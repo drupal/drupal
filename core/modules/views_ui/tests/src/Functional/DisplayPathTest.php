@@ -161,7 +161,7 @@ class DisplayPathTest extends UITestBase {
     $this->drupalGet('admin/structure/views/view/test_view');
     $this->assertSession()->linkExists('Tab: Test tab title');
     // If it's a default tab, it should also have an additional settings link.
-    $this->assertLinkByHref('admin/structure/views/nojs/display/test_view/page_1/tab_options');
+    $this->assertSession()->linkByHrefExists('admin/structure/views/nojs/display/test_view/page_1/tab_options');
 
     // Ensure that you can select a parent in case the parent does not exist.
     $this->drupalGet('admin/structure/views/nojs/display/test_page_display_menu/page_5/menu');

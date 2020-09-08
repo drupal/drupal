@@ -71,7 +71,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Test for existence of link to image styles configuration.
     $this->drupalPostForm(NULL, [], "{$field_name}_settings_edit");
-    $this->assertLinkByHref(Url::fromRoute('entity.image_style.collection')->toString(), 0, 'Link to image styles configuration is found');
+    $this->assertSession()->linkByHrefExists(Url::fromRoute('entity.image_style.collection')->toString(), 0, 'Link to image styles configuration is found');
 
     // Remove 'administer image styles' permission from testing admin user.
     $admin_user_roles = $this->adminUser->getRoles(TRUE);
@@ -82,7 +82,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Test for absence of link to image styles configuration.
     $this->drupalPostForm(NULL, [], "{$field_name}_settings_edit");
-    $this->assertNoLinkByHref(Url::fromRoute('entity.image_style.collection')->toString(), 'Link to image styles configuration is absent when permissions are insufficient');
+    $this->assertSession()->linkByHrefNotExists(Url::fromRoute('entity.image_style.collection')->toString(), 'Link to image styles configuration is absent when permissions are insufficient');
 
     // Restore 'administer image styles' permission to testing admin user
     user_role_change_permissions(reset($admin_user_roles), ['administer image styles' => TRUE]);

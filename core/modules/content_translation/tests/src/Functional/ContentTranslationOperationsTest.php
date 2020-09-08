@@ -79,13 +79,13 @@ class ContentTranslationOperationsTest extends NodeTestBase {
     // permission.
     $this->drupalLogin($this->baseUser1);
     $this->drupalGet('admin/content');
-    $this->assertNoLinkByHref('node/' . $node->id() . '/translations');
+    $this->assertSession()->linkByHrefNotExists('node/' . $node->id() . '/translations');
     $this->drupalLogout();
     // Verify there's a translation operation link for users with enough
     // permissions.
     $this->drupalLogin($this->baseUser2);
     $this->drupalGet('admin/content');
-    $this->assertLinkByHref('node/' . $node->id() . '/translations');
+    $this->assertSession()->linkByHrefExists('node/' . $node->id() . '/translations');
 
     // Ensure that an unintended misconfiguration of permissions does not open
     // access to the translation form, see https://www.drupal.org/node/2558905.
@@ -128,10 +128,10 @@ class ContentTranslationOperationsTest extends NodeTestBase {
     $this->drupalPlaceBlock('local_tasks_block');
     $this->drupalLogin($this->baseUser2);
     $this->drupalGet('node/' . $node->id());
-    $this->assertLinkByHref('node/' . $node->id() . '/translations');
+    $this->assertSession()->linkByHrefExists('node/' . $node->id() . '/translations');
     $this->drupalPostForm('admin/config/regional/content-language', ['settings[node][article][translatable]' => FALSE], t('Save configuration'));
     $this->drupalGet('node/' . $node->id());
-    $this->assertNoLinkByHref('node/' . $node->id() . '/translations');
+    $this->assertSession()->linkByHrefNotExists('node/' . $node->id() . '/translations');
   }
 
   /**

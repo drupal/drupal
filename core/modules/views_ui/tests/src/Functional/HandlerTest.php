@@ -126,7 +126,7 @@ class HandlerTest extends UITestBase {
       // Verify that the user got redirected to the views edit form.
       $this->assertSession()->addressEquals('admin/structure/views/view/test_view_empty/edit/default');
 
-      $this->assertLinkByHref($edit_handler_url, 0, 'The handler edit link appears in the UI.');
+      $this->assertSession()->linkByHrefExists($edit_handler_url, 0, 'The handler edit link appears in the UI.');
       $links = $this->xpath('//a[starts-with(normalize-space(text()), :label)]', [':label' => $random_label]);
       $this->assertTrue(isset($links[0]), 'The handler edit link has the right label');
 
@@ -138,7 +138,7 @@ class HandlerTest extends UITestBase {
 
       // Remove the item and check that it's removed
       $this->drupalPostForm($edit_handler_url, [], t('Remove'));
-      $this->assertNoLinkByHref($edit_handler_url, 0, 'The handler edit link does not appears in the UI after removing.');
+      $this->assertSession()->linkByHrefNotExists($edit_handler_url, 0, 'The handler edit link does not appears in the UI after removing.');
 
       $this->drupalPostForm(NULL, [], t('Save'));
       $view = $this->container->get('entity_type.manager')->getStorage('view')->load('test_view_empty');

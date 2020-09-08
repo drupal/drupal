@@ -282,17 +282,17 @@ class ConfigExportImportUITest extends BrowserTestBase {
     $this->assertText(t('@collection configuration collection', ['@collection' => 'collection.test1']));
     $this->assertText(t('@collection configuration collection', ['@collection' => 'collection.test2']));
     $this->assertText('config_test.create');
-    $this->assertLinkByHref('admin/config/development/configuration/sync/diff_collection/collection.test1/config_test.create');
+    $this->assertSession()->linkByHrefExists('admin/config/development/configuration/sync/diff_collection/collection.test1/config_test.create');
     $this->assertText('config_test.update');
-    $this->assertLinkByHref('admin/config/development/configuration/sync/diff_collection/collection.test1/config_test.update');
+    $this->assertSession()->linkByHrefExists('admin/config/development/configuration/sync/diff_collection/collection.test1/config_test.update');
     $this->assertText('config_test.delete');
-    $this->assertLinkByHref('admin/config/development/configuration/sync/diff_collection/collection.test1/config_test.delete');
+    $this->assertSession()->linkByHrefExists('admin/config/development/configuration/sync/diff_collection/collection.test1/config_test.delete');
     $this->assertText('config_test.another_create');
-    $this->assertLinkByHref('admin/config/development/configuration/sync/diff_collection/collection.test2/config_test.another_create');
+    $this->assertSession()->linkByHrefExists('admin/config/development/configuration/sync/diff_collection/collection.test2/config_test.another_create');
     $this->assertText('config_test.another_update');
-    $this->assertLinkByHref('admin/config/development/configuration/sync/diff_collection/collection.test2/config_test.another_update');
+    $this->assertSession()->linkByHrefExists('admin/config/development/configuration/sync/diff_collection/collection.test2/config_test.another_update');
     $this->assertText('config_test.another_delete');
-    $this->assertLinkByHref('admin/config/development/configuration/sync/diff_collection/collection.test2/config_test.another_delete');
+    $this->assertSession()->linkByHrefExists('admin/config/development/configuration/sync/diff_collection/collection.test2/config_test.another_delete');
 
     $this->drupalPostForm(NULL, [], 'Import all');
     $this->assertText(t('There are no configuration changes to import.'));

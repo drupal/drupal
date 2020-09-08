@@ -123,9 +123,9 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Ensure that the expected entity operations are there.
     $this->drupalGet($admin_path);
-    $this->assertLinkByHref($style_path);
-    $this->assertLinkByHref($style_path . '/flush');
-    $this->assertLinkByHref($style_path . '/delete');
+    $this->assertSession()->linkByHrefExists($style_path);
+    $this->assertSession()->linkByHrefExists($style_path . '/flush');
+    $this->assertSession()->linkByHrefExists($style_path . '/delete');
 
     // Add effect form.
 
@@ -255,7 +255,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $image_crop_effect = $style->getEffect($uuids['image_crop']);
     $this->assertRaw(t('The image effect %name has been deleted.', ['%name' => $image_crop_effect->label()]));
     // Confirm that there is no longer a link to the effect.
-    $this->assertNoLinkByHref($style_path . '/effects/' . $uuids['image_crop'] . '/delete');
+    $this->assertSession()->linkByHrefNotExists($style_path . '/effects/' . $uuids['image_crop'] . '/delete');
     // Refresh the image style information and verify that the effect was
     // actually deleted.
     $entity_type_manager = $this->container->get('entity_type.manager');
@@ -443,7 +443,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     // exists.
     $this->drupalGet($admin_path);
     $flush_path = $admin_path . '/manage/' . $style_name . '/flush';
-    $this->assertLinkByHref($flush_path);
+    $this->assertSession()->linkByHrefExists($flush_path);
 
     // Flush the image style derivatives using the user interface.
     $this->drupalPostForm($flush_path, [], t('Flush'));

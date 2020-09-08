@@ -111,7 +111,7 @@ class ContactSitewideTest extends BrowserTestBase {
 
     $this->drupalGet('admin/structure/contact');
     // Default form exists.
-    $this->assertLinkByHref('admin/structure/contact/manage/feedback/delete');
+    $this->assertSession()->linkByHrefExists('admin/structure/contact/manage/feedback/delete');
     // User form could not be changed or deleted.
     // Cannot use ::assertNoLinkByHref as it does partial url matching and with
     // field_ui enabled admin/structure/contact/manage/personal/fields exists.
@@ -122,7 +122,7 @@ class ContactSitewideTest extends BrowserTestBase {
     $this->assertTrue(empty($edit_link), new FormattableMarkup('No link containing href %href found.',
       ['%href' => 'admin/structure/contact/manage/personal']
     ));
-    $this->assertNoLinkByHref('admin/structure/contact/manage/personal/delete');
+    $this->assertSession()->linkByHrefNotExists('admin/structure/contact/manage/personal/delete');
 
     $this->drupalGet('admin/structure/contact/manage/personal');
     $this->assertSession()->statusCodeEquals(403);
@@ -131,7 +131,7 @@ class ContactSitewideTest extends BrowserTestBase {
     $this->deleteContactForms();
     $this->drupalGet('admin/structure/contact');
     $this->assertText('Personal', 'Personal form was not deleted');
-    $this->assertNoLinkByHref('admin/structure/contact/manage/feedback');
+    $this->assertSession()->linkByHrefNotExists('admin/structure/contact/manage/feedback');
 
     // Ensure that the contact form won't be shown without forms.
     user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['access site-wide contact form']);

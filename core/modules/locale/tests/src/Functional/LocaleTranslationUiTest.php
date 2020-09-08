@@ -39,7 +39,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     $this->drupalLogin($admin_user);
 
     $this->drupalPostForm('admin/config/regional/language/edit/en', ['locale_translate_english' => TRUE], t('Save language'));
-    $this->assertLinkByHref('/admin/config/regional/translate?langcode=en', 0, 'Enabled interface translation to English.');
+    $this->assertSession()->linkByHrefExists('/admin/config/regional/translate?langcode=en', 0, 'Enabled interface translation to English.');
   }
 
   /**

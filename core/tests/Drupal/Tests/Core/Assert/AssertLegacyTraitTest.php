@@ -247,6 +247,30 @@ class AssertLegacyTraitTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::assertLinkByHref
+   * @expectedDeprecation AssertLegacyTrait::assertLinkByHref() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->linkByHrefExists() instead. See https://www.drupal.org/node/3129738
+   */
+  public function testAssertLinkByHref() {
+    $this->webAssert
+      ->linkByHrefExists('boo', 0)
+      ->shouldBeCalled();
+
+    $this->assertLinkByHref('boo', 0);
+  }
+
+  /**
+   * @covers ::assertNoLinkByHref
+   * @expectedDeprecation AssertLegacyTrait::assertNoLinkByHref() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->linkByHrefNotExists() instead. See https://www.drupal.org/node/3129738
+   */
+  public function testAssertNoLinkByHref() {
+    $this->webAssert
+      ->linkByHrefNotExists('boo')
+      ->shouldBeCalled();
+
+    $this->assertNoLinkByHref('boo');
+  }
+
+  /**
    * @covers ::constructFieldXpath
    * @expectedDeprecation AssertLegacyTrait::constructFieldXpath() is deprecated in drupal:8.5.0 and is removed from drupal:10.0.0. Use $this->getSession()->getPage()->findField() instead. See https://www.drupal.org/node/3129738
    */

@@ -215,7 +215,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
         // The seven theme has markup inside the link, we cannot use clickLink().
         if ($default_theme == 'seven') {
           $options = $theme != $default_theme ? ['query' => ['theme' => $theme]] : [];
-          $this->assertLinkByHref(Url::fromRoute('block_content.add_form', ['block_content_type' => 'foo'], $options)->toString());
+          $this->assertSession()->linkByHrefExists(Url::fromRoute('block_content.add_form', ['block_content_type' => 'foo'], $options)->toString());
           $this->drupalGet('block/add/foo', $options);
         }
         else {

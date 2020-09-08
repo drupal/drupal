@@ -76,7 +76,7 @@ class UnsavedPreviewTest extends UITestBase {
 
     $this->drupalPostForm(NULL, [], t('Update preview'));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertLinkByHref('foobarbaz');
+    $this->assertSession()->linkByHrefExists('foobarbaz');
   }
 
 }

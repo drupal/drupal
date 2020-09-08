@@ -256,7 +256,7 @@ class HandlerTest extends ViewTestBase {
     $handler_options_path = 'admin/structure/views/nojs/handler/test_handler_relationships/default/field/title';
     $view_edit_path = 'admin/structure/views/view/test_handler_relationships/edit';
     $this->drupalGet($view_edit_path);
-    $this->assertLinkByHref($handler_options_path);
+    $this->assertSession()->linkByHrefExists($handler_options_path);
 
     // The test view has a relationship to node_revision so the field should
     // show a relationship selection.

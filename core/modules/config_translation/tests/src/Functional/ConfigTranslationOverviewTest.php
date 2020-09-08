@@ -82,8 +82,8 @@ class ConfigTranslationOverviewTest extends BrowserTestBase {
    */
   public function testMapperListPage() {
     $this->drupalGet('admin/config/regional/config-translation');
-    $this->assertLinkByHref('admin/config/regional/config-translation/config_test');
-    $this->assertLinkByHref('admin/config/people/accounts/translate');
+    $this->assertSession()->linkByHrefExists('admin/config/regional/config-translation/config_test');
+    $this->assertSession()->linkByHrefExists('admin/config/people/accounts/translate');
     // Make sure there is only a single operation for each dropbutton, either
     // 'List' or 'Translate'.
     foreach ($this->cssSelect('ul.dropbutton') as $i => $dropbutton) {
@@ -107,7 +107,7 @@ class ConfigTranslationOverviewTest extends BrowserTestBase {
 
       $base_url = 'admin/structure/config_test/manage/' . $test_entity->id();
       $this->drupalGet('admin/config/regional/config-translation/config_test');
-      $this->assertLinkByHref($base_url . '/translate');
+      $this->assertSession()->linkByHrefExists($base_url . '/translate');
       $this->assertSession()->assertEscaped($test_entity->label());
 
       // Make sure there is only a single 'Translate' operation for each
@@ -138,17 +138,17 @@ class ConfigTranslationOverviewTest extends BrowserTestBase {
     // configuration translation listings.
     $this->drupalGet('admin/config/regional/config-translation/configurable_language');
     $this->assertText('Not applicable');
-    $this->assertLinkByHref('admin/config/regional/language/edit/zxx/translate');
+    $this->assertSession()->linkByHrefExists('admin/config/regional/language/edit/zxx/translate');
     $this->assertText('Not specified');
-    $this->assertLinkByHref('admin/config/regional/language/edit/und/translate');
+    $this->assertSession()->linkByHrefExists('admin/config/regional/language/edit/und/translate');
 
     // Hidden date formats are only available to translate through the
     // configuration translation listings. Test a couple of them.
     $this->drupalGet('admin/config/regional/config-translation/date_format');
     $this->assertText('HTML Date');
-    $this->assertLinkByHref('admin/config/regional/date-time/formats/manage/html_date/translate');
+    $this->assertSession()->linkByHrefExists('admin/config/regional/date-time/formats/manage/html_date/translate');
     $this->assertText('HTML Year');
-    $this->assertLinkByHref('admin/config/regional/date-time/formats/manage/html_year/translate');
+    $this->assertSession()->linkByHrefExists('admin/config/regional/date-time/formats/manage/html_year/translate');
   }
 
   /**
@@ -200,7 +200,7 @@ class ConfigTranslationOverviewTest extends BrowserTestBase {
     $this->drupalGet('admin/config/regional/config-translation/node_fields');
     $this->assertText('Body');
     $this->assertText('Basic');
-    $this->assertLinkByHref('admin/structure/types/manage/basic/fields/node.basic.body/translate');
+    $this->assertSession()->linkByHrefExists('admin/structure/types/manage/basic/fields/node.basic.body/translate');
   }
 
 }

@@ -115,7 +115,7 @@ class RssTest extends TaxonomyTestBase {
 
     // Test that the feed icon exists for the term.
     $this->drupalGet("taxonomy/term/{$term1->id()}");
-    $this->assertLinkByHref("taxonomy/term/{$term1->id()}/feed");
+    $this->assertSession()->linkByHrefExists("taxonomy/term/{$term1->id()}/feed");
 
     // Test that the feed page exists for the term.
     $this->drupalGet("taxonomy/term/{$term1->id()}/feed");

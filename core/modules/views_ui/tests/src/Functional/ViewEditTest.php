@@ -135,7 +135,7 @@ class ViewEditTest extends UITestBase {
       $this->drupalGet('admin/structure/views/view/' . $view_name);
       $this->assertSession()->statusCodeEquals(200);
       $langcode_url = 'admin/structure/views/nojs/display/' . $view_name . '/' . $display . '/rendering_language';
-      $this->assertNoLinkByHref($langcode_url);
+      $this->assertSession()->linkByHrefNotExists($langcode_url);
       $assert_session->linkNotExistsExact('Content language selected for page');
       $this->assertSession()->linkNotExists('Content language of view row');
     }
@@ -152,12 +152,12 @@ class ViewEditTest extends UITestBase {
       $this->assertSession()->statusCodeEquals(200);
       $langcode_url = 'admin/structure/views/nojs/display/' . $view_name . '/' . $display . '/rendering_language';
       if ($view_name == 'test_view') {
-        $this->assertNoLinkByHref($langcode_url);
+        $this->assertSession()->linkByHrefNotExists($langcode_url);
         $assert_session->linkNotExistsExact('Content language selected for page');
         $this->assertSession()->linkNotExists('Content language of view row');
       }
       else {
-        $this->assertLinkByHref($langcode_url);
+        $this->assertSession()->linkByHrefExists($langcode_url);
         $assert_session->linkNotExistsExact('Content language selected for page');
         $this->assertSession()->linkExists('Content language of view row');
       }

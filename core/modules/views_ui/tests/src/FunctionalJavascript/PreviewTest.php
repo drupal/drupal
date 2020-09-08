@@ -235,7 +235,7 @@ class PreviewTest extends WebDriverTestBase {
     $this->assertTrue(!empty($elements), 'The header label is present.');
 
     // Verify link.
-    $this->assertLinkByHref('preview/page_1?_wrapper_format=drupal_ajax&order=name&sort=desc', 0, 'The output URL is as expected.');
+    $this->assertSession()->linkByHrefExists('preview/page_1?_wrapper_format=drupal_ajax&order=name&sort=desc', 0, 'The output URL is as expected.');
 
     // Click link to sort.
     $elements[0]->click();
@@ -244,7 +244,7 @@ class PreviewTest extends WebDriverTestBase {
     $this->assertNotEmpty($sort_link);
 
     // Verify link.
-    $this->assertLinkByHref('preview/page_1?_wrapper_format=drupal_ajax&order=name&sort=asc', 0, 'The output URL is as expected.');
+    $this->assertSession()->linkByHrefExists('preview/page_1?_wrapper_format=drupal_ajax&order=name&sort=asc', 0, 'The output URL is as expected.');
   }
 
   /**

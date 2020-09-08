@@ -70,9 +70,9 @@ class FieldWebTest extends ViewTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Only the id and name should be click sortable, but not the name.
-    $this->assertLinkByHref(Url::fromRoute('<none>', [], ['query' => ['order' => 'id', 'sort' => 'asc']])->toString());
-    $this->assertLinkByHref(Url::fromRoute('<none>', [], ['query' => ['order' => 'name', 'sort' => 'desc']])->toString());
-    $this->assertNoLinkByHref(Url::fromRoute('<none>', [], ['query' => ['order' => 'created']])->toString());
+    $this->assertSession()->linkByHrefExists(Url::fromRoute('<none>', [], ['query' => ['order' => 'id', 'sort' => 'asc']])->toString());
+    $this->assertSession()->linkByHrefExists(Url::fromRoute('<none>', [], ['query' => ['order' => 'name', 'sort' => 'desc']])->toString());
+    $this->assertSession()->linkByHrefNotExists(Url::fromRoute('<none>', [], ['query' => ['order' => 'created']])->toString());
 
     // Check that the view returns the click sorting cache contexts.
     $expected_contexts = [
@@ -85,7 +85,7 @@ class FieldWebTest extends ViewTestBase {
     // Clicking a click sort should change the order.
     $this->clickLink(t('ID'));
     $href = Url::fromRoute('<none>', [], ['query' => ['order' => 'id', 'sort' => 'desc']])->toString();
-    $this->assertLinkByHref($href);
+    $this->assertSession()->linkByHrefExists($href);
     // Check that the output has the expected order (asc).
     $ids = $this->clickSortLoadIdsFromOutput();
     $this->assertEqual($ids, range(1, 5));

@@ -637,8 +637,8 @@ class UpdateScriptTest extends BrowserTestBase {
     // Visit status report page and ensure, that link to update.php has no path prefix set.
     $this->drupalGet('en/admin/reports/status', ['external' => TRUE]);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertLinkByHref('/update.php');
-    $this->assertNoLinkByHref('en/update.php');
+    $this->assertSession()->linkByHrefExists('/update.php');
+    $this->assertSession()->linkByHrefNotExists('en/update.php');
 
     // Click through update.php with 'access administration pages' and
     // 'access site reports' permissions.

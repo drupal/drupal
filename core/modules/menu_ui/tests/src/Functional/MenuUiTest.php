@@ -135,8 +135,8 @@ class MenuUiTest extends BrowserTestBase {
 
     // Verify delete link exists and reset link does not exist.
     $this->drupalGet('admin/structure/menu/manage/' . $this->menu->id());
-    $this->assertLinkByHref(Url::fromRoute('entity.menu_link_content.delete_form', ['menu_link_content' => $this->items[0]->id()])->toString());
-    $this->assertNoLinkByHref(Url::fromRoute('menu_ui.link_reset', ['menu_link_plugin' => $this->items[0]->getPluginId()])->toString());
+    $this->assertSession()->linkByHrefExists(Url::fromRoute('entity.menu_link_content.delete_form', ['menu_link_content' => $this->items[0]->id()])->toString());
+    $this->assertSession()->linkByHrefNotExists(Url::fromRoute('menu_ui.link_reset', ['menu_link_plugin' => $this->items[0]->getPluginId()])->toString());
     // Check delete and reset access.
     $this->drupalGet('admin/structure/menu/item/' . $this->items[0]->id() . '/delete');
     $this->assertSession()->statusCodeEquals(200);
@@ -317,7 +317,7 @@ class MenuUiTest extends BrowserTestBase {
 
     // Verify add link button.
     $this->drupalGet('admin/structure/menu');
-    $this->assertLinkByHref('admin/structure/menu/manage/' . $menu_name . '/add', 0, "The add menu link button URL is correct");
+    $this->assertSession()->linkByHrefExists('admin/structure/menu/manage/' . $menu_name . '/add', 0, "The add menu link button URL is correct");
 
     // Verify form defaults.
     $this->doMenuLinkFormDefaultsTest();

@@ -97,7 +97,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
       ->loadByProperties(['info' => $label]);
     $block = reset($blocks);
     if (!empty($block)) {
-      $this->assertLinkByHref('block/' . $block->id());
+      $this->assertSession()->linkByHrefExists('block/' . $block->id());
       $this->clickLink(t('Edit'));
       $this->assertSession()->statusCodeEquals(200);
       $this->assertSession()->titleEquals("Edit custom block $label | Drupal");
@@ -113,7 +113,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     $this->assertFieldByXpath('//td/a', $new_label, 'Label found for updated custom block.');
 
     // Delete the added entity using the operations link.
-    $this->assertLinkByHref('block/' . $block->id() . '/delete');
+    $this->assertSession()->linkByHrefExists('block/' . $block->id() . '/delete');
     $delete_text = t('Delete');
     $this->clickLink($delete_text);
     $this->assertSession()->statusCodeEquals(200);

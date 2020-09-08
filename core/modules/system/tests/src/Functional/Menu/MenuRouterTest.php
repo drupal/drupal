@@ -70,8 +70,8 @@ class MenuRouterTest extends BrowserTestBase {
     $this->assertSession()->linkNotExists('Local task C');
     $this->assertSession()->assertEscaped("<script>alert('Welcome to the jungle!')</script>");
     // Confirm correct local task href.
-    $this->assertLinkByHref(Url::fromRoute('menu_test.router_test1', ['bar' => $machine_name])->toString());
-    $this->assertLinkByHref(Url::fromRoute('menu_test.router_test2', ['bar' => $machine_name])->toString());
+    $this->assertSession()->linkByHrefExists(Url::fromRoute('menu_test.router_test1', ['bar' => $machine_name])->toString());
+    $this->assertSession()->linkByHrefExists(Url::fromRoute('menu_test.router_test2', ['bar' => $machine_name])->toString());
   }
 
   /**
@@ -180,10 +180,10 @@ class MenuRouterTest extends BrowserTestBase {
     $this->resetAll();
 
     $this->drupalGet('router_test/test2');
-    $this->assertLinkByHref('menu_no_title_callback');
-    $this->assertLinkByHref('menu-title-test/case1');
-    $this->assertLinkByHref('menu-title-test/case2');
-    $this->assertLinkByHref('menu-title-test/case3');
+    $this->assertSession()->linkByHrefExists('menu_no_title_callback');
+    $this->assertSession()->linkByHrefExists('menu-title-test/case1');
+    $this->assertSession()->linkByHrefExists('menu-title-test/case2');
+    $this->assertSession()->linkByHrefExists('menu-title-test/case3');
   }
 
   /**

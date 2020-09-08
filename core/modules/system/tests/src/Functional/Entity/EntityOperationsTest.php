@@ -41,7 +41,7 @@ class EntityOperationsTest extends BrowserTestBase {
     $this->drupalGet('admin/people/roles');
     $roles = user_roles();
     foreach ($roles as $role) {
-      $this->assertLinkByHref($role->toUrl()->toString() . '/test_operation');
+      $this->assertSession()->linkByHrefExists($role->toUrl()->toString() . '/test_operation');
       $this->assertSession()->linkExists(new FormattableMarkup('Test Operation: @label', ['@label' => $role->label()]));
     }
   }

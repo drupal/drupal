@@ -169,7 +169,7 @@ class CommentAttributesTest extends CommentTestBase {
     // is modified by the RDF module.
     $this->drupalGet('node/' . $this->node->id());
     $this->assertSession()->linkExistsExact($this->webUser->getDisplayName());
-    $this->assertLinkByHref('user/' . $this->webUser->id());
+    $this->assertSession()->linkByHrefExists('user/' . $this->webUser->id());
   }
 
   /**

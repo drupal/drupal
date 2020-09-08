@@ -136,13 +136,13 @@ class TermTranslationUITest extends ContentTranslationUITestBase {
     // Verify translation links.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertLinkByHref('term/' . $translatable_tid . '/translations', 0, 'The translations link exists for a translatable vocabulary.');
-    $this->assertLinkByHref('term/' . $translatable_tid . '/edit', 0, 'The edit link exists for a translatable vocabulary.');
+    $this->assertSession()->linkByHrefExists('term/' . $translatable_tid . '/translations', 0, 'The translations link exists for a translatable vocabulary.');
+    $this->assertSession()->linkByHrefExists('term/' . $translatable_tid . '/edit', 0, 'The edit link exists for a translatable vocabulary.');
 
     $this->drupalGet('admin/structure/taxonomy/manage/' . $untranslatable_vocabulary->id() . '/overview');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertLinkByHref('term/' . $untranslatable_tid . '/edit');
-    $this->assertNoLinkByHref('term/' . $untranslatable_tid . '/translations');
+    $this->assertSession()->linkByHrefExists('term/' . $untranslatable_tid . '/edit');
+    $this->assertSession()->linkByHrefNotExists('term/' . $untranslatable_tid . '/translations');
   }
 
   /**

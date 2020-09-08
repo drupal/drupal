@@ -458,7 +458,7 @@ class StyleSerializerTest extends ViewTestBase {
     // Test the UI settings for adding field ID aliases.
     $this->drupalGet('admin/structure/views/view/test_serializer_display_field/edit/rest_export_1');
     $row_options = 'admin/structure/views/nojs/display/test_serializer_display_field/rest_export_1/row_options';
-    $this->assertLinkByHref($row_options);
+    $this->assertSession()->linkByHrefExists($row_options);
 
     // Test an empty string for an alias, this should not be used. This also
     // tests that the form can be submitted with no aliases.
@@ -525,7 +525,7 @@ class StyleSerializerTest extends ViewTestBase {
     // Test the UI settings for adding field ID aliases.
     $this->drupalGet('admin/structure/views/view/test_serializer_display_field/edit/rest_export_1');
     $row_options = 'admin/structure/views/nojs/display/test_serializer_display_field/rest_export_1/row_options';
-    $this->assertLinkByHref($row_options);
+    $this->assertSession()->linkByHrefExists($row_options);
 
     // Test an empty string for an alias, this should not be used. This also
     // tests that the form can be submitted with no aliases.

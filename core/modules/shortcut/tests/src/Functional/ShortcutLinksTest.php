@@ -259,7 +259,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $saved_set = ShortcutSet::load($set->id());
     $paths = $this->getShortcutInformation($saved_set, 'link');
     $this->assertContains('internal:' . $new_link_path, $paths, 'Shortcut path changed: ' . $new_link_path);
-    $this->assertLinkByHref($new_link_path, 0, 'Shortcut with new path appears on the page.');
+    $this->assertSession()->linkByHrefExists($new_link_path, 0, 'Shortcut with new path appears on the page.');
     $this->assertText(t('The shortcut @link has been updated.', ['@link' => $shortcut->getTitle()]));
   }
 

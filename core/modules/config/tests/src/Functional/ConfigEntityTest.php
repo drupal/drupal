@@ -248,7 +248,7 @@ class ConfigEntityTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $this->assertRaw($message_insert);
     $this->assertNoRaw($message_update);
-    $this->assertLinkByHref("admin/structure/config_test/manage/$id");
+    $this->assertSession()->linkByHrefExists("admin/structure/config_test/manage/$id");
 
     // Update the configuration entity.
     $edit = [
@@ -259,8 +259,8 @@ class ConfigEntityTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $this->assertNoRaw($message_insert);
     $this->assertRaw($message_update);
-    $this->assertLinkByHref("admin/structure/config_test/manage/$id");
-    $this->assertLinkByHref("admin/structure/config_test/manage/$id/delete");
+    $this->assertSession()->linkByHrefExists("admin/structure/config_test/manage/$id");
+    $this->assertSession()->linkByHrefExists("admin/structure/config_test/manage/$id/delete");
 
     // Delete the configuration entity.
     $this->drupalGet("admin/structure/config_test/manage/$id");
@@ -272,7 +272,7 @@ class ConfigEntityTest extends BrowserTestBase {
     $this->assertNoRaw($message_update);
     $this->assertRaw($message_delete);
     $this->assertNoText($label1);
-    $this->assertNoLinkByHref("admin/structure/config_test/manage/$id");
+    $this->assertSession()->linkByHrefNotExists("admin/structure/config_test/manage/$id");
 
     // Re-create a configuration entity.
     $edit = [
@@ -283,7 +283,7 @@ class ConfigEntityTest extends BrowserTestBase {
     $this->assertSession()->addressEquals('admin/structure/config_test');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertText($label1);
-    $this->assertLinkByHref("admin/structure/config_test/manage/$id");
+    $this->assertSession()->linkByHrefExists("admin/structure/config_test/manage/$id");
 
     // Rename the configuration entity's ID/machine name.
     $edit = [
@@ -296,9 +296,9 @@ class ConfigEntityTest extends BrowserTestBase {
     $this->assertNoText($label1);
     $this->assertNoText($label2);
     $this->assertText($label3);
-    $this->assertNoLinkByHref("admin/structure/config_test/manage/$id");
+    $this->assertSession()->linkByHrefNotExists("admin/structure/config_test/manage/$id");
     $id = $edit['id'];
-    $this->assertLinkByHref("admin/structure/config_test/manage/$id");
+    $this->assertSession()->linkByHrefExists("admin/structure/config_test/manage/$id");
 
     // Create a configuration entity with '0' machine name.
     $edit = [
@@ -309,8 +309,8 @@ class ConfigEntityTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $message_insert = new FormattableMarkup('%label configuration has been created.', ['%label' => $edit['label']]);
     $this->assertRaw($message_insert);
-    $this->assertLinkByHref('admin/structure/config_test/manage/0');
-    $this->assertLinkByHref('admin/structure/config_test/manage/0/delete');
+    $this->assertSession()->linkByHrefExists('admin/structure/config_test/manage/0');
+    $this->assertSession()->linkByHrefExists('admin/structure/config_test/manage/0/delete');
     $this->drupalPostForm('admin/structure/config_test/manage/0/delete', [], 'Delete');
     $storage = \Drupal::entityTypeManager()->getStorage('config_test');
     $this->assertNull($storage->load(0), 'Test entity deleted');

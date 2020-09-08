@@ -49,7 +49,7 @@ class BlockHookOperationTest extends BrowserTestBase {
 
     $test_operation_link = 'admin/structure/block/manage/' . $block_id . '/test_operation';
     // Test if the test_operation link is on the page.
-    $this->assertLinkByHref($test_operation_link);
+    $this->assertSession()->linkByHrefExists($test_operation_link);
   }
 
 }

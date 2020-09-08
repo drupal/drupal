@@ -272,7 +272,7 @@ class CommentNonNodeTest extends BrowserTestBase {
     // Test that default field exists.
     $this->drupalGet('entity_test/structure/entity_test/fields');
     $this->assertText(t('Comments'));
-    $this->assertLinkByHref('entity_test/structure/entity_test/fields/entity_test.entity_test.comment');
+    $this->assertSession()->linkByHrefExists('entity_test/structure/entity_test/fields/entity_test.entity_test.comment');
     // Test widget hidden option is not visible when there's no comments.
     $this->drupalGet('entity_test/structure/entity_test/fields/entity_test.entity_test.comment');
     $this->assertSession()->statusCodeEquals(200);

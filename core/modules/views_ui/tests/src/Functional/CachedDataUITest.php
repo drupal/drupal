@@ -58,7 +58,7 @@ class CachedDataUITest extends UITestBase {
     $this->assertNoFieldById('edit-actions-submit', t('Save'));
     $this->assertNoFieldById('edit-actions-cancel', t('Cancel'));
     // Test we have the break lock link.
-    $this->assertLinkByHref('admin/structure/views/view/test_view/break-lock');
+    $this->assertSession()->linkByHrefExists('admin/structure/views/view/test_view/break-lock');
     // Break the lock.
     $this->clickLink(t('break this lock'));
     $this->drupalPostForm(NULL, [], t('Break lock'));

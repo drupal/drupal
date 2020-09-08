@@ -142,7 +142,7 @@ class StyleSummaryTest extends ViewTestBase {
     $this->drupalPostForm('admin/structure/views/nojs/handler/test_summary/page_1/argument/type', $edit, t('Apply'));
     $this->drupalPostForm(NULL, [], t('Save'));
     $this->drupalGet('test-summary');
-    $this->assertLinkByHref('/');
+    $this->assertSession()->linkByHrefExists('/');
   }
 
 }

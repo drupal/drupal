@@ -53,7 +53,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
     $this->drupalGet('admin/structure/taxonomy');
     $this->assertText($edit['name'], 'Vocabulary name found in the vocabulary overview listing.');
     $this->assertText($edit['description'], 'Vocabulary description found in the vocabulary overview listing.');
-    $this->assertLinkByHref(Url::fromRoute('entity.taxonomy_term.add_form', ['taxonomy_vocabulary' => $edit['vid']])->toString());
+    $this->assertSession()->linkByHrefExists(Url::fromRoute('entity.taxonomy_term.add_form', ['taxonomy_vocabulary' => $edit['vid']])->toString());
     $this->clickLink(t('Edit vocabulary'));
     $edit = [];
     $edit['name'] = $this->randomMachineName();

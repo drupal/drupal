@@ -138,7 +138,7 @@ class UserAccountLinksTest extends BrowserTestBase {
     $this->drupalLogin($this->drupalCreateUser());
     // After login, the client is redirected to /user.
     $this->assertSession()->linkExists('My account', 0, "Page title of /user is 'My Account' in menus for registered users");
-    $this->assertLinkByHref(\Drupal::urlGenerator()->generate('user.page'), 0);
+    $this->assertSession()->linkByHrefExists(\Drupal::urlGenerator()->generate('user.page'), 0);
   }
 
   /**

@@ -481,7 +481,7 @@ class BlockTest extends BlockTestBase {
     $this->drupalLogin($theme_admin);
     $this->drupalGet('admin/appearance');
     $this->assertText('You can place blocks for each theme on the block layout page');
-    $this->assertLinkByHref('admin/structure/block');
+    $this->assertSession()->linkByHrefExists('admin/structure/block');
   }
 
   /**

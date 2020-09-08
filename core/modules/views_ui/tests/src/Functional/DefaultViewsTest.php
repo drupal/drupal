@@ -42,20 +42,20 @@ class DefaultViewsTest extends UITestBase {
     $this->drupalGet('admin/structure/views');
     // @todo Disabled default views do now appear on the front page. Test this
     // behavior with templates instead.
-    // $this->assertNoLinkByHref($edit_href);
+    // $this->assertSession()->linkByHrefNotExists($edit_href);
 
     // Enable the view, and make sure it is now visible on the main listing
     // page.
     $this->drupalGet('admin/structure/views');
     $this->clickViewsOperationLink('Enable', '/glossary/');
     $this->assertSession()->addressEquals('admin/structure/views');
-    $this->assertLinkByHref($edit_href);
+    $this->assertSession()->linkByHrefExists($edit_href);
 
     // It should not be possible to revert the view yet.
     // @todo Figure out how to handle this with the new configuration system.
     // $this->assertSession()->linkNotExists('Revert');
     // $revert_href = 'admin/structure/views/view/glossary/revert';
-    // $this->assertNoLinkByHref($revert_href);
+    // $this->assertSession()->linkByHrefNotExists($revert_href);
 
     // Edit the view and change the title. Make sure that the new title is
     // displayed.
@@ -74,7 +74,7 @@ class DefaultViewsTest extends UITestBase {
     // Check there is an enable link. i.e. The view has not been enabled after
     // editing.
     $this->drupalGet('admin/structure/views');
-    $this->assertLinkByHref('admin/structure/views/view/archive/enable');
+    $this->assertSession()->linkByHrefExists('admin/structure/views/view/archive/enable');
     // Enable it again so it can be tested for access permissions.
     $this->clickViewsOperationLink('Enable', '/archive/');
 
@@ -82,7 +82,7 @@ class DefaultViewsTest extends UITestBase {
     // view title we added above no longer is displayed.
     // $this->drupalGet('admin/structure/views');
     // $this->assertSession()->linkExists('Revert');
-    // $this->assertLinkByHref($revert_href);
+    // $this->assertSession()->linkByHrefExists($revert_href);
     // $this->drupalPostForm($revert_href, array(), t('Revert'));
     // $this->drupalGet('glossary');
     // $this->assertNoText($new_title);
@@ -111,13 +111,13 @@ class DefaultViewsTest extends UITestBase {
     $this->drupalGet('admin/structure/views');
     $this->clickViewsOperationLink('Disable', '/glossary/');
     // $this->assertSession()->addressEquals('admin/structure/views');
-    // $this->assertNoLinkByHref($edit_href);
+    // $this->assertSession()->linkByHrefNotExists($edit_href);
     // The easiest way to verify it appears on the disabled views listing page
     // is to try to click the "enable" link from there again.
     $this->drupalGet('admin/structure/views');
     $this->clickViewsOperationLink('Enable', '/glossary/');
     $this->assertSession()->addressEquals('admin/structure/views');
-    $this->assertLinkByHref($edit_href);
+    $this->assertSession()->linkByHrefExists($edit_href);
 
     // Clear permissions for anonymous users to check access for default views.
     Role::load(RoleInterface::ANONYMOUS_ID)->revokePermission('access content')->save();
@@ -137,7 +137,7 @@ class DefaultViewsTest extends UITestBase {
     $this->drupalPostForm(NULL, [], t('Delete'));
     // Ensure the view is no longer listed.
     $this->assertSession()->addressEquals('admin/structure/views');
-    $this->assertNoLinkByHref($edit_href);
+    $this->assertSession()->linkByHrefNotExists($edit_href);
     // Ensure the view is no longer available.
     $this->drupalGet($edit_href);
     $this->assertSession()->statusCodeEquals(404);
@@ -204,13 +204,13 @@ class DefaultViewsTest extends UITestBase {
     $this->drupalGet('admin/structure/views');
 
     // Check that links to views on default tabs are rendered correctly.
-    $this->assertLinkByHref('test_page_display_menu');
-    $this->assertNoLinkByHref('test_page_display_menu/default');
-    $this->assertLinkByHref('test_page_display_menu/local');
+    $this->assertSession()->linkByHrefExists('test_page_display_menu');
+    $this->assertSession()->linkByHrefNotExists('test_page_display_menu/default');
+    $this->assertSession()->linkByHrefExists('test_page_display_menu/local');
 
     // Check that a dynamic path is shown as text.
     $this->assertRaw('test_route_with_suffix/%/suffix');
-    $this->assertNoLinkByHref(Url::fromUri('base:test_route_with_suffix/%/suffix')->toString());
+    $this->assertSession()->linkByHrefNotExists(Url::fromUri('base:test_route_with_suffix/%/suffix')->toString());
   }
 
   /**

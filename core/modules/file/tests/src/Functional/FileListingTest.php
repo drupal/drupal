@@ -116,8 +116,8 @@ class FileListingTest extends FileFieldTestBase {
     foreach ($nodes as $node) {
       $file = File::load($node->file->target_id);
       $this->assertText($file->getFilename());
-      $this->assertLinkByHref(file_create_url($file->getFileUri()));
-      $this->assertLinkByHref('admin/content/files/usage/' . $file->id());
+      $this->assertSession()->linkByHrefExists(file_create_url($file->getFileUri()));
+      $this->assertSession()->linkByHrefExists('admin/content/files/usage/' . $file->id());
     }
     $this->assertSession()->elementTextNotContains('css', 'table.views-table', 'Temporary');
     $this->assertSession()->elementTextContains('css', 'table.views-table', 'Permanent');
@@ -156,7 +156,7 @@ class FileListingTest extends FileFieldTestBase {
           }
         }
       }
-      $this->assertLinkByHref('node/' . $node->id(), 0, 'Link to registering entity found on usage page.');
+      $this->assertSession()->linkByHrefExists('node/' . $node->id(), 0, 'Link to registering entity found on usage page.');
     }
   }
 

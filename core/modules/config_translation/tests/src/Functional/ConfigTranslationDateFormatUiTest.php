@@ -46,10 +46,10 @@ class ConfigTranslationDateFormatUiTest extends BrowserTestBase {
     $this->drupalGet('admin/config/regional/date-time');
 
     // Assert translation link unlocked date format.
-    $this->assertLinkByHref('admin/config/regional/date-time/formats/manage/medium/translate');
+    $this->assertSession()->linkByHrefExists('admin/config/regional/date-time/formats/manage/medium/translate');
 
     // Assert translation link locked date format.
-    $this->assertLinkByHref('admin/config/regional/date-time/formats/manage/html_datetime/translate');
+    $this->assertSession()->linkByHrefExists('admin/config/regional/date-time/formats/manage/html_datetime/translate');
 
     // Date pattern is visible on unlocked date formats.
     $this->drupalGet('admin/config/regional/date-time/formats/manage/medium/translate/de/add');

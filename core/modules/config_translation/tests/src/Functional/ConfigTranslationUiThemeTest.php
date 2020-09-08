@@ -78,7 +78,7 @@ class ConfigTranslationUiThemeTest extends BrowserTestBase {
     $translation_base_url = 'admin/config/development/performance/translate';
     $this->drupalGet($translation_base_url);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertLinkByHref("$translation_base_url/fr/add");
+    $this->assertSession()->linkByHrefExists("$translation_base_url/fr/add");
   }
 
 }

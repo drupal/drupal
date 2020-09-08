@@ -48,7 +48,7 @@ class ConfigEntityListMultilingualTest extends BrowserTestBase {
 
     // Get the list page.
     $this->drupalGet('admin/structure/config_test');
-    $this->assertLinkByHref('admin/structure/config_test/manage/dotted.default');
+    $this->assertSession()->linkByHrefExists('admin/structure/config_test/manage/dotted.default');
 
     // Add a new entity using the action link.
     $this->clickLink('Add test configuration');
@@ -59,13 +59,13 @@ class ConfigEntityListMultilingualTest extends BrowserTestBase {
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
     // Ensure that operations for editing the Hungarian entity appear in English.
-    $this->assertLinkByHref('admin/structure/config_test/manage/antilop');
+    $this->assertSession()->linkByHrefExists('admin/structure/config_test/manage/antilop');
 
     // Get the list page in Hungarian and assert Hungarian admin links
     // regardless of language of config entities.
     $this->drupalGet('hu/admin/structure/config_test');
-    $this->assertLinkByHref('hu/admin/structure/config_test/manage/dotted.default');
-    $this->assertLinkByHref('hu/admin/structure/config_test/manage/antilop');
+    $this->assertSession()->linkByHrefExists('hu/admin/structure/config_test/manage/dotted.default');
+    $this->assertSession()->linkByHrefExists('hu/admin/structure/config_test/manage/antilop');
   }
 
 }

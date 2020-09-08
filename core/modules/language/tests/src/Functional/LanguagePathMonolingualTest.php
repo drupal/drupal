@@ -71,7 +71,7 @@ class LanguagePathMonolingualTest extends BrowserTestBase {
     $this->drupalGet('admin/config');
 
     // Verify that links in this page do not have a 'fr/' prefix.
-    $this->assertNoLinkByHref('/fr/', 'Links do not contain language prefix');
+    $this->assertSession()->linkByHrefNotExists('/fr/', 'Links do not contain language prefix');
 
     // Verify that links in this page can be followed and work.
     $this->clickLink(t('Languages'));

@@ -44,9 +44,9 @@ class BasicTest extends WizardTestBase {
     $this->drupalGet('admin/structure/views');
     $this->assertText($view1['label']);
     $this->assertText($view1['description']);
-    $this->assertLinkByHref(Url::fromRoute('entity.view.edit_form', ['view' => $view1['id']])->toString());
-    $this->assertLinkByHref(Url::fromRoute('entity.view.delete_form', ['view' => $view1['id']])->toString());
-    $this->assertLinkByHref(Url::fromRoute('entity.view.duplicate_form', ['view' => $view1['id']])->toString());
+    $this->assertSession()->linkByHrefExists(Url::fromRoute('entity.view.edit_form', ['view' => $view1['id']])->toString());
+    $this->assertSession()->linkByHrefExists(Url::fromRoute('entity.view.delete_form', ['view' => $view1['id']])->toString());
+    $this->assertSession()->linkByHrefExists(Url::fromRoute('entity.view.duplicate_form', ['view' => $view1['id']])->toString());
 
     // The view should not have a REST export display.
     $this->assertNoText('REST export', 'When no options are enabled in the wizard, the resulting view does not have a REST export display.');
@@ -81,7 +81,7 @@ class BasicTest extends WizardTestBase {
     $this->assertText($node2->label());
 
     // Check if we have the feed.
-    $this->assertLinkByHref(Url::fromRoute('view.' . $view2['id'] . '.feed_1')->toString());
+    $this->assertSession()->linkByHrefExists(Url::fromRoute('view.' . $view2['id'] . '.feed_1')->toString());
     $elements = $this->cssSelect('link[href="' . Url::fromRoute('view.' . $view2['id'] . '.feed_1', [], ['absolute' => TRUE])->toString() . '"]');
     $this->assertCount(1, $elements, 'Feed found.');
     $this->drupalGet($view2['page[feed_properties][path]']);
@@ -99,7 +99,7 @@ class BasicTest extends WizardTestBase {
     $this->drupalGet('admin/structure/views');
     $this->assertText($view2['label']);
     $this->assertText($view2['description']);
-    $this->assertLinkByHref(Url::fromRoute('view.' . $view2['id'] . '.page_1')->toString());
+    $this->assertSession()->linkByHrefExists(Url::fromRoute('view.' . $view2['id'] . '.page_1')->toString());
 
     // The view should not have a REST export display.
     $this->assertNoText('REST export', 'If only the page option was enabled in the wizard, the resulting view does not have a REST export display.');
@@ -134,7 +134,7 @@ class BasicTest extends WizardTestBase {
     $this->drupalGet('admin/structure/views');
     $this->assertText($view3['label']);
     $this->assertText($view3['description']);
-    $this->assertLinkByHref(Url::fromRoute('view.' . $view3['id'] . '.page_1')->toString());
+    $this->assertSession()->linkByHrefExists(Url::fromRoute('view.' . $view3['id'] . '.page_1')->toString());
 
     // The view should not have a REST export display.
     $this->assertNoText('REST export', 'If only the page and block options were enabled in the wizard, the resulting view does not have a REST export display.');

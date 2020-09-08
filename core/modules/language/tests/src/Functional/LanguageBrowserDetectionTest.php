@@ -33,7 +33,7 @@ class LanguageBrowserDetectionTest extends BrowserTestBase {
 
     // Check that the configure link exists.
     $this->drupalGet('admin/config/regional/language/detection');
-    $this->assertLinkByHref('admin/config/regional/language/detection/browser');
+    $this->assertSession()->linkByHrefExists('admin/config/regional/language/detection/browser');
 
     // Check that defaults are loaded from language.mappings.yml.
     $this->drupalGet('admin/config/regional/language/detection/browser');

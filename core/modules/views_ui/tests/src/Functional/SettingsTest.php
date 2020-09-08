@@ -39,7 +39,7 @@ class SettingsTest extends UITestBase {
 
     // Test the settings tab exists.
     $this->drupalGet('admin/structure/views');
-    $this->assertLinkByHref('admin/structure/views/settings');
+    $this->assertSession()->linkNotExists('admin/structure/views/settings');
 
     // Test the confirmation message.
     $this->drupalPostForm('admin/structure/views/settings', [], t('Save configuration'));

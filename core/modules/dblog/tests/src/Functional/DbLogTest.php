@@ -129,8 +129,8 @@ class DbLogTest extends BrowserTestBase {
 
     // Verify the links appear correctly.
     $this->drupalGet('admin/reports/dblog/event/' . $wid);
-    $this->assertLinkByHref($context['request_uri']);
-    $this->assertLinkByHref($context['referer']);
+    $this->assertSession()->linkByHrefExists($context['request_uri']);
+    $this->assertSession()->linkByHrefExists($context['referer']);
 
     // Verify hostname.
     $this->assertRaw($context['ip'], 'Found hostname on the detail page.');

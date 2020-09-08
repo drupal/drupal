@@ -54,10 +54,10 @@ class StatusTest extends BrowserTestBase {
     $this->assertText($phpversion, 'Php version is shown on the page.');
 
     if (function_exists('phpinfo')) {
-      $this->assertLinkByHref(Url::fromRoute('system.php')->toString());
+      $this->assertSession()->linkByHrefExists(Url::fromRoute('system.php')->toString());
     }
     else {
-      $this->assertNoLinkByHref(Url::fromRoute('system.php')->toString());
+      $this->assertSession()->linkByHrefNotExists(Url::fromRoute('system.php')->toString());
     }
 
     // If a module is fully installed no pending updates exists.

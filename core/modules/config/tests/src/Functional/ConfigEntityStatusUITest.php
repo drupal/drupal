@@ -42,17 +42,17 @@ class ConfigEntityStatusUITest extends BrowserTestBase {
 
     // Disable an entity.
     $disable_url = $entity->toUrl('disable');
-    $this->assertLinkByHref($disable_url->toString());
+    $this->assertSession()->linkByHrefExists($disable_url->toString());
     $this->drupalGet($disable_url);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertNoLinkByHref($disable_url->toString());
+    $this->assertSession()->linkByHrefNotExists($disable_url->toString());
 
     // Enable an entity.
     $enable_url = $entity->toUrl('enable');
-    $this->assertLinkByHref($enable_url->toString());
+    $this->assertSession()->linkByHrefExists($enable_url->toString());
     $this->drupalGet($enable_url);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertNoLinkByHref($enable_url->toString());
+    $this->assertSession()->linkByHrefNotExists($enable_url->toString());
   }
 
 }

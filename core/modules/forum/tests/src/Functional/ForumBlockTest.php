@@ -59,7 +59,7 @@ class ForumBlockTest extends BrowserTestBase {
     $topics = $this->createForumTopics();
 
     $this->assertSession()->linkExists('More', 0, 'New forum topics block has a "more"-link.');
-    $this->assertLinkByHref('forum', 0, 'New forum topics block has a "more"-link.');
+    $this->assertSession()->linkByHrefExists('forum', 0, 'New forum topics block has a "more"-link.');
 
     // We expect all 5 forum topics to appear in the "New forum topics" block.
     foreach ($topics as $topic) {
@@ -114,7 +114,7 @@ class ForumBlockTest extends BrowserTestBase {
     $block = $this->drupalPlaceBlock('forum_active_block');
     $this->drupalGet('');
     $this->assertSession()->linkExists('More', 0, 'Active forum topics block has a "more"-link.');
-    $this->assertLinkByHref('forum', 0, 'Active forum topics block has a "more"-link.');
+    $this->assertSession()->linkByHrefExists('forum', 0, 'Active forum topics block has a "more"-link.');
 
     // We expect the first 5 forum topics to appear in the "Active forum topics"
     // block.

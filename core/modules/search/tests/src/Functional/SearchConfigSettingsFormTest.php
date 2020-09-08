@@ -370,28 +370,28 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
    */
   protected function verifySearchPageOperations($id, $edit, $delete, $disable, $enable) {
     if ($edit) {
-      $this->assertLinkByHref("admin/config/search/pages/manage/$id");
+      $this->assertSession()->linkByHrefExists("admin/config/search/pages/manage/$id");
     }
     else {
-      $this->assertNoLinkByHref("admin/config/search/pages/manage/$id");
+      $this->assertSession()->linkByHrefNotExists("admin/config/search/pages/manage/$id");
     }
     if ($delete) {
-      $this->assertLinkByHref("admin/config/search/pages/manage/$id/delete");
+      $this->assertSession()->linkByHrefExists("admin/config/search/pages/manage/$id/delete");
     }
     else {
-      $this->assertNoLinkByHref("admin/config/search/pages/manage/$id/delete");
+      $this->assertSession()->linkByHrefNotExists("admin/config/search/pages/manage/$id/delete");
     }
     if ($disable) {
-      $this->assertLinkByHref("admin/config/search/pages/manage/$id/disable");
+      $this->assertSession()->linkByHrefExists("admin/config/search/pages/manage/$id/disable");
     }
     else {
-      $this->assertNoLinkByHref("admin/config/search/pages/manage/$id/disable");
+      $this->assertSession()->linkByHrefNotExists("admin/config/search/pages/manage/$id/disable");
     }
     if ($enable) {
-      $this->assertLinkByHref("admin/config/search/pages/manage/$id/enable");
+      $this->assertSession()->linkByHrefExists("admin/config/search/pages/manage/$id/enable");
     }
     else {
-      $this->assertNoLinkByHref("admin/config/search/pages/manage/$id/enable");
+      $this->assertSession()->linkByHrefNotExists("admin/config/search/pages/manage/$id/enable");
     }
   }
 

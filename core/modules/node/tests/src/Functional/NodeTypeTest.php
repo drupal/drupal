@@ -238,8 +238,8 @@ class NodeTypeTest extends NodeTestBase {
 
     // Test that the user only sees the actions available to them.
     $this->drupalGet('admin/structure/types');
-    $this->assertLinkByHref('admin/structure/types/manage/article/fields');
-    $this->assertNoLinkByHref('admin/structure/types/manage/article/display');
+    $this->assertSession()->linkByHrefExists('admin/structure/types/manage/article/fields');
+    $this->assertSession()->linkByHrefNotExists('admin/structure/types/manage/article/display');
 
     // Create another admin user who can manage node fields display.
     $admin_user_2 = $this->drupalCreateUser([
@@ -250,8 +250,8 @@ class NodeTypeTest extends NodeTestBase {
 
     // Test that the user only sees the actions available to them.
     $this->drupalGet('admin/structure/types');
-    $this->assertNoLinkByHref('admin/structure/types/manage/article/fields');
-    $this->assertLinkByHref('admin/structure/types/manage/article/display');
+    $this->assertSession()->linkByHrefNotExists('admin/structure/types/manage/article/fields');
+    $this->assertSession()->linkByHrefExists('admin/structure/types/manage/article/display');
   }
 
   /**

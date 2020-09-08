@@ -73,7 +73,7 @@ class PrepareUninstallTest extends BrowserTestBase {
     // Check that Taxonomy cannot be uninstalled yet.
     $this->drupalGet('admin/modules/uninstall');
     $this->assertText('Remove content items');
-    $this->assertLinkByHref('admin/modules/uninstall/entity/taxonomy_term');
+    $this->assertSession()->linkByHrefExists('admin/modules/uninstall/entity/taxonomy_term');
 
     // Delete Taxonomy term data.
     $this->drupalGet('admin/modules/uninstall/entity/taxonomy_term');
@@ -95,7 +95,7 @@ class PrepareUninstallTest extends BrowserTestBase {
     // Check that there is no more data to be deleted, Taxonomy is ready to be
     // uninstalled.
     $this->assertText('Enables the categorization of content.');
-    $this->assertNoLinkByHref('admin/modules/uninstall/entity/taxonomy_term');
+    $this->assertSession()->linkByHrefNotExists('admin/modules/uninstall/entity/taxonomy_term');
 
     // Uninstall the Taxonomy module.
     $this->drupalPostForm('admin/modules/uninstall', ['uninstall[taxonomy]' => TRUE], t('Uninstall'));
@@ -106,7 +106,7 @@ class PrepareUninstallTest extends BrowserTestBase {
     // Check Node cannot be uninstalled yet, there is content to be removed.
     $this->drupalGet('admin/modules/uninstall');
     $this->assertText('Remove content items');
-    $this->assertLinkByHref('admin/modules/uninstall/entity/node');
+    $this->assertSession()->linkByHrefExists('admin/modules/uninstall/entity/node');
 
     // Delete Node data.
     $this->drupalGet('admin/modules/uninstall/entity/node');
@@ -143,7 +143,7 @@ class PrepareUninstallTest extends BrowserTestBase {
     // Check there is no more data to be deleted, Node is ready to be
     // uninstalled.
     $this->assertText('Allows content to be submitted to the site and displayed on pages.');
-    $this->assertNoLinkByHref('admin/modules/uninstall/entity/node');
+    $this->assertSession()->linkByHrefNotExists('admin/modules/uninstall/entity/node');
 
     // Uninstall Node module.
     $this->drupalPostForm('admin/modules/uninstall', ['uninstall[node]' => TRUE], t('Uninstall'));

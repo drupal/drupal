@@ -70,41 +70,41 @@ class PathAdminTest extends PathTestBase {
       'filter' => $alias1,
     ];
     $this->drupalPostForm(NULL, $edit, t('Filter'));
-    $this->assertLinkByHref($alias1);
-    $this->assertNoLinkByHref($alias2);
-    $this->assertNoLinkByHref($alias3);
+    $this->assertSession()->linkByHrefExists($alias1);
+    $this->assertSession()->linkByHrefNotExists($alias2);
+    $this->assertSession()->linkByHrefNotExists($alias3);
 
     // Filter by the second alias.
     $edit = [
       'filter' => $alias2,
     ];
     $this->drupalPostForm(NULL, $edit, t('Filter'));
-    $this->assertNoLinkByHref($alias1);
-    $this->assertLinkByHref($alias2);
-    $this->assertNoLinkByHref($alias3);
+    $this->assertSession()->linkByHrefNotExists($alias1);
+    $this->assertSession()->linkByHrefExists($alias2);
+    $this->assertSession()->linkByHrefNotExists($alias3);
 
     // Filter by the third alias which has a slash.
     $edit = [
       'filter' => $alias3,
     ];
     $this->drupalPostForm(NULL, $edit, t('Filter'));
-    $this->assertNoLinkByHref($alias1);
-    $this->assertNoLinkByHref($alias2);
-    $this->assertLinkByHref($alias3);
+    $this->assertSession()->linkByHrefNotExists($alias1);
+    $this->assertSession()->linkByHrefNotExists($alias2);
+    $this->assertSession()->linkByHrefExists($alias3);
 
     // Filter by a random string with a different length.
     $edit = [
       'filter' => $this->randomMachineName(10),
     ];
     $this->drupalPostForm(NULL, $edit, t('Filter'));
-    $this->assertNoLinkByHref($alias1);
-    $this->assertNoLinkByHref($alias2);
+    $this->assertSession()->linkByHrefNotExists($alias1);
+    $this->assertSession()->linkByHrefNotExists($alias2);
 
     // Reset the filter.
     $edit = [];
     $this->drupalPostForm(NULL, $edit, t('Reset'));
-    $this->assertLinkByHref($alias1);
-    $this->assertLinkByHref($alias2);
+    $this->assertSession()->linkByHrefExists($alias1);
+    $this->assertSession()->linkByHrefExists($alias2);
   }
 
 }
