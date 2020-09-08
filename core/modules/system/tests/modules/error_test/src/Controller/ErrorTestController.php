@@ -44,7 +44,8 @@ class ErrorTestController extends ControllerBase {
     // Tell Drupal error reporter to send errors to Simpletest or not.
     define('SIMPLETEST_COLLECT_ERRORS', $collect_errors);
     // This will generate a notice.
-    $monkey_love = $bananas;
+    $bananas = [];
+    $monkey_love = $bananas[1];
     // This will generate a warning.
     $awesomely_big = 1 / 0;
     // This will generate a user error. Use & to check for double escaping.
