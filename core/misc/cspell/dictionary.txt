@@ -325,7 +325,6 @@ createkey
 createrole
 createuser
 crema
-cript
 crossout
 crudui
 crypted
@@ -346,19 +345,15 @@ currenttime
 currentuser
 customly
 customrequest
-cves
 cweagans
 dasharray
 dashoffset
 data's
 databasefilename
 databasename
-datafld
-dataformatas
 datapoint
 dataprovider
 datas
-datasrc
 datatypes
 datefield
 dateformatter
@@ -963,7 +958,6 @@ minipager
 minky
 minusthick
 mirakolous
-misrendered
 missingkey
 missingkeys
 miterlimit
@@ -1459,7 +1453,6 @@ scorewords
 screenreader
 screenreaders
 scriptable
-scriptlet
 scrollable
 scrollbars
 sdeeeee
@@ -1984,7 +1977,6 @@ writeln
 wrongparam
 wsod
 wwwrun
-wxuczpzdmc
 wysiwygs
 xampl
 xbap
