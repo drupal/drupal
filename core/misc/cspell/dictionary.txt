@@ -723,6 +723,7 @@ horizontalrule
 hosters
 hostnames
 hreflang
+hreflangs
 hrefs
 htaccess
 htkey

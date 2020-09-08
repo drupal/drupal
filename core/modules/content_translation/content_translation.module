@@ -674,6 +674,7 @@ function content_translation_page_attachments(&$page) {
   if (!($route = $route_match->getRouteObject()) || !($parameters = $route->getOption('parameters'))) {
     return;
   }
+  $is_front = \Drupal::service('path.matcher')->isFrontPage();
 
   // Determine if the current route represents an entity.
   foreach ($parameters as $name => $options) {
@@ -692,10 +693,21 @@ function content_translation_page_attachments(&$page) {
         if (!$access->isAllowed()) {
           continue;
         }
-        $url = $entity->toUrl('canonical')
-          ->setOption('language', $language)
-          ->setAbsolute()
-          ->toString();
+        if ($is_front) {
+          // If the current page is front page, do not create hreflang links
+          // from the entity route, just add the languages to root path.
+          $url = Url::fromRoute('<front>', [], [
+            'absolute' => TRUE,
+            'language' => $language,
+          ])->toString();
+        }
+        // Create links for the entity path.
+        else {
+          $url = $entity->toUrl('canonical')
+            ->setOption('language', $language)
+            ->setAbsolute()
+            ->toString();
+        }
         $page['#attached']['html_head_link'][] = [
           [
             'rel' => 'alternate',
