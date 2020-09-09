@@ -1346,7 +1346,7 @@
      *   The XMLHttpRequest status.
      */
     alert(ajax, response, status) {
-      window.alert(response.text, response.title);
+      window.alert(response.text);
     },
 
     /**
