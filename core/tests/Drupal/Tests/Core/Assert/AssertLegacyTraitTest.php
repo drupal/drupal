@@ -55,6 +55,24 @@ class AssertLegacyTraitTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::assertRaw
+   * @expectedDeprecation Calling AssertLegacyTrait::assertRaw() with more that one argument is deprecated in drupal:8.2.0 and the method is removed from drupal:10.0.0. Use $this->assertSession()->responseContains() instead. See https://www.drupal.org/node/3129738
+   */
+  public function testAssertRaw() {
+    $this->page->getText()->willReturn('foo bar bar');
+    $this->assertRaw('foo', '\'foo\' should be present.');
+  }
+
+  /**
+   * @covers ::assertNoRaw
+   * @expectedDeprecation Calling AssertLegacyTrait::assertNoRaw() with more that one argument is deprecated in drupal:8.2.0 and the method is removed from drupal:10.0.0. Use $this->assertSession()->responseContains() instead. See https://www.drupal.org/node/3129738
+   */
+  public function testAssertNoRaw() {
+    $this->page->getText()->willReturn('foo bar bar');
+    $this->assertNoRaw('qux', '\'qux\' should not be present.');
+  }
+
+  /**
    * @covers ::assertUniqueText
    * @expectedDeprecation AssertLegacyTrait::assertUniqueText() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->getSession()->pageTextContainsOnce() or $this->getSession()->pageTextMatchesCount() instead. See https://www.drupal.org/node/3129738
    */

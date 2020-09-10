@@ -112,7 +112,7 @@ class CommentTypeTest extends CommentTestBase {
     $this->drupalPostForm('admin/structure/comment/manage/comment', $edit, t('Save'));
 
     $this->drupalGet('admin/structure/comment');
-    $this->assertRaw('Bar', 'New name was displayed.');
+    $this->assertRaw('Bar');
     $this->clickLink('Manage fields');
     // Verify that the original machine name was used in the URL.
     $this->assertSession()->addressEquals(Url::fromRoute('entity.comment.field_ui_fields', ['comment_type' => 'comment']));
@@ -158,15 +158,13 @@ class CommentTypeTest extends CommentTestBase {
     // Attempt to delete the comment type, which should not be allowed.
     $this->drupalGet('admin/structure/comment/manage/' . $type->id() . '/delete');
     $this->assertRaw(
-      t('%label is used by 1 comment on your site. You can not remove this comment type until you have removed all of the %label comments.', ['%label' => $type->label()]),
-      'The comment type will not be deleted until all comments of that type are removed.'
+      t('%label is used by 1 comment on your site. You can not remove this comment type until you have removed all of the %label comments.', ['%label' => $type->label()])
     );
     $this->assertRaw(
       t('%label is used by the %field field on your site. You can not remove this comment type until you have removed the field.', [
         '%label' => 'foo',
         '%field' => 'node.foo',
-      ]),
-      'The comment type will not be deleted until all fields of that type are removed.'
+      ])
     );
     $this->assertNoText('This action cannot be undone.', 'The comment type deletion confirmation form is not available.');
 
@@ -176,8 +174,7 @@ class CommentTypeTest extends CommentTestBase {
     // Attempt to delete the comment type, which should now be allowed.
     $this->drupalGet('admin/structure/comment/manage/' . $type->id() . '/delete');
     $this->assertRaw(
-      t('Are you sure you want to delete the comment type %type?', ['%type' => $type->id()]),
-      'The comment type is available for deletion.'
+      t('Are you sure you want to delete the comment type %type?', ['%type' => $type->id()])
     );
     $this->assertText(t('This action cannot be undone.'), 'The comment type deletion confirmation form is available.');
 

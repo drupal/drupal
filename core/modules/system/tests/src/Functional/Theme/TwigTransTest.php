@@ -155,20 +155,17 @@ class TwigTransTest extends BrowserTestBase {
       '{% trans %} with {% plural count = 2 %} was successfully translated.'
     );
 
-    $this->assertRaw(
-      'ESCAPEE: &amp;&quot;&lt;&gt;',
-      '{{ token }} was successfully translated and prefixed with "@".'
-    );
+    // Assert that {{ token }} was successfully translated and prefixed
+    // with "@".
+    $this->assertRaw('ESCAPEE: &amp;&quot;&lt;&gt;');
 
-    $this->assertRaw(
-      'PLAYSHOLDR: <em class="placeholder">&amp;&quot;&lt;&gt;</em>',
-      '{{ token|placeholder }} was successfully translated and prefixed with "%".'
-    );
+    // Assert that {{ token|placeholder }} was successfully translated and
+    // prefixed with "%".
+    $this->assertRaw('PLAYSHOLDR: <em class="placeholder">&amp;&quot;&lt;&gt;</em>');
 
-    $this->assertRaw(
-      'DIS complex token HAZ LENGTH OV: 3. IT CONTAYNZ: <em class="placeholder">12345</em> AN &amp;&quot;&lt;&gt;.',
-      '{{ complex.tokens }} were successfully translated with appropriate prefixes.'
-    );
+    // Assert that {{ complex.tokens }} were successfully translated with
+    // appropriate prefixes.
+    $this->assertRaw('DIS complex token HAZ LENGTH OV: 3. IT CONTAYNZ: <em class="placeholder">12345</em> AN &amp;&quot;&lt;&gt;.');
 
     $this->assertText(
       'I have context.',
@@ -213,7 +210,7 @@ class TwigTransTest extends BrowserTestBase {
 
         // Install the language in Drupal.
         $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
-        $this->assertRaw('"edit-languages-' . $langcode . '-weight"', 'Language code found.');
+        $this->assertRaw('"edit-languages-' . $langcode . '-weight"');
 
         // Import the custom .po contents for the language.
         $filename = $file_system->tempnam('temporary://', "po_") . '.po';

@@ -154,8 +154,7 @@ class NodeRevisionsAllTest extends NodeTestBase {
         '@type' => 'Basic page',
         '%title' => $nodes[1]->getTitle(),
         '%revision-date' => $this->container->get('date.formatter')->format($nodes[1]->getRevisionCreationTime()),
-      ]),
-      'Revision reverted.');
+      ]));
     $node_storage->resetCache([$node->id()]);
     $reverted_node = $node_storage->load($node->id());
     $this->assertTrue(($nodes[1]->body->value == $reverted_node->body->value), 'Node reverted correctly.');
@@ -181,8 +180,7 @@ class NodeRevisionsAllTest extends NodeTestBase {
         '%revision-date' => $this->container->get('date.formatter')->format($nodes[1]->getRevisionCreationTime()),
         '@type' => 'Basic page',
         '%title' => $nodes[1]->getTitle(),
-      ]),
-      'Revision deleted.');
+      ]));
     $nids = \Drupal::entityQuery('node')
       ->allRevisions()
       ->accessCheck(FALSE)

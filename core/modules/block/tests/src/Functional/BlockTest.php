@@ -63,7 +63,7 @@ class BlockTest extends BlockTestBase {
 
     // Confirm that an empty block is not displayed.
     $this->assertNoText('Powered by Drupal', 'Empty block not displayed.');
-    $this->assertNoRaw('sidebar-first', 'Empty sidebar-first region is not displayed.');
+    $this->assertNoRaw('sidebar-first');
   }
 
   /**

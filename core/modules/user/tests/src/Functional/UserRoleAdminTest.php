@@ -73,7 +73,7 @@ class UserRoleAdminTest extends BrowserTestBase {
 
     // Try adding a duplicate role.
     $this->drupalPostForm('admin/people/roles/add', $edit, t('Save'));
-    $this->assertRaw(t('The machine-readable name is already in use. It must be unique.'), 'Duplicate role warning displayed.');
+    $this->assertRaw(t('The machine-readable name is already in use. It must be unique.'));
 
     // Test renaming a role.
     $role_name = '456';

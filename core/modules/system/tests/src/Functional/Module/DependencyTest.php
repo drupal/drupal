@@ -63,7 +63,7 @@ class DependencyTest extends ModuleTestBase {
     // Test that the system_dependencies_test module is marked
     // as missing a dependency.
     $this->drupalGet('admin/modules');
-    $this->assertRaw(t('@module (<span class="admin-missing">missing</span>)', ['@module' => Unicode::ucfirst('_missing_dependency')]), 'A module with missing dependencies is marked as such.');
+    $this->assertRaw(t('@module (<span class="admin-missing">missing</span>)', ['@module' => Unicode::ucfirst('_missing_dependency')]));
     $checkbox = $this->xpath('//input[@type="checkbox" and @disabled="disabled" and @name="modules[system_dependencies_test][enable]"]');
     $this->assertCount(1, $checkbox, 'Checkbox for the module is disabled.');
   }
@@ -78,7 +78,7 @@ class DependencyTest extends ModuleTestBase {
     $this->assertRaw(t('@module (<span class="admin-missing">incompatible with</span> version @version)', [
       '@module' => 'System incompatible module version test (>2.0)',
       '@version' => '1.0',
-    ]), 'A module that depends on an incompatible version of a module is marked as such.');
+    ]));
     $checkbox = $this->xpath('//input[@type="checkbox" and @disabled="disabled" and @name="modules[system_incompatible_module_version_dependencies_test][enable]"]');
     $this->assertCount(1, $checkbox, 'Checkbox for the module is disabled.');
   }
@@ -92,7 +92,7 @@ class DependencyTest extends ModuleTestBase {
     $this->drupalGet('admin/modules');
     $this->assertRaw(t('@module (<span class="admin-missing">incompatible with</span> this version of Drupal core)', [
       '@module' => 'System core incompatible semver test',
-    ]), 'A module that depends on a module with an incompatible core version is marked as such.');
+    ]));
     $checkbox = $this->xpath('//input[@type="checkbox" and @disabled="disabled" and @name="modules[system_incompatible_core_version_dependencies_test][enable]"]');
     $this->assertCount(1, $checkbox, 'Checkbox for the module is disabled.');
   }
@@ -102,7 +102,7 @@ class DependencyTest extends ModuleTestBase {
    */
   public function testIncompatiblePhpVersionDependency() {
     $this->drupalGet('admin/modules');
-    $this->assertRaw('This module requires PHP version 6502.* and is incompatible with PHP version ' . phpversion() . '.', 'User is informed when the PHP dependency requirement of a module is not met.');
+    $this->assertRaw('This module requires PHP version 6502.* and is incompatible with PHP version ' . phpversion() . '.');
     $checkbox = $this->xpath('//input[@type="checkbox" and @disabled="disabled" and @name="modules[system_incompatible_php_version_test][enable]"]');
     $this->assertCount(1, $checkbox, 'Checkbox for the module is disabled.');
   }

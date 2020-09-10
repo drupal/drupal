@@ -89,7 +89,7 @@ class ConfigExportUITest extends BrowserTestBase {
 
     // Check the single export form doesn't have "form-required" elements.
     $this->drupalGet('admin/config/development/configuration/single/export');
-    $this->assertNoRaw('js-form-required form-required', 'No form required fields are found.');
+    $this->assertNoRaw('js-form-required form-required');
 
     // Ensure the temporary file is not available to users without the
     // permission.

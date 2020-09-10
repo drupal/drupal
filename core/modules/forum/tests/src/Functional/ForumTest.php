@@ -135,7 +135,7 @@ class ForumTest extends BrowserTestBase {
     // Check that the basic forum install creates a default forum topic
     $this->drupalGet('/forum');
     // Look for the "General discussion" default forum
-    $this->assertRaw(Link::createFromRoute(t('General discussion'), 'forum.page', ['taxonomy_term' => 1])->toString(), "Found the default forum at the /forum listing");
+    $this->assertRaw(Link::createFromRoute(t('General discussion'), 'forum.page', ['taxonomy_term' => 1])->toString());
     // Check the presence of expected cache tags.
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:forum.settings');
 
@@ -326,13 +326,13 @@ class ForumTest extends BrowserTestBase {
     $this->assertSession()->linkExists('Add forum');
     $this->assertSession()->linkExists('Add container');
     $this->clickLink('edit container');
-    $this->assertRaw('Edit container', 'Followed the link to edit the container');
+    $this->assertRaw('Edit container');
     // Create forum inside the forum container.
     $this->forum = $this->createForum('forum', $this->forumContainer['tid']);
     // Verify the "edit forum" link exists and functions correctly.
     $this->drupalGet('admin/structure/forum');
     $this->clickLink('edit forum');
-    $this->assertRaw('Edit forum', 'Followed the link to edit the forum');
+    $this->assertRaw('Edit forum');
     // Navigate back to forum structure page.
     $this->drupalGet('admin/structure/forum');
     // Create second forum in container, destined to be deleted below.
@@ -395,7 +395,7 @@ class ForumTest extends BrowserTestBase {
     // Edit the vocabulary.
     $this->drupalPostForm('admin/structure/taxonomy/manage/' . $original_vocabulary->id(), $edit, t('Save'));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertRaw(t('Updated vocabulary %name.', ['%name' => $edit['name']]), 'Vocabulary was edited');
+    $this->assertRaw(t('Updated vocabulary %name.', ['%name' => $edit['name']]));
 
     // Grab the newly edited vocabulary.
     $current_vocabulary = Vocabulary::load($vid);
@@ -581,12 +581,12 @@ class ForumTest extends BrowserTestBase {
     $type = t('Forum topic');
     if ($container) {
       $this->assertNoText("$type $title has been created.", 'Forum topic was not created');
-      $this->assertRaw(t('The item %title is a forum container, not a forum.', ['%title' => $forum['name']]), 'Error message was shown');
+      $this->assertRaw(t('The item %title is a forum container, not a forum.', ['%title' => $forum['name']]));
       return;
     }
     else {
       $this->assertText(t('@type @title has been created.', ['@type' => $type, '@title' => $title]), 'Forum topic was created');
-      $this->assertNoRaw(t('The item %title is a forum container, not a forum.', ['%title' => $forum['name']]), 'No error message was shown');
+      $this->assertNoRaw(t('The item %title is a forum container, not a forum.', ['%title' => $forum['name']]));
 
       // Verify that the creation message contains a link to a node.
       $this->assertSession()->elementExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "node/")]');
@@ -599,8 +599,8 @@ class ForumTest extends BrowserTestBase {
 
     // View forum topic.
     $this->drupalGet('node/' . $node->id());
-    $this->assertRaw($title, 'Subject was found');
-    $this->assertRaw($body, 'Body was found');
+    $this->assertRaw($title);
+    $this->assertRaw($body);
 
     return $node;
   }
@@ -647,7 +647,7 @@ class ForumTest extends BrowserTestBase {
       '#theme' => 'breadcrumb',
       '#links' => $breadcrumb_build,
     ];
-    $this->assertRaw(\Drupal::service('renderer')->renderRoot($breadcrumb), 'Breadcrumbs were displayed');
+    $this->assertRaw(\Drupal::service('renderer')->renderRoot($breadcrumb));
 
     // View forum edit node.
     $this->drupalGet('node/' . $node->id() . '/edit');
@@ -681,7 +681,7 @@ class ForumTest extends BrowserTestBase {
       // Delete forum node.
       $this->drupalPostForm('node/' . $node->id() . '/delete', [], t('Delete'));
       $this->assertSession()->statusCodeEquals($response);
-      $this->assertRaw(t('Forum topic %title has been deleted.', ['%title' => $edit['title[0][value]']]), 'Forum node was deleted');
+      $this->assertRaw(t('Forum topic %title has been deleted.', ['%title' => $edit['title[0][value]']]));
     }
   }
 
@@ -711,7 +711,7 @@ class ForumTest extends BrowserTestBase {
       '#theme' => 'breadcrumb',
       '#links' => $breadcrumb_build,
     ];
-    $this->assertRaw(\Drupal::service('renderer')->renderRoot($breadcrumb), 'Breadcrumbs were displayed');
+    $this->assertRaw(\Drupal::service('renderer')->renderRoot($breadcrumb));
   }
 
   /**

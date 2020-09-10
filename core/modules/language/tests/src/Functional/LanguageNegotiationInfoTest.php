@@ -159,8 +159,8 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
     $this->assertFalse(isset($negotiation[$test_method_id]), 'The disabled test language negotiation method is not part of the content language negotiation settings.');
 
     // Check that configuration page presents the correct options and settings.
-    $this->assertNoRaw(t('Test language detection'), 'No test language type configuration available.');
-    $this->assertNoRaw(t('This is a test language negotiation method'), 'No test language negotiation method available.');
+    $this->assertNoRaw(t('Test language detection'));
+    $this->assertNoRaw(t('This is a test language negotiation method'));
   }
 
   /**

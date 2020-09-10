@@ -72,7 +72,7 @@ class EditorAdminTest extends BrowserTestBase {
     $this->assertCount(1, $select_is_disabled, 'The Text Editor select is disabled.');
     $this->assertCount(1, $options, 'The Text Editor select has only one option.');
     $this->assertTrue(($options[0]->getText()) === 'None', 'Option 1 in the Text Editor select is "None".');
-    $this->assertRaw('This option is disabled because no modules that provide a text editor are currently enabled.', 'Description for select present that tells users to install a text editor module.');
+    $this->assertRaw('This option is disabled because no modules that provide a text editor are currently enabled.');
   }
 
   /**
@@ -203,7 +203,7 @@ class EditorAdminTest extends BrowserTestBase {
     $this->assertTrue(($options[1]->getText()) === 'Unicorn Editor', 'Option 2 in the Text Editor select is "Unicorn Editor".');
     $this->assertTrue($options[0]->hasAttribute('selected'), 'Option 1 ("None") is selected.');
     // Ensure the none option is selected.
-    $this->assertNoRaw('This option is disabled because no modules that provide a text editor are currently enabled.', 'Description for select absent that tells users to install a text editor module.');
+    $this->assertNoRaw('This option is disabled because no modules that provide a text editor are currently enabled.');
 
     // Select the "Unicorn Editor" editor and click the "Configure" button.
     $edit = [

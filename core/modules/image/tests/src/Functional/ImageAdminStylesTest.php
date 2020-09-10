@@ -338,7 +338,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Test that image is displayed using newly created style.
     $this->drupalGet('node/' . $nid);
-    $this->assertRaw(file_url_transform_relative($style->buildUrl($original_uri)), new FormattableMarkup('Image displayed using style @style.', ['@style' => $style_name]));
+    $this->assertRaw(file_url_transform_relative($style->buildUrl($original_uri)));
 
     // Rename the style and make sure the image field is updated.
     $new_style_name = strtolower($this->randomMachineName(10));
@@ -353,7 +353,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Reload the image style using the new name.
     $style = ImageStyle::load($new_style_name);
-    $this->assertRaw(file_url_transform_relative($style->buildUrl($original_uri)), 'Image displayed using style replacement style.');
+    $this->assertRaw(file_url_transform_relative($style->buildUrl($original_uri)));
 
     // Delete the style and choose a replacement style.
     $edit = [
@@ -365,7 +365,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     $replacement_style = ImageStyle::load('thumbnail');
     $this->drupalGet('node/' . $nid);
-    $this->assertRaw(file_url_transform_relative($replacement_style->buildUrl($original_uri)), 'Image displayed using style replacement style.');
+    $this->assertRaw(file_url_transform_relative($replacement_style->buildUrl($original_uri)));
   }
 
   /**
@@ -484,7 +484,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Test that image is displayed using newly created style.
     $this->drupalGet('node/' . $nid);
-    $this->assertRaw(file_url_transform_relative($style->buildUrl($original_uri)), new FormattableMarkup('Image displayed using style @style.', ['@style' => $style_name]));
+    $this->assertRaw(file_url_transform_relative($style->buildUrl($original_uri)));
 
     // Copy config to sync, and delete the image style.
     $sync = $this->container->get('config.storage.sync');

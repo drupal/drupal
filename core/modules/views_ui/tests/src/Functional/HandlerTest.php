@@ -269,7 +269,7 @@ class HandlerTest extends UITestBase {
     // description field is shown instead.
     $this->drupalGet('admin/structure/views/nojs/add-handler/test_node_view/default/field');
     $this->assertNoText('Error: missing help');
-    $this->assertRaw('<td class="description"></td>', 'Empty description found');
+    $this->assertRaw('<td class="description"></td>');
 
     // Test that no error message is shown for other fields.
     $this->drupalGet('admin/structure/views/nojs/add-handler/test_view_empty/default/field');

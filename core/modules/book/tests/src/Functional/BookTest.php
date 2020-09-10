@@ -231,7 +231,7 @@ class BookTest extends BrowserTestBase {
     // Make sure each part of the book is there.
     foreach ($nodes as $node) {
       $this->assertText($node->label(), 'Node title found in printer friendly version.');
-      $this->assertRaw($node->body->processed, 'Node body found in printer friendly version.');
+      $this->assertRaw($node->body->processed);
     }
 
     // Make sure we can't export an unsupported format.

@@ -83,7 +83,7 @@ class ConfigurationTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Make sure that the action was actually deleted.
-    $this->assertRaw(t('The action %action has been deleted.', ['%action' => $new_action_label]), 'Make sure that we get a delete confirmation message.');
+    $this->assertRaw(t('The action %action has been deleted.', ['%action' => $new_action_label]));
     $this->drupalGet('admin/config/system/actions');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertNoText($new_action_label, "Make sure the action label does not appear on the overview page after we've deleted the action.");

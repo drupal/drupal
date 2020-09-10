@@ -127,7 +127,7 @@ class ContentTranslationContextualLinksTest extends BrowserTestBase {
     $this->drupalLogin($this->translator);
     $translate_link = 'node/' . $node->id() . '/translations';
     $this->drupalGet($translate_link);
-    $this->assertRaw(t('Translations of %label', ['%label' => $node->label()]), 'The contextual link leads to the translate page.');
+    $this->assertRaw(t('Translations of %label', ['%label' => $node->label()]));
   }
 
 }

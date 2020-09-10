@@ -123,7 +123,8 @@ class UninstallTest extends BrowserTestBase {
 
     $this->drupalPostForm(NULL, NULL, t('Uninstall'));
     $this->assertText(t('The selected modules have been uninstalled.'), 'Modules status has been updated.');
-    $this->assertNoRaw('&lt;label', 'The page does not have double escaped HTML tags.');
+    // Check that the page does not have double escaped HTML tags.
+    $this->assertNoRaw('&lt;label');
 
     // Make sure our unique cache entry is gone.
     $cached = \Drupal::cache()->get('uninstall_test');

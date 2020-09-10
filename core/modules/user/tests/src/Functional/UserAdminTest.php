@@ -63,7 +63,7 @@ class UserAdminTest extends BrowserTestBase {
 
     // Test for existence of edit link in table.
     $link = $user_a->toLink(t('Edit'), 'edit-form', ['query' => ['destination' => $user_a->toUrl('collection')->toString()]])->toString();
-    $this->assertRaw($link, 'Found user A edit link on admin users page');
+    $this->assertRaw($link);
 
     // Test exposed filter elements.
     foreach (['user', 'role', 'permission', 'status'] as $field) {
@@ -168,7 +168,7 @@ class UserAdminTest extends BrowserTestBase {
     ]);
     $this->drupalLogin($admin_user);
     $this->drupalGet('admin/config/people/accounts');
-    $this->assertRaw('id="edit-mail-notification-address"', 'Notification Email address field exists');
+    $this->assertRaw('id="edit-mail-notification-address"');
     $this->drupalLogout();
 
     // Test custom user registration approval email address(es).

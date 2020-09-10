@@ -87,7 +87,8 @@ class StandardTest extends BrowserTestBase {
     // Add a comment.
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('node/1');
-    $this->assertRaw('Then she picked out two somebodies,<br />Sally and me', 'Found a line break.');
+    // Verify that a line break is present.
+    $this->assertRaw('Then she picked out two somebodies,<br />Sally and me');
     $this->drupalPostForm(NULL, [
       'subject[0][value]' => 'Barfoo',
       'comment_body[0][value]' => 'Then she picked out two somebodies, Sally and me',

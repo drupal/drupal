@@ -138,7 +138,7 @@ class FormTest extends FieldTestBase {
       "{$field_name}[0][value]" => -1,
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertRaw(t('%name does not accept the value -1.', ['%name' => $this->field['label']]), 'Field validation fails with invalid input.');
+    $this->assertRaw(t('%name does not accept the value -1.', ['%name' => $this->field['label']]));
     // TODO : check that the correct field is flagged for error.
 
     // Create an entity
@@ -230,7 +230,7 @@ class FormTest extends FieldTestBase {
     // Submit with missing required value.
     $edit = [];
     $this->drupalPostForm('entity_test/add', $edit, t('Save'));
-    $this->assertRaw(t('@name field is required.', ['@name' => $this->field['label']]), 'Required field with no value fails validation');
+    $this->assertRaw(t('@name field is required.', ['@name' => $this->field['label']]));
 
     // Create an entity
     $value = mt_rand(1, 127);
@@ -250,7 +250,7 @@ class FormTest extends FieldTestBase {
       "{$field_name}[0][value]" => $value,
     ];
     $this->drupalPostForm('entity_test/manage/' . $id . '/edit', $edit, t('Save'));
-    $this->assertRaw(t('@name field is required.', ['@name' => $this->field['label']]), 'Required field with no value fails validation');
+    $this->assertRaw(t('@name field is required.', ['@name' => $this->field['label']]));
   }
 
   public function testFieldFormUnlimited() {
@@ -462,7 +462,7 @@ class FormTest extends FieldTestBase {
     // Submit the form with more values than the field accepts.
     $edit = [$field_name => '1, 2, 3, 4, 5'];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertRaw('this field cannot hold more than 4 values', 'Form validation failed.');
+    $this->assertRaw('this field cannot hold more than 4 values');
     // Check that the field values were not submitted.
     $this->assertFieldValues($entity_init, $field_name, [1, 2, 3]);
 

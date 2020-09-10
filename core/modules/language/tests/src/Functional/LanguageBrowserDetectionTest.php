@@ -56,7 +56,7 @@ class LanguageBrowserDetectionTest extends BrowserTestBase {
     $t_args = [
       '%browser' => $browser_langcode,
     ];
-    $this->assertRaw(t('The mapping for the %browser browser language code has been deleted.', $t_args), 'The test browser language code has been deleted.');
+    $this->assertRaw(t('The mapping for the %browser browser language code has been deleted.', $t_args));
 
     // Check we went back to the browser negotiation mapping overview.
     $this->assertSession()->addressEquals(Url::fromRoute('language.negotiation_browser'));

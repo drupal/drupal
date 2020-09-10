@@ -255,7 +255,8 @@ class ContactPersonalTest extends BrowserTestBase {
 
     // Submit contact form one over limit.
     $this->submitPersonalContact($this->contactUser);
-    $this->assertRaw(t('You cannot send more than %number messages in @interval. Try again later.', ['%number' => $flood_limit, '@interval' => \Drupal::service('date.formatter')->formatInterval($this->config('contact.settings')->get('flood.interval'))]), 'Normal user denied access to flooded contact form.');
+    // Normal user should be denied access to flooded contact form.
+    $this->assertRaw(t('You cannot send more than %number messages in @interval. Try again later.', ['%number' => $flood_limit, '@interval' => \Drupal::service('date.formatter')->formatInterval($this->config('contact.settings')->get('flood.interval'))]));
 
     // Test that the admin user can still access the contact form even though
     // the flood limit was reached.

@@ -185,14 +185,14 @@ class MenuUiTest extends BrowserTestBase {
 
     // Assert the new menu.
     $this->drupalGet('admin/structure/menu/manage/' . $menu_name);
-    $this->assertRaw($label, 'Custom menu was added.');
+    $this->assertRaw($label);
 
     // Edit the menu.
     $new_label = $this->randomMachineName(16);
     $menu->set('label', $new_label);
     $menu->save();
     $this->drupalGet('admin/structure/menu/manage/' . $menu_name);
-    $this->assertRaw($new_label, 'Custom menu was edited.');
+    $this->assertRaw($new_label);
   }
 
   /**
@@ -261,7 +261,7 @@ class MenuUiTest extends BrowserTestBase {
     // Delete custom menu.
     $this->drupalPostForm("admin/structure/menu/manage/$menu_name/delete", [], t('Delete'));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertRaw(t('The menu %title has been deleted.', ['%title' => $label]), 'Custom menu was deleted');
+    $this->assertRaw(t('The menu %title has been deleted.', ['%title' => $label]));
     $this->assertNull(Menu::load($menu_name), 'Custom menu was deleted');
     // Test if all menu links associated with the menu were removed from
     // database.
@@ -270,7 +270,7 @@ class MenuUiTest extends BrowserTestBase {
 
     // Make sure there's no delete button on system menus.
     $this->drupalGet('admin/structure/menu/manage/main');
-    $this->assertNoRaw('edit-delete', 'The delete button was not found');
+    $this->assertNoRaw('edit-delete');
 
     // Try to delete the main menu.
     $this->drupalGet('admin/structure/menu/manage/main/delete');
@@ -648,7 +648,7 @@ class MenuUiTest extends BrowserTestBase {
         'title[0][value]' => 'title',
       ];
       $this->drupalPostForm("admin/structure/menu/manage/{$this->menu->id()}/add", $edit, t('Save'));
-      $this->assertRaw(t("The path '@link_path' is inaccessible.", ['@link_path' => $link_path]), 'Menu link was not created');
+      $this->assertRaw(t("The path '@link_path' is inaccessible.", ['@link_path' => $link_path]));
     }
   }
 
@@ -788,7 +788,7 @@ class MenuUiTest extends BrowserTestBase {
     // Reset menu link.
     $this->drupalPostForm("admin/structure/menu/link/{$menu_link->getPluginId()}/reset", [], t('Reset'));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertRaw(t('The menu link was reset to its default settings.'), 'Menu link was reset');
+    $this->assertRaw(t('The menu link was reset to its default settings.'));
 
     // Verify menu link.
     $instance = \Drupal::service('plugin.manager.menu.link')->createInstance($menu_link->getPluginId());
@@ -808,7 +808,7 @@ class MenuUiTest extends BrowserTestBase {
     // Delete menu link.
     $this->drupalPostForm("admin/structure/menu/item/$mlid/delete", [], t('Delete'));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertRaw(t('The menu link %title has been deleted.', ['%title' => $title]), 'Menu link was deleted');
+    $this->assertRaw(t('The menu link %title has been deleted.', ['%title' => $title]));
 
     // Verify deletion.
     $this->drupalGet('');

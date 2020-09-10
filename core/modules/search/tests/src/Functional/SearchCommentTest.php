@@ -172,7 +172,8 @@ class SearchCommentTest extends BrowserTestBase {
 
     // Verify that comment is rendered using proper format.
     $this->assertText($comment_body, 'Comment body text found in search results.');
-    $this->assertNoRaw(t('n/a'), 'HTML in comment body is not hidden.');
+    // Verify that HTML in comment body is not hidden.
+    $this->assertNoRaw(t('n/a'));
     $this->assertSession()->assertNoEscaped($edit_comment['comment_body[0][value]']);
 
     // Search for the evil script comment subject.

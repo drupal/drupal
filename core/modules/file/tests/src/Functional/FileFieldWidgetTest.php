@@ -376,12 +376,12 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $this->drupalPostForm(NULL, $edit, t('Upload'));
 
     $error_message = t('Only files with the following extensions are allowed: %files-allowed.', ['%files-allowed' => 'txt']);
-    $this->assertRaw($error_message, t('Validation error when file with wrong extension uploaded (JSMode=%type).', ['%type' => $type]));
+    $this->assertRaw($error_message);
 
     // Upload file with correct extension, check that error message is removed.
     $edit[$name] = \Drupal::service('file_system')->realpath($test_file_text->getFileUri());
     $this->drupalPostForm(NULL, $edit, t('Upload'));
-    $this->assertNoRaw($error_message, t('Validation error removed when file with correct extension uploaded (JSMode=%type).', ['%type' => $type]));
+    $this->assertNoRaw($error_message);
   }
 
   /**

@@ -32,8 +32,8 @@ class ReportFieldsTest extends UITestBase {
    */
   public function testReportFields() {
     $this->drupalGet('admin/reports/fields/views-fields');
-    $this->assertRaw('Used in views', 'Title appears correctly');
-    $this->assertRaw('No fields have been used in views yet.', 'No results message appears correctly.');
+    $this->assertRaw('Used in views');
+    $this->assertRaw('No fields have been used in views yet.');
 
     // Set up the field_test field.
     $field_storage = FieldStorageConfig::create([
@@ -50,11 +50,11 @@ class ReportFieldsTest extends UITestBase {
     ]);
     $field->save();
 
-    $this->drupalGet('admin/reports/fields/views-fields');
     // Assert that the newly created field appears in the overview.
-    $this->assertRaw('<td>field_test</td>', 'Field name appears correctly');
-    $this->assertRaw('>test_field_field_test</a>', 'View name appears correctly');
-    $this->assertRaw('Used in views', 'Title appears correctly');
+    $this->drupalGet('admin/reports/fields/views-fields');
+    $this->assertRaw('<td>field_test</td>');
+    $this->assertRaw('>test_field_field_test</a>');
+    $this->assertRaw('Used in views');
   }
 
 }

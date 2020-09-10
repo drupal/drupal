@@ -338,12 +338,12 @@ class UserRegistrationTest extends BrowserTestBase {
     $edit['test_user_field[0][value]'] = '';
     $this->drupalPostForm(NULL, $edit, t('Create new account'));
     $this->assertRegistrationFormCacheTagsWithUserFields();
-    $this->assertRaw(t('@name field is required.', ['@name' => $field->label()]), 'Field validation error was correctly reported.');
+    $this->assertRaw(t('@name field is required.', ['@name' => $field->label()]));
     // Invalid input.
     $edit['test_user_field[0][value]'] = '-1';
     $this->drupalPostForm(NULL, $edit, t('Create new account'));
     $this->assertRegistrationFormCacheTagsWithUserFields();
-    $this->assertRaw(t('%name does not accept the value -1.', ['%name' => $field->label()]), 'Field validation error was correctly reported.');
+    $this->assertRaw(t('%name does not accept the value -1.', ['%name' => $field->label()]));
 
     // Submit with valid data.
     $value = rand(1, 255);

@@ -204,7 +204,7 @@ class FilterAdminTest extends BrowserTestBase {
     // Check that the fallback format exists and cannot be disabled.
     $this->assertTrue($plain == filter_fallback_format(), 'The fallback format is set to plain text.');
     $this->drupalGet('admin/config/content/formats');
-    $this->assertNoRaw('admin/config/content/formats/manage/' . $plain . '/disable', 'Disable link for the fallback format not found.');
+    $this->assertNoRaw('admin/config/content/formats/manage/' . $plain . '/disable');
     $this->drupalGet('admin/config/content/formats/manage/' . $plain . '/disable');
     $this->assertSession()->statusCodeEquals(403);
 
@@ -261,7 +261,7 @@ class FilterAdminTest extends BrowserTestBase {
     $edit['filters[' . $first_filter . '][status]'] = TRUE;
     $this->drupalPostForm('admin/config/content/formats/add', $edit, t('Save configuration'));
     $this->assertSession()->addressEquals('admin/config/content/formats');
-    $this->assertRaw(t('Added text format %format.', ['%format' => $edit['name']]), 'New filter created.');
+    $this->assertRaw(t('Added text format %format.', ['%format' => $edit['name']]));
 
     filter_formats_reset();
     $format = FilterFormat::load($edit['format']);
@@ -274,7 +274,7 @@ class FilterAdminTest extends BrowserTestBase {
     // Disable new filter.
     $this->drupalPostForm('admin/config/content/formats/manage/' . $format->id() . '/disable', [], t('Disable'));
     $this->assertSession()->addressEquals('admin/config/content/formats');
-    $this->assertRaw(t('Disabled text format %format.', ['%format' => $edit['name']]), 'Format successfully disabled.');
+    $this->assertRaw(t('Disabled text format %format.', ['%format' => $edit['name']]));
 
     // Allow authenticated users on full HTML.
     $format = FilterFormat::load($full);
@@ -283,13 +283,13 @@ class FilterAdminTest extends BrowserTestBase {
     $edit['roles[' . RoleInterface::AUTHENTICATED_ID . ']'] = 1;
     $this->drupalPostForm('admin/config/content/formats/manage/' . $full, $edit, t('Save configuration'));
     $this->assertSession()->addressEquals('admin/config/content/formats/manage/' . $full);
-    $this->assertRaw(t('The text format %format has been updated.', ['%format' => $format->label()]), 'Full HTML format successfully updated.');
+    $this->assertRaw(t('The text format %format has been updated.', ['%format' => $format->label()]));
 
     // Switch user.
     $this->drupalLogin($this->webUser);
 
     $this->drupalGet('node/add/page');
-    $this->assertRaw('<option value="' . $full . '">Full HTML</option>', 'Full HTML filter accessible.');
+    $this->assertRaw('<option value="' . $full . '">Full HTML</option>');
 
     // Use basic HTML and see if it removes tags that are not allowed.
     $body = '<em>' . $this->randomMachineName() . '</em>';
@@ -311,7 +311,8 @@ class FilterAdminTest extends BrowserTestBase {
     $this->assertNotEmpty($node, 'Node found in database.');
 
     $this->drupalGet('node/' . $node->id());
-    $this->assertRaw($body . $extra_text, 'Filter removed invalid tag.');
+    // Check that filter removed invalid tag.
+    $this->assertRaw($body . $extra_text);
 
     // Use plain text and see if it escapes all tags, whether allowed or not.
     // In order to test plain text, we have to enable the hidden variable for
@@ -345,7 +346,7 @@ class FilterAdminTest extends BrowserTestBase {
     $edit['roles[' . RoleInterface::AUTHENTICATED_ID . ']'] = FALSE;
     $this->drupalPostForm('admin/config/content/formats/manage/' . $full, $edit, t('Save configuration'));
     $this->assertSession()->addressEquals('admin/config/content/formats/manage/' . $full);
-    $this->assertRaw(t('The text format %format has been updated.', ['%format' => $format->label()]), 'Full HTML format successfully reverted.');
+    $this->assertRaw(t('The text format %format has been updated.', ['%format' => $format->label()]));
     $this->drupalGet('admin/config/content/formats/manage/' . $full);
     $this->assertFieldByName('roles[' . RoleInterface::AUTHENTICATED_ID . ']', $edit['roles[' . RoleInterface::AUTHENTICATED_ID . ']'], 'Changes reverted.');
 

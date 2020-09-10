@@ -37,7 +37,7 @@ class RouterTest extends BrowserTestBase {
 
     // Confirm that the router can get to a controller.
     $this->drupalGet('router_test/test1');
-    $this->assertRaw('test1', 'The correct string was returned because the route was successful.');
+    $this->assertRaw('test1');
     $session = $this->getSession();
 
     // Check expected headers from FinishResponseSubscriber.
@@ -48,7 +48,7 @@ class RouterTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderDoesNotExist('Vary');
 
     $this->drupalGet('router_test/test2');
-    $this->assertRaw('test2', 'The correct string was returned because the route was successful.');
+    $this->assertRaw('test2');
     // Check expected headers from FinishResponseSubscriber.
     $headers = $session->getResponseHeaders();
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache-Contexts', implode(' ', $expected_cache_contexts));
@@ -56,7 +56,7 @@ class RouterTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache-Max-Age', '-1 (Permanent)');
     // Confirm that the page wrapping is being added, so we're not getting a
     // raw body returned.
-    $this->assertRaw('</html>', 'Page markup was found.');
+    $this->assertRaw('</html>');
     // In some instances, the subrequest handling may get confused and render
     // a page inception style.  This test verifies that is not happening.
     $this->assertSession()->responseNotMatches('#</body>.*</body>#s');
@@ -147,12 +147,12 @@ class RouterTest extends BrowserTestBase {
     foreach ($values as $value) {
       $this->drupalGet('router_test/test3/' . $value);
       $this->assertSession()->statusCodeEquals(200);
-      $this->assertRaw($value, 'The correct string was returned because the route was successful.');
+      $this->assertRaw($value);
     }
 
     // Confirm that the page wrapping is being added, so we're not getting a
     // raw body returned.
-    $this->assertRaw('</html>', 'Page markup was found.');
+    $this->assertRaw('</html>');
 
     // In some instances, the subrequest handling may get confused and render
     // a page inception style.  This test verifies that is not happening.
@@ -165,11 +165,11 @@ class RouterTest extends BrowserTestBase {
   public function testControllerPlaceholdersDefaultValues() {
     $this->drupalGet('router_test/test4');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertRaw('narf', 'The correct string was returned because the route was successful.');
+    $this->assertRaw('narf');
 
     // Confirm that the page wrapping is being added, so we're not getting a
     // raw body returned.
-    $this->assertRaw('</html>', 'Page markup was found.');
+    $this->assertRaw('</html>');
 
     // In some instances, the subrequest handling may get confused and render
     // a page inception style.  This test verifies that is not happening.
@@ -182,11 +182,11 @@ class RouterTest extends BrowserTestBase {
   public function testControllerPlaceholdersDefaultValuesProvided() {
     $this->drupalGet('router_test/test4/barf');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertRaw('barf', 'The correct string was returned because the route was successful.');
+    $this->assertRaw('barf');
 
     // Confirm that the page wrapping is being added, so we're not getting a
     // raw body returned.
-    $this->assertRaw('</html>', 'Page markup was found.');
+    $this->assertRaw('</html>');
 
     // In some instances, the subrequest handling may get confused and render
     // a page inception style.  This test verifies that is not happening.
@@ -202,7 +202,7 @@ class RouterTest extends BrowserTestBase {
     // Test the altered route.
     $this->drupalGet('router_test/test6');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertRaw('test5', 'The correct string was returned because the route was successful.');
+    $this->assertRaw('test5');
   }
 
   /**
@@ -211,11 +211,11 @@ class RouterTest extends BrowserTestBase {
   public function testControllerResolutionPage() {
     $this->drupalGet('/router_test/test10');
 
-    $this->assertRaw('abcde', 'Correct body was found.');
+    $this->assertRaw('abcde');
 
     // Confirm that the page wrapping is being added, so we're not getting a
     // raw body returned.
-    $this->assertRaw('</html>', 'Page markup was found.');
+    $this->assertRaw('</html>');
 
     // In some instances, the subrequest handling may get confused and render
     // a page inception style. This test verifies that is not happening.
@@ -294,7 +294,7 @@ class RouterTest extends BrowserTestBase {
 
     $this->assertSession()->responseHeaderEquals('Content-Type', 'application/json');
 
-    $this->assertRaw('abcde', 'Correct body was found.');
+    $this->assertRaw('abcde');
   }
 
   /**

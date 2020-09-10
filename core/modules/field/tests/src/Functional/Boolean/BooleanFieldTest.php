@@ -108,7 +108,7 @@ class BooleanFieldTest extends BrowserTestBase {
     $this->drupalGet('entity_test/add');
     $this->assertFieldByName("{$field_name}[value]", '', 'Widget found.');
     $this->assertText($this->field->label(), 'Uses field label by default.');
-    $this->assertNoRaw($on, 'Does not use the "On" label.');
+    $this->assertNoRaw($on);
 
     // Submit and ensure it is accepted.
     $edit = [

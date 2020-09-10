@@ -291,17 +291,21 @@ class ThemeTest extends BrowserTestBase {
     ];
     $this->drupalPostForm('admin/appearance', $edit, t('Save configuration'));
 
+    // Check that the administration theme is used on an administration page.
     $this->drupalGet('admin/config');
-    $this->assertRaw('core/themes/seven', 'Administration theme used on an administration page.');
+    $this->assertRaw('core/themes/seven');
 
+    // Check that the site default theme used on node page.
     $this->drupalGet('node/' . $this->node->id());
-    $this->assertRaw('core/themes/classy', 'Site default theme used on node page.');
+    $this->assertRaw('core/themes/classy');
 
+    // Check that the administration theme is used on the add content page.
     $this->drupalGet('node/add');
-    $this->assertRaw('core/themes/seven', 'Administration theme used on the add content page.');
+    $this->assertRaw('core/themes/seven');
 
+    // Check that the administration theme is used on the edit content page.
     $this->drupalGet('node/' . $this->node->id() . '/edit');
-    $this->assertRaw('core/themes/seven', 'Administration theme used on the edit content page.');
+    $this->assertRaw('core/themes/seven');
 
     // Disable the admin theme on the node admin pages.
     $edit = [
@@ -309,19 +313,22 @@ class ThemeTest extends BrowserTestBase {
     ];
     $this->drupalPostForm('admin/appearance', $edit, t('Save configuration'));
 
+    // Check that the administration theme is used on an administration page.
     $this->drupalGet('admin/config');
-    $this->assertRaw('core/themes/seven', 'Administration theme used on an administration page.');
+    $this->assertRaw('core/themes/seven');
 
     // Ensure that the admin theme is also visible on the 403 page.
     $normal_user = $this->drupalCreateUser(['view the administration theme']);
     $this->drupalLogin($normal_user);
+    // Check that the administration theme is used on an administration page.
     $this->drupalGet('admin/config');
     $this->assertSession()->statusCodeEquals(403);
-    $this->assertRaw('core/themes/seven', 'Administration theme used on an administration page.');
+    $this->assertRaw('core/themes/seven');
     $this->drupalLogin($this->adminUser);
 
+    // Check that the site default theme used on the add content page.
     $this->drupalGet('node/add');
-    $this->assertRaw('core/themes/classy', 'Site default theme used on the add content page.');
+    $this->assertRaw('core/themes/classy');
 
     // Reset to the default theme settings.
     $edit = [
@@ -330,11 +337,13 @@ class ThemeTest extends BrowserTestBase {
     ];
     $this->drupalPostForm('admin/appearance', $edit, t('Save configuration'));
 
+    // Check that the site default theme used on administration page.
     $this->drupalGet('admin');
-    $this->assertRaw('core/themes/classy', 'Site default theme used on administration page.');
+    $this->assertRaw('core/themes/classy');
 
+    // Check that the site default theme used on the add content page.
     $this->drupalGet('node/add');
-    $this->assertRaw('core/themes/classy', 'Site default theme used on the add content page.');
+    $this->assertRaw('core/themes/classy');
   }
 
   /**
@@ -405,12 +414,12 @@ class ThemeTest extends BrowserTestBase {
     $this->clickLink(t('Set as default'));
 
     // Check that seven cannot be uninstalled as it is the admin theme.
-    $this->assertNoRaw('Uninstall Seven theme', 'A link to uninstall the Seven theme does not appear on the theme settings page.');
+    $this->assertNoRaw('Uninstall Seven theme');
     // Check that bartik cannot be uninstalled as it is the default theme.
-    $this->assertNoRaw('Uninstall Bartik theme', 'A link to uninstall the Bartik theme does not appear on the theme settings page.');
+    $this->assertNoRaw('Uninstall Bartik theme');
     // Check that the classy theme cannot be uninstalled as it is a base theme
     // of seven and bartik.
-    $this->assertNoRaw('Uninstall Classy theme', 'A link to uninstall the Classy theme does not appear on the theme settings page.');
+    $this->assertNoRaw('Uninstall Classy theme');
 
     // Install Stark and set it as the default theme.
     \Drupal::service('theme_installer')->install(['stark']);
@@ -422,20 +431,20 @@ class ThemeTest extends BrowserTestBase {
     $this->drupalPostForm('admin/appearance', $edit, t('Save configuration'));
 
     // Check that seven can be uninstalled now.
-    $this->assertRaw('Uninstall Seven theme', 'A link to uninstall the Seven theme does appear on the theme settings page.');
+    $this->assertRaw('Uninstall Seven theme');
     // Check that the classy theme still cannot be uninstalled as it is a
     // base theme of bartik.
-    $this->assertNoRaw('Uninstall Classy theme', 'A link to uninstall the Classy theme does not appear on the theme settings page.');
+    $this->assertNoRaw('Uninstall Classy theme');
 
     // Change the default theme to stark, stark is second in the list.
     $this->clickLink(t('Set as default'), 1);
 
     // Check that bartik can be uninstalled now.
-    $this->assertRaw('Uninstall Bartik theme', 'A link to uninstall the Bartik theme does appear on the theme settings page.');
+    $this->assertRaw('Uninstall Bartik theme');
 
     // Check that the classy theme still can't be uninstalled as neither of its
     // base themes have been.
-    $this->assertNoRaw('Uninstall Classy theme', 'A link to uninstall the Classy theme does not appear on the theme settings page.');
+    $this->assertNoRaw('Uninstall Classy theme');
 
     // Uninstall each of the three themes starting with Bartik.
     $this->clickLink(t('Uninstall'));
@@ -445,7 +454,7 @@ class ThemeTest extends BrowserTestBase {
     $this->assertRaw('The <em class="placeholder">Seven</em> theme has been uninstalled');
 
     // Check that the classy theme still can't be uninstalled as it is hidden.
-    $this->assertNoRaw('Uninstall Classy theme', 'A link to uninstall the Classy theme does not appear on the theme settings page.');
+    $this->assertNoRaw('Uninstall Classy theme');
   }
 
   /**

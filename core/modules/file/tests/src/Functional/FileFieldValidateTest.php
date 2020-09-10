@@ -36,7 +36,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName();
     $this->drupalPostForm('node/add/' . $type_name, $edit, t('Save'));
-    $this->assertRaw(t('@title field is required.', ['@title' => $field->getLabel()]), 'Node save failed when required file field was empty.');
+    $this->assertRaw(t('@title field is required.', ['@title' => $field->getLabel()]));
 
     // Create a new node with the uploaded file.
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
@@ -57,7 +57,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName();
     $this->drupalPostForm('node/add/' . $type_name, $edit, t('Save'));
-    $this->assertRaw(t('@title field is required.', ['@title' => $field->getLabel()]), 'Node save failed when required multiple value file field was empty.');
+    $this->assertRaw(t('@title field is required.', ['@title' => $field->getLabel()]));
 
     // Create a new node with the uploaded file into the multivalue field.
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
@@ -104,7 +104,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
       // Check that uploading the large file fails (1M limit).
       $this->uploadNodeFile($large_file, $field_name, $type_name);
       $error_message = t('The file is %filesize exceeding the maximum file size of %maxsize.', ['%filesize' => format_size($large_file->getSize()), '%maxsize' => format_size($file_limit)]);
-      $this->assertRaw($error_message, new FormattableMarkup('Node save failed when file (%filesize) exceeded the max upload size (%maxsize).', ['%filesize' => format_size($large_file->getSize()), '%maxsize' => $max_filesize]));
+      $this->assertRaw($error_message);
     }
 
     // Turn off the max filesize.
@@ -148,7 +148,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
     // Check that the file with the wrong extension cannot be uploaded.
     $this->uploadNodeFile($test_file, $field_name, $type_name);
     $error_message = t('Only files with the following extensions are allowed: %files-allowed.', ['%files-allowed' => 'txt']);
-    $this->assertRaw($error_message, 'Node save failed when file uploaded with the wrong extension.');
+    $this->assertRaw($error_message);
 
     // Enable extension checking for text and image files.
     $this->updateFileField($field_name, $type_name, ['file_extensions' => "txt $test_file_extension"]);

@@ -167,7 +167,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     ];
     foreach ($table_headers as $table_header) {
       // We check that the label appear in the table headings.
-      $this->assertRaw($table_header . '</th>', new FormattableMarkup('%table_header table header was found.', ['%table_header' => $table_header]));
+      $this->assertRaw($table_header . '</th>');
     }
 
     // Test the "Add field" action link.
@@ -249,7 +249,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
   public function addExistingField() {
     // Check "Re-use existing field" appears.
     $this->drupalGet('admin/structure/types/manage/page/fields/add-field');
-    $this->assertRaw(t('Re-use an existing field'), '"Re-use existing field" was found.');
+    $this->assertRaw(t('Re-use an existing field'));
 
     // Check that fields of other entity types (here, the 'comment_body' field)
     // do not show up in the "Re-use existing field" list.
@@ -307,7 +307,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       'cardinality_number' => 1,
     ];
     $this->drupalPostForm($field_edit_path, $edit, t('Save field settings'));
-    $this->assertRaw(t('There is @count entity with @delta or more values in this field.', ['@count' => 1, '@delta' => 2]), 'Correctly failed to set cardinality lower than highest delta.');
+    $this->assertRaw(t('There is @count entity with @delta or more values in this field.', ['@count' => 1, '@delta' => 2]));
 
     // Create a second entity with three values.
     $edit = ['title[0][value]' => 'Cardinality 3', 'body[0][value]' => 'Body 1', 'body[1][value]' => 'Body 2', 'body[2][value]' => 'Body 3'];
@@ -330,14 +330,14 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       'cardinality_number' => 1,
     ];
     $this->drupalPostForm($field_edit_path, $edit, t('Save field settings'));
-    $this->assertRaw(t('There are @count entities with @delta or more values in this field.', ['@count' => 2, '@delta' => 2]), 'Correctly failed to set cardinality lower than highest delta.');
+    $this->assertRaw(t('There are @count entities with @delta or more values in this field.', ['@count' => 2, '@delta' => 2]));
 
     $edit = [
       'cardinality' => 'number',
       'cardinality_number' => 2,
     ];
     $this->drupalPostForm($field_edit_path, $edit, t('Save field settings'));
-    $this->assertRaw(t('There is @count entity with @delta or more values in this field.', ['@count' => 1, '@delta' => 3]), 'Correctly failed to set cardinality lower than highest delta.');
+    $this->assertRaw(t('There is @count entity with @delta or more values in this field.', ['@count' => 1, '@delta' => 3]));
 
     $edit = [
       'cardinality' => 'number',
@@ -373,7 +373,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     }
     // Check "Re-use existing field" appears.
     $this->drupalGet('admin/structure/types/manage/page/fields/add-field');
-    $this->assertRaw(t('Re-use an existing field'), '"Re-use existing field" was found.');
+    $this->assertRaw(t('Re-use an existing field'));
 
     // Ensure that we test with a label that contains HTML.
     $label = $this->randomString(4) . '<br/>' . $this->randomString(4);

@@ -117,7 +117,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#alt' => $alt,
     ];
     $default_output = str_replace("\n", NULL, $renderer->renderRoot($image));
-    $this->assertRaw($default_output, 'Default formatter displaying correctly on full node view.');
+    $this->assertRaw($default_output);
 
     // Test the image linked to file formatter.
     $display_options = [
@@ -143,7 +143,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->assertCacheContext('url.site');
     // Verify that no image style cache tags are found.
     $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'image_style:');
-    $this->assertRaw($default_output, 'Image linked to file formatter displaying correctly on full node view.');
+    $this->assertRaw($default_output);
     // Verify that the image can be downloaded.
     $this->assertEqual(file_get_contents($test_image->uri), $this->drupalGet(file_create_url($image_uri)), 'File was downloaded successfully.');
     if ($scheme == 'private') {
@@ -208,7 +208,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->drupalGet('node/' . $nid);
     $image_style = ImageStyle::load('thumbnail');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $image_style->getCacheTags()[0]);
-    $this->assertRaw($default_output, 'Image style thumbnail formatter displaying correctly on full node view.');
+    $this->assertRaw($default_output);
 
     if ($scheme == 'private') {
       // Log out and ensure the file cannot be accessed.
@@ -304,7 +304,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     ];
     $this->drupalPostForm('node/' . $nid . '/edit', $edit, t('Save'));
     $default_output = str_replace("\n", NULL, $renderer->renderRoot($image));
-    $this->assertRaw($default_output, 'Image displayed using user supplied alt and title attributes.');
+    $this->assertRaw($default_output);
 
     // Verify that alt/title longer than allowed results in a validation error.
     $test_size = 2000;
@@ -401,7 +401,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $file->getCacheTags()[0]);
     // Verify that no image style cache tags are found.
     $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'image_style:');
-    $this->assertRaw($default_output, 'Default image displayed when no user supplied image is present.');
+    $this->assertRaw($default_output);
 
     // Create a node with an image attached and ensure that the default image
     // is not displayed.
@@ -426,8 +426,10 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $file->getCacheTags()[0]);
     // Verify that no image style cache tags are found.
     $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'image_style:');
-    $this->assertNoRaw($default_output, 'Default image is not displayed when user supplied image is present.');
-    $this->assertRaw($image_output, 'User supplied image is displayed.');
+    // Default image should not be displayed.
+    $this->assertNoRaw($default_output);
+    // User supplied image should be displayed.
+    $this->assertRaw($image_output);
 
     // Remove default image from the field and make sure it is no longer used.
     // Can't use fillField cause Mink can't fill hidden fields.
@@ -477,7 +479,9 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $file->getCacheTags()[0]);
     // Verify that no image style cache tags are found.
     $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'image_style:');
-    $this->assertRaw($default_output, 'Default private image displayed when no user supplied image is present.');
+    // Default private image should be displayed when no user supplied image
+    // is present.
+    $this->assertRaw($default_output);
   }
 
 }

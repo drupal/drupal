@@ -219,7 +219,7 @@ class ExposedFormTest extends ViewTestBase {
 
     // Test that the custom block label is found.
     $this->drupalGet('test_exposed_block');
-    $this->assertRaw('<strong>Custom</strong> titlealert("hacked!");', 'Custom block title found.');
+    $this->assertRaw('<strong>Custom</strong> titlealert("hacked!");');
 
     // Set label to hidden on the exposed filter form block.
     $block->getPlugin()->setConfigurationValue('label_display', FALSE);
@@ -227,7 +227,7 @@ class ExposedFormTest extends ViewTestBase {
 
     // Test that the label is removed.
     $this->drupalGet('test_exposed_block');
-    $this->assertNoRaw('<strong>Custom</strong> titlealert("hacked!");', 'Custom title was not displayed.');
+    $this->assertNoRaw('<strong>Custom</strong> titlealert("hacked!");');
     $this->assertNoText($view->getTitle(), 'Block title was not displayed.');
 
     // Test there is an exposed form in a block.
@@ -398,15 +398,17 @@ class ExposedFormTest extends ViewTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $form = $this->cssSelect('form.views-exposed-form');
     $this->assertNotEmpty($form, 'The exposed form element was found.');
-    $this->assertRaw(t('Apply'), 'Ensure the exposed form is rendered before submitting the normal form.');
-    $this->assertRaw('<div class="views-row">', 'Views result shown.');
+    // Ensure the exposed form is rendered before submitting the normal form.
+    $this->assertRaw(t('Apply'));
+    $this->assertRaw('<div class="views-row">');
 
     $this->drupalPostForm(NULL, [], t('Submit'));
     $this->assertSession()->statusCodeEquals(200);
     $form = $this->cssSelect('form.views-exposed-form');
     $this->assertNotEmpty($form, 'The exposed form element was found.');
-    $this->assertRaw(t('Apply'), 'Ensure the exposed form is rendered after submitting the normal form.');
-    $this->assertRaw('<div class="views-row">', 'Views result shown.');
+    // Ensure the exposed form is rendered after submitting the normal form.
+    $this->assertRaw(t('Apply'));
+    $this->assertRaw('<div class="views-row">');
   }
 
   /**

@@ -83,7 +83,7 @@ class BulkFormTest extends UserTestBase {
 
     // Block a user using the bulk form.
     $this->assertTrue($account->isActive(), 'The user is not blocked.');
-    $this->assertRaw($account->label(), 'The user is found in the table.');
+    $this->assertRaw($account->label());
     $edit = [
       'user_bulk_form[1]' => TRUE,
       'action' => 'user_block_user_action',
@@ -93,7 +93,7 @@ class BulkFormTest extends UserTestBase {
     $user_storage->resetCache([$account->id()]);
     $account = $user_storage->load($account->id());
     $this->assertTrue($account->isBlocked(), 'The user is blocked.');
-    $this->assertNoRaw($account->label(), 'The user is not found in the table.');
+    $this->assertNoRaw($account->label());
 
     // Remove the user status filter from the view.
     $view = Views::getView('test_user_bulk_form');

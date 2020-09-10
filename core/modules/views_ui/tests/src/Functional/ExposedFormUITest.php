@@ -266,12 +266,8 @@ class ExposedFormUITest extends UITestBase {
    */
   protected function assertNoGroupedFilterErrors($message = '', $group = 'Other') {
     foreach ($this->groupFormUiErrors as $error) {
-      $err_message = $message;
-      if (empty($err_message)) {
-        $err_message = "Verify that '$error' is not in the HTML output.";
-      }
       if (empty($message)) {
-        return $this->assertNoRaw($error, $err_message, $group);
+        return $this->assertNoRaw($error);
       }
     }
     return TRUE;

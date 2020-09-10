@@ -148,7 +148,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->assertSession()->checkboxNotChecked('edit-card-1-0');
     $this->assertSession()->checkboxNotChecked('edit-card-1-1');
     $this->assertSession()->checkboxNotChecked('edit-card-1-2');
-    $this->assertRaw('Some dangerous &amp; unescaped <strong>markup</strong>', 'Option text was properly filtered.');
+    $this->assertRaw('Some dangerous &amp; unescaped <strong>markup</strong>');
     $this->assertRaw('Some HTML encoded markup with &lt; &amp; &gt;');
 
     // Select first option.
@@ -206,7 +206,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->assertSession()->checkboxNotChecked('edit-card-2-0');
     $this->assertSession()->checkboxNotChecked('edit-card-2-1');
     $this->assertSession()->checkboxNotChecked('edit-card-2-2');
-    $this->assertRaw('Some dangerous &amp; unescaped <strong>markup</strong>', 'Option text was properly filtered.');
+    $this->assertRaw('Some dangerous &amp; unescaped <strong>markup</strong>');
 
     // Submit form: select first and third options.
     $edit = [
@@ -302,12 +302,12 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->assertFalse($this->assertSession()->optionExists('card_1', 0)->isSelected());
     $this->assertFalse($this->assertSession()->optionExists('card_1', 1)->isSelected());
     $this->assertFalse($this->assertSession()->optionExists('card_1', 2)->isSelected());
-    $this->assertRaw('Some dangerous &amp; unescaped markup', 'Option text was properly filtered.');
+    $this->assertRaw('Some dangerous &amp; unescaped markup');
 
     // Submit form: select invalid 'none' option.
     $edit = ['card_1' => '_none'];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertRaw(t('@title field is required.', ['@title' => $field->getName()]), 'Cannot save a required field when selecting "none" from the select list.');
+    $this->assertRaw(t('@title field is required.', ['@title' => $field->getName()]));
 
     // Submit form: select first option.
     $edit = ['card_1' => 0];
@@ -346,9 +346,9 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->assertFalse($this->assertSession()->optionExists('card_1', 0)->isSelected());
     $this->assertFalse($this->assertSession()->optionExists('card_1', 1)->isSelected());
     $this->assertFalse($this->assertSession()->optionExists('card_1', 2)->isSelected());
-    $this->assertRaw('Some dangerous &amp; unescaped markup', 'Option text was properly filtered.');
-    $this->assertRaw('More &lt;script&gt;dangerous&lt;/script&gt; markup', 'Option group text was properly filtered.');
-    $this->assertRaw('Group 1', 'Option groups are displayed.');
+    $this->assertRaw('Some dangerous &amp; unescaped markup');
+    $this->assertRaw('More &lt;script&gt;dangerous&lt;/script&gt; markup');
+    $this->assertRaw('Group 1');
 
     // Submit form: select first option.
     $edit = ['card_1' => 0];
@@ -398,7 +398,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->assertFalse($this->assertSession()->optionExists('card_2', 0)->isSelected());
     $this->assertFalse($this->assertSession()->optionExists('card_2', 1)->isSelected());
     $this->assertFalse($this->assertSession()->optionExists('card_2', 2)->isSelected());
-    $this->assertRaw('Some dangerous &amp; unescaped markup', 'Option text was properly filtered.');
+    $this->assertRaw('Some dangerous &amp; unescaped markup');
 
     // Submit form: select first and third options.
     $edit = ['card_2[]' => [0 => 0, 2 => 2]];
@@ -468,9 +468,9 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->assertFalse($this->assertSession()->optionExists('card_2', 0)->isSelected());
     $this->assertFalse($this->assertSession()->optionExists('card_2', 1)->isSelected());
     $this->assertFalse($this->assertSession()->optionExists('card_2', 2)->isSelected());
-    $this->assertRaw('Some dangerous &amp; unescaped markup', 'Option text was properly filtered.');
-    $this->assertRaw('More &lt;script&gt;dangerous&lt;/script&gt; markup', 'Option group text was properly filtered.');
-    $this->assertRaw('Group 1', 'Option groups are displayed.');
+    $this->assertRaw('Some dangerous &amp; unescaped markup');
+    $this->assertRaw('More &lt;script&gt;dangerous&lt;/script&gt; markup');
+    $this->assertRaw('Group 1');
 
     // Submit form: select first option.
     $edit = ['card_2[]' => [0 => 0]];

@@ -204,7 +204,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       '#alt' => $alt,
     ];
     $default_output = str_replace("\n", NULL, $renderer->renderRoot($image));
-    $this->assertRaw($default_output, 'Default formatter displaying correctly on full node view.');
+    $this->assertRaw($default_output);
 
     // Test field not being configured. This should not cause a fatal error.
     $display_options = [
@@ -330,7 +330,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     // responsive-image.html.twig doesn't have one after the fallback image, so
     // we remove it here.
     $default_output = trim($renderer->renderRoot($fallback_image));
-    $this->assertRaw($default_output, 'Image style large formatter displaying correctly on full node view.');
+    $this->assertRaw($default_output);
 
     if ($scheme == 'private') {
       // Log out and ensure the file cannot be accessed.

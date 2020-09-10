@@ -142,7 +142,7 @@ class PathAliasTest extends PathTestBase {
     $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
 
     // Confirm no duplicate was created.
-    $this->assertRaw(t('The alias %alias is already in use in this language.', ['%alias' => $edit['alias[0][value]']]), 'Attempt to move alias was rejected.');
+    $this->assertRaw(t('The alias %alias is already in use in this language.', ['%alias' => $edit['alias[0][value]']]));
 
     $edit_upper = $edit;
     $edit_upper['alias[0][value]'] = mb_strtoupper($edit['alias[0][value]']);
@@ -150,7 +150,7 @@ class PathAliasTest extends PathTestBase {
     $this->assertRaw(t('The alias %alias could not be added because it is already in use in this language with different capitalization: %stored_alias.', [
       '%alias' => $edit_upper['alias[0][value]'],
       '%stored_alias' => $edit['alias[0][value]'],
-    ]), 'Attempt to move upper-case alias was rejected.');
+    ]));
 
     // Delete alias.
     $this->drupalGet('admin/config/search/path/edit/' . $pid);

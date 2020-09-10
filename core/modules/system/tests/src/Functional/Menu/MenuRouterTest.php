@@ -269,7 +269,7 @@ class MenuRouterTest extends BrowserTestBase {
   protected function doTestThemeCallbackAdministrative() {
     $this->drupalGet('menu-test/theme-callback/use-admin-theme');
     $this->assertText('Active theme: seven. Actual theme: seven.', 'The administrative theme can be correctly set in a theme negotiation.');
-    $this->assertRaw('seven/css/base/elements.css', "The administrative theme's CSS appears on the page.");
+    $this->assertRaw('seven/css/base/elements.css');
   }
 
   /**
@@ -281,14 +281,16 @@ class MenuRouterTest extends BrowserTestBase {
     // For a regular user, the fact that the site is in maintenance mode means
     // we expect the theme callback system to be bypassed entirely.
     $this->drupalGet('menu-test/theme-callback/use-admin-theme');
-    $this->assertRaw('bartik/css/base/elements.css', "The maintenance theme's CSS appears on the page.");
+    // Check that the maintenance theme's CSS appears on the page.
+    $this->assertRaw('bartik/css/base/elements.css');
 
     // An administrator, however, should continue to see the requested theme.
     $admin_user = $this->drupalCreateUser(['access site in maintenance mode']);
     $this->drupalLogin($admin_user);
     $this->drupalGet('menu-test/theme-callback/use-admin-theme');
     $this->assertText('Active theme: seven. Actual theme: seven.', 'The theme negotiation system is correctly triggered for an administrator when the site is in maintenance mode.');
-    $this->assertRaw('seven/css/base/elements.css', "The administrative theme's CSS appears on the page.");
+    // Check that the administrative theme's CSS appears on the page.
+    $this->assertRaw('seven/css/base/elements.css');
 
     $this->container->get('state')->set('system.maintenance_mode', FALSE);
   }
@@ -300,7 +302,8 @@ class MenuRouterTest extends BrowserTestBase {
     // Request a theme that is not installed.
     $this->drupalGet('menu-test/theme-callback/use-test-theme');
     $this->assertText('Active theme: bartik. Actual theme: bartik.', 'The theme negotiation system falls back on the default theme when a theme that is not installed is requested.');
-    $this->assertRaw('bartik/css/base/elements.css', "The default theme's CSS appears on the page.");
+    // Check that the default theme's CSS appears on the page.
+    $this->assertRaw('bartik/css/base/elements.css');
 
     // Now install the theme and request it again.
     /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
@@ -309,7 +312,8 @@ class MenuRouterTest extends BrowserTestBase {
 
     $this->drupalGet('menu-test/theme-callback/use-test-theme');
     $this->assertText('Active theme: test_theme. Actual theme: test_theme.', 'The theme negotiation system uses an optional theme once it has been installed.');
-    $this->assertRaw('test_theme/kitten.css', "The optional theme's CSS appears on the page.");
+    // Check that the optional theme's CSS appears on the page.
+    $this->assertRaw('test_theme/kitten.css');
 
     $theme_installer->uninstall(['test_theme']);
   }
@@ -320,7 +324,8 @@ class MenuRouterTest extends BrowserTestBase {
   protected function doTestThemeCallbackFakeTheme() {
     $this->drupalGet('menu-test/theme-callback/use-fake-theme');
     $this->assertText('Active theme: bartik. Actual theme: bartik.', 'The theme negotiation system falls back on the default theme when a theme that does not exist is requested.');
-    $this->assertRaw('bartik/css/base/elements.css', "The default theme's CSS appears on the page.");
+    // Check that the default theme's CSS appears on the page.
+    $this->assertRaw('bartik/css/base/elements.css');
   }
 
   /**
@@ -329,7 +334,8 @@ class MenuRouterTest extends BrowserTestBase {
   protected function doTestThemeCallbackNoThemeRequested() {
     $this->drupalGet('menu-test/theme-callback/no-theme-requested');
     $this->assertText('Active theme: bartik. Actual theme: bartik.', 'The theme negotiation system falls back on the default theme when no theme is requested.');
-    $this->assertRaw('bartik/css/base/elements.css', "The default theme's CSS appears on the page.");
+    // Check that the default theme's CSS appears on the page.
+    $this->assertRaw('bartik/css/base/elements.css');
   }
 
 }

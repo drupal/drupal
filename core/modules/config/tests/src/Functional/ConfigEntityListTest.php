@@ -277,14 +277,14 @@ class ConfigEntityListTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/config_test');
 
     // Item 51 should not be present.
-    $this->assertRaw('Test config entity 50', 'Config entity 50 is shown.');
-    $this->assertNoRaw('Test config entity 51', 'Config entity 51 is on the next page.');
+    $this->assertRaw('Test config entity 50');
+    $this->assertNoRaw('Test config entity 51');
 
-    // Browse to the next page.
+    // Browse to the next page, test config entity 51 is on page 2.
     $this->clickLink(t('Page 2'));
-    $this->assertNoRaw('Test config entity 50', 'Test config entity 50 is on the previous page.');
-    $this->assertRaw('dotted.default', 'Default config entity appears on page 2.');
-    $this->assertRaw('Test config entity 51', 'Test config entity 51 is on page 2.');
+    $this->assertNoRaw('Test config entity 50');
+    $this->assertRaw('dotted.default');
+    $this->assertRaw('Test config entity 51');
   }
 
 }

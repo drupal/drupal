@@ -133,10 +133,10 @@ class DbLogTest extends BrowserTestBase {
     $this->assertSession()->linkByHrefExists($context['referer']);
 
     // Verify hostname.
-    $this->assertRaw($context['ip'], 'Found hostname on the detail page.');
+    $this->assertRaw($context['ip']);
 
     // Verify location.
-    $this->assertRaw($context['request_uri'], 'Found location on the detail page.');
+    $this->assertRaw($context['request_uri']);
 
     // Verify severity.
     $this->assertText('Notice', 'The severity was properly displayed on the detail page.');
@@ -471,7 +471,7 @@ class DbLogTest extends BrowserTestBase {
       $link = mb_substr($value, strpos($value, 'admin/reports/dblog/event/'));
       $this->drupalGet($link);
       // Check for full message text on the details page.
-      $this->assertRaw($message, 'DBLog event details was found: [delete user]');
+      $this->assertRaw($message);
     }
     $this->assertNotEmpty($link, 'DBLog event was recorded: [delete user]');
     // Visit random URL (to generate page not found event).

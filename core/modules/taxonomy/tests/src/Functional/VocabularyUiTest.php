@@ -47,7 +47,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
     $edit['description'] = $this->randomMachineName();
     $edit['vid'] = $vid;
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertRaw(t('Created new vocabulary %name.', ['%name' => $edit['name']]), 'Vocabulary created successfully.');
+    $this->assertRaw(t('Created new vocabulary %name.', ['%name' => $edit['name']]));
 
     // Edit the vocabulary.
     $this->drupalGet('admin/structure/taxonomy');
@@ -150,12 +150,12 @@ class VocabularyUiTest extends TaxonomyTestBase {
     // Delete the vocabulary.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $vocabulary->id());
     $this->clickLink(t('Delete'));
-    $this->assertRaw(t('Are you sure you want to delete the vocabulary %name?', ['%name' => $vocabulary->label()]), '[confirm deletion] Asks for confirmation.');
+    $this->assertRaw(t('Are you sure you want to delete the vocabulary %name?', ['%name' => $vocabulary->label()]));
     $this->assertText(t('Deleting a vocabulary will delete all the terms in it. This action cannot be undone.'), '[confirm deletion] Inform that all terms will be deleted.');
 
     // Confirm deletion.
     $this->drupalPostForm(NULL, NULL, t('Delete'));
-    $this->assertRaw(t('Deleted vocabulary %name.', ['%name' => $vocabulary->label()]), 'Vocabulary deleted.');
+    $this->assertRaw(t('Deleted vocabulary %name.', ['%name' => $vocabulary->label()]));
     $this->container->get('entity_type.manager')->getStorage('taxonomy_vocabulary')->resetCache();
     $this->assertNull(Vocabulary::load($vid), 'Vocabulary not found.');
   }

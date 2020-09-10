@@ -59,7 +59,7 @@ class SiteMaintenanceTest extends BrowserTestBase {
     $permission_label = $permissions['access site in maintenance mode']['title'];
     $permission_message = t('Visitors will only see the maintenance mode message. Only users with the "@permission-label" <a href=":permissions-url">permission</a> will be able to access the site. Authorized users can log in directly via the <a href=":user-login">user login</a> page.', ['@permission-label' => $permission_label, ':permissions-url' => Url::fromRoute('user.admin_permissions')->toString(), ':user-login' => Url::fromRoute('user.login')->toString()]);
     $this->drupalGet(Url::fromRoute('system.site_maintenance_mode'));
-    $this->assertRaw($permission_message, 'Found the permission message.');
+    $this->assertRaw($permission_message);
 
     $this->drupalGet(Url::fromRoute('user.page'));
     // JS should be aggregated, so drupal.js is not in the page source.
@@ -79,7 +79,7 @@ class SiteMaintenanceTest extends BrowserTestBase {
     // JS should not be aggregated, so drupal.js is expected in the page source.
     $links = $this->xpath('//script[contains(@src, :href)]', [':href' => '/core/misc/drupal.js']);
     $this->assertTrue(isset($links[0]), 'script /core/misc/drupal.js in page');
-    $this->assertRaw($admin_message, 'Found the site maintenance mode message.');
+    $this->assertRaw($admin_message);
 
     // Logout and verify that offline message is displayed.
     $this->drupalLogout();
@@ -112,7 +112,7 @@ class SiteMaintenanceTest extends BrowserTestBase {
     $this->drupalLogout();
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/config/development/maintenance');
-    $this->assertNoRaw($admin_message, 'Site maintenance mode message not displayed.');
+    $this->assertNoRaw($admin_message);
 
     $offline_message = 'Sorry, not online.';
     $edit = [
@@ -124,7 +124,7 @@ class SiteMaintenanceTest extends BrowserTestBase {
     $this->drupalLogout();
     $this->drupalGet('');
     $this->assertEqual('Site under maintenance', $this->cssSelect('main h1')[0]->getText());
-    $this->assertRaw($offline_message, 'Found the site offline message.');
+    $this->assertRaw($offline_message);
 
     // Verify that custom site offline message is not displayed on user/password.
     $this->drupalGet('user/password');

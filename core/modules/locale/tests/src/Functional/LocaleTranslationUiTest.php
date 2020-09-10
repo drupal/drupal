@@ -77,7 +77,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     t($name, [], ['langcode' => $langcode])->render();
     // Reset locale cache.
     $this->container->get('string_translation')->reset();
-    $this->assertRaw('"edit-languages-' . $langcode . '-weight"', 'Language code found.');
+    $this->assertRaw('"edit-languages-' . $langcode . '-weight"');
     $this->assertText(t($name), 'Test language added.');
     $this->drupalLogout();
 
@@ -119,7 +119,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
       'translation' => 'translated',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
-    $this->assertRaw($translation, 'Non-English translation properly saved.');
+    $this->assertRaw($translation);
 
     $search = [
       'string' => $name,
@@ -139,7 +139,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
       'translation' => 'translated',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
-    $this->assertRaw($translation_to_en, 'English translation properly saved.');
+    $this->assertRaw($translation_to_en);
 
     $this->assertTrue($name != $translation && t($name, [], ['langcode' => $langcode]) == $translation, 't() works for non-English.');
     // Refresh the locale() cache to get fresh data from t() below. We are in
@@ -188,7 +188,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     $this->drupalPostForm($path, [], t('Delete'));
     // We need raw here because %language and %langcode will add HTML.
     $t_args = ['%language' => $name, '%langcode' => $langcode];
-    $this->assertRaw(t('The %language (%langcode) language has been removed.', $t_args), 'The test language has been removed.');
+    $this->assertRaw(t('The %language (%langcode) language has been removed.', $t_args));
     // Reload to remove $name.
     $this->drupalGet($path);
     // Verify that language is no longer found.
@@ -210,7 +210,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
       $lid => '',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $edit, t('Save translations'));
-    $this->assertRaw($name, 'The strings have been saved.');
+    $this->assertRaw($name);
     $this->drupalLogin($translate_user);
     $search = [
       'string' => $name,

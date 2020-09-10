@@ -94,11 +94,11 @@ class UserEditTest extends BrowserTestBase {
 
     $config->set('password_strength', TRUE)->save();
     $this->drupalPostForm("user/" . $user1->id() . "/edit", $edit, t('Save'));
-    $this->assertRaw(t('Password strength:'), 'The password strength indicator is displayed.');
+    $this->assertRaw(t('Password strength:'));
 
     $config->set('password_strength', FALSE)->save();
     $this->drupalPostForm("user/" . $user1->id() . "/edit", $edit, t('Save'));
-    $this->assertNoRaw(t('Password strength:'), 'The password strength indicator is not displayed.');
+    $this->assertNoRaw(t('Password strength:'));
 
     // Check that the user status field has the correct value and that it is
     // properly displayed.

@@ -227,7 +227,7 @@ class PagePreviewTest extends NodeTestBase {
 
     $view_mode_edit = ['view_mode' => 'teaser'];
     $this->drupalPostForm('node/preview/' . $uuid . '/full', $view_mode_edit, t('Switch'));
-    $this->assertRaw('view-mode-teaser', 'View mode teaser class found.');
+    $this->assertRaw('view-mode-teaser');
     $this->assertNoText($edit[$body_key], 'Body not displayed.');
 
     // Check that the title, body and term fields are displayed with the
@@ -275,8 +275,8 @@ class PagePreviewTest extends NodeTestBase {
     $newterm2 = $this->randomMachineName(8);
     $edit[$term_key] = $this->term->getName() . ', ' . $newterm1 . ', ' . $newterm2;
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Preview'));
-    $this->assertRaw('>' . $newterm1 . '<', 'First new term displayed.');
-    $this->assertRaw('>' . $newterm2 . '<', 'Second new term displayed.');
+    $this->assertRaw('>' . $newterm1 . '<');
+    $this->assertRaw('>' . $newterm2 . '<');
     // The first term should be displayed as link, the others not.
     $this->assertSession()->linkExists($this->term->getName());
     $this->assertSession()->linkNotExists($newterm1);
@@ -290,9 +290,9 @@ class PagePreviewTest extends NodeTestBase {
     $newterm3 = $this->randomMachineName(8);
     $edit[$term_key] = $newterm1 . ', ' . $newterm3 . ', ' . $newterm2;
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Preview'));
-    $this->assertRaw('>' . $newterm1 . '<', 'First existing term displayed.');
-    $this->assertRaw('>' . $newterm2 . '<', 'Second existing term displayed.');
-    $this->assertRaw('>' . $newterm3 . '<', 'Third new term displayed.');
+    $this->assertRaw('>' . $newterm1 . '<');
+    $this->assertRaw('>' . $newterm2 . '<');
+    $this->assertRaw('>' . $newterm3 . '<');
     $this->assertNoText($this->term->getName());
     $this->assertSession()->linkExists($newterm1);
     $this->assertSession()->linkExists($newterm2);

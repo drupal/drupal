@@ -233,7 +233,7 @@ class FormTest extends BrowserTestBase {
     ];
     $this->drupalPostForm(NULL, $edit, 'Submit');
     $this->assertNoFieldByXpath('//div[contains(@class, "error")]', FALSE, 'No error message is displayed when all required fields are filled.');
-    $this->assertRaw("The form_test_validate_required_form form was submitted successfully.", 'Validation form submitted successfully.');
+    $this->assertRaw("The form_test_validate_required_form form was submitted successfully.");
   }
 
   /**
@@ -343,7 +343,7 @@ class FormTest extends BrowserTestBase {
     // Attempt to submit the form with no required field set.
     $edit = [];
     $this->drupalPostForm('form-test/validate-required-no-title', $edit, 'Submit');
-    $this->assertNoRaw("The form_test_validate_required_form_no_title form was submitted successfully.", 'Validation form submitted successfully.');
+    $this->assertNoRaw("The form_test_validate_required_form_no_title form was submitted successfully.");
 
     // Check the page for the error class on the textfield.
     $this->assertFieldByXPath('//input[contains(@class, "error")]', FALSE, 'Error input form element class found.');
@@ -358,7 +358,7 @@ class FormTest extends BrowserTestBase {
     ];
     $this->drupalPostForm(NULL, $edit, 'Submit');
     $this->assertNoFieldByXpath('//input[contains(@class, "error")]', FALSE, 'No error input form element class found.');
-    $this->assertRaw("The form_test_validate_required_form_no_title form was submitted successfully.", 'Validation form submitted successfully.');
+    $this->assertRaw("The form_test_validate_required_form_no_title form was submitted successfully.");
   }
 
   /**
@@ -370,7 +370,7 @@ class FormTest extends BrowserTestBase {
     // First, try to submit without the required checkbox.
     $edit = [];
     $this->drupalPostForm('form-test/checkbox', $edit, t('Submit'));
-    $this->assertRaw(t('@name field is required.', ['@name' => 'required_checkbox']), 'A required checkbox is actually mandatory');
+    $this->assertRaw(t('@name field is required.', ['@name' => 'required_checkbox']));
 
     // Now try to submit the form correctly.
     $this->drupalPostForm(NULL, ['required_checkbox' => 1], t('Submit'));

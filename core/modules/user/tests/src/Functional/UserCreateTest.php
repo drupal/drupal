@@ -81,18 +81,18 @@ class UserCreateTest extends BrowserTestBase {
     $this->assertFieldByXPath('//input[@type="radio" and @id="edit-status-1" and @checked="checked"]', NULL, 'Default setting for user status is active.');
 
     // Test that browser autocomplete behavior does not occur.
-    $this->assertNoRaw('data-user-info-from-browser', 'Ensure form attribute, data-user-info-from-browser, does not exist.');
+    $this->assertNoRaw('data-user-info-from-browser');
 
     // Test that the password strength indicator displays.
     $config = $this->config('user.settings');
 
     $config->set('password_strength', TRUE)->save();
     $this->drupalGet('admin/people/create');
-    $this->assertRaw(t('Password strength:'), 'The password strength indicator is displayed.');
+    $this->assertRaw(t('Password strength:'));
 
     $config->set('password_strength', FALSE)->save();
     $this->drupalGet('admin/people/create');
-    $this->assertNoRaw(t('Password strength:'), 'The password strength indicator is not displayed.');
+    $this->assertNoRaw(t('Password strength:'));
 
     // We create two users, notifying one and not notifying the other, to
     // ensure that the tests work in both cases.

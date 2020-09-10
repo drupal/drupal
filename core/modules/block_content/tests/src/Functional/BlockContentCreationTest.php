@@ -62,7 +62,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->assertRaw(new FormattableMarkup('@block %name has been created.', [
       '@block' => 'basic',
       '%name' => $edit['info[0][value]'],
-    ]), 'Basic block created.');
+    ]));
 
     // Check that the view mode setting is hidden because only one exists.
     $this->assertNoFieldByXPath('//select[@name="settings[view_mode]"]', NULL, 'View mode setting hidden because only one exists');
@@ -111,7 +111,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->assertRaw(new FormattableMarkup('@block %name has been created.', [
       '@block' => 'basic',
       '%name' => $edit['info[0][value]'],
-    ]), 'Basic block created.');
+    ]));
 
     // Save our block permanently
     $this->drupalPostForm(NULL, ['region' => 'content'], t('Save block'));
@@ -186,7 +186,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->assertRaw(new FormattableMarkup('@block %name has been created.', [
       '@block' => 'basic',
       '%name' => $edit['info[0][value]'],
-    ]), 'Basic block created.');
+    ]));
 
     // Check that the block exists in the database.
     $blocks = \Drupal::entityTypeManager()

@@ -104,14 +104,14 @@ trait BookTestTrait {
       $url = $previous->toUrl();
       $url->setOptions(['attributes' => ['rel' => ['prev'], 'title' => t('Go to previous page')]]);
       $text = new FormattableMarkup('<b>‹</b> @label', ['@label' => $previous->label()]);
-      $this->assertRaw(Link::fromTextAndUrl($text, $url)->toString(), 'Previous page link found.');
+      $this->assertRaw(Link::fromTextAndUrl($text, $url)->toString());
     }
 
     if ($up) {
       /** @var \Drupal\Core\Url $url */
       $url = $up->toUrl();
       $url->setOptions(['attributes' => ['title' => t('Go to parent page')]]);
-      $this->assertRaw(Link::fromTextAndUrl('Up', $url)->toString(), 'Up page link found.');
+      $this->assertRaw(Link::fromTextAndUrl('Up', $url)->toString());
     }
 
     if ($next) {
@@ -119,7 +119,7 @@ trait BookTestTrait {
       $url = $next->toUrl();
       $url->setOptions(['attributes' => ['rel' => ['next'], 'title' => t('Go to next page')]]);
       $text = new FormattableMarkup('@label <b>›</b>', ['@label' => $next->label()]);
-      $this->assertRaw(Link::fromTextAndUrl($text, $url)->toString(), 'Next page link found.');
+      $this->assertRaw(Link::fromTextAndUrl($text, $url)->toString());
     }
 
     // Compute the expected breadcrumb.
@@ -142,7 +142,7 @@ trait BookTestTrait {
     // Check printer friendly version.
     $this->drupalGet('book/export/html/' . $node->id());
     $this->assertText($node->label(), 'Printer friendly title found.');
-    $this->assertRaw($node->body->processed, 'Printer friendly body found.');
+    $this->assertRaw($node->body->processed);
 
     $number++;
   }

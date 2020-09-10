@@ -55,7 +55,7 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
       'language_configuration[language_alterable]' => TRUE,
     ];
     $this->drupalPostForm('admin/structure/types/manage/page', $edit, t('Save content type'));
-    $this->assertRaw(t('The content type %type has been updated.', ['%type' => 'Basic page']), 'Basic page content type has been updated.');
+    $this->assertRaw(t('The content type %type has been updated.', ['%type' => 'Basic page']));
 
     // Make node body translatable.
     $field_storage = FieldStorageConfig::loadByName('node', 'body');
@@ -102,10 +102,14 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
 
     // Test multilingual field language fallback logic.
     $this->drupalGet("it/node/{$node->id()}");
-    $this->assertRaw($body_value, 'Body correctly displayed using Italian as requested language');
+    // Verify that body is correctly displayed using Italian as requested
+    // language.
+    $this->assertRaw($body_value);
 
     $this->drupalGet("node/{$node->id()}");
-    $this->assertRaw($body_value, 'Body correctly displayed using English as requested language');
+    // Verify that body is correctly displayed using English as requested
+    // language.
+    $this->assertRaw($body_value);
   }
 
   /**

@@ -127,7 +127,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $this->drupalGet('admin/reports/translations/check');
 
     // Check the status on the Available translation status page.
-    $this->assertRaw('<label for="edit-langcodes-de" class="visually-hidden">Update German</label>', 'German language found');
+    $this->assertRaw('<label for="edit-langcodes-de" class="visually-hidden">Update German</label>');
     $this->assertText('Updates for: Contributed module one, Contributed module two, Custom module one, Locale test', 'Updates found');
     /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
     $date_formatter = $this->container->get('date.formatter');
@@ -317,7 +317,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Check if translations have been imported.
     $this->assertRaw(t('One translation file imported. %number translations were added, %update translations were updated and %delete translations were removed.',
-      ['%number' => 7, '%update' => 0, '%delete' => 0]), 'One translation file imported.');
+      ['%number' => 7, '%update' => 0, '%delete' => 0]));
     // cSpell:disable-next-line
     $this->assertTranslation('Tuesday', 'Dienstag', 'de');
 
@@ -364,7 +364,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Check if the right number of translations are added.
     $this->assertRaw(t('One translation file imported. %number translations were added, %update translations were updated and %delete translations were removed.',
-      ['%number' => 8, '%update' => 0, '%delete' => 0]), 'One language added.');
+      ['%number' => 8, '%update' => 0, '%delete' => 0]));
     // cSpell:disable-next-line
     $this->assertTranslation('Extraday', 'extra dag', 'nl');
 

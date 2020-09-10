@@ -55,7 +55,7 @@ class ErrorHandlerTest extends BrowserTestBase {
     $this->assertErrorMessage($error_notice);
     $this->assertErrorMessage($error_warning);
     $this->assertErrorMessage($error_user_notice);
-    $this->assertRaw('<pre class="backtrace">', 'Found pre element with backtrace class.');
+    $this->assertRaw('<pre class="backtrace">');
     // Ensure we are escaping but not double escaping.
     $this->assertRaw('&amp;');
     $this->assertNoRaw('&amp;amp;');
@@ -70,7 +70,7 @@ class ErrorHandlerTest extends BrowserTestBase {
     $this->assertErrorMessage($error_notice);
     $this->assertErrorMessage($error_warning);
     $this->assertErrorMessage($error_user_notice);
-    $this->assertNoRaw('<pre class="backtrace">', 'Did not find pre element with backtrace class.');
+    $this->assertNoRaw('<pre class="backtrace">');
 
     // Set error reporting to not collect notices.
     $config->set('error_level', ERROR_REPORTING_DISPLAY_SOME)->save();
@@ -79,7 +79,7 @@ class ErrorHandlerTest extends BrowserTestBase {
     $this->assertNoErrorMessage($error_notice);
     $this->assertErrorMessage($error_warning);
     $this->assertErrorMessage($error_user_notice);
-    $this->assertNoRaw('<pre class="backtrace">', 'Did not find pre element with backtrace class.');
+    $this->assertNoRaw('<pre class="backtrace">');
 
     // Set error reporting to not show any errors.
     $config->set('error_level', ERROR_REPORTING_HIDE)->save();
@@ -89,7 +89,7 @@ class ErrorHandlerTest extends BrowserTestBase {
     $this->assertNoErrorMessage($error_warning);
     $this->assertNoErrorMessage($error_user_notice);
     $this->assertNoMessages();
-    $this->assertNoRaw('<pre class="backtrace">', 'Did not find pre element with backtrace class.');
+    $this->assertNoRaw('<pre class="backtrace">');
   }
 
   /**
@@ -131,8 +131,7 @@ class ErrorHandlerTest extends BrowserTestBase {
     // error message.
     $this->assertSession()->pageTextContains($error_pdo_exception['@message']);
     $error_details = new FormattableMarkup('in %function (line ', $error_pdo_exception);
-    $this->assertRaw($error_details, new FormattableMarkup("Found '@message' in error page.", ['@message' => $error_details]));
-
+    $this->assertRaw($error_details);
     $this->drupalGet('error-test/trigger-renderer-exception');
     $this->assertSession()->statusCodeEquals(500);
     $this->assertErrorMessage($error_renderer_exception);
@@ -154,7 +153,7 @@ class ErrorHandlerTest extends BrowserTestBase {
    */
   public function assertErrorMessage(array $error) {
     $message = new FormattableMarkup('%type: @message in %function (line ', $error);
-    $this->assertRaw($message, new FormattableMarkup('Found error message: @message.', ['@message' => $message]));
+    $this->assertRaw($message);
   }
 
   /**
@@ -162,7 +161,7 @@ class ErrorHandlerTest extends BrowserTestBase {
    */
   public function assertNoErrorMessage(array $error) {
     $message = new FormattableMarkup('%type: @message in %function (line ', $error);
-    $this->assertNoRaw($message, new FormattableMarkup('Did not find error message: @message.', ['@message' => $message]));
+    $this->assertNoRaw($message);
   }
 
   /**

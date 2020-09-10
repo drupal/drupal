@@ -134,7 +134,7 @@ class DateTimeTest extends BrowserTestBase {
     $this->drupalPostForm('admin/config/regional/date-time/formats/manage/' . $date_format_id . '/delete', [], t('Delete'));
     // Verify that the user is redirected to the correct page.
     $this->assertSession()->addressEquals(Url::fromRoute('entity.date_format.collection'));
-    $this->assertRaw(t('The date format %format has been deleted.', ['%format' => $name]), 'Custom date format removed.');
+    $this->assertRaw(t('The date format %format has been deleted.', ['%format' => $name]));
 
     // Make sure the date does not exist in config.
     $date_format = DateFormat::load($date_format_id);

@@ -137,27 +137,27 @@ class CommentAnonymousTest extends CommentTestBase {
     // Make sure the user data appears correctly when editing the comment.
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('comment/' . $anonymous_comment3->id() . '/edit');
-    $this->assertRaw($author_name, "The anonymous user's name is correct when editing the comment.");
+    $this->assertRaw($author_name);
     $this->assertFieldByName('uid', '', 'The author field is empty (i.e. anonymous) when editing the comment.');
-    $this->assertRaw($author_mail, "The anonymous user's email address is correct when editing the comment.");
+    $this->assertRaw($author_mail);
 
     // Unpublish comment.
     $this->performCommentOperation($anonymous_comment3, 'unpublish');
 
     $this->drupalGet('admin/content/comment/approval');
-    $this->assertRaw('comments[' . $anonymous_comment3->id() . ']', 'Comment was unpublished.');
+    $this->assertRaw('comments[' . $anonymous_comment3->id() . ']');
 
     // Publish comment.
     $this->performCommentOperation($anonymous_comment3, 'publish', TRUE);
 
     $this->drupalGet('admin/content/comment');
-    $this->assertRaw('comments[' . $anonymous_comment3->id() . ']', 'Comment was published.');
+    $this->assertRaw('comments[' . $anonymous_comment3->id() . ']');
 
     // Delete comment.
     $this->performCommentOperation($anonymous_comment3, 'delete');
 
     $this->drupalGet('admin/content/comment');
-    $this->assertNoRaw('comments[' . $anonymous_comment3->id() . ']', 'Comment was deleted.');
+    $this->assertNoRaw('comments[' . $anonymous_comment3->id() . ']');
     $this->drupalLogout();
 
     // Comment 3 was deleted.

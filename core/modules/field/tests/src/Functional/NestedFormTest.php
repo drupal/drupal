@@ -128,14 +128,14 @@ class NestedFormTest extends FieldTestBase {
       'field_unlimited[1][value]' => -1,
     ];
     $this->drupalPostForm('test-entity/nested/1/2', $edit, t('Save'));
-    $this->assertRaw(t('%label does not accept the value -1', ['%label' => 'Unlimited field']), 'Entity 1: the field validation error was reported.');
+    $this->assertRaw(t('%label does not accept the value -1', ['%label' => 'Unlimited field']));
     $error_field = $this->xpath('//input[@id=:id and contains(@class, "error")]', [':id' => 'edit-field-unlimited-1-value']);
     $this->assertCount(1, $error_field, 'Entity 1: the error was flagged on the correct element.');
     $edit = [
       'entity_2[field_unlimited][1][value]' => -1,
     ];
     $this->drupalPostForm('test-entity/nested/1/2', $edit, t('Save'));
-    $this->assertRaw(t('%label does not accept the value -1', ['%label' => 'Unlimited field']), 'Entity 2: the field validation error was reported.');
+    $this->assertRaw(t('%label does not accept the value -1', ['%label' => 'Unlimited field']));
     $error_field = $this->xpath('//input[@id=:id and contains(@class, "error")]', [':id' => 'edit-entity-2-field-unlimited-1-value']);
     $this->assertCount(1, $error_field, 'Entity 2: the error was flagged on the correct element.');
 

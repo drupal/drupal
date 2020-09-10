@@ -148,7 +148,7 @@ SQL;
     $this->assertCount(1, $elements, 'Views Query Preview Info area altered.');
     // Check that additional assets are attached.
     $this->assertStringContainsString('views_ui_test/views_ui_test.test', $this->getDrupalSettings()['ajaxPageState']['libraries'], 'Attached library found.');
-    $this->assertRaw('css/views_ui_test.test.css', 'Attached CSS asset found.');
+    $this->assertRaw('css/views_ui_test.test.css');
   }
 
   /**

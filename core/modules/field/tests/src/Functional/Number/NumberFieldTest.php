@@ -87,7 +87,7 @@ class NumberFieldTest extends BrowserTestBase {
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', ['@id' => $id]), 'Entity was created');
-    $this->assertRaw($value, 'Value is displayed.');
+    $this->assertRaw($value);
 
     // Try to create entries with more than one decimal separator; assert fail.
     $wrong_entries = [
@@ -104,7 +104,7 @@ class NumberFieldTest extends BrowserTestBase {
         "{$field_name}[0][value]" => $wrong_entry,
       ];
       $this->drupalPostForm(NULL, $edit, t('Save'));
-      $this->assertRaw(t('%name must be a number.', ['%name' => $field_name]), 'Correctly failed to save decimal value with more than one decimal point.');
+      $this->assertRaw(t('%name must be a number.', ['%name' => $field_name]));
     }
 
     // Try to create entries with minus sign not in the first position.
@@ -122,7 +122,7 @@ class NumberFieldTest extends BrowserTestBase {
         "{$field_name}[0][value]" => $wrong_entry,
       ];
       $this->drupalPostForm(NULL, $edit, t('Save'));
-      $this->assertRaw(t('%name must be a number.', ['%name' => $field_name]), 'Correctly failed to save decimal value with minus sign in the wrong position.');
+      $this->assertRaw(t('%name must be a number.', ['%name' => $field_name]));
     }
   }
 
@@ -209,7 +209,7 @@ class NumberFieldTest extends BrowserTestBase {
       "{$field_name}[0][value]" => $minimum - 1,
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertRaw(t('%name must be higher than or equal to %minimum.', ['%name' => $field_name, '%minimum' => $minimum]), 'Correctly failed to save integer value less than minimum allowed value.');
+    $this->assertRaw(t('%name must be higher than or equal to %minimum.', ['%name' => $field_name, '%minimum' => $minimum]));
 
     // Try to set a decimal value
     $this->drupalGet('entity_test/add');
@@ -217,7 +217,7 @@ class NumberFieldTest extends BrowserTestBase {
       "{$field_name}[0][value]" => 1.5,
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertRaw(t('%name is not a valid number.', ['%name' => $field_name]), 'Correctly failed to save decimal value to integer field.');
+    $this->assertRaw(t('%name is not a valid number.', ['%name' => $field_name]));
 
     // Try to set a value above the maximum value
     $this->drupalGet('entity_test/add');
@@ -225,7 +225,7 @@ class NumberFieldTest extends BrowserTestBase {
       "{$field_name}[0][value]" => $maximum + 1,
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertRaw(t('%name must be lower than or equal to %maximum.', ['%name' => $field_name, '%maximum' => $maximum]), 'Correctly failed to save integer value greater than maximum allowed value.');
+    $this->assertRaw(t('%name must be lower than or equal to %maximum.', ['%name' => $field_name, '%maximum' => $maximum]));
 
     // Try to set a wrong integer value.
     $this->drupalGet('entity_test/add');
@@ -233,7 +233,7 @@ class NumberFieldTest extends BrowserTestBase {
       "{$field_name}[0][value]" => '20-40',
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertRaw(t('%name must be a number.', ['%name' => $field_name]), 'Correctly failed to save wrong integer value.');
+    $this->assertRaw(t('%name must be a number.', ['%name' => $field_name]));
 
     // Test with valid entries.
     $valid_entries = [
@@ -251,7 +251,7 @@ class NumberFieldTest extends BrowserTestBase {
       preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
       $id = $match[1];
       $this->assertText(t('entity_test @id has been created.', ['@id' => $id]), 'Entity was created');
-      $this->assertRaw($valid_entry, 'Value is displayed.');
+      $this->assertRaw($valid_entry);
       $this->assertNoFieldByXpath('//div[@content="' . $valid_entry . '"]', NULL, 'The "content" attribute is not present since the Prefix is not being displayed');
     }
 
@@ -348,7 +348,7 @@ class NumberFieldTest extends BrowserTestBase {
         "{$field_name}[0][value]" => $wrong_entry,
       ];
       $this->drupalPostForm(NULL, $edit, t('Save'));
-      $this->assertRaw(t('%name must be a number.', ['%name' => $field_name]), 'Correctly failed to save float value with more than one decimal point.');
+      $this->assertRaw(t('%name must be a number.', ['%name' => $field_name]));
     }
 
     // Try to create entries with minus sign not in the first position.
@@ -366,7 +366,7 @@ class NumberFieldTest extends BrowserTestBase {
         "{$field_name}[0][value]" => $wrong_entry,
       ];
       $this->drupalPostForm(NULL, $edit, t('Save'));
-      $this->assertRaw(t('%name must be a number.', ['%name' => $field_name]), 'Correctly failed to save float value with minus sign in the wrong position.');
+      $this->assertRaw(t('%name must be a number.', ['%name' => $field_name]));
     }
   }
 
@@ -432,7 +432,7 @@ class NumberFieldTest extends BrowserTestBase {
     ];
     $this->drupalPostForm($field_configuration_url, $edit, t('Save settings'));
     // Check if an error message is shown.
-    $this->assertNoRaw(t('%name is not a valid number.', ['%name' => t('Minimum')]), 'Saved ' . gettype($minimum_value) . '  value as minimal value on a ' . $field->getType() . ' field');
+    $this->assertNoRaw(t('%name is not a valid number.', ['%name' => t('Minimum')]));
     // Check if a success message is shown.
     $this->assertRaw(t('Saved %label configuration.', ['%label' => $field->getLabel()]));
     // Check if the minimum value was actually set.

@@ -88,7 +88,7 @@ class CommentBlockTest extends CommentTestBase {
     for ($i = 0; $i < 10; $i++) {
       $this->clickLink($comments[$i]->getSubject());
       $this->assertText($comments[$i]->getSubject(), 'Comment link goes to correct page.');
-      $this->assertRaw('<link rel="canonical"', 'Canonical URL was found in the HTML head');
+      $this->assertRaw('<link rel="canonical"');
     }
   }
 

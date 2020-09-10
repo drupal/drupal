@@ -78,7 +78,7 @@ class NodeActionsConfigurationTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Make sure that the action was actually deleted.
-    $this->assertRaw(t('The action %action has been deleted.', ['%action' => $new_action_label]), 'The delete confirmation message appears after deleting the node_assign_owner_action action.');
+    $this->assertRaw(t('The action %action has been deleted.', ['%action' => $new_action_label]));
     $this->drupalGet('admin/config/system/actions');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertNoText($new_action_label, 'The label for the node_assign_owner_action action does not appear on the actions administration page after deleting.');

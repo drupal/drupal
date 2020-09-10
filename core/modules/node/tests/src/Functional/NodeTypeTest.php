@@ -186,8 +186,7 @@ class NodeTypeTest extends NodeTestBase {
     // Attempt to delete the content type, which should not be allowed.
     $this->drupalGet('admin/structure/types/manage/' . $type->label() . '/delete');
     $this->assertRaw(
-      t('%type is used by 1 piece of content on your site. You can not remove this content type until you have removed all of the %type content.', ['%type' => $type->label()]),
-      'The content type will not be deleted until all nodes of that type are removed.'
+     t('%type is used by 1 piece of content on your site. You can not remove this content type until you have removed all of the %type content.', ['%type' => $type->label()])
     );
     $this->assertNoText('This action cannot be undone.', 'The node type deletion confirmation form is not available.');
 
@@ -196,8 +195,7 @@ class NodeTypeTest extends NodeTestBase {
     // Attempt to delete the content type, which should now be allowed.
     $this->drupalGet('admin/structure/types/manage/' . $type->label() . '/delete');
     $this->assertRaw(
-      t('Are you sure you want to delete the content type %type?', ['%type' => $type->label()]),
-      'The content type is available for deletion.'
+      t('Are you sure you want to delete the content type %type?', ['%type' => $type->label()])
     );
     $this->assertText(t('This action cannot be undone.'), 'The node type deletion confirmation form is available.');
 
@@ -273,7 +271,7 @@ class NodeTypeTest extends NodeTestBase {
     $this->drupalGet('admin/structure/types');
     $this->assertRaw(t('No content types available. <a href=":link">Add content type</a>.', [
         ':link' => Url::fromRoute('node.type_add')->toString(),
-      ]), 'Empty text when there are no content types in the system is correct.');
+      ]));
 
     $bundle_info->clearCachedBundles();
     $this->assertCount(0, $bundle_info->getBundleInfo('node'), 'The bundle information service has 0 bundles for the Node entity type.');

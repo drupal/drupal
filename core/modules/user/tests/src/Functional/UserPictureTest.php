@@ -72,7 +72,7 @@ class UserPictureTest extends BrowserTestBase {
 
     // Verify that the image is displayed on the user account page.
     $this->drupalGet('user');
-    $this->assertRaw(StreamWrapperManager::getTarget($file->getFileUri()), 'User picture found on user account page.');
+    $this->assertRaw(StreamWrapperManager::getTarget($file->getFileUri()));
 
     // Delete the picture.
     $edit = [];
@@ -143,7 +143,7 @@ class UserPictureTest extends BrowserTestBase {
       ->save();
 
     $this->drupalGet('node/' . $node->id());
-    $this->assertNoRaw(StreamWrapperManager::getTarget($file->getFileUri()), 'User picture not found on node and comment.');
+    $this->assertNoRaw(StreamWrapperManager::getTarget($file->getFileUri()));
   }
 
   /**

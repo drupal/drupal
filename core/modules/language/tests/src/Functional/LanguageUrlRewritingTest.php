@@ -56,7 +56,7 @@ class LanguageUrlRewritingTest extends BrowserTestBase {
 
     // Check that drupalSettings contains path prefix.
     $this->drupalGet('fr/admin/config/regional/language/detection');
-    $this->assertRaw('"pathPrefix":"fr\/"', 'drupalSettings path prefix contains language code.');
+    $this->assertRaw('"pathPrefix":"fr\/"');
   }
 
   /**

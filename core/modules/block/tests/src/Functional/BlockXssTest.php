@@ -50,7 +50,8 @@ class BlockXssTest extends BrowserTestBase {
 
     \Drupal::state()->set('block_test.content', $this->randomMachineName());
     $this->drupalGet('');
-    $this->assertNoRaw('<script>alert("XSS label");</script>', 'The block title was properly sanitized when rendered.');
+    // Check that the block title was properly sanitized when rendered.
+    $this->assertNoRaw('<script>alert("XSS label");</script>');
 
     $this->drupalLogin($this->drupalCreateUser([
       'administer blocks',
@@ -58,7 +59,9 @@ class BlockXssTest extends BrowserTestBase {
     ]));
     $default_theme = $this->config('system.theme')->get('default');
     $this->drupalGet('admin/structure/block/list/' . $default_theme);
-    $this->assertNoRaw("<script>alert('XSS subject');</script>", 'The block title was properly sanitized in Block Plugin UI Admin page.');
+    // Check that the block title was properly sanitized in Block Plugin UI
+    // Admin page.
+    $this->assertNoRaw("<script>alert('XSS subject');</script>");
   }
 
   /**
@@ -88,7 +91,8 @@ class BlockXssTest extends BrowserTestBase {
 
     $this->drupalGet(Url::fromRoute('block.admin_display'));
     $this->clickLink('Place block');
-    $this->assertNoRaw('&amp;lt;', 'The page does not have double escaped HTML tags.');
+    // Check that the page does not have double escaped HTML tags.
+    $this->assertNoRaw('&amp;lt;');
   }
 
   /**

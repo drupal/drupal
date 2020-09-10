@@ -77,11 +77,11 @@ class HelpTest extends BrowserTestBase {
 
     // Verify that hook_help() section title and description appear.
     $this->assertRaw('<h2>' . t('Module overviews') . '</h2>');
-    $this->assertRaw('<p>' . t('Module overviews are provided by modules. Overviews available for your installed modules:'), '</p>');
+    $this->assertRaw('<p>' . t('Module overviews are provided by modules. Overviews available for your installed modules:') . '</p>');
 
     // Verify that an empty section is handled correctly.
     $this->assertRaw('<h2>' . t('Empty section') . '</h2>');
-    $this->assertRaw('<p>' . t('This description should appear.'), '</p>');
+    $this->assertRaw('<p>' . t('This description should appear.') . '</p>');
     $this->assertText(t('There is currently nothing in this section.'));
 
     // Make sure links are properly added for modules implementing hook_help().

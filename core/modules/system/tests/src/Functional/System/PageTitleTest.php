@@ -93,15 +93,18 @@ class PageTitleTest extends BrowserTestBase {
     // Load frontpage.
     $this->drupalGet('');
 
-    // Test the title.
-    $this->assertNoRaw($title, 'Check for the lack of the unfiltered version of the title.');
+    // Test the title, checking for the lack of the unfiltered version of the
+    // title.
+    $this->assertNoRaw($title);
     // Add </title> to make sure we're checking the title tag, rather than the
     // first 'heading' on the page.
-    $this->assertRaw($title_filtered . '</title>', 'Check for the filtered version of the title in a <title> tag.');
+    $this->assertRaw($title_filtered . '</title>');
 
     // Test the slogan.
-    $this->assertNoRaw($slogan, 'Check for the unfiltered version of the slogan.');
-    $this->assertRaw($slogan_filtered, 'Check for the filtered version of the slogan.');
+    // Check the unfiltered version of the slogan is missing.
+    $this->assertNoRaw($slogan);
+    // Check for the filtered version of the slogan.
+    $this->assertRaw($slogan_filtered);
   }
 
   /**

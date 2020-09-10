@@ -111,7 +111,7 @@ class RssTest extends TaxonomyTestBase {
       'domain="' . $term1->toUrl('canonical', ['absolute' => TRUE])->toString() . '"',
       $term1->getName()
     );
-    $this->assertRaw($test_element, 'Term is displayed when viewing the rss feed.');
+    $this->assertRaw($test_element);
 
     // Test that the feed icon exists for the term.
     $this->drupalGet("taxonomy/term/{$term1->id()}");
@@ -138,7 +138,7 @@ class RssTest extends TaxonomyTestBase {
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $raw_xml = '<title>' . $node->label() . '</title>';
     $this->drupalGet('taxonomy/term/all/feed');
-    $this->assertRaw($raw_xml, "Raw text '$raw_xml' is found.");
+    $this->assertRaw($raw_xml);
     // Unpublish the article and check that it is not shown in the feed.
     $node->setUnpublished()->save();
     $this->drupalGet('taxonomy/term/all/feed');

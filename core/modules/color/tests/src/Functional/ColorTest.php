@@ -208,8 +208,10 @@ class ColorTest extends BrowserTestBase {
     $this->drupalPlaceBlock('system_branding_block', ['region' => 'header']);
 
     $this->drupalGet('');
-    $this->assertNoRaw('files/color/bartik-', 'Make sure the color logo is not being used.');
-    $this->assertRaw('bartik/logo.svg', 'Make sure the original bartik logo exists.');
+    // Make sure the color logo is not being used.
+    $this->assertNoRaw('files/color/bartik-');
+    // Make sure the original bartik logo exists.
+    $this->assertRaw('bartik/logo.svg');
 
     // Log in and set the color scheme to 'slate'.
     $this->drupalLogin($this->bigUser);
@@ -219,8 +221,10 @@ class ColorTest extends BrowserTestBase {
     // Visit the homepage and ensure color changes.
     $this->drupalLogout();
     $this->drupalGet('');
-    $this->assertRaw('files/color/bartik-', 'Make sure the color logo is being used.');
-    $this->assertNoRaw('bartik/logo.svg', 'Make sure the original bartik logo does not exist.');
+    // Make sure the color logo is being used.
+    $this->assertRaw('files/color/bartik-');
+    // Make sure the original bartik logo does not exist.
+    $this->assertNoRaw('bartik/logo.svg');
 
     // Log in and set the color scheme back to default (delete config).
     $this->drupalLogin($this->bigUser);
@@ -230,8 +234,10 @@ class ColorTest extends BrowserTestBase {
     // Log out and ensure there is no color and we have the original logo.
     $this->drupalLogout();
     $this->drupalGet('');
-    $this->assertNoRaw('files/color/bartik-', 'Make sure the color logo is not being used.');
-    $this->assertRaw('bartik/logo.svg', 'Make sure the original bartik logo exists.');
+    // Make sure the color logo is not being used.
+    $this->assertNoRaw('files/color/bartik-');
+    // Make sure the original bartik logo exists.
+    $this->assertRaw('bartik/logo.svg');
   }
 
 }

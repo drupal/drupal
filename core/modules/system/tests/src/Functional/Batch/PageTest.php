@@ -76,12 +76,15 @@ class PageTest extends BrowserTestBase {
     // Go to the initial step only.
     $this->maximumMetaRefreshCount = 0;
     $this->drupalGet('batch-test/test-title');
-    $this->assertRaw('<div class="progress__description">Initializing.<br />&nbsp;</div>', 'Initial progress message appears correctly.');
-    $this->assertNoRaw('&amp;nbsp;', 'Initial progress message is not double escaped.');
+    // Check that the initial progress message appears correctly and is not
+    // double escaped.
+    $this->assertRaw('<div class="progress__description">Initializing.<br />&nbsp;</div>');
+    $this->assertNoRaw('&amp;nbsp;');
     // Now also go to the next step.
     $this->maximumMetaRefreshCount = 1;
     $this->drupalGet('batch-test/test-title');
-    $this->assertRaw('<div class="progress__description">Completed 1 of 1.</div>', 'Progress message for second step appears correctly.');
+    // Check that the progress message for second step appears correctly.
+    $this->assertRaw('<div class="progress__description">Completed 1 of 1.</div>');
   }
 
 }

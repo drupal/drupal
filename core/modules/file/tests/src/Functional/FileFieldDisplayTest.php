@@ -79,13 +79,13 @@ class FileFieldDisplayTest extends FileFieldTestBase {
       '#file' => $node_file,
     ];
     $default_output = \Drupal::service('renderer')->renderRoot($file_link);
-    $this->assertRaw($default_output, 'Default formatter displaying correctly on full node view.');
+    $this->assertRaw($default_output);
 
     // Turn the "display" option off and check that the file is no longer displayed.
     $edit = [$field_name . '[0][display]' => FALSE];
     $this->drupalPostForm('node/' . $nid . '/edit', $edit, t('Save'));
 
-    $this->assertNoRaw($default_output, 'Field is hidden when "display" option is unchecked.');
+    $this->assertNoRaw($default_output);
 
     // Add a description and make sure that it is displayed.
     $description = $this->randomMachineName();
@@ -110,8 +110,10 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     $edit[$field_name . '[1][display]'] = FALSE;
     $this->drupalPostForm(NULL, $edit, t('Preview'));
     $this->clickLink(t('Back to content editing'));
-    $this->assertRaw($field_name . '[0][display]', 'First file appears as expected.');
-    $this->assertRaw($field_name . '[1][display]', 'Second file appears as expected.');
+    // First file.
+    $this->assertRaw($field_name . '[0][display]');
+    // Second file.
+    $this->assertRaw($field_name . '[1][display]');
     $this->assertSession()->responseContains($field_name . '[1][description]');
 
     // Check that the file fields don't contain duplicate HTML IDs.

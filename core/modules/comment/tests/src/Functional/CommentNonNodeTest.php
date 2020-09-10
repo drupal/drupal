@@ -238,7 +238,7 @@ class CommentNonNodeTest extends BrowserTestBase {
 
     if ($operation == 'delete') {
       $this->drupalPostForm(NULL, [], t('Delete'));
-      $this->assertRaw(\Drupal::translation()->formatPlural(1, 'Deleted 1 comment.', 'Deleted @count comments.'), new FormattableMarkup('Operation "@operation" was performed on comment.', ['@operation' => $operation]));
+      $this->assertRaw(\Drupal::translation()->formatPlural(1, 'Deleted 1 comment.', 'Deleted @count comments.'));
     }
     else {
       $this->assertText(t('The update has been performed.'), new FormattableMarkup('Operation "@operation" was performed on comment.', ['@operation' => $operation]));
@@ -313,17 +313,17 @@ class CommentNonNodeTest extends BrowserTestBase {
     // Unpublish the comment.
     $this->performCommentOperation($comment1, 'unpublish');
     $this->drupalGet('admin/content/comment/approval');
-    $this->assertRaw('comments[' . $comment1->id() . ']', 'Comment was unpublished.');
+    $this->assertRaw('comments[' . $comment1->id() . ']');
 
     // Publish the comment.
     $this->performCommentOperation($comment1, 'publish', TRUE);
     $this->drupalGet('admin/content/comment');
-    $this->assertRaw('comments[' . $comment1->id() . ']', 'Comment was published.');
+    $this->assertRaw('comments[' . $comment1->id() . ']');
 
     // Delete the comment.
     $this->performCommentOperation($comment1, 'delete');
     $this->drupalGet('admin/content/comment');
-    $this->assertNoRaw('comments[' . $comment1->id() . ']', 'Comment was deleted.');
+    $this->assertNoRaw('comments[' . $comment1->id() . ']');
 
     // Post another comment.
     $comment1 = $this->postComment($this->entity, $this->randomMachineName(), $this->randomMachineName());
@@ -331,7 +331,7 @@ class CommentNonNodeTest extends BrowserTestBase {
 
     // Check that the comment was found.
     $this->drupalGet('admin/content/comment');
-    $this->assertRaw('comments[' . $comment1->id() . ']', 'Comment was published.');
+    $this->assertRaw('comments[' . $comment1->id() . ']');
 
     // Check that entity access applies to administrative page.
     $this->assertText($this->entity->label(), 'Name of commented account found.');

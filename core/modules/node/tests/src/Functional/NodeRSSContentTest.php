@@ -62,8 +62,8 @@ class NodeRSSContentTest extends NodeTestBase {
     // Check that extra RSS elements and namespaces are added to RSS feed.
     $test_element = '<testElement>' . t('Value of testElement RSS element for node @nid.', ['@nid' => $node->id()]) . '</testElement>';
     $test_ns = 'xmlns:drupaltest="http://example.com/test-namespace"';
-    $this->assertRaw($test_element, 'Extra RSS elements appear in RSS feed.');
-    $this->assertRaw($test_ns, 'Extra namespaces appear in RSS feed.');
+    $this->assertRaw($test_element);
+    $this->assertRaw($test_ns);
 
     // Check that content added in 'rss' view mode doesn't appear when
     // viewing node.
@@ -109,9 +109,12 @@ class NodeRSSContentTest extends NodeTestBase {
     ]);
 
     $this->drupalGet('rss.xml');
-    $this->assertRaw(file_create_url('public://root-relative'), 'Root-relative URL is transformed to absolute.');
-    $this->assertRaw($protocol_relative_url, 'Protocol-relative URL is left untouched.');
-    $this->assertRaw($absolute_url, 'Absolute URL is left untouched.');
+    // Verify that root-relative URL is transformed to absolute.
+    $this->assertRaw(file_create_url('public://root-relative'));
+    // Verify that protocol-relative URL is left untouched.
+    $this->assertRaw($protocol_relative_url);
+    // Verify that absolute URL is left untouched.
+    $this->assertRaw($absolute_url);
   }
 
 }
