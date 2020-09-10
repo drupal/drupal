@@ -124,9 +124,4 @@ class RestJsonApiUnsupported extends ResourceTestBase {
    */
   protected function getExpectedUnauthorizedAccessCacheability() {}
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function getExpectedBcUnauthorizedAccessMessage($method) {}
-
 }

@@ -266,11 +266,6 @@ class RestRegisterUserTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedBcUnauthorizedAccessMessage($method) {}
-
-  /**
-   * {@inheritdoc}
-   */
   protected function getExpectedUnauthorizedAccessCacheability() {}
 
 }
