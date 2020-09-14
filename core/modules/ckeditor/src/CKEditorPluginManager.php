@@ -122,7 +122,7 @@ class CKEditorPluginManager extends DefaultPluginManager {
     $toolbar_rows = [];
     $settings = $editor->getSettings();
     foreach ($settings['toolbar']['rows'] as $row_number => $row) {
-      $toolbar_rows[] = array_reduce($settings['toolbar']['rows'][$row_number], function (&$result, $button_group) {
+      $toolbar_rows[] = array_reduce($settings['toolbar']['rows'][$row_number], function ($result, $button_group) {
         return array_merge($result, $button_group['items']);
       }, []);
     }
