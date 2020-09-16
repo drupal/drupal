@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\file\Functional;
 
-use Drupal\Core\Entity\Plugin\Validation\Constraint\ReferenceAccessConstraint;
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\file\Entity\File;
 use Drupal\node\Entity\NodeType;
 use Drupal\user\RoleInterface;
