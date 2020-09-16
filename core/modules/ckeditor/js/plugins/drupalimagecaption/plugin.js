@@ -137,6 +137,8 @@
             if (caption) {
               var figure = new CKEDITOR.htmlParser.element('figure');
               caption = new CKEDITOR.htmlParser.fragment.fromHtml(caption, 'figcaption');
+              var captionFilter = new CKEDITOR.filter(widgetDefinition.editables.caption.allowedContent);
+              captionFilter.applyTo(caption);
               caption.attributes['data-placeholder'] = placeholderText;
               element.replaceWith(figure);
               figure.add(element);
