@@ -155,7 +155,8 @@
       isComposing: false
     },
     ajax: {
-      dataType: 'json'
+      dataType: 'json',
+      jsonp: false
     }
   };
   Drupal.autocomplete = autocomplete;

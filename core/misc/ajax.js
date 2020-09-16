@@ -246,6 +246,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         }
       },
       dataType: 'json',
+      jsonp: false,
       type: 'POST'
     };
 
