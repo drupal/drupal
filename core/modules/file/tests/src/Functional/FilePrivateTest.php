@@ -92,11 +92,10 @@ class FilePrivateTest extends FileFieldTestBase {
     $this->drupalGet('node/' . $new_node->id() . '/edit');
     $this->getSession()->getPage()->find('css', 'input[name="' . $field_name . '[0][fids]"]')->setValue($node_file->id());
     $this->getSession()->getPage()->pressButton(t('Save'));
-    // Make sure the form submit failed - we stayed on the edit form.
-    $this->assertUrl('node/' . $new_node->id() . '/edit');
-    // Check that we got the expected constraint form error.
-    $constraint = new ReferenceAccessConstraint();
-    $this->assertRaw(new FormattableMarkup($constraint->message, ['%type' => 'file', '%id' => $node_file->id()]));
+    $this->assertUrl('node/' . $new_node->id());
+    // Make sure the submitted hidden file field is empty.
+    $new_node = \Drupal::entityTypeManager()->getStorage('node')->loadUnchanged($new_node->id());
+    $this->assertTrue($new_node->get($field_name)->isEmpty());
     // Attempt to reuse the existing file when creating a new node, and confirm
     // that access is still denied.
     $edit = [];
@@ -107,9 +106,10 @@ class FilePrivateTest extends FileFieldTestBase {
     $this->getSession()->getPage()->find('css', 'input[name="' . $field_name . '[0][fids]"]')->setValue($node_file->id());
     $this->getSession()->getPage()->pressButton(t('Save'));
     $new_node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
-    $this->assertTrue(empty($new_node), 'Node was not created.');
-    $this->assertUrl('node/add/' . $type_name);
-    $this->assertRaw(new FormattableMarkup($constraint->message, ['%type' => 'file', '%id' => $node_file->id()]));
+    $this->assertUrl('node/' . $new_node->id());
+    // Make sure the submitted hidden file field is empty.
+    $new_node = \Drupal::entityTypeManager()->getStorage('node')->loadUnchanged($new_node->id());
+    $this->assertTrue($new_node->get($field_name)->isEmpty());
 
     // Now make file_test_file_download() return everything.
     \Drupal::state()->set('file_test.allow_all', TRUE);

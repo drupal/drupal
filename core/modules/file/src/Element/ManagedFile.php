@@ -96,6 +96,10 @@ class ManagedFile extends FormElement {
           foreach ($input['fids'] as $fid) {
             if ($file = File::load($fid)) {
               $fids[] = $file->id();
+              if (!$file->access('download')) {
+                $force_default = TRUE;
+                break;
+              }
               // Temporary files that belong to other users should never be
               // allowed.
               if ($file->isTemporary()) {
