@@ -4,6 +4,7 @@ namespace Drupal\Tests\workspaces\Functional\UpdateSystem;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\UpdatePathTestTrait;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
  * Tests that there is no active workspace during database updates.
@@ -12,12 +13,14 @@ use Drupal\Tests\UpdatePathTestTrait;
  * @group Update
  */
 class ActiveWorkspaceUpdateTest extends BrowserTestBase {
+
   use UpdatePathTestTrait;
+  use UserCreationTrait;
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['workspaces', 'workspace_update_test'];
+  protected static $modules = ['workspaces'];
 
   /**
    * {@inheritdoc}
@@ -29,6 +32,11 @@ class ActiveWorkspaceUpdateTest extends BrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+
+    $this->setUpCurrentUser([], ['view any workspace']);
+    $this->container->get('module_installer')->install(['workspace_update_test']);
+    $this->rebuildContainer();
+
     // Ensure the workspace_update_test_post_update_check_active_workspace()
     // update runs.
     $existing_updates = \Drupal::keyValue('post_update')->get('existing_updates', []);
