@@ -861,7 +861,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     //   https://www.drupal.org/node/2504709.
     $parsed = UrlHelper::parse($request_uri);
     unset($parsed['query'][static::AJAX_FORM_REQUEST], $parsed['query'][MainContentViewSubscriber::WRAPPER_FORMAT]);
-    $action =  $parsed['path'] . ($parsed['query'] ? ('?' . UrlHelper::buildQuery($parsed['query'])) : '');
+    $action = $parsed['path'] . ($parsed['query'] ? ('?' . UrlHelper::buildQuery($parsed['query'])) : '');
     return UrlHelper::filterBadProtocol($action);
   }
 
