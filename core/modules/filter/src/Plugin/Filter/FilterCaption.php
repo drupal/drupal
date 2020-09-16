@@ -4,9 +4,12 @@ namespace Drupal\filter\Plugin\Filter;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\filter\FilterPluginManager;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
 use Drupal\filter\Render\FilteredMarkup;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a filter to caption elements.
@@ -20,7 +23,43 @@ use Drupal\filter\Render\FilteredMarkup;
  *   type = Drupal\filter\Plugin\FilterInterface::TYPE_TRANSFORM_REVERSIBLE
  * )
  */
-class FilterCaption extends FilterBase {
+class FilterCaption extends FilterBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * Filter manager.
+   *
+   * @var \Drupal\filter\FilterPluginManager
+   */
+  protected $filterManager;
+
+  /**
+   * Constructs a new FilterCaption.
+   *
+   * @param array $configuration
+   *   Configuration.
+   * @param string $plugin_id
+   *   Plugin ID.
+   * @param mixed $plugin_definition
+   *   Definition.
+   * @param \Drupal\filter\FilterPluginManager $filter_manager
+   *   Filter plugin manager.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, FilterPluginManager $filter_manager = NULL) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->filterManager = $filter_manager ?: \Drupal::service('plugin.manager.filter');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('plugin.manager.filter')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -31,6 +70,13 @@ class FilterCaption extends FilterBase {
     if (stristr($text, 'data-caption') !== FALSE) {
       $dom = Html::load($text);
       $xpath = new \DOMXPath($dom);
+      $html_filter = $this->filterManager->createInstance('filter_html', [
+        'settings' => [
+          'allowed_html' => '<a href hreflang target rel> <em> <strong> <cite> <code> <br>',
+          'filter_html_help' => FALSE,
+          'filter_html_nofollow' => FALSE,
+        ],
+      ]);
       foreach ($xpath->query('//*[@data-caption]') as $node) {
         // Read the data-caption attribute's value, then delete it.
         $caption = Html::escape($node->getAttribute('data-caption'));
@@ -39,10 +85,19 @@ class FilterCaption extends FilterBase {
         // Sanitize caption: decode HTML encoding, limit allowed HTML tags; only
         // allow inline tags that are allowed by default, plus <br>.
         $caption = Html::decodeEntities($caption);
-        $caption = FilteredMarkup::create(Xss::filter($caption, ['a', 'em', 'strong', 'cite', 'code', 'br']));
+        $raw_caption = $caption;
+        $filtered_caption = $html_filter->process($caption, $langcode);
+        $result->addCacheableDependency($filtered_caption);
+        $caption = FilteredMarkup::create($filtered_caption->getProcessedText());
 
-        // The caption must be non-empty.
-        if (mb_strlen($caption) === 0) {
+        // The caption must be non-empty - however the Media Embed CKEditor
+        // plugin uses a single space to represent a newly added caption. The
+        // HTML filter will transform this into an empty string and prevent the
+        // content editor from adding a new caption. To allow for this we treat
+        // a raw caption value of ' ' as valid and adding the wrapping figure
+        // element.
+        // @see core/modules/media/js/plugins/drupalmedia/plugin.es6.js
+        if (mb_strlen($caption) === 0 && $raw_caption !== ' ') {
           continue;
         }
 
