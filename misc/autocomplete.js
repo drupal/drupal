@@ -297,8 +297,9 @@ Drupal.ACDB.prototype.search = function (searchString) {
     // encodeURIComponent to allow autocomplete search terms to contain slashes.
     $.ajax({
       type: 'GET',
-      url: db.uri + '/' + Drupal.encodePath(searchString),
+      url: Drupal.sanitizeAjaxUrl(db.uri + '/' + Drupal.encodePath(searchString)),
       dataType: 'json',
+      jsonp: false,
       success: function (matches) {
         if (typeof matches.status == 'undefined' || matches.status != 0) {
           db.cache[searchString] = matches;
