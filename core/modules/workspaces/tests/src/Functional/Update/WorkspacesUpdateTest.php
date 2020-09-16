@@ -18,7 +18,7 @@ class WorkspacesUpdateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['workspaces', 'workspace_update_test'];
+  protected static $modules = ['workspaces'];
 
   /**
    * {@inheritdoc}
@@ -131,6 +131,10 @@ class WorkspacesUpdateTest extends UpdatePathTestBase {
    * Tests that there is no active workspace during database updates.
    */
   public function testActiveWorkspaceDuringUpdate() {
+    $this->setUpCurrentUser([], ['view any workspace']);
+    $this->container->get('module_installer')->install(['workspace_update_test']);
+    $this->rebuildContainer();
+
     /** @var \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager */
     $workspace_manager = \Drupal::service('workspaces.manager');
 
