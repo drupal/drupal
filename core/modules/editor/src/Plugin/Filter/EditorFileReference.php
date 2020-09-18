@@ -84,10 +84,16 @@ class EditorFileReference extends FilterBase implements ContainerFactoryPluginIn
               // which are more noticeable on pages that take some time to load.
               // As a result, only mark images as lazy load that have dimensions.
               [$width, $height] = @getimagesize($file->getFileUri());
-              if ($width != NULL && $height != NULL) {
-                $node->setAttribute('width', $width);
-                $node->setAttribute('height', $height);
-                $node->setAttribute('loading', 'lazy');
+              if ($width !== NULL && $height !== NULL) {
+                if (!$node->hasAttribute('width')) {
+                  $node->setAttribute('width', $width);
+                }
+                if (!$node->hasAttribute('height')) {
+                  $node->setAttribute('height', $height);
+                }
+                if (!$node->hasAttribute('loading')) {
+                  $node->setAttribute('loading', 'lazy');
+                }
               }
             }
           }
