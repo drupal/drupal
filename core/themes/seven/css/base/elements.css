@@ -161,16 +161,18 @@ details summary {
   padding: 0.95em 1.45em;
 }
 details summary:focus {
-  text-decoration: underline;
   outline: none;
 }
 /**
  * Unfortunately, text-decoration for details summary is not supported on all
  * browsers. So we add a span (which can handle text-decoration) in Seven's
  * templates/details.html.twig. In case there are other details templates that
- * don't have the span, we leave the text-decoration in the parent selector.
+ * don't have the span, we provide text-decoration in the parent selector.
  * This provides maximum compatibility and coverage with minimal disruption.
  */
+details summary:not(.seven-details__summary):focus {
+  text-decoration: underline;
+}
 details summary:focus span {
   text-decoration: underline;
 }

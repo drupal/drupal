@@ -194,10 +194,6 @@
 
     this.link.attr('href', `#${settings.details.attr('id')}`);
 
-    this.detailsSummaryDescription = $(
-      Drupal.theme.verticalTabDetailsDescription(),
-    ).appendTo(this.details.find('> summary'));
-
     this.link.on('click', event => {
       event.preventDefault();
       self.focus();
@@ -315,7 +311,6 @@
      */
     updateSummary() {
       const summary = this.details.drupalGetSummary();
-      this.detailsSummaryDescription.html(summary);
       this.summary.html(summary);
     },
 
@@ -449,15 +444,6 @@
    */
   Drupal.theme.verticalTabListWrapper = () =>
     '<ul class="vertical-tabs__menu"></ul>';
-
-  /**
-   * The wrapper of the details summary message added to the summary element.
-   *
-   * @return {string}
-   *   A string representing the DOM fragment.
-   */
-  Drupal.theme.verticalTabDetailsDescription = () =>
-    '<span class="vertical-tabs__details-summary-summary"></span>';
 
   /**
    * Themes the active vertical tab menu item message.

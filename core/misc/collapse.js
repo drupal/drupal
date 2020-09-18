@@ -15,31 +15,22 @@
       this.$node.attr('open', true);
     }
 
-    this.setupSummary();
-    this.setupLegend();
+    this.setupSummaryPolyfill();
   }
 
   $.extend(CollapsibleDetails, {
     instances: []
   });
   $.extend(CollapsibleDetails.prototype, {
-    setupSummary: function setupSummary() {
-      this.$summary = $('<span class="summary"></span>');
-      this.$node.on('summaryUpdated', $.proxy(this.onSummaryUpdated, this)).trigger('summaryUpdated');
+    setupSummaryPolyfill: function setupSummaryPolyfill() {
+      var $summary = this.$node.find('> summary');
+      $('<span class="details-summary-prefix visually-hidden"></span>').append(this.$node.attr('open') ? Drupal.t('Hide') : Drupal.t('Show')).prependTo($summary).after(document.createTextNode(' '));
+      $('<a class="details-title"></a>').attr('href', "#".concat(this.$node.attr('id'))).prepend($summary.contents()).appendTo($summary);
+      $summary.append(this.$summary).on('click', $.proxy(this.onSummaryClick, this));
     },
-    setupLegend: function setupLegend() {
-      var $legend = this.$node.find('> summary');
-      $('<span class="details-summary-prefix visually-hidden"></span>').append(this.$node.attr('open') ? Drupal.t('Hide') : Drupal.t('Show')).prependTo($legend).after(document.createTextNode(' '));
-      $('<a class="details-title"></a>').attr('href', "#".concat(this.$node.attr('id'))).prepend($legend.contents()).appendTo($legend);
-      $legend.append(this.$summary).on('click', $.proxy(this.onLegendClick, this));
-    },
-    onLegendClick: function onLegendClick(e) {
+    onSummaryClick: function onSummaryClick(e) {
       this.toggle();
       e.preventDefault();
-    },
-    onSummaryUpdated: function onSummaryUpdated() {
-      var text = $.trim(this.$node.drupalGetSummary());
-      this.$summary.html(text ? " (".concat(text, ")") : '');
     },
     toggle: function toggle() {
       var _this = this;

@@ -59,14 +59,12 @@
   padding: 0.85em 1.25em;
   text-shadow: 0 1px 0 white;
 }
-
-/**
- * Hide JS summary from the details polyfill to make it consistent with native
- * details elements.
- *
- * @todo Consider removing this after https://www.drupal.org/node/2493957 has
- *   been solved.
- */
-.entity-meta .seven-details .summary {
-  display: none;
+.seven-details__summary > .summary {
+  text-transform: none;
+  color: #595959;
+  font-size: 0.95em;
+  font-weight: normal;
+}
+.seven-details__summary:focus > .summary {
+  text-decoration: none;
 }

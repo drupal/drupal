@@ -256,8 +256,7 @@
 /**
  * Details summary in vertical tabs menu link and in the summary of the details.
  */
-.vertical-tabs__menu-link-summary,
-.vertical-tabs__details-summary-summary {
+.vertical-tabs__menu-link-summary {
   display: block;
   color: var(--color-davysgray);
   font-size: var(--font-size-s);

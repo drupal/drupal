@@ -597,18 +597,11 @@ rgba(0, 0, 0, 0.1);
   border-bottom-left-radius: 0;
 }
 
-/**
- * Hide JS summary from the details polyfill to make it consistent with native
- * details elements.
- *
- * @todo Consider removing this after https://www.drupal.org/node/2493957 has
- * been solved.
- */
-
-.claro-details__summary--accordion .summary,
-.claro-details__summary--accordion-item .summary,
-.claro-details__summary--vertical-tabs-item .summary {
-  display: none;
+.claro-details__summary-summary {
+  display: block;
+  color: #545560;
+  font-size: 0.889rem;
+  font-weight: normal;
 }
 
 @media screen and (-ms-high-contrast: active) {

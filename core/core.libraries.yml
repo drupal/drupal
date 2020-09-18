@@ -122,6 +122,7 @@ drupal.checkbox:
 drupal.collapse:
   version: VERSION
   js:
+    misc/details-summarized-content.js: {}
     misc/details-aria.js: {}
     misc/collapse.js: {}
   dependencies:

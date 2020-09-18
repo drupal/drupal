@@ -24,10 +24,8 @@
     if (this.$node.find(`.error${anchor}`).length) {
       this.$node.attr('open', true);
     }
-    // Initialize and setup the summary,
-    this.setupSummary();
-    // Initialize and setup the legend.
-    this.setupLegend();
+    // Initialize and set up the summary polyfill.
+    this.setupSummaryPolyfill();
   }
 
   $.extend(
@@ -46,59 +44,37 @@
     CollapsibleDetails.prototype,
     /** @lends Drupal.CollapsibleDetails# */ {
       /**
-       * Initialize and setup summary events and markup.
-       *
-       * @fires event:summaryUpdated
-       *
-       * @listens event:summaryUpdated
+       * Initialize and setup summary markup.
        */
-      setupSummary() {
-        this.$summary = $('<span class="summary"></span>');
-        this.$node
-          .on('summaryUpdated', $.proxy(this.onSummaryUpdated, this))
-          .trigger('summaryUpdated');
-      },
-
-      /**
-       * Initialize and setup legend markup.
-       */
-      setupLegend() {
+      setupSummaryPolyfill() {
         // Turn the summary into a clickable link.
-        const $legend = this.$node.find('> summary');
+        const $summary = this.$node.find('> summary');
 
         $('<span class="details-summary-prefix visually-hidden"></span>')
           .append(this.$node.attr('open') ? Drupal.t('Hide') : Drupal.t('Show'))
-          .prependTo($legend)
+          .prependTo($summary)
           .after(document.createTextNode(' '));
 
         // .wrapInner() does not retain bound events.
         $('<a class="details-title"></a>')
           .attr('href', `#${this.$node.attr('id')}`)
-          .prepend($legend.contents())
-          .appendTo($legend);
+          .prepend($summary.contents())
+          .appendTo($summary);
 
-        $legend
+        $summary
           .append(this.$summary)
-          .on('click', $.proxy(this.onLegendClick, this));
+          .on('click', $.proxy(this.onSummaryClick, this));
       },
 
       /**
-       * Handle legend clicks.
+       * Handle summary clicks.
        *
        * @param {jQuery.Event} e
        *   The event triggered.
        */
-      onLegendClick(e) {
+      onSummaryClick(e) {
         this.toggle();
         e.preventDefault();
-      },
-
-      /**
-       * Update summary.
-       */
-      onSummaryUpdated() {
-        const text = $.trim(this.$node.drupalGetSummary());
-        this.$summary.html(text ? ` (${text})` : '');
       },
 
       /**

@@ -34,13 +34,8 @@
   border-bottom-left-radius: var(--details-accordion-border-size-radius);
 }
 
-/**
- * Hide JS summary from the details polyfill to make it consistent with native
- * details elements.
- *
- * @todo Consider removing this after https://www.drupal.org/node/2493957 has
- *   been solved.
- */
 .accordion__item .claro-details__summary .summary {
-  display: none;
+  display: block;
+  color: var(--color-davysgray);
+  font-weight: normal;
 }
