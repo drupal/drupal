@@ -855,7 +855,9 @@ function template_preprocess_image(&$variables) {
   // Without dimensions specified, layout shifts can occur,
   // which are more noticeable on pages that take some time to load.
   // As a result, only mark images as lazy load that have dimensions.
-  if (isset($variables['width'], $variables['height'])) {
+  if (isset($variables['width'], $variables['height'])
+    && !AttributeHelper::attributeExists('loading', $variables['attributes'])
+    ) {
     $variables['attributes']['loading'] = 'lazy';
   }
 }

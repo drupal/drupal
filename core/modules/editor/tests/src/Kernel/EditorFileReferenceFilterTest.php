@@ -138,12 +138,19 @@ class EditorFileReferenceFilterTest extends KernelTestBase {
     [$width, $height] = getimagesize('public://llama.jpg');
     $dimensions = 'width="' . $width . '" height="' . $height . '"';
 
-    // Test image dimensions and loading attributes are present.
+    // Image dimensions and loading attributes are present.
     $input = '<img src="llama.jpg" data-entity-type="file" data-entity-uuid="' . $uuid . '" />';
     $expected_output = '<img src="/' . $this->siteDirectory . '/files/llama.jpg" data-entity-type="file" data-entity-uuid="' . $uuid . '" ' . $dimensions . ' loading="lazy" />';
     $output = $test($input);
-    $this->assertIdentical($expected_output, $output->getProcessedText());
-    $this->assertEqual($cache_tag, $output->getCacheTags());
+    $this->assertSame($expected_output, $output->getProcessedText());
+    $this->assertEquals($cache_tag, $output->getCacheTags());
+
+    // Image dimensions and loading attributes are set manually.
+    $input = '<img src="llama.jpg" data-entity-type="file" data-entity-uuid="' . $uuid . '"width="41" height="21" loading="eager" />';
+    $expected_output = '<img src="/' . $this->siteDirectory . '/files/llama.jpg" data-entity-type="file" data-entity-uuid="' . $uuid . '" width="41" height="21" loading="eager" />';
+    $output = $test($input);
+    $this->assertSame($expected_output, $output->getProcessedText());
+    $this->assertEquals($cache_tag, $output->getCacheTags());
   }
 
 }

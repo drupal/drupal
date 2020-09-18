@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\system\Functional\Theme;
 
-use Behat\Mink\Exception\ElementHtmlException;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -28,6 +27,7 @@ class ImageLoadingAttributeTest extends BrowserTestBase {
    * Tests that loading attribute is enabled for images.
    */
   public function testImageLoadingAttribute() {
+    // Loading attribute is added when image dimensions has been set.
     $this->drupalGet('image-lazy-load-test');
     $this->assertSession()->elementAttributeExists('css', '#with-dimensions img', 'loading');
     $this->assertSession()->elementAttributeContains('css', '#with-dimensions img', 'loading', 'lazy');
