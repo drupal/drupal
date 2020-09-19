@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\node\Functional;
+namespace Drupal\Tests\node\Kernel;
 
 use Drupal\node\Entity\Node;
 
@@ -9,27 +9,20 @@ use Drupal\node\Entity\Node;
  *
  * @group node
  */
-class NodeLoadMultipleTest extends NodeTestBase {
-
-  /**
-   * Enable Views to test the frontpage against Node::loadMultiple() results.
-   *
-   * @var array
-   */
-  protected static $modules = ['views'];
+class NodeLoadMultipleTest extends NodeAccessTestBase {
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected static $modules = ['node', 'user'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
-    $web_user = $this->drupalCreateUser([
-      'create article content',
-      'create page content',
-    ]);
-    $this->drupalLogin($web_user);
+
+    $this->installEntitySchema('node');
   }
 
   /**
@@ -41,12 +34,6 @@ class NodeLoadMultipleTest extends NodeTestBase {
     $node3 = $this->drupalCreateNode(['type' => 'article', 'promote' => 0]);
     $node4 = $this->drupalCreateNode(['type' => 'page', 'promote' => 0]);
 
-    // Confirm that promoted nodes appear in the default node listing.
-    $this->drupalGet('node');
-    $this->assertText($node1->label(), 'Node title appears on the default listing.');
-    $this->assertText($node2->label(), 'Node title appears on the default listing.');
-    $this->assertNoText($node3->label(), 'Node title does not appear in the default listing.');
-    $this->assertNoText($node4->label(), 'Node title does not appear in the default listing.');
     // Load nodes with only a condition. Nodes 3 and 4 will be loaded.
     $nodes = $this->container->get('entity_type.manager')->getStorage('node')
       ->loadByProperties(['promote' => 0]);
