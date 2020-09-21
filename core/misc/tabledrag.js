@@ -445,7 +445,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         var xDiff = self.currentPointerCoords.x - self.dragObject.indentPointerPos.x;
         var indentDiff = Math.round(xDiff / self.indentAmount);
         var indentChange = self.rowObject.indent(indentDiff);
-        self.dragObject.indentPointerPos.x += self.indentAmount * indentChange;
+        self.dragObject.indentPointerPos.x += self.indentAmount * indentChange * self.rtl;
         self.indentCount = Math.max(self.indentCount, self.rowObject.indents);
       }
 

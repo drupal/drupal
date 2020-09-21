@@ -828,7 +828,8 @@
         // restricted according to the rows around this row.
         const indentChange = self.rowObject.indent(indentDiff);
         // Update table and pointer indentations.
-        self.dragObject.indentPointerPos.x += self.indentAmount * indentChange;
+        self.dragObject.indentPointerPos.x +=
+          self.indentAmount * indentChange * self.rtl;
         self.indentCount = Math.max(self.indentCount, self.rowObject.indents);
       }
 

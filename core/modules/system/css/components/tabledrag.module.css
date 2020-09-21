@@ -20,24 +20,9 @@ tr.region-populated {
 tr.add-new .tabledrag-changed {
   display: none;
 }
-.draggable .tabledrag-changed {
-  margin: 0 4px;
-}
-
-/**
- * Do not apply this style in IE11, as it leads to a regression where the
- * table can more easily overflow the browser viewport.
- */
-@supports not (-ms-high-contrast: none) {
-  .draggable > td:first-of-type {
-    display: flex;
-  }
-}
-
 .draggable a.tabledrag-handle {
   float: left; /* LTR */
   overflow: hidden;
-  min-width: calc(2em + 14px);  /* (.5em padding * 2) + (.5em margin * 2) + tabledrag handle image width. */
   height: 1.7em;
   margin-left: -1em; /* LTR */
   cursor: move;
@@ -71,18 +56,17 @@ a.tabledrag-handle:focus .handle {
 }
 .touchevents a.tabledrag-handle {
   width: 40px;
-  min-width: 40px;
   height: 44px;
 }
 .touchevents a.tabledrag-handle .handle {
   height: 21px;
-  background-position: 40% 17px; /* LTR */
+  background-position: 40% 19px; /* LTR */
 }
 [dir="rtl"] .touch a.tabledrag-handle .handle {
-  background-position: right 40% top 17px;
+  background-position: right 40% top 19px;
 }
 .touchevents .draggable.drag a.tabledrag-handle .handle {
-  background-image: url(../../../../misc/icons/000000/move.svg);
+  background-position: 50% -32px;
 }
 .tabledrag-toggle-weight-wrapper {
   text-align: right; /* LTR */
@@ -91,23 +75,14 @@ a.tabledrag-handle:focus .handle {
   text-align: left;
 }
 .indentation {
+  float: left; /* LTR */
   width: 20px;
-  min-width: 20px;
   height: 1.7em;
   margin: -0.4em 0.2em -0.4em -0.4em; /* LTR */
   padding: 0.42em 0 0.42em 0.6em; /* LTR */
 }
 [dir="rtl"] .indentation {
+  float: right;
   margin: -0.4em -0.4em -0.4em 0.2em;
   padding: 0.42em 0.6em 0.42em 0;
-}
-
-@media all and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-  .indentation {
-    float: left;
-  }
-
-  [dir="rtl"] .indentation {
-    float: right;
-  }
 }
