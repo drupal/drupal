@@ -5,8 +5,6 @@ build:
   assessment:
     validate_codebase:
       phplint:
-      csslint:
-        halt-on-fail: false
       eslint:
         # A test must pass eslinting standards check in order to continue processing.
         halt-on-fail: false
