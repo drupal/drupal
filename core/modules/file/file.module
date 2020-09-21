@@ -23,6 +23,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Template\Attribute;
+use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
 /**
  * The regex pattern used when checking for insecure file types.
@@ -945,7 +946,14 @@ function _file_save_upload_single(\SplFileInfo $file_info, $form_field_name, $va
     'uri' => $file_info->getRealPath(),
     'filesize' => $file_info->getSize(),
   ];
-  $values['filemime'] = \Drupal::service('file.mime_type.guesser')->guess($values['filename']);
+  $guesser = \Drupal::service('file.mime_type.guesser');
+  if ($guesser instanceof MimeTypeGuesserInterface) {
+    $values['filemime'] = $guesser->guessMimeType($values['filename']);
+  }
+  else {
+    $values['filemime'] = $guesser->guess($values['filename']);
+    @trigger_error('\Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Implement \Symfony\Component\Mime\MimeTypeGuesserInterface instead. See https://www.drupal.org/node/3133341', E_USER_DEPRECATED);
+  }
   $file = File::create($values);
 
   $extensions = '';

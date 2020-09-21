@@ -13,6 +13,7 @@ use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\file\Entity\File;
 use Drupal\file\Plugin\Field\FieldType\FileItem;
+use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
 /**
  * Plugin implementation of the 'image' field type.
@@ -351,7 +352,14 @@ class ImageItem extends FileItem {
         $image = File::create();
         $image->setFileUri($path);
         $image->setOwnerId(\Drupal::currentUser()->id());
-        $image->setMimeType(\Drupal::service('file.mime_type.guesser')->guess($path));
+        $guesser = \Drupal::service('file.mime_type.guesser');
+        if ($guesser instanceof MimeTypeGuesserInterface) {
+          $image->setMimeType($guesser->guessMimeType($path));
+        }
+        else {
+          $image->setMimeType($guesser->guess($path));
+          @trigger_error('\Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Implement \Symfony\Component\Mime\MimeTypeGuesserInterface instead. See https://www.drupal.org/node/3133341', E_USER_DEPRECATED);
+        }
         $image->setFileName($file_system->basename($path));
         $destination_dir = static::doGetUploadLocation($settings);
         $file_system->prepareDirectory($destination_dir, FileSystemInterface::CREATE_DIRECTORY);

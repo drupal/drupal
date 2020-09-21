@@ -23,11 +23,11 @@ use Drupal\rest\Plugin\rest\resource\EntityResourceValidationTrait;
 use Drupal\rest\RequestHandler;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
+use Symfony\Component\Mime\MimeTypeGuesserInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -103,7 +103,7 @@ class FileUploadResource extends ResourceBase {
   /**
    * The MIME type guesser.
    *
-   * @var \Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface
+   * @var \Symfony\Component\Mime\MimeTypeGuesserInterface
    */
   protected $mimeTypeGuesser;
 
@@ -147,7 +147,7 @@ class FileUploadResource extends ResourceBase {
    *   The entity field manager.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The currently authenticated user.
-   * @param \Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface $mime_type_guesser
+   * @param \Symfony\Component\Mime\MimeTypeGuesserInterface $mime_type_guesser
    *   The MIME type guesser.
    * @param \Drupal\Core\Utility\Token $token
    *   The token replacement instance.
@@ -156,7 +156,7 @@ class FileUploadResource extends ResourceBase {
    * @param \Drupal\Core\Config\Config $system_file_config
    *   The system file configuration.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, $serializer_formats, LoggerInterface $logger, FileSystemInterface $file_system, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, AccountInterface $current_user, MimeTypeGuesserInterface $mime_type_guesser, Token $token, LockBackendInterface $lock, Config $system_file_config) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, $serializer_formats, LoggerInterface $logger, FileSystemInterface $file_system, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, AccountInterface $current_user, $mime_type_guesser, Token $token, LockBackendInterface $lock, Config $system_file_config) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
     $this->fileSystem = $file_system;
     $this->entityTypeManager = $entity_type_manager;
@@ -254,7 +254,13 @@ class FileUploadResource extends ResourceBase {
     $file = File::create([]);
     $file->setOwnerId($this->currentUser->id());
     $file->setFilename($prepared_filename);
-    $file->setMimeType($this->mimeTypeGuesser->guess($prepared_filename));
+    if ($this->mimeTypeGuesser instanceof MimeTypeGuesserInterface) {
+      $file->setMimeType($this->mimeTypeGuesser->guessMimeType($prepared_filename));
+    }
+    else {
+      $file->setMimeType($this->mimeTypeGuesser->guess($prepared_filename));
+      @trigger_error('\Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Implement \Symfony\Component\Mime\MimeTypeGuesserInterface instead. See https://www.drupal.org/node/3133341', E_USER_DEPRECATED);
+    }
     $file->setFileUri($file_uri);
     // Set the size. This is done in File::preSave() but we validate the file
     // before it is saved.

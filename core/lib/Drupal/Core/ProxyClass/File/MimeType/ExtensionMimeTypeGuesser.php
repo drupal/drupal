@@ -12,7 +12,7 @@ namespace Drupal\Core\ProxyClass\File\MimeType {
      *
      * @see \Drupal\Component\ProxyBuilder
      */
-    class ExtensionMimeTypeGuesser implements \Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface
+    class ExtensionMimeTypeGuesser implements \Symfony\Component\Mime\MimeTypeGuesserInterface, \Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface
     {
 
         use \Drupal\Core\DependencyInjection\DependencySerializationTrait;
@@ -78,9 +78,25 @@ namespace Drupal\Core\ProxyClass\File\MimeType {
         /**
          * {@inheritdoc}
          */
+        public function guessMimeType($path): string
+        {
+            return $this->lazyLoadItself()->guessMimeType($path);
+        }
+
+        /**
+         * {@inheritdoc}
+         */
         public function setMapping(array $mapping = NULL)
         {
             return $this->lazyLoadItself()->setMapping($mapping);
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public function isGuesserSupported(): bool
+        {
+            return $this->lazyLoadItself()->isGuesserSupported();
         }
 
     }

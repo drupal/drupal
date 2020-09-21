@@ -2,8 +2,6 @@
 
 namespace Drupal\KernelTests\Core\File;
 
-use Drupal\Component\Render\FormattableMarkup;
-
 /**
  * Tests filename mimetype detection.
  *
@@ -46,13 +44,13 @@ class MimeTypeTest extends FileTestBase {
     foreach ($test_case as $input => $expected) {
       // Test stream [URI].
       foreach ($prefixes as $prefix) {
-        $output = $guesser->guess($prefix . $input);
-        $this->assertIdentical($output, $expected, new FormattableMarkup('Mimetype for %input is %output (expected: %expected).', ['%input' => $prefix . $input, '%output' => $output, '%expected' => $expected]));
+        $output = $guesser->guessMimeType($prefix . $input);
+        $this->assertSame($expected, $output);
       }
 
       // Test normal path equivalent
-      $output = $guesser->guess($input);
-      $this->assertIdentical($output, $expected, new FormattableMarkup('Mimetype (using default mappings) for %input is %output (expected: %expected).', ['%input' => $input, '%output' => $output, '%expected' => $expected]));
+      $output = $guesser->guessMimeType($input);
+      $this->assertSame($expected, $output);
     }
 
     // Now test the extension guesser by passing in a custom mapping.
@@ -86,9 +84,24 @@ class MimeTypeTest extends FileTestBase {
     $extension_guesser->setMapping($mapping);
 
     foreach ($test_case as $input => $expected) {
-      $output = $extension_guesser->guess($input);
-      $this->assertIdentical($output, $expected, new FormattableMarkup('Mimetype (using passed-in mappings) for %input is %output (expected: %expected).', ['%input' => $input, '%output' => $output, '%expected' => $expected]));
+      $output = $extension_guesser->guessMimeType($input);
+      $this->assertSame($expected, $output);
     }
+  }
+
+  /**
+   * Test deprecations.
+   *
+   * @group legacy
+   * @expectedDeprecation The "Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser" class is deprecated since Symfony 4.3, use "Symfony\Component\Mime\MimeTypes" instead.
+   * @expectedDeprecation The "Symfony\Component\HttpFoundation\File\MimeType\FileBinaryMimeTypeGuesser" class is deprecated since Symfony 4.3, use "Symfony\Component\Mime\FileBinaryMimeTypeGuesser" instead.
+   * @expectedDeprecation The "Symfony\Component\HttpFoundation\File\MimeType\FileinfoMimeTypeGuesser" class is deprecated since Symfony 4.3, use "Symfony\Component\Mime\FileinfoMimeTypeGuesser" instead.
+   * @expectedDeprecation Drupal\Core\File\MimeType\MimeTypeGuesser::guess() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use ::guessMimeType() instead. See https://www.drupal.org/node/3133341
+   */
+  public function testFileMimeTypeDetectionDeprecation() {
+    $guesser = $this->container->get('file.mime_type.guesser');
+    $output = $guesser->guess('public://test.jar');
+    $this->assertSame('application/java-archive', $output);
   }
 
 }

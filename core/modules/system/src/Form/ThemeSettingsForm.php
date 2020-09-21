@@ -10,12 +10,12 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Theme\ThemeManagerInterface;
+use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
 /**
  * Displays theme configuration for entire site and individual themes.
@@ -41,7 +41,7 @@ class ThemeSettingsForm extends ConfigFormBase {
   /**
    * The MIME type guesser.
    *
-   * @var \Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface
+   * @var \Symfony\Component\Mime\MimeTypeGuesserInterface
    */
   protected $mimeTypeGuesser;
 
@@ -75,14 +75,14 @@ class ThemeSettingsForm extends ConfigFormBase {
    *   The module handler instance to use.
    * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
    *   The theme handler.
-   * @param \Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface $mime_type_guesser
+   * @param \Symfony\Component\Mime\MimeTypeGuesserInterface $mime_type_guesser
    *   The MIME type guesser instance to use.
    * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
    *   The theme manager.
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The file system.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, MimeTypeGuesserInterface $mime_type_guesser, ThemeManagerInterface $theme_manager, FileSystemInterface $file_system) {
+  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, $mime_type_guesser, ThemeManagerInterface $theme_manager, FileSystemInterface $file_system) {
     parent::__construct($config_factory);
 
     $this->moduleHandler = $module_handler;
@@ -494,7 +494,13 @@ class ThemeSettingsForm extends ConfigFormBase {
     }
 
     if (empty($values['default_favicon']) && !empty($values['favicon_path'])) {
-      $values['favicon_mimetype'] = $this->mimeTypeGuesser->guess($values['favicon_path']);
+      if ($this->mimeTypeGuesser instanceof MimeTypeGuesserInterface) {
+        $values['favicon_mimetype'] = $this->mimeTypeGuesser->guessMimeType($values['favicon_path']);
+      }
+      else {
+        $values['favicon_mimetype'] = $this->mimeTypeGuesser->guess($values['favicon_path']);
+        @trigger_error('\Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Implement \Symfony\Component\Mime\MimeTypeGuesserInterface instead. See https://www.drupal.org/node/3133341', E_USER_DEPRECATED);
+      }
     }
 
     theme_settings_convert_to_config($values, $config)->save();

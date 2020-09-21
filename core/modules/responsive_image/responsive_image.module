@@ -13,6 +13,7 @@ use Drupal\image\Entity\ImageStyle;
 use Drupal\responsive_image\Entity\ResponsiveImageStyle;
 use Drupal\responsive_image\ResponsiveImageStyleInterface;
 use Drupal\breakpoint\BreakpointInterface;
+use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
 /**
  * Implements hook_help().
@@ -477,7 +478,12 @@ function responsive_image_get_mime_type($image_style_name, $extension) {
   else {
     $fake_path = 'responsive_image.' . ImageStyle::load($image_style_name)->getDerivativeExtension($extension);
   }
-  return Drupal::service('file.mime_type.guesser.extension')->guess($fake_path);
+  $guesser = \Drupal::service('file.mime_type.guesser.extension');
+  if (!$guesser instanceof MimeTypeGuesserInterface) {
+    @trigger_error('\Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Implement \Symfony\Component\Mime\MimeTypeGuesserInterface instead. See https://www.drupal.org/node/3133341', E_USER_DEPRECATED);
+    return $guesser->guess($fake_path);
+  }
+  return $guesser->guessMimeType($fake_path);
 }
 
 /**

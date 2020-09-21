@@ -12,7 +12,7 @@ namespace Drupal\Core\ProxyClass\File\MimeType {
      *
      * @see \Drupal\Component\ProxyBuilder
      */
-    class MimeTypeGuesser implements \Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface
+    class MimeTypeGuesser implements \Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface, \Symfony\Component\Mime\MimeTypeGuesserInterface
     {
 
         use \Drupal\Core\DependencyInjection\DependencySerializationTrait;
@@ -70,6 +70,14 @@ namespace Drupal\Core\ProxyClass\File\MimeType {
         /**
          * {@inheritdoc}
          */
+        public function guessMimeType(string $path): string
+        {
+            return $this->lazyLoadItself()->guessMimeType($path);
+        }
+
+        /**
+         * {@inheritdoc}
+         */
         public function guess($path)
         {
             return $this->lazyLoadItself()->guess($path);
@@ -78,9 +86,25 @@ namespace Drupal\Core\ProxyClass\File\MimeType {
         /**
          * {@inheritdoc}
          */
+        public function addMimeTypeGuesser($guesser, $priority = 0)
+        {
+            return $this->lazyLoadItself()->addMimeTypeGuesser($guesser, $priority);
+        }
+
+        /**
+         * {@inheritdoc}
+         */
         public function addGuesser(\Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface $guesser, $priority = 0)
         {
             return $this->lazyLoadItself()->addGuesser($guesser, $priority);
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public function isGuesserSupported(): bool
+        {
+            return $this->lazyLoadItself()->isGuesserSupported();
         }
 
         /**
