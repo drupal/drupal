@@ -317,8 +317,8 @@
     this.operator = $operator;
     this.hasGroupOperator = this.operator.length > 0;
     this.draggableRows = $table.find('.draggable');
-    this.addGroupButton = $('input#views-add-group');
-    this.removeGroupButtons = $table.find('input.views-remove-group');
+    this.addGroupButton = $('#views-add-group');
+    this.removeGroupButtons = $table.find('.views-remove-group');
     this.insertAddRemoveFilterGroupLinks();
 
     if (this.hasGroupOperator) {

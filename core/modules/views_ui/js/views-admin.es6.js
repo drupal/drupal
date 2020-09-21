@@ -709,12 +709,12 @@
      *
      * @type {jQuery}
      */
-    this.addGroupButton = $('input#views-add-group');
+    this.addGroupButton = $('#views-add-group');
 
     /**
      * @type {jQuery}
      */
-    this.removeGroupButtons = $table.find('input.views-remove-group');
+    this.removeGroupButtons = $table.find('.views-remove-group');
 
     // Add links that duplicate the functionality of the (hidden) add and remove
     // buttons.
