@@ -13,11 +13,11 @@ backbone:
     - core/underscore
 
 ckeditor:
-  remote: https://github.com/ckeditor/ckeditor-dev
-  version: "4.14.1"
+  remote: https://github.com/ckeditor/ckeditor4
+  version: "4.15.0"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://raw.githubusercontent.com/ckeditor/ckeditor4/4.14.1/LICENSE.md
+    url: https://raw.githubusercontent.com/ckeditor/ckeditor4/4.15.0/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor/ckeditor.js: { preprocess: false, minified: true }
