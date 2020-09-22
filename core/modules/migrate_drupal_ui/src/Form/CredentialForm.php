@@ -90,11 +90,6 @@ class CredentialForm extends MigrateUpgradeFormBase {
 
     $drivers = $this->getDatabaseTypes();
     $drivers_keys = array_keys($drivers);
-    // @todo https://www.drupal.org/node/2678510 Because this is a multi-step
-    //   form, the form is not rebuilt during submission. Ideally we would get
-    //   the chosen driver from form input, if available, in order to use
-    //   #limit_validation_errors in the same way
-    //   \Drupal\Core\Installer\Form\SiteSettingsForm does.
     $default_driver = current($drivers_keys);
 
     $default_options = [];
@@ -136,10 +131,9 @@ class CredentialForm extends MigrateUpgradeFormBase {
       $form['database']['settings'][$key] = $driver->getFormOptions($default_options);
       unset($form['database']['settings'][$key]['advanced_options']['prefix']['#description']);
 
-      // @todo https://www.drupal.org/node/2678510 Using
-      //   #limit_validation_errors in the submit does not work so it is not
-      //   possible to require the database and username for mysql and pgsql.
-      //   This is because this is a multi-step form.
+      // This is a multi-step form and is not rebuilt during submission so
+      // #limit_validation_errors is not used. The database and username fields
+      // for mysql and pgsql must not be required.
       $form['database']['settings'][$key]['database']['#required'] = FALSE;
       $form['database']['settings'][$key]['username']['#required'] = FALSE;
       $form['database']['settings'][$key]['#prefix'] = '<h2 class="js-hide">' . $this->t('@driver_name settings', ['@driver_name' => $driver->name()]) . '</h2>';
