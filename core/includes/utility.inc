@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\DrupalKernel;
+use Drupal\Core\Cache\Rebuilder;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -17,6 +18,10 @@ use Symfony\Component\HttpFoundation\Request;
  * @param \Symfony\Component\HttpFoundation\Request $request
  *   The current request.
  *
+ * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\Core\Cache\Rebuilder::safeBootstrap() instead.
+ *
+ * @see https://www.drupal.org/node/3014783
  * @see rebuild.php
  */
 function drupal_rebuild($class_loader, Request $request) {
@@ -38,7 +43,7 @@ function drupal_rebuild($class_loader, Request $request) {
     $request->setSession($kernel->getContainer()->get('session'));
   }
 
-  drupal_flush_all_caches($kernel);
+  Rebuilder::rebuildAll($kernel);
 
   // Disable recording of cached pages.
   \Drupal::service('page_cache_kill_switch')->trigger();

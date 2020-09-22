@@ -3,6 +3,7 @@
 namespace Drupal\system\Form;
 
 use Drupal\Core\Asset\AssetCollectionOptimizerInterface;
+use Drupal\Core\Cache\Rebuilder;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -189,7 +190,7 @@ class PerformanceForm extends ConfigFormBase {
    * Clears the caches.
    */
   public function submitCacheClear(array &$form, FormStateInterface $form_state) {
-    drupal_flush_all_caches();
+    Rebuilder::rebuildAll();
     $this->messenger()->addStatus($this->t('Caches cleared.'));
   }
 

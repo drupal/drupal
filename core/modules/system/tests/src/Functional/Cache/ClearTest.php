@@ -9,6 +9,7 @@ namespace Drupal\Tests\system\Functional\Cache;
  */
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\Rebuilder;
 
 class ClearTest extends CacheTestBase {
 
@@ -25,9 +26,9 @@ class ClearTest extends CacheTestBase {
   }
 
   /**
-   * Tests drupal_flush_all_caches().
+   * Tests \Drupal\Core\Cache\Rebuilder::rebuildAll().
    */
-  public function testFlushAllCaches() {
+  public function testrebuildAll() {
     // Create cache entries for each flushed cache bin.
     $bins = Cache::getBins();
     $this->assertNotEmpty($bins, 'Cache::getBins() returned bins to flush.');
@@ -37,7 +38,7 @@ class ClearTest extends CacheTestBase {
     }
 
     // Remove all caches then make sure that they are cleared.
-    drupal_flush_all_caches();
+    Rebuilder::rebuildAll();
 
     foreach ($bins as $bin => $cache_backend) {
       $cid = 'test_cid_clear' . $bin;

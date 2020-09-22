@@ -5,6 +5,7 @@ namespace Drupal\Core\Test;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Environment;
+use Drupal\Core\Cache\Rebuilder;
 use Drupal\Core\Config\Development\ConfigSchemaChecker;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\InstallStorage;
@@ -224,7 +225,7 @@ trait FunctionalTestSetupTrait {
    */
   protected function resetAll() {
     // Clear all database and static caches and rebuild data structures.
-    drupal_flush_all_caches();
+    Rebuilder::rebuildAll();
     $this->container = \Drupal::getContainer();
 
     // Reset static variables and reload permissions.

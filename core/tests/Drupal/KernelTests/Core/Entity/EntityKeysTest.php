@@ -2,6 +2,7 @@
 
 namespace Drupal\KernelTests\Core\Entity;
 
+use Drupal\Core\Cache\Rebuilder;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\entity_test\Entity\EntityTest;
 
@@ -25,7 +26,7 @@ class EntityKeysTest extends EntityKernelTestBase {
       'key_1' => 'test_field',
       'key_2' => 'test_field',
     ]);
-    drupal_flush_all_caches();
+    Rebuilder::rebuildAll();
     $this->installEntitySchema('entity_test');
 
     $entity = EntityTest::create([]);

@@ -1858,8 +1858,9 @@ function install_finished(&$install_state) {
 
   if ($install_state['interactive']) {
     // Load current user and perform final login tasks.
-    // This has to be done after drupal_flush_all_caches()
-    // to avoid session regeneration.
+    // This has to be done after
+    // \Drupal\Core\Cache\Rebuilder::rebuildAll() to avoid session
+    // regeneration.
     $account = User::load(1);
     user_login_finalize($account);
   }

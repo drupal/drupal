@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\ckeditor\Functional;
 
+use Drupal\Core\Cache\Rebuilder;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\BrowserTestBase;
@@ -173,7 +174,7 @@ class CKEditorLoadingTest extends BrowserTestBase {
     $this->assertSame($expected, \Drupal::state()->get('system.css_js_query_string'), "CKEditor scripts cache-busting string is correct before flushing all caches.");
     // Flush all caches then make sure that $settings['ckeditor']['timestamp']
     // still matches.
-    drupal_flush_all_caches();
+    Rebuilder::rebuildAll();
     $this->assertSame($expected, \Drupal::state()->get('system.css_js_query_string'), "CKEditor scripts cache-busting string is correct after flushing all caches.");
   }
 

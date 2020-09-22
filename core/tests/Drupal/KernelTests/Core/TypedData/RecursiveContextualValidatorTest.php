@@ -2,6 +2,7 @@
 
 namespace Drupal\KernelTests\Core\TypedData;
 
+use Drupal\Core\Cache\Rebuilder;
 use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\entity_test\Entity\EntityTest;
@@ -58,7 +59,7 @@ class RecursiveContextualValidatorTest extends KernelTestBase {
       ->setLabel('Required string')
       ->setRequired(TRUE);
     $this->container->get('state')->set('entity_test.additional_base_field_definitions', $definitions);
-    drupal_flush_all_caches();
+    Rebuilder::rebuildAll();
     $this->installEntitySchema('entity_test');
     $child = EntityTest::create([
       'name' => 'test2',

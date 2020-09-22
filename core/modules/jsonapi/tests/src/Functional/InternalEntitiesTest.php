@@ -3,6 +3,7 @@
 namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Cache\Rebuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\entity_test\Entity\EntityTestNoLabel;
@@ -83,7 +84,7 @@ class InternalEntitiesTest extends BrowserTestBase {
       'field_internal' => $this->internalEntity->id(),
     ]);
     $this->referencingEntity->save();
-    drupal_flush_all_caches();
+    Rebuilder::rebuildAll();
   }
 
   /**

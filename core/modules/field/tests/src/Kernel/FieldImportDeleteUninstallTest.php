@@ -26,7 +26,7 @@ class FieldImportDeleteUninstallTest extends FieldKernelTestBase {
   protected function setUp(): void {
     parent::setUp();
     // Module uninstall requires users_data tables.
-    // @see drupal_flush_all_caches()
+    // @see \Drupal\Core\Cache\Rebuilder::rebuildAll()
     // @see user_modules_uninstalled()
     $this->installSchema('user', ['users_data']);
   }

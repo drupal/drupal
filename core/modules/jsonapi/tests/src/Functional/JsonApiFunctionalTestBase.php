@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\jsonapi\Functional;
 
+use Drupal\Core\Cache\Rebuilder;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
@@ -191,7 +192,7 @@ abstract class JsonApiFunctionalTestBase extends BrowserTestBase {
       'administer taxonomy',
     ]);
 
-    drupal_flush_all_caches();
+    Rebuilder::rebuildAll();
   }
 
   /**

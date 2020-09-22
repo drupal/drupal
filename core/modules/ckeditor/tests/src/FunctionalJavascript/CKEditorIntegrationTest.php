@@ -10,6 +10,7 @@ use Drupal\filter\Entity\FilterFormat;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\ckeditor\Traits\CKEditorTestTrait;
+use Drupal\Core\Cache\Rebuilder;
 
 /**
  * Tests the integration of CKEditor.
@@ -218,7 +219,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $old_keys = $this->getSession()->evaluateScript($get_cache_keys);
     // Flush the caches to ensure the new timestamp is altered into the
     // drupal.ckeditor library's javascript settings.
-    drupal_flush_all_caches();
+    Rebuilder::rebuildAll();
     // Normally flushing caches regenerates the cache busting query string, but
     // as it's based on the request time, it won't change within this test so
     // explicitly set it.

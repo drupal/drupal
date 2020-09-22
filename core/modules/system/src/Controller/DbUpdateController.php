@@ -4,6 +4,7 @@ namespace Drupal\system\Controller;
 
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\Rebuilder;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
@@ -207,7 +208,7 @@ class DbUpdateController extends ControllerBase {
    */
   protected function info(Request $request) {
     // Change query-strings on css/js files to enforce reload for all users.
-    _drupal_flush_css_js();
+    Rebuilder::flushCssJs();
     // Flush the cache of all data for the update status module.
     $this->keyValueExpirableFactory->get('update')->deleteAll();
     $this->keyValueExpirableFactory->get('update_available_release')->deleteAll();
@@ -350,7 +351,7 @@ class DbUpdateController extends ControllerBase {
       ];
 
       // No updates to run, so caches won't get flushed later.  Clear them now.
-      drupal_flush_all_caches();
+      Rebuilder::rebuildAll();
     }
     else {
       $build['help'] = [
@@ -623,7 +624,7 @@ class DbUpdateController extends ControllerBase {
     if ($post_updates) {
       // Now we rebuild all caches and after that execute the hook_post_update()
       // functions.
-      $batch_builder->addOperation('drupal_flush_all_caches', []);
+      $batch_builder->addOperation([Rebuilder::class, 'rebuildAll'], []);
       foreach ($post_updates as $function) {
         $batch_builder->addOperation('update_invoke_post_update', [$function]);
       }
@@ -652,7 +653,7 @@ class DbUpdateController extends ControllerBase {
    */
   public static function batchFinished($success, $results, $operations) {
     // No updates to run, so caches won't get flushed later.  Clear them now.
-    drupal_flush_all_caches();
+    Rebuilder::rebuildAll();
 
     $_SESSION['update_results'] = $results;
     $_SESSION['update_success'] = $success;

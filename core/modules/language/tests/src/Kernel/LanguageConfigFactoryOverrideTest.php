@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\language\Kernel;
 
+use Drupal\Core\Cache\Rebuilder;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\KernelTests\KernelTestBase;
 
@@ -34,7 +35,7 @@ class LanguageConfigFactoryOverrideTest extends KernelTestBase {
 
     // Invalidate the container.
     $this->config('system.site')->set('default_langcode', 'de')->save();
-    drupal_flush_all_caches();
+    Rebuilder::rebuildAll();
 
     $config_factory_override = \Drupal::service('language.config_factory_override');
     $this->assertEquals('de', $config_factory_override->getLanguage()->getId());

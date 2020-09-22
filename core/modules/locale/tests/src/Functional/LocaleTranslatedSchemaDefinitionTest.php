@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\locale\Functional;
 
+use Drupal\Core\Cache\Rebuilder;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\RequirementsPageTrait;
@@ -37,7 +38,7 @@ class LocaleTranslatedSchemaDefinitionTest extends BrowserTestBase {
 
     // Clear all caches so that the base field definition, its cache in the
     // entity field manager, the t() cache, etc. are all cleared.
-    drupal_flush_all_caches();
+    Rebuilder::rebuildAll();
   }
 
   /**

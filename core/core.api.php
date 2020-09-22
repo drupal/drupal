@@ -2174,10 +2174,10 @@ function hook_layout_alter(&$definitions) {
  * However, all other static variables that do not use drupal_static() must be
  * manually reset.
  *
- * This hook is invoked by drupal_flush_all_caches(). It runs before module data
- * is updated and before hook_rebuild().
+ * This hook is invoked by Rebuilder::rebuildAll(). It runs before module
+ * data is updated and before hook_rebuild().
  *
- * @see drupal_flush_all_caches()
+ * @see \Drupal\Core\Cache\Rebuilder::rebuildAll()
  * @see hook_rebuild()
  */
 function hook_cache_flush() {
@@ -2199,7 +2199,7 @@ function hook_cache_flush() {
  * on all available data to rebuild its own.
  *
  * @see hook_cache_flush()
- * @see drupal_flush_all_caches()
+ * @see \Drupal\Core\Cache\Rebuilder::rebuildAll()
  */
 function hook_rebuild() {
   $themes = \Drupal::service('theme_handler')->listInfo();
