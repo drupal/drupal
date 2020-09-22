@@ -84,11 +84,21 @@ function media_library_help($route_name, RouteMatchInterface $route_match) {
  * Implements hook_media_source_info_alter().
  */
 function media_library_media_source_info_alter(array &$sources) {
-  $sources['audio_file']['forms']['media_library_add'] = FileUploadForm::class;
-  $sources['file']['forms']['media_library_add'] = FileUploadForm::class;
-  $sources['image']['forms']['media_library_add'] = FileUploadForm::class;
-  $sources['video_file']['forms']['media_library_add'] = FileUploadForm::class;
-  $sources['oembed:video']['forms']['media_library_add'] = OEmbedForm::class;
+  if (empty($sources['audio_file']['forms']['media_library_add'])) {
+    $sources['audio_file']['forms']['media_library_add'] = FileUploadForm::class;
+  }
+  if (empty($sources['file']['forms']['media_library_add'])) {
+    $sources['file']['forms']['media_library_add'] = FileUploadForm::class;
+  }
+  if (empty($sources['image']['forms']['media_library_add'])) {
+    $sources['image']['forms']['media_library_add'] = FileUploadForm::class;
+  }
+  if (empty($sources['video_file']['forms']['media_library_add'])) {
+    $sources['video_file']['forms']['media_library_add'] = FileUploadForm::class;
+  }
+  if (empty($sources['oembed:video']['forms']['media_library_add'])) {
+    $sources['oembed:video']['forms']['media_library_add'] = OEmbedForm::class;
+  }
 }
 
 /**
