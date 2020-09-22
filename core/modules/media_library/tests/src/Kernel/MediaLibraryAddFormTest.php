@@ -7,6 +7,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\media_library\Form\FileUploadForm;
 use Drupal\media_library\Form\OEmbedForm;
 use Drupal\media_library\MediaLibraryState;
+use Drupal\media_library_form_overwrite_test\Form\TestAddForm;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 
@@ -135,6 +136,21 @@ class MediaLibraryAddFormTest extends KernelTestBase {
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage("The 'header_image' media type does not exist.");
     \Drupal::formBuilder()->buildForm(FileUploadForm::class, $form_state);
+  }
+
+  /**
+   * Tests overwriting of the add form.
+   */
+  public function testDifferentAddForm() {
+    $this->enableModules(['media_library_form_overwrite_test']);
+
+    $entity_type_manager = \Drupal::entityTypeManager();
+    $image = $entity_type_manager->getStorage('media_type')->load('image');
+
+    $image_source_definition = $image->getSource()->getPluginDefinition();
+
+    // Assert the overwritten form class is set to the media source.
+    $this->assertSame(TestAddForm::class, $image_source_definition['forms']['media_library_add']);
   }
 
 }
