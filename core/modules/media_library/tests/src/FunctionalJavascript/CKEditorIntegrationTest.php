@@ -171,8 +171,8 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
 
     $targetSelector = 'ul.ckeditor-toolbar-group-buttons';
     $buttonSelector = 'li[data-drupal-ckeditor-button-name="DrupalMediaLibrary"]';
-    $this->assertNotEmpty($target = $assert_session->waitForElementVisible('css', $targetSelector));
-    $this->assertNotEmpty($button = $assert_session->elementExists('css', $buttonSelector));
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', $targetSelector));
+    $this->assertNotEmpty($assert_session->elementExists('css', $buttonSelector));
     $this->sortableTo($buttonSelector, 'ul.ckeditor-available-buttons', $targetSelector);
     $page->pressButton('Save configuration');
     $assert_session->pageTextContains('The Embed media filter must be enabled to use the Insert from Media Library button.');
