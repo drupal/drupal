@@ -543,15 +543,15 @@ function drupal_flush_all_caches($kernel = NULL) {
  * all browsers to reload fresh files.
  *
  * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
- * \Drupal\Core\Cache\Rebuilder::flushCssJs() instead.
+ * \Drupal\Core\Cache\QueryString::reset() instead.
  *
  * @see https://www.drupal.org/node/3014783
- * @see \Drupal\Core\Cache\Rebuilder::flushCssJs()
+ * @see \Drupal\Core\Cache\QueryString::reset()
  * @internal
  */
 function _drupal_flush_css_js() {
-  @trigger_error('_drupal_flush_css_js() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Cache\Rebuilder::flushCssJs() instead. See https://www.drupal.org/node/3014783', E_USER_DEPRECATED);
-  Rebuilder::flushCssJs();
+  @trigger_error('_drupal_flush_css_js() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Cache\QueryString::reset() instead. See https://www.drupal.org/node/3014783', E_USER_DEPRECATED);
+  \Drupal::service('cache.query_string')->reset();
 }
 
 /**

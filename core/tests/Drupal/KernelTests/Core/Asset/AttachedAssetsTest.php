@@ -87,7 +87,7 @@ class AttachedAssetsTest extends KernelTestBase {
     $js_render_array = \Drupal::service('asset.js.collection_renderer')->render($js);
     $rendered_css = $this->renderer->renderPlain($css_render_array);
     $rendered_js = $this->renderer->renderPlain($js_render_array);
-    $query_string = $this->container->get('state')->get('system.css_js_query_string') ?: '0';
+    $query_string = $this->container->get('cache.query_string')->get();
     $this->assertStringContainsString('<link rel="stylesheet" media="all" href="' . file_url_transform_relative(file_create_url('core/modules/system/tests/modules/common_test/bar.css')) . '?' . $query_string . '" />', $rendered_css, 'Rendering an external CSS file.');
     $this->assertStringContainsString('<script src="' . file_url_transform_relative(file_create_url('core/modules/system/tests/modules/common_test/foo.js')) . '?' . $query_string . '"></script>', $rendered_js, 'Rendering an external JavaScript file.');
   }
@@ -231,7 +231,7 @@ class AttachedAssetsTest extends KernelTestBase {
     $js = $this->assetResolver->getJsAssets($assets, FALSE)[0];
     $js_render_array = \Drupal::service('asset.js.collection_renderer')->render($js);
     $rendered_js = $this->renderer->renderPlain($js_render_array);
-    $query_string = $this->container->get('state')->get('system.css_js_query_string') ?: '0';
+    $query_string = $this->container->get('cache.query_string')->get();
     $this->assertStringContainsString('<script src="' . file_url_transform_relative(file_create_url('core/modules/system/tests/modules/common_test/header.js')) . '?' . $query_string . '"></script>', $rendered_js, 'The JS asset in common_test/js-header appears in the header.');
     $this->assertStringContainsString('<script src="' . file_url_transform_relative(file_create_url('core/misc/drupal.js')), $rendered_js, 'The JS asset of the direct dependency (core/drupal) of common_test/js-header appears in the header.');
     $this->assertStringContainsString('<script src="' . file_url_transform_relative(file_create_url('core/misc/drupalSettingsLoader.js')), $rendered_js, 'The JS asset of the indirect dependency (core/drupalSettings) of common_test/js-header appears in the header.');
@@ -256,7 +256,7 @@ class AttachedAssetsTest extends KernelTestBase {
    */
   public function testBrowserConditionalComments() {
     $this->expectDeprecation('Support for IE Conditional Comments is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. See https://www.drupal.org/node/3102997');
-    $default_query_string = $this->container->get('state')->get('system.css_js_query_string') ?: '0';
+    $default_query_string = $this->container->get('cache.query_string')->get();
 
     $build['#attached']['library'][] = 'common_test/browsers';
     $assets = AttachedAssets::createFromRenderArray($build);
@@ -474,7 +474,7 @@ class AttachedAssetsTest extends KernelTestBase {
     $rendered_css = $this->renderer->renderPlain($css_render_array);
     $js_render_array = \Drupal::service('asset.js.collection_renderer')->render($js);
     $rendered_js = $this->renderer->renderPlain($js_render_array);
-    $query_string = $this->container->get('state')->get('system.css_js_query_string') ?: '0';
+    $query_string = $this->container->get('cache.query_string')->get();
     $this->assertStringContainsString('<link rel="stylesheet" media="all" href="' . str_replace('&', '&amp;', file_url_transform_relative(file_create_url('core/modules/system/tests/modules/common_test/querystring.css?arg1=value1&arg2=value2'))) . '&amp;' . $query_string . '" />', $rendered_css, 'CSS file with query string gets version query string correctly appended..');
     $this->assertStringContainsString('<script src="' . str_replace('&', '&amp;', file_url_transform_relative(file_create_url('core/modules/system/tests/modules/common_test/querystring.js?arg1=value1&arg2=value2'))) . '&amp;' . $query_string . '"></script>', $rendered_js, 'JavaScript file with query string gets version query string correctly appended.');
   }

@@ -272,6 +272,11 @@ services:
       - { name: cache.bin, default_backend: cache.backend.chainedfast }
     factory: ['@cache_factory', 'get']
     arguments: [discovery]
+  cache.query_string:
+    class: Drupal\Core\Cache\QueryString
+    arguments:
+      - '@state'
+      - '@datetime.time'
   cache_router_rebuild_subscriber:
     class: Drupal\Core\EventSubscriber\CacheRouterRebuildSubscriber
     tags:

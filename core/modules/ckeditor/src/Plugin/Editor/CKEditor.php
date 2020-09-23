@@ -2,6 +2,7 @@
 
 namespace Drupal\ckeditor\Plugin\Editor;
 
+use Drupal\Core\Cache\QueryStringInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\ckeditor\CKEditorPluginManager;
 use Drupal\Core\Form\FormStateInterface;
@@ -66,6 +67,13 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
   protected $state;
 
   /**
+   * The cache query string service.
+   *
+   * @var \Drupal\Core\Cache\QueryStringInterface
+   */
+  protected $queryString;
+
+  /**
    * Constructs a \Drupal\ckeditor\Plugin\Editor\CKEditor object.
    *
    * @param array $configuration
@@ -84,14 +92,20 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
    *   The renderer.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key/value store.
+   * @param \Drupal\Core\Cache\QueryStringInterface $query_string
+   *   The cache query string service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, CKEditorPluginManager $ckeditor_plugin_manager, ModuleHandlerInterface $module_handler, LanguageManagerInterface $language_manager, RendererInterface $renderer, StateInterface $state) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, CKEditorPluginManager $ckeditor_plugin_manager, ModuleHandlerInterface $module_handler, LanguageManagerInterface $language_manager, RendererInterface $renderer, StateInterface $state, QueryStringInterface $query_string = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->ckeditorPluginManager = $ckeditor_plugin_manager;
     $this->moduleHandler = $module_handler;
     $this->languageManager = $language_manager;
     $this->renderer = $renderer;
     $this->state = $state;
+    if ($query_string === NULL) {
+      $query_string = \Drupal::service('cache.query_string');
+    }
+    $this->queryString = $query_string;
   }
 
   /**
@@ -106,7 +120,8 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
       $container->get('module_handler'),
       $container->get('language_manager'),
       $container->get('renderer'),
-      $container->get('state')
+      $container->get('state'),
+      $container->get('cache.query_string')
     );
   }
 
@@ -439,7 +454,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
     }, []);
     $css = array_merge($css, $plugins_css);
     $css = array_merge($css, _ckeditor_theme_css());
-    $query_string = $this->state->get('system.css_js_query_string', '0');
+    $query_string = $this->queryString->get();
     $css = array_map(function ($item) use ($query_string) {
       $query_string_separator = (strpos($item, '?') !== FALSE) ? '&' : '?';
       return $item . $query_string_separator . $query_string;

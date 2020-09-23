@@ -3,6 +3,7 @@
 namespace Drupal\Core\Asset;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Cache\QueryStringInterface;
 use Drupal\Core\State\StateInterface;
 
 /**
@@ -18,13 +19,26 @@ class JsCollectionRenderer implements AssetCollectionRendererInterface {
   protected $state;
 
   /**
+   * The cache query string service.
+   *
+   * @var \Drupal\Core\Cache\QueryStringInterface
+   */
+  protected $queryString;
+
+  /**
    * Constructs a JsCollectionRenderer.
    *
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key/value store.
+   * @param \Drupal\Core\Cache\QueryStringInterface $query_string
+   *   The cache query string service.
    */
-  public function __construct(StateInterface $state) {
+  public function __construct(StateInterface $state, QueryStringInterface $query_string = NULL) {
     $this->state = $state;
+    if ($query_string === NULL) {
+      $query_string = \Drupal::service('cache.query_string');
+    }
+    $this->queryString = $query_string;
   }
 
   /**
@@ -44,7 +58,7 @@ class JsCollectionRenderer implements AssetCollectionRendererInterface {
     // flush, forcing browsers to load a new copy of the files, as the
     // URL changed. Files that should not be cached get REQUEST_TIME as
     // query-string instead, to enforce reload on every page request.
-    $default_query_string = $this->state->get('system.css_js_query_string', '0');
+    $default_query_string = $this->queryString->get();
 
     // Defaults for each SCRIPT element.
     $element_defaults = [

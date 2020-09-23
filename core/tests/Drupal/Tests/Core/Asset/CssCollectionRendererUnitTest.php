@@ -3,6 +3,7 @@
 namespace Drupal\Tests\Core\Asset;
 
 use Drupal\Core\Asset\CssCollectionRenderer;
+use Drupal\Core\Cache\QueryString;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\State\StateInterface;
 
@@ -33,8 +34,9 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
     $state = $this->prophesize(StateInterface::class);
-    $state->get('system.css_js_query_string', '0')->shouldBeCalledOnce()->willReturn(NULL);
-    $this->renderer = new CssCollectionRenderer($state->reveal());
+    $query_string = $this->prophesize(QueryString::class);
+    $query_string->get()->shouldBeCalledOnce()->willReturn(NULL);
+    $this->renderer = new CssCollectionRenderer($state->reveal(), $query_string->reveal());
     $this->fileCssGroup = [
       'group' => -100,
       'type' => 'file',

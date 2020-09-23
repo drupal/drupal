@@ -4,6 +4,7 @@ namespace Drupal\system\Controller;
 
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\QueryStringInterface;
 use Drupal\Core\Cache\Rebuilder;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -80,6 +81,13 @@ class DbUpdateController extends ControllerBase {
   protected $postUpdateRegistry;
 
   /**
+   * The cache query string service.
+   *
+   * @var \Drupal\Core\Cache\QueryStringInterface
+   */
+  protected $queryString;
+
+  /**
    * Constructs a new UpdateController.
    *
    * @param string $root
@@ -98,8 +106,10 @@ class DbUpdateController extends ControllerBase {
    *   The bare HTML page renderer.
    * @param \Drupal\Core\Update\UpdateRegistry $post_update_registry
    *   The post update registry.
+   * @param \Drupal\Core\Cache\QueryStringInterface $query_string
+   *   The cache query string service.
    */
-  public function __construct($root, KeyValueExpirableFactoryInterface $key_value_expirable_factory, CacheBackendInterface $cache, StateInterface $state, ModuleHandlerInterface $module_handler, AccountInterface $account, BareHtmlPageRendererInterface $bare_html_page_renderer, UpdateRegistry $post_update_registry) {
+  public function __construct($root, KeyValueExpirableFactoryInterface $key_value_expirable_factory, CacheBackendInterface $cache, StateInterface $state, ModuleHandlerInterface $module_handler, AccountInterface $account, BareHtmlPageRendererInterface $bare_html_page_renderer, UpdateRegistry $post_update_registry, QueryStringInterface $query_string = NULL) {
     $this->root = $root;
     $this->keyValueExpirableFactory = $key_value_expirable_factory;
     $this->cache = $cache;
@@ -108,6 +118,10 @@ class DbUpdateController extends ControllerBase {
     $this->account = $account;
     $this->bareHtmlPageRenderer = $bare_html_page_renderer;
     $this->postUpdateRegistry = $post_update_registry;
+    if ($query_string === NULL) {
+      $query_string = \Drupal::service('cache.query_string');
+    }
+    $this->queryString = $query_string;
   }
 
   /**
@@ -208,7 +222,7 @@ class DbUpdateController extends ControllerBase {
    */
   protected function info(Request $request) {
     // Change query-strings on css/js files to enforce reload for all users.
-    Rebuilder::flushCssJs();
+    $this->queryString->reset();
     // Flush the cache of all data for the update status module.
     $this->keyValueExpirableFactory->get('update')->deleteAll();
     $this->keyValueExpirableFactory->get('update_available_release')->deleteAll();

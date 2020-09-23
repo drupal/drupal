@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Asset;
 
+use Drupal\Core\Cache\QueryStringInterface;
 use Drupal\Core\State\StateInterface;
 
 /**
@@ -17,13 +18,26 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
   protected $state;
 
   /**
+   * The cache query string interface.
+   *
+   * @var \Drupal\Core\Cache\QueryStringInterface|mixed|null
+   */
+  protected $queryString;
+
+  /**
    * Constructs a CssCollectionRenderer.
    *
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key/value store.
+   * @param \Drupal\Core\Cache\QueryStringInterface $query_string
+   *   The cache query string interface.
    */
-  public function __construct(StateInterface $state) {
+  public function __construct(StateInterface $state, QueryStringInterface $query_string = NULL) {
     $this->state = $state;
+    if ($query_string === NULL) {
+      $query_string = \Drupal::service('cache.query_string');
+    }
+    $this->queryString = $query_string;
   }
 
   /**
@@ -36,7 +50,7 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
     // browser-caching. The string changes on every update or full cache
     // flush, forcing browsers to load a new copy of the files, as the
     // URL changed.
-    $query_string = $this->state->get('system.css_js_query_string', '0');
+    $query_string = $this->queryString->get();
 
     // Defaults for LINK and STYLE elements.
     $link_element_defaults = [

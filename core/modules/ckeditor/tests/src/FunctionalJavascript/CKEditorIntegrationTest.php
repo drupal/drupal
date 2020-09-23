@@ -223,7 +223,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     // Normally flushing caches regenerates the cache busting query string, but
     // as it's based on the request time, it won't change within this test so
     // explicitly set it.
-    \Drupal::state()->set('system.css_js_query_string', '0');
+    \Drupal::service('cache.query_string')->reset('0');
     $this->drupalGet('/ckeditor_test/off_canvas');
     $page->clickLink('Add Node');
     $assert_session->waitForElementVisible('css', '#drupal-off-canvas');
