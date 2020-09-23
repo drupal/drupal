@@ -624,11 +624,10 @@ class DateTimePlus {
     $valid_date = FALSE;
     $valid_time = TRUE;
     // Check for a valid date using checkdate(). Only values that
-    // meet that test are valid.
-    if (array_key_exists('year', $array) && array_key_exists('month', $array) && array_key_exists('day', $array)) {
-      if (@checkdate($array['month'], $array['day'], $array['year'])) {
-        $valid_date = TRUE;
-      }
+    // meet that test are valid. An empty value, either a string or a 0, is not
+    // a valid value.
+    if (!empty($array['year']) && !empty($array['month']) && !empty($array['day'])) {
+      $valid_date = checkdate($array['month'], $array['day'], $array['year']);
     }
     // Testing for valid time is reversed. Missing time is OK,
     // but incorrect values are not.
