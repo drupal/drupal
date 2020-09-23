@@ -113,6 +113,23 @@ class DateTimePlusTest extends TestCase {
   }
 
   /**
+   * Tests DateTimePlus::checkArray().
+   *
+   * @param mixed $array
+   *   Input argument for DateTimePlus::checkArray().
+   * @param bool $expected
+   *   The expected result of DateTimePlus::checkArray().
+   *
+   * @dataProvider providerTestCheckArray
+   */
+  public function testCheckArray(array $array, $expected) {
+    $this->assertSame(
+      $expected,
+      DateTimePlus::checkArray($array)
+    );
+  }
+
+  /**
    * Test creating dates from timestamps, and manipulating timezones.
    *
    * @param int $input
@@ -439,6 +456,30 @@ class DateTimePlusTest extends TestCase {
       [['year' => 2010, 'month' => 7, 'day' => 8, 'hour' => 8, 'minute' => 88, 'second' => 0], 'America/Chicago', \InvalidArgumentException::class],
       // Regression test for https://www.drupal.org/node/2084455.
       [['hour' => 59, 'minute' => 1, 'second' => 1], 'America/Chicago', \InvalidArgumentException::class],
+    ];
+  }
+
+  /**
+   * Data provider for testCheckArray.
+   *
+   * @return array
+   *   An array of arrays, each containing:
+   *   - 'array' - Input for DateTimePlus::checkArray().
+   *   - 'expected' - Expected output for  DateTimePlus::checkArray().
+   *
+   * @see testCheckArray
+   */
+  public function providerTestCheckArray() {
+    return [
+      'Date array, date only' => [['year' => 2010, 'month' => 2, 'day' => 28], TRUE],
+      'Date array with hour' => [['year' => 2010, 'month' => 2, 'day' => 28, 'hour' => 10], TRUE],
+      'One year larger than the documented upper limit of checkdate()' => [['year' => 32768, 'month' => 1, 'day' => 8, 'hour' => 8, 'minute' => 0, 'second' => 0], FALSE],
+      'One year smaller than the documented lower limit of checkdate()' => [['year' => 0, 'month' => 1, 'day' => 8, 'hour' => 8, 'minute' => 0, 'second' => 0], FALSE],
+      'Invalid month from date array' => [['year' => 2010, 'month' => 27, 'day' => 8, 'hour' => 8, 'minute' => 0, 'second' => 0], FALSE],
+      'Invalid hour from date array' => [['year' => 2010, 'month' => 2, 'day' => 28, 'hour' => 80, 'minute' => 0, 'second' => 0], FALSE],
+      'Invalid minute from date array.' => [['year' => 2010, 'month' => 7, 'day' => 8, 'hour' => 8, 'minute' => 88, 'second' => 0], FALSE],
+      'Missing day' => [['year' => 2059, 'month' => 1, 'second' => 1], FALSE],
+      'Zero day' => [['year' => 2059, 'month' => 1, 'day' => 0], FALSE],
     ];
   }
 
