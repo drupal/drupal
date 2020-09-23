@@ -5,10 +5,8 @@
  * Miscellaneous functions.
  */
 
-use Drupal\Core\DrupalKernel;
 use Drupal\Core\Cache\Rebuilder;
 use Drupal\Core\DrupalKernel;
-use Drupal\Core\PhpStorage\PhpStorageFactory;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
