@@ -22,8 +22,8 @@ class Depth extends EntityField {
 
     foreach ($items as &$item) {
       // Work out the depth of this comment.
-      $comment_thread = $item['rendered']['#markup'];
-      $item['rendered']['#markup'] = count(explode('.', $comment_thread)) - 1;
+      $comment_thread = $item['rendered']['#context']['value'];
+      $item['rendered']['#context']['value'] = count(explode('.', $comment_thread)) - 1;
     }
     return $items;
   }
