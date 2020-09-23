@@ -233,7 +233,8 @@ function entity_load_unchanged($entity_type, $id) {
  *   An array of entity IDs of the entities to delete.
  *
  * @deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use
- *   the entity storage's delete() method to delete multiple entities:
+ *   the entity storage's \Drupal\Core\Entity\EntityStorageInterface::delete()
+ *   method to delete multiple entities:
  *   @code
  *     $storage_handler = \Drupal::entityTypeManager()->getStorage($entity_type);
  *     $entities = $storage_handler->loadMultiple($ids);
