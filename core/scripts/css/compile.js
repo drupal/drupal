@@ -12,7 +12,24 @@ module.exports = (filePath, callback) => {
   // Transform the file.
   fs.readFile(filePath, (err, css) => {
     postcss([
-      postcssImport(),
+      postcssImport({
+        plugins: [
+          // On import, remove the comments from variables.pcss.css so they don't
+          // appear as useless comments at the top files that import these
+          // variables.
+          postcss.plugin('remove-unwanted-comments-from-variables', (options) => {
+            return css => {
+              if (css.source.input.file.indexOf('variables.pcss.css') !== -1) {
+                css.walk(node => {
+                  if (node.type === 'comment') {
+                    node.remove();
+                  }
+                });
+              }
+            };
+          }),
+        ],
+      }),
       postcssCustomProperties({
         // Remove converted properties from the generated code. This needs to be
         // set to ensure that CSS minifiers don't remove the generated values.
