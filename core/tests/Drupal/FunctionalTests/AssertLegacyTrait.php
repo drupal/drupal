@@ -83,7 +83,13 @@ trait AssertLegacyTrait {
       $this->assertSession()->responseContains($text);
     }
     else {
-      $this->assertTextHelper($text, FALSE);
+      // Trying to simulate what the user sees, given that it removes all text
+      // inside the head tags, removes inline JavaScript, fix all HTML entities,
+      // removes dangerous protocols and filtering out all HTML tags, as they are
+      // not visible in a normal browser.
+      $raw_content = preg_replace('@<head>(.+?)</head>@si', '', $this->getSession()->getPage()->getContent());
+      $page_text = Xss::filter($raw_content, []);
+      $this->assertStringContainsString($text, $page_text, "\"$text\" found");
     }
   }
 
@@ -117,7 +123,13 @@ trait AssertLegacyTrait {
       $this->assertSession()->responseNotContains($text);
     }
     else {
-      $this->assertTextHelper($text);
+      // Trying to simulate what the user sees, given that it removes all text
+      // inside the head tags, removes inline JavaScript, fix all HTML entities,
+      // removes dangerous protocols and filtering out all HTML tags, as they are
+      // not visible in a normal browser.
+      $raw_content = preg_replace('@<head>(.+?)</head>@si', '', $this->getSession()->getPage()->getContent());
+      $page_text = Xss::filter($raw_content, []);
+      $this->assertStringNotContainsString($text, $page_text, "\"$text\" not found");
     }
   }
 
@@ -140,7 +152,7 @@ trait AssertLegacyTrait {
    * @see https://www.drupal.org/node/3129738
    */
   protected function assertTextHelper($text, $not_exists = TRUE) {
-    @trigger_error('AssertLegacyTrait::assertText() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->pageTextContains() or $this->assertSession()->pageTextNotContains() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
+    @trigger_error('AssertLegacyTrait::assertTextHelper() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->pageTextContains() or $this->assertSession()->pageTextNotContains() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     $args = ['@text' => $text];
     $message = $not_exists ? new FormattableMarkup('"@text" not found', $args) : new FormattableMarkup('"@text" found', $args);
 
