@@ -133,7 +133,7 @@ EOS;
 /**
  * {@inheritdoc}
  */
-public function complexMethod(string $parameter, callable $function, \Drupal\Tests\Component\ProxyBuilder\TestServiceNoMethod $test_service = NULL, array &$elements = array (
+public function complexMethod(string $parameter, callable $function, ?\Drupal\Tests\Component\ProxyBuilder\TestServiceNoMethod $test_service = NULL, array &$elements = array (
 )): array
 {
     return $this->lazyLoadItself()->complexMethod($parameter, $function, $test_service, $elements);
@@ -284,6 +284,32 @@ EOS;
   }
 
   /**
+   * @covers ::buildMethod
+   * @covers ::buildParameter
+   * @covers ::buildMethodBody
+   */
+  public function testBuildWithNullableSelfTypehint() {
+    $class = 'Drupal\Tests\Component\ProxyBuilder\TestServiceNullableTypehintSelf';
+
+    $result = $this->proxyBuilder->build($class);
+
+    // Ensure that the static method is not wrapped.
+    $method_body = <<<'EOS'
+
+/**
+ * {@inheritdoc}
+ */
+public function typehintSelf(?\Drupal\Tests\Component\ProxyBuilder\TestServiceNullableTypehintSelf $parameter): ?\Drupal\Tests\Component\ProxyBuilder\TestServiceNullableTypehintSelf
+{
+    return $this->lazyLoadItself()->typehintSelf($parameter);
+}
+
+EOS;
+
+    $this->assertEquals($this->buildExpectedClass($class, $method_body), $result);
+  }
+
+  /**
    * Constructs the expected class output.
    *
    * @param string $expected_methods_body
@@ -406,6 +432,14 @@ class TestServiceMethodWithParameter {
 class TestServiceComplexMethod {
 
   public function complexMethod(string $parameter, callable $function, TestServiceNoMethod $test_service = NULL, array &$elements = []): array {
+
+  }
+
+}
+
+class TestServiceNullableTypehintSelf {
+
+  public function typehintSelf(?self $parameter): ?self {
 
   }
 

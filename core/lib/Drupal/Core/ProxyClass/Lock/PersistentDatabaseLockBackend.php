@@ -70,7 +70,7 @@ namespace Drupal\Core\ProxyClass\Lock {
         /**
          * {@inheritdoc}
          */
-        public function acquire($name, $timeout = 30)
+        public function acquire($name, $timeout = 30.0)
         {
             return $this->lazyLoadItself()->acquire($name, $timeout);
         }
