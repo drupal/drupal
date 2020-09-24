@@ -76,8 +76,8 @@ class UserCreateTest extends BrowserTestBase {
 
     // Test user creation page for valid fields.
     $this->drupalGet('admin/people/create');
-    $this->assertFieldbyId('edit-status-0', 0, 'The user status option Blocked exists.', 'User login');
-    $this->assertFieldbyId('edit-status-1', 1, 'The user status option Active exists.', 'User login');
+    $this->assertSession()->fieldValueEquals('edit-status-0', '1');
+    $this->assertSession()->fieldValueEquals('edit-status-1', '1');
     $this->assertFieldByXPath('//input[@type="radio" and @id="edit-status-1" and @checked="checked"]', NULL, 'Default setting for user status is active.');
 
     // Test that browser autocomplete behavior does not occur.

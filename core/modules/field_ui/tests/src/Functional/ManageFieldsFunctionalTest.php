@@ -458,7 +458,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $element_id = "edit-default-value-input-$field_name-0-value";
     $element_name = "default_value_input[{$field_name}][0][value]";
     $this->drupalGet($admin_path);
-    $this->assertFieldById($element_id, '', 'The default value widget was empty.');
+    $this->assertSession()->fieldValueEquals($element_id, '');
 
     // Check that invalid default values are rejected.
     $edit = [$element_name => '-1'];
@@ -474,7 +474,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
 
     // Check that the default value shows up in the form
     $this->drupalGet($admin_path);
-    $this->assertFieldById($element_id, '1', 'The default value widget was displayed with the correct value.');
+    $this->assertSession()->fieldValueEquals($element_id, '1');
 
     // Check that the default value can be emptied.
     $edit = [$element_name => ''];
@@ -506,7 +506,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       ->removeComponent($field_name)
       ->save();
     $this->drupalGet($admin_path);
-    $this->assertFieldById($element_id, '', 'The default value widget was displayed when field is hidden.');
+    $this->assertSession()->fieldValueEquals($element_id, '');
   }
 
   /**

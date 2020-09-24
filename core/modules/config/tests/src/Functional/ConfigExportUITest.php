@@ -48,7 +48,7 @@ class ConfigExportUITest extends BrowserTestBase {
   public function testExport() {
     // Verify the export page with export submit button is available.
     $this->drupalGet('admin/config/development/configuration/full/export');
-    $this->assertFieldById('edit-submit', t('Export'));
+    $this->assertSession()->buttonExists('Export');
 
     // Submit the export form and verify response. This will create a file in
     // temporary directory with the default name config.tar.gz.

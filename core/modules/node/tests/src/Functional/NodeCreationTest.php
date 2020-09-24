@@ -91,7 +91,7 @@ class NodeCreationTest extends NodeTestBase {
     ]);
     $this->drupalLogin($admin_user);
     $this->drupalGet('node/add/page');
-    $this->assertNoFieldById('edit-revision', NULL, 'The revision checkbox is not present.');
+    $this->assertSession()->fieldNotExists('edit-revision', NULL);
   }
 
   /**

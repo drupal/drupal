@@ -37,8 +37,8 @@ class LanguageBrowserDetectionTest extends BrowserTestBase {
 
     // Check that defaults are loaded from language.mappings.yml.
     $this->drupalGet('admin/config/regional/language/detection/browser');
-    $this->assertFieldById('edit-mappings-zh-cn-browser-langcode', 'zh-cn');
-    $this->assertFieldById('edit-mappings-zh-cn-drupal-langcode', 'zh-hans');
+    $this->assertSession()->fieldValueEquals('edit-mappings-zh-cn-browser-langcode', 'zh-cn');
+    $this->assertSession()->fieldValueEquals('edit-mappings-zh-cn-drupal-langcode', 'zh-hans');
 
     // Delete zh-cn language code.
     $browser_langcode = 'zh-cn';
@@ -70,8 +70,8 @@ class LanguageBrowserDetectionTest extends BrowserTestBase {
     ];
     $this->drupalPostForm('admin/config/regional/language/detection/browser', $edit, t('Save configuration'));
     $this->assertSession()->addressEquals(Url::fromRoute('language.negotiation_browser'));
-    $this->assertFieldById('edit-mappings-xx-browser-langcode', 'xx');
-    $this->assertFieldById('edit-mappings-xx-drupal-langcode', 'en');
+    $this->assertSession()->fieldValueEquals('edit-mappings-xx-browser-langcode', 'xx');
+    $this->assertSession()->fieldValueEquals('edit-mappings-xx-drupal-langcode', 'en');
 
     // Add the same custom mapping again.
     $this->drupalPostForm('admin/config/regional/language/detection/browser', $edit, t('Save configuration'));
@@ -92,8 +92,8 @@ class LanguageBrowserDetectionTest extends BrowserTestBase {
     ];
     $this->drupalPostForm('admin/config/regional/language/detection/browser', $edit, t('Save configuration'));
     $this->assertSession()->addressEquals(Url::fromRoute('language.negotiation_browser'));
-    $this->assertFieldById('edit-mappings-xx-browser-langcode', 'xx');
-    $this->assertFieldById('edit-mappings-xx-drupal-langcode', 'zh-hans');
+    $this->assertSession()->fieldValueEquals('edit-mappings-xx-browser-langcode', 'xx');
+    $this->assertSession()->fieldValueEquals('edit-mappings-xx-drupal-langcode', 'zh-hans');
   }
 
 }

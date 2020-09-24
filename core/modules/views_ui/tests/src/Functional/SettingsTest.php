@@ -89,7 +89,7 @@ class SettingsTest extends UITestBase {
 
     $view['id'] = strtolower($this->randomMachineName());
     $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
-    $this->assertFieldById('edit-displays-top-add-display-embed', NULL);
+    $this->assertSession()->buttonExists('edit-displays-top-add-display-embed');
 
     $edit = [
       'ui_show_display_embed' => FALSE,
@@ -97,7 +97,7 @@ class SettingsTest extends UITestBase {
     $this->drupalPostForm('admin/structure/views/settings', $edit, t('Save configuration'));
 
     $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
-    $this->assertNoFieldById('edit-displays-top-add-display-embed');
+    $this->assertSession()->buttonNotExists('edit-displays-top-add-display-embed');
 
     // Configure to hide/show the sql at the preview.
     $edit = [

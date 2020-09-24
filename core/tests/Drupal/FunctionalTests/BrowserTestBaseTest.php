@@ -385,6 +385,19 @@ class BrowserTestBaseTest extends BrowserTestBase {
   }
 
   /**
+   * Tests legacy field asserts by id.
+   *
+   * @group legacy
+   * @expectedDeprecation AssertLegacyTrait::assertFieldById() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->fieldExists() or $this->assertSession()->buttonExists() or $this->assertSession()->fieldValueEquals() instead. See https://www.drupal.org/node/3129738
+   * @expectedDeprecation AssertLegacyTrait::assertNoFieldById() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->fieldNotExists() or $this->assertSession()->buttonNotExists() or $this->assertSession()->fieldValueNotEquals() instead. See https://www.drupal.org/node/3129738
+   */
+  public function testAssertFieldById() {
+    $this->drupalGet('test-field-xpath');
+    $this->assertFieldById('edit-save', NULL);
+    $this->assertNoFieldById('invalid', NULL);
+  }
+
+  /**
    * Tests field asserts using textfields.
    */
   public function testFieldAssertsForTextfields() {
@@ -423,16 +436,12 @@ class BrowserTestBaseTest extends BrowserTestBase {
     catch (ElementNotFoundException $e) {
       // Expected exception; just continue testing.
     }
-
     // *** 3. assertNoFieldById().
-    $this->assertNoFieldById('name');
-    $this->assertNoFieldById('name', 'not the value');
-    $this->assertNoFieldById('notexisting');
-    $this->assertNoFieldById('notexisting', NULL);
-
+    $this->assertSession()->fieldValueNotEquals('name', 'not the value');
+    $this->assertSession()->fieldNotExists('notexisting');
     // Test that the assertion fails correctly if no value is passed in.
     try {
-      $this->assertNoFieldById('edit-description');
+      $this->assertSession()->fieldNotExists('edit-description');
       $this->fail('The "description" field, with no value was not found.');
     }
     catch (ExpectationException $e) {
@@ -441,7 +450,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
 
     // Test that the assertion fails correctly if a NULL value is passed in.
     try {
-      $this->assertNoFieldById('edit-name', NULL);
+      $this->assertSession()->fieldNotExists('name', NULL);
       $this->fail('The "name" field was not found.');
     }
     catch (ExpectationException $e) {
@@ -449,15 +458,14 @@ class BrowserTestBaseTest extends BrowserTestBase {
     }
 
     // *** 4. assertFieldById().
-    $this->assertFieldById('edit-name', NULL);
-    $this->assertFieldById('edit-name', 'Test name');
-    $this->assertFieldById('edit-description', NULL);
-    $this->assertFieldById('edit-description');
+    $this->assertSession()->fieldExists('edit-name');
+    $this->assertSession()->fieldValueEquals('edit-name', 'Test name');
+    $this->assertSession()->fieldExists('edit-description');
+    $this->assertSession()->fieldValueEquals('edit-description', '');
 
     // Test that the assertion fails correctly if no value is passed in.
     try {
-      $this->assertFieldById('edit-name');
-      $this->fail('The "edit-name" field with no value was found.');
+      $this->assertSession()->fieldValueNotEquals('edit-name', '');
     }
     catch (ExpectationFailedException $e) {
       // Expected exception; just continue testing.
@@ -465,8 +473,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
 
     // Test that the assertion fails correctly if the wrong value is passed in.
     try {
-      $this->assertFieldById('edit-name', 'not the value');
-      $this->fail('The "name" field was found, using the wrong value.');
+      $this->assertSession()->fieldValueNotEquals('edit-name', 'not the value');
     }
     catch (ExpectationFailedException $e) {
       // Expected exception; just continue testing.
@@ -590,32 +597,24 @@ class BrowserTestBaseTest extends BrowserTestBase {
   public function testFieldAssertsForButton() {
     $this->drupalGet('test-field-xpath');
 
-    $this->assertFieldById('edit-save', NULL);
-    // Test that the assertion fails correctly if the field value is passed in
-    // rather than the id.
-    try {
-      $this->assertFieldById('Save', NULL);
-      $this->fail('The field with id of "Save" was found.');
-    }
-    catch (ExpectationFailedException $e) {
-      // Expected exception; just continue testing.
-    }
+    // Verify if the test passes with button ID.
+    $this->assertSession()->buttonExists('edit-save');
+    // Verify if the test passes with button Value.
+    $this->assertSession()->buttonExists('Save');
+    // Verify if the test passes with button Name.
+    $this->assertSession()->buttonExists('op');
 
-    $this->assertNoFieldById('Save', NULL);
-    // Test that the assertion fails correctly if the id of an actual field is
-    // passed in.
-    try {
-      $this->assertNoFieldById('edit-save', NULL);
-      $this->fail('The field with id of "edit-save" was not found.');
-    }
-    catch (ExpectationException $e) {
-      // Expected exception; just continue testing.
-    }
+    // Verify if the test passes with button ID.
+    $this->assertSession()->buttonNotExists('i-do-not-exist');
+    // Verify if the test passes with button Value.
+    $this->assertSession()->buttonNotExists('I do not exist');
+    // Verify if the test passes with button Name.
+    $this->assertSession()->buttonNotExists('no');
 
     // Test that multiple fields with the same name are validated correctly.
-    $this->assertFieldByName('duplicate_button', 'Duplicate button 1');
-    $this->assertFieldByName('duplicate_button', 'Duplicate button 2');
-    $this->assertNoFieldByName('duplicate_button', 'Rabbit');
+    $this->assertSession()->buttonExists('Duplicate button 1');
+    $this->assertSession()->buttonExists('Duplicate button 2');
+    $this->assertSession()->buttonNotExists('Rabbit');
 
     try {
       $this->assertNoFieldByName('duplicate_button', 'Duplicate button 2');
@@ -678,27 +677,27 @@ class BrowserTestBaseTest extends BrowserTestBase {
     // Part 2 - Test by ID.
     // Test that checkboxes are found/not found correctly by ID, when using
     // TRUE or FALSE to match their 'checked' state.
-    $this->assertFieldById('edit-checkbox-enabled', TRUE);
-    $this->assertFieldById('edit-checkbox-disabled', FALSE);
-    $this->assertNoFieldById('edit-checkbox-enabled', FALSE);
-    $this->assertNoFieldById('edit-checkbox-disabled', TRUE);
+    $this->assertSession()->fieldValueEquals('edit-checkbox-enabled', TRUE);
+    $this->assertSession()->fieldValueEquals('edit-checkbox-disabled', FALSE);
+    $this->assertSession()->fieldValueNotEquals('edit-checkbox-enabled', FALSE);
+    $this->assertSession()->fieldValueNotEquals('edit-checkbox-disabled', TRUE);
 
     // Test that checkboxes are found by ID, when using NULL to ignore the
     // 'checked' state.
-    $this->assertFieldById('edit-checkbox-enabled', NULL);
-    $this->assertFieldById('edit-checkbox-disabled', NULL);
+    $this->assertSession()->fieldExists('edit-checkbox-enabled');
+    $this->assertSession()->fieldExists('edit-checkbox-disabled');
 
     // Test that checkboxes are found by ID when passing no second parameter.
-    $this->assertFieldById('edit-checkbox-enabled');
-    $this->assertFieldById('edit-checkbox-disabled');
+    $this->assertSession()->fieldExists('edit-checkbox-enabled');
+    $this->assertSession()->fieldExists('edit-checkbox-disabled');
 
     // Test that we have legacy support.
-    $this->assertFieldById('edit-checkbox-enabled', '1');
-    $this->assertFieldById('edit-checkbox-disabled', '');
+    $this->assertSession()->fieldValueEquals('edit-checkbox-enabled', '1');
+    $this->assertSession()->fieldValueEquals('edit-checkbox-disabled', '');
 
     // Test that the assertion fails correctly when using NULL to ignore state.
     try {
-      $this->assertNoFieldById('edit-checkbox-disabled', NULL);
+      $this->assertSession()->fieldNotExists('edit-checkbox-disabled', NULL);
       $this->fail('The "edit-checkbox-disabled" field was not found by ID, using NULL value.');
     }
     catch (ExpectationException $e) {

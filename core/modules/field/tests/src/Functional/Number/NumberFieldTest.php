@@ -437,7 +437,7 @@ class NumberFieldTest extends BrowserTestBase {
     $this->assertRaw(t('Saved %label configuration.', ['%label' => $field->getLabel()]));
     // Check if the minimum value was actually set.
     $this->drupalGet($field_configuration_url);
-    $this->assertFieldById('edit-settings-min', $minimum_value, 'Minimal ' . gettype($minimum_value) . '  value was set on a ' . $field->getType() . ' field.');
+    $this->assertSession()->fieldValueEquals('edit-settings-min', $minimum_value);
   }
 
 }

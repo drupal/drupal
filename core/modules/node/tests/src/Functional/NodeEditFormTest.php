@@ -128,7 +128,7 @@ class NodeEditFormTest extends NodeTestBase {
 
     // Check if the node revision checkbox is rendered on node edit form.
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertFieldById('edit-revision', NULL, 'The revision field is present.');
+    $this->assertSession()->fieldExists('edit-revision', NULL);
 
     // Check that details form element opens when there are errors on child
     // elements.

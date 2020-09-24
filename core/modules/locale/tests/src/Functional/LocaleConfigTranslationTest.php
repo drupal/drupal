@@ -205,7 +205,7 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
 
     // Check if the UI does not show the translated String.
     $this->drupalGet('admin/structure/contact/manage/feedback');
-    $this->assertFieldById('edit-label', 'Website feedback', 'Translation is not loaded for Edit Form.');
+    $this->assertSession()->fieldValueEquals('edit-label', 'Website feedback');
   }
 
   /**

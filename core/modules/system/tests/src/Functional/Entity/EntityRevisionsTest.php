@@ -177,8 +177,8 @@ class EntityRevisionsTest extends BrowserTestBase {
     // Confirm the correct revision text appears in the edit form.
     $entity = $storage->load($entity->id->value);
     $this->drupalGet($entity_type . '/manage/' . $entity->id->value . '/edit');
-    $this->assertFieldById('edit-name-0-value', $entity->name->value, new FormattableMarkup('%entity_type: Name matches in UI.', ['%entity_type' => $entity_type]));
-    $this->assertFieldById('edit-translatable-test-field-0-value', $entity->translatable_test_field->value, new FormattableMarkup('%entity_type: Text matches in UI.', ['%entity_type' => $entity_type]));
+    $this->assertSession()->fieldValueEquals('edit-name-0-value', $entity->name->value);
+    $this->assertSession()->fieldValueEquals('edit-translatable-test-field-0-value', $entity->translatable_test_field->value);
   }
 
   /**

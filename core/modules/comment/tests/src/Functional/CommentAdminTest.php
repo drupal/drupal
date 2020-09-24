@@ -231,12 +231,12 @@ class CommentAdminTest extends CommentTestBase {
     // Make sure the comment field is not visible when
     // the comment was posted by an authenticated user.
     $this->drupalGet('comment/' . $comment->id() . '/edit');
-    $this->assertNoFieldById('edit-mail', $comment->getAuthorEmail());
+    $this->assertSession()->fieldNotExists('edit-mail');
 
     // Make sure the comment field is visible when
     // the comment was posted by an anonymous user.
     $this->drupalGet('comment/' . $anonymous_comment->id() . '/edit');
-    $this->assertFieldById('edit-mail', $anonymous_comment->getAuthorEmail());
+    $this->assertSession()->fieldValueEquals('edit-mail', $anonymous_comment->getAuthorEmail());
   }
 
   /**

@@ -58,7 +58,7 @@ class ConfigImportUITest extends BrowserTestBase {
 
     $this->drupalGet('admin/config/development/configuration');
     $this->assertText('There are no configuration changes to import.');
-    $this->assertNoFieldById('edit-submit', t('Import all'));
+    $this->assertSession()->buttonNotExists('Import all');
 
     // Create updated configuration object.
     $new_site_name = 'Config import test ' . $this->randomString();
@@ -126,7 +126,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->assertRaw('<td>core.extension');
     $this->assertRaw('<td>system.theme');
     $this->assertRaw('<td>automated_cron.settings');
-    $this->assertFieldById('edit-submit', t('Import all'));
+    $this->assertSession()->buttonExists('Import all');
 
     // Import and verify that both do not appear anymore.
     $this->drupalPostForm(NULL, [], t('Import all'));
@@ -136,7 +136,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->assertNoRaw('<td>system.theme');
     $this->assertNoRaw('<td>automated_cron.settings');
 
-    $this->assertNoFieldById('edit-submit', t('Import all'));
+    $this->assertSession()->buttonNotExists('Import all');
 
     // Verify that there are no further changes to import.
     $this->assertText(t('There are no configuration changes to import.'));
@@ -269,7 +269,7 @@ class ConfigImportUITest extends BrowserTestBase {
     // Verify that there are configuration differences to import.
     $this->drupalGet('admin/config/development/configuration');
     $this->assertText(t('The staged configuration cannot be imported, because it originates from a different site than this site. You can only synchronize configuration between cloned instances of this site.'));
-    $this->assertNoFieldById('edit-submit', t('Import all'));
+    $this->assertSession()->buttonNotExists('Import all');
   }
 
   /**

@@ -185,9 +185,9 @@ class FilterTest extends ViewTestBase {
 
     // Because there are not operators that use the min and max fields, those
     // fields should not be in the exposed form.
-    $this->assertFieldById('edit-nid-value');
-    $this->assertNoFieldById('edit-nid-min');
-    $this->assertNoFieldById('edit-nid-max');
+    $this->assertSession()->fieldExists('edit-nid-value');
+    $this->assertSession()->fieldNotExists('edit-nid-min');
+    $this->assertSession()->fieldNotExists('edit-nid-max');
 
     $edit = [];
     $edit['options[operator]'] = '>';
@@ -203,9 +203,9 @@ class FilterTest extends ViewTestBase {
     $this->assertSession()->optionExists('edit-nid-op', '>');
     $this->assertSession()->optionExists('edit-nid-op', '>=');
 
-    $this->assertFieldById('edit-nid-value');
-    $this->assertFieldById('edit-nid-min');
-    $this->assertFieldById('edit-nid-max');
+    $this->assertSession()->fieldExists('edit-nid-value');
+    $this->assertSession()->fieldExists('edit-nid-min');
+    $this->assertSession()->fieldExists('edit-nid-max');
 
     // Set the default to an excluded operator.
     $edit = [];

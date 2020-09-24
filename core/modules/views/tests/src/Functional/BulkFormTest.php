@@ -56,12 +56,12 @@ class BulkFormTest extends BrowserTestBase {
     $first_form_element = $this->xpath('//form/div[1][@id = :id]', [':id' => 'edit-header']);
     $this->assertNotEmpty($first_form_element, 'The views form edit header appears first.');
 
-    $this->assertFieldById('edit-action', NULL, 'The action select field appears.');
+    $this->assertSession()->fieldExists('edit-action');
 
     // Make sure a checkbox appears on all rows.
     $edit = [];
     for ($i = 0; $i < 10; $i++) {
-      $this->assertFieldById('edit-node-bulk-form-' . $i, NULL, new FormattableMarkup('The checkbox on row @row appears.', ['@row' => $i]));
+      $this->assertSession()->fieldExists('edit-node-bulk-form-' . $i);
       $edit["node_bulk_form[$i]"] = TRUE;
     }
 

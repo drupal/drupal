@@ -83,7 +83,7 @@ class DisplayAttachmentTest extends UITestBase {
 
     // Open the Page display and mark it as deleted.
     $this->drupalGet($path_prefix . '/page_1');
-    $this->assertFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-delete', 'Delete Page', 'Make sure there is a delete button on the page display.');
+    $this->assertSession()->buttonExists('edit-displays-settings-settings-content-tab-content-details-top-actions-delete');
     $this->drupalPostForm($path_prefix . '/page_1', [], 'Delete Page');
 
     // Open the attachment display and save it.

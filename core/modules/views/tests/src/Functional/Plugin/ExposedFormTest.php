@@ -115,7 +115,7 @@ class ExposedFormTest extends ViewTestBase {
     ]);
     $view->save();
     $this->drupalGet('test_exposed_form_buttons', ['query' => [$identifier => 'article']]);
-    $this->assertFieldById(Html::getId('edit-' . $identifier), 'article', "Article type filter set with new identifier.");
+    $this->assertSession()->fieldValueEquals(Html::getId('edit-' . $identifier), 'article');
 
     // Alter the identifier of the filter to a random string containing
     // restricted characters.
@@ -160,13 +160,13 @@ class ExposedFormTest extends ViewTestBase {
 
     $this->drupalGet('test_exposed_form_buttons', ['query' => ['type' => 'article']]);
     // Test that the type has been set.
-    $this->assertFieldById('edit-type', 'article', 'Article type filter set.');
+    $this->assertSession()->fieldValueEquals('edit-type', 'article');
 
     // Test the reset works.
     $this->drupalGet('test_exposed_form_buttons', ['query' => ['op' => 'Reset']]);
     $this->assertSession()->statusCodeEquals(200);
     // Test the type has been reset.
-    $this->assertFieldById('edit-type', 'All', 'Article type filter has been reset.');
+    $this->assertSession()->fieldValueEquals('edit-type', 'All');
 
     // Test the button is hidden after reset.
     $this->assertSession()->fieldNotExists('edit-reset');
@@ -174,7 +174,7 @@ class ExposedFormTest extends ViewTestBase {
     // Test the reset works with type set.
     $this->drupalGet('test_exposed_form_buttons', ['query' => ['type' => 'article', 'op' => 'Reset']]);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertFieldById('edit-type', 'All', 'Article type filter has been reset.');
+    $this->assertSession()->fieldValueEquals('edit-type', 'All');
 
     // Test the button is hidden after reset.
     $this->assertSession()->fieldNotExists('edit-reset');

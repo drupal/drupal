@@ -55,16 +55,16 @@ class CachedDataUITest extends UITestBase {
 
     $this->drupalGet('admin/structure/views/view/test_view/edit');
     // Test that save and cancel buttons are not shown.
-    $this->assertNoFieldById('edit-actions-submit', t('Save'));
-    $this->assertNoFieldById('edit-actions-cancel', t('Cancel'));
+    $this->assertSession()->buttonNotExists('Save');
+    $this->assertSession()->buttonNotExists('Cancel');
     // Test we have the break lock link.
     $this->assertSession()->linkByHrefExists('admin/structure/views/view/test_view/break-lock');
     // Break the lock.
     $this->clickLink(t('break this lock'));
     $this->drupalPostForm(NULL, [], t('Break lock'));
     // Test that save and cancel buttons are shown.
-    $this->assertFieldById('edit-actions-submit', t('Save'));
-    $this->assertFieldById('edit-actions-cancel', t('Cancel'));
+    $this->assertSession()->buttonExists('Save');
+    $this->assertSession()->buttonExists('Cancel');
     // Test we can save the view.
     $this->drupalPostForm('admin/structure/views/view/test_view/edit', [], t('Save'));
     $this->assertRaw(t('The view %view has been saved.', ['%view' => 'Test view']));

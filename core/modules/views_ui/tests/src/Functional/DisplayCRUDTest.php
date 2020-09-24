@@ -61,15 +61,16 @@ class DisplayCRUDTest extends UITestBase {
     $view = $this->randomView();
     $path_prefix = 'admin/structure/views/view/' . $view['id'] . '/edit';
 
+    // Make sure there is no delete button on the default display.
     $this->drupalGet($path_prefix . '/default');
-    $this->assertNoFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-delete', 'Delete Page', 'Make sure there is no delete button on the default display.');
+    $this->assertSession()->buttonNotExists('edit-displays-settings-settings-content-tab-content-details-top-actions-delete');
 
     $this->drupalGet($path_prefix . '/page_1');
-    $this->assertFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-delete', 'Delete Page', 'Make sure there is a delete button on the page display.');
+    $this->assertSession()->buttonExists('edit-displays-settings-settings-content-tab-content-details-top-actions-delete');
 
     // Delete the page, so we can test the undo process.
     $this->drupalPostForm($path_prefix . '/page_1', [], 'Delete Page');
-    $this->assertFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-undo-delete', 'Undo delete of Page', 'Make sure there a undo button on the page display after deleting.');
+    $this->assertSession()->buttonExists('edit-displays-settings-settings-content-tab-content-details-top-actions-undo-delete');
     $element = $this->xpath('//a[contains(@href, :href) and contains(@class, :class)]', [':href' => $path_prefix . '/page_1', ':class' => 'views-display-deleted-link']);
     $this->assertTrue(!empty($element), 'Make sure the display link is marked as to be deleted.');
 
@@ -78,8 +79,8 @@ class DisplayCRUDTest extends UITestBase {
 
     // Undo the deleting of the display.
     $this->drupalPostForm($path_prefix . '/page_1', [], 'Undo delete of Page');
-    $this->assertNoFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-undo-delete', 'Undo delete of Page', 'Make sure there is no undo button on the page display after reverting.');
-    $this->assertFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-delete', 'Delete Page', 'Make sure there is a delete button on the page display after the reverting.');
+    $this->assertSession()->buttonNotExists('edit-displays-settings-settings-content-tab-content-details-top-actions-undo-delete');
+    $this->assertSession()->buttonExists('edit-displays-settings-settings-content-tab-content-details-top-actions-delete');
 
     // Now delete again and save the view.
     $this->drupalPostForm($path_prefix . '/page_1', [], 'Delete Page');

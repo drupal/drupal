@@ -181,8 +181,8 @@ class BooleanFieldTest extends BrowserTestBase {
 
     // Test the boolean field settings.
     $this->drupalGet('entity_test/structure/entity_test/fields/entity_test.entity_test.' . $field_name);
-    $this->assertFieldById('edit-settings-on-label', $on);
-    $this->assertFieldById('edit-settings-off-label', $off);
+    $this->assertSession()->fieldValueEquals('edit-settings-on-label', $on);
+    $this->assertSession()->fieldValueEquals('edit-settings-off-label', $off);
   }
 
   /**

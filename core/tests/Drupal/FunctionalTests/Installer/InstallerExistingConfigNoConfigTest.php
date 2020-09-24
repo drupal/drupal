@@ -40,7 +40,7 @@ class InstallerExistingConfigNoConfigTest extends InstallerExistingConfigTestBas
 
     // Ensure there is no continuation button.
     $this->assertNoText('Save and continue');
-    $this->assertNoFieldById('edit-submit');
+    $this->assertSession()->buttonNotExists('edit-submit');
   }
 
 }

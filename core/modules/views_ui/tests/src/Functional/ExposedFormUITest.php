@@ -73,10 +73,10 @@ class ExposedFormUITest extends UITestBase {
 
     // The first time the filter UI is displayed, the operator and the
     // value forms should be shown.
-    $this->assertFieldById('edit-options-operator-in', 'in', 'Operator In exists');
-    $this->assertFieldById('edit-options-operator-not-in', 'not in', 'Operator Not In exists');
-    $this->assertFieldById('edit-options-value-page', '', 'Checkbox for Page exists');
-    $this->assertFieldById('edit-options-value-article', '', 'Checkbox for Article exists');
+    $this->assertSession()->fieldValueEquals('edit-options-operator-in', 'in');
+    $this->assertSession()->fieldValueEquals('edit-options-operator-not-in', 'in');
+    $this->assertSession()->checkboxNotChecked('edit-options-value-page');
+    $this->assertSession()->checkboxNotChecked('edit-options-value-article');
 
     // Click the Expose filter button.
     $this->drupalPostForm('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/filter/type', $edit, t('Expose filter'));
@@ -84,10 +84,10 @@ class ExposedFormUITest extends UITestBase {
     $this->helperButtonHasLabel('edit-options-expose-button-button', 'Hide filter');
 
     // After exposing the filter, Operator and Value should be still here.
-    $this->assertFieldById('edit-options-operator-in', 'in', 'Operator In exists');
-    $this->assertFieldById('edit-options-operator-not-in', 'not in', 'Operator Not In exists');
-    $this->assertFieldById('edit-options-value-page', '', 'Checkbox for Page exists');
-    $this->assertFieldById('edit-options-value-article', '', 'Checkbox for Article exists');
+    $this->assertSession()->fieldValueEquals('edit-options-operator-in', 'in');
+    $this->assertSession()->fieldValueEquals('edit-options-operator-not-in', 'in');
+    $this->assertSession()->checkboxNotChecked('edit-options-value-page');
+    $this->assertSession()->checkboxNotChecked('edit-options-value-article');
 
     // Check the validations of the filter handler.
     $edit = [];
@@ -103,24 +103,24 @@ class ExposedFormUITest extends UITestBase {
     // Now check the sort criteria.
     $this->drupalGet('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/sort/created');
     $this->helperButtonHasLabel('edit-options-expose-button-button', 'Expose sort');
-    $this->assertNoFieldById('edit-options-expose-label', '', 'Make sure no label field is shown');
+    $this->assertSession()->fieldNotExists('edit-options-expose-label');
 
     // Un-expose the filter.
     $this->drupalGet('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/filter/type');
     $this->drupalPostForm(NULL, [], t('Hide filter'));
 
     // After Un-exposing the filter, Operator and Value should be shown again.
-    $this->assertFieldById('edit-options-operator-in', 'in', 'Operator In exists after hide filter');
-    $this->assertFieldById('edit-options-operator-not-in', 'not in', 'Operator Not In exists after hide filter');
-    $this->assertFieldById('edit-options-value-page', '', 'Checkbox for Page exists after hide filter');
-    $this->assertFieldById('edit-options-value-article', '', 'Checkbox for Article exists after hide filter');
+    $this->assertSession()->fieldValueEquals('edit-options-operator-in', 'in');
+    $this->assertSession()->fieldValueEquals('edit-options-operator-not-in', 'in');
+    $this->assertSession()->checkboxNotChecked('edit-options-value-page');
+    $this->assertSession()->checkboxNotChecked('edit-options-value-article');
 
     // Click the Expose sort button.
     $edit = [];
     $this->drupalPostForm('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/sort/created', $edit, t('Expose sort'));
     // Check the label of the expose button.
     $this->helperButtonHasLabel('edit-options-expose-button-button', 'Hide sort');
-    $this->assertFieldById('edit-options-expose-label', 'Authored on', 'Make sure a label field is shown');
+    $this->assertSession()->fieldValueEquals('edit-options-expose-label', 'Authored on');
 
     // Test adding a new exposed sort criteria.
     $view_id = $this->randomView()['id'];
@@ -162,10 +162,10 @@ class ExposedFormUITest extends UITestBase {
 
     // After click on 'Grouped Filters', the standard operator and value should
     // not be displayed.
-    $this->assertNoFieldById('edit-options-operator-in', 'in', 'Operator In not exists');
-    $this->assertNoFieldById('edit-options-operator-not-in', 'not in', 'Operator Not In not exists');
-    $this->assertNoFieldById('edit-options-value-page', '', 'Checkbox for Page not exists');
-    $this->assertNoFieldById('edit-options-value-article', '', 'Checkbox for Article not exists');
+    $this->assertSession()->fieldNotExists('edit-options-operator-in');
+    $this->assertSession()->fieldNotExists('edit-options-operator-not-in');
+    $this->assertSession()->fieldNotExists('edit-options-value-page');
+    $this->assertSession()->fieldNotExists('edit-options-value-article');
 
     // Check that after click on 'Grouped Filters', a new button is shown to
     // add more items to the list.
