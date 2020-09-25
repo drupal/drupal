@@ -34,6 +34,18 @@ class ImageLazyLoadController extends ControllerBase {
       '#suffix' => '</div>',
     ];
 
+    $images['override-loading-attribute'] = [
+      '#theme' => 'image',
+      '#uri' => '/core/themes/bartik/logo.svg',
+      '#alt' => 'Image lazy load test loading attribute can be overriden',
+      '#prefix' => '<div id="override-loading-attribute">',
+      '#suffix' => '</div>',
+      '#width' => '50%',
+      '#height' => '50%',
+    ];
+
+    $images['override-loading-attribute']['#attributes']['loading'] = 'eager';
+
     return $images;
   }
 

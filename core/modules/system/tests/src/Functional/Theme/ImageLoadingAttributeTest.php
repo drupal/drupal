@@ -27,10 +27,15 @@ class ImageLoadingAttributeTest extends BrowserTestBase {
    * Tests that loading attribute is enabled for images.
    */
   public function testImageLoadingAttribute() {
-    // Loading attribute is added when image dimensions has been set.
+    // Get page under test.
     $this->drupalGet('image-lazy-load-test');
+
+    // Loading attribute is added when image dimensions has been set.
     $this->assertSession()->elementAttributeExists('css', '#with-dimensions img', 'loading');
     $this->assertSession()->elementAttributeContains('css', '#with-dimensions img', 'loading', 'lazy');
+
+    // Loading attribute with lazy default value can be overriden.
+    $this->assertSession()->elementAttributeContains('css', '#override-loading-attribute img', 'loading', 'eager');
 
     // Without image dimensions loading attribute is not generated.
     $this->assertSession()->elementAttributeContains('css', '#without-dimensions img', 'alt', 'Image lazy load testing image without dimensions');
