@@ -197,7 +197,7 @@ class InstallHelper implements ContainerInjectionInterface {
       }
       else {
         // Language directory exists, but the file in this language was not found,
-        // remove that language from list list of languages to be translated.
+        // remove that language from list of languages to be translated.
         $key = array_search($language, $translated_languages);
         unset($translated_languages[$key]);
       }
