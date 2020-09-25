@@ -220,7 +220,7 @@ class SystemTestController extends ControllerBase implements TrustedCallbackInte
   }
 
   /**
-   * Set cache tag on on the returned render array.
+   * Set cache tag on the returned render array.
    */
   public function system_test_cache_tags_page() {
     $build['main'] = [
