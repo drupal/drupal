@@ -478,7 +478,7 @@ class MigrateExecutableTest extends MigrateTestCase {
    *   The mocked migration source.
    */
   protected function getMockSource() {
-    $iterator = $this->createMock('\Iterator');
+    $this->createMock('\Iterator');
 
     $class = 'Drupal\migrate\Plugin\migrate\source\SourcePluginBase';
     $source = $this->getMockBuilder($class)
