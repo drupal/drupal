@@ -121,6 +121,7 @@ trait DeprecationListenerTrait {
       "The \"Drupal\Tests\Listeners\DrupalListener\" class uses \"PHPUnit\Framework\TestListenerDefaultImplementation\" that is deprecated The `TestListener` interface is deprecated.",
       "The \"PHPUnit\Framework\TestSuite\" class is considered internal This class is not covered by the backward compatibility promise for PHPUnit. It may change without further notice. You should not use it from \"Drupal\Tests\TestSuites\TestSuiteBase\".",
       // Simpletest's legacy assertion methods.
+      'UiHelperTrait::drupalPostForm() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use $this->submitForm() instead. See https://www.drupal.org/node/3168858',
       'AssertLegacyTrait::assertEqual() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertEquals() instead. See https://www.drupal.org/node/3129738',
       'AssertLegacyTrait::assertNotEqual() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertNotEquals() instead. See https://www.drupal.org/node/3129738',
       'AssertLegacyTrait::assertIdentical() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertSame() instead. See https://www.drupal.org/node/3129738',
