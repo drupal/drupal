@@ -115,18 +115,19 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
     $negotiation = $this->config('language.types')->get('negotiation.' . $type . '.enabled');
     $this->assertFalse(isset($negotiation[$interface_method_id]), 'Interface language negotiation method removed from the stored settings.');
 
+    // Check that the interface language negotiation method is unavailable.
     $this->drupalGet('admin/config/regional/language/detection');
-    $this->assertNoFieldByName($form_field, NULL, 'Interface language negotiation method unavailable.');
+    $this->assertSession()->fieldNotExists($form_field);
 
     // Check that type-specific language negotiation methods can be assigned
     // only to the corresponding language types.
     foreach ($this->languageManager()->getLanguageTypes() as $type) {
       $form_field = $type . '[enabled][test_language_negotiation_method_ts]';
       if ($type == $test_type) {
-        $this->assertFieldByName($form_field, NULL, new FormattableMarkup('Type-specific test language negotiation method available for %type.', ['%type' => $type]));
+        $this->assertSession()->fieldExists($form_field);
       }
       else {
-        $this->assertNoFieldByName($form_field, NULL, new FormattableMarkup('Type-specific test language negotiation method unavailable for %type.', ['%type' => $type]));
+        $this->assertSession()->fieldNotExists($form_field);
       }
     }
 

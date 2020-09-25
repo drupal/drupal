@@ -148,9 +148,9 @@ class PagerTest extends ViewTestBase {
 
     // Test that the override element is only displayed on pager plugin selection form.
     $this->drupalGet('admin/structure/views/nojs/display/test_store_pager_settings/page_1/pager');
-    $this->assertFieldByName('override[dropdown]', 'page_1', 'The override element is displayed on plugin selection form.');
+    $this->assertSession()->fieldValueEquals('override[dropdown]', 'page_1');
     $this->drupalGet('admin/structure/views/nojs/display/test_store_pager_settings/page_1/pager_options');
-    $this->assertNoFieldByName('override[dropdown]', NULL, 'The override element is not displayed on plugin settings form.');
+    $this->assertSession()->fieldNotExists('override[dropdown]');
 
     $this->assertFieldByXPath('//input[@name="pager_options[items_per_page]" and @type="number" and @min="0"]', 20, '"Items per page" field was found.');
     $this->assertFieldByXPath('//input[@name="pager_options[offset]" and @type="number" and @min="0"]', 0, '"Offset" field was found.');

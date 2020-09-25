@@ -227,7 +227,7 @@ class FilterDateTest extends ViewTestBase {
 
     $this->drupalGet('admin/structure/views/nojs/handler/test_filter_date_between/default/filter/created');
     foreach ($edit as $name => $value) {
-      $this->assertFieldByName($name, $value);
+      $this->assertSession()->fieldValueEquals($name, $value);
       if (strpos($name, '[value][type]')) {
         $radio = $this->cssSelect('input[name="' . $name . '"][checked="checked"][type="radio"]');
         $this->assertEqual($radio[0]->getAttribute('value'), $value);

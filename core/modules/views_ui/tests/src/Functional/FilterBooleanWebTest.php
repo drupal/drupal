@@ -71,7 +71,7 @@ class FilterBooleanWebTest extends UITestBase {
     $edit['options[group_info][group_items][3][remove]'] = 1;
     $this->drupalPostForm(NULL, $edit, t('Apply'));
     $this->drupalGet('admin/structure/views/nojs/handler/test_view/default/filter/status');
-    $this->assertFieldByName('options[group_info][default_group]', 2, 'Second item was set as the default.');
+    $this->assertSession()->fieldValueEquals('options[group_info][default_group]', 2);
     $this->assertSession()->fieldNotExists('options[group_info][group_items][3][remove]');
   }
 

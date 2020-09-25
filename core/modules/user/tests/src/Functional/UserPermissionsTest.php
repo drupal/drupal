@@ -141,7 +141,7 @@ class UserPermissionsTest extends BrowserTestBase {
     Role::create(['id' => 'admin_role_0', 'is_admin' => TRUE, 'label' => 'Admin role 0'])->save();
     Role::create(['id' => 'admin_role_1', 'is_admin' => TRUE, 'label' => 'Admin role 1'])->save();
     $this->drupalGet('admin/config/people/accounts');
-    $this->assertNoFieldByName('user_admin_role');
+    $this->assertSession()->fieldNotExists('user_admin_role');
   }
 
   /**

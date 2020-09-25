@@ -102,7 +102,7 @@ class ForumUninstallTest extends BrowserTestBase {
     // Now attempt to uninstall forum.
     $this->drupalGet('admin/modules/uninstall');
     // Assert forum is no longer required.
-    $this->assertFieldByName('uninstall[forum]');
+    $this->assertSession()->fieldExists('uninstall[forum]');
     $this->drupalPostForm('admin/modules/uninstall', [
       'uninstall[forum]' => 1,
     ], t('Uninstall'));

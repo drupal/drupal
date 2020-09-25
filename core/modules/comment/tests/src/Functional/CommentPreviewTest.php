@@ -72,8 +72,8 @@ class CommentPreviewTest extends CommentTestBase {
     $this->assertText($edit['comment_body[0][value]'], 'Comment displayed.');
 
     // Check that the title and body fields are displayed with the correct values.
-    $this->assertFieldByName('subject[0][value]', $edit['subject[0][value]'], 'Subject field displayed.');
-    $this->assertFieldByName('comment_body[0][value]', $edit['comment_body[0][value]'], 'Comment field displayed.');
+    $this->assertSession()->fieldValueEquals('subject[0][value]', $edit['subject[0][value]']);
+    $this->assertSession()->fieldValueEquals('comment_body[0][value]', $edit['comment_body[0][value]']);
 
     // Check that the user picture is displayed.
     $this->assertFieldByXPath("//article[contains(@class, 'preview')]//div[contains(@class, 'user-picture')]//img", NULL, 'User picture displayed.');
@@ -106,8 +106,8 @@ class CommentPreviewTest extends CommentTestBase {
     $this->assertText($edit['comment_body[0][value]'], 'Comment displayed.');
 
     // Check that the title and body fields are displayed with the correct values.
-    $this->assertFieldByName('subject[0][value]', $edit['subject[0][value]'], 'Subject field displayed.');
-    $this->assertFieldByName('comment_body[0][value]', $edit['comment_body[0][value]'], 'Comment field displayed.');
+    $this->assertSession()->fieldValueEquals('subject[0][value]', $edit['subject[0][value]']);
+    $this->assertSession()->fieldValueEquals('comment_body[0][value]', $edit['comment_body[0][value]']);
 
     // Store the content of this page.
     $this->drupalPostForm(NULL, [], 'Save');
@@ -162,11 +162,11 @@ class CommentPreviewTest extends CommentTestBase {
     $this->assertText($expected_text_date, 'Date displayed.');
 
     // Check that the subject, comment, author and date fields are displayed with the correct values.
-    $this->assertFieldByName('subject[0][value]', $edit['subject[0][value]'], 'Subject field displayed.');
-    $this->assertFieldByName('comment_body[0][value]', $edit['comment_body[0][value]'], 'Comment field displayed.');
-    $this->assertFieldByName('uid', $edit['uid'], 'Author field displayed.');
-    $this->assertFieldByName('date[date]', $edit['date[date]'], 'Date field displayed.');
-    $this->assertFieldByName('date[time]', $edit['date[time]'], 'Time field displayed.');
+    $this->assertSession()->fieldValueEquals('subject[0][value]', $edit['subject[0][value]']);
+    $this->assertSession()->fieldValueEquals('comment_body[0][value]', $edit['comment_body[0][value]']);
+    $this->assertSession()->fieldValueEquals('uid', $edit['uid']);
+    $this->assertSession()->fieldValueEquals('date[date]', $edit['date[date]']);
+    $this->assertSession()->fieldValueEquals('date[time]', $edit['date[time]']);
 
     // Check that saving a comment produces a success message.
     $this->drupalPostForm('comment/' . $comment->id() . '/edit', $edit, t('Save'));
@@ -174,11 +174,11 @@ class CommentPreviewTest extends CommentTestBase {
 
     // Check that the comment fields are correct after loading the saved comment.
     $this->drupalGet('comment/' . $comment->id() . '/edit');
-    $this->assertFieldByName('subject[0][value]', $edit['subject[0][value]'], 'Subject field displayed.');
-    $this->assertFieldByName('comment_body[0][value]', $edit['comment_body[0][value]'], 'Comment field displayed.');
-    $this->assertFieldByName('uid', $edit['uid'], 'Author field displayed.');
-    $this->assertFieldByName('date[date]', $expected_form_date, 'Date field displayed.');
-    $this->assertFieldByName('date[time]', $expected_form_time, 'Time field displayed.');
+    $this->assertSession()->fieldValueEquals('subject[0][value]', $edit['subject[0][value]']);
+    $this->assertSession()->fieldValueEquals('comment_body[0][value]', $edit['comment_body[0][value]']);
+    $this->assertSession()->fieldValueEquals('uid', $edit['uid']);
+    $this->assertSession()->fieldValueEquals('date[date]', $expected_form_date);
+    $this->assertSession()->fieldValueEquals('date[time]', $expected_form_time);
 
     // Submit the form using the displayed values.
     $displayed = [];

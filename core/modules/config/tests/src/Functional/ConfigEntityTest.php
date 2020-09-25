@@ -328,12 +328,12 @@ class ConfigEntityTest extends BrowserTestBase {
       'size' => 'custom',
     ];
 
-    $this->assertFieldByName('size');
-    $this->assertNoFieldByName('size_value');
+    $this->assertSession()->fieldExists('size');
+    $this->assertSession()->fieldNotExists('size_value');
 
     $this->drupalPostForm(NULL, $edit, 'Change size');
-    $this->assertFieldByName('size');
-    $this->assertFieldByName('size_value');
+    $this->assertSession()->fieldExists('size');
+    $this->assertSession()->fieldExists('size_value');
 
     // Submit the form with the regular 'Save' button and check that the entity
     // values are correct.

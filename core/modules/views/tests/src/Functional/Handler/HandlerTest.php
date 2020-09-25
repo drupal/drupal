@@ -263,7 +263,7 @@ class HandlerTest extends ViewTestBase {
 
     $this->drupalGet($handler_options_path);
     $relationship_name = 'options[relationship]';
-    $this->assertFieldByName($relationship_name);
+    $this->assertSession()->fieldExists($relationship_name);
 
     // Check for available options.
     $fields = $this->getSession()->getPage()->findAll('named_exact', ['field', $relationship_name]);
@@ -280,7 +280,7 @@ class HandlerTest extends ViewTestBase {
     // Remove the relationship and make sure no relationship option appears.
     $this->drupalPostForm('admin/structure/views/nojs/handler/test_handler_relationships/default/relationship/nid', [], t('Remove'));
     $this->drupalGet($handler_options_path);
-    $this->assertNoFieldByName($relationship_name, NULL, 'Make sure that no relationship option is available');
+    $this->assertSession()->fieldNotExists($relationship_name);
 
     // Create a view of comments with node relationship.
     View::create(['base_table' => 'comment_field_data', 'id' => 'test_get_entity_type'])->save();

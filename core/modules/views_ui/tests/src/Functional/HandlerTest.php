@@ -159,7 +159,7 @@ class HandlerTest extends UITestBase {
 
     // Verify that the user got redirected to the handler edit form.
     $this->assertSession()->addressEquals($edit_handler_url);
-    $this->assertFieldByName('options[relationship]', 'uid', 'Ensure the relationship select is filled with the UID relationship.');
+    $this->assertSession()->fieldValueEquals('options[relationship]', 'uid');
     $this->drupalPostForm(NULL, [], t('Apply'));
 
     $this->drupalPostForm(NULL, [], t('Save'));

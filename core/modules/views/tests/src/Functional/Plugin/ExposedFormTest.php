@@ -428,15 +428,15 @@ class ExposedFormTest extends ViewTestBase {
 
     // Ensure the filters can be applied.
     $this->getSession()->getPage()->pressButton('Apply');
-    $this->assertFieldByName('type[]', 'post');
-    $this->assertFieldByName('created[min]', '-1 month');
-    $this->assertFieldByName('created[max]', '+1 month');
+    $this->assertTrue($this->assertSession()->optionExists('type[]', 'post')->isSelected());
+    $this->assertSession()->fieldValueEquals('created[min]', '-1 month');
+    $this->assertSession()->fieldValueEquals('created[max]', '+1 month');
 
     // Ensure the filters are still applied after pressing next.
     $this->clickLink('Next ›');
-    $this->assertFieldByName('type[]', 'post');
-    $this->assertFieldByName('created[min]', '-1 month');
-    $this->assertFieldByName('created[max]', '+1 month');
+    $this->assertTrue($this->assertSession()->optionExists('type[]', 'post')->isSelected());
+    $this->assertSession()->fieldValueEquals('created[min]', '-1 month');
+    $this->assertSession()->fieldValueEquals('created[max]', '+1 month');
   }
 
 }

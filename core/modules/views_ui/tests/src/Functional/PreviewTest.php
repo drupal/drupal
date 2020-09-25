@@ -38,7 +38,7 @@ class PreviewTest extends UITestBase {
     $this->drupalPostForm(NULL, $edit = ['view_args' => '100'], t('Update preview'));
 
     // Test that area text and exposed filters are present and rendered.
-    $this->assertFieldByName('id', NULL, 'ID exposed filter field found.');
+    $this->assertSession()->fieldExists('id');
     $this->assertText('Test header text', 'Rendered header text found');
     $this->assertText('Test footer text', 'Rendered footer text found.');
     $this->assertText('Test empty text', 'Rendered empty text found.');
@@ -69,7 +69,7 @@ class PreviewTest extends UITestBase {
     $this->assertCount(0, $elements);
 
     // Test that area text and exposed filters are present and rendered.
-    $this->assertFieldByName('id', NULL, 'ID exposed filter field found.');
+    $this->assertSession()->fieldExists('id');
     $this->assertText('Test header text', 'Rendered header text found');
     $this->assertText('Test footer text', 'Rendered footer text found.');
     $this->assertText('Test empty text', 'Rendered empty text found.');

@@ -90,8 +90,8 @@ class StringFieldTest extends BrowserTestBase {
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
-    $this->assertFieldByName("{$field_name}[0][value]", '', 'Widget is displayed');
-    $this->assertNoFieldByName("{$field_name}[0][format]", '1', 'Format selector is not displayed');
+    $this->assertSession()->fieldValueEquals("{$field_name}[0][value]", '');
+    $this->assertSession()->fieldNotExists("{$field_name}[0][format]");
     $this->assertRaw(new FormattableMarkup('placeholder="A placeholder on @widget_type"', ['@widget_type' => $widget_type]));
 
     // Submit with some value.

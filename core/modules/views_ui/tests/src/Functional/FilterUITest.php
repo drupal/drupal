@@ -50,7 +50,7 @@ class FilterUITest extends UITestBase {
     $path = 'admin/structure/views/nojs/handler/test_filter_in_operator_ui/default/filter/type';
     $this->drupalGet($path);
     // Verifies that "Limit list to selected items" option is not selected.
-    $this->assertFieldByName('options[expose][reduce]', FALSE);
+    $this->assertSession()->fieldValueEquals('options[expose][reduce]', FALSE);
 
     // Select "Limit list to selected items" option and apply.
     $edit = [
@@ -60,7 +60,7 @@ class FilterUITest extends UITestBase {
 
     // Verifies that the option was saved as expected.
     $this->drupalGet($path);
-    $this->assertFieldByName('options[expose][reduce]', TRUE);
+    $this->assertSession()->fieldValueEquals('options[expose][reduce]', TRUE);
   }
 
   /**

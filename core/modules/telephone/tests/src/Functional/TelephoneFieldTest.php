@@ -88,7 +88,7 @@ class TelephoneFieldTest extends BrowserTestBase {
    */
   public function testTelephoneWidget() {
     $this->drupalGet('node/add/article');
-    $this->assertFieldByName("field_telephone[0][value]", '', 'Widget found.');
+    $this->assertSession()->fieldValueEquals("field_telephone[0][value]", '');
     $this->assertRaw('placeholder="123-456-7890"');
   }
 

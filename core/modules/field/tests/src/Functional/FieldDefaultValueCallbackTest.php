@@ -70,25 +70,25 @@ class FieldDefaultValueCallbackTest extends BrowserTestBase {
 
     // Check that the default field form is visible when no callback is set.
     $this->drupalGet('/admin/structure/types/manage/article/fields/node.article.field_test');
-    $this->assertFieldByName('default_value_input[field_test][0][value]', NULL, 'The default field form is visible.');
+    $this->assertSession()->fieldValueEquals('default_value_input[field_test][0][value]', NULL);
 
     // Set a different field value, it should be on the field.
     $default_value = $this->randomString();
     $field_config->setDefaultValue([['value' => $default_value]])->save();
     $this->drupalGet('/admin/structure/types/manage/article/fields/node.article.field_test');
-    $this->assertFieldByName('default_value_input[field_test][0][value]', $default_value, 'The default field form is visible.');
+    $this->assertSession()->fieldValueEquals('default_value_input[field_test][0][value]', $default_value);
 
     // Set a different field value to the field directly, instead of an array.
     $default_value = $this->randomString();
     $field_config->setDefaultValue($default_value)->save();
     $this->drupalGet('/admin/structure/types/manage/article/fields/node.article.field_test');
-    $this->assertFieldByName('default_value_input[field_test][0][value]', $default_value, 'The default field form is visible.');
+    $this->assertSession()->fieldValueEquals('default_value_input[field_test][0][value]', $default_value);
 
     // Set a default value callback instead, and the default field form should
     // not be visible.
     $field_config->setDefaultValueCallback('\Drupal\field_test\FieldDefaultValueCallbackProvider::calculateDefaultValue')->save();
     $this->drupalGet('/admin/structure/types/manage/article/fields/node.article.field_test');
-    $this->assertNoFieldByName('default_value_input[field_test][0][value]', 'Calculated default value', 'The default field form is not visible when a callback is defined.');
+    $this->assertSession()->fieldNotExists('default_value_input[field_test][0][value]');
   }
 
 }

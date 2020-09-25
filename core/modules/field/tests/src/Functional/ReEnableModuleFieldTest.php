@@ -83,7 +83,7 @@ class ReEnableModuleFieldTest extends BrowserTestBase {
 
     // Display the article node form and verify the telephone widget is present.
     $this->drupalGet('node/add/article');
-    $this->assertFieldByName("field_telephone[0][value]", '', 'Widget found.');
+    $this->assertSession()->fieldValueEquals("field_telephone[0][value]", '');
 
     // Submit an article node with a telephone field so data exist for the
     // field.

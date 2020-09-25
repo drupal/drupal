@@ -77,7 +77,7 @@ class FieldUITest extends FieldTestBase {
     $random_number = rand(100, 400);
     $this->drupalPostForm(NULL, ['options[settings][trim_length]' => $random_number], t('Apply'));
     $this->drupalGet($url);
-    $this->assertFieldByName('options[settings][trim_length]', $random_number, 'The formatter setting got saved.');
+    $this->assertSession()->fieldValueEquals('options[settings][trim_length]', $random_number);
 
     // Save the view and test whether the settings are saved.
     $this->drupalPostForm('admin/structure/views/view/test_view_fieldapi', [], t('Save'));

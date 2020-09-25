@@ -109,7 +109,7 @@ class ThemeTest extends BrowserTestBase {
       ];
       $this->drupalPostForm('admin/appearance/settings', $edit, t('Save configuration'));
       $this->assertNoText('The custom logo path is invalid.');
-      $this->assertFieldByName('logo_path', $expected['form']);
+      $this->assertSession()->fieldValueEquals('logo_path', $expected['form']);
 
       // Verify logo path examples.
       $elements = $this->xpath('//div[contains(@class, :item)]/div[@class=:description]/code', [
@@ -245,8 +245,8 @@ class ThemeTest extends BrowserTestBase {
       'logo_path' => 'core/misc/druplicon.png',
     ];
     $this->drupalPostForm('admin/appearance/settings/bartik', $edit, t('Save configuration'));
-    $this->assertFieldByName('default_logo', FALSE);
-    $this->assertFieldByName('logo_path', 'core/misc/druplicon.png');
+    $this->assertSession()->fieldValueEquals('default_logo', FALSE);
+    $this->assertSession()->fieldValueEquals('logo_path', 'core/misc/druplicon.png');
 
     // Make sure the logo and favicon settings are not available when the file
     // module is not enabled.

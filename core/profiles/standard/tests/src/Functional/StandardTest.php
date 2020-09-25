@@ -100,7 +100,7 @@ class StandardTest extends BrowserTestBase {
 
     // Ensure block body exists.
     $this->drupalGet('block/add');
-    $this->assertFieldByName('body[0][value]');
+    $this->assertSession()->fieldExists('body[0][value]');
 
     // Now we have all configuration imported, test all of them for schema
     // conformance. Ensures all imported default configuration is valid when

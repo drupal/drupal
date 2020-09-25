@@ -86,7 +86,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
       $this->assertSession()->linkExists($title);
 
       // Look for a test shortcut weight select form element.
-      $this->assertFieldByName('shortcuts[links][' . $shortcut->id() . '][weight]');
+      $this->assertSession()->fieldExists('shortcuts[links][' . $shortcut->id() . '][weight]');
 
       // Change the weight of the shortcut.
       $edit['shortcuts[links][' . $shortcut->id() . '][weight]'] = $weight;

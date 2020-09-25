@@ -140,7 +140,7 @@ class CommentNonNodeTest extends BrowserTestBase {
       $edit['subject[0][value]'] = $subject;
     }
     else {
-      $this->assertNoFieldByName('subject[0][value]', '', 'Subject field not found.');
+      $this->assertSession()->fieldValueNotEquals('subject[0][value]', '');
     }
 
     if ($contact !== NULL && is_array($contact)) {
@@ -149,19 +149,19 @@ class CommentNonNodeTest extends BrowserTestBase {
     switch ($preview_mode) {
       case DRUPAL_REQUIRED:
         // Preview required so no save button should be found.
-        $this->assertNoFieldByName('op', t('Save'), 'Save button not found.');
+        $this->assertSession()->buttonNotExists(t('Save'));
         $this->drupalPostForm(NULL, $edit, t('Preview'));
         // Don't break here so that we can test post-preview field presence and
         // function below.
       case DRUPAL_OPTIONAL:
-        $this->assertFieldByName('op', t('Preview'), 'Preview button found.');
-        $this->assertFieldByName('op', t('Save'), 'Save button found.');
+        $this->assertSession()->buttonExists(t('Preview'));
+        $this->assertSession()->buttonExists(t('Save'));
         $this->drupalPostForm(NULL, $edit, t('Save'));
         break;
 
       case DRUPAL_DISABLED:
-        $this->assertNoFieldByName('op', t('Preview'), 'Preview button not found.');
-        $this->assertFieldByName('op', t('Save'), 'Save button found.');
+        $this->assertSession()->buttonNotExists(t('Preview'));
+        $this->assertSession()->buttonExists(t('Save'));
         $this->drupalPostForm(NULL, $edit, t('Save'));
         break;
     }
@@ -361,8 +361,8 @@ class CommentNonNodeTest extends BrowserTestBase {
     // Attempt to view test entity comment form while disallowed.
     $this->drupalGet('comment/reply/entity_test/' . $this->entity->id() . '/comment');
     $this->assertSession()->statusCodeEquals(403);
-    $this->assertNoFieldByName('subject[0][value]', '', 'Subject field not found.');
-    $this->assertNoFieldByName('comment_body[0][value]', '', 'Comment field not found.');
+    $this->assertSession()->fieldNotExists('subject[0][value]');
+    $this->assertSession()->fieldNotExists('comment_body[0][value]');
 
     user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
       'access comments' => TRUE,
@@ -375,8 +375,8 @@ class CommentNonNodeTest extends BrowserTestBase {
     $this->assertSession()->responseMatches('@<h2[^>]*>Comments</h2>@');
     $this->assertSession()->linkExists('Log in', 0, 'Link to login was found.');
     $this->assertSession()->linkExists('register', 0, 'Link to register was found.');
-    $this->assertNoFieldByName('subject[0][value]', '', 'Subject field not found.');
-    $this->assertNoFieldByName('comment_body[0][value]', '', 'Comment field not found.');
+    $this->assertSession()->fieldNotExists('subject[0][value]');
+    $this->assertSession()->fieldNotExists('comment_body[0][value]');
 
     // Test the combination of anonymous users being able to post, but not view
     // comments, to ensure that access to post comments doesn't grant access to
@@ -390,8 +390,8 @@ class CommentNonNodeTest extends BrowserTestBase {
     $this->drupalGet('entity_test/' . $this->entity->id());
     // Verify that comments were not displayed.
     $this->assertSession()->responseNotMatches('@<h2[^>]*>Comments</h2>@');
-    $this->assertFieldByName('subject[0][value]', '', 'Subject field found.');
-    $this->assertFieldByName('comment_body[0][value]', '', 'Comment field found.');
+    $this->assertSession()->fieldValueEquals('subject[0][value]', '');
+    $this->assertSession()->fieldValueEquals('comment_body[0][value]', '');
 
     $this->drupalGet('comment/reply/entity_test/' . $this->entity->id() . '/comment/' . $comment1->id());
     $this->assertSession()->statusCodeEquals(403);
@@ -419,7 +419,7 @@ class CommentNonNodeTest extends BrowserTestBase {
     $this->assertSession()->checkboxNotChecked('edit-default-value-input-comment-0-status-0');
     $this->assertSession()->checkboxChecked('edit-default-value-input-comment-0-status-1');
     $this->assertSession()->checkboxNotChecked('edit-default-value-input-comment-0-status-2');
-    $this->assertFieldByName('settings[anonymous]', CommentInterface::ANONYMOUS_MAY_CONTACT);
+    $this->assertSession()->fieldValueEquals('settings[anonymous]', CommentInterface::ANONYMOUS_MAY_CONTACT);
 
     // Add a new comment-type.
     $bundle = CommentType::create([
@@ -457,8 +457,8 @@ class CommentNonNodeTest extends BrowserTestBase {
 
     // @todo Check proper url and form https://www.drupal.org/node/2458323
     $this->drupalGet('comment/reply/entity_test/comment/' . $new_entity->id());
-    $this->assertNoFieldByName('subject[0][value]', '', 'Subject field found.');
-    $this->assertNoFieldByName('comment_body[0][value]', '', 'Comment field found.');
+    $this->assertSession()->fieldNotExists('subject[0][value]');
+    $this->assertSession()->fieldNotExists('comment_body[0][value]');
 
     // Test removal of comment_body field.
     $limited_user = $this->drupalCreateUser([
@@ -471,10 +471,10 @@ class CommentNonNodeTest extends BrowserTestBase {
     $this->drupalLogin($limited_user);
 
     $this->drupalGet('comment/reply/entity_test/' . $this->entity->id() . '/comment');
-    $this->assertFieldByName('comment_body[0][value]', '', 'Comment body field found.');
+    $this->assertSession()->fieldValueEquals('comment_body[0][value]', '');
     $this->fieldUIDeleteField('admin/structure/comment/manage/comment', 'comment.comment.comment_body', 'Comment', 'Comment settings');
     $this->drupalGet('comment/reply/entity_test/' . $this->entity->id() . '/comment');
-    $this->assertNoFieldByName('comment_body[0][value]', '', 'Comment body field not found.');
+    $this->assertSession()->fieldNotExists('comment_body[0][value]');
     // Set subject field to autogenerate it.
     $edit = ['subject[0][value]' => ''];
     $this->drupalPostForm(NULL, $edit, t('Save'));

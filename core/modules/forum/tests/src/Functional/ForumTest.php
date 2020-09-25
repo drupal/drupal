@@ -541,7 +541,7 @@ class ForumTest extends BrowserTestBase {
     // Test replying to a comment.
     $this->clickLink('Reply');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertFieldByName('comment_body[0][value]');
+    $this->assertSession()->fieldExists('comment_body[0][value]');
 
     // Log in as the first user.
     $this->drupalLogin($this->adminUser);

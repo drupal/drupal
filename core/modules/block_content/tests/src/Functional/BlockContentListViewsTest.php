@@ -44,8 +44,8 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     $this->assertSession()->titleEquals('Custom block library | Drupal');
 
     // Test for the exposed filters.
-    $this->assertFieldByName('info');
-    $this->assertFieldByName('type');
+    $this->assertSession()->fieldExists('info');
+    $this->assertSession()->fieldExists('type');
 
     // Test for the table.
     $element = $this->xpath('//div[@class="layout-content"]//table');

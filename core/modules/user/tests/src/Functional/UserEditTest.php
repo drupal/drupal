@@ -37,7 +37,7 @@ class UserEditTest extends BrowserTestBase {
     \Drupal::service('module_installer')->install(['user_hooks_test']);
     Cache::invalidateTags(['rendered']);
     $this->drupalGet('user/' . $user1->id() . '/edit');
-    $this->assertFieldByName('name', $user1->getAccountName());
+    $this->assertSession()->fieldValueEquals('name', $user1->getAccountName());
 
     // Ensure the formatted name is displayed when expected.
     $this->drupalGet('user/' . $user1->id());

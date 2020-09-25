@@ -136,7 +136,7 @@ class CKEditorAdminTest extends BrowserTestBase {
     // Ensure the toolbar buttons configuration value is initialized to the
     // expected default value.
     $expected_buttons_value = json_encode($expected_default_settings['toolbar']['rows']);
-    $this->assertFieldByName('editor[settings][toolbar][button_groups]', $expected_buttons_value);
+    $this->assertSession()->fieldValueEquals('editor[settings][toolbar][button_groups]', $expected_buttons_value);
 
     // Ensure the styles textarea exists and is initialized empty.
     $styles_textarea = $this->xpath('//textarea[@name="editor[settings][plugins][stylescombo][styles]"]');
@@ -275,7 +275,7 @@ class CKEditorAdminTest extends BrowserTestBase {
     $ckeditor = $this->container->get('plugin.manager.editor')->createInstance('ckeditor');
     $default_settings = $ckeditor->getDefaultSettings();
     $expected_buttons_value = json_encode($default_settings['toolbar']['rows']);
-    $this->assertFieldByName('editor[settings][toolbar][button_groups]', $expected_buttons_value);
+    $this->assertSession()->fieldValueEquals('editor[settings][toolbar][button_groups]', $expected_buttons_value);
 
     // Regression test for https://www.drupal.org/node/2606460.
     $settings = $this->getDrupalSettings();

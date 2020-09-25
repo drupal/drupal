@@ -179,7 +179,7 @@ class DisplayTest extends UITestBase {
     $this->drupalPostForm(NULL, [], t('Add Block'));
     $this->assertSession()->addressEquals('admin/structure/views/view/test_display/edit/block_2');
     $this->clickLink(t('Custom URL'));
-    $this->assertFieldByName('link_url', 'a-custom-url');
+    $this->assertSession()->fieldValueEquals('link_url', 'a-custom-url');
   }
 
   /**

@@ -479,53 +479,28 @@ class BrowserTestBaseTest extends BrowserTestBase {
       // Expected exception; just continue testing.
     }
 
-    // *** 5. assertNoFieldByName().
-    $this->assertNoFieldByName('name');
-    $this->assertNoFieldByName('name', 'not the value');
-    $this->assertNoFieldByName('notexisting');
-    $this->assertNoFieldByName('notexisting', NULL);
+    // *** 5. fieldValueNotEquals().
+    $this->assertSession()->fieldValueNotEquals('name', 'not the value');
 
-    // Test that the assertion fails correctly if no value is passed in.
+    // Test that the assertion fails correctly if given the right value.
     try {
-      $this->assertNoFieldByName('description');
-      $this->fail('The "description" field, with no value was not found.');
+      $this->assertSession()->fieldValueNotEquals('name', 'Test name');
+      $this->fail('fieldValueNotEquals failed to throw an exception.');
     }
     catch (ExpectationException $e) {
       // Expected exception; just continue testing.
     }
 
-    // Test that the assertion fails correctly if a NULL value is passed in.
-    try {
-      $this->assertNoFieldByName('name', NULL);
-      $this->fail('The "name" field was not found.');
-    }
-    catch (ExpectationException $e) {
-      // Expected exception; just continue testing.
-    }
-
-    // *** 6. assertFieldByName().
-    $this->assertFieldByName('name');
-    $this->assertFieldByName('name', NULL);
-    $this->assertFieldByName('name', 'Test name');
-    $this->assertFieldByName('description');
-    $this->assertFieldByName('description', '');
-    $this->assertFieldByName('description', NULL);
-
-    // Test that the assertion fails correctly if given the wrong name.
-    try {
-      $this->assertFieldByName('non-existing-name');
-      $this->fail('The "non-existing-name" field was found.');
-    }
-    catch (ExpectationFailedException $e) {
-      // Expected exception; just continue testing.
-    }
+    // *** 6. fieldValueEquals().
+    $this->assertSession()->fieldValueEquals('name', 'Test name');
+    $this->assertSession()->fieldValueEquals('description', '');
 
     // Test that the assertion fails correctly if given the wrong value.
     try {
-      $this->assertFieldByName('name', 'not the value');
-      $this->fail('The "name" field with incorrect value was found.');
+      $this->assertSession()->fieldValueEquals('name', 'not the value');
+      $this->fail('fieldValueEquals failed to throw an exception.');
     }
-    catch (ExpectationFailedException $e) {
+    catch (ExpectationException $e) {
       // Expected exception; just continue testing.
     }
 
@@ -612,12 +587,13 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->assertSession()->buttonNotExists('no');
 
     // Test that multiple fields with the same name are validated correctly.
+    $this->assertSession()->buttonExists('duplicate_button');
     $this->assertSession()->buttonExists('Duplicate button 1');
     $this->assertSession()->buttonExists('Duplicate button 2');
     $this->assertSession()->buttonNotExists('Rabbit');
 
     try {
-      $this->assertNoFieldByName('duplicate_button', 'Duplicate button 2');
+      $this->assertSession()->buttonNotExists('Duplicate button 2');
       $this->fail('The "duplicate_button" field with the value Duplicate button 2 was not found.');
     }
     catch (ExpectationException $e) {
@@ -647,28 +623,21 @@ class BrowserTestBaseTest extends BrowserTestBase {
     // Part 1 - Test by name.
     // Test that checkboxes are found/not found correctly by name, when using
     // TRUE or FALSE to match their 'checked' state.
-    $this->assertFieldByName('checkbox_enabled', TRUE);
-    $this->assertFieldByName('checkbox_disabled', FALSE);
-    $this->assertNoFieldByName('checkbox_enabled', FALSE);
-    $this->assertNoFieldByName('checkbox_disabled', TRUE);
-
-    // Test that checkboxes are found by name when using NULL to ignore the
-    // 'checked' state.
-    $this->assertFieldByName('checkbox_enabled', NULL);
-    $this->assertFieldByName('checkbox_disabled', NULL);
-
-    // Test that checkboxes are found by name when passing no second parameter.
-    $this->assertFieldByName('checkbox_enabled');
-    $this->assertFieldByName('checkbox_disabled');
+    $this->assertSession()->fieldExists('checkbox_enabled');
+    $this->assertSession()->fieldExists('checkbox_disabled');
+    $this->assertSession()->fieldValueEquals('checkbox_enabled', TRUE);
+    $this->assertSession()->fieldValueEquals('checkbox_disabled', FALSE);
+    $this->assertSession()->fieldValueNotEquals('checkbox_enabled', FALSE);
+    $this->assertSession()->fieldValueNotEquals('checkbox_disabled', TRUE);
 
     // Test that we have legacy support.
-    $this->assertFieldByName('checkbox_enabled', '1');
-    $this->assertFieldByName('checkbox_disabled', '');
+    $this->assertSession()->fieldValueEquals('checkbox_enabled', '1');
+    $this->assertSession()->fieldValueEquals('checkbox_disabled', '');
 
-    // Test that the assertion fails correctly when using NULL to ignore state.
+    // Test that the assertion fails correctly if given the right value.
     try {
-      $this->assertNoFieldByName('checkbox_enabled', NULL);
-      $this->fail('The "checkbox_enabled" field was not found by name, using NULL value.');
+      $this->assertSession()->fieldValueNotEquals('checkbox_enabled', TRUE);
+      $this->fail('fieldValueNotEquals failed to throw an exception.');
     }
     catch (ExpectationException $e) {
       // Expected exception; just continue testing.
@@ -914,6 +883,19 @@ class BrowserTestBaseTest extends BrowserTestBase {
       return $message === 'Test deprecation message';
     });
     $this->assertCount(1, $test_deprecation_messages);
+  }
+
+  /**
+   * Tests legacy assertFieldByName() and assertNoFieldByName().
+   *
+   * @group legacy
+   * @expectedDeprecation AssertLegacyTrait::assertFieldByName() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->fieldExists() or $this->assertSession()->buttonExists() or $this->assertSession()->fieldValueEquals() instead. See https://www.drupal.org/node/3129738
+   * @expectedDeprecation AssertLegacyTrait::assertNoFieldByName() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->fieldNotExists() or $this->assertSession()->buttonNotExists() or $this->assertSession()->fieldValueNotEquals() instead. See https://www.drupal.org/node/3129738
+   */
+  public function testLegacyFieldAssertsByName() {
+    $this->drupalGet('test-field-xpath');
+    $this->assertFieldByName('checkbox_enabled', TRUE);
+    $this->assertNoFieldByName('checkbox_enabled', FALSE);
   }
 
 }

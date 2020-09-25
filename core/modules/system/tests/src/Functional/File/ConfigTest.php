@@ -44,7 +44,7 @@ class ConfigTest extends BrowserTestBase {
     $this->drupalPostForm(NULL, $fields, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'));
     foreach ($fields as $field => $value) {
-      $this->assertFieldByName($field, $value);
+      $this->assertSession()->fieldValueEquals($field, $value);
     }
 
     // Remove the private path, rebuild the container and verify that private

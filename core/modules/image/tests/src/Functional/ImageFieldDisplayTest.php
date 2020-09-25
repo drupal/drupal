@@ -257,10 +257,10 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // Verify that the min/max resolution set on the field are properly
     // extracted, and displayed, on the image field's configuration form.
     $this->drupalGet('admin/structure/types/manage/article/fields/' . $field->id());
-    $this->assertFieldByName('settings[max_resolution][x]', '100', 'Expected max resolution X value of 100.');
-    $this->assertFieldByName('settings[max_resolution][y]', '100', 'Expected max resolution Y value of 100.');
-    $this->assertFieldByName('settings[min_resolution][x]', '10', 'Expected min resolution X value of 10.');
-    $this->assertFieldByName('settings[min_resolution][y]', '10', 'Expected min resolution Y value of 10.');
+    $this->assertSession()->fieldValueEquals('settings[max_resolution][x]', '100');
+    $this->assertSession()->fieldValueEquals('settings[max_resolution][y]', '100');
+    $this->assertSession()->fieldValueEquals('settings[min_resolution][x]', '10');
+    $this->assertSession()->fieldValueEquals('settings[min_resolution][y]', '10');
 
     $this->drupalGet('node/add/article');
     $this->assertText(t('50 KB limit.'), 'Image widget max file size is displayed on article form.');
@@ -277,8 +277,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->drupalGet('node/' . $nid . '/edit');
 
     // Verify that the optional fields alt & title are saved & filled.
-    $this->assertFieldByName($field_name . '[0][alt]', $alt, 'Alt field displayed on article form.');
-    $this->assertFieldByName($field_name . '[0][title]', '', 'Title field displayed on article form.');
+    $this->assertSession()->fieldValueEquals($field_name . '[0][alt]', $alt);
+    $this->assertSession()->fieldValueEquals($field_name . '[0][title]', '');
 
     // Verify that the attached image is being previewed using the 'medium'
     // style.

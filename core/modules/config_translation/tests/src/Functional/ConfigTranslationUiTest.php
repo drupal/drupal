@@ -180,8 +180,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
     // Check translation saved proper.
     $this->drupalGet("$translation_base_url/fr/edit");
-    $this->assertFieldByName('translation[config_names][system.site][name]', $fr_site_name);
-    $this->assertFieldByName('translation[config_names][system.site][slogan]', $fr_site_slogan);
+    $this->assertSession()->fieldValueEquals('translation[config_names][system.site][name]', $fr_site_name);
+    $this->assertSession()->fieldValueEquals('translation[config_names][system.site][slogan]', $fr_site_slogan);
 
     // Place branding block with site name and slogan into header region.
     $this->drupalPlaceBlock('system_branding_block', ['region' => 'header']);
@@ -390,7 +390,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       $langcode_prefixes = array_merge([''], $this->langcodes);
       foreach ($langcode_prefixes as $langcode_prefix) {
         $this->drupalGet(ltrim("$langcode_prefix/$translation_base_url/$langcode/edit", '/'));
-        $this->assertFieldByName('translation[config_names][contact.form.feedback][label]', 'Website feedback - ' . $langcode);
+        $this->assertSession()->fieldValueEquals('translation[config_names][contact.form.feedback][label]', 'Website feedback - ' . $langcode);
         $this->assertText($label);
       }
     }
@@ -628,10 +628,10 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
     // Check translation saved proper.
     $this->drupalGet("$translation_base_url/fr/edit");
-    $this->assertFieldByName('translation[config_names][views.view.frontpage][description]', $description . " FR");
-    $this->assertFieldByName('translation[config_names][views.view.frontpage][label]', $human_readable_name . " FR");
-    $this->assertFieldByName('translation[config_names][views.view.frontpage][display][default][display_title]', $display_settings_master . " FR");
-    $this->assertFieldByName('translation[config_names][views.view.frontpage][display][default][display_options][title]', $display_options_master . " FR");
+    $this->assertSession()->fieldValueEquals('translation[config_names][views.view.frontpage][description]', $description . " FR");
+    $this->assertSession()->fieldValueEquals('translation[config_names][views.view.frontpage][label]', $human_readable_name . " FR");
+    $this->assertSession()->fieldValueEquals('translation[config_names][views.view.frontpage][display][default][display_title]', $display_settings_master . " FR");
+    $this->assertSession()->fieldValueEquals('translation[config_names][views.view.frontpage][display][default][display_options][title]', $display_options_master . " FR");
   }
 
   /**
@@ -702,10 +702,10 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     // Make sure original text is present on this page, in addition to 2 new
     // empty fields.
     $this->assertRaw($description);
-    $this->assertFieldByName('translation[config_names][views.view.files][display][default][display_options][fields][count][format_plural_string][0]', $field_value);
-    $this->assertFieldByName('translation[config_names][views.view.files][display][default][display_options][fields][count][format_plural_string][1]', $field_value_plural);
-    $this->assertFieldByName('translation[config_names][views.view.files][display][default][display_options][fields][count][format_plural_string][2]', '');
-    $this->assertFieldByName('translation[config_names][views.view.files][display][default][display_options][fields][count][format_plural_string][3]', '');
+    $this->assertSession()->fieldValueEquals('translation[config_names][views.view.files][display][default][display_options][fields][count][format_plural_string][0]', $field_value);
+    $this->assertSession()->fieldValueEquals('translation[config_names][views.view.files][display][default][display_options][fields][count][format_plural_string][1]', $field_value_plural);
+    $this->assertSession()->fieldValueEquals('translation[config_names][views.view.files][display][default][display_options][fields][count][format_plural_string][2]', '');
+    $this->assertSession()->fieldValueEquals('translation[config_names][views.view.files][display][default][display_options][fields][count][format_plural_string][3]', '');
 
     // Then make sure it also works.
     $edit = [
@@ -718,10 +718,10 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
     // Make sure the values have changed.
     $this->drupalGet($translation_url);
-    $this->assertFieldByName('translation[config_names][views.view.files][display][default][display_options][fields][count][format_plural_string][0]', "$field_value SL");
-    $this->assertFieldByName('translation[config_names][views.view.files][display][default][display_options][fields][count][format_plural_string][1]', "$field_value_plural 1 SL");
-    $this->assertFieldByName('translation[config_names][views.view.files][display][default][display_options][fields][count][format_plural_string][2]', "$field_value_plural 2 SL");
-    $this->assertFieldByName('translation[config_names][views.view.files][display][default][display_options][fields][count][format_plural_string][3]', "$field_value_plural 3 SL");
+    $this->assertSession()->fieldValueEquals('translation[config_names][views.view.files][display][default][display_options][fields][count][format_plural_string][0]', "$field_value SL");
+    $this->assertSession()->fieldValueEquals('translation[config_names][views.view.files][display][default][display_options][fields][count][format_plural_string][1]', "$field_value_plural 1 SL");
+    $this->assertSession()->fieldValueEquals('translation[config_names][views.view.files][display][default][display_options][fields][count][format_plural_string][2]', "$field_value_plural 2 SL");
+    $this->assertSession()->fieldValueEquals('translation[config_names][views.view.files][display][default][display_options][fields][count][format_plural_string][3]', "$field_value_plural 3 SL");
   }
 
   /**
@@ -969,7 +969,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
     // Assert that changing the text format is not possible, even for an
     // administrator.
-    $this->assertNoFieldByName('translation[config_names][config_translation_test.content][content][format]');
+    $this->assertSession()->fieldNotExists('translation[config_names][config_translation_test.content][content][format]');
 
     // Update translatable fields.
     $edit = [

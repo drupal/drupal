@@ -314,7 +314,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     $this->drupalGet($path);
 
     // Expect that there's no 'auto_create_bundle' selected.
-    $this->assertNoFieldByName('settings[handler_settings][auto_create_bundle]');
+    $this->assertSession()->fieldNotExists('settings[handler_settings][auto_create_bundle]');
 
     $edit = [
       'settings[handler_settings][target_bundles][' . $vocabularies[1]->id() . ']' => TRUE,

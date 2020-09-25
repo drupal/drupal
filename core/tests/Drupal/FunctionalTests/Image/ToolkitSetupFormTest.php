@@ -49,7 +49,7 @@ class ToolkitSetupFormTest extends BrowserTestBase {
     $this->drupalGet('admin/config/media/image-toolkit');
 
     // Test that default toolkit is GD.
-    $this->assertFieldByName('image_toolkit', 'gd', 'The default image toolkit is GD.');
+    $this->assertSession()->fieldValueEquals('image_toolkit', 'gd');
 
     // Test changing the jpeg image quality.
     $edit = ['gd[image_jpeg_quality]' => '70'];
@@ -60,7 +60,7 @@ class ToolkitSetupFormTest extends BrowserTestBase {
     $edit = ['image_toolkit' => 'test'];
     $this->drupalPostForm(NULL, $edit, 'Save configuration');
     $this->assertEqual($this->config('system.image')->get('toolkit'), 'test');
-    $this->assertFieldByName('test[test_parameter]', '10');
+    $this->assertSession()->fieldValueEquals('test[test_parameter]', '10');
 
     // Test changing the test toolkit parameter.
     $edit = ['test[test_parameter]' => '0'];

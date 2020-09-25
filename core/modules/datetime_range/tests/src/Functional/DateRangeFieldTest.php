@@ -66,11 +66,11 @@ class DateRangeFieldTest extends DateTestBase {
 
       // Display creation form.
       $this->drupalGet('entity_test/add');
-      $this->assertFieldByName("{$field_name}[0][value][date]", '', 'Start date element found.');
-      $this->assertFieldByName("{$field_name}[0][end_value][date]", '', 'End date element found.');
+      $this->assertSession()->fieldValueEquals("{$field_name}[0][value][date]", '');
+      $this->assertSession()->fieldValueEquals("{$field_name}[0][end_value][date]", '');
       $this->assertFieldByXPath('//*[@id="edit-' . $field_name . '-wrapper"]//label[contains(@class, "js-form-required")]', TRUE, 'Required markup found');
-      $this->assertNoFieldByName("{$field_name}[0][value][time]", '', 'Start time element not found.');
-      $this->assertNoFieldByName("{$field_name}[0][end_value][time]", '', 'End time element not found.');
+      $this->assertSession()->fieldNotExists("{$field_name}[0][value][time]");
+      $this->assertSession()->fieldNotExists("{$field_name}[0][end_value][time]");
       $this->assertFieldByXPath('//fieldset[@id="edit-' . $field_name . '-0"]/legend', $field_label, 'Fieldset and label found');
       $this->assertFieldByXPath('//fieldset[@aria-describedby="edit-' . $field_name . '-0--description"]', NULL, 'ARIA described-by found');
       $this->assertFieldByXPath('//div[@id="edit-' . $field_name . '-0--description"]', NULL, 'ARIA description found');
@@ -294,10 +294,10 @@ class DateRangeFieldTest extends DateTestBase {
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
-    $this->assertFieldByName("{$field_name}[0][value][date]", '', 'Start date element found.');
-    $this->assertFieldByName("{$field_name}[0][value][time]", '', 'Start time element found.');
-    $this->assertFieldByName("{$field_name}[0][end_value][date]", '', 'End date element found.');
-    $this->assertFieldByName("{$field_name}[0][end_value][time]", '', 'End time element found.');
+    $this->assertSession()->fieldValueEquals("{$field_name}[0][value][date]", '');
+    $this->assertSession()->fieldValueEquals("{$field_name}[0][value][time]", '');
+    $this->assertSession()->fieldValueEquals("{$field_name}[0][end_value][date]", '');
+    $this->assertSession()->fieldValueEquals("{$field_name}[0][end_value][time]", '');
     $this->assertFieldByXPath('//fieldset[@id="edit-' . $field_name . '-0"]/legend', $field_label, 'Fieldset and label found');
     $this->assertFieldByXPath('//fieldset[@aria-describedby="edit-' . $field_name . '-0--description"]', NULL, 'ARIA described-by found');
     $this->assertFieldByXPath('//div[@id="edit-' . $field_name . '-0--description"]', NULL, 'ARIA description found');
@@ -472,11 +472,11 @@ class DateRangeFieldTest extends DateTestBase {
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
-    $this->assertFieldByName("{$field_name}[0][value][date]", '', 'Start date element found.');
-    $this->assertFieldByName("{$field_name}[0][end_value][date]", '', 'End date element found.');
+    $this->assertSession()->fieldValueEquals("{$field_name}[0][value][date]", '');
+    $this->assertSession()->fieldValueEquals("{$field_name}[0][end_value][date]", '');
     $this->assertFieldByXPath('//*[@id="edit-' . $field_name . '-wrapper"]//label[contains(@class, "js-form-required")]', TRUE, 'Required markup found');
-    $this->assertNoFieldByName("{$field_name}[0][value][time]", '', 'Start time element not found.');
-    $this->assertNoFieldByName("{$field_name}[0][end_value][time]", '', 'End time element not found.');
+    $this->assertSession()->fieldNotExists("{$field_name}[0][value][time]");
+    $this->assertSession()->fieldNotExists("{$field_name}[0][end_value][time]");
     $this->assertFieldByXPath('//fieldset[@id="edit-' . $field_name . '-0"]/legend', $field_label, 'Fieldset and label found');
     $this->assertFieldByXPath('//fieldset[@aria-describedby="edit-' . $field_name . '-0--description"]', NULL, 'ARIA described-by found');
     $this->assertFieldByXPath('//div[@id="edit-' . $field_name . '-0--description"]', NULL, 'ARIA description found');
@@ -1025,9 +1025,11 @@ class DateRangeFieldTest extends DateTestBase {
     // Check that default value is selected in default value form.
     $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
     $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-date-type', 'now')->isSelected());
-    $this->assertFieldByName('default_value_input[default_date]', '', 'The relative start default value is empty in instance settings page');
+    // Check that the relative start default value is empty.
+    $this->assertSession()->fieldValueEquals('default_value_input[default_date]', '');
     $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-end-date-type', 'now')->isSelected());
-    $this->assertFieldByName('default_value_input[default_end_date]', '', 'The relative end default value is empty in instance settings page');
+    // Check that the relative end default value is empty.
+    $this->assertSession()->fieldValueEquals('default_value_input[default_end_date]', '');
 
     // Check if default_date has been stored successfully.
     $config_entity = $this->config('field.field.node.date_content.' . $field_name)->get();
@@ -1078,9 +1080,11 @@ class DateRangeFieldTest extends DateTestBase {
     // Check that default value is selected in default value form.
     $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
     $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-date-type', 'relative')->isSelected());
-    $this->assertFieldByName('default_value_input[default_date]', '+45 days', 'The relative default start value is displayed in instance settings page');
+    // Check that the relative start default value is displayed.
+    $this->assertSession()->fieldValueEquals('default_value_input[default_date]', '+45 days');
     $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-end-date-type', 'relative')->isSelected());
-    $this->assertFieldByName('default_value_input[default_end_date]', '+90 days', 'The relative default end value is displayed in instance settings page');
+    // Check that the relative end default value is displayed.
+    $this->assertSession()->fieldValueEquals('default_value_input[default_end_date]', '+90 days');
 
     // Check if default_date has been stored successfully.
     $config_entity = $this->config('field.field.node.date_content.' . $field_name)->get();
@@ -1111,9 +1115,11 @@ class DateRangeFieldTest extends DateTestBase {
     // Check that default value is selected in default value form.
     $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
     $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-date-type', '')->isSelected());
-    $this->assertFieldByName('default_value_input[default_date]', '', 'The relative default start value is empty in instance settings page');
+    // Check that the relative start default value is empty.
+    $this->assertSession()->fieldValueEquals('default_value_input[default_date]', '');
     $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-end-date-type', '')->isSelected());
-    $this->assertFieldByName('default_value_input[default_end_date]', '', 'The relative default end value is empty in instance settings page');
+    // Check that the relative end default value is empty.
+    $this->assertSession()->fieldValueEquals('default_value_input[default_end_date]', '');
 
     // Check if default_date has been stored successfully.
     $config_entity = $this->config('field.field.node.date_content.' . $field_name)->get();
@@ -1144,8 +1150,8 @@ class DateRangeFieldTest extends DateTestBase {
 
     // Make sure only the start value is populated on node add page.
     $this->drupalGet('node/add/date_content');
-    $this->assertFieldByName("{$field_name}[0][value][date]", $expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT), 'Start date element populated.');
-    $this->assertFieldByName("{$field_name}[0][end_value][date]", '', 'End date element empty.');
+    $this->assertSession()->fieldValueEquals("{$field_name}[0][value][date]", $expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT));
+    $this->assertSession()->fieldValueEquals("{$field_name}[0][end_value][date]", '');
 
     // Set now as default_value for end date only.
     $field_edit = [
@@ -1156,8 +1162,8 @@ class DateRangeFieldTest extends DateTestBase {
 
     // Make sure only the start value is populated on node add page.
     $this->drupalGet('node/add/date_content');
-    $this->assertFieldByName("{$field_name}[0][value][date]", '', 'Start date element empty.');
-    $this->assertFieldByName("{$field_name}[0][end_value][date]", $expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT), 'End date element populated.');
+    $this->assertSession()->fieldValueEquals("{$field_name}[0][value][date]", '');
+    $this->assertSession()->fieldValueEquals("{$field_name}[0][end_value][date]", $expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT));
   }
 
   /**
@@ -1171,10 +1177,10 @@ class DateRangeFieldTest extends DateTestBase {
     $field_label = $this->field->label();
 
     $this->drupalGet('entity_test/add');
-    $this->assertFieldByName("{$field_name}[0][value][date]", '', 'Start date element found.');
-    $this->assertFieldByName("{$field_name}[0][value][time]", '', 'Start time element found.');
-    $this->assertFieldByName("{$field_name}[0][end_value][date]", '', 'End date element found.');
-    $this->assertFieldByName("{$field_name}[0][end_value][time]", '', 'End time element found.');
+    $this->assertSession()->fieldValueEquals("{$field_name}[0][value][date]", '');
+    $this->assertSession()->fieldValueEquals("{$field_name}[0][value][time]", '');
+    $this->assertSession()->fieldValueEquals("{$field_name}[0][end_value][date]", '');
+    $this->assertSession()->fieldValueEquals("{$field_name}[0][end_value][time]", '');
 
     // Submit invalid start dates and ensure they is not accepted.
     $date_value = '';

@@ -101,8 +101,8 @@ class EntityReferenceIntegrationTest extends BrowserTestBase {
       $storage = $this->container->get('entity_type.manager')->getStorage($this->entityType);
       $entity = current($storage->loadByProperties(['name' => $entity_name]));
       $this->drupalGet($this->entityType . '/manage/' . $entity->id() . '/edit');
-      $this->assertFieldByName($this->fieldName . '[0][target_id]', $referenced_entities[0]->label() . ' (' . $referenced_entities[0]->id() . ')');
-      $this->assertFieldByName($this->fieldName . '[1][target_id]', $referenced_entities[1]->label() . ' (' . $referenced_entities[1]->id() . ')');
+      $this->assertSession()->fieldValueEquals($this->fieldName . '[0][target_id]', $referenced_entities[0]->label() . ' (' . $referenced_entities[0]->id() . ')');
+      $this->assertSession()->fieldValueEquals($this->fieldName . '[1][target_id]', $referenced_entities[1]->label() . ' (' . $referenced_entities[1]->id() . ')');
 
       $this->drupalPostForm(NULL, [], t('Save'));
       $this->assertFieldValues($entity_name, $referenced_entities);
@@ -128,7 +128,7 @@ class EntityReferenceIntegrationTest extends BrowserTestBase {
       // values remain the same.
       $entity = current($storage->loadByProperties(['name' => $entity_name]));
       $this->drupalGet($this->entityType . '/manage/' . $entity->id() . '/edit');
-      $this->assertFieldByName($this->fieldName . '[target_id]', $target_id . ' (' . $referenced_entities[1]->id() . ')');
+      $this->assertSession()->fieldValueEquals($this->fieldName . '[target_id]', $target_id . ' (' . $referenced_entities[1]->id() . ')');
 
       $this->drupalPostForm(NULL, [], t('Save'));
       $this->assertFieldValues($entity_name, $referenced_entities);

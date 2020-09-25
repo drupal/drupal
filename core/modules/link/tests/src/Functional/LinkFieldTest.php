@@ -104,7 +104,7 @@ class LinkFieldTest extends BrowserTestBase {
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
-    $this->assertFieldByName("{$field_name}[0][uri]", '', 'Link URL field is displayed');
+    $this->assertSession()->fieldValueEquals("{$field_name}[0][uri]", '');
     $this->assertRaw('placeholder="http://example.com"');
 
     // Create a path alias.
@@ -293,17 +293,17 @@ class LinkFieldTest extends BrowserTestBase {
       $this->drupalGet('entity_test/add');
       // Assert label is shown.
       $this->assertText('Read more about this entity');
-      $this->assertFieldByName("{$field_name}[0][uri]", '', 'URL field found.');
+      $this->assertSession()->fieldValueEquals("{$field_name}[0][uri]", '');
       $this->assertRaw('placeholder="http://example.com"');
 
       if ($title_setting === DRUPAL_DISABLED) {
-        $this->assertNoFieldByName("{$field_name}[0][title]", '', 'Link text field not found.');
+        $this->assertSession()->fieldNotExists("{$field_name}[0][title]");
         $this->assertNoRaw('placeholder="Enter the text for this link"');
       }
       else {
         $this->assertRaw('placeholder="Enter the text for this link"');
 
-        $this->assertFieldByName("{$field_name}[0][title]", '', 'Link text field found.');
+        $this->assertSession()->fieldValueEquals("{$field_name}[0][title]", '');
         if ($title_setting === DRUPAL_OPTIONAL) {
           // Verify that the URL is required, if the link text is non-empty.
           $edit = [

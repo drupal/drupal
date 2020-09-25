@@ -126,7 +126,7 @@ class ModerationFormTest extends ModerationStateTestBase {
 
     // Check widget default value.
     $this->drupalGet($edit_path);
-    $this->assertFieldByName('moderation_state[0][state]', 'published', 'The moderation default value is set correctly.');
+    $this->assertSession()->fieldValueEquals('moderation_state[0][state]', 'published');
 
     // Preview the content while selecting the "draft" state and when the user
     // returns to the edit form, ensure all of the available transitions are

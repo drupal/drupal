@@ -139,7 +139,7 @@ abstract class CommentTestBase extends BrowserTestBase {
       $edit['subject[0][value]'] = $subject;
     }
     else {
-      $this->assertNoFieldByName('subject[0][value]', '', 'Subject field not found.');
+      $this->assertSession()->fieldNotExists('subject[0][value]');
     }
 
     if ($contact !== NULL && is_array($contact)) {
@@ -148,19 +148,19 @@ abstract class CommentTestBase extends BrowserTestBase {
     switch ($preview_mode) {
       case DRUPAL_REQUIRED:
         // Preview required so no save button should be found.
-        $this->assertNoFieldByName('op', t('Save'), 'Save button not found.');
+        $this->assertSession()->buttonNotExists(t('Save'));
         $this->drupalPostForm(NULL, $edit, t('Preview'));
         // Don't break here so that we can test post-preview field presence and
         // function below.
       case DRUPAL_OPTIONAL:
-        $this->assertFieldByName('op', t('Preview'), 'Preview button found.');
-        $this->assertFieldByName('op', t('Save'), 'Save button found.');
+        $this->assertSession()->buttonExists(t('Preview'));
+        $this->assertSession()->buttonExists(t('Save'));
         $this->drupalPostForm(NULL, $edit, t('Save'));
         break;
 
       case DRUPAL_DISABLED:
-        $this->assertNoFieldByName('op', t('Preview'), 'Preview button not found.');
-        $this->assertFieldByName('op', t('Save'), 'Save button found.');
+        $this->assertSession()->buttonNotExists(t('Preview'));
+        $this->assertSession()->buttonExists(t('Save'));
         $this->drupalPostForm(NULL, $edit, t('Save'));
         break;
     }

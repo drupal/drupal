@@ -35,20 +35,20 @@ class StyleUITest extends UITestBase {
     $style_options_url = "admin/structure/views/nojs/display/$view_name/default/style_options";
 
     $this->drupalGet($style_plugin_url);
-    $this->assertFieldByName('style[type]', 'default', 'The default style plugin selected in the UI should be unformatted list.');
+    $this->assertSession()->fieldValueEquals('style[type]', 'default');
 
     $edit = [
       'style[type]' => 'test_style',
     ];
     $this->drupalPostForm(NULL, $edit, t('Apply'));
-    $this->assertFieldByName('style_options[test_option]', NULL, 'Make sure the custom settings form from the test plugin appears.');
+    $this->assertSession()->fieldExists('style_options[test_option]');
     $random_name = $this->randomMachineName();
     $edit = [
       'style_options[test_option]' => $random_name,
     ];
     $this->drupalPostForm(NULL, $edit, t('Apply'));
     $this->drupalGet($style_options_url);
-    $this->assertFieldByName('style_options[test_option]', $random_name, 'Make sure the custom settings form field has the expected value stored.');
+    $this->assertSession()->fieldValueEquals('style_options[test_option]', $random_name);
 
     $this->drupalPostForm($view_edit_url, [], t('Save'));
     $this->assertSession()->linkExists('Test style plugin', 0, 'Make sure the test style plugin is shown in the UI');

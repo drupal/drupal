@@ -109,12 +109,12 @@ class LocaleContentTest extends BrowserTestBase {
     $this->drupalLogin($web_user);
     $this->drupalGet("node/add/{$type1->id()}");
     // Verify language select list is not present.
-    $this->assertNoFieldByName('langcode[0][value]', NULL, 'Language select not present on the node add form.');
+    $this->assertSession()->fieldNotExists('langcode[0][value]');
 
     // Verify language selection appears on the node add form.
     $this->drupalGet("node/add/{$type2->id()}");
     // Verify language select list is present.
-    $this->assertFieldByName('langcode[0][value]', NULL, 'Language select present on the node add form.');
+    $this->assertSession()->fieldExists('langcode[0][value]');
     // Ensure language appears.
     $this->assertText($name, 'Language present.');
 

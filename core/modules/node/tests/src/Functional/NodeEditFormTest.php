@@ -86,8 +86,8 @@ class NodeEditFormTest extends NodeTestBase {
     // Check that the title and body fields are displayed with the correct values.
     // @todo Ideally assertLink would support HTML, but it doesn't.
     $this->assertRaw('Edit<span class="visually-hidden">(active tab)</span>');
-    $this->assertFieldByName($title_key, $edit[$title_key], 'Title field displayed.');
-    $this->assertFieldByName($body_key, $edit[$body_key], 'Body field displayed.');
+    $this->assertSession()->fieldValueEquals($title_key, $edit[$title_key]);
+    $this->assertSession()->fieldValueEquals($body_key, $edit[$body_key]);
 
     // Edit the content of the node.
     $edit = [];
@@ -177,7 +177,7 @@ class NodeEditFormTest extends NodeTestBase {
     // Check that normal users cannot change the authored by information.
     $this->drupalLogin($this->webUser);
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertNoFieldByName('uid[0][target_id]');
+    $this->assertSession()->fieldNotExists('uid[0][target_id]');
 
     // Now test with the Autocomplete (Tags) field widget.
     /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $form_display */
@@ -283,7 +283,7 @@ class NodeEditFormTest extends NodeTestBase {
     $this->drupalGet('node/' . $node->id() . '/edit');
     $anonymous_user = User::getAnonymousUser();
     $expected = $anonymous_user->label() . ' (' . $anonymous_user->id() . ')';
-    $this->assertFieldByName($form_element_name, $expected, 'Authored by field displays the correct value for the anonymous user.');
+    $this->assertSession()->fieldValueEquals($form_element_name, $expected);
 
     // Change the authored by field to another user's name (that is not
     // logged in).

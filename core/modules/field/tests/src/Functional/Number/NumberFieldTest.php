@@ -75,7 +75,7 @@ class NumberFieldTest extends BrowserTestBase {
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
-    $this->assertFieldByName("{$field_name}[0][value]", '', 'Widget is displayed');
+    $this->assertSession()->fieldValueEquals("{$field_name}[0][value]", '');
     $this->assertRaw('placeholder="0.00"');
 
     // Submit a signed decimal value within the allowed precision and scale.
@@ -190,7 +190,7 @@ class NumberFieldTest extends BrowserTestBase {
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
-    $this->assertFieldByName("{$field_name}[0][value]", '', 'Widget is displayed');
+    $this->assertSession()->fieldValueEquals("{$field_name}[0][value]", '');
     $this->assertRaw('placeholder="4"');
 
     // Submit a valid integer
@@ -315,7 +315,7 @@ class NumberFieldTest extends BrowserTestBase {
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
-    $this->assertFieldByName("{$field_name}[0][value]", '', 'Widget is displayed');
+    $this->assertSession()->fieldValueEquals("{$field_name}[0][value]", '');
     $this->assertRaw('placeholder="0.00"');
 
     // Submit a signed decimal value within the allowed precision and scale.

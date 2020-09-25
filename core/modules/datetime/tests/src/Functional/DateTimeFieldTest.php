@@ -54,9 +54,9 @@ class DateTimeFieldTest extends DateTestBase {
 
       // Display creation form.
       $this->drupalGet('entity_test/add');
-      $this->assertFieldByName("{$field_name}[0][value][date]", '', 'Date element found.');
+      $this->assertSession()->fieldValueEquals("{$field_name}[0][value][date]", '');
       $this->assertFieldByXPath('//*[@id="edit-' . $field_name . '-wrapper"]//label[contains(@class,"js-form-required")]', TRUE, 'Required markup found');
-      $this->assertNoFieldByName("{$field_name}[0][value][time]", '', 'Time element not found.');
+      $this->assertSession()->fieldNotExists("{$field_name}[0][value][time]");
       $this->assertFieldByXPath('//input[@aria-describedby="edit-' . $field_name . '-0-value--description"]', NULL, 'ARIA described-by found');
       $this->assertFieldByXPath('//div[@id="edit-' . $field_name . '-0-value--description"]', NULL, 'ARIA description found');
 
@@ -247,8 +247,8 @@ class DateTimeFieldTest extends DateTestBase {
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
-    $this->assertFieldByName("{$field_name}[0][value][date]", '', 'Date element found.');
-    $this->assertFieldByName("{$field_name}[0][value][time]", '', 'Time element found.');
+    $this->assertSession()->fieldValueEquals("{$field_name}[0][value][date]", '');
+    $this->assertSession()->fieldValueEquals("{$field_name}[0][value][time]", '');
     $this->assertFieldByXPath('//fieldset[@id="edit-' . $field_name . '-0"]/legend', $field_label, 'Fieldset and label found');
     $this->assertFieldByXPath('//fieldset[@aria-describedby="edit-' . $field_name . '-0--description"]', NULL, 'ARIA described-by found');
     $this->assertFieldByXPath('//div[@id="edit-' . $field_name . '-0--description"]', NULL, 'ARIA description found');
@@ -697,7 +697,8 @@ class DateTimeFieldTest extends DateTestBase {
       // Check that default value is selected in default value form.
       $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
       $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-date-type', 'now')->isSelected());
-      $this->assertFieldByName('default_value_input[default_date]', '', 'The relative default value is empty in instance settings page');
+      // Check that the relative default value is empty.
+      $this->assertSession()->fieldValueEquals('default_value_input[default_date]', '');
 
       // Check if default_date has been stored successfully.
       $config_entity = $this->config('field.field.node.date_content.' . $field_name)
@@ -735,7 +736,8 @@ class DateTimeFieldTest extends DateTestBase {
       // Check that default value is selected in default value form.
       $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
       $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-date-type', 'relative')->isSelected());
-      $this->assertFieldByName('default_value_input[default_date]', '+90 days', 'The relative default value is displayed in instance settings page');
+      // Check that the relative default value is displayed.
+      $this->assertSession()->fieldValueEquals('default_value_input[default_date]', '+90 days');
 
       // Check if default_date has been stored successfully.
       $config_entity = $this->config('field.field.node.date_content.' . $field_name)
@@ -764,7 +766,8 @@ class DateTimeFieldTest extends DateTestBase {
       // Check that default value is selected in default value form.
       $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
       $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-date-type', '')->isSelected());
-      $this->assertFieldByName('default_value_input[default_date]', '', 'The relative default value is empty in instance settings page');
+      // Check that the relative default value is empty.
+      $this->assertSession()->fieldValueEquals('default_value_input[default_date]', '');
 
       // Check if default_date has been stored successfully.
       $config_entity = $this->config('field.field.node.date_content.' . $field_name)
@@ -792,8 +795,8 @@ class DateTimeFieldTest extends DateTestBase {
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
-    $this->assertFieldByName("{$field_name}[0][value][date]", '', 'Date element found.');
-    $this->assertFieldByName("{$field_name}[0][value][time]", '', 'Time element found.');
+    $this->assertSession()->fieldValueEquals("{$field_name}[0][value][date]", '');
+    $this->assertSession()->fieldValueEquals("{$field_name}[0][value][time]", '');
 
     // Submit invalid dates and ensure they is not accepted.
     $date_value = '';

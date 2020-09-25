@@ -73,7 +73,7 @@ class UserLanguageCreationTest extends BrowserTestBase {
     $this->drupalLogout();
 
     $this->drupalGet($langcode . '/user/register');
-    $this->assertNoFieldByName('language[fr]', 'Language selector is not accessible.');
+    $this->assertSession()->fieldNotExists('language[fr]');
 
     $username = $this->randomMachineName(10);
     $edit = [

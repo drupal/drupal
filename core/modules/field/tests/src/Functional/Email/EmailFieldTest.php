@@ -89,7 +89,7 @@ class EmailFieldTest extends BrowserTestBase {
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
-    $this->assertFieldByName("{$field_name}[0][value]", '', 'Widget found.');
+    $this->assertSession()->fieldValueEquals("{$field_name}[0][value]", '');
     $this->assertRaw('placeholder="example@example.com"');
 
     // Submit a valid email address and ensure it is accepted.

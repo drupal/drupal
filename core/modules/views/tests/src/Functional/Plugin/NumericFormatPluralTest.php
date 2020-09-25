@@ -62,8 +62,8 @@ class NumericFormatPluralTest extends ViewTestBase {
 
     // Assert that the user interface has controls to change it.
     $this->drupalGet('admin/structure/views/nojs/handler/numeric_test/page_1/field/count');
-    $this->assertFieldByName('options[format_plural_values][0]', '1');
-    $this->assertFieldByName('options[format_plural_values][1]', '@count');
+    $this->assertSession()->fieldValueEquals('options[format_plural_values][0]', '1');
+    $this->assertSession()->fieldValueEquals('options[format_plural_values][1]', '@count');
 
     // Assert that changing the settings will change configuration properly.
     $edit = ['options[format_plural_values][0]' => '1 time', 'options[format_plural_values][1]' => '@count times'];
@@ -99,10 +99,10 @@ class NumericFormatPluralTest extends ViewTestBase {
 
     // Assert that the user interface has controls with more inputs now.
     $this->drupalGet('admin/structure/views/nojs/handler/numeric_test/page_1/field/count');
-    $this->assertFieldByName('options[format_plural_values][0]', '1 time');
-    $this->assertFieldByName('options[format_plural_values][1]', '@count times');
-    $this->assertFieldByName('options[format_plural_values][2]', '');
-    $this->assertFieldByName('options[format_plural_values][3]', '');
+    $this->assertSession()->fieldValueEquals('options[format_plural_values][0]', '1 time');
+    $this->assertSession()->fieldValueEquals('options[format_plural_values][1]', '@count times');
+    $this->assertSession()->fieldValueEquals('options[format_plural_values][2]', '');
+    $this->assertSession()->fieldValueEquals('options[format_plural_values][3]', '');
 
     // Assert that changing the settings will change configuration properly.
     $edit = [

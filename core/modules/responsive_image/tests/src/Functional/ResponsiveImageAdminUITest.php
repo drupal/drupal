@@ -49,7 +49,7 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
     // Add a responsive image style.
     $this->drupalGet('admin/config/media/responsive-image-style/add');
     // The 'Responsive Image' breakpoint group should be selected by default.
-    $this->assertFieldByName('breakpoint_group', 'responsive_image');
+    $this->assertSession()->fieldValueEquals('breakpoint_group', 'responsive_image');
 
     // Create a new group.
     $edit = [
@@ -68,9 +68,9 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
 
     // Edit the group.
     $this->drupalGet('admin/config/media/responsive-image-style/style_one');
-    $this->assertFieldByName('label', 'Style One');
-    $this->assertFieldByName('breakpoint_group', 'responsive_image_test_module');
-    $this->assertFieldByName('fallback_image_style', 'thumbnail');
+    $this->assertSession()->fieldValueEquals('label', 'Style One');
+    $this->assertSession()->fieldValueEquals('breakpoint_group', 'responsive_image_test_module');
+    $this->assertSession()->fieldValueEquals('fallback_image_style', 'thumbnail');
 
     $cases = [
       ['mobile', '1x'],
@@ -86,11 +86,11 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
     );
     foreach ($cases as $case) {
       // Check if the radio buttons are present.
-      $this->assertFieldByName('keyed_styles[responsive_image_test_module.' . $case[0] . '][' . $case[1] . '][image_mapping_type]', NULL);
+      $this->assertSession()->fieldExists('keyed_styles[responsive_image_test_module.' . $case[0] . '][' . $case[1] . '][image_mapping_type]');
       // Check if the image style dropdowns are present.
-      $this->assertFieldByName('keyed_styles[responsive_image_test_module.' . $case[0] . '][' . $case[1] . '][image_style]', NULL);
+      $this->assertSession()->fieldExists('keyed_styles[responsive_image_test_module.' . $case[0] . '][' . $case[1] . '][image_style]');
       // Check if the sizes textfields are present.
-      $this->assertFieldByName('keyed_styles[responsive_image_test_module.' . $case[0] . '][' . $case[1] . '][sizes]', NULL);
+      $this->assertSession()->fieldExists('keyed_styles[responsive_image_test_module.' . $case[0] . '][' . $case[1] . '][sizes]');
 
       foreach ($image_styles as $image_style_name) {
         // Check if the image styles are available in the dropdowns.
@@ -102,7 +102,7 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
           ]
         ));
         // Check if the image styles checkboxes are present.
-        $this->assertFieldByName('keyed_styles[responsive_image_test_module.' . $case[0] . '][' . $case[1] . '][sizes_image_styles][' . $image_style_name . ']');
+        $this->assertSession()->fieldExists('keyed_styles[responsive_image_test_module.' . $case[0] . '][' . $case[1] . '][sizes_image_styles][' . $image_style_name . ']');
       }
     }
 
@@ -125,22 +125,22 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
     $this->drupalGet('admin/config/media/responsive-image-style/style_one');
 
     // Check the mapping for multipliers 1x and 2x for the mobile breakpoint.
-    $this->assertFieldByName('keyed_styles[responsive_image_test_module.mobile][1x][image_style]', 'thumbnail');
-    $this->assertFieldByName('keyed_styles[responsive_image_test_module.mobile][1x][image_mapping_type]', 'image_style');
-    $this->assertFieldByName('keyed_styles[responsive_image_test_module.mobile][2x][image_mapping_type]', '_none');
+    $this->assertSession()->fieldValueEquals('keyed_styles[responsive_image_test_module.mobile][1x][image_style]', 'thumbnail');
+    $this->assertSession()->fieldValueEquals('keyed_styles[responsive_image_test_module.mobile][1x][image_mapping_type]', 'image_style');
+    $this->assertSession()->fieldValueEquals('keyed_styles[responsive_image_test_module.mobile][2x][image_mapping_type]', '_none');
 
     // Check the mapping for multipliers 1x and 2x for the narrow breakpoint.
-    $this->assertFieldByName('keyed_styles[responsive_image_test_module.narrow][1x][image_mapping_type]', 'sizes');
-    $this->assertFieldByName('keyed_styles[responsive_image_test_module.narrow][1x][sizes]', '(min-resolution: 192dpi) and (min-width: 170px) 386px, (min-width: 170px) 193px, (min-width: 768px) 18vw, (min-width: 480px) 30vw, 48vw');
+    $this->assertSession()->fieldValueEquals('keyed_styles[responsive_image_test_module.narrow][1x][image_mapping_type]', 'sizes');
+    $this->assertSession()->fieldValueEquals('keyed_styles[responsive_image_test_module.narrow][1x][sizes]', '(min-resolution: 192dpi) and (min-width: 170px) 386px, (min-width: 170px) 193px, (min-width: 768px) 18vw, (min-width: 480px) 30vw, 48vw');
     $this->assertSession()->checkboxChecked('edit-keyed-styles-responsive-image-test-modulenarrow-1x-sizes-image-styles-large');
     $this->assertSession()->checkboxChecked('edit-keyed-styles-responsive-image-test-modulenarrow-1x-sizes-image-styles-medium');
     $this->assertSession()->checkboxNotChecked('edit-keyed-styles-responsive-image-test-modulenarrow-1x-sizes-image-styles-thumbnail');
-    $this->assertFieldByName('keyed_styles[responsive_image_test_module.narrow][2x][image_mapping_type]', '_none');
+    $this->assertSession()->fieldValueEquals('keyed_styles[responsive_image_test_module.narrow][2x][image_mapping_type]', '_none');
 
     // Check the mapping for multipliers 1x and 2x for the wide breakpoint.
-    $this->assertFieldByName('keyed_styles[responsive_image_test_module.wide][1x][image_style]', 'large');
-    $this->assertFieldByName('keyed_styles[responsive_image_test_module.wide][1x][image_mapping_type]', 'image_style');
-    $this->assertFieldByName('keyed_styles[responsive_image_test_module.wide][2x][image_mapping_type]', '_none');
+    $this->assertSession()->fieldValueEquals('keyed_styles[responsive_image_test_module.wide][1x][image_style]', 'large');
+    $this->assertSession()->fieldValueEquals('keyed_styles[responsive_image_test_module.wide][1x][image_mapping_type]', 'image_style');
+    $this->assertSession()->fieldValueEquals('keyed_styles[responsive_image_test_module.wide][2x][image_mapping_type]', '_none');
 
     // Delete the style.
     $this->drupalGet('admin/config/media/responsive-image-style/style_one/delete');

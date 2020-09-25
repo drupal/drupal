@@ -188,7 +188,7 @@ class NodeAdminTest extends NodeTestBase {
     $this->assertSession()->linkByHrefNotExists('node/' . $nodes['unpublished_page_1']->id() . '/delete');
 
     // Verify no tableselect.
-    $this->assertNoFieldByName('nodes[' . $nodes['published_page']->id() . ']', '', 'No tableselect found.');
+    $this->assertSession()->fieldNotExists('nodes[' . $nodes['published_page']->id() . ']');
 
     // Verify unpublished content is displayed with permission.
     $this->drupalLogout();
@@ -206,7 +206,7 @@ class NodeAdminTest extends NodeTestBase {
     $this->assertSession()->linkByHrefNotExists('node/' . $nodes['unpublished_page_1']->id() . '/delete');
 
     // Verify no tableselect.
-    $this->assertNoFieldByName('nodes[' . $nodes['unpublished_page_2']->id() . ']', '', 'No tableselect found.');
+    $this->assertSession()->fieldNotExists('nodes[' . $nodes['unpublished_page_2']->id() . ']');
 
     // Verify node access can be bypassed.
     $this->drupalLogout();

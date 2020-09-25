@@ -180,7 +180,7 @@ class ManageDisplayTest extends BrowserTestBase {
     // Check that the field appears as 'hidden' on the 'Manage display' page
     // for the 'teaser' mode.
     $this->drupalGet('admin/structure/types/manage/' . $this->type . '/display/teaser');
-    $this->assertFieldByName('fields[field_test][region]', 'hidden', 'The field is displayed as \'hidden \'.');
+    $this->assertSession()->fieldValueEquals('fields[field_test][region]', 'hidden');
   }
 
   /**

@@ -138,7 +138,8 @@ class CommentAnonymousTest extends CommentTestBase {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('comment/' . $anonymous_comment3->id() . '/edit');
     $this->assertRaw($author_name);
-    $this->assertFieldByName('uid', '', 'The author field is empty (i.e. anonymous) when editing the comment.');
+    // Check the author field is empty (i.e. anonymous) when editing the comment.
+    $this->assertSession()->fieldValueEquals('uid', '');
     $this->assertRaw($author_mail);
 
     // Unpublish comment.
@@ -202,8 +203,8 @@ class CommentAnonymousTest extends CommentTestBase {
     $this->drupalGet('node/' . $this->node->id());
     // Verify that comments were not displayed.
     $this->assertSession()->responseNotMatches('@<h2[^>]*>Comments</h2>@');
-    $this->assertFieldByName('subject[0][value]', '', 'Subject field found.');
-    $this->assertFieldByName('comment_body[0][value]', '', 'Comment field found.');
+    $this->assertSession()->fieldValueEquals('subject[0][value]', '');
+    $this->assertSession()->fieldValueEquals('comment_body[0][value]', '');
 
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment/' . $anonymous_comment2->id());
     $this->assertSession()->statusCodeEquals(403);

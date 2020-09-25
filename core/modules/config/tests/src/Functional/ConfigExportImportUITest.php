@@ -136,7 +136,7 @@ class ConfigExportImportUITest extends BrowserTestBase {
       ->save();
 
     $this->drupalGet('node/add/' . $this->contentType->id());
-    $this->assertFieldByName("{$this->fieldName}[0][value]", '', 'Widget is displayed');
+    $this->assertSession()->fieldValueEquals("{$this->fieldName}[0][value]", '');
 
     // Export the configuration.
     $this->drupalPostForm('admin/config/development/configuration/full/export', [], 'Export');
@@ -161,7 +161,7 @@ class ConfigExportImportUITest extends BrowserTestBase {
       }
     }
     $this->drupalGet('node/add/' . $this->contentType->id());
-    $this->assertNoFieldByName("{$this->fieldName}[0][value]", '', 'Widget is not displayed');
+    $this->assertSession()->fieldNotExists("{$this->fieldName}[0][value]");
 
     // Import the configuration.
     $filename = 'temporary://' . $this->randomMachineName();
@@ -180,7 +180,7 @@ class ConfigExportImportUITest extends BrowserTestBase {
     $this->assertEquals($this->newSlogan, $this->config('system.site')->get('slogan'));
 
     $this->drupalGet('node/add');
-    $this->assertFieldByName("{$this->fieldName}[0][value]", '', 'Widget is displayed');
+    $this->assertSession()->fieldValueEquals("{$this->fieldName}[0][value]", '');
 
     $this->config('system.site')
       ->set('slogan', $this->originalSlogan)

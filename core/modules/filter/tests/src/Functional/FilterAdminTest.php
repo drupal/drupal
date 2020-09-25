@@ -138,14 +138,14 @@ class FilterAdminTest extends BrowserTestBase {
 
     // Verify default weight of the text format.
     $this->drupalGet('admin/config/content/formats');
-    $this->assertFieldByName("formats[$format_id][weight]", 0, 'Text format weight was saved.');
+    $this->assertSession()->fieldValueEquals("formats[$format_id][weight]", 0);
 
     // Change the weight of the text format.
     $edit = [
       "formats[$format_id][weight]" => 5,
     ];
     $this->drupalPostForm('admin/config/content/formats', $edit, t('Save'));
-    $this->assertFieldByName("formats[$format_id][weight]", 5, 'Text format weight was saved.');
+    $this->assertSession()->fieldValueEquals("formats[$format_id][weight]", 5);
 
     // Edit text format.
     $this->drupalGet('admin/config/content/formats');
@@ -157,7 +157,7 @@ class FilterAdminTest extends BrowserTestBase {
 
     // Verify that the custom weight of the text format has been retained.
     $this->drupalGet('admin/config/content/formats');
-    $this->assertFieldByName("formats[$format_id][weight]", 5, 'Text format weight was retained.');
+    $this->assertSession()->fieldValueEquals("formats[$format_id][weight]", 5);
 
     // Disable text format.
     $this->assertSession()->linkByHrefExists('admin/config/content/formats/manage/' . $format_id . '/disable');
@@ -219,7 +219,8 @@ class FilterAdminTest extends BrowserTestBase {
     $this->drupalPostForm('admin/config/content/formats/manage/' . $restricted, $edit, t('Save configuration'));
     $this->assertSession()->addressEquals('admin/config/content/formats/manage/' . $restricted);
     $this->drupalGet('admin/config/content/formats/manage/' . $restricted);
-    $this->assertFieldByName('filters[filter_html][settings][allowed_html]', "<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd> <quote>", 'Allowed HTML tag added.');
+    // Check that the allowed HTML tag was added and the string reformatted.
+    $this->assertSession()->fieldValueEquals('filters[filter_html][settings][allowed_html]', "<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd> <quote>");
 
     $elements = $this->xpath('//select[@name=:first]/following::select[@name=:second]', [
       ':first' => 'filters[' . $first_filter . '][weight]',
@@ -234,8 +235,8 @@ class FilterAdminTest extends BrowserTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save configuration'));
     $this->assertSession()->addressEquals('admin/config/content/formats/manage/' . $restricted);
     $this->drupalGet('admin/config/content/formats/manage/' . $restricted);
-    $this->assertFieldByName('filters[' . $second_filter . '][weight]', 1, 'Order saved successfully.');
-    $this->assertFieldByName('filters[' . $first_filter . '][weight]', 2, 'Order saved successfully.');
+    $this->assertSession()->fieldValueEquals('filters[' . $second_filter . '][weight]', 1);
+    $this->assertSession()->fieldValueEquals('filters[' . $first_filter . '][weight]', 2);
 
     $elements = $this->xpath('//select[@name=:first]/following::select[@name=:second]', [
       ':first' => 'filters[' . $second_filter . '][weight]',
@@ -339,7 +340,7 @@ class FilterAdminTest extends BrowserTestBase {
     $this->drupalPostForm('admin/config/content/formats/manage/' . $basic, $edit, t('Save configuration'));
     $this->assertSession()->addressEquals('admin/config/content/formats/manage/' . $basic);
     $this->drupalGet('admin/config/content/formats/manage/' . $basic);
-    $this->assertFieldByName('filters[filter_html][settings][allowed_html]', $edit['filters[filter_html][settings][allowed_html]'], 'Changes reverted.');
+    $this->assertSession()->fieldValueEquals('filters[filter_html][settings][allowed_html]', $edit['filters[filter_html][settings][allowed_html]']);
 
     // Full HTML.
     $edit = [];
@@ -348,7 +349,7 @@ class FilterAdminTest extends BrowserTestBase {
     $this->assertSession()->addressEquals('admin/config/content/formats/manage/' . $full);
     $this->assertRaw(t('The text format %format has been updated.', ['%format' => $format->label()]));
     $this->drupalGet('admin/config/content/formats/manage/' . $full);
-    $this->assertFieldByName('roles[' . RoleInterface::AUTHENTICATED_ID . ']', $edit['roles[' . RoleInterface::AUTHENTICATED_ID . ']'], 'Changes reverted.');
+    $this->assertSession()->fieldValueEquals('roles[' . RoleInterface::AUTHENTICATED_ID . ']', $edit['roles[' . RoleInterface::AUTHENTICATED_ID . ']']);
 
     // Filter order.
     $edit = [];
@@ -357,8 +358,8 @@ class FilterAdminTest extends BrowserTestBase {
     $this->drupalPostForm('admin/config/content/formats/manage/' . $basic, $edit, t('Save configuration'));
     $this->assertSession()->addressEquals('admin/config/content/formats/manage/' . $basic);
     $this->drupalGet('admin/config/content/formats/manage/' . $basic);
-    $this->assertFieldByName('filters[' . $second_filter . '][weight]', $edit['filters[' . $second_filter . '][weight]'], 'Changes reverted.');
-    $this->assertFieldByName('filters[' . $first_filter . '][weight]', $edit['filters[' . $first_filter . '][weight]'], 'Changes reverted.');
+    $this->assertSession()->fieldValueEquals('filters[' . $second_filter . '][weight]', $edit['filters[' . $second_filter . '][weight]']);
+    $this->assertSession()->fieldValueEquals('filters[' . $first_filter . '][weight]', $edit['filters[' . $first_filter . '][weight]']);
   }
 
   /**

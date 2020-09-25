@@ -289,7 +289,7 @@ class ContactSitewideTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/contact');
     $this->clickLink(t('Edit'));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertFieldByName('label', $label);
+    $this->assertSession()->fieldValueEquals('label', $label);
 
     // Test field UI and field integration.
     $this->drupalGet('admin/structure/contact');

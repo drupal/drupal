@@ -282,10 +282,10 @@ class UserPasswordResetTest extends BrowserTestBase {
       [':password' => Url::fromRoute('user.pass', [], ['query' => ['name' => $edit['name']]])->toString()]));
     unset($edit['pass']);
     $this->drupalGet('user/password', ['query' => ['name' => $edit['name']]]);
-    $this->assertFieldByName('name', $edit['name'], 'User name found.');
+    $this->assertSession()->fieldValueEquals('name', $edit['name']);
     // Ensure the name field value is not cached.
     $this->drupalGet('user/password');
-    $this->assertNoFieldByName('name', $edit['name'], 'User name not found.');
+    $this->assertSession()->fieldValueNotEquals('name', $edit['name']);
   }
 
   /**

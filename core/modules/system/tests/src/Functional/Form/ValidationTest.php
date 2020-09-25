@@ -36,7 +36,7 @@ class ValidationTest extends BrowserTestBase {
       'name' => 'element_validate',
     ];
     $this->drupalPostForm(NULL, $edit, 'Save');
-    $this->assertFieldByName('name', '#value changed by #element_validate', 'Form element #value was altered.');
+    $this->assertSession()->fieldValueEquals('name', '#value changed by #element_validate');
     $this->assertText('Name value: value changed by setValueForElement() in #element_validate', 'Form element value in $form_state was altered.');
 
     // Verify that #validate handlers can alter the form and submitted
@@ -45,7 +45,7 @@ class ValidationTest extends BrowserTestBase {
       'name' => 'validate',
     ];
     $this->drupalPostForm(NULL, $edit, 'Save');
-    $this->assertFieldByName('name', '#value changed by #validate', 'Form element #value was altered.');
+    $this->assertSession()->fieldValueEquals('name', '#value changed by #validate');
     $this->assertText('Name value: value changed by setValueForElement() in #validate', 'Form element value in $form_state was altered.');
 
     // Verify that #element_validate handlers can make form elements
@@ -54,12 +54,12 @@ class ValidationTest extends BrowserTestBase {
       'name' => 'element_validate_access',
     ];
     $this->drupalPostForm(NULL, $edit, 'Save');
-    $this->assertNoFieldByName('name', 'Form element was hidden.');
+    $this->assertSession()->fieldNotExists('name');
     $this->assertText('Name value: element_validate_access', 'Value for inaccessible form element exists.');
 
     // Verify that value for inaccessible form element persists.
     $this->drupalPostForm(NULL, [], 'Save');
-    $this->assertNoFieldByName('name', 'Form element was hidden.');
+    $this->assertSession()->fieldValueNotEquals('name', 'Form element was hidden.');
     $this->assertText('Name value: element_validate_access', 'Value for inaccessible form element exists.');
 
     // Verify that #validate handlers don't run if the CSRF token is invalid.
@@ -72,7 +72,7 @@ class ValidationTest extends BrowserTestBase {
       ->elementExists('css', 'input[name="form_token"]')
       ->setValue('invalid_token');
     $this->drupalPostForm(NULL, ['name' => 'validate'], 'Save');
-    $this->assertNoFieldByName('name', '#value changed by #validate', 'Form element #value was not altered.');
+    $this->assertSession()->fieldValueNotEquals('name', '#value changed by #validate');
     $this->assertNoText('Name value: value changed by setValueForElement() in #validate', 'Form element value in $form_state was not altered.');
     $this->assertText('The form has become outdated.');
   }

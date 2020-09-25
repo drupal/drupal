@@ -168,7 +168,7 @@ class ViewEditTest extends UITestBase {
         $this->assertText(t('The view is not based on a translatable entity type or the site is not multilingual.'));
       }
       else {
-        $this->assertFieldByName('rendering_language', '***LANGUAGE_entity_translation***');
+        $this->assertSession()->fieldValueEquals('rendering_language', '***LANGUAGE_entity_translation***');
         // Test that the order of the language list is similar to other language
         // lists, such as in the content translation settings.
         $expected_elements = [

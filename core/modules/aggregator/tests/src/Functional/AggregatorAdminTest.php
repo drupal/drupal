@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\aggregator\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
-
 /**
  * Tests aggregator admin pages.
  *
@@ -41,8 +39,9 @@ class AggregatorAdminTest extends AggregatorTestBase {
     $this->drupalPostForm('admin/config/services/aggregator/settings', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'));
 
+    // Check that settings have the correct default value.
     foreach ($edit as $name => $value) {
-      $this->assertFieldByName($name, $value, new FormattableMarkup('"@name" has correct default value.', ['@name' => $name]));
+      $this->assertSession()->fieldValueEquals($name, $value);
     }
 
     // Check for our test processor settings form.
@@ -53,7 +52,7 @@ class AggregatorAdminTest extends AggregatorTestBase {
     ];
     $this->drupalPostForm('admin/config/services/aggregator/settings', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'));
-    $this->assertFieldByName('dummy_length', 100, '"dummy_length" has correct default value.');
+    $this->assertSession()->fieldValueEquals('dummy_length', 100);
 
     // Make sure settings form is still accessible even after uninstalling a module
     // that provides the selected plugins.

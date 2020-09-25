@@ -131,7 +131,7 @@ class ExposedFormUITest extends UITestBase {
     $this->drupalPostForm(NULL, ['options[order]' => 'DESC'], t('Apply'));
     $this->drupalPostForm("admin/structure/views/nojs/handler/$view_id/default/sort/created", [], t('Expose sort'));
     $this->assertFieldByXPath('//input[@name="options[order]" and @checked="checked"]', 'DESC');
-    $this->assertFieldByName('options[expose][label]', 'Authored on', 'The default label is set.');
+    $this->assertSession()->fieldValueEquals('options[expose][label]', 'Authored on');
     // Change the label and save the view.
     $edit = ['options[expose][label]' => $this->randomString()];
     $this->drupalPostForm(NULL, $edit, t('Apply'));

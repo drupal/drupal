@@ -292,7 +292,7 @@ class MenuUiTest extends BrowserTestBase {
     $this->assertSession()->addressEquals(Url::fromRoute('entity.menu.edit_form', ['menu' => $menu_name]));
     // Test the 'Edit' operation.
     $this->clickLink(t('Edit'));
-    $this->assertFieldByName('title[0][value]', $link_title);
+    $this->assertSession()->fieldValueEquals('title[0][value]', $link_title);
     $link_title = $this->randomString();
     $this->drupalPostForm(NULL, ['title[0][value]' => $link_title], t('Save'));
     $this->assertSession()->addressEquals(Url::fromRoute('entity.menu.edit_form', ['menu' => $menu_name]));
@@ -499,14 +499,14 @@ class MenuUiTest extends BrowserTestBase {
     $this->drupalGet("admin/structure/menu/manage/tools/add");
     $this->assertSession()->statusCodeEquals(200);
 
-    $this->assertFieldByName('title[0][value]', '');
-    $this->assertFieldByName('link[0][uri]', '');
+    $this->assertSession()->fieldValueEquals('title[0][value]', '');
+    $this->assertSession()->fieldValueEquals('link[0][uri]', '');
 
     $this->assertSession()->checkboxNotChecked('edit-expanded-value');
     $this->assertSession()->checkboxChecked('edit-enabled-value');
 
-    $this->assertFieldByName('description[0][value]', '');
-    $this->assertFieldByName('weight[0][value]', 0);
+    $this->assertSession()->fieldValueEquals('description[0][value]', '');
+    $this->assertSession()->fieldValueEquals('weight[0][value]', 0);
   }
 
   /**
@@ -519,26 +519,27 @@ class MenuUiTest extends BrowserTestBase {
     $path = '/test-page?arg1=value1&arg2=value2';
     $item = $this->addMenuLink('', $path);
 
+    // Check that the path has both the query and fragment.
     $this->drupalGet('admin/structure/menu/item/' . $item->id() . '/edit');
-    $this->assertFieldByName('link[0][uri]', $path, 'Path is found with both query and fragment.');
+    $this->assertSession()->fieldValueEquals('link[0][uri]', $path);
 
     // Now change the path to something without query and fragment.
     $path = '/test-page';
     $this->drupalPostForm('admin/structure/menu/item/' . $item->id() . '/edit', ['link[0][uri]' => $path], t('Save'));
     $this->drupalGet('admin/structure/menu/item/' . $item->id() . '/edit');
-    $this->assertFieldByName('link[0][uri]', $path, 'Path no longer has query or fragment.');
+    $this->assertSession()->fieldValueEquals('link[0][uri]', $path);
 
     // Use <front>#fragment and ensure that saving it does not lose its content.
     $path = '<front>?arg1=value#fragment';
     $item = $this->addMenuLink('', $path);
 
     $this->drupalGet('admin/structure/menu/item/' . $item->id() . '/edit');
-    $this->assertFieldByName('link[0][uri]', $path, 'Path is found with both query and fragment.');
+    $this->assertSession()->fieldValueEquals('link[0][uri]', $path);
 
     $this->drupalPostForm('admin/structure/menu/item/' . $item->id() . '/edit', [], t('Save'));
 
     $this->drupalGet('admin/structure/menu/item/' . $item->id() . '/edit');
-    $this->assertFieldByName('link[0][uri]', $path, 'Path is found with both query and fragment.');
+    $this->assertSession()->fieldValueEquals('link[0][uri]', $path);
   }
 
   /**

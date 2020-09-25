@@ -63,10 +63,10 @@ class AreaEntityUITest extends UITestBase {
     // Confirm that the correct serial ID (for the entity_test) and config ID
     // (for the block) are displayed in the form.
     $this->drupalGet("admin/structure/views/nojs/handler/$id/page_1/header/entity_block");
-    $this->assertFieldByName('options[target]', $block->id());
+    $this->assertSession()->fieldValueEquals('options[target]', $block->id());
 
     $this->drupalGet("admin/structure/views/nojs/handler/$id/page_1/header/entity_entity_test");
-    $this->assertFieldByName('options[target]', $entity_test->id());
+    $this->assertSession()->fieldValueEquals('options[target]', $entity_test->id());
 
     // Replace the header target entities with argument placeholders.
     $this->drupalPostForm("admin/structure/views/nojs/handler/$id/page_1/header/entity_block", ['options[target]' => '{{ raw_arguments.null }}'], 'Apply');
@@ -83,10 +83,10 @@ class AreaEntityUITest extends UITestBase {
 
     // Confirm that the argument placeholders are still displayed in the form.
     $this->drupalGet("admin/structure/views/nojs/handler/$id/page_1/header/entity_block");
-    $this->assertFieldByName('options[target]', '{{ raw_arguments.null }}');
+    $this->assertSession()->fieldValueEquals('options[target]', '{{ raw_arguments.null }}');
 
     $this->drupalGet("admin/structure/views/nojs/handler/$id/page_1/header/entity_entity_test");
-    $this->assertFieldByName('options[target]', '{{ raw_arguments.null }}');
+    $this->assertSession()->fieldValueEquals('options[target]', '{{ raw_arguments.null }}');
 
     // Change the targets for both headers back to the entities.
     $this->drupalPostForm("admin/structure/views/nojs/handler/$id/page_1/header/entity_block", ['options[target]' => $block->id()], 'Apply');

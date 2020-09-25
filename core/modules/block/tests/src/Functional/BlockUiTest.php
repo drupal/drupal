@@ -277,22 +277,24 @@ class BlockUiTest extends BrowserTestBase {
    * Tests that the BlockForm populates machine name correctly.
    */
   public function testMachineNameSuggestion() {
+    // Check the form uses the raw machine name suggestion when no instance
+    // already exists.
     $url = 'admin/structure/block/add/test_block_instantiation/classy';
     $this->drupalGet($url);
-    $this->assertFieldByName('id', 'displaymessage', 'Block form uses raw machine name suggestion when no instance already exists.');
+    $this->assertSession()->fieldValueEquals('id', 'displaymessage');
     $edit = ['region' => 'content'];
     $this->drupalPostForm($url, $edit, 'Save block');
     $this->assertText('The block configuration has been saved.');
 
     // Now, check to make sure the form starts by autoincrementing correctly.
     $this->drupalGet($url);
-    $this->assertFieldByName('id', 'displaymessage_2', 'Block form appends _2 to plugin-suggested machine name when an instance already exists.');
+    $this->assertSession()->fieldValueEquals('id', 'displaymessage_2');
     $this->drupalPostForm($url, $edit, 'Save block');
     $this->assertText('The block configuration has been saved.');
 
     // And verify that it continues working beyond just the first two.
     $this->drupalGet($url);
-    $this->assertFieldByName('id', 'displaymessage_3', 'Block form appends _3 to plugin-suggested machine name when two instances already exist.');
+    $this->assertSession()->fieldValueEquals('id', 'displaymessage_3');
   }
 
   /**
