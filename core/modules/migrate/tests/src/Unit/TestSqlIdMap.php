@@ -81,4 +81,11 @@ class TestSqlIdMap extends Sql implements \Iterator {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function ensureTables() {
+    parent::ensureTables();
+  }
+
 }

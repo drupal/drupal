@@ -312,6 +312,8 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
 
   /**
    * Create the map and message tables if they don't already exist.
+   *
+   * @throws \Drupal\Core\Database\DatabaseException
    */
   protected function ensureTables() {
     if (!$this->getDatabase()->schema()->tableExists($this->mapTableName)) {
@@ -373,13 +375,46 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
         'not null' => FALSE,
         'description' => 'Hash of source row data, for detecting changes',
       ];
-      $schema = [
-        'description' => 'Mappings from source identifier value(s) to destination identifier value(s).',
-        'fields' => $fields,
-        'primary key' => [$this::SOURCE_IDS_HASH],
-        'indexes' => $indexes,
-      ];
-      $this->getDatabase()->schema()->createTable($this->mapTableName, $schema);
+
+      // To keep within the MySQL maximum key length of 3072 bytes we try
+      // different groupings of the source IDs. Groups are created in chunks
+      // starting at a chunk size equivalent to the number of the source IDs.
+      // On each loop the chunk size is reduced by one until either the map
+      // table is successfully created or the chunk_size is less than zero. If
+      // there are no source IDs the table is created.
+      $chunk_size = count($source_id_schema);
+      while ($chunk_size >= 0) {
+        $indexes = [];
+        if ($chunk_size > 0) {
+          foreach (array_chunk(array_keys($source_id_schema), $chunk_size) as $key => $index_columns) {
+            $index_name = ($key === 0) ? 'source' : "source$key";
+            $indexes[$index_name] = $index_columns;
+          }
+        }
+        $schema = [
+          'description' => 'Mappings from source identifier value(s) to destination identifier value(s).',
+          'fields' => $fields,
+          'primary key' => [$this::SOURCE_IDS_HASH],
+          'indexes' => $indexes,
+        ];
+
+        try {
+          $this->getDatabase()
+            ->schema()
+            ->createTable($this->mapTableName, $schema);
+          break;
+        }
+        catch (DatabaseException $e) {
+          $pdo_exception = $e->getPrevious();
+          $mysql_index_error = $pdo_exception instanceof \PDOException && $pdo_exception->getCode() === '42000' && $pdo_exception->errorInfo[1] === 1071;
+          $chunk_size--;
+          // Rethrow the exception if the source IDs can not be in smaller
+          // groups.
+          if (!$mysql_index_error || $chunk_size <= 0) {
+            throw $e;
+          }
+        }
+      }
 
       // Now do the message table.
       if (!$this->getDatabase()->schema()->tableExists($this->messageTableName())) {
