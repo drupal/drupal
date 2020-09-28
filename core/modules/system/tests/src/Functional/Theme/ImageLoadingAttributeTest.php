@@ -42,35 +42,8 @@ class ImageLoadingAttributeTest extends BrowserTestBase {
     $assert->elementAttributeContains('css', '#override-loading-attribute img', 'loading', 'eager');
 
     // Without image dimensions loading attribute is not generated.
-    $this->assertFalse($this->elementAttributeExists($assert, 'css', '#without-dimensions img', 'loading'));
-  }
-
-  /**
-   * Checks that an attribuet exists in an element.
-   *
-   * Exends Drupal\Tests\WebAssert::elementAttributeExists() method to returns a
-   * boolean type instead throwing an execption when attribuet is not found.
-   *
-   * @param \Drupal\Tests\WebAssert $assert
-   * @param string $selectorType
-   * @param string|array $selector
-   * @param string $attribute
-   *
-   * @see Drupal\Tests\WebAssert::elementAttributeExists()
-   *
-   * @return bool
-   *   Returns TRUE if $attribute exists, FALSE otherwise.
-   */
-  protected function elementAttributeExists(WebAssert $assert, $selectorType, $selector, $attribute) {
-    $attribute_exists = TRUE;
-    try {
-      $assert->elementAttributeExists($selectorType, $selector, $attribute);
-    }
-    catch (ElementHtmlException $th) {
-      $attribute_exists = FALSE;
-    }
-
-    return $attribute_exists;
+    $element = $assert->elementExists('css', '#without-dimensions img');
+    $this->assertFalse($element->hasAttribute('loading'));
   }
 
 }
