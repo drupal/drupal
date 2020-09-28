@@ -133,7 +133,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $value = $config_factory->get('form_test.object')->get('bananas');
     $this->assertSame('red', $value);
 
-    $this->drupalPostForm('form-test/object-builder', NULL, 'Save');
+    $this->drupalPostForm('form-test/object-builder', [], 'Save');
     $value = $config_factory->get('form_test.object')->get('bananas');
     $this->assertSame('', $value);
 
@@ -850,6 +850,16 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->drupalGet('test-escaped-characters');
     $this->assertNoEscaped('<div class="escaped">');
     $this->assertEscaped('Escaped: <"\'&>');
+  }
+
+  /**
+   * Tests deprecation of drupalPostForm().
+   *
+   * @group legacy
+   * @expectedDeprecation Calling Drupal\Tests\UiHelperTrait::drupalPostForm() with $edit set to NULL is deprecated in drupal:9.1.0 and the method is removed in drupal:10.0.0. Use $this->submitForm() instead. See https://www.drupal.org/node/3168858
+   */
+  public function testLegacyDrupalPostForm(): void {
+    $this->drupalPostForm(NULL, NULL, '');
   }
 
   /**

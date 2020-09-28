@@ -264,7 +264,7 @@ class InstallUninstallTest extends ModuleTestBase {
     $edit = [];
     $edit['uninstall[' . $module . ']'] = TRUE;
     $this->drupalPostForm('admin/modules/uninstall', $edit, t('Uninstall'));
-    $this->drupalPostForm(NULL, NULL, t('Uninstall'));
+    $this->drupalPostForm(NULL, [], t('Uninstall'));
     $this->assertText(t('The selected modules have been uninstalled.'), 'Modules status has been updated.');
     $this->assertModules([$module], FALSE);
 

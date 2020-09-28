@@ -113,7 +113,7 @@ class DateTimeTest extends BrowserTestBase {
     // Edit the custom date format and re-save without editing the format.
     $this->drupalGet('admin/config/regional/date-time');
     $this->clickLink(t('Edit'));
-    $this->drupalPostForm(NULL, NULL, t('Save format'));
+    $this->drupalPostForm(NULL, [], t('Save format'));
     // Verify that the user is redirected to the correct page.
     $this->assertSession()->addressEquals(Url::fromRoute('entity.date_format.collection'));
     $this->assertText(t('Custom date format updated.'), 'Custom date format successfully updated.');

@@ -47,7 +47,7 @@ class DependencyTest extends ModuleTestBase {
     // Assert that the language tables weren't enabled.
     $this->assertTableCount('language', FALSE);
 
-    $this->drupalPostForm(NULL, NULL, t('Continue'));
+    $this->drupalPostForm(NULL, [], t('Continue'));
     $this->assertText(t('2 modules have been enabled: Content Translation, Language.'), 'Modules status has been updated.');
     $this->assertModules(['content_translation', 'language'], TRUE);
 
@@ -217,13 +217,13 @@ class DependencyTest extends ModuleTestBase {
     // uninstalled.
     $edit = ['uninstall[forum]' => 'forum'];
     $this->drupalPostForm('admin/modules/uninstall', $edit, t('Uninstall'));
-    $this->drupalPostForm(NULL, NULL, t('Uninstall'));
+    $this->drupalPostForm(NULL, [], t('Uninstall'));
     $this->assertText(t('The selected modules have been uninstalled.'), 'Modules status has been updated.');
 
     // Uninstall comment module.
     $edit = ['uninstall[comment]' => 'comment'];
     $this->drupalPostForm('admin/modules/uninstall', $edit, t('Uninstall'));
-    $this->drupalPostForm(NULL, NULL, t('Uninstall'));
+    $this->drupalPostForm(NULL, [], t('Uninstall'));
     $this->assertText(t('The selected modules have been uninstalled.'), 'Modules status has been updated.');
   }
 

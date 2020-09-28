@@ -27,7 +27,7 @@ class ElementsAccessTest extends BrowserTestBase {
    * Ensures that child values are still processed when #access = FALSE.
    */
   public function testAccessFalse() {
-    $this->drupalPostForm('form_test/vertical-tabs-access', NULL, t('Submit'));
+    $this->drupalPostForm('form_test/vertical-tabs-access', [], t('Submit'));
     $this->assertNoText('This checkbox inside a vertical tab does not have its default value.');
     $this->assertNoText('This textfield inside a vertical tab does not have its default value.');
     $this->assertNoText('This checkbox inside a fieldset does not have its default value.');

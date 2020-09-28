@@ -165,7 +165,7 @@ class BooleanFieldTest extends BrowserTestBase {
     // Enable setting.
     $edit = ['fields[' . $field_name . '][settings_edit_form][settings][display_label]' => 1];
     $this->drupalPostForm(NULL, $edit, $field_name . "_plugin_settings_update");
-    $this->drupalPostForm(NULL, NULL, 'Save');
+    $this->drupalPostForm(NULL, [], 'Save');
 
     // Go again to the form display page and check if the setting
     // is stored and has the expected effect.

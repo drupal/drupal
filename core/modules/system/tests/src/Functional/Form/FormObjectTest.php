@@ -45,7 +45,7 @@ class FormObjectTest extends BrowserTestBase {
     $this->assertText('The FormTestArgumentsObject::buildForm() method was used for this form.');
     $elements = $this->xpath('//form[@id="form-test-form-test-arguments-object"]');
     $this->assertTrue(!empty($elements), 'The correct form ID was used.');
-    $this->drupalPostForm(NULL, NULL, t('Save'));
+    $this->drupalPostForm(NULL, [], t('Save'));
     $this->assertText('The FormTestArgumentsObject::validateForm() method was used for this form.');
     $this->assertText('The FormTestArgumentsObject::submitForm() method was used for this form.');
     $value = $config_factory->get('form_test.object')->get('bananas');
