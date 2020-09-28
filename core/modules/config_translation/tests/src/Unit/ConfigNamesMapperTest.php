@@ -611,7 +611,7 @@ class ConfigNamesMapperTest extends UnitTestCase {
   }
 
   /**
-   * Provides data for for ConfigNamesMapperTest::testHasTranslation().
+   * Provides data for ConfigNamesMapperTest::testHasTranslation().
    *
    * @return array
    *   An array of arrays, where each inner array has an array of values that
