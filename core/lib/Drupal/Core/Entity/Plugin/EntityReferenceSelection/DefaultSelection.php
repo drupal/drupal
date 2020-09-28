@@ -395,13 +395,16 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
    */
   public function createNewEntity($entity_type_id, $bundle, $label, $uid) {
     $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
-    $bundle_key = $entity_type->getKey('bundle');
-    $label_key = $entity_type->getKey('label');
 
-    $entity = $this->entityTypeManager->getStorage($entity_type_id)->create([
-      $bundle_key => $bundle,
-      $label_key => $label,
-    ]);
+    $values = [
+      $entity_type->getKey('label') => $label,
+    ];
+
+    if ($bundle_key = $entity_type->getKey('bundle')) {
+      $values[$bundle_key] = $bundle;
+    }
+
+    $entity = $this->entityTypeManager->getStorage($entity_type_id)->create($values);
 
     if ($entity instanceof EntityOwnerInterface) {
       $entity->setOwnerId($uid);
