@@ -46,10 +46,16 @@ use Drupal\Core\Url;
  *   are called to validate the input. Arguments: $element, $form_state, $form.
  * - #field_prefix: (string) Prefix to display before the HTML input element.
  *   Should be translated, normally. If it is not already wrapped in a safe
- *   markup object, will be filtered for XSS safety.
+ *   markup object, will be filtered for XSS safety. Note that the contents of
+ *   this prefix are wrapped in a <span> element, so the value should not
+ *   contain block level HTML. Any HTML added must be valid, i.e. any tags
+ *   introduced inside this prefix must also be terminated within the prefix.
  * - #field_suffix: (string) Suffix to display after the HTML input element.
  *   Should be translated, normally. If it is not already wrapped in a safe
- *   markup object, will be filtered for XSS safety.
+ *   markup object, will be filtered for XSS safety. Note that the contents of
+ *   this suffix are wrapped in a <span> element, so the value should not
+ *   contain block level HTML. Any HTML must also be valid, i.e. any tags
+ *   introduce inside this suffix must also be terminated within the suffix.
  * - #input: (bool, internal) Whether or not the element accepts input.
  * - #parents: (string[], read-only) Array of names of the element's parents
  *   for purposes of getting values out of $form_state. See also

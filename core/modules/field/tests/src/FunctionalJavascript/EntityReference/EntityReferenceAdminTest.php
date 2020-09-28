@@ -88,7 +88,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
 
     $page->findField('new_storage_type')->setValue('entity_reference');
     $assert_session->waitForField('label')->setValue('Test');
-    $machine_name = $assert_session->waitForElement('xpath', '//*[@id="edit-label-machine-name-suffix"]/span[2]/span[contains(text(), "field_test")]');
+    $machine_name = $assert_session->waitForElement('xpath', '//*[@id="edit-label-machine-name-suffix"]/span[contains(text(), "field_test")]');
     $this->assertNotEmpty($machine_name);
     $page->pressButton('Save and continue');
 

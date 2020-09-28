@@ -187,9 +187,7 @@ class FieldStorageAddForm extends FormBase {
     $field_prefix = $this->config('field_ui.settings')->get('field_prefix');
     $form['new_storage_wrapper']['field_name'] = [
       '#type' => 'machine_name',
-      // This field should stay LTR even for RTL languages.
-      '#field_prefix' => '<span dir="ltr">' . $field_prefix,
-      '#field_suffix' => '</span>&lrm;',
+      '#field_prefix' => $field_prefix,
       '#size' => 15,
       '#description' => $this->t('A unique machine-readable name containing letters, numbers, and underscores.'),
       // Calculate characters depending on the length of the field prefix
