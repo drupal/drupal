@@ -140,7 +140,7 @@
   margin-top: calc(var(--space-m) / -2);
   content: "";
   transition: transform var(--details-transform-transition-duration) ease-in 0s;
-  transform: rotate(0); /* LTR */
+  transform: rotate(90deg); /* LTR */
   text-align: center;
   background-image: url(../../images/icons/545560/chevron-right.svg);
   background-size: contain;
@@ -148,7 +148,7 @@
 [dir="rtl"] .claro-details__summary::before {
   right: var(--space-s);
   left: auto;
-  transform: rotate(180deg);
+  transform: rotate(-270deg);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -161,16 +161,16 @@
   .claro-details__summary::before {
     width: 0.5625rem;
     height: 0.5625rem;
-    margin-top: calc(0.5625rem / -2);
     transition: transform var(--details-transform-transition-duration) ease-in 0s, margin var(--details-transform-transition-duration) ease-in 0s;
-    transform: rotate(45deg); /* LTR */
+    transform: rotate(135deg); /* LTR */
     border: 0.125rem solid;
-    border-width: 0.125rem 0.125rem 0 0;
+    border-bottom-color: transparent;
+    border-left-color: transparent;
     background: none;
   }
 
   [dir="rtl"] .claro-details__summary::before {
-    transform: rotate(225deg);
+    transform: rotate(-225deg);
   }
 }
 
@@ -271,7 +271,7 @@
 }
 
 .claro-details[open] > .claro-details__summary::before {
-  transform: rotate(90deg); /* for LTR and RTL */
+  transform: rotate(-90deg); /* for LTR and RTL */
 }
 
 @media screen and (-ms-high-contrast: active) {
@@ -282,9 +282,9 @@
 
   .claro-details[open] > .claro-details__summary::before,
   [dir="rtl"] .claro-details[open] > .claro-details__summary::before {
-    margin-top: calc((0.5625rem / -2) - 0.125rem);
+    margin-top: calc(0.125rem / -2);
     margin-right: 0.125rem;
-    transform: rotate(135deg); /* for LTR and RTL */
+    transform: rotate(-45deg); /* for LTR and RTL */
     background: none;
   }
 }
