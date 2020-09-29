@@ -19,7 +19,7 @@ use Drupal\Core\Test\TestDatabase;
 use Drupal\Tests\ConfigTestTrait;
 use Drupal\Tests\RandomGeneratorTrait;
 use Drupal\Tests\TestRequirementsTrait;
-use Drupal\Tests\Traits\PHPUnit8Warnings;
+use Drupal\Tests\Traits\PhpUnitWarnings;
 use Drupal\TestTools\Comparator\MarkupInterfaceComparator;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\TestCase;
@@ -78,7 +78,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   use RandomGeneratorTrait;
   use ConfigTestTrait;
   use TestRequirementsTrait;
-  use PHPUnit8Warnings;
+  use PhpUnitWarnings;
 
   /**
    * {@inheritdoc}
