@@ -128,6 +128,8 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
 
     $this->assertEntity('node.blog.teaser');
     $this->assertComponent('node.blog.teaser', 'body', 'text_summary_or_trimmed', 'hidden', 0);
+    $this->assertComponent('node.blog.default', 'field_termplain', 'entity_reference_label', 'above', 13);
+    $this->assertComponent('node.blog.default', 'field_termrss', 'entity_reference_label', 'above', 14);
 
     $this->assertEntity('node.book.default');
     $this->assertComponent('node.book.default', 'body', 'text_default', 'hidden', 0);
