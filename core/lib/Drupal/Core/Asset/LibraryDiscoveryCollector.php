@@ -136,6 +136,11 @@ class LibraryDiscoveryCollector extends CacheCollector {
     $libraries_extend = $this->themeManager->getActiveTheme()->getLibrariesExtend();
     if (!empty($libraries_extend["$extension/$library_name"])) {
       foreach ($libraries_extend["$extension/$library_name"] as $library_extend_name) {
+        if (isset($library_definition['deprecated'])) {
+          $extend_message = sprintf('Theme "%s" is extending a deprecated library.', $extension);
+          $library_deprecation = str_replace('%library_id%', "$extension/$library_name", $library_definition['deprecated']);
+          @trigger_error("$extend_message $library_deprecation", E_USER_DEPRECATED);
+        }
         if (!is_string($library_extend_name)) {
           // Only string library names are allowed.
           throw new InvalidLibrariesExtendSpecificationException('The libraries-extend specification for each library must be a list of strings.');
