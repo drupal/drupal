@@ -219,11 +219,10 @@ form.password-confirm:
     component:
       css/components/form--password-confirm.css: {}
   js:
-    js/user.js: {}
+    js/user.theme.js: {}
   dependencies:
-    - core/jquery
+    - core/drupal.object.assign
     - core/drupal
-    - core/jquery.once
     - claro/global-styling
 
 views:
