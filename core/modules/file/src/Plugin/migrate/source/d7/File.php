@@ -88,7 +88,7 @@ class File extends DrupalSqlBase {
     // At this point, $path could be an absolute path or a relative path,
     // depending on how the scheme's variable was set. So we need to shear out
     // the source_base_path in order to make them all relative.
-    $path = str_replace($this->configuration['constants']['source_base_path'], NULL, $path);
+    $path = preg_replace('#' . preg_quote($this->configuration['constants']['source_base_path']) . '#', '', $path, 1);
     $row->setSourceProperty('filepath', $path);
     return parent::prepareRow($row);
   }
