@@ -172,7 +172,7 @@ class BatchBuilderTest extends UnitTestCase {
       ->setQueue('BatchName', '\Drupal\Core\Queue\Batch')
       ->toArray();
 
-    $this->assertArrayEquals([
+    $this->assertEquals([
       'name' => 'BatchName',
       'class' => '\Drupal\Core\Queue\Batch',
     ], $batch['queue'], 'Batch queue has been set.');

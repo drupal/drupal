@@ -200,7 +200,7 @@ abstract class MigrateTestCase extends UnitTestCase {
       if (empty($expected_value && $actual_value)) {
         return;
       }
-      $this->assertArrayEquals($expected_value, $actual_value, $message);
+      $this->assertEquals($expected_value, $actual_value, $message);
     }
     else {
       $this->assertSame((string) $expected_value, (string) $actual_value, $message);

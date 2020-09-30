@@ -123,7 +123,7 @@ class MigrationTest extends UnitTestCase {
 
     $requirements = ['test_a', 'test_b', 'test_c', 'test_d'];
     $migration->setRequirements($requirements);
-    $this->assertArrayEquals($requirements, $migration->getRequirements());
+    $this->assertEquals($requirements, $migration->getRequirements());
   }
 
   /**

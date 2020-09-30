@@ -166,7 +166,7 @@ class SubProcessTest extends MigrateTestCase {
     // values ended up in the proper destinations, and that the value of the
     // key (@id) is the same as the destination ID (42).
     $new_value = $plugin->transform($current_value, $migrate_executable, $row, 'test');
-    $this->assertArrayEquals([], $new_value);
+    $this->assertSame([], $new_value);
   }
 
   /**

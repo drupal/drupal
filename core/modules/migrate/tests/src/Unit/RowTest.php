@@ -366,7 +366,7 @@ class RowTest extends UnitTestCase {
    */
   public function testGetMultiple(array $keys, array $expected_values) {
     $row = $this->createRowWithDestinationProperties($this->testGetSourceProperties, $this->testGetSourceIds, $this->testGetDestinationProperties);
-    $this->assertArrayEquals(array_combine($keys, $expected_values), $row->getMultiple($keys));
+    $this->assertEquals(array_combine($keys, $expected_values), $row->getMultiple($keys));
   }
 
   /**

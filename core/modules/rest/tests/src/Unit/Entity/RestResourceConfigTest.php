@@ -36,7 +36,7 @@ class RestResourceConfigTest extends UnitTestCase {
       'configuration' => $configuration,
     ], 'rest_resource_config');
 
-    $this->assertArrayEquals($expected, $entity->getMethods());
+    $this->assertEquals($expected, $entity->getMethods());
   }
 
 }
