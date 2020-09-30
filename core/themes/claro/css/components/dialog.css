@@ -15,22 +15,12 @@
   border: 0;
   border-radius: 4px;
   background: transparent;
-  box-shadow: 0
-0
-1rem
--0.25rem
-#222330;
+  box-shadow: 0 0 1rem -0.25rem #222330;
 }
 
 .ui-dialog:focus {
-  outline: 2px
-dotted
-transparent;
-  box-shadow: 0
-0
-0
-3px
-#26a769;
+  outline: 2px dotted transparent;
+  box-shadow: 0 0 0 3px #26a769;
 }
 
 @media all and (max-width: 48em) { /* 768px */
@@ -89,9 +79,7 @@ transparent;
 
 .ui-dialog .ui-dialog-titlebar-close:focus {
   border-color: #26a769;
-  outline: 2px
-dotted
-transparent;
+  outline: 2px dotted transparent;
   box-shadow: none;
 }
 

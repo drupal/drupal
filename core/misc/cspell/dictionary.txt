@@ -109,6 +109,7 @@ autoloader
 autoloaders
 autoloading
 autop
+autoplace
 autoplay
 autoreply
 autosave

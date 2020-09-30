@@ -192,7 +192,7 @@
  */
 /* stylelint-disable-next-line unit-whitelist */
 @media not all and (min-resolution: 0.001dpcm) {
-  @media {
+  @supports (-webkit-appearance: none) {
     .claro-details__summary::before {
       transition: none;
     }
@@ -339,7 +339,7 @@
  */
 /* stylelint-disable-next-line unit-whitelist */
 @media not all and (min-resolution: 0.001dpcm) {
-  @media {
+  @supports (-webkit-appearance: none) {
     .claro-details__summary::after {
       transition: none;
     }

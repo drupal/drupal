@@ -168,6 +168,7 @@ tr .form-item,
 }
 
 .form-actions .ajax-progress--throbber {
+  -ms-grid-row-align: center;
   align-self: center;
 }
 

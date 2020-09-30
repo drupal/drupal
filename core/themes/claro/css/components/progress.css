@@ -46,9 +46,7 @@
   height: calc(1rem - 2px);
   margin-top: -1px;
   margin-left: -1px; /* LTR */
-  transition: width
-0.5s
-ease-out;
+  transition: width 0.5s ease-out;
   border: 1px #003cc5 solid;
   border-radius: 1rem;
   background-color: #003cc5;

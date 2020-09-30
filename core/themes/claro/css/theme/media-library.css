@@ -161,6 +161,7 @@
  */
 
 .button.media-library-add-form-oembed-submit {
+  -ms-grid-row-align: center;
   align-self: center;
 }
 

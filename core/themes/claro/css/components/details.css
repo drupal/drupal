@@ -43,10 +43,7 @@
   border: 1px solid rgba(216, 217, 224, 0.8);
   border-radius: 2px;
   background-color: #fff;
-  box-shadow: 0
-2px
-4px
-rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .claro-details--accordion-item,
@@ -204,7 +201,7 @@ rgba(0, 0, 0, 0.1);
 /* stylelint-disable-next-line unit-whitelist */
 
 @media not all and (min-resolution: 0.001dpcm) {
-  @media {
+  @supports (-webkit-appearance: none) {
     .claro-details__summary::before {
       transition: none;
     }
@@ -358,7 +355,7 @@ rgba(0, 0, 0, 0.1);
 /* stylelint-disable-next-line unit-whitelist */
 
 @media not all and (min-resolution: 0.001dpcm) {
-  @media {
+  @supports (-webkit-appearance: none) {
     .claro-details__summary::after {
       transition: none;
     }
