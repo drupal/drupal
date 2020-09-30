@@ -103,13 +103,13 @@ class LibraryDiscoveryTest extends UnitTestCase {
    * Tests getting a deprecated library.
    */
   public function testAssetLibraryDeprecation() {
-    $previous_error_handler = set_error_handler(function ($severity, $message, $file, $line, $context) use (&$previous_error_handler) {
+    $previous_error_handler = set_error_handler(function ($severity, $message, $file, $line) use (&$previous_error_handler) {
       // Convert deprecation error into a catchable exception.
       if ($severity === E_USER_DEPRECATED) {
         throw new \ErrorException($message, 0, $severity, $file, $line);
       }
       if ($previous_error_handler) {
-        return $previous_error_handler($severity, $message, $file, $line, $context);
+        return $previous_error_handler($severity, $message, $file, $line);
       }
     });
 

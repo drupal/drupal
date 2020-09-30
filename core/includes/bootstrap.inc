@@ -299,13 +299,10 @@ function watchdog_exception($type, Exception $exception, $message = NULL, $varia
  *   (optional) The filename that the error was raised in.
  * @param $line
  *   (optional) The line number the error was raised at.
- * @param $context
- *   (optional) An array that points to the active symbol table at the point the
- *   error occurred.
  */
-function _drupal_error_handler($error_level, $message, $filename = NULL, $line = NULL, $context = NULL) {
+function _drupal_error_handler($error_level, $message, $filename = NULL, $line = NULL) {
   require_once __DIR__ . '/errors.inc';
-  _drupal_error_handler_real($error_level, $message, $filename, $line, $context);
+  _drupal_error_handler_real($error_level, $message, $filename, $line);
 }
 
 /**
