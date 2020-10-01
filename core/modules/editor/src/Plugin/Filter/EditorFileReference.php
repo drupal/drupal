@@ -56,7 +56,7 @@ class EditorFileReference extends FilterBase implements ContainerFactoryPluginIn
   public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityRepositoryInterface $entity_repository, ImageFactory $image_factory = NULL) {
     $this->entityRepository = $entity_repository;
     if ($image_factory === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $image_factory argument is deprecated in drupal:9.1.0 and will be required in drupal:10.0.0. See https://www.drupal.org/node/3173719', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without the $image_factory argument is deprecated in drupal:9.1.0 and is required in drupal:10.0.0. See https://www.drupal.org/node/3173719', E_USER_DEPRECATED);
       $image_factory = \Drupal::service('image.factory');
     }
     $this->imageFactory = $image_factory;
