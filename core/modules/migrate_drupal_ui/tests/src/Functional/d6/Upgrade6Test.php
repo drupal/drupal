@@ -29,7 +29,6 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
     'book',
     'forum',
     'statistics',
-    'migration_provider_test',
   ];
 
   /**

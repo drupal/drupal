@@ -190,7 +190,7 @@ class RegistryTest extends UnitTestCase {
     $reflection_method->setAccessible(TRUE);
     $reflection_method->invokeArgs($this->registry, [&$hooks, $theme->reveal()]);
 
-    $this->assertArrayEquals($expected, $hooks);
+    $this->assertEquals($expected, $hooks);
   }
 
   /**

@@ -154,7 +154,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
     $this->assertText(t('Deleting a vocabulary will delete all the terms in it. This action cannot be undone.'), '[confirm deletion] Inform that all terms will be deleted.');
 
     // Confirm deletion.
-    $this->drupalPostForm(NULL, NULL, t('Delete'));
+    $this->drupalPostForm(NULL, [], t('Delete'));
     $this->assertRaw(t('Deleted vocabulary %name.', ['%name' => $vocabulary->label()]));
     $this->container->get('entity_type.manager')->getStorage('taxonomy_vocabulary')->resetCache();
     $this->assertNull(Vocabulary::load($vid), 'Vocabulary not found.');

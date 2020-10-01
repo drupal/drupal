@@ -212,7 +212,7 @@ class DerivativeDiscoveryDecoratorTest extends UnitTestCase {
 
     $expected = $definitions['non_container_aware_discovery'];
     $expected['id'] = 'non_container_aware_discovery:test_discovery_1';
-    $this->assertArrayEquals($expected, $returned_definitions['non_container_aware_discovery:test_discovery_1']);
+    $this->assertEquals($expected, $returned_definitions['non_container_aware_discovery:test_discovery_1']);
   }
 
   /**
@@ -252,7 +252,7 @@ class DerivativeDiscoveryDecoratorTest extends UnitTestCase {
 
     $expected = $base_definition;
     $expected['id'] = 'non_container_aware_discovery:test_discovery_1';
-    $this->assertArrayEquals($expected, $discovery->getDefinition('non_container_aware_discovery:test_discovery_1'));
+    $this->assertEquals($expected, $discovery->getDefinition('non_container_aware_discovery:test_discovery_1'));
   }
 
 }

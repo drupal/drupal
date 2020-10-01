@@ -98,7 +98,7 @@ class HelpTopicTest extends BrowserTestBase {
     $session->pageTextContains('Topics can be provided by modules or themes');
     $session->responseHeaderContains('X-Drupal-Cache-Tags', 'core.extension');
 
-    // Verify links for for help topics and order.
+    // Verify links for help topics and order.
     $page_text = $this->getTextContent();
     $start = strpos($page_text, 'Topics can be provided');
     $pos = $start;

@@ -431,6 +431,7 @@ details.fieldset-no-legend {
 }
 
 [dir="rtl"] .views-ui-rearrange-filter-form tr td:last-child {
+  border-right: 0;
   border-right: initial;
   border-left: medium none;
 }
@@ -471,6 +472,7 @@ details.fieldset-no-legend {
 }
 
 [dir="rtl"] .views-query-info table tr td:last-child {
+  border-right: 0;
   border-right: initial;
   border-left: 0 none;
 }

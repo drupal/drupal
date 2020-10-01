@@ -598,7 +598,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
       ->willReturnArgument(0);
 
     // Exercise getFields().
-    $this->assertArrayEquals(
+    $this->assertEquals(
       $expected,
       $mock_base->getFields($include_computed)
     );

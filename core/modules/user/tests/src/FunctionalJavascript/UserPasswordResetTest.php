@@ -92,7 +92,7 @@ class UserPasswordResetTest extends WebDriverTestBase {
     $this->drupalGet($resetURL);
 
     // Login
-    $this->drupalPostForm(NULL, NULL, t('Log in'));
+    $this->drupalPostForm(NULL, [], t('Log in'));
 
     // Generate file.
     $image_file = current($this->drupalGetTestFiles('image'));

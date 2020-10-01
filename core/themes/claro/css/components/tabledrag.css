@@ -275,7 +275,7 @@ body.drag {
 /* stylelint-disable-next-line unit-whitelist */
 
 @media not all and (min-resolution: 0.001dpcm) {
-  @media {
+  @supports (-webkit-appearance: none) {
     .tabledrag-cell-content .tree {
       overflow: visible;
       min-height: 0;

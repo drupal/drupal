@@ -31,7 +31,6 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
     'forum',
     'rdf',
     'statistics',
-    'migration_provider_test',
   ];
 
   /**

@@ -108,7 +108,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     $this->assertSession()->titleEquals('Reset password | Drupal');
 
     // Check successful login.
-    $this->drupalPostForm(NULL, NULL, t('Log in'));
+    $this->drupalPostForm(NULL, [], t('Log in'));
     $this->assertSession()->linkExists('Log out');
     $this->assertSession()->titleEquals($this->account->getAccountName() . ' | Drupal');
 
@@ -125,7 +125,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     // Log out, and try to log in again using the same one-time link.
     $this->drupalLogout();
     $this->drupalGet($resetURL);
-    $this->drupalPostForm(NULL, NULL, t('Log in'));
+    $this->drupalPostForm(NULL, [], t('Log in'));
     $this->assertText(t('You have tried to use a one-time login link that has either been used or is no longer valid. Please request a new one using the form below.'), 'One-time link is no longer valid.');
 
     // Request a new password again, this time using the email address.
@@ -141,7 +141,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     // not cause an error.
     $resetURL = $this->getResetURL();
     $this->drupalGet($resetURL);
-    $this->drupalPostForm(NULL, NULL, t('Log in'));
+    $this->drupalPostForm(NULL, [], t('Log in'));
     $this->drupalGet('user/' . $this->account->id() . '/edit');
     $this->assertNoText('Expected user_string to be a string, NULL given');
     $this->drupalLogout();
@@ -151,7 +151,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     $bogus_timestamp = REQUEST_TIME - $timeout - 60;
     $_uid = $this->account->id();
     $this->drupalGet("user/reset/$_uid/$bogus_timestamp/" . user_pass_rehash($this->account, $bogus_timestamp));
-    $this->drupalPostForm(NULL, NULL, t('Log in'));
+    $this->drupalPostForm(NULL, [], t('Log in'));
     $this->assertText(t('You have tried to use a one-time login link that has expired. Please request a new one using the form below.'), 'Expired password reset request rejected.');
 
     // Create a user, block the account, and verify that a login link is denied.
@@ -178,7 +178,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     $this->account->setEmail("1" . $this->account->getEmail());
     $this->account->save();
     $this->drupalGet($old_email_reset_link);
-    $this->drupalPostForm(NULL, NULL, t('Log in'));
+    $this->drupalPostForm(NULL, [], t('Log in'));
     $this->assertText(t('You have tried to use a one-time login link that has either been used or is no longer valid. Please request a new one using the form below.'), 'One-time link is no longer valid.');
 
     // Verify a password reset link will automatically log a user when /login is
@@ -225,7 +225,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     $another_account = $this->drupalCreateUser();
     $this->drupalLogin($another_account);
     $this->drupalGet('user/password');
-    $this->drupalPostForm(NULL, NULL, t('Submit'));
+    $this->drupalPostForm(NULL, [], t('Submit'));
 
     // Click the reset URL while logged and change our password.
     $resetURL = $this->getResetURL();
@@ -246,12 +246,12 @@ class UserPasswordResetTest extends BrowserTestBase {
 
     // Reset the password by username via the password reset page.
     $this->drupalGet('user/password');
-    $this->drupalPostForm(NULL, NULL, t('Submit'));
+    $this->drupalPostForm(NULL, [], t('Submit'));
 
     // Click the reset URL while logged and change our password.
     $resetURL = $this->getResetURL();
     $this->drupalGet($resetURL);
-    $this->drupalPostForm(NULL, NULL, t('Log in'));
+    $this->drupalPostForm(NULL, [], t('Log in'));
 
     // Change the password.
     $password = \Drupal::service('password_generator')->generate();
@@ -452,7 +452,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     $reset_url = user_pass_reset_url($user1);
     $attack_reset_url = str_replace("user/reset/{$user1->id()}", "user/reset/{$user2->id()}", $reset_url);
     $this->drupalGet($attack_reset_url);
-    $this->drupalPostForm(NULL, NULL, t('Log in'));
+    $this->drupalPostForm(NULL, [], t('Log in'));
     $this->assertNoText($user2->getAccountName(), 'The invalid password reset page does not show the user name.');
     $this->assertSession()->addressEquals('user/password');
     $this->assertText('You have tried to use a one-time login link that has either been used or is no longer valid. Please request a new one using the form below.');

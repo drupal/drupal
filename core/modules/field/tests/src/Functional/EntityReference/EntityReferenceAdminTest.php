@@ -103,7 +103,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
       'name[node_field_data.nid]' => 1,
     ];
     $this->drupalPostForm('admin/structure/views/nojs/add-handler/node_test_view/entity_reference_1/sort', $edit, t('Add and configure sort criteria'));
-    $this->drupalPostForm(NULL, NULL, t('Apply'));
+    $this->drupalPostForm(NULL, [], t('Apply'));
 
     $this->drupalPostForm('admin/structure/views/view/node_test_view/edit/entity_reference_1', [], t('Save'));
     $this->clickLink(t('Settings'));

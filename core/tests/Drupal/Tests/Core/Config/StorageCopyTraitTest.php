@@ -28,7 +28,7 @@ class StorageCopyTraitTest extends UnitTestCase {
     $source = new MemoryStorage();
     $target = new MemoryStorage();
     // Empty the storage should be the same.
-    $this->assertArrayEquals(self::toArray($source), self::toArray($target));
+    $this->assertEquals(self::toArray($source), self::toArray($target));
 
     // When the source is populated, they are not the same any more.
     $this->generateRandomData($source, $source_collections);
@@ -54,9 +54,9 @@ class StorageCopyTraitTest extends UnitTestCase {
     // After copying they are the same, this asserts that items not present
     // in the source get removed from the target.
     self::replaceStorageContents($source, $target);
-    $this->assertArrayEquals($source_data, self::toArray($target));
+    $this->assertEquals($source_data, self::toArray($target));
     // Assert that the copy method did indeed not change the source.
-    $this->assertArrayEquals($source_data, self::toArray($source));
+    $this->assertEquals($source_data, self::toArray($source));
 
     // Assert that the active collection is the same as the original source.
     $this->assertEquals($source_name, $source->getCollectionName());
@@ -154,7 +154,7 @@ class StorageCopyTraitTest extends UnitTestCase {
         $this->assertFalse($target->exists($name));
       }
       else {
-        $this->assertArrayEquals($source->read($name), $target->read($name));
+        $this->assertEquals($source->read($name), $target->read($name));
       }
     }
 

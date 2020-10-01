@@ -60,8 +60,8 @@ class PharExtensionInterceptor implements Assertable {
       return FALSE;
     }
     // If the stream wrapper is registered by invoking a phar file that does
-    // not not have .phar extension then this should be allowed. For
-    // example, some CLI tools recommend removing the extension.
+    // not have .phar extension then this should be allowed. For example, some
+    // CLI tools recommend removing the extension.
     $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
     // Find the last entry in the backtrace containing a 'file' key as
     // sometimes the last caller is executed outside the scope of a file. For

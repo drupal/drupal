@@ -1,0 +1,7 @@
+name: Migration Tag Test
+type: module
+description: Provide migrations for testing 'migration_tags' property
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:migrate

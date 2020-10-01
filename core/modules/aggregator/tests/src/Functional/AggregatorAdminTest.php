@@ -69,26 +69,23 @@ class AggregatorAdminTest extends AggregatorTestBase {
     $feed = $this->createFeed($this->getRSS091Sample());
     $this->drupalGet('admin/config/services/aggregator');
 
-    $result = $this->xpath('//table/tbody/tr');
     // Check if the amount of feeds in the overview matches the amount created.
-    $this->assertCount(1, $result, 'Created feed is found in the overview');
+    $this->assertSession()->elementsCount('xpath', '//table/tbody/tr', 1);
+
     // Check if the fields in the table match with what's expected.
-    $link = $this->xpath('//table/tbody/tr//td[1]/a');
-    $this->assertEquals($feed->label(), $link[0]->getText());
+    $this->assertSession()->elementTextContains('xpath', '//table/tbody/tr//td[1]/a', $feed->label());
     $count = $this->container->get('entity_type.manager')->getStorage('aggregator_item')->getItemCount($feed);
-    $td = $this->xpath('//table/tbody/tr//td[2]');
-    $this->assertEquals(\Drupal::translation()->formatPlural($count, '1 item', '@count items'), $td[0]->getText());
+    $this->assertSession()->elementTextContains('xpath', '//table/tbody/tr//td[2]', \Drupal::translation()->formatPlural($count, '1 item', '@count items'));
 
     // Update the items of the first feed.
     $feed->refreshItems();
     $this->drupalGet('admin/config/services/aggregator');
-    $result = $this->xpath('//table/tbody/tr');
+    $this->assertSession()->elementsCount('xpath', '//table/tbody/tr', 1);
+
     // Check if the fields in the table match with what's expected.
-    $link = $this->xpath('//table/tbody/tr//td[1]/a');
-    $this->assertEquals($feed->label(), $link[0]->getText());
+    $this->assertSession()->elementTextContains('xpath', '//table/tbody/tr//td[1]/a', $feed->label());
     $count = $this->container->get('entity_type.manager')->getStorage('aggregator_item')->getItemCount($feed);
-    $td = $this->xpath('//table/tbody/tr//td[2]');
-    $this->assertEquals(\Drupal::translation()->formatPlural($count, '1 item', '@count items'), $td[0]->getText());
+    $this->assertSession()->elementTextContains('xpath', '//table/tbody/tr//td[2]', \Drupal::translation()->formatPlural($count, '1 item', '@count items'));
   }
 
 }

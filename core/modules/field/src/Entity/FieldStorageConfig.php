@@ -796,7 +796,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    * @param string $field_name
    *   Name of the field.
    *
-   * @return static
+   * @return \Drupal\field\FieldStorageConfigInterface|null
    *   The field config entity if one exists for the provided field name,
    *   otherwise NULL.
    */

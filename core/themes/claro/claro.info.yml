@@ -19,9 +19,9 @@ package: Core
 version: VERSION
 experimental: true
 libraries:
- - core/drupal.message
- - core/normalize
- - claro/global-styling
+  - core/drupal.message
+  - core/normalize
+  - claro/global-styling
 libraries-override:
   system/base:
     css:
@@ -69,7 +69,10 @@ libraries-override:
       component:
         assets/vendor/jquery.ui/themes/base/dialog.css: false
 
-  user/drupal.user: claro/form.password-confirm
+  user/drupal.user:
+    css:
+      component:
+        css/user.module.css: false
 
   field_ui/drupal.field_ui:
     css:
@@ -118,6 +121,8 @@ libraries-extend:
     - claro/drupal.shortcut
   core/drupal.ajax:
     - claro/ajax
+  user/drupal.user:
+    - claro/form.password-confirm
   views/views.module:
     - claro/views
   media/media_embed_ckeditor_theme:

@@ -132,8 +132,8 @@ class Entity extends TokenizeAreaPluginBase {
     // @todo Use a method to check for tokens in
     //   https://www.drupal.org/node/2396607.
     if (strpos($this->options['target'], '{{') === FALSE) {
-      // @todo If the entity does not exist, this will will show the config
-      //   target identifier. Decide if this is the correct behavior in
+      // @todo If the entity does not exist, this will show the config target
+      //   identifier. Decide if this is the correct behavior in
       //   https://www.drupal.org/node/2415391.
       if ($target_entity = $this->entityRepository->loadEntityByConfigTarget($this->entityType, $this->options['target'])) {
         $target = $target_entity->id();

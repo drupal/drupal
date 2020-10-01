@@ -18,7 +18,7 @@ class RequirementsExceptionTest extends UnitTestCase {
    */
   public function testGetRequirements() {
     $exception = new RequirementsException('Missing requirements ', ['requirements' => $this->missingRequirements]);
-    $this->assertArrayEquals(['requirements' => $this->missingRequirements], $exception->getRequirements());
+    $this->assertEquals(['requirements' => $this->missingRequirements], $exception->getRequirements());
   }
 
   /**

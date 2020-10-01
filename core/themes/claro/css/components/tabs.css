@@ -24,14 +24,9 @@
   flex-direction: column;
   width: 100%;
   margin: 0 0 1.5rem 0;
-  border: 1px
-solid
-#d4d4d8;
+  border: 1px solid #d4d4d8;
   border-radius: 2px;
-  box-shadow: 0
-2px
-4px
-rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 [dir="rtl"] .tabs {
@@ -40,9 +35,7 @@ rgba(0, 0, 0, 0.1);
 
 .tabs__tab {
   position: relative;
-  border-bottom: 1px
-solid
-#d4d4d8;
+  border-bottom: 1px solid #d4d4d8;
   background-color: #fafbfd;
   font-size: 0.889rem;
   font-weight: bold;
@@ -56,10 +49,7 @@ solid
   display: flex;
   justify-content: space-between;
   background-color: #fff;
-  box-shadow: 0
-2px
-4px
-rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .tabs__link {
@@ -185,15 +175,11 @@ rgba(0, 0, 0, 0.1);
   width: 3rem;
   padding-right: 1px;
   text-align: center;
-  border-left: 1px
-solid
-rgba(216, 217, 224, 0.8); /* LTR */
+  border-left: 1px solid rgba(216, 217, 224, 0.8); /* LTR */
 }
 
 [dir="rtl"] .tabs__trigger {
-  border-right: 1px
-solid
-rgba(216, 217, 224, 0.8);
+  border-right: 1px solid rgba(216, 217, 224, 0.8);
   border-left: none;
 }
 

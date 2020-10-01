@@ -253,7 +253,7 @@ class DisplayTest extends UITestBase {
     $this->assertNoFieldByXpath('//input[@type="submit"]', 'Enable ' . $display_title);
 
     // Disable the display so we can test the rendering of the "Enable" button.
-    $this->drupalPostForm(NULL, NULL, 'Disable ' . $display_title);
+    $this->drupalPostForm(NULL, [], 'Disable ' . $display_title);
     $this->assertFieldByXpath('//input[@type="submit"]', 'Enable ' . $display_title);
     $this->assertNoFieldByXpath('//input[@type="submit"]', 'Disable ' . $display_title);
 

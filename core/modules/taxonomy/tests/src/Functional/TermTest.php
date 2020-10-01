@@ -222,7 +222,7 @@ class TermTest extends TaxonomyTestBase {
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Preview'));
     // Ensure that term is displayed when previewing the node.
     $this->assertSession()->pageTextContainsOnce($term2->getName());
-    $this->drupalPostForm('node/' . $node->id() . '/edit', NULL, t('Preview'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', [], t('Preview'));
     // Ensure that term is displayed when previewing the node again.
     $this->assertSession()->pageTextContainsOnce($term2->getName());
   }
@@ -304,7 +304,7 @@ class TermTest extends TaxonomyTestBase {
     // Delete term 1 from the term edit page.
     $this->drupalGet('taxonomy/term/' . $term_objects['term1']->id() . '/edit');
     $this->clickLink(t('Delete'));
-    $this->drupalPostForm(NULL, NULL, t('Delete'));
+    $this->drupalPostForm(NULL, [], t('Delete'));
 
     // Delete term 2 from the term delete page.
     $this->drupalGet('taxonomy/term/' . $term_objects['term2']->id() . '/delete');
@@ -390,7 +390,7 @@ class TermTest extends TaxonomyTestBase {
     // Delete the term.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/edit');
     $this->clickLink(t('Delete'));
-    $this->drupalPostForm(NULL, NULL, t('Delete'));
+    $this->drupalPostForm(NULL, [], t('Delete'));
 
     // Assert that the term no longer exists.
     $this->drupalGet('taxonomy/term/' . $term->id());

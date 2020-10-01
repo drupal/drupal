@@ -1,0 +1,13 @@
+id: tag_test_no_tag
+label: migration tag test no tags
+source:
+  plugin: embedded_data
+  data_rows:
+    - id: 0
+  ids:
+    id:
+      type: integer
+process:
+  id: id
+destination:
+  plugin: null

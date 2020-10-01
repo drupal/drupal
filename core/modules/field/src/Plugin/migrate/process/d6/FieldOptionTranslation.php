@@ -40,7 +40,7 @@ class FieldOptionTranslation extends ProcessPluginBase {
           $i = 0;
           foreach ($list as $allowed_value) {
             // Get the key for this allowed value which may be a key|label pair
-            // or or just key.
+            // or just key.
             $value = explode("|", $allowed_value);
             if (isset($value[0]) && ($value[0] == $option)) {
               $allowed_values = ['label' => $row->getSourceProperty('translation')];

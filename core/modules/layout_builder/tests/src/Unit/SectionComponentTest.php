@@ -12,7 +12,7 @@ use Drupal\layout_builder\LayoutBuilderEvents;
 use Drupal\layout_builder\SectionComponent;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @coversDefaultClass \Drupal\layout_builder\SectionComponent
@@ -39,7 +39,7 @@ class SectionComponentTest extends UnitTestCase {
         /** @var \Drupal\layout_builder\Event\SectionComponentBuildRenderArrayEvent $event */
         $event = $args[0];
         $event->setBuild(['#markup' => $event->getPlugin()->getPluginId()]);
-        return;
+        return $event;
       });
 
     $layout_plugin = $this->prophesize(LayoutInterface::class);

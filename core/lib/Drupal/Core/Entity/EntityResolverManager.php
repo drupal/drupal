@@ -74,6 +74,10 @@ class EntityResolverManager {
       }
     }
 
+    if ($controller === NULL) {
+      return NULL;
+    }
+
     if (strpos($controller, ':') === FALSE) {
       if (method_exists($controller, '__invoke')) {
         return [$controller, '__invoke'];

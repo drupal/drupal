@@ -3,3 +3,4 @@ example:
   css:
     theme:
       css/example.css: {}
+      css/example2.css: {}

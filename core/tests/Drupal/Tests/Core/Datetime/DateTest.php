@@ -412,7 +412,7 @@ class DateTest extends UnitTestCase {
         'max-age' => $max_age,
       ],
     ];
-    $this->assertArrayEquals($expected, $object->toRenderable());
+    $this->assertEquals($expected, $object->toRenderable());
 
     // Test retrieving the formatted time difference string.
     $this->assertEquals($string, $object->getString());

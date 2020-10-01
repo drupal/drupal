@@ -267,7 +267,7 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
     $this->assertRaw(t('Are you sure you want to delete the @entity-type %label?', ['@entity-type' => 'taxonomy term', '%label' => $edit['name[0][value]']]));
 
     // Confirm deletion.
-    $this->drupalPostForm(NULL, NULL, t('Delete'));
+    $this->drupalPostForm(NULL, [], t('Delete'));
     $this->assertRaw(t('Deleted term %name.', ['%name' => $edit['name[0][value]']]));
 
     // Test as user with "create" permissions.
@@ -346,7 +346,7 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
     $this->assertRaw(t('Are you sure you want to delete the @entity-type %label?', ['@entity-type' => 'taxonomy term', '%label' => $term->getName()]));
 
     // Confirm deletion.
-    $this->drupalPostForm(NULL, NULL, t('Delete'));
+    $this->drupalPostForm(NULL, [], t('Delete'));
     $this->assertRaw(t('Deleted term %name.', ['%name' => $term->getName()]));
 
     // Test as user without proper permissions.

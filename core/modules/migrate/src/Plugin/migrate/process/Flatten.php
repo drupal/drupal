@@ -2,6 +2,7 @@
 
 namespace Drupal\migrate\Plugin\migrate\process;
 
+use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
@@ -49,6 +50,10 @@ class Flatten extends ProcessPluginBase {
    * For example, [[1, 2, [3, 4]]] becomes [1, 2, 3, 4].
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
+    if (!is_array($value) && !is_object($value)) {
+      $type = gettype($value);
+      throw new MigrateException(sprintf("Input should be an array or an object, instead it was of type '%s'", $type));
+    }
     return iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($value)), FALSE);
   }
 
