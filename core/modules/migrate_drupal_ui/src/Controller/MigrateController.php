@@ -16,9 +16,11 @@ class MigrateController extends ControllerBase {
    *   A redirect response object that may be returned by the controller.
    */
   public function showLog() {
+    // Sets both the session and the query parameter so that it works correctly
+    // with both the watchdog view and the fallback.
     $_SESSION['dblog_overview_filter'] = [];
     $_SESSION['dblog_overview_filter']['type'] = ['migrate_drupal_ui' => 'migrate_drupal_ui'];
-    return $this->redirect('dblog.overview');
+    return $this->redirect('dblog.overview', [], ['query' => ['type' => ['migrate_drupal_ui']]]);
   }
 
 }
