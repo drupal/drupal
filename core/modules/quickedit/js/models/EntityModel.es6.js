@@ -526,8 +526,8 @@
             options.success.call(entityModel);
           }
         };
-        // Trigger the AJAX request, which will will return the
-        // quickeditEntitySaved AJAX command to which we then react.
+        // Trigger the AJAX request, which will return the quickeditEntitySaved
+        // AJAX command to which we then react.
         entitySaverAjax.execute();
       },
 
