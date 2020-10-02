@@ -910,18 +910,19 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
  */
 function _file_save_upload_single(\SplFileInfo $file_info, $form_field_name, $validators = [], $destination = FALSE, $replace = FileSystemInterface::EXISTS_REPLACE) {
   $user = \Drupal::currentUser();
+  $original_file_name = trim($file_info->getClientOriginalName(), '.');
   // Check for file upload errors and return FALSE for this file if a lower
   // level system error occurred. For a complete list of errors:
   // See http://php.net/manual/features.file-upload.errors.php.
   switch ($file_info->getError()) {
     case UPLOAD_ERR_INI_SIZE:
     case UPLOAD_ERR_FORM_SIZE:
-      \Drupal::messenger()->addError(t('The file %file could not be saved because it exceeds %maxsize, the maximum allowed size for uploads.', ['%file' => $file_info->getFilename(), '%maxsize' => format_size(Environment::getUploadMaxSize())]));
+      \Drupal::messenger()->addError(t('The file %file could not be saved because it exceeds %maxsize, the maximum allowed size for uploads.', ['%file' => $original_file_name, '%maxsize' => format_size(Environment::getUploadMaxSize())]));
       return FALSE;
 
     case UPLOAD_ERR_PARTIAL:
     case UPLOAD_ERR_NO_FILE:
-      \Drupal::messenger()->addError(t('The file %file could not be saved because the upload did not complete.', ['%file' => $file_info->getFilename()]));
+      \Drupal::messenger()->addError(t('The file %file could not be saved because the upload did not complete.', ['%file' => $original_file_name]));
       return FALSE;
 
     case UPLOAD_ERR_OK:
@@ -933,7 +934,7 @@ function _file_save_upload_single(\SplFileInfo $file_info, $form_field_name, $va
 
     default:
       // Unknown error
-      \Drupal::messenger()->addError(t('The file %file could not be saved. An unknown error has occurred.', ['%file' => $file_info->getFilename()]));
+      \Drupal::messenger()->addError(t('The file %file could not be saved. An unknown error has occurred.', ['%file' => $original_file_name]));
       return FALSE;
 
   }
@@ -941,7 +942,7 @@ function _file_save_upload_single(\SplFileInfo $file_info, $form_field_name, $va
   $values = [
     'uid' => $user->id(),
     'status' => 0,
-    'filename' => trim($file_info->getClientOriginalName(), '.'),
+    'filename' => $original_file_name,
     'uri' => $file_info->getRealPath(),
     'filesize' => $file_info->getSize(),
   ];
