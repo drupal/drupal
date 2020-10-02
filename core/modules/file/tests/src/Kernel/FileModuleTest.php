@@ -28,7 +28,7 @@ class FileModuleTest extends KernelTestBase {
     $file_name = $this->randomMachineName();
     $file_info = $this->createMock(UploadedFile::class);
     $file_info->expects($this->once())->method('getError')->willReturn(UPLOAD_ERR_FORM_SIZE);
-    $file_info->expects($this->once())->method('getFileName')->willReturn($file_name);
+    $file_info->expects($this->once())->method('getClientOriginalName')->willReturn($file_name);
     $this->assertFalse(\_file_save_upload_single($file_info, 'name'));
     $expected_message = new TranslatableMarkup('The file %file could not be saved because it exceeds %maxsize, the maximum allowed size for uploads.', ['%file' => $file_name, '%maxsize' => format_size(Environment::getUploadMaxSize())]);
     $this->assertEquals($expected_message, \Drupal::messenger()->all()['error'][0]);
