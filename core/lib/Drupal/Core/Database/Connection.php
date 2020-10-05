@@ -1501,8 +1501,8 @@ abstract class Connection {
   /**
    * Prepares a statement for execution and returns a statement object
    *
-   * Emulated prepared statements does not communicate with the database server
-   * so this method does not check the statement.
+   * Emulated prepared statements do not communicate with the database server so
+   * this method does not check the statement.
    *
    * @param string $statement
    *   This must be a valid SQL statement for the target database server.
