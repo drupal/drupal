@@ -107,6 +107,18 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
     $this->sqliteCreateFunction('substring_index', array($this, 'sqlFunctionSubstringIndex'), 3);
     $this->sqliteCreateFunction('rand', array($this, 'sqlFunctionRand'));
 
+    // Enable the Write-Ahead Logging (WAL) option for SQLite if supported.
+    // @see https://www.drupal.org/node/2348137
+    // @see https://sqlite.org/wal.html
+    if (version_compare($version, '3.7') >= 0) {
+      $connection_options += array(
+        'init_commands' => array(),
+      );
+      $connection_options['init_commands'] += array(
+        'wal' => "PRAGMA journal_mode=WAL",
+      );
+    }
+
     // Execute sqlite init_commands.
     if (isset($connection_options['init_commands'])) {
       $this->exec(implode('; ', $connection_options['init_commands']));
