@@ -47,7 +47,9 @@ class ErrorTestController extends ControllerBase {
     $bananas = [];
     $monkey_love = $bananas[1];
     // This will generate a warning.
-    $awesomely_big = 1 / 0;
+    $obj = new \stdClass();
+    $obj->p =& $obj;
+    var_export($obj, TRUE);
     // This will generate a user error. Use & to check for double escaping.
     trigger_error("Drupal & awesome", E_USER_WARNING);
     return [];

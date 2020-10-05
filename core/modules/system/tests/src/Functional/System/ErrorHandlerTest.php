@@ -37,7 +37,7 @@ class ErrorHandlerTest extends BrowserTestBase {
     ];
     $error_warning = [
       '%type' => 'Warning',
-      '@message' => 'Division by zero',
+      '@message' => 'var_export does not handle circular references',
       '%function' => 'Drupal\error_test\Controller\ErrorTestController->generateWarnings()',
       '%file' => drupal_get_path('module', 'error_test') . '/error_test.module',
     ];
