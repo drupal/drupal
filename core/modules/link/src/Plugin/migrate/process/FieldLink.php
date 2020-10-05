@@ -60,8 +60,13 @@ class FieldLink extends ProcessPluginBase {
    */
   protected function canonicalizeUri($uri) {
     // If we already have a scheme, we're fine.
-    if (empty($uri) || parse_url($uri, PHP_URL_SCHEME)) {
+    if (parse_url($uri, PHP_URL_SCHEME)) {
       return $uri;
+    }
+
+    // Empty URI and non-links are allowed.
+    if (empty($uri) || in_array($uri, ['<nolink>', '<none>'])) {
+      return 'route:<nolink>';
     }
 
     // Remove the <front> component of the URL.
