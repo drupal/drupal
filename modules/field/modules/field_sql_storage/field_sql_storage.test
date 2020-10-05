@@ -313,9 +313,13 @@ class FieldSqlStorageTestCase extends DrupalWebTestCase {
     $field = array('field_name' => 'test_text', 'type' => 'text', 'settings' => array('max_length' => 255));
     $field = field_create_field($field);
 
-    // Attempt to update the field in a way that would break the storage.
+    // Attempt to update the field in a way that would break the storage. The
+    // parenthesis suffix is needed because SQLite has *very* relaxed rules for
+    // data types, so we actually need to provide an invalid SQL syntax in order
+    // to break it.
+    // @see https://www.sqlite.org/datatype3.html
     $prior_field = $field;
-    $field['settings']['max_length'] = -1;
+    $field['settings']['max_length'] = '-1)';
     try {
       field_update_field($field);
       $this->fail(t('Update succeeded.'));
