@@ -779,14 +779,14 @@ class IPAddressBlockingTestCase extends DrupalWebTestCase {
     $submit_ip = $_SERVER['REMOTE_ADDR'] = '192.168.1.1';
     system_block_ip_action();
     system_block_ip_action();
-    $ip_count = db_query("SELECT iid from {blocked_ips} WHERE ip = :ip", array(':ip' => $submit_ip))->rowCount();
+    $ip_count = db_query("SELECT COUNT(*) from {blocked_ips} WHERE ip = :ip", array(':ip' => $submit_ip))->fetchColumn();
     $this->assertEqual('1', $ip_count);
     drupal_static_reset('ip_address');
     $submit_ip = $_SERVER['REMOTE_ADDR'] = ' ';
     system_block_ip_action();
     system_block_ip_action();
     system_block_ip_action();
-    $ip_count = db_query("SELECT iid from {blocked_ips} WHERE ip = :ip", array(':ip' => $submit_ip))->rowCount();
+    $ip_count = db_query("SELECT COUNT(*) from {blocked_ips} WHERE ip = :ip", array(':ip' => $submit_ip))->fetchColumn();
     $this->assertEqual('1', $ip_count);
   }
 }
