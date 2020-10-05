@@ -86,6 +86,18 @@ class FieldLinkTest extends UnitTestCase {
         'http://www.example.com/page#links',
         'http://www.example.com/page#links',
       ],
+      'empty' => [
+        '',
+        'route:<nolink>',
+      ],
+      'No link' => [
+        '<nolink>',
+        'route:<nolink>',
+      ],
+      'none' => [
+        '<none>',
+        'route:<nolink>',
+      ],
     ];
   }
 
