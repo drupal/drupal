@@ -55,7 +55,7 @@ class TestSiteApplicationTest extends UnitTestCase {
     $table_count = count($connection->schema()->findTables('%'));
 
     $command_line = $this->php . ' core/scripts/test-site.php install --setup-file "this-class-does-not-exist" --db-url "' . getenv('SIMPLETEST_DB') . '"';
-    $process = new Process($command_line, $this->root);
+    $process = Process::fromShellCommandline($command_line, $this->root);
     $process->run();
 
     $this->assertStringContainsString('The file this-class-does-not-exist does not exist.', $process->getErrorOutput());
@@ -73,7 +73,7 @@ class TestSiteApplicationTest extends UnitTestCase {
     $table_count = count($connection->schema()->findTables('%'));
 
     $command_line = $this->php . ' core/scripts/test-site.php install --setup-file core/tests/fixtures/empty_file.php.module --db-url "' . getenv('SIMPLETEST_DB') . '"';
-    $process = new Process($command_line, $this->root);
+    $process = Process::fromShellCommandline($command_line, $this->root);
     $process->run();
 
     $this->assertStringContainsString('The file core/tests/fixtures/empty_file.php.module does not contain a class', $process->getErrorOutput());
@@ -93,7 +93,7 @@ class TestSiteApplicationTest extends UnitTestCase {
 
     // Use __FILE__ to test absolute paths.
     $command_line = $this->php . ' core/scripts/test-site.php install --setup-file "' . __FILE__ . '" --db-url "' . getenv('SIMPLETEST_DB') . '"';
-    $process = new Process($command_line, $this->root, ['COLUMNS' => PHP_INT_MAX]);
+    $process = Process::fromShellCommandline($command_line, $this->root, ['COLUMNS' => PHP_INT_MAX]);
     $process->run();
 
     $this->assertStringContainsString('The class Drupal\Tests\Scripts\TestSiteApplicationTest contained in', $process->getErrorOutput());
@@ -113,7 +113,7 @@ class TestSiteApplicationTest extends UnitTestCase {
 
     // Install a site using the JSON output.
     $command_line = $this->php . ' core/scripts/test-site.php install --json --setup-file core/tests/Drupal/TestSite/TestSiteInstallTestScript.php --db-url "' . getenv('SIMPLETEST_DB') . '"';
-    $process = new Process($command_line, $this->root);
+    $process = Process::fromShellCommandline($command_line, $this->root);
     // Set the timeout to a value that allows debugging.
     $process->setTimeout(500);
     $process->run();
@@ -145,7 +145,7 @@ class TestSiteApplicationTest extends UnitTestCase {
     // Install another site so we can ensure the tear down command only removes
     // one site at a time. Use the regular output.
     $command_line = $this->php . ' core/scripts/test-site.php install --setup-file core/tests/Drupal/TestSite/TestSiteInstallTestScript.php --db-url "' . getenv('SIMPLETEST_DB') . '"';
-    $process = new Process($command_line, $this->root);
+    $process = Process::fromShellCommandline($command_line, $this->root);
     // Set the timeout to a value that allows debugging.
     $process->setTimeout(500);
     $process->run();
@@ -163,7 +163,7 @@ class TestSiteApplicationTest extends UnitTestCase {
 
     // Now test the tear down process as well, but keep the lock.
     $command_line = $this->php . ' core/scripts/test-site.php tear-down ' . $db_prefix . ' --keep-lock --db-url "' . getenv('SIMPLETEST_DB') . '"';
-    $process = new Process($command_line, $this->root);
+    $process = Process::fromShellCommandline($command_line, $this->root);
     // Set the timeout to a value that allows debugging.
     $process->setTimeout(500);
     $process->run();
@@ -185,7 +185,7 @@ class TestSiteApplicationTest extends UnitTestCase {
     $test_site_settings = $this->root . DIRECTORY_SEPARATOR . $test_database->getTestSitePath() . DIRECTORY_SEPARATOR . 'settings.php';
     $this->assertTrue(unlink($test_site_settings));
     $command_line = $this->php . ' core/scripts/test-site.php tear-down ' . $other_db_prefix . ' --db-url "' . getenv('SIMPLETEST_DB') . '"';
-    $process = new Process($command_line, $this->root);
+    $process = Process::fromShellCommandline($command_line, $this->root);
     // Set the timeout to a value that allows debugging.
     $process->setTimeout(500);
     $process->run();
@@ -212,7 +212,7 @@ class TestSiteApplicationTest extends UnitTestCase {
     }
 
     $command_line = $this->php . ' core/scripts/test-site.php install --json --langcode fr --setup-file core/tests/Drupal/TestSite/TestSiteMultilingualInstallTestScript.php --db-url "' . getenv('SIMPLETEST_DB') . '"';
-    $process = new Process($command_line, $this->root);
+    $process = Process::fromShellCommandline($command_line, $this->root);
     $process->setTimeout(500);
     $process->run();
     $this->assertEquals(0, $process->getExitCode());
@@ -230,7 +230,7 @@ class TestSiteApplicationTest extends UnitTestCase {
 
     // Now test the tear down process as well.
     $command_line = $this->php . ' core/scripts/test-site.php tear-down ' . $db_prefix . ' --db-url "' . getenv('SIMPLETEST_DB') . '"';
-    $process = new Process($command_line, $this->root);
+    $process = Process::fromShellCommandline($command_line, $this->root);
     $process->setTimeout(500);
     $process->run();
     $this->assertSame(0, $process->getExitCode());
@@ -244,7 +244,7 @@ class TestSiteApplicationTest extends UnitTestCase {
    */
   public function testTearDownDbPrefixValidation() {
     $command_line = $this->php . ' core/scripts/test-site.php tear-down not-a-valid-prefix';
-    $process = new Process($command_line, $this->root);
+    $process = Process::fromShellCommandline($command_line, $this->root);
     $process->setTimeout(500);
     $process->run();
     $this->assertSame(1, $process->getExitCode());
@@ -263,7 +263,7 @@ class TestSiteApplicationTest extends UnitTestCase {
 
     // Install a site using the JSON output.
     $command_line = $this->php . ' core/scripts/test-site.php install --json --setup-file core/tests/Drupal/TestSite/TestSiteInstallTestScript.php --db-url "' . getenv('SIMPLETEST_DB') . '"';
-    $process = new Process($command_line, $this->root);
+    $process = Process::fromShellCommandline($command_line, $this->root);
     // Set the timeout to a value that allows debugging.
     $process->setTimeout(500);
     $process->run();
@@ -276,7 +276,7 @@ class TestSiteApplicationTest extends UnitTestCase {
 
     // Test the user login command with valid uid.
     $command_line = $this->php . ' core/scripts/test-site.php user-login 1 --site-path ' . $site_path;
-    $process = new Process($command_line, $this->root);
+    $process = Process::fromShellCommandline($command_line, $this->root);
     $process->run();
     $this->assertSame(0, $process->getExitCode());
     $this->assertStringContainsString('/user/reset/1/', $process->getOutput());
@@ -292,14 +292,14 @@ class TestSiteApplicationTest extends UnitTestCase {
 
     // Test the user login command with invalid uid.
     $command_line = $this->php . ' core/scripts/test-site.php user-login invalid-uid --site-path ' . $site_path;
-    $process = new Process($command_line, $this->root);
+    $process = Process::fromShellCommandline($command_line, $this->root);
     $process->run();
     $this->assertSame(1, $process->getExitCode());
     $this->assertStringContainsString('The "uid" argument needs to be an integer, but it is "invalid-uid".', $process->getErrorOutput());
 
     // Now tear down the test site.
     $command_line = $this->php . ' core/scripts/test-site.php tear-down ' . $db_prefix . ' --db-url "' . getenv('SIMPLETEST_DB') . '"';
-    $process = new Process($command_line, $this->root);
+    $process = Process::fromShellCommandline($command_line, $this->root);
     // Set the timeout to a value that allows debugging.
     $process->setTimeout(500);
     $process->run();

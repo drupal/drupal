@@ -1400,7 +1400,8 @@ function install_download_translation(&$install_state) {
   // Check whether all conditions are met to download. Download the translation
   // if possible.
   $requirements = install_check_translations($install_state['parameters']['langcode'], $install_state['server_pattern']);
-  if ($output = install_display_requirements($install_state, $requirements)) {
+  // Render requirements only if any returned.
+  if ($requirements && $output = install_display_requirements($install_state, $requirements)) {
     return $output;
   }
 
