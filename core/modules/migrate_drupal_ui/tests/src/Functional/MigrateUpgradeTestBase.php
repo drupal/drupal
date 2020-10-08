@@ -210,15 +210,13 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
   /**
    * Asserts the upgrade completed successfully.
    *
-   * @param string $version
-   *   The legacy Drupal version.
    * @param array $entity_counts
    *   An array of entity count, where the key is the entity type and the value
    *   is the number of the entities that should exist post migration.
    *
    * @throws \Behat\Mink\Exception\ExpectationException
    */
-  protected function assertUpgrade($version, array $entity_counts) {
+  protected function assertUpgrade(array $entity_counts) {
     $session = $this->assertSession();
     $session->pageTextContains(t('Congratulations, you upgraded Drupal!'));
 
@@ -241,6 +239,7 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
     }
 
     $plugin_manager = \Drupal::service('plugin.manager.migration');
+    $version = $this->getLegacyDrupalVersion($this->sourceDatabase);
     /** @var \Drupal\migrate\Plugin\Migration[] $all_migrations */
     $all_migrations = $plugin_manager->createInstancesByTag('Drupal ' . $version);
     foreach ($all_migrations as $migration) {

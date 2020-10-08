@@ -32,7 +32,6 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
    * and assert the results.
    */
   public function testMigrateUpgradeExecute() {
-    $connection_options = $this->sourceDatabase->getConnectionOptions();
     $this->drupalGet('/upgrade');
     $session = $this->assertSession();
     $session->responseContains("Upgrade a site by importing its files and the data from its database into a clean and empty new install of Drupal $this->destinationSiteVersion.");
@@ -40,37 +39,11 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
     $this->drupalPostForm(NULL, [], t('Continue'));
     $session->pageTextContains('Provide credentials for the database of the Drupal site you want to upgrade.');
     $session->fieldExists('mysql[host]');
-    $driver = $connection_options['driver'];
 
     // Get valid credentials.
     $edits = $this->translatePostValues($this->getCredentials());
 
-    // Ensure submitting the form with invalid database credentials gives us a
-    // nice warning.
-    $this->drupalPostForm(NULL, [$driver . '[database]' => 'wrong'] + $edits, t('Review upgrade'));
-    $session->pageTextContains('Resolve all issues below to continue the upgrade.');
-
     $this->drupalPostForm(NULL, $edits, t('Review upgrade'));
-
-    // Test the file sources.
-    $this->drupalGet('/upgrade');
-    $this->drupalPostForm(NULL, [], t('Continue'));
-    $version = $this->getLegacyDrupalVersion($this->sourceDatabase);
-    if ($version == 6) {
-      $paths['d6_source_base_path'] = DRUPAL_ROOT . '/wrong-path';
-    }
-    else {
-      $paths['source_base_path'] = 'https://example.com/wrong-path';
-      $paths['source_private_file_path'] = DRUPAL_ROOT . '/wrong-path';
-    }
-    $this->drupalPostForm(NULL, $paths + $edits, t('Review upgrade'));
-    if ($version == 6) {
-      $session->responseContains('Failed to read from Document root for files.');
-    }
-    else {
-      $session->responseContains('Failed to read from Document root for public files.');
-      $session->responseContains('Failed to read from Document root for private files.');
-    }
 
     // Restart the upgrade process.
     $this->drupalGet('/upgrade');
@@ -103,7 +76,7 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
     $this->assertReviewForm();
 
     $this->drupalPostForm(NULL, [], t('Perform upgrade'));
-    $this->assertUpgrade($version, $this->getEntityCounts());
+    $this->assertUpgrade($this->getEntityCounts());
 
     \Drupal::service('module_installer')->install(['forum']);
     \Drupal::service('module_installer')->install(['book']);
@@ -126,7 +99,7 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
 
     // Run the incremental migration and check the results.
     $this->drupalPostForm(NULL, [], t('Perform upgrade'));
-    $this->assertUpgrade($version, $this->getEntityCountsIncremental());
+    $this->assertUpgrade($this->getEntityCountsIncremental());
   }
 
 }
