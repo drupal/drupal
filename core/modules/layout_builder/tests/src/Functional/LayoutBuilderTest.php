@@ -904,6 +904,23 @@ class LayoutBuilderTest extends BrowserTestBase {
 
     $this->drupalGet('node');
     $assert_session->linkExists('Read more');
+
+    // Consider an extra field hidden by default. Make sure it's not displayed.
+    $this->drupalGet('node/1');
+    $assert_session->pageTextNotContains('Extra Field 2 is hidden by default.');
+
+    // View the layout and add the extra field that is not visible by default.
+    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default/layout');
+    $assert_session->pageTextNotContains('Extra Field 2');
+    $page->clickLink('Add block');
+    $page->clickLink('Extra Field 2');
+    $page->pressButton('Add block');
+    $assert_session->pageTextContains('Extra Field 2');
+    $page->pressButton('Save layout');
+
+    // Confirm that the newly added extra field is visible.
+    $this->drupalGet('node/1');
+    $assert_session->pageTextContains('Extra Field 2 is hidden by default.');
   }
 
   /**
