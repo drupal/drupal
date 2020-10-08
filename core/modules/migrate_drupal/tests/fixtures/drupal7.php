@@ -19707,6 +19707,26 @@ $connection->insert('i18n_string')
   'objectindex' => '0',
   'format' => '',
 ))
+->values(array(
+  'lid' => '797',
+  'textgroup' => 'taxonomy',
+  'context' => 'term:25:name',
+  'objectid' => '25',
+  'type' => 'term',
+  'property' => 'name',
+  'objectindex' => '25',
+  'format' => '',
+))
+->values(array(
+  'lid' => '798',
+  'textgroup' => 'taxonomy',
+  'context' => 'term:25:description',
+  'objectid' => '25',
+  'type' => 'term',
+  'property' => 'description',
+  'objectindex' => '25',
+  'format' => '',
+))
 ->execute();
 $connection->schema()->createTable('i18n_translation_set', array(
   'fields' => array(
@@ -21310,6 +21330,22 @@ $connection->insert('locales_target')
 ->values(array(
   'lid' => '802',
   'translation' => 'fr - Test menu description',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '797',
+  'translation' => 'fr - Emissary',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '798',
+  'translation' => 'fr - Pilot episode',
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
@@ -56789,6 +56825,16 @@ $connection->insert('taxonomy_term_data')
   'language' => 'fr',
   'i18n_tsid' => '0',
 ))
+->values(array(
+  'tid' => '25',
+  'vid' => '8',
+  'name' => 'Emissary',
+  'description' => 'Pilot episode',
+  'format' => 'filtered_html',
+  'weight' => '0',
+  'language' => 'und',
+  'i18n_tsid' => '0',
+))
 ->execute();
 $connection->schema()->createTable('taxonomy_term_hierarchy', array(
   'fields' => array(
@@ -56914,6 +56960,10 @@ $connection->insert('taxonomy_term_hierarchy')
 ->values(array(
   'tid' => '8',
   'parent' => '6',
+))
+->values(array(
+  'tid' => '25',
+  'parent' => '0',
 ))
 ->execute();
 $connection->schema()->createTable('taxonomy_vocabulary', array(
@@ -57068,6 +57118,17 @@ $connection->insert('taxonomy_vocabulary')
   'weight' => '0',
   'language' => 'fr',
   'i18n_mode' => '2',
+))
+->values(array(
+  'vid' => '8',
+  'name' => 'VocabLocalized2',
+  'machine_name' => 'vocablocalized2',
+  'description' => '',
+  'hierarchy' => '0',
+  'module' => 'taxonomy',
+  'weight' => '0',
+  'language' => 'und',
+  'i18n_mode' => '1',
 ))
 ->execute();
 $connection->schema()->createTable('tracker_node', array(

@@ -90,7 +90,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'file' => 3,
       'filter_format' => 7,
       'image_style' => 7,
-      'language_content_settings' => 21,
+      'language_content_settings' => 22,
       'node' => 7,
       'node_type' => 7,
       'rdf_mapping' => 8,
@@ -99,8 +99,8 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'shortcut_set' => 2,
       'action' => 19,
       'menu' => 7,
-      'taxonomy_term' => 24,
-      'taxonomy_vocabulary' => 7,
+      'taxonomy_term' => 25,
+      'taxonomy_vocabulary' => 8,
       'path_alias' => 8,
       'tour' => 6,
       'user' => 4,
@@ -126,7 +126,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
     $counts['file'] = 4;
     $counts['menu_link_content'] = 13;
     $counts['node'] = 8;
-    $counts['taxonomy_term'] = 25;
+    $counts['taxonomy_term'] = 26;
     $counts['user'] = 5;
     return $counts;
   }

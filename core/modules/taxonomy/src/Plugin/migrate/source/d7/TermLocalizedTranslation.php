@@ -50,38 +50,22 @@ class TermLocalizedTranslation extends Term {
    * {@inheritdoc}
    */
   public function prepareRow(Row $row) {
-    $language = $row->getSourceProperty('ltlanguage');
-    $tid = $row->getSourceProperty('tid');
+    parent::prepareRow($row);
 
-    // If this row has been migrated it is a duplicate then skip it.
-    if ($this->idMap->lookupDestinationIds(['tid' => $tid, 'language' => $language])) {
-      return FALSE;
-    }
+    // Override language with ltlanguage.
+    $language = $row->getSourceProperty('ltlanguage');
+    $row->setSourceProperty('language', $language);
+
+    // Set the i18n string table for use in I18nQueryTrait.
+    $this->i18nStringTable = 'i18n_string';
 
     // Save the translation for the property already in the row.
     $property_in_row = $row->getSourceProperty('property');
-    $row->setSourceProperty($property_in_row . '_translated', $row->getSourceProperty('translation'));
 
     // Get the translation for the property not already in the row and save it
     // in the row.
     $property_not_in_row = ($property_in_row == 'name') ? 'description' : 'name';
-
-    // Get the translation, if one exists, for the property not already in the
-    // row.
-    $query = $this->select('i18n_string', 'i18n')
-      ->fields('i18n', ['lid'])
-      ->condition('i18n.property', $property_not_in_row);
-    $query->leftJoin('locales_target', 'lt', 'i18n.lid = lt.lid');
-    $query->condition('lt.language', $language);
-    $query->addField('lt', 'translation');
-    $results = $query->execute()->fetchAssoc();
-    if (!$results) {
-      $row->setSourceProperty($property_not_in_row . '_translated', NULL);
-    }
-    else {
-      $row->setSourceProperty($property_not_in_row . '_translated', $results['translation']);
-    }
-    parent::prepareRow($row);
+    return $this->getPropertyNotInRowTranslation($row, $property_not_in_row, 'tid', $this->idMap);
   }
 
   /**

@@ -126,7 +126,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
 
     // Reset the forums tree data so this new term is included in the tree.
     unset($this->treeData['forums']);
-    $this->assertEntity(25, 'en', 'Forum Container', 'forums', '', '', 0, [], NULL, NULL, 1);
+    $this->assertEntity(26, 'en', 'Forum Container', 'forums', '', '', 0, [], NULL, NULL, 1);
 
     // Test taxonomy term language translations.
     $this->assertEntity(19, 'en', 'Jupiter Station', 'vocablocalized', 'Holographic research.', 'filtered_html', 0, [], NULL, NULL, 1);
@@ -139,6 +139,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
     // Localized.
     $this->assertEntity(19, 'en', 'Jupiter Station', 'vocablocalized', 'Holographic research.', 'filtered_html', '0', []);
     $this->assertEntity(20, 'en', 'DS9', 'vocablocalized', 'Terok Nor', 'filtered_html', '0', []);
+    $this->assertEntity(25, 'en', 'Emissary', 'vocablocalized2', 'Pilot episode', 'filtered_html', '0', []);
 
     /** @var \Drupal\taxonomy\TermInterface $entity */
     $entity = Term::load(20);
