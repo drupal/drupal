@@ -131,7 +131,7 @@ class QuickEditLoadingTest extends WebDriverTestBase {
     $this->assertNoRaw('core/modules/quickedit/js/quickedit.js');
     $this->assertNoRaw('core/modules/quickedit/js/editors/formEditor.js');
 
-    // HTML annotation and title class does not exist for users without
+    // HTML annotation and title class do not exist for users without
     // permission to in-place edit.
     $this->assertNoRaw('data-quickedit-entity-id="node/1"');
     $this->assertNoRaw('data-quickedit-field-id="node/1/body/en/full"');
