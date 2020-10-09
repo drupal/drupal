@@ -5,7 +5,7 @@ namespace Drupal\Tests\action\Functional;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests that uninstalling actions does not remove other module's actions.
+ * Tests that uninstalling Actions does not remove other modules' actions.
  *
  * @group action
  * @see \Drupal\views\Plugin\views\field\BulkForm
