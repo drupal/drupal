@@ -299,23 +299,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   }
 
   /**
-   * Gets the second normalized POST entity.
-   *
-   * Entity types can have non-sequential IDs, and in that case the second
-   * entity created for POST testing needs to be able to specify a different ID.
-   *
-   * @see ::testPost
-   * @see ::getNormalizedPostEntity
-   *
-   * @return array
-   *   An array structure as returned by ::getNormalizedPostEntity().
-   */
-  protected function getSecondNormalizedPostEntity() {
-    // Return the values of the "parent" method by default.
-    return $this->getNormalizedPostEntity();
-  }
-
-  /**
    * Gets the normalized POST entity with random values for its unique fields.
    *
    * @see ::testPost
@@ -718,7 +701,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // Try with all of the following request bodies.
     $unparseable_request_body = '!{>}<';
     $parseable_valid_request_body = $this->serializer->encode($this->getNormalizedPostEntity(), static::$format);
-    $parseable_valid_request_body_2 = $this->serializer->encode($this->getSecondNormalizedPostEntity(), static::$format);
     $parseable_invalid_request_body = $this->serializer->encode($this->makeNormalizationInvalid($this->getNormalizedPostEntity(), 'label'), static::$format);
     $parseable_invalid_request_body_2 = $this->serializer->encode($this->getNormalizedPostEntity() + ['uuid' => [$this->randomMachineName(129)]], static::$format);
     $parseable_invalid_request_body_3 = $this->serializer->encode($this->getNormalizedPostEntity() + ['field_rest_test' => [['value' => $this->randomString()]]], static::$format);
@@ -897,7 +879,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // Try with all of the following request bodies.
     $unparseable_request_body         = '!{>}<';
     $parseable_valid_request_body     = $this->serializer->encode($this->getNormalizedPatchEntity(), static::$format);
-    $parseable_valid_request_body_2   = $this->serializer->encode($this->getNormalizedPatchEntity(), static::$format);
     $parseable_invalid_request_body   = $this->serializer->encode($this->makeNormalizationInvalid($this->getNormalizedPatchEntity(), 'label'), static::$format);
     $parseable_invalid_request_body_2 = $this->serializer->encode($this->getNormalizedPatchEntity() + ['field_rest_test' => [['value' => $this->randomString()]]], static::$format);
     // The 'field_rest_test' field does not allow 'view' access, so does not end

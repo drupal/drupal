@@ -1883,7 +1883,6 @@ abstract class ResourceTestBase extends BrowserTestBase {
     // Try with all of the following request bodies.
     $unparseable_request_body = '!{>}<';
     $parseable_valid_request_body = Json::encode($this->getPostDocument());
-    /* $parseable_valid_request_body_2 = Json::encode($this->getNormalizedPostEntity()); */
     $parseable_invalid_request_body_missing_type = Json::encode($this->removeResourceTypeFromDocument($this->getPostDocument()));
     if ($this->entity->getEntityType()->hasKey('label')) {
       $parseable_invalid_request_body = Json::encode($this->makeNormalizationInvalid($this->getPostDocument(), 'label'));
@@ -2105,7 +2104,6 @@ abstract class ResourceTestBase extends BrowserTestBase {
     // Try with all of the following request bodies.
     $unparseable_request_body = '!{>}<';
     $parseable_valid_request_body = Json::encode($this->getPatchDocument());
-    /* $parseable_valid_request_body_2 = Json::encode($this->getNormalizedPatchEntity()); */
     if ($this->entity->getEntityType()->hasKey('label')) {
       $parseable_invalid_request_body = Json::encode($this->makeNormalizationInvalid($this->getPatchDocument(), 'label'));
     }

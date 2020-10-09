@@ -162,16 +162,6 @@ abstract class WorkspaceResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getSecondNormalizedPostEntity() {
-    $normalized_post_entity = $this->getNormalizedPostEntity();
-    $normalized_post_entity['id'][0]['value'] = static::$secondCreatedEntityId;
-
-    return $normalized_post_entity;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function getNormalizedPatchEntity() {
     return [
       'label' => [
