@@ -15,12 +15,20 @@ interface MailInterface {
    * Formats a message prior to sending.
    *
    * Allows to preprocess, format, and postprocess a mail message before it is
-   * passed to the sending system. By default, all messages may contain HTML and
-   * are converted to plain-text by the Drupal\Core\Mail\Plugin\Mail\PhpMail
-   * implementation. For example, an alternative implementation could override
-   * the default implementation and also sanitize the HTML for usage in a MIME-
-   * encoded email, but still invoking the Drupal\Core\Mail\Plugin\Mail\PhpMail
-   * implementation to generate an alternate plain-text version for sending.
+   * passed to the sending system. The message body is received as an array of
+   * lines that are either strings or objects implementing
+   * \Drupal\Component\Render\MarkupInterface. It must be converted to the
+   * format expected by mail() which is a single string that can be either
+   * plain text or HTML. In the HTML case an alternate plain-text version can
+   * be returned in $message['plain'].
+   *
+   * The conversion process consists of the following steps:
+   * - If the output is HTML then convert any input line that is a string using
+   *   \Drupal\Component\Utility\Html\Html::Escape().
+   * - If the output is plain text then convert any input line that is markup
+   *   using \Drupal\Core\Mail\MailFormatHelper::htmlToText().
+   * - Join the input lines into a single string.
+   * - Wrap long lines using \Drupal\Core\Mail\MailFormatHelper::wrapMail().
    *
    * @param array $message
    *   A message array, as described in hook_mail_alter().

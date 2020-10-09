@@ -4,7 +4,6 @@ namespace Drupal\contact;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityViewBuilder;
-use Drupal\Core\Mail\MailFormatHelper;
 use Drupal\Core\Render\Element;
 
 /**
@@ -40,9 +39,6 @@ class MessageViewBuilder extends EntityViewBuilder {
           $build[$key]['#label_display'] = 'hidden';
         }
       }
-      $build['#post_render'][] = function ($html, array $elements) {
-        return MailFormatHelper::htmlToText($html);
-      };
     }
     return $build;
   }
