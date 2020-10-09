@@ -649,7 +649,6 @@ function system_requirements($phase) {
     ];
   }
   if ($phase != 'install') {
-    $filesystem_config = \Drupal::config('system.file');
     $directories = [
       PublicStream::basePath(),
       // By default no private files directory is configured. For private files
