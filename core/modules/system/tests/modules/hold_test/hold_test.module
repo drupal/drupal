@@ -12,7 +12,8 @@
  *   TRUE - enable hold, FALSE - disable hold.
  */
 function hold_test_request($status) {
-  file_put_contents(\Drupal::root() . '/sites/default/files/simpletest/hold_test_request.txt', $status);
+  $site_path = \Drupal::getContainer()->getParameter('site.path');
+  file_put_contents($site_path . '/hold_test_request.txt', $status);
 }
 
 /**
@@ -22,5 +23,6 @@ function hold_test_request($status) {
  *   TRUE - enable hold, FALSE - disable hold.
  */
 function hold_test_response($status) {
-  file_put_contents(\Drupal::root() . '/sites/default/files/simpletest/hold_test_response.txt', $status);
+  $site_path = \Drupal::getContainer()->getParameter('site.path');
+  file_put_contents($site_path . '/hold_test_response.txt', $status);
 }
