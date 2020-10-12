@@ -12,7 +12,7 @@
         "behat/mink-selenium2-driver": "^1.4",
         "composer/composer": "^1.9.1",
         "drupal/coder": "^8.3.7",
-        "easyrdf/easyrdf": "^0.9",
+        "easyrdf/easyrdf": "^0.9 || ^1.0",
         "justinrainbow/json-schema": "^5.2",
         "mikey179/vfsstream": "^1.6.8",
         "phpspec/prophecy": "^1.7",

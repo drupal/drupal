@@ -3,14 +3,8 @@
 namespace Drupal\Tests\rdf\Traits;
 
 use Drupal\Core\Url;
-
-/**
- * Override \EasyRdf_ParsedUri for PHP 7.4 compatibility.
- *
- * @todo https://www.drupal.org/project/drupal/issues/3110972 Remove this work
- *   around.
- */
-class_alias('\Drupal\Tests\rdf\Traits\EasyRdf_ParsedUri', '\EasyRdf_ParsedUri');
+use EasyRdf\Graph;
+use EasyRdf\Parser\Rdfa;
 
 /**
  * Defines a trait for parsing RDF properties from HTML.
@@ -39,10 +33,12 @@ trait RdfParsingTrait {
    *
    * @return bool
    *   TRUE if the property exists with the given value.
+   *
+   * @throws \EasyRdf\Exception
    */
   protected function hasRdfProperty($html, $base_uri, $resource, $property, array $value) {
-    $parser = new \EasyRdf_Parser_Rdfa();
-    $graph = new \EasyRdf_Graph();
+    $parser = $this->getInstanceParser();
+    $graph = $this->getInstanceGraph();
     $parser->parse($graph, $html, 'rdfa', $base_uri);
 
     return $graph->hasProperty($resource, $property, $value);
@@ -72,10 +68,12 @@ trait RdfParsingTrait {
    *
    * @return bool
    *   TRUE if the property exists with the given value.
+   *
+   * @throws \EasyRdf\Exception
    */
   protected function hasRdfChildProperty($html, $base_uri, $resource, $parent_property, string $child_property, array $value) {
-    $parser = new \EasyRdf_Parser_Rdfa();
-    $graph = new \EasyRdf_Graph();
+    $parser = $this->getInstanceParser();
+    $graph = $this->getInstanceGraph();
     $parser->parse($graph, $html, 'rdfa', $base_uri);
     $node = $graph->get($resource, $parent_property);
     return $graph->hasProperty($node, $child_property, $value);
@@ -93,10 +91,12 @@ trait RdfParsingTrait {
    *
    * @return int
    *   The number of resources of the provided type.
+   *
+   * @throws \EasyRdf\Exception
    */
   protected function getElementByRdfTypeCount(Url $url, $base_uri, $type) {
-    $parser = new \EasyRdf_Parser_Rdfa();
-    $graph = new \EasyRdf_Graph();
+    $parser = $this->getInstanceParser();
+    $graph = $this->getInstanceGraph();
     $parser->parse($graph, $this->drupalGet($url), 'rdfa', $base_uri);
     return count($graph->allOfType($type));
   }
@@ -113,10 +113,12 @@ trait RdfParsingTrait {
    *
    * @return string|null
    *   The type of resource or NULL if the resource has no type.
+   *
+   * @throws \EasyRdf\Exception
    */
   protected function getElementRdfType(Url $url, $base_uri, $resource_uri) {
-    $parser = new \EasyRdf_Parser_Rdfa();
-    $graph = new \EasyRdf_Graph();
+    $parser = $this->getInstanceParser();
+    $graph = $this->getInstanceGraph();
     $parser->parse($graph, $this->drupalGet($url), 'rdfa', $base_uri);
     return $graph->type($resource_uri);
   }
@@ -135,12 +137,46 @@ trait RdfParsingTrait {
    *
    * @return bool
    *   TRUE if the given property is blank.
+   *
+   * @throws \EasyRdf\Exception
    */
   protected function rdfElementIsBlankNode($html, $base_uri, $resource_uri, $property) {
-    $parser = new \EasyRdf_Parser_Rdfa();
-    $graph = new \EasyRdf_Graph();
+    $parser = $this->getInstanceParser();
+    $graph = $this->getInstanceGraph();
     $parser->parse($graph, $html, 'rdfa', $base_uri);
     return $graph->get($resource_uri, $property)->isBnode();
+  }
+
+  /**
+   * Gets a new instance of EasyRdf\Parser\Rdfa or EasyRdf_Parser_Rdfa.
+   *
+   * @return \EasyRdf\Parser\Rdfa|\EasyRdf_Parser_Rdfa
+   *   The instance.
+   *
+   * @todo Clean this up in drupal:10.0.0.
+   * @see https://www.drupal.org/node/3176468
+   */
+  private function getInstanceParser() {
+    if (class_exists('EasyRdf\Parser\Rdfa')) {
+      return new Rdfa();
+    }
+    return new \EasyRdf_Parser_Rdfa();
+  }
+
+  /**
+   * Gets a new instance of EasyRdf\Graph or EasyRdf_Graph.
+   *
+   * @return \EasyRdf\Graph|\EasyRdf_Graph
+   *   The instance.
+   *
+   * @todo Clean this up in drupal:10.0.0.
+   * @see https://www.drupal.org/node/3176468
+   */
+  private function getInstanceGraph() {
+    if (class_exists('EasyRdf\Graph')) {
+      return new Graph();
+    }
+    return new \EasyRdf_Graph();
   }
 
 }
