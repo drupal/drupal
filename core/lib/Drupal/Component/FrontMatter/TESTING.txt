@@ -1,0 +1,18 @@
+HOW-TO: Test this Drupal component
+
+In order to test this component, you'll need to get the entire Drupal repo and
+run the tests there.
+
+You'll find the tests under core/tests/Drupal/Tests/Component.
+
+You can get the full Drupal repo here:
+https://www.drupal.org/project/drupal/git-instructions
+
+You can find more information about running PHPUnit tests with Drupal here:
+https://www.drupal.org/node/2116263
+
+Each component in the Drupal\Component namespace has its own annotated test
+group. You can use this group to run only the tests for this component. Like
+this:
+
+$ ./vendor/bin/phpunit -c core --group FrontMatter

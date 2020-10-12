@@ -85,6 +85,7 @@
         "drupal/core-file-cache": "self.version",
         "drupal/core-file-security": "self.version",
         "drupal/core-filesystem": "self.version",
+        "drupal/core-front-matter": "self.version",
         "drupal/core-gettext": "self.version",
         "drupal/core-graph": "self.version",
         "drupal/core-http-foundation": "self.version",
