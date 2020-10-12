@@ -17,7 +17,7 @@ class DatabaseExceptionWrapperTest extends KernelTestBase {
    * Tests deprecation of Connection::prepare.
    *
    * @group legacy
-   * @expectedDeprecation Connection::prepare() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Database drivers should instantiate \PDOStatement objects by calling \PDO::prepare in their Collection::prepareStatement method instead. \PDO::prepare should not be called outside of driver code. See https://www.drupal.org/node/3137786
+   * @expectedDeprecation Connection::prepare() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Database drivers should instantiate \PDOStatement objects by calling \PDO::prepare in their Connection::prepareStatement method instead. \PDO::prepare should not be called outside of driver code. See https://www.drupal.org/node/3137786
    */
   public function testPrepare() {
     $connection = Database::getConnection();
