@@ -2,9 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\Theme;
 
-use Behat\Mink\Exception\ElementHtmlException;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\Tests\WebAssert;
 
 /**
  * Tests lazy loading for images.
@@ -38,7 +36,7 @@ class ImageLoadingAttributeTest extends BrowserTestBase {
     $assert->elementAttributeExists('css', '#with-dimensions img', 'loading');
     $assert->elementAttributeContains('css', '#with-dimensions img', 'loading', 'lazy');
 
-    // Loading attribute with lazy default value can be overriden.
+    // Loading attribute with lazy default value can be overridden.
     $assert->elementAttributeContains('css', '#override-loading-attribute img', 'loading', 'eager');
 
     // Without image dimensions loading attribute is not generated.

@@ -3,7 +3,7 @@
 namespace Drupal\Core\FileTransfer;
 
 /**
- * FileTransferException class.
+ * Exception thrown for file transfer errors.
  */
 class FileTransferException extends \RuntimeException {
 

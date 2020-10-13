@@ -5,7 +5,7 @@ namespace Drupal\migrate\Plugin\Derivative;
 use Drupal\migrate\Plugin\migrate\destination\EntityContentComplete;
 
 /**
- * MigrateEntityComplete deriver.
+ * Deriver for entity_complete:ENTITY_TYPE entity migrations.
  */
 class MigrateEntityComplete extends MigrateEntity {
 

@@ -12,7 +12,7 @@ use Drupal\workflows\StateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class WorkflowStateEditForm.
+ * Entity form variant for editing workflow states.
  *
  * @internal
  */

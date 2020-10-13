@@ -12,7 +12,7 @@ use Drupal\workflows\TransitionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class WorkflowTransitionAddForm.
+ * Entity form variant for adding workflow transitions.
  *
  * @internal
  */

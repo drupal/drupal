@@ -1487,6 +1487,7 @@ simpletest's
 singlebyte
 sioc
 sioct
+sirbrillig
 sisko
 sitename
 sitewide

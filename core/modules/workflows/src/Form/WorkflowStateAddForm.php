@@ -11,7 +11,7 @@ use Drupal\workflows\StateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class WorkflowStateAddForm.
+ * Entity form variant for adding workflow states.
  *
  * @internal
  */
