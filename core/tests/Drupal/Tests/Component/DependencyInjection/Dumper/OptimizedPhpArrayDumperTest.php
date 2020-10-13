@@ -8,6 +8,7 @@
 namespace Drupal\Tests\Component\DependencyInjection\Dumper {
 
   use Drupal\Component\Utility\Crypt;
+  use Drupal\Tests\PhpUnitCompatibilityTrait;
   use PHPUnit\Framework\TestCase;
   use Symfony\Component\DependencyInjection\Definition;
   use Symfony\Component\DependencyInjection\Reference;
@@ -23,6 +24,8 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
    * @group DependencyInjection
    */
   class OptimizedPhpArrayDumperTest extends TestCase {
+
+    use PhpUnitCompatibilityTrait;
 
     /**
      * The container builder instance.

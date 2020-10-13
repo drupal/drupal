@@ -4,8 +4,8 @@ namespace Drupal\Tests\Component\PhpStorage;
 
 use Drupal\Component\PhpStorage\FileStorage;
 use Drupal\Component\Utility\Random;
+use Drupal\Tests\Traits\PhpUnitWarnings;
 use org\bovigo\vfs\vfsStreamDirectory;
-use PHPUnit\Framework\Error\Warning;
 
 /**
  * @coversDefaultClass \Drupal\Component\PhpStorage\FileStorage
@@ -13,6 +13,8 @@ use PHPUnit\Framework\Error\Warning;
  * @group PhpStorage
  */
 class FileStorageTest extends PhpStorageTestBase {
+
+  use PhpUnitWarnings;
 
   /**
    * Standard test settings to pass to storage instances.
@@ -99,8 +101,8 @@ class FileStorageTest extends PhpStorageTestBase {
       'bin' => 'test',
     ]);
     $code = "<?php\n echo 'here';";
-    $this->expectException(Warning::class);
-    $this->expectExceptionMessage('mkdir(): Permission Denied');
+    $this->expectWarning();
+    $this->expectWarningMessage('mkdir(): Permission Denied');
     $storage->save('subdirectory/foo.php', $code);
   }
 

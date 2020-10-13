@@ -4,6 +4,7 @@ namespace Drupal\Tests\Component\Gettext;
 
 use Drupal\Component\Gettext\PoItem;
 use Drupal\Component\Gettext\PoStreamWriter;
+use Drupal\Tests\PhpUnitCompatibilityTrait;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamFile;
 use PHPUnit\Framework\TestCase;
@@ -13,6 +14,8 @@ use PHPUnit\Framework\TestCase;
  * @group Gettext
  */
 class PoStreamWriterTest extends TestCase {
+
+  use PhpUnitCompatibilityTrait;
 
   /**
    * The PO writer object under test.

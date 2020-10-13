@@ -310,7 +310,7 @@ class Composer {
       return;
     }
 
-    // If the PHP version is 7.3 or above and PHPUnit is less than version 7
+    // If the PHP version is 7.4 or above and PHPUnit is less than version 9
     // call the drupal-phpunit-upgrade script to upgrade PHPUnit.
     if (!static::upgradePHPUnitCheck($phpunit_package->getVersion())) {
       $event->getComposer()
@@ -332,7 +332,7 @@ class Composer {
    *   TRUE if the PHPUnit needs to be upgraded, FALSE if not.
    */
   public static function upgradePHPUnitCheck($phpunit_version) {
-    return !(version_compare(PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION, '7.3') >= 0 && version_compare($phpunit_version, '7.0') < 0);
+    return !(version_compare(PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION, '7.4') >= 0 && version_compare($phpunit_version, '9.0') < 0);
   }
 
 }

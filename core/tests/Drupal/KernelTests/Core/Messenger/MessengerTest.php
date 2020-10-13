@@ -49,7 +49,7 @@ class MessengerTest extends KernelTestBase {
 
     // Check we only have the second one.
     $this->assertCount(1, $this->messenger->messagesByType(MessengerInterface::TYPE_STATUS));
-    $this->assertContains('Second message with <em>markup!</em> (not removed).', $this->messenger->deleteByType(MessengerInterface::TYPE_STATUS));
+    $this->assertContainsEquals('Second message with <em>markup!</em> (not removed).', $this->messenger->deleteByType(MessengerInterface::TYPE_STATUS));
 
   }
 

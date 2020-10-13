@@ -16,7 +16,7 @@
         "justinrainbow/json-schema": "^5.2",
         "mikey179/vfsstream": "^1.6.8",
         "phpspec/prophecy": "^1.7",
-        "phpunit/phpunit": "^8.4.1",
+        "phpunit/phpunit": "^8.4.1 || ^9",
         "symfony/browser-kit": "^4.4",
         "symfony/css-selector": "^4.4",
         "symfony/dom-crawler": "^4.4 !=4.4.5",

@@ -20,6 +20,7 @@ use PHPUnit\Framework\TestCase;
 abstract class UnitTestCase extends TestCase {
 
   use PhpUnitWarnings;
+  use PhpUnitCompatibilityTrait;
 
   /**
    * The random generator.

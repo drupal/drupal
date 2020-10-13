@@ -2,11 +2,16 @@
 
 namespace Drupal\Tests;
 
+use Drupal\TestTools\PhpUnitCompatibility\RunnerVersion;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+
 /**
  * @coversDefaultClass \Drupal\Tests\Traits\PhpUnitWarnings
  * @group legacy
  */
 class PhpUnitWarningsTest extends UnitTestCase {
+
+  use ExpectDeprecationTrait;
 
   /**
    * @expectedDeprecation Test warning for \Drupal\Tests\PhpUnitWarningsTest::testAddWarning()
@@ -16,46 +21,66 @@ class PhpUnitWarningsTest extends UnitTestCase {
   }
 
   /**
-   * @expectedDeprecation Using assertContains() with string haystacks is deprecated and will not be supported in PHPUnit 9. Refactor your test to use assertStringContainsString() or assertStringContainsStringIgnoringCase() instead.
-   * @expectedDeprecation The optional $ignoreCase parameter of assertContains() is deprecated and will be removed in PHPUnit 9.
+   * Tests assertContains.
    */
   public function testAssertContains() {
+    if (RunnerVersion::getMajor() > 8) {
+      $this->markTestSkipped("In PHPUnit 9+, argument 2 passed to PHPUnit\Framework\Assert::assertContains() must be iterable.");
+    }
+    $this->expectDeprecation('Using assertContains() with string haystacks is deprecated and will not be supported in PHPUnit 9. Refactor your test to use assertStringContainsString() or assertStringContainsStringIgnoringCase() instead.');
+    $this->expectDeprecation('The optional $ignoreCase parameter of assertContains() is deprecated and will be removed in PHPUnit 9.');
     $this->assertContains('string', 'aaaa_string_aaa');
     $this->assertContains('STRING', 'aaaa_string_aaa', '', TRUE);
   }
 
   /**
-   * @expectedDeprecation Using assertNotContains() with string haystacks is deprecated and will not be supported in PHPUnit 9. Refactor your test to use assertStringNotContainsString() or assertStringNotContainsStringIgnoringCase() instead.
-   * @expectedDeprecation The optional $ignoreCase parameter of assertNotContains() is deprecated and will be removed in PHPUnit 9.
+   * Tests assertNotContains.
    */
   public function testAssertNotContains() {
+    if (RunnerVersion::getMajor() > 8) {
+      $this->markTestSkipped("In PHPUnit 9+, argument 2 passed to PHPUnit\Framework\Assert::assertNotContains() must be iterable.");
+    }
+    $this->expectDeprecation('Using assertNotContains() with string haystacks is deprecated and will not be supported in PHPUnit 9. Refactor your test to use assertStringNotContainsString() or assertStringNotContainsStringIgnoringCase() instead.');
+    $this->expectDeprecation('The optional $ignoreCase parameter of assertNotContains() is deprecated and will be removed in PHPUnit 9.');
     $this->assertNotContains('foo', 'bar');
     $this->assertNotContains('FOO', 'bar', '', TRUE);
   }
 
   /**
-   * @expectedDeprecation assertArraySubset() is deprecated and will be removed in PHPUnit 9.
+   * Tests assertArraySubset.
    */
   public function testAssertArraySubset() {
+    if (RunnerVersion::getMajor() > 8) {
+      $this->markTestSkipped("In PHPUnit 9+, assertArraySubset() is removed.");
+    }
+    $this->expectDeprecation('assertArraySubset() is deprecated and will be removed in PHPUnit 9.');
     $this->assertArraySubset(['a'], ['a', 'b']);
   }
 
   /**
-   * @expectedDeprecation assertInternalType() is deprecated and will be removed in PHPUnit 9. Refactor your test to use assertIsArray(), assertIsBool(), assertIsFloat(), assertIsInt(), assertIsNumeric(), assertIsObject(), assertIsResource(), assertIsString(), assertIsScalar(), assertIsCallable(), or assertIsIterable() instead.
+   * Tests assertInternalType.
    */
   public function testAssertInternalType() {
+    if (RunnerVersion::getMajor() > 8) {
+      $this->markTestSkipped("In PHPUnit 9+, assertInternalType() is removed.");
+    }
+    $this->expectDeprecation('assertInternalType() is deprecated and will be removed in PHPUnit 9. Refactor your test to use assertIsArray(), assertIsBool(), assertIsFloat(), assertIsInt(), assertIsNumeric(), assertIsObject(), assertIsResource(), assertIsString(), assertIsScalar(), assertIsCallable(), or assertIsIterable() instead.');
     $this->assertInternalType('string', 'string');
   }
 
   /**
-   * @expectedDeprecation assertAttributeEquals() is deprecated and will be removed in PHPUnit 9.
-   * @expectedDeprecation readAttribute() is deprecated and will be removed in PHPUnit 9.
-   * @expectedDeprecation getObjectAttribute() is deprecated and will be removed in PHPUnit 9.
-   * @expectedDeprecation assertAttributeSame() is deprecated and will be removed in PHPUnit 9.
-   * @expectedDeprecation assertAttributeInstanceOf() is deprecated and will be removed in PHPUnit 9.
-   * @expectedDeprecation assertAttributeEmpty() is deprecated and will be removed in PHPUnit 9.
+   * Tests assertion methods accessing class attributes.
    */
   public function testAssertAttribute() {
+    if (RunnerVersion::getMajor() > 8) {
+      $this->markTestSkipped("In PHPUnit 9+, assertion methods accessing class attributes are removed.");
+    }
+    $this->expectDeprecation('assertAttributeEquals() is deprecated and will be removed in PHPUnit 9.');
+    $this->expectDeprecation('readAttribute() is deprecated and will be removed in PHPUnit 9.');
+    $this->expectDeprecation('getObjectAttribute() is deprecated and will be removed in PHPUnit 9.');
+    $this->expectDeprecation('assertAttributeSame() is deprecated and will be removed in PHPUnit 9.');
+    $this->expectDeprecation('assertAttributeInstanceOf() is deprecated and will be removed in PHPUnit 9.');
+    $this->expectDeprecation('assertAttributeEmpty() is deprecated and will be removed in PHPUnit 9.');
     $obj = new class() {
       protected $attribute = 'value';
       protected $class;
@@ -73,16 +98,24 @@ class PhpUnitWarningsTest extends UnitTestCase {
   }
 
   /**
-   * @expectedDeprecation The optional $canonicalize parameter of assertEquals() is deprecated and will be removed in PHPUnit 9. Refactor your test to use assertEqualsCanonicalizing() instead.
+   * Tests assertEquals.
    */
   public function testAssertEquals() {
+    if (RunnerVersion::getMajor() > 8) {
+      $this->markTestSkipped("In PHPUnit 9+, the \$canonicalize parameter of assertEquals() is removed.");
+    }
+    $this->expectDeprecation('The optional $canonicalize parameter of assertEquals() is deprecated and will be removed in PHPUnit 9. Refactor your test to use assertEqualsCanonicalizing() instead.');
     $this->assertEquals(['a', 'b'], ['b', 'a'], '', 0.0, 10, TRUE);
   }
 
   /**
-   * @expectedDeprecation expectExceptionMessageRegExp() is deprecated in PHPUnit 8 and will be removed in PHPUnit 9.
+   * Tests expectExceptionMessageRegExp.
    */
   public function testExpectExceptionMessageRegExp() {
+    if (RunnerVersion::getMajor() > 8) {
+      $this->markTestSkipped("In PHPUnit 9+, expectExceptionMessageRegExp() is removed.");
+    }
+    $this->expectDeprecation('expectExceptionMessageRegExp() is deprecated in PHPUnit 8 and will be removed in PHPUnit 9.');
     $this->expectException(\Exception::class);
     $this->expectExceptionMessageRegExp('/An exception .*/');
     throw new \Exception('An exception has been triggered');

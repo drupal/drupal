@@ -612,7 +612,7 @@ class ConfigImporterTest extends KernelTestBase {
         'Configuration <em class="placeholder">unknown.config</em> depends on the <em class="placeholder">unknown</em> extension that will not be installed after import.',
       ];
       foreach ($expected as $expected_message) {
-        $this->assertContains($expected_message, $error_log, $expected_message);
+        $this->assertContainsEquals($expected_message, $error_log, $expected_message);
       }
     }
 
@@ -658,7 +658,7 @@ class ConfigImporterTest extends KernelTestBase {
         'Configuration <em class="placeholder">config_test.dynamic.dotted.theme</em> depends on themes (<em class="placeholder">unknown, Seven</em>) that will not be installed after import.',
       ];
       foreach ($expected as $expected_message) {
-        $this->assertContains($expected_message, $error_log, $expected_message);
+        $this->assertContainsEquals($expected_message, $error_log, $expected_message);
       }
     }
   }

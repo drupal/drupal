@@ -3,6 +3,7 @@
 namespace Drupal\Tests\migrate\Unit;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\Tests\UnitTestCase;
 use Drupal\migrate\MigrateStub;
 use Drupal\migrate\Plugin\MigrateDestinationInterface;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
@@ -10,7 +11,6 @@ use Drupal\migrate\Plugin\MigrateSourceInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 use Drupal\migrate\Row;
-use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 
 /**
@@ -20,7 +20,7 @@ use Prophecy\Argument;
  *
  * @coversDefaultClass \Drupal\migrate\MigrateStub
  */
-class MigrateStubTest extends TestCase {
+class MigrateStubTest extends UnitTestCase {
 
   /**
    * The plugin manager prophecy.

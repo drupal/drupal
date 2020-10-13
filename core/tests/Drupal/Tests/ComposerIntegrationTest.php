@@ -5,6 +5,7 @@ namespace Drupal\Tests;
 use Drupal\Composer\Plugin\VendorHardening\Config;
 use Drupal\Core\Composer\Composer;
 use Drupal\Tests\Composer\ComposerIntegrationTrait;
+use Drupal\TestTools\PhpUnitCompatibility\RunnerVersion;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -260,6 +261,11 @@ class ComposerIntegrationTest extends UnitTestCase {
     $reflection = new \ReflectionProperty($class, $property);
     $reflection->setAccessible(TRUE);
     $config = $reflection->getValue();
+    // PHPUnit 9.5.3 removes 'phpunit/php-token-stream' from its dependencies.
+    // @todo remove the check below when PHPUnit 9 is the minimum.
+    if (RunnerVersion::getMajor() >= 9) {
+      unset($config['phpunit/php-token-stream']);
+    }
     foreach (array_keys($config) as $package) {
       $this->assertContains(strtolower($package), $packages);
     }

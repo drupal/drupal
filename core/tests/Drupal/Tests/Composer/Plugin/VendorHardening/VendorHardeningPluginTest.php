@@ -8,6 +8,8 @@ use Composer\Package\PackageInterface;
 use Composer\Package\RootPackageInterface;
 use Drupal\Composer\Plugin\VendorHardening\Config;
 use Drupal\Composer\Plugin\VendorHardening\VendorHardeningPlugin;
+use Drupal\Tests\PhpUnitCompatibilityTrait;
+use Drupal\Tests\Traits\PhpUnitWarnings;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 
@@ -16,6 +18,9 @@ use PHPUnit\Framework\TestCase;
  * @group VendorHardening
  */
 class VendorHardeningPluginTest extends TestCase {
+
+  use PhpUnitWarnings;
+  use PhpUnitCompatibilityTrait;
 
   public function setUp(): void {
     parent::setUp();
