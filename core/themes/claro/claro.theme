@@ -19,6 +19,7 @@ use Drupal\media\MediaForm;
 use Drupal\file\FileInterface;
 use Drupal\views\Form\ViewsForm;
 use Drupal\views\ViewExecutable;
+use Drupal\views_ui\Form\Ajax\ViewsFormInterface;
 
 /**
  * Implements hook_theme_suggestions_HOOK_alter() for form_element.
@@ -376,6 +377,12 @@ function claro_form_alter(array &$form, FormStateInterface $form_state, $form_id
     $form['actions']['delete'] = _claro_convert_link_to_action_link($form['actions']['delete'], 'trash', 'default', 'danger');
   }
 
+  if (($form_object instanceof ViewsForm || $form_object instanceof ViewsFormInterface) && isset($form['override']['#prefix'])) {
+    // Replace form--inline class so positioning of override form elements don't
+    // have to depend on floats.
+    $form['override']['#prefix'] = str_replace('form--inline', 'form--flex', $form['override']['#prefix']);
+  }
+
   if ($form_object instanceof ViewsForm && strpos($form_object->getBaseFormId(), 'views_form_media_library') === 0) {
     if (isset($form['header'])) {
       $form['header']['#attributes']['class'][] = 'media-library-views-form__header';
@@ -586,6 +593,31 @@ function claro_views_ui_display_top_alter(&$element) {
   if (!empty($element['extra_actions'])) {
     $element['extra_actions']['#dropbutton_type'] = 'small';
   }
+
+  // Add a class to each item in the add display dropdown so they can be styled
+  // with a single selector.
+  if (isset($element['add_display'])) {
+    foreach ($element['add_display'] as &$display_item) {
+      if (isset($display_item['#type']) && in_array($display_item['#type'], ['submit', 'button'], TRUE)) {
+        $display_item['#attributes']['class'][] = 'views-tabs__action-list-button';
+      }
+    }
+  }
+
+  // Rearrange top bar contents so floats aren't necessary for positioning.
+  if (isset($element['extra_actions'], $element['tabs'], $element['add_display'])) {
+    $element['extra_actions']['#weight'] = 10;
+    $element['extra_actions']['#theme_wrappers'] = [
+      'container' => [
+        '#attributes' => [
+          'class' => ['views-display-top__extra-actions-wrapper'],
+        ],
+      ],
+    ];
+
+    $element['#attributes']['class'] = array_diff($element['#attributes']['class'], ['clearfix']);
+  }
+
 }
 
 /**
@@ -636,10 +668,18 @@ function claro_views_ui_display_tab_alter(&$element) {
       $dummy_dropbutton['prefix']['#markup'] = preg_replace($prefix_regex, '$1$2 ' . $classes . '$3', $prefix);
     }
   }
+
+  // If the top details have both actions and title, the `actions` weights need
+  // to be adjusted so the DOM order matches the order of appearance.
+  if (isset($element['details']['top']['actions'], $element['details']['top']['display_title'])) {
+    $top = &$element['details']['top'];
+    $top['actions']['#weight'] = 10;
+    $top['#attributes']['class'] = array_diff($top['#attributes']['class'], ['clearfix']);
+  }
 }
 
 /**
- * Implements hook_preprocess_HOOK for views_exposed_form.
+ * Implements hook_preprocess_HOOK() for views_exposed_form.
  */
 function claro_preprocess_views_exposed_form(&$variables) {
   $form = &$variables['form'];
@@ -1411,5 +1451,113 @@ function claro_preprocess_links__media_library_menu(array &$variables) {
     if (!isset($link['link']['#options']['attributes']['class']) || !in_array('media-library-menu__link', $link['link']['#options']['attributes']['class'])) {
       $link['link']['#options']['attributes']['class'][] = 'media-library-menu__link';
     }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for the Views UI rearrange filter form.
+ */
+function claro_preprocess_views_ui_rearrange_filter_form(array &$variables) {
+  foreach ($variables['table']['#rows'] as &$row) {
+    // Remove the container-inline class from the operator table cell.
+    if (isset($row['data'][0]['class'])) {
+      $row['data'][0]['class'] = array_diff($row['data'][0]['class'], ['container-inline']);
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for the Views UI config form.
+ */
+function claro_form_views_ui_config_item_form_alter(array &$form, FormStateInterface $form_state) {
+  $type = $form_state->get('type');
+
+  if ($type === 'filter') {
+    // Remove clearfix classes from several elements. They add unwanted
+    // whitespace and are no longer needed because uses of `float:` in this form
+    // have been removed.
+    // @todo Many of the changes to classes within this conditional may not be
+    // needed or require refactoring in https://drupal.org/node/3164890
+    unset($form['options']['clear_markup_start']);
+    unset($form['options']['clear_markup_end']);
+    $form['options']['expose_button']['#prefix'] = str_replace('clearfix', '', $form['options']['expose_button']['#prefix']);
+    if (isset($form['options']['group_button']['#prefix'])) {
+      $form['options']['group_button']['#prefix'] = str_replace('clearfix', '', $form['options']['group_button']['#prefix']);
+    }
+
+    // Remove `views-(direction)-(amount)` classes, replace with
+    // `views-group-box--operator`, and add a `views-config-group-region`
+    // wrapper.
+    if (isset($form['options']['operator']['#prefix'])) {
+      foreach (['views-left-30', 'views-left-40'] as $left_class) {
+        if (strpos($form['options']['operator']['#prefix'], $left_class) !== FALSE) {
+          $form['options']['operator']['#prefix'] = '<div class="views-config-group-region">' . str_replace($left_class, 'views-group-box--operator', $form['options']['operator']['#prefix']);
+          $form['options']['value']['#suffix'] = $form['options']['value']['#suffix'] . '</div>';
+        }
+      }
+    }
+
+    // Some instances of this form input have an added wrapper that needs to be
+    // removed in order to style these forms consistently.
+    // @see \Drupal\views\Plugin\views\filter\InOperator::valueForm
+    $wrapper_div_to_remove = '<div id="edit-options-value-wrapper">';
+    if (isset($form['options']['value']['#prefix']) && strpos($form['options']['value']['#prefix'], $wrapper_div_to_remove) !== FALSE) {
+      $form['options']['value']['#prefix'] = str_replace($wrapper_div_to_remove, '', $form['options']['value']['#prefix']);
+      $form['options']['value']['#suffix'] = preg_replace('/<\/div>/', '', $form['options']['value']['#suffix'], 1);
+    }
+
+    if (isset($form['options']['value']['#prefix'])) {
+      foreach (['views-right-70', 'views-right-60'] as $right_class) {
+        if (strpos($form['options']['value']['#prefix'], $right_class) !== FALSE) {
+          $form['options']['value']['#prefix'] = str_replace($right_class, 'views-group-box--value', $form['options']['value']['#prefix']);
+        }
+      }
+    }
+
+    // If the form includes a `value` field, the `.views-group-box--value` and
+    // `.views-group-box` classes must be present in a wrapper div. Add them
+    // here if it they are not yet present.
+    if (!isset($form['options']['value']['#prefix']) || strpos($form['options']['value']['#prefix'], 'views-group-box--value') === FALSE) {
+      $prefix = $form['options']['value']['#prefix'] ?? '';
+      $suffix = $form['options']['value']['#suffix'] ?? '';
+      $form['options']['value']['#prefix'] = '<div class="views-group-box views-group-box--value">' . $prefix;
+      $form['options']['value']['#suffix'] = $suffix . '</div>';
+    }
+
+    // If operator or value have no children, remove them from the render array
+    // so their prefixes and suffixes aren't added without any content.
+    foreach (['operator', 'value'] as $form_item) {
+      if (isset($form['options'][$form_item]) && count($form['options'][$form_item]) === 2 && isset($form['options'][$form_item]['#prefix']) && $form['options'][$form_item]['#suffix']) {
+        unset($form['options'][$form_item]);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for Views UI add handler form.
+ */
+function claro_form_views_ui_add_handler_form_alter(array &$form, FormStateInterface $form_state) {
+  // Remove container-inline class to allow more control over styling.
+  if (isset($form['selected']['#attributes']['class'])) {
+    $form['selected']['#attributes']['class'] = array_diff($form['selected']['#attributes']['class'], ['container-inline']);
+  }
+  // Move all form elements in controls to its parent, this places them all in
+  // the same div, which makes it possible to position them with flex styling
+  // instead of floats.
+  if (isset($form['override']['controls'])) {
+    foreach (Element::children($form['override']['controls']) as $key) {
+      $form['override']["controls_$key"] = $form['override']['controls'][$key];
+
+      // The wrapper array for controls is removed after this loop completes.
+      // The wrapper ensured that its child elements were hidden in browsers
+      // without JavaScript. To replicate this functionality, the `.js-show`
+      // class is added to each item previously contained in the wrapper.
+      if (isset($form['override']['controls']['#id']) && $form['override']['controls']['#id'] === 'views-filterable-options-controls') {
+        $form['override']["controls_$key"]['#wrapper_attributes']['class'][] = 'js-show';
+      }
+    }
+
+    unset($form['override']['controls']);
   }
 }

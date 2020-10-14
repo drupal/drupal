@@ -93,20 +93,9 @@
 
 .ui-dialog > .ui-dialog-content {
   overflow: auto;
-  padding-right: 1.5rem;
-  padding-left: 1.5rem;
+  padding: 1rem 1.5rem;
   color: #222330;
   background: #fff;
-}
-
-/**
- * @todo it should not be necessary to specify not(.views-ui-dialog) after
- *   https://drupal.org/node/3066006
- */
-
-.ui-dialog:not(.views-ui-dialog) > .ui-dialog-content {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
 }
 
 .ui-dialog > .ui-dialog-buttonpane {

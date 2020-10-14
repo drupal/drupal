@@ -31,6 +31,9 @@
   background-color: var(--color-white);
   box-shadow: var(--details-box-shadow);
 }
+.views-exposed-form--preview.views-exposed-form--preview {
+  margin-top: 0;
+}
 
 .views-exposed-form__item.views-exposed-form__item {
   margin: var(--space-s) var(--space-xs) 0 0; /* LTR */

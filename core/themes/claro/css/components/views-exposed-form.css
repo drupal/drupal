@@ -37,6 +37,10 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.views-exposed-form--preview.views-exposed-form--preview {
+  margin-top: 0;
+}
+
 .views-exposed-form__item.views-exposed-form__item {
   margin: 0.75rem 0.5rem 0 0; /* LTR */
 }

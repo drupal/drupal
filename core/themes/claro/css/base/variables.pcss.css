@@ -102,6 +102,10 @@
   --input-padding-horizontal: calc(var(--space-m) - var(--input-border-size));
   --input-font-size: var(--font-size-base);
   --input-line-height: var(--space-l);
+  --input-padding-vertical--small: calc(var(--space-xs) - (var(--input-border-size) * 2));
+  --input-padding-horizontal--small: calc(var(--space-m) - var(--input-border-size));
+  --input-font-size--small: var(--font-size-xs);
+  --input-line-height--small: 1.3125rem;
   --input--extrasmall-padding-vertical: calc(0.15rem - var(--input-border-size));
   --input--extrasmall-padding-horizontal: calc(var(--space-xs) - var(--input-border-size));
   --input--extrasmall-font-size: var(--font-size-s);

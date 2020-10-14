@@ -21,15 +21,6 @@
   text-decoration: none;
 }
 
-.box-padding {
-  padding-right: 12px;
-  padding-left: 12px;
-}
-
-.box-margin {
-  margin: 12px 12px 0 12px;
-}
-
 .views-admin .icon {
   width: 16px;
   height: 16px;
@@ -99,18 +90,6 @@
   background-position: center -195px;
 }
 
-.views-admin .icon.add {
-  background-position: center 3px;
-}
-
-.views-admin a.icon.add {
-  background-position: center 3px, left top; /* LTR */
-}
-
-[dir="rtl"] .views-admin a.icon.add {
-  background-position: center 3px, right top;
-}
-
 .views-admin .icon.delete {
   background-position: center -52px;
 }
@@ -135,14 +114,6 @@
   background-position: center -111px, right top;
 }
 
-.views-displays .tabs a:hover > .icon.add {
-  background-position: center -25px;
-}
-
-.views-displays .tabs .open a:hover > .icon.add {
-  background-position: center 3px;
-}
-
 details.box-padding {
   border: none;
 }
@@ -164,32 +135,6 @@ details.box-padding {
 .form-checkbox,
 .form-radio {
   vertical-align: baseline;
-}
-
-.container-inline {
-  padding-top: 15px;
-  padding-bottom: 15px;
-}
-
-.container-inline > * + *,
-.container-inline .details-wrapper > * + * {
-  padding-left: 4px; /* LTR */
-}
-
-[dir="rtl"] .container-inline > * + *,
-[dir="rtl"] .container-inline .details-wrapper > * + * {
-  padding-right: 4px;
-  padding-left: 0;
-}
-
-.views-admin details details.container-inline {
-  margin-top: 1em;
-  margin-bottom: 1em;
-  padding-top: 0;
-}
-
-.views-admin details details.container-inline > .details-wrapper {
-  padding-bottom: 0;
 }
 
 /* Indent form elements so they're directly underneath the label of the checkbox that reveals them */
@@ -317,6 +262,7 @@ td.group-title {
 }
 
 .views-ui-dialog td.group-title {
+  height: 1px;
   margin: 0;
   padding: 0;
 }
@@ -341,15 +287,15 @@ td.group-title {
 }
 
 .views-operator-label {
-  padding-left: 0.5em; /* LTR */
+  position: absolute;
+  z-index: 1;
+  bottom: -13px;
+  padding: 0.5px 6px;
   text-transform: uppercase;
+  border: 1px solid #d4d4d8;
+  background: #fff;
   font-weight: bold;
   font-style: italic;
-}
-
-[dir="rtl"] .views-operator-label {
-  padding-right: 0.5em;
-  padding-left: 0;
 }
 
 .grouped-description,
@@ -368,198 +314,60 @@ td.group-title {
 
 .views-displays {
   padding-bottom: 36px;
-  border: 1px solid #ccc;
+  border-top: 1px solid rgba(212, 212, 218, 0.8);
+  border-right: 1px solid rgba(212, 212, 218, 0.8);
+  border-left: 1px solid rgba(212, 212, 218, 0.8);
 }
 
 .views-display-top {
   position: relative;
-  padding: 8px 8px 3px;
-  border-bottom: 1px solid #ccc;
-  background-color: #e1e2dc;
-}
-
-.views-display-top .tabs {
-  margin-right: 18em; /* LTR */
-}
-
-[dir="rtl"] .views-display-top .tabs {
-  margin-right: 0;
-  margin-left: 18em;
-}
-
-.views-display-top .tabs > li {
-  margin-right: 6px; /* LTR */
-  padding-left: 0; /* LTR */
-}
-
-[dir="rtl"] .views-display-top .tabs > li {
-  margin-right: 0.3em;
-  margin-left: 6px;
-  padding-right: 0;
-}
-
-.views-display-top .tabs > li:last-child {
-  margin-right: 0; /* LTR */
-}
-
-[dir="rtl"] .views-display-top .tabs > li:last-child {
-  margin-right: 0.3em;
-  margin-left: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 0.75rem 0.75rem calc(0.75rem - 5px);
+  border-bottom: 1px solid rgba(212, 212, 218, 0.8);
+  background-color: #f3f4f9;
 }
 
 .form-edit .form-actions {
   margin-top: 0;
-  padding: 8px 12px;
-  border-right: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
-  border-left: 1px solid #ccc;
-  background-color: #e1e2dc;
-}
-
-.views-displays .tabs.secondary {
-  margin-right: 200px; /* LTR */
-  border: 0;
-}
-
-[dir="rtl"] .views-displays .tabs.secondary {
-  margin-right: 0;
-  margin-left: 200px;
-}
-
-.views-displays .tabs.secondary li,
-.views-displays .tabs.secondary li.is-active {
-  width: auto;
-  padding: 0;
-  border: 0;
-  background: transparent;
-}
-
-.views-displays .tabs li.add ul.action-list li {
-  margin: 0;
-}
-
-.views-displays .tabs.secondary li {
-  margin: 0 5px 5px 6px; /* LTR */
-}
-
-[dir="rtl"] .views-displays .tabs.secondary li {
-  margin-right: 6px;
-  margin-left: 5px;
-}
-
-.views-displays .tabs.secondary .tabs__tab + .tabs__tab {
-  border-top: 0;
-}
-
-.views-displays .tabs li.tabs__tab:hover {
-  padding-left: 0; /* LTR */
-  border: 0;
-}
-
-[dir="rtl"] .views-displays .tabs li.tabs__tab:hover {
-  padding-right: 0;
-}
-
-.views-displays .tabs.secondary a {
-  display: inline-block;
-  padding: 3px 7px;
-  border: 1px solid #cbcbcb;
-  border-radius: 7px;
-  font-size: small;
-  line-height: 1.3333;
-}
-
-/* Display a red border if the display doesn't validate. */
-
-.views-displays .tabs li.is-active a.is-active.error,
-.views-displays .tabs .error {
-  padding: 1px 6px;
-  border: 2px solid #ed541d;
-}
-
-.views-displays .tabs a:focus {
-  outline: none;
-}
-
-.views-displays .tabs.secondary li a {
-  background-color: #fff;
-}
-
-.views-displays .tabs li a:hover,
-.views-displays .tabs li.is-active a,
-.views-displays .tabs li.is-active a.is-active {
-  color: #fff;
-  background-color: #555;
-}
-
-.views-displays .tabs .open > a {
-  position: relative;
-  border-bottom: 1px solid transparent;
-  background-color: #f1f1f1;
-}
-
-.views-displays .tabs .open > a:hover {
-  color: #0074bd;
-  background-color: #f1f1f1;
-}
-
-.views-displays .tabs .action-list li {
-  padding: 2px 9px;
-  border-width: 0 1px;
-  border-style: solid;
-  border-color: #cbcbcb;
-  background-color: #f1f1f1;
-}
-
-.views-displays .tabs .action-list li:first-child {
-  border-width: 1px 1px 0;
-}
-
-.views-displays .action-list li:last-child {
-  border-width: 0 1px 1px;
-}
-
-.views-displays .tabs .action-list li:last-child {
-  border-width: 0 1px 1px;
-}
-
-.views-displays .tabs .action-list input.form-submit {
-  margin: 0;
-  padding: 0;
-  border: medium none;
-  background: none repeat scroll 0 0 transparent;
-}
-
-.views-displays .tabs .action-list input.form-submit:hover {
-  box-shadow: none;
-}
-
-.views-displays .tabs .action-list li:hover {
-  background-color: #ddd;
+  padding: 0.75rem 1rem;
+  border-right: 1px solid rgba(212, 212, 218, 0.8);
+  border-bottom: 1px solid rgba(212, 212, 218, 0.8);
+  border-left: 1px solid rgba(212, 212, 218, 0.8);
+  background-color: #f3f4f9;
 }
 
 .edit-display-settings {
-  margin: 12px 12px 0 12px;
+  margin: 1.5rem 1.5rem 0 1.5rem;
 }
 
-.edit-display-settings-top.views-ui-display-tab-bucket {
+.edit-display-settings-top.views-ui-display-tab-bucket.views-ui-display-tab-bucket {
   position: relative;
-  margin: 0 0 15px 0;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  border: 1px solid #f3f3f3;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 0 0 1.5rem;
+  padding: 0;
+  border-bottom: none;
   line-height: 20px;
 }
 
+.edit-display-settings-top.views-ui-display-tab-bucket .views-display-setting {
+  padding: 0.125rem 0 0;
+}
+
 .views-display-column {
-  border: 1px solid #f3f3f3;
+  border: 1px solid rgba(212, 212, 218, 0.8);
+  border-radius: 2px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .views-display-column + .views-display-column {
   margin-top: 0;
 }
 
-.view-preview-form .form-item-view-args,
+.view-preview-form .form-item--view-args,
 .view-preview-form .form-actions {
   margin-top: 5px;
 }
@@ -568,37 +376,21 @@ td.group-title {
   font-size: 1em;
 }
 
+.view-preview-form .form-item--view-args {
+  margin-top: 1rem;
+}
+
 .view-preview-form .arguments-preview,
-.view-preview-form .form-item-view-args {
-  margin-left: 10px; /* LTR */
+.view-preview-form .form-item--view-args {
+  margin-right: 1rem;
+  margin-left: 1rem;
 }
 
-[dir="rtl"] .view-preview-form .arguments-preview,
-[dir="rtl"] .view-preview-form .form-item-view-args {
-  margin-right: 10px;
-  margin-left: 0;
-}
-
-.view-preview-form .form-item-view-args label {
-  float: left; /* LTR */
-  height: 6ex;
-  margin-right: 0.75em; /* LTR */
-  font-weight: normal;
-}
-
-[dir="rtl"] .view-preview-form .form-item-view-args label {
-  float: right;
-  margin-right: 0.2em;
-  margin-left: 0.75em;
-}
-
-.form-item-live-preview,
-.form-item-view-args,
 .preview-submit-wrapper {
   display: inline-block;
 }
 
-.form-item-live-preview,
+.form-item--live-preview,
 .view-preview-form .form-actions {
   vertical-align: top;
 }
@@ -611,15 +403,17 @@ td.group-title {
 
 /* These are the individual "buckets," or boxes, inside the display settings area */
 
-.views-ui-display-tab-bucket {
+.views-ui-display-tab-bucket.views-ui-display-tab-bucket {
   position: relative;
-  margin: 0;
-  padding-top: 4px;
-  border-bottom: 1px solid #f3f3f3;
+  margin: 0 0 0.5rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(212, 212, 218, 0.8);
   line-height: 20px;
 }
 
 .views-ui-display-tab-bucket:last-of-type {
+  margin-bottom: 0;
   border-bottom: none;
 }
 
@@ -627,14 +421,17 @@ td.group-title {
   border-top: medium none;
 }
 
-.views-ui-display-tab-bucket__title,
-.views-ui-display-tab-bucket > .views-display-setting {
-  padding: 3px 6px 4px;
+.views-ui-display-tab-bucket__header {
+  display: inline-flex;
+  justify-content: space-between;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0.75rem 1rem calc(0.75rem + 2px);
 }
 
 .views-ui-display-tab-bucket__title {
   margin: 0;
-  font-size: small;
+  font-size: 1rem;
 }
 
 .views-ui-display-tab-bucket.access {
@@ -643,21 +440,6 @@ td.group-title {
 
 .views-ui-display-tab-bucket.page-settings {
   border-bottom: medium none;
-}
-
-.views-display-setting .views-ajax-link {
-  margin-right: 0.2083em;
-  margin-left: 0.2083em;
-  text-decoration: none;
-}
-
-.views-ui-display-tab-setting > span {
-  margin-left: 0.5em; /* LTR */
-}
-
-[dir="rtl"] .views-ui-display-tab-setting > span {
-  margin-right: 0.5em;
-  margin-left: 0;
 }
 
 /** Applies an overridden(italics) font style to overridden buckets.
@@ -675,13 +457,11 @@ td.group-title {
 /* This is each row within one of the "boxes." */
 
 .views-ui-display-tab-bucket .views-display-setting {
-  padding-bottom: 2px;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0.5rem 1rem;
   color: #666;
-  font-size: 12px;
-}
-
-.views-ui-display-tab-bucket .views-display-setting:nth-of-type(even) {
-  background-color: #f3f5ee;
+  font-size: 0.889rem;
 }
 
 .views-ui-display-tab-actions.views-ui-display-tab-bucket .views-display-setting {
@@ -693,13 +473,28 @@ td.group-title {
   margin-bottom: 6px;
 }
 
+.views-ui-display-tab-bucket__actions {
+  margin-left: 0.5rem; /* LTR */
+}
+
+[dir="rtl"] .views-ui-display-tab-bucket__actions {
+  margin-right: 0.5rem;
+  margin-left: 0;
+}
+
 .views-display-setting .label {
-  margin-right: 3px; /* LTR */
+  margin-right: 0.5rem; /* LTR */
+  white-space: nowrap;
 }
 
 [dir="rtl"] .views-display-setting .label {
   margin-right: 0;
-  margin-left: 3px;
+  margin-left: 0.5rem;
+}
+
+.label--separator.label--separator {
+  margin-right: 0.5rem;
+  margin-left: 0.5rem;
 }
 
 .views-edit-view {
@@ -713,18 +508,9 @@ td.group-title {
   border-top: none;
 }
 
-.views-filterable-options {
-  border-top: 1px solid #ccc;
-}
-
 .filterable-option .form-item {
   margin-top: 0;
   margin-bottom: 0;
-}
-
-.views-filterable-options .filterable-option .title {
-  cursor: pointer;
-  font-weight: bold;
 }
 
 .views-filterable-options .form-type-checkbox .description {
@@ -746,7 +532,7 @@ td.group-title {
   width: 100%;
 }
 
-.views-ui-dialog .ui-dialog-content {
+.views-ui-dialog.views-ui-dialog > .ui-dialog-content {
   padding: 0;
 }
 
@@ -754,12 +540,22 @@ td.group-title {
   margin-bottom: 10px;
 }
 
-.views-ui-dialog .views-add-form-selected.container-inline {
-  padding: 0;
+[id^="views-ui-add-handler-form"] .scroll {
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
-.views-ui-dialog .views-add-form-selected.container-inline > div {
+.views-ui-dialog .views-add-form-selected {
+  padding: 0 1rem;
+}
+
+.views-ui-dialog .views-add-form-selected > div {
   display: block;
+  margin: 0;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid #dedfe4;
+  border-radius: 2px 2px 0 0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .views-ui-dialog .form-item-selected {
@@ -767,25 +563,37 @@ td.group-title {
   padding: 6px 16px;
 }
 
-.views-ui-dialog .views-override:not(:empty) {
-  padding: 8px 13px;
-  background-color: #f3f4ee;
+.views-ui-dialog .views-add-form-selected .views-selected-options {
+  display: inline;
 }
 
 .views-ui-dialog.views-ui-dialog-scroll .ui-dialog-titlebar {
   border: none;
 }
 
-.views-ui-dialog .views-offset-top {
-  border-bottom: 1px solid #ccc;
+.views-ui-dialog .views-offset-top:not(:empty) {
+  position: relative;
+  padding: 0.75rem 1rem 0.5rem;
+  background-color: #f3f4f9;
 }
 
-.views-ui-dialog .views-offset-bottom {
-  border-top: 1px solid #ccc;
+.views-ui-dialog .views-offset-top:not(:empty):after {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  content: "";
+  background: linear-gradient(to bottom, rgba(80, 81, 86, 0.11) 0%, rgba(18, 19, 20, 0.02) 49%, rgba(18, 19, 20, 0) 100%);
 }
 
-.views-ui-dialog .views-override > * {
+.views-ui-dialog .views-offset-top > * {
   margin: 0;
+}
+
+.views-ui-dialog .views-offset-top .form-item {
+  max-width: 40%;
+  margin: 0 0.75rem 0.75rem 0;
 }
 
 .views-ui-dialog .views-progress-indicator {
@@ -811,6 +619,10 @@ td.group-title {
   content: "\00A0\003E";
 }
 
+.views-ui-dialog .tabledrag-toggle-weight-wrapper {
+  margin: 0 0 1rem 0;
+}
+
 .views-ui-dialog details .item-list {
   padding-left: 2em; /* LTR */
 }
@@ -820,14 +632,16 @@ td.group-title {
   padding-left: 0;
 }
 
+.views-display-columns .details-wrapper {
+  margin: 0;
+}
+
 .views-ui-rearrange-filter-form table {
   border-collapse: collapse;
 }
 
 .views-ui-rearrange-filter-form tr td[rowspan] {
-  border-width: 0 1px 1px 1px;
-  border-style: solid;
-  border-color: #cdcdcd;
+  border: 1px solid #d4d4d8;
 }
 
 .views-ui-rearrange-filter-form tr[id^="views-row"] {
@@ -839,12 +653,8 @@ td.group-title {
   border-left: 1px solid #cdcdcd;
 }
 
-.views-ui-rearrange-filter-form .even td {
-  background-color: #f3f4ed;
-}
-
-.views-ui-rearrange-filter-form .views-group-title {
-  border-top: 1px solid #cdcdcd;
+.views-ui-rearrange-filter-form .draggable td {
+  border-bottom: 0.0625rem solid #d4d4d8;
 }
 
 .views-ui-rearrange-filter-form .group-empty {
@@ -878,26 +688,26 @@ td.group-title {
   margin-top: 0;
   padding: 8px 12px;
   border-bottom: 1px solid #ccc;
-  background-color: #e1e2dc;
+  background-color: #f3f4f9;
 }
 
-.view-preview-form .form-item-live-preview {
+.view-preview-form .form-item--live-preview {
   position: absolute;
-  top: 3px;
-  right: 12px;
+  top: 0.6875rem;
+  right: 0.75rem;
   margin-top: 2px;
   margin-left: 2px; /* LTR */
 }
 
-[dir="rtl"] .view-preview-form .form-item-live-preview {
+[dir="rtl"] .view-preview-form .form-item--live-preview {
   right: auto;
-  left: 12px;
+  left: 0.75rem;
   margin-right: 2px;
   margin-left: 0;
 }
 
 .views-live-preview {
-  padding: 12px;
+  padding: 1rem;
 }
 
 .views-live-preview .views-query-info {
@@ -915,7 +725,7 @@ td.group-title {
 }
 
 .views-live-preview .view > * {
-  margin-top: 18px;
+  margin-top: 1rem;
 }
 
 .views-live-preview .preview-section {
@@ -938,17 +748,17 @@ td.group-title {
   margin: 10px 0;
   border-spacing: 0;
   border-collapse: separate;
-  border-color: #ddd;
+  border-color: #fff;
 }
 
 .views-query-info table tr {
-  background-color: #f9f9f9;
+  background-color: #f3f4f9;
 }
 
 .views-query-info table th,
 .views-query-info table td {
-  padding: 4px 10px;
-  color: #666;
+  padding: 0.5rem 1.5rem;
+  font-size: 0.889rem;
 }
 
 .messages {
@@ -968,26 +778,22 @@ td.group-title {
   left: -5px;
 }
 
-.views-display-top .dropbutton-wrapper {
-  position: absolute;
-  top: 5px;
-  right: 4px; /* LTR */
+/**
+ * Position dropbuttons with flexbox instead after the dropbuttons have been
+ * converted to splitbuttons.
+ *
+ * @see https://www.drupal.org/project/drupal/issues/3134107
+ * @see https://www.drupal.org/project/drupal/issues/1899236
+ */
+
+.edit-display-settings-top.views-ui-display-tab-bucket .dropbutton-wrapper {
+  top: 0.8125rem;
+  right: 0.75rem; /* LTR */
 }
 
-[dir="rtl"] .views-display-top .dropbutton-wrapper {
+[dir="rtl"] .edit-display-settings-top.views-ui-display-tab-bucket .dropbutton-wrapper {
   right: auto;
-  left: 4px;
-}
-
-.views-ui-display-tab-bucket .dropbutton-wrapper {
-  position: absolute;
-  top: 3px;
-  right: 3px; /* LTR */
-}
-
-[dir="rtl"] .views-ui-display-tab-bucket .dropbutton-wrapper {
-  right: auto;
-  left: 3px;
+  left: 0.75rem;
 }
 
 .views-list-section {
@@ -997,4 +803,22 @@ td.group-title {
 .form-textarea-wrapper,
 .form-item-options-content {
   width: 100%;
+}
+
+.views-messages .messages-list,
+.views-messages .messages-list__item {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/**
+ * Styles on devices with touchevents.
+ */
+
+html:not(.no-touchevents) .views-ui-display-tab-bucket__header--actions {
+  padding: 1.5rem 0.5rem;
+}
+
+html:not(.no-touchevents) .edit-display-settings-top.views-ui-display-tab-bucket {
+  padding: 1rem 0.5rem;
 }
