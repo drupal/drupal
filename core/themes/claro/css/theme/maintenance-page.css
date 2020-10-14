@@ -12,21 +12,30 @@
 
 .maintenance-page {
   min-height: 100%;
-  background-color: #e0e0d8;
-  background-image: radial-gradient(hsl(203, 2%, 90%), hsl(203, 2%, 95%));
-  background-repeat: repeat;
-  background-position: left top, 50% 50%; /* LTR */
+  background-color: #dedfe4;
 }
 
-[dir="rtl"] .maintenance-page {
-  background-position: right top, 50% 50%;
-}
-
-.page-title {
+.site-name {
+  margin-top: 1rem;
   word-wrap: break-word;
-  color: #0074bd;
-  font-size: 2em;
-  line-height: 1.2em;
+  color: #545560;
+  font-size: 1.424rem;
+}
+
+.site-name,
+.title {
+  margin-bottom: 1.5rem;
+}
+
+.content {
+  margin-bottom: 1rem;
+  color: #545560;
+}
+
+.site-name,
+.title,
+.content {
+  max-width: 512px;
 }
 
 /**
@@ -112,7 +121,10 @@
   width: auto;
   margin-right: 1.25em;
   margin-left: 1.25em;
+  padding: 3rem;
+  border-radius: 8px;
   background: #fff;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.1);
 }
 
 .layout-container:after { /* no reason for a clearfix in the markup */
@@ -124,15 +136,7 @@
 @media all and (max-width: 48em) { /* 768px */
   .layout-container {
     margin: 1.25em;
-    padding: 10px 20px;
-  }
-  .page-title {
-    margin-right: 2em; /* LTR */
-    margin-bottom: 0.725em;
-  }
-  [dir="rtl"] .page-title {
-    margin-right: 0;
-    margin-left: 2em;
+    padding: 1rem 1.5rem;
   }
 }
 
@@ -153,26 +157,13 @@
     height: 100%;
     margin: 0;
   }
-  .layout-container {
+  /**
+   * Needed to override rules from system-admin--layout.pcss.
+   */
+  .layout-container.layout-container.layout-container {
     width: 75%;
-    max-width: 770px;
+    max-width: 940px;
     margin: 0 auto;
-    padding: 20px 0 40px 0;
-    border-radius: 5px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  }
-
-  /* Positioning sidebar & content */
-  main {
-    float: left; /* LTR */
-    clear: none;
-    box-sizing: border-box;
-    width: 65%;
-    padding-right: 3.85em;
-    padding-left: 3.85em;
-  }
-  [dir="rtl"] main {
-    float: right;
   }
   ul {
     margin: 0.25em 0;
@@ -187,11 +178,6 @@
   }
   [dir="rtl"] .layout-sidebar-first {
     float: right;
-  }
-
-  /* Margins for sitename */
-  .page-title {
-    margin: 0.75em 1.9em;
   }
 }
 

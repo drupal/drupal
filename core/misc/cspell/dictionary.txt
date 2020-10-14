@@ -864,6 +864,7 @@ libyaml
 licious
 lified
 lightbulb
+lightdiamond
 lightninggreen
 linebreak
 linebreaks

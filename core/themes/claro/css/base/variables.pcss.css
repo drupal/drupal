@@ -10,6 +10,7 @@
   --color-whitesmoke-light: #fafbfd;
   --color-whitesmoke-o-40: rgba(243, 244, 249, 0.4);
   /* Secondary. */
+  --color-lightdiamond: #dedfe4;
   --color-lightgray: #d4d4d8;
   --color-lightgray-o-80: rgba(212, 212, 218, 0.8);
   --color-grayblue: #8e929c;
@@ -77,6 +78,10 @@
   --outline-size: 2px;
   --focus-outline: var(--outline-size) dotted transparent;
   --focus-box-shadow: 0 0 0 var(--focus-border-offset-size) var(--color-white), 0 0 0 calc(var(--focus-border-size) + var(--focus-border-offset-size)) var(--color-focus);
+  /**
+   * Shadows.
+   */
+  --shadow-z3: 0 14px 30px rgba(0, 0, 0, 0.1);
   /*
    * Inputs.
    */

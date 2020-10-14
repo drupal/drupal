@@ -13,7 +13,7 @@
 
   <header role="banner">
     {% if site_name %}
-      <h1 class="page-title">{{ site_name }}</h1>
+      <h2 class="site-name">{{ site_name }}</h2>
     {% endif %}
   </header>
 
@@ -25,10 +25,12 @@
 
   <main role="main">
     {% if title %}
-      <h1>{{ title }}</h1>
+      <h1 class="title">{{ title }}</h1>
     {% endif %}
     {{ page.highlighted }}
-    {{ page.content }}
+    <div class="content">
+      {{ page.content }}
+    </div>
   </main>
 
   {% if page.page_bottom %}
