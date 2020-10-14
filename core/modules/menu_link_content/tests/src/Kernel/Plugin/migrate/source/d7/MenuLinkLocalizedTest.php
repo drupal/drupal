@@ -90,7 +90,7 @@ class MenuLinkLocalizedTest extends MigrateSqlSourceTestBase {
         'link_path' => 'https://duckduckgo.com/',
         'router_path' => '',
         'link_title' => 'DuckDuckGo',
-        'options' => 'a:1:{s:10:"attributes";a:1:{s:5:"title";s:21:"Duckduckgo";}}',
+        'options' => 'a:1:{s:10:"attributes";a:1:{s:5:"title";s:21:"DuckDuckGo";}}',
         'module' => 'menu',
         'hidden' => 0,
         'external' => 1,
