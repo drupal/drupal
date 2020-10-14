@@ -5,6 +5,7 @@ namespace Drupal\help_topics;
 use Drupal\Component\Discovery\DiscoveryException;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\FileSystem\RegexDirectoryIterator;
+use Drupal\Component\FrontMatter\FrontMatter;
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Component\Plugin\Discovery\DiscoveryTrait;
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
@@ -118,7 +119,7 @@ class HelpTopicDiscovery implements DiscoveryInterface {
         // Get the rest of the plugin definition from front matter contained in
         // the help topic Twig file.
         try {
-          $front_matter = FrontMatter::load(file_get_contents($file), Yaml::class)->getData();
+          $front_matter = FrontMatter::create(file_get_contents($file), Yaml::class)->getData();
         }
         catch (InvalidDataTypeException $e) {
           throw new DiscoveryException(sprintf('Malformed YAML in help topic "%s": %s.', $file, $e->getMessage()));
