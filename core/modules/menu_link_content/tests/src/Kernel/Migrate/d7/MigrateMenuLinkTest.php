@@ -3,8 +3,7 @@
 namespace Drupal\Tests\menu_link_content\Kernel\Migrate\d7;
 
 use Drupal\Core\Menu\MenuTreeParameters;
-use Drupal\menu_link_content\Entity\MenuLinkContent;
-use Drupal\menu_link_content\MenuLinkContentInterface;
+use Drupal\Tests\menu_link_content\Kernel\Migrate\MigrateMenuLinkTestTrait;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 
@@ -17,6 +16,7 @@ class MigrateMenuLinkTest extends MigrateDrupal7TestBase {
   const MENU_NAME = 'menu-test-menu';
 
   use UserCreationTrait;
+  use MigrateMenuLinkTestTrait;
 
   /**
    * {@inheritdoc}
@@ -56,57 +56,21 @@ class MigrateMenuLinkTest extends MigrateDrupal7TestBase {
   }
 
   /**
-   * Asserts various aspects of a menu link entity.
-   *
-   * @param string $id
-   *   The link ID.
-   * @param string $title
-   *   The expected title of the link.
-   * @param string $menu
-   *   The expected ID of the menu to which the link will belong.
-   * @param string $description
-   *   The link's expected description.
-   * @param bool $enabled
-   *   Whether the link is enabled.
-   * @param bool $expanded
-   *   Whether the link is expanded.
-   * @param array $attributes
-   *   Additional attributes the link is expected to have.
-   * @param string $uri
-   *   The expected URI of the link.
-   * @param int $weight
-   *   The expected weight of the link.
-   *
-   * @return \Drupal\menu_link_content\MenuLinkContentInterface
-   *   The menu link content.
-   */
-  protected function assertEntity($id, $title, $menu, $description, $enabled, $expanded, array $attributes, $uri, $weight) {
-    /** @var \Drupal\menu_link_content\MenuLinkContentInterface $menu_link */
-    $menu_link = MenuLinkContent::load($id);
-    $this->assertInstanceOf(MenuLinkContentInterface::class, $menu_link);
-    $this->assertSame($title, $menu_link->getTitle());
-    $this->assertSame($menu, $menu_link->getMenuName());
-    $this->assertSame($description, $menu_link->getDescription());
-    $this->assertSame($enabled, $menu_link->isEnabled());
-    $this->assertSame($expanded, $menu_link->isExpanded());
-    $this->assertSame($attributes, $menu_link->link->options);
-    $this->assertSame($uri, $menu_link->link->uri);
-    $this->assertSame($weight, $menu_link->getWeight());
-    return $menu_link;
-  }
-
-  /**
    * Tests migration of menu links.
    */
   public function testMenuLinks() {
-    $this->assertEntity(469, 'Bing', static::MENU_NAME, 'Bing', TRUE, FALSE, ['attributes' => ['title' => 'Bing']], 'http://bing.com', 0);
-    $this->assertEntity(467, 'Google', static::MENU_NAME, 'Google', TRUE, FALSE, ['attributes' => ['title' => 'Google']], 'http://google.com', 0);
-    $this->assertEntity(468, 'Yahoo', static::MENU_NAME, 'Yahoo', TRUE, FALSE, ['attributes' => ['title' => 'Yahoo']], 'http://yahoo.com', 0);
+    $this->assertEntity(469, 'und', 'Bing', static::MENU_NAME, 'Bing', TRUE, FALSE, ['attributes' => ['title' => 'Bing']], 'http://bing.com', 0);
+    // This link has an i18n translation so the language is changed to the
+    // default language of the source site.
+    $this->assertEntity(467, 'en', 'Google', static::MENU_NAME, 'Google', TRUE, FALSE, ['attributes' => ['title' => 'Google']], 'http://google.com', 0);
+    $this->assertEntity(468, 'en', 'Yahoo', static::MENU_NAME, 'english description', TRUE, FALSE, ['attributes' => ['title' => 'english description'], 'alter' => TRUE], 'http://yahoo.com', 0);
+
     // Tests migrating an external link with an undefined title attribute.
-    $this->assertEntity(470, 'Ask', static::MENU_NAME, NULL, TRUE, FALSE, [], 'http://ask.com', 0);
-    $this->assertEntity(245, 'Home', 'main', NULL, TRUE, FALSE, [], 'internal:/', 0);
-    $this->assertEntity(478, 'custom link test', 'admin', NULL, TRUE, FALSE, ['attributes' => ['title' => '']], 'internal:/admin/content', 0);
-    $this->assertEntity(479, 'node link test', 'tools', 'node 2', TRUE, FALSE, ['attributes' => ['title' => 'node 2']], 'entity:node/2', 3);
+    $this->assertEntity(470, 'und', 'Ask', static::MENU_NAME, NULL, TRUE, FALSE, [], 'http://ask.com', 0);
+
+    $this->assertEntity(245, 'und', 'Home', 'main', NULL, TRUE, FALSE, [], 'internal:/', 0);
+    $this->assertEntity(478, 'und', 'custom link test', 'admin', NULL, TRUE, FALSE, ['attributes' => ['title' => '']], 'internal:/admin/content', 0);
+    $this->assertEntity(479, 'und', 'node link test', 'tools', 'node 2', TRUE, FALSE, ['attributes' => ['title' => 'node 2']], 'entity:node/2', 3);
 
     $menu_link_tree_service = \Drupal::service('menu.link_tree');
     $parameters = new MenuTreeParameters();
@@ -137,10 +101,10 @@ class MigrateMenuLinkTest extends MigrateDrupal7TestBase {
     $this->assertTrue($found);
 
     // Test the migration of menu links for translated nodes.
-    $this->assertEntity(484, 'The thing about Deep Space 9', 'tools', NULL, TRUE, FALSE, ['attributes' => ['title' => '']], 'entity:node/2', 9);
-    $this->assertEntity(485, 'is - The thing about Deep Space 9', 'tools', NULL, TRUE, FALSE, ['attributes' => ['title' => '']], 'entity:node/2', 10);
-    $this->assertEntity(486, 'is - The thing about Firefly', 'tools', NULL, TRUE, FALSE, ['attributes' => ['title' => '']], 'entity:node/4', 11);
-    $this->assertEntity(487, 'en - The thing about Firefly', 'tools', NULL, TRUE, FALSE, ['attributes' => ['title' => '']], 'entity:node/4', 12);
+    $this->assertEntity(484, 'und', 'The thing about Deep Space 9', 'tools', NULL, TRUE, FALSE, ['attributes' => ['title' => '']], 'entity:node/2', 9);
+    $this->assertEntity(485, 'en', 'is - The thing about Deep Space 9', 'tools', NULL, TRUE, FALSE, ['attributes' => ['title' => '']], 'entity:node/2', 10);
+    $this->assertEntity(486, 'und', 'is - The thing about Firefly', 'tools', NULL, TRUE, FALSE, ['attributes' => ['title' => '']], 'entity:node/4', 11);
+    $this->assertEntity(487, 'en', 'en - The thing about Firefly', 'tools', NULL, TRUE, FALSE, ['attributes' => ['title' => '']], 'entity:node/4', 12);
   }
 
 }

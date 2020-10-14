@@ -96,6 +96,7 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'List',
       'Locale',
       'Menu',
+      'Menu translation',
       'Node',
       'Number',
       'OpenID',
@@ -152,7 +153,6 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       // styles from picture are migrated.
       'FlexSlider Picture',
       'Internationalization',
-      'Menu translation',
       'Multilingual content',
       'Multilingual forum',
       'Multilingual select',

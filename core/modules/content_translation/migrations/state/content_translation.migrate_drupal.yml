@@ -21,6 +21,8 @@ finished:
       - content_translation
     locale: content_translation
     menu: content_translation
+    # menu links.
+    i18n_menu: content_translation
     statistics: statistics
     # Node revision translations.
     node: content_translation
@@ -36,9 +38,6 @@ not_finished:
     # @TODO: Move to finished when remaining Drupal 7 i18n issues are resolved.
     # See https://www.drupal.org/project/drupal/issues/2208401
     i18n: content_translation
-    # Menu links.
-    # See https://www.drupal.org/project/drupal/issues/3008028
-    i18n_menu: content_translation
     # @TODO: Remove when taxonomy term field translations are migrated.
     # See https://www.drupal.org/project/drupal/issues/3073050
     i18n_taxonomy: content_translation

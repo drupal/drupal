@@ -54,7 +54,9 @@ class MenuLinkTest extends MigrateSqlSourceTestBase {
         'p8' => '0',
         'p9' => '0',
         'updated' => '0',
-        'description' => '',
+        'language' => 'und',
+        'i18n_tsid' => '0',
+        'skip_translation' => TRUE,
       ],
       [
         // D6 customized menu link, provided by menu module.
@@ -83,7 +85,9 @@ class MenuLinkTest extends MigrateSqlSourceTestBase {
         'p8' => '0',
         'p9' => '0',
         'updated' => '0',
-        'description' => '',
+        'language' => 'und',
+        'i18n_tsid' => '0',
+        'skip_translation' => TRUE,
       ],
       [
         // D6 non-customized menu link, provided by menu module.
@@ -112,7 +116,9 @@ class MenuLinkTest extends MigrateSqlSourceTestBase {
         'p8' => '0',
         'p9' => '0',
         'updated' => '0',
-        'description' => '',
+        'language' => 'en',
+        'i18n_tsid' => '1',
+        'skip_translation' => TRUE,
       ],
       [
         'menu_name' => 'menu-test-menu',
@@ -140,7 +146,9 @@ class MenuLinkTest extends MigrateSqlSourceTestBase {
         'p8' => '0',
         'p9' => '0',
         'updated' => '0',
-        'description' => 'Test menu link 1',
+        'language' => 'und',
+        'i18n_tsid' => '0',
+        'skip_translation' => TRUE,
       ],
       [
         'menu_name' => 'menu-test-menu',
@@ -168,7 +176,9 @@ class MenuLinkTest extends MigrateSqlSourceTestBase {
         'p8' => '0',
         'p9' => '0',
         'updated' => '0',
-        'description' => 'Test menu link 2',
+        'language' => 'und',
+        'i18n_tsid' => '0',
+        'skip_translation' => TRUE,
       ],
       [
         'menu_name' => 'menu-user',
@@ -196,7 +206,40 @@ class MenuLinkTest extends MigrateSqlSourceTestBase {
         'p8' => '0',
         'p9' => '0',
         'updated' => '0',
-        'description' => '',
+        'language' => 'und',
+        'i18n_tsid' => '0',
+        'skip_translation' => TRUE,
+      ],
+      [
+        // D7 non-customized menu link, provided by menu module.
+        'menu_name' => 'menu-test-menu',
+        'mlid' => 300,
+        'plid' => 0,
+        'link_path' => 'node/142',
+        'router_path' => 'node/%',
+        'link_title' => 'Node 142',
+        'options' => [],
+        'module' => 'menu',
+        'hidden' => 0,
+        'external' => 0,
+        'has_children' => 0,
+        'expanded' => 0,
+        'weight' => 0,
+        'depth' => 0,
+        'customized' => 0,
+        'p1' => '0',
+        'p2' => '0',
+        'p3' => '0',
+        'p4' => '0',
+        'p5' => '0',
+        'p6' => '0',
+        'p7' => '0',
+        'p8' => '0',
+        'p9' => '0',
+        'updated' => '0',
+        'language' => 'fr',
+        'i18n_tsid' => '1',
+        'skip_translation' => FALSE,
       ],
     ];
 
@@ -217,7 +260,15 @@ class MenuLinkTest extends MigrateSqlSourceTestBase {
       $row['options'] = serialize($row['options']);
     });
 
-    $tests[0]['expected_data'] = $expected;
+    // Adjust the order to match the order used in the query. The expected[5] is
+    // not returned by the source query because it is an admin menu link.
+    $tests[0]['expected_data'] = [];
+    $tests[0]['expected_data'][] = $expected[0];
+    $tests[0]['expected_data'][] = $expected[1];
+    $tests[0]['expected_data'][] = $expected[2];
+    $tests[0]['expected_data'][] = $expected[6];
+    $tests[0]['expected_data'][] = $expected[3];
+    $tests[0]['expected_data'][] = $expected[4];
 
     return $tests;
   }

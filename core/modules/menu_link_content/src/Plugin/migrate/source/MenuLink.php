@@ -40,7 +40,7 @@ class MenuLink extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function fields() {
-    return [
+    $fields = [
       'menu_name' => t("The menu name. All links with the same menu name (such as 'navigation') are part of the same menu."),
       'mlid' => t('The menu link ID (mlid) is the integer primary key.'),
       'plid' => t('The parent link ID (plid) is the mlid of the link above in the hierarchy, or zero if the link is at the top level in its menu.'),
@@ -67,17 +67,78 @@ class MenuLink extends DrupalSqlBase {
       'p9' => t('The ninth mlid in the materialized path. See p1.'),
       'updated' => t('Flag that indicates that this link was generated during the update from Drupal 5.'),
     ];
+    $schema = $this->getDatabase()->schema();
+    if ($schema->fieldExists('menu_links', 'language')) {
+      $fields['language'] = $this->t("Menu link language code.");
+    }
+    if ($schema->fieldExists('menu_links', 'i18n_tsid')) {
+      $fields['i18n_tsid'] = $this->t("Translation set id.");
+    }
+    return $fields;
   }
 
   /**
    * {@inheritdoc}
    */
   public function prepareRow(Row $row) {
+    // In Drupal 7 a language neutral menu_link can be translated. The menu
+    // link is treated as if it is in the site default language. So, here
+    // we look to see if this menu link has a translation and if so, the
+    // language is changed to the default language. With the language set
+    // the entity API will allow the saving of the translations.
+    if ($row->hasSourceProperty('language') &&
+      $row->getSourceProperty('language') == 'und' &&
+      $this->hasTranslation($row->getSourceProperty('mlid'))) {
+
+      $default_language = $this->variableGet('language_default', (object) ['language' => 'und']);
+      $default_language = $default_language->language;
+      $row->setSourceProperty('language', $default_language);
+    }
+    // If this menu link is part of translation set skip the translations. The
+    // translations are migrated in d7_menu_link_localized.yml.
+    $row->setSourceProperty('skip_translation', TRUE);
+    if ($row->hasSourceProperty('i18n_tsid') && $row->getSourceProperty('i18n_tsid') != 0) {
+      $source_mlid = $this->select('menu_links', 'ml')
+        ->fields('ml', ['mlid'])
+        ->condition('i18n_tsid', $row->getSourceProperty('i18n_tsid'))
+        ->orderBy('mlid')
+        ->range(0, 1)
+        ->execute()
+        ->fetchField();
+      if ($source_mlid !== $row->getSourceProperty('mlid')) {
+        $row->setSourceProperty('skip_translation', FALSE);
+      }
+    }
     $row->setSourceProperty('options', unserialize($row->getSourceProperty('options')));
     $row->setSourceProperty('enabled', !$row->getSourceProperty('hidden'));
     $row->setSourceProperty('description', Unicode::truncate($row->getSourceProperty('options/attributes/title'), 255));
 
     return parent::prepareRow($row);
+  }
+
+  /**
+   * Determines if this  menu_link has an i18n translation.
+   *
+   * @param string $mlid
+   *   The menu id.
+   *
+   * @return bool
+   *   True if the menu_link has an i18n translation.
+   */
+  public function hasTranslation($mlid) {
+    if ($this->getDatabase()->schema()->tableExists('i18n_string')) {
+      $results = $this->select('i18n_string', 'i18n')
+        ->fields('i18n')
+        ->condition('textgroup', 'menu')
+        ->condition('type', 'item')
+        ->condition('objectid', $mlid)
+        ->execute()
+        ->fetchAll();
+      if ($results) {
+        return TRUE;
+      }
+    }
+    return FALSE;
   }
 
   /**
