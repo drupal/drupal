@@ -95,7 +95,7 @@ class ResourceRoutes implements EventSubscriberInterface {
       $methods = $route->getMethods();
       // Only expose routes that have an explicit method and allow >=1 format
       // for that method.
-      if (($methods && ($method = $methods[0]) && $supported_formats = $rest_resource_config->getFormats($method))) {
+      if (($methods && ($method = $methods[0]) && $rest_resource_config->getFormats($method))) {
         $route->setRequirement('_csrf_request_header_token', 'TRUE');
 
         // Check that authentication providers are defined.
