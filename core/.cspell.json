@@ -3,7 +3,8 @@
     "language": "en-US",
     "allowCompoundWords": false,
     "ignorePaths": [
-      ".cspell.json",
+      ".*.json",
+      ".*ignore",
       "composer.lock",
       "assets/vendor/**",
       "lib/Drupal/Component/Diff/**",

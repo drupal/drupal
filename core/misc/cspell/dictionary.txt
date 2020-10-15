@@ -444,6 +444,7 @@ docroot
 docroots
 docx
 dolore
+dotenv
 doubleclick
 downcasting
 downlevel
@@ -955,6 +956,7 @@ mimeheaders
 mimetypes
 minifiers
 minifyzombies
+minimatch
 minimise
 minipager
 minky
