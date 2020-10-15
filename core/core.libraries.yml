@@ -232,6 +232,11 @@ drupal.message:
     - core/drupal
     - core/drupal.announce
 
+drupal.nodelist.foreach:
+  version: VERSION
+  js:
+    misc/polyfills/nodelist.foreach.js: { weight: -20 }
+
 drupal.object.assign:
   version: VERSION
   js:

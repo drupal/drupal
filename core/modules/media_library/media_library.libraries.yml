@@ -23,6 +23,7 @@ widget:
     - core/drupal.dialog.ajax
     - core/jquery.once
     - core/sortable
+    - core/drupal.nodelist.foreach
 
 ui:
   version: VERSION
