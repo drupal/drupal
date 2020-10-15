@@ -10,154 +10,177 @@
  * System admin module: modules page.
  */
 
-.system-modules thead > tr {
-  border: 0;
+.modules-table-filter {
+  padding: 0.25rem 1.5rem;
+  border: 1px solid #d4d4d8;
+  border-radius: 2px 2px 0 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.system-modules div.incompatible {
-  font-weight: bold;
+/* Visually hide the module filter input description. */
+
+.modules-table-filter .form-item__description {
+  position: absolute !important;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  width: 1px;
+  height: 1px;
+  word-wrap: normal;
 }
 
-.system-modules td.checkbox {
-  width: 4%;
-  min-width: 25px;
-  padding-left: 1rem; /* LTR */
+.claro-details.claro-details--package-listing,
+.claro-details.module-list__module-details {
+  margin-top: 2rem;
+  margin-bottom: 0;
+  border: none;
+  box-shadow: none;
 }
 
-[dir="rtl"] .system-modules td.checkbox {
-  padding-right: 1rem;
+.claro-details__wrapper.claro-details__wrapper--package-listing {
+  margin: 0;
 }
 
-.system-modules td.module {
-  width: 25%;
+.claro-details__summary.claro-details__summary--package-listing {
+  color: #222330;
+  border-radius: 4px;
+  background: #f3f4f9;
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.424rem; /* 23px */
 }
 
-.system-modules td {
+.module-list {
+  margin-top: 0;
+}
+
+.module-list__module {
+  color: #222330;
+  border-bottom: 1px solid #d4d4d8;
+  background: none;
+}
+
+.module-list__module:hover {
+  background: none;
+}
+
+.module-list__module td {
+  height: auto;
+  padding: 1rem calc(1rem - 2px);
   vertical-align: top;
 }
 
-.system-modules label,
-.system-modules-uninstall label {
-  color: #1d1d1d;
-  font-size: 1.15em;
+/* Set width only on wider view where description is visible by default. */
+
+@media screen and (min-width: 60em) {
+  td.module-list__module {
+    width: 25%;
+  }
 }
 
-.system-modules details {
-  color: #5c5c5b;
+.module-list__module-name {
+  font-weight: bold;
 }
 
-.system-modules details[open] {
-  overflow: visible;
-  height: auto;
-  white-space: normal;
+.module-list__checkbox {
+  padding-left: 0.6875rem; /* LTR */
+  text-align: left; /* LTR */
 }
 
-.system-modules details[open] summary .text {
-  text-transform: none;
-  -webkit-hyphens: auto;
-  -ms-hyphens: auto;
-  hyphens: auto;
+[dir="rtl"] .module-list__checkbox {
+  padding-right: 0.6875rem;
+  padding-left: calc(1rem - 2px);
+  text-align: right;
 }
 
-.system-modules td details a {
-  color: #5c5c5b;
-  border: 0;
-}
-
-.system-modules td details {
+.module-list__checkbox .form-type--checkbox {
   margin: 0;
-  border: 0;
+  line-height: 1.295rem;
 }
 
-.system-modules td details summary {
-  padding: 0;
-  cursor: default;
-  text-transform: none;
-  font-weight: normal;
+.module-list__checkbox .form-checkbox:not([disabled]) {
+  cursor: pointer;
 }
 
-.system-modules td {
-  padding-left: 0; /* LTR */
+td.module-list__checkbox {
+  width: 4%;
 }
 
-[dir="rtl"] .system-modules td {
+td.module-list__description {
+  padding-top: 0;
   padding-right: 0;
-  padding-left: 12px;
+  padding-bottom: 0;
 }
 
-@media screen and (max-width: 40em) {
-  .system-modules td.name {
-    width: 20%;
-  }
-  .system-modules td.description {
-    width: 40%;
-  }
+.claro-details.module-list__module-details {
+  margin: 0;
 }
 
-.system-modules .requirements {
-  max-width: 490px;
-  padding: 5px 0;
+.claro-details__summary.module-list__module-summary {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  font-weight: normal;
+  line-height: 1.295rem;
 }
 
-.system-modules .links {
-  overflow: hidden; /* prevents collapse */
+.module-details__description {
+  font-size: 0.75rem;
+  line-height: 0.9375rem;
 }
 
-.system-modules .checkbox {
-  margin: 0 5px;
-}
-
-.system-modules .checkbox .form-item {
+.claro-details__wrapper.module-details__wrapper {
   margin-top: 0;
   margin-bottom: 0;
 }
 
-.admin-requirements,
-.admin-required {
-  color: #666;
-  font-size: 0.9em;
+.module-details__requirements {
+  margin-bottom: 1rem;
 }
 
-.admin-enabled {
-  color: #080;
+.module-details__links {
+  position: relative;
+  /* Negative margin matches the value of action link's top padding. */
+  margin-top: -0.375rem;
+  margin-bottom: 1rem;
 }
 
-.admin-missing {
-  color: #f00;
+.module-details__links .action-link + .action-link {
+  margin-left: 0; /* LTR */
 }
 
-.module-link {
-  display: block;
-  float: left; /* LTR */
-  margin-top: 2px;
-  padding: 2px 20px;
-  white-space: nowrap;
+[dir="rtl"] .module-details__links .action-link + .action-link {
+  margin-right: 0;
 }
 
-[dir="rtl"] .module-link {
-  float: right;
+.claro-details .tableresponsive-toggle {
+  padding: 1rem 1rem 1rem 0;
 }
 
-.module-link-help {
-  background: url("data:image/svg+xml,%3csvg height='16' width='16' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='m8.002 1c-3.868 0-7.002 3.134-7.002 7s3.134 7 7.002 7c3.865 0 7-3.134 7-7s-3.135-7-7-7zm3 5c0 .551-.16 1.085-.477 1.586l-.158.22c-.07.093-.189.241-.361.393-.168.148-.35.299-.545.447l-.203.189-.141.129-.096.17-.021.235v.63h-2.001v-.704c.026-.396.078-.73.204-.999.125-.269.271-.498.439-.688l.225-.21-.01-.015.176-.14.137-.128c.186-.139.357-.277.516-.417l.148-.18c.098-.152.168-.323.168-.518 0-.552-.447-1-1-1s-1.002.448-1.002 1h-2c0-1.657 1.343-3 3.002-3 1.656 0 3 1.343 3 3zm-1.75 6.619c0 .344-.281.625-.625.625h-1.25c-.345 0-.626-.281-.626-.625v-1.238c0-.344.281-.625.626-.625h1.25c.344 0 .625.281.625.625z' fill='%23787878'/%3e%3c/svg%3e") 0 50% no-repeat; /* LTR */
+.claro-details .tableresponsive-toggle::before {
+  /* This adjustment is necessary for better alignment with the adjacent button
+   text. */
+  position: relative;
+  top: -1px;
+  display: inline-block;
+  width: 2rem;
+  height: 1.25rem;
+  content: "";
+  cursor: pointer;
+  vertical-align: text-top;
+  background: url("data:image/svg+xml,%3csvg height='16' stroke='%23545560' stroke-width='2' width='16' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M3 8h10M8 3v10'/%3e%3c/svg%3e") no-repeat center;
+  background-size: contain;
 }
 
-[dir="rtl"] .module-link-help {
-  background-position: top 50% right 0;
+.claro-details .tableresponsive-toggle:hover {
+  color: #0036b1;
+  background-color: #f0f5fd;
 }
 
-.module-link-permissions {
-  background: url("data:image/svg+xml,%3csvg height='16' width='16' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='m13.727 7.714c-1.309-1.308-3.248-1.569-4.827-.818l-5.899-5.896h-3.001v2h1v1.618l.378.382h1.622v1h1v1.622h1.622l.864.862-.986 1.016.992.99c-.062 1.162.335 2.346 1.223 3.234 1.66 1.653 4.352 1.653 6.012 0 1.658-1.66 1.658-4.351 0-6.01zm-.829 5.182c-.646.646-1.693.646-2.338 0-.646-.646-.646-1.692 0-2.338.645-.646 1.688-.646 2.338 0 .645.646.645 1.694 0 2.338z' fill='%23787878'/%3e%3c/svg%3e") 0 50% no-repeat; /* LTR */
+.claro-details .tableresponsive-toggle:hover::before {
+  background-image: url("data:image/svg+xml,%3csvg height='16' stroke='%230036b1' stroke-width='2' width='16' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M3 8h10M8 3v10'/%3e%3c/svg%3e");
 }
 
-[dir="rtl"] .module-link-permissions {
-  background-position: top 50% right 0;
-}
-
-.module-link-configure {
-  background: url("data:image/svg+xml,%3csvg height='16' width='16' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='m15.176 9.041c.045-.327.076-.658.076-.998 0-.36-.035-.71-.086-1.056l-2.275-.293c-.115-.426-.283-.827-.498-1.201l1.396-1.808c-.416-.551-.906-1.039-1.459-1.452l-1.807 1.391c-.373-.215-.774-.383-1.2-.499l-.292-2.252c-.338-.048-.677-.081-1.029-.081s-.694.033-1.032.082l-.291 2.251c-.426.116-.826.284-1.2.499l-1.805-1.391c-.552.413-1.044.901-1.459 1.452l1.395 1.808c-.215.374-.383.774-.499 1.2l-2.276.294c-.05.346-.085.696-.085 1.056 0 .34.031.671.077.998l2.285.295c.115.426.284.826.499 1.2l-1.417 1.836c.411.55.896 1.038 1.443 1.452l1.842-1.42c.374.215.774.383 1.2.498l.298 2.311c.337.047.677.08 1.025.08s.688-.033 1.021-.08l.299-2.311c.426-.115.826-.283 1.201-.498l1.842 1.42c.547-.414 1.031-.902 1.443-1.452l-1.416-1.837c.215-.373.383-.773.498-1.199zm-7.174 1.514c-1.406 0-2.543-1.137-2.543-2.541 0-1.402 1.137-2.541 2.543-2.541 1.402 0 2.541 1.138 2.541 2.541 0 1.404-1.139 2.541-2.541 2.541z' fill='%23787878'/%3e%3c/svg%3e") 0 50% no-repeat; /* LTR */
-}
-
-[dir="rtl"] .module-link-configure {
-  background-position: top 50% right 0;
+.claro-details .tableresponsive-toggle-columns button {
+  margin-top: 0.5rem;
+  text-decoration: none;
+  color: #545560;
+  font-weight: bold;
 }

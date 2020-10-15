@@ -384,3 +384,61 @@
     background-image: url(../../images/icons/windowText/hide.svg);
   }
 }
+
+/* Key */
+.action-link--icon-key::before {
+  content: "";
+  background-image: url("../../images/icons/545560/key.svg");
+}
+.action-link--icon-key:hover::before {
+  background-image: url("../../images/icons/0036b1/key.svg");
+}
+.action-link--icon-key:active::before {
+  background-image: url("../../images/icons/00309e/key.svg");
+}
+
+/* Key — danger */
+.action-link--icon-key.action-link--danger::before {
+  background-image: url("../../images/icons/d72222/key.svg");
+}
+.action-link--icon-key.action-link--danger:hover::before {
+  background-image: url("../../images/icons/c11f1f/key.svg");
+}
+.action-link--icon-key.action-link--danger:active::before {
+  background-image: url("../../images/icons/ab1b1b/key.svg");
+}
+
+@media screen and (-ms-high-contrast: active) {
+  .action-link--icon-key.action-link--icon-key.action-link--icon-key::before {
+    background-image: url("../../images/icons/windowText/key.svg") !important;
+  }
+}
+
+/* Question Mark */
+.action-link--icon-questionmark::before {
+  content: "";
+  background-image: url("../../images/icons/545560/questionmark.svg");
+}
+.action-link--icon-questionmark:hover::before {
+  background-image: url("../../images/icons/0036b1/questionmark.svg");
+}
+.action-link--icon-questionmark:active::before {
+  background-image: url("../../images/icons/00309e/questionmark.svg");
+}
+
+/* Question Mark - danger */
+.action-link--icon-questionmark.action-link--danger::before {
+  background-image: url("../../images/icons/d72222/questionmark.svg");
+}
+.action-link--icon-questionmark.action-link--danger:hover::before {
+  background-image: url("../../images/icons/c11f1f/questionmark.svg");
+}
+.action-link--icon-questionmark.action-link--danger:active::before {
+  background-image: url("../../images/icons/ab1b1b/questionmark.svg");
+}
+
+@media screen and (-ms-high-contrast: active) {
+  .action-link--icon-questionmark.action-link--icon-questionmark.action-link--icon-questionmark::before {
+    background-image: url("../../images/icons/windowText/questionmark.svg") !important;
+  }
+}

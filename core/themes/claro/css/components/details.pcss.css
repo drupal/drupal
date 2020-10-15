@@ -132,7 +132,7 @@
 
 .claro-details__summary::before {
   position: absolute;
-  top: 50%;
+  top: calc(var(--space-m) + var(--space-s));
   left: var(--space-s); /* LTR */
   display: inline-block;
   width: var(--space-m);

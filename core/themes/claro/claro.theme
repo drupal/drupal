@@ -725,6 +725,41 @@ function claro_form_views_exposed_form_alter(&$form, FormStateInterface $form_st
 }
 
 /**
+ * Implements hook_form_FORM_ID_alter() for the system_modules form.
+ */
+function claro_form_system_modules_alter(&$form, FormStateInterface $form_state) {
+  if (isset($form['filters'])) {
+    $form['filters']['#attributes']['class'][] = 'modules-table-filter';
+    if (isset($form['filters']['text'])) {
+      unset($form['filters']['text']['#title_display']);
+      $form['filters']['text']['#title'] = t('Filter');
+    }
+  }
+
+  // Convert module links to action links.
+  foreach (Element::children($form['modules']) as $key) {
+    $link_key_to_action_link_type = [
+      'help' => 'questionmark',
+      'permissions' => 'key',
+      'configure' => 'cog',
+    ];
+    if (isset($form['modules'][$key]['#type']) && $form['modules'][$key]['#type'] === 'details') {
+      $form['modules'][$key]['#module_package_listing'] = TRUE;
+      foreach (Element::children($form['modules'][$key]) as $module_key) {
+        if (isset($form['modules'][$key][$module_key]['links'])) {
+          foreach ($form['modules'][$key][$module_key]['links'] as $link_key => &$link) {
+            $action_link_type = $link_key_to_action_link_type[$link_key];
+            $link['#options']['attributes']['class'][] = 'action-link';
+            $link['#options']['attributes']['class'][] = 'action-link--small';
+            $link['#options']['attributes']['class'][] = "action-link--icon-$action_link_type";
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_preprocess_form_element().
  */
 function claro_preprocess_form_element(&$variables) {

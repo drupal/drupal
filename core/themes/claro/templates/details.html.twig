@@ -29,6 +29,7 @@
     'claro-details',
     accordion ? 'claro-details--accordion',
     accordion_item ? 'claro-details--accordion-item',
+    element['#module_package_listing'] ? 'claro-details--package-listing',
   ]
 %}
 {%
@@ -37,6 +38,7 @@
     'details-wrapper',
     accordion ? 'claro-details__wrapper--accordion',
     accordion_item ? 'claro-details__wrapper--accordion-item',
+    element['#module_package_listing'] ? 'claro-details__wrapper--package-listing',
   ]
 %}
 {%
@@ -44,6 +46,7 @@
     'claro-details__content',
     accordion ? 'claro-details__content--accordion',
     accordion_item ? 'claro-details__content--accordion-item',
+    element['#module_package_listing']  ? 'claro-details__content--package-listing',
   ]
 %}
 <details{{ attributes.addClass(classes) }}>
@@ -55,7 +58,9 @@
         required ? 'form-required',
         accordion ? 'claro-details__summary--accordion',
         accordion_item ? 'claro-details__summary--accordion-item',
-      ]
+        element['#module_package_listing']  ? 'claro-details__summary--package-listing',
+
+    ]
     %}
     <summary{{ summary_attributes.addClass(summary_classes) }}>
       {{- title -}}

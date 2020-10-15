@@ -133,6 +133,7 @@
   --details-bg-color-transition-duration: 0.12s;
   --details-box-shadow-transition-duration: 0.2s;
   --details-transform-transition-duration: 0.12s;
+  --details-line-height: 1.295rem;
   /**
    * Buttons.
    */
