@@ -41,7 +41,7 @@ class TypedDataTest extends KernelTestBase {
   protected static $modules = ['system', 'field', 'file', 'user'];
 
   protected function setUp(): void {
-    parent::setup();
+    parent::setUp();
 
     $this->installEntitySchema('file');
     $this->typedDataManager = $this->container->get('typed_data_manager');

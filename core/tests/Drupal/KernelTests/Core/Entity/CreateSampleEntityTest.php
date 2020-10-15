@@ -42,7 +42,7 @@ class CreateSampleEntityTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    parent::setup();
+    parent::setUp();
 
     $this->installEntitySchema('file');
     $this->installEntitySchema('user');

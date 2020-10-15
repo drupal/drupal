@@ -22,13 +22,13 @@ class ViewsEscapingTest extends ViewTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Used by WebTestBase::setup()
+   * Used by WebTestBase::setUp()
    *
    * We need theme_test for testing against test_basetheme and test_subtheme.
    *
    * @var array
    *
-   * @see \Drupal\simpletest\WebTestBase::setup()
+   * @see \Drupal\simpletest\WebTestBase::setUp()
    */
   protected static $modules = ['views', 'theme_test'];
 

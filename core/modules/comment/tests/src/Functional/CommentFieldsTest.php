@@ -194,7 +194,7 @@ class CommentFieldsTest extends CommentTestBase {
     ]);
     $this->drupalLogin($this->adminUser);
 
-    // Drop default comment field added in CommentTestBase::setup().
+    // Drop default comment field added in CommentTestBase::setUp().
     FieldStorageConfig::loadByName('node', 'comment')->delete();
     if ($field_storage = FieldStorageConfig::loadByName('node', 'comment_forum')) {
       $field_storage->delete();

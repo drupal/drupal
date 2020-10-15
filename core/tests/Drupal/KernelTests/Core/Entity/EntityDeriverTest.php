@@ -39,7 +39,7 @@ class EntityDeriverTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    parent::setup();
+    parent::setUp();
 
     $this->installEntitySchema('comment');
     NodeType::create(['type' => 'article', 'name' => 'Article'])->save();

@@ -66,7 +66,7 @@ class EntityReferenceSettingsTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    parent::setup();
+    parent::setUp();
 
     $this->installEntitySchema('node');
     $this->installEntitySchema('taxonomy_term');
