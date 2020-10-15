@@ -39,7 +39,6 @@ function workspaces_module_preinstall($module) {
   $workspace_manager = \Drupal::service('workspaces.manager');
   $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
   foreach ($entity_definition_update_manager->getEntityTypes() as $entity_type) {
-    $revision_metadata_keys = $entity_type->get('revision_metadata_keys');
     if ($workspace_manager->isEntityTypeSupported($entity_type)) {
       $entity_type->setRevisionMetadataKey('workspace', 'workspace');
       $entity_definition_update_manager->updateEntityType($entity_type);

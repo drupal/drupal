@@ -63,7 +63,7 @@ class Tables extends BaseTables {
     // looking for workspace-specific revisions, we have to force the parent
     // method to always pick the revision tables if the field being queried is
     // revisionable.
-    if ($active_workspace_id = $this->sqlQuery->getMetaData('active_workspace_id')) {
+    if ($this->sqlQuery->getMetaData('active_workspace_id')) {
       $previous_all_revisions = $this->sqlQuery->getMetaData('all_revisions');
       $this->sqlQuery->addMetaData('all_revisions', TRUE);
     }
