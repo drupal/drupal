@@ -15,18 +15,14 @@ class PhpUnitBridgeTest extends KernelTestBase {
 
   protected static $modules = ['deprecation_test'];
 
-  /**
-   * @expectedDeprecation Drupal\deprecation_test\Deprecation\FixtureDeprecatedClass is deprecated.
-   */
   public function testDeprecatedClass() {
+    $this->expectDeprecation('Drupal\deprecation_test\Deprecation\FixtureDeprecatedClass is deprecated.');
     $deprecated = new FixtureDeprecatedClass();
     $this->assertEquals('test', $deprecated->testFunction());
   }
 
-  /**
-   * @expectedDeprecation This is the deprecation message for deprecation_test_function().
-   */
   public function testDeprecatedFunction() {
+    $this->expectDeprecation('This is the deprecation message for deprecation_test_function().');
     $this->assertEquals('known_return_value', \deprecation_test_function());
   }
 

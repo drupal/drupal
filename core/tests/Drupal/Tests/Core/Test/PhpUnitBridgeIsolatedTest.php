@@ -16,10 +16,8 @@ use Drupal\deprecation_test\Deprecation\FixtureDeprecatedClass;
  */
 class PhpUnitBridgeIsolatedTest extends UnitTestCase {
 
-  /**
-   * @expectedDeprecation Drupal\deprecation_test\Deprecation\FixtureDeprecatedClass is deprecated.
-   */
   public function testDeprecatedClass() {
+    $this->expectDeprecation('Drupal\deprecation_test\Deprecation\FixtureDeprecatedClass is deprecated.');
     $deprecated = new FixtureDeprecatedClass();
     $this->assertEquals('test', $deprecated->testFunction());
   }

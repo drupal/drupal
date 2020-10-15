@@ -736,9 +736,9 @@ class RouteProviderTest extends KernelTestBase {
    * Tests getRoutesPaged().
    *
    * @group legacy
-   * @expectedDeprecation Drupal\Core\Routing\RouteProvider::getRoutesPaged() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3151009
    */
   public function testGetRoutesPaged() {
+    $this->expectDeprecation('Drupal\Core\Routing\RouteProvider::getRoutesPaged() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3151009');
     $connection = Database::getConnection();
     $provider = new RouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
 
@@ -766,9 +766,9 @@ class RouteProviderTest extends KernelTestBase {
    * Tests getRoutesCount().
    *
    * @group legacy
-   * @expectedDeprecation Drupal\Core\Routing\RouteProvider::getRoutesCount() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3151009
    */
   public function testGetRoutesCount() {
+    $this->expectDeprecation('Drupal\Core\Routing\RouteProvider::getRoutesCount() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3151009');
     $connection = Database::getConnection();
     $provider = new RouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
 

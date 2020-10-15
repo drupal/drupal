@@ -3,7 +3,6 @@
 namespace Drupal\Tests;
 
 use Drupal\TestTools\PhpUnitCompatibility\RunnerVersion;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
  * @coversDefaultClass \Drupal\Tests\Traits\PhpUnitWarnings
@@ -11,12 +10,11 @@ use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
  */
 class PhpUnitWarningsTest extends UnitTestCase {
 
-  use ExpectDeprecationTrait;
-
   /**
-   * @expectedDeprecation Test warning for \Drupal\Tests\PhpUnitWarningsTest::testAddWarning()
+   * Tests that selected PHPUnit warning is converted to deprecation.
    */
   public function testAddWarning() {
+    $this->expectDeprecation('Test warning for \Drupal\Tests\PhpUnitWarningsTest::testAddWarning()');
     $this->addWarning('Test warning for \Drupal\Tests\PhpUnitWarningsTest::testAddWarning()');
   }
 

@@ -76,6 +76,12 @@ class DrupalListener implements TestListener {
    * {@inheritdoc}
    */
   public function startTest(Test $test): void {
+    // Check for deprecated @expectedDeprecation annotations before the
+    // Symfony error handler has a chance to swallow this deprecation notice.
+    $annotations = UtilTest::parseTestMethodAnnotations(get_class($test), $test->getName(FALSE));
+    if (isset($annotations['method']['expectedDeprecation'])) {
+      @trigger_error('The @expectedDeprecation annotation on ' . get_class($test) . '::' . $test->getName(FALSE) . '() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use the expectDeprecation() method instead. See https://www.drupal.org/node/3176667', E_USER_DEPRECATED);
+    }
     // The Drupal error handler has to be registered prior to the Symfony error
     // handler that is registered in
     // \Symfony\Bridge\PhpUnit\Legacy\SymfonyTestsListenerTrait::startTest()

@@ -25,10 +25,9 @@ class MimeTypePassTest extends UnitTestCase {
 
   /**
    * Tests backwards compatibility shim for MimeTypeGuesser interface changes.
-   *
-   * @expectedDeprecation The "Drupal\Tests\Core\DependencyInjection\Compiler\LegacyMimeTypeGuesser" class implements "Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface" that is deprecated since Symfony 4.3, use {@link MimeTypesInterface} instead.
    */
   public function testProcessLegacy() {
+    $this->expectDeprecation('The "Drupal\Tests\Core\DependencyInjection\Compiler\LegacyMimeTypeGuesser" class implements "Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface" that is deprecated since Symfony 4.3, use {@link MimeTypesInterface} instead.');
     $container = $this->buildContainer();
     $container
       ->register('file.mime_type.guesser', MimeTypeGuesser::class);

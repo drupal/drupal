@@ -23,6 +23,7 @@ use GuzzleHttp\Cookie\CookieJar;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 
 /**
@@ -66,6 +67,7 @@ abstract class BrowserTestBase extends TestCase {
   use XdebugRequestTrait;
   use PhpUnitWarnings;
   use PhpUnitCompatibilityTrait;
+  use ExpectDeprecationTrait;
 
   /**
    * The database prefix of this test run.

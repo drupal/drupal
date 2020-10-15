@@ -607,10 +607,9 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
    * @covers ::applyLibrariesOverride
    *
    * @group legacy
-   *
-   * @expectedDeprecation Theme "deprecated" is overriding a deprecated library. The "deprecated/deprecated" asset library is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use another library instead. See https://www.example.com
    */
   public function testLibraryOverrideDeprecated() {
+    $this->expectDeprecation('Theme "deprecated" is overriding a deprecated library. The "deprecated/deprecated" asset library is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use another library instead. See https://www.example.com');
     $mock_theme_path = 'mocked_themes/kittens';
     $this->themeManager = $this->createMock(ThemeManagerInterface::class);
     $this->activeTheme = $this->getMockBuilder(ActiveTheme::class)

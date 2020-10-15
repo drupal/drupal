@@ -254,9 +254,9 @@ class BrowserTestBaseTest extends BrowserTestBase {
    * Tests legacy assertResponse().
    *
    * @group legacy
-   * @expectedDeprecation AssertLegacyTrait::assertResponse() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->statusCodeEquals() instead. See https://www.drupal.org/node/3129738
    */
   public function testAssertResponse() {
+    $this->expectDeprecation('AssertLegacyTrait::assertResponse() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->statusCodeEquals() instead. See https://www.drupal.org/node/3129738');
     $this->drupalGet('test-encoded');
     $this->assertResponse(200);
   }
@@ -265,9 +265,9 @@ class BrowserTestBaseTest extends BrowserTestBase {
    * Tests legacy assertTitle().
    *
    * @group legacy
-   * @expectedDeprecation AssertLegacyTrait::assertTitle() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->titleEquals() instead. See https://www.drupal.org/node/3129738
    */
   public function testAssertTitle() {
+    $this->expectDeprecation('AssertLegacyTrait::assertTitle() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->titleEquals() instead. See https://www.drupal.org/node/3129738');
     $this->drupalGet('test-encoded');
     $this->assertTitle("Page with encoded HTML | Drupal");
   }
@@ -276,9 +276,9 @@ class BrowserTestBaseTest extends BrowserTestBase {
    * Tests legacy assertHeader().
    *
    * @group legacy
-   * @expectedDeprecation AssertLegacyTrait::assertHeader() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->responseHeaderEquals() instead. See https://www.drupal.org/node/3129738
    */
   public function testAssertHeader() {
+    $this->expectDeprecation('AssertLegacyTrait::assertHeader() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->responseHeaderEquals() instead. See https://www.drupal.org/node/3129738');
     $account = $this->drupalCreateUser();
     $this->drupalLogin($account);
     $this->drupalGet('test-page');
@@ -300,9 +300,9 @@ class BrowserTestBaseTest extends BrowserTestBase {
    * Tests legacy assertPattern().
    *
    * @group legacy
-   * @expectedDeprecation AssertLegacyTrait::assertPattern() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->responseMatches() instead. See https://www.drupal.org/node/3129738
    */
   public function testAssertPattern() {
+    $this->expectDeprecation('AssertLegacyTrait::assertPattern() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->responseMatches() instead. See https://www.drupal.org/node/3129738');
     $this->drupalGet('test-escaped-characters');
     $this->assertPattern('/div class.*escaped/');
   }
@@ -311,9 +311,9 @@ class BrowserTestBaseTest extends BrowserTestBase {
    * Tests legacy getRawContent().
    *
    * @group legacy
-   * @expectedDeprecation AssertLegacyTrait::getRawContent() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->getSession()->getPage()->getContent() instead. See https://www.drupal.org/node/3129738
    */
   public function testGetRawContent() {
+    $this->expectDeprecation('AssertLegacyTrait::getRawContent() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->getSession()->getPage()->getContent() instead. See https://www.drupal.org/node/3129738');
     $this->drupalGet('test-encoded');
     $this->assertSame($this->getSession()->getPage()->getContent(), $this->getRawContent());
   }
@@ -322,9 +322,9 @@ class BrowserTestBaseTest extends BrowserTestBase {
    * Tests legacy buildXPathQuery().
    *
    * @group legacy
-   * @expectedDeprecation AssertLegacyTrait::buildXPathQuery() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->buildXPathQuery() instead. See https://www.drupal.org/node/3129738
    */
   public function testBuildXPathQuery() {
+    $this->expectDeprecation('AssertLegacyTrait::buildXPathQuery() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->buildXPathQuery() instead. See https://www.drupal.org/node/3129738');
     $this->buildXPathQuery('\\html');
   }
 
@@ -375,10 +375,10 @@ class BrowserTestBaseTest extends BrowserTestBase {
    * Tests legacy field asserts using textfields.
    *
    * @group legacy
-   * @expectedDeprecation AssertLegacyTrait::assertField() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->fieldExists() or $this->assertSession()->buttonExists() instead. See https://www.drupal.org/node/3129738
-   * @expectedDeprecation AssertLegacyTrait::assertNoField() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->fieldNotExists() or $this->assertSession()->buttonNotExists() instead. See https://www.drupal.org/node/3129738
    */
   public function testAssertField() {
+    $this->expectDeprecation('AssertLegacyTrait::assertField() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->fieldExists() or $this->assertSession()->buttonExists() instead. See https://www.drupal.org/node/3129738');
+    $this->expectDeprecation('AssertLegacyTrait::assertNoField() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->fieldNotExists() or $this->assertSession()->buttonNotExists() instead. See https://www.drupal.org/node/3129738');
     $this->drupalGet('test-field-xpath');
     $this->assertField('name');
     $this->assertNoField('invalid_name_and_id');
@@ -388,10 +388,10 @@ class BrowserTestBaseTest extends BrowserTestBase {
    * Tests legacy field asserts by id.
    *
    * @group legacy
-   * @expectedDeprecation AssertLegacyTrait::assertFieldById() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->fieldExists() or $this->assertSession()->buttonExists() or $this->assertSession()->fieldValueEquals() instead. See https://www.drupal.org/node/3129738
-   * @expectedDeprecation AssertLegacyTrait::assertNoFieldById() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->fieldNotExists() or $this->assertSession()->buttonNotExists() or $this->assertSession()->fieldValueNotEquals() instead. See https://www.drupal.org/node/3129738
    */
   public function testAssertFieldById() {
+    $this->expectDeprecation('AssertLegacyTrait::assertFieldById() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->fieldExists() or $this->assertSession()->buttonExists() or $this->assertSession()->fieldValueEquals() instead. See https://www.drupal.org/node/3129738');
+    $this->expectDeprecation('AssertLegacyTrait::assertNoFieldById() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->fieldNotExists() or $this->assertSession()->buttonNotExists() or $this->assertSession()->fieldValueNotEquals() instead. See https://www.drupal.org/node/3129738');
     $this->drupalGet('test-field-xpath');
     $this->assertFieldById('edit-save', NULL);
     $this->assertNoFieldById('invalid', NULL);
@@ -512,11 +512,11 @@ class BrowserTestBaseTest extends BrowserTestBase {
    * Tests legacy field asserts for options field type.
    *
    * @group legacy
-   * @expectedDeprecation AssertLegacyTrait::assertOptionByText() is deprecated in drupal:8.4.0 and is removed from drupal:10.0.0. Use $this->assertSession()->optionExists() instead. See https://www.drupal.org/node/3129738
-   * @expectedDeprecation AssertLegacyTrait::assertOption() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->optionExists() instead. See https://www.drupal.org/node/3129738
-   * @expectedDeprecation AssertLegacyTrait::assertNoOption() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->optionNotExists() instead. See https://www.drupal.org/node/3129738
    */
   public function testFieldAssertsForOptions() {
+    $this->expectDeprecation('AssertLegacyTrait::assertOptionByText() is deprecated in drupal:8.4.0 and is removed from drupal:10.0.0. Use $this->assertSession()->optionExists() instead. See https://www.drupal.org/node/3129738');
+    $this->expectDeprecation('AssertLegacyTrait::assertOption() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->optionExists() instead. See https://www.drupal.org/node/3129738');
+    $this->expectDeprecation('AssertLegacyTrait::assertNoOption() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->optionNotExists() instead. See https://www.drupal.org/node/3129738');
     $this->drupalGet('test-field-xpath');
 
     // Option field type.
@@ -605,10 +605,10 @@ class BrowserTestBaseTest extends BrowserTestBase {
    * Tests legacy assertFieldChecked() and assertNoFieldChecked().
    *
    * @group legacy
-   * @expectedDeprecation AssertLegacyTrait::assertFieldChecked() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->checkboxChecked() instead. See https://www.drupal.org/node/3129738
-   * @expectedDeprecation AssertLegacyTrait::assertNoFieldChecked() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->checkboxNotChecked() instead. See https://www.drupal.org/node/3129738
    */
   public function testLegacyFieldAssertsForCheckbox() {
+    $this->expectDeprecation('AssertLegacyTrait::assertFieldChecked() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->checkboxChecked() instead. See https://www.drupal.org/node/3129738');
+    $this->expectDeprecation('AssertLegacyTrait::assertNoFieldChecked() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->checkboxNotChecked() instead. See https://www.drupal.org/node/3129738');
     $this->drupalGet('test-field-xpath');
     $this->assertFieldChecked('edit-checkbox-enabled');
     $this->assertNoFieldChecked('edit-checkbox-disabled');
@@ -843,10 +843,10 @@ class BrowserTestBaseTest extends BrowserTestBase {
    * Tests deprecation of legacy assertEscaped() and assertNoEscaped().
    *
    * @group legacy
-   * @expectedDeprecation AssertLegacyTrait::assertNoEscaped() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->assertNoEscaped() instead. See https://www.drupal.org/node/3129738
-   * @expectedDeprecation AssertLegacyTrait::assertEscaped() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->assertEscaped() instead. See https://www.drupal.org/node/3129738
    */
   public function testLegacyEscapingAssertions(): void {
+    $this->expectDeprecation('AssertLegacyTrait::assertNoEscaped() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->assertNoEscaped() instead. See https://www.drupal.org/node/3129738');
+    $this->expectDeprecation('AssertLegacyTrait::assertEscaped() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->assertEscaped() instead. See https://www.drupal.org/node/3129738');
     $this->drupalGet('test-escaped-characters');
     $this->assertNoEscaped('<div class="escaped">');
     $this->assertEscaped('Escaped: <"\'&>');
@@ -856,9 +856,9 @@ class BrowserTestBaseTest extends BrowserTestBase {
    * Tests deprecation of drupalPostForm().
    *
    * @group legacy
-   * @expectedDeprecation Calling Drupal\Tests\UiHelperTrait::drupalPostForm() with $edit set to NULL is deprecated in drupal:9.1.0 and the method is removed in drupal:10.0.0. Use $this->submitForm() instead. See https://www.drupal.org/node/3168858
    */
   public function testLegacyDrupalPostForm(): void {
+    $this->expectDeprecation('Calling Drupal\Tests\UiHelperTrait::drupalPostForm() with $edit set to NULL is deprecated in drupal:9.1.0 and the method is removed in drupal:10.0.0. Use $this->submitForm() instead. See https://www.drupal.org/node/3168858');
     $this->drupalPostForm(NULL, NULL, '');
   }
 
@@ -899,10 +899,10 @@ class BrowserTestBaseTest extends BrowserTestBase {
    * Tests legacy assertFieldByName() and assertNoFieldByName().
    *
    * @group legacy
-   * @expectedDeprecation AssertLegacyTrait::assertFieldByName() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->fieldExists() or $this->assertSession()->buttonExists() or $this->assertSession()->fieldValueEquals() instead. See https://www.drupal.org/node/3129738
-   * @expectedDeprecation AssertLegacyTrait::assertNoFieldByName() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->fieldNotExists() or $this->assertSession()->buttonNotExists() or $this->assertSession()->fieldValueNotEquals() instead. See https://www.drupal.org/node/3129738
    */
   public function testLegacyFieldAssertsByName() {
+    $this->expectDeprecation('AssertLegacyTrait::assertFieldByName() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->fieldExists() or $this->assertSession()->buttonExists() or $this->assertSession()->fieldValueEquals() instead. See https://www.drupal.org/node/3129738');
+    $this->expectDeprecation('AssertLegacyTrait::assertNoFieldByName() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->fieldNotExists() or $this->assertSession()->buttonNotExists() or $this->assertSession()->fieldValueNotEquals() instead. See https://www.drupal.org/node/3129738');
     $this->drupalGet('test-field-xpath');
     $this->assertFieldByName('checkbox_enabled', TRUE);
     $this->assertNoFieldByName('checkbox_enabled', FALSE);

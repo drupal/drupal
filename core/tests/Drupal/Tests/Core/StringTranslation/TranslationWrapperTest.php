@@ -17,9 +17,9 @@ class TranslationWrapperTest extends UnitTestCase {
   /**
    * @covers ::__construct
    * @group legacy
-   * @expectedDeprecation Drupal\Core\StringTranslation\TranslationWrapper is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use the \Drupal\Core\StringTranslation\TranslatableMarkup class instead. See https://www.drupal.org/node/2571255
    */
   public function testTranslationWrapper() {
+    $this->expectDeprecation('Drupal\Core\StringTranslation\TranslationWrapper is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use the \Drupal\Core\StringTranslation\TranslatableMarkup class instead. See https://www.drupal.org/node/2571255');
     $object = new TranslationWrapper('Deprecated');
     $this->assertInstanceOf(TranslatableMarkup::class, $object);
   }

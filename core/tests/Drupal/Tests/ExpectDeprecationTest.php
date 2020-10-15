@@ -19,9 +19,9 @@ class ExpectDeprecationTest extends UnitTestCase {
 
   /**
    * @covers ::addExpectedDeprecationMessage
-   * @expectedDeprecation Drupal\Tests\Traits\ExpectDeprecationTrait::addExpectedDeprecationMessage() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Symfony\Bridge\PhpUnit\ExpectDeprecationTrait::expectDeprecation() instead. See https://www.drupal.org/node/3161901
    */
   public function testExpectDeprecation() {
+    $this->expectDeprecation('Drupal\Tests\Traits\ExpectDeprecationTrait::addExpectedDeprecationMessage() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Symfony\Bridge\PhpUnit\ExpectDeprecationTrait::expectDeprecation() instead. See https://www.drupal.org/node/3161901');
     $this->addExpectedDeprecationMessage('Test deprecation');
     @trigger_error('Test deprecation', E_USER_DEPRECATED);
   }
@@ -30,10 +30,10 @@ class ExpectDeprecationTest extends UnitTestCase {
    * @covers ::addExpectedDeprecationMessage
    * @runInSeparateProcess
    * @preserveGlobalState disabled
-   * @expectedDeprecation Drupal\Tests\Traits\ExpectDeprecationTrait::addExpectedDeprecationMessage() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Symfony\Bridge\PhpUnit\ExpectDeprecationTrait::expectDeprecation() instead. See https://www.drupal.org/node/3161901
-   * @expectedDeprecation Drupal\Tests\Traits\ExpectDeprecationTrait::expectedDeprecations() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Symfony\Bridge\PhpUnit\ExpectDeprecationTrait::expectDeprecation() instead. See https://www.drupal.org/node/3161901
    */
   public function testExpectDeprecationInIsolation() {
+    $this->expectDeprecation('Drupal\Tests\Traits\ExpectDeprecationTrait::addExpectedDeprecationMessage() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Symfony\Bridge\PhpUnit\ExpectDeprecationTrait::expectDeprecation() instead. See https://www.drupal.org/node/3161901');
+    $this->expectDeprecation('Drupal\Tests\Traits\ExpectDeprecationTrait::expectedDeprecations() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Symfony\Bridge\PhpUnit\ExpectDeprecationTrait::expectDeprecation() instead. See https://www.drupal.org/node/3161901');
     $this->addExpectedDeprecationMessage('Test isolated deprecation');
     $this->expectedDeprecations(['Test isolated deprecation2']);
     @trigger_error('Test isolated deprecation', E_USER_DEPRECATED);

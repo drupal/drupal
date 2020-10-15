@@ -17,9 +17,9 @@ class DatabaseExceptionWrapperTest extends KernelTestBase {
    * Tests deprecation of Connection::prepare.
    *
    * @group legacy
-   * @expectedDeprecation Connection::prepare() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Database drivers should instantiate \PDOStatement objects by calling \PDO::prepare in their Connection::prepareStatement method instead. \PDO::prepare should not be called outside of driver code. See https://www.drupal.org/node/3137786
    */
   public function testPrepare() {
+    $this->expectDeprecation('Connection::prepare() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Database drivers should instantiate \PDOStatement objects by calling \PDO::prepare in their Connection::prepareStatement method instead. \PDO::prepare should not be called outside of driver code. See https://www.drupal.org/node/3137786');
     $connection = Database::getConnection();
     try {
       // SQLite validates the syntax upon preparing a statement already.
@@ -41,9 +41,9 @@ class DatabaseExceptionWrapperTest extends KernelTestBase {
    * Tests deprecation of Connection::prepareQuery.
    *
    * @group legacy
-   * @expectedDeprecation Connection::prepareQuery() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use ::prepareStatement() instead. See https://www.drupal.org/node/3137786
    */
   public function testPrepareQuery() {
+    $this->expectDeprecation('Connection::prepareQuery() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use ::prepareStatement() instead. See https://www.drupal.org/node/3137786');
     $this->expectException(\PDOException::class);
     $stmt = Database::getConnection()->prepareQuery('bananas');
     $stmt->execute();

@@ -323,9 +323,9 @@ class ConnectionTest extends UnitTestCase {
    * Test Connection::destroy().
    *
    * @group legacy
-   * @expectedDeprecation Drupal\Core\Database\Connection::destroy() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Move custom database destruction logic to __destruct(). See https://www.drupal.org/node/3142866
    */
   public function testDestroy() {
+    $this->expectDeprecation('Drupal\Core\Database\Connection::destroy() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Move custom database destruction logic to __destruct(). See https://www.drupal.org/node/3142866');
     $mock_pdo = $this->createMock('Drupal\Tests\Core\Database\Stub\StubPDO');
     // Mocking StubConnection gives us access to the $schema attribute.
     $connection = new StubConnection($mock_pdo, ['namespace' => 'Drupal\\Tests\\Core\\Database\\Stub\\Driver']);
@@ -345,9 +345,9 @@ class ConnectionTest extends UnitTestCase {
    * Test Connection::__destruct().
    *
    * @group legacy
-   * @expectedDeprecation Drupal\Core\Database\Connection::destroy() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Move custom database destruction logic to __destruct(). See https://www.drupal.org/node/3142866
    */
   public function testDestructBcLayer() {
+    $this->expectDeprecation('Drupal\Core\Database\Connection::destroy() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Move custom database destruction logic to __destruct(). See https://www.drupal.org/node/3142866');
     $mock_pdo = $this->createMock(StubPDO::class);
     $fake_connection = new class($mock_pdo, ['namespace' => Driver::class]) extends StubConnection {
 
@@ -567,10 +567,10 @@ class ConnectionTest extends UnitTestCase {
 
   /**
    * @covers ::__construct
-   * @expectedDeprecation In drupal:10.0.0 not setting the $identifierQuotes property in the concrete Connection class will result in an RuntimeException. See https://www.drupal.org/node/2986894
    * @group legacy
    */
   public function testIdentifierQuotesDeprecation() {
+    $this->expectDeprecation('In drupal:10.0.0 not setting the $identifierQuotes property in the concrete Connection class will result in an RuntimeException. See https://www.drupal.org/node/2986894');
     $mock_pdo = $this->createMock(StubPDO::class);
     new StubConnection($mock_pdo, [], NULL);
   }
@@ -675,9 +675,9 @@ class ConnectionTest extends UnitTestCase {
    * Tests the deprecation of Drupal 8 style database drivers.
    *
    * @group legacy
-   * @expectedDeprecation Support for database drivers located in the "drivers/lib/Drupal/Driver/Database" directory is deprecated in drupal:9.1.0 and is removed in drupal:10.0.0. Contributed and custom database drivers should be provided by modules and use the namespace "Drupal\MODULE_NAME\Driver\Database\DRIVER_NAME". See https://www.drupal.org/node/3123251
    */
   public function testLegacyDatabaseDriverInRootDriversDirectory() {
+    $this->expectDeprecation('Support for database drivers located in the "drivers/lib/Drupal/Driver/Database" directory is deprecated in drupal:9.1.0 and is removed in drupal:10.0.0. Contributed and custom database drivers should be provided by modules and use the namespace "Drupal\MODULE_NAME\Driver\Database\DRIVER_NAME". See https://www.drupal.org/node/3123251');
     $namespace = 'Drupal\\Driver\\Database\\Stub';
     $mock_pdo = $this->createMock(StubPDO::class);
     $connection = new StubConnection($mock_pdo, ['namespace' => $namespace], ['"', '"']);

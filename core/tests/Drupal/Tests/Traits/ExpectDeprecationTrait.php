@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\Traits;
 
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait as SymfonyExpectDeprecationTrait;
-
 /**
  * Adds the ability to dynamically set expected deprecation messages in tests.
  *
@@ -15,7 +13,6 @@ use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait as SymfonyExpectDeprecationTra
  * @see https://www.drupal.org/node/3161901
  */
 trait ExpectDeprecationTrait {
-  use SymfonyExpectDeprecationTrait;
 
   /**
    * Sets an expected deprecation message.

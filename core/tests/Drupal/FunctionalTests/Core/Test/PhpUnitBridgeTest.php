@@ -21,16 +21,18 @@ class PhpUnitBridgeTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * @expectedDeprecation This is the deprecation message for deprecation_test_function().
+   * Tests deprecation message from deprecation_test_function().
    */
   public function testSilencedError() {
+    $this->expectDeprecation('This is the deprecation message for deprecation_test_function().');
     $this->assertEquals('known_return_value', deprecation_test_function());
   }
 
   /**
-   * @expectedDeprecation This is the deprecation message for deprecation_test_function().
+   * Tests deprecation message from deprecated route.
    */
   public function testErrorOnSiteUnderTest() {
+    $this->expectDeprecation('This is the deprecation message for deprecation_test_function().');
     $this->drupalGet(Url::fromRoute('deprecation_test.route'));
   }
 

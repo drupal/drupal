@@ -4,6 +4,7 @@ namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Bytes;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 // cspell:ignore zettabytes
 
@@ -15,6 +16,8 @@ use PHPUnit\Framework\TestCase;
  * @coversDefaultClass \Drupal\Component\Utility\Bytes
  */
 class BytesTest extends TestCase {
+
+  use ExpectDeprecationTrait;
 
   /**
    * Tests \Drupal\Component\Utility\Bytes::toInt().
@@ -30,9 +33,9 @@ class BytesTest extends TestCase {
    * @covers ::toInt
    *
    * @group legacy
-   * @expectedDeprecation \Drupal\Component\Utility\Bytes::toInt() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Drupal\Component\Utility\Bytes::toNumber() instead. See https://www.drupal.org/node/3162663
    */
   public function testToInt($size, $expected_int) {
+    $this->expectDeprecation('\Drupal\Component\Utility\Bytes::toInt() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Drupal\Component\Utility\Bytes::toNumber() instead. See https://www.drupal.org/node/3162663');
     $this->assertEquals($expected_int, Bytes::toInt($size));
   }
 

@@ -30,6 +30,7 @@ use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\visitor\vfsStreamPrintVisitor;
 use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Route;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
  * Base class for functional integration tests.
@@ -81,6 +82,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   use TestRequirementsTrait;
   use PhpUnitWarnings;
   use PhpUnitCompatibilityTrait;
+  use ExpectDeprecationTrait;
 
   /**
    * {@inheritdoc}

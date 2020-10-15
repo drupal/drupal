@@ -4,6 +4,7 @@ namespace Drupal\Tests\Component\Render;
 
 use Drupal\Component\Render\FormattableMarkup;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
  * Tests the TranslatableMarkup class.
@@ -12,6 +13,8 @@ use PHPUnit\Framework\TestCase;
  * @group utility
  */
 class FormattableMarkupTest extends TestCase {
+
+  use ExpectDeprecationTrait;
 
   /**
    * The error message of the last error in the error handler.
@@ -100,10 +103,10 @@ class FormattableMarkupTest extends TestCase {
   }
 
   /**
-   * @expectedDeprecation Support for keys without a placeholder prefix is deprecated in Drupal 9.1.0 and will be removed in Drupal 10.0.0. Invalid placeholder (foo) with string: "No replacements"
    * @group legacy
    */
   public function testNoReplacementUnsupportedVariable() {
+    $this->expectDeprecation('Support for keys without a placeholder prefix is deprecated in Drupal 9.1.0 and will be removed in Drupal 10.0.0. Invalid placeholder (foo) with string: "No replacements"');
     $markup = new FormattableMarkup('No replacements', ['foo' => 'bar']);
     // Cast it to a string which will generate the deprecation notice.
     $output = (string) $markup;

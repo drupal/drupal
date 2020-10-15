@@ -77,9 +77,9 @@ class DoTrustedCallbackTraitTest extends UnitTestCase {
   /**
    * @dataProvider errorTypeProvider
    * @group legacy
-   * @expectedDeprecation Drupal\Tests\Core\Security\UntrustedObject::callback is not trusted
    */
   public function testSilencedDeprecation($callback) {
+    $this->expectDeprecation('Drupal\Tests\Core\Security\UntrustedObject::callback is not trusted');
     $this->doTrustedCallback($callback, [], '%s is not trusted', TrustedCallbackInterface::TRIGGER_SILENCED_DEPRECATION);
   }
 

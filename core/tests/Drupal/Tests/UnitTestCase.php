@@ -11,6 +11,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Tests\Traits\PhpUnitWarnings;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
  * Provides a base class and helpers for Drupal unit tests.
@@ -21,6 +22,7 @@ abstract class UnitTestCase extends TestCase {
 
   use PhpUnitWarnings;
   use PhpUnitCompatibilityTrait;
+  use ExpectDeprecationTrait;
 
   /**
    * The random generator.

@@ -22,9 +22,9 @@ class UserLoginFormTest extends KernelTestBase {
 
   /**
    * @group legacy
-   * @expectedDeprecation Passing the flood service to Drupal\user\Form\UserLoginForm::__construct is deprecated in drupal:9.1.0 and is replaced by user.flood_control in drupal:10.0.0. See https://www.drupal.org/node/3067148
    */
   public function testConstructorDeprecations() {
+    $this->expectDeprecation('Passing the flood service to Drupal\user\Form\UserLoginForm::__construct is deprecated in drupal:9.1.0 and is replaced by user.flood_control in drupal:10.0.0. See https://www.drupal.org/node/3067148');
     $flood = $this->prophesize(FloodInterface::class);
     $user_storage = $this->prophesize(UserStorageInterface::class);
     $user_auth = $this->prophesize(UserAuthInterface::class);

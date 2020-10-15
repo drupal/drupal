@@ -5,7 +5,6 @@ namespace Drupal\Tests\Core\Site;
 use Drupal\Core\Site\Settings;
 use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
  * @coversDefaultClass \Drupal\Core\Site\Settings
@@ -13,8 +12,6 @@ use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
  * @group Site
  */
 class SettingsTest extends UnitTestCase {
-
-  use ExpectDeprecationTrait;
 
   /**
    * Simple settings array to test against.

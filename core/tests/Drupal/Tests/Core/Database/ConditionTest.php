@@ -208,9 +208,9 @@ class ConditionTest extends UnitTestCase {
    * Tests the deprecation of the class Condition.
    *
    * @group legacy
-   * @expectedDeprecation Creating an instance of this class is deprecated in drupal:9.1.0 and is removed in drupal:10.0.0. Use Database::getConnection()->condition() instead. See https://www.drupal.org/node/3159568
    */
   public function testConditionClassDeprecation() {
+    $this->expectDeprecation('Creating an instance of this class is deprecated in drupal:9.1.0 and is removed in drupal:10.0.0. Use Database::getConnection()->condition() instead. See https://www.drupal.org/node/3159568');
     $condition = new Condition('OR');
     $this->assertSame('Drupal\Core\Database\Query\Condition', get_class($condition));
   }

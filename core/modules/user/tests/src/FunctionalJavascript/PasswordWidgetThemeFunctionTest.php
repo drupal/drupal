@@ -43,13 +43,12 @@ class PasswordWidgetThemeFunctionTest extends WebDriverTestBase {
    * Tests password widget theme functions and its deprecations.
    *
    * @group legacy
-   *
-   * @expectedDeprecation Javascript Deprecation: Returning <span> without data-drupal-selector="password-match-status-text" attribute is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. See https://www.drupal.org/node/3152101
-   * @expectedDeprecation Javascript Deprecation: The js-password-strength__indicator class is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Replace js-password-strength__indicator with a data-drupal-selector="password-strength-indicator" attribute. See https://www.drupal.org/node/3152101
-   * @expectedDeprecation Javascript Deprecation: The js-password-strength__text class is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Replace js-password-strength__text with a data-drupal-selector="password-strength-text" attribute. See https://www.drupal.org/node/3152101
-   * @expectedDeprecation Javascript Deprecation: The message property is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. The markup should be constructed using messageTips property and Drupal.theme.passwordSuggestions. See https://www.drupal.org/node/3130352
    */
   public function testPasswordConfirmWidgetJsComponents() {
+    $this->expectDeprecation('Javascript Deprecation: Returning <span> without data-drupal-selector="password-match-status-text" attribute is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. See https://www.drupal.org/node/3152101');
+    $this->expectDeprecation('Javascript Deprecation: The js-password-strength__indicator class is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Replace js-password-strength__indicator with a data-drupal-selector="password-strength-indicator" attribute. See https://www.drupal.org/node/3152101');
+    $this->expectDeprecation('Javascript Deprecation: The js-password-strength__text class is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Replace js-password-strength__text with a data-drupal-selector="password-strength-text" attribute. See https://www.drupal.org/node/3152101');
+    $this->expectDeprecation('Javascript Deprecation: The message property is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. The markup should be constructed using messageTips property and Drupal.theme.passwordSuggestions. See https://www.drupal.org/node/3130352');
     $assert_session = $this->assertSession();
 
     $this->drupalGet($this->testUser->toUrl('edit-form'));

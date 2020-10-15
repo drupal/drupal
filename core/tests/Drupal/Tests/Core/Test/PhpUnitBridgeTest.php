@@ -14,9 +14,10 @@ use Drupal\deprecation_test\Deprecation\FixtureDeprecatedClass;
 class PhpUnitBridgeTest extends UnitTestCase {
 
   /**
-   * @expectedDeprecation Drupal\deprecation_test\Deprecation\FixtureDeprecatedClass is deprecated.
+   * Tests class-level deprecation.
    */
   public function testDeprecatedClass() {
+    $this->expectDeprecation('Drupal\deprecation_test\Deprecation\FixtureDeprecatedClass is deprecated.');
     $deprecated = new FixtureDeprecatedClass();
     $this->assertEquals('test', $deprecated->testFunction());
   }

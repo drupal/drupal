@@ -82,10 +82,9 @@ class RegistryLegacyTest extends UnitTestCase {
 
   /**
    * Tests getting legacy theme function registry data defined by a module.
-   *
-   * @expectedDeprecation Unsilenced deprecation: Theme functions are deprecated in drupal:8.0.0 and are removed from drupal:10.0.0. Use Twig templates instead of theme_theme_test(). See https://www.drupal.org/node/1831138
    */
   public function testGetLegacyThemeFunctionRegistryForModule() {
+    $this->expectDeprecation('Unsilenced deprecation: Theme functions are deprecated in drupal:8.0.0 and are removed from drupal:10.0.0. Use Twig templates instead of theme_theme_test(). See https://www.drupal.org/node/1831138');
     $test_theme = new ActiveTheme([
       'name' => 'test_legacy_theme',
       'path' => 'core/modules/system/tests/themes/test_legacy_theme/test_legacy_theme.info.yml',

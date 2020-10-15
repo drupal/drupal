@@ -18,9 +18,9 @@ class RouterLegacyTest extends UnitTestCase {
 
   /**
    * @covers ::generate
-   * @expectedDeprecation Drupal\Core\Routing\Router::generate() is deprecated in drupal:8.3.0 and will throw an exception from drupal:10.0.0. Use the \Drupal\Core\Url object instead. See https://www.drupal.org/node/2820197
    */
   public function testGenerateDeprecated() {
+    $this->expectDeprecation('Drupal\Core\Routing\Router::generate() is deprecated in drupal:8.3.0 and will throw an exception from drupal:10.0.0. Use the \Drupal\Core\Url object instead. See https://www.drupal.org/node/2820197');
     $route_provider = $this->prophesize(RouteProviderInterface::class);
     $current_path_stack = $this->prophesize(CurrentPathStack::class);
     $url_generator = $this->prophesize(UrlGeneratorInterface::class);

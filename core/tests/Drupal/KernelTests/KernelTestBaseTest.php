@@ -322,9 +322,9 @@ class KernelTestBaseTest extends KernelTestBase {
    * Tests the deprecation of AssertLegacyTrait::assert.
    *
    * @group legacy
-   * @expectedDeprecation AssertLegacyTrait::assert() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertTrue() instead. See https://www.drupal.org/node/3129738
    */
   public function testAssert() {
+    $this->expectDeprecation('AssertLegacyTrait::assert() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertTrue() instead. See https://www.drupal.org/node/3129738');
     $this->assert(TRUE);
   }
 
@@ -332,9 +332,9 @@ class KernelTestBaseTest extends KernelTestBase {
    * Tests the deprecation of AssertLegacyTrait::assertIdenticalObject.
    *
    * @group legacy
-   * @expectedDeprecation AssertLegacyTrait::assertIdenticalObject() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertEquals() instead. See https://www.drupal.org/node/3129738
     */
   public function testAssertIdenticalObject() {
+    $this->expectDeprecation('AssertLegacyTrait::assertIdenticalObject() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertEquals() instead. See https://www.drupal.org/node/3129738');
     $this->assertIdenticalObject((object) ['foo' => 'bar'], (object) ['foo' => 'bar']);
   }
 
@@ -342,9 +342,9 @@ class KernelTestBaseTest extends KernelTestBase {
    * Tests the deprecation of ::installSchema with the tables key_value(_expire).
    *
    * @group legacy
-   * @expectedDeprecation Installing the tables key_value and key_value_expire with the method KernelTestBase::installSchema() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. The tables are now lazy loaded and therefore will be installed automatically when used. See https://www.drupal.org/node/3143286
     */
   public function testKernelTestBaseInstallSchema() {
+    $this->expectDeprecation('Installing the tables key_value and key_value_expire with the method KernelTestBase::installSchema() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. The tables are now lazy loaded and therefore will be installed automatically when used. See https://www.drupal.org/node/3143286');
     $this->enableModules(['system']);
     $this->installSchema('system', ['key_value', 'key_value_expire']);
     $this->assertFalse(Database::getConnection()->schema()->tableExists('key_value'));

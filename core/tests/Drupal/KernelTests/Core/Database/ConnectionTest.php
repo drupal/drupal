@@ -122,10 +122,10 @@ class ConnectionTest extends DatabaseTestBase {
    * Tests the deprecation of the 'transactions' connection option.
    *
    * @group legacy
-   * @expectedDeprecation Passing a 'transactions' connection option to Drupal\Core\Database\Connection::__construct is deprecated in drupal:9.1.0 and is removed in drupal:10.0.0. All database drivers must support transactions. See https://www.drupal.org/node/2278745
-   * @expectedDeprecation Drupal\Core\Database\Connection::supportsTransactions is deprecated in drupal:9.1.0 and is removed in drupal:10.0.0. All database drivers must support transactions. See https://www.drupal.org/node/2278745
    */
   public function testTransactionsOptionDeprecation() {
+    $this->expectDeprecation('Passing a \'transactions\' connection option to Drupal\Core\Database\Connection::__construct is deprecated in drupal:9.1.0 and is removed in drupal:10.0.0. All database drivers must support transactions. See https://www.drupal.org/node/2278745');
+    $this->expectDeprecation('Drupal\Core\Database\Connection::supportsTransactions is deprecated in drupal:9.1.0 and is removed in drupal:10.0.0. All database drivers must support transactions. See https://www.drupal.org/node/2278745');
     $connection_info = Database::getConnectionInfo('default');
     $connection_info['default']['transactions'] = FALSE;
     Database::addConnectionInfo('default', 'foo', $connection_info['default']);

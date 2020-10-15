@@ -216,10 +216,9 @@ class LibraryDiscoveryCollectorTest extends UnitTestCase {
    * @covers ::applyLibrariesExtend
    *
    * @group legacy
-   *
-   * @expectedDeprecation Theme "test" is extending a deprecated library. The "test/test_4" asset library is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use the test_3 library instead. See https://www.example.com
    */
   public function testLibrariesExtendDeprecated() {
+    $this->expectDeprecation('Theme "test" is extending a deprecated library. The "test/test_4" asset library is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use the test_3 library instead. See https://www.example.com');
     $this->activeTheme = $this->getMockBuilder(ActiveTheme::class)
       ->disableOriginalConstructor()
       ->getMock();
