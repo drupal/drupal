@@ -155,7 +155,6 @@ class FilterTest extends ViewTestBase {
    * exposed filter.
    */
   public function testInOperatorSelectAllOptions() {
-    $view = Views::getView('test_filter_in_operator_ui');
     $row['row[type]'] = 'fields';
     $this->drupalPostForm('admin/structure/views/nojs/display/test_filter_in_operator_ui/default/row', $row, t('Apply'));
     $field['name[node_field_data.nid]'] = TRUE;
