@@ -68,7 +68,7 @@ class DateTimeCustomFormatter extends DateTimeFormatterBase {
     $form['date_format'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Date/time format'),
-      '#description' => $this->t('See <a href="http://php.net/manual/function.date.php" target="_blank">the documentation for PHP date formats</a>.'),
+      '#description' => $this->t('See <a href="https://www.php.net/manual/datetime.format.php#refsect1-datetime.format-parameters" target="_blank">the documentation for PHP date formats</a>.'),
       '#default_value' => $this->getSetting('date_format'),
     ];
 
