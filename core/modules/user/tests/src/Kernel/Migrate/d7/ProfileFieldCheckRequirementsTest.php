@@ -21,7 +21,7 @@ class ProfileFieldCheckRequirementsTest extends MigrateDrupal7TestBase {
   }
 
   /**
-   * Tests exception in thrown when profile_fields tables does not exist.
+   * Tests exception is thrown when profile_fields tables do not exist.
    */
   public function testCheckRequirements() {
     $this->expectException(RequirementsException::class);
