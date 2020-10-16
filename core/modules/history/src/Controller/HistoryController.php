@@ -2,6 +2,7 @@
 
 namespace Drupal\history\Controller;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -13,6 +14,22 @@ use Drupal\node\NodeInterface;
  * Returns responses for History module routes.
  */
 class HistoryController extends ControllerBase {
+
+  /**
+   * The history repository service.
+   *
+   * @var \Drupal\history\HistoryRepositoryInterface
+   */
+  protected $historyRepository;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    $instance = parent::create($container);
+    $instance->historyRepository = $container->get('history.repository');
+    return $instance;
+  }
 
   /**
    * Returns a set of nodes' last read timestamps.
@@ -32,7 +49,7 @@ class HistoryController extends ControllerBase {
     if (!isset($nids)) {
       throw new NotFoundHttpException();
     }
-    return new JsonResponse(history_read_multiple($nids));
+    return new JsonResponse($this->historyRepository->getLastViewed('node', $nids));
   }
 
   /**
@@ -42,6 +59,8 @@ class HistoryController extends ControllerBase {
    *   The request of the page.
    * @param \Drupal\node\NodeInterface $node
    *   The node whose "last read" timestamp should be updated.
+   *
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
    */
   public function readNode(Request $request, NodeInterface $node) {
     if ($this->currentUser()->isAnonymous()) {
@@ -49,9 +68,10 @@ class HistoryController extends ControllerBase {
     }
 
     // Update the history table, stating that this user viewed this node.
-    history_write($node->id());
-
-    return new JsonResponse((int) history_read($node->id()));
+    $timestamps = $this->historyRepository
+      ->updateLastViewed($node)
+      ->getLastViewed('node', [$node->id()]);
+    return new JsonResponse($timestamps[$node->id()]);
   }
 
 }

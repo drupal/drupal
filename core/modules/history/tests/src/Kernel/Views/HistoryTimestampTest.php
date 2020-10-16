@@ -72,14 +72,16 @@ class HistoryTimestampTest extends ViewsKernelTestBase {
     $connection->insert('history')
       ->fields([
         'uid' => $account->id(),
-        'nid' => $nodes[0]->id(),
+        'entity_id' => $nodes[0]->id(),
+        'entity_type' => 'node',
         'timestamp' => REQUEST_TIME - 100,
       ])->execute();
 
     $connection->insert('history')
       ->fields([
         'uid' => $account->id(),
-        'nid' => $nodes[1]->id(),
+        'entity_id' => $nodes[1]->id(),
+        'entity_type' => 'node',
         'timestamp' => REQUEST_TIME + 100,
       ])->execute();
 

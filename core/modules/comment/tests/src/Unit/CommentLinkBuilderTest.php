@@ -6,6 +6,7 @@ use Drupal\comment\CommentLinkBuilder;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Url;
+use Drupal\history\HistoryRepositoryInterface;
 use Drupal\node\NodeInterface;
 use Drupal\Tests\Traits\Core\GeneratePermutationsTrait;
 use Drupal\Tests\UnitTestCase;
@@ -40,6 +41,13 @@ class CommentLinkBuilderTest extends UnitTestCase {
   protected $entityTypeManager;
 
   /**
+   * The history repository mock.
+   *
+   * @var \Drupal\history\HistoryRepositoryInterface|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected $historyRepository;
+
+  /**
    * Module handler mock.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
@@ -72,9 +80,10 @@ class CommentLinkBuilderTest extends UnitTestCase {
     $this->commentManager = $this->createMock('\Drupal\comment\CommentManagerInterface');
     $this->stringTranslation = $this->getStringTranslationStub();
     $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
+    $this->historyRepository = $this->createMock(HistoryRepositoryInterface::class);
     $this->moduleHandler = $this->createMock('\Drupal\Core\Extension\ModuleHandlerInterface');
     $this->currentUser = $this->createMock('\Drupal\Core\Session\AccountProxyInterface');
-    $this->commentLinkBuilder = new CommentLinkBuilder($this->currentUser, $this->commentManager, $this->moduleHandler, $this->stringTranslation, $this->entityTypeManager);
+    $this->commentLinkBuilder = new CommentLinkBuilder($this->currentUser, $this->commentManager, $this->moduleHandler, $this->stringTranslation, $this->entityTypeManager, $this->historyRepository);
     $this->commentManager->expects($this->any())
       ->method('getFields')
       ->with('node')
@@ -87,6 +96,9 @@ class CommentLinkBuilderTest extends UnitTestCase {
     $this->stringTranslation->expects($this->any())
       ->method('formatPlural')
       ->willReturnArgument(1);
+    $this->historyRepository->expects($this->any())
+      ->method('getLastViewed')
+      ->willReturn([1 => 0]);
   }
 
   /**
@@ -315,16 +327,6 @@ class CommentLinkBuilderTest extends UnitTestCase {
       ->willReturn($url);
 
     return $node;
-  }
-
-}
-
-namespace Drupal\comment;
-
-if (!function_exists('history_read')) {
-
-  function history_read() {
-    return 0;
   }
 
 }

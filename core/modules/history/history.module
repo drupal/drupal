@@ -13,6 +13,7 @@ use Drupal\Core\Url;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\node\Entity\Node;
 use Drupal\user\UserInterface;
 
 /**
@@ -44,10 +45,16 @@ function history_help($route_name, RouteMatchInterface $route_match) {
  * @return int
  *   If a node has been previously viewed by the user, the timestamp in seconds
  *   of when the last view occurred; otherwise, zero.
+ *
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\history\HistoryRepositoryInterface::getLastViewed() instead.
+ *
+ * @see https://www.drupal.org/node/2197189
  */
 function history_read($nid) {
-  $history = history_read_multiple([$nid]);
-  return $history[$nid];
+  @trigger_error('history_read() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use \Drupal\history\HistoryRepositoryInterface::getLastViewed() instead. See https://www.drupal.org/node/2197189', E_USER_DEPRECATED);
+  $timestamps = \Drupal::service('history.repository')->getLastViewed('node', [$nid]);
+  return $timestamps[$nid];
 }
 
 /**
@@ -60,37 +67,15 @@ function history_read($nid) {
  *   Array of timestamps keyed by node ID. If a node has been previously viewed
  *   by the user, the timestamp in seconds of when the last view occurred;
  *   otherwise, zero.
+ *
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\history\HistoryRepositoryInterface::getLastViewed() instead.
+ *
+ * @see https://www.drupal.org/node/2197189
  */
 function history_read_multiple($nids) {
-  $history = &drupal_static(__FUNCTION__, []);
-
-  $return = [];
-
-  $nodes_to_read = [];
-  foreach ($nids as $nid) {
-    if (isset($history[$nid])) {
-      $return[$nid] = $history[$nid];
-    }
-    else {
-      // Initialize value if current user has not viewed the node.
-      $nodes_to_read[$nid] = 0;
-    }
-  }
-
-  if (empty($nodes_to_read)) {
-    return $return;
-  }
-
-  $result = \Drupal::database()->query('SELECT [nid], [timestamp] FROM {history} WHERE [uid] = :uid AND [nid] IN ( :nids[] )', [
-    ':uid' => \Drupal::currentUser()->id(),
-    ':nids[]' => array_keys($nodes_to_read),
-  ]);
-  foreach ($result as $row) {
-    $nodes_to_read[$row->nid] = (int) $row->timestamp;
-  }
-  $history += $nodes_to_read;
-
-  return $return + $nodes_to_read;
+  @trigger_error('history_read_multiple() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use \Drupal\history\HistoryRepositoryInterface::getLastViewed() instead. See https://www.drupal.org/node/2197189', E_USER_DEPRECATED);
+  return \Drupal::service('history.repository')->getLastViewed('node', $nids);
 }
 
 /**
@@ -101,24 +86,22 @@ function history_read_multiple($nids) {
  * @param $account
  *   (optional) The user account to update the history for. Defaults to the
  *   current user.
+ *
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\history\HistoryRepositoryInterface::updateLastViewed() instead.
+ *
+ * @see https://www.drupal.org/node/2197189
  */
 function history_write($nid, $account = NULL) {
+  @trigger_error('history_write() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use \Drupal\history\HistoryRepositoryInterface::updateLastViewed() instead. See https://www.drupal.org/node/2197189', E_USER_DEPRECATED);
 
   if (!isset($account)) {
     $account = \Drupal::currentUser();
   }
 
   if ($account->isAuthenticated()) {
-    \Drupal::database()->merge('history')
-      ->keys([
-        'uid' => $account->id(),
-        'nid' => $nid,
-      ])
-      ->fields(['timestamp' => REQUEST_TIME])
-      ->execute();
-    // Update static cache.
-    $history = &drupal_static('history_read_multiple', []);
-    $history[$nid] = REQUEST_TIME;
+    $node = Node::load($nid);
+    \Drupal::service('history.repository')->updateLastViewed($node);
   }
 }
 
@@ -126,9 +109,7 @@ function history_write($nid, $account = NULL) {
  * Implements hook_cron().
  */
 function history_cron() {
-  \Drupal::database()->delete('history')
-    ->condition('timestamp', HISTORY_READ_LIMIT, '<')
-    ->execute();
+  \Drupal::service('history.repository')->purge();
 }
 
 /**
@@ -156,9 +137,7 @@ function history_node_view_alter(array &$build, EntityInterface $node, EntityVie
  * Implements hook_ENTITY_TYPE_delete() for node entities.
  */
 function history_node_delete(EntityInterface $node) {
-  \Drupal::database()->delete('history')
-    ->condition('nid', $node->id())
-    ->execute();
+  \Drupal::service('history.repository')->deleteByEntity($node);
 }
 
 /**
@@ -167,9 +146,7 @@ function history_node_delete(EntityInterface $node) {
 function history_user_cancel($edit, UserInterface $account, $method) {
   switch ($method) {
     case 'user_cancel_reassign':
-      \Drupal::database()->delete('history')
-        ->condition('uid', $account->id())
-        ->execute();
+      \Drupal::service('history.repository')->deleteByUser($account);
       break;
   }
 }
@@ -178,7 +155,5 @@ function history_user_cancel($edit, UserInterface $account, $method) {
  * Implements hook_ENTITY_TYPE_delete() for user entities.
  */
 function history_user_delete($account) {
-  \Drupal::database()->delete('history')
-    ->condition('uid', $account->id())
-    ->execute();
+  \Drupal::service('history.repository')->deleteByUser($account);
 }

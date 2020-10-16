@@ -1,7 +1,7 @@
 services:
   forum_manager:
     class: Drupal\forum\ForumManager
-    arguments: ['@config.factory', '@entity_type.manager', '@database', '@string_translation', '@comment.manager', '@entity_field.manager']
+    arguments: ['@config.factory', '@entity_type.manager', '@database', '@string_translation', '@comment.manager', '@entity_field.manager', '@history.repository']
     tags:
       - { name: backend_overridable }
   forum.breadcrumb.node:

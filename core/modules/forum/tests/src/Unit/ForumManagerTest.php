@@ -4,6 +4,7 @@ namespace Drupal\Tests\forum\Unit;
 
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\history\HistoryRepository;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -56,6 +57,10 @@ class ForumManagerTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
+    $history_repository = $this->getMockBuilder(HistoryRepository::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
     $comment_manager = $this->getMockBuilder('\Drupal\comment\CommentManagerInterface')
       ->disableOriginalConstructor()
       ->getMock();
@@ -69,6 +74,7 @@ class ForumManagerTest extends UnitTestCase {
         $translation_manager,
         $comment_manager,
         $entity_field_manager,
+        $history_repository,
       ])
       ->getMock();
 

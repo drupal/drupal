@@ -11,8 +11,7 @@ use Drupal\Core\Entity\ContentEntityInterface;
  * Implements hook_views_data_alter().
  */
 function comment_views_data_alter(&$data) {
-  // New comments are only supported for node table because it requires the
-  // history table.
+  // New comments are supported for node table when the history module enabled.
   $data['node']['new_comments'] = [
     'title' => t('New comments'),
     'help' => t('The number of new comments on the node.'),

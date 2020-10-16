@@ -13,6 +13,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\comment\CommentManagerInterface;
+use Drupal\history\HistoryRepositoryInterface;
 use Drupal\node\NodeInterface;
 
 /**
@@ -116,6 +117,13 @@ class ForumManager implements ForumManagerInterface {
   protected $index;
 
   /**
+   * The history repository service.
+   *
+   * @var \Drupal\history\HistoryRepositoryInterface
+   */
+  protected $historyRepository;
+
+  /**
    * Constructs the forum manager service.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -130,14 +138,21 @@ class ForumManager implements ForumManagerInterface {
    *   The comment manager service.
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   The entity field manager.
+   * @param \Drupal\history\HistoryRepositoryInterface $history_repository
+   *   The history repository service.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_type_manager, Connection $connection, TranslationInterface $string_translation, CommentManagerInterface $comment_manager, EntityFieldManagerInterface $entity_field_manager) {
+  public function __construct(ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_type_manager, Connection $connection, TranslationInterface $string_translation, CommentManagerInterface $comment_manager, EntityFieldManagerInterface $entity_field_manager, HistoryRepositoryInterface $history_repository = NULL) {
     $this->configFactory = $config_factory;
     $this->entityTypeManager = $entity_type_manager;
     $this->connection = $connection;
     $this->stringTranslation = $string_translation;
     $this->commentManager = $comment_manager;
     $this->entityFieldManager = $entity_field_manager;
+    if (!$history_repository) {
+      @trigger_error('The history.repository service must be passed to ' . __METHOD__ . '(), it is required before Drupal 10.0.0. See https://www.drupal.org/node/2197189.', E_USER_DEPRECATED);
+      $history_repository = \Drupal::service('history.repository');
+    }
+    $this->historyRepository = $history_repository;
   }
 
   /**
@@ -321,13 +336,7 @@ class ForumManager implements ForumManagerInterface {
    */
   protected function lastVisit($nid, AccountInterface $account) {
     if (empty($this->history[$nid])) {
-      $result = $this->connection->select('history', 'h')
-        ->fields('h', ['nid', 'timestamp'])
-        ->condition('uid', $account->id())
-        ->execute();
-      foreach ($result as $t) {
-        $this->history[$t->nid] = $t->timestamp > HISTORY_READ_LIMIT ? $t->timestamp : HISTORY_READ_LIMIT;
-      }
+      $this->history += $this->historyRepository->getLastViewed('node', [$nid]);
     }
     return isset($this->history[$nid]) ? $this->history[$nid] : HISTORY_READ_LIMIT;
   }
@@ -482,7 +491,7 @@ class ForumManager implements ForumManagerInterface {
   public function unreadTopics($term, $uid) {
     $query = $this->connection->select('node_field_data', 'n');
     $query->join('forum', 'f', '[n].[vid] = [f].[vid] AND [f].[tid] = :tid', [':tid' => $term]);
-    $query->leftJoin('history', 'h', '[n].[nid] = [h].[nid] AND [h].[uid] = :uid', [':uid' => $uid]);
+    $query->leftJoin('history', 'h', "[n].[nid] = [h].[entity_id] AND [h].[entity_type] = 'node' AND [h].[uid] = :uid", [':uid' => $uid]);
     $query->addExpression('COUNT([n].[nid])', 'count');
     return $query
       ->condition('status', 1)
@@ -490,7 +499,7 @@ class ForumManager implements ForumManagerInterface {
       //   field language and just fall back to the default language.
       ->condition('n.default_langcode', 1)
       ->condition('n.created', HISTORY_READ_LIMIT, '>')
-      ->isNull('h.nid')
+      ->isNull('h.entity_id')
       ->addTag('node_access')
       ->execute()
       ->fetchField();

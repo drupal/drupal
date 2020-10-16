@@ -11,6 +11,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Url;
+use Drupal\history\HistoryRepositoryInterface;
 
 /**
  * Defines a class for building markup for comment links on a commented entity.
@@ -50,6 +51,13 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
   protected $entityTypeManager;
 
   /**
+   * The history repository service.
+   *
+   * @var \Drupal\history\HistoryRepositoryInterface
+   */
+  protected $historyRepository;
+
+  /**
    * Constructs a new CommentLinkBuilder object.
    *
    * @param \Drupal\Core\Session\AccountInterface $current_user
@@ -62,13 +70,16 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
    *   String translation service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\history\HistoryRepositoryInterface $history_repository
+   *   (Optional) The history repository service.
    */
-  public function __construct(AccountInterface $current_user, CommentManagerInterface $comment_manager, ModuleHandlerInterface $module_handler, TranslationInterface $string_translation, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(AccountInterface $current_user, CommentManagerInterface $comment_manager, ModuleHandlerInterface $module_handler, TranslationInterface $string_translation, EntityTypeManagerInterface $entity_type_manager, HistoryRepositoryInterface $history_repository = NULL) {
     $this->currentUser = $current_user;
     $this->commentManager = $comment_manager;
     $this->moduleHandler = $module_handler;
     $this->stringTranslation = $string_translation;
     $this->entityTypeManager = $entity_type_manager;
+    $this->historyRepository = $history_repository;
   }
 
   /**
@@ -193,12 +204,13 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
           '#links' => $links,
           '#attributes' => ['class' => ['links', 'inline']],
         ];
-        if ($view_mode == 'teaser' && $this->moduleHandler->moduleExists('history') && $this->currentUser->isAuthenticated()) {
+        if ($view_mode == 'teaser' && $this->historyRepository && $this->currentUser->isAuthenticated()) {
           $entity_links['comment__' . $field_name]['#cache']['contexts'][] = 'user';
           $entity_links['comment__' . $field_name]['#attached']['library'][] = 'comment/drupal.node-new-comments-link';
           // Embed the metadata for the "X new comments" link (if any) on this
           // entity.
-          $entity_links['comment__' . $field_name]['#attached']['drupalSettings']['history']['lastReadTimestamps'][$entity->id()] = (int) history_read($entity->id());
+          $timestamps = $this->historyRepository->getLastViewed($entity->getEntityTypeId(), [$entity->id()]);
+          $entity_links['comment__' . $field_name]['#attached']['drupalSettings']['history']['lastReadTimestamps'][$entity->id()] = (int) $timestamps[$entity->id()];
           $new_comments = $this->commentManager->getCountNewComments($entity);
           if ($new_comments > 0) {
             $page_number = $this->entityTypeManager

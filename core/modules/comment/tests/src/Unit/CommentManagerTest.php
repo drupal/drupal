@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\history\HistoryRepositoryInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -34,6 +35,7 @@ class CommentManagerTest extends UnitTestCase {
 
     $entity_field_manager = $this->createMock(EntityFieldManagerInterface::class);
     $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
+    $history_repository = $this->createMock(HistoryRepositoryInterface::class);
 
     $entity_field_manager->expects($this->once())
       ->method('getFieldMapByFieldType')
@@ -49,6 +51,10 @@ class CommentManagerTest extends UnitTestCase {
       ->method('getDefinition')
       ->will($this->returnValue($entity_type));
 
+    $history_repository->expects($this->any())
+      ->method('getLastViewed')
+      ->willReturn([]);
+
     $comment_manager = new CommentManager(
       $entity_type_manager,
       $this->createMock('Drupal\Core\Config\ConfigFactoryInterface'),
@@ -56,7 +62,8 @@ class CommentManagerTest extends UnitTestCase {
       $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface'),
       $this->createMock(AccountInterface::class),
       $entity_field_manager,
-      $this->prophesize(EntityDisplayRepositoryInterface::class)->reveal()
+      $this->prophesize(EntityDisplayRepositoryInterface::class)->reveal(),
+      $history_repository
     );
     $comment_fields = $comment_manager->getFields('node');
     $this->assertArrayHasKey('field_foobar', $comment_fields);

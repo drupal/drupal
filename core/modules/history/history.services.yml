@@ -1,0 +1,6 @@
+services:
+  history.repository:
+    class: Drupal\history\HistoryRepository
+    arguments: ['@database', '@datetime.time', '@entity.memory_cache', '@current_user']
+    tags:
+      - { name: backend_overridable }

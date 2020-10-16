@@ -23,6 +23,7 @@ class ForumValidationTest extends EntityKernelTestBase {
     'options',
     'comment',
     'taxonomy',
+    'history',
     'forum',
   ];
 

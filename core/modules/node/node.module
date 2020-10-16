@@ -194,7 +194,7 @@ function node_mark($nid, $timestamp) {
     return MARK_READ;
   }
   if (!isset($cache[$nid])) {
-    $cache[$nid] = history_read($nid);
+    $cache[$nid] = \Drupal::service('history.repository')->getLastViewed('node', $nid);
   }
   if ($cache[$nid] == 0 && $timestamp > HISTORY_READ_LIMIT) {
     return MARK_NEW;

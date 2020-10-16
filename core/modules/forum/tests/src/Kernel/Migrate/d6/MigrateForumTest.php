@@ -22,6 +22,7 @@ class MigrateForumTest extends MigrateNodeTestBase {
   protected static $modules = [
     'comment',
     'forum',
+    'history',
     'menu_ui',
     'taxonomy',
   ];

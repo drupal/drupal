@@ -5,21 +5,30 @@
  * Installation functions for History module.
  */
 
+use Drupal\Core\Database\Database;
+use Drupal\Core\Entity\EntityTypeInterface;
+
 /**
  * Implements hook_schema().
  */
 function history_schema() {
   $schema['history'] = [
-    'description' => 'A record of which {users} have read which {node}s.',
+    'description' => 'A record of which {users} have read which entities.',
     'fields' => [
       'uid' => [
-        'description' => 'The {users}.uid that read the {node} nid.',
+        'description' => 'The {users}.uid that read the {history}.entity_id entity.',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
       ],
-      'nid' => [
-        'description' => 'The {node}.nid that was read.',
+      'entity_type' => [
+        'description' => 'The type of the entity that was read.',
+        'type' => 'varchar_ascii',
+        'not null' => TRUE,
+        'length' => EntityTypeInterface::ID_MAX_LENGTH,
+      ],
+      'entity_id' => [
+        'description' => 'The ID of the entity that was read.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
@@ -32,9 +41,9 @@ function history_schema() {
         'default' => 0,
       ],
     ],
-    'primary key' => ['uid', 'nid'],
+    'primary key' => ['entity_type', 'uid', 'entity_id'],
     'indexes' => [
-      'nid' => ['nid'],
+      'history_entity' => ['entity_type', 'entity_id'],
     ],
   ];
 
@@ -46,4 +55,69 @@ function history_schema() {
  */
 function history_update_last_removed() {
   return 8101;
+}
+
+/**
+ * Change {history}.nid to {history}.entity_id and add {history}.entity_type.
+ */
+function history_update_9101() {
+  $database = Database::getConnection();
+  $schema = $database->schema();
+  $schema->dropPrimaryKey('history');
+  $schema->dropIndex('history', 'nid');
+  $schema->changeField('history', 'nid', 'entity_id', [
+    'description' => 'The ID of the entity that was read.',
+    'type' => 'int',
+    'unsigned' => TRUE,
+    'not null' => TRUE,
+    'default' => 0,
+  ]);
+  $schema->addField('history', 'entity_type', [
+    'description' => 'The type of the entity that was read.',
+    'type' => 'varchar_ascii',
+    'not null' => TRUE,
+    'length' => EntityTypeInterface::ID_MAX_LENGTH,
+  ]);
+
+  // Set default value for {history}.entity_type.
+  $database->update('history')
+    ->fields(['entity_type' => 'node'])
+    ->execute();
+
+  $schema->addPrimaryKey('history', ['entity_type', 'uid', 'entity_id']);
+  $spec = [
+    'description' => 'A record of which {users} have read which entities.',
+    'fields' => [
+      'uid' => [
+        'description' => 'The {users}.uid that read the {history}.entity_id entity.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'entity_type' => [
+        'description' => 'The type of the entity that was read.',
+        'type' => 'varchar_ascii',
+        'not null' => TRUE,
+        'length' => EntityTypeInterface::ID_MAX_LENGTH,
+      ],
+      'entity_id' => [
+        'description' => 'The ID of the entity that was read.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'timestamp' => [
+        'description' => 'The Unix timestamp at which the read occurred.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'primary key' => ['entity_type', 'uid', 'entity_id'],
+    'indexes' => [
+      'history_entity' => ['entity_type', 'entity_id'],
+    ],
+  ];
+  $schema->addIndex('history', 'history_entity', ['entity_type', 'entity_id'], $spec);
 }

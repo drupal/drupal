@@ -35,7 +35,10 @@ use Drupal\user\UserInterface;
  * Comments changed after this time may be marked new, updated, or read,
  * depending on their state for the current user. Defaults to 30 days ago.
  *
- * @todo Remove when https://www.drupal.org/node/1029708 lands.
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0.
+ *   No replacement is provided.
+ *
+ * @see https://www.drupal.org/node/1029708
  */
 define('COMMENT_NEW_LIMIT', REQUEST_TIME - 30 * 24 * 60 * 60);
 

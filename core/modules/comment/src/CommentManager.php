@@ -16,6 +16,7 @@ use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Url;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\history\HistoryRepositoryInterface;
 use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
 
@@ -75,6 +76,13 @@ class CommentManager implements CommentManagerInterface {
   protected $currentUser;
 
   /**
+   * The history repository service.
+   *
+   * @var \Drupal\history\HistoryRepositoryInterface
+   */
+  protected $historyRepository;
+
+  /**
    * Construct the CommentManager object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -91,8 +99,10 @@ class CommentManager implements CommentManagerInterface {
    *   The entity field manager service.
    * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
    *   The entity display repository service.
+   * @param \Drupal\history\HistoryRepositoryInterface $history_repository
+   *   (Optional) The history repository service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory, TranslationInterface $string_translation, ModuleHandlerInterface $module_handler, AccountInterface $current_user, EntityFieldManagerInterface $entity_field_manager, EntityDisplayRepositoryInterface $entity_display_repository) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory, TranslationInterface $string_translation, ModuleHandlerInterface $module_handler, AccountInterface $current_user, EntityFieldManagerInterface $entity_field_manager, EntityDisplayRepositoryInterface $entity_display_repository, HistoryRepositoryInterface $history_repository = NULL) {
     $this->entityTypeManager = $entity_type_manager;
     $this->userConfig = $config_factory->get('user.settings');
     $this->stringTranslation = $string_translation;
@@ -100,6 +110,7 @@ class CommentManager implements CommentManagerInterface {
     $this->currentUser = $current_user;
     $this->entityFieldManager = $entity_field_manager;
     $this->entityDisplayRepository = $entity_display_repository;
+    $this->historyRepository = $history_repository;
   }
 
   /**
@@ -196,25 +207,11 @@ class CommentManager implements CommentManagerInterface {
    * {@inheritdoc}
    */
   public function getCountNewComments(EntityInterface $entity, $field_name = NULL, $timestamp = 0) {
-    // @todo Replace module handler with optional history service injection
-    //   after https://www.drupal.org/node/2081585.
-    if ($this->currentUser->isAuthenticated() && $this->moduleHandler->moduleExists('history')) {
+    if ($this->currentUser->isAuthenticated() && $this->historyRepository) {
       // Retrieve the timestamp at which the current user last viewed this entity.
       if (!$timestamp) {
-        if ($entity->getEntityTypeId() == 'node') {
-          $timestamp = history_read($entity->id());
-        }
-        else {
-          $function = $entity->getEntityTypeId() . '_last_viewed';
-          if (function_exists($function)) {
-            $timestamp = $function($entity->id());
-          }
-          else {
-            // Default to 30 days ago.
-            // @todo Remove once https://www.drupal.org/node/1029708 lands.
-            $timestamp = COMMENT_NEW_LIMIT;
-          }
-        }
+        $timestamp = $this->historyRepository->getLastViewed($entity->getEntityTypeId(), [$entity->id()]);
+        $timestamp = $timestamp[$entity->id()];
       }
       $timestamp = ($timestamp > HISTORY_READ_LIMIT ? $timestamp : HISTORY_READ_LIMIT);
 

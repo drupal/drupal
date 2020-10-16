@@ -22,8 +22,9 @@ function history_views_data() {
     'node_field_data' => [
       'table' => 'history',
       'left_field' => 'nid',
-      'field' => 'nid',
+      'field' => 'entity_id',
       'extra' => [
+        ['field' => 'entity_type', 'value' => 'node'],
         ['field' => 'uid', 'value' => '***CURRENT_USER***', 'numeric' => TRUE],
       ],
     ],
