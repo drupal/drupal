@@ -496,7 +496,7 @@
         },
         {
             "name": "drupal/core",
-            "version": "9.1.x-dev",
+            "version": "9.2.x-dev",
             "dist": {
                 "type": "path",
                 "url": "core",
@@ -745,11 +745,11 @@
         },
         {
             "name": "drupal/core-project-message",
-            "version": "9.1.x-dev",
+            "version": "9.2.x-dev",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/ProjectMessage",
-                "reference": "cad5c2853f5b733663dcc1be328f80ee233acc30"
+                "reference": "b4efdbe26634b41a1b89e4f3770a8074769088a6"
             },
             "require": {
                 "composer-plugin-api": "^1.1 || ^2",
@@ -778,11 +778,11 @@
         },
         {
             "name": "drupal/core-vendor-hardening",
-            "version": "9.1.x-dev",
+            "version": "9.2.x-dev",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/VendorHardening",
-                "reference": "3732b3fa7c1db63f41bc72d847793ea8aebf7735"
+                "reference": "d54f0b3cc8b4237f3a41a0860a808db242f9da9e"
             },
             "require": {
                 "composer-plugin-api": "^1.1 || ^2",
@@ -7324,5 +7324,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "1.1.0"
+    "plugin-api-version": "2.0.0"
 }
