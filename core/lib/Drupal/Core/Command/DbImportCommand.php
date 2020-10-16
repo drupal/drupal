@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Provides a command to import the current database from a script.
  *
- * This script runs on databases exported using using one of the database dump
+ * This script runs on databases exported using one of the database dump
  * commands and imports it into the current database connection.
  *
  * @see \Drupal\Core\Command\DbImportApplication
