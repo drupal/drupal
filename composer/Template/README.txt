@@ -45,7 +45,7 @@ How do I set it up?
 
 Use Composer to create a new project using the desired starter template:
 
-    composer -n create-project -s dev drupal/recommended-project my-project
+    composer -n create-project drupal/recommended-project my-project
 
 Add new modules and themes with `composer require`:
 

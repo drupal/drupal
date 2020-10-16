@@ -1628,6 +1628,7 @@ svgz
 svibanj
 swcf
 symfony's
+symlinked
 symlinking
 symlinks
 synchronizable

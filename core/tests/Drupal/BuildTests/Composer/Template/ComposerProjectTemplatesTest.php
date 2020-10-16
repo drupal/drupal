@@ -5,7 +5,6 @@ namespace Drupal\BuildTests\Composer\Template;
 use Composer\Json\JsonFile;
 use Drupal\BuildTests\Framework\BuildTestBase;
 use Drupal\Composer\Composer;
-use Symfony\Component\Finder\Finder;
 
 /**
  * Demonstrate that Composer project templates are buildable as patched.
@@ -40,10 +39,7 @@ class ComposerProjectTemplatesTest extends BuildTestBase {
    */
   public function getPathReposForType($workspace_directory, $subdir) {
     // Find the Composer items that we want to be path repos.
-    $path_repos = Finder::create()
-      ->files()
-      ->name('composer.json')
-      ->in($workspace_directory . '/composer/' . $subdir);
+    $path_repos = Composer::composerSubprojectPaths($workspace_directory, $subdir);
 
     $data = [];
     /* @var $path_repo \SplFileInfo */
@@ -78,10 +74,7 @@ class ComposerProjectTemplatesTest extends BuildTestBase {
     $data = $this->provideTemplateCreateProject($root);
 
     // Find all the templates.
-    $template_files = Finder::create()
-      ->files()
-      ->name('composer.json')
-      ->in($root . '/composer/Template');
+    $template_files = Composer::composerSubprojectPaths($root, 'Template');
 
     $this->assertSame(count($template_files), count($data));
 
@@ -114,6 +107,8 @@ class ComposerProjectTemplatesTest extends BuildTestBase {
     // Make a working COMPOSER_HOME directory for setting global composer config
     $composer_home = $this->getWorkspaceDirectory() . '/composer-home';
     mkdir($composer_home);
+    // Create an empty global composer.json file, just to avoid warnings.
+    file_put_contents("$composer_home/composer.json", '{}');
 
     // Disable packagist globally (but only in our own custom COMPOSER_HOME).
     // It is necessary to do this globally rather than in our SUT composer.json
@@ -126,13 +121,24 @@ class ComposerProjectTemplatesTest extends BuildTestBase {
     // 8.9.x-dev for the 8.9.x branch.
     $core_version = Composer::drupalVersionBranch();
 
+    // In order to use create-project on our template, we must have stable
+    // versions of drupal/core and our other SUT repositories. Since we have
+    // provided these as path repositories, they will take on the version of
+    // the root project. We'll make a simulated version number that is stable
+    // to fulfill this role.
+    $simulated_stable_version = str_replace('.x-dev', '.99', $core_version);
+
     // Create a "Composer"-type repository containing one entry for every
     // package in the vendor directory.
     $vendor_packages_path = $this->getWorkspaceDirectory() . '/vendor_packages/packages.json';
     $this->makeVendorPackage($vendor_packages_path);
 
-    // Make a copy of the code to alter.
+    // Make a copy of the code to alter in the workspace directory.
     $this->copyCodebase();
+
+    // Set the Drupal version and minimum stability of the template projects
+    Composer::setDrupalVersion($this->getWorkspaceDirectory(), $simulated_stable_version);
+    $this->assertDrupalVersion($simulated_stable_version, $this->getWorkspaceDirectory());
 
     // Remove the packages.drupal.org entry (and any other custom repository)
     // from the SUT's repositories section. There is no way to do this via
@@ -146,6 +152,7 @@ class ComposerProjectTemplatesTest extends BuildTestBase {
     // Set up the template to use our path repos. Inclusion of metapackages is
     // reported differently, so we load up a separate set for them.
     $metapackage_path_repos = $this->getPathReposForType($this->getWorkspaceDirectory(), 'Metapackage');
+    $this->assertArrayHasKey('drupal/core-recommended', $metapackage_path_repos);
     $path_repos = array_merge($metapackage_path_repos, $this->getPathReposForType($this->getWorkspaceDirectory(), 'Plugin'));
     // Always add drupal/core as a path repo.
     $path_repos['drupal/core'] = $this->getWorkspaceDirectory() . '/core';
@@ -153,27 +160,46 @@ class ComposerProjectTemplatesTest extends BuildTestBase {
       $this->executeCommand("composer config --no-interaction repositories.$name path $path", $package_dir);
       $this->assertCommandSuccessful();
     }
+    // Fix up drupal/core-recommended so that it requires a stable version
+    // of drupal/core rather than a dev version.
+    $core_recommended_dir = 'composer/Metapackage/CoreRecommended';
+    $this->executeCommand("composer remove --no-interaction drupal/core --no-update", $core_recommended_dir);
+    $this->assertCommandSuccessful();
+    $this->executeCommand("composer require --no-interaction drupal/core:^$simulated_stable_version --no-update", $core_recommended_dir);
+    $this->assertCommandSuccessful();
 
+    // Add our vendor package repository to our SUT's repositories section.
+    // Call it "local" (although the name does not matter).
     $this->executeCommand("composer config --no-interaction repositories.local composer file://" . $vendor_packages_path, $package_dir);
     $this->assertCommandSuccessful();
 
     $repository_path = $this->getWorkspaceDirectory() . '/test_repository/packages.json';
-    $this->makeTestPackage($repository_path, $core_version);
+    $this->makeTestPackage($repository_path, $simulated_stable_version);
 
+    $installed_composer_json = $this->getWorkspaceDirectory() . '/testproject/composer.json';
     $autoloader = $this->getWorkspaceDirectory() . '/testproject' . $docroot_dir . '/autoload.php';
     $this->assertFileNotExists($autoloader);
 
-    $this->executeCommand("COMPOSER_HOME=$composer_home COMPOSER_ROOT_VERSION=$core_version composer create-project --no-ansi $project testproject $core_version -s dev -vv --repository $repository_path");
+    // At the moment, we are only testing stable versions. If we used a
+    // non-stable version instead of $simulated_stable_version, then we would
+    // also need to pass the --stability flag to composer create-project.
+    $this->executeCommand("COMPOSER_HOME=$composer_home COMPOSER_ROOT_VERSION=$simulated_stable_version composer create-project --no-ansi $project testproject -vvv --repository $repository_path");
     $this->assertCommandSuccessful();
 
     // Ensure we used the project from our codebase.
-    $this->assertErrorOutputContains("Installing $project ($core_version): Symlinking from $package_dir");
+    $this->assertErrorOutputContains("Installing $project ($simulated_stable_version): Symlinking from $package_dir");
     // Ensure that we used drupal/core from our codebase. This probably means
     // that drupal/core-recommended was added successfully by the project.
-    $this->assertErrorOutputContains("Installing drupal/core ($core_version): Symlinking from");
+    $this->assertErrorOutputContains("Installing drupal/core ($simulated_stable_version): Symlinking from");
     // Verify that there is an autoloader. This is written by the scaffold
     // plugin, so its existence assures us that scaffolding happened.
     $this->assertFileExists($autoloader);
+
+    // Verify that the minimum stability in the installed composer.json file
+    // is 'stable'
+    $this->assertFileExists($installed_composer_json);
+    $composer_json_contents = file_get_contents($installed_composer_json);
+    $this->assertStringContainsString('"minimum-stability": "stable"', $composer_json_contents);
 
     // In order to verify that Composer used the path repos for our project, we
     // have to get the requirements from the project composer.json so we can
@@ -195,13 +221,29 @@ class ComposerProjectTemplatesTest extends BuildTestBase {
         // we still must check that their installed version matches
         // COMPOSER_CORE_VERSION.
         if (array_key_exists($package_name, $metapackage_path_repos)) {
-          $this->assertErrorOutputContains("Installing $package_name ($core_version)");
+          $this->assertErrorOutputContains("Installing $package_name ($simulated_stable_version)");
         }
         else {
-          $this->assertErrorOutputContains("Installing $package_name ($core_version): Symlinking from");
+          $this->assertErrorOutputContains("Installing $package_name ($simulated_stable_version): Symlinking from");
         }
       }
     }
+  }
+
+  /**
+   * Assert that the VERSION constant in Drupal.php is the expected value.
+   *
+   * @param string $expectedVersion
+   * @param string $dir
+   */
+  protected function assertDrupalVersion($expectedVersion, $dir) {
+    $drupal_php_path = $dir . '/core/lib/Drupal.php';
+    $this->assertFileExists($drupal_php_path);
+
+    // Read back the Drupal version that was set and assert it matches expectations.
+    $this->executeCommand("php -r 'include \"$drupal_php_path\"; print \Drupal::VERSION;'");
+    $this->assertCommandSuccessful();
+    $this->assertCommandOutputContains($expectedVersion);
   }
 
   /**
@@ -267,7 +309,10 @@ JSON;
       $full_path = "$root/$path";
       // We are building a set of path repositories to projects in the vendor
       // directory, so we will skip any project that does not exist in vendor.
-      if (is_dir($full_path)) {
+      // Also skip the projects that are symlinked in vendor. These are in our
+      // metapackage. They will be represented as path repositories in the test
+      // project's composer.json.
+      if (is_dir($full_path) && !is_link($full_path)) {
         $packages['packages'][$name] = [
           $version => [
             "name" => $name,
