@@ -21,7 +21,13 @@ class BookTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['book', 'block', 'node_access_test', 'book_test'];
+  public static $modules = [
+    'content_moderation',
+    'book',
+    'block',
+    'node_access_test',
+    'book_test',
+  ];
 
   /**
    * {@inheritdoc}
@@ -66,6 +72,7 @@ class BookTest extends BrowserTestBase {
       'create book content',
       'edit own book content',
       'add content to books',
+      'view own unpublished content',
     ]);
     $this->webUser = $this->drupalCreateUser([
       'access printer-friendly version',
@@ -86,6 +93,7 @@ class BookTest extends BrowserTestBase {
       'node test view',
       'administer content types',
       'administer site configuration',
+      'view any unpublished content',
     ]);
   }
 
@@ -496,16 +504,54 @@ class BookTest extends BrowserTestBase {
    * Tests the listing of all books.
    */
   public function testBookListing() {
-    // Create a new book.
-    $this->createBook();
+    // Uninstall 'node_access_test' as this interferes with the test.
+    \Drupal::service('module_installer')->uninstall(['node_access_test']);
 
-    // Must be a user with 'node test view' permission since node_access_test is installed.
-    $this->drupalLogin($this->webUser);
+    // Create a new book.
+    $nodes = $this->createBook();
 
     // Load the book page and assert the created book title is displayed.
     $this->drupalGet('book');
 
     $this->assertText($this->book->label(), 'The book title is displayed on the book listing page.');
+
+    // Unpublish the top book page and confirm that the created book title is
+    // not displayed for anonymous.
+    $this->book->setUnpublished();
+    $this->book->save();
+
+    $this->drupalGet('book');
+    $this->assertSession()->pageTextNotContains($this->book->label());
+
+    // Publish the top book page and unpublish a page in the book and confirm
+    // that the created book title is displayed for anonymous.
+    $this->book->setPublished();
+    $this->book->save();
+    $nodes[0]->setUnpublished();
+    $nodes[0]->save();
+
+    $this->drupalGet('book');
+    $this->assertSession()->pageTextContains($this->book->label());
+
+    // Unpublish the top book page and confirm that the created book title is
+    // displayed for user which has 'view own unpublished content' permission.
+    $this->drupalLogin($this->bookAuthor);
+    $this->book->setUnpublished();
+    $this->book->save();
+
+    $this->drupalGet('book');
+    $this->assertSession()->pageTextContains($this->book->label());
+
+    // Ensure the user doesn't see the book if they don't own it.
+    $this->book->setOwner($this->webUser)->save();
+    $this->drupalGet('book');
+    $this->assertSession()->pageTextNotContains($this->book->label());
+
+    // Confirm that the created book title is displayed for user which has
+    // 'view any unpublished content' permission.
+    $this->drupalLogin($this->adminUser);
+    $this->drupalGet('book');
+    $this->assertSession()->pageTextContains($this->book->label());
   }
 
   /**

@@ -121,7 +121,7 @@ class BookManager implements BookManagerInterface {
       // @todo: use route name for links, not system path.
       foreach ($book_links as $link) {
         $nid = $link['nid'];
-        if (isset($nodes[$nid]) && $nodes[$nid]->status) {
+        if (isset($nodes[$nid]) && $nodes[$nid]->access('view')) {
           $link['url'] = $nodes[$nid]->toUrl();
           $link['title'] = $nodes[$nid]->label();
           $link['type'] = $nodes[$nid]->bundle();
