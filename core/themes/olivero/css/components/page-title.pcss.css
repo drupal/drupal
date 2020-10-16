@@ -1,0 +1,14 @@
+/**
+ * @file
+ * Page title.
+ */
+
+@import "../base/variables.pcss.css";
+
+.page-title {
+  /*
+    Necessary to properly display the star icon from core's shortcut
+    module.
+  */
+  display: inline;
+}

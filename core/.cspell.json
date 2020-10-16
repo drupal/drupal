@@ -21,6 +21,7 @@
       "profiles/demo_umami/modules/demo_umami_content/default_content/languages/es/**/*",
       "tests/Drupal/Tests/Component/Annotation/Doctrine/**",
       "themes/bartik/color/preview.html",
+      "themes/olivero/fonts/**",
       "COPYRIGHT.txt",
       "MAINTAINERS.txt",
       "package.json",

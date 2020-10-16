@@ -1,0 +1,121 @@
+/**
+ * @file
+ * Node Teaser specific styles.
+ */
+
+@import "../base/variables.pcss.css";
+
+.node--view-mode-teaser {
+  position: relative; /* Anchor after pseudo-element. */
+  margin-block-end: var(--sp1-5);
+
+  &:after {
+    position: absolute;
+    inset-block-end: 0;
+    width: var(--sp3);
+    height: 0;
+    content: "";
+    /* Intentionally not using CSS logical properties. */
+    border-top: solid 2px var(--color--gray-80);
+  }
+
+  & .node__meta {
+    margin-block-end: var(--sp);
+
+    & a {
+      color: var(--color--blue-20);
+      font-weight: bold;
+    }
+  }
+
+  & .node__top-wrapper {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    margin-block-end: var(--sp1);
+
+    @media (--lg) {
+      position: relative; /* Anchor the image */
+      margin: 0;
+    }
+  }
+
+  & .field--name-field-image {
+    flex-shrink: 0;
+    margin: 0;
+    margin-inline-end: var(--sp1);
+
+    & img {
+      width: calc(3.5 * var(--sp));
+      height: calc(3.5 * var(--sp));
+      object-fit: cover;
+      border-radius: 50%;
+
+      @media (--lg) {
+        width: var(--grid-col-width--lg);
+        height: var(--grid-col-width--lg);
+      }
+
+      @media (--nav) {
+        width: var(--grid-col-width--nav);
+        height: var(--grid-col-width--nav);
+      }
+
+      @media (--grid-max) {
+        width: var(--grid-col-width--max);
+        height: var(--grid-col-width--max);
+      }
+    }
+
+    @media (--lg) {
+      position: absolute;
+      inset-block-start: 0;
+      inset-inline-start: calc(-1 * ((var(--grid-col-width--lg) + var(--grid-gap--lg))));
+      margin: 0;
+    }
+
+    @media (--nav) {
+      inset-inline-start: calc(-1 * ((var(--grid-col-width--nav) + var(--grid-gap--nav))));
+    }
+
+    @media (--grid-max) {
+      inset-inline-start: calc(-1 * ((var(--grid-col-width--max) + var(--grid-gap--max))));
+    }
+  }
+
+  & .node__title {
+    margin: 0;
+    color: var(--color--gray-0);
+    font-size: 24px;
+    line-height: var(--line-height-base);
+
+    @media (--lg) {
+      margin-block-end: var(--sp1);
+      font-size: var(--sp2);
+      line-height: var(--sp3);
+    }
+  }
+
+  & .field--tag-ref {
+    margin-block-start: var(--sp1);
+    margin-block-end: 0;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+    padding-block: 0;
+    padding-inline-start: 0;
+    padding-inline-end: 0;
+    background-color: transparent;
+
+    @media (--lg) {
+      margin-block-start: var(--sp2);
+    }
+  }
+
+  @media (--lg) {
+    margin-block-end: var(--sp3);
+  }
+}
+
+.views-row:last-child .node--view-mode-teaser {
+  margin-block-end: 0;
+}

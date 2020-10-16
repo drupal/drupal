@@ -1,0 +1,114 @@
+/**
+ * @file
+ * Embedded Media.
+ */
+
+@import "../base/variables.pcss.css";
+
+figure {
+  background: var(--color--gray-95);
+}
+
+figcaption {
+  padding-block: var(--sp0-5);
+  padding-inline-start: var(--sp0-5);
+  padding-inline-end: var(--sp0-5);
+  color: var(--color--gray-10);
+  background: var(--color--gray-95);
+  font-family: var(--font-serif);
+  font-size: 14px;
+  font-style: italic;
+  line-height: var(--sp);
+
+  @media (--sm) {
+    padding-block: var(--sp);
+    padding-inline-start: var(--sp);
+    padding-inline-end: var(--sp);
+  }
+}
+
+.align-right {
+  float: none; /* Override core's align.module.css. */
+  max-width: 100%;
+  margin-block: var(--sp3);
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+
+  @media (--grid-md) {
+    float: inline-end;
+    max-width: 50%;
+    margin-block-start: var(--sp);
+    margin-block-end: var(--sp);
+    margin-inline-start: var(--sp);
+    margin-inline-end: 0;
+  }
+}
+
+/* Pull out of grid if nested in content narrow layout. */
+.layout--content-narrow .align-right,
+.layout--pass--content-narrow > * .align-right {
+  @media (--grid-md) {
+    margin-inline-end: calc(-1 * ((var(--grid-col-width--md) + var(--grid-gap--md))));
+  }
+
+  @media (--lg) {
+    margin-inline-end: calc(-2 * ((var(--grid-col-width--lg) + var(--grid-gap--lg))));
+  }
+
+  @media (--nav) {
+    margin-inline-end: calc(-3 * ((var(--grid-col-width--nav) + var(--grid-gap--nav))));
+  }
+
+  @media (--grid-max) {
+    margin-inline-end: calc(-3 * ((var(--grid-col-width--max) + var(--grid-gap--max))));
+  }
+}
+
+.align-left {
+  float: none; /* Override core's align.module.css. */
+  max-width: 100%;
+  margin-block-start: var(--sp3);
+  margin-block-end: var(--sp3);
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+
+  @media (--grid-md) {
+    float: inline-start;
+    max-width: 50%;
+    margin-block-start: var(--sp);
+    margin-block-end: var(--sp);
+    margin-inline-start: 0;
+    margin-inline-end: var(--sp2); /* Extra right margins in case of aligning next to lists. */
+  }
+}
+
+/* Pull out of grid if nested in content narrow layout. */
+.layout--content-narrow .align-left,
+.layout--pass--content-narrow > * .align-left {
+  @media (--grid-md) {
+    margin-inline-start: calc(-1 * ((var(--grid-col-width--md) + var(--grid-gap--md))));
+  }
+
+  @media (--lg) {
+    margin-inline-start: calc(-1 * ((var(--grid-col-width--lg) + var(--grid-gap--lg))));
+  }
+
+  @media (--nav) {
+    margin-inline-start: calc(-1 * ((var(--grid-col-width--nav) + var(--grid-gap--nav))));
+  }
+
+  @media (--grid-max) {
+    margin-inline-start: calc(-1 * ((var(--grid-col-width--max) + var(--grid-gap--max))));
+  }
+}
+
+.align-center img,
+.align-center video,
+.align-center audio {
+  margin-inline: auto;
+}
+
+.media-oembed-content {
+  display: block;
+  max-width: 100%;
+}

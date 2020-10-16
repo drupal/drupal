@@ -1,0 +1,162 @@
+/**
+ * @file
+ * Messages.
+ */
+
+@import "../base/variables.pcss.css";
+
+:root {
+  --messages-icon-size: 32px;
+}
+
+.messages-list {
+  margin-block: var(--sp1);
+  padding-block: 0;
+  padding-inline-start: 0;
+  padding-inline-end: 0;
+  list-style: none;
+}
+
+.messages {
+  min-height: calc(var(--messages-icon-size) + 2 * var(--sp1));
+  padding-block: var(--sp1);
+  padding-inline-start: var(--sp1-5);
+  padding-inline-end: var(--sp1-5);
+  color: var(--color--white);
+  outline: solid 1px transparent;
+  background-color: var(--color--gray-0);
+
+  & * {
+    color: inherit;
+  }
+
+  /* Additional specificity to override contrib modules. */
+  &.messages-list__item {
+    background-image: none;
+  }
+}
+
+.messages__list {
+  margin-block: 0;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  padding-block: 0;
+  padding-inline-start: 0;
+  padding-inline-end: 0;
+  list-style: none;
+}
+
+.messages:not(.hidden) ~ .messages {
+  margin-block-start: var(--sp1);
+}
+
+.messages__item + .messages__item {
+  margin-block-start: var(--sp0-5);
+}
+
+.messages__container {
+  display: flex;
+}
+
+.messages__header {
+  flex-shrink: 0;
+  margin-inline-end: var(--sp1);
+
+  &.no-icon {
+    margin-inline-end: 0;
+  }
+}
+
+.messages__content {
+  overflow: auto; /* Ensure large code blocks can be scrolled to. */
+  flex: 1;
+  padding-block-start: 3px;
+}
+
+.messages__button {
+  flex-shrink: 0;
+  margin-inline-start: var(--sp1);
+  padding-block-start: 3px;
+}
+
+.messages__close {
+  position: relative;
+  width: 25px;
+  height: 25px;
+  padding-block: 0;
+  padding-inline-start: 0;
+  padding-inline-end: 0;
+  cursor: pointer;
+  vertical-align: top;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  appearance: none;
+
+  &::before,
+  &::after {
+    position: absolute;
+    /* stylelint-disable csstools/use-logical */
+    top: 50%;
+    left: 50%;
+    /* stylelint-enable csstools/use-logical */
+    display: block;
+    width: 33px;
+    height: 2px;
+    content: "";
+    background-color: var(--color--gray-30);
+  }
+
+  &::before {
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  &::after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+
+  &:hover {
+    &::before,
+    &::after {
+      background-color: var(--color--white);
+    }
+  }
+
+  &:focus {
+    outline: 2px solid var(--color--blue-70);
+    outline-offset: 1px;
+  }
+}
+
+.messages__icon svg {
+  vertical-align: top;
+}
+
+.messages--error .messages__icon svg {
+  fill: var(--color--red);
+}
+
+.messages--warning .messages__icon svg {
+  fill: var(--color--gold);
+}
+
+.messages--status .messages__icon svg {
+  fill: var(--color--green);
+}
+
+.messages--info .messages__icon svg {
+  fill: var(--color--blue-70);
+}
+
+.messages a {
+  color: var(--color--white);
+}
+
+.messages pre {
+  margin: 0;
+}
+
+.js-form-managed-file .messages {
+  margin-block-end: var(--sp1);
+  border-inline-start: var(--form-element-border-size-left) solid var(--color--red);
+}

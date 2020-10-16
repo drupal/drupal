@@ -1,0 +1,145 @@
+/**
+ * @file
+ * Text input elements.
+ */
+
+@import "../base/variables.pcss.css";
+
+[type="color"],
+[type="date"],
+[type="datetime-local"],
+[type="email"],
+[type="file"],
+[type="month"],
+[type="number"],
+[type="password"],
+[type="search"],
+[type="tel"],
+[type="text"],
+[type="time"],
+[type="url"],
+[type="week"],
+textarea {
+  max-width: 100%;
+  min-height: var(--sp3);
+  padding-block: calc((var(--sp3) - (var(--font-size-base) * 1.5) - (var(--form-element-border-size-base) * 2)) / 2);
+  padding-inline-start: calc(var(--sp1) + var(--form-element-border-size-left));
+  padding-inline-end: calc(var(--sp1) + var(--form-element-border-size-base));
+  color: var(--color--gray-10);
+  border-width: var(--form-element-border-size-base) 0;
+  border-style: solid;
+  border-color: transparent;
+  border-top-left-radius: 0; /* LTR */
+  border-top-right-radius: var(--border-radius-base); /* LTR */
+  border-bottom-right-radius: var(--border-radius-base); /* LTR */
+  border-bottom-left-radius: 0; /* LTR */
+  outline: var(--outline--thin);
+  background: linear-gradient(to right, var(--color--gray-30) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%) var(--color--gray-95); /* LTR */
+  font-family: inherit;
+  font-size: var(--font-size-base);
+  line-height: calc(var(--font-size-base) * 1.5);
+  appearance: none;
+
+  &:focus {
+    border-color: var(--color--gray-30);
+    outline: var(--outline--thick);
+    background: /* LTR */
+      linear-gradient(to right, var(--color--gray-30) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%),
+      linear-gradient(to left, var(--color--gray-30) var(--form-element-border-size-base), transparent var(--form-element-border-size-base), transparent 100%) var(--color--gray-95);
+    box-shadow: var(--shadow-focusable);
+
+    @supports (outline-style: double) {
+      outline-style: double;
+    }
+  }
+
+  &:hover {
+    border-color: var(--color--blue-70);
+    background: /* LTR */
+      linear-gradient(to right, var(--color--blue-70) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%),
+      linear-gradient(to left, var(--color--blue-70) var(--form-element-border-size-base), transparent var(--form-element-border-size-base), transparent 100%) var(--color--gray-95);
+  }
+
+  &::-ms-clear {
+    display: none;
+  }
+
+  &[disabled] {
+    color: var(--color--gray-30);
+    border-color: transparent;
+    background: linear-gradient(to right, var(--color--gray-70) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%) var(--color--gray-95); /* LTR */
+  }
+
+  &.error {
+    border-color: var(--color--red);
+    background: /* LTR */
+      linear-gradient(to right, var(--color--red) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%),
+      linear-gradient(to left, var(--color--red) var(--form-element-border-size-base), transparent var(--form-element-border-size-base), transparent 100%) var(--color--gray-95);
+
+    &:focus {
+      box-shadow: var(--shadow-focusable);
+    }
+  }
+
+  &.form-element--small {
+    min-height: var(--sp2-5);
+    padding-block: calc((var(--sp2-5) - (var(--font-size-base) * 1.5) - (var(--form-element-border-size-base) * 2)) / 2);
+    padding-inline-start: calc(var(--sp0-75) + var(--form-element-border-size-left));
+    padding-inline-end: calc(var(--sp0-75) + var(--form-element-border-size-base));
+  }
+}
+
+[type="date"] {
+  /* Ensure that date field isn't larger than other fields. */
+  &::-webkit-datetime-edit-fields-wrapper {
+    padding-block: 0;
+    padding-inline-start: 0;
+    padding-inline-end: 0;
+  }
+}
+
+[dir="rtl"] {
+  & [type="color"],
+  & [type="date"],
+  & [type="datetime-local"],
+  & [type="email"],
+  & [type="file"],
+  & [type="month"],
+  & [type="number"],
+  & [type="password"],
+  & [type="search"],
+  & [type="tel"],
+  & [type="text"],
+  & [type="time"],
+  & [type="url"],
+  & [type="week"],
+  & textarea {
+    border-top-left-radius: var(--border-radius-base);
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: var(--border-radius-base);
+    background: linear-gradient(to left, var(--color--gray-30) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%) var(--color--gray-95);
+
+    &:focus {
+      background:
+        linear-gradient(to left, var(--color--gray-30) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%),
+        linear-gradient(to right, var(--color--gray-30) var(--form-element-border-size-base), transparent var(--form-element-border-size-base), transparent 100%) var(--color--gray-95);
+    }
+
+    &:hover {
+      background:
+        linear-gradient(to left, var(--color--blue-70) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%),
+        linear-gradient(to right, var(--color--blue-70) var(--form-element-border-size-base), transparent var(--form-element-border-size-base), transparent 100%) var(--color--gray-95);
+    }
+
+    &[disabled] {
+      background: linear-gradient(to left, var(--color--gray-70) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%) var(--color--gray-95);
+    }
+
+    &.error {
+      background:
+        linear-gradient(to left, var(--color--red) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%),
+        linear-gradient(to right, var(--color--red) var(--form-element-border-size-base), transparent var(--form-element-border-size-base), transparent 100%) var(--color--gray-95);
+    }
+  }
+}

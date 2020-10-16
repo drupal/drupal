@@ -132,6 +132,7 @@
         "drupal/migrate_drupal_multilingual": "self.version",
         "drupal/migrate_drupal_ui": "self.version",
         "drupal/node": "self.version",
+        "drupal/olivero": "self.version",
         "drupal/options": "self.version",
         "drupal/page_cache": "self.version",
         "drupal/path": "self.version",

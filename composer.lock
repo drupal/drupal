@@ -500,7 +500,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "deeb3ec5ad5b0a9b0aa65505ab74e2bde5255abd"
+                "reference": "493f34276d92722b600d8cf70f7852260a87afd5"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -631,6 +631,7 @@
                 "drupal/migrate_drupal_ui": "self.version",
                 "drupal/minimal": "self.version",
                 "drupal/node": "self.version",
+                "drupal/olivero": "self.version",
                 "drupal/options": "self.version",
                 "drupal/page_cache": "self.version",
                 "drupal/path": "self.version",
@@ -748,7 +749,7 @@
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/ProjectMessage",
-                "reference": "b4efdbe26634b41a1b89e4f3770a8074769088a6"
+                "reference": "cad5c2853f5b733663dcc1be328f80ee233acc30"
             },
             "require": {
                 "composer-plugin-api": "^1.1 || ^2",
@@ -781,7 +782,7 @@
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/VendorHardening",
-                "reference": "d54f0b3cc8b4237f3a41a0860a808db242f9da9e"
+                "reference": "3732b3fa7c1db63f41bc72d847793ea8aebf7735"
             },
             "require": {
                 "composer-plugin-api": "^1.1 || ^2",
@@ -4596,9 +4597,6 @@
                 "ext-zip": "Enabling the zip extension allows you to unzip archives",
                 "ext-zlib": "Allow gzip compression of HTTP requests"
             },
-            "bin": [
-                "bin/composer"
-            ],
             "type": "library",
             "extra": {
                 "branch-alias": {

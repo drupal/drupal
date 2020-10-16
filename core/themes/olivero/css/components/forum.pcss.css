@@ -1,0 +1,19 @@
+/**
+ * @file
+ * Forum specific styles.
+ */
+
+@import "../base/variables.pcss.css";
+
+.forum {
+  & table {
+    width: 100%;
+  }
+}
+
+.forum__name--link,
+.forum__last-reply a,
+.forum__title a {
+  color: var(--color--blue-20);
+  font-weight: bold;
+}

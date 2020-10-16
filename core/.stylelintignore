@@ -1,2 +1,4 @@
 themes/claro/**/*.css
 !themes/claro/**/*.pcss.css
+themes/olivero/**/*.css
+!themes/olivero/**/*.pcss.css

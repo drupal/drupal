@@ -1,0 +1,48 @@
+{#
+/**
+ * @file
+ * Olivero's theme implementation to display a single Drupal page while offline.
+ *
+ * All available variables are mirrored in page.html.twig.
+ *
+ * @see template_preprocess_maintenance_page()
+ */
+ #}
+<div id="page-wrapper">
+  <div id="page">
+    <header id="header" role="banner">
+      <div class="section">
+        {% if site_name or site_slogan %}
+          <div id="name-and-slogan"{{ hide_site_name and hide_site_slogan ? ' class="visually-hidden"' }}>
+            {% if site_name %}
+              <div id="site-name"{{ hide_site_name ? ' class="visually-hidden"' }}>
+                <strong>
+                  <a href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home"><span>{{ site_name }}</span></a>
+                </strong>
+              </div>
+            {% endif %}
+            {% if site_slogan %}
+              <div id="site-slogan"{{ hide_site_slogan ? ' class="visually-hidden"' }}>
+                {{ site_slogan }}
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </header>
+    <div id="main-wrapper">
+      <div id="main">
+        <main id="content" class="column" role="main">
+          <section class="section">
+            <a id="main-content"></a>
+            {% if title %}
+              <h1 class="title" id="page-title">{{ title }}</h1>
+            {% endif %}
+            {{ page.content }}
+            {{ page.highlighted }}
+          </section>
+        </main>
+      </div>
+    </div>
+  </div>
+</div>

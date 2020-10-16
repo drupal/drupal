@@ -112,6 +112,7 @@ autop
 autoplace
 autoplay
 autoreply
+autorow
 autosave
 autosubmit
 autowire
@@ -326,6 +327,7 @@ createkey
 createrole
 createuser
 crema
+crossorigin
 crossout
 crudui
 crypted
@@ -335,6 +337,7 @@ csrftoken
 cssidentifier
 csslint
 csslintrc
+csstools
 ctags
 ctes
 ctools
@@ -1057,6 +1060,7 @@ nalias
 nameofbin
 namespacing
 narf
+navs
 nbaz
 nbchoices
 nblocks
@@ -1147,6 +1151,8 @@ objectindex
 oembed
 officedocument
 oldsilver
+olivero
+olivero's
 omitscript
 omittable
 ondemand
@@ -1252,6 +1258,7 @@ porterstemmer
 português
 postbar
 postcondition
+postcss
 postfields
 postfoo
 postgres
@@ -1580,6 +1587,7 @@ subjectkeyword
 subkey
 subkeys
 submenu
+submenus
 subparse
 subpath
 subpatterns

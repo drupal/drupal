@@ -1,0 +1,176 @@
+/**
+ * @file
+ * Nav Primary (wide widths).
+ */
+
+@import "../../base/variables.pcss.css";
+
+body:not(.is-always-mobile-nav) {
+  @media (--nav) {
+    & .primary-nav__menu-item {
+      flex-wrap: nowrap; /* Ensure that sub navigation toggle button doesn't wrap underneath link. */
+
+      &.primary-nav__menu-item--has-children {
+        & .primary-nav__menu-link--link,
+        & .primary-nav__menu-link--nolink {
+          flex-basis: auto;
+        }
+      }
+    }
+
+    & .primary-nav__menu-link {
+      letter-spacing: 0.02em;
+      font-size: 16px;
+      line-height: var(--sp1-5);
+    }
+
+    & .primary-nav__menu-link--button {
+      &.primary-nav__menu-link--has-children {
+        overflow: visible; /* Necessary to view icon in IE11 */
+        padding-inline-end: 9px;
+
+        &:before {
+          content: none;
+        }
+
+        /* Chevron icon for desktop navigation. */
+        &:after {
+          position: absolute;
+          inset-block-start: 50%;
+          inset-inline-start: calc(100% - 3px);
+          width: 8px;
+          height: 8px;
+          margin-block-start: -2px;
+          transform: translateY(-50%) rotate(45deg);
+          /* Intentionally not using CSS logical properties. */
+          border-top: 0;
+          border-right: solid 2px currentColor;
+          border-bottom: solid 2px currentColor;
+        }
+
+        &[aria-expanded="true"]:after {
+          opacity: 1;
+        }
+      }
+    }
+
+    & .primary-nav__menu-link-inner {
+      padding-block: var(--sp2);
+      padding-inline-start: 0;
+      padding-inline-end: 0;
+      transform-origin: center;
+      border-top-width: var(--sp0-5);
+    }
+
+    & .primary-nav__menu--level-1 {
+      display: flex;
+      align-items: stretch;
+      margin-inline-end: var(--sp);
+    }
+
+    & .primary-nav__menu-item--level-1 {
+      position: relative; /* Anchor secondary menu */
+      display: flex;
+      align-items: center;
+      width: max-content;
+      max-width: 200px;
+      margin-block: 0;
+      margin-inline-start: 0;
+      margin-inline-end: 0;
+
+      &:not(:last-child) {
+        margin-inline-end: var(--sp2);
+      }
+    }
+
+    & .primary-nav__menu--level-2 {
+      position: absolute;
+      z-index: 5; /* Appear above search container. */
+      /* stylelint-disable csstools/use-logical */
+      top: calc(100% - (0.5 * var(--sp)));
+      left: 50%;
+      /* stylelint-enable csstools/use-logical */
+      visibility: hidden;
+      overflow: visible;
+      width: 250px;
+      max-height: none;
+      margin-block-start: 0;
+      margin-inline-start: 0;
+      padding-block: calc(3 * var(--sp));
+      padding-inline-start: var(--sp2);
+      padding-inline-end: var(--sp2);
+      transition: none;
+      transform: translate(-50%, -20px);
+      opacity: 0;
+      /* Intentionally not using CSS logical properties. */
+      border-top: solid var(--color--blue-50) var(--sp0-5);
+      border-right: solid 1px transparent; /* Transparent borders useful for Windows High Contrast mode. */
+      border-bottom: solid 1px transparent;
+      border-left: solid 1px transparent;
+      border-radius: 0 0 2px 2px;
+      background: var(--color--white);
+      box-shadow: 0 1px 36px rgba(0, 0, 0, 0.08);
+
+      /* Arrow */
+      &:after {
+        position: absolute;
+        /* stylelint-disable csstools/use-logical */
+        bottom: calc(100% + (0.5 * var(--sp)));
+        left: 50%;
+        /* stylelint-enable csstools/use-logical */
+        width: 0;
+        height: 0;
+        content: "";
+        transform: translateX(-50%);
+        /* Intentionally not using CSS logical properties. */
+        border-right: solid 10px transparent;
+        border-bottom: solid 10px var(--color--blue-50);
+        border-left: solid 10px transparent;
+      }
+
+      &.is-active {
+        visibility: visible;
+        margin-block-start: 0;
+        transform: translate(-50%, 0);
+        opacity: 1;
+      }
+    }
+
+    & .primary-nav__menu-link--level-2 {
+      display: block;
+
+      & .primary-nav__menu-link-inner {
+        padding-block: var(--sp0-5);
+        padding-inline-start: 0;
+        padding-inline-end: 0;
+
+        &:after {
+          transform-origin: left;
+          border-top-width: 3px;
+        }
+      }
+    }
+  }
+}
+
+/*
+ * Only apply transition styles to menu when JS is loaded. This
+ * works around https://bugs.chromium.org/p/chromium/issues/detail?id=332189
+ */
+html.js body:not(.is-always-mobile-nav) .primary-nav__menu--level-2 {
+  @media (--nav) {
+    transition: visibility 0.2s, transform 0.2s, opacity 0.2s;
+  }
+}
+
+[dir="rtl"] {
+  & body:not(.is-always-mobile-nav) {
+    @media (--nav) {
+      & .primary-nav__menu-link--level-2 {
+        & .primary-nav__menu-link-inner:after {
+          transform-origin: right;
+        }
+      }
+    }
+  }
+}

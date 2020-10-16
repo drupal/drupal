@@ -1,0 +1,12 @@
+/**
+ * @file
+ * Textarea.
+ */
+
+@import "../base/variables.pcss.css";
+
+textarea {
+  display: block;
+  width: 100%;
+  min-height: var(--sp8);
+}

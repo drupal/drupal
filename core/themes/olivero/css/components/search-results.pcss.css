@@ -1,0 +1,108 @@
+/**
+ * @file
+ * Search results specific styles.
+ */
+
+@import "../base/variables.pcss.css";
+
+.search-results {
+  margin-block-end: var(--sp2);
+  padding-block: 0;
+  padding-inline-start: 0;
+  padding-inline-end: 0;
+  list-style: none;
+
+  @media (--md) {
+    margin-block-end: var(--sp3);
+  }
+}
+
+.search-result__title {
+  margin-block: 0;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  color: var(--color--gray-0);
+  font-size: 20px;
+  line-height: var(--line-height-base);
+
+  & a {
+    padding-block-end: 3px;
+    transition: background-size 0.2s, color 0.2s;
+    text-decoration: none;
+    background-color: transparent;
+    background-image: linear-gradient(var(--color--blue-50), var(--color--blue-50)); /* Two values are needed for IE11 support. */
+    background-repeat: no-repeat;
+    background-position: bottom left; /* LTR */
+    background-size: 0 3px;
+
+    &:hover {
+      color: var(--color--blue-20);
+    }
+
+    &:focus {
+      color: var(--color--blue-20);
+      outline: 0;
+      background-size: 100% 3px;
+
+      @media screen and (-ms-high-contrast: active) {
+        text-decoration: underline;
+        outline: initial;
+      }
+    }
+  }
+
+  @media (--lg) {
+    margin-block-end: var(--sp1);
+    font-size: 30px;
+    line-height: var(--sp3);
+  }
+}
+
+[dir="rtl"] .search-result__title a {
+  background-position: bottom right;
+}
+
+.search-result__snippet {
+  padding-block-end: calc(var(--sp1-5) - 2px);
+
+  @media (--lg) {
+    padding-block-end: var(--sp3);
+  }
+}
+
+.search-result__meta {
+  display: flex;
+  align-items: center;
+  margin-block-end: var(--sp1);
+  color: var(--color--gray-20);
+  font-size: 14px;
+  line-height: var(--sp);
+
+  & a {
+    color: var(--color--blue-20);
+    font-weight: bold;
+  }
+}
+
+.search-results__item {
+  position: relative; /* Anchor after pseudo-element. */
+  margin-block-end: var(--sp1-5);
+
+  &:after {
+    position: absolute;
+    inset-block-end: 0;
+    width: var(--sp3);
+    height: 0;
+    content: "";
+    /* Intentionally not using CSS logical properties. */
+    border-top: solid 2px var(--color--gray-80);
+  }
+
+  &:last-child {
+    margin-block-end: 0;
+  }
+
+  @media (--lg) {
+    margin-block-end: var(--sp3);
+  }
+}

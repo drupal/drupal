@@ -1,0 +1,110 @@
+{#
+/**
+ * @file
+ * Olivero's theme implementation for the main menu.
+ *
+ * Available variables:
+ * - menu_name: The machine name of the menu.
+ * - items: A nested list of menu items. Each menu item contains:
+ *   - attributes: HTML attributes for the menu item.
+ *   - below: The menu item child items.
+ *   - title: The menu link title.
+ *   - url: The menu link url, instance of \Drupal\Core\Url
+ *   - localized_options: Menu link localized options.
+ *   - is_expanded: TRUE if the link has visible children within the current
+ *     menu tree.
+ *   - is_collapsed: TRUE if the link has children within the current menu tree
+ *     that are not currently visible.
+ *   - in_active_trail: TRUE if the link is in the active trail.
+ *
+ * @ingroup themeable
+ */
+#}
+{% import _self as menus %}
+
+{#
+  We call a macro which calls itself to render the full tree.
+  @see https://twig.symfony.com/doc/1.x/tags/macro.html
+#}
+{% set attributes = attributes.addClass('menu') %}
+{{ menus.menu_links(items, attributes, 0) }}
+
+{% macro menu_links(items, attributes, menu_level) %}
+  {% set primary_nav_level = 'primary-nav__menu--level-' ~ (menu_level + 1) %}
+  {% import _self as menus %}
+  {% if items %}
+    <ul {{ attributes.addClass('primary-nav__menu', primary_nav_level) }}>
+      {% set attributes = attributes.removeClass(primary_nav_level) %}
+      {% for item in items %}
+
+        {% if item.url.isRouted and item.url.routeName == '<nolink>' %}
+          {% set menu_item_type = 'nolink' %}
+        {% elseif item.url.isRouted and item.url.routeName == '<button>' %}
+          {% set menu_item_type = 'button' %}
+        {% else %}
+          {% set menu_item_type = 'link' %}
+        {% endif %}
+
+        {% set item_classes = [
+            'primary-nav__menu-item',
+            'primary-nav__menu-item--' ~ menu_item_type,
+            'primary-nav__menu-item--level-' ~ (menu_level + 1),
+            item.in_active_trail ? 'primary-nav__menu-item--active-trail',
+            item.below ? 'primary-nav__menu-item--has-children',
+          ]
+        %}
+
+        {% set link_classes = [
+            'primary-nav__menu-link',
+            'primary-nav__menu-link--' ~ menu_item_type,
+            'primary-nav__menu-link--level-' ~ (menu_level + 1),
+            item.in_active_trail ? 'primary-nav__menu-link--active-trail',
+            item.below ? 'primary-nav__menu-link--has-children',
+          ]
+        %}
+
+        <li{{ item.attributes.addClass(item_classes) }}>
+          {#
+            A unique HTML ID should be used, but that isn't available through
+            Twig yet, so the |clean_id filter is used for now.
+            @see https://www.drupal.org/project/drupal/issues/3115445
+          #}
+          {% set aria_id = (item.title ~ '-submenu-' ~ loop.index )|clean_id %}
+          {% set link_title %}
+            <span class="primary-nav__menu-link-inner">{{ item.title }}</span>
+          {% endset %}
+
+          {% if menu_item_type == 'link' or menu_item_type == 'nolink' %}
+            {{ link(menu_item_type == 'link' ? link_title : item.title, item.url, { 'class': link_classes }) }}
+
+            {% if item.below %}
+              {#
+                Aria-hidden  and tabindex attributes are removed via JS. Button is non-functional,
+                but still visible in non-JS environments so that chevron can indicate presence of
+                drop menu).
+              #}
+              <button class="primary-nav__button-toggle" aria-controls="{{ aria_id }}" aria-expanded="false" aria-hidden="true" tabindex="-1">
+                <span class="visually-hidden">{{ 'Toggle sub-navigation'|t }}</span>
+                <span class="icon--menu-toggle"></span>
+              </button>
+
+              {% set attributes = attributes.setAttribute('id', aria_id) %}
+              {{ menus.menu_links(item.below, attributes, menu_level + 1) }}
+            {% endif %}
+
+          {% elseif menu_item_type == 'button' %}
+            {{ link(link_title, item.url, {
+              'class': link_classes,
+              'aria-controls': item.below ? aria_id : false,
+              'aria-expanded': item.below ? 'false' : false,
+              })
+            }}
+
+            {% set attributes = attributes.setAttribute('id', aria_id) %}
+            {{ menus.menu_links(item.below, attributes, menu_level + 1) }}
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endmacro %}

@@ -1,0 +1,110 @@
+/**
+ * @file
+ * Main Header.
+ */
+
+@import "../base/variables.pcss.css";
+
+/* Header */
+.site-header {
+  position: relative;
+
+  @media (--nav) {
+    /* Necessary to keep the content from jumping up when header transitions to fixed. */
+    min-height: var(--sp10);
+    border-block-end: solid 1px transparent; /* Will show in Windows high contrast mode. */
+  }
+}
+
+.header__left {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  align-self: stretch;
+  background-color: var(--color--blue-50);
+}
+
+.site-header__fixable {
+  display: flex;
+  align-items: flex-end;
+  transition: all 0.5s;
+
+  &.js-fixed {
+    @media (--nav) {
+      &:not(.is-expanded) {
+        pointer-events: none;
+      }
+    }
+  }
+}
+
+@media (--nav) {
+  body:not(.is-always-mobile-nav) {
+    & .site-header__fixable.js-fixed {
+      position: fixed;
+      z-index: 2; /* Appear above body content that is position: relative */
+      inset-block-start: calc(-1 * var(--sp4));
+      max-width: var(--max-bg-color);
+    }
+
+    /* Toolbar is fixed, and tray is either vertical or closed and horizontal. */
+    &.toolbar-vertical.toolbar-fixed,
+    &.toolbar-horizontal.toolbar-fixed {
+      & .site-header__fixable.js-fixed {
+        inset-block-start: calc(var(--toolbar-height) - var(--sp4));
+      }
+    }
+    /* Toolbar is fixed, and tray is open and horizontal. */
+    &.toolbar-horizontal.toolbar-fixed.toolbar-tray-open .site-header__fixable.js-fixed {
+      inset-block-start: calc(var(--toolbar-tray-height) + var(--toolbar-height) - var(--sp4));
+    }
+  }
+}
+
+.site-header__inner {
+  flex-grow: 1;
+  width: calc(100vw - var(--content-left));
+  background: var(--color--white);
+}
+
+/*
+ * Only apply transition styles when JS is loaded. This
+ * works around https://bugs.chromium.org/p/chromium/issues/detail?id=332189
+ */
+html.js body:not(.is-always-mobile-nav) .site-header__inner {
+  @media (--nav) {
+    transition: opacity 0.3s, transform 0.3s;
+  }
+}
+
+.site-header__fixable.js-fixed .site-header__inner {
+  @media (--nav) {
+    box-shadow: -36px 1px 36px rgba(0, 0, 0, 0.08); /* LTR */
+  }
+}
+
+[dir="rtl"] .site-header__fixable.js-fixed .site-header__inner {
+  @media (--nav) {
+    box-shadow: 36px 1px 36px rgba(0, 0, 0, 0.08);
+  }
+}
+
+/* Hide the desktop nav when it's fixed and not active. */
+body:not(.is-always-mobile-nav) .site-header__fixable.js-fixed:not(.is-expanded) .site-header__inner {
+  @media (--nav) {
+    transform: translateX(-101%); /* LTR */
+    opacity: 0;
+  }
+}
+
+[dir="rtl"] body:not(.is-always-mobile-nav) .site-header__fixable.js-fixed:not(.is-expanded) .site-header__inner {
+  @media (--nav) {
+    transform: translateX(101%);
+  }
+}
+
+.site-header__inner__container {
+  display: flex;
+  justify-content: space-between;
+}

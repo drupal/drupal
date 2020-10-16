@@ -1,0 +1,165 @@
+/**
+ * @file
+ * CKE Dialogs.
+ */
+/** cspell:ignore acke */
+
+@import "../base/variables.pcss.css";
+
+:root {
+  --form-element-select-icon: url("../../images/chevron-down.svg");
+  --form-element-select-bg: url("../../images/select-chevron-bg-default.svg");
+  --form-element-select-bg--highlight: url("../../images/select-chevron-bg-highlight.svg");
+}
+
+.cke_dialog {
+  & td,
+  & th {
+    padding-block: var(--sp0-25);
+    padding-inline-start: var(--sp0-25);
+    padding-inline-end: var(--sp0-25);
+  }
+
+  & .cke_dialog_ui_hbox_last {
+    padding-block-start: 1px;
+    padding-block-end: 0;
+    padding-inline-start: 0;
+    padding-inline-end: 0;
+  }
+
+  & .cke_dialog_contents_body .cke_dialog_ui_text,
+  & .cke_dialog_contents_body .cke_dialog_ui_select,
+  & .cke_dialog_contents_body .cke_dialog_ui_hbox_last > a.cke_dialog_ui_button {
+    margin-block-start: var(--sp0-5);
+  }
+
+  & .cke_dialog_body label + .cke_dialog_ui_labeled_content {
+    width: 100% !important; /* Override inline width. */
+  }
+
+  & input.cke_dialog_ui_input_text,
+  & input.cke_dialog_ui_input_password,
+  & input.cke_dialog_ui_input_tel,
+  & textarea.cke_dialog_ui_input_textarea {
+    padding-block: calc((var(--sp3) - (var(--font-size-base) * 1.5) - (var(--form-element-border-size-base) * 2)) / 2);
+    padding-inline-start: calc(var(--sp1) + var(--form-element-border-size-left));
+    padding-inline-end: calc(var(--sp1) + var(--form-element-border-size-base));
+    color: var(--color--gray-10);
+    border-width: var(--form-element-border-size-base) 0;
+
+    &:hover {
+      border-width: var(--form-element-border-size-base) 0;
+    }
+  }
+
+  & .cke_dialog_ui_input_select {
+    display: block;
+
+    & select,
+    & .cke_dialog_ui_input_select {
+      width: 100% !important;
+      height: var(--sp2-5);
+      margin-block: 0;
+      margin-inline-start: 0;
+      margin-inline-end: 0;
+      padding-block: 0;
+      padding-inline-start: calc(var(--sp0-75) + var(--form-element-border-size-left));
+      padding-inline-end: calc(var(--sp2-5) + var(--sp0-75));
+      color: var(--color--gray-10);
+      border: 1px solid transparent;
+      border-width: var(--form-element-border-size-base) 0;
+      border-style: solid;
+      border-color: transparent;
+      border-top-left-radius: 0; /* LTR */
+      border-top-right-radius: var(--border-radius-base); /* LTR */
+      border-bottom-right-radius: var(--border-radius-base); /* LTR */
+      border-bottom-left-radius: 0; /* LTR */
+      outline: var(--outline--thin);
+      background-color: var(--color--gray-95);
+      line-height: var(--sp2-5);
+
+      &:hover,
+      &:focus {
+        border-color: var(--color--blue-70);
+        background-image:
+          var(--form-element-select-icon),
+          var(--form-element-select-bg--highlight),
+          var(--form-element-select-bg--highlight);
+      }
+
+      &:focus {
+        outline: var(--outline--thick);
+      }
+    }
+  }
+
+  & .cke_dialog_footer_buttons {
+    margin-block-start: var(--sp0-5);
+    margin-block-end: var(--sp0-5);
+    margin-inline-start: 0;
+    margin-inline-end: var(--sp0-5);
+
+    & .cke_dialog_ui_hbox_last {
+      padding-block: var(--sp0-25);
+      padding-inline-start: var(--sp0-25);
+      padding-inline-end: var(--sp0-25);
+    }
+
+    & a,
+    & .acke_dialog_ui_button {
+      display: inline-block;
+      margin-block: var(--sp0-25);
+      margin-inline-start: 0;
+      margin-inline-end: var(--sp0-25);
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      color: var(--color--blue-20);
+      border: var(--form-element-border-size-base) solid var(--color--blue-20);
+      border-radius: var(--border-radius-base);
+      background-color: var(--color--white);
+      font-family: inherit;
+      font-size: var(--font-size-s);
+      font-weight: 700;
+      line-height: var(--line-height-s);
+      appearance: none;
+      -webkit-font-smoothing: antialiased;
+
+      &:hover,
+      &:focus {
+        text-decoration: none;
+        color: var(--color--blue-50);
+        border-color: var(--color--blue-50);
+      }
+
+      &:focus {
+        outline: var(--outline--base);
+        outline-offset: var(--outline-offset);
+        box-shadow: var(--shadow-focusable);
+      }
+
+      &.cke_dialog_ui_button_ok {
+        color: var(--color--white);
+        background-color: var(--color--blue-20);
+
+        &:hover,
+        &:focus {
+          color: var(--color--white);
+          background-color: var(--color--blue-50);
+        }
+      }
+    }
+  }
+}
+
+[dir="rtl"] .cke_dialog {
+  & .cke_dialog_ui_input_select {
+    & select,
+    & .cke_dialog_ui_input_select {
+      border-top-left-radius: var(--border-radius-base);
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: var(--border-radius-base);
+    }
+  }
+}

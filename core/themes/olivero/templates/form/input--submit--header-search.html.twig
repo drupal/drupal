@@ -1,0 +1,17 @@
+{#
+/**
+ * @file
+ * Theme override for the search form submit button.
+ *
+ * Available variables:
+ * - attributes: A list of HTML attributes for the input element.
+ * - children: Optional additional rendered elements.
+ *
+ * @see template_preprocess_input()
+ */
+#}
+<button{{ attributes }}>
+    <span class="icon--search"></span>
+    <span class="visually-hidden">{{ attributes.value }}</span>
+</button>
+{{ children }}

@@ -1,0 +1,48 @@
+/**
+ * @file
+ * CKEditor frame styles.
+ */
+/** cspell:ignore grouptitle */
+
+@import "../base/variables.pcss.css";
+
+.cke_editable {
+  margin: var(--sp1);
+  background-image: none;
+}
+
+[dir].cke_panel_container body {
+  background: var(--color--white);
+}
+
+.cke_panel_listItem a > * {
+  margin-block: 0;
+}
+
+.cke_panel_grouptitle {
+  margin: 0;
+}
+
+.cke_editable blockquote {
+  margin-inline-start: var(--sp3);
+}
+
+.cke_editable .align-right {
+  margin-inline-end: 0;
+}
+
+.cke_editable .align-left {
+  margin-inline-start: 0;
+}
+
+.cke_image_resizer_wrapper {
+  vertical-align: top;
+}
+
+figure.cke_widget_element {
+  margin: 0;
+}
+
+figcaption.cke_widget_editable {
+  background-color: var(--color--white);
+}

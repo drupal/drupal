@@ -1,0 +1,114 @@
+/**
+ * @file
+ * Nav Secondary.
+ */
+
+@import "../../base/variables.pcss.css";
+
+.secondary-nav__wrapper {
+  display: flex;
+  margin-block-start: var(--sp2);
+  margin-block-end: var(--sp2);
+}
+
+.secondary-nav {
+  letter-spacing: 0.02em;
+  font-size: var(--font-size-s);
+  font-weight: 600;
+
+  & ul.menu {
+    display: flex;
+    align-items: center;
+    margin-block: 0;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+    padding-block: 0;
+    padding-inline-start: 0;
+    padding-inline-end: 0;
+    list-style: none;
+
+    & li {
+      /* Parent element is set to flex-basis: 0. We
+       * don't want text to wrap unless it goes over a
+       * certain arbitrary width.
+      */
+
+      /* @todo should this be scoped to desktop nav? */
+      width: max-content;
+      max-width: 200px;
+
+      &:not(:last-child) {
+        margin-inline-end: var(--sp1-5);
+      }
+    }
+
+    & a:not(.button--primary) {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      height: var(--sp2);
+      text-decoration: none;
+      color: inherit;
+
+      &:after {
+        position: absolute;
+        /* stylelint-disable csstools/use-logical */
+        bottom: 0;
+        left: 0;
+        /* stylelint-enable csstools/use-logical */
+        width: 100%;
+        height: 0;
+        content: "";
+        transition: opacity 0.2s, transform 0.2s;
+        transform: translateY(5px);
+        opacity: 0;
+        /* Intentionally not using CSS logical properties. */
+        border-top: solid 2px currentColor;
+      }
+
+      &:focus,
+      &:hover {
+        &:after {
+          transform: translateY(0);
+          opacity: 0.8;
+        }
+      }
+    }
+  }
+}
+
+body:not(.is-always-mobile-nav) {
+  @media (--nav) {
+    & .secondary-nav__wrapper {
+      justify-content: flex-end;
+      margin: 0;
+
+      /* If the secondary nav is the first item within the header, it does not need left separator. */
+      &:first-child .secondary-nav:before {
+        content: none;
+      }
+    }
+
+    & .secondary-nav {
+      position: relative;
+      display: flex;
+      margin-inline-start: var(--sp);
+      padding-inline-start: var(--sp2);
+
+      &:before {
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: 0;
+        width: 2px;
+        height: var(--sp2);
+        content: "";
+        transform: translateY(-50%);
+        background-color: var(--color--gray-70);
+      }
+
+      & ul.menu li:not(:last-child) {
+        margin-inline-end: var(--sp2);
+      }
+    }
+  }
+}

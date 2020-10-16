@@ -1,0 +1,165 @@
+/*
+  Media query breakpoints.
+  Processed by postcss/postcss-custom-media.
+*/
+
+@custom-media --sm (min-width: 500px);
+@custom-media --md (min-width: 700px);
+@custom-media --lg (min-width: 1000px);
+@custom-media --xl (min-width: 1300px);
+
+/* Navigation related breakpoints */
+@custom-media --nav-md (min-width: 500px);
+@custom-media --nav (min-width: 1200px);
+@custom-media --max-nav (max-width: 1200px);
+
+/* Grid related breakpoints */
+@custom-media --grid-md (min-width: 700px);   /* Grid shifts from 6 to 14 columns. */
+@custom-media --grid-max (min-width: 1440px); /* Width of the entire grid maxes out. */
+
+/*
+  Custom CSS properties.
+
+  These are "compiled" by postcss/postcss-custom-properties for IE11 compatibility.
+*/
+:root {
+  --font-sans: "metropolis", sans-serif;
+  --font-serif: "Lora", "georgia", serif;
+
+  /* Typography */
+  --font-size-base: 16px;
+  --font-size-l: 18px;
+  --font-size-s: 14px;
+  --font-size-xs: 13px;
+  --font-size-xxs: 12px;
+  --line-height-base: 27px;
+  --line-height-s: 18px;
+
+  /* Layout */
+  --max-width: 1350px;
+  --max-bg-color: 1570px;
+  --sp: 18px;
+  --content-left: 90px;
+  --container-padding: var(--sp);
+  --container-padding-nav: var(--sp2);
+
+  /* Drupal administrative toolbar heights and width. */
+  --toolbar-height: 39px;
+  --toolbar-tray-height: 40px;
+  --toolbar-tray-vertical-width: 239px;
+
+  /*
+    Grid helpers.
+
+    These variables help authors apply widths and negative margins to break items out of
+    the grid, while still conforming to the larger grid system.
+
+    Note we cannot change the values of these custom properties within media queries,
+    as they are processed by postcss/postcss-custom-properties (for IE11 compatibility),
+    which does not support that functionality. Therefore, we need a separate custom
+    property for each breakpoint. 😭
+  */
+
+  --scrollbar-width: 15px; /* Approximate width of a scrollbar. Doesn't have to be perfect. */
+
+  /* Grid gap across various breakpoints. */
+  --grid-gap: var(--sp);
+  --grid-gap--md: var(--sp2);
+  --grid-gap--lg: var(--grid-gap--md);
+  --grid-gap--nav: var(--grid-gap--md);
+  --grid-gap--max: var(--grid-gap--md);
+
+  /* Column counts at various breakpoints. */
+  --grid-col-count: 6;
+  --grid-col-count--md: 14;
+  --grid-col-count--lg: var(--grid-col-count--md);
+  --grid-col-count--nav: var(--grid-col-count--md);
+  --grid-col-count--max: var(--grid-col-count--md);
+
+  /* Count of grid-gaps at various breakpoints. */
+  --grid-gap-count: calc(var(--grid-col-count) - 1);
+  --grid-gap-count--md: calc(var(--grid-col-count--md) - 1);
+  --grid-gap-count--lg: var(--grid-gap-count--md);
+  --grid-gap-count--nav: var(--grid-gap-count--md);
+  --grid-gap-count--max: var(--grid-gap-count--md);
+
+  /* Width of the entire grid at various breakpoints. */
+  --grid-full-width: calc(100vw - var(--sp2));
+  --grid-full-width--md: var(--grid-full-width);
+  --grid-full-width--lg: calc(var(--grid-full-width) - var(--scrollbar-width));
+  --grid-full-width--nav: calc(100vw - var(--scrollbar-width) - var(--content-left) - var(--sp4));
+  --grid-full-width--max: calc(var(--max-width) - var(--sp4));
+
+  /* Width of a grid column at various breakpoints */
+  --grid-col-width: calc((var(--grid-full-width) - (var(--grid-gap-count) * var(--grid-gap))) / var(--grid-col-count));
+  --grid-col-width--md: calc((var(--grid-full-width--md) - (var(--grid-gap-count--md) * var(--grid-gap--md))) / var(--grid-col-count--md));
+  --grid-col-width--lg: calc((var(--grid-full-width--lg) - (var(--grid-gap-count--lg) * var(--grid-gap--lg))) / var(--grid-col-count--lg));
+  --grid-col-width--nav: calc((var(--grid-full-width--nav) - (var(--grid-gap-count--nav) * var(--grid-gap--nav))) / var(--grid-col-count--nav));
+  --grid-col-width--max: calc((var(--grid-full-width--max) - (var(--grid-gap-count--max) * var(--grid-gap--max))) / var(--grid-col-count--max));
+
+  /* Layout helpers */
+  --sp0-25: calc(0.25 * var(--sp));
+  --sp0-5: calc(0.5 * var(--sp));
+  --sp0-75: calc(0.75 * var(--sp));
+  --sp1: calc(1 * var(--sp));
+  --sp1-5: calc(1.5 * var(--sp));
+  --sp2: calc(2 * var(--sp));
+  --sp2-5: calc(2.5 * var(--sp));
+  --sp3: calc(3 * var(--sp));
+  --sp4: calc(4 * var(--sp));
+  --sp5: calc(5 * var(--sp));
+  --sp6: calc(6 * var(--sp));
+  --sp7: calc(7 * var(--sp));
+  --sp8: calc(8 * var(--sp));
+  --sp9: calc(9 * var(--sp));
+  --sp10: calc(10 * var(--sp));
+  --sp11: calc(11 * var(--sp));
+  --sp12: calc(12 * var(--sp));
+  --color--black: #000; /* Black */
+  --color--gray-0: #0d1214; /* Black 1 */
+  --color--gray-10: #313637; /* Black 2 */
+  --color--gray-20: #6e7172; /* Black 3 */
+  --color--gray-25: #5d7585; /* Gray Dark */
+  --color--gray-30: #7e96a7; /* Gray medium */
+  --color--gray-40: #98abb9; /* Gray medium 1 */
+  --color--gray-45: #afb8be; /* Gray medium 2 */
+  --color--gray-50: #9ea0a1; /* Black 4 */
+  --color--gray-70: #d7e1e8; /* Gray light */
+  --color--gray-80: #e7edf1; /* Gray light 1 */
+  --color--gray-95: #f7f9fa; /* Gray light 2 */
+  --color--blue-20: #0d77b5; /* Blue dark */
+  --color--blue-30: #3d92c4; /* Blue dark 2 */
+  --color--blue-50: #2494db; /* Blue medium */
+  --color--blue-70: #53b0eb; /* Blue bright */
+  --color--blue-90: #ddeffb; /* Blue bright 5 */
+  --color--white: #fff; /* White */
+  --color--red: #e33f1e; /* Red */
+  --color--gold: #fdca40; /* Gold */
+  --color--green: #3fa21c; /* Green */
+
+  /* Shadows */
+  --shadow-focusable: 0 0 0 2px var(--color--white), 0 0 0 4px var(--color--blue-70), var(--shadow-focusable-smooth);
+  --shadow-focusable-smooth: 0 0 36px rgba(83, 176, 235, 0.25);
+
+  /* Radius */
+  --border-radius-base: 2px;
+
+  /* Outlines */
+  --outline--thin: 1px solid transparent;
+  --outline--thick: 6px dashed transparent;
+  --outline--base: 2px solid  var(--color--blue-70);
+  --outline-offset: 2px;
+
+  /* Header */
+  --header-height-wide-when-fixed: calc(6 * var(--sp));
+
+  /* Width of slide out navigation */
+  --mobile-nav-width: 500px;
+
+  /* Border radius */
+  --border-radius: 2px;
+
+  /* Form */
+  --form-element-border-size-base: 2px;
+  --form-element-border-size-left: 6px;
+}

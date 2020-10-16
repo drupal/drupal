@@ -1,0 +1,68 @@
+/**
+ * @file
+ * Styling for the Filter module.
+ */
+
+@import "../base/variables.pcss.css";
+
+/**
+ * Filter information under field.
+ */
+.text-full > .form-item {
+  margin-block-end: 0;
+}
+.form-element--editor-format {
+  vertical-align: top;
+}
+
+.filter-wrapper {
+  margin-block: var(--sp1) var(--sp0-5);
+}
+
+.filter-wrapper .form-item {
+  margin: 0;
+}
+
+.filter-help {
+  float: inline-end;
+  padding-block: var(--sp0-5);
+  font-size: var(--font-size-xxs);
+}
+
+/**
+ * Compose tips.
+ *
+ * Wraps filter tips on page '/filter/tips[/name]'.
+ */
+.compose-tips__item {
+  margin-block: var(--sp1-5);
+}
+
+/**
+ * Filter guidelines.
+ */
+.filter-guidelines__item {
+  margin-block-start: var(--sp1);
+  font-size: var(--font-size-s);
+  line-height: var(--line-height-s);
+}
+.filter-guidelines p {
+  margin-block: var(--sp0-25) 0;
+}
+
+/**
+ * Filter tips.
+ *
+ * Long is used on '/filter/tips[/name]', short is used for the filter tips
+ * below a text format input.
+ */
+.filter-tips--long {
+  margin-block-end: var(--sp1-5);
+}
+.filter-tips__item,
+.filter-tips--long p {
+  margin-block: var(--sp0-75);
+}
+.filter-tips__item--short {
+  margin-block: var(--sp0-25) 0;
+}

@@ -1,0 +1,109 @@
+/**
+ * @file
+ * Book module styling.
+ */
+
+@import "../base/variables.pcss.css";
+
+.book-pager {
+  display: flex;
+  flex-wrap: wrap;
+  margin-block-start: 0 var(--sp);
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  padding-block: 0 var(--sp);
+  padding-inline-start: 0;
+  padding-inline-end: 0;
+  list-style: none;
+  border-block-end: solid 1px var(--color--blue-20);
+
+  & a {
+    text-decoration: none;
+    color: var(--color--blue-20);
+    font-family: var(--font-serif);
+    font-size: 18px;
+    font-weight: 600;
+  }
+}
+
+.book-pager__item {
+  display: inline-block;
+
+  @media (--sm) {
+    flex: 0 0 33.33%;
+  }
+}
+
+.book-pager__item--center {
+  @media (--sm) {
+    text-align: center;
+  }
+}
+
+.book-pager__item--next {
+  @media (--sm) {
+    margin-inline-start: auto;
+    text-align: end;
+  }
+}
+
+.book-pager__link {
+  display: inline-flex;
+  align-items: center;
+}
+
+.book-pager__link--previous {
+  &:before {
+    display: block;
+    width: var(--sp0-5);
+    height: var(--sp0-5);
+    margin-inline-end: 0.25em;
+    content: "";
+    transform: rotate(-45deg);
+    border-block-start: solid 3px currentColor;
+    border-inline-start: solid 3px currentColor;
+  }
+}
+
+.book-pager__link--next {
+  &:after {
+    display: block;
+    width: var(--sp0-5);
+    height: var(--sp0-5);
+    margin-inline-start: 0.25em;
+    content: "";
+    transform: rotate(135deg);
+    border-block-start: solid 3px currentColor;
+    border-inline-start: solid 3px currentColor;
+  }
+}
+
+.book-navigation {
+  & .menu {
+    margin-block: var(--sp2);
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+    padding-block: 0;
+    padding-inline-start: 0;
+    padding-inline-end: 0;
+    list-style: none;
+
+    & li {
+      margin-block: 0;
+      padding-block: 0;
+      padding-inline-start: 0;
+      padding-inline-end: 0;
+      list-style: none;
+    }
+  }
+}
+
+[dir="rtl"] {
+  & .book-pager__link--previous:before {
+    transform: rotate(45deg);
+  }
+
+  & .book-pager__link--next:after {
+    transform: rotate(-135deg);
+  }
+}

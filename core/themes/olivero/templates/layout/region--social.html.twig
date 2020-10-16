@@ -1,0 +1,20 @@
+{#
+/**
+ * @file
+ * Olivero's theme override to display the social region.
+ *
+ * Available variables:
+ * - content: The content for this region, typically blocks.
+ * - attributes: HTML attributes for the region <div>.
+ * - region: The name of the region variable as defined in the theme's
+ *   .info.yml file.
+ *
+ * @see template_preprocess_region()
+ */
+#}
+
+<aside class="social-bar__inner fixable">
+  <div class="rotate">
+    {{ content }}
+  </div>
+</aside>

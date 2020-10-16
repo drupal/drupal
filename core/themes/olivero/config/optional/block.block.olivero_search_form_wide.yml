@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - search
+  theme:
+    - olivero
+id: olivero_search_form_wide
+theme: olivero
+region: secondary_menu
+weight: -5
+provider: null
+plugin: search_form_block
+settings:
+  id: search_form_block
+  label: 'Search form (wide)'
+  provider: search
+  label_display: '0'
+  page_id: ''
+visibility: {  }

@@ -1,0 +1,216 @@
+global-styling:
+  version: VERSION
+  css:
+    base:
+      css/base/fonts.css: {}
+      css/base/variables.css: {}
+      css/base/base.css: {}
+      css/base/utility.css: {}
+    layout:
+      css/layout/layout.css: {}
+      css/layout/grid.css: {}
+      css/layout/layout-content-narrow.css: {}
+      css/layout/layout-content-medium.css: {}
+      css/layout/layout-footer.css: {}
+      css/layout/region.css: {}
+      css/layout/region-content.css: {}
+      css/layout/region-hero.css: {}
+      css/layout/social-bar.css: {}
+      css/layout/views.css: {}
+    component:
+      css/components/block.css: {}
+      css/components/breadcrumb.css: {}
+      css/components/embedded-media.css: {}
+      css/components/footer.css: {}
+      css/components/button.css: {}
+      css/components/container-inline.module.css: {}
+      css/components/fieldset.css: {}
+      css/components/field.css: {}
+      css/components/field-image.css: {}
+      css/components/form.css: {}
+      css/components/form-boolean.css: {}
+      css/components/form-text.css: {}
+      css/components/form-textarea.css: {}
+      css/components/form-select.css: {}
+      css/components/header.css: {}
+      css/components/header-buttons-mobile.css: {}
+      css/components/header-navigation.css: {}
+      css/components/header-site-branding.css: {}
+      css/components/hero.css: {}
+      css/components/links.css: {}
+      css/components/messages.css: {}
+      css/components/navigation/nav-button-mobile.css: {}
+      css/components/navigation/nav-button-wide.css: {}
+      css/components/navigation/nav-primary-button.css: {}
+      css/components/navigation/nav-primary.css: {}
+      css/components/navigation/nav-primary-wide.css: {}
+      css/components/navigation/nav-secondary.css: {}
+      css/components/node.css: {}
+      css/components/node-teaser.css: {}
+      css/components/page-title.css: {}
+      css/components/skip-link.css: {}
+      css/components/pager.css: {}
+      css/components/table.css: {}
+      css/components/text-content.css: {}
+      css/components/tabledrag.css: {}
+
+  js:
+    js/checkbox.js: {}
+    js/polyfills.js: {}
+    js/scripts.js: {}
+    js/navigation.js: {}
+    js/second-level-navigation.js: {}
+  dependencies:
+    - core/drupal
+
+book:
+  css:
+    theme:
+      css/components/book.css: {}
+
+local-actions:
+  css:
+    component:
+      css/components/action-links.css: {}
+comments:
+  css:
+    component:
+      css/components/comments.css: {}
+  js:
+    js/comments.js: {}
+
+content-below:
+  css:
+    layout:
+      css/layout/region-content-below.css: {}
+
+content_moderation:
+  css:
+    component:
+      css/components/content-moderation.css: {}
+
+filter.theme:
+  css:
+    component:
+      css/theme/filter.theme.css: {}
+
+details:
+  css:
+    theme:
+      css/components/details.css: {}
+
+layout_discovery_section:
+  css:
+    layout:
+      css/layout/layout-discovery-section-layout.css: {}
+
+layout_builder_twocol_section:
+  css:
+    layout:
+      css/layout/layout-builder-twocol-section.css: {}
+  dependencies:
+    - olivero/layout_discovery_section
+
+layout_builder_threecol_section:
+  css:
+    layout:
+      css/layout/layout-builder-threecol-section.css: {}
+  dependencies:
+    - olivero/layout_discovery_section
+
+layout_builder_fourcol_section:
+  css:
+    layout:
+      css/layout/layout-builder-fourcol-section.css: {}
+  dependencies:
+    - olivero/layout_discovery_section
+
+messages:
+  js:
+    js/messages.js: {}
+
+sidebar:
+  css:
+    component:
+      css/components/sidebar.css: {}
+    layout:
+      css/layout/layout-sidebar.css: {}
+
+tabs:
+  css:
+    theme:
+      css/components/tabs.css: {}
+  js:
+    js/tabs.js: {}
+
+tags:
+  css:
+    theme:
+      css/components/tags.css: {}
+
+feed:
+  css:
+    theme:
+      css/components/feed.css: {}
+
+search-narrow:
+  css:
+    component:
+      css/components/header-search-narrow.css: {}
+
+search-wide:
+  css:
+    component:
+      css/components/header-search-wide.css: {}
+  js:
+    js/search.js: {}
+
+search-results:
+  css:
+    theme:
+      css/components/search-results.css: {}
+
+drupal.node.preview:
+  css:
+    theme:
+      css/components/node-preview-container.css: {}
+
+powered-by-block:
+  css:
+    theme:
+      css/components/powered-by-block.css: {}
+
+layout-views-grid-horizontal:
+  css:
+    layout:
+      css/layout/layout-views-grid-horizontal.css: {}
+
+layout-views-grid-vertical:
+  css:
+    layout:
+      css/layout/layout-views-grid-vertical.css: {}
+
+cke-dialog:
+  css:
+    component:
+      css/components/cke-dialog.css: {}
+
+progress:
+  css:
+    component:
+      css/components/progress.css: {}
+
+forum:
+  css:
+    component:
+      css/components/forum.css: {}
+
+dropbutton:
+  css:
+    component:
+      css/components/dropbutton.css: {}
+
+dialog.off_canvas:
+  css:
+    component:
+      css/components/off-canvas.css: {}

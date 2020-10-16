@@ -1,0 +1,16 @@
+/**
+ * @file
+ * Styles for tabledrag.
+ */
+
+@import "../base/variables.pcss.css";
+
+a.tabledrag-handle .handle {
+  width: var(--sp2);
+  height: var(--sp2);
+}
+
+.touchevents a.tabledrag-handle .handle {
+  height: var(--sp2);
+  background-position: 40% 10px;
+}
