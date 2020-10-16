@@ -98,7 +98,3 @@ _:-ms-fullscreen,
   right: auto;
   left: 0;
 }
-
-.js .is-autocompleting + .claro-autocomplete__message {
-  display: block;
-}
