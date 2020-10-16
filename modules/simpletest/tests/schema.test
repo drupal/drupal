@@ -381,4 +381,60 @@ class SchemaTestCase extends DrupalWebTestCase {
 
     db_drop_field($table_name, $field_name);
   }
+
+  /**
+   * Tests the findTables() method.
+   */
+  public function testFindTables() {
+    // We will be testing with three tables, two of them using the default
+    // prefix and the third one with an individually specified prefix.
+
+    // Set up a new connection with different connection info.
+    $connection_info = Database::getConnectionInfo();
+
+    // Add per-table prefix to the second table.
+    $new_connection_info = $connection_info['default'];
+    $new_connection_info['prefix']['test_2_table'] = $new_connection_info['prefix']['default'] . '_shared_';
+    Database::addConnectionInfo('test', 'default', $new_connection_info);
+
+    Database::setActiveConnection('test');
+
+    // Create the tables.
+    $table_specification = array(
+      'description' => 'Test table.',
+      'fields' => array(
+        'id'  => array(
+          'type' => 'int',
+          'default' => NULL,
+        ),
+      ),
+    );
+    Database::getConnection()->schema()->createTable('test_1_table', $table_specification);
+    Database::getConnection()->schema()->createTable('test_2_table', $table_specification);
+    Database::getConnection()->schema()->createTable('the_third_table', $table_specification);
+
+    // Check the "all tables" syntax.
+    $tables = Database::getConnection()->schema()->findTablesD8('%');
+    sort($tables);
+    $expected = array(
+      'test_1_table',
+      // This table uses a per-table prefix, yet it is returned as un-prefixed.
+      'test_2_table',
+      'the_third_table',
+    );
+
+    $this->assertTrue(!array_diff($expected, $tables), 'All tables were found.');
+
+    // Check the restrictive syntax.
+    $tables = Database::getConnection()->schema()->findTablesD8('test_%');
+    sort($tables);
+    $expected = array(
+      'test_1_table',
+      'test_2_table',
+    );
+    $this->assertEqual($tables, $expected, 'Two tables were found.');
+
+    // Go back to the initial connection.
+    Database::setActiveConnection('default');
+  }
 }
