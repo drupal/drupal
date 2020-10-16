@@ -2,7 +2,6 @@
 
 namespace Drupal\KernelTests\Core\Plugin\Context;
 
-use Drupal\Component\Plugin\Context\ContextInterface as ComponentContextInterface;
 use Drupal\Component\Plugin\Definition\ContextAwarePluginDefinitionInterface;
 use Drupal\Component\Plugin\Definition\ContextAwarePluginDefinitionTrait;
 use Drupal\Component\Plugin\Definition\PluginDefinition;
@@ -19,6 +18,7 @@ use Drupal\KernelTests\KernelTestBase;
  * @coversDefaultClass \Drupal\Core\Plugin\ContextAwarePluginBase
  *
  * @group Plugin
+ * @group legacy
  */
 class ContextAwarePluginBaseTest extends KernelTestBase {
 
@@ -41,7 +41,10 @@ class ContextAwarePluginBaseTest extends KernelTestBase {
     ];
     $plugin_definition = new TestPluginDefinition();
     $plugin_definition->addContextDefinition('nato_letter', ContextDefinition::create('string'));
-    $this->plugin = new TestContextAwarePlugin($configuration, 'the_sisko', $plugin_definition);
+    $this->plugin = $this->getMockBuilder(ContextAwarePluginBase::class)
+      ->setConstructorArgs([$configuration, 'the_sisko', $plugin_definition])
+      ->setMethods(['setContext'])
+      ->getMockForAbstractClass();
   }
 
   /**
@@ -81,9 +84,8 @@ class ContextAwarePluginBaseTest extends KernelTestBase {
 
     $this->plugin->getPluginDefinition()->addContextDefinition('foo', new ContextDefinition('string'));
 
-    $this->assertFalse($this->plugin->setContextCalled);
+    $this->plugin->expects($this->exactly(1))->method('setContext');
     $this->plugin->setContextValue('foo', new StringData(new DataDefinition(), 'bar'));
-    $this->assertTrue($this->plugin->setContextCalled);
   }
 
 }
@@ -91,24 +93,5 @@ class ContextAwarePluginBaseTest extends KernelTestBase {
 class TestPluginDefinition extends PluginDefinition implements ContextAwarePluginDefinitionInterface {
 
   use ContextAwarePluginDefinitionTrait;
-
-}
-
-class TestContextAwarePlugin extends ContextAwarePluginBase {
-
-  /**
-   * Indicates if ::setContext() has been called or not.
-   *
-   * @var bool
-   */
-  public $setContextCalled = FALSE;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setContext($name, ComponentContextInterface $context) {
-    parent::setContext($name, $context);
-    $this->setContextCalled = TRUE;
-  }
 
 }

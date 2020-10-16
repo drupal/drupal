@@ -3,21 +3,20 @@
 namespace Drupal\Core\Plugin;
 
 use Drupal\Component\Plugin\ContextAwarePluginBase as ComponentContextAwarePluginBase;
-use Drupal\Component\Plugin\Exception\ContextException;
-use Drupal\Component\Plugin\PluginHelper;
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\TypedData\TypedDataTrait;
-use Drupal\Component\Plugin\Context\ContextInterface as ComponentContextInterface;
-use Drupal\Core\Plugin\Context\ContextInterface;
+
+@trigger_error(__NAMESPACE__ . '\ContextAwarePluginBase is deprecated in drupal:9.1.0 and will be removed before drupal:10.0.0. Instead, use \Drupal\Core\Plugin\ContextAwarePluginTrait. See https://www.drupal.org/node/3120980', E_USER_DEPRECATED);
 
 /**
  * Base class for plugins that are context aware.
  */
 abstract class ContextAwarePluginBase extends ComponentContextAwarePluginBase implements ContextAwarePluginInterface, CacheableDependencyInterface {
+
+  use ContextAwarePluginTrait;
   use TypedDataTrait;
   use StringTranslationTrait;
   use DependencySerializationTrait;
@@ -36,141 +35,6 @@ abstract class ContextAwarePluginBase extends ComponentContextAwarePluginBase im
       $contexts[$key] = new Context($context_definition, $value);
     }
     return $contexts;
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * This code is identical to the Component in order to pick up a different
-   * Context class.
-   *
-   * @return \Drupal\Core\Plugin\Context\ContextInterface
-   *   The context object.
-   */
-  public function getContext($name) {
-    // Check for a valid context value.
-    if (!isset($this->context[$name])) {
-      $this->context[$name] = new Context($this->getContextDefinition($name));
-    }
-    return $this->context[$name];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setContext($name, ComponentContextInterface $context) {
-    // Check that the context passed is an instance of our extended interface.
-    if (!$context instanceof ContextInterface) {
-      throw new ContextException("Passed $name context must be an instance of \\Drupal\\Core\\Plugin\\Context\\ContextInterface");
-    }
-    parent::setContext($name, $context);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setContextValue($name, $value) {
-    $this->setContext($name, Context::createFromContext($this->getContext($name), $value));
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getContextMapping() {
-    $configuration = PluginHelper::isConfigurable($this) ? $this->getConfiguration() : $this->configuration;
-    return isset($configuration['context_mapping']) ? $configuration['context_mapping'] : [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setContextMapping(array $context_mapping) {
-    if (PluginHelper::isConfigurable($this)) {
-      $configuration = $this->getConfiguration();
-      $configuration['context_mapping'] = array_filter($context_mapping);
-      $this->setConfiguration($configuration);
-    }
-    else {
-      $this->configuration['context_mapping'] = $context_mapping;
-    }
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @return \Drupal\Core\Plugin\Context\ContextDefinitionInterface[]
-   */
-  public function getContextDefinitions() {
-    return parent::getContextDefinitions();
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @return \Drupal\Core\Plugin\Context\ContextDefinitionInterface
-   */
-  public function getContextDefinition($name) {
-    return parent::getContextDefinition($name);
-  }
-
-  /**
-   * Wraps the context handler.
-   *
-   * @return \Drupal\Core\Plugin\Context\ContextHandlerInterface
-   */
-  protected function contextHandler() {
-    return \Drupal::service('context.handler');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getCacheContexts() {
-    $cache_contexts = [];
-    // Applied contexts can affect the cache contexts when this plugin is
-    // involved in caching, collect and return them.
-    foreach ($this->getContexts() as $context) {
-      /** @var $context \Drupal\Core\Cache\CacheableDependencyInterface */
-      if ($context instanceof CacheableDependencyInterface) {
-        $cache_contexts = Cache::mergeContexts($cache_contexts, $context->getCacheContexts());
-      }
-    }
-    return $cache_contexts;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getCacheTags() {
-    $tags = [];
-    // Applied contexts can affect the cache tags when this plugin is
-    // involved in caching, collect and return them.
-    foreach ($this->getContexts() as $context) {
-      /** @var $context \Drupal\Core\Cache\CacheableDependencyInterface */
-      if ($context instanceof CacheableDependencyInterface) {
-        $tags = Cache::mergeTags($tags, $context->getCacheTags());
-      }
-    }
-    return $tags;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getCacheMaxAge() {
-    $max_age = Cache::PERMANENT;
-
-    // Applied contexts can affect the cache max age when this plugin is
-    // involved in caching, collect and return them.
-    foreach ($this->getContexts() as $context) {
-      /** @var $context \Drupal\Core\Cache\CacheableDependencyInterface */
-      if ($context instanceof CacheableDependencyInterface) {
-        $max_age = Cache::mergeMaxAges($max_age, $context->getCacheMaxAge());
-      }
-    }
-    return $max_age;
   }
 
 }

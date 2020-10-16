@@ -135,10 +135,6 @@ class UserRoleConditionTest extends KernelTestBase {
     $condition->setConfig('roles', [RoleInterface::AUTHENTICATED_ID => RoleInterface::AUTHENTICATED_ID]);
     $this->assertTrue($condition->execute(), 'Authenticated users pass role checks for authenticated.');
 
-    // Test Constructor injection.
-    $condition = $this->manager->createInstance('user_role', ['roles' => [RoleInterface::AUTHENTICATED_ID => RoleInterface::AUTHENTICATED_ID], 'context' => ['user' => $this->authenticated]]);
-    $this->assertTrue($condition->execute(), 'Constructor injection of context and configuration working as anticipated.');
-
     // Check the negated summary.
     $condition->setConfig('negate', TRUE);
     $this->assertEqual($condition->summary(), 'The user is not a member of Authenticated user');
@@ -152,6 +148,16 @@ class UserRoleConditionTest extends KernelTestBase {
     $condition->setConfig('negate', FALSE);
     $this->assertTrue($condition->execute(), 'Authenticated user is a member of the custom role.');
     $this->assertEqual($condition->summary(), new FormattableMarkup('The user is a member of @roles', ['@roles' => $this->role->label()]));
+  }
+
+  /**
+   * @group legacy
+   */
+  public function testLegacy() {
+    $this->expectDeprecation('Passing context values to plugins via configuration is deprecated in drupal:9.1.0 and will be removed before drupal:10.0.0. Instead, call ::setContextValue() on the plugin itself. See https://www.drupal.org/node/3120980');
+    // Test Constructor injection.
+    $condition = $this->manager->createInstance('user_role', ['roles' => [RoleInterface::AUTHENTICATED_ID => RoleInterface::AUTHENTICATED_ID], 'context' => ['user' => $this->authenticated]]);
+    $this->assertTrue($condition->execute(), 'Constructor injection of context and configuration working as anticipated.');
   }
 
 }

@@ -8,7 +8,8 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
-use Drupal\Core\Plugin\ContextAwarePluginBase;
+use Drupal\Core\Plugin\ContextAwarePluginTrait;
+use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\layout_builder\Plugin\SectionStorage\SectionStorageLocalTaskProviderInterface;
@@ -29,8 +30,9 @@ use Symfony\Component\Routing\RouteCollection;
  *   }
  * )
  */
-class SimpleConfigSectionStorage extends ContextAwarePluginBase implements SectionStorageInterface, SectionStorageLocalTaskProviderInterface, ContainerFactoryPluginInterface {
+class SimpleConfigSectionStorage extends PluginBase implements SectionStorageInterface, SectionStorageLocalTaskProviderInterface, ContainerFactoryPluginInterface {
 
+  use ContextAwarePluginTrait;
   use LayoutBuilderRoutesTrait;
   use SectionStorageTrait;
 

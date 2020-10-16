@@ -8,6 +8,7 @@ use Drupal\Component\Plugin\ContextAwarePluginInterface as ComponentContextAware
  * An override of ContextAwarePluginInterface for documentation purposes.
  *
  * @see \Drupal\Component\Plugin\ContextAwarePluginInterface
+ * @see \Drupal\Core\Plugin\ContextAwarePluginTrait
  *
  * @ingroup plugin_api
  */
