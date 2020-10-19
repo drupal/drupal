@@ -79,6 +79,16 @@ libraries-override:
       theme:
         css/field_ui.admin.css: css/theme/field-ui.admin.css
 
+  node/drupal.node:
+    css:
+      layout:
+        css/node.module.css: false
+
+  node/form:
+    css:
+      layout:
+        css/node.module.css: false
+
   views_ui/admin.styling:
     css:
       component:

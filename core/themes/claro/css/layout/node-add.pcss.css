@@ -4,28 +4,56 @@
 
 @import "../base/variables.pcss.css";
 
-.layout-region-node-footer__content {
-  margin-top: 1.5em;
+:root {
+  --node-meta-width: 22.5rem;
+}
+
+.layout-region {
+  box-sizing: border-box;
+}
+
+.layout-region--node-footer .layout-region__content {
+  margin-top: var(--space-l);
 }
 
 /**
- * Widescreen
- *
- * Both of the following media queries must *exactly* match what is in
- * node.module.css. This is rather crazy.
- *
- * @todo Figure out how to reduce media query duplication across files
- *       and modules. Layout styles only allowed in themes?
+ * Wide screens
  */
-@media
-  screen and (min-width: 780px),
-  (orientation: landscape) and (min-device-height: 780px) {
-  .layout-region-node-footer__content {
-    margin-top: 0.5em;
+@media screen and (min-width: 61rem) {
+  .layout-region--node-main,
+  .layout-region--node-footer {
+    float: left; /* LTR */
+    width: calc(100% - var(--node-meta-width));
+    padding-right: var(--space-l); /* LTR */
   }
-}
+  [dir="rtl"] .layout-region--node-main,
+  [dir="rtl"] .layout-region--node-footer {
+    float: right;
+    padding-right: 0;
+    padding-left: var(--space-l);
+  }
 
-/* Push sidebar down to horizontal align with form section */
-.layout-region-node-secondary {
-  margin-top: var(--space-l);
+  .layout-region--node-main .layout-region__content,
+  .layout-region--node-footer .layout-region__content {
+    max-width: 48rem;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .layout-region--node-footer .layout-region__content {
+    margin-top: var(--space-xs);
+  }
+
+  .layout-region--node-secondary {
+    float: right; /* LTR */
+    width: var(--node-meta-width);
+  }
+  [dir="rtl"] .layout-region--node-secondary {
+    float: left;
+  }
+
+  /* Push sidebar down to horizontal align with form section */
+  .layout-region--node-secondary {
+    margin-top: var(--space-l);
+  }
 }
