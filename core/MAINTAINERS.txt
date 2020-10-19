@@ -39,7 +39,7 @@ Release managers
 - Jess Myrbo 'xjm' https://www.drupal.org/u/xjm
 
 Committer team facilitators
-- (provisional) Pamela Barone 'pameeela' https://www.drupal.org/u/pameeela
+- Pamela Barone 'pameeela' https://www.drupal.org/u/pameeela
 
 Subsystem maintainers
 ---------------------
