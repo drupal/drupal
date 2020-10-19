@@ -16,14 +16,18 @@
  */
 #}
 <div class="layout-node-form clearfix">
-  <div class="layout-region layout-region-node-main">
-    {{ form|without('advanced', 'footer', 'actions') }}
+  <div class="layout-region layout-region--node-main">
+    <div class="layout-region__content">
+      {{ form|without('advanced', 'footer', 'actions') }}
+    </div>
   </div>
-  <div class="layout-region layout-region-node-secondary">
-    {{ form.advanced }}
+  <div class="layout-region layout-region--node-secondary">
+    <div class="layout-region__content">
+      {{ form.advanced }}
+    </div>
   </div>
-  <div class="layout-region layout-region-node-footer">
-    <div class="layout-region-node-footer__content">
+  <div class="layout-region layout-region--node-footer">
+    <div class="layout-region__content">
       <div class="divider"></div>
       {{ form.footer }}
       {{ form.actions }}
