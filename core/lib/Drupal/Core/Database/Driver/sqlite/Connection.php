@@ -18,6 +18,16 @@ class Connection extends DatabaseConnection {
   const DATABASE_NOT_FOUND = 14;
 
   /**
+   * {@inheritdoc}
+   */
+  protected $statementClass = NULL;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $statementWrapperClass = NULL;
+
+  /**
    * Whether or not the active transaction (if any) will be rolled back.
    *
    * @var bool
@@ -70,10 +80,6 @@ class Connection extends DatabaseConnection {
    * Constructs a \Drupal\Core\Database\Driver\sqlite\Connection object.
    */
   public function __construct(\PDO $connection, array $connection_options) {
-    // We don't need a specific PDOStatement class here, we simulate it in
-    // static::prepare().
-    $this->statementClass = NULL;
-
     parent::__construct($connection, $connection_options);
 
     // Attach one database for each registered prefix.

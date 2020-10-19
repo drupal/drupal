@@ -34,13 +34,13 @@ class Upsert extends QueryUpsert {
           fwrite($blobs[$blob_count], $insert_values[$idx]);
           rewind($blobs[$blob_count]);
 
-          $stmt->bindParam(':db_insert_placeholder_' . $max_placeholder++, $blobs[$blob_count], \PDO::PARAM_LOB);
+          $stmt->getClientStatement()->bindParam(':db_insert_placeholder_' . $max_placeholder++, $blobs[$blob_count], \PDO::PARAM_LOB);
 
           // Pre-increment is faster in PHP than increment.
           ++$blob_count;
         }
         else {
-          $stmt->bindParam(':db_insert_placeholder_' . $max_placeholder++, $insert_values[$idx]);
+          $stmt->getClientStatement()->bindParam(':db_insert_placeholder_' . $max_placeholder++, $insert_values[$idx]);
         }
       }
       // Check if values for a serial field has been passed.

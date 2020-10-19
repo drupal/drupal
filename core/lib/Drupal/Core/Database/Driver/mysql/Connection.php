@@ -5,7 +5,7 @@ namespace Drupal\Core\Database\Driver\mysql;
 use Drupal\Core\Database\DatabaseAccessDeniedException;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
-
+use Drupal\Core\Database\StatementWrapper;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\DatabaseException;
@@ -46,6 +46,16 @@ class Connection extends DatabaseConnection {
    * SQLSTATE error code for "Syntax error or access rule violation".
    */
   const SQLSTATE_SYNTAX_ERROR = 42000;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $statementClass = NULL;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $statementWrapperClass = StatementWrapper::class;
 
   /**
    * Flag to indicate if the cleanup function in __destruct() should run.

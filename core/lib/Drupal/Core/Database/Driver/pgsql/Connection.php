@@ -7,6 +7,7 @@ use Drupal\Core\Database\Connection as DatabaseConnection;
 use Drupal\Core\Database\DatabaseAccessDeniedException;
 use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\StatementInterface;
+use Drupal\Core\Database\StatementWrapper;
 
 // cSpell:ignore ilike nextval
 
@@ -37,6 +38,16 @@ class Connection extends DatabaseConnection {
    * PDOException message. It will need to get extracted.
    */
   const CONNECTION_FAILURE = '08006';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $statementClass = NULL;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $statementWrapperClass = StatementWrapper::class;
 
   /**
    * A map of condition operators to PostgreSQL operators.
