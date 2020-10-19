@@ -4,6 +4,7 @@ namespace Drupal\Tests\Core\Database;
 
 use Composer\Autoload\ClassLoader;
 use Drupal\Core\Database\Statement;
+use Drupal\Core\Database\StatementWrapper;
 use Drupal\Tests\Core\Database\Stub\StubConnection;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
 use Drupal\Tests\Core\Database\Stub\Driver;
@@ -605,6 +606,21 @@ class ConnectionTest extends UnitTestCase {
   }
 
   /**
+   * Tests deprecation of the Statement class.
+   *
+   * @group legacy
+   */
+  public function testStatementDeprecation() {
+    if (PHP_VERSION_ID >= 80000) {
+      $this->markTestSkipped('Drupal\Core\Database\Statement is incompatible with PHP 8.0. Remove in https://www.drupal.org/node/3177490');
+    }
+    $this->expectDeprecation('\Drupal\Core\Database\Statement is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Database drivers should use or extend StatementWrapper instead, and encapsulate client-level statement objects. See https://www.drupal.org/node/3177488');
+    $mock_statement = $this->getMockBuilder(Statement::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+  }
+
+  /**
    * Test rtrim() of query strings.
    *
    * @dataProvider provideQueriesToTrim
@@ -613,7 +629,7 @@ class ConnectionTest extends UnitTestCase {
     $mock_pdo = $this->getMockBuilder(StubPdo::class)
       ->setMethods(['execute', 'prepare', 'setAttribute'])
       ->getMock();
-    $mock_statement = $this->getMockBuilder(Statement::class)
+    $mock_statement = $this->getMockBuilder(StatementWrapper::class)
       ->disableOriginalConstructor()
       ->getMock();
 
@@ -682,6 +698,20 @@ class ConnectionTest extends UnitTestCase {
     $mock_pdo = $this->createMock(StubPDO::class);
     $connection = new StubConnection($mock_pdo, ['namespace' => $namespace], ['"', '"']);
     $this->assertEquals($namespace, $connection->getConnectionOptions()['namespace']);
+  }
+
+  /**
+   * Tests the deprecation of \Drupal\Core\Database\Connection::$statementClass.
+   *
+   * @group legacy
+   */
+  public function testPdoStatementClass() {
+    if (PHP_VERSION_ID >= 80000) {
+      $this->markTestSkipped('Drupal\Core\Database\Statement is incompatible with PHP 8.0. Remove in https://www.drupal.org/node/3177490');
+    }
+    $this->expectDeprecation('\Drupal\Core\Database\Connection::$statementClass is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Database drivers should use or extend StatementWrapper instead, and encapsulate client-level statement objects. See https://www.drupal.org/node/3177488');
+    $mock_pdo = $this->createMock(StubPDO::class);
+    new StubConnection($mock_pdo, ['namespace' => 'Drupal\\Tests\\Core\\Database\\Stub\\Driver'], ['"', '"'], Statement::class);
   }
 
 }

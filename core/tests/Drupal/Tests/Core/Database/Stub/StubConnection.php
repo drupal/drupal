@@ -5,6 +5,7 @@ namespace Drupal\Tests\Core\Database\Stub;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Log;
 use Drupal\Core\Database\StatementEmpty;
+use Drupal\Core\Database\StatementWrapper;
 
 /**
  * A stub of the abstract Connection class for testing purposes.
@@ -12,6 +13,16 @@ use Drupal\Core\Database\StatementEmpty;
  * Includes minimal implementations of Connection's abstract methods.
  */
 class StubConnection extends Connection {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $statementClass = NULL;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $statementWrapperClass = StatementWrapper::class;
 
   /**
    * Public property so we can test driver loading mechanism.
@@ -30,9 +41,15 @@ class StubConnection extends Connection {
    *   An array of options for the connection.
    * @param string[]|null $identifier_quotes
    *   The identifier quote characters. Defaults to an empty strings.
+   * @param string|null $statement_class
+   *   A class to use as a statement class for deprecation testing.
    */
-  public function __construct(\PDO $connection, array $connection_options, $identifier_quotes = ['', '']) {
+  public function __construct(\PDO $connection, array $connection_options, $identifier_quotes = ['', ''], $statement_class = NULL) {
     $this->identifierQuotes = $identifier_quotes;
+    if ($statement_class) {
+      $this->statementClass = $statement_class;
+      $this->statementWrapperClass = NULL;
+    }
     parent::__construct($connection, $connection_options);
   }
 
