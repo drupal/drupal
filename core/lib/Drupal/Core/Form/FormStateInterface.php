@@ -121,12 +121,13 @@ interface FormStateInterface {
    * @param array $route_parameters
    *   (optional) An associative array of parameter names and values.
    * @param array $options
-   *   (optional) An associative array of additional options. See
-   *   \Drupal\Core\Url for the available keys.
+   *   (optional) An associative array of additional options containing the
+   *   same values accepted from \Drupal\Core\Url::fromUri() for $options.
    *
    * @return $this
    *
    * @see \Drupal\Core\Form\FormSubmitterInterface::redirectForm()
+   * @see \Drupal\Core\Url::fromUri()
    */
   public function setRedirect($route_name, array $route_parameters = [], array $options = []);
 
