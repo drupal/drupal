@@ -83,8 +83,8 @@ interface ListInterface extends TraversableTypedDataInterface, \ArrayAccess, \Co
   /**
    * Returns the first item in this list.
    *
-   * @return \Drupal\Core\TypedData\TypedDataInterface
-   *   The first item in this list.
+   * @return \Drupal\Core\TypedData\TypedDataInterface|null
+   *   The first item in this list, or NULL if there are no items.
    *
    * @throws \Drupal\Core\TypedData\Exception\MissingDataException
    *   If the complex data structure is unset and no item can be created.
