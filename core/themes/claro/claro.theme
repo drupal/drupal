@@ -1596,3 +1596,62 @@ function claro_form_views_ui_add_handler_form_alter(array &$form, FormStateInter
     unset($form['override']['controls']);
   }
 }
+
+/**
+ * Implements hook_preprocess_toolbar().
+ *
+ * This is also called by system_preprocess_toolbar() in instances where Claro
+ * is the admin theme but not the active theme.
+ *
+ * @see system_preprocess_toolbar()
+ */
+function claro_preprocess_toolbar(&$variables, $hook, $info) {
+  $variables['attributes']['data-drupal-claro-processed-toolbar'] = TRUE;
+}
+
+/**
+ * Called by system.module via its hook_library_info_alter().
+ *
+ * If the active theme is not Claro, but Claro is the admin theme, this alters
+ * the toolbar library config so Claro's toolbar stylesheets are used.
+ *
+ * @see system_library_info_alter()
+ */
+function claro_system_module_invoked_library_info_alter(&$libraries, $extension) {
+  if ($extension === 'toolbar') {
+    $claro_info = \Drupal::service('theme_handler')->listInfo()['claro']->info;
+    $path_prefix = '/core/themes/claro/';
+    $claro_toolbar_overrides = $claro_info['libraries-override']['toolbar/toolbar'];
+    foreach ($claro_toolbar_overrides['css'] as $concern => $overrides) {
+      foreach ($claro_toolbar_overrides['css'][$concern] as $key => $value) {
+        $config = $libraries['toolbar']['css'][$concern][$key];
+        $libraries['toolbar']['css'][$concern][$path_prefix . $value] = $config;
+        unset($libraries['toolbar']['css'][$concern][$key]);
+      }
+    }
+    $claro_toolbar_menu_overrides = $claro_info['libraries-override']['toolbar/toolbar.menu'];
+    foreach ($claro_toolbar_menu_overrides['css'] as $concern => $overrides) {
+      foreach ($claro_toolbar_menu_overrides['css'][$concern] as $key => $value) {
+        $config = $libraries['toolbar.menu']['css'][$concern][$key];
+        $libraries['toolbar.menu']['css'][$concern][$path_prefix . $value] = $config;
+        unset($libraries['toolbar.menu']['css'][$concern][$key]);
+      }
+    }
+  }
+}
+
+/**
+ * Called by system.module via its hook_theme_registry_alter().
+ *
+ * If the active theme is not Claro, but Claro is the admin theme, this alters
+ * the registry so Claro's toolbar templates are used.
+ *
+ * @see system_theme_registry_alter()
+ */
+function claro_system_module_invoked_theme_registry_alter(array &$theme_registry) {
+  foreach (['toolbar', 'menu__toolbar'] as $registry_item) {
+    if (isset($theme_registry[$registry_item])) {
+      $theme_registry[$registry_item]['path'] = 'core/themes/claro/templates/navigation';
+    }
+  }
+}
