@@ -31,10 +31,10 @@
 
 @media (min-width: 700px) {
     [dir="ltr"] .layout--twocol-section--50-50 > .layout__region--first {
-      margin-right: 18px)
+      margin-right: 18px
   }
     [dir="rtl"] .layout--twocol-section--50-50 > .layout__region--first {
-      margin-left: 18px)
+      margin-left: 18px
   }
     .layout--twocol-section--50-50 > .layout__region--first {
       flex-basis: calc(50% - 18px);
@@ -52,10 +52,10 @@
       flex-basis: calc(50% - 18px);
     }
     [dir="ltr"] .layout--twocol-section--33-67 > .layout__region--first {
-      margin-right: 11.9988px)
+      margin-right: 11.9988px
   }
     [dir="rtl"] .layout--twocol-section--33-67 > .layout__region--first {
-      margin-left: 11.9988px)
+      margin-left: 11.9988px
   }
     .layout--twocol-section--33-67 > .layout__region--first {
       flex-basis: calc(33.33% - 11.9988px);
