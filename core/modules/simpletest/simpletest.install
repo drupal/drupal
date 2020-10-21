@@ -21,7 +21,7 @@ function simpletest_requirements($phase) {
     $requirements['simpletest'] = [
       'title' => t('SimpleTest'),
       'severity' => REQUIREMENT_ERROR,
-      'description' => t('SimpleTest is has been removed from Drupal 9.0.0 and can no longer be installed. A contributed module is available for those who wish to continue using SimpleTest during the transition from Drupal 8 to 9. <a href=":change-record">See the change record for more information</a>.', [
+      'description' => t('SimpleTest has been removed from Drupal 9.0.0 and can no longer be installed. A contributed module is available for those who wish to continue using SimpleTest during the transition from Drupal 8 to 9. <a href=":change-record">See the change record for more information</a>.', [
         ':change-record' => 'https://www.drupal.org/node/3091784',
       ]),
     ];
