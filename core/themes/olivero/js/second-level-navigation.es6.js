@@ -1,4 +1,4 @@
-(Drupal => {
+((Drupal) => {
   const { isDesktopNav } = Drupal.olivero;
   const secondLevelNavMenus = document.querySelectorAll(
     '.primary-nav__menu-item--has-children',
@@ -36,7 +36,7 @@
 
   // Add hover and click event listeners onto each sub navigation parent and its
   // button.
-  secondLevelNavMenus.forEach(el => {
+  secondLevelNavMenus.forEach((el) => {
     const button = el.querySelector(
       '.primary-nav__button-toggle, .primary-nav__menu-link--button',
     );
@@ -44,18 +44,18 @@
     button.removeAttribute('aria-hidden');
     button.removeAttribute('tabindex');
 
-    button.addEventListener('click', e => {
+    button.addEventListener('click', (e) => {
       const topLevelMenuITem = e.currentTarget.parentNode;
       toggleSubNav(topLevelMenuITem);
     });
 
-    el.addEventListener('mouseover', e => {
+    el.addEventListener('mouseover', (e) => {
       if (isDesktopNav()) {
         toggleSubNav(e.currentTarget, true);
       }
     });
 
-    el.addEventListener('mouseout', e => {
+    el.addEventListener('mouseout', (e) => {
       if (isDesktopNav()) {
         toggleSubNav(e.currentTarget, false);
       }
@@ -66,7 +66,7 @@
    * Close all second level sub navigation menus.
    */
   function closeAllSubNav() {
-    secondLevelNavMenus.forEach(el => {
+    secondLevelNavMenus.forEach((el) => {
       toggleSubNav(el, false);
     });
   }
@@ -80,7 +80,7 @@
   function areAnySubNavsOpen() {
     let subNavsAreOpen = false;
 
-    secondLevelNavMenus.forEach(el => {
+    secondLevelNavMenus.forEach((el) => {
       const button = el.querySelector('.primary-nav__button-toggle');
       const state = button.getAttribute('aria-expanded') === 'true';
 
@@ -95,7 +95,7 @@
   Drupal.olivero.areAnySubNavsOpen = areAnySubNavsOpen;
 
   // Ensure that desktop submenus close when ESC key is pressed.
-  document.addEventListener('keyup', e => {
+  document.addEventListener('keyup', (e) => {
     if (e.keyCode === 27 && isDesktopNav()) {
       closeAllSubNav();
     }

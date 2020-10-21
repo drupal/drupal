@@ -3,7 +3,7 @@
  * Polyfill for HTML5 details elements.
  */
 
-(function($, Modernizr, Drupal) {
+(function ($, Modernizr, Drupal) {
   /**
    * The collapsible details object represents a single details element.
    *
@@ -140,11 +140,7 @@
    *   The targeted node as a jQuery object.
    */
   const handleFragmentLinkClickOrHashChange = (e, $target) => {
-    $target
-      .parents('details')
-      .not('[open]')
-      .find('> summary')
-      .trigger('click');
+    $target.parents('details').not('[open]').find('> summary').trigger('click');
   };
 
   /**

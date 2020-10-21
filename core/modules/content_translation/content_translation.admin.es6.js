@@ -3,7 +3,7 @@
  * Content Translation admin behaviors.
  */
 
-(function($, Drupal, drupalSettings) {
+(function ($, Drupal, drupalSettings) {
   /**
    * Forces applicable options to be checked as translatable.
    *
@@ -19,7 +19,7 @@
       let $fields;
 
       function fieldsChangeHandler($fields, dependentColumns) {
-        return function(e) {
+        return function (e) {
           Drupal.behaviors.contentTranslationDependentOptions.check(
             $fields,
             dependentColumns,
@@ -32,7 +32,7 @@
       // that name and copy over the input values that require all columns to be
       // translatable.
       if (options && options.dependent_selectors) {
-        Object.keys(options.dependent_selectors).forEach(field => {
+        Object.keys(options.dependent_selectors).forEach((field) => {
           $fields = $context.find(`input[name^="${field}"]`);
           const dependentColumns = options.dependent_selectors[field];
 
@@ -54,7 +54,7 @@
 
       // A field that has many different translatable parts can also define one
       // or more columns that require all columns to be translatable.
-      Object.keys(dependentColumns || {}).forEach(index => {
+      Object.keys(dependentColumns || {}).forEach((index) => {
         column = dependentColumns[index];
 
         if (!$changed) {
@@ -62,10 +62,7 @@
         }
 
         if ($element.is(`input[value="${column}"]:checked`)) {
-          $fields
-            .prop('checked', true)
-            .not($element)
-            .prop('disabled', true);
+          $fields.prop('checked', true).not($element).prop('disabled', true);
         } else {
           $fields.prop('disabled', false);
         }
@@ -88,7 +85,7 @@
       $(context)
         .find('table .bundle-settings .translatable :input')
         .once('translation-entity-admin-hide')
-        .each(function() {
+        .each(function () {
           const $input = $(this);
           const $bundleSettings = $input.closest('.bundle-settings');
           if (!$input.is(':checked')) {
@@ -108,7 +105,7 @@
       // hidden, since their translatability no longer matters.
       $('body')
         .once('translation-entity-admin-bind')
-        .on('click', 'table .bundle-settings .translatable :input', e => {
+        .on('click', 'table .bundle-settings .translatable :input', (e) => {
           const $target = $(e.target);
           const $bundleSettings = $target.closest('.bundle-settings');
           const $settings = $bundleSettings.nextUntil('.bundle-settings');
@@ -123,7 +120,7 @@
             $settings.hide();
           }
         })
-        .on('click', 'table .field-settings .translatable :input', e => {
+        .on('click', 'table .field-settings .translatable :input', (e) => {
           const $target = $(e.target);
           const $fieldSettings = $target.closest('.field-settings');
           const $columnSettings = $fieldSettings.nextUntil(

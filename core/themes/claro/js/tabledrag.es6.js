@@ -81,13 +81,8 @@
         }
       }
 
-      Object.keys(settings.tableDrag || {}).forEach(base => {
-        initTableDrag(
-          $(context)
-            .find(`#${base}`)
-            .once('tabledrag'),
-          base,
-        );
+      Object.keys(settings.tableDrag || {}).forEach((base) => {
+        initTableDrag($(context).find(`#${base}`).once('tabledrag'), base);
       });
     },
   };
@@ -215,8 +210,8 @@
      * @type {bool}
      */
     this.indentEnabled = false;
-    Object.keys(tableSettings || {}).forEach(group => {
-      Object.keys(tableSettings[group] || {}).forEach(n => {
+    Object.keys(tableSettings || {}).forEach((group) => {
+      Object.keys(tableSettings[group] || {}).forEach((n) => {
         if (tableSettings[group][n].relationship === 'parent') {
           this.indentEnabled = true;
         }
@@ -237,9 +232,7 @@
       // manually append 2 indentations in the first draggable row, measure
       // the offset, then remove.
       const indent = Drupal.theme('tableDragIndentation');
-      const testRow = $('<tr></tr>')
-        .addClass('draggable')
-        .appendTo(table);
+      const testRow = $('<tr></tr>').addClass('draggable').appendTo(table);
       const testCell = $('<td></td>')
         .appendTo(testRow)
         .prepend(indent)
@@ -285,14 +278,16 @@
 
     // Add event bindings to the document. The self variable is passed along
     // as event handlers do not have direct access to the tableDrag object.
-    $(document).on('touchmove', event =>
+    $(document).on('touchmove', (event) =>
       self.dragRow(event.originalEvent.touches[0], self),
     );
-    $(document).on('touchend', event =>
+    $(document).on('touchend', (event) =>
       self.dropRow(event.originalEvent.touches[0], self),
     );
-    $(document).on('mousemove pointermove', event => self.dragRow(event, self));
-    $(document).on('mouseup pointerup', event => self.dropRow(event, self));
+    $(document).on('mousemove pointermove', (event) =>
+      self.dragRow(event, self),
+    );
+    $(document).on('mouseup pointerup', (event) => self.dropRow(event, self));
 
     // React to localStorage event showing or hiding weight columns.
     $(window).on(
@@ -322,9 +317,9 @@
       let hidden;
       let cell;
       let columnIndex;
-      Object.keys(this.tableSettings || {}).forEach(group => {
+      Object.keys(this.tableSettings || {}).forEach((group) => {
         // Find the first field in this group.
-        Object.keys(this.tableSettings[group]).some(tableSetting => {
+        Object.keys(this.tableSettings[group]).some((tableSetting) => {
           const field = $table
             .find(`.${this.tableSettings[group][tableSetting].target}`)
             .eq(0);
@@ -341,11 +336,7 @@
           // Add 1 to our indexes. The nth-child selector is 1 based, not 0
           // based. Match immediate children of the parent element to allow
           // nesting.
-          columnIndex =
-            cell
-              .parent()
-              .find('> td')
-              .index(cell.get(0)) + 1;
+          columnIndex = cell.parent().find('> td').index(cell.get(0)) + 1;
           $table
             .find('> thead > tr, > tbody > tr, > tr')
             .each(this.addColspanClass(columnIndex));
@@ -525,19 +516,19 @@
       const field = $(row).find(`.${group}`);
       const tableSettingsGroup = this.tableSettings[group];
       return Object.keys(tableSettingsGroup)
-        .map(delta => {
+        .map((delta) => {
           const targetClass = tableSettingsGroup[delta].target;
           let rowSettings;
           if (field.is(`.${targetClass}`)) {
             // Return a copy of the row settings.
             rowSettings = {};
-            Object.keys(tableSettingsGroup[delta]).forEach(n => {
+            Object.keys(tableSettingsGroup[delta]).forEach((n) => {
               rowSettings[n] = tableSettingsGroup[delta][n];
             });
           }
           return rowSettings;
         })
-        .filter(rowSetting => rowSetting)[0];
+        .filter((rowSetting) => rowSetting)[0];
     },
 
     /**
@@ -562,10 +553,7 @@
         : $firstCell.addClass('js-tabledrag-cell-content');
 
       // Move indentations into the '.js-tabledrag-cell-content' target.
-      $targetElem
-        .find('.js-indentation')
-        .detach()
-        .prependTo($targetElem);
+      $targetElem.find('.js-indentation').detach().prependTo($targetElem);
 
       // Add a class to the title link.
       $targetElem.find('a').addClass('menu-item__link');
@@ -587,7 +575,7 @@
       }
 
       // Prevent the anchor tag from jumping us to the top of the page.
-      handle.on('click', event => {
+      handle.on('click', (event) => {
         event.preventDefault();
       });
 
@@ -596,7 +584,7 @@
         return;
       }
 
-      handle.on('mousedown touchstart pointerdown', event => {
+      handle.on('mousedown touchstart pointerdown', (event) => {
         event.preventDefault();
         if (event.originalEvent.type === 'touchstart') {
           event = event.originalEvent.touches[0];
@@ -611,14 +599,14 @@
 
       // On blur, fire the same function as a touchend/mouseup. This is used to
       // update values after a row has been moved through the keyboard support.
-      handle.on('blur', event => {
+      handle.on('blur', (event) => {
         if (self.rowObject && self.safeBlur) {
           self.dropRow(event, self);
         }
       });
 
       // Add arrow-key support to the handle.
-      handle.on('keydown', event => {
+      handle.on('keydown', (event) => {
         // If a rowObject doesn't yet exist and this isn't the tab key.
         if (event.keyCode !== 9 && !self.rowObject) {
           self.rowObject = new self.row(
@@ -648,14 +636,10 @@
           case 38:
           // Safari up arrow.
           case 63232: {
-            let $previousRow = $(self.rowObject.element)
-              .prev('tr')
-              .eq(0);
+            let $previousRow = $(self.rowObject.element).prev('tr').eq(0);
             let previousRow = $previousRow.get(0);
             while (previousRow && $previousRow.is(':hidden')) {
-              $previousRow = $(previousRow)
-                .prev('tr')
-                .eq(0);
+              $previousRow = $(previousRow).prev('tr').eq(0);
               previousRow = $previousRow.get(0);
             }
             if (previousRow) {
@@ -671,9 +655,7 @@
                   previousRow &&
                   $previousRow.find('.js-indentation').length
                 ) {
-                  $previousRow = $(previousRow)
-                    .prev('tr')
-                    .eq(0);
+                  $previousRow = $(previousRow).prev('tr').eq(0);
                   previousRow = $previousRow.get(0);
                   groupHeight += $previousRow.is(':hidden')
                     ? 0
@@ -712,15 +694,10 @@
           case 40:
           // Safari down arrow.
           case 63233: {
-            let $nextRow = $(self.rowObject.group)
-              .eq(-1)
-              .next('tr')
-              .eq(0);
+            let $nextRow = $(self.rowObject.group).eq(-1).next('tr').eq(0);
             let nextRow = $nextRow.get(0);
             while (nextRow && $nextRow.is(':hidden')) {
-              $nextRow = $(nextRow)
-                .next('tr')
-                .eq(0);
+              $nextRow = $(nextRow).next('tr').eq(0);
               nextRow = $nextRow.get(0);
             }
             if (nextRow) {
@@ -745,9 +722,7 @@
                       ? 0
                       : this.offsetHeight;
                   });
-                  const nextGroupRow = $(nextGroup.group)
-                    .eq(-1)
-                    .get(0);
+                  const nextGroupRow = $(nextGroup.group).eq(-1).get(0);
                   self.rowObject.swap('after', nextGroupRow);
                   // No need to check for indentation, 0 is the only valid one.
                   window.scrollBy(0, parseInt(groupHeight, 10));
@@ -790,7 +765,7 @@
       // scrolling. IE and Safari will suppress scrolling on keydown, but all
       // other browsers need to return false on keypress.
       // http://www.quirksmode.org/js/keys.html
-      handle.on('keypress', event => {
+      handle.on('keypress', (event) => {
         /* eslint-disable no-fallthrough */
 
         switch (event.keyCode) {
@@ -830,9 +805,7 @@
 
       // If there's a lingering row object from the keyboard, remove its focus.
       if (self.rowObject) {
-        $(self.rowObject.element)
-          .find('.js-tabledrag-handle')
-          .trigger('blur');
+        $(self.rowObject.element).find('.js-tabledrag-handle').trigger('blur');
       }
 
       // Create a new rowObject for manipulation of this row.
@@ -953,10 +926,10 @@
 
           // If a setting exists for affecting the entire group, update all the
           // fields in the entire dragged group.
-          Object.keys(self.tableSettings || {}).forEach(group => {
+          Object.keys(self.tableSettings || {}).forEach((group) => {
             const rowSettings = self.rowSettings(group, droppedRow);
             if (rowSettings.relationship === 'group') {
-              Object.keys(self.rowObject.children || {}).forEach(n => {
+              Object.keys(self.rowObject.children || {}).forEach((n) => {
                 self.updateField(self.rowObject.children[n], group);
               });
             }
@@ -1076,7 +1049,7 @@
             // Check that this row is not a child of the row being dragged.
             if (
               Object.keys(this.rowObject.group).some(
-                o => this.rowObject.group[o] === row,
+                (o) => this.rowObject.group[o] === row,
               )
             ) {
               return null;
@@ -1112,7 +1085,7 @@
      *   DOM object for the row that was just dropped.
      */
     updateFields(changedRow) {
-      Object.keys(this.tableSettings || {}).forEach(group => {
+      Object.keys(this.tableSettings || {}).forEach((group) => {
         // Each group may have a different setting for relationship, so we find
         // the source rows for each separately.
         this.updateField(changedRow, group);
@@ -1200,9 +1173,7 @@
           // Use the first row in the table as source, because it's guaranteed to
           // be at the root level. Find the first item, then compare this row
           // against it as a sibling.
-          sourceRow = $(this.table)
-            .find('tr.draggable:first-of-type')
-            .get(0);
+          sourceRow = $(this.table).find('tr.draggable:first-of-type').get(0);
           if (sourceRow === this.rowObject.element) {
             sourceRow = $(this.rowObject.group[this.rowObject.group.length - 1])
               .next('tr.draggable')
@@ -1270,12 +1241,7 @@
             } else {
               // Assume a numeric input field.
               let weight =
-                parseInt(
-                  $(siblings[0])
-                    .find(targetClass)
-                    .val(),
-                  10,
-                ) || 0;
+                parseInt($(siblings[0]).find(targetClass).val(), 10) || 0;
               $(siblings)
                 .find(targetClass)
                 .each(function assignWeight() {
@@ -1559,12 +1525,12 @@
      */
     swap(position, row) {
       // Makes sure only DOM object are passed to Drupal.detachBehaviors().
-      this.group.forEach(detachedRow => {
+      this.group.forEach((detachedRow) => {
         Drupal.detachBehaviors(detachedRow, drupalSettings, 'move');
       });
       $(row)[position](this.group);
       // Makes sure only DOM object are passed to Drupal.attachBehaviors()s.
-      this.group.forEach(attachedRow => {
+      this.group.forEach((attachedRow) => {
         Drupal.attachBehaviors(attachedRow, drupalSettings);
       });
       this.changed = true;
@@ -1636,13 +1602,8 @@
       const $group = $(this.group);
       // Determine the valid indentations interval if not available yet.
       if (!this.interval) {
-        const prevRow = $(this.element)
-          .prev('tr')
-          .get(0);
-        const nextRow = $group
-          .eq(-1)
-          .next('tr')
-          .get(0);
+        const prevRow = $(this.element).prev('tr').get(0);
+        const nextRow = $group.eq(-1).next('tr').get(0);
         this.interval = this.validIndentInterval(prevRow, nextRow);
       }
 
@@ -1728,7 +1689,7 @@
      * Remove indentation helper classes from the current row group.
      */
     removeIndentClasses() {
-      Object.keys(this.children || {}).forEach(n => {
+      Object.keys(this.children || {}).forEach((n) => {
         $(this.children[n])
           .find('.js-indentation')
           .removeClass('tree-child')

@@ -2,6 +2,6 @@
  * @file
  * Adds javascript functions for font resizing.
  */
-(function($) {
+(function ($) {
   $(document).ready(() => {});
 })(jQuery);

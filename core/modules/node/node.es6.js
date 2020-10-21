@@ -3,7 +3,7 @@
  * Defines JavaScript behaviors for the node module.
  */
 
-(function($, Drupal, drupalSettings) {
+(function ($, Drupal, drupalSettings) {
   /**
    * Behaviors for tabs in the node edit form.
    *
@@ -16,7 +16,7 @@
     attach(context) {
       const $context = $(context);
 
-      $context.find('.node-form-author').drupalSetSummary(context => {
+      $context.find('.node-form-author').drupalSetSummary((context) => {
         const $authorContext = $(context);
         const name = $authorContext.find('.field--name-uid input').val();
         const date = $authorContext.find('.field--name-created input').val();
@@ -35,7 +35,7 @@
         }
       });
 
-      $context.find('.node-form-options').drupalSetSummary(context => {
+      $context.find('.node-form-options').drupalSetSummary((context) => {
         const $optionsContext = $(context);
         const vals = [];
 
@@ -43,7 +43,7 @@
           $optionsContext
             .find('input:checked')
             .next('label')
-            .each(function() {
+            .each(function () {
               vals.push(Drupal.checkPlain($.trim($(this).text())));
             });
           return vals.join(', ');

@@ -3,7 +3,7 @@
  *
  * May only be loaded for authenticated users, with the History module enabled.
  */
-(function($, Drupal, window) {
+(function ($, Drupal, window) {
   function processNodeNewIndicators($placeholders) {
     const newNodeString = Drupal.t('new');
     const updatedNodeString = Drupal.t('updated');
@@ -55,7 +55,7 @@
       data: { 'node_ids[]': nodeIDs },
       dataType: 'json',
       success(results) {
-        Object.keys(results || {}).forEach(nodeID => {
+        Object.keys(results || {}).forEach((nodeID) => {
           if (placeholdersToUpdate.hasOwnProperty(nodeID)) {
             const url = results[nodeID].first_new_comment_link;
             const text = Drupal.formatPlural(
@@ -83,7 +83,7 @@
       const $nodeNewPlaceholders = $(context)
         .find('[data-history-node-timestamp]')
         .once('history')
-        .filter(function() {
+        .filter(function () {
           const nodeTimestamp = parseInt(
             this.getAttribute('data-history-node-timestamp'),
             10,
@@ -102,7 +102,7 @@
       const $newRepliesPlaceholders = $(context)
         .find('[data-history-node-last-comment-timestamp]')
         .once('history')
-        .filter(function() {
+        .filter(function () {
           const lastCommentTimestamp = parseInt(
             this.getAttribute('data-history-node-last-comment-timestamp'),
             10,

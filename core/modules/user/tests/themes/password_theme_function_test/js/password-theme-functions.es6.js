@@ -3,7 +3,7 @@
  * Overrides password theme functions for testing.
  */
 
-(Drupal => {
+((Drupal) => {
   /**
    * Constructs a password strength message.
    *

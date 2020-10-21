@@ -12,14 +12,14 @@
    */
   Drupal.behaviors.js_webassert_test_wait_for_ajax_request = {
     attach() {
-      $('#edit-test-assert-no-element-after-wait-pass').on('click', e => {
+      $('#edit-test-assert-no-element-after-wait-pass').on('click', (e) => {
         e.preventDefault();
         setTimeout(() => {
           $('#edit-test-assert-no-element-after-wait-pass').remove();
         }, 500);
       });
 
-      $('#edit-test-assert-no-element-after-wait-fail').on('click', e => {
+      $('#edit-test-assert-no-element-after-wait-fail').on('click', (e) => {
         e.preventDefault();
         setTimeout(() => {
           $('#edit-test-assert-no-element-after-wait-fail').remove();

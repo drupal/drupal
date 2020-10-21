@@ -3,7 +3,7 @@
  * Preview behaviors.
  */
 
-(function($, Drupal) {
+(function ($, Drupal) {
   /**
    * Disables all non-relevant links in node previews.
    *
@@ -65,9 +65,7 @@
     },
     detach(context, settings, trigger) {
       if (trigger === 'unload') {
-        const $preview = $(context)
-          .find('.content')
-          .removeOnce('node-preview');
+        const $preview = $(context).find('.content').removeOnce('node-preview');
         if ($preview.length) {
           $preview.off('click.preview');
         }
@@ -89,7 +87,7 @@
         .find('[data-drupal-autosubmit]')
         .once('autosubmit');
       if ($autosubmit.length) {
-        $autosubmit.on('formUpdated.preview', function() {
+        $autosubmit.on('formUpdated.preview', function () {
           $(this.form).trigger('submit');
         });
       }
@@ -102,7 +100,7 @@
    * @return {string}
    *   Markup for the node preview modal.
    */
-  Drupal.theme.nodePreviewModal = function() {
+  Drupal.theme.nodePreviewModal = function () {
     return `<p>${Drupal.t(
       'Leaving the preview will cause unsaved changes to be lost. Are you sure you want to leave the preview?',
     )}</p><small class="description">${Drupal.t(

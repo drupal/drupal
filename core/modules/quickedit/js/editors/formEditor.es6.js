@@ -3,7 +3,7 @@
  * Form-based in-place editor. Works for any field type.
  */
 
-(function($, Drupal, _) {
+(function ($, Drupal, _) {
   /**
    * @constructor
    *
@@ -148,7 +148,7 @@
           });
 
           $formContainer
-            .on('formUpdated.quickedit', ':input', event => {
+            .on('formUpdated.quickedit', ':input', (event) => {
               const state = fieldModel.get('state');
               // If the form is in an invalid state, it will persist on the page.
               // Set the field to activating so that the user can correct the
@@ -162,7 +162,7 @@
                 fieldModel.set('state', 'changed');
               }
             })
-            .on('keypress.quickedit', 'input', event => {
+            .on('keypress.quickedit', 'input', (event) => {
               if (event.keyCode === 13) {
                 return false;
               }
@@ -215,7 +215,7 @@
         }
 
         // Successfully saved.
-        formSaveAjax.commands.quickeditFieldFormSaved = function(
+        formSaveAjax.commands.quickeditFieldFormSaved = function (
           ajax,
           response,
           status,
@@ -235,7 +235,7 @@
         };
 
         // Unsuccessfully saved; validation errors.
-        formSaveAjax.commands.quickeditFieldFormValidationErrors = function(
+        formSaveAjax.commands.quickeditFieldFormValidationErrors = function (
           ajax,
           response,
           status,
@@ -248,7 +248,7 @@
         // the form; Form API will mark which form items have errors, if any. This
         // command is invoked only if validation errors exist and then it runs
         // before editFieldFormValidationErrors().
-        formSaveAjax.commands.quickeditFieldForm = function(
+        formSaveAjax.commands.quickeditFieldForm = function (
           ajax,
           response,
           status,

@@ -3,7 +3,7 @@
  * Drupal's batch API.
  */
 
-(function($, Drupal) {
+(function ($, Drupal) {
   /**
    * Attaches the batch behavior to progress bars.
    *

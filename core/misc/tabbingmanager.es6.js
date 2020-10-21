@@ -27,7 +27,7 @@
  * @event drupalTabbingContextDeactivated
  */
 
-(function($, Drupal) {
+(function ($, Drupal) {
   /**
    * Provides an API for managing page tabbing order modifications.
    *
@@ -136,9 +136,7 @@
 
         // The "active tabbing set" are the elements tabbing should be constrained
         // to.
-        const $elements = $(elements)
-          .find(':tabbable')
-          .addBack(':tabbable');
+        const $elements = $(elements).find(':tabbable').addBack(':tabbable');
 
         const tabbingContext = new TabbingContext({
           // The level is the current height of the stack before this new

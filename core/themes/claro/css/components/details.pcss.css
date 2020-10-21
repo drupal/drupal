@@ -190,7 +190,7 @@
  * https://stackoverflow.com/questions/16348489#25975282 (based on the
  * answer it works for Safari 10.1+)
  */
-/* stylelint-disable-next-line unit-whitelist */
+/* stylelint-disable-next-line unit-allowed-list */
 @media not all and (min-resolution: 0.001dpcm) {
   @supports (-webkit-appearance: none) {
     .claro-details__summary::before {
@@ -337,7 +337,7 @@
 /**
  * Safari workaround.
  */
-/* stylelint-disable-next-line unit-whitelist */
+/* stylelint-disable-next-line unit-allowed-list */
 @media not all and (min-resolution: 0.001dpcm) {
   @supports (-webkit-appearance: none) {
     .claro-details__summary::after {

@@ -1,4 +1,4 @@
-(function(Drupal) {
+(function (Drupal) {
   /**
    * Call picturefill so newly added responsive images are processed.
    */

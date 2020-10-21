@@ -3,7 +3,7 @@
  * Parse inline JSON and initialize the drupalSettings global object.
  */
 
-(function() {
+(function () {
   // Use direct child elements to harden against XSS exploits when CSP is on.
   const settingsElement = document.querySelector(
     'head > script[type="application/json"][data-drupal-selector="drupal-settings-json"], body > script[type="application/json"][data-drupal-selector="drupal-settings-json"]',

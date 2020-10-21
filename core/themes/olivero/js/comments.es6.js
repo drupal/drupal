@@ -3,10 +3,10 @@
  * Comments.
  */
 
-(Drupal => {
+((Drupal) => {
   const indentedComments = document.querySelectorAll('.comments .indented');
 
-  document.querySelectorAll('.comment').forEach(comment => {
+  document.querySelectorAll('.comment').forEach((comment) => {
     if (
       comment.nextElementSibling != null &&
       comment.nextElementSibling.matches('.indented')
@@ -15,7 +15,7 @@
     }
   });
 
-  indentedComments.forEach(commentGroup => {
+  indentedComments.forEach((commentGroup) => {
     const showHideWrapper = document.createElement('div');
     showHideWrapper.setAttribute('class', 'show-hide-wrapper');
 
@@ -28,7 +28,7 @@
     commentGroup.parentNode.insertBefore(showHideWrapper, commentGroup);
     showHideWrapper.appendChild(toggleCommentsBtn);
 
-    toggleCommentsBtn.addEventListener('click', e => {
+    toggleCommentsBtn.addEventListener('click', (e) => {
       commentGroup.classList.toggle('hidden');
       e.currentTarget.setAttribute(
         'aria-expanded',

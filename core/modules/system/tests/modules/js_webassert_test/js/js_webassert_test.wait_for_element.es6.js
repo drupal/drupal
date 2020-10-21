@@ -3,7 +3,7 @@
  *  Testing behavior for JSWebAssertTest.
  */
 
-(function($, Drupal, drupalSettings) {
+(function ($, Drupal, drupalSettings) {
   /**
    * @type {Drupal~behavior}
    *

@@ -5,7 +5,7 @@
  * @see Drupal.quickedit.EditorView
  */
 
-(function(Backbone, Drupal) {
+(function (Backbone, Drupal) {
   /**
    * @constructor
    *

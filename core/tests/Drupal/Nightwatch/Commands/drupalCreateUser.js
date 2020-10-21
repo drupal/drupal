@@ -23,7 +23,7 @@ exports.command = function drupalCreateUser(
   let role;
   this.perform((client, done) => {
     if (permissions) {
-      client.drupalCreateRole({ permissions, name: null }, newRole => {
+      client.drupalCreateRole({ permissions, name: null }, (newRole) => {
         role = newRole;
         done();
       });

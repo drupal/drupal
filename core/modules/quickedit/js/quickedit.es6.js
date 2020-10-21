@@ -17,7 +17,7 @@
  *     is not yet known whether the user has permission to edit at >=1 of them.
  */
 
-(function($, _, Backbone, Drupal, drupalSettings, JSON, storage) {
+(function ($, _, Backbone, Drupal, drupalSettings, JSON, storage) {
   const options = $.extend(
     drupalSettings.quickedit,
     // Merge strings on top of drupalSettings so that they are not mutable.
@@ -154,7 +154,7 @@
   function loadMissingEditors(callback) {
     const loadedEditors = _.keys(Drupal.quickedit.editors);
     let missingEditors = [];
-    Drupal.quickedit.collections.fields.each(fieldModel => {
+    Drupal.quickedit.collections.fields.each((fieldModel) => {
       const metadata = Drupal.quickedit.metadata.get(fieldModel.get('fieldID'));
       if (metadata.access && _.indexOf(loadedEditors, metadata.editor) === -1) {
         missingEditors.push(metadata.editor);
@@ -181,7 +181,7 @@
     // Implement a scoped insert AJAX command: calls the callback after all AJAX
     // command functions have been executed (hence the deferred calling).
     const realInsert = Drupal.AjaxCommands.prototype.insert;
-    loadEditorsAjax.commands.insert = function(ajax, response, status) {
+    loadEditorsAjax.commands.insert = function (ajax, response, status) {
       _.defer(callback);
       realInsert(ajax, response, status);
     };
@@ -260,7 +260,7 @@
       entityModel.set('entityDecorationView', entityDecorationView);
 
       // Initialize all queued fields within this entity (creates FieldModels).
-      _.each(fields, field => {
+      _.each(fields, (field) => {
         initializeField(
           field.el,
           field.fieldID,
@@ -314,10 +314,7 @@
    *   An entity ID: a string of the format `<entity type>/<id>`.
    */
   function extractEntityID(fieldID) {
-    return fieldID
-      .split('/')
-      .slice(0, 2)
-      .join('/');
+    return fieldID.split('/').slice(0, 2).join('/');
   }
 
   /**
@@ -449,7 +446,7 @@
         // Delete field models.
         Drupal.quickedit.collections.fields
           .chain()
-          .filter(fieldModel => fieldModel.get('el') === fieldElement)
+          .filter((fieldModel) => fieldModel.get('el') === fieldElement)
           .invoke('destroy');
 
         // Filter queues.
@@ -516,9 +513,7 @@
   Drupal.behaviors.quickedit = {
     attach(context) {
       // Initialize the Quick Edit app once per page load.
-      $('body')
-        .once('quickedit-init')
-        .each(initQuickEdit);
+      $('body').once('quickedit-init').each(initQuickEdit);
 
       // Find all in-place editable fields, if any.
       const $fields = $(context)
@@ -551,11 +546,11 @@
       // meta- data in the client-side cache.
       contextualLinksQueue = _.filter(
         contextualLinksQueue,
-        contextualLink => !initializeEntityContextualLink(contextualLink),
+        (contextualLink) => !initializeEntityContextualLink(contextualLink),
       );
 
       // Fetch metadata for any fields that are queued to retrieve it.
-      fetchMissingMetadata(fieldElementsWithFreshMetadata => {
+      fetchMissingMetadata((fieldElementsWithFreshMetadata) => {
         // Metadata has been fetched, reprocess fields whose metadata was
         // missing.
         _.each(fieldElementsWithFreshMetadata, processField);
@@ -563,7 +558,7 @@
         // Metadata has been fetched, try to set up more contextual links now.
         contextualLinksQueue = _.filter(
           contextualLinksQueue,
-          contextualLink => !initializeEntityContextualLink(contextualLink),
+          (contextualLink) => !initializeEntityContextualLink(contextualLink),
         );
       });
     },
@@ -715,7 +710,7 @@
     if (typeof permissionsHash === 'string') {
       _.chain(storage)
         .keys()
-        .each(key => {
+        .each((key) => {
           if (key.substring(0, 26) === 'Drupal.quickedit.metadata.') {
             storage.removeItem(key);
           }

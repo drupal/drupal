@@ -3,7 +3,7 @@
  * A Backbone Model for the toolbar.
  */
 
-(function(Backbone, Drupal) {
+(function (Backbone, Drupal) {
   /**
    * Backbone model for the toolbar.
    *

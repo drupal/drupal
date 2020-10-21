@@ -5,7 +5,7 @@
  * @see Drupal.quickedit.AppModel
  */
 
-(function($, _, Backbone, Drupal) {
+(function ($, _, Backbone, Drupal) {
   // Indicates whether the page should be reloaded after in-place editing has
   // shut down. A page reload is necessary to re-instate the original HTML of
   // the edited fields if in-place editing has been canceled and one or more of
@@ -102,7 +102,7 @@
             // Second, set up in-place editors.
             // They must be notified of state changes, hence this must happen
             // while the associated fields are still in the 'inactive' state.
-            entityModel.get('fields').each(fieldModel => {
+            entityModel.get('fields').each((fieldModel) => {
               app.setupEditor(fieldModel);
             });
             // Third, transition the entity to the 'opening' state, which will
@@ -115,7 +115,7 @@
           case 'closed':
             entityToolbarView = entityModel.toolbarView;
             // First, tear down the in-place editors.
-            entityModel.get('fields').each(fieldModel => {
+            entityModel.get('fields').each((fieldModel) => {
               app.teardownEditor(fieldModel);
             });
             // Second, tear down the entity toolbar view.
@@ -426,10 +426,7 @@
             // choice as per http://stackoverflow.com/a/5438771.
             closeOnEscape: false,
             create() {
-              $(this)
-                .parent()
-                .find('.ui-dialog-titlebar-close')
-                .remove();
+              $(this).parent().find('.ui-dialog-titlebar-close').remove();
             },
             beforeClose: false,
             close(event) {
@@ -506,7 +503,7 @@
         const $fieldWrapper = $(fieldModel.get('el'));
         const $context = $fieldWrapper.parent();
 
-        const renderField = function() {
+        const renderField = function () {
           // Destroy the field model; this will cause all attached views to be
           // destroyed too, and removal from all collections in which it exists.
           fieldModel.destroy();
@@ -577,7 +574,7 @@
           // (same entity, same field, just a different instance and maybe a
           // different view mode).
           .where({ logicalFieldID: updatedField.get('logicalFieldID') })
-          .forEach(field => {
+          .forEach((field) => {
             if (field === updatedField) {
               // Ignore the field that was already updated.
             }
@@ -643,11 +640,11 @@
         changedEntityModel.collection
           .chain()
           .filter(
-            entityModel =>
+            (entityModel) =>
               entityModel.get('isActive') === true &&
               entityModel !== changedEntityModel,
           )
-          .each(entityModel => {
+          .each((entityModel) => {
             entityModel.set('state', 'deactivating');
           });
       },

@@ -17,7 +17,7 @@
     attach(context) {
       $(context)
         .once('claroDetails')
-        .on('click', event => {
+        .on('click', (event) => {
           if (event.target.nodeName === 'SUMMARY') {
             $(event.target).trigger('focus');
           }
@@ -44,12 +44,10 @@
       $(context)
         .find('details .details-title')
         .once('claroDetailsToggleShim')
-        .on('keypress', event => {
+        .on('keypress', (event) => {
           const keyCode = event.keyCode || event.charCode;
           if (keyCode === 32) {
-            $(event.target)
-              .closest('summary')
-              .trigger('click');
+            $(event.target).closest('summary').trigger('click');
             event.preventDefault();
           }
         });
@@ -73,5 +71,5 @@
    * @return {string}
    *   The formatted summarized content text.
    */
-  Drupal.theme.detailsSummarizedContentText = text => text || '';
+  Drupal.theme.detailsSummarizedContentText = (text) => text || '';
 })(jQuery, Modernizr, Drupal);

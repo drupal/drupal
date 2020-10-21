@@ -10,7 +10,7 @@
  * @ignore
  */
 
-(function(CKEDITOR) {
+(function (CKEDITOR) {
   /**
    * Finds an element by its name.
    *
@@ -31,7 +31,7 @@
     }
 
     let found = null;
-    element.forEach(el => {
+    element.forEach((el) => {
       if (el.name === name) {
         found = el;
         // Stop here.
@@ -60,7 +60,7 @@
       // data-align and data-caption attributes.
       editor.on(
         'widgetDefinition',
-        event => {
+        (event) => {
           const widgetDefinition = event.data;
           if (widgetDefinition.name !== 'image') {
             return;
@@ -112,7 +112,7 @@
           // we include the data-entity-type, data-entity-uuid, data-align and
           // data-caption attributes.
           const originalDowncast = widgetDefinition.downcast;
-          widgetDefinition.downcast = function(element) {
+          widgetDefinition.downcast = function (element) {
             const img = findElementByName(element, 'img');
             originalDowncast.call(this, img);
 
@@ -148,7 +148,7 @@
           //   - <figure> tag (captioned image).
           // We take the same attributes into account as downcast() does.
           const originalUpcast = widgetDefinition.upcast;
-          widgetDefinition.upcast = function(element, data) {
+          widgetDefinition.upcast = function (element, data) {
             if (
               element.name !== 'img' ||
               !element.attributes['data-entity-type'] ||
@@ -267,7 +267,7 @@
           // Override Drupal dialog save callback.
           const originalCreateDialogSaveCallback =
             widgetDefinition._createDialogSaveCallback;
-          widgetDefinition._createDialogSaveCallback = function(
+          widgetDefinition._createDialogSaveCallback = function (
             editor,
             widget,
           ) {
@@ -277,7 +277,7 @@
               widget,
             );
 
-            return function(dialogReturnValues) {
+            return function (dialogReturnValues) {
               // Ensure hasCaption is a boolean. image2 assumes it always works
               // with booleans; if this is not the case, then
               // CKEDITOR.plugins.image2.stateShifter() will incorrectly mark
@@ -321,7 +321,7 @@
     },
 
     afterInit(editor) {
-      const disableButtonIfOnWidget = function(evt) {
+      const disableButtonIfOnWidget = function (evt) {
         const widget = editor.widgets.focused;
         if (widget && widget.name === 'image') {
           this.setState(CKEDITOR.TRISTATE_DISABLED);

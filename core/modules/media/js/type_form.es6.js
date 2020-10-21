@@ -3,7 +3,7 @@
  * Defines JavaScript behaviors for the media type form.
  */
 
-(function($, Drupal) {
+(function ($, Drupal) {
   /**
    * Behaviors for setting summaries on media type form.
    *
@@ -16,32 +16,22 @@
     attach(context) {
       const $context = $(context);
       // Provide the vertical tab summaries.
-      $context.find('#edit-workflow').drupalSetSummary(context => {
+      $context.find('#edit-workflow').drupalSetSummary((context) => {
         const vals = [];
         $(context)
           .find('input[name^="options"]:checked')
           .parent()
-          .each(function() {
-            vals.push(
-              Drupal.checkPlain(
-                $(this)
-                  .find('label')
-                  .text(),
-              ),
-            );
+          .each(function () {
+            vals.push(Drupal.checkPlain($(this).find('label').text()));
           });
-        if (
-          !$(context)
-            .find('#edit-options-status')
-            .is(':checked')
-        ) {
+        if (!$(context).find('#edit-options-status').is(':checked')) {
           vals.unshift(Drupal.t('Not published'));
         }
         return vals.join(', ');
       });
       $(context)
         .find('#edit-language')
-        .drupalSetSummary(context => {
+        .drupalSetSummary((context) => {
           const vals = [];
 
           vals.push(
@@ -55,7 +45,7 @@
           $(context)
             .find('input:checked')
             .next('label')
-            .each(function() {
+            .each(function () {
               vals.push(Drupal.checkPlain($(this).text()));
             });
 

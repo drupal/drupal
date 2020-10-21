@@ -3,7 +3,7 @@
  * Menu UI admin behaviors.
  */
 
-(function($, Drupal) {
+(function ($, Drupal) {
   /**
    *
    * @type {Drupal~behavior}
@@ -25,11 +25,11 @@
   /**
    * Function to set the options of the menu parent item dropdown.
    */
-  Drupal.menuUiUpdateParentList = function() {
+  Drupal.menuUiUpdateParentList = function () {
     const $menu = $('#edit-menu');
     const values = [];
 
-    $menu.find('input:checked').each(function() {
+    $menu.find('input:checked').each(function () {
       // Get the names of all checked menus.
       values.push(Drupal.checkPlain($.trim($(this).val())));
     });
@@ -49,7 +49,7 @@
         $select.children().remove();
         // Add new options to dropdown. Keep a count of options for testing later.
         let totalOptions = 0;
-        Object.keys(options || {}).forEach(machineName => {
+        Object.keys(options || {}).forEach((machineName) => {
           $select.append(
             $(
               `<option ${

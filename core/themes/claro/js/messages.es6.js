@@ -3,7 +3,7 @@
  * Message template overrides.
  */
 
-(Drupal => {
+((Drupal) => {
   /**
    * Overrides message theme function.
    *

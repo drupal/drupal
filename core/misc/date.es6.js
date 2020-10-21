@@ -3,7 +3,7 @@
  * Polyfill for HTML5 date input.
  */
 
-(function($, Modernizr, Drupal) {
+(function ($, Modernizr, Drupal) {
   /**
    * Attach datepicker fallback on date elements.
    *
@@ -30,7 +30,7 @@
        * @return {string}
        *   A CSS Selector.
        */
-      const getDateSelector = elements =>
+      const getDateSelector = (elements) =>
         [
           `[${dataFieldElements}="${elements}"]`,
           `:not([${dataDatepickerProcessed}="${elements}"])`,
@@ -41,7 +41,7 @@
       if (Modernizr.inputtypes.date === false) {
         Array.prototype.forEach.call(
           document.querySelectorAll(getDateSelector('date-time')),
-          dateTime => {
+          (dateTime) => {
             const dateInput = dateTime.querySelector('input[type="date"]');
             const timeInput = dateTime.querySelector('input[type="time"]');
             const help = Drupal.theme.dateTimeHelp({
@@ -51,7 +51,7 @@
               timeDesc: timeInput.dataset.help,
             });
 
-            [dateInput, timeInput].forEach(input => {
+            [dateInput, timeInput].forEach((input) => {
               input.setAttribute(
                 'aria-describedby',
                 `${input.id}--description`,
@@ -71,7 +71,7 @@
 
         Array.prototype.forEach.call(
           document.querySelectorAll(getDateSelector('date')),
-          date => {
+          (date) => {
             const dateInput = date.querySelector('input[type="date"]');
             const help = Drupal.theme.dateHelp({
               dateDesc: dateInput.dataset.help,

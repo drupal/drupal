@@ -3,7 +3,7 @@
  * Attaches the behaviors for the Field UI module.
  */
 
-(function($, Drupal, drupalSettings) {
+(function ($, Drupal, drupalSettings) {
   /**
    * @type {Drupal~behavior}
    *
@@ -39,7 +39,7 @@
 
         // When the user selects a new field type, clear the "existing field"
         // selection.
-        $newFieldType.on('change', function() {
+        $newFieldType.on('change', function () {
           if ($(this).val() !== '') {
             // Reset the "existing storage name" selection.
             $existingStorageName.val('').trigger('change');
@@ -48,7 +48,7 @@
 
         // When the user selects an existing storage name, clear the "new field
         // type" selection and populate the 'existing_storage_label' element.
-        $existingStorageName.on('change', function() {
+        $existingStorageName.on('change', function () {
           const value = $(this).val();
           if (value !== '') {
             // Reset the "new field type" selection.
@@ -83,7 +83,7 @@
       $(context)
         .find('table#field-display-overview')
         .once('field-display-overview')
-        .each(function() {
+        .each(function () {
           Drupal.fieldUIOverview.attach(
             this,
             settings.fieldUIRowsData,
@@ -119,7 +119,7 @@
       // Create row handlers.
       $(table)
         .find('tr.draggable')
-        .each(function() {
+        .each(function () {
           // Extract server-side data for the row.
           const row = this;
           if (row.id in rowsData) {
@@ -198,7 +198,7 @@
       const rowObject = this;
       $(rowObject.table)
         .find('tr.region-message')
-        .each(function() {
+        .each(function () {
           const $this = $(this);
           // If the dragged row is in this region, but above the message row, swap
           // it down one space.
@@ -246,7 +246,7 @@
       // Separate keys and values.
       const rowNames = [];
       const ajaxElements = [];
-      Object.keys(rows || {}).forEach(rowName => {
+      Object.keys(rows || {}).forEach((rowName) => {
         rowNames.push(rowName);
         ajaxElements.push(rows[rowName]);
       });
@@ -288,7 +288,7 @@
    * @return {Drupal.fieldUIDisplayOverview.field}
    *   The field row handler constructed.
    */
-  Drupal.fieldUIDisplayOverview.field = function(row, data) {
+  Drupal.fieldUIDisplayOverview.field = function (row, data) {
     this.row = row;
     this.name = data.name;
     this.region = data.region;

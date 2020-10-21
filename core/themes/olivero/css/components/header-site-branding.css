@@ -40,7 +40,7 @@
   display: flex;
   flex-shrink: 1;
   align-items: flex-end;
-  min-width: calc(2*(100vw - 126px)/6 + 54px);
+  min-width: calc(33.33333vw + 12px);
   height: 54px;
   padding-top: 0;
   padding-bottom: 9px;
@@ -67,7 +67,7 @@
 @media (min-width: 1000px) {
 
 .site-branding {
-    min-width: calc(2*(100vw - 519px)/14 + 90px)
+    min-width: calc(14.28571vw + 15.85714px)
 }
   }
 
@@ -98,7 +98,7 @@
   }
 
 .site-branding {
-    min-width: calc(2*(100vw - 645px)/14 + 108px);
+    min-width: calc(14.28571vw + 15.85714px);
     height: 180px;
     padding-top: 0;
     padding-bottom: 0

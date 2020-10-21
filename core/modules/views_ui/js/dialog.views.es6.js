@@ -3,7 +3,7 @@
  * Views dialog behaviors.
  */
 
-(function($, Drupal, drupalSettings) {
+(function ($, Drupal, drupalSettings) {
   function handleDialogResize(e) {
     const $modal = $(e.currentTarget);
     const $viewsOverride = $modal.find('[data-drupal-views-offset]');
@@ -16,7 +16,7 @@
       // Let scroll element take all the height available.
       $scroll.css({ overflow: 'visible', height: 'auto' });
       modalHeight = $modal.height();
-      $viewsOverride.each(function() {
+      $viewsOverride.each(function () {
         offset += $(this).outerHeight();
       });
 
@@ -52,15 +52,13 @@
       $(context)
         .find('.scroll')
         .once('detailsUpdate')
-        .on('click', 'summary', e => {
+        .on('click', 'summary', (e) => {
           $(e.currentTarget).trigger('dialogContentResize');
         });
     },
     detach(context, settings, trigger) {
       if (trigger === 'unload') {
-        $('body')
-          .removeOnce('viewsDialog')
-          .off('.viewsDialog');
+        $('body').removeOnce('viewsDialog').off('.viewsDialog');
       }
     },
   };

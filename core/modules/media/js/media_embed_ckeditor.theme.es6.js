@@ -3,7 +3,7 @@
  * Theme elements for the Media Embed CKEditor plugin.
  */
 
-(Drupal => {
+((Drupal) => {
   /**
    * Themes the error displayed when the media embed preview fails.
    *

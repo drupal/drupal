@@ -5,7 +5,7 @@
  * May only be loaded for authenticated users, with the History module enabled.
  */
 
-(function($, Drupal, drupalSettings, storage) {
+(function ($, Drupal, drupalSettings, storage) {
   const currentUserID = parseInt(drupalSettings.user.uid, 10);
 
   // Any comment that is older than 30 days is automatically considered read,
@@ -45,7 +45,7 @@
         data: { 'node_ids[]': nodeIDs },
         dataType: 'json',
         success(results) {
-          Object.keys(results || {}).forEach(nodeID => {
+          Object.keys(results || {}).forEach((nodeID) => {
             storage.setItem(
               `Drupal.history.${currentUserID}.${nodeID}`,
               results[nodeID],

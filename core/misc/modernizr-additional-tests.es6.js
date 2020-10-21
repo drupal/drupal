@@ -2,7 +2,7 @@
  * @file
  * Provides additional Modernizr tests.
  */
-(Modernizr => {
+((Modernizr) => {
   // This is a copy of Modernizr's touchevents test from version 3.3.1. Drupal
   // core has updated Modernizr to a version newer than 3.3.1, but this newer
   // version does not include the touchevents test in its build. Modernizr's
@@ -34,7 +34,7 @@
         ')',
         '{#modernizr{top:9px;position:absolute}}',
       ].join('');
-      Modernizr.testStyles(query, node => {
+      Modernizr.testStyles(query, (node) => {
         bool = node.offsetTop === 9;
       });
     }

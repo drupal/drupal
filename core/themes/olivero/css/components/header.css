@@ -30,6 +30,7 @@
   z-index: 2;
   display: flex;
   align-items: flex-end;
+  -ms-grid-row-align: stretch;
   align-self: stretch;
   background-color: #2494db;
 }

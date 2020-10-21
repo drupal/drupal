@@ -72,9 +72,7 @@
    */
   Drupal.behaviors.detailsSummary = {
     attach(context) {
-      const $detailsElements = $(context)
-        .find('details')
-        .once('details');
+      const $detailsElements = $(context).find('details').once('details');
 
       DetailsSummarizedContent.instances = DetailsSummarizedContent.instances.concat(
         $detailsElements
@@ -103,6 +101,6 @@
    * @return {string}
    *   The formatted summarized content text.
    */
-  Drupal.theme.detailsSummarizedContentText = text =>
+  Drupal.theme.detailsSummarizedContentText = (text) =>
     text ? ` (${text})` : '';
 })(jQuery, Drupal);

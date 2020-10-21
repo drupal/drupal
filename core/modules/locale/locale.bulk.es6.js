@@ -3,7 +3,7 @@
  * Locale behavior.
  */
 
-(function($, Drupal) {
+(function ($, Drupal) {
   /**
    * Select the language code of an imported file based on its filename.
    *
@@ -19,7 +19,7 @@
       const $form = $('#locale-translate-import-form').once('autodetect-lang');
       if ($form.length) {
         const $langcode = $form.find('.langcode-input');
-        $form.find('.file-import-input').on('change', function() {
+        $form.find('.file-import-input').on('change', function () {
           // If the filename is fully the language code or the filename
           // ends with a language code, pre-select that one.
           const matches = $(this)

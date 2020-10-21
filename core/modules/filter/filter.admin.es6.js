@@ -3,7 +3,7 @@
  * Attaches administration-specific behavior for the Filter module.
  */
 
-(function($, Drupal) {
+(function ($, Drupal) {
   /**
    * Displays and updates the status of filters on the admin page.
    *
@@ -18,7 +18,7 @@
       $context
         .find('#filters-status-wrapper input.form-checkbox')
         .once('filter-status')
-        .each(function() {
+        .each(function () {
           const $checkbox = $(this);
           // Retrieve the tabledrag row belonging to this filter.
           const $row = $context

@@ -2,7 +2,7 @@
  * @file
  * Preview for the Bartik theme.
  */
-(function($, Drupal, drupalSettings) {
+(function ($, Drupal, drupalSettings) {
   Drupal.color = {
     logoChanged: false,
     callback(context, settings, $form) {

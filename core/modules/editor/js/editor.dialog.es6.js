@@ -3,7 +3,7 @@
  * AJAX commands used by Editor module.
  */
 
-(function($, Drupal) {
+(function ($, Drupal) {
   /**
    * Command to save the contents of an editor-provided modal.
    *
@@ -24,7 +24,7 @@
    *
    * @fires event:editor:dialogsave
    */
-  Drupal.AjaxCommands.prototype.editorDialogSave = function(
+  Drupal.AjaxCommands.prototype.editorDialogSave = function (
     ajax,
     response,
     status,

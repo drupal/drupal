@@ -1,4 +1,4 @@
-(Drupal => {
+((Drupal) => {
   /**
    * Checks if navWrapper contains "is-active" class.
    * @param {object} navWrapper
@@ -46,7 +46,7 @@
     });
 
     // Closes any open sub navigation first, then close header navigation.
-    document.addEventListener('keyup', e => {
+    document.addEventListener('keyup', (e) => {
       if (e.key === 'Escape') {
         if (props.olivero.areAnySubNavsOpen()) {
           props.olivero.closeAllSubNav();
@@ -65,7 +65,7 @@
     });
 
     // Focus trap.
-    props.navWrapper.addEventListener('keydown', e => {
+    props.navWrapper.addEventListener('keydown', (e) => {
       if (e.key === 'Tab') {
         if (e.shiftKey) {
           if (

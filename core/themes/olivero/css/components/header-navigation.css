@@ -225,7 +225,7 @@ body.is-always-mobile-nav.toolbar-horizontal.toolbar-fixed.toolbar-tray-open .he
 
 body.is-always-mobile-nav .header-nav {
       overflow: auto;
-      max-width: calc(7*((100vw - 645px)/14 + 36px));
+      max-width: calc(50vw - 70.5px);
       transition: transform 0.2s, visibility 0.2s;
       border-top-width: 198px
   }

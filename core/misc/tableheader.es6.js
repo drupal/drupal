@@ -3,7 +3,7 @@
  * Sticky table headers.
  */
 
-(function($, Drupal, displace) {
+(function ($, Drupal, displace) {
   /**
    * Constructor for the tableHeader object. Provides sticky table headers.
    *

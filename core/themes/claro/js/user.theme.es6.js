@@ -3,7 +3,7 @@
  * Password confirm widget template overrides.
  */
 
-(Drupal => {
+((Drupal) => {
   Object.assign(Drupal.user.password.css, {
     passwordWeak: 'is-weak',
     widgetInitial: 'is-initial',

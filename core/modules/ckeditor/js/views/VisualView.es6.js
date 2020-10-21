@@ -4,7 +4,7 @@
  *   configuration.
  */
 
-(function(Drupal, Backbone, $, Sortable) {
+(function (Drupal, Backbone, $, Sortable) {
   Drupal.ckeditor.VisualView = Backbone.View.extend(
     /** @lends Drupal.ckeditor.VisualView# */ {
       events: {
@@ -182,7 +182,7 @@
       endButtonDrag(event) {
         const $item = $(event.item);
 
-        Drupal.ckeditor.registerButtonMove(this, $item, success => {
+        Drupal.ckeditor.registerButtonMove(this, $item, (success) => {
           // Refocus the target button so that the user can continue
           // from a known place.
           $item.find('a').trigger('focus');
@@ -198,7 +198,7 @@
         // Make the buttons sortable.
         Array.prototype.forEach.call(
           this.el.querySelectorAll('.ckeditor-buttons:not(.js-sortable)'),
-          buttons => {
+          (buttons) => {
             buttons.classList.add('js-sortable');
             Sortable.create(buttons, {
               ghostClass: 'ckeditor-button-placeholder',
@@ -213,7 +213,7 @@
           this.el.querySelectorAll(
             '.ckeditor-toolbar-groups:not(.js-sortable)',
           ),
-          buttons => {
+          (buttons) => {
             buttons.classList.add('js-sortable');
             Sortable.create(buttons, {
               ghostClass: 'ckeditor-toolbar-group-placeholder',
@@ -226,7 +226,7 @@
           this.el.querySelectorAll(
             '.ckeditor-multiple-buttons:not(.js-sortable)',
           ),
-          buttons => {
+          (buttons) => {
             buttons.classList.add('js-sortable');
             Sortable.create(buttons, {
               group: {
@@ -270,9 +270,8 @@
               return false;
             }
             return (
-              $(row)
-                .find('.ckeditor-toolbar-group')
-                .not('.placeholder').length === 0
+              $(row).find('.ckeditor-toolbar-group').not('.placeholder')
+                .length === 0
             );
           })
           // Then get all rows that are placeholders and remove them.
@@ -284,7 +283,7 @@
        */
       insertNewGroupButtons() {
         // Insert an add group button to each row.
-        this.$el.find('.ckeditor-row').each(function() {
+        this.$el.find('.ckeditor-row').each(function () {
           const $row = $(this);
           const $groups = $row.find('.ckeditor-toolbar-group');
           const $button = $row.find('.ckeditor-add-new-group');

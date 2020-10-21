@@ -3,7 +3,7 @@
  * A Backbone View acting as a controller for CKEditor toolbar configuration.
  */
 
-(function($, Drupal, Backbone, CKEDITOR, _) {
+(function ($, Drupal, Backbone, CKEDITOR, _) {
   Drupal.ckeditor.ControllerView = Backbone.View.extend(
     /** @lends Drupal.ckeditor.ControllerView# */ {
       /**
@@ -58,12 +58,12 @@
           this.$el
             .find('.ckeditor-active-toolbar-configuration')
             .children('.ckeditor-row')
-            .each(function() {
+            .each(function () {
               const groups = [];
               // Process the button groups.
               $(this)
                 .find('.ckeditor-toolbar-group')
-                .each(function() {
+                .each(function () {
                   const $group = $(this);
                   const $buttons = $group.find('.ckeditor-button');
                   if ($buttons.length) {
@@ -75,7 +75,7 @@
                     };
                     $group
                       .find('.ckeditor-button, .ckeditor-multiple-button')
-                      .each(function() {
+                      .each(function () {
                         group.items.push(
                           $(this).attr('data-drupal-ckeditor-button-name'),
                         );
@@ -130,11 +130,11 @@
        *   CKEditor object.
        */
       getCKEditorFeatures(CKEditorConfig, callback) {
-        const getProperties = function(CKEPropertiesList) {
+        const getProperties = function (CKEPropertiesList) {
           return _.isObject(CKEPropertiesList) ? _.keys(CKEPropertiesList) : [];
         };
 
-        const convertCKERulesToEditorFeature = function(
+        const convertCKERulesToEditorFeature = function (
           feature,
           CKEFeatureRules,
         ) {
@@ -174,7 +174,7 @@
         const hiddenEditorConfig = this.model.get('hiddenEditorConfig');
         if (hiddenEditorConfig.drupalExternalPlugins) {
           const externalPlugins = hiddenEditorConfig.drupalExternalPlugins;
-          Object.keys(externalPlugins || {}).forEach(pluginName => {
+          Object.keys(externalPlugins || {}).forEach((pluginName) => {
             CKEDITOR.plugins.addExternal(
               pluginName,
               externalPlugins[pluginName],
@@ -186,7 +186,7 @@
 
         // Once the instance is ready, retrieve the allowedContent filter rules
         // and convert them to Drupal.EditorFeature objects.
-        CKEDITOR.once('instanceReady', e => {
+        CKEDITOR.once('instanceReady', (e) => {
           if (e.editor.name === hiddenCKEditorID) {
             // First collect all CKEditor allowedContent rules.
             const CKEFeatureRulesMap = {};
@@ -207,7 +207,7 @@
             // @see getFeatureForButton()
             const features = {};
             const buttonsToFeatures = {};
-            Object.keys(CKEFeatureRulesMap).forEach(featureName => {
+            Object.keys(CKEFeatureRulesMap).forEach((featureName) => {
               const feature = new Drupal.EditorFeature(featureName);
               convertCKERulesToEditorFeature(
                 feature,
@@ -366,16 +366,16 @@
             'CKEditorPluginSettingsChanged.ckeditorAdmin',
             (event, settingsChanges) => {
               // Update hidden CKEditor configuration.
-              Object.keys(settingsChanges || {}).forEach(key => {
+              Object.keys(settingsChanges || {}).forEach((key) => {
                 hiddenEditorConfig[key] = settingsChanges[key];
               });
 
               // Retrieve features for the updated hidden CKEditor configuration.
-              getCKEditorFeatures(hiddenEditorConfig, features => {
+              getCKEditorFeatures(hiddenEditorConfig, (features) => {
                 // Trigger a standardized text editor configuration event for each
                 // feature that was modified by the configuration changes.
                 const featuresMetadata = view.model.get('featuresMetadata');
-                Object.keys(features || {}).forEach(name => {
+                Object.keys(features || {}).forEach((name) => {
                   const feature = features[name];
                   if (
                     featuresMetadata.hasOwnProperty(name) &&
@@ -406,8 +406,8 @@
         config = _.flatten(config);
 
         // Loop through the button groups and pull out the buttons.
-        config.forEach(group => {
-          group.items.forEach(button => {
+        config.forEach((group) => {
+          group.items.forEach((button) => {
             buttons.push(button);
           });
         });

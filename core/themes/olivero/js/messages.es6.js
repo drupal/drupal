@@ -3,14 +3,14 @@
  * Messages.
  */
 
-(Drupal => {
+((Drupal) => {
   /**
    * Adds close button to the message.
    *
    * @param {object} message
    *   The message object.
    */
-  const closeMessage = message => {
+  const closeMessage = (message) => {
     const messageContainer = message.querySelector('.messages__container');
 
     const closeBtnWrapper = document.createElement('div');
@@ -118,7 +118,7 @@
         '.messages:not(.messages-processed)',
       );
 
-      messages.forEach(message => {
+      messages.forEach((message) => {
         closeMessage(message);
       });
     },

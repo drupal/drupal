@@ -3,7 +3,7 @@
  * A Backbone view for the toolbar element. Listens to mouse & touch.
  */
 
-(function($, Drupal, drupalSettings, Backbone) {
+(function ($, Drupal, drupalSettings, Backbone) {
   Drupal.toolbar.ToolbarVisualView = Backbone.View.extend(
     /** @lends Drupal.toolbar.ToolbarVisualView# */ {
       /**
@@ -14,7 +14,7 @@
        */
       events() {
         // Prevents delay and simulated mouse events.
-        const touchEndToClick = function(event) {
+        const touchEndToClick = function (event) {
           event.preventDefault();
           event.target.click();
         };
@@ -75,9 +75,7 @@
        */
       updateToolbarHeight() {
         const toolbarTabOuterHeight =
-          $('#toolbar-bar')
-            .find('.toolbar-tab')
-            .outerHeight() || 0;
+          $('#toolbar-bar').find('.toolbar-tab').outerHeight() || 0;
         const toolbarTrayHorizontalOuterHeight =
           $('.is-active.toolbar-tray-horizontal').outerHeight() || 0;
         this.model.set(

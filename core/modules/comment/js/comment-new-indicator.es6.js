@@ -6,7 +6,7 @@
  * installed.
  */
 
-(function($, Drupal, window) {
+(function ($, Drupal, window) {
   /**
    * Processes the markup for "new comment" indicators.
    *
@@ -72,7 +72,7 @@
       const $placeholders = $(context)
         .find('[data-comment-timestamp]')
         .once('history')
-        .filter(function() {
+        .filter(function () {
           const $placeholder = $(this);
           const commentTimestamp = parseInt(
             $placeholder.attr('data-comment-timestamp'),

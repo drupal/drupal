@@ -2,7 +2,7 @@
  * @file
  * Attaches behaviors for the Path module.
  */
-(function($, Drupal) {
+(function ($, Drupal) {
   /**
    * Behaviors for settings summaries on path edit forms.
    *
@@ -15,7 +15,7 @@
     attach(context) {
       $(context)
         .find('.path-form')
-        .drupalSetSummary(context => {
+        .drupalSetSummary((context) => {
           const path = $('.js-form-item-path-0-alias input').val();
 
           return path

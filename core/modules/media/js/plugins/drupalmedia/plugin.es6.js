@@ -3,7 +3,7 @@
  * Drupal Media embed plugin.
  */
 
-(function(jQuery, Drupal, CKEDITOR) {
+(function (jQuery, Drupal, CKEDITOR) {
   /**
    * Gets the focused widget, if of the type specific for this plugin.
    *
@@ -35,7 +35,7 @@
 
     CKEDITOR.plugins.drupallink.registerLinkableWidget('drupalmedia');
 
-    editor.getCommand('drupalunlink').on('exec', function(evt) {
+    editor.getCommand('drupalunlink').on('exec', function (evt) {
       const widget = getFocusedWidget(editor);
 
       if (!widget) {
@@ -49,7 +49,7 @@
       evt.cancel();
     });
 
-    editor.getCommand('drupalunlink').on('refresh', function(evt) {
+    editor.getCommand('drupalunlink').on('refresh', function (evt) {
       const widget = getFocusedWidget(editor);
 
       if (!widget) {
@@ -94,7 +94,7 @@
       dtd['drupal-media'] = { '#': 1 };
       // Register drupal-media element as an allowed child in each tag that can
       // contain a div element and as an allowed child of the a tag.
-      Object.keys(dtd).forEach(tagName => {
+      Object.keys(dtd).forEach((tagName) => {
         if (dtd[tagName].div) {
           dtd[tagName]['drupal-media'] = 1;
         }
@@ -168,7 +168,7 @@
           if (element.parent.name === 'a') {
             data.link = CKEDITOR.tools.copy(element.parent.attributes);
             // Omit CKEditor-internal attributes.
-            Object.keys(element.parent.attributes).forEach(attrName => {
+            Object.keys(element.parent.attributes).forEach((attrName) => {
               if (attrName.indexOf('data-cke-') !== -1) {
                 delete data.link[attrName];
               }
@@ -218,7 +218,7 @@
             editor.fire('lockSnapshot');
             this._tearDownDynamicEditables();
 
-            this._loadPreview(widget => {
+            this._loadPreview((widget) => {
               widget._setUpDynamicEditables();
               widget._setUpEditButton();
               editor.fire('unlockSnapshot');
@@ -227,7 +227,7 @@
 
           // Remove old attributes from drupal-media element within the widget.
           if (this.oldData) {
-            Object.keys(this.oldData.attributes).forEach(attrName => {
+            Object.keys(this.oldData.attributes).forEach((attrName) => {
               this.element.removeAttribute(attrName);
             });
           }
@@ -316,7 +316,7 @@
            *
            * @see https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR.html#property-NODE_ELEMENT
            */
-          const isElementNode = function(n) {
+          const isElementNode = function (n) {
             return n.type === CKEDITOR.NODE_ELEMENT;
           };
 
@@ -343,8 +343,8 @@
           const widget = this;
           this.element
             .findOne('.media-library-item__edit')
-            .on('click', event => {
-              const saveCallback = function(values) {
+            .on('click', (event) => {
+              const saveCallback = function (values) {
                 event.cancel();
                 editor.fire('saveSnapshot');
                 if (values.hasOwnProperty('attributes')) {
@@ -358,7 +358,7 @@
                   );
                   // Allow the dialog to delete attributes by setting them
                   // to `false` or `none`. For example: `alt`.
-                  Object.keys(values.attributes).forEach(prop => {
+                  Object.keys(values.attributes).forEach((prop) => {
                     if (
                       values.attributes[prop] === false ||
                       (prop === 'data-align' &&
@@ -391,7 +391,7 @@
           // the edit button.
           this.element
             .findOne('.media-library-item__edit')
-            .on('keydown', event => {
+            .on('keydown', (event) => {
               // The character code for the return key.
               const returnKey = 13;
               // The character code for the space bar.
