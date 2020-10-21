@@ -3,7 +3,7 @@
  * CKEditor implementation of {@link Drupal.editors} API.
  */
 
-(function(Drupal, debounce, CKEDITOR, $, displace, AjaxCommands) {
+(function (Drupal, debounce, CKEDITOR, $, displace, AjaxCommands) {
   /**
    * @namespace
    */
@@ -94,7 +94,7 @@
           if (!editable.isInline()) {
             editor.on(
               'autoGrow',
-              evt => {
+              (evt) => {
                 const doc = evt.editor.document;
                 const scrollable = CKEDITOR.env.quirks
                   ? doc.getBody()
@@ -200,7 +200,7 @@
       const externalPlugins = format.editorSettings.drupalExternalPlugins;
       // Register and load additional CKEditor plugins as necessary.
       if (externalPlugins) {
-        Object.keys(externalPlugins || {}).forEach(pluginName => {
+        Object.keys(externalPlugins || {}).forEach((pluginName) => {
           CKEDITOR.plugins.addExternal(
             pluginName,
             externalPlugins[pluginName],
@@ -300,7 +300,7 @@
 
   // Respond to new dialogs that are opened by CKEditor, closing the AJAX loader.
   $(window).on('dialog:beforecreate', (e, dialog, $element, settings) => {
-    $('.ckeditor-dialog-loading').animate({ top: '-40px' }, function() {
+    $('.ckeditor-dialog-loading').animate({ top: '-40px' }, function () {
       $(this).remove();
     });
   });
@@ -369,7 +369,7 @@
      *
      * @see http://docs.ckeditor.com/#!/api/CKEDITOR.dom.document
      */
-    AjaxCommands.prototype.ckeditor_add_stylesheet = function(
+    AjaxCommands.prototype.ckeditor_add_stylesheet = function (
       ajax,
       response,
       status,
@@ -377,7 +377,7 @@
       const editor = CKEDITOR.instances[response.editor_id];
 
       if (editor) {
-        response.stylesheets.forEach(url => {
+        response.stylesheets.forEach((url) => {
           editor.document.appendStyleSheet(url);
         });
       }

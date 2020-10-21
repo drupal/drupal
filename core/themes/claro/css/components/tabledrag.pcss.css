@@ -243,7 +243,7 @@ body.drag {
  * and SVG, then we refer to the elements total size inside the SVG.
  * We only want to inherit the height of the parent element.
  */
-/* stylelint-disable-next-line unit-whitelist */
+/* stylelint-disable-next-line unit-allowed-list */
 @media not all and (min-resolution: 0.001dpcm) {
   @supports (-webkit-appearance: none) {
     .tabledrag-cell-content .tree {

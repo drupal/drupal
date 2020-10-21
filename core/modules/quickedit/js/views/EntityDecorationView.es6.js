@@ -3,7 +3,7 @@
  * A Backbone view that decorates the in-place editable entity.
  */
 
-(function(Drupal, $, Backbone) {
+(function (Drupal, $, Backbone) {
   Drupal.quickedit.EntityDecorationView = Backbone.View.extend(
     /** @lends Drupal.quickedit.EntityDecorationView# */ {
       /**

@@ -3,7 +3,7 @@
  * Defines the behavior of the Drupal administration toolbar.
  */
 
-(function($, Drupal, drupalSettings) {
+(function ($, Drupal, drupalSettings) {
   // Merge run-time settings with the defaults.
   const options = $.extend(
     {
@@ -47,7 +47,7 @@
       $(context)
         .find('#toolbar-administration')
         .once('toolbar')
-        .each(function() {
+        .each(function () {
           // Establish the toolbar models and views.
           const model = new Drupal.toolbar.ToolbarModel({
             locked: JSON.parse(
@@ -63,7 +63,7 @@
 
           // Attach a listener to the configured media query breakpoints.
           // Executes it before Drupal.toolbar.views to avoid extra rendering.
-          Object.keys(options.breakpoints).forEach(label => {
+          Object.keys(options.breakpoints).forEach((label) => {
             const mq = options.breakpoints[label];
             const mql = window.matchMedia(mq);
             Drupal.toolbar.mql[label] = mql;
@@ -113,9 +113,7 @@
           Drupal.toolbar.models.menuModel = menuModel;
           Drupal.toolbar.views.menuVisualView = new Drupal.toolbar.MenuVisualView(
             {
-              el: $(this)
-                .find('.toolbar-menu-administration')
-                .get(0),
+              el: $(this).find('.toolbar-menu-administration').get(0),
               model: menuModel,
               strings: options.strings,
             },
@@ -124,7 +122,7 @@
           // Handle the resolution of Drupal.toolbar.setSubtrees.
           // This is handled with a deferred so that the function may be invoked
           // asynchronously.
-          Drupal.toolbar.setSubtrees.done(subtrees => {
+          Drupal.toolbar.setSubtrees.done((subtrees) => {
             menuModel.set('subtrees', subtrees);
             const theme = drupalSettings.ajaxPageState.theme;
             localStorage.setItem(
@@ -304,7 +302,7 @@
    * @return {string}
    *   A string representing a DOM fragment.
    */
-  Drupal.theme.toolbarOrientationToggle = function() {
+  Drupal.theme.toolbarOrientationToggle = function () {
     return (
       '<div class="toolbar-toggle-orientation"><div class="toolbar-lining">' +
       '<button class="toolbar-icon" type="button"></button>' +
@@ -322,7 +320,7 @@
    * @param {number} [status]
    *   XMLHttpRequest status.
    */
-  Drupal.AjaxCommands.prototype.setToolbarSubtrees = function(
+  Drupal.AjaxCommands.prototype.setToolbarSubtrees = function (
     ajax,
     response,
     status,

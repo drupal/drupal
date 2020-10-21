@@ -3,7 +3,7 @@
  * Some basic behaviors and utility functions for Views UI.
  */
 
-(function($, Drupal, drupalSettings) {
+(function ($, Drupal, drupalSettings) {
   /**
    * @namespace
    */
@@ -119,7 +119,12 @@
    * @param {string} [suffix='']
    *   A suffix to append at the end of the target field content.
    */
-  Drupal.viewsUi.FormFieldFiller = function($target, exclude, replace, suffix) {
+  Drupal.viewsUi.FormFieldFiller = function (
+    $target,
+    exclude,
+    replace,
+    suffix,
+  ) {
     /**
      *
      * @type {jQuery}
@@ -163,7 +168,7 @@
      * @return {*}
      *   The result of the _populate call, which should be undefined.
      */
-    this.populate = function() {
+    this.populate = function () {
       return self._populate.call(self);
     };
 
@@ -173,7 +178,7 @@
      * @return {*}
      *   The result of the _unbind call, which should be undefined.
      */
-    this.unbind = function() {
+    this.unbind = function () {
       return self._unbind.call(self);
     };
 
@@ -215,7 +220,7 @@
       _populate() {
         const transliterated = this.getTransliterated();
         const suffix = this.suffix;
-        this.target.each(function(i) {
+        this.target.each(function (i) {
           // Ensure that the maxlength is not exceeded by prepopulating the field.
           const maxlength = $(this).attr('maxlength') - suffix.length;
           $(this).val(transliterated.substr(0, maxlength) + suffix);
@@ -276,7 +281,7 @@
    * @param {jQuery} $form
    *   The form element used.
    */
-  Drupal.viewsUi.AddItemForm = function($form) {
+  Drupal.viewsUi.AddItemForm = function ($form) {
     /**
      *
      * @type {jQuery}
@@ -305,14 +310,9 @@
    * @param {jQuery.Event} event
    *   The event triggered.
    */
-  Drupal.viewsUi.AddItemForm.prototype.handleCheck = function(event) {
+  Drupal.viewsUi.AddItemForm.prototype.handleCheck = function (event) {
     const $target = $(event.target);
-    const label = $.trim(
-      $target
-        .closest('td')
-        .next()
-        .html(),
-    );
+    const label = $.trim($target.closest('td').next().html());
     // Add/remove the checked item to the list.
     if ($target.is(':checked')) {
       this.$selected_div.show().css('display', 'block');
@@ -339,7 +339,7 @@
   /**
    * Refresh the display of the checked items.
    */
-  Drupal.viewsUi.AddItemForm.prototype.refreshCheckedItems = function() {
+  Drupal.viewsUi.AddItemForm.prototype.refreshCheckedItems = function () {
     // Perhaps we should precache the text div, too.
     this.$selected_div
       .find('.views-selected-options')
@@ -386,7 +386,7 @@
       // Remove the 'Add ' prefix from the button labels since they're being
       // placed in an 'Add' dropdown. @todo This assumes English, but so does
       // $addDisplayDropdown above. Add support for translation.
-      $displayButtons.each(function() {
+      $displayButtons.each(function () {
         const label = $(this).val();
         if (label.substr(0, 4) === 'Add ') {
           $(this).val(label.substr(4));
@@ -395,7 +395,7 @@
       $addDisplayDropdown.appendTo($menu);
 
       // Add the click handler for the add display button.
-      $menu.find('li.add > a').on('click', function(event) {
+      $menu.find('li.add > a').on('click', function (event) {
         event.preventDefault();
         const $trigger = $(this);
         Drupal.behaviors.viewsUiRenderAddViewButton.toggleMenu($trigger);
@@ -407,7 +407,7 @@
       // We use the live binder because the open class on this item will be
       // toggled on and off and we want the handler to take effect in the cases
       // that the class is present, but not when it isn't.
-      $('li.add', $menu).on('mouseleave', function(event) {
+      $('li.add', $menu).on('mouseleave', function (event) {
         const $this = $(this);
         const $trigger = $this.children('a[href="#"]');
         if ($this.children('.action-list').is(':visible')) {
@@ -428,7 +428,7 @@
    *   function and not written specifically for this UI, but I'm not sure
    *   where to put it.
    */
-  Drupal.behaviors.viewsUiRenderAddViewButton.toggleMenu = function($trigger) {
+  Drupal.behaviors.viewsUiRenderAddViewButton.toggleMenu = function ($trigger) {
     $trigger.parent().toggleClass('open');
     $trigger.next().slideToggle('fast');
   };
@@ -469,7 +469,7 @@
    * @param {jQuery} $form
    *   The form element.
    */
-  Drupal.viewsUi.OptionsSearch = function($form) {
+  Drupal.viewsUi.OptionsSearch = function ($form) {
     /**
      *
      * @type {jQuery}
@@ -477,12 +477,9 @@
     this.$form = $form;
 
     // Click on the title checks the box.
-    this.$form.on('click', 'td.title', event => {
+    this.$form.on('click', 'td.title', (event) => {
       const $target = $(event.currentTarget);
-      $target
-        .closest('tr')
-        .find('input')
-        .trigger('click');
+      $target.closest('tr').find('input').trigger('click');
     });
 
     const searchBoxSelector =
@@ -505,7 +502,7 @@
     this.options = this.getOptions(this.$form.find('.filterable-option'));
 
     // Trap the ENTER key in the search box so that it doesn't submit the form.
-    this.$searchBox.on('keypress', event => {
+    this.$searchBox.on('keypress', (event) => {
       if (event.which === 13) {
         event.preventDefault();
       }
@@ -565,7 +562,7 @@
         const group = this.$controlGroup.val();
 
         // Search through the search texts in the form for matching text.
-        this.options.forEach(option => {
+        this.options.forEach((option) => {
           function hasWord(word) {
             return option.searchText.indexOf(word) !== -1;
           }
@@ -614,13 +611,9 @@
         '.views-display-setting a',
       );
       if ($contextualFilters.length) {
-        $('#preview-args')
-          .parent()
-          .show();
+        $('#preview-args').parent().show();
       } else {
-        $('#preview-args')
-          .parent()
-          .hide();
+        $('#preview-args').parent().hide();
       }
 
       // Executes an initial preview.
@@ -678,7 +671,7 @@
    * @param {jQuery} $operator
    *   The filter groups operator element.
    */
-  Drupal.viewsUi.RearrangeFilterHandler = function($table, $operator) {
+  Drupal.viewsUi.RearrangeFilterHandler = function ($table, $operator) {
     /**
      * Keep a reference to the `<table>` being altered and to the div containing
      * the filter groups operator dropdown (if it exists).
@@ -943,7 +936,7 @@
          * - The operator labels that are displayed next to each filter need to
          * be redrawn, to account for the row's new location.
          */
-        tableDrag.row.prototype.onSwap = function() {
+        tableDrag.row.prototype.onSwap = function () {
           if (filterHandler.hasGroupOperator) {
             // Make sure the row that just got moved (this.group) is inside one
             // of the filter groups (i.e. below an empty marker row or a
@@ -971,7 +964,7 @@
         /**
          * Override the onDrop method from tabledrag.js.
          */
-        tableDrag.onDrop = function() {
+        tableDrag.onDrop = function () {
           // If the tabledrag change marker (i.e., the "*") has been inserted
           // inside a row after the operator label (i.e., "And" or "Or")
           // rearrange the items so the operator label continues to appear last.
@@ -1131,13 +1124,13 @@
       if ($selectAll.length) {
         // Show the select all checkbox.
         $selectAll.show();
-        $selectAllCheckbox.on('click', function() {
+        $selectAllCheckbox.on('click', function () {
           // Update all checkbox beside the select all checkbox.
           $checkboxes.prop('checked', $(this).is(':checked'));
         });
 
         // Uncheck the select all checkbox if any of the others are unchecked.
-        $checkboxes.on('click', function() {
+        $checkboxes.on('click', function () {
           if ($(this).is('checked') === false) {
             $selectAllCheckbox.prop('checked', false);
           }
@@ -1200,31 +1193,13 @@
 
       function changeDefaultWidget(event) {
         if ($(event.target).prop('checked')) {
-          $context
-            .find('input.default-radios')
-            .parent()
-            .hide();
-          $context
-            .find('td.any-default-radios-row')
-            .parent()
-            .hide();
-          $context
-            .find('input.default-checkboxes')
-            .parent()
-            .show();
+          $context.find('input.default-radios').parent().hide();
+          $context.find('td.any-default-radios-row').parent().hide();
+          $context.find('input.default-checkboxes').parent().show();
         } else {
-          $context
-            .find('input.default-checkboxes')
-            .parent()
-            .hide();
-          $context
-            .find('td.any-default-radios-row')
-            .parent()
-            .show();
-          $context
-            .find('input.default-radios')
-            .parent()
-            .show();
+          $context.find('input.default-checkboxes').parent().hide();
+          $context.find('td.any-default-radios-row').parent().show();
+          $context.find('input.default-radios').parent().show();
         }
       }
 
@@ -1245,7 +1220,7 @@
    * @param {HTMLElement} button
    *   The DOM object representing the button to be checkboxified.
    */
-  Drupal.viewsUi.Checkboxifier = function(button) {
+  Drupal.viewsUi.Checkboxifier = function (button) {
     this.$button = $(button);
     this.$parent = this.$button.parent('div.views-expose, div.views-grouped');
     this.$input = this.$parent.find('input:checkbox, input:radio');
@@ -1262,7 +1237,7 @@
    * @param {jQuery.Event} e
    *   The event triggered.
    */
-  Drupal.viewsUi.Checkboxifier.prototype.clickHandler = function(e) {
+  Drupal.viewsUi.Checkboxifier.prototype.clickHandler = function (e) {
     this.$button.trigger('click').trigger('submit');
   };
 
@@ -1280,7 +1255,7 @@
       $(context)
         .find('[data-drupal-selector="edit-override-dropdown"]')
         .once('views-ui-override-button-text')
-        .each(function() {
+        .each(function () {
           // Closures! :(
           const $context = $(context);
           const $submit = $context.find('[id^=edit-submit]');
@@ -1288,13 +1263,13 @@
 
           $submit
             .once('views-ui-override-button-text')
-            .on('mouseup', function() {
+            .on('mouseup', function () {
               $(this).val(oldValue);
               return true;
             });
 
           $(this)
-            .on('change', function() {
+            .on('change', function () {
               const $this = $(this);
               if ($this.val() === 'default') {
                 $submit.val(Drupal.t('Apply (all displays)'));
@@ -1327,10 +1302,8 @@
       $context
         .find('a.views-remove-link')
         .once('views')
-        .on('click', function(event) {
-          const id = $(this)
-            .attr('id')
-            .replace('views-remove-link-', '');
+        .on('click', function (event) {
+          const id = $(this).attr('id').replace('views-remove-link-', '');
           $context.find(`#views-row-${id}`).hide();
           $context.find(`#views-removed-${id}`).prop('checked', true);
           event.preventDefault();
@@ -1341,10 +1314,8 @@
       $context
         .find('a.display-remove-link')
         .once('display')
-        .on('click', function(event) {
-          const id = $(this)
-            .attr('id')
-            .replace('display-remove-link-', '');
+        .on('click', function (event) {
+          const id = $(this).attr('id').replace('display-remove-link-', '');
           $context.find(`#display-row-${id}`).hide();
           $context.find(`#display-removed-${id}`).prop('checked', true);
           event.preventDefault();

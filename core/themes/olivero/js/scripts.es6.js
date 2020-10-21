@@ -1,5 +1,5 @@
 /* eslint-disable no-inner-declarations */
-(Drupal => {
+((Drupal) => {
   /**
    * Olivero helper functions.
    *
@@ -51,13 +51,13 @@
     function toggleDesktopNavVisibility(entries) {
       if (!isDesktopNav()) return;
 
-      entries.forEach(entry => {
+      entries.forEach((entry) => {
         // FF doesn't seem to support entry.isIntersecting properly,
         // so we check the intersectionRatio.
         if (entry.intersectionRatio < 1) {
-          fixableElements.forEach(el => el.classList.add('js-fixed'));
+          fixableElements.forEach((el) => el.classList.add('js-fixed'));
         } else {
-          fixableElements.forEach(el => el.classList.remove('js-fixed'));
+          fixableElements.forEach((el) => el.classList.remove('js-fixed'));
         }
       });
     }
@@ -112,7 +112,7 @@
     monitorNavPosition();
   }
 
-  document.addEventListener('keyup', e => {
+  document.addEventListener('keyup', (e) => {
     if (e.keyCode === 27) {
       // Close the search form.
       if (

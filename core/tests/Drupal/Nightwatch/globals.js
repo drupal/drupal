@@ -5,7 +5,7 @@ import mkdirp from 'mkdirp';
 import chromedriver from 'chromedriver';
 import nightwatchSettings from './nightwatch.conf';
 
-export const commandAsWebserver = command => {
+export const commandAsWebserver = (command) => {
   if (process.env.DRUPAL_TEST_WEBSERVER_USER) {
     return `sudo -u ${process.env.DRUPAL_TEST_WEBSERVER_USER} ${command}`;
   }
@@ -16,13 +16,13 @@ export const drupalDbPrefix = null;
 export const drupalSitePath = null;
 
 module.exports = {
-  before: done => {
+  before: (done) => {
     if (JSON.parse(process.env.DRUPAL_TEST_CHROMEDRIVER_AUTOSTART)) {
       chromedriver.start();
     }
     done();
   },
-  after: done => {
+  after: (done) => {
     if (JSON.parse(process.env.DRUPAL_TEST_CHROMEDRIVER_AUTOSTART)) {
       chromedriver.stop();
     }
@@ -51,7 +51,7 @@ module.exports = {
         browser.currentTest.name || browser.currentTest.module
       ).replace(/[\s/]+/g, '-');
       browser
-        .getLog('browser', logEntries => {
+        .getLog('browser', (logEntries) => {
           const browserLog = JSON.stringify(logEntries, null, '  ');
           fs.writeFileSync(
             `${resultPath}/${testName}_${status}_${now}_console.json`,

@@ -3,7 +3,7 @@
  * Defines JavaScript behaviors for the block_content module.
  */
 
-(function($, Drupal) {
+(function ($, Drupal) {
   /**
    * Sets summaries about revision and translation of entities.
    *
@@ -20,7 +20,7 @@
       const $context = $(context);
       $context
         .find('.entity-content-form-revision-information')
-        .drupalSetSummary(context => {
+        .drupalSetSummary((context) => {
           const $revisionContext = $(context);
           const revisionCheckbox = $revisionContext.find(
             '.js-form-item-revision input',
@@ -44,7 +44,7 @@
 
       $context
         .find('details.entity-translation-options')
-        .drupalSetSummary(context => {
+        .drupalSetSummary((context) => {
           const $translationContext = $(context);
           let translate;
           let $checkbox = $translationContext.find(

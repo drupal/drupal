@@ -3,7 +3,7 @@
  * Attaches the behaviors for the Color module.
  */
 
-(function($, Drupal) {
+(function ($, Drupal) {
   /**
    * Displays farbtastic color selector and initialize color administration UI.
    *
@@ -30,14 +30,12 @@
       let focused = null;
 
       // Add Farbtastic.
-      $('<div class="color-placeholder"></div>')
-        .once('color')
-        .prependTo(form);
+      $('<div class="color-placeholder"></div>').once('color').prependTo(form);
       const farb = $.farbtastic('.color-placeholder');
 
       // Decode reference colors to HSL.
       const reference = settings.color.reference;
-      Object.keys(reference || {}).forEach(color => {
+      Object.keys(reference || {}).forEach((color) => {
         reference[color] = farb.RGBToHSL(farb.unpack(reference[color]));
       });
 
@@ -56,7 +54,7 @@
        * Resets the color scheme selector.
        */
       function resetScheme() {
-        form.find('#edit-scheme').each(function() {
+        form.find('#edit-scheme').each(function () {
           this.selectedIndex = this.options.length - 1;
         });
       }
@@ -180,7 +178,7 @@
       }
 
       // Loop through all defined gradients.
-      Object.keys(settings.gradients || {}).forEach(i => {
+      Object.keys(settings.gradients || {}).forEach((i) => {
         // Add element to display the gradient.
         $('.color-preview')
           .once('color')
@@ -207,13 +205,13 @@
       });
 
       // Set up colorScheme selector.
-      form.find('#edit-scheme').on('change', function() {
+      form.find('#edit-scheme').on('change', function () {
         const schemes = settings.color.schemes;
         const colorScheme = this.options[this.selectedIndex].value;
         if (colorScheme !== '' && schemes[colorScheme]) {
           // Get colors of active scheme.
           colors = schemes[colorScheme];
-          Object.keys(colors || {}).forEach(fieldName => {
+          Object.keys(colors || {}).forEach((fieldName) => {
             callback(
               $(`#edit-palette-${fieldName}`),
               colors[fieldName],
@@ -245,7 +243,7 @@
 
         // Add new bindings.
         focused = input;
-        farb.linkTo(color => {
+        farb.linkTo((color) => {
           callback(input, color, true, false);
         });
         farb.setColor(input.value);
@@ -260,7 +258,7 @@
       // Initialize color fields.
       form
         .find('.js-color-palette input.form-text')
-        .each(function() {
+        .each(function () {
           // Extract palette field name.
           this.key = this.id.substring(13);
 
@@ -278,12 +276,10 @@
               `<button class="color-palette__lock">${Drupal.t(
                 'Unlock',
               )}</button>`,
-            ).on('click', function(e) {
+            ).on('click', function (e) {
               e.preventDefault();
               if (toggleClick) {
-                $(this)
-                  .addClass('is-unlocked')
-                  .html(Drupal.t('Lock'));
+                $(this).addClass('is-unlocked').html(Drupal.t('Lock'));
                 $(hooks[i - 1]).attr(
                   'class',
                   locks[i - 2] && $(locks[i - 2]).is(':not(.is-unlocked)')
@@ -297,9 +293,7 @@
                     : 'color-palette__hook',
                 );
               } else {
-                $(this)
-                  .removeClass('is-unlocked')
-                  .html(Drupal.t('Unlock'));
+                $(this).removeClass('is-unlocked').html(Drupal.t('Unlock'));
                 $(hooks[i - 1]).attr(
                   'class',
                   locks[i - 2] && $(locks[i - 2]).is(':not(.is-unlocked)')
@@ -324,10 +318,7 @@
           $(this).after(hook);
           hooks.push(hook);
 
-          $(this)
-            .parent()
-            .find('.color-palette__lock')
-            .trigger('click');
+          $(this).parent().find('.color-palette__lock').trigger('click');
           this.i = i;
           inputs.push(this);
         })

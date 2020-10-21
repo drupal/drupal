@@ -3,7 +3,7 @@
  * A Backbone View that provides an entity level toolbar.
  */
 
-(function($, _, Backbone, Drupal, debounce, Popper) {
+(function ($, _, Backbone, Drupal, debounce, Popper) {
   Drupal.quickedit.EntityToolbarView = Backbone.View.extend(
     /** @lends Drupal.quickedit.EntityToolbarView# */ {
       /**

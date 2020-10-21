@@ -93,50 +93,40 @@
          * When a click occurs try and find the settings-tray edit link
          * and click it.
          */
-        $editables.not(contextualItemsSelector).on('click.settingstray', e => {
-          // Contextual links are allowed to function in Edit mode.
-          if (
-            $(e.target).closest('.contextual').length ||
-            !localStorage.getItem('Drupal.contextualToolbar.isViewing')
-          ) {
-            return;
-          }
-          $(e.currentTarget)
-            .find(blockConfigureSelector)
-            .trigger('click');
-          disableQuickEdit();
-        });
+        $editables
+          .not(contextualItemsSelector)
+          .on('click.settingstray', (e) => {
+            // Contextual links are allowed to function in Edit mode.
+            if (
+              $(e.target).closest('.contextual').length ||
+              !localStorage.getItem('Drupal.contextualToolbar.isViewing')
+            ) {
+              return;
+            }
+            $(e.currentTarget).find(blockConfigureSelector).trigger('click');
+            disableQuickEdit();
+          });
         $(quickEditItemSelector)
           .not(contextualItemsSelector)
-          .on('click.settingstray', e => {
+          .on('click.settingstray', (e) => {
             /**
              * For all non-contextual links or the contextual QuickEdit link
              * close the off-canvas dialog.
              */
             if (
-              !$(e.target)
-                .parent()
-                .hasClass('contextual') ||
-              $(e.target)
-                .parent()
-                .hasClass('quickedit')
+              !$(e.target).parent().hasClass('contextual') ||
+              $(e.target).parent().hasClass('quickedit')
             ) {
               closeOffCanvas();
             }
             // Do not trigger if target is quick edit link to avoid loop.
             if (
-              $(e.target)
-                .parent()
-                .hasClass('contextual') ||
-              $(e.target)
-                .parent()
-                .hasClass('quickedit')
+              $(e.target).parent().hasClass('contextual') ||
+              $(e.target).parent().hasClass('quickedit')
             ) {
               return;
             }
-            $(e.currentTarget)
-              .find('li.quickedit a')
-              .trigger('click');
+            $(e.currentTarget).find('li.quickedit a').trigger('click');
           });
       }
     }
@@ -191,7 +181,7 @@
        * to add our changes.
        */
       .filter(
-        instance =>
+        (instance) =>
           instance &&
           $(instance.element).attr('data-dialog-renderer') === 'off_canvas',
       )
@@ -199,7 +189,7 @@
        * Loop through all Ajax instances that use the 'off_canvas' renderer to
        * set active editable ID.
        */
-      .forEach(instance => {
+      .forEach((instance) => {
         // Check to make sure existing dialogOptions aren't overridden.
         if (!instance.options.data.hasOwnProperty('dialogOptions')) {
           instance.options.data.dialogOptions = {};
@@ -249,9 +239,7 @@
      */
     data.$el.find(blockConfigureSelector).on('click.settingstray', () => {
       if (!isInEditMode()) {
-        $(toggleEditSelector)
-          .trigger('click')
-          .trigger('click.settings_tray');
+        $(toggleEditSelector).trigger('click').trigger('click.settings_tray');
       }
       /**
        * Always disable QuickEdit regardless of whether "EditMode" was just
@@ -261,7 +249,7 @@
     });
   });
 
-  $(document).on('keyup.settingstray', e => {
+  $(document).on('keyup.settingstray', (e) => {
     if (isInEditMode() && e.keyCode === 27) {
       Drupal.announce(Drupal.t('Exited edit mode.'));
       toggleEditMode();

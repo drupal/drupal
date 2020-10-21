@@ -3,7 +3,7 @@
  * Adds default classes to buttons for styling purposes.
  */
 
-(function($) {
+(function ($) {
   $.widget('ui.dialog', $.ui.dialog, {
     options: {
       buttonClass: 'button',

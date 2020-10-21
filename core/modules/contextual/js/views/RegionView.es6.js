@@ -3,7 +3,7 @@
  * A Backbone View that renders the visual view of a contextual region element.
  */
 
-(function(Drupal, Backbone, Modernizr) {
+(function (Drupal, Backbone, Modernizr) {
   Drupal.contextual.RegionView = Backbone.View.extend(
     /** @lends Drupal.contextual.RegionView# */ {
       /**
@@ -18,10 +18,7 @@
             this.model.set('regionIsHovered', true);
           },
           mouseleave() {
-            this.model
-              .close()
-              .blur()
-              .set('regionIsHovered', false);
+            this.model.close().blur().set('regionIsHovered', false);
           },
         };
         // We don't want mouse hover events on touch.

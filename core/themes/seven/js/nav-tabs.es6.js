@@ -5,7 +5,7 @@
  * This also supports collapsible navigable is the 'is-collapsible' class is
  * added to the main element, and a target element is included.
  */
-(function($, Drupal) {
+(function ($, Drupal) {
   function init(i, tab) {
     const $tab = $(tab);
     const $target = $tab.find('[data-drupal-nav-tabs-target]');

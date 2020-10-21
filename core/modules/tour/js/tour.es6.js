@@ -3,7 +3,7 @@
  * Attaches behaviors for the Tour module's toolbar tab.
  */
 
-(function($, Backbone, Drupal, document) {
+(function ($, Backbone, Drupal, document) {
   const queryString = decodeURI(window.location.search);
 
   /**
@@ -226,7 +226,7 @@
       _removeIrrelevantTourItems($tour, $document) {
         let removals = false;
         const tips = /tips=([^&]+)/.exec(queryString);
-        $tour.find('li').each(function() {
+        $tour.find('li').each(function () {
           const $this = $(this);
           const itemId = $this.attr('data-id');
           const itemClass = $this.attr('data-class');
@@ -259,14 +259,12 @@
           $tour
             .find('li')
             // Rebuild the progress data.
-            .each(function(index) {
+            .each(function (index) {
               const progress = Drupal.t('!tour_item of !total', {
                 '!tour_item': index + 1,
                 '!total': total,
               });
-              $(this)
-                .find('.tour-progress')
-                .text(progress);
+              $(this).find('.tour-progress').text(progress);
             })
             // Update the last item to have "End tour" as the button.
             .eq(-1)

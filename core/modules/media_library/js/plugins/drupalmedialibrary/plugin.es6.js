@@ -3,7 +3,7 @@
  * Drupal Media Library plugin.
  */
 
-(function(Drupal, CKEDITOR) {
+(function (Drupal, CKEDITOR) {
   CKEDITOR.plugins.add('drupalmedialibrary', {
     requires: 'drupalmedia',
     icons: 'drupalmedialibrary',
@@ -42,12 +42,12 @@
         canUndo: true,
         // eslint-disable-next-line no-shadow
         exec(editor) {
-          const saveCallback = function(values) {
+          const saveCallback = function (values) {
             editor.fire('saveSnapshot');
             const mediaElement = editor.document.createElement('drupal-media');
             // eslint-disable-next-line prefer-destructuring
             const attributes = values.attributes;
-            Object.keys(attributes).forEach(key => {
+            Object.keys(attributes).forEach((key) => {
               mediaElement.setAttribute(key, attributes[key]);
             });
             editor.insertHtml(mediaElement.getOuterHtml());

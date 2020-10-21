@@ -4,12 +4,12 @@
  * ajax-insert-inline links for testing ajax requests.
  */
 
-(function($, window, Drupal) {
+(function ($, window, Drupal) {
   Drupal.behaviors.insertTest = {
     attach(context) {
       $('.ajax-insert')
         .once('ajax-insert')
-        .on('click', event => {
+        .on('click', (event) => {
           event.preventDefault();
           const ajaxSettings = {
             url: event.currentTarget.getAttribute('href'),
@@ -25,7 +25,7 @@
 
       $('.ajax-insert-inline')
         .once('ajax-insert')
-        .on('click', event => {
+        .on('click', (event) => {
           event.preventDefault();
           const ajaxSettings = {
             url: event.currentTarget.getAttribute('href'),

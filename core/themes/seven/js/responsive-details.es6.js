@@ -3,7 +3,7 @@
  * Provides responsive behaviors to HTML details elements.
  */
 
-(function($, Drupal) {
+(function ($, Drupal) {
   /**
    * Initializes the responsive behaviors for details elements.
    *
@@ -14,9 +14,7 @@
    */
   Drupal.behaviors.responsiveDetails = {
     attach(context) {
-      const $details = $(context)
-        .find('details')
-        .once('responsive-details');
+      const $details = $(context).find('details').once('responsive-details');
 
       if (!$details.length) {
         return;

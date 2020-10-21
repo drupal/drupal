@@ -5,7 +5,7 @@
  * @see http://www.whatwg.org/specs/web-apps/current-work/multipage/commands.html#the-dialog-element
  */
 
-(function($, Drupal, drupalSettings) {
+(function ($, Drupal, drupalSettings) {
   /**
    * Default dialog options.
    *
@@ -59,7 +59,7 @@
    * @return {Drupal.dialog~dialogDefinition}
    *   The dialog instance.
    */
-  Drupal.dialog = function(element, options) {
+  Drupal.dialog = function (element, options) {
     let undef;
     const $element = $(element);
     const dialog = {

@@ -6,7 +6,7 @@
 (($, { behaviors }, { testMessages }) => {
   // Message types.
   const indexes = {};
-  testMessages.types.forEach(type => {
+  testMessages.types.forEach((type) => {
     indexes[type] = [];
   });
 
@@ -21,7 +21,7 @@
   // Ensure clear() can be called on a newly created message object.
   messageObjects.default.zone.clear();
 
-  testMessages.selectors.filter(Boolean).forEach(selector => {
+  testMessages.selectors.filter(Boolean).forEach((selector) => {
     messageObjects[selector] = {
       zone: new Drupal.Message(document.querySelector(selector)),
       indexes,
@@ -38,7 +38,7 @@
     attach() {
       $('[data-drupal-messages-area]')
         .once('messages-details')
-        .on('click', '[data-action]', e => {
+        .on('click', '[data-action]', (e) => {
           const $target = $(e.currentTarget);
           const type = $target.attr('data-type');
           const area =
@@ -66,7 +66,7 @@
            * Add several of different types to make sure message type doesn't
            * cause issues in the API.
            */
-          [0, 1, 2, 3, 4, 5].forEach(i => {
+          [0, 1, 2, 3, 4, 5].forEach((i) => {
             messageObjects.multiple.push(
               messageObjects.default.zone.add(
                 `This is message number ${i} of the type, ${
@@ -80,7 +80,7 @@
       $('[data-action="remove-multiple"]')
         .once('remove-multiple')
         .on('click', () => {
-          messageObjects.multiple.forEach(messageIndex =>
+          messageObjects.multiple.forEach((messageIndex) =>
             messageObjects.default.zone.remove(messageIndex),
           );
           messageObjects.multiple = [];
@@ -89,7 +89,7 @@
         .once('add-multiple-error')
         .on('click', () => {
           // Use the same number of elements to facilitate things on the PHP side.
-          [0, 1, 2, 3, 4, 5].forEach(i =>
+          [0, 1, 2, 3, 4, 5].forEach((i) =>
             messageObjects.default.zone.add(`Msg-${i}`, { type: 'error' }),
           );
           messageObjects.default.zone.add(
@@ -103,9 +103,9 @@
           Array.prototype.map
             .call(
               document.querySelectorAll('[data-drupal-message-id^="error"]'),
-              element => element.getAttribute('data-drupal-message-id'),
+              (element) => element.getAttribute('data-drupal-message-id'),
             )
-            .forEach(id => messageObjects.default.zone.remove(id));
+            .forEach((id) => messageObjects.default.zone.remove(id));
         });
       $('[data-action="clear-all"]')
         .once('clear-all')

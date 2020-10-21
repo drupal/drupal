@@ -3,7 +3,7 @@
  * A Backbone View that provides a dynamic contextual link.
  */
 
-(function($, Backbone, Drupal) {
+(function ($, Backbone, Drupal) {
   Drupal.quickedit.ContextualLinkView = Backbone.View.extend(
     /** @lends Drupal.quickedit.ContextualLinkView# */ {
       /**
@@ -20,7 +20,7 @@
         }
 
         return {
-          'click a': function(event) {
+          'click a': function (event) {
             event.preventDefault();
             this.model.set('state', 'launching');
           },

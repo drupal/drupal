@@ -3,7 +3,7 @@
  * Provides utility functions for Quick Edit.
  */
 
-(function($, Drupal) {
+(function ($, Drupal) {
   /**
    * @namespace
    */
@@ -38,7 +38,7 @@
    * @return {string}
    *   The formatted URL.
    */
-  Drupal.quickedit.util.buildUrl = function(id, urlFormat) {
+  Drupal.quickedit.util.buildUrl = function (id, urlFormat) {
     const parts = id.split('/');
     return Drupal.formatString(decodeURIComponent(urlFormat), {
       '!entity_type': parts[0],
@@ -57,7 +57,7 @@
    * @param {string} message
    *   The message to use in the modal dialog.
    */
-  Drupal.quickedit.util.networkErrorModal = function(title, message) {
+  Drupal.quickedit.util.networkErrorModal = function (title, message) {
     const $message = $(`<div>${message}</div>`);
     const networkErrorModal = Drupal.dialog($message.get(0), {
       title,
@@ -72,10 +72,7 @@
         },
       ],
       create() {
-        $(this)
-          .parent()
-          .find('.ui-dialog-titlebar-close')
-          .remove();
+        $(this).parent().find('.ui-dialog-titlebar-close').remove();
       },
       close(event) {
         // Automatically destroy the DOM element that was used for the dialog.
@@ -145,7 +142,7 @@
         },
       });
       // Implement a scoped quickeditFieldForm AJAX command: calls the callback.
-      formLoaderAjax.commands.quickeditFieldForm = function(
+      formLoaderAjax.commands.quickeditFieldForm = function (
         ajax,
         response,
         status,
@@ -199,7 +196,7 @@
          *   The HTTP status code.
          */
         success(response, status) {
-          Object.keys(response || {}).forEach(i => {
+          Object.keys(response || {}).forEach((i) => {
             if (response[i].command && this.commands[response[i].command]) {
               this.commands[response[i].command](this, response[i], status);
             }

@@ -3,7 +3,7 @@
  * User permission page behaviors.
  */
 
-(function($, Drupal) {
+(function ($, Drupal) {
   /**
    * Shows checked and disabled checkboxes for inherited permissions.
    *
@@ -17,7 +17,7 @@
       const self = this;
       $('table#permissions')
         .once('permissions')
-        .each(function() {
+        .each(function () {
           // On a site with many roles and permissions, this behavior initially
           // has to perform thousands of DOM manipulations to inject checkboxes
           // and hide them. By detaching the table from the DOM, all operations
@@ -84,10 +84,10 @@
       // jQuery performs too many layout calculations for .hide() and .show(),
       // leading to a major page rendering lag on sites with many roles and
       // permissions. Therefore, we toggle visibility directly.
-      $row.find('.js-real-checkbox').each(function() {
+      $row.find('.js-real-checkbox').each(function () {
         this.style.display = authCheckbox.checked ? 'none' : '';
       });
-      $row.find('.js-dummy-checkbox').each(function() {
+      $row.find('.js-dummy-checkbox').each(function () {
         this.style.display = authCheckbox.checked ? '' : 'none';
       });
     },

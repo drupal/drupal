@@ -5,7 +5,7 @@
  * @see Drupal.quickedit.AppView
  */
 
-(function(Backbone, Drupal) {
+(function (Backbone, Drupal) {
   /**
    * @constructor
    *

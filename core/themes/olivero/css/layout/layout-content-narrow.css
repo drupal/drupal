@@ -87,33 +87,33 @@
 @media (min-width: 700px) {
 
 [dir="ltr"] .layout--content-narrow.text-content blockquote:before,[dir="ltr"]  .layout--content-narrow .text-content blockquote:before,[dir="ltr"]  .layout--pass--content-narrow > *.text-content blockquote:before,[dir="ltr"]  .layout--pass--content-narrow > * .text-content blockquote:before {
-          left: calc(-1*((100vw - 504px)/14 + 36px))
+          left: -7.14286vw
   }
 
 [dir="rtl"] .layout--content-narrow.text-content blockquote:before,[dir="rtl"]  .layout--content-narrow .text-content blockquote:before,[dir="rtl"]  .layout--pass--content-narrow > *.text-content blockquote:before,[dir="rtl"]  .layout--pass--content-narrow > * .text-content blockquote:before {
-          right: calc(-1*((100vw - 504px)/14 + 36px))
+          right: -7.14286vw
   }
         }
 
 @media (min-width: 1000px) {
 
 [dir="ltr"] .layout--content-narrow.text-content blockquote:before,[dir="ltr"]  .layout--content-narrow .text-content blockquote:before,[dir="ltr"]  .layout--pass--content-narrow > *.text-content blockquote:before,[dir="ltr"]  .layout--pass--content-narrow > * .text-content blockquote:before {
-          left: calc(-1*((100vw - 519px)/14 + 36px))
+          left: calc(-7.14286vw - -1.07143px)
   }
 
 [dir="rtl"] .layout--content-narrow.text-content blockquote:before,[dir="rtl"]  .layout--content-narrow .text-content blockquote:before,[dir="rtl"]  .layout--pass--content-narrow > *.text-content blockquote:before,[dir="rtl"]  .layout--pass--content-narrow > * .text-content blockquote:before {
-          right: calc(-1*((100vw - 519px)/14 + 36px))
+          right: calc(-7.14286vw - -1.07143px)
   }
         }
 
 @media (min-width: 1200px) {
 
 [dir="ltr"] .layout--content-narrow.text-content blockquote:before,[dir="ltr"]  .layout--content-narrow .text-content blockquote:before,[dir="ltr"]  .layout--pass--content-narrow > *.text-content blockquote:before,[dir="ltr"]  .layout--pass--content-narrow > * .text-content blockquote:before {
-          left: calc(-1*((100vw - 645px)/14 + 36px))
+          left: calc(-7.14286vw - -10.07143px)
   }
 
 [dir="rtl"] .layout--content-narrow.text-content blockquote:before,[dir="rtl"]  .layout--content-narrow .text-content blockquote:before,[dir="rtl"]  .layout--pass--content-narrow > *.text-content blockquote:before,[dir="rtl"]  .layout--pass--content-narrow > * .text-content blockquote:before {
-          right: calc(-1*((100vw - 645px)/14 + 36px))
+          right: calc(-7.14286vw - -10.07143px)
   }
         }
 
@@ -131,11 +131,11 @@
 @media (min-width: 700px) {
 
 [dir="ltr"] .layout--content-narrow.text-content blockquote:after,[dir="ltr"]  .layout--content-narrow .text-content blockquote:after,[dir="ltr"]  .layout--pass--content-narrow > *.text-content blockquote:after,[dir="ltr"]  .layout--pass--content-narrow > * .text-content blockquote:after {
-          left: calc(-1*((100vw - 504px)/14 + 36px))
+          left: -7.14286vw
   }
 
 [dir="rtl"] .layout--content-narrow.text-content blockquote:after,[dir="rtl"]  .layout--content-narrow .text-content blockquote:after,[dir="rtl"]  .layout--pass--content-narrow > *.text-content blockquote:after,[dir="rtl"]  .layout--pass--content-narrow > * .text-content blockquote:after {
-          right: calc(-1*((100vw - 504px)/14 + 36px))
+          right: -7.14286vw
   }
 
 [dir="ltr"] .layout--content-narrow.text-content blockquote:after,[dir="ltr"]  .layout--content-narrow .text-content blockquote:after,[dir="ltr"]  .layout--pass--content-narrow > *.text-content blockquote:after,[dir="ltr"]  .layout--pass--content-narrow > * .text-content blockquote:after {
@@ -155,22 +155,22 @@
 @media (min-width: 1000px) {
 
 [dir="ltr"] .layout--content-narrow.text-content blockquote:after,[dir="ltr"]  .layout--content-narrow .text-content blockquote:after,[dir="ltr"]  .layout--pass--content-narrow > *.text-content blockquote:after,[dir="ltr"]  .layout--pass--content-narrow > * .text-content blockquote:after {
-          left: calc(-1*((100vw - 519px)/14 + 36px))
+          left: calc(-7.14286vw - -1.07143px)
   }
 
 [dir="rtl"] .layout--content-narrow.text-content blockquote:after,[dir="rtl"]  .layout--content-narrow .text-content blockquote:after,[dir="rtl"]  .layout--pass--content-narrow > *.text-content blockquote:after,[dir="rtl"]  .layout--pass--content-narrow > * .text-content blockquote:after {
-          right: calc(-1*((100vw - 519px)/14 + 36px))
+          right: calc(-7.14286vw - -1.07143px)
   }
         }
 
 @media (min-width: 1200px) {
 
 [dir="ltr"] .layout--content-narrow.text-content blockquote:after,[dir="ltr"]  .layout--content-narrow .text-content blockquote:after,[dir="ltr"]  .layout--pass--content-narrow > *.text-content blockquote:after,[dir="ltr"]  .layout--pass--content-narrow > * .text-content blockquote:after {
-          left: calc(-1*((100vw - 645px)/14 + 36px))
+          left: calc(-7.14286vw - -10.07143px)
   }
 
 [dir="rtl"] .layout--content-narrow.text-content blockquote:after,[dir="rtl"]  .layout--content-narrow .text-content blockquote:after,[dir="rtl"]  .layout--pass--content-narrow > *.text-content blockquote:after,[dir="rtl"]  .layout--pass--content-narrow > * .text-content blockquote:after {
-          right: calc(-1*((100vw - 645px)/14 + 36px))
+          right: calc(-7.14286vw - -10.07143px)
   }
         }
 
@@ -196,7 +196,7 @@
   }
 
 .layout--content-narrow.text-content blockquote, .layout--content-narrow .text-content blockquote, .layout--pass--content-narrow > *.text-content blockquote, .layout--pass--content-narrow > * .text-content blockquote {
-        width: calc(10*(100vw - 504px)/14 + 324px);
+        width: calc(71.42857vw - 36px);
         margin-top: 54px;
         margin-bottom: 54px
     }
@@ -205,14 +205,14 @@
 @media (min-width: 1000px) {
 
 .layout--content-narrow.text-content blockquote, .layout--content-narrow .text-content blockquote, .layout--pass--content-narrow > *.text-content blockquote, .layout--pass--content-narrow > * .text-content blockquote {
-        width: calc(10*(100vw - 519px)/14 + 324px)
+        width: calc(71.42857vw - 46.71429px)
     }
       }
 
 @media (min-width: 1200px) {
 
 .layout--content-narrow.text-content blockquote, .layout--content-narrow .text-content blockquote, .layout--pass--content-narrow > *.text-content blockquote, .layout--pass--content-narrow > * .text-content blockquote {
-        width: calc(10*(100vw - 645px)/14 + 324px)
+        width: calc(71.42857vw - 136.71429px)
     }
       }
 
@@ -226,7 +226,7 @@
 @media (min-width: 700px) {
 
 .layout--content-narrow.text-content pre, .layout--content-narrow .text-content pre, .layout--pass--content-narrow > *.text-content pre, .layout--pass--content-narrow > * .text-content pre {
-        width: calc(10*(100vw - 504px)/14 + 324px);
+        width: calc(71.42857vw - 36px);
         margin-top: 54px;
         margin-bottom: 54px
     }
@@ -235,22 +235,22 @@
 @media (min-width: 1000px) {
 
 [dir="ltr"] .layout--content-narrow.text-content pre,[dir="ltr"]  .layout--content-narrow .text-content pre,[dir="ltr"]  .layout--pass--content-narrow > *.text-content pre,[dir="ltr"]  .layout--pass--content-narrow > * .text-content pre {
-        margin-left: calc(-1*((100vw - 519px)/14 + 36px))
+        margin-left: calc(-7.14286vw - -1.07143px)
   }
 
 [dir="rtl"] .layout--content-narrow.text-content pre,[dir="rtl"]  .layout--content-narrow .text-content pre,[dir="rtl"]  .layout--pass--content-narrow > *.text-content pre,[dir="rtl"]  .layout--pass--content-narrow > * .text-content pre {
-        margin-right: calc(-1*((100vw - 519px)/14 + 36px))
+        margin-right: calc(-7.14286vw - -1.07143px)
   }
 
 .layout--content-narrow.text-content pre, .layout--content-narrow .text-content pre, .layout--pass--content-narrow > *.text-content pre, .layout--pass--content-narrow > * .text-content pre {
-        width: calc(12*(100vw - 519px)/14 + 396px)
+        width: calc(85.71429vw - 48.85714px)
     }
       }
 
 @media (min-width: 1200px) {
 
 .layout--content-narrow.text-content pre, .layout--content-narrow .text-content pre, .layout--pass--content-narrow > *.text-content pre, .layout--pass--content-narrow > * .text-content pre {
-        width: calc(12*(100vw - 645px)/14 + 396px)
+        width: calc(85.71429vw - 156.85714px)
     }
       }
 

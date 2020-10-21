@@ -1,4 +1,4 @@
-(Drupal => {
+((Drupal) => {
   function init(el) {
     const tabs = el.querySelector('.tabs');
     const expandedClass = 'is-expanded';
@@ -34,7 +34,7 @@
     attach(context) {
       context
         .querySelectorAll('[data-drupal-nav-tabs]')
-        .forEach(el => init(el));
+        .forEach((el) => init(el));
     },
   };
 })(Drupal);

@@ -61,13 +61,13 @@
 .ui-state-disabled,
 .ui-widget-content .ui-state-disabled {
   opacity: 0.35;
-  filter: alpha(Opacity=35);
+  filter: alpha(opacity=35);
 }
 
 .ui-priority-secondary,
 .ui-widget-content .ui-priority-secondary {
   opacity: 0.7;
-  filter: alpha(Opacity=70);
+  filter: alpha(opacity=70);
 }
 
 /**

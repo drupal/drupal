@@ -3,7 +3,7 @@
  * A Backbone View that provides the aural view of the edit mode toggle.
  */
 
-(function($, Drupal, Backbone, _) {
+(function ($, Drupal, Backbone, _) {
   Drupal.contextualToolbar.AuralView = Backbone.View.extend(
     /** @lends Drupal.contextualToolbar.AuralView# */ {
       /**

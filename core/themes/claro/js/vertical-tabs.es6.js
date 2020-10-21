@@ -73,9 +73,7 @@
    */
   const handleFragmentLinkClickOrHashChange = (e, $target) => {
     $target.parents('.js-vertical-tabs-pane').each((index, pane) => {
-      $(pane)
-        .data('verticalTab')
-        .focus();
+      $(pane).data('verticalTab').focus();
     });
   };
 
@@ -194,12 +192,12 @@
 
     this.link.attr('href', `#${settings.details.attr('id')}`);
 
-    this.link.on('click', event => {
+    this.link.on('click', (event) => {
       event.preventDefault();
       self.focus();
     });
 
-    this.details.on('toggle', event => {
+    this.details.on('toggle', (event) => {
       // We will control this by summary clicks.
       event.preventDefault();
     });
@@ -207,7 +205,7 @@
     // Open the tab for every browser, with or without details support.
     this.details
       .find('> summary')
-      .on('click', event => {
+      .on('click', (event) => {
         event.preventDefault();
         self.details.attr('open', true);
         if (self.details.hasClass('collapse-processed')) {
@@ -218,31 +216,25 @@
           self.focus();
         }
       })
-      .on('keydown', event => {
+      .on('keydown', (event) => {
         if (event.keyCode === 13) {
           // Set focus on the first input field of the current visible details/tab
           // pane.
           setTimeout(() => {
-            self.details
-              .find(':input:visible:enabled')
-              .eq(0)
-              .trigger('focus');
+            self.details.find(':input:visible:enabled').eq(0).trigger('focus');
           }, 10);
         }
       });
 
     // Keyboard events added:
     // Pressing the Enter key will open the tab pane.
-    this.link.on('keydown', event => {
+    this.link.on('keydown', (event) => {
       if (event.keyCode === 13) {
         event.preventDefault();
         self.focus();
         // Set focus on the first input field of the current visible details/tab
         // pane.
-        self.details
-          .find(':input:visible:enabled')
-          .eq(0)
-          .trigger('focus');
+        self.details.find(':input:visible:enabled').eq(0).trigger('focus');
       }
     });
 
@@ -266,13 +258,10 @@
         .each(function closeOtherTabs() {
           const tab = $(this).data('verticalTab');
           if (tab.details.attr('open')) {
-            tab.details
-              .removeAttr('open')
-              .find('> summary')
-              .attr({
-                'aria-expanded': 'false',
-                'aria-pressed': 'false',
-              });
+            tab.details.removeAttr('open').find('> summary').attr({
+              'aria-expanded': 'false',
+              'aria-pressed': 'false',
+            });
             tab.item.removeClass('is-selected');
           }
         })
@@ -405,7 +394,7 @@
    *       (jQuery version)
    *   - summary: The jQuery element that contains the tab summary
    */
-  Drupal.theme.verticalTab = settings => {
+  Drupal.theme.verticalTab = (settings) => {
     const tab = {};
     tab.item = $(
       '<li class="vertical-tabs__menu-item" tabindex="-1"></li>',

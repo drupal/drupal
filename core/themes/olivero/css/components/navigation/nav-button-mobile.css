@@ -39,6 +39,7 @@
   z-index: 10; /* appear above mobile nav */
   display: flex;
   align-items: center;
+  -ms-grid-row-align: center;
   align-self: center;
   width: 36px;
   height: 36px;

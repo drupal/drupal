@@ -15,7 +15,7 @@
       $target.toggleClass('is-open');
     };
 
-    const toggleOrder = reset => {
+    const toggleOrder = (reset) => {
       const current = $active.index();
       const original = $active.data('original-order');
 

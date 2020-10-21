@@ -3,7 +3,7 @@
  * An abstract Backbone View that controls an in-place editor.
  */
 
-(function($, Backbone, Drupal) {
+(function ($, Backbone, Drupal) {
   Drupal.quickedit.EditorView = Backbone.View.extend(
     /** @lends Drupal.quickedit.EditorView# */ {
       /**
@@ -129,7 +129,7 @@
             // do so at this stage, and once the in-place editor is ready,
             // set the 'active' state. A "loading" indicator will be shown in the
             // UI for as long as the field remains in this state.
-            const loadDependencies = function(callback) {
+            const loadDependencies = function (callback) {
               // Do the loading here.
               callback();
             };
@@ -250,7 +250,7 @@
           }
 
           // Successfully saved.
-          self.formSaveAjax.commands.quickeditFieldFormSaved = function(
+          self.formSaveAjax.commands.quickeditFieldFormSaved = function (
             ajax,
             response,
             status,
@@ -269,7 +269,7 @@
           };
 
           // Unsuccessfully saved; validation errors.
-          self.formSaveAjax.commands.quickeditFieldFormValidationErrors = function(
+          self.formSaveAjax.commands.quickeditFieldFormValidationErrors = function (
             ajax,
             response,
             status,
@@ -285,7 +285,7 @@
           // useful for the form-based in-place editor, but pointless for any
           // other: the form itself won't be visible at all anyway! So, we just
           // ignore it.
-          self.formSaveAjax.commands.quickeditFieldForm = function() {};
+          self.formSaveAjax.commands.quickeditFieldForm = function () {};
 
           fillAndSubmitForm(editorModel.get('currentValue'));
         });

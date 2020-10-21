@@ -3,7 +3,7 @@
  * Menu UI behaviors.
  */
 
-(function($, Drupal) {
+(function ($, Drupal) {
   /**
    * Set a summary on the menu link form.
    *
@@ -16,7 +16,7 @@
     attach(context) {
       $(context)
         .find('.menu-link-form')
-        .drupalSetSummary(context => {
+        .drupalSetSummary((context) => {
           const $context = $(context);
           if (
             $context.find('.js-form-item-menu-enabled input').is(':checked')
@@ -43,7 +43,7 @@
   Drupal.behaviors.menuUiLinkAutomaticTitle = {
     attach(context) {
       const $context = $(context);
-      $context.find('.menu-link-form').each(function() {
+      $context.find('.menu-link-form').each(function () {
         const $this = $(this);
         // Try to find menu settings widget elements as well as a 'title' field
         // in the form, but play nicely with user permissions and form

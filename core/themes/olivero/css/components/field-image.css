@@ -34,15 +34,15 @@
 @media (min-width: 700px) {
 
 [dir="ltr"] .page-node-type-article .field--name-field-image {
-      margin-left: calc(-1*((100vw - 504px)/14 + 36px))
+      margin-left: -7.14286vw
     }
 
 [dir="rtl"] .page-node-type-article .field--name-field-image {
-      margin-right: calc(-1*((100vw - 504px)/14 + 36px))
+      margin-right: -7.14286vw
     }
 
 .page-node-type-article .field--name-field-image {
-      width: calc(14*(100vw - 504px)/14 + 468px);
+      width: calc(100vw - 36px);
       margin-top: 36px;
       margin-bottom: 72px
   }
@@ -51,30 +51,30 @@
 @media (min-width: 1000px) {
 
 [dir="ltr"] .page-node-type-article .field--name-field-image {
-      margin-left: calc(-1*((100vw - 519px)/14 + 36px))
+      margin-left: calc(-7.14286vw - -1.07143px)
     }
 
 [dir="rtl"] .page-node-type-article .field--name-field-image {
-      margin-right: calc(-1*((100vw - 519px)/14 + 36px))
+      margin-right: calc(-7.14286vw - -1.07143px)
     }
 
 .page-node-type-article .field--name-field-image {
-      width: calc(12*(100vw - 519px)/14 + 396px)
+      width: calc(85.71429vw - 48.85714px)
   }
     }
 
 @media (min-width: 1200px) {
 
 [dir="ltr"] .page-node-type-article .field--name-field-image {
-      margin-left: calc(-1*((100vw - 645px)/14 + 36px))
+      margin-left: calc(-7.14286vw - -10.07143px)
     }
 
 [dir="rtl"] .page-node-type-article .field--name-field-image {
-      margin-right: calc(-1*((100vw - 645px)/14 + 36px))
+      margin-right: calc(-7.14286vw - -10.07143px)
     }
 
 .page-node-type-article .field--name-field-image {
-      width: calc(12*(100vw - 645px)/14 + 396px)
+      width: calc(85.71429vw - 156.85714px)
   }
     }
 
@@ -101,21 +101,21 @@
 @media (min-width: 1000px) {
 
 .page-node-type-article .sidebar-grid .field--name-field-image {
-      width: calc(9*(100vw - 519px)/14 + 288px)
+      width: calc(64.28571vw - 45.64286px)
   }
     }
 
 @media (min-width: 1200px) {
 
 .page-node-type-article .sidebar-grid .field--name-field-image {
-      width: calc(9*(100vw - 645px)/14 + 288px)
+      width: calc(64.28571vw - 126.64286px)
   }
     }
 
 @media (min-width: 1300px) {
 
 .page-node-type-article .sidebar-grid .field--name-field-image {
-      width: calc(10*(100vw - 645px)/14 + 324px)
+      width: calc(71.42857vw - 136.71429px)
   }
     }
 

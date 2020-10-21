@@ -3,7 +3,7 @@
  * Module page behaviors.
  */
 
-(function($, Drupal, debounce) {
+(function ($, Drupal, debounce) {
   /**
    * Filters the module list table by a text input search string.
    *

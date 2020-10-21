@@ -3,7 +3,7 @@
  * Theme elements for user password forms.
  */
 
-(Drupal => {
+((Drupal) => {
   /**
    * Constructs a password confirm message element.
    *

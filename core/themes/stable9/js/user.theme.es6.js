@@ -3,7 +3,7 @@
  * Stable theme overrides for user password forms.
  */
 
-(Drupal => {
+((Drupal) => {
   /**
    * Constructs a password confirm message element.
    *

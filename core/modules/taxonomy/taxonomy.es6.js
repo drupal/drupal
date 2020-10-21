@@ -3,7 +3,7 @@
  * Taxonomy behaviors.
  */
 
-(function($, Drupal) {
+(function ($, Drupal) {
   /**
    * Reorder taxonomy terms.
    *
@@ -25,7 +25,7 @@
       const rows = $table.find('tr').length;
 
       // When a row is swapped, keep previous and next page classes set.
-      tableDrag.row.prototype.onSwap = function(swappedRow) {
+      tableDrag.row.prototype.onSwap = function (swappedRow) {
         $table
           .find('tr.taxonomy-term-preview')
           .removeClass('taxonomy-term-preview');

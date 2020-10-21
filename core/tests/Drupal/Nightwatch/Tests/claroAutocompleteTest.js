@@ -31,7 +31,7 @@ module.exports = {
     browser.drupalUninstall();
   },
 
-  'Test Claro autocomplete': browser => {
+  'Test Claro autocomplete': (browser) => {
     browser
       .drupalCreateUser({
         name: 'user',

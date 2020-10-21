@@ -3,7 +3,7 @@
  * Dropbutton feature.
  */
 
-(function($, Drupal) {
+(function ($, Drupal) {
   /**
    * A DropButton presents an HTML list as a button with a primary action.
    *
@@ -97,9 +97,7 @@
    */
   function dropbuttonClickHandler(e) {
     e.preventDefault();
-    $(e.target)
-      .closest('.dropbutton-wrapper')
-      .toggleClass('open');
+    $(e.target).closest('.dropbutton-wrapper').toggleClass('open');
   }
 
   /**

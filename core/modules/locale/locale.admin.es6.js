@@ -3,7 +3,7 @@
  * Locale admin behavior.
  */
 
-(function($, Drupal) {
+(function ($, Drupal) {
   /**
    * Marks changes of translations.
    *
@@ -21,17 +21,15 @@
       );
       if ($form.length) {
         // Display a notice if any row changed.
-        $form.one('formUpdated.localeTranslateDirty', 'table', function() {
+        $form.one('formUpdated.localeTranslateDirty', 'table', function () {
           const $marker = $(
             Drupal.theme('localeTranslateChangedWarning'),
           ).hide();
-          $(this)
-            .addClass('changed')
-            .before($marker);
+          $(this).addClass('changed').before($marker);
           $marker.fadeIn('slow');
         });
         // Highlight changed row.
-        $form.on('formUpdated.localeTranslateDirty', 'tr', function() {
+        $form.on('formUpdated.localeTranslateDirty', 'tr', function () {
           const $row = $(this);
           const $rowToMark = $row.once('localemark');
           const marker = Drupal.theme('localeTranslateChangedMarker');
@@ -73,7 +71,7 @@
         const $tbodies = $table.find('tbody');
 
         // Open/close the description details by toggling a tr class.
-        $tbodies.on('click keydown', '.description', function(e) {
+        $tbodies.on('click keydown', '.description', function (e) {
           if (e.keyCode && e.keyCode !== 13 && e.keyCode !== 32) {
             return;
           }

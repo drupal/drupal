@@ -3,7 +3,7 @@
  * Timezone detection.
  */
 
-(function($, Drupal) {
+(function ($, Drupal) {
   /**
    * Set the client's system time zone as default values of form fields.
    *
@@ -11,9 +11,7 @@
    */
   Drupal.behaviors.setTimezone = {
     attach(context, settings) {
-      const $timezone = $(context)
-        .find('.timezone-detect')
-        .once('timezone');
+      const $timezone = $(context).find('.timezone-detect').once('timezone');
       if ($timezone.length) {
         const tz = new Intl.DateTimeFormat().resolvedOptions().timeZone;
         // Ensure that the timezone value returned by the browser is supported

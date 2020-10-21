@@ -1,4 +1,4 @@
-(Drupal => {
+((Drupal) => {
   const searchWideButton = document.querySelector('.header-nav__search-button');
   const searchWideWrapper = document.querySelector('.search-wide__wrapper');
 
@@ -30,7 +30,7 @@
 
   Drupal.olivero.toggleSearchVisibility = toggleSearchVisibility;
 
-  document.addEventListener('click', e => {
+  document.addEventListener('click', (e) => {
     if (
       e.target.matches(
         '.header-nav__search-button, .header-nav__search-button *',

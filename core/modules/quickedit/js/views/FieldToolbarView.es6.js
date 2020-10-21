@@ -3,7 +3,7 @@
  * A Backbone View that provides an interactive toolbar (1 per in-place editor).
  */
 
-(function($, _, Backbone, Drupal) {
+(function ($, _, Backbone, Drupal) {
   Drupal.quickedit.FieldToolbarView = Backbone.View.extend(
     /** @lends Drupal.quickedit.FieldToolbarView# */ {
       /**
@@ -229,7 +229,7 @@
         const $group = this._find(toolgroup);
         // Attach a transitionEnd event handler to the toolbar group so that
         // update events can be triggered after the animations have ended.
-        $group.on(Drupal.quickedit.util.constants.transitionEnd, event => {
+        $group.on(Drupal.quickedit.util.constants.transitionEnd, (event) => {
           $group.off(Drupal.quickedit.util.constants.transitionEnd);
         });
         // The call to remove the class and start the animation must be started in

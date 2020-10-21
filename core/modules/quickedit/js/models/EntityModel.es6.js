@@ -3,7 +3,7 @@
  * A Backbone Model for the state of an in-place editable entity in the DOM.
  */
 
-(function(_, $, Backbone, Drupal) {
+(function (_, $, Backbone, Drupal) {
   Drupal.quickedit.EntityModel = Drupal.quickedit.BaseModel.extend(
     /** @lends Drupal.quickedit.EntityModel# */ {
       /**
@@ -182,7 +182,7 @@
 
           case 'opening':
             // Set the fields to candidate state.
-            entityModel.get('fields').each(fieldModel => {
+            entityModel.get('fields').each((fieldModel) => {
               fieldModel.set('state', 'candidate', options);
             });
             break;
@@ -200,10 +200,10 @@
             fields
               .chain()
               .filter(
-                fieldModel =>
+                (fieldModel) =>
                   _.intersection([fieldModel.get('state')], ['active']).length,
               )
-              .each(fieldModel => {
+              .each((fieldModel) => {
                 fieldModel.set('state', 'candidate');
               });
             // For fields that are in a changed state, field values must first be
@@ -211,13 +211,13 @@
             fields
               .chain()
               .filter(
-                fieldModel =>
+                (fieldModel) =>
                   _.intersection(
                     [fieldModel.get('state')],
                     Drupal.quickedit.app.changedFieldStates,
                   ).length,
               )
-              .each(fieldModel => {
+              .each((fieldModel) => {
                 fieldModel.set('state', 'saving');
               });
             break;
@@ -225,7 +225,7 @@
 
           case 'deactivating': {
             const changedFields = this.get('fields').filter(
-              fieldModel =>
+              (fieldModel) =>
                 _.intersection(
                   [fieldModel.get('state')],
                   ['changed', 'invalid'],
@@ -254,7 +254,7 @@
               });
             } else {
               const invalidFields = this.get('fields').filter(
-                fieldModel =>
+                (fieldModel) =>
                   _.intersection([fieldModel.get('state')], ['invalid']).length,
               );
               // Indicate if this EntityModel needs to be reloaded in order to
@@ -265,7 +265,7 @@
               );
               // Set all fields to the 'candidate' state. A changed field may have
               // to go through confirmation first.
-              entityModel.get('fields').each(fieldModel => {
+              entityModel.get('fields').each((fieldModel) => {
                 // If the field is already in the candidate state, trigger a
                 // change event so that the entityModel can move to the next state
                 // in deactivation.
@@ -292,7 +292,7 @@
           case 'closing':
             // Set all fields to the 'inactive' state.
             options.reason = 'stop';
-            this.get('fields').each(fieldModel => {
+            this.get('fields').each((fieldModel) => {
               fieldModel.set(
                 {
                   inTempStore: false,
@@ -507,7 +507,7 @@
           },
         });
         // Entity saved successfully.
-        entitySaverAjax.commands.quickeditEntitySaved = function(
+        entitySaverAjax.commands.quickeditEntitySaved = function (
           ajax,
           response,
           status,
@@ -515,7 +515,7 @@
           // All fields have been moved from PrivateTempStore to permanent
           // storage, update the "inTempStore" attribute on FieldModels, on the
           // EntityModel and clear EntityModel's "fieldInTempStore" attribute.
-          entityModel.get('fields').each(fieldModel => {
+          entityModel.get('fields').each((fieldModel) => {
             fieldModel.set('inTempStore', false);
           });
           entityModel.set('inTempStore', false);

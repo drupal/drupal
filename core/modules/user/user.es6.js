@@ -191,7 +191,7 @@
            * @param {string} confirmInputVal
            *   The value of the confirm input.
            */
-          const passwordCheckMatch = confirmInputVal => {
+          const passwordCheckMatch = (confirmInputVal) => {
             const passwordsAreMatching = $mainInput.val() === confirmInputVal;
             const confirmClass = passwordsAreMatching
               ? cssClasses.passwordsMatch

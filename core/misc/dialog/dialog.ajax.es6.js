@@ -3,7 +3,7 @@
  * Extends the Drupal AJAX functionality to integrate the dialog API.
  */
 
-(function($, Drupal) {
+(function ($, Drupal) {
   /**
    * Initialize dialogs for Ajax purposes.
    *
@@ -44,7 +44,7 @@
 
       const originalClose = settings.dialog.close;
       // Overwrite the close method to remove the dialog on closing.
-      settings.dialog.close = function(event, ...args) {
+      settings.dialog.close = function (event, ...args) {
         originalClose.apply(settings.dialog, [event, ...args]);
         $(event.target).remove();
       };
@@ -64,7 +64,7 @@
       const $buttons = $dialog.find(
         '.form-actions input[type=submit], .form-actions a.button',
       );
-      $buttons.each(function() {
+      $buttons.each(function () {
         const $originalButton = $(this).css({ display: 'none' });
         buttons.push({
           text: $originalButton.html() || $originalButton.attr('value'),
@@ -101,7 +101,7 @@
    * @return {bool|undefined}
    *   Returns false if there was no selector property in the response object.
    */
-  Drupal.AjaxCommands.prototype.openDialog = function(ajax, response, status) {
+  Drupal.AjaxCommands.prototype.openDialog = function (ajax, response, status) {
     if (!response.selector) {
       return false;
     }
@@ -149,10 +149,7 @@
     }
 
     // Add the standard Drupal class for buttons for style consistency.
-    $dialog
-      .parent()
-      .find('.ui-dialog-buttonset')
-      .addClass('form-actions');
+    $dialog.parent().find('.ui-dialog-buttonset').addClass('form-actions');
   };
 
   /**
@@ -171,7 +168,11 @@
    * @param {number} [status]
    *   The HTTP status code.
    */
-  Drupal.AjaxCommands.prototype.closeDialog = function(ajax, response, status) {
+  Drupal.AjaxCommands.prototype.closeDialog = function (
+    ajax,
+    response,
+    status,
+  ) {
     const $dialog = $(response.selector);
     if ($dialog.length) {
       Drupal.dialog($dialog.get(0)).close();
@@ -202,7 +203,7 @@
    * @param {number} [status]
    *   The HTTP status code.
    */
-  Drupal.AjaxCommands.prototype.setDialogOption = function(
+  Drupal.AjaxCommands.prototype.setDialogOption = function (
     ajax,
     response,
     status,
@@ -226,7 +227,7 @@
    *   Dialog settings.
    */
   $(window).on('dialog:aftercreate', (e, dialog, $element, settings) => {
-    $element.on('click.dialog', '.dialog-cancel', e => {
+    $element.on('click.dialog', '.dialog-cancel', (e) => {
       dialog.close('cancel');
       e.preventDefault();
       e.stopPropagation();

@@ -3,7 +3,7 @@
  * Attaches behavior for updating filter_html's settings automatically.
  */
 
-(function($, Drupal, _, document) {
+(function ($, Drupal, _, document) {
   if (Drupal.filterConfiguration) {
     /**
      * Implement a live setting parser to prevent text editors from automatically
@@ -71,7 +71,7 @@
       $(context)
         .find('[name="filters[filter_html][settings][allowed_html]"]')
         .once('filter-filter_html-updating')
-        .each(function() {
+        .each(function () {
           that.$allowedHTMLFormItem = $(this);
           that.$allowedHTMLDescription = that.$allowedHTMLFormItem
             .closest('.js-form-item')
@@ -98,7 +98,7 @@
             });
 
           // When the allowed tags list is manually changed, update userTags.
-          that.$allowedHTMLFormItem.on('change.updateUserTags', function() {
+          that.$allowedHTMLFormItem.on('change.updateUserTags', function () {
             that.userTags = _.difference(
               that._parseSetting(this.value),
               that.autoTags,
@@ -161,7 +161,7 @@
 
       // Map the newly added Text Editor features to Drupal.FilterHtmlRule
       // objects (to allow comparing userTags with autoTags).
-      Object.keys(newFeatures || {}).forEach(featureName => {
+      Object.keys(newFeatures || {}).forEach((featureName) => {
         const feature = newFeatures[featureName];
         let featureRule;
         let filterRule;
@@ -213,7 +213,7 @@
       // - any tags in editorRequiredTags that already exists in userAllowedTags
       //   but does not allow all attributes or attribute values
       const autoAllowedTags = {};
-      Object.keys(editorRequiredTags).forEach(tag => {
+      Object.keys(editorRequiredTags).forEach((tag) => {
         // If userAllowedTags does not contain a rule for this editor-required
         // tag, then add it to the list of automatically allowed tags.
         if (!_.has(userAllowedTags, tag)) {
@@ -360,7 +360,7 @@
    * @return {string}
    *   The corresponding HTML.
    */
-  Drupal.theme.filterFilterHTMLUpdateMessage = function(tags) {
+  Drupal.theme.filterFilterHTMLUpdateMessage = function (tags) {
     let html = '';
     const tagList = Drupal.behaviors.filterFilterHtmlUpdating._generateSetting(
       tags,

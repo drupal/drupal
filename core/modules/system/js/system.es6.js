@@ -3,7 +3,7 @@
  * System behaviors.
  */
 
-(function($, Drupal, drupalSettings) {
+(function ($, Drupal, drupalSettings) {
   // Cache IDs in an array for ease of use.
   const ids = [];
 
@@ -23,7 +23,7 @@
     attach(context) {
       // List of fields IDs on which to bind the event listener.
       // Create an array of IDs to use with jQuery.
-      Object.keys(drupalSettings.copyFieldValue || {}).forEach(element => {
+      Object.keys(drupalSettings.copyFieldValue || {}).forEach((element) => {
         ids.push(element);
       });
 
@@ -42,9 +42,7 @@
     },
     detach(context, settings, trigger) {
       if (trigger === 'unload' && ids.length) {
-        $('body')
-          .removeOnce('copy-field-values')
-          .off('value:copy');
+        $('body').removeOnce('copy-field-values').off('value:copy');
         $(`#${ids.join(', #')}`)
           .removeOnce('copy-field-values')
           .off('blur');

@@ -3,7 +3,7 @@
  * Responsive table functionality.
  */
 
-(function($, Drupal, window) {
+(function ($, Drupal, window) {
   /**
    * The TableResponsive object optimizes table presentation for screen size.
    *
@@ -139,24 +139,18 @@
         this.$revealedCells = this.$revealedCells || $();
         // Reveal hidden columns.
         if ($hiddenHeaders.length > 0) {
-          $hiddenHeaders.each(function(index, element) {
+          $hiddenHeaders.each(function (index, element) {
             const $header = $(this);
             const position = $header.prevAll('th').length;
-            self.$table.find('tbody tr').each(function() {
-              const $cells = $(this)
-                .find('td')
-                .eq(position);
+            self.$table.find('tbody tr').each(function () {
+              const $cells = $(this).find('td').eq(position);
               $cells.show();
               // Keep track of the revealed cells, so they can be hidden later.
-              self.$revealedCells = $()
-                .add(self.$revealedCells)
-                .add($cells);
+              self.$revealedCells = $().add(self.$revealedCells).add($cells);
             });
             $header.show();
             // Keep track of the revealed headers, so they can be hidden later.
-            self.$revealedCells = $()
-              .add(self.$revealedCells)
-              .add($header);
+            self.$revealedCells = $().add(self.$revealedCells).add($header);
           });
           this.$link.text(this.hideText).data('pegged', 1);
         }
@@ -165,7 +159,7 @@
           this.$revealedCells.hide();
           // Strip the 'display:none' declaration from the style attributes of
           // the table cells that .hide() added.
-          this.$revealedCells.each(function(index, element) {
+          this.$revealedCells.each(function (index, element) {
             const $cell = $(this);
             const properties = $cell.attr('style').split(';');
             const newProps = [];

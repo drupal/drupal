@@ -16,7 +16,7 @@ module.exports = {
   after(browser) {
     browser.drupalUninstall();
   },
-  'Test JavaScript deprecations': browser => {
+  'Test JavaScript deprecations': (browser) => {
     browser
       .drupalRelativeURL('/js_deprecation_test')
       .waitForElementVisible('body', 1000)

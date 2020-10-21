@@ -2,10 +2,10 @@
  * @file
  *  Testing tools for deprecating JavaScript functions and class properties.
  */
-(function() {
+(function () {
   if (typeof console !== 'undefined' && console.warn) {
     const originalWarnFunction = console.warn;
-    console.warn = warning => {
+    console.warn = (warning) => {
       const warnings = JSON.parse(
         sessionStorage.getItem('js_deprecation_log_test.warnings') ||
           JSON.stringify([]),

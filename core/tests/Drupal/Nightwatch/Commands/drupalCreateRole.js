@@ -17,11 +17,7 @@ exports.command = function drupalCreateRole(
   callback,
 ) {
   const self = this;
-  const roleName =
-    name ||
-    Math.random()
-      .toString(36)
-      .substring(2, 15);
+  const roleName = name || Math.random().toString(36).substring(2, 15);
 
   let machineName;
   this.drupalLoginAsAdmin(() => {
@@ -32,8 +28,8 @@ exports.command = function drupalCreateRole(
       .expect.element('.user-role-form .machine-name-value')
       .to.be.visible.before(2000);
 
-    this.perform(done => {
-      this.getText('.user-role-form .machine-name-value', element => {
+    this.perform((done) => {
+      this.getText('.user-role-form .machine-name-value', (element) => {
         machineName = element.value;
         done();
       });
@@ -43,8 +39,8 @@ exports.command = function drupalCreateRole(
       .perform((client, done) => {
         Promise.all(
           permissions.map(
-            permission =>
-              new Promise(resolve => {
+            (permission) =>
+              new Promise((resolve) => {
                 client.click(
                   `input[name="${machineName}[${permission}]"]`,
                   () => {

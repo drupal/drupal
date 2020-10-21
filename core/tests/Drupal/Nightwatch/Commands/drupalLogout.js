@@ -18,7 +18,7 @@ exports.command = function drupalLogout({ silent = false } = {}, callback) {
 
   this.drupalRelativeURL('/user/logout');
 
-  this.drupalUserIsLoggedIn(sessionExists => {
+  this.drupalUserIsLoggedIn((sessionExists) => {
     if (silent) {
       if (sessionExists) {
         throw new Error('Logging out failed.');

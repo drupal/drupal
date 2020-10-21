@@ -3,7 +3,7 @@
  * A Backbone view for the body element.
  */
 
-(function($, Drupal, Backbone) {
+(function ($, Drupal, Backbone) {
   Drupal.toolbar.BodyVisualView = Backbone.View.extend(
     /** @lends Drupal.toolbar.BodyVisualView# */ {
       /**

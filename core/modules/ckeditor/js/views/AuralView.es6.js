@@ -4,7 +4,7 @@
  * configuration.
  */
 
-(function(Drupal, Backbone, $) {
+(function (Drupal, Backbone, $) {
   Drupal.ckeditor.AuralView = Backbone.View.extend(
     /** @lends Drupal.ckeditor.AuralView# */ {
       /**

@@ -7,7 +7,7 @@
  * prevents separate file fields from accidentally uploading files).
  */
 
-(function($, Drupal) {
+(function ($, Drupal) {
   /**
    * Attach behaviors to the file fields passed in the settings.
    *
