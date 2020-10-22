@@ -382,4 +382,35 @@ class BlockUiTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(403);
   }
 
+  /**
+   * Tests that users without permission are not able to view broken blocks.
+   */
+  public function testBrokenBlockVisibility() {
+    $assert_session = $this->assertSession();
+
+    $this->drupalPlaceBlock('broken');
+
+    // Login as an admin user to the site.
+    $this->drupalLogin($this->adminUser);
+    $this->drupalGet('');
+    $assert_session->statusCodeEquals(200);
+    // Check that this user can view the Broken Block message.
+    $assert_session->pageTextContains('This block is broken or missing. You may be missing content or you might need to enable the original module.');
+    $this->drupalLogout();
+
+    // Visit the same page as anonymous.
+    $this->drupalGet('');
+    $assert_session->statusCodeEquals(200);
+    // Check that this user cannot view the Broken Block message.
+    $assert_session->pageTextNotContains('This block is broken or missing. You may be missing content or you might need to enable the original module.');
+
+    // Visit same page as an authorized user that does not have access to
+    // administer blocks.
+    $this->drupalLogin($this->drupalCreateUser(['access administration pages']));
+    $this->drupalGet('');
+    $assert_session->statusCodeEquals(200);
+    // Check that this user cannot view the Broken Block message.
+    $assert_session->pageTextNotContains('This block is broken or missing. You may be missing content or you might need to enable the original module.');
+  }
+
 }

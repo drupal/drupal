@@ -81,6 +81,7 @@ class TestPrepareLayout implements EventSubscriberInterface {
           'id' => 'static_block',
           'label' => 'Test static block title',
           'label_display' => 'visible',
+          'provider' => 'fake_provider',
         ]));
         $section_storage->appendSection($section);
       }
@@ -113,6 +114,7 @@ class TestPrepareLayout implements EventSubscriberInterface {
           'id' => 'static_block_two',
           'label' => 'Test second static block title',
           'label_display' => 'visible',
+          'provider' => 'fake_provider',
         ]));
         $section_storage->appendSection($section);
       }
