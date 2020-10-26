@@ -506,8 +506,6 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
       $this->errors[] = new FormattableMarkup('The translation stream %uri ended unexpectedly at line %line.', $log_vars);
       return FALSE;
     }
-
-    return;
   }
 
   /**

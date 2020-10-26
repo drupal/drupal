@@ -22,7 +22,7 @@ class InstallerExistingConfigNoSystemSiteTest extends InstallerExistingConfigTes
    * {@inheritdoc}
    */
   public function setUpSite() {
-    return;
+    // There are are errors. Therefore, there is nothing to do here.
   }
 
   /**
