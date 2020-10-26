@@ -21,7 +21,6 @@ class InstallerExistingConfigNoConfigTest extends InstallerExistingConfigTestBas
    */
   protected function setUpSite() {
     // There are errors therefore there is nothing to do here.
-    return;
   }
 
   /**

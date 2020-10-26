@@ -249,9 +249,7 @@ class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderIn
   /**
    * Gets the title of the page.
    */
-  protected function getTitle() {
-    return;
-  }
+  protected function getTitle() {}
 
   /**
    * Ensures that a destination is present on the given URL.

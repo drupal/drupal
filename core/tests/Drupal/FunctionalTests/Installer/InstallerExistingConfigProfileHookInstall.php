@@ -32,7 +32,6 @@ EOF;
    */
   protected function setUpSettings() {
     // There are errors therefore there is nothing to do here.
-    return;
   }
 
   /**
@@ -40,7 +39,6 @@ EOF;
    */
   protected function setUpSite() {
     // There are errors therefore there is nothing to do here.
-    return;
   }
 
   /**

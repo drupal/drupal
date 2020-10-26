@@ -29,5 +29,4 @@ function _config_import_test_config_import_steps_alter(&$context, ConfigImporter
     $config_importer->logError('_config_import_test_config_import_steps_alter ConfigImporter error');
   }
   $context['finished'] = 1;
-  return;
 }

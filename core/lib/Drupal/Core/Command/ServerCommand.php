@@ -176,7 +176,6 @@ class ServerCommand extends Command {
     $php = "<?php sleep(2); passthru(\"$cmd\"); ?>";
     $process = new PhpProcess($php);
     $process->start();
-    return;
   }
 
   /**

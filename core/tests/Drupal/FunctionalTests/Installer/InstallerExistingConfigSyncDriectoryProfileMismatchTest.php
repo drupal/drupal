@@ -42,7 +42,6 @@ class InstallerExistingConfigSyncDriectoryProfileMismatchTest extends InstallerE
 
   protected function setUpSite() {
     // This step will not occur because there is an error.
-    return;
   }
 
   /**

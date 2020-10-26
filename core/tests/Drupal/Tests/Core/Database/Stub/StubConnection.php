@@ -51,9 +51,7 @@ class StubConnection extends Connection {
   /**
    * {@inheritdoc}
    */
-  public function createDatabase($database) {
-    return;
-  }
+  public function createDatabase($database) {}
 
   /**
    * {@inheritdoc}
