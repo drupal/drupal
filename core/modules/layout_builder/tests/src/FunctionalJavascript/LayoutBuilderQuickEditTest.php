@@ -202,8 +202,12 @@ class LayoutBuilderQuickEditTest extends QuickEditJavascriptTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function assertEntityInstanceFieldMarkup($entity_type_id, $entity_id, $entity_instance_id, array $expected_field_attributes) {
-    parent::assertEntityInstanceFieldMarkup($entity_type_id, $entity_id, $entity_instance_id, $this->replaceLayoutBuilderFieldIdKeys($expected_field_attributes));
+  protected function assertEntityInstanceFieldMarkup($expected_field_attributes) {
+    if (func_num_args() === 4) {
+      $expected_field_attributes = func_get_arg(3);
+      @trigger_error('Calling ' . __METHOD__ . '() with 4 arguments is deprecated in drupal:9.1.0 and will throw an error in drupal:10.0.0. See https://www.drupal.org/project/drupal/issues/3037436', E_USER_DEPRECATED);
+    }
+    parent::assertEntityInstanceFieldMarkup($this->replaceLayoutBuilderFieldIdKeys($expected_field_attributes));
   }
 
   /**
