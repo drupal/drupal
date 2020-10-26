@@ -643,7 +643,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   }
 
   /**
-   * #lazy_builder callback; renders a form action URL.
+   * Renders a form action URL. It's a #lazy_builder callback.
    *
    * @return array
    *   A renderable array representing the form action.
@@ -657,7 +657,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   }
 
   /**
-   * #lazy_builder callback; renders form CSRF token.
+   * Renders the form CSRF token. It's a #lazy_builder callback.
    *
    * @param string $placeholder
    *   A string containing a placeholder, matching the value of the form's
@@ -690,9 +690,10 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       // Instead of setting an actual action URL, we set the placeholder, which
       // will be replaced at the very last moment. This ensures forms with
       // dynamically generated action URLs don't have poor cacheability.
-      // Use the proper API to generate the placeholder, when we have one. See
-      // https://www.drupal.org/node/2562341. The placeholder uses a fixed string
-      // that is Crypt::hashBase64('Drupal\Core\Form\FormBuilder::prepareForm');
+      // Use the proper API to generate the placeholder, when we have one.
+      // See https://www.drupal.org/node/2562341.
+      // The placeholder uses a unique string that is returned by
+      // Crypt::hashBase64('Drupal\Core\Form\FormBuilder::prepareForm').
       $placeholder = 'form_action_p_pvdeGsVG5zNF_XLGPTvYSKCf43t8qZYSwcfZl2uzM';
 
       $form['#attached']['placeholders'][$placeholder] = [
@@ -708,8 +709,6 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
 
     // GET forms should not use a CSRF token.
     if (isset($form['#method']) && $form['#method'] === 'get') {
-      // Merges in a default, this means if you've explicitly set #token to the
-      // the $form_id on a GET form, which we don't recommend, it will work.
       $form += [
         '#token' => FALSE,
       ];
@@ -729,14 +728,14 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       '#value' => $form['#build_id'],
       '#id' => $form['#build_id'],
       '#name' => 'form_build_id',
-      // Form processing and validation requires this value, so ensure the
+      // Form processing and validation requires this value. Ensure the
       // submitted form value appears literally, regardless of custom #tree
       // and #parents being set elsewhere.
       '#parents' => ['form_build_id'],
-      // Prevent user agents from prefilling the build id with earlier values.
+      // Prevent user agents from prefilling the build ID with earlier values.
       // When the ajax command "update_build_id" is executed, the user agent
       // will assume that a user interaction changed the field. Upon a soft
-      // reload of the page, the previous build id will be restored in the
+      // reload of the page, the previous build ID will be restored in the
       // input, causing subsequent ajax callbacks to access the wrong cached
       // form build. Setting the autocomplete attribute to "off" will tell the
       // user agent to never reuse the value.
@@ -762,8 +761,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     else {
       $form['#cache']['contexts'][] = 'user.roles:authenticated';
       if ($user && $user->isAuthenticated()) {
-        // Generate a public token based on the form id.
-        // Generates a placeholder based on the form ID.
+        // Generate a public token and placeholder based on the form ID.
         $placeholder = 'form_token_placeholder_' . Crypt::hashBase64($form_id);
         $form['#token'] = $placeholder;
 
@@ -771,14 +769,14 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
           '#id' => Html::getUniqueId('edit-' . $form_id . '-form-token'),
           '#type' => 'token',
           '#default_value' => $placeholder,
-          // Form processing and validation requires this value, so ensure the
+          // Form processing and validation requires this value. Ensure the
           // submitted form value appears literally, regardless of custom #tree
           // and #parents being set elsewhere.
           '#parents' => ['form_token'],
           // Instead of setting an actual CSRF token, we've set the placeholder
           // in form_token's #default_value and #placeholder. These will be
-          // replaced at the very last moment. This ensures forms with a CSRF
-          // token don't have poor cacheability.
+          // replaced at the very last moment to ensure forms with a CSRF token
+          // don't have poor cacheability.
           '#attached' => [
             'placeholders' => [
               $placeholder => [
@@ -798,7 +796,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
         '#type' => 'hidden',
         '#value' => $form_id,
         '#id' => Html::getUniqueId("edit-$form_id"),
-        // Form processing and validation requires this value, so ensure the
+        // Form processing and validation require this value. Ensure the
         // submitted form value appears literally, regardless of custom #tree
         // and #parents being set elsewhere.
         '#parents' => ['form_id'],
@@ -806,7 +804,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     }
     if (!isset($form['#id'])) {
       $form['#id'] = Html::getUniqueId($form_id);
-      // Provide a selector usable by JavaScript. As the ID is unique, its not
+      // Provide a selector usable by JavaScript. As the ID is unique, it's not
       // possible to rely on it in JavaScript.
       $form['#attributes']['data-drupal-selector'] = Html::getId($form_id);
     }
@@ -983,12 +981,12 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     if (!isset($element['#id'])) {
       $unprocessed_id = 'edit-' . implode('-', $element['#parents']);
       $element['#id'] = Html::getUniqueId($unprocessed_id);
-      // Provide a selector usable by JavaScript. As the ID is unique, its not
+      // Provide a selector usable by JavaScript. As the ID is unique, it's not
       // possible to rely on it in JavaScript.
       $element['#attributes']['data-drupal-selector'] = Html::getId($unprocessed_id);
     }
     else {
-      // Provide a selector usable by JavaScript. As the ID is unique, its not
+      // Provide a selector usable by JavaScript. As the ID is unique, it's not
       // possible to rely on it in JavaScript.
       $element['#attributes']['data-drupal-selector'] = Html::getId($element['#id']);
     }
@@ -1158,12 +1156,6 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    *   otherwise.
    */
   protected function valueCallableIsSafe(callable $value_callable) {
-    // The same static class method callable may be formatted in two array and
-    // two string forms:
-    // ['\Classname', 'methodname']
-    // ['Classname', 'methodname']
-    // '\Classname::methodname'
-    // 'Classname::methodname'
     if (is_callable($value_callable, FALSE, $callable_name)) {
       // The third parameter of is_callable() is set to a string form, but we
       // still have to normalize further by stripping a leading '\'.
@@ -1410,6 +1402,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    * Gets the current active user.
    *
    * @return \Drupal\Core\Session\AccountInterface
+   *   The current account.
    */
   protected function currentUser() {
     if (!$this->currentUser && \Drupal::hasService('current_user')) {
