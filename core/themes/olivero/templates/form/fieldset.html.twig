@@ -3,6 +3,23 @@
  * @file
  * Theme override for a fieldset element and its children.
  *
+ * Available variables:
+ * - attributes: HTML attributes for the <fieldset> element.
+ * - errors: (optional) Any errors for this <fieldset> element, may not be set.
+ * - required: Boolean indicating whether the <fieldset> element is required.
+ * - legend: The <legend> element containing the following properties:
+ *   - title: Title of the <fieldset>, intended for use as the text
+       of the <legend>.
+ *   - attributes: HTML attributes to apply to the <legend> element.
+ * - description: The description element containing the following properties:
+ *   - content: The description content of the <fieldset>.
+ *   - attributes: HTML attributes to apply to the description container.
+ * - children: The rendered child elements of the <fieldset>.
+ * - prefix: The content to add before the <fieldset> children.
+ * - suffix: The content to add after the <fieldset> children.
+ * - title_display: Title display setting.
+ * - inline_items: Boolean indicating whether the <fieldset> items are inline.
+ *
  * @see template_preprocess_fieldset()
  * @see olivero_preprocess_fieldset()
  */
