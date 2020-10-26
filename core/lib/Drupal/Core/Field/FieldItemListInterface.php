@@ -174,7 +174,7 @@ interface FieldItemListInterface extends ListInterface, AccessibleInterface {
   /**
    * Returns a renderable array for the field items.
    *
-   * @param array $display_options
+   * @param string|array $display_options
    *   Can be either the name of a view mode, or an array of display settings.
    *   See EntityViewBuilderInterface::viewField() for more information.
    *
