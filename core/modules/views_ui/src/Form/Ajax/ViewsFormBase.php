@@ -87,7 +87,7 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
   public function getForm(ViewEntityInterface $view, $display_id, $js) {
     $form_state = $this->getFormState($view, $display_id, $js);
     $view = $form_state->get('view');
-    $key = $form_state->get('form_key');
+    $form_key = $form_state->get('form_key');
 
     // @todo Remove the need for this.
     \Drupal::moduleHandler()->loadInclude('views_ui', 'inc', 'admin');
@@ -101,14 +101,14 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
     // it off; if it isn't, the user clicked somewhere else and the stack is
     // now irrelevant.
     if (!empty($view->stack)) {
-      $identifier = implode('-', array_filter([$key, $view->id(), $display_id, $form_state->get('type'), $form_state->get('id')]));
+      $identifier = implode('-', array_filter([$form_key, $view->id(), $display_id, $form_state->get('type'), $form_state->get('id')]));
       // Retrieve the first form from the stack without changing the integer keys,
       // as they're being used for the "2 of 3" progress indicator.
       reset($view->stack);
-      $key = key($view->stack);
+      $stack_key = key($view->stack);
       $top = current($view->stack);
       next($view->stack);
-      unset($view->stack[$key]);
+      unset($view->stack[$stack_key]);
 
       if (array_shift($top) != $identifier) {
         $view->stack = [];
@@ -118,7 +118,7 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
     // Automatically remove the form cache if it is set and the key does
     // not match. This way navigating away from the form without hitting
     // update will work.
-    if (isset($view->form_cache) && $view->form_cache['key'] != $key) {
+    if (isset($view->form_cache) && $view->form_cache['key'] !== $form_key) {
       unset($view->form_cache);
     }
 
