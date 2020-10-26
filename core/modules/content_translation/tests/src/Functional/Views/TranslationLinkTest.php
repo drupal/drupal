@@ -35,7 +35,7 @@ class TranslationLinkTest extends ContentTranslationTestBase {
   protected $defaultTheme = 'stark';
 
   protected function setUp() {
-    // @todo Use entity_type once it is has multilingual Views integration.
+    // @todo Use entity_type once it has multilingual Views integration.
     $this->entityTypeId = 'user';
 
     parent::setUp();
