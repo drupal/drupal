@@ -69,3 +69,8 @@
     padding-block-end: var(--sp3);
   }
 }
+
+.node--unpublished {
+  /* There is no variable for the color - #fff4f4. */
+  background-color: #fff4f4;
+}
