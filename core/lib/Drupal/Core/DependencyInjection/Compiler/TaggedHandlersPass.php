@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\DependencyInjection\Compiler;
 
+use Drupal\Component\Utility\Reflection;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
@@ -130,8 +131,9 @@ class TaggedHandlersPass implements CompilerPassInterface {
     $priority_pos = NULL;
     $extra_params = [];
     foreach ($params as $pos => $param) {
-      if ($param->getClass()) {
-        $interface = $param->getClass();
+      $class = Reflection::getParameterClassName($param);
+      if ($class !== NULL) {
+        $interface = $class;
       }
       elseif ($param->getName() === 'id') {
         $id_pos = $pos;
@@ -152,7 +154,6 @@ class TaggedHandlersPass implements CompilerPassInterface {
         $method_name,
       ]));
     }
-    $interface = $interface->getName();
 
     // Find all tagged handlers.
     $handlers = [];

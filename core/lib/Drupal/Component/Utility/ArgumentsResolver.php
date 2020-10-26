@@ -69,7 +69,7 @@ class ArgumentsResolver implements ArgumentsResolverInterface {
    *   Thrown when there is a missing parameter.
    */
   protected function getArgument(\ReflectionParameter $parameter) {
-    $parameter_type_hint = $parameter->getClass();
+    $parameter_type_hint = Reflection::getParameterClassName($parameter);
     $parameter_name = $parameter->getName();
 
     // If the argument exists and is NULL, return it, regardless of
@@ -79,6 +79,7 @@ class ArgumentsResolver implements ArgumentsResolverInterface {
     }
 
     if ($parameter_type_hint) {
+      $parameter_type_hint = new \ReflectionClass($parameter_type_hint);
       // If the argument exists and complies with the type hint, return it.
       if (isset($this->objects[$parameter_name]) && is_object($this->objects[$parameter_name]) && $parameter_type_hint->isInstance($this->objects[$parameter_name])) {
         return $this->objects[$parameter_name];
