@@ -132,7 +132,6 @@ class SearchBlockTest extends BrowserTestBase {
         'settings[page_id]' => 'user_search',
       ], 'Save block');
     $name = $this->adminUser->getAccountName();
-    $email = $this->adminUser->getEmail();
     $this->drupalPostForm('node', ['keys' => $name], t('Search'));
     $this->assertSession()->linkExists($name);
   }
