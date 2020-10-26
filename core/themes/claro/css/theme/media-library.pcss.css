@@ -616,9 +616,9 @@
 /**
  * Style the added media item container.
  *
- * The added media container receives screen reader focus since it is has the
- * role 'listitem'. Since it is not an interactive element, it does not need
- * an outline.
+ * The added media container receives screen reader focus since it has the role
+ * 'listitem'. Since it is not an interactive element, it does not need an
+ * outline.
  */
 .media-library-add-form__media {
   position: relative;
