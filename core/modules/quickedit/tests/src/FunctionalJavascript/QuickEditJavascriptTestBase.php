@@ -238,42 +238,30 @@ JS;
     foreach ($expected_field_states as $quickedit_field_id => $expected_field_state) {
       $expected_field_attributes[$quickedit_field_id] = static::$expectedFieldStateAttributes[$expected_field_state];
     }
-    $this->assertEntityInstanceFieldMarkup($entity_type_id, $entity_id, $entity_instance_id, $expected_field_attributes);
+    $this->assertEntityInstanceFieldMarkup($expected_field_attributes);
   }
 
   /**
    * Asserts all in-place editable fields with markup expectations.
    *
-   * @param string $entity_type_id
-   *   The entity type ID.
-   * @param int $entity_id
-   *   The entity ID.
-   * @param int $entity_instance_id
-   *   The entity instance ID. (Instance on the page.)
    * @param array $expected_field_attributes
    *   Must describe the expected markup attributes for all given in-place
    *   editable fields.
+   *
+   * @todo https://www.drupal.org/project/drupal/issues/3178758 Remove
+   *   deprecation layer and add array typehint.
    */
-  protected function assertEntityInstanceFieldMarkup($entity_type_id, $entity_id, $entity_instance_id, array $expected_field_attributes) {
-    $entity_page_id = $entity_type_id . '/' . $entity_id . '[' . $entity_instance_id . ']';
-    $expected_field_attributes_json = json_encode($expected_field_attributes);
-    $js_match_field_element_attributes = <<<JS
-function () {
-  var expectations = $expected_field_attributes_json;
-  var entityCollection = Drupal.quickedit.collections.entities;
-  var entityModel = entityCollection.get('$entity_page_id');
-  return entityModel.get('fields').reduce(function (result, fieldModel) {
-    var fieldID = fieldModel.get('fieldID');
-    var element = fieldModel.get('el');
-    var matches = element.webkitMatchesSelector(expectations[fieldID]);
-    result[fieldID] = matches ? matches : element.outerHTML;
-    return result;
-  }, {});
-}()
-JS;
-    $result = $this->getSession()->evaluateScript($js_match_field_element_attributes);
+  protected function assertEntityInstanceFieldMarkup($expected_field_attributes) {
+    if (func_num_args() === 4) {
+      $expected_field_attributes = func_get_arg(3);
+      @trigger_error('Calling ' . __METHOD__ . '() with 4 arguments is deprecated in drupal:9.1.0 and will throw an error in drupal:10.0.0. See https://www.drupal.org/project/drupal/issues/3037436', E_USER_DEPRECATED);
+    }
+    if (!is_array($expected_field_attributes)) {
+      throw new \InvalidArgumentException('The $expected_field_attributes argument must be an array.');
+    }
     foreach ($expected_field_attributes as $quickedit_field_id => $expectation) {
-      $this->assertTrue($result[$quickedit_field_id], 'Field ' . $quickedit_field_id . ' did not match its expectation selector (' . $expectation . '), actual HTML: ' . $result[$quickedit_field_id]);
+      $element = $this->assertSession()->waitForElementVisible('css', '[data-quickedit-field-id="' . $quickedit_field_id . '"]' . $expectation);
+      $this->assertNotEmpty($element, 'Field ' . $quickedit_field_id . ' did not match its expectation selector (' . $expectation . ')');
     }
   }
 

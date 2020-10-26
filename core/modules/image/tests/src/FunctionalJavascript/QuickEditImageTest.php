@@ -20,7 +20,7 @@ class QuickEditImageTest extends QuickEditJavascriptTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'image', 'field_ui'];
+  protected static $modules = ['node', 'image', 'field_ui', 'hold_test'];
 
   /**
    * {@inheritdoc}
@@ -178,6 +178,7 @@ class QuickEditImageTest extends QuickEditJavascriptTestBase {
     $this->prepareRequest();
 
     // Click 'Save'.
+    hold_test_response(TRUE);
     $this->saveQuickEdit();
     $this->assertEntityInstanceStates([
       'node/1[0]' => 'committing',
@@ -189,9 +190,10 @@ class QuickEditImageTest extends QuickEditJavascriptTestBase {
       'node/1/body/en/full'                => 'candidate',
       'node/1/' . $field_name . '/en/full' => 'saving',
     ]);
-    $this->assertEntityInstanceFieldMarkup('node', 1, 0, [
+    $this->assertEntityInstanceFieldMarkup([
       'node/1/' . $field_name . '/en/full' => '.quickedit-changed',
     ]);
+    hold_test_response(FALSE);
 
     // Wait for the saving of the image field to complete.
     $this->assertJsCondition("Drupal.quickedit.collections.entities.get('node/1[0]').get('state') === 'closed'");
