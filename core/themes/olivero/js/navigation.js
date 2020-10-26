@@ -62,7 +62,8 @@
     window.addEventListener('resize', function () {
       if (props.olivero.isDesktopNav()) {
         toggleNav(props, false);
-        props.body.classList.remove('js-overlay-active', 'js-fixed');
+        props.body.classList.remove('js-overlay-active');
+        props.body.classList.remove('js-fixed');
       }
     });
   }

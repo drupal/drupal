@@ -90,7 +90,8 @@
     window.addEventListener('resize', () => {
       if (props.olivero.isDesktopNav()) {
         toggleNav(props, false);
-        props.body.classList.remove('js-overlay-active', 'js-fixed');
+        props.body.classList.remove('js-overlay-active');
+        props.body.classList.remove('js-fixed');
       }
     });
   }
@@ -106,7 +107,7 @@
       );
       if (navWrapper) {
         navWrapper.classList.add(`${navWrapperId}-processed`);
-        const olivero = Drupal.olivero;
+        const { olivero } = Drupal;
         const navButton = context.querySelector('.mobile-nav-button');
         const body = context.querySelector('body');
         const overlay = context.querySelector('.overlay');
