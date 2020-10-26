@@ -31,7 +31,7 @@ class FilterLanguageTest extends LanguageTestBase {
           'id' => 'langcode',
           'table' => 'views_test_data',
           'field' => 'langcode',
-          'value' => [$langcode],
+          'value' => [$langcode => $langcode],
         ],
       ]);
       $this->executeView($view);
@@ -44,7 +44,6 @@ class FilterLanguageTest extends LanguageTestBase {
       $expected = [
         '***LANGUAGE_site_default***',
         '***LANGUAGE_language_interface***',
-        '***LANGUAGE_language_content***',
         'en',
         'xx-lolspeak',
         'und',

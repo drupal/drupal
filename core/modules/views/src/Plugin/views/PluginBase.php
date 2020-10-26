@@ -603,7 +603,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
           // If this (non-configurable) type is among the current values,
           // add that option too, so it is not lost. If not among the current
           // values, skip displaying it to avoid user confusion.
-          if (isset($type['name']) && !isset($list[$id]) && in_array($id, $current_values)) {
+          if (isset($type['name']) && !isset($list[$id]) && in_array($id, $current_values, TRUE)) {
             $list[$id] = $this->t('@type language selected for page', ['@type' => $type['name']]);
           }
         }
