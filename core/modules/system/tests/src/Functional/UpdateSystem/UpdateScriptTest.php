@@ -414,7 +414,6 @@ class UpdateScriptTest extends BrowserTestBase {
 
     // Visit update.php and make sure we can click through to the 'No pending
     // updates' page without errors.
-    $assert_session = $this->assertSession();
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->updateRequirementsProblem();
     $this->clickLink(t('Continue'));
