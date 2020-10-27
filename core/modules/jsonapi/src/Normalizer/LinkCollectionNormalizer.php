@@ -94,7 +94,14 @@ class LinkCollectionNormalizer extends NormalizerBase {
     if (!$this->hashSalt) {
       $this->hashSalt = Crypt::randomBytesBase64();
     }
-    return substr(str_replace(['-', '_'], '', Crypt::hashBase64($this->hashSalt . $link->getHref())), 0, 7);
+    $link_parameters = [
+      'href' => $link->getHref(),
+    ] + $link->getTargetAttributes();
+    foreach ($link_parameters as $name => $value) {
+      $serialized_parameters[] = sprintf('%s="%s"', $name, implode(' ', (array) $value));
+    }
+    $b64_hash = Crypt::hashBase64($this->hashSalt . implode('; ', $serialized_parameters));
+    return substr(str_replace(['-', '_'], '', $b64_hash), 0, 7);
   }
 
 }
