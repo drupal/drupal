@@ -86,14 +86,10 @@ class SearchTokenizerTest extends KernelTestBase {
 
     // Generate characters consisting of starts, midpoints, and ends.
     $chars = [];
-    $charcodes = [];
     foreach ($starts as $key => $value) {
-      $charcodes[] = $starts[$key];
       $chars[] = $this->code2utf($starts[$key]);
       $mid = round(0.5 * ($starts[$key] + $ends[$key]));
-      $charcodes[] = $mid;
       $chars[] = $this->code2utf($mid);
-      $charcodes[] = $ends[$key];
       $chars[] = $this->code2utf($ends[$key]);
     }
 
