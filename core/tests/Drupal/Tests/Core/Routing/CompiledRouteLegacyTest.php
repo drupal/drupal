@@ -56,8 +56,14 @@ class CompiledRouteLegacyTest extends UnitTestCase {
    */
   public function testOptionsDeprecated() {
     $this->expectDeprecation('Drupal\Core\Routing\CompiledRoute::getOptions() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3159706');
-    $this->expectNotice();
-    $this->expectNoticeMessage('Undefined property: Drupal\Core\Routing\CompiledRoute::$route');
+    if (PHP_VERSION_ID >= 80000) {
+      $this->expectWarning();
+      $this->expectWarningMessage('Undefined property: Drupal\Core\Routing\CompiledRoute::$route');
+    }
+    else {
+      $this->expectNotice();
+      $this->expectNoticeMessage('Undefined property: Drupal\Core\Routing\CompiledRoute::$route');
+    }
     $this->compiled_route->getOptions();
   }
 
@@ -79,8 +85,14 @@ class CompiledRouteLegacyTest extends UnitTestCase {
    */
   public function testDefaultsDeprecated() {
     $this->expectDeprecation('Drupal\Core\Routing\CompiledRoute::getDefaults() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3159706');
-    $this->expectNotice();
-    $this->expectNoticeMessage('Undefined property: Drupal\Core\Routing\CompiledRoute::$route');
+    if (PHP_VERSION_ID >= 80000) {
+      $this->expectWarning();
+      $this->expectWarningMessage('Undefined property: Drupal\Core\Routing\CompiledRoute::$route');
+    }
+    else {
+      $this->expectNotice();
+      $this->expectNoticeMessage('Undefined property: Drupal\Core\Routing\CompiledRoute::$route');
+    }
     $this->compiled_route->getDefaults();
   }
 
@@ -100,8 +112,14 @@ class CompiledRouteLegacyTest extends UnitTestCase {
    */
   public function testRequirementsDeprecated() {
     $this->expectDeprecation('Drupal\Core\Routing\CompiledRoute::getRequirements() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3159706');
-    $this->expectNotice();
-    $this->expectNoticeMessage('Undefined property: Drupal\Core\Routing\CompiledRoute::$route');
+    if (PHP_VERSION_ID >= 80000) {
+      $this->expectWarning();
+      $this->expectWarningMessage('Undefined property: Drupal\Core\Routing\CompiledRoute::$route');
+    }
+    else {
+      $this->expectNotice();
+      $this->expectNoticeMessage('Undefined property: Drupal\Core\Routing\CompiledRoute::$route');
+    }
     $this->compiled_route->getRequirements();
   }
 
