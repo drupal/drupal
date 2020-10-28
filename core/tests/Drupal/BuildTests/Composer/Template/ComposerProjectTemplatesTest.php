@@ -98,12 +98,6 @@ class ComposerProjectTemplatesTest extends BuildTestBase {
    * @dataProvider provideTemplateCreateProject
    */
   public function testTemplateCreateProject($project, $package_dir, $docroot_dir) {
-    $composer_version_line = exec('composer --version');
-    if (strpos($composer_version_line, 'Composer version 2') !== FALSE) {
-      // @todo Remove in https://www.drupal.org/project/drupal/issues/3128631
-      $this->markTestSkipped("Composer 2 not supported for this test yet.");
-    }
-
     // Make a working COMPOSER_HOME directory for setting global composer config
     $composer_home = $this->getWorkspaceDirectory() . '/composer-home';
     mkdir($composer_home);

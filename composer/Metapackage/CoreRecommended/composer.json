@@ -9,7 +9,7 @@
     "require": {
         "drupal/core": "9.2.x-dev",
         "asm89/stack-cors": "1.3.0",
-        "composer/semver": "1.7.1",
+        "composer/semver": "3.2.2",
         "doctrine/annotations": "1.10.4",
         "doctrine/lexer": "1.2.1",
         "doctrine/reflection": "1.2.1",

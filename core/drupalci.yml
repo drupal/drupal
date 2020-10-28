@@ -48,9 +48,3 @@ build:
       # Run nightwatch testing.
       # @see https://www.drupal.org/project/drupal/issues/2869825
       nightwatchjs:
-      # Re-run Composer plugin tests after installing Composer 2
-      container_command.composer-upgrade:
-        commands:
-          - "sudo composer self-update --snapshot"
-          - "./vendor/bin/phpunit -c core --group VendorHardening,ProjectMessage,Scaffold"
-        halt-on-fail: true
