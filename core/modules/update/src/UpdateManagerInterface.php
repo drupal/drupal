@@ -82,8 +82,14 @@ interface UpdateManagerInterface {
   /**
    * Processes a step in batch for fetching available update data.
    *
+   * Before calling this method, call
+   * UpdateManagerInterface::refreshUpdateData() to clear existing update data
+   * and initiate re-fetching.
+   *
    * @param array $context
    *   Reference to an array used for Batch API storage.
+   *
+   * @see \Drupal\update\UpdateManagerInterface::refreshUpdateData()
    */
   public function fetchDataBatch(&$context);
 
