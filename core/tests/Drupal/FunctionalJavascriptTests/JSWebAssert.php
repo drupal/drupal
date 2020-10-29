@@ -26,6 +26,8 @@ class JSWebAssert extends WebAssert {
    *   be displayed.
    */
   public function assertWaitOnAjaxRequest($timeout = 10000, $message = 'Unable to complete AJAX request.') {
+    // Wait for a very short time to allow page state to update after clicking.
+    usleep(5000);
     $condition = <<<JS
       (function() {
         function isAjaxing(instance) {

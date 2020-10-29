@@ -102,11 +102,11 @@ class LayoutBuilderQuickEditTest extends QuickEditJavascriptTestBase {
     $this->drupalGet('admin/structure/types/manage/article/display/default/layout');
     $page->clickLink('Add block');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas'));
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->waitForElementVisible('named', ['link', 'Body']);
     $page->clickLink('Body');
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->waitForElementVisible('named', ['button', 'Add block']);
     $page->pressButton('Add block');
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->waitForElementVisible('named', ['button', 'Save layout']);
     $page->pressButton('Save layout');
     $this->assertNotEmpty($assert_session->waitForElement('css', '.messages--status'));
     $assert_session->pageTextContains('The layout has been saved.');

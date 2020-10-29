@@ -652,6 +652,8 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $this->waitForEditor();
     $this->assignNameToCkeditorIframe();
     $this->getSession()->switchToIFrame('ckeditor');
+    // Wait for the media preview to load.
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'drupal-media img'));
     // Test that by default no alt attribute is present on the drupal-media
     // element.
     $this->pressEditorButton('source');

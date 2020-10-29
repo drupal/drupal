@@ -13,7 +13,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['media_library_test'];
+  protected static $modules = ['media_library_test', 'hold_test'];
 
   /**
    * {@inheritdoc}
@@ -416,9 +416,11 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
    * Switches to the table display of the widget view.
    */
   protected function switchToMediaLibraryTable() {
+    hold_test_response(TRUE);
     $this->getSession()->getPage()->clickLink('Table');
     // Assert the display change is correctly announced for screen readers.
     $this->waitForText('Loading table view.');
+    hold_test_response(FALSE);
     $this->waitForText('Changed to table view.');
     $this->assertMediaLibraryTable();
   }
