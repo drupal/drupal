@@ -863,6 +863,43 @@ class UpdateCoreTest extends UpdateTestBase {
   }
 
   /**
+   * Checks that Drupal recovers after problems connecting to update server.
+   */
+  public function testBrokenThenFixedUpdates() {
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer site configuration',
+      'access administration pages',
+    ]));
+    $this->setSystemInfo('8.0.0');
+    // Instead of using refreshUpdateStatus(), set these manually.
+    $this->config('update.settings')
+      ->set('fetch.url', Url::fromRoute('update_test.update_test')->setAbsolute()->toString())
+      ->save();
+    // Use update XML that has no information to simulate a broken response from
+    // the update server.
+    $this->config('update_test.settings')
+      ->set('xml_map', ['drupal' => 'broken'])
+      ->save();
+
+    // This will retrieve broken updates.
+    $this->cronRun();
+    $this->drupalGet('admin/reports/status');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('There was a problem checking available updates for Drupal.');
+    $this->config('update_test.settings')
+      ->set('xml_map', ['drupal' => 'sec.0.2'])
+      ->save();
+    // Simulate the update_available_releases state expiring before cron is run
+    // and the state is used by \Drupal\update\UpdateManager::getProjects().
+    \Drupal::keyValueExpirable('update_available_releases')->deleteAll();
+    // This cron run should retrieve fixed updates.
+    $this->cronRun();
+    $this->drupalGet('admin/structure');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('There is a security update available for your version of Drupal.');
+  }
+
+  /**
    * Tests messages when a project release is marked unsupported.
    *
    * This test confirms unsupported messages are displayed regardless of whether
