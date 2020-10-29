@@ -115,10 +115,10 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
 
     $this->drupalGet($path);
     $page->clickLink('Add section');
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->waitForElementVisible('named', ['link', 'One column']);
     $assert_session->pageTextNotContains('You have unsaved changes.');
     $page->clickLink('One column');
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->waitForElementVisible('named', ['button', 'Add section']);
     $page->pressButton('Add section');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextContainsOnce('You have unsaved changes.');

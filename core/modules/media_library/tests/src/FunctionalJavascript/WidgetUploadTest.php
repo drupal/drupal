@@ -311,8 +311,8 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     // Remove the second file and assert the focus is shifted to the container
     // of the next media item and field values are still correct.
     $page->pressButton('media-1-remove-button');
+    $this->assertTrue($assert_session->waitForText('The media item ' . $filenames[1] . ' has been removed.'));
     $this->assertJsCondition('jQuery("[data-media-library-added-delta=2]").is(":focus")');
-    $assert_session->pageTextContains('The media item ' . $filenames[1] . ' has been removed.');
     // Assert the file was deleted.
     $this->assertEmpty($file_storage->loadByProperties(['filename' => $filenames[1]]));
     $this->assertFileNotExists($file_1_uri);
@@ -582,6 +582,7 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     // a file.
     $this->getSession()->executeScript("jQuery('.js-media-library-add-form-current-selection').val('1,2,{$unpublished_media->id()}')");
     $this->addMediaFileToField('Add files', $this->container->get('file_system')->realpath($png_uri_3));
+    $this->assertMediaAdded();
     // Assert the pre-selected items are shown.
     $this->getSelectionArea();
     // Assert the published items are selected and the unpublished item is not
@@ -602,9 +603,7 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     $this->assertTrue($assert_session->fieldExists('Add files')->hasAttribute('multiple'));
     $png_uri_5 = $file_system->copy($png_image->uri, 'public://');
     $this->addMediaFileToField('Add files', $this->container->get('file_system')->realpath($png_uri_5));
-    // assertWaitOnAjaxRequest() required for input "id" attributes to
-    // consistently match their label's "for" attribute.
-    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertMediaAdded();
     $page->fillField('Alternative text', $this->randomString());
     // Assert the pre-selected items are shown.
     $selection_area = $this->getSelectionArea();
@@ -723,6 +722,7 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     // Remove the last file and assert the focus is shifted to the container
     // of the first media item and field values are still correct.
     $page->pressButton('media-2-remove-button');
+    $this->assertTrue($assert_session->waitForText('The media item ' . $filenames[2] . ' has been removed.'));
     $this->assertJsCondition('jQuery("[data-media-library-added-delta=0]").is(":focus")');
     $assert_session->pageTextContains('The media item ' . $filenames[2] . ' has been removed.');
     $assert_session->elementNotExists('css', '[data-media-library-added-delta=1]');

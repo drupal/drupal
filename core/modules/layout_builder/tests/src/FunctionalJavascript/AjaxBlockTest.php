@@ -82,7 +82,7 @@ class AjaxBlockTest extends WebDriverTestBase {
     // Find the radio buttons.
     $name = 'settings[ajax_test]';
     /** @var \Behat\Mink\Element\NodeElement[] $radios */
-    $radios = $this->cssSelect('input[name="' . $name . '"]');
+    $radios = $this->assertSession()->fieldExists($name);
     // Click them both a couple of times.
     foreach ([1, 2] as $rounds) {
       foreach ($radios as $radio) {
@@ -91,7 +91,7 @@ class AjaxBlockTest extends WebDriverTestBase {
       }
     }
     // Then add the block.
-    $page->pressButton('Add block');
+    $assert_session->waitForElementVisible('named', ['button', 'Add block'])->press();
     $assert_session->assertWaitOnAjaxRequest();
     $block_elements = $this->cssSelect('.block-layout-builder-test-testajax');
     // Should be exactly one of these in there.
