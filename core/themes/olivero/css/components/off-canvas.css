@@ -10,20 +10,20 @@
  * Settings tray specific styles.
  */
 
-[dir="ltr"] #drupal-off-canvas .form-type--boolean {
+[dir="ltr"] #drupal-off-canvas .form-type-boolean {
     margin-left: 0
 }
 
-[dir="rtl"] #drupal-off-canvas .form-type--boolean {
+[dir="rtl"] #drupal-off-canvas .form-type-boolean {
     margin-right: 0
 }
 
-#drupal-off-canvas .form-type--boolean {
+#drupal-off-canvas .form-type-boolean {
     line-height: 18px
   }
 
-#drupal-off-canvas .form-type--boolean input[type="checkbox"],
-    #drupal-off-canvas .form-type--boolean input[type="radio"] {
+#drupal-off-canvas .form-type-boolean input[type="checkbox"],
+    #drupal-off-canvas .form-type-boolean input[type="radio"] {
       float: none;
       width: 13.5px;
       height: 13.5px;
@@ -31,11 +31,11 @@
       vertical-align: middle;
     }
 
-[dir="ltr"] #drupal-off-canvas .form-type--boolean .form-item__description {
+[dir="ltr"] #drupal-off-canvas .form-type-boolean .form-item__description {
       margin-left: 0
 }
 
-[dir="rtl"] #drupal-off-canvas .form-type--boolean .form-item__description {
+[dir="rtl"] #drupal-off-canvas .form-type-boolean .form-item__description {
       margin-right: 0
 }
 

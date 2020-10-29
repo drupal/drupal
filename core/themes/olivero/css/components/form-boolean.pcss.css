@@ -50,28 +50,6 @@ input[type="radio"] {
   }
 }
 
-.form-type--boolean {
-  & input[type="checkbox"],
-  & input[type="radio"] {
-    position: relative;
-    /* stylelint-disable-next-line csstools/use-logical */
-    top: var(--sp0-5);
-    float: inline-start;
-    margin-inline-start: calc(var(--sp2) * -1);
-    transform: translateY(-50%);
-  }
-
-  &.form-no-label {
-    & input[type="checkbox"],
-    & input[type="radio"] {
-      position: static;
-      float: none;
-      margin-inline: 0;
-      transform: none;
-    }
-  }
-}
-
 input[type="checkbox"] {
   &:checked {
     background-image: url("data:image/svg+xml,%3Csvg width='18' height='14' viewBox='0 0 18 14' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%232494DB' d='M14.8232 0.176777C14.9209 0.0791457 15.0791 0.0791455 15.1768 0.176777L16.9445 1.94454C17.0422 2.04217 17.0422 2.20047 16.9445 2.2981L6.23744 13.0052C6.13981 13.1028 5.98151 13.1028 5.88388 13.0052L0.176777 7.2981C0.0791456 7.20047 0.0791456 7.04218 0.176777 6.94454L1.94454 5.17678C2.04217 5.07915 2.20047 5.07915 2.2981 5.17678L5.88388 8.76256C5.98151 8.86019 6.13981 8.86019 6.23744 8.76256L14.8232 0.176777Z'/%3E%3C/svg%3E%0A");
@@ -87,12 +65,29 @@ input[type="radio"] {
   }
 }
 
-.form-type--boolean {
+.form-type-boolean {
   clear: both;
   margin-inline-start: var(--sp2);
 
+  & input[type="checkbox"],
+  & input[type="radio"] {
+    position: relative;
+    top: var(--sp0-5);
+    float: inline-start;
+    margin-inline-start: calc(var(--sp2) * -1);
+    transform: translateY(-50%);
+  }
+
   &.form-no-label {
     margin-inline-start: 0;
+
+    & input[type="checkbox"],
+    & input[type="radio"] {
+      position: static;
+      float: none;
+      margin-inline: 0;
+      transform: none;
+    }
   }
 
   & .form-item__description,
@@ -101,10 +96,10 @@ input[type="radio"] {
   }
 }
 
-.form-boolean-group .form-type--boolean {
+.form-boolean-group .form-type-boolean {
   margin-block: var(--sp1);
 }
 
-.container-inline .form-boolean-group .form-type--boolean:not(:last-child) {
+.container-inline .form-boolean-group .form-type-boolean:not(:last-child) {
   margin-inline-end: var(--sp);
 }
