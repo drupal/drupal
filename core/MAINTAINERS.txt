@@ -313,6 +313,12 @@ Node Access
 - Moshe Weitzman 'moshe weitzman' https://www.drupal.org/u/moshe-weitzman
 - Jess Myrbo 'xjm' https://www.drupal.org/u/xjm
 
+Olivero
+- Mike Herchel 'mherchel' https://www.drupal.org/u/mherchel
+- Putra Bonaccorsi 'proeung' https://www.drupal.org/u/proeung
+- Jen Witkowski 'jwitkowski79' https://www.drupal.org/u/jwitkowski79
+- Konstantin Shupenko 'kostyashupenko' https://www.drupal.org/u/kostyashupenko
+
 Options
 - ?
 
