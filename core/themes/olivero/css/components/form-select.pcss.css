@@ -187,6 +187,6 @@ select {
   }
 
   &.form-element--small {
-    background-position: left var(--sp0-75) center, right -10px top -2px, left -48px top -2px;
+    background-position: left var(--sp0-75) center, right -48px top -2px, left -10px top -2px;
   }
 }
