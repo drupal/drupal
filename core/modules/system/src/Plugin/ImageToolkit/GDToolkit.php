@@ -28,7 +28,7 @@ class GDToolkit extends ImageToolkitBase {
   /**
    * A GD image resource.
    *
-   * @var resource|null
+   * @var resource|\GdImage|null
    */
   protected $resource = NULL;
 
@@ -98,6 +98,8 @@ class GDToolkit extends ImageToolkitBase {
    * Destructs a GDToolkit object.
    *
    * Frees memory associated with a GD image resource.
+   *
+   * @todo Remove the method for PHP 8.0+ https://www.drupal.org/node/3173031
    */
   public function __destruct() {
     if (is_resource($this->resource)) {
@@ -124,15 +126,20 @@ class GDToolkit extends ImageToolkitBase {
   /**
    * Sets the GD image resource.
    *
-   * @param resource $resource
+   * @param resource|\GdImage $resource
    *   The GD image resource.
    *
    * @return $this
    *   An instance of the current toolkit object.
    */
   public function setResource($resource) {
-    if (!is_resource($resource) || get_resource_type($resource) != 'gd') {
-      throw new \InvalidArgumentException('Invalid resource argument');
+    if (!(is_object($resource) && $resource instanceof \GdImage)) {
+      // Since PHP 8.0 resource should be \GdImage, for previous versions it
+      // should be resource.
+      // @TODO clean-up for PHP 8.0+ https://www.drupal.org/node/3173031
+      if (!is_resource($resource) || get_resource_type($resource) != 'gd') {
+        throw new \InvalidArgumentException('Invalid resource argument');
+      }
     }
     $this->preLoadInfo = NULL;
     $this->resource = $resource;
@@ -142,11 +149,12 @@ class GDToolkit extends ImageToolkitBase {
   /**
    * Retrieves the GD image resource.
    *
-   * @return resource|null
+   * @return resource|\GdImage|null
    *   The GD image resource, or NULL if not available.
    */
   public function getResource() {
-    if (!is_resource($this->resource)) {
+    // @TODO clean-up for PHP 8.0+ https://www.drupal.org/node/3173031
+    if (!(is_resource($this->resource) || (is_object($this->resource) && $this->resource instanceof \GdImage))) {
       $this->load();
     }
     return $this->resource;

@@ -428,8 +428,13 @@ class ToolkitGdTest extends KernelTestBase {
 
   /**
    * Tests that GD resources are freed from memory.
+   *
+   * @todo Remove the method for PHP 8.0+ https://www.drupal.org/node/3179058
    */
   public function testResourceDestruction() {
+    if (PHP_VERSION_ID >= 80000) {
+      $this->markTestSkipped('In PHP8 resources are no longer used. \GdImage objects are used instead. These will be garbage collected like the regular objects they are.');
+    }
     // Test that an Image object going out of scope releases its GD resource.
     $image = $this->imageFactory->get('core/tests/fixtures/files/image-test.png');
     $res = $image->getToolkit()->getResource();
