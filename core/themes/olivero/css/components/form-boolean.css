@@ -61,43 +61,6 @@ input[type="checkbox"].error::-ms-check, input[type="radio"].error::-ms-check {
     border: 1px solid #e33f1e;
   }
 
-[dir="ltr"] .form-type--boolean input[type="checkbox"],[dir="ltr"] 
-  .form-type--boolean input[type="radio"] {
-    float: left
-}
-
-[dir="rtl"] .form-type--boolean input[type="checkbox"],[dir="rtl"] 
-  .form-type--boolean input[type="radio"] {
-    float: right
-}
-
-[dir="ltr"] .form-type--boolean input[type="checkbox"],[dir="ltr"] 
-  .form-type--boolean input[type="radio"] {
-    margin-left: -36px
-}
-
-[dir="rtl"] .form-type--boolean input[type="checkbox"],[dir="rtl"] 
-  .form-type--boolean input[type="radio"] {
-    margin-right: -36px
-}
-
-.form-type--boolean input[type="checkbox"],
-  .form-type--boolean input[type="radio"] {
-    position: relative;
-    /* stylelint-disable-next-line csstools/use-logical */
-    top: 9px;
-    transform: translateY(-50%);
-  }
-
-.form-type--boolean.form-no-label input[type="checkbox"],
-    .form-type--boolean.form-no-label input[type="radio"] {
-      position: static;
-      float: none;
-      margin-left: 0;
-      margin-right: 0;
-      transform: none;
-    }
-
 input[type="checkbox"]:checked {
     background-image: url("data:image/svg+xml,%3Csvg width='18' height='14' viewBox='0 0 18 14' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%232494DB' d='M14.8232 0.176777C14.9209 0.0791457 15.0791 0.0791455 15.1768 0.176777L16.9445 1.94454C17.0422 2.04217 17.0422 2.20047 16.9445 2.2981L6.23744 13.0052C6.13981 13.1028 5.98151 13.1028 5.88388 13.0052L0.176777 7.2981C0.0791456 7.20047 0.0791456 7.04218 0.176777 6.94454L1.94454 5.17678C2.04217 5.07915 2.20047 5.07915 2.2981 5.17678L5.88388 8.76256C5.98151 8.86019 6.13981 8.86019 6.23744 8.76256L14.8232 0.176777Z'/%3E%3C/svg%3E%0A");
   }
@@ -111,45 +74,81 @@ input[type="radio"]:checked {
     background-size: 17px 17px;
   }
 
-[dir="ltr"] .form-type--boolean {
+[dir="ltr"] .form-type-boolean {
   margin-left: 36px
 }
 
-[dir="rtl"] .form-type--boolean {
+[dir="rtl"] .form-type-boolean {
   margin-right: 36px
 }
 
-.form-type--boolean {
+.form-type-boolean {
   clear: both
 }
 
-[dir="ltr"] .form-type--boolean.form-no-label {
-    margin-left: 0
+[dir="ltr"] .form-type-boolean input[type="checkbox"],[dir="ltr"] 
+  .form-type-boolean input[type="radio"] {
+    float: left
 }
 
-[dir="rtl"] .form-type--boolean.form-no-label {
-    margin-right: 0
+[dir="rtl"] .form-type-boolean input[type="checkbox"],[dir="rtl"] 
+  .form-type-boolean input[type="radio"] {
+    float: right
 }
 
-[dir="ltr"] .form-type--boolean .form-item__description,[dir="ltr"] 
-  .form-type--boolean .form-item--error-message {
+[dir="ltr"] .form-type-boolean input[type="checkbox"],[dir="ltr"] 
+  .form-type-boolean input[type="radio"] {
     margin-left: -36px
 }
 
-[dir="rtl"] .form-type--boolean .form-item__description,[dir="rtl"] 
-  .form-type--boolean .form-item--error-message {
+[dir="rtl"] .form-type-boolean input[type="checkbox"],[dir="rtl"] 
+  .form-type-boolean input[type="radio"] {
     margin-right: -36px
 }
 
-.form-boolean-group .form-type--boolean {
+.form-type-boolean input[type="checkbox"],
+  .form-type-boolean input[type="radio"] {
+    position: relative;
+    top: 9px;
+    transform: translateY(-50%);
+  }
+
+[dir="ltr"] .form-type-boolean.form-no-label {
+    margin-left: 0
+}
+
+[dir="rtl"] .form-type-boolean.form-no-label {
+    margin-right: 0
+}
+
+.form-type-boolean.form-no-label input[type="checkbox"],
+    .form-type-boolean.form-no-label input[type="radio"] {
+      position: static;
+      float: none;
+      margin-left: 0;
+      margin-right: 0;
+      transform: none;
+    }
+
+[dir="ltr"] .form-type-boolean .form-item__description,[dir="ltr"] 
+  .form-type-boolean .form-item--error-message {
+    margin-left: -36px
+}
+
+[dir="rtl"] .form-type-boolean .form-item__description,[dir="rtl"] 
+  .form-type-boolean .form-item--error-message {
+    margin-right: -36px
+}
+
+.form-boolean-group .form-type-boolean {
   margin-top: 18px;
   margin-bottom: 18px;
 }
 
-[dir="ltr"] .container-inline .form-boolean-group .form-type--boolean:not(:last-child) {
+[dir="ltr"] .container-inline .form-boolean-group .form-type-boolean:not(:last-child) {
   margin-right: 18px
 }
 
-[dir="rtl"] .container-inline .form-boolean-group .form-type--boolean:not(:last-child) {
+[dir="rtl"] .container-inline .form-boolean-group .form-type-boolean:not(:last-child) {
   margin-left: 18px
 }

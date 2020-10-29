@@ -230,7 +230,7 @@ function olivero_preprocess_menu_local_tasks(&$variables) {
  */
 function olivero_preprocess_form_element(&$variables) {
   if (in_array($variables['element']['#type'] ?? FALSE, ['checkbox', 'radio'], TRUE)) {
-    $variables['attributes']['class'][] = 'form-type--boolean';
+    $variables['attributes']['class'][] = 'form-type-boolean';
   }
 
   if (!empty($variables['description']['attributes'])) {

@@ -6,7 +6,7 @@
 @import "../base/variables.pcss.css";
 
 #drupal-off-canvas {
-  & .form-type--boolean {
+  & .form-type-boolean {
     margin-inline-start: 0;
     line-height: var(--line-height-s);
 
