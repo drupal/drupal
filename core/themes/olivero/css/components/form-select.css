@@ -267,5 +267,5 @@ select {
   }
 
 [dir="rtl"] select.form-element--small {
-    background-position: left 13.5px center, right -10px top -2px, left -48px top -2px;
+    background-position: left 13.5px center, right -48px top -2px, left -10px top -2px;
   }
