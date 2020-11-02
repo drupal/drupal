@@ -11,6 +11,7 @@ use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Database\Connection as DatabaseConnection;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Database\TransactionNoActiveException;
 
 /**
  * @addtogroup database
@@ -415,6 +416,64 @@ class Connection extends DatabaseConnection {
         }
       }
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function rollBack($savepoint_name = 'drupal_transaction') {
+    // MySQL will automatically commit transactions when tables are altered or
+    // created (DDL transactions are not supported). Prevent triggering an
+    // exception to ensure that the error that has caused the rollback is
+    // properly reported.
+    if (!$this->connection->inTransaction()) {
+      // On PHP 7 $this->connection->inTransaction() will return TRUE and
+      // $this->connection->rollback() does not throw an exception; the
+      // following code is unreachable.
+
+      // If \Drupal\Core\Database\Connection::rollBack() would throw an
+      // exception then continue to throw an exception.
+      if (!$this->inTransaction()) {
+        throw new TransactionNoActiveException();
+      }
+      // A previous rollback to an earlier savepoint may mean that the savepoint
+      // in question has already been accidentally committed.
+      if (!isset($this->transactionLayers[$savepoint_name])) {
+        throw new TransactionNoActiveException();
+      }
+
+      trigger_error('Rollback attempted when there is no active transaction. This can cause data integrity issues.', E_USER_WARNING);
+      return;
+    }
+    return parent::rollBack($savepoint_name);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function doCommit() {
+    // MySQL will automatically commit transactions when tables are altered or
+    // created (DDL transactions are not supported). Prevent triggering an
+    // exception in this case as all statements have been committed.
+    if ($this->connection->inTransaction()) {
+      // On PHP 7 $this->connection->inTransaction() will return TRUE and
+      // $this->connection->commit() does not throw an exception.
+      $success = parent::doCommit();
+    }
+    else {
+      // Process the post-root (non-nested) transaction commit callbacks. The
+      // following code is copied from
+      // \Drupal\Core\Database\Connection::doCommit()
+      $success = TRUE;
+      if (!empty($this->rootTransactionEndCallbacks)) {
+        $callbacks = $this->rootTransactionEndCallbacks;
+        $this->rootTransactionEndCallbacks = [];
+        foreach ($callbacks as $callback) {
+          call_user_func($callback, $success);
+        }
+      }
+    }
+    return $success;
   }
 
 }

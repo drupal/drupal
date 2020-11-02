@@ -5,6 +5,7 @@ namespace Drupal\KernelTests\Core\Database;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\TransactionOutOfOrderException;
 use Drupal\Core\Database\TransactionNoActiveException;
+use PHPUnit\Framework\Error\Warning;
 
 /**
  * Tests the transaction abstraction system.
@@ -258,18 +259,19 @@ class TransactionTest extends DatabaseTestBase {
       $transaction = $this->connection->startTransaction();
       $this->insertRow('row');
       $this->executeDDLStatement();
-      // Rollback the outer transaction.
+
       try {
+        // Rollback the outer transaction.
         $transaction->rollBack();
-        unset($transaction);
-        // @todo An exception should be triggered here, but is not because
-        // "ROLLBACK" fails silently in MySQL if there is no transaction active.
-        // @see https://www.drupal.org/project/drupal/issues/2736777
-        // $this->fail('Rolling back a transaction containing DDL should fail.');
+        // @see \Drupal\Core\Database\Driver\mysql\Connection::rollBack()
+        if (PHP_VERSION_ID >= 80000) {
+          $this->fail('Rolling back a transaction containing DDL should produce a warning.');
+        }
       }
-      catch (TransactionNoActiveException $e) {
-        // Expected exception; just continue testing.
+      catch (Warning $warning) {
+        $this->assertSame('Rollback attempted when there is no active transaction. This can cause data integrity issues.', $warning->getMessage());
       }
+      unset($transaction);
       $this->assertRowPresent('row');
     }
   }
