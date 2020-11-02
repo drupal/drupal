@@ -1338,7 +1338,11 @@ function claro_form_media_library_add_form_alter(array &$form, FormStateInterfac
  */
 function claro_form_media_library_add_form_upload_alter(array &$form, FormStateInterface $form_state) {
   $form['#attributes']['class'][] = 'media-library-add-form--upload';
-
+  if (isset($form['container']['upload'])) {
+    // Set this flag so we can prevent the details element from being added
+    // in \Drupal\claro\ClaroPreRender::managedFile.
+    $form['container']['upload']['#do_not_wrap_in_details'] = TRUE;
+  }
   if (isset($form['container'])) {
     $form['container']['#attributes']['class'][] = 'media-library-add-form__input-wrapper';
   }
@@ -1371,10 +1375,15 @@ function claro_preprocess_item_list__media_library_add_form_media_list(array &$v
     $item['value']['fields']['#attributes']['class'][] = 'media-library-add-form__fields';
     $item['value']['remove_button']['#attributes']['class'][] = 'media-library-add-form__remove-button';
 
+    $item['value']['remove_button']['#attributes']['class'][] = 'button--extrasmall';
     // #source_field_name is set by AddFormBase::buildEntityFormElement()
     // to help themes and form_alter hooks identify the source field.
     $fields = &$item['value']['fields'];
     $source_field_name = $fields['#source_field_name'];
+
+    // Set this flag so we can remove the details element.
+    $fields[$source_field_name]['widget'][0]['#do_not_wrap_in_details'] = TRUE;
+
     if (isset($fields[$source_field_name])) {
       $fields[$source_field_name]['#attributes']['class'][] = 'media-library-add-form__source-field';
     }
@@ -1388,6 +1397,7 @@ function claro_preprocess_item_list__media_library_add_form_media_list(array &$v
  */
 function claro_preprocess_media_library_item__widget(array &$variables) {
   $variables['content']['remove_button']['#attributes']['class'][] = 'media-library-item__remove';
+  $variables['content']['remove_button']['#attributes']['class'][] = 'icon-link';
 }
 
 /**
@@ -1408,6 +1418,9 @@ function claro_preprocess_media_library_item__small(array &$variables) {
  */
 function claro_preprocess_fieldset__media_library_widget(array &$variables) {
   if (isset($variables['prefix']['weight_toggle'])) {
+    $variables['prefix']['weight_toggle']['#attributes']['class'][] = 'action-link';
+    $variables['prefix']['weight_toggle']['#attributes']['class'][] = 'action-link--extrasmall';
+    $variables['prefix']['weight_toggle']['#attributes']['class'][] = 'action-link--icon-show';
     $variables['prefix']['weight_toggle']['#attributes']['class'][] = 'media-library-widget__toggle-weight';
   }
   if (isset($variables['suffix']['open_button'])) {
@@ -1443,9 +1456,11 @@ function claro_views_pre_render(ViewExecutable $view) {
       }
       if (array_key_exists('edit_media', $view->field)) {
         $add_classes($view->field['edit_media']->options['alter']['link_class'], ['media-library-item__edit']);
+        $add_classes($view->field['edit_media']->options['alter']['link_class'], ['icon-link']);
       }
       if (array_key_exists('delete_media', $view->field)) {
         $add_classes($view->field['delete_media']->options['alter']['link_class'], ['media-library-item__remove']);
+        $add_classes($view->field['delete_media']->options['alter']['link_class'], ['icon-link']);
       }
     }
     elseif (strpos($view->current_display, 'widget') === 0) {
@@ -1477,6 +1492,9 @@ function claro_views_pre_render(ViewExecutable $view) {
  */
 function claro_preprocess_links__media_library_menu(array &$variables) {
   foreach ($variables['links'] as &$link) {
+    // Add a class to the Media Library menu items.
+    $link['attributes']->addClass('media-library-menu__item');
+
     // This conditional exists because the media-library-menu__link class is
     // currently added by Classy, but Claro will eventually not use Classy as a
     // base theme.

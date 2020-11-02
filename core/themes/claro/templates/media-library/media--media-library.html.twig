@@ -38,7 +38,7 @@
  * @ingroup themeable
  */
 #}
-<article{{ attributes }}>
+<article{{ attributes.addClass('media-library-item__preview-wrapper') }}>
   {% if content %}
     <div{{ preview_attributes.addClass('media-library-item__preview js-media-library-item-preview') }}>
       {{ content|without('name') }}

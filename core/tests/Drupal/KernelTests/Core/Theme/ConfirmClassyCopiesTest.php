@@ -349,7 +349,6 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
             'field--node--created.html.twig',
             'file-video.html.twig',
             'links--media-library-menu.html.twig',
-            'media--media-library.html.twig',
             'container--media-library-content.html.twig',
             'media-library-item--small.html.twig',
             'container--media-library-widget-selection.html.twig',
