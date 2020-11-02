@@ -138,7 +138,7 @@
 
 .claro-details__summary::before {
   position: absolute;
-  top: 1.75rem;
+  top: 50%;
   left: 0.75rem; /* LTR */
   display: inline-block;
   width: 1rem;

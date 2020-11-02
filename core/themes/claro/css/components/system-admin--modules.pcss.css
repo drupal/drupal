@@ -118,6 +118,10 @@ td.module-list__description {
   line-height: var(--details-line-height);
 }
 
+.claro-details__summary.module-list__module-summary::before {
+  top: calc(var(--space-m) + var(--space-s));
+}
+
 .module-details__description {
   font-size: var(--space-s);
   line-height: 0.9375rem;
