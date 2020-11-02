@@ -121,6 +121,10 @@ td.module-list__description {
   line-height: 1.295rem;
 }
 
+.claro-details__summary.module-list__module-summary::before {
+  top: 1.75rem;
+}
+
 .module-details__description {
   font-size: 0.75rem;
   line-height: 0.9375rem;
