@@ -37,6 +37,12 @@
   font-size: 1.231em;
 }
 
+.system-status-report .claro-details {
+  border: none;
+  border-bottom: 1px solid rgba(216, 217, 224, 0.8);
+  box-shadow: none;
+}
+
 /* Account for native and poly-filled details element */
 
 .system-status-report__status-title {
@@ -65,42 +71,14 @@
   padding: 1em 3em 1em 1em;
 }
 
-.collapse-processed > .system-status-report__status-title:before {
-  float: right; /* LTR */
-}
-
-.system-status-report__status-title::-webkit-details-marker {
-  float: right; /* LTR */
-}
-
-[dir="rtl"] .collapse-processed > .system-status-report__status-title:before {
-  float: left;
-}
-
-[dir="rtl"] .system-status-report__status-title::-webkit-details-marker {
-  float: left;
-}
-
-/* Make poly-filled details and summary elements behave correctly. */
-
-.system-status-report summary:first-child ~ * {
-  display: none;
-}
-
-.system-status-report details[open] > *,
-.system-status-report details > summary:first-child {
-  display: block;
-  color: inherit;
-}
-
 .system-status-report__status-title .details-title:before,
 .details .system-status-report__status-icon:before {
   position: absolute;
   top: 1em;
   left: 10px; /* LTR */
   display: inline-block;
-  width: 16px;
-  height: 16px;
+  width: 24px;
+  height: 24px;
   margin-right: 10px; /* LTR */
   content: "";
   vertical-align: top;
@@ -129,11 +107,16 @@
 .system-status-report__entry__value {
   box-sizing: border-box;
   padding: 0 1em 1em 3em; /* LTR */
+  font-size: 14px;
 }
 
 [dir="rtl"] .system-status-report__entry__value {
   padding-right: 3em;
   padding-left: 1em;
+}
+
+.claro-details__summary--system-status-report {
+  background: #f3f4f9;
 }
 
 @media screen and (max-width: 48em) {
@@ -149,7 +132,6 @@
     content: "";
   }
   .system-status-report__status-title {
-    float: left; /* LTR */
     width: 18rem;
     cursor: default;
   }
@@ -157,9 +139,7 @@
   .system-status-report__status-title:focus {
     text-decoration: none;
   }
-  [dir="rtl"] .system-status-report__status-title {
-    float: right;
-  }
+
   html.js .system-status-report__status-title::-webkit-details-marker {
     display: none;
   }
@@ -169,7 +149,6 @@
   }
   .system-status-report__entry__value {
     display: block;
-    float: right;
     width: calc(100% - 23em);
     padding-top: 1em;
     padding-left: 0; /* LTR */

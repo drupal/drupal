@@ -32,7 +32,7 @@
 <div class="system-status-general-info">
   <h2 class="system-status-general-info__header">{{ 'General System Information'|t }}</h2>
   <div class="system-status-general-info__items">
-    <div class="system-status-general-info__item">
+    <div class="system-status-general-info__item card">
       <span class="system-status-general-info__item-icon system-status-general-info__item-icon--drupal"></span>
       <div class="system-status-general-info__item-details">
         <h3 class="system-status-general-info__item-title">{{ 'Drupal Version'|t }}</h3>
@@ -42,7 +42,18 @@
         {% endif %}
       </div>
     </div>
-    <div class="system-status-general-info__item">
+
+    <div class="system-status-general-info__item card">
+      <span class="system-status-general-info__item-icon system-status-general-info__item-icon--server"></span>
+      <div class="system-status-general-info__item-details">
+        <h3 class="system-status-general-info__item-title">{{ 'Web Server'|t }}</h3>
+        {{ webserver.value }}
+        {% if webserver.description %}
+          <div class="description">{{ webserver.description }}</div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="system-status-general-info__item card">
       <span class="system-status-general-info__item-icon system-status-general-info__item-icon--clock"></span>
       <div class="system-status-general-info__item-details">
         <h3 class="system-status-general-info__item-title">{{ 'Last Cron Run'|t }}</h3>
@@ -55,17 +66,7 @@
         {% endif %}
       </div>
     </div>
-    <div class="system-status-general-info__item">
-      <span class="system-status-general-info__item-icon system-status-general-info__item-icon--server"></span>
-      <div class="system-status-general-info__item-details">
-        <h3 class="system-status-general-info__item-title">{{ 'Web Server'|t }}</h3>
-        {{ webserver.value }}
-        {% if webserver.description %}
-          <div class="description">{{ webserver.description }}</div>
-        {% endif %}
-      </div>
-    </div>
-    <div class="system-status-general-info__item">
+    <div class="system-status-general-info__item card">
       <span class="system-status-general-info__item-icon system-status-general-info__item-icon--php"></span>
       <div class="system-status-general-info__item-details">
         <h3 class="system-status-general-info__item-title">{{ 'PHP'|t }}</h3>
@@ -80,7 +81,7 @@
         {% endif %}
       </div>
     </div>
-    <div class="system-status-general-info__item">
+    <div class="system-status-general-info__item card">
       <span class="system-status-general-info__item-icon system-status-general-info__item-icon--database"></span>
       <div class="system-status-general-info__item-details">
         <h3 class="system-status-general-info__item-title">{{ 'Database'|t }}</h3>
