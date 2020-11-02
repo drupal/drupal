@@ -10,6 +10,19 @@
  *  - system-status-report-counters.css
  */
 
+@import "../base/variables.pcss.css";
+
+.system-status-report {
+  position: relative;
+  padding-top: var(--space-m);
+}
+
+@media screen and (min-width: 38em) {
+  .system-status-report {
+    padding-top: var(--space-l);
+  }
+}
+
 .system-status-report__status-title {
   position: relative;
   box-sizing: border-box;
@@ -48,4 +61,16 @@
 
 .cron-description__run-cron {
   display: block;
+}
+
+.claro-details__wrapper.claro-details__wrapper--system-status-report {
+  margin: 0;
+}
+
+.system-status-report__row {
+  display: flex;
+  border-bottom: 1px solid #d4d4d8;
+}
+.system-status-report__row:last-of-type {
+  border-bottom: none;
 }

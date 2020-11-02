@@ -17,6 +17,17 @@
  *  - system-status-report-counters.css
  */
 
+.system-status-report {
+  position: relative;
+  padding-top: 1rem;
+}
+
+@media screen and (min-width: 38em) {
+  .system-status-report {
+    padding-top: 1.5rem;
+  }
+}
+
 .system-status-report__status-title {
   position: relative;
   box-sizing: border-box;
@@ -61,4 +72,17 @@
 
 .cron-description__run-cron {
   display: block;
+}
+
+.claro-details__wrapper.claro-details__wrapper--system-status-report {
+  margin: 0;
+}
+
+.system-status-report__row {
+  display: flex;
+  border-bottom: 1px solid #d4d4d8;
+}
+
+.system-status-report__row:last-of-type {
+  border-bottom: none;
 }
