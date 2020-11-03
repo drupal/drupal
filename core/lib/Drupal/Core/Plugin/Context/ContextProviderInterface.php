@@ -8,8 +8,8 @@ namespace Drupal\Core\Plugin\Context;
  * Implementations only need to deal with unqualified context IDs so they only
  * need to be unique in the context of a given service provider.
  *
- * The fully qualified context ID then includes the service ID:
- * @{service_id}:{unqualified_context_id}.
+ * The fully qualified context ID then includes the service ID, e.g.
+ * "@service_id:unqualified_context_id".
  *
  * @see \Drupal\Core\Plugin\Context\ContextRepositoryInterface
  */
