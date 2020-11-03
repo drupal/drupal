@@ -23,7 +23,6 @@ if (PHP_SAPI !== 'cli') {
 }
 
 $autoloader = require_once 'autoload.php';
-require_once 'core/includes/bootstrap.inc';
 require_once 'core/includes/errors.inc';
 define('DRUPAL_TEST_IN_CHILD_SITE', FALSE);
 

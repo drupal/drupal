@@ -59,13 +59,6 @@ class CronTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
 
-    // @todo Remove in https://www.drupal.org/project/drupal/issues/2932518
-    //
-    // This line is currently needed so that watchdog_exception() is available
-    // when unit testing Drupal\Core\Cron and can safely be removed once that
-    // class no longer refers to it.
-    require_once $this->root . '/core/includes/bootstrap.inc';
-
     // Construct a state object used for testing logger assertions.
     $this->state = new State(new KeyValueMemoryFactory());
 

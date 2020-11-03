@@ -25,7 +25,6 @@ require_once __DIR__ . '/includes/utility.inc';
 
 $request = Request::createFromGlobals();
 // Manually resemble early bootstrap of DrupalKernel::boot().
-require_once __DIR__ . '/includes/bootstrap.inc';
 DrupalKernel::bootEnvironment();
 
 try {
