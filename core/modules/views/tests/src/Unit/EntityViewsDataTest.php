@@ -1195,24 +1195,3 @@ class TestEntityType extends ContentEntityType {
   }
 
 }
-
-namespace Drupal\entity_test\Entity;
-
-if (!function_exists('t')) {
-
-  function t($string, array $args = []) {
-    return strtr($string, $args);
-  }
-
-}
-
-
-namespace Drupal\Core\Entity;
-
-if (!function_exists('t')) {
-
-  function t($string, array $args = []) {
-    return strtr($string, $args);
-  }
-
-}

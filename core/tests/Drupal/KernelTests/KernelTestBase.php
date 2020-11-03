@@ -258,8 +258,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
 
     $this->classLoader = require $this->root . '/autoload.php';
 
-    require_once $this->root . '/core/includes/bootstrap.inc';
-
     // Set up virtual filesystem.
     Database::addConnectionInfo('default', 'test-runner', $this->getDatabaseConnectionInfo()['default']);
     $test_db = new TestDatabase();

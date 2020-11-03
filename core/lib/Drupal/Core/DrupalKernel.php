@@ -984,9 +984,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $app_root = static::guessApplicationRoot();
     }
 
-    // Include our bootstrap file.
-    require_once $app_root . '/core/includes/bootstrap.inc';
-
     // Enforce E_STRICT, but allow users to set levels not part of E_STRICT.
     error_reporting(E_STRICT | E_ALL);
 

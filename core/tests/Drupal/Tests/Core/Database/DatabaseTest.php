@@ -82,11 +82,6 @@ class DatabaseTest extends UnitTestCase {
    */
   public function testFindDriverAutoloadDirectoryException($expected_message, $namespace, $include_tests) {
     new Settings(['extension_discovery_scan_tests' => $include_tests]);
-    if ($include_tests === FALSE) {
-      // \Drupal\Core\Extension\ExtensionDiscovery::scan() needs
-      // drupal_valid_test_ua().
-      include $this->root . '/core/includes/bootstrap.inc';
-    }
     $this->expectException(\RuntimeException::class);
     $this->expectExceptionMessage($expected_message);
     Database::findDriverAutoloadDirectory($namespace, $this->root);

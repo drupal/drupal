@@ -60,7 +60,6 @@ class QuickStartTest extends TestCase {
     }
     // Get a lock and a valid site path.
     $this->testDb = new TestDatabase();
-    include $this->root . '/core/includes/bootstrap.inc';
   }
 
   /**

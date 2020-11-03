@@ -44,8 +44,6 @@ class ExtensionSerializationTest extends UnitTestCase {
    * @covers ::__wakeup
    */
   public function testServiceAppRouteUsage() {
-    // The assumption of our test is that DRUPAL_ROOT is not defined.
-    $this->assertFalse(defined('DRUPAL_ROOT'), 'Constant DRUPAL_ROOT is defined.');
     $container = new ContainerBuilder();
     // Set a dummy container app.root to test against.
     $container->setParameter('app.root', 'vfs://dummy_app_root');
@@ -56,6 +54,14 @@ class ExtensionSerializationTest extends UnitTestCase {
     $reflected_root = new \ReflectionProperty($extension, 'root');
     $reflected_root->setAccessible(TRUE);
     $this->assertEquals('vfs://dummy_app_root', $reflected_root->getValue($extension));
+
+    // Change the app root and test serializing and unserializing again.
+    $container->setParameter('app.root', 'vfs://dummy_app_root2');
+    \Drupal::setContainer($container);
+    $extension = unserialize(serialize($extension));
+    $reflected_root = new \ReflectionProperty($extension, 'root');
+    $reflected_root->setAccessible(TRUE);
+    $this->assertEquals('vfs://dummy_app_root2', $reflected_root->getValue($extension));
   }
 
   /**
