@@ -25,7 +25,7 @@ services:
       - { name: access_check, applies_to: _access_book_removable }
   cache_context.route.book_navigation:
     class: Drupal\book\Cache\BookNavigationCacheContext
-    arguments: ['@request_stack']
+    arguments: ['@current_route_match']
     calls:
       - [setContainer, ['@service_container']]
     tags:
