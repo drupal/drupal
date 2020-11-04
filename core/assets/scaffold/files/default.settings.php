@@ -308,6 +308,20 @@ $settings['hash_salt'] = '';
 $settings['update_free_access'] = FALSE;
 
 /**
+ * Fallback to HTTP for Update Manager.
+ *
+ * If your Drupal site fails to connect to updates.drupal.org using HTTPS to
+ * fetch Drupal core, module and theme update status, you may uncomment this
+ * setting and set it to TRUE to allow an insecure fallback to HTTP. Note that
+ * doing so will open your site up to a potential man-in-the-middle attack. You
+ * should instead attempt to resolve the issues before enabling this option.
+ * @see https://www.drupal.org/docs/system-requirements/php-requirements#openssl
+ * @see https://en.wikipedia.org/wiki/Man-in-the-middle_attack
+ * @see \Drupal\update\UpdateFetcher
+ */
+# $settings['update_fetch_with_http_fallback'] = TRUE;
+
+/**
  * External access proxy settings:
  *
  * If your site must access the Internet via a web proxy then you can enter the

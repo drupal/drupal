@@ -161,6 +161,11 @@ function update_theme() {
       'variables' => ['version' => NULL, 'title' => NULL, 'attributes' => []],
       'file' => 'update.report.inc',
     ],
+    'update_fetch_error_message' => [
+      'file' => 'update.report.inc',
+      'render element' => 'element',
+      'variables' => ['error_message' => []],
+    ],
   ];
 }
 

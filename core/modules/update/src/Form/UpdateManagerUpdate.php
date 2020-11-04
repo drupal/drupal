@@ -104,7 +104,13 @@ class UpdateManagerUpdate extends FormBase {
     $form['project_downloads'] = ['#tree' => TRUE];
     $this->moduleHandler->loadInclude('update', 'inc', 'update.compare');
     $project_data = update_calculate_project_data($available);
+
+    $fetch_failed = FALSE;
     foreach ($project_data as $name => $project) {
+      if ($project['status'] === UpdateFetcherInterface::NOT_FETCHED) {
+        $fetch_failed = TRUE;
+      }
+
       // Filter out projects which are up to date already.
       if ($project['status'] == UpdateManagerInterface::CURRENT) {
         continue;
@@ -243,6 +249,11 @@ class UpdateManagerUpdate extends FormBase {
             break;
         }
       }
+    }
+
+    if ($fetch_failed) {
+      $message = ['#theme' => 'update_fetch_error_message'];
+      $this->messenger()->addError(\Drupal::service('renderer')->renderPlain($message));
     }
 
     if (empty($projects)) {

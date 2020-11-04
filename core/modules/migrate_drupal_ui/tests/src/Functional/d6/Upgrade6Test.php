@@ -29,6 +29,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
     'book',
     'forum',
     'statistics',
+    'update',
   ];
 
   /**
@@ -166,6 +167,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'System',
       'Taxonomy',
       'Text',
+      'Update status',
       'Upload',
       'User',
       'User Reference',
