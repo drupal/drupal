@@ -81,10 +81,13 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     $this->assertText($name, 'Test language added.');
     $this->drupalLogout();
 
+    // Add a whitespace at the end of string to ensure it is found.
+    $name_ws = $name . " ";
+
     // Search for the name and translate it.
     $this->drupalLogin($translate_user);
     $search = [
-      'string' => $name,
+      'string' => $name_ws,
       'langcode' => $langcode,
       'translation' => 'untranslated',
     ];
