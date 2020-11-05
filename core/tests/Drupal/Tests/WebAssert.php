@@ -58,13 +58,7 @@ class WebAssert extends MinkWebAssert {
     if (parse_url($url, PHP_URL_HOST) === NULL && strpos($url, '/') !== 0) {
       $url = "/$url";
     }
-
-    $parts = parse_url($url);
-    $fragment = empty($parts['fragment']) ? '' : '#' . $parts['fragment'];
-    $query = empty($parts['query']) ? '' : '?' . $parts['query'];
-    $path = empty($parts['path']) ? '/' : $parts['path'];
-
-    return preg_replace('/^\/[^\.\/]+\.php\//', '/', $path) . $query . $fragment;
+    return parent::cleanUrl($url);
   }
 
   /**
