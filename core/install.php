@@ -29,6 +29,10 @@ if (version_compare(PHP_VERSION, '7.3.0') < 0) {
   print 'Your PHP installation is too old. Drupal requires at least PHP 7.3.0. See the <a href="https://www.drupal.org/requirements">system requirements</a> page for more information.';
   exit;
 }
+elseif (version_compare(PHP_VERSION, '8.0', '>=')) {
+  print 'Update to the latest release of Drupal 9 for improved PHP 8 support, or use PHP 7.4. See the <a href="https://www.drupal.org/requirements">system requirements</a> page for more information.';
+  exit;
+}
 
 // Initialize the autoloader.
 $class_loader = require_once $root_path . '/autoload.php';
