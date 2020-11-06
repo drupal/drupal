@@ -671,7 +671,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "00a84fa61ee921f106f7912c3ca0393a2c328e68"
+                "reference": "9e58f98953ff193220b4366d62446dc984f346d4"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -698,7 +698,7 @@
                 "laminas/laminas-feed": "^2.12",
                 "masterminds/html5": "^2.1",
                 "pear/archive_tar": "^1.4.9",
-                "php": ">=7.0.8",
+                "php": "^7.0.8",
                 "psr/log": "^1.0",
                 "stack/builder": "^1.0",
                 "symfony-cmf/routing": "^1.4",
