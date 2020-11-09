@@ -61,6 +61,6 @@
         "symfony/var-dumper": "v5.1.8",
         "symfony/yaml": "v4.4.16",
         "twig/twig": "v2.14.1",
-        "typo3/phar-stream-wrapper": "v3.1.5"
+        "typo3/phar-stream-wrapper": "v3.1.6"
     }
 }
