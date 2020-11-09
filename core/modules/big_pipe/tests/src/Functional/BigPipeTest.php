@@ -269,7 +269,8 @@ class BigPipeTest extends BrowserTestBase {
     $this->assertNoRaw(BigPipe::STOP_SIGNAL);
 
     // Verifying BigPipe assets are absent.
-    $this->assertTrue(!isset($this->getDrupalSettings()['bigPipePlaceholderIds']) && empty($this->getDrupalSettings()['ajaxPageState']), 'BigPipe drupalSettings and BigPipe asset library absent.');
+    $this->assertArrayNotHasKey('bigPipePlaceholderIds', $this->getDrupalSettings());
+    $this->assertArrayNotHasKey('ajaxPageState', $this->getDrupalSettings());
     $this->assertRaw('</body>');
 
     // Verify that 4xx responses work fine. (4xx responses are handled by

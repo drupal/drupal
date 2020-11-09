@@ -318,7 +318,16 @@ class SortArrayTest extends TestCase {
   protected function assertBothNegativePositiveOrZero($expected, $result) {
     $this->assertIsNumeric($expected);
     $this->assertIsNumeric($result);
-    $this->assertTrue(($expected < 0 && $result < 0) || ($expected > 0 && $result > 0) || ($expected === 0 && $result === 0), 'Numbers are either both negative, both positive or both zero.');
+    $message = "Numbers should be both negative, both positive or both zero. Expected: $expected, actual: $result";
+    if ($expected > 0) {
+      $this->assertGreaterThan(0, $result, $message);
+    }
+    elseif ($expected < 0) {
+      $this->assertLessThan(0, $result, $message);
+    }
+    else {
+      $this->assertEquals(0, $result, $message);
+    }
   }
 
 }

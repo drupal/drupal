@@ -69,7 +69,8 @@ class UserCancelTest extends BrowserTestBase {
     // Confirm user's content has not been altered.
     $node_storage->resetCache([$node->id()]);
     $test_node = $node_storage->load($node->id());
-    $this->assertTrue(($test_node->getOwnerId() == $account->id() && $test_node->isPublished()), 'Node of the user has not been altered.');
+    $this->assertEquals($account->id(), $test_node->getOwnerId(), 'Node of the user has not been altered.');
+    $this->assertTrue($test_node->isPublished());
   }
 
   /**
@@ -164,7 +165,8 @@ class UserCancelTest extends BrowserTestBase {
     // Confirm user's content has not been altered.
     $node_storage->resetCache([$node->id()]);
     $test_node = $node_storage->load($node->id());
-    $this->assertTrue(($test_node->getOwnerId() == $account->id() && $test_node->isPublished()), 'Node of the user has not been altered.');
+    $this->assertEquals($account->id(), $test_node->getOwnerId(), 'Node of the user has not been altered.');
+    $this->assertTrue($test_node->isPublished());
   }
 
   /**
@@ -342,17 +344,21 @@ class UserCancelTest extends BrowserTestBase {
     $anonymous_user = User::getAnonymousUser();
     $node_storage->resetCache([$node->id()]);
     $test_node = $node_storage->load($node->id());
-    $this->assertTrue(($test_node->getOwnerId() == 0 && $test_node->isPublished()), 'Node of the user has been attributed to anonymous user.');
+    $this->assertEquals(0, $test_node->getOwnerId(), 'Node of the user has been attributed to anonymous user.');
+    $this->assertTrue($test_node->isPublished());
     $test_node = node_revision_load($revision, TRUE);
-    $this->assertTrue(($test_node->getRevisionUser()->id() == 0 && $test_node->isPublished()), 'Node revision of the user has been attributed to anonymous user.');
+    $this->assertEquals(0, $test_node->getRevisionUser()->id(), 'Node revision of the user has been attributed to anonymous user.');
+    $this->assertTrue($test_node->isPublished());
     $node_storage->resetCache([$revision_node->id()]);
     $test_node = $node_storage->load($revision_node->id());
-    $this->assertTrue(($test_node->getOwnerId() != 0 && $test_node->isPublished()), "Current revision of the user's node was not attributed to anonymous user.");
+    $this->assertNotEquals(0, $test_node->getOwnerId(), "Current revision of the user's node was not attributed to anonymous user.");
+    $this->assertTrue($test_node->isPublished());
 
     $storage = \Drupal::entityTypeManager()->getStorage('comment');
     $storage->resetCache([$comment->id()]);
     $test_comment = $storage->load($comment->id());
-    $this->assertTrue(($test_comment->getOwnerId() == 0 && $test_comment->isPublished()), 'Comment of the user has been attributed to anonymous user.');
+    $this->assertEquals(0, $test_comment->getOwnerId(), 'Comment of the user has been attributed to anonymous user.');
+    $this->assertTrue($test_comment->isPublished());
     $this->assertEqual($test_comment->getAuthorName(), $anonymous_user->getDisplayName(), 'Comment of the user has been attributed to anonymous user name.');
 
     // Confirm that the confirmation message made it through to the end user.
@@ -402,7 +408,8 @@ class UserCancelTest extends BrowserTestBase {
     $node_storage->resetCache(array_keys($nodes));
     $test_nodes = $node_storage->loadMultiple(array_keys($nodes));
     foreach ($test_nodes as $test_node) {
-      $this->assertTrue(($test_node->getOwnerId() == 0 && $test_node->isPublished()), 'Node ' . $test_node->id() . ' of the user has been attributed to anonymous user.');
+      $this->assertEquals(0, $test_node->getOwnerId(), 'Node ' . $test_node->id() . ' of the user has been attributed to anonymous user.');
+      $this->assertTrue($test_node->isPublished());
     }
   }
 

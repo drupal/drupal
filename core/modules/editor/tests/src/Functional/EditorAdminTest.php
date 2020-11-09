@@ -62,7 +62,8 @@ class EditorAdminTest extends BrowserTestBase {
     $roles_pos = strpos($raw_content, 'Roles');
     $editor_pos = strpos($raw_content, 'Text editor');
     $filters_pos = strpos($raw_content, 'Enabled filters');
-    $this->assertTrue($roles_pos < $editor_pos && $editor_pos < $filters_pos, '"Text Editor" select appears in the correct location of the text format configuration UI.');
+    $this->assertGreaterThan($roles_pos, $editor_pos);
+    $this->assertLessThan($filters_pos, $editor_pos);
 
     // Verify the <select>.
     $select = $this->xpath('//select[@name="editor[editor]"]');

@@ -128,7 +128,8 @@ class TermTest extends TaxonomyTestBase {
     $term2->parent = [$term1->id(), $term3->id()];
     $term2->save();
     $parents = $taxonomy_storage->loadParents($term2->id());
-    $this->assertTrue(isset($parents[$term1->id()]) && isset($parents[$term3->id()]), 'Both parents found successfully.');
+    $this->assertArrayHasKey($term1->id(), $parents);
+    $this->assertArrayHasKey($term3->id(), $parents);
   }
 
   /**

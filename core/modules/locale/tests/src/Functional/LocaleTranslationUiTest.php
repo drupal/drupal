@@ -144,13 +144,15 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
     $this->assertRaw($translation_to_en);
 
-    $this->assertTrue($name != $translation && t($name, [], ['langcode' => $langcode]) == $translation, 't() works for non-English.');
+    $this->assertNotEquals($translation, $name);
+    $this->assertEquals($translation, t($name, [], ['langcode' => $langcode]), 't() works for non-English.');
     // Refresh the locale() cache to get fresh data from t() below. We are in
     // the same HTTP request and therefore t() is not refreshed by saving the
     // translation above.
     $this->container->get('string_translation')->reset();
     // Now we should get the proper fresh translation from t().
-    $this->assertTrue($name != $translation_to_en && t($name, [], ['langcode' => 'en']) == $translation_to_en, 't() works for English.');
+    $this->assertNotEquals($translation_to_en, $name);
+    $this->assertEquals($translation_to_en, t($name, [], ['langcode' => 'en']), 't() works for English.');
     $this->assertTrue(t($name, [], ['langcode' => LanguageInterface::LANGCODE_SYSTEM]) == $name, 't() works for LanguageInterface::LANGCODE_SYSTEM.');
 
     $search = [

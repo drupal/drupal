@@ -611,7 +611,8 @@ class StyleSerializerTest extends ViewTestBase {
 
     $build = $view->preview();
     $rendered_json = $build['#plain_text'];
-    $this->assertTrue(!isset($build['#markup']) && $rendered_json == $expected, 'Ensure the previewed json is escaped.');
+    $this->assertArrayNotHasKey('#markup', $build);
+    $this->assertSame($expected, $rendered_json, 'Ensure the previewed json is escaped.');
     $view->destroy();
 
     $expected = $serializer->serialize($entities, 'xml');

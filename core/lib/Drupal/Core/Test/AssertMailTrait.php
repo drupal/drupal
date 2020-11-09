@@ -57,12 +57,15 @@ trait AssertMailTrait {
    *   this default.
    *
    * @return bool
-   *   TRUE on pass, FALSE on fail.
+   *   TRUE on pass.
    */
   protected function assertMail($name, $value = '', $message = '', $group = 'Email') {
     $captured_emails = $this->container->get('state')->get('system.test_mail_collector') ?: [];
     $email = end($captured_emails);
-    return $this->assertTrue($email && isset($email[$name]) && $email[$name] == $value, $message, $group);
+    $this->assertIsArray($email, $message);
+    $this->assertArrayHasKey($name, $email, $message);
+    $this->assertEquals($value, $email[$name], $message);
+    return TRUE;
   }
 
   /**

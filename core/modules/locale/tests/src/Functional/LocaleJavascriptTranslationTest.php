@@ -103,8 +103,8 @@ class LocaleJavascriptTranslationTest extends BrowserTestBase {
         $this->assertTrue(isset($source_strings[$str]), new FormattableMarkup('Found source string: %source', $args));
 
         // Make sure that the proper context was matched.
-        $message = $context ? new FormattableMarkup('Context for %source is %context', $args) : new FormattableMarkup('Context for %source is blank', $args);
-        $this->assertTrue(isset($source_strings[$str]) && $source_strings[$str] === $context, $message);
+        $this->assertArrayHasKey($str, $source_strings);
+        $this->assertSame($context, $source_strings[$str]);
       }
 
       $this->assertSame(count($test_strings), count($source_strings), 'Found correct number of source strings.');

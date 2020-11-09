@@ -324,7 +324,9 @@ class ConfigSchemaTest extends KernelTestBase {
     // Check nested array of properties.
     $list = $meta->get('page')->getElements();
     $this->assertCount(3, $list, 'Got a list with the right number of properties for site page data');
-    $this->assertTrue(isset($list['front']) && isset($list['403']) && isset($list['404']), 'Got a list with the right properties for site page data.');
+    $this->assertArrayHasKey('front', $list);
+    $this->assertArrayHasKey('403', $list);
+    $this->assertArrayHasKey('404', $list);
     $this->assertEqual($list['front']->getValue(), '/user/login', 'Got the right value for page.front data from the list.');
 
     // And test some TypedConfigInterface methods.
@@ -341,7 +343,8 @@ class ConfigSchemaTest extends KernelTestBase {
     $this->assertCount(1, $effects->toArray(), 'Got an array with effects for image.style.large data');
     $uuid = key($effects->getValue());
     $effect = $effects->get($uuid)->getElements();
-    $this->assertTrue(!$effect['data']->isEmpty() && $effect['id']->getValue() == 'image_scale', 'Got data for the image scale effect from metadata.');
+    $this->assertFalse($effect['data']->isEmpty(), 'Got data for the image scale effect from metadata.');
+    $this->assertSame('image_scale', $effect['id']->getValue(), 'Got data for the image scale effect from metadata.');
     $this->assertInstanceOf(IntegerInterface::class, $effect['data']->get('width'));
     $this->assertEqual($effect['data']->get('width')->getValue(), 480, 'Got the right value for the scale effect width.');
   }

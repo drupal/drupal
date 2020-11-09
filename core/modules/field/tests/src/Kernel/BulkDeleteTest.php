@@ -266,8 +266,9 @@ class BulkDeleteTest extends FieldKernelTestBase {
 
     // The field still exists, deleted, with the same field name.
     $fields = \Drupal::entityTypeManager()->getStorage('field_config')->loadByProperties(['uuid' => $deleted_field_uuid, 'include_deleted' => TRUE]);
-    $this->assertTrue(isset($fields[$deleted_field_uuid]) && $fields[$deleted_field_uuid]->isDeleted(), 'The field exists and is deleted');
-    $this->assertTrue(isset($fields[$deleted_field_uuid]) && $fields[$deleted_field_uuid]->getName() == $field_name);
+    $this->assertArrayHasKey($deleted_field_uuid, $fields);
+    $this->assertTrue($fields[$deleted_field_uuid]->isDeleted());
+    $this->assertSame($field_name, $fields[$deleted_field_uuid]->getName());
 
     for ($i = 0; $i < 10; $i++) {
       $entity = $this->container->get('entity_type.manager')
@@ -397,7 +398,8 @@ class BulkDeleteTest extends FieldKernelTestBase {
 
     // The field still exists, deleted.
     $fields = \Drupal::entityTypeManager()->getStorage('field_config')->loadByProperties(['uuid' => $field->uuid(), 'include_deleted' => TRUE]);
-    $this->assertTrue(isset($fields[$field->uuid()]) && $fields[$field->uuid()]->isDeleted(), 'The field exists and is deleted');
+    $this->assertArrayHasKey($field->uuid(), $fields);
+    $this->assertTrue($fields[$field->uuid()]->isDeleted());
 
     // Purge again to purge the field.
     field_purge_batch(0);
@@ -407,7 +409,8 @@ class BulkDeleteTest extends FieldKernelTestBase {
     $this->assertCount(0, $fields, 'The field is purged.');
     // The field storage still exists, not deleted.
     $storages = \Drupal::entityTypeManager()->getStorage('field_storage_config')->loadByProperties(['uuid' => $field_storage->uuid(), 'include_deleted' => TRUE]);
-    $this->assertTrue(isset($storages[$field_storage->uuid()]) && !$storages[$field_storage->uuid()]->isDeleted(), 'The field storage exists and is not deleted');
+    $this->assertArrayHasKey($field_storage->uuid(), $storages);
+    $this->assertFalse($storages[$field_storage->uuid()]->isDeleted());
 
     // Delete the second field.
     $bundle = next($this->bundles);
@@ -429,9 +432,11 @@ class BulkDeleteTest extends FieldKernelTestBase {
 
     // The field and the storage still exist, deleted.
     $fields = \Drupal::entityTypeManager()->getStorage('field_config')->loadByProperties(['uuid' => $field->uuid(), 'include_deleted' => TRUE]);
-    $this->assertTrue(isset($fields[$field->uuid()]) && $fields[$field->uuid()]->isDeleted(), 'The field exists and is deleted');
+    $this->assertArrayHasKey($field->uuid(), $fields);
+    $this->assertTrue($fields[$field->uuid()]->isDeleted());
     $storages = \Drupal::entityTypeManager()->getStorage('field_storage_config')->loadByProperties(['uuid' => $field_storage->uuid(), 'include_deleted' => TRUE]);
-    $this->assertTrue(isset($storages[$field_storage->uuid()]) && $storages[$field_storage->uuid()]->isDeleted(), 'The field storage exists and is deleted');
+    $this->assertArrayHasKey($field_storage->uuid(), $storages);
+    $this->assertTrue($storages[$field_storage->uuid()]->isDeleted());
 
     // Purge again to purge the field and the storage.
     field_purge_batch(0);

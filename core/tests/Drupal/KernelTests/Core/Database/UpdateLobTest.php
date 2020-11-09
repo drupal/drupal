@@ -48,7 +48,8 @@ class UpdateLobTest extends DatabaseTestBase {
       ->execute();
 
     $r = $this->connection->query('SELECT * FROM {test_two_blobs} WHERE [id] = :id', [':id' => $id])->fetchAssoc();
-    $this->assertTrue($r['blob1'] === 'and so' && $r['blob2'] === 'is this', 'Can update multiple blobs per row.');
+    $this->assertSame('and so', $r['blob1']);
+    $this->assertSame('is this', $r['blob2']);
   }
 
 }

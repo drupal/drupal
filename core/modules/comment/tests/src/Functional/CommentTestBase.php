@@ -175,7 +175,8 @@ abstract class CommentTestBase extends BrowserTestBase {
         $this->assertText($subject, 'Comment subject posted.');
       }
       $this->assertText($comment, 'Comment body posted.');
-      $this->assertTrue((!empty($match) && !empty($match[1])), 'Comment id found.');
+      // Check the comment ID was extracted.
+      $this->assertArrayHasKey(1, $match);
     }
 
     if (isset($match[1])) {
