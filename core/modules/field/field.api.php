@@ -190,11 +190,11 @@ function hook_field_widget_info_alter(array &$info) {
  * @see hook_field_widget_multivalue_form_alter()
  */
 function hook_field_widget_form_alter(&$element, \Drupal\Core\Form\FormStateInterface $form_state, $context) {
-  // Add a css class to widget form elements for all fields of type mytype.
+  // Add a css class to widget form elements for all fields of type my_type.
   $field_definition = $context['items']->getFieldDefinition();
-  if ($field_definition->getType() == 'mytype') {
+  if ($field_definition->getType() == 'my_type') {
     // Be sure not to overwrite existing attributes.
-    $element['#attributes']['class'][] = 'myclass';
+    $element['#attributes']['class'][] = 'my-class';
   }
 }
 
@@ -257,11 +257,11 @@ function hook_field_widget_WIDGET_TYPE_form_alter(&$element, \Drupal\Core\Form\F
  * @see hook_field_widget_multivalue_WIDGET_TYPE_form_alter()
  */
 function hook_field_widget_multivalue_form_alter(array &$elements, \Drupal\Core\Form\FormStateInterface $form_state, array $context) {
-  // Add a css class to widget form elements for all fields of type mytype.
+  // Add a css class to widget form elements for all fields of type my_type.
   $field_definition = $context['items']->getFieldDefinition();
-  if ($field_definition->getType() == 'mytype') {
+  if ($field_definition->getType() == 'my_type') {
     // Be sure not to overwrite existing attributes.
-    $elements['#attributes']['class'][] = 'myclass';
+    $elements['#attributes']['class'][] = 'my-class';
   }
 }
 

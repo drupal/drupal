@@ -517,7 +517,7 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
       ['field_test_1' => 1, 'field_test_2_count' => 2],
     ]);
 
-    // Groupby and aggregate by fieldapi field, and sort by the aggregated
+    // Group by and aggregate by Field API field, and sort by the aggregated
     // field.
     $this->queryResult = $this->entityStorage->getAggregateQuery()
       ->groupBy('field_test_1')

@@ -78,7 +78,7 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
 
     // Situations with context: front page, English, no query.
     $context = [
-      'path' => 'myfrontpage',
+      'path' => 'my-front-page',
       'front' => TRUE,
       'language' => 'en',
       'query' => [],
@@ -87,7 +87,7 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
     $situations[] = ['context' => $context, 'is active' => FALSE, 'attributes' => []];
     // Matching path, plus all matching variations.
     $attributes = [
-      'data-drupal-link-system-path' => 'myfrontpage',
+      'data-drupal-link-system-path' => 'my-front-page',
     ];
     $situations[] = ['context' => $context, 'is active' => TRUE, 'attributes' => $attributes];
     $situations[] = ['context' => $context, 'is active' => TRUE, 'attributes' => $attributes + ['hreflang' => 'en']];
@@ -217,7 +217,7 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
 
     // Situations with context: front page, English, query.
     $context = [
-      'path' => 'myfrontpage',
+      'path' => 'my-front-page',
       'front' => TRUE,
       'language' => 'en',
       'query' => ['foo' => 'bar'],
@@ -225,7 +225,7 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
     $situations[] = ['context' => $context, 'is active' => FALSE, 'attributes' => []];
     // Matching path, plus all matching variations.
     $attributes = [
-      'data-drupal-link-system-path' => 'myfrontpage',
+      'data-drupal-link-system-path' => 'my-front-page',
       'data-drupal-link-query' => Json::encode(['foo' => 'bar']),
     ];
     $situations[] = ['context' => $context, 'is active' => TRUE, 'attributes' => $attributes];
@@ -254,13 +254,13 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
 
     // Query with unsorted keys must match when the attribute is in sorted form.
     $context = [
-      'path' => 'myfrontpage',
+      'path' => 'my-front-page',
       'front' => TRUE,
       'language' => 'en',
       'query' => ['foo' => 'bar', 'baz' => 'qux'],
     ];
     $attributes = [
-      'data-drupal-link-system-path' => 'myfrontpage',
+      'data-drupal-link-system-path' => 'my-front-page',
       'data-drupal-link-query' => Json::encode(['baz' => 'qux', 'foo' => 'bar']),
     ];
     $situations[] = ['context' => $context, 'is active' => TRUE, 'attributes' => $attributes];
@@ -329,11 +329,11 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
     // - the special matching path ('<front>')
     $front_special_link = '<a data-drupal-link-system-path="&lt;front&gt;">Front</a>';
     $front_special_link_active = '<a data-drupal-link-system-path="&lt;front&gt;" class="is-active">Front</a>';
-    $front_path_link = '<a data-drupal-link-system-path="myfrontpage">Front Path</a>';
-    $front_path_link_active = '<a data-drupal-link-system-path="myfrontpage" class="is-active">Front Path</a>';
+    $front_path_link = '<a data-drupal-link-system-path="my-front-page">Front Path</a>';
+    $front_path_link_active = '<a data-drupal-link-system-path="my-front-page" class="is-active">Front Path</a>';
     $data[] = [
       0 => $front_path_link . ' ' . $front_special_link,
-      1 => 'myfrontpage',
+      1 => 'my-front-page',
       2 => TRUE,
       3 => 'en',
       4 => [],
@@ -341,7 +341,7 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
     ];
     $data[] = [
       0 => $front_special_link . ' ' . $front_path_link,
-      1 => 'myfrontpage',
+      1 => 'my-front-page',
       2 => TRUE,
       3 => 'en',
       4 => [],
@@ -350,11 +350,11 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
 
     // Test cases to verify that links to the front page do not get the
     // 'is-active' class when not on the front page.
-    $other_link = '<a data-drupal-link-system-path="otherpage">Other page</a>';
-    $other_link_active = '<a data-drupal-link-system-path="otherpage" class="is-active">Other page</a>';
+    $other_link = '<a data-drupal-link-system-path="other-page">Other page</a>';
+    $other_link_active = '<a data-drupal-link-system-path="other-page" class="is-active">Other page</a>';
     $data['<front>-and-other-link-on-other-path'] = [
       0 => $front_special_link . ' ' . $other_link,
-      1 => 'otherpage',
+      1 => 'other-page',
       2 => FALSE,
       3 => 'en',
       4 => [],
@@ -362,7 +362,7 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
     ];
     $data['front-and-other-link-on-other-path'] = [
       0 => $front_path_link . ' ' . $other_link,
-      1 => 'otherpage',
+      1 => 'other-page',
       2 => FALSE,
       3 => 'en',
       4 => [],
@@ -370,7 +370,7 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
     ];
     $data['other-and-<front>-link-on-other-path'] = [
       0 => $other_link . ' ' . $front_special_link,
-      1 => 'otherpage',
+      1 => 'other-page',
       2 => FALSE,
       3 => 'en',
       4 => [],
@@ -378,7 +378,7 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
     ];
     $data['other-and-front-link-on-other-path'] = [
       0 => $other_link . ' ' . $front_path_link,
-      1 => 'otherpage',
+      1 => 'other-page',
       2 => FALSE,
       3 => 'en',
       4 => [],
@@ -435,7 +435,7 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
     );
 
     // A link that might otherwise be set 'active'.
-    $content = '<a data-drupal-link-system-path="otherpage">Other page</a>';
+    $content = '<a data-drupal-link-system-path="other-page">Other page</a>';
 
     // Assert response with non-html content type gets ignored.
     $response = new Response();

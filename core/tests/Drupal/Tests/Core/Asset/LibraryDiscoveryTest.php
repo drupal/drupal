@@ -80,14 +80,14 @@ class LibraryDiscoveryTest extends UnitTestCase {
    * @covers ::getLibrariesByExtension
    */
   public function testGetLibrariesByExtension() {
-    $this->libraryDiscovery->getLibrariesbyExtension('test');
+    $this->libraryDiscovery->getLibrariesByExtension('test');
     // Verify that subsequent calls don't trigger hook_library_info_alter()
     // and hook_js_settings_alter() invocations, nor do they talk to the
     // collector again. This ensures that the alterations made by
     // hook_library_info_alter() and hook_js_settings_alter() implementations
     // are statically cached, as desired.
     $this->libraryDiscovery->getLibraryByName('test', 'test_1');
-    $this->libraryDiscovery->getLibrariesbyExtension('test');
+    $this->libraryDiscovery->getLibrariesByExtension('test');
   }
 
   /**

@@ -47,7 +47,7 @@ class ExtensionDiscoveryTest extends UnitTestCase {
       }
       if ($type === 'profile') {
         // Set profile directories for discovery of the other extension types.
-        $extension_discovery->setProfileDirectories(['myprofile' => 'profiles/myprofile']);
+        $extension_discovery->setProfileDirectories(['my_profile' => 'profiles/my_profile']);
       }
     }
 
@@ -119,15 +119,15 @@ class ExtensionDiscoveryTest extends UnitTestCase {
       'sites/default/profiles/minimal/minimal.info.yml' => [
         'type' => 'profile',
       ],
-      'profiles/myprofile/myprofile.info.yml' => [
+      'profiles/my_profile/my_profile.info.yml' => [
         'type' => 'profile',
       ],
-      'profiles/myprofile/modules/myprofile_nested_module/myprofile_nested_module.info.yml' => [],
-      'profiles/otherprofile/otherprofile.info.yml' => [
+      'profiles/my_profile/modules/my_profile_nested_module/my_profile_nested_module.info.yml' => [],
+      'profiles/other_profile/other_profile.info.yml' => [
         'type' => 'profile',
       ],
       'core/modules/user/user.info.yml' => [],
-      'profiles/otherprofile/modules/otherprofile_nested_module/otherprofile_nested_module.info.yml' => [],
+      'profiles/other_profile/modules/other_profile_nested_module/other_profile_nested_module.info.yml' => [],
       'core/modules/system/system.info.yml' => [],
       'core/themes/seven/seven.info.yml' => [
         'type' => 'theme',
@@ -167,7 +167,7 @@ class ExtensionDiscoveryTest extends UnitTestCase {
       $this->addFileToFilesystemStructure($filesystem_structure, $pieces, $content);
     }
 
-    unset($files_by_type_and_name_expected['module']['otherprofile_nested_module']);
+    unset($files_by_type_and_name_expected['module']['other_profile_nested_module']);
 
     return $files_by_type_and_name_expected;
   }

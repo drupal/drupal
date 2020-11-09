@@ -96,7 +96,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['definition_class'] = '\Drupal\Core\TypedData\DataDefinition';
     $expected['unwrap_for_canonical_representation'] = TRUE;
     $this->assertEqual($definition, $expected, 'Automatic type detected for a list is undefined.');
-    $definition = $config->get('testnoschema')->getDataDefinition()->toArray();
+    $definition = $config->get('test_no_schema')->getDataDefinition()->toArray();
     $expected = [];
     $expected['label'] = 'Undefined';
     $expected['class'] = Undefined::class;

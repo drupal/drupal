@@ -175,7 +175,7 @@ use Drupal\Core\Database\Query\SelectInterface;
  *   try {
  *     $id = $connection->insert('example')
  *       ->fields(array(
- *         'field1' => 'mystring',
+ *         'field1' => 'string',
  *         'field2' => 5,
  *       ))
  *       ->execute();

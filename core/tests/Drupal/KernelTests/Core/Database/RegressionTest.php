@@ -39,7 +39,7 @@ class RegressionTest extends DatabaseTestBase {
    */
   public function testDBTableExists() {
     $this->assertTrue($this->connection->schema()->tableExists('test'), 'Returns true for existent table.');
-    $this->assertFalse($this->connection->schema()->tableExists('nosuchtable'), 'Returns false for nonexistent table.');
+    $this->assertFalse($this->connection->schema()->tableExists('no_such_table'), 'Returns false for nonexistent table.');
   }
 
   /**
@@ -48,7 +48,7 @@ class RegressionTest extends DatabaseTestBase {
   public function testDBFieldExists() {
     $schema = $this->connection->schema();
     $this->assertTrue($schema->fieldExists('test', 'name'), 'Returns true for existent column.');
-    $this->assertFalse($schema->fieldExists('test', 'nosuchcolumn'), 'Returns false for nonexistent column.');
+    $this->assertFalse($schema->fieldExists('test', 'no_such_column'), 'Returns false for nonexistent column.');
   }
 
   /**
@@ -56,7 +56,7 @@ class RegressionTest extends DatabaseTestBase {
    */
   public function testDBIndexExists() {
     $this->assertTrue($this->connection->schema()->indexExists('test', 'ages'), 'Returns true for existent index.');
-    $this->assertFalse($this->connection->schema()->indexExists('test', 'nosuchindex'), 'Returns false for nonexistent index.');
+    $this->assertFalse($this->connection->schema()->indexExists('test', 'no_such_index'), 'Returns false for nonexistent index.');
   }
 
 }

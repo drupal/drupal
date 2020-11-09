@@ -572,11 +572,11 @@ class LayoutBuilderTest extends BrowserTestBase {
     // Create a new menu.
     $this->drupalGet('admin/structure/menu/add');
     $page->fillField('label', 'My Menu');
-    $page->fillField('id', 'mymenu');
+    $page->fillField('id', 'my-menu');
     $page->pressButton('Save');
     $this->drupalGet('admin/structure/menu/add');
     $page->fillField('label', 'My Menu');
-    $page->fillField('id', 'myothermenu');
+    $page->fillField('id', 'my-other-menu');
     $page->pressButton('Save');
 
     $page->clickLink('Add link');
@@ -595,7 +595,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->elementExists('css', '.layout--layout-test-dependencies-plugin');
     $assert_session->elementExists('css', '.field--name-body');
     $page->pressButton('Save layout');
-    $this->drupalPostForm('admin/structure/menu/manage/myothermenu/delete', [], 'Delete');
+    $this->drupalPostForm('admin/structure/menu/manage/my-other-menu/delete', [], 'Delete');
     $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default/layout');
     $assert_session->elementNotExists('css', '.layout--layout-test-dependencies-plugin');
     $assert_session->elementExists('css', '.field--name-body');
@@ -617,17 +617,17 @@ class LayoutBuilderTest extends BrowserTestBase {
     // Assert that the blocks are visible, and save the layout.
     $assert_session->pageTextContains('Powered by Drupal');
     $assert_session->pageTextContains('My Menu');
-    $assert_session->elementExists('css', '.block.menu--mymenu');
+    $assert_session->elementExists('css', '.block.menu--my-menu');
     $page->pressButton('Save layout');
 
     // Delete the menu.
-    $this->drupalPostForm('admin/structure/menu/manage/mymenu/delete', [], 'Delete');
+    $this->drupalPostForm('admin/structure/menu/manage/my-menu/delete', [], 'Delete');
 
     // Ensure that the menu block is gone, but that the other block remains.
     $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default/layout');
     $assert_session->pageTextContains('Powered by Drupal');
     $assert_session->pageTextNotContains('My Menu');
-    $assert_session->elementNotExists('css', '.block.menu--mymenu');
+    $assert_session->elementNotExists('css', '.block.menu--my-menu');
   }
 
   /**

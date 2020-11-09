@@ -125,8 +125,8 @@ function locale_translation_project_list() {
  *
  * Custom modules or themes can bring their own gettext translation file. To
  * enable import of this file the module or theme defines "interface translation
- * project = myproject" in its .info.yml file. This function will add a project
- * "myproject" to the info data.
+ * project = my_project" in its .info.yml file. This function will add a project
+ * "my_project" to the info data.
  *
  * @param \Drupal\Core\Extension\Extension[] $data
  *   Array of .info.yml file data.

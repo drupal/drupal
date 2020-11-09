@@ -577,7 +577,7 @@ function template_preprocess_form_element_label(&$variables) {
  *     array('my_function_2', array()),
  *   ),
  *   'finished' => 'my_finished_callback',
- *   'file' => 'path_to_file_containing_myfunctions',
+ *   'file' => 'path_to_file_containing_my_functions',
  * );
  * batch_set($batch);
  * // Only needed if not inside a form _submit handler.

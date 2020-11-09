@@ -33,15 +33,15 @@ class DistributionProfileTest extends InstallerTestBase {
         'name' => 'My Distribution',
         'install' => [
           'theme' => 'bartik',
-          'finish_url' => '/myrootuser',
+          'finish_url' => '/root-user',
         ],
       ],
     ];
     // File API functions are not available yet.
-    $path = $this->siteDirectory . '/profiles/mydistro';
+    $path = $this->siteDirectory . '/profiles/my_distro';
     mkdir($path, 0777, TRUE);
-    file_put_contents("$path/mydistro.info.yml", Yaml::encode($this->info));
-    file_put_contents("$path/mydistro.install", "<?php function mydistro_install() {\Drupal::entityTypeManager()->getStorage('path_alias')->create(['path' => '/user/1', 'alias' => '/myrootuser'])->save();}");
+    file_put_contents("$path/my_distro.info.yml", Yaml::encode($this->info));
+    file_put_contents("$path/my_distro.install", "<?php function my_distro_install() {\Drupal::entityTypeManager()->getStorage('path_alias')->create(['path' => '/user/1', 'alias' => '/root-user'])->save();}");
   }
 
   /**
@@ -71,14 +71,14 @@ class DistributionProfileTest extends InstallerTestBase {
    * Confirms that the installation succeeded.
    */
   public function testInstalled() {
-    $this->assertSession()->addressEquals('myrootuser');
+    $this->assertSession()->addressEquals('root-user');
     $this->assertSession()->statusCodeEquals(200);
     // Confirm that we are logged-in after installation.
     $this->assertText($this->rootUser->getAccountName());
 
     // Confirm that Drupal recognizes this distribution as the current profile.
-    $this->assertEqual(\Drupal::installProfile(), 'mydistro');
-    $this->assertEqual($this->config('core.extension')->get('profile'), 'mydistro', 'The install profile has been written to core.extension configuration.');
+    $this->assertEqual(\Drupal::installProfile(), 'my_distro');
+    $this->assertEqual($this->config('core.extension')->get('profile'), 'my_distro', 'The install profile has been written to core.extension configuration.');
   }
 
 }

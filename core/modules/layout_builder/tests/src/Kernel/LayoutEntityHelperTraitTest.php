@@ -46,7 +46,7 @@ class LayoutEntityHelperTraitTest extends KernelTestBase {
   }
 
   /**
-   * Dataprovider for testGetSectionStorageForEntity().
+   * Data provider for testGetSectionStorageForEntity().
    */
   public function providerTestGetSectionStorageForEntity() {
     $data = [];
@@ -119,7 +119,7 @@ class LayoutEntityHelperTraitTest extends KernelTestBase {
   }
 
   /**
-   * Dataprovider for testOriginalEntityUsesDefaultStorage().
+   * Data provider for testOriginalEntityUsesDefaultStorage().
    */
   public function providerTestOriginalEntityUsesDefaultStorage() {
     return [

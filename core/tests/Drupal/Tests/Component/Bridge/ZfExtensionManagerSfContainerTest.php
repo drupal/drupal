@@ -22,7 +22,7 @@ class ZfExtensionManagerSfContainerTest extends TestCase {
    */
   public function testGet() {
     $service = new \stdClass();
-    $service->value = 'myvalue';
+    $service->value = 'my_value';
     $container = new ContainerBuilder();
     $container->set('foo', $service);
     $bridge = new ZfExtensionManagerSfContainer();
@@ -42,7 +42,7 @@ class ZfExtensionManagerSfContainerTest extends TestCase {
    */
   public function testHas() {
     $service = new \stdClass();
-    $service->value = 'myvalue';
+    $service->value = 'my_value';
     $container = new ContainerBuilder();
     $container->set('foo', $service);
     $bridge = new ZfExtensionManagerSfContainer();
@@ -84,7 +84,7 @@ class ZfExtensionManagerSfContainerTest extends TestCase {
    */
   public function testPrefix() {
     $service = new \stdClass();
-    $service->value = 'myvalue';
+    $service->value = 'my_value';
     $container = new ContainerBuilder();
     $container->set('foo.bar', $service);
     $bridge = new ZfExtensionManagerSfContainer('foo.');
@@ -100,7 +100,7 @@ class ZfExtensionManagerSfContainerTest extends TestCase {
    */
   public function testCanonicalizeName($name, $canonical_name) {
     $service = new \stdClass();
-    $service->value = 'myvalue';
+    $service->value = 'my_value';
     $container = new ContainerBuilder();
     $container->set($canonical_name, $service);
     $bridge = new ZfExtensionManagerSfContainer();
