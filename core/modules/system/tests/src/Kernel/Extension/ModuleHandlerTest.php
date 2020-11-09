@@ -109,7 +109,8 @@ class ModuleHandlerTest extends KernelTestBase {
     $this->assertTrue($result, 'ModuleInstaller::install() returns the correct value.');
 
     // Verify that the fake dependency chain was installed.
-    $this->assertTrue($this->moduleHandler()->moduleExists('config') && $this->moduleHandler()->moduleExists('help'), 'Dependency chain was installed.');
+    $this->assertTrue($this->moduleHandler()->moduleExists('config'));
+    $this->assertTrue($this->moduleHandler()->moduleExists('help'));
 
     // Verify that the original module was installed.
     $this->assertTrue($this->moduleHandler()->moduleExists('color'), 'Module installation with dependencies succeeded.');
@@ -140,7 +141,8 @@ class ModuleHandlerTest extends KernelTestBase {
     $this->assertTrue($result, 'ModuleInstaller::install() returns the correct value.');
 
     // Verify that the fake dependency chain was installed.
-    $this->assertTrue($this->moduleHandler()->moduleExists('config') && $this->moduleHandler()->moduleExists('help'), 'Dependency chain was installed.');
+    $this->assertTrue($this->moduleHandler()->moduleExists('config'));
+    $this->assertTrue($this->moduleHandler()->moduleExists('help'));
 
     // Verify that the original module was installed.
     $this->assertTrue($this->moduleHandler()->moduleExists('color'), 'Module installation with version dependencies succeeded.');

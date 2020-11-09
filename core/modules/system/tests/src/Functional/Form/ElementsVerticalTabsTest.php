@@ -59,7 +59,9 @@ class ElementsVerticalTabsTest extends BrowserTestBase {
     $content = $this->getSession()->getPage()->getContent();
     $position1 = strpos($content, 'core/misc/vertical-tabs.js');
     $position2 = strpos($content, 'core/misc/collapse.js');
-    $this->assertTrue($position1 !== FALSE && $position2 !== FALSE && $position1 < $position2, 'vertical-tabs.js is included before collapse.js');
+    $this->assertNotFalse($position1);
+    $this->assertNotFalse($position2);
+    $this->assertGreaterThan($position1, $position2, 'vertical-tabs.js is included before collapse.js');
   }
 
   /**

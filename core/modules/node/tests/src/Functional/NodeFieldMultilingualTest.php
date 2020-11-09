@@ -83,7 +83,8 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
     // Check that the node exists in the database.
     $node = $this->drupalGetNodeByTitle($edit[$title_key]);
     $this->assertNotEmpty($node, 'Node found in database.');
-    $this->assertTrue($node->language()->getId() == $langcode && $node->body->value == $body_value, 'Field language correctly set.');
+    $this->assertSame($langcode, $node->language()->getId());
+    $this->assertSame($body_value, $node->body->value);
 
     // Change node language.
     $langcode = 'it';
@@ -95,7 +96,8 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $node = $this->drupalGetNodeByTitle($edit[$title_key], TRUE);
     $this->assertNotEmpty($node, 'Node found in database.');
-    $this->assertTrue($node->language()->getId() == $langcode && $node->body->value == $body_value, 'Field language correctly changed.');
+    $this->assertSame($langcode, $node->language()->getId());
+    $this->assertSame($body_value, $node->body->value);
 
     // Enable content language URL detection.
     $this->container->get('language_negotiator')->saveConfiguration(LanguageInterface::TYPE_CONTENT, [LanguageNegotiationUrl::METHOD_ID => 0]);

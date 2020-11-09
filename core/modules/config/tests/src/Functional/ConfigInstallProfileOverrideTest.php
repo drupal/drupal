@@ -70,8 +70,7 @@ class ConfigInstallProfileOverrideTest extends BrowserTestBase {
 
     $config = $this->config('system.site');
     // Verify the system.site config has a valid UUID.
-    $site_uuid = $config->get('uuid');
-    $this->assertTrue(Uuid::isValid($site_uuid) && strlen($site_uuid) > 0, "Site UUID '$site_uuid' is valid");
+    $this->assertTrue(Uuid::isValid($config->get('uuid')));
     // Verify the profile overrides have been used.
     $this->assertEquals(91, $config->get('weight_select_max'));
     // Ensure the site configure form is used.

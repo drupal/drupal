@@ -319,7 +319,7 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
     // Test that the first field is not deleted, and then delete it.
     $field_storage_config_storage = \Drupal::entityTypeManager()->getStorage('field_storage_config');
     $field_storage = current($field_storage_config_storage->loadByProperties(['field_name' => $field_storage_definition['field_name'], 'include_deleted' => TRUE]));
-    $this->assertTrue(!empty($field_storage) && !$field_storage->isDeleted(), 'A new storage is not marked for deletion.');
+    $this->assertFalse($field_storage->isDeleted());
     FieldStorageConfig::loadByName('entity_test', $field_storage_definition['field_name'])->delete();
 
     // Make sure that the field storage is deleted as it had no data.
@@ -341,18 +341,18 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
 
     // Make sure the other field and its storage are not deleted.
     $another_field_storage = FieldStorageConfig::load('entity_test.' . $another_field_storage_definition['field_name']);
-    $this->assertTrue(!empty($another_field_storage) && !$another_field_storage->isDeleted(), 'A non-deleted storage is not marked for deletion.');
+    $this->assertFalse($another_field_storage->isDeleted());
     $another_field = FieldConfig::load('entity_test.' . $another_field_definition['bundle'] . '.' . $another_field_definition['field_name']);
-    $this->assertTrue(!empty($another_field) && !$another_field->isDeleted(), 'A field whose storage was not deleted is not marked for deletion.');
+    $this->assertFalse($another_field->isDeleted());
 
     // Try to create a new field the same name as a deleted field and
     // write data into it.
     FieldStorageConfig::create($field_storage_definition)->save();
     FieldConfig::create($field_definition)->save();
     $field_storage = FieldStorageConfig::load('entity_test.' . $field_storage_definition['field_name']);
-    $this->assertTrue(!empty($field_storage) && !$field_storage->isDeleted(), 'A new storage with a previously used name is created.');
+    $this->assertFalse($field_storage->isDeleted());
     $field = FieldConfig::load('entity_test.' . $field_definition['bundle'] . '.' . $field_definition['field_name']);
-    $this->assertTrue(!empty($field) && !$field->isDeleted(), 'A new field for a previously used field name is created.');
+    $this->assertFalse($field->isDeleted());
 
     // Save an entity with data for the field
     $entity = EntityTest::create();

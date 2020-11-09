@@ -163,7 +163,7 @@ class ViewsDataTest extends UnitTestCase {
     for ($i = 1; $i < count($base_tables); ++$i) {
       $prev = $base_tables[$base_tables_keys[$i - 1]];
       $current = $base_tables[$base_tables_keys[$i]];
-      $this->assertTrue($prev['weight'] <= $current['weight'] && $prev['title'] <= $prev['title'], 'The tables are sorted as expected.');
+      $this->assertGreaterThanOrEqual($prev['weight'], $current['weight']);
     }
 
     // Test the values returned for each base table.

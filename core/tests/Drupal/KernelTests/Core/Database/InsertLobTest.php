@@ -35,7 +35,8 @@ class InsertLobTest extends DatabaseTestBase {
       ])
       ->execute();
     $r = $this->connection->query('SELECT * FROM {test_two_blobs} WHERE [id] = :id', [':id' => $id])->fetchAssoc();
-    $this->assertTrue($r['blob1'] === 'This is' && $r['blob2'] === 'a test', 'Can insert multiple blobs per row.');
+    $this->assertSame('This is', $r['blob1']);
+    $this->assertSame('a test', $r['blob2']);
   }
 
 }

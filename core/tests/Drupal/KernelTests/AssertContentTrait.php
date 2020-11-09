@@ -917,7 +917,7 @@ trait AssertContentTrait {
    *   this default.
    *
    * @return bool
-   *   TRUE on pass, FALSE on fail.
+   *   TRUE on pass.
    */
   protected function assertFieldsByValue($fields, $value = NULL, $message = '', $group = 'Other') {
     // If value specified then check array for match.
@@ -951,7 +951,9 @@ trait AssertContentTrait {
         }
       }
     }
-    return $this->assertTrue($fields && $found, $message, $group);
+    $this->assertNotEmpty($fields);
+    $this->assertTrue($found, $message);
+    return TRUE;
   }
 
   /**
@@ -1026,7 +1028,7 @@ trait AssertContentTrait {
    *   this default.
    *
    * @return bool
-   *   TRUE on pass, FALSE on fail.
+   *   TRUE on pass.
    */
   protected function assertNoFieldByXPath($xpath, $value = NULL, $message = '', $group = 'Other') {
     $fields = $this->xpath($xpath);
@@ -1043,7 +1045,9 @@ trait AssertContentTrait {
         }
       }
     }
-    return $this->assertFalse($fields && $found, $message, $group);
+    $this->assertNotEmpty($fields);
+    $this->assertTrue($found, $message);
+    return TRUE;
   }
 
   /**
@@ -1192,11 +1196,14 @@ trait AssertContentTrait {
    *   this default.
    *
    * @return bool
-   *   TRUE on pass, FALSE on fail.
+   *   TRUE on pass.
    */
   protected function assertFieldChecked($id, $message = '', $group = 'Browser') {
+    $message = $message ? $message : new FormattableMarkup('Checkbox field @id is checked.', ['@id' => $id]);
     $elements = $this->xpath('//input[@id=:id]', [':id' => $id]);
-    return $this->assertTrue(isset($elements[0]) && !empty($elements[0]['checked']), $message ? $message : new FormattableMarkup('Checkbox field @id is checked.', ['@id' => $id]), $group);
+    $this->assertNotEmpty($elements, $message);
+    $this->assertNotEmpty($elements[0]['checked'], $message);
+    return TRUE;
   }
 
   /**
@@ -1216,11 +1223,14 @@ trait AssertContentTrait {
    *   this default.
    *
    * @return bool
-   *   TRUE on pass, FALSE on fail.
+   *   TRUE on pass.
    */
   protected function assertNoFieldChecked($id, $message = '', $group = 'Browser') {
+    $message = $message ? $message : new FormattableMarkup('Checkbox field @id is not checked.', ['@id' => $id]);
     $elements = $this->xpath('//input[@id=:id]', [':id' => $id]);
-    return $this->assertTrue(isset($elements[0]) && empty($elements[0]['checked']), $message ? $message : new FormattableMarkup('Checkbox field @id is not checked.', ['@id' => $id]), $group);
+    $this->assertNotEmpty($elements, $message);
+    $this->assertEmpty($elements[0]['checked'], $message);
+    return TRUE;
   }
 
   /**
@@ -1312,12 +1322,15 @@ trait AssertContentTrait {
    *   this default.
    *
    * @return bool
-   *   TRUE on pass, FALSE on fail.
+   *   TRUE on pass.
    */
   protected function assertNoOption($id, $option, $message = '', $group = 'Browser') {
+    $message = $message ? $message : new FormattableMarkup('Option @option for field @id does not exist.', ['@option' => $option, '@id' => $id]);
     $selects = $this->xpath('//select[@id=:id]', [':id' => $id]);
     $options = $this->xpath('//select[@id=:id]//option[@value=:option]', [':id' => $id, ':option' => $option]);
-    return $this->assertTrue(isset($selects[0]) && !isset($options[0]), $message ? $message : new FormattableMarkup('Option @option for field @id does not exist.', ['@option' => $option, '@id' => $id]), $group);
+    $this->assertArrayHasKey(0, $selects, $message);
+    $this->assertEmpty($options, $message);
+    return TRUE;
   }
 
   /**
@@ -1339,13 +1352,16 @@ trait AssertContentTrait {
    *   this default.
    *
    * @return bool
-   *   TRUE on pass, FALSE on fail.
+   *   TRUE on pass.
    *
    * @todo $id is unusable. Replace with $name.
    */
   protected function assertOptionSelected($id, $option, $message = '', $group = 'Browser') {
+    $message = $message ? $message : new FormattableMarkup('Option @option for field @id is selected.', ['@option' => $option, '@id' => $id]);
     $elements = $this->xpath('//select[@id=:id]//option[@value=:option]', [':id' => $id, ':option' => $option]);
-    return $this->assertTrue(isset($elements[0]) && !empty($elements[0]['selected']), $message ? $message : new FormattableMarkup('Option @option for field @id is selected.', ['@option' => $option, '@id' => $id]), $group);
+    $this->assertNotEmpty($elements, $message);
+    $this->assertNotEmpty($elements[0]['selected'], $message);
+    return TRUE;
   }
 
   /**
@@ -1372,8 +1388,11 @@ trait AssertContentTrait {
    * @todo $id is unusable. Replace with $name.
    */
   protected function assertOptionSelectedWithDrupalSelector($drupal_selector, $option, $message = '', $group = 'Browser') {
+    $message = $message ? $message : new FormattableMarkup('Option @option for field @data_drupal_selector is selected.', ['@option' => $option, '@data_drupal_selector' => $drupal_selector]);
     $elements = $this->xpath('//select[@data-drupal-selector=:data_drupal_selector]//option[@value=:option]', [':data_drupal_selector' => $drupal_selector, ':option' => $option]);
-    return $this->assertTrue(isset($elements[0]) && !empty($elements[0]['selected']), $message ? $message : new FormattableMarkup('Option @option for field @data_drupal_selector is selected.', ['@option' => $option, '@data_drupal_selector' => $drupal_selector]), $group);
+    $this->assertNotEmpty($elements, $message);
+    $this->assertNotEmpty($elements[0]['selected'], $message);
+    return TRUE;
   }
 
   /**
@@ -1395,11 +1414,14 @@ trait AssertContentTrait {
    *   this default.
    *
    * @return bool
-   *   TRUE on pass, FALSE on fail.
+   *   TRUE on pass.
    */
   protected function assertNoOptionSelected($id, $option, $message = '', $group = 'Browser') {
+    $message = $message ? $message : new FormattableMarkup('Option @option for field @id is not selected.', ['@option' => $option, '@id' => $id]);
     $elements = $this->xpath('//select[@id=:id]//option[@value=:option]', [':id' => $id, ':option' => $option]);
-    return $this->assertTrue(isset($elements[0]) && empty($elements[0]['selected']), $message ? $message : new FormattableMarkup('Option @option for field @id is not selected.', ['@option' => $option, '@id' => $id]), $group);
+    $this->assertNotEmpty($elements, $message);
+    $this->assertEmpty($elements[0]['selected'], $message);
+    return TRUE;
   }
 
   /**

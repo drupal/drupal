@@ -207,7 +207,9 @@ class BlockViewBuilderTest extends KernelTestBase {
     $build = $this->getBlockRenderArray();
     $this->assertFalse(isset($build['#prefix']), 'The appended #pre_render callback has not yet run before rendering.');
     $this->assertIdentical((string) $this->renderer->renderRoot($build), 'Hiya!<br>');
-    $this->assertTrue(isset($build['#prefix']) && $build['#prefix'] === 'Hiya!<br>', 'A cached block without content is altered.');
+    // Check that a cached block without content is altered.
+    $this->assertArrayHasKey('#prefix', $build);
+    $this->assertSame('Hiya!<br>', $build['#prefix']);
   }
 
   /**

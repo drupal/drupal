@@ -147,11 +147,17 @@ class LocaleStringTest extends KernelTestBase {
     // Try quick search function with different field combinations.
     $langcode = 'es';
     $found = $this->storage->findTranslation(['language' => $langcode, 'source' => $source1->source, 'context' => $source1->context]);
-    $this->assertTrue($found && isset($found->language) && isset($found->translation) && !$found->isNew(), 'Translation not found searching by source and context.');
+    $this->assertNotNull($found, 'Translation not found searching by source and context.');
+    $this->assertNotNull($found->language);
+    $this->assertNotNull($found->translation);
+    $this->assertFalse($found->isNew());
     $this->assertEquals($translate1[$langcode]->translation, $found->translation);
     // Now try a translation not found.
     $found = $this->storage->findTranslation(['language' => $langcode, 'source' => $source3->source, 'context' => $source3->context]);
-    $this->assertTrue($found && $found->lid == $source3->lid && !isset($found->translation) && $found->isNew());
+    $this->assertNotNull($found);
+    $this->assertSame($source3->lid, $found->lid);
+    $this->assertNull($found->translation);
+    $this->assertTrue($found->isNew());
 
     // Load all translations. For next queries we'll be loading only translated
     // strings.
