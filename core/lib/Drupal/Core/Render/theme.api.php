@@ -186,7 +186,7 @@
  *   @code
  *   function THEME_page_attachments_alter(array &$page) {
  *     if ($some_condition) {
- *       $page['#attached']['library'][] = 'mytheme/something';
+ *       $page['#attached']['library'][] = 'my_theme/something';
  *     }
  *   }
  *   @endcode

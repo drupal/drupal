@@ -111,7 +111,7 @@
  *
  * If the route has placeholders (see @ref sec_placeholders above) the
  * placeholders will be passed to the method (using reflection) by name.
- * For example, the placeholder '{myvar}' in a route will become the $myvar
+ * For example, the placeholder '{my_var}' in a route will become the $my_var
  * parameter to the method.
  *
  * Additionally, if a parameter is typed to one of the following special classes

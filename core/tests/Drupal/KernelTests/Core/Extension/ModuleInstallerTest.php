@@ -99,7 +99,7 @@ class ModuleInstallerTest extends KernelTestBase {
   }
 
   /**
-   * Dataprovider for testInvalidCoreInstall().
+   * Data provider for testInvalidCoreInstall().
    */
   public function providerTestInvalidCoreInstall() {
     return [

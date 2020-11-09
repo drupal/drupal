@@ -91,7 +91,7 @@ function hook_field_widget_third_party_settings_form(\Drupal\Core\Field\WidgetIn
  */
 function hook_field_formatter_settings_summary_alter(array &$summary, array $context) {
   // Append a message to the summary when an instance of foo_formatter has
-  // mysetting set to TRUE for the current view mode.
+  // my_setting set to TRUE for the current view mode.
   if ($context['formatter']->getPluginId() == 'foo_formatter') {
     if ($context['formatter']->getThirdPartySetting('my_module', 'my_setting')) {
       $summary[] = t('My setting enabled.');
@@ -114,7 +114,7 @@ function hook_field_formatter_settings_summary_alter(array &$summary, array $con
  */
 function hook_field_widget_settings_summary_alter(array &$summary, array $context) {
   // Append a message to the summary when an instance of foo_widget has
-  // mysetting set to TRUE for the current view mode.
+  // my_setting set to TRUE for the current view mode.
   if ($context['widget']->getPluginId() == 'foo_widget') {
     if ($context['widget']->getThirdPartySetting('my_module', 'my_setting')) {
       $summary[] = t('My setting enabled.');

@@ -421,51 +421,51 @@ function hook_install_tasks(&$install_state) {
   // Here, we define a variable to allow tasks to indicate that a particular,
   // processor-intensive batch process needs to be triggered later on in the
   // installation.
-  $myprofile_needs_batch_processing = \Drupal::state()->get('myprofile.needs_batch_processing', FALSE);
+  $my_profile_needs_batch_processing = \Drupal::state()->get('my_profile.needs_batch_processing', FALSE);
   $tasks = [
     // This is an example of a task that defines a form which the user who is
     // installing the site will be asked to fill out. To implement this task,
-    // your profile would define a function named myprofile_data_import_form()
+    // your profile would define a function named my_profile_data_import_form()
     // as a normal form API callback function, with associated validation and
     // submit handlers. In the submit handler, in addition to saving whatever
     // other data you have collected from the user, you might also call
-    // \Drupal::state()->set('myprofile.needs_batch_processing', TRUE) if the
+    // \Drupal::state()->set('my_profile.needs_batch_processing', TRUE) if the
     // user has entered data which requires that batch processing will need to
     // occur later on.
-    'myprofile_data_import_form' => [
+    'my_profile_data_import_form' => [
       'display_name' => t('Data import options'),
       'type' => 'form',
     ],
     // Similarly, to implement this task, your profile would define a function
-    // named myprofile_settings_form() with associated validation and submit
+    // named my_profile_settings_form() with associated validation and submit
     // handlers. This form might be used to collect and save additional
     // information from the user that your profile needs. There are no extra
     // steps required for your profile to act as an "installation wizard"; you
     // can simply define as many tasks of type 'form' as you wish to execute,
     // and the forms will be presented to the user, one after another.
-    'myprofile_settings_form' => [
+    'my_profile_settings_form' => [
       'display_name' => t('Additional options'),
       'type' => 'form',
     ],
     // This is an example of a task that performs batch operations. To
     // implement this task, your profile would define a function named
-    // myprofile_batch_processing() which returns a batch API array definition
+    // my_profile_batch_processing() which returns a batch API array definition
     // that the installer will use to execute your batch operations. Due to the
-    // 'myprofile.needs_batch_processing' variable used here, this task will be
+    // 'my_profile.needs_batch_processing' variable used here, this task will be
     // hidden and skipped unless your profile set it to TRUE in one of the
     // previous tasks.
-    'myprofile_batch_processing' => [
+    'my_profile_batch_processing' => [
       'display_name' => t('Import additional data'),
-      'display' => $myprofile_needs_batch_processing,
+      'display' => $my_profile_needs_batch_processing,
       'type' => 'batch',
-      'run' => $myprofile_needs_batch_processing ? INSTALL_TASK_RUN_IF_NOT_COMPLETED : INSTALL_TASK_SKIP,
+      'run' => $my_profile_needs_batch_processing ? INSTALL_TASK_RUN_IF_NOT_COMPLETED : INSTALL_TASK_SKIP,
     ],
     // This is an example of a task that will not be displayed in the list that
     // the user sees. To implement this task, your profile would define a
-    // function named myprofile_final_site_setup(), in which additional,
+    // function named my_profile_final_site_setup(), in which additional,
     // automated site setup operations would be performed. Since this is the
     // last task defined by your profile, you should also use this function to
-    // call \Drupal::state()->delete('myprofile.needs_batch_processing') and
+    // call \Drupal::state()->delete('my_profile.needs_batch_processing') and
     // clean up the state that was used above. If you want the user to pass
     // to the final Drupal installation tasks uninterrupted, return no output
     // from this function. Otherwise, return themed output that the user will
@@ -473,7 +473,7 @@ function hook_install_tasks(&$install_state) {
     // tasks are complete, with a link to reload the current page and therefore
     // pass on to the final Drupal installation tasks when the user is ready to
     // do so).
-    'myprofile_final_site_setup' => [],
+    'my_profile_final_site_setup' => [],
   ];
   return $tasks;
 }
@@ -499,7 +499,7 @@ function hook_install_tasks(&$install_state) {
 function hook_install_tasks_alter(&$tasks, $install_state) {
   // Replace the entire site configuration form provided by Drupal core
   // with a custom callback function defined by this installation profile.
-  $tasks['install_configure_form']['function'] = 'myprofile_install_configure_form';
+  $tasks['install_configure_form']['function'] = 'my_profile_install_configure_form';
 }
 
 /**
@@ -647,7 +647,7 @@ function hook_update_N(&$sandbox) {
     'not null' => FALSE,
   ];
   $schema = Database::getConnection()->schema();
-  $schema->addField('mytable1', 'newcol', $spec);
+  $schema->addField('my_table', 'newcol', $spec);
 
   // Example of what to do if there is an error during your update.
   if ($some_error_condition_met) {
@@ -660,26 +660,26 @@ function hook_update_N(&$sandbox) {
     // This must be the first run. Initialize the sandbox.
     $sandbox['progress'] = 0;
     $sandbox['current_pk'] = 0;
-    $sandbox['max'] = Database::getConnection()->query('SELECT COUNT([myprimarykey]) FROM {mytable1}')->fetchField();
+    $sandbox['max'] = Database::getConnection()->query('SELECT COUNT([my_primary_key]) FROM {my_table}')->fetchField();
   }
 
   // Update in chunks of 20.
-  $records = Database::getConnection()->select('mytable1', 'm')
-    ->fields('m', ['myprimarykey', 'otherfield'])
-    ->condition('myprimarykey', $sandbox['current_pk'], '>')
+  $records = Database::getConnection()->select('my_table', 'm')
+    ->fields('m', ['my_primary_key', 'other_field'])
+    ->condition('my_primary_key', $sandbox['current_pk'], '>')
     ->range(0, 20)
-    ->orderBy('myprimarykey', 'ASC')
+    ->orderBy('my_primary_key', 'ASC')
     ->execute();
   foreach ($records as $record) {
     // Here, you would make an update something related to this record. In this
     // example, some text is added to the other field.
-    Database::getConnection()->update('mytable1')
-      ->fields(['otherfield' => $record->otherfield . '-suffix'])
-      ->condition('myprimarykey', $record->myprimarykey)
+    Database::getConnection()->update('my_table')
+      ->fields(['other_field' => $record->other_field . '-suffix'])
+      ->condition('my_primary_key', $record->my_primary_key)
       ->execute();
 
     $sandbox['progress']++;
-    $sandbox['current_pk'] = $record->myprimarykey;
+    $sandbox['current_pk'] = $record->my_primary_key;
   }
 
   $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);

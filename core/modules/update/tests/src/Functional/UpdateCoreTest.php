@@ -445,7 +445,7 @@ class UpdateCoreTest extends UpdateTestBase {
   }
 
   /**
-   * Dataprovider for testSecurityCoverageMessage().
+   * Data provider for testSecurityCoverageMessage().
    *
    * These test cases rely on the following fixtures containing the following
    * releases:

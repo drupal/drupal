@@ -19,7 +19,7 @@ use Drupal\Tests\UnitTestCase;
 class ConnectionTest extends UnitTestCase {
 
   /**
-   * Dataprovider for testPrefixRoundTrip().
+   * Data provider for testPrefixRoundTrip().
    *
    * @return array
    *   Array of arrays with the following elements:
@@ -68,7 +68,7 @@ class ConnectionTest extends UnitTestCase {
   }
 
   /**
-   * Dataprovider for testPrefixTables().
+   * Data provider for testPrefixTables().
    *
    * @return array
    *   Array of arrays with the following elements:
@@ -117,7 +117,7 @@ class ConnectionTest extends UnitTestCase {
   }
 
   /**
-   * Dataprovider for testGetDriverClass().
+   * Data provider for testGetDriverClass().
    *
    * @return array
    *   Array of arrays with the following elements:
@@ -290,7 +290,7 @@ class ConnectionTest extends UnitTestCase {
   }
 
   /**
-   * Dataprovider for testSchema().
+   * Data provider for testSchema().
    *
    * @return array
    *   Array of arrays with the following elements:
@@ -366,7 +366,7 @@ class ConnectionTest extends UnitTestCase {
   }
 
   /**
-   * Dataprovider for testMakeComments().
+   * Data provider for testMakeComments().
    *
    * @return array
    *   Array of arrays with the following elements:
@@ -402,7 +402,7 @@ class ConnectionTest extends UnitTestCase {
   }
 
   /**
-   * Dataprovider for testFilterComments().
+   * Data provider for testFilterComments().
    *
    * @return array
    *   Array of arrays with the following elements:
@@ -644,7 +644,7 @@ class ConnectionTest extends UnitTestCase {
   }
 
   /**
-   * Dataprovider for testQueryTrim().
+   * Data provider for testQueryTrim().
    *
    * @return array
    *   Array of arrays with the following elements:

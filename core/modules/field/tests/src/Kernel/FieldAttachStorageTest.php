@@ -122,7 +122,7 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
         $values[$index][$field_name] = mt_rand(1, 127);
         $entity->$field_name->setValue(['value' => $values[$index][$field_name]]);
       }
-      $entity->enforceIsnew();
+      $entity->enforceIsNew();
       $entity->save();
     }
 

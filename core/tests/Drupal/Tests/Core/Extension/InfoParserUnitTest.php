@@ -334,7 +334,7 @@ CORE_8X;
   }
 
   /**
-   * Dataprovider for testCore8x().
+   * Data provider for testCore8x().
    */
   public function providerCore8x() {
     return [
@@ -444,7 +444,7 @@ INVALID_CORE_VERSION_REQUIREMENT;
   }
 
   /**
-   * Dataprovider for testCoreVersionRequirementInvalid().
+   * Data provider for testCoreVersionRequirementInvalid().
    */
   public function providerCoreVersionRequirementInvalid() {
     return [
@@ -583,7 +583,7 @@ CORE_INCOMPATIBILITY;
   }
 
   /**
-   * Dataprovider for testCoreIncompatibility().
+   * Data provider for testCoreIncompatibility().
    */
   public function providerCoreIncompatibility() {
     list($major, $minor) = explode('.', \Drupal::VERSION);

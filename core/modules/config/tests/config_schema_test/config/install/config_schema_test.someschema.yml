@@ -2,4 +2,4 @@ testitem: 'Since this file at least has top level schema in config_test.schema.y
 testlist:
  - 'Direct string items are identified and other items are'
  - 'recognized as undefined types.'
-testnoschema: 12
+test_no_schema: 12

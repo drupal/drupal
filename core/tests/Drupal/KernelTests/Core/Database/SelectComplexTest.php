@@ -324,12 +324,12 @@ class SelectComplexTest extends DatabaseTestBase {
   public function testJoinTwice() {
     $query = $this->connection->select('test')->fields('test');
     $alias = $query->join('test', 'test', 'test.job = %alias.job');
-    $query->addField($alias, 'name', 'othername');
-    $query->addField($alias, 'job', 'otherjob');
+    $query->addField($alias, 'name', 'other_name');
+    $query->addField($alias, 'job', 'other_job');
     $query->where("$alias.name <> test.name");
     $crowded_job = $query->execute()->fetch();
-    $this->assertEqual($crowded_job->job, $crowded_job->otherjob, 'Correctly joined same table twice.');
-    $this->assertNotEqual($crowded_job->name, $crowded_job->othername, 'Correctly joined same table twice.');
+    $this->assertEqual($crowded_job->job, $crowded_job->other_job, 'Correctly joined same table twice.');
+    $this->assertNotEqual($crowded_job->name, $crowded_job->other_name, 'Correctly joined same table twice.');
   }
 
   /**

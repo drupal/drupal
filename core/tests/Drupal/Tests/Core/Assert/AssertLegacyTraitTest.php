@@ -170,10 +170,10 @@ class AssertLegacyTraitTest extends UnitTestCase {
     $option_field->hasAttribute('selected')->willReturn(TRUE);
 
     $this->webAssert
-      ->optionExists('myselect', 'two')
+      ->optionExists('my_select', 'two')
       ->willReturn($option_field->reveal());
 
-    $this->assertOptionSelected('myselect', 'two');
+    $this->assertOptionSelected('my_select', 'two');
   }
 
   /**
@@ -185,11 +185,11 @@ class AssertLegacyTraitTest extends UnitTestCase {
     $option_field->hasAttribute('selected')->willReturn(FALSE);
 
     $this->webAssert
-      ->optionExists('myselect', 'two')
+      ->optionExists('my_select', 'two')
       ->willReturn($option_field->reveal());
 
     $this->expectException(ExpectationFailedException::class);
-    $this->assertOptionSelected('myselect', 'two');
+    $this->assertOptionSelected('my_select', 'two');
   }
 
   /**

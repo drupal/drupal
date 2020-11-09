@@ -382,10 +382,10 @@
  *   be an admin path). Here's an example using the configurable_language config
  *   entity:
  *   @code
- *   mymodule.myroute:
- *     path: '/admin/mypath/{configurable_language}'
+ *   my_module.my_route:
+ *     path: '/admin/my-path/{configurable_language}'
  *     defaults:
- *       _controller: '\Drupal\mymodule\MyController::myMethod'
+ *       _controller: '\Drupal\my_module\MyController::myMethod'
  *     options:
  *       parameters:
  *         configurable_language:
@@ -809,7 +809,7 @@
  *   arguments, but they all include an argument $container of type
  *   \Symfony\Component\DependencyInjection\ContainerInterface.
  *   If you are defining one of these classes, in the create() or
- *   createInstance() method, call $container->get('myservice.name') to
+ *   createInstance() method, call $container->get('my_service.name') to
  *   instantiate a service. The results of these calls are generally passed to
  *   the class constructor and saved as member variables in the class.
  * - For functions and class methods that do not have access to either of
@@ -837,7 +837,7 @@
  * @section sec_define Defining a service
  * If your module needs to define a new service, here are the steps:
  * - Choose a unique machine name for your service. Typically, this should
- *   start with your module name. Example: mymodule.myservice.
+ *   start with your module name. Example: my_module.my_service.
  * - Create a PHP interface to define what your service does.
  * - Create a default class implementing your interface that provides your
  *   service. If your class needs to use existing services (such as database

@@ -36,8 +36,8 @@ if (in_array('--help', $_SERVER['argv']) || empty($_SERVER['argv'])) {
 
 Generate Drupal password hashes from the shell.
 
-Usage:        {$script} [OPTIONS] "<plan-text password>"
-Example:      {$script} "mynewpassword"
+Usage:        {$script} [OPTIONS] "<plaintext password>"
+Example:      {$script} "my-new-password"
 
 All arguments are long options.
 
@@ -45,7 +45,7 @@ All arguments are long options.
 
   "<password1>" ["<password2>" ["<password3>" ...]]
 
-              One or more plan-text passwords enclosed by double quotes. The
+              One or more plaintext passwords enclosed by double quotes. The
               output hash may be manually entered into the
               {users_field_data}.pass field to change a password via SQL to a
               known value.

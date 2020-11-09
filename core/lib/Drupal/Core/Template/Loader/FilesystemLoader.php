@@ -11,7 +11,7 @@ use Twig\Loader\FilesystemLoader as TwigFilesystemLoader;
  *
  * This loader adds module and theme template paths as namespaces to the Twig
  * filesystem loader so that templates can be referenced by namespace, like
- * @block/block.html.twig or @mytheme/page.html.twig.
+ * @block/block.html.twig or @my_theme/page.html.twig.
  */
 class FilesystemLoader extends TwigFilesystemLoader {
 

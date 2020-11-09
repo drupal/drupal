@@ -462,7 +462,7 @@
     // 1. /nojs/
     // 2. /nojs$ - The end of a URL string.
     // 3. /nojs? - Followed by a query (e.g. path/nojs?destination=foobar).
-    // 4. /nojs# - Followed by a fragment (e.g.: path/nojs#myfragment).
+    // 4. /nojs# - Followed by a fragment (e.g.: path/nojs#my-fragment).
     const originalUrl = this.url;
 
     /**

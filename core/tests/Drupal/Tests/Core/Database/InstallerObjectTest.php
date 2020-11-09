@@ -47,7 +47,7 @@ class InstallerObjectTest extends UnitTestCase {
   }
 
   /**
-   * Dataprovider for testDbUrltoConnectionConversion().
+   * Data provider for testDbUrlToConnectionConversion().
    *
    * @return array
    *   Array of arrays with the following elements:
