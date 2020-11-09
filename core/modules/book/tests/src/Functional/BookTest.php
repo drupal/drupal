@@ -644,4 +644,12 @@ class BookTest extends BrowserTestBase {
     $this->assertText($this->book->label(), 'Unpublished book with "Show block only on book pages" book navigation settings.');
   }
 
+  /**
+   * Tests that the book settings form can be saved without error.
+   */
+  public function testSettingsForm() {
+    $this->drupalLogin($this->adminUser);
+    $this->drupalPostForm('admin/structure/book/settings', [], 'Save configuration');
+  }
+
 }
