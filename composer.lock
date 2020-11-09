@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b0f25f872cb3e35d4a7caf8c48aaa3c5",
+    "content-hash": "0f75a7d0e9e148f3f3d8abdb0a8a8e61",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -477,6 +477,7 @@
                 "reflection",
                 "static"
             ],
+            "abandoned": "roave/better-reflection",
             "time": "2020-03-27T11:06:43+00:00"
         },
         {
