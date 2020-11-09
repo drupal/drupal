@@ -96,10 +96,6 @@
     },
     "repositories": [
         {
-            "type": "composer",
-            "url": "https://packages.drupal.org/8"
-        },
-        {
             "type": "path",
             "url": "core"
         },
@@ -110,6 +106,10 @@
         {
             "type": "path",
             "url": "composer/Plugin/VendorHardening"
+        },
+        {
+            "type": "composer",
+            "url": "https://packages.drupal.org/8"
         }
     ]
 }
