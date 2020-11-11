@@ -126,10 +126,12 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     // Option 0: no sort.
     $this->assertSession()->fieldValueEquals('settings[handler_settings][sort][field]', '_none');
     $sort_by = $page->findField('settings[handler_settings][sort][field]');
-    $this->assertSession()->fieldNotExists('settings[handler_settings][sort][direction]');
+    $sort_direction = $page->findField('settings[handler_settings][sort][direction]');
+    $this->assertFalse($sort_direction->isVisible());
     // Option 1: sort by field.
     $sort_by->setValue('nid');
-    $assert_session->waitForField('settings[handler_settings][sort][direction]');
+    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertTrue($sort_direction->isVisible());
     $this->assertSession()->fieldValueEquals('settings[handler_settings][sort][direction]', 'ASC');
 
     // Test that the sort-by options are sorted.
@@ -154,7 +156,24 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     // Set back to no sort.
     $sort_by->setValue('_none');
     $assert_session->assertWaitOnAjaxRequest();
-    $this->assertSession()->fieldNotExists('settings[handler_settings][sort][direction]');
+    $this->assertFalse($sort_direction->isVisible());
+
+    // Sort by nid, then select no bundles. The sort fields and sort direction
+    // should not display. Then select all bundles again.
+    $sort_by->setValue('nid');
+    $assert_session->assertWaitOnAjaxRequest();
+    foreach ($bundles as $bundle_name => $bundle_info) {
+      $this->assertSession()->fieldExists('settings[handler_settings][target_bundles][' . $bundle_name . ']');
+      $page->findField('settings[handler_settings][target_bundles][' . $bundle_name . ']')->uncheck();
+      $assert_session->assertWaitOnAjaxRequest();
+    }
+    $sort_direction = $page->findField('settings[handler_settings][sort][direction]');
+    $this->assertFalse($sort_direction->isVisible());
+    foreach ($bundles as $bundle_name => $bundle_info) {
+      $this->assertSession()->fieldExists('settings[handler_settings][target_bundles][' . $bundle_name . ']');
+      $page->findField('settings[handler_settings][target_bundles][' . $bundle_name . ']')->setValue($bundle_name);
+      $sort_direction = $page->findField('settings[handler_settings][sort][direction]');
+    }
 
     // Third step: confirm.
     $this->drupalPostForm(NULL, [
@@ -190,6 +209,13 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $this->drupalGet($bundle_path . '/fields/' . $field_name);
     $this->assertSession()->fieldValueEquals('settings[handler_settings][filter][type]', '_none');
     $this->assertSession()->fieldValueEquals('settings[handler_settings][sort][field]', '_none');
+
+    // Check that sort direction is visible only when a sort field is selected.
+    $sort_direction = $page->findField('settings[handler_settings][sort][direction]');
+    $this->assertFalse($sort_direction->isVisible());
+    $sort_by->setValue('name');
+    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertTrue($sort_direction->isVisible());
 
     // Switch the target type to 'node'.
     $field_name = 'node.' . $this->type . '.field_test';
