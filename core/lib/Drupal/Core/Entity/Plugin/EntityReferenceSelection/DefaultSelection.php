@@ -246,18 +246,31 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
         '#process' => [[EntityReferenceItem::class, 'formProcessMergeParent']],
       ];
 
-      if ($configuration['sort']['field'] != '_none') {
-        $form['sort']['settings']['direction'] = [
-          '#type' => 'select',
-          '#title' => $this->t('Sort direction'),
-          '#required' => TRUE,
-          '#options' => [
-            'ASC' => $this->t('Ascending'),
-            'DESC' => $this->t('Descending'),
+      $form['sort']['settings']['direction'] = [
+        '#type' => 'select',
+        '#title' => $this->t('Sort direction'),
+        '#required' => TRUE,
+        '#options' => [
+          'ASC' => $this->t('Ascending'),
+          'DESC' => $this->t('Descending'),
+        ],
+        '#default_value' => $configuration['sort']['direction'],
+        '#states' => [
+          'visible' => [
+            ':input[name="settings[handler_settings][sort][field]"]' => [
+              '!value' => '_none',
+            ],
           ],
-          '#default_value' => $configuration['sort']['direction'],
+        ],
+      ];
+      if ($entity_type->hasKey('bundle')) {
+        $form['sort']['settings']['direction']['#states']['visible'][] = [
+          ':input[name^="settings[handler_settings][target_bundles]["]' => [
+            'checked' => TRUE,
+          ],
         ];
       }
+
     }
 
     $form['auto_create'] = [
