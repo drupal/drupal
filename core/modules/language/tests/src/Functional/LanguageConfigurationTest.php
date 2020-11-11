@@ -44,11 +44,12 @@ class LanguageConfigurationTest extends BrowserTestBase {
 
     // Check if the Default English language has no path prefix.
     $this->drupalGet('admin/config/regional/language/detection/url');
-    $this->assertFieldByXPath('//input[@name="prefix[en]"]', '', 'Default English has no path prefix.');
+    $this->assertSession()->fieldValueEquals("prefix[en]", '');
 
     // Check that Add language is a primary button.
     $this->drupalGet('admin/config/regional/language/add');
-    $this->assertFieldByXPath('//input[contains(@class, "button--primary")]', 'Add language', 'Add language is a primary button');
+    $button = $this->assertSession()->buttonExists('Add language');
+    $this->assertTrue($button->hasClass("button--primary"));
 
     // Add predefined language.
     $edit = [
@@ -63,10 +64,10 @@ class LanguageConfigurationTest extends BrowserTestBase {
 
     // Check if the Default English language has no path prefix.
     $this->drupalGet('admin/config/regional/language/detection/url');
-    $this->assertFieldByXPath('//input[@name="prefix[en]"]', '', 'Default English has no path prefix.');
+    $this->assertSession()->fieldValueEquals("prefix[en]", '');
     // Check if French has a path prefix.
     $this->drupalGet('admin/config/regional/language/detection/url');
-    $this->assertFieldByXPath('//input[@name="prefix[fr]"]', 'fr', 'French has a path prefix.');
+    $this->assertSession()->fieldValueEquals("prefix[fr]", 'fr');
 
     // Check if we can change the default language.
     $this->drupalGet('admin/config/regional/language');
@@ -84,17 +85,17 @@ class LanguageConfigurationTest extends BrowserTestBase {
     // Check if a valid language prefix is added after changing the default
     // language.
     $this->drupalGet('admin/config/regional/language/detection/url');
-    $this->assertFieldByXPath('//input[@name="prefix[en]"]', 'en', 'A valid path prefix has been added to the previous default language.');
+    $this->assertSession()->fieldValueEquals("prefix[en]", 'en');
     // Check if French still has a path prefix.
     $this->drupalGet('admin/config/regional/language/detection/url');
-    $this->assertFieldByXPath('//input[@name="prefix[fr]"]', 'fr', 'French still has a path prefix.');
+    $this->assertSession()->fieldValueEquals("prefix[fr]", 'fr');
 
     // Check that prefix can be changed.
     $edit = [
       'prefix[fr]' => 'french',
     ];
     $this->drupalPostForm(NULL, $edit, t('Save configuration'));
-    $this->assertFieldByXPath('//input[@name="prefix[fr]"]', 'french', 'French path prefix has changed.');
+    $this->assertSession()->fieldValueEquals("prefix[fr]", 'french');
 
     // Check that the prefix can be removed.
     $edit = [

@@ -535,8 +535,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $this->drupalGet('admin/config/people/accounts/translate/fr/edit');
     foreach ($edit as $key => $value) {
       // Check the translations appear in the right field type as well.
-      $xpath = '//' . (strpos($key, '[body]') ? 'textarea' : 'input') . '[@name="' . $key . '"]';
-      $this->assertFieldByXPath($xpath, $value);
+      $this->assertSession()->fieldValueEquals($key, $value);
     }
     // Check that labels for email settings appear.
     $this->assertText(t('Account cancellation confirmation'));

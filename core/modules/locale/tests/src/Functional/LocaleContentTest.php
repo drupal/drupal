@@ -43,7 +43,8 @@ class LocaleContentTest extends BrowserTestBase {
 
     // Verify that the machine name field is LTR for a new content type.
     $this->drupalGet('admin/structure/types/add');
-    $this->assertFieldByXpath('//input[@name="type" and @dir="ltr"]', NULL, 'The machine name field is LTR when no additional language is configured.');
+    $type = $this->assertSession()->fieldExists('type');
+    $this->assertSame('ltr', $type->getAttribute('dir'));
 
     // Install the Arabic language (which is RTL) and configure as the default.
     $edit = [];
@@ -57,7 +58,8 @@ class LocaleContentTest extends BrowserTestBase {
 
     // Verify that the machine name field is still LTR for a new content type.
     $this->drupalGet('admin/structure/types/add');
-    $this->assertFieldByXpath('//input[@name="type" and @dir="ltr"]', NULL, 'The machine name field is LTR when the default language is RTL.');
+    $type = $this->assertSession()->fieldExists('type');
+    $this->assertSame('ltr', $type->getAttribute('dir'));
   }
 
   /**

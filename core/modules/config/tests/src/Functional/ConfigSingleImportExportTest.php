@@ -243,8 +243,11 @@ EOD;
   public function testExport() {
     $this->drupalLogin($this->drupalCreateUser(['export configuration']));
 
+    // Verify that the simple configuration option is selected when specified
+    // in the URL.
     $this->drupalGet('admin/config/development/configuration/single/export/system.simple');
-    $this->assertFieldByXPath('//select[@name="config_type"]//option[@selected="selected"]', t('Simple configuration'), 'The simple configuration option is selected when specified in the URL.');
+    $option_node = $this->assertSession()->optionExists("config_type", 'Simple configuration');
+    $this->assertTrue($option_node->isSelected());
     // Spot check several known simple configuration files.
     $element = $this->xpath('//select[@name="config_name"]')[0];
     $options = $element->findAll('css', 'option');
@@ -257,12 +260,17 @@ EOD;
     $this->drupalGet('admin/config/development/configuration/single/export/system.simple/system.image');
     $this->assertEquals("toolkit: gd\n_core:\n  default_config_hash: durWHaKeBaq4d9Wpi4RqwADj1OufDepcnJuhVLmKN24\n", $this->xpath('//textarea[@name="export"]')[0]->getValue(), 'The expected system configuration is displayed.');
 
+    // Verify that the date format entity type is selected when specified in
+    // the URL.
     $this->drupalGet('admin/config/development/configuration/single/export/date_format');
-    $this->assertFieldByXPath('//select[@name="config_type"]//option[@selected="selected"]', t('Date format'), 'The date format entity type is selected when specified in the URL.');
+    $option_node = $this->assertSession()->optionExists("config_type", 'Date format');
+    $this->assertTrue($option_node->isSelected());
 
+    // Verify that the fallback date format config entity is selected when
+    // specified in the URL.
     $this->drupalGet('admin/config/development/configuration/single/export/date_format/fallback');
-    $this->assertFieldByXPath('//select[@name="config_name"]//option[@selected="selected"]', t('Fallback date format (fallback)'), 'The fallback date format config entity is selected when specified in the URL.');
-
+    $option_node = $this->assertSession()->optionExists("config_name", 'Fallback date format (fallback)');
+    $this->assertTrue($option_node->isSelected());
     $fallback_date = \Drupal::entityTypeManager()->getStorage('date_format')->load('fallback');
     $yaml_text = $this->xpath('//textarea[@name="export"]')[0]->getValue();
     $this->assertEquals(Yaml::decode($yaml_text), $fallback_date->toArray(), 'The fallback date format config entity export code is displayed.');

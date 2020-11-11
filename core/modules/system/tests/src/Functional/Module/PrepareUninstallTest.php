@@ -158,8 +158,7 @@ class PrepareUninstallTest extends BrowserTestBase {
     // Test an entity type which does not have any existing entities.
     $this->drupalGet('admin/modules/uninstall/entity/entity_test_no_label');
     $this->assertText('There are 0 entity test without label entities to delete.');
-    $button_xpath = '//input[@type="submit"][@value="Delete all entity test without label entities"]';
-    $this->assertNoFieldByXPath($button_xpath, NULL, 'Button with value "Delete all entity test without label entities" not found');
+    $this->assertSession()->buttonNotExists("Delete all entity test without label entities");
 
     // Test an entity type without a label.
     /** @var \Drupal\Core\Entity\EntityStorageInterface $storage */
@@ -171,7 +170,7 @@ class PrepareUninstallTest extends BrowserTestBase {
     ])->save();
     $this->drupalGet('admin/modules/uninstall/entity/entity_test_no_label');
     $this->assertText('This will delete 1 entity test without label.');
-    $this->assertFieldByXPath($button_xpath, NULL, 'Button with value "Delete all entity test without label entities" found');
+    $this->assertSession()->buttonExists("Delete all entity test without label entities");
     $storage->create([
       'id' => mb_strtolower($this->randomMachineName()),
       'name' => $this->randomMachineName(),

@@ -323,8 +323,8 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     $this->drupalPostForm($path, $edit, 'Save settings');
     $this->drupalGet($path);
     // Expect a select element with the two vocabularies as options.
-    $this->assertFieldByXPath("//select[@name='settings[handler_settings][auto_create_bundle]']/option[@value='" . $vocabularies[0]->id() . "']");
-    $this->assertFieldByXPath("//select[@name='settings[handler_settings][auto_create_bundle]']/option[@value='" . $vocabularies[1]->id() . "']");
+    $this->assertSession()->optionExists('settings[handler_settings][auto_create_bundle]', $vocabularies[0]->id());
+    $this->assertSession()->optionExists('settings[handler_settings][auto_create_bundle]', $vocabularies[1]->id());
 
     $edit = [
       'settings[handler_settings][auto_create]' => TRUE,

@@ -239,7 +239,7 @@ class ExposedFormTest extends ViewTestBase {
     $xpath = $this->assertSession()->buildXPathQuery('//div[@class="view-content"]/form/@id', [
       ':id' => Html::getUniqueId('block-' . $block->id()),
     ]);
-    $this->assertNoFieldByXpath($xpath, $this->getExpectedExposedFormId($view), 'No exposed form found in views content region.');
+    $this->assertSession()->elementNotExists('xpath', $xpath);
 
     // Test there is only one views exposed form on the page.
     $elements = $this->xpath('//form[@id=:id]', [':id' => $this->getExpectedExposedFormId($view)]);

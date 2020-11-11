@@ -68,7 +68,7 @@ class BlockContentListTest extends BlockContentTestBase {
 
     // Confirm that once the user returns to the listing, the text of the label
     // (versus elsewhere on the page).
-    $this->assertFieldByXpath('//td', $label, 'Label found for added block.');
+    $this->assertSession()->elementTextContains('xpath', '//td', $label);
 
     // Check the number of table row cells.
     $elements = $this->xpath('//div[@class="layout-content"]//table/tbody/tr[@class="odd"]/td');
@@ -98,7 +98,7 @@ class BlockContentListTest extends BlockContentTestBase {
 
     // Confirm that once the user returns to the listing, the text of the label
     // (versus elsewhere on the page).
-    $this->assertFieldByXpath('//td', $new_label, 'Label found for updated custom block.');
+    $this->assertSession()->elementTextContains('xpath', '//td', $new_label);
 
     // Delete the added entity using the operations link.
     $this->assertSession()->linkByHrefExists('block/' . $block->id() . '/delete');
@@ -110,7 +110,7 @@ class BlockContentListTest extends BlockContentTestBase {
 
     // Verify that the text of the label and machine name does not appear in
     // the list (though it may appear elsewhere on the page).
-    $this->assertNoFieldByXpath('//td', $new_label, 'No label found for deleted custom block.');
+    $this->assertSession()->elementTextNotContains('xpath', '//td', $new_label);
 
     // Confirm that the empty text is displayed.
     $this->assertText(t('There are no custom blocks yet.'));

@@ -58,18 +58,18 @@ class ContentTranslationStandardFieldsTest extends BrowserTestBase {
     $this->drupalGet($path);
 
     // Check content block fields.
-    $this->assertFieldByXPath("//input[@id='edit-settings-block-content-basic-fields-body' and @checked='checked']");
+    $this->assertSession()->checkboxChecked('edit-settings-block-content-basic-fields-body');
 
     // Check comment fields.
-    $this->assertFieldByXPath("//input[@id='edit-settings-comment-comment-fields-comment-body' and @checked='checked']");
+    $this->assertSession()->checkboxChecked('edit-settings-comment-comment-fields-comment-body');
 
     // Check node fields.
-    $this->assertFieldByXPath("//input[@id='edit-settings-node-article-fields-comment' and @checked='checked']");
-    $this->assertFieldByXPath("//input[@id='edit-settings-node-article-fields-field-image' and @checked='checked']");
-    $this->assertFieldByXPath("//input[@id='edit-settings-node-article-fields-field-tags' and @checked='checked']");
+    $this->assertSession()->checkboxChecked('edit-settings-node-article-fields-comment');
+    $this->assertSession()->checkboxChecked('edit-settings-node-article-fields-field-image');
+    $this->assertSession()->checkboxChecked('edit-settings-node-article-fields-field-tags');
 
     // Check user fields.
-    $this->assertFieldByXPath("//input[@id='edit-settings-user-user-fields-user-picture' and @checked='checked']");
+    $this->assertSession()->checkboxChecked('edit-settings-user-user-fields-user-picture');
   }
 
   /**
@@ -78,7 +78,7 @@ class ContentTranslationStandardFieldsTest extends BrowserTestBase {
   public function testRevisionLogNotTranslatable() {
     $path = 'admin/config/regional/content-language';
     $this->drupalGet($path);
-    $this->assertNoFieldByXPath("//input[@id='edit-settings-node-article-fields-revision-log']");
+    $this->assertSession()->fieldNotExists('edit-settings-node-article-fields-revision-log');
   }
 
 }

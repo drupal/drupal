@@ -247,15 +247,15 @@ class DisplayTest extends UITestBase {
     $this->assertNoRaw($display_title);
 
     // Ensure that the dropdown buttons are displayed correctly.
-    $this->assertFieldByXpath('//input[@type="submit"]', 'Duplicate ' . $display_title);
-    $this->assertFieldByXpath('//input[@type="submit"]', 'Delete ' . $display_title);
-    $this->assertFieldByXpath('//input[@type="submit"]', 'Disable ' . $display_title);
-    $this->assertNoFieldByXpath('//input[@type="submit"]', 'Enable ' . $display_title);
+    $this->assertSession()->buttonExists('Duplicate ' . $display_title);
+    $this->assertSession()->buttonExists('Delete ' . $display_title);
+    $this->assertSession()->buttonExists('Disable ' . $display_title);
+    $this->assertSession()->buttonNotExists('Enable ' . $display_title);
 
     // Disable the display so we can test the rendering of the "Enable" button.
     $this->drupalPostForm(NULL, [], 'Disable ' . $display_title);
-    $this->assertFieldByXpath('//input[@type="submit"]', 'Enable ' . $display_title);
-    $this->assertNoFieldByXpath('//input[@type="submit"]', 'Disable ' . $display_title);
+    $this->assertSession()->buttonExists('Enable ' . $display_title);
+    $this->assertSession()->buttonNotExists('Disable ' . $display_title);
 
     // Ensure that the title is escaped as expected.
     $this->assertSession()->assertEscaped($display_title);

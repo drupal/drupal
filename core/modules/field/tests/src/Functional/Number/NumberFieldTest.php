@@ -252,7 +252,9 @@ class NumberFieldTest extends BrowserTestBase {
       $id = $match[1];
       $this->assertText(t('entity_test @id has been created.', ['@id' => $id]), 'Entity was created');
       $this->assertRaw($valid_entry);
-      $this->assertNoFieldByXpath('//div[@content="' . $valid_entry . '"]', NULL, 'The "content" attribute is not present since the Prefix is not being displayed');
+      // Verify that the "content" attribute is not present since the Prefix is
+      // not being displayed.
+      $this->assertSession()->elementNotExists('xpath', '//div[@content="' . $valid_entry . '"]');
     }
 
     // Test for the content attribute when a Prefix is displayed. Presumably this also tests for the attribute when a Suffix is displayed.
@@ -274,7 +276,9 @@ class NumberFieldTest extends BrowserTestBase {
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', ['@id' => $id]), 'Entity was created');
     $this->drupalGet('entity_test/' . $id);
-    $this->assertFieldByXPath('//div[@content="' . $integer_value . '"]', 'ThePrefix' . $integer_value, 'The "content" attribute has been set to the value of the field, and the prefix is being displayed.');
+    // Verify that the "content" attribute has been set to the value of the
+    // field, and the prefix is being displayed.
+    $this->assertSession()->elementTextContains('xpath', '//div[@content="' . $integer_value . '"]', 'ThePrefix' . $integer_value);
   }
 
   /**

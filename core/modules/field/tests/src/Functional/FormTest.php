@@ -202,7 +202,7 @@ class FormTest extends FieldTestBase {
     // Display creation form.
     $this->drupalGet('entity_test/add');
     // Test that the default value is displayed correctly.
-    $this->assertFieldByXpath("//input[@name='{$field_name}[0][value]' and @value='$default']");
+    $this->assertSession()->fieldValueEquals("{$field_name}[0][value]", $default);
 
     // Try to submit an empty value.
     $edit = [
@@ -413,7 +413,7 @@ class FormTest extends FieldTestBase {
     $this->drupalPostForm(NULL, [], t('Add another item'));
 
     // Verify that no error is thrown by the radio element.
-    $this->assertNoFieldByXpath('//div[contains(@class, "error")]', FALSE, 'No error message is displayed.');
+    $this->assertSession()->elementNotExists('xpath', '//div[contains(@class, "error")]');
 
     // Verify that the widget is added.
     $this->assertSession()->fieldValueEquals("{$field_name}[0][value]", '');

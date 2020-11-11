@@ -126,11 +126,11 @@ class ExposedFormUITest extends UITestBase {
     $view_id = $this->randomView()['id'];
     $this->drupalGet("admin/structure/views/nojs/add-handler/$view_id/default/sort");
     $this->drupalPostForm(NULL, ['name[node_field_data.created]' => 1], t('Add and configure @handler', ['@handler' => t('sort criteria')]));
-    $this->assertFieldByXPath('//input[@name="options[order]" and @checked="checked"]', 'ASC', 'The default order is set.');
+    $this->assertSession()->fieldValueEquals('options[order]', 'ASC');
     // Change the order and expose the sort.
     $this->drupalPostForm(NULL, ['options[order]' => 'DESC'], t('Apply'));
     $this->drupalPostForm("admin/structure/views/nojs/handler/$view_id/default/sort/created", [], t('Expose sort'));
-    $this->assertFieldByXPath('//input[@name="options[order]" and @checked="checked"]', 'DESC');
+    $this->assertSession()->fieldValueEquals('options[order]', 'DESC');
     $this->assertSession()->fieldValueEquals('options[expose][label]', 'Authored on');
     // Change the label and save the view.
     $edit = ['options[expose][label]' => $this->randomString()];

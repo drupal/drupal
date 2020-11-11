@@ -402,7 +402,9 @@ class PathAliasTest extends PathTestBase {
     $node_two = $this->drupalCreateNode();
     $this->drupalPostForm('node/' . $node_two->id() . '/edit', $edit, t('Save'));
     $this->assertSession()->pageTextContains("The alias {$edit['path[0][alias]']} is already in use in this language.");
-    $this->assertFieldByXPath("//input[@name='path[0][alias]' and contains(@class, 'error')]", $edit['path[0][alias]'], 'Textfield exists and has the error class.');
+    $path_alias = $this->assertSession()->fieldExists('path[0][alias]');
+    $this->assertSession()->fieldValueEquals('path[0][alias]', $edit['path[0][alias]']);
+    $this->assertTrue($path_alias->hasClass('error'));
 
     // Behavior here differs with the inline_form_errors module enabled.
     // Enable the inline_form_errors module and try this again. This module

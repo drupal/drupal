@@ -58,7 +58,10 @@ trait FieldUiTestTrait {
     $this->assertRaw(t('Saved %label configuration.', ['%label' => $label]));
 
     // Check that the field appears in the overview form.
-    $this->assertFieldByXPath('//table[@id="field-overview"]//tr/td[1]', $label, 'Field was created and appears in the overview page.');
+    $xpath = $this->assertSession()->buildXPathQuery("//table[@id=\"field-overview\"]//tr/td[1 and text() = :label]", [
+      ':label' => $label,
+    ]);
+    $this->assertSession()->elementExists('xpath', $xpath);
   }
 
   /**
@@ -95,7 +98,10 @@ trait FieldUiTestTrait {
     $this->assertRaw(t('Saved %label configuration.', ['%label' => $label]));
 
     // Check that the field appears in the overview form.
-    $this->assertFieldByXPath('//table[@id="field-overview"]//tr/td[1]', $label, 'Field was created and appears in the overview page.');
+    $xpath = $this->assertSession()->buildXPathQuery("//table[@id=\"field-overview\"]//tr/td[1 and text() = :label]", [
+      ':label' => $label,
+    ]);
+    $this->assertSession()->elementExists('xpath', $xpath);
   }
 
   /**
@@ -123,7 +129,10 @@ trait FieldUiTestTrait {
     $this->assertRaw(t('The field %label has been deleted from the %type content type.', ['%label' => $label, '%type' => $bundle_label]));
 
     // Check that the field does not appear in the overview form.
-    $this->assertNoFieldByXPath('//table[@id="field-overview"]//span[@class="label-field"]', $label, 'Field does not appear in the overview page.');
+    $xpath = $this->assertSession()->buildXPathQuery('//table[@id="field-overview"]//span[@class="label-field" and text()= :label]', [
+      ':label' => $label,
+    ]);
+    $this->assertSession()->elementNotExists('xpath', $xpath);
   }
 
 }

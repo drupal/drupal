@@ -115,7 +115,8 @@ class ViewEditTest extends UITestBase {
     $this->drupalPostForm('admin/structure/views/nojs/rearrange/test_view/default/field', $fields, t('Apply'));
     $this->drupalPostForm(NULL, [], 'Save');
     $this->drupalPostForm(NULL, [], t('Cancel'));
-    $this->assertNoFieldByXpath('//div[contains(@class, "error")]', FALSE, 'No error message is displayed.');
+    // Verify that no error message is displayed.
+    $this->assertSession()->elementNotExists('xpath', '//div[contains(@class, "error")]');
     // Verify page was redirected to the view listing.
     $this->assertSession()->addressEquals('admin/structure/views');
   }

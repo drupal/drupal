@@ -335,27 +335,27 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->drupalGet('test-field-xpath');
     $this->assertFieldsByValue($this->xpath("//h1[@class = 'page-title']"), NULL);
     $this->assertFieldsByValue($this->xpath('//table/tbody/tr[2]/td[1]'), 'one');
-    $this->assertFieldByXPath('//table/tbody/tr[2]/td[1]', 'one');
+    $this->assertSession()->elementTextContains('xpath', '//table/tbody/tr[2]/td[1]', 'one');
 
     $this->assertFieldsByValue($this->xpath("//input[@id = 'edit-name']"), 'Test name');
-    $this->assertFieldByXPath("//input[@id = 'edit-name']", 'Test name');
+    $this->assertSession()->fieldValueEquals('edit-name', 'Test name');
     $this->assertFieldsByValue($this->xpath("//select[@id = 'edit-options']"), '2');
-    $this->assertFieldByXPath("//select[@id = 'edit-options']", '2');
+    $this->assertSession()->fieldValueEquals('edit-options', '2');
 
-    $this->assertNoFieldByXPath('//notexisting');
-    $this->assertNoFieldByXPath("//input[@id = 'edit-name']", 'wrong value');
+    $this->assertSession()->elementNotExists('xpath', '//notexisting');
+    $this->assertSession()->fieldValueNotEquals('edit-name', 'wrong value');
 
     // Test that the assertion fails correctly.
     try {
-      $this->assertFieldByXPath("//input[@id = 'notexisting']");
+      $this->assertSession()->fieldExists('notexisting');
       $this->fail('The "notexisting" field was found.');
     }
-    catch (ExpectationFailedException $e) {
+    catch (ExpectationException $e) {
       // Expected exception; just continue testing.
     }
 
     try {
-      $this->assertNoFieldByXPath("//input[@id = 'edit-name']");
+      $this->assertSession()->fieldNotExists('edit-name');
       $this->fail('The "edit-name" field was not found.');
     }
     catch (ExpectationException $e) {
@@ -385,16 +385,20 @@ class BrowserTestBaseTest extends BrowserTestBase {
   }
 
   /**
-   * Tests legacy field asserts by id.
+   * Tests legacy field asserts by id and by Xpath.
    *
    * @group legacy
    */
   public function testAssertFieldById() {
     $this->expectDeprecation('AssertLegacyTrait::assertFieldById() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->fieldExists() or $this->assertSession()->buttonExists() or $this->assertSession()->fieldValueEquals() instead. See https://www.drupal.org/node/3129738');
     $this->expectDeprecation('AssertLegacyTrait::assertNoFieldById() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->fieldNotExists() or $this->assertSession()->buttonNotExists() or $this->assertSession()->fieldValueNotEquals() instead. See https://www.drupal.org/node/3129738');
+    $this->expectDeprecation('AssertLegacyTrait::assertFieldByXPath() is deprecated in drupal:8.3.0 and is removed from drupal:10.0.0. Use $this->xpath() instead and check the values directly in the test. See https://www.drupal.org/node/3129738');
+    $this->expectDeprecation('AssertLegacyTrait::assertNoFieldByXPath() is deprecated in drupal:8.3.0 and is removed from drupal:10.0.0. Use $this->xpath() instead and assert that the result is empty. See https://www.drupal.org/node/3129738');
     $this->drupalGet('test-field-xpath');
     $this->assertFieldById('edit-save', NULL);
     $this->assertNoFieldById('invalid', NULL);
+    $this->assertFieldByXPath("//input[@id = 'edit-name']", 'Test name');
+    $this->assertNoFieldByXPath("//input[@id = 'edit-name']", 'wrong value');
   }
 
   /**

@@ -45,7 +45,7 @@ class BlockHtmlTest extends BrowserTestBase {
 
     // Ensure that a block's ID is converted to an HTML valid ID, and that
     // block-specific attributes are added to the same DOM element.
-    $this->assertFieldByXPath('//div[@id="block-test-html-block" and @data-custom-attribute="foo"]', NULL, 'HTML ID and attributes for test block are valid and on the same DOM element.');
+    $this->assertSession()->elementExists('xpath', '//div[@id="block-test-html-block" and @data-custom-attribute="foo"]');
 
     // Ensure expected markup for a menu block.
     $elements = $this->xpath('//nav[contains(@class, :nav-class)]/ul[contains(@class, :ul-class)]/li', [':nav-class' => 'block-menu', ':ul-class' => 'menu']);
