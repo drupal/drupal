@@ -193,15 +193,14 @@ class TaggedWithTest extends WizardTestBase {
     // by default (when the wizard is configured to display all content) and
     // also when the node type that has the tagging field is selected, but not
     // when the node type that doesn't have the tagging field is selected.
-    $tags_xpath = '//input[@name="show[tagged_with]"]';
     $this->drupalGet('admin/structure/views/add');
-    $this->assertFieldByXpath($tags_xpath);
+    $this->assertSession()->fieldExists("show[tagged_with]");
     $view['show[type]'] = $this->nodeTypeWithTags->id();
     $this->drupalPostForm('admin/structure/views/add', $view, t('Update "of type" choice'));
-    $this->assertFieldByXpath($tags_xpath);
+    $this->assertSession()->fieldExists("show[tagged_with]");
     $view['show[type]'] = $this->nodeTypeWithoutTags->id();
     $this->drupalPostForm(NULL, $view, t('Update "of type" choice (2)'));
-    $this->assertNoFieldByXpath($tags_xpath);
+    $this->assertSession()->fieldNotExists("show[tagged_with]");
 
     // If we add an instance of the tagging field to the second node type, the
     // "tagged with" form element should not appear for it too.
@@ -228,10 +227,10 @@ class TaggedWithTest extends WizardTestBase {
 
     $view['show[type]'] = $this->nodeTypeWithTags->id();
     $this->drupalPostForm('admin/structure/views/add', $view, t('Update "of type" choice'));
-    $this->assertFieldByXpath($tags_xpath);
+    $this->assertSession()->fieldExists("show[tagged_with]");
     $view['show[type]'] = $this->nodeTypeWithoutTags->id();
     $this->drupalPostForm(NULL, $view, t('Update "of type" choice (2)'));
-    $this->assertFieldByXpath($tags_xpath);
+    $this->assertSession()->fieldExists("show[tagged_with]");
   }
 
 }

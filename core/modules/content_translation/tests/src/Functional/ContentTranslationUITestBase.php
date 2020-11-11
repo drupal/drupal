@@ -157,7 +157,8 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     }
 
     if ($this->testLanguageSelector) {
-      $this->assertNoFieldByXPath('//select[@id="edit-langcode-0-value"]', NULL, 'Language selector correctly disabled on translations.');
+      // Verify that language selector is correctly disabled on translations.
+      $this->assertSession()->fieldNotExists('edit-langcode-0-value');
     }
     $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId);
@@ -178,7 +179,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     // This does not save anything, it merely reloads the form and fills in the
     // fields with the values from the different source language.
     $this->drupalPostForm($add_url, $edit, t('Change'));
-    $this->assertFieldByXPath("//input[@name=\"{$this->fieldName}[0][value]\"]", $values[$source_langcode][$this->fieldName][0]['value'], 'Source language correctly switched.');
+    $this->assertSession()->fieldValueEquals("{$this->fieldName}[0][value]", $values[$source_langcode][$this->fieldName][0]['value']);
 
     // Add another translation and mark the other ones as outdated.
     $values[$langcode] = $this->getNewEntityValues($langcode);
@@ -256,16 +257,19 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
       $url = $entity->toUrl('edit-form', ['language' => ConfigurableLanguage::load($added_langcode)]);
       $this->drupalGet($url);
       if ($added_langcode == $langcode) {
-        $this->assertFieldByXPath('//input[@name="content_translation[retranslate]"]', FALSE, 'The retranslate flag is not checked by default.');
+        // Verify that the retranslate flag is not checked by default.
+        $this->assertSession()->fieldValueEquals('content_translation[retranslate]', FALSE);
         $this->assertEmpty($this->xpath('//details[@id="edit-content-translation" and @open="open"]'), 'The translation tab should be collapsed by default.');
       }
       else {
-        $this->assertFieldByXPath('//input[@name="content_translation[outdated]"]', TRUE, 'The translate flag is checked by default.');
+        // Verify that the translate flag is checked by default.
+        $this->assertSession()->fieldValueEquals('content_translation[outdated]', TRUE);
         $this->assertNotEmpty($this->xpath('//details[@id="edit-content-translation" and @open="open"]'), 'The translation tab is correctly expanded when the translation is outdated.');
         $edit = ['content_translation[outdated]' => FALSE];
         $this->drupalPostForm($url, $edit, $this->getFormSubmitAction($entity, $added_langcode));
         $this->drupalGet($url);
-        $this->assertFieldByXPath('//input[@name="content_translation[retranslate]"]', FALSE, 'The retranslate flag is now shown.');
+        // Verify that retranslate flag is now shown.
+        $this->assertSession()->fieldValueEquals('content_translation[retranslate]', FALSE);
         $storage = $this->container->get('entity_type.manager')
           ->getStorage($this->entityTypeId);
         $storage->resetCache([$this->entityId]);
@@ -300,7 +304,8 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
 
     // Check that the last published translation cannot be unpublished.
     $this->drupalGet($entity->toUrl('edit-form'));
-    $this->assertFieldByXPath('//input[@name="content_translation[status]" and @disabled="disabled"]', TRUE, 'The last translation is published and cannot be unpublished.');
+    $this->assertSession()->fieldDisabled('content_translation[status]');
+    $this->assertSession()->fieldValueEquals('content_translation[status]', TRUE);
   }
 
   /**

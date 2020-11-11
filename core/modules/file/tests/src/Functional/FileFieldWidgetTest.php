@@ -97,13 +97,13 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
     // Ensure the edit page has a remove button instead of an upload button.
     $this->drupalGet("node/$nid/edit");
-    $this->assertNoFieldByXPath('//input[@type="submit"]', t('Upload'), 'Node with file does not display the "Upload" button.');
-    $this->assertFieldByXpath('//input[@type="submit"]', t('Remove'), 'Node with file displays the "Remove" button.');
+    $this->assertSession()->buttonNotExists('Upload');
+    $this->assertSession()->buttonExists('Remove');
     $this->drupalPostForm(NULL, [], t('Remove'));
 
     // Ensure the page now has an upload button instead of a remove button.
-    $this->assertNoFieldByXPath('//input[@type="submit"]', t('Remove'), 'After clicking the "Remove" button, it is no longer displayed.');
-    $this->assertFieldByXpath('//input[@type="submit"]', t('Upload'), 'After clicking the "Remove" button, the "Upload" button is displayed.');
+    $this->assertSession()->buttonNotExists('Remove');
+    $this->assertSession()->buttonExists('Upload');
     // Test label has correct 'for' attribute.
     $input = $this->xpath('//input[@name="files[' . $field_name . '_0]"]');
     $label = $this->xpath('//label[@for="' . $input[0]->getAttribute('id') . '"]');
@@ -149,7 +149,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
         $this->drupalPostForm(NULL, $edit, t('Upload'));
       }
     }
-    $this->assertNoFieldByXpath('//input[@type="submit"]', t('Upload'), 'After uploading 3 files for each field, the "Upload" button is no longer displayed.');
+    $this->assertSession()->buttonNotExists('Upload');
 
     $num_expected_remove_buttons = 6;
 
@@ -197,7 +197,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     }
 
     // Ensure the page now has no Remove buttons.
-    $this->assertNoFieldByXPath('//input[@type="submit"]', t('Remove'), 'After removing all files, there is no "Remove" button displayed.');
+    $this->assertSession()->buttonNotExists('Remove');
 
     // Save the node and ensure it does not have any files.
     $this->drupalPostForm(NULL, ['title[0][value]' => $this->randomMachineName()], t('Save'));
@@ -272,12 +272,12 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     // Ensure we can't change 'uri_scheme' field settings while there are some
     // entities with uploaded files.
     $this->drupalGet("admin/structure/types/manage/$type_name/fields/$field_id/storage");
-    $this->assertFieldByXpath('//input[@id="edit-settings-uri-scheme-public" and @disabled="disabled"]', 'public', 'Upload destination setting disabled.');
+    $this->assertSession()->fieldDisabled("edit-settings-uri-scheme-public");
 
     // Delete node and confirm that setting could be changed.
     $node->delete();
     $this->drupalGet("admin/structure/types/manage/$type_name/fields/$field_id/storage");
-    $this->assertFieldByXpath('//input[@id="edit-settings-uri-scheme-public" and not(@disabled)]', 'public', 'Upload destination setting enabled.');
+    $this->assertSession()->fieldEnabled("edit-settings-uri-scheme-public");
   }
 
   /**

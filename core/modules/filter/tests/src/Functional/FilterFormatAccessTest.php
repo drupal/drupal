@@ -235,7 +235,8 @@ class FilterFormatAccessTest extends BrowserTestBase {
     $this->clickLink(t('Edit'));
 
     // Verify that body field is read-only and contains replacement value.
-    $this->assertFieldByXPath("//textarea[@name='$body_value_key' and @disabled='disabled']", t('This field has been disabled because you do not have sufficient permissions to edit it.'), 'Text format access denied message found.');
+    $this->assertSession()->fieldDisabled($body_value_key);
+    $this->assertSession()->fieldValueEquals($body_value_key, 'This field has been disabled because you do not have sufficient permissions to edit it.');
 
     // Verify that title can be changed, but preview displays original body.
     $new_edit = [];
@@ -256,7 +257,8 @@ class FilterFormatAccessTest extends BrowserTestBase {
     // else.)
     $this->drupalLogin($this->filterAdminUser);
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertFieldByXPath("//textarea[@name='$body_value_key' and @disabled='disabled']", t('This field has been disabled because you do not have sufficient permissions to edit it.'), 'Text format access denied message found.');
+    $this->assertSession()->fieldDisabled($body_value_key);
+    $this->assertSession()->fieldValueEquals($body_value_key, 'This field has been disabled because you do not have sufficient permissions to edit it.');
 
     // Disable the text format used above.
     $this->disallowedFormat->disable()->save();
@@ -267,14 +269,15 @@ class FilterFormatAccessTest extends BrowserTestBase {
     // edit content that does not have an assigned format.
     $this->drupalLogin($this->webUser);
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertFieldByXPath("//textarea[@name='$body_value_key' and @disabled='disabled']", t('This field has been disabled because you do not have sufficient permissions to edit it.'), 'Text format access denied message found.');
+    $this->assertSession()->fieldDisabled($body_value_key);
+    $this->assertSession()->fieldValueEquals($body_value_key, 'This field has been disabled because you do not have sufficient permissions to edit it.');
 
     // Log back in as the filter administrator and verify that the body field
     // can be edited.
     $this->drupalLogin($this->filterAdminUser);
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertNoFieldByXPath("//textarea[@name='$body_value_key' and @disabled='disabled']", NULL, 'Text format access denied message not found.');
-    $this->assertFieldByXPath("//select[@name='$body_format_key']", NULL, 'Text format selector found.');
+    $this->assertSession()->fieldEnabled($body_value_key);
+    $this->assertSession()->fieldExists($body_format_key);
 
     // Verify that trying to save the node without selecting a new text format
     // produces an error message, and does not result in the node being saved.

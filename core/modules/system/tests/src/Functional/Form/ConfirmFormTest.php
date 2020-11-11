@@ -31,7 +31,7 @@ class ConfirmFormTest extends BrowserTestBase {
     $site_name = $this->config('system.site')->get('name');
     $this->assertSession()->titleEquals("ConfirmFormTestForm::getQuestion(). | $site_name");
     $this->assertText(t('ConfirmFormTestForm::getDescription().'), 'The description was used.');
-    $this->assertFieldByXPath('//input[@id="edit-submit"]', t('ConfirmFormTestForm::getConfirmText().'), 'The confirm text was used.');
+    $this->assertSession()->buttonExists('ConfirmFormTestForm::getConfirmText().');
 
     // Test cancelling the form.
     $this->clickLink(t('ConfirmFormTestForm::getCancelText().'));

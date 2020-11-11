@@ -36,7 +36,7 @@ class NodeSyndicateBlockTest extends NodeTestBase {
     // Place the "Syndicate" block and confirm that it is rendered.
     $this->drupalPlaceBlock('node_syndicate_block', ['id' => 'test_syndicate_block']);
     $this->drupalGet('');
-    $this->assertFieldByXPath('//div[@id="block-test-syndicate-block"]/*', NULL, 'Syndicate block found.');
+    $this->assertSession()->elementExists('xpath', '//div[@id="block-test-syndicate-block"]/*');
   }
 
 }

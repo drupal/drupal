@@ -287,8 +287,8 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $this->drupalPostForm($field_edit_path, $edit, t('Save field settings'));
     $this->assertText('Updated field Body field settings.');
     $this->drupalGet($field_edit_path);
-    $this->assertFieldByXPath("//select[@name='cardinality']", 'number');
-    $this->assertFieldByXPath("//input[@name='cardinality_number']", 6);
+    $this->assertSession()->fieldValueEquals('cardinality', 'number');
+    $this->assertSession()->fieldValueEquals('cardinality_number', 6);
 
     // Check that tabs displayed.
     $this->assertSession()->linkExists('Edit');
@@ -320,8 +320,8 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $this->drupalPostForm($field_edit_path, $edit, t('Save field settings'));
     $this->assertText('Updated field Body field settings.');
     $this->drupalGet($field_edit_path);
-    $this->assertFieldByXPath("//select[@name='cardinality']", FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
-    $this->assertFieldByXPath("//input[@name='cardinality_number']", 1);
+    $this->assertSession()->fieldValueEquals('cardinality', FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
+    $this->assertSession()->fieldValueEquals('cardinality_number', 1);
 
     // Assert that you can't set the cardinality to a lower number then the
     // highest delta of this field but can set it to the same.
@@ -635,7 +635,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     // Check that the newly added field appears on the 'Manage Fields'
     // screen.
     $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields');
-    $this->assertFieldByXPath('//table[@id="field-overview"]//tr[@id="hidden-test-field"]//td[1]', $field['label'], 'Field was created and appears in the overview page.');
+    $this->assertSession()->elementTextContains('xpath', '//table[@id="field-overview"]//tr[@id="hidden-test-field"]//td[1]', $field['label']);
 
     // Check that the field does not appear in the 're-use existing field' row
     // on other bundles.

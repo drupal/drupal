@@ -140,7 +140,7 @@ class CKEditorAdminTest extends BrowserTestBase {
 
     // Ensure the styles textarea exists and is initialized empty.
     $styles_textarea = $this->xpath('//textarea[@name="editor[settings][plugins][stylescombo][styles]"]');
-    $this->assertFieldByXPath('//textarea[@name="editor[settings][plugins][stylescombo][styles]"]', '', 'The styles textarea exists and is empty.');
+    $this->assertSession()->fieldValueEquals('editor[settings][plugins][stylescombo][styles]', '');
     $this->assertCount(1, $styles_textarea, 'The "styles" textarea exists.');
 
     // Submit the form to save the selection of CKEditor as the chosen editor.
@@ -284,7 +284,7 @@ class CKEditorAdminTest extends BrowserTestBase {
 
     // Ensure the styles textarea exists and is initialized empty.
     $styles_textarea = $this->xpath('//textarea[@name="editor[settings][plugins][stylescombo][styles]"]');
-    $this->assertFieldByXPath('//textarea[@name="editor[settings][plugins][stylescombo][styles]"]', '', 'The styles textarea exists and is empty.');
+    $this->assertSession()->fieldValueEquals('editor[settings][plugins][stylescombo][styles]', '');
     $this->assertCount(1, $styles_textarea, 'The "styles" textarea exists.');
 
     // Submit the form to create both a new text format and an associated text

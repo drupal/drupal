@@ -78,7 +78,7 @@ class UserCreateTest extends BrowserTestBase {
     $this->drupalGet('admin/people/create');
     $this->assertSession()->fieldValueEquals('edit-status-0', '1');
     $this->assertSession()->fieldValueEquals('edit-status-1', '1');
-    $this->assertFieldByXPath('//input[@type="radio" and @id="edit-status-1" and @checked="checked"]', NULL, 'Default setting for user status is active.');
+    $this->assertSession()->checkboxChecked('edit-status-1');
 
     // Test that browser autocomplete behavior does not occur.
     $this->assertNoRaw('data-user-info-from-browser');

@@ -143,8 +143,8 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
 
     $this->drupalGet('node/' . $nid . '/edit');
-    $this->assertFieldByXPath('//input[@type="checkbox" and @name="' . $field_name . '[0][display]"]', NULL, 'Default file display checkbox field exists.');
-    $this->assertFieldByXPath('//input[@type="checkbox" and @name="' . $field_name . '[0][display]" and not(@checked)]', NULL, 'Default file display is off.');
+    $this->assertSession()->fieldExists($field_name . '[0][display]');
+    $this->assertSession()->checkboxNotChecked($field_name . '[0][display]');
   }
 
   /**
@@ -218,7 +218,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
 
     // Test default formatter.
     $this->drupalGet('node/' . $nid);
-    $this->assertFieldByXPath('//a[@href="' . $node->{$field_name}->entity->createFileUrl(FALSE) . '"]', $description);
+    $this->assertSession()->elementTextContains('xpath', '//a[@href="' . $node->{$field_name}->entity->createFileUrl(FALSE) . '"]', $description);
 
     // Change formatter to "Table of files".
     $display = \Drupal::entityTypeManager()->getStorage('entity_view_display')->load('node.' . $type_name . '.default');
@@ -228,7 +228,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     ])->save();
 
     $this->drupalGet('node/' . $nid);
-    $this->assertFieldByXPath('//a[@href="' . $node->{$field_name}->entity->createFileUrl(FALSE) . '"]', $description);
+    $this->assertSession()->elementTextContains('xpath', '//a[@href="' . $node->{$field_name}->entity->createFileUrl(FALSE) . '"]', $description);
   }
 
 }

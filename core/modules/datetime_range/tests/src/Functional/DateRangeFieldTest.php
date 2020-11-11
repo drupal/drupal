@@ -68,12 +68,12 @@ class DateRangeFieldTest extends DateTestBase {
       $this->drupalGet('entity_test/add');
       $this->assertSession()->fieldValueEquals("{$field_name}[0][value][date]", '');
       $this->assertSession()->fieldValueEquals("{$field_name}[0][end_value][date]", '');
-      $this->assertFieldByXPath('//*[@id="edit-' . $field_name . '-wrapper"]//label[contains(@class, "js-form-required")]', TRUE, 'Required markup found');
+      $this->assertSession()->elementExists('xpath', '//*[@id="edit-' . $field_name . '-wrapper"]//label[contains(@class, "js-form-required")]');
       $this->assertSession()->fieldNotExists("{$field_name}[0][value][time]");
       $this->assertSession()->fieldNotExists("{$field_name}[0][end_value][time]");
-      $this->assertFieldByXPath('//fieldset[@id="edit-' . $field_name . '-0"]/legend', $field_label, 'Fieldset and label found');
-      $this->assertFieldByXPath('//fieldset[@aria-describedby="edit-' . $field_name . '-0--description"]', NULL, 'ARIA described-by found');
-      $this->assertFieldByXPath('//div[@id="edit-' . $field_name . '-0--description"]', NULL, 'ARIA description found');
+      $this->assertSession()->elementTextContains('xpath', '//fieldset[@id="edit-' . $field_name . '-0"]/legend', $field_label);
+      $this->assertSession()->elementExists('xpath', '//fieldset[@aria-describedby="edit-' . $field_name . '-0--description"]');
+      $this->assertSession()->elementExists('xpath', '//div[@id="edit-' . $field_name . '-0--description"]');
 
       // Build up dates in the UTC timezone.
       $value = '2012-12-31 00:00:00';
@@ -160,7 +160,7 @@ class DateRangeFieldTest extends DateTestBase {
       // Verify that hook_entity_prepare_view can add attributes.
       // @see entity_test_entity_prepare_view()
       $this->drupalGet('entity_test/' . $id);
-      $this->assertFieldByXPath('//div[@data-field-item-attr="foobar"]');
+      $this->assertSession()->elementExists('xpath', '//div[@data-field-item-attr="foobar"]');
 
       // Verify that the plain formatter works.
       $this->displayOptions['type'] = 'daterange_plain';
@@ -250,7 +250,7 @@ class DateRangeFieldTest extends DateTestBase {
       // Verify that hook_entity_prepare_view can add attributes.
       // @see entity_test_entity_prepare_view()
       $this->drupalGet('entity_test/' . $id);
-      $this->assertFieldByXPath('//time[@data-field-item-attr="foobar"]');
+      $this->assertSession()->elementExists('xpath', '//time[@data-field-item-attr="foobar"]');
 
       $this->displayOptions['type'] = 'daterange_plain';
       $this->displayOptions['settings'] = $this->defaultSettings;
@@ -298,9 +298,9 @@ class DateRangeFieldTest extends DateTestBase {
     $this->assertSession()->fieldValueEquals("{$field_name}[0][value][time]", '');
     $this->assertSession()->fieldValueEquals("{$field_name}[0][end_value][date]", '');
     $this->assertSession()->fieldValueEquals("{$field_name}[0][end_value][time]", '');
-    $this->assertFieldByXPath('//fieldset[@id="edit-' . $field_name . '-0"]/legend', $field_label, 'Fieldset and label found');
-    $this->assertFieldByXPath('//fieldset[@aria-describedby="edit-' . $field_name . '-0--description"]', NULL, 'ARIA described-by found');
-    $this->assertFieldByXPath('//div[@id="edit-' . $field_name . '-0--description"]', NULL, 'ARIA description found');
+    $this->assertSession()->elementTextContains('xpath', '//fieldset[@id="edit-' . $field_name . '-0"]/legend', $field_label);
+    $this->assertSession()->elementExists('xpath', '//fieldset[@aria-describedby="edit-' . $field_name . '-0--description"]');
+    $this->assertSession()->elementExists('xpath', '//div[@id="edit-' . $field_name . '-0--description"]');
 
     // Build up dates in the UTC timezone.
     $value = '2012-12-31 00:00:00';
@@ -357,7 +357,7 @@ class DateRangeFieldTest extends DateTestBase {
     // Verify that hook_entity_prepare_view can add attributes.
     // @see entity_test_entity_prepare_view()
     $this->drupalGet('entity_test/' . $id);
-    $this->assertFieldByXPath('//div[@data-field-item-attr="foobar"]');
+    $this->assertSession()->elementExists('xpath', '//div[@data-field-item-attr="foobar"]');
 
     // Verify that the plain formatter works.
     $this->displayOptions['type'] = 'daterange_plain';
@@ -435,7 +435,7 @@ class DateRangeFieldTest extends DateTestBase {
     // Verify that hook_entity_prepare_view can add attributes.
     // @see entity_test_entity_prepare_view()
     $this->drupalGet('entity_test/' . $id);
-    $this->assertFieldByXPath('//time[@data-field-item-attr="foobar"]');
+    $this->assertSession()->elementExists('xpath', '//time[@data-field-item-attr="foobar"]');
 
     $this->displayOptions['type'] = 'daterange_plain';
     $this->displayOptions['settings'] = $this->defaultSettings;
@@ -474,12 +474,12 @@ class DateRangeFieldTest extends DateTestBase {
     $this->drupalGet('entity_test/add');
     $this->assertSession()->fieldValueEquals("{$field_name}[0][value][date]", '');
     $this->assertSession()->fieldValueEquals("{$field_name}[0][end_value][date]", '');
-    $this->assertFieldByXPath('//*[@id="edit-' . $field_name . '-wrapper"]//label[contains(@class, "js-form-required")]', TRUE, 'Required markup found');
+    $this->assertSession()->elementExists('xpath', '//*[@id="edit-' . $field_name . '-wrapper"]//label[contains(@class, "js-form-required")]');
     $this->assertSession()->fieldNotExists("{$field_name}[0][value][time]");
     $this->assertSession()->fieldNotExists("{$field_name}[0][end_value][time]");
-    $this->assertFieldByXPath('//fieldset[@id="edit-' . $field_name . '-0"]/legend', $field_label, 'Fieldset and label found');
-    $this->assertFieldByXPath('//fieldset[@aria-describedby="edit-' . $field_name . '-0--description"]', NULL, 'ARIA described-by found');
-    $this->assertFieldByXPath('//div[@id="edit-' . $field_name . '-0--description"]', NULL, 'ARIA description found');
+    $this->assertSession()->elementTextContains('xpath', '//fieldset[@id="edit-' . $field_name . '-0"]/legend', $field_label);
+    $this->assertSession()->elementExists('xpath', '//fieldset[@aria-describedby="edit-' . $field_name . '-0--description"]');
+    $this->assertSession()->elementExists('xpath', '//div[@id="edit-' . $field_name . '-0--description"]');
 
     // Build up dates in the proper timezone.
     $value = '2012-12-31 00:00:00';
@@ -530,7 +530,7 @@ class DateRangeFieldTest extends DateTestBase {
     // Verify that hook_entity_prepare_view can add attributes.
     // @see entity_test_entity_prepare_view()
     $this->drupalGet('entity_test/' . $id);
-    $this->assertFieldByXPath('//div[@data-field-item-attr="foobar"]');
+    $this->assertSession()->elementExists('xpath', '//div[@data-field-item-attr="foobar"]');
 
     // Verify that the plain formatter works.
     $this->displayOptions['type'] = 'daterange_plain';
@@ -611,7 +611,7 @@ class DateRangeFieldTest extends DateTestBase {
     // Verify that hook_entity_prepare_view can add attributes.
     // @see entity_test_entity_prepare_view()
     $this->drupalGet('entity_test/' . $id);
-    $this->assertFieldByXPath('//div[@data-field-item-attr="foobar"]');
+    $this->assertSession()->elementExists('xpath', '//div[@data-field-item-attr="foobar"]');
 
     $this->displayOptions['type'] = 'daterange_plain';
     $this->container->get('entity_display.repository')
@@ -662,15 +662,15 @@ class DateRangeFieldTest extends DateTestBase {
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
-    $this->assertFieldByXPath('//fieldset[@id="edit-' . $field_name . '-0"]/legend', $field_label, 'Fieldset and label found');
-    $this->assertFieldByXPath('//fieldset[@aria-describedby="edit-' . $field_name . '-0--description"]', NULL, 'ARIA described-by found');
-    $this->assertFieldByXPath('//div[@id="edit-' . $field_name . '-0--description"]', NULL, 'ARIA description found');
+    $this->assertSession()->elementTextContains('xpath', '//fieldset[@id="edit-' . $field_name . '-0"]/legend', $field_label);
+    $this->assertSession()->elementExists('xpath', '//fieldset[@aria-describedby="edit-' . $field_name . '-0--description"]');
+    $this->assertSession()->elementExists('xpath', '//div[@id="edit-' . $field_name . '-0--description"]');
 
     // Assert that Hour and Minute Elements do not appear on Date Only.
-    $this->assertNoFieldByXPath("//*[@id=\"edit-$field_name-0-value-hour\"]", NULL, 'Hour element not found on Date Only.');
-    $this->assertNoFieldByXPath("//*[@id=\"edit-$field_name-0-value-minute\"]", NULL, 'Minute element not found on Date Only.');
-    $this->assertNoFieldByXPath("//*[@id=\"edit-$field_name-0-end-value-hour\"]", NULL, 'Hour element not found on Date Only.');
-    $this->assertNoFieldByXPath("//*[@id=\"edit-$field_name-0-end-value-minute\"]", NULL, 'Minute element not found on Date Only.');
+    $this->assertSession()->elementNotExists('xpath', "//*[@id=\"edit-$field_name-0-value-hour\"]");
+    $this->assertSession()->elementNotExists('xpath', "//*[@id=\"edit-$field_name-0-value-minute\"]");
+    $this->assertSession()->elementNotExists('xpath', "//*[@id=\"edit-$field_name-0-end-value-hour\"]");
+    $this->assertSession()->elementNotExists('xpath', "//*[@id=\"edit-$field_name-0-end-value-minute\"]");
 
     // Go to the form display page to assert that increment option does not
     // appear on Date Only.
@@ -680,7 +680,7 @@ class DateRangeFieldTest extends DateTestBase {
     // Click on the widget settings button to open the widget settings form.
     $this->drupalPostForm(NULL, [], $field_name . "_settings_edit");
     $xpathIncr = "//select[starts-with(@id, \"edit-fields-$field_name-settings-edit-form-settings-increment\")]";
-    $this->assertNoFieldByXPath($xpathIncr, NULL, 'Increment element not found for Date Only.');
+    $this->assertSession()->elementNotExists('xpath', $xpathIncr);
 
     // Change the field is set to an all day field.
     $this->fieldStorage->setSetting('datetime_type', DateRangeItem::DATETIME_TYPE_ALLDAY);
@@ -701,10 +701,10 @@ class DateRangeFieldTest extends DateTestBase {
     $this->drupalGet('entity_test/add');
 
     // Assert that Hour and Minute Elements do not appear on Date Only.
-    $this->assertNoFieldByXPath("//*[@id=\"edit-$field_name-0-value-hour\"]", NULL, 'Hour element not found on Date Only.');
-    $this->assertNoFieldByXPath("//*[@id=\"edit-$field_name-0-value-minute\"]", NULL, 'Minute element not found on Date Only.');
-    $this->assertNoFieldByXPath("//*[@id=\"edit-$field_name-0-end-value-hour\"]", NULL, 'Hour element not found on Date Only.');
-    $this->assertNoFieldByXPath("//*[@id=\"edit-$field_name-0-end-value-minute\"]", NULL, 'Minute element not found on Date Only.');
+    $this->assertSession()->elementNotExists('xpath', "//*[@id=\"edit-$field_name-0-value-hour\"]");
+    $this->assertSession()->elementNotExists('xpath', "//*[@id=\"edit-$field_name-0-value-minute\"]");
+    $this->assertSession()->elementNotExists('xpath', "//*[@id=\"edit-$field_name-0-end-value-hour\"]");
+    $this->assertSession()->elementNotExists('xpath', "//*[@id=\"edit-$field_name-0-end-value-minute\"]");
 
     // Go to the form display page to assert that increment option does not
     // appear on Date Only.
@@ -714,7 +714,7 @@ class DateRangeFieldTest extends DateTestBase {
     // Click on the widget settings button to open the widget settings form.
     $this->drupalPostForm(NULL, [], $field_name . "_settings_edit");
     $xpathIncr = "//select[starts-with(@id, \"edit-fields-$field_name-settings-edit-form-settings-increment\")]";
-    $this->assertNoFieldByXPath($xpathIncr, NULL, 'Increment element not found for Date Only.');
+    $this->assertSession()->elementNotExists('xpath', $xpathIncr);
 
     // Change the field to a datetime field.
     $this->fieldStorage->setSetting('datetime_type', DateRangeItem::DATETIME_TYPE_DATETIME);
@@ -740,14 +740,14 @@ class DateRangeFieldTest extends DateTestBase {
 
     // Click on the widget settings button to open the widget settings form.
     $this->drupalPostForm(NULL, [], $field_name . "_settings_edit");
-    $this->assertFieldByXPath($xpathIncr, NULL, 'Increment element found for Date and time.');
+    $this->assertSession()->elementExists('xpath', $xpathIncr);
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
 
     foreach (['value', 'end-value'] as $column) {
       foreach (['year', 'month', 'day', 'hour', 'minute', 'ampm'] as $element) {
-        $this->assertFieldByXPath("//*[@id=\"edit-$field_name-0-$column-$element\"]", NULL, $element . ' element found.');
+        $this->assertSession()->elementExists('xpath', "//*[@id=\"edit-$field_name-0-$column-$element\"]");
         $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-$column-$element", '')->isSelected());
       }
     }
@@ -803,12 +803,12 @@ class DateRangeFieldTest extends DateTestBase {
     $this->drupalGet('entity_test/add');
 
     // Other elements are unaffected by the changed settings.
-    $this->assertFieldByXPath("//*[@id=\"edit-$field_name-0-value-hour\"]", NULL, 'Hour element found.');
+    $this->assertSession()->elementExists('xpath', "//*[@id=\"edit-$field_name-0-value-hour\"]");
     $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-hour", '')->isSelected());
-    $this->assertNoFieldByXPath("//*[@id=\"edit-$field_name-0-value-ampm\"]", NULL, 'AMPM element not found.');
-    $this->assertFieldByXPath("//*[@id=\"edit-$field_name-0-end-value-hour\"]", NULL, 'Hour element found.');
+    $this->assertSession()->elementNotExists('xpath', "//*[@id=\"edit-$field_name-0-value-ampm\"]");
+    $this->assertSession()->elementExists('xpath', "//*[@id=\"edit-$field_name-0-end-value-hour\"]");
     $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-end-value-hour", '')->isSelected());
-    $this->assertNoFieldByXPath("//*[@id=\"edit-$field_name-0-end-value-ampm\"]", NULL, 'AMPM element not found.');
+    $this->assertSession()->elementNotExists('xpath', "//*[@id=\"edit-$field_name-0-end-value-ampm\"]");
 
     // Submit a valid date and ensure it is accepted.
     $start_date_value = ['year' => 2012, 'month' => 12, 'day' => 31, 'hour' => 17, 'minute' => 15];

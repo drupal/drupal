@@ -24,7 +24,8 @@ class FileManagedFileElementTest extends FileFieldTestBase {
   public function testManagedFile() {
     // Check that $element['#size'] is passed to the child upload element.
     $this->drupalGet('file/test');
-    $this->assertFieldByXpath('//input[@name="files[nested_file]" and @size="13"]', NULL, 'The custom #size attribute is passed to the child upload element.');
+    $field = $this->assertSession()->fieldExists("files[nested_file]");
+    $this->assertEquals(13, $field->getAttribute('size'));
 
     // Perform the tests with all permutations of $form['#tree'],
     // $element['#extended'], and $element['#multiple'].
@@ -115,12 +116,12 @@ class FileManagedFileElementTest extends FileFieldTestBase {
     // Add a single file to the upload field.
     $this->drupalPostForm(NULL, $edit, t('Upload'));
     $fid_list[] = $this->getLastFileId();
-    $this->assertFieldByXpath('//input[@name="nested[file][file_' . $fid_list[0] . '][selected]"]', NULL, 'First file successfully uploaded to multiple file element.');
+    $this->assertSession()->fieldExists("nested[file][file_{$fid_list[0]}][selected]");
 
     // Add another file to the same upload field.
     $this->drupalPostForm(NULL, $edit, t('Upload'));
     $fid_list[] = $this->getLastFileId();
-    $this->assertFieldByXpath('//input[@name="nested[file][file_' . $fid_list[1] . '][selected]"]', NULL, 'Second file successfully uploaded to multiple file element.');
+    $this->assertSession()->fieldExists("nested[file][file_{$fid_list[1]}][selected]");
 
     // Save the entire form.
     $this->drupalPostForm(NULL, [], t('Save'));
@@ -134,8 +135,8 @@ class FileManagedFileElementTest extends FileFieldTestBase {
     $this->drupalPostForm($path . '/' . implode(',', $fid_list), $edit, t('Remove selected'));
 
     // Check that the first file has been deleted but not the second.
-    $this->assertNoFieldByXpath('//input[@name="nested[file][file_' . $fid_list[0] . '][selected]"]', NULL, 'An individual file can be deleted from a multiple file element.');
-    $this->assertFieldByXpath('//input[@name="nested[file][file_' . $fid_list[1] . '][selected]"]', NULL, 'Second individual file not deleted when the first file is deleted from a multiple file element.');
+    $this->assertSession()->fieldNotExists("nested[file][file_{$fid_list[0]}][selected]");
+    $this->assertSession()->fieldExists("nested[file][file_{$fid_list[1]}][selected]");
   }
 
   /**

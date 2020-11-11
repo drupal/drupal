@@ -77,12 +77,12 @@ class DisplayFeedTest extends UITestBase {
     $this->assertNoRaw('<em>Page</em>');
 
     $this->drupalGet('admin/structure/views/view/' . $view_name . '/edit/feed_1');
-    $this->assertFieldByXpath('//*[@id="views-feed-1-displays"]', '<em>Page</em>');
+    $this->assertSession()->elementTextContains('xpath', '//*[@id="views-feed-1-displays"]', 'Page');
 
     // Add the default display, so there should now be multiple displays.
     $this->drupalPostForm('admin/structure/views/nojs/display/' . $view_name . '/feed_1/displays', ['displays[default]' => 'default'], t('Apply'));
     $this->drupalGet('admin/structure/views/view/' . $view_name . '/edit/feed_1');
-    $this->assertFieldByXpath('//*[@id="views-feed-1-displays"]', 'Multiple displays');
+    $this->assertSession()->elementTextContains('xpath', '//*[@id="views-feed-1-displays"]', 'Multiple displays');
   }
 
 }

@@ -145,11 +145,11 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $this->assertTrue($sorted, 'The "sort by" options are sorted.');
 
     // Test that a non-translatable base field is a sort option.
-    $this->assertFieldByXPath("//select[@name='settings[handler_settings][sort][field]']/option[@value='nid']");
+    $this->assertSession()->optionExists('settings[handler_settings][sort][field]', 'nid');
     // Test that a translatable base field is a sort option.
-    $this->assertFieldByXPath("//select[@name='settings[handler_settings][sort][field]']/option[@value='title']");
+    $this->assertSession()->optionExists('settings[handler_settings][sort][field]', 'title');
     // Test that a configurable field is a sort option.
-    $this->assertFieldByXPath("//select[@name='settings[handler_settings][sort][field]']/option[@value='body.value']");
+    $this->assertSession()->optionExists('settings[handler_settings][sort][field]', 'body.value');
 
     // Set back to no sort.
     $sort_by->setValue('_none');
@@ -162,7 +162,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     ], t('Save settings'));
 
     // Check that the field appears in the overview form.
-    $this->assertFieldByXPath('//table[@id="field-overview"]//tr[@id="field-test"]/td[1]', 'Test', 'Field was created and appears in the overview page.');
+    $this->assertSession()->elementTextContains('xpath', '//table[@id="field-overview"]//tr[@id="field-test"]/td[1]', "Test");
 
     // Check that the field settings form can be submitted again, even when the
     // field is required.

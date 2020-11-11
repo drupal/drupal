@@ -224,7 +224,7 @@ class BlockTest extends BlockTestBase {
     // Check for <div id="block-my-block-instance-name"> if the machine name
     // is my_block_instance_name.
     $xpath = $this->assertSession()->buildXPathQuery('//div[@id=:id]/*', [':id' => 'block-' . str_replace('_', '-', strtolower($block['id']))]);
-    $this->assertNoFieldByXPath($xpath, FALSE, 'Block found in no regions.');
+    $this->assertSession()->elementNotExists('xpath', $xpath);
 
     // Test deleting the block from the edit form.
     $this->drupalGet('admin/structure/block/manage/' . $block['id']);
@@ -352,7 +352,7 @@ class BlockTest extends BlockTestBase {
       ':region-class' => 'region region-' . Html::getClass($region),
       ':block-id' => 'block-' . str_replace('_', '-', strtolower($block['id'])),
     ]);
-    $this->assertFieldByXPath($xpath, NULL, t('Block found in %region_name region.', ['%region_name' => Html::getClass($region)]));
+    $this->assertSession()->elementExists('xpath', $xpath);
   }
 
   /**

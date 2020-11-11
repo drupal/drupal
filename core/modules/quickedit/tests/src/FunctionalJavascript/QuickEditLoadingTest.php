@@ -135,7 +135,7 @@ class QuickEditLoadingTest extends WebDriverTestBase {
     // permission to in-place edit.
     $this->assertNoRaw('data-quickedit-entity-id="node/1"');
     $this->assertNoRaw('data-quickedit-field-id="node/1/body/en/full"');
-    $this->assertNoFieldByXPath('//h1[contains(@class, "js-quickedit-page-title")]');
+    $this->assertSession()->elementNotExists('xpath', '//h1[contains(@class, "js-quickedit-page-title")]');
     $assert->linkNotExists('Quick edit');
 
     // Tests the loading of Quick Edit when a user does have access to it.
