@@ -60,6 +60,7 @@ class FieldItemNormalizer extends NormalizerBase implements DenormalizerInterfac
    * catch it, and pass it to the value object that JSON:API uses.
    */
   public function normalize($field_item, $format = NULL, array $context = []) {
+    assert($field_item instanceof FieldItemInterface);
     /** @var \Drupal\Core\TypedData\TypedDataInterface $property */
     $values = [];
     $context[CacheableNormalizerInterface::SERIALIZATION_CONTEXT_CACHEABILITY] = new CacheableMetadata();
@@ -71,7 +72,8 @@ class FieldItemNormalizer extends NormalizerBase implements DenormalizerInterfac
         $values[$property_name] = $this->serializer->normalize($property, $format, $context);
       }
       // Flatten if there is only a single property to normalize.
-      $values = static::rasterizeValueRecursive(count($field_properties) == 1 ? reset($values) : $values);
+      $flatten = count($field_properties) === 1 && $field_item::mainPropertyName() !== NULL;
+      $values = static::rasterizeValueRecursive($flatten ? reset($values) : $values);
     }
     else {
       $values = $field_item->getValue();
