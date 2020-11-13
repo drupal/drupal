@@ -113,7 +113,7 @@ class HtaccessTest extends BrowserTestBase {
     // Test that it is possible to have path aliases containing .php.
     $type = $this->drupalCreateContentType();
 
-    // Create an node aliased to test.php.
+    // Create a node aliased to test.php.
     $node = $this->drupalCreateNode([
       'title' => 'This is a node',
       'type' => $type->id(),

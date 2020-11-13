@@ -501,7 +501,7 @@ class TwigExtension extends AbstractExtension {
    *   RenderableInterface or toString().
    *
    * @return mixed
-   *   The rendered output or an \Twig\Markup object.
+   *   The rendered output or a \Twig\Markup object.
    *
    * @see render
    * @see TwigNodeVisitor

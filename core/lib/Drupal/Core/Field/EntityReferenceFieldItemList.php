@@ -6,7 +6,7 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Defines a item list class for entity reference fields.
+ * Defines an item list class for entity reference fields.
  */
 class EntityReferenceFieldItemList extends FieldItemList implements EntityReferenceFieldItemListInterface {
 

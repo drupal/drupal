@@ -8,7 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
  * Provides a matched path render element.
  *
  * Provides a form element to enter a path which can be optionally validated and
- * stored as either a \Drupal\Core\Url value object or a array containing a
+ * stored as either a \Drupal\Core\Url value object or an array containing a
  * route name and route parameters pair.
  *
  * @FormElement("path")

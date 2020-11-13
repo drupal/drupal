@@ -46,7 +46,7 @@ class DialogTest extends WebDriverTestBase {
     // expected.
     $this->getSession()->getPage()->clickLink('Link 1 (modal)');
 
-    // Clicking the link triggers a AJAX request/response.
+    // Clicking the link triggers an AJAX request/response.
     // Opens a Dialog panel.
     $link1_dialog_div = $this->assertSession()->waitForElementVisible('css', 'div.ui-dialog');
     $this->assertNotNull($link1_dialog_div, 'Link was used to open a dialog ( modal )');

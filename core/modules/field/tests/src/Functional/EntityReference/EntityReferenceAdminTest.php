@@ -78,7 +78,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
    */
   public function testFieldAdminHandler() {
     $bundle_path = 'admin/structure/types/manage/' . $this->type;
-    // Create a new view and display it as a entity reference.
+    // Create a new view and display it as an entity reference.
     $edit = [
       'id' => 'node_test_view',
       'label' => 'Node Test View',

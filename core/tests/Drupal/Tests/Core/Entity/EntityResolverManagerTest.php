@@ -266,7 +266,7 @@ class EntityResolverManagerTest extends UnitTestCase {
   }
 
   /**
-   * Tests setRouteOptions() with an form parameter without interface.
+   * Tests setRouteOptions() with a form parameter without interface.
    *
    * @covers ::setRouteOptions
    * @covers ::getControllerClass

@@ -83,7 +83,7 @@ class MenuDeleteForm extends EntityDeleteForm {
 
     // Delete all links to the overview page for this menu.
     // @todo Add a more generic helper function to the menu link plugin
-    //   manager to remove links to a entity or other ID used as a route
+    //   manager to remove links to an entity or other ID used as a route
     //   parameter that is being removed. Also, consider moving this to
     //   menu_ui.module as part of a generic response to entity deletion.
     //   https://www.drupal.org/node/2310329

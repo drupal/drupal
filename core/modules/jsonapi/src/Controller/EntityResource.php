@@ -152,7 +152,7 @@ class EntityResource {
   protected $user;
 
   /**
-   * Instantiates a EntityResource object.
+   * Instantiates an EntityResource object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
@@ -1263,7 +1263,7 @@ class EntityResource {
    *   An associative array with extra data to build the links.
    *
    * @return \Drupal\jsonapi\JsonApiResource\LinkCollection
-   *   An LinkCollection, with:
+   *   A LinkCollection, with:
    *   - a 'next' key if it is not the last page;
    *   - 'prev' and 'first' keys if it's not the first page.
    */

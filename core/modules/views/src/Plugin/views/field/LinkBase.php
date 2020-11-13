@@ -195,7 +195,7 @@ abstract class LinkBase extends FieldPluginBase {
   abstract protected function getUrlInfo(ResultRow $row);
 
   /**
-   * Prepares the link to view a entity.
+   * Prepares the link to view an entity.
    *
    * @param \Drupal\views\ResultRow $row
    *   A view result row.

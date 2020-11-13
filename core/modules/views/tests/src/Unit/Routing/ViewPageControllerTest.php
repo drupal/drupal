@@ -101,7 +101,7 @@ class ViewPageControllerTest extends UnitTestCase {
   }
 
   /**
-   * Tests the page controller with arguments of a overridden page view.
+   * Tests the page controller with arguments of an overridden page view.
    *
    * Note: This test does not care about upcasting for now.
    */
@@ -137,7 +137,7 @@ class ViewPageControllerTest extends UnitTestCase {
   }
 
   /**
-   * Tests the page controller with arguments of a overridden page view.
+   * Tests the page controller with arguments of an overridden page view.
    *
    * This test care about upcasted values and ensures that the raw variables
    * are pulled in.

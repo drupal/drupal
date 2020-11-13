@@ -3,7 +3,7 @@
 namespace Drupal\Core\Field;
 
 /**
- * Defines a item list class for map fields.
+ * Defines an item list class for map fields.
  */
 class MapFieldItemList extends FieldItemList {
 

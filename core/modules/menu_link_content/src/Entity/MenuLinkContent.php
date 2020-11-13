@@ -217,7 +217,7 @@ class MenuLinkContent extends EditorialContentEntityBase implements MenuLinkCont
     /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
     $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
 
-    // The menu link can just be updated if there is already an menu link entry
+    // The menu link can just be updated if there is already a menu link entry
     // on both entity and menu link plugin level.
     $definition = $this->getPluginDefinition();
     // Even when $update is FALSE, for top level links it is possible the link

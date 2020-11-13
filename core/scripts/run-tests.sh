@@ -908,9 +908,9 @@ function simpletest_script_command($test_id, $test_class) {
 /**
  * Removes all remnants of a test runner.
  *
- * In case a (e.g., fatal) error occurs after the test site has been fully setup
- * and the error happens in many tests, the environment that executes the tests
- * can easily run out of memory or disk space. This function ensures that all
+ * In case a fatal error occurs after the test site has been fully setup and
+ * the error happens in many tests, the environment that executes the tests can
+ * easily run out of memory or disk space. This function ensures that all
  * created resources are properly cleaned up after every executed test.
  *
  * This clean-up only exists in this script, since SimpleTest module itself does

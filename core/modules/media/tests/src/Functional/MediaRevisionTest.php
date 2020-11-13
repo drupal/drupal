@@ -119,7 +119,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
   }
 
   /**
-   * Tests creating revisions of a Image media item.
+   * Tests creating revisions of an Image media item.
    */
   public function testImageMediaRevision() {
     $assert = $this->assertSession();

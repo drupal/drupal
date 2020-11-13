@@ -154,7 +154,7 @@ class Datetime extends DateElementBase {
    *     element, no other format will work. See the
    *     DateFormatterInterface::format() function for a list of the possible
    *     formats and HTML5 standards for the HTML5 requirements. Defaults to the
-   *     right HTML5 format for the chosen element if a HTML5 element is used,
+   *     right HTML5 format for the chosen element if an HTML5 element is used,
    *     otherwise defaults to DateFormat::load('html_date')->getPattern().
    *   - #date_date_element: The date element. Options are:
    *     - datetime: Use the HTML5 datetime element type.
@@ -164,7 +164,7 @@ class Datetime extends DateElementBase {
    *     - none: Do not display a date element.
    *   - #date_date_callbacks: Array of optional callbacks for the date element.
    *   - #date_time_element: The time element. Options are:
-   *     - time: Use a HTML5 time element type.
+   *     - time: Use an HTML5 time element type.
    *     - text: No HTML5 element, use a normal text field.
    *     - none: Do not display a time element.
    *   - #date_time_format: A date format string that describes the format that
@@ -173,7 +173,7 @@ class Datetime extends DateElementBase {
    *     element, no other format will work. See the
    *     DateFormatterInterface::format() function for a list of the possible
    *     formats and HTML5 standards for the HTML5 requirements. Defaults to the
-   *     right HTML5 format for the chosen element if a HTML5 element is used,
+   *     right HTML5 format for the chosen element if an HTML5 element is used,
    *     otherwise defaults to DateFormat::load('html_time')->getPattern().
    *   - #date_time_callbacks: An array of optional callbacks for the time
    *     element. Can be used to add a jQuery timepicker or an 'All day' checkbox.
@@ -394,7 +394,7 @@ class Datetime extends DateElementBase {
   }
 
   /**
-   * Retrieves the right format for a HTML5 date element.
+   * Retrieves the right format for an HTML5 date element.
    *
    * The format is important because these elements will not work with any other
    * format.
@@ -404,7 +404,7 @@ class Datetime extends DateElementBase {
    *
    * @return string
    *   Returns the right format for the date element, or the original format
-   *   if this is not a HTML5 element.
+   *   if this is not an HTML5 element.
    */
   protected static function getHtml5DateFormat($element) {
     switch ($element['#date_date_element']) {
@@ -421,7 +421,7 @@ class Datetime extends DateElementBase {
   }
 
   /**
-   * Retrieves the right format for a HTML5 time element.
+   * Retrieves the right format for an HTML5 time element.
    *
    * The format is important because these elements will not work with any other
    * format.
@@ -431,7 +431,7 @@ class Datetime extends DateElementBase {
    *
    * @return string
    *   Returns the right format for the time element, or the original format
-   *   if this is not a HTML5 element.
+   *   if this is not an HTML5 element.
    */
   protected static function getHtml5TimeFormat($element) {
     switch ($element['#date_time_element']) {

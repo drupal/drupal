@@ -11,7 +11,7 @@ use Drupal\Core\Ajax\BaseCommand;
 class EntitySavedCommand extends BaseCommand {
 
   /**
-   * Constructs a EntitySaveCommand object.
+   * Constructs an EntitySaveCommand object.
    *
    * @param string $data
    *   The data to pass on to the client side.

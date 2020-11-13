@@ -26,7 +26,7 @@ class Rss extends RssPluginBase {
   public $base_table = 'aggregator_item';
 
   /**
-   * The actual field which is used to identify a aggregator item.
+   * The actual field which is used to identify an aggregator item.
    *
    * @var string
    */

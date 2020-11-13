@@ -39,7 +39,7 @@ class FieldUiLocalTask extends DeriverBase implements ContainerDeriverInterface 
   protected $entityDisplayRepository;
 
   /**
-   * Creates an FieldUiLocalTask object.
+   * Creates a FieldUiLocalTask object.
    *
    * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
    *   The route provider.

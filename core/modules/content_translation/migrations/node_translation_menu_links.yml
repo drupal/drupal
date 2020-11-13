@@ -38,7 +38,7 @@ process:
   new_nid:
     -
       # If the path is of the form "node/<ID>" and is not routed, we will get
-      # back an URI of the form "base:node/<ID>".
+      # back a URI of the form "base:node/<ID>".
       plugin: link_uri
       source: link_path
       validate_route: false

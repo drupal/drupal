@@ -8,7 +8,7 @@ namespace Drupal\Component\Plugin\Exception;
 class PluginNotFoundException extends PluginException {
 
   /**
-   * Construct an PluginNotFoundException exception.
+   * Construct a PluginNotFoundException exception.
    *
    * For the remaining parameters see \Exception.
    *

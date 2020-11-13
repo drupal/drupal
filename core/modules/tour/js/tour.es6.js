@@ -188,7 +188,7 @@
        * Gets the tour.
        *
        * @return {jQuery}
-       *   A jQuery element pointing to a `<ol>` containing tour items.
+       *   A jQuery element pointing to an `<ol>` containing tour items.
        */
       _getTour() {
         return this.model.get('tour');
@@ -216,7 +216,7 @@
        * http://example.com/foo?tips=bar
        *
        * @param {jQuery} $tour
-       *   A jQuery element pointing to a `<ol>` containing tour items.
+       *   A jQuery element pointing to an `<ol>` containing tour items.
        * @param {jQuery} $document
        *   A jQuery element pointing to the document within which the elements
        *   should be sought.

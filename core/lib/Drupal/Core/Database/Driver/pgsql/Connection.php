@@ -319,7 +319,7 @@ class Connection extends DatabaseConnection {
   }
 
   /**
-   * Add a new savepoint with an unique name.
+   * Add a new savepoint with a unique name.
    *
    * The main use for this method is to mimic InnoDB functionality, which
    * provides an inherent savepoint before any query in a transaction.

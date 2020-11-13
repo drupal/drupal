@@ -182,7 +182,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
 
     // Weights range from -delta to +delta, so delta should be at least half
     // of the amount of blocks present. This makes sure all blocks in the same
-    // region get an unique weight.
+    // region get a unique weight.
     $weight_delta = round(count($entities) / 2);
 
     $placement = FALSE;

@@ -366,7 +366,7 @@ class Schema extends DatabaseSchema {
       // Build the mapping between the old fields and the new fields.
       $mapping = [];
       if (isset($specification['initial_from_field'])) {
-        // If we have a initial value, copy it over.
+        // If we have an initial value, copy it over.
         if (isset($specification['initial'])) {
           $expression = 'COALESCE(' . $specification['initial_from_field'] . ', :default_initial_value)';
           $arguments = [':default_initial_value' => $specification['initial']];
@@ -381,7 +381,7 @@ class Schema extends DatabaseSchema {
         ];
       }
       elseif (isset($specification['initial'])) {
-        // If we have a initial value, copy it over.
+        // If we have an initial value, copy it over.
         $mapping[$field] = [
           'expression' => ':newfieldinitial',
           'arguments' => [':newfieldinitial' => $specification['initial']],

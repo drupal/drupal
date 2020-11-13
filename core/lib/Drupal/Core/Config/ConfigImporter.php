@@ -23,7 +23,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  *
  * @see \Drupal\Core\Config\StorageComparerInterface
  *
- * The ConfigImporter has a identifier which is used to construct event names.
+ * The ConfigImporter has an identifier which is used to construct event names.
  * The events fired during an import are:
  * - ConfigEvents::IMPORT_VALIDATE: Events listening can throw a
  *   \Drupal\Core\Config\ConfigImporterException to prevent an import from
@@ -1039,7 +1039,7 @@ class ConfigImporter {
   }
 
   /**
-   * Determines if a import is already running.
+   * Determines if an import is already running.
    *
    * @return bool
    *   TRUE if an import is already running, FALSE if not.

@@ -76,7 +76,7 @@ class UpdateManager implements UpdateManagerInterface {
   protected $moduleExtensionList;
 
   /**
-   * Constructs a UpdateManager.
+   * Constructs an UpdateManager.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.

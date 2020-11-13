@@ -334,7 +334,7 @@ class ModuleTest extends ViewsKernelTestBase {
   }
 
   /**
-   * Ensure that a certain handler is a instance of a certain table/field.
+   * Ensure that a certain handler is an instance of a certain table/field.
    */
   public function assertInstanceHandler($handler, $table, $field, $id) {
     $table_data = $this->container->get('views.views_data')->get($table);

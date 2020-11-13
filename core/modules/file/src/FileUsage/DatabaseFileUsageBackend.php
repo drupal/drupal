@@ -64,7 +64,7 @@ class DatabaseFileUsageBackend extends FileUsageBase {
    * {@inheritdoc}
    */
   public function delete(FileInterface $file, $module, $type = NULL, $id = NULL, $count = 1) {
-    // Delete rows that have a exact or less value to prevent empty rows.
+    // Delete rows that have an exact or less value to prevent empty rows.
     $query = $this->connection->delete($this->tableName)
       ->condition('module', $module)
       ->condition('fid', $file->id());

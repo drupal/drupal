@@ -562,7 +562,7 @@ class FilterKernelTest extends KernelTestBase {
     // - absolute, mail, partial
     // - characters/encoding, surrounding markup, security
 
-    // Create a email that is too long.
+    // Create an email that is too long.
     $long_email = str_repeat('a', 254) . '@example.com';
     $too_long_email = str_repeat('b', 255) . '@example.com';
     $email_with_plus_sign = 'one+two@example.com';
@@ -862,7 +862,7 @@ www.example.com with a newline in comments -->
    * Asserts multiple filter output expectations for multiple input strings.
    *
    * @param FilterInterface $filter
-   *   A input filter object.
+   *   An input filter object.
    * @param array $tests
    *   An associative array, whereas each key is an arbitrary input string and
    *   each value is again an associative array whose keys are filter output

@@ -20,7 +20,7 @@ use Drupal\views\ViewExecutable;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Defines a actions-based bulk operation form element.
+ * Defines an actions-based bulk operation form element.
  *
  * @ViewsField("bulk_form")
  */

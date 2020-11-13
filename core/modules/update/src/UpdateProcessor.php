@@ -78,7 +78,7 @@ class UpdateProcessor implements UpdateProcessorInterface {
   protected $privateKey;
 
   /**
-   * Constructs a UpdateProcessor.
+   * Constructs an UpdateProcessor.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.

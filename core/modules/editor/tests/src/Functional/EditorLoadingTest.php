@@ -259,7 +259,7 @@ class EditorLoadingTest extends BrowserTestBase {
     ]);
     $editor->save();
 
-    // Create an "page" node that uses the full_html text format.
+    // Create a "page" node that uses the full_html text format.
     $this->drupalCreateNode([
       'type' => 'page',
       'field_text' => [

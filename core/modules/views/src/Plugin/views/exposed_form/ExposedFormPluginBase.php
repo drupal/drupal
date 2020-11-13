@@ -347,7 +347,7 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
   public function getCacheContexts() {
     $contexts = [];
     if ($this->options['expose_sort_order']) {
-      // The sort order query arg is just important in case there is a exposed
+      // The sort order query arg is just important in case there is an exposed
       // sort order.
       $has_exposed_sort_handler = FALSE;
       /** @var \Drupal\views\Plugin\views\sort\SortPluginBase $sort_handler */

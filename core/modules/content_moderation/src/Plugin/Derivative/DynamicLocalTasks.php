@@ -40,7 +40,7 @@ class DynamicLocalTasks extends DeriverBase implements ContainerDeriverInterface
   protected $moderationInfo;
 
   /**
-   * Creates an FieldUiLocalTask object.
+   * Creates a FieldUiLocalTask object.
    *
    * @param string $base_plugin_id
    *   The base plugin ID.

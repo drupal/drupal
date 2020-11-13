@@ -96,7 +96,7 @@ class DynamicPageCacheIntegrationTest extends BrowserTestBase {
       $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'HIT');
     }
 
-    // Controllers returning render arrays, rendered as anything except a HTML
+    // Controllers returning render arrays, rendered as anything except an HTML
     // response, are ignored by Dynamic Page Cache (but only because those
     // wrapper formats' responses do not implement CacheableResponseInterface).
     $this->drupalGet('dynamic-page-cache-test/html', ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']]);

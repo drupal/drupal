@@ -10,7 +10,7 @@ use Drupal\Core\Session\AccountInterface;
  * While possible values specify which values existing data might have, settable
  * values define the values that are allowed to be set by a user.
  *
- * For example, in an workflow scenario, the settable values for a state field
+ * For example, in a workflow scenario, the settable values for a state field
  * might depend on the currently set state, while possible values are all
  * states. Thus settable values would be used in an editing context, while
  * possible values would be used for presenting filtering options in a search.

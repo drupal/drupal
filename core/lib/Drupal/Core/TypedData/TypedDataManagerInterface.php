@@ -146,7 +146,7 @@ interface TypedDataManagerInterface extends PluginManagerInterface, CachedDiscov
    *   The parent typed data object, implementing the TypedDataInterface and
    *   either the ListInterface or the ComplexDataInterface.
    * @param string $property_name
-   *   The name of the property to instantiate, or the delta of an list item.
+   *   The name of the property to instantiate, or the delta of a list item.
    * @param mixed $value
    *   (optional) The data value. If set, it has to match one of the supported
    *   data type formats as documented by the data type classes.

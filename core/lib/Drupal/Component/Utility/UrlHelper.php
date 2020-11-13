@@ -242,14 +242,14 @@ class UrlHelper {
    *   TRUE if the URL has the same domain and base path.
    *
    * @throws \InvalidArgumentException
-   *   Exception thrown when a either $url or $bath_url are not fully qualified.
+   *   Exception thrown when either $url or $base_url are not fully qualified.
    */
   public static function externalIsLocal($url, $base_url) {
     // Some browsers treat \ as / so normalize to forward slashes.
     $url = str_replace('\\', '/', $url);
 
     // Leading control characters may be ignored or mishandled by browsers, so
-    // assume such a path may lead to an non-local location. The \p{C} character
+    // assume such a path may lead to a non-local location. The \p{C} character
     // class matches all UTF-8 control, unassigned, and private characters.
     if (preg_match('/^\p{C}/u', $url) !== 0) {
       return FALSE;

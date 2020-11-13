@@ -333,7 +333,7 @@ EOF;
   }
 
   /**
-   * Returns a example RSS091 feed.
+   * Returns an example RSS091 feed.
    *
    * @return string
    *   Path to the feed.
@@ -343,7 +343,7 @@ EOF;
   }
 
   /**
-   * Returns a example Atom feed.
+   * Returns an example Atom feed.
    *
    * @return string
    *   Path to the feed.
@@ -355,7 +355,7 @@ EOF;
   }
 
   /**
-   * Returns a example feed.
+   * Returns an example feed.
    *
    * @return string
    *   Path to the feed.

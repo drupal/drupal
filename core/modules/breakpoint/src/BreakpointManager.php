@@ -16,7 +16,7 @@ use Drupal\Core\StringTranslation\TranslationInterface;
 /**
  * Defines a breakpoint plugin manager to deal with breakpoints.
  *
- * Extension can define breakpoints in a EXTENSION_NAME.breakpoints.yml file
+ * Extension can define breakpoints in an EXTENSION_NAME.breakpoints.yml file
  * contained in the extension's base directory. Each breakpoint has the
  * following structure:
  * @code

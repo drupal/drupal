@@ -19,7 +19,7 @@ class EntityAutocompleteMatcher implements EntityAutocompleteMatcherInterface {
   protected $selectionManager;
 
   /**
-   * Constructs a EntityAutocompleteMatcher object.
+   * Constructs an EntityAutocompleteMatcher object.
    *
    * @param \Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface $selection_manager
    *   The entity reference selection handler plugin manager.

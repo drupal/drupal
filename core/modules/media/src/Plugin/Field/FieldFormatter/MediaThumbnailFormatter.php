@@ -35,7 +35,7 @@ class MediaThumbnailFormatter extends ImageFormatter {
   protected $renderer;
 
   /**
-   * Constructs an MediaThumbnailFormatter object.
+   * Constructs a MediaThumbnailFormatter object.
    *
    * @param string $plugin_id
    *   The plugin_id for the formatter.

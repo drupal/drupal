@@ -8,7 +8,7 @@
  * contributed modules and themes. It warns site administrators if newer
  * releases are available via the system status report (admin/reports/status),
  * the module and theme pages, and optionally via email. It also provides the
- * ability to install contributed modules and themes via an user interface.
+ * ability to install contributed modules and themes via a user interface.
  */
 
 use Drupal\Core\File\Exception\FileException;

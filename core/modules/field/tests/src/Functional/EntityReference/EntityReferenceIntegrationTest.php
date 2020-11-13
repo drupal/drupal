@@ -89,7 +89,7 @@ class EntityReferenceIntegrationTest extends BrowserTestBase {
       $edit = [
         'name[0][value]' => $entity_name,
         $this->fieldName . '[0][target_id]' => $referenced_entities[0]->label() . ' (' . $referenced_entities[0]->id() . ')',
-        // Test an input of the entity label without a ' (entity_id)' suffix.
+        // Test an input of the entity label without an ' (entity_id)' suffix.
         $this->fieldName . '[1][target_id]' => $referenced_entities[1]->label(),
       ];
       $this->drupalPostForm($this->entityType . '/add', $edit, t('Save'));
@@ -115,7 +115,7 @@ class EntityReferenceIntegrationTest extends BrowserTestBase {
 
       $entity_name = $this->randomMachineName();
       $target_id = $referenced_entities[0]->label() . ' (' . $referenced_entities[0]->id() . ')';
-      // Test an input of the entity label without a ' (entity_id)' suffix.
+      // Test an input of the entity label without an ' (entity_id)' suffix.
       $target_id .= ', ' . $referenced_entities[1]->label();
       $edit = [
         'name[0][value]' => $entity_name,

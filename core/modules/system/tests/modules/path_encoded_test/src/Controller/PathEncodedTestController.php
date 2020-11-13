@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 class PathEncodedTestController {
 
   /**
-   * Returns a HTML simple response.
+   * Returns an HTML simple response.
    *
    * @return \Symfony\Component\HttpFoundation\Response
    */

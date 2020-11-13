@@ -27,7 +27,7 @@ class TipPluginImage extends TipPluginBase {
    * The alt text which is used for the image in this Tip.
    *
    * @var string
-   *   A alt text used for the image.
+   *   An alt text used for the image.
    */
   protected $alt;
 

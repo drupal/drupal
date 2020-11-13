@@ -55,7 +55,7 @@ class AccessManager implements AccessManagerInterface {
   protected $checkProvider;
 
   /**
-   * Constructs a AccessManager instance.
+   * Constructs an AccessManager instance.
    *
    * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
    *   The route provider.

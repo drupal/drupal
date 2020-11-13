@@ -71,7 +71,7 @@ class TipPluginText extends TipPluginBase implements ContainerFactoryPluginInter
   }
 
   /**
-   * Returns a ID that is guaranteed uniqueness.
+   * Returns an ID that is guaranteed uniqueness.
    *
    * @return string
    *   A unique id to be used to generate aria attributes.

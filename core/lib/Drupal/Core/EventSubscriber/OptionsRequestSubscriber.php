@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Route;
 /**
  * Handles options requests.
  *
- * Therefore it sends a options response using all methods on all possible
+ * Therefore it sends an options response using all methods on all possible
  * routes.
  */
 class OptionsRequestSubscriber implements EventSubscriberInterface {

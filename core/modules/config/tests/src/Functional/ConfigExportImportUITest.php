@@ -173,7 +173,7 @@ class ConfigExportImportUITest extends BrowserTestBase {
     $this->assertText($this->contentType->label());
 
     $this->drupalPostForm(NULL, [], 'Import all');
-    // After importing the snapshot has been updated an there are no warnings.
+    // After importing the snapshot has been updated and there are no warnings.
     $this->assertNoText('Warning message');
     $this->assertText('There are no configuration changes to import.');
 

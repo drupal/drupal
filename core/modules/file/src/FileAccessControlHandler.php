@@ -125,7 +125,7 @@ class FileAccessControlHandler extends EntityAccessControlHandler {
     // The file entity has no "create" permission because by default Drupal core
     // does not allow creating file entities independently. It allows you to
     // create file entities that are referenced from another entity
-    // (e.g. an image for a article). A contributed module is free to alter
+    // (e.g. an image for an article). A contributed module is free to alter
     // this to allow file entities to be created directly.
     return AccessResult::neutral();
   }

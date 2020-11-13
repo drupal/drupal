@@ -48,7 +48,7 @@ class LockTest extends KernelTestBase {
 
     $this->lock->release('lock_b');
 
-    // Test acquiring an releasing a lock with a long key (over 255 chars).
+    // Test acquiring and releasing a lock with a long key (over 255 chars).
     $long_key = 'long_key:BZoMiSf9IIPULsJ98po18TxJ6T4usd3MZrLE0d3qMgG6iAgDlOi1G3oMap7zI5df84l7LtJBg4bOj6XvpO6vDRmP5h5QbA0Bj9rVFiPIPAIQZ9qFvJqTALiK1OR3GpOkWQ4vgEA4LkY0UfznrWBeuK7IWZfv1um6DLosnVXd1z1cJjvbEUqYGJj92rwHfhYihLm8IO9t3P2gAvEkH5Mhc8GBoiTsIDnP01Te1kxGFHO3RuvJIxPnHmZtSdBggmuVN7x9';
 
     $success = $this->lock->acquire($long_key);

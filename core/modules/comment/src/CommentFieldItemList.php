@@ -7,7 +7,7 @@ use Drupal\Core\Field\FieldItemList;
 use Drupal\Core\Session\AccountInterface;
 
 /**
- * Defines a item list class for comment fields.
+ * Defines an item list class for comment fields.
  */
 class CommentFieldItemList extends FieldItemList {
 

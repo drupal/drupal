@@ -38,7 +38,7 @@ abstract class Database {
   const RETURN_INSERT_ID = 3;
 
   /**
-   * An nested array of all active connections. It is keyed by database name
+   * A nested array of all active connections. It is keyed by database name
    * and target.
    *
    * @var array

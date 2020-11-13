@@ -352,7 +352,7 @@ trait UiHelperTrait {
   }
 
   /**
-   * Builds an a absolute URL from a system path or a URL object.
+   * Builds an absolute URL from a system path or a URL object.
    *
    * @param string|\Drupal\Core\Url $path
    *   A system path or a URL.

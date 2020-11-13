@@ -18,7 +18,7 @@ class Gettext {
    * Reads the given PO files into the database.
    *
    * @param object $file
-   *   File object with an URI property pointing at the file's path.
+   *   File object with a URI property pointing at the file's path.
    *   - "langcode": The language the strings will be added to.
    *   - "uri": File URI.
    * @param array $options

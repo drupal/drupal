@@ -765,7 +765,7 @@
   };
 
   /**
-   * Adds a HTML rule to the list of HTML rules for this feature.
+   * Adds an HTML rule to the list of HTML rules for this feature.
    *
    * @param {Drupal.EditorFeatureHTMLRule} rule
    *   A text editor feature HTML rule.
@@ -818,7 +818,7 @@
   };
 
   /**
-   * Adds a HTML rule to the list of HTML rules for this filter.
+   * Adds an HTML rule to the list of HTML rules for this filter.
    *
    * @param {Drupal.FilterHTMLRule} rule
    *   A text filter HTML rule.

@@ -143,7 +143,7 @@ function drupal_find_theme_functions($cache, $prefixes) {
       // Find theme functions that implement possible "suggestion" variants of
       // registered theme hooks and add those as new registered theme hooks.
       // The 'pattern' key defines a common prefix that all suggestions must
-      // start with. The default is the name of the hook followed by '__'. An
+      // start with. The default is the name of the hook followed by '__'. A
       // 'base hook' key is added to each entry made for a found suggestion,
       // so that common functionality can be implemented for all suggestions of
       // the same base hook. To keep things simple, deep hierarchy of

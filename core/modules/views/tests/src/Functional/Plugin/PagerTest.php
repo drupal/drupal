@@ -216,7 +216,7 @@ class PagerTest extends ViewTestBase {
     $this->executeView($view);
     $this->assertCount(11, $view->result, 'Make sure that every item is returned in the result');
 
-    // Setup and test a offset.
+    // Setup and test an offset.
     $view = Views::getView('test_pager_none');
     $view->setDisplay();
     $pager = [
@@ -264,7 +264,7 @@ class PagerTest extends ViewTestBase {
     $this->executeView($view);
     $this->assertCount(5, $view->result, 'Make sure that only a certain count of items is returned');
 
-    // Setup and test a offset.
+    // Setup and test an offset.
     $view = Views::getView('test_pager_some');
     $view->setDisplay();
     $pager = [
@@ -298,7 +298,7 @@ class PagerTest extends ViewTestBase {
     $this->executeView($view);
     $this->assertCount(5, $view->result, 'Make sure that only a certain count of items is returned');
 
-    // Setup and test a offset.
+    // Setup and test an offset.
     $view = Views::getView('test_pager_full');
     $view->setDisplay();
     $pager = [
@@ -321,7 +321,7 @@ class PagerTest extends ViewTestBase {
     // TODO test number of pages.
 
     // Test items per page = 0.
-    // Setup and test a offset.
+    // Setup and test an offset.
     $view = Views::getView('test_pager_full');
     $view->setDisplay();
     $pager = [

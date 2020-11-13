@@ -480,7 +480,7 @@ class ViewsDataTest extends UnitTestCase {
   }
 
   /**
-   * Tests the cache calls for an non-existent table:
+   * Tests the cache calls for a non-existent table:
    *
    * Warm cache:
    *   - all tables
@@ -518,7 +518,7 @@ class ViewsDataTest extends UnitTestCase {
   }
 
   /**
-   * Tests the cache calls for an non-existent table:
+   * Tests the cache calls for a non-existent table:
    *
    * Warm cache:
    *   - all tables

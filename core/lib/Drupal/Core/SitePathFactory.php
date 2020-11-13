@@ -15,7 +15,7 @@ class SitePathFactory {
   protected $drupalKernel;
 
   /**
-   * Constructs an SitePathFactory instance.
+   * Constructs a SitePathFactory instance.
    *
    * @param \Drupal\Core\DrupalKernelInterface $drupal_kernel
    *   The Drupal kernel.

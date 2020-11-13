@@ -130,7 +130,7 @@ class ProjectInfo {
       }
       elseif (empty($status)) {
         // If we have a project_name that matches, but the project_display_type
-        // does not, it means we're processing a uninstalled module or theme
+        // does not, it means we're processing an uninstalled module or theme
         // that belongs to a project that has some enabled code. In this case,
         // we add the uninstalled thing into a separate array for separate
         // display.

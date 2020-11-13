@@ -71,7 +71,7 @@ class QueryGroupByTest extends ViewsKernelTestBase {
 
     $types = [];
     foreach ($view->result as $item) {
-      // num_records is a alias for id.
+      // num_records is an alias for id.
       $types[$item->entity_test_name] = $item->num_records;
     }
 

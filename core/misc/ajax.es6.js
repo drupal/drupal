@@ -1208,7 +1208,7 @@
      * @param {string} [response.method]
      *   The jQuery DOM manipulation method to be used.
      * @param {string} [response.selector]
-     *   A optional jQuery selector string.
+     *   An optional jQuery selector string.
      * @param {object} [response.settings]
      *   An optional array of settings that will be used.
      */

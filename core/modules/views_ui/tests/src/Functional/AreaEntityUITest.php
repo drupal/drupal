@@ -25,7 +25,7 @@ class AreaEntityUITest extends UITestBase {
   protected $defaultTheme = 'stark';
 
   public function testUI() {
-    // Set up a block and a entity_test entity.
+    // Set up a block and an entity_test entity.
     $block = Block::create(['id' => 'test_id', 'plugin' => 'system_main_block']);
     $block->save();
 

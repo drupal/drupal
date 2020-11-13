@@ -18,7 +18,7 @@ class MigrateRollbackEvent extends Event {
   protected $migration;
 
   /**
-   * Constructs an rollback event object.
+   * Constructs a rollback event object.
    *
    * @param \Drupal\migrate\Plugin\MigrationInterface $migration
    *   Migration entity.

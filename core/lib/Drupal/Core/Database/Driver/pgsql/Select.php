@@ -99,7 +99,7 @@ class Select extends QuerySelect {
       }
     }
 
-    // If $field contains an characters which are not allowed in a field name
+    // If $field contains characters which are not allowed in a field name
     // it is considered an expression, these can't be handled automatically
     // either.
     if ($this->connection->escapeField($field) != $field) {

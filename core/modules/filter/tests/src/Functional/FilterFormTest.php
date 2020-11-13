@@ -33,7 +33,7 @@ class FilterFormTest extends BrowserTestBase {
   protected $adminUser;
 
   /**
-   * An basic user account that can only access basic HTML text format.
+   * A basic user account that can only access basic HTML text format.
    *
    * @var \Drupal\user\Entity\User
    */

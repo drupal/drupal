@@ -38,7 +38,7 @@ use Drupal\Component\Utility\NestedArray;
  *
  * The attribute keys and values are automatically escaped for output with
  * Html::escape(). No protocol filtering is applied, so when using user-entered
- * input as a value for an attribute that expects an URI (href, src, ...),
+ * input as a value for an attribute that expects a URI (href, src, ...),
  * UrlHelper::stripDangerousProtocols() should be used to ensure dangerous
  * protocols (such as 'javascript:') are removed. For example:
  * @code

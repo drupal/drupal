@@ -48,7 +48,7 @@ class AjaxFormPageCacheTest extends WebDriverTestBase {
     $this->drupalGet('ajax_forms_test_get_form');
     $build_id_initial = $this->getFormBuildId();
 
-    // Changing the value of a select input element, triggers a AJAX
+    // Changing the value of a select input element, triggers an AJAX
     // request/response. The callback on the form responds with three AJAX
     // commands:
     // - UpdateBuildIdCommand
@@ -66,7 +66,7 @@ class AjaxFormPageCacheTest extends WebDriverTestBase {
     $build_id_first_ajax = $this->getFormBuildId();
     $this->assertNotEquals($build_id_initial, $build_id_first_ajax, 'Build id is changed in the form_build_id element on first AJAX submission');
 
-    // Changing the value of a select input element, triggers a AJAX
+    // Changing the value of a select input element, triggers an AJAX
     // request/response.
     $session->getPage()->selectFieldOption('select', 'red');
 
@@ -84,7 +84,7 @@ class AjaxFormPageCacheTest extends WebDriverTestBase {
     $build_id_from_cache_initial = $this->getFormBuildId();
     $this->assertEquals($build_id_initial, $build_id_from_cache_initial, 'Build id is the same as on the first request');
 
-    // Changing the value of a select input element, triggers a AJAX
+    // Changing the value of a select input element, triggers an AJAX
     // request/response.
     $session->getPage()->selectFieldOption('select', 'green');
 
@@ -96,7 +96,7 @@ class AjaxFormPageCacheTest extends WebDriverTestBase {
     $this->assertNotEquals($build_id_from_cache_initial, $build_id_from_cache_first_ajax, 'Build id is changed in the simpletest-DOM on first AJAX submission');
     $this->assertNotEquals($build_id_first_ajax, $build_id_from_cache_first_ajax, 'Build id from first user is not reused');
 
-    // Changing the value of a select input element, triggers a AJAX
+    // Changing the value of a select input element, triggers an AJAX
     // request/response.
     $session->getPage()->selectFieldOption('select', 'red');
 

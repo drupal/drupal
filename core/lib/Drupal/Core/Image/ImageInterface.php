@@ -228,7 +228,7 @@ interface ImageInterface {
    * @param float $degrees
    *   The number of (clockwise) degrees to rotate the image.
    * @param string|null $background
-   *   (optional) An hexadecimal integer specifying the background color to use
+   *   (optional) A hexadecimal integer specifying the background color to use
    *   for the uncovered area of the image after the rotation; for example,
    *   0x000000 for black, 0xff00ff for magenta, and 0xffffff for white. When
    *   NULL (the default) is specified, for images that support transparency,

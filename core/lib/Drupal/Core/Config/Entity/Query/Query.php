@@ -59,7 +59,7 @@ class Query extends QueryBase implements QueryInterface {
    * Overrides \Drupal\Core\Entity\Query\QueryBase::condition().
    *
    * Additional to the syntax defined in the QueryInterface you can use
-   * placeholders (*) to match all keys of an subarray. Let's take the follow
+   * placeholders (*) to match all keys of a subarray. Let's take the follow
    * yaml file as example:
    * @code
    *  level1:

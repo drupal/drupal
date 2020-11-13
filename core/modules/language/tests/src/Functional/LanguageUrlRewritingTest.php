@@ -29,7 +29,7 @@ class LanguageUrlRewritingTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * An user with permissions to administer languages.
+   * A user with permissions to administer languages.
    *
    * @var \Drupal\user\UserInterface
    */

@@ -242,7 +242,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
   }
 
   /**
-   * Determines whether a override for the path and method should happen.
+   * Determines whether an override for the path and method should happen.
    *
    * @param string $view_path
    *   The path of the view.
