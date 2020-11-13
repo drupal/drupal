@@ -147,7 +147,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
       'files[file]' => $name,
     ], t('Import'));
     $this->assertSession()->addressEquals(Url::fromRoute('locale.translate_import'));
-    $this->assertText(t('File to import not found.'), 'File to import not found message.');
+    $this->assertText('File to import not found.', 'File to import not found message.');
 
     // Try importing a .po file with overriding strings, and ensure existing
     // strings are kept.
@@ -164,7 +164,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
       'translation' => 'translated',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
-    $this->assertText(t('No strings available.'), 'String not overwritten by imported string.');
+    $this->assertText('No strings available.', 'String not overwritten by imported string.');
 
     // This import should not have changed number of plural forms.
     $locale_plurals = \Drupal::service('locale.plural.formula')->getNumberOfPlurals('fr');
@@ -226,7 +226,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
       'translation' => 'translated',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
-    $this->assertText(t('No strings available.'), 'Customized string not overwritten by imported string.');
+    $this->assertText('No strings available.', 'Customized string not overwritten by imported string.');
 
     // Try importing a .po file with overriding strings, and ensure existing
     // customized strings are overwritten.

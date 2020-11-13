@@ -174,7 +174,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $this->assertRaw(
       t('Are you sure you want to delete the custom block type %type?', ['%type' => $type->id()])
     );
-    $this->assertText(t('This action cannot be undone.'), 'The custom block type deletion confirmation form is available.');
+    $this->assertText('This action cannot be undone.', 'The custom block type deletion confirmation form is available.');
   }
 
   /**

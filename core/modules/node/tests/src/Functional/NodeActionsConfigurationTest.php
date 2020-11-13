@@ -52,7 +52,7 @@ class NodeActionsConfigurationTest extends BrowserTestBase {
     $action_id = $edit['id'];
 
     // Make sure that the new action was saved properly.
-    $this->assertText(t('The action has been successfully saved.'), 'The node_assign_owner_action action has been successfully saved.');
+    $this->assertText('The action has been successfully saved.', 'The node_assign_owner_action action has been successfully saved.');
     $this->assertText($action_label, 'The label of the node_assign_owner_action action appears on the actions administration page after saving.');
 
     // Make another POST request to the action edit page.
@@ -65,7 +65,7 @@ class NodeActionsConfigurationTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Make sure that the action updated properly.
-    $this->assertText(t('The action has been successfully saved.'), 'The node_assign_owner_action action has been successfully updated.');
+    $this->assertText('The action has been successfully saved.', 'The node_assign_owner_action action has been successfully updated.');
     $this->assertNoText($action_label, 'The old label for the node_assign_owner_action action does not appear on the actions administration page after updating.');
     $this->assertText($new_action_label, 'The new label for the node_assign_owner_action action appears on the actions administration page after updating.');
 

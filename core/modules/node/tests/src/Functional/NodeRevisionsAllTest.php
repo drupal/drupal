@@ -170,7 +170,7 @@ class NodeRevisionsAllTest extends NodeTestBase {
 
     // Confirm that the node can still be updated.
     $this->drupalPostForm("node/" . $reverted_node->id() . "/edit", ['body[0][value]' => 'We are Drupal.'], t('Save'));
-    $this->assertText(t('Basic page @title has been updated.', ['@title' => $reverted_node->getTitle()]), 'Node was successfully saved after reverting a revision.');
+    $this->assertText('Basic page ' . $reverted_node->getTitle() . ' has been updated.', 'Node was successfully saved after reverting a revision.');
     $this->assertText('We are Drupal.', 'Node was correctly updated after reverting a revision.');
 
     // Confirm revisions delete properly.

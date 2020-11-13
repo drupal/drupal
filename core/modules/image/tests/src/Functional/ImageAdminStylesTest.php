@@ -348,7 +348,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       'label' => $new_style_label,
     ];
     $this->drupalPostForm($style_path . $style_name, $edit, t('Save'));
-    $this->assertText(t('Changes to the style have been saved.'), new FormattableMarkup('Style %name was renamed to %new_name.', ['%name' => $style_name, '%new_name' => $new_style_name]));
+    $this->assertText('Changes to the style have been saved.', new FormattableMarkup('Style %name was renamed to %new_name.', ['%name' => $style_name, '%new_name' => $new_style_name]));
     $this->drupalGet('node/' . $nid);
 
     // Reload the image style using the new name.
@@ -378,12 +378,12 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->drupalPostForm(NULL, ['label' => 'Test style effect edit', 'name' => $style_name], t('Create new style'));
     $this->drupalPostForm(NULL, ['new' => 'image_scale_and_crop'], t('Add'));
     $this->drupalPostForm(NULL, ['data[width]' => '300', 'data[height]' => '200'], t('Add effect'));
-    $this->assertText(t('Scale and crop 300×200'));
+    $this->assertText('Scale and crop 300×200');
 
     // There should normally be only one edit link on this page initially.
     $this->clickLink(t('Edit'));
     $this->drupalPostForm(NULL, ['data[width]' => '360', 'data[height]' => '240'], t('Update effect'));
-    $this->assertText(t('Scale and crop 360×240'));
+    $this->assertText('Scale and crop 360×240');
 
     // Check that the previous effect is replaced.
     $this->assertNoText('Scale and crop 300×200');
@@ -412,8 +412,8 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     }
     $this->drupalPostForm(NULL, ['new' => 'image_scale'], t('Add'));
     $this->drupalPostForm(NULL, ['data[width]' => '12', 'data[height]' => '19'], t('Add effect'));
-    $this->assertText(t('Scale 24×19'));
-    $this->assertText(t('Scale 12×19'));
+    $this->assertText('Scale 24×19');
+    $this->assertText('Scale 12×19');
 
     // Try to edit a nonexistent effect.
     $uuid = $this->container->get('uuid');

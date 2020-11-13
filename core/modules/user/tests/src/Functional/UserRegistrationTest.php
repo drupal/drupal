@@ -46,7 +46,7 @@ class UserRegistrationTest extends BrowserTestBase {
     $edit['name'] = $name = $this->randomMachineName();
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
     $this->drupalPostForm('user/register', $edit, t('Create new account'));
-    $this->assertText(t('A welcome message with further instructions has been sent to your email address.'), 'User registered successfully.');
+    $this->assertText('A welcome message with further instructions has been sent to your email address.', 'User registered successfully.');
 
     /** @var EntityStorageInterface $storage */
     $storage = $this->container->get('entity_type.manager')->getStorage('user');
@@ -86,7 +86,7 @@ class UserRegistrationTest extends BrowserTestBase {
     $edit['pass[pass1]'] = '99999.0';
     $edit['pass[pass2]'] = '99999';
     $this->drupalPostForm('user/register', $edit, t('Create new account'));
-    $this->assertText(t('The specified passwords do not match.'), 'Typing mismatched passwords displays an error message.');
+    $this->assertText('The specified passwords do not match.', 'Typing mismatched passwords displays an error message.');
 
     // Enter a correct password.
     $edit['pass[pass1]'] = $new_pass = $this->randomMachineName();
@@ -97,7 +97,7 @@ class UserRegistrationTest extends BrowserTestBase {
       ->loadByProperties(['name' => $name, 'mail' => $mail]);
     $new_user = reset($accounts);
     $this->assertNotNull($new_user, 'New account successfully created with matching passwords.');
-    $this->assertText(t('Registration successful. You are now logged in.'), 'Users are logged in after registering.');
+    $this->assertText('Registration successful. You are now logged in.', 'Users are logged in after registering.');
     $this->drupalLogout();
 
     // Allow registration by site visitors, but require administrator approval.
@@ -108,7 +108,7 @@ class UserRegistrationTest extends BrowserTestBase {
     $edit['pass[pass1]'] = $pass = $this->randomMachineName();
     $edit['pass[pass2]'] = $pass;
     $this->drupalPostForm('user/register', $edit, t('Create new account'));
-    $this->assertText(t('Thank you for applying for an account. Your account is currently pending approval by the site administrator.'), 'Users are notified of pending approval');
+    $this->assertText('Thank you for applying for an account. Your account is currently pending approval by the site administrator.', 'Users are notified of pending approval');
 
     // Try to log in before administrator approval.
     $auth = [
@@ -116,7 +116,7 @@ class UserRegistrationTest extends BrowserTestBase {
       'pass' => $pass,
     ];
     $this->drupalPostForm('user/login', $auth, t('Log in'));
-    $this->assertText(t('The username @name has not been activated or is blocked.', ['@name' => $name]), 'User cannot log in yet.');
+    $this->assertText('The username ' . $name . ' has not been activated or is blocked.', 'User cannot log in yet.');
 
     // Activate the new account.
     $accounts = $this->container->get('entity_type.manager')->getStorage('user')
@@ -132,7 +132,7 @@ class UserRegistrationTest extends BrowserTestBase {
 
     // Log in after administrator approval.
     $this->drupalPostForm('user/login', $auth, t('Log in'));
-    $this->assertText(t('Member for'), 'User can log in after administrator approval.');
+    $this->assertText('Member for', 'User can log in after administrator approval.');
   }
 
   public function testRegistrationEmailDuplicates() {
@@ -152,13 +152,13 @@ class UserRegistrationTest extends BrowserTestBase {
 
     // Attempt to create a new account using an existing email address.
     $this->drupalPostForm('user/register', $edit, t('Create new account'));
-    $this->assertText(t('The email address @email is already taken.', ['@email' => $duplicate_user->getEmail()]), 'Supplying an exact duplicate email address displays an error message');
+    $this->assertText('The email address ' . $duplicate_user->getEmail() . ' is already taken.', 'Supplying an exact duplicate email address displays an error message');
 
     // Attempt to bypass duplicate email registration validation by adding spaces.
     $edit['mail'] = '   ' . $duplicate_user->getEmail() . '   ';
 
     $this->drupalPostForm('user/register', $edit, t('Create new account'));
-    $this->assertText(t('The email address @email is already taken.', ['@email' => $duplicate_user->getEmail()]), 'Supplying a duplicate email address with added whitespace displays an error message');
+    $this->assertText('The email address ' . $duplicate_user->getEmail() . ' is already taken.', 'Supplying a duplicate email address with added whitespace displays an error message');
   }
 
   /**

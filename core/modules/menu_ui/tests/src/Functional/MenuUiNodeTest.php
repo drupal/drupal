@@ -93,7 +93,7 @@ class MenuUiNodeTest extends BrowserTestBase {
 
     // Verify that no menu settings are displayed and nodes can be created.
     $this->drupalGet('node/add/page');
-    $this->assertText(t('Create Basic page'));
+    $this->assertText('Create Basic page');
     $this->assertNoText('Menu settings');
     $node_title = $this->randomMachineName();
     $edit = [
@@ -111,7 +111,7 @@ class MenuUiNodeTest extends BrowserTestBase {
       'menu_parent' => 'main:',
     ];
     $this->drupalPostForm('admin/structure/types/manage/page', $edit, t('Save content type'));
-    $this->assertText(t('The selected menu link is not under one of the selected menus.'));
+    $this->assertText('The selected menu link is not under one of the selected menus.');
     $this->assertNoRaw(t('The content type %name has been updated.', ['%name' => 'Basic page']));
 
     // Enable Tools menu as available menu.

@@ -42,7 +42,7 @@ class CommentAdminTest extends CommentTestBase {
 
     // Test that the comments page loads correctly when there are no comments
     $this->drupalGet('admin/content/comment');
-    $this->assertText(t('No comments available.'));
+    $this->assertText('No comments available.');
 
     $this->drupalLogout();
 
@@ -51,7 +51,7 @@ class CommentAdminTest extends CommentTestBase {
     $body = $this->randomMachineName();
     // Set $contact to true so that it won't check for id and message.
     $this->postComment($this->node, $body, $subject, TRUE);
-    $this->assertText(t('Your comment has been queued for review by site administrators and will be published after approval.'), 'Comment requires approval.');
+    $this->assertText('Your comment has been queued for review by site administrators and will be published after approval.', 'Comment requires approval.');
 
     // Get unapproved comment id.
     $this->drupalLogin($this->adminUser);
@@ -83,13 +83,13 @@ class CommentAdminTest extends CommentTestBase {
     // Publish multiple comments in one operation.
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/content/comment/approval');
-    $this->assertText(t('Unapproved comments (@count)', ['@count' => 2]), 'Two unapproved comments waiting for approval.');
+    $this->assertText('Unapproved comments (2)', 'Two unapproved comments waiting for approval.');
     $edit = [
       "comments[{$comments[0]->id()}]" => 1,
       "comments[{$comments[1]->id()}]" => 1,
     ];
     $this->drupalPostForm(NULL, $edit, t('Update'));
-    $this->assertText(t('Unapproved comments (@count)', ['@count' => 0]), 'All comments were approved.');
+    $this->assertText('Unapproved comments (0)', 'All comments were approved.');
 
     // Delete multiple comments in one operation.
     $edit = [
@@ -99,15 +99,15 @@ class CommentAdminTest extends CommentTestBase {
       "comments[{$anonymous_comment4->id()}]" => 1,
     ];
     $this->drupalPostForm(NULL, $edit, t('Update'));
-    $this->assertText(t('Are you sure you want to delete these comments and all their children?'), 'Confirmation required.');
+    $this->assertText('Are you sure you want to delete these comments and all their children?', 'Confirmation required.');
     $this->drupalPostForm(NULL, [], t('Delete'));
-    $this->assertText(t('No comments available.'), 'All comments were deleted.');
+    $this->assertText('No comments available.', 'All comments were deleted.');
     // Test message when no comments selected.
     $edit = [
       'operation' => 'delete',
     ];
     $this->drupalPostForm(NULL, $edit, t('Update'));
-    $this->assertText(t('Select one or more comments to perform the update on.'));
+    $this->assertText('Select one or more comments to perform the update on.');
 
     // Make sure the label of unpublished node is not visible on listing page.
     $this->drupalGet('admin/content/comment');
@@ -139,7 +139,7 @@ class CommentAdminTest extends CommentTestBase {
     $body = $this->randomMachineName();
     // Set $contact to true so that it won't check for id and message.
     $this->postComment($this->node, $body, $subject, TRUE);
-    $this->assertText(t('Your comment has been queued for review by site administrators and will be published after approval.'), 'Comment requires approval.');
+    $this->assertText('Your comment has been queued for review by site administrators and will be published after approval.', 'Comment requires approval.');
 
     // Get unapproved comment id.
     $this->drupalLogin($this->adminUser);

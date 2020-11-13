@@ -200,7 +200,7 @@ class BlockTest extends BlockTestBase {
 
     // Set block title to confirm that interface works and override any custom titles.
     $this->drupalPostForm('admin/structure/block/add/' . $block['id'] . '/' . $block['theme'], ['settings[label]' => $block['settings[label]'], 'settings[label_display]' => $block['settings[label_display]'], 'id' => $block['id'], 'region' => $block['region']], t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), 'Block title set.');
+    $this->assertText('The block configuration has been saved.', 'Block title set.');
     // Check to see if the block was created by checking its configuration.
     $instance = Block::load($block['id']);
 
@@ -216,7 +216,7 @@ class BlockTest extends BlockTestBase {
     $this->clickLink('Disable');
 
     // Confirm that the block is now listed as disabled.
-    $this->assertText(t('The block settings have been updated.'), 'Block successfully moved to disabled region.');
+    $this->assertText('The block settings have been updated.', 'Block successfully moved to disabled region.');
 
     // Confirm that the block instance title and markup are not displayed.
     $this->drupalGet('node');
@@ -260,7 +260,7 @@ class BlockTest extends BlockTestBase {
       $block['theme'] = $theme;
       $block['region'] = 'content';
       $this->drupalPostForm('admin/structure/block/add/system_powered_by_block', $block, t('Save block'));
-      $this->assertText(t('The block configuration has been saved.'));
+      $this->assertText('The block configuration has been saved.');
       $this->assertSession()->addressEquals('admin/structure/block/list/' . $theme . '?block-placement=' . Html::getClass($block['id']));
 
       // Set the default theme and ensure the block is placed.
@@ -341,11 +341,11 @@ class BlockTest extends BlockTestBase {
     $this->drupalPostForm('admin/structure/block', $edit, t('Save blocks'));
 
     // Confirm that the block was moved to the proper region.
-    $this->assertText(t('The block settings have been updated.'), new FormattableMarkup('Block successfully moved to %region_name region.', ['%region_name' => $region]));
+    $this->assertText('The block settings have been updated.', new FormattableMarkup('Block successfully moved to %region_name region.', ['%region_name' => $region]));
 
     // Confirm that the block is being displayed.
     $this->drupalGet('');
-    $this->assertText(t($block['settings[label]']), 'Block successfully being displayed on the page.');
+    $this->assertText($block['settings[label]'], 'Block successfully being displayed on the page.');
 
     // Confirm that the custom block was found at the proper region.
     $xpath = $this->assertSession()->buildXPathQuery('//div[@class=:region-class]//div[@id=:block-id]/*', [

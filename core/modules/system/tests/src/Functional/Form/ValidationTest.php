@@ -142,7 +142,7 @@ class ValidationTest extends BrowserTestBase {
     // Now test full form validation and ensure that the #element_validate
     // handler is still triggered.
     $this->drupalPostForm($path, $edit, t('Full validate'));
-    $this->assertText(t('@name field is required.', ['@name' => 'Title']));
+    $this->assertText('Title field is required.');
     $this->assertText('Test element is invalid');
   }
 
@@ -220,11 +220,11 @@ class ValidationTest extends BrowserTestBase {
     foreach (Element::children($form) as $key) {
       if (isset($form[$key]['#required_error'])) {
         $this->assertNoText($form[$key]['#title'] . ' field is required.');
-        $this->assertText($form[$key]['#required_error']);
+        $this->assertText((string) $form[$key]['#required_error']);
       }
       elseif (isset($form[$key]['#form_test_required_error'])) {
         $this->assertNoText($form[$key]['#title'] . ' field is required.');
-        $this->assertText($form[$key]['#form_test_required_error']);
+        $this->assertText((string) $form[$key]['#form_test_required_error']);
       }
     }
     $this->assertNoText('An illegal choice has been detected. Please contact the site administrator.');
@@ -240,11 +240,11 @@ class ValidationTest extends BrowserTestBase {
     foreach (Element::children($form) as $key) {
       if (isset($form[$key]['#required_error'])) {
         $this->assertNoText($form[$key]['#title'] . ' field is required.');
-        $this->assertNoText($form[$key]['#required_error']);
+        $this->assertNoText((string) $form[$key]['#required_error']);
       }
       elseif (isset($form[$key]['#form_test_required_error'])) {
         $this->assertNoText($form[$key]['#title'] . ' field is required.');
-        $this->assertNoText($form[$key]['#form_test_required_error']);
+        $this->assertNoText((string) $form[$key]['#form_test_required_error']);
       }
     }
     $this->assertNoText('An illegal choice has been detected. Please contact the site administrator.');

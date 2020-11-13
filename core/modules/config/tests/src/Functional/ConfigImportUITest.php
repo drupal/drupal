@@ -3,7 +3,6 @@
 namespace Drupal\Tests\config\Functional;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Tests\BrowserTestBase;
 
@@ -139,7 +138,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->assertSession()->buttonNotExists('Import all');
 
     // Verify that there are no further changes to import.
-    $this->assertText(t('There are no configuration changes to import.'));
+    $this->assertText('There are no configuration changes to import.');
 
     $this->rebuildContainer();
     // Verify site name has changed.
@@ -246,7 +245,7 @@ class ConfigImportUITest extends BrowserTestBase {
 
     // Attempt to import configuration and verify that an error message appears.
     $this->drupalPostForm(NULL, [], t('Import all'));
-    $this->assertText(t('Another request may be synchronizing configuration already.'));
+    $this->assertText('Another request may be synchronizing configuration already.');
 
     // Release the lock, just to keep testing sane.
     $this->container->get('lock.persistent')->release($config_importer::LOCK_NAME);
@@ -268,7 +267,7 @@ class ConfigImportUITest extends BrowserTestBase {
 
     // Verify that there are configuration differences to import.
     $this->drupalGet('admin/config/development/configuration');
-    $this->assertText(t('The staged configuration cannot be imported, because it originates from a different site than this site. You can only synchronize configuration between cloned instances of this site.'));
+    $this->assertText('The staged configuration cannot be imported, because it originates from a different site than this site. You can only synchronize configuration between cloned instances of this site.');
     $this->assertSession()->buttonNotExists('Import all');
   }
 
@@ -443,10 +442,10 @@ class ConfigImportUITest extends BrowserTestBase {
 
     // Attempt to import configuration and verify that an error message appears.
     $this->drupalPostForm(NULL, [], t('Import all'));
-    $this->assertText(new FormattableMarkup('Deleted and replaced configuration entity "@name"', ['@name' => $name_secondary]));
-    $this->assertText(t('The configuration was imported with errors.'));
+    $this->assertText('Deleted and replaced configuration entity "' . $name_secondary . '"');
+    $this->assertText('The configuration was imported with errors.');
     $this->assertNoText('The configuration was imported successfully.');
-    $this->assertText(t('There are no configuration changes to import.'));
+    $this->assertText('There are no configuration changes to import.');
   }
 
   /**
@@ -463,11 +462,11 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->drupalGet('admin/config/development/configuration');
     // The node type, body field and entity displays will be scheduled for
     // removal.
-    $this->assertText(new FormattableMarkup('node.type.@type', ['@type' => $node_type->id()]));
-    $this->assertText(new FormattableMarkup('field.field.node.@type.body', ['@type' => $node_type->id()]));
-    $this->assertText(new FormattableMarkup('core.entity_view_display.node.@type.teaser', ['@type' => $node_type->id()]));
-    $this->assertText(new FormattableMarkup('core.entity_view_display.node.@type.default', ['@type' => $node_type->id()]));
-    $this->assertText(new FormattableMarkup('core.entity_form_display.node.@type.default', ['@type' => $node_type->id()]));
+    $this->assertText('node.type.' . $node_type->id());
+    $this->assertText('field.field.node.' . $node_type->id() . '.body');
+    $this->assertText('core.entity_view_display.node.' . $node_type->id() . '.teaser');
+    $this->assertText('core.entity_view_display.node.' . $node_type->id() . '.default');
+    $this->assertText('core.entity_form_display.node.' . $node_type->id() . '.default');
 
     // Attempt to import configuration and verify that an error message appears
     // and the node type, body field and entity displays are still scheduled for
@@ -475,22 +474,22 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->drupalPostForm(NULL, [], t('Import all'));
     $validation_message = t('Entities exist of type %entity_type and %bundle_label %bundle. These entities need to be deleted before importing.', ['%entity_type' => $node->getEntityType()->getLabel(), '%bundle_label' => $node->getEntityType()->getBundleLabel(), '%bundle' => $node_type->label()]);
     $this->assertRaw($validation_message);
-    $this->assertText(new FormattableMarkup('node.type.@type', ['@type' => $node_type->id()]));
-    $this->assertText(new FormattableMarkup('field.field.node.@type.body', ['@type' => $node_type->id()]));
-    $this->assertText(new FormattableMarkup('core.entity_view_display.node.@type.teaser', ['@type' => $node_type->id()]));
-    $this->assertText(new FormattableMarkup('core.entity_view_display.node.@type.default', ['@type' => $node_type->id()]));
-    $this->assertText(new FormattableMarkup('core.entity_form_display.node.@type.default', ['@type' => $node_type->id()]));
+    $this->assertText('node.type.' . $node_type->id());
+    $this->assertText('field.field.node.' . $node_type->id() . '.body');
+    $this->assertText('core.entity_view_display.node.' . $node_type->id() . '.teaser');
+    $this->assertText('core.entity_view_display.node.' . $node_type->id() . '.default');
+    $this->assertText('core.entity_form_display.node.' . $node_type->id() . '.default');
 
     // Delete the node and try to import again.
     $node->delete();
     $this->drupalPostForm(NULL, [], t('Import all'));
     $this->assertNoRaw($validation_message);
-    $this->assertText(t('There are no configuration changes to import.'));
-    $this->assertNoText(new FormattableMarkup('node.type.@type', ['@type' => $node_type->id()]));
-    $this->assertNoText(new FormattableMarkup('field.field.node.@type.body', ['@type' => $node_type->id()]));
-    $this->assertNoText(new FormattableMarkup('core.entity_view_display.node.@type.teaser', ['@type' => $node_type->id()]));
-    $this->assertNoText(new FormattableMarkup('core.entity_view_display.node.@type.default', ['@type' => $node_type->id()]));
-    $this->assertNoText(new FormattableMarkup('core.entity_form_display.node.@type.default', ['@type' => $node_type->id()]));
+    $this->assertText('There are no configuration changes to import.');
+    $this->assertNoText('node.type.' . $node_type->id());
+    $this->assertNoText('field.field.node.' . $node_type->id() . '.body');
+    $this->assertNoText('core.entity_view_display.node.' . $node_type->id() . '.teaser');
+    $this->assertNoText('core.entity_view_display.node.' . $node_type->id() . '.default');
+    $this->assertNoText('core.entity_form_display.node.' . $node_type->id() . '.default');
   }
 
   /**

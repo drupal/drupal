@@ -243,7 +243,7 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
     $edit['name[0][value]'] = $this->randomMachineName();
 
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertText(t('Created new term @name.', ['@name' => $edit['name[0][value]']]), 'Term created successfully.');
+    $this->assertText('Created new term ' . $edit['name[0][value]'] . '.', 'Term created successfully.');
 
     // Verify that the creation message contains a link to a term.
     $this->assertSession()->elementExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "term/")]');
@@ -260,7 +260,7 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
 
     $edit['name[0][value]'] = $this->randomMachineName();
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertText(t('Updated term @name.', ['@name' => $edit['name[0][value]']]), 'Term updated successfully.');
+    $this->assertText('Updated term ' . $edit['name[0][value]'] . '.', 'Term updated successfully.');
 
     // Delete the vocabulary.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/delete');
@@ -317,7 +317,7 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
 
     $edit['name[0][value]'] = $this->randomMachineName();
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertText(t('Updated term @name.', ['@name' => $edit['name[0][value]']]), 'Term updated successfully.');
+    $this->assertText('Updated term ' . $edit['name[0][value]'] . '.', 'Term updated successfully.');
 
     // Verify that the update message contains a link to a term.
     $this->assertSession()->elementExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "term/")]');

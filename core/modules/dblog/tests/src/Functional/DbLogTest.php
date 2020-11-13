@@ -300,20 +300,20 @@ class DbLogTest extends BrowserTestBase {
     $this->drupalGet('admin/help/dblog');
     $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
-      $this->assertText(t('Database Logging'), 'DBLog help was displayed');
+      $this->assertText('Database Logging', 'DBLog help was displayed');
     }
 
     // View the database log report page.
     $this->drupalGet('admin/reports/dblog');
     $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
-      $this->assertText(t('Recent log messages'), 'DBLog report was displayed');
+      $this->assertText('Recent log messages', 'DBLog report was displayed');
     }
 
     $this->drupalGet('admin/reports/dblog/confirm');
     $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
-      $this->assertText(t('Are you sure you want to delete the recent logs?'), 'DBLog clear logs form was displayed');
+      $this->assertText('Are you sure you want to delete the recent logs?', 'DBLog clear logs form was displayed');
     }
 
     // View the database log page-not-found report page.
@@ -337,7 +337,7 @@ class DbLogTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/dblog/event/' . $wid);
     $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
-      $this->assertText(t('Details'), 'DBLog event node was displayed');
+      $this->assertText('Details', 'DBLog event node was displayed');
     }
   }
 
@@ -382,7 +382,7 @@ class DbLogTest extends BrowserTestBase {
   public function verifySort($sort = 'asc', $order = 'Date') {
     $this->drupalGet('admin/reports/dblog', ['query' => ['sort' => $sort, 'order' => $order]]);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText(t('Recent log messages'), 'DBLog report was displayed correctly and sorting went fine.');
+    $this->assertText('Recent log messages', 'DBLog report was displayed correctly and sorting went fine.');
   }
 
   /**
@@ -696,13 +696,13 @@ class DbLogTest extends BrowserTestBase {
 
     $this->drupalGet('admin/reports/dblog', ['query' => ['order' => 'Type']]);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText(t('Operations'), 'Operations text found');
+    $this->assertText('Operations', 'Operations text found');
 
     // Clear all logs and make sure the confirmation message is found.
     $this->clearLogsEntries();
     // Confirm that the logs should be cleared.
     $this->drupalPostForm(NULL, [], 'Confirm');
-    $this->assertText(t('Database log cleared.'), 'Confirmation message found');
+    $this->assertText('Database log cleared.', 'Confirmation message found');
   }
 
   /**

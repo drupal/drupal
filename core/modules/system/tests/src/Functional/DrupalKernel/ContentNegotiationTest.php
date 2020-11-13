@@ -43,7 +43,7 @@ class ContentNegotiationTest extends BrowserTestBase {
     foreach ($tests as $case => $header) {
       $this->drupalGet('', [], ['Accept: ' . $header]);
       $this->assertNoText('Unsupported Media Type', '"Unsupported Media Type" not found for ' . $case);
-      $this->assertText(t('Log in'), '"Log in" found for ' . $case);
+      $this->assertText('Log in', '"Log in" found for ' . $case);
     }
   }
 

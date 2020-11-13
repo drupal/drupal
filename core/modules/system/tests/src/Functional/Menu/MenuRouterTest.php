@@ -92,7 +92,7 @@ class MenuRouterTest extends BrowserTestBase {
     $this->assertNoText('Menu Callback Title');
     // Verify that the menu router item title is output as page title.
     $this->drupalGet('menu_callback_title');
-    $this->assertText(t('Menu Callback Title'));
+    $this->assertText('Menu Callback Title');
   }
 
   /**
@@ -101,7 +101,7 @@ class MenuRouterTest extends BrowserTestBase {
   protected function doTestDescriptionMenuItems() {
     // Verify that the menu router item title is output as page title.
     $this->drupalGet('menu_callback_description');
-    $this->assertText(t('Menu item description text'));
+    $this->assertText('Menu item description text');
   }
 
   /**
@@ -211,7 +211,7 @@ class MenuRouterTest extends BrowserTestBase {
   public function testMaintenanceModeLoginPaths() {
     $this->container->get('state')->set('system.maintenance_mode', TRUE);
 
-    $offline_message = t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', ['@site' => $this->config('system.site')->get('name')]);
+    $offline_message = $this->config('system.site')->get('name') . ' is currently under maintenance. We should be back shortly. Thank you for your patience.';
     $this->drupalGet('test-page');
     $this->assertText($offline_message);
     $this->drupalGet('menu_login_callback');

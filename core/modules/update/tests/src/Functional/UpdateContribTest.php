@@ -70,10 +70,10 @@ class UpdateContribTest extends UpdateTestBase {
     // 'No available releases found' string.
     $this->assertRaw('<h3>' . t('Drupal core') . '</h3>');
     $this->assertRaw(Link::fromTextAndUrl(t('Drupal'), Url::fromUri('http://example.com/project/drupal'))->toString());
-    $this->assertText(t('Up to date'));
+    $this->assertText('Up to date');
     $this->assertRaw('<h3>' . t('Modules') . '</h3>');
     $this->assertNoText('Update available');
-    $this->assertText(t('No available releases found'));
+    $this->assertText('No available releases found');
     $this->assertNoRaw(Link::fromTextAndUrl(t('AAA Update test'), Url::fromUri('http://example.com/project/aaa_update_test'))->toString());
 
     $available = update_get_available();
@@ -103,7 +103,7 @@ class UpdateContribTest extends UpdateTestBase {
       ]
     );
     $this->standardTests();
-    $this->assertText(t('Up to date'));
+    $this->assertText('Up to date');
     $this->assertRaw('<h3>' . t('Modules') . '</h3>');
     $this->assertNoText('Update available');
     $this->assertRaw($project_link);
@@ -181,13 +181,13 @@ class UpdateContribTest extends UpdateTestBase {
     $this->refreshUpdateStatus(['drupal' => '0.0', '#all' => '1_0']);
     $this->standardTests();
     // We're expecting the report to say all projects are up to date.
-    $this->assertText(t('Up to date'));
+    $this->assertText('Up to date');
     $this->assertNoText('Update available');
     // We want to see all 3 module names listed, since they'll show up either
     // as project names or as modules under the "Includes" listing.
-    $this->assertText(t('AAA Update test'));
-    $this->assertText(t('BBB Update test'));
-    $this->assertText(t('CCC Update test'));
+    $this->assertText('AAA Update test');
+    $this->assertText('BBB Update test');
+    $this->assertText('CCC Update test');
     // We want aaa_update_test included in the ccc_update_test project, not as
     // its own project on the report.
     $this->assertNoRaw(Link::fromTextAndUrl(t('AAA Update test'), Url::fromUri('http://example.com/project/aaa_update_test'))->toString());
@@ -239,7 +239,7 @@ class UpdateContribTest extends UpdateTestBase {
       'update_test_basetheme' => '1_1-sec',
     ];
     $this->refreshUpdateStatus($xml_mapping);
-    $this->assertText(t('Security update required!'));
+    $this->assertText('Security update required!');
     $this->assertRaw(Link::fromTextAndUrl(t('Update test base theme'), Url::fromUri('http://example.com/project/update_test_basetheme'))->toString());
   }
 
@@ -395,7 +395,7 @@ class UpdateContribTest extends UpdateTestBase {
       // themes.
       $this->assertNoText('Themes');
       if ($check_disabled) {
-        $this->assertText(t('Uninstalled themes'));
+        $this->assertText('Uninstalled themes');
         $this->assertRaw($base_theme_project_link);
         $this->assertRaw($sub_theme_project_link);
       }
@@ -475,7 +475,7 @@ class UpdateContribTest extends UpdateTestBase {
     ];
     $this->refreshUpdateStatus($xml_mapping);
 
-    $this->assertText(t('Up to date'));
+    $this->assertText('Up to date');
     // We're expecting the report to say most projects are up to date, so we
     // hope that 'Up to date' is not unique.
     $this->assertSession()->pageTextMatchesCount(3, '/Up to date/');
@@ -538,7 +538,7 @@ class UpdateContribTest extends UpdateTestBase {
     );
     $this->drupalGet('admin/reports/updates');
     $this->assertRaw('<h3>' . t('Modules') . '</h3>');
-    $this->assertText(t('Security update required!'));
+    $this->assertText('Security update required!');
     $this->assertRaw(Link::fromTextAndUrl(t('AAA Update test'), Url::fromUri('http://example.com/project/aaa_update_test'))->toString());
 
     // Visit the reports page again without the altering and make sure the
@@ -552,7 +552,7 @@ class UpdateContribTest extends UpdateTestBase {
     // Turn the altering back on and visit the Update manager UI.
     $update_test_config->set('update_status', $update_status)->save();
     $this->drupalGet('admin/modules/update');
-    $this->assertText(t('Security update'));
+    $this->assertText('Security update');
 
     // Turn the altering back off and visit the Update manager UI.
     $update_test_config->set('update_status', [])->save();

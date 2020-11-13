@@ -43,7 +43,7 @@ class SettingsTest extends UITestBase {
 
     // Test the confirmation message.
     $this->drupalPostForm('admin/structure/views/settings', [], t('Save configuration'));
-    $this->assertText(t('The configuration options have been saved.'));
+    $this->assertText('The configuration options have been saved.');
 
     // Configure to always show the master display.
     $edit = [
@@ -130,7 +130,7 @@ class SettingsTest extends UITestBase {
 
     // Test the confirmation message.
     $this->drupalPostForm('admin/structure/views/settings/advanced', [], t('Save configuration'));
-    $this->assertText(t('The configuration options have been saved.'));
+    $this->assertText('The configuration options have been saved.');
 
     $edit = [
       'skip_cache' => TRUE,
@@ -143,7 +143,7 @@ class SettingsTest extends UITestBase {
 
     // Test the "Clear Views' cache" button.
     $this->drupalPostForm('admin/structure/views/settings/advanced', [], t("Clear Views' cache"));
-    $this->assertText(t('The cache has been cleared.'));
+    $this->assertText('The cache has been cleared.');
   }
 
 }

@@ -173,7 +173,7 @@ class LinkFieldUITest extends BrowserTestBase {
     // generate warnings.
     // @todo Mess with the formatter settings a bit here.
     $this->drupalGet("$type_path/display");
-    $this->assertText(t('Link text trimmed to @limit characters', ['@limit' => 80]));
+    $this->assertText('Link text trimmed to 80 characters');
 
     $storage = FieldStorageConfig::create([
       'field_name' => $field_name,

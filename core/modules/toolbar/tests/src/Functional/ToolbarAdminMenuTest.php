@@ -199,7 +199,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
 
     // Assign the role to the user.
     $this->drupalPostForm('user/' . $this->adminUser->id() . '/edit', ["roles[$rid]" => $rid], t('Save'));
-    $this->assertText(t('The changes have been saved.'));
+    $this->assertText('The changes have been saved.');
 
     // Assert that the subtrees hash has been altered because the subtrees
     // structure changed.
@@ -240,7 +240,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
 
     // Assign the role to the user.
     $this->drupalPostForm('user/' . $admin_user_id . '/edit', ["roles[$rid]" => $rid], t('Save'));
-    $this->assertText(t('The changes have been saved.'));
+    $this->assertText('The changes have been saved.');
 
     // Log in adminUser and assert that the subtrees hash has changed.
     $this->drupalLogin($this->adminUser);
@@ -287,7 +287,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     // Reset locale cache.
     $this->container->get('string_translation')->reset();
     $this->assertRaw('"edit-languages-' . $langcode . '-weight"');
-    $this->assertText(t($name), 'Test language added.');
+    $this->assertText($name, 'Test language added.');
 
     // Have the adminUser request a page in the new language.
     $this->drupalGet($langcode . '/test-page');
@@ -321,7 +321,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
       $lid => $translation,
     ];
     $this->drupalPostForm('admin/config/regional/translate', $edit, t('Save translations'));
-    $this->assertText(t('The strings have been saved.'), 'The strings have been saved.');
+    $this->assertText('The strings have been saved.', 'The strings have been saved.');
     // Verify that the user is redirected to the correct page.
     $this->assertSession()->addressEquals(Url::fromRoute('locale.translate_page'));
     $this->drupalLogout();

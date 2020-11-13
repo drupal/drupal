@@ -122,7 +122,7 @@ class UserRoleAdminTest extends BrowserTestBase {
       $weight--;
     }
     $this->drupalPostForm('admin/people/roles', $edit, t('Save'));
-    $this->assertText(t('The role settings have been updated.'), 'The role settings form submitted successfully.');
+    $this->assertText('The role settings have been updated.', 'The role settings form submitted successfully.');
 
     // Load up the user roles with the new weights.
     $roles = user_roles();

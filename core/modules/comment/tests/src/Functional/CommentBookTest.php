@@ -71,13 +71,13 @@ class CommentBookTest extends BrowserTestBase {
 
     $this->assertText($comment_subject, 'Comment subject found');
     $this->assertText($comment_body, 'Comment body found');
-    $this->assertText(t('Add new comment'), 'Comment form found');
+    $this->assertText('Add new comment', 'Comment form found');
     // Ensure that the comment form subject field exists.
     $this->assertSession()->fieldExists('subject[0][value]');
 
     $this->drupalGet('book/export/html/' . $book_node->id());
 
-    $this->assertText(t('Comments'), 'Comment thread found');
+    $this->assertText('Comments', 'Comment thread found');
     $this->assertText($comment_subject, 'Comment subject found');
     $this->assertText($comment_body, 'Comment body found');
 

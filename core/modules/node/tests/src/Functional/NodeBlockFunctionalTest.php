@@ -77,7 +77,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
 
     // Test that block is not visible without nodes.
     $this->drupalGet('');
-    $this->assertText(t('No content available.'), 'Block with "No content available." found.');
+    $this->assertText('No content available.', 'Block with "No content available." found.');
 
     // Add some test nodes.
     $default_settings = ['uid' => $this->webUser->id(), 'type' => 'article'];

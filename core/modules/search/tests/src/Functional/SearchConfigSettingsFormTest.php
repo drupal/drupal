@@ -88,19 +88,19 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
 
     // Test that the settings form displays the correct count of items left to index.
     $this->drupalGet('admin/config/search/pages');
-    $this->assertText(t('There are @count items left to index.', ['@count' => 0]));
+    $this->assertText('There are 0 items left to index.');
 
     // Test the re-index button.
     $this->drupalPostForm('admin/config/search/pages', [], t('Re-index site'));
-    $this->assertText(t('Are you sure you want to re-index the site'));
+    $this->assertText('Are you sure you want to re-index the site');
     $this->drupalPostForm('admin/config/search/pages/reindex', [], t('Re-index site'));
-    $this->assertText(t('All search indexes will be rebuilt'));
+    $this->assertText('All search indexes will be rebuilt');
     $this->drupalGet('admin/config/search/pages');
-    $this->assertText(t('There is 1 item left to index.'));
+    $this->assertText('There is 1 item left to index.');
 
     // Test that the form saves with the default values.
     $this->drupalPostForm('admin/config/search/pages', [], t('Save configuration'));
-    $this->assertText(t('The configuration options have been saved.'), 'Form saves with the default values.');
+    $this->assertText('The configuration options have been saved.', 'Form saves with the default values.');
 
     // Test that the form does not save with an invalid word length.
     $edit = [
@@ -257,7 +257,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
 
     // Ensure that no search pages are configured.
     $this->drupalGet('admin/config/search/pages');
-    $this->assertText(t('No search pages have been configured.'));
+    $this->assertText('No search pages have been configured.');
 
     // Add a search page.
     $edit = [];
@@ -282,7 +282,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
     $edit['id'] = strtolower($this->randomMachineName(8));
     $edit['path'] = $first['path'];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertText(t('The search page path must be unique.'));
+    $this->assertText('The search page path must be unique.');
 
     // Add a second search page.
     $second = [];

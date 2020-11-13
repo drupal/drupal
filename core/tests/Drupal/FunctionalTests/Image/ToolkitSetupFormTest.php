@@ -65,7 +65,7 @@ class ToolkitSetupFormTest extends BrowserTestBase {
     // Test changing the test toolkit parameter.
     $edit = ['test[test_parameter]' => '0'];
     $this->drupalPostForm(NULL, $edit, 'Save configuration');
-    $this->assertText(t('Test parameter should be different from 0.'), 'Validation error displayed.');
+    $this->assertText('Test parameter should be different from 0.', 'Validation error displayed.');
     $edit = ['test[test_parameter]' => '20'];
     $this->drupalPostForm(NULL, $edit, 'Save configuration');
     $this->assertEqual($this->config('system.image.test_toolkit')->get('test_parameter'), '20');

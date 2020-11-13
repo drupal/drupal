@@ -49,12 +49,12 @@ class UserEditTest extends BrowserTestBase {
     $edit['pass[pass1]'] = '';
     $edit['pass[pass2]'] = $this->randomMachineName();
     $this->drupalPostForm("user/" . $user1->id() . "/edit", $edit, t('Save'));
-    $this->assertText(t("The specified passwords do not match."), 'Typing mismatched passwords displays an error message.');
+    $this->assertText("The specified passwords do not match.", 'Typing mismatched passwords displays an error message.');
 
     $edit['pass[pass1]'] = $this->randomMachineName();
     $edit['pass[pass2]'] = '';
     $this->drupalPostForm("user/" . $user1->id() . "/edit", $edit, t('Save'));
-    $this->assertText(t("The specified passwords do not match."), 'Typing mismatched passwords displays an error message.');
+    $this->assertText("The specified passwords do not match.", 'Typing mismatched passwords displays an error message.');
 
     // Test that the error message appears when attempting to change the mail or
     // pass without the current password.
@@ -111,13 +111,13 @@ class UserEditTest extends BrowserTestBase {
 
     $edit = ['status' => 0];
     $this->drupalPostForm('user/' . $user1->id() . '/edit', $edit, t('Save'));
-    $this->assertText(t('The changes have been saved.'));
+    $this->assertText('The changes have been saved.');
     $this->assertSession()->checkboxChecked('edit-status-0');
     $this->assertSession()->checkboxNotChecked('edit-status-1');
 
     $edit = ['status' => 1];
     $this->drupalPostForm('user/' . $user1->id() . '/edit', $edit, t('Save'));
-    $this->assertText(t('The changes have been saved.'));
+    $this->assertText('The changes have been saved.');
     $this->assertSession()->checkboxNotChecked('edit-status-0');
     $this->assertSession()->checkboxChecked('edit-status-1');
   }

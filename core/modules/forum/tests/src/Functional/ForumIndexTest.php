@@ -86,7 +86,7 @@ class ForumIndexTest extends BrowserTestBase {
     $edit = ['status[value]' => FALSE];
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
     $this->drupalGet('node/' . $node->id());
-    $this->assertText(t('Access denied'), 'Unpublished node is no longer accessible.');
+    $this->assertText('Access denied', 'Unpublished node is no longer accessible.');
 
     // Verify that the node no longer appears on the index.
     $this->drupalGet('forum/' . $tid);

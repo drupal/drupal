@@ -121,8 +121,8 @@ class FieldUIDeleteTest extends BrowserTestBase {
 
     // Check the config dependencies of the first field.
     $this->drupalGet("$bundle_path2/fields/node.$type_name2.$field_name/delete");
-    $this->assertText(t('The listed configuration will be updated.'));
-    $this->assertText(t('View'));
+    $this->assertText('The listed configuration will be updated.');
+    $this->assertText('View');
     $this->assertText('test_view_field_delete');
 
     $xml = $this->cssSelect('#edit-entity-deletes');

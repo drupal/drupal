@@ -72,8 +72,8 @@ class SiteMaintenanceTest extends BrowserTestBase {
     $this->drupalPostForm('admin/config/development/maintenance', $edit, t('Save configuration'));
 
     $admin_message = t('Operating in maintenance mode. <a href=":url">Go online.</a>', [':url' => Url::fromRoute('system.site_maintenance_mode')->toString()]);
-    $user_message = t('Operating in maintenance mode.');
-    $offline_message = t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', ['@site' => $this->config('system.site')->get('name')]);
+    $user_message = 'Operating in maintenance mode.';
+    $offline_message = $this->config('system.site')->get('name') . ' is currently under maintenance. We should be back shortly. Thank you for your patience.';
 
     $this->drupalGet(Url::fromRoute('user.page'));
     // JS should not be aggregated, so drupal.js is expected in the page source.
@@ -128,7 +128,7 @@ class SiteMaintenanceTest extends BrowserTestBase {
 
     // Verify that custom site offline message is not displayed on user/password.
     $this->drupalGet('user/password');
-    $this->assertText(t('Username or email address'), 'Anonymous users can access user/password');
+    $this->assertText('Username or email address', 'Anonymous users can access user/password');
 
     // Submit password reset form.
     $edit = [

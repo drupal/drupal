@@ -233,7 +233,7 @@ class HandlerTest extends UITestBase {
       ];
 
       foreach ($original_configuration as $key => $value) {
-        $this->assertText(new FormattableMarkup('@key: @value', ['@key' => $key, '@value' => $value]));
+        $this->assertText($key . ': ' . $value);
       }
     }
   }

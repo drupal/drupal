@@ -149,7 +149,7 @@ class FormTest extends FieldTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText(t('entity_test @id has been created.', ['@id' => $id]), 'Entity was created');
+    $this->assertText('entity_test ' . $id . ' has been created.', 'Entity was created');
     $entity = EntityTest::load($id);
     $this->assertEqual($entity->{$field_name}->value, $value, 'Field value was saved');
 
@@ -166,7 +166,7 @@ class FormTest extends FieldTestBase {
       "{$field_name}[0][value]" => $value,
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertText(t('entity_test @id has been updated.', ['@id' => $id]), 'Entity was updated');
+    $this->assertText('entity_test ' . $id . ' has been updated.', 'Entity was updated');
     $this->container->get('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);
     $entity = EntityTest::load($id);
     $this->assertEqual($entity->{$field_name}->value, $value, 'Field value was updated');
@@ -177,7 +177,7 @@ class FormTest extends FieldTestBase {
       "{$field_name}[0][value]" => $value,
     ];
     $this->drupalPostForm('entity_test/manage/' . $id . '/edit', $edit, t('Save'));
-    $this->assertText(t('entity_test @id has been updated.', ['@id' => $id]), 'Entity was updated');
+    $this->assertText('entity_test ' . $id . ' has been updated.', 'Entity was updated');
     $this->container->get('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);
     $entity = EntityTest::load($id);
     $this->assertTrue($entity->{$field_name}->isEmpty(), 'Field was emptied');
@@ -211,7 +211,7 @@ class FormTest extends FieldTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText(t('entity_test @id has been created.', ['@id' => $id]), 'Entity was created.');
+    $this->assertText('entity_test ' . $id . ' has been created.', 'Entity was created.');
     $entity = EntityTest::load($id);
     $this->assertTrue($entity->{$field_name}->isEmpty(), 'Field is now empty.');
   }
@@ -241,7 +241,7 @@ class FormTest extends FieldTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText(t('entity_test @id has been created.', ['@id' => $id]), 'Entity was created');
+    $this->assertText('entity_test ' . $id . ' has been created.', 'Entity was created');
     $entity = EntityTest::load($id);
     $this->assertEqual($entity->{$field_name}->value, $value, 'Field value was saved');
 
@@ -327,7 +327,7 @@ class FormTest extends FieldTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText(t('entity_test @id has been created.', ['@id' => $id]), 'Entity was created');
+    $this->assertText('entity_test ' . $id . ' has been created.', 'Entity was created');
     $entity = EntityTest::load($id);
     ksort($field_values);
     $field_values = array_values($field_values);
@@ -601,7 +601,7 @@ class FormTest extends FieldTestBase {
     $this->drupalPostForm(NULL, [], t('Save'));
     preg_match('|' . $entity_type . '/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText(t('entity_test_rev @id has been created.', ['@id' => $id]), 'Entity was created');
+    $this->assertText('entity_test_rev ' . $id . ' has been created.', 'Entity was created');
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($entity_type);
 
@@ -627,7 +627,7 @@ class FormTest extends FieldTestBase {
     $value = mt_rand(1, 127);
     $edit = ["{$field_name}[0][value]" => $value];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertText(t('entity_test_rev @id has been updated.', ['@id' => $id]), 'Entity was updated');
+    $this->assertText('entity_test_rev ' . $id . ' has been updated.', 'Entity was updated');
     $storage->resetCache([$id]);
     $entity = $storage->load($id);
     $this->assertEqual($entity->{$field_name}->value, $value, 'Field value was updated');

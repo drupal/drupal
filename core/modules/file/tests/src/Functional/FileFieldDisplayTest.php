@@ -183,7 +183,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     $this->drupalPostForm('node/add/' . $type_name, $edit, t('Save'));
     $node = $this->drupalGetNodeByTitle($title);
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertText(t('The description may be used as the label of the link to the file.'));
+    $this->assertText('The description may be used as the label of the link to the file.');
   }
 
   /**

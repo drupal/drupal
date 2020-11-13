@@ -86,7 +86,7 @@ class CommentTypeTest extends CommentTestBase {
     // Edit the comment-type and ensure that we cannot change the entity-type.
     $this->drupalGet('admin/structure/comment/manage/foo');
     $this->assertSession()->fieldNotExists('target_entity_type_id');
-    $this->assertText(t('Target entity type'));
+    $this->assertText('Target entity type');
     // Save the form and ensure the entity-type value is preserved even though
     // the field isn't present.
     $this->drupalPostForm(NULL, [], t('Save'));
@@ -176,7 +176,7 @@ class CommentTypeTest extends CommentTestBase {
     $this->assertRaw(
       t('Are you sure you want to delete the comment type %type?', ['%type' => $type->id()])
     );
-    $this->assertText(t('This action cannot be undone.'), 'The comment type deletion confirmation form is available.');
+    $this->assertText('This action cannot be undone.', 'The comment type deletion confirmation form is available.');
 
     // Test exception thrown when re-using an existing comment type.
     try {

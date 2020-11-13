@@ -203,7 +203,7 @@ class ContactPersonalTest extends BrowserTestBase {
     $this->drupalLogin($this->adminUser);
     $edit = ['contact_default_status' => FALSE];
     $this->drupalPostForm('admin/config/people/accounts', $edit, t('Save configuration'));
-    $this->assertText(t('The configuration options have been saved.'), 'Setting successfully saved.');
+    $this->assertText('The configuration options have been saved.', 'Setting successfully saved.');
     $this->drupalLogout();
 
     // Re-create our contacted user with personal contact forms disabled by
@@ -265,7 +265,7 @@ class ContactPersonalTest extends BrowserTestBase {
     // Submit contact form with correct values and check flood interval.
     for ($i = 0; $i < $flood_limit; $i++) {
       $this->submitPersonalContact($this->contactUser);
-      $this->assertText(t('Your message has been sent.'), 'Message sent.');
+      $this->assertText('Your message has been sent.', 'Message sent.');
     }
 
     // Submit contact form one over limit.

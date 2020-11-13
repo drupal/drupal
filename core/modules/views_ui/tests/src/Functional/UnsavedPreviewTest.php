@@ -66,7 +66,7 @@ class UnsavedPreviewTest extends UITestBase {
 
     $this->drupalPostForm(NULL, [], t('Update preview'));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText(t('This display has no path'));
+    $this->assertText('This display has no path');
 
     $this->drupalGet('admin/structure/views/view/content/edit/page_2');
     $this->assertSession()->statusCodeEquals(200);

@@ -233,7 +233,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $edit = [
       'settings[test_field_setting]' => $string,
     ];
-    $this->assertText(t('Default value'), 'Default value heading is shown');
+    $this->assertText('Default value', 'Default value heading is shown');
     $this->drupalPostForm(NULL, $edit, t('Save settings'));
 
     // Assert the field settings are correct.
@@ -426,7 +426,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     // Create a valid field.
     $this->fieldUIAddNewField('admin/structure/types/manage/' . $this->contentType, $this->fieldNameInput, $this->fieldLabel);
     $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/node.' . $this->contentType . '.' . $field_prefix . $this->fieldNameInput);
-    $this->assertText(new FormattableMarkup('@label settings for @type', ['@label' => $this->fieldLabel, '@type' => $this->contentType]));
+    $this->assertSession()->pageTextContains($this->fieldLabel . ' settings for ' . $this->contentType);
   }
 
   /**
@@ -560,13 +560,13 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $edit['field_name'] = 'title';
     $bundle_path = 'admin/structure/types/manage/' . $this->contentType;
     $this->drupalPostForm("$bundle_path/fields/add-field", $edit, t('Save and continue'));
-    $this->assertText(t('The machine-readable name is already in use. It must be unique.'));
+    $this->assertText('The machine-readable name is already in use. It must be unique.');
 
     // Try with a base field.
     $edit['field_name'] = 'sticky';
     $bundle_path = 'admin/structure/types/manage/' . $this->contentType;
     $this->drupalPostForm("$bundle_path/fields/add-field", $edit, t('Save and continue'));
-    $this->assertText(t('The machine-readable name is already in use. It must be unique.'));
+    $this->assertText('The machine-readable name is already in use. It must be unique.');
   }
 
   /**
@@ -669,7 +669,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $url = 'admin/structure/types/manage/' . $this->contentType . '/fields/add-field';
     $this->drupalPostForm($url, $edit, t('Save and continue'));
 
-    $this->assertText(t('The machine-readable name is already in use. It must be unique.'));
+    $this->assertText('The machine-readable name is already in use. It must be unique.');
     $this->assertSession()->addressEquals($url);
   }
 

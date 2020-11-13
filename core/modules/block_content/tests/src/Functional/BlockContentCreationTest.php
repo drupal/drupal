@@ -252,7 +252,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
 
     // Delete the block.
     $this->drupalGet('block/1/delete');
-    $this->assertText(\Drupal::translation()->formatPlural(1, 'This will also remove 1 placed block instance.', 'This will also remove @count placed block instance.'));
+    $this->assertText('This will also remove 1 placed block instance.');
 
     $this->drupalPostForm(NULL, [], 'Delete');
     $this->assertRaw(t('The custom block %name has been deleted.', ['%name' => $edit['info[0][value]']]));

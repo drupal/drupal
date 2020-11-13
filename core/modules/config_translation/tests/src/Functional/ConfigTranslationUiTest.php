@@ -538,8 +538,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       $this->assertSession()->fieldValueEquals($key, $value);
     }
     // Check that labels for email settings appear.
-    $this->assertText(t('Account cancellation confirmation'));
-    $this->assertText(t('Password recovery'));
+    $this->assertText('Account cancellation confirmation');
+    $this->assertText('Password recovery');
   }
 
   /**
@@ -890,12 +890,12 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
     // Check out if the translation page has the altered in settings.
     $this->drupalGet('admin/config/system/site-information/translate/fr/add');
-    $this->assertText(t('Feed channel'));
-    $this->assertText(t('Feed description'));
+    $this->assertText('Feed channel');
+    $this->assertText('Feed description');
 
     // Check if the translation page does not have the altered out settings.
     $this->drupalGet('admin/config/people/accounts/translate/fr/add');
-    $this->assertText(t('Name'));
+    $this->assertText('Name');
     $this->assertNoText('Account cancellation confirmation');
     $this->assertNoText('Password recovery');
   }

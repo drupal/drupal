@@ -490,7 +490,7 @@ class StyleSerializerTest extends ViewTestBase {
 
     $edit = ['row_options[field_options][name][alias]' => $alias_map['name'], 'row_options[field_options][nothing][alias]' => $alias_map['nothing']];
     $this->drupalPostForm($row_options, $edit, t('Apply'));
-    $this->assertText(t('The machine-readable name must contain only letters, numbers, dashes and underscores.'));
+    $this->assertText('The machine-readable name must contain only letters, numbers, dashes and underscores.');
 
     // Change the map alias value to a valid one.
     $alias_map['nothing'] = $this->randomMachineName();

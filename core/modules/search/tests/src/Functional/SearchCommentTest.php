@@ -220,7 +220,7 @@ class SearchCommentTest extends BrowserTestBase {
 
     // Search for $title.
     $this->drupalPostForm('search/node', $edit, t('Search'));
-    $this->assertText(t('Your search yielded no results.'));
+    $this->assertText('Your search yielded no results.');
   }
 
   /**
@@ -347,7 +347,7 @@ class SearchCommentTest extends BrowserTestBase {
     // Verify that if you view the node on its own page, 'add new comment'
     // is there.
     $this->drupalGet('node/' . $node->id());
-    $this->assertText(t('Add new comment'));
+    $this->assertText('Add new comment');
 
     // Run cron to index this page.
     $this->drupalLogout();
@@ -356,7 +356,7 @@ class SearchCommentTest extends BrowserTestBase {
     // Search for 'comment'. Should be no results.
     $this->drupalLogin($user);
     $this->drupalPostForm('search/node', ['keys' => 'comment'], t('Search'));
-    $this->assertText(t('Your search yielded no results'));
+    $this->assertText('Your search yielded no results');
 
     // Search for the node title. Should be found, and 'Add new comment' should
     // not be part of the search snippet.

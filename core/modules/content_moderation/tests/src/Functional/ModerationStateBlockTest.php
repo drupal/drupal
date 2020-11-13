@@ -68,7 +68,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
       'body[0][value]' => $body,
     ];
     $this->drupalPostForm('block/add', $edit, t('Save'));
-    $this->assertText(t('basic Moderated block has been created.'));
+    $this->assertText('basic Moderated block has been created.');
 
     // Place the block in the Sidebar First region.
     $instance = [
@@ -92,7 +92,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
       'moderation_state[0][state]' => 'draft',
     ];
     $this->drupalPostForm('block/' . $block->id(), $edit, t('Save'));
-    $this->assertText(t('basic Moderated block has been updated.'));
+    $this->assertText('basic Moderated block has been updated.');
 
     // Navigate to the home page and check that the block shows the updated
     // content. It should show the updated content because the block's default
@@ -112,7 +112,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
       'moderation_state[0][state]' => 'draft',
     ];
     $this->drupalPostForm('block/' . $block->id(), $edit, t('Save'));
-    $this->assertText(t('basic Moderated block has been updated.'));
+    $this->assertText('basic Moderated block has been updated.');
 
     // Navigate to home page and check that the pending revision doesn't show,
     // since it should not be set as the default revision.
@@ -124,7 +124,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
       'new_state' => 'published',
     ];
     $this->drupalPostForm('block/' . $block->id() . '/latest', $edit, t('Apply'));
-    $this->assertText(t('The moderation state has been updated.'));
+    $this->assertText('The moderation state has been updated.');
 
     // Navigate to home page and check that the pending revision is now the
     // default revision and therefore visible.

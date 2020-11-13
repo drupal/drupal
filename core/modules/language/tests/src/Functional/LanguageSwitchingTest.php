@@ -203,7 +203,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
       'domain[en]' => '',
     ];
     $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
-    $this->assertText(t('The domain may not be left blank for English'), 'The form does not allow blank domains.');
+    $this->assertText('The domain may not be left blank for English', 'The form does not allow blank domains.');
 
     // Change the domain for the Italian language.
     $edit = [
@@ -212,7 +212,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
       'domain[it]' => 'it.example.com',
     ];
     $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
-    $this->assertText(t('The configuration options have been saved'), 'Domain configuration is saved.');
+    $this->assertText('The configuration options have been saved', 'Domain configuration is saved.');
 
     // Enable the language switcher block.
     $this->drupalPlaceBlock('language_block:' . LanguageInterface::TYPE_INTERFACE, ['id' => 'test_language_block']);

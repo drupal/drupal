@@ -30,7 +30,7 @@ class MigrateAccessTest extends BrowserTestBase {
     $this->drupalLogin($this->rootUser);
     $this->drupalGet('upgrade');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText(t('Upgrade'));
+    $this->assertText('Upgrade');
 
     $user = $this->createUser(['administer software updates']);
     $this->drupalLogin($user);
