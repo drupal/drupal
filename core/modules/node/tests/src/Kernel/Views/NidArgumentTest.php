@@ -68,7 +68,7 @@ class NidArgumentTest extends ViewsKernelTestBase {
     $view->preview();
     $this->assertCount(2, $view->result, 'Found the expected number of results.');
 
-    // Set an the second node id as an argument.
+    // Set the second node id as an argument.
     $view->destroy();
     $view->preview('default', [$node2->id()]);
     // Verify that the title is overridden.

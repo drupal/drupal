@@ -49,7 +49,7 @@ class UpdateFetcher implements UpdateFetcherInterface {
   protected $withHttpFallback;
 
   /**
-   * Constructs a UpdateFetcher.
+   * Constructs an UpdateFetcher.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.

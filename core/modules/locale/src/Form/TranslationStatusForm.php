@@ -277,8 +277,8 @@ class TranslationStatusForm extends FormBase {
     $options = _locale_translation_default_update_options();
 
     // If the status was updated recently we can immediately start fetching the
-    // translation updates. If the status is expired we clear it an run a batch to
-    // update the status and then fetch the translation updates.
+    // translation updates. If the status is expired we clear it and run a batch
+    // to update the status and then fetch the translation updates.
     $last_checked = $this->state->get('locale.translation_last_checked');
     if ($last_checked < REQUEST_TIME - LOCALE_TRANSLATION_STATUS_TTL) {
       locale_translation_clear_status();

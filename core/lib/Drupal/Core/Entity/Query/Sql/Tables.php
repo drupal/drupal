@@ -408,7 +408,7 @@ class Tables implements TablesInterface {
       $entity_type_id = $this->sqlQuery->getMetaData('entity_type');
       $entity_type = $this->entityTypeManager->getActiveDefinition($entity_type_id);
       // Only the data table follows the entity language key, dedicated field
-      // tables have an hard-coded 'langcode' column.
+      // tables have a hard-coded 'langcode' column.
       $langcode_key = $entity_type->getDataTable() == $table ? $entity_type->getKey('langcode') : 'langcode';
       $placeholder = ':langcode' . $this->sqlQuery->nextPlaceholder();
       $join_condition .= ' AND [%alias].[' . $langcode_key . '] = ' . $placeholder;

@@ -2210,7 +2210,7 @@ class ViewExecutable {
   }
 
   /**
-   * Generates a unique ID for an handler instance.
+   * Generates a unique ID for a handler instance.
    *
    * These handler instances are typically fields, filters, sort criteria, or
    * arguments.

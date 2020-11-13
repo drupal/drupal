@@ -9,7 +9,7 @@ use Drupal\Core\Security\TrustedCallbackInterface;
 class BigPipeTestController implements TrustedCallbackInterface {
 
   /**
-   * Returns a all BigPipe placeholder test case render arrays.
+   * Returns all BigPipe placeholder test case render arrays.
    *
    * @return array
    */

@@ -17,7 +17,7 @@ use Drupal\Core\Theme\ThemeManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Turns a render array into a HTML string.
+ * Turns a render array into an HTML string.
  */
 class Renderer implements RendererInterface {
   use DoTrustedCallbackTrait;

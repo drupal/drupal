@@ -63,7 +63,7 @@ class ImageToolkitOperation extends Plugin {
   /**
    * The human-readable name of the image toolkit operation.
    *
-   * The string should be wrapped in a @Translation().
+   * The string should be wrapped in @Translation().
    *
    * @ingroup plugin_translatable
    *
@@ -74,7 +74,7 @@ class ImageToolkitOperation extends Plugin {
   /**
    * The description of the image toolkit operation.
    *
-   * The string should be wrapped in a @Translation().
+   * The string should be wrapped in @Translation().
    *
    * @ingroup plugin_translatable
    *

@@ -35,7 +35,7 @@ class ImageToolkit extends Plugin {
   /**
    * The title of the image toolkit.
    *
-   * The string should be wrapped in a @Translation().
+   * The string should be wrapped in @Translation().
    *
    * @ingroup plugin_translatable
    *

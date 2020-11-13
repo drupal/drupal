@@ -186,7 +186,7 @@ class ImageWidget extends FileWidget {
   }
 
   /**
-   * Form API callback: Processes a image_image field element.
+   * Form API callback: Processes an image_image field element.
    *
    * Expands the image_image type to include the alt and title fields.
    *

@@ -47,7 +47,7 @@ class QuickEditLoadingTest extends WebDriverTestBase {
   protected $defaultTheme = 'classy';
 
   /**
-   * An user with permissions to create and edit articles.
+   * A user with permissions to create and edit articles.
    *
    * @var \Drupal\user\UserInterface
    */
@@ -61,7 +61,7 @@ class QuickEditLoadingTest extends WebDriverTestBase {
   protected $testNode;
 
   /**
-   * A author user with permissions to access in-place editor.
+   * An author user with permissions to access in-place editor.
    *
    * @var \Drupal\user\UserInterface
    */

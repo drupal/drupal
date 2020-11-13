@@ -100,7 +100,7 @@ class StyleTableUnitTest extends PluginKernelTestBase {
     $this->assertIdentical($style_plugin->active, NULL, 'No sort field was set, when invalid sort order was specified.');
     $view->destroy();
 
-    // Use a existing field, and sort both ascending and descending.
+    // Use an existing field, and sort both ascending and descending.
     foreach (['asc', 'desc'] as $order) {
       $this->prepareView($view);
       $style_plugin = $view->style_plugin;

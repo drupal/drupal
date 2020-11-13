@@ -13,7 +13,7 @@
    * @type {Drupal~behavior}
    *
    * @prop {Drupal~behaviorAttach} attach
-   *   Attaches the drag behavior to a applicable table element.
+   *   Attaches the drag behavior to an applicable table element.
    */
   Drupal.behaviors.termDrag = {
     attach(context, settings) {

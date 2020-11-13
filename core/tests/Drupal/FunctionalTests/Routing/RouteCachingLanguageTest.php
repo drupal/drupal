@@ -34,7 +34,7 @@ class RouteCachingLanguageTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * An user with permissions to administer content types.
+   * A user with permissions to administer content types.
    *
    * @var \Drupal\user\UserInterface
    */

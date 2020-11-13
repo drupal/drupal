@@ -208,7 +208,7 @@ class UserValidationTest extends KernelTestBase {
   }
 
   /**
-   * Verifies that a AllowedValues violation exists for the given field.
+   * Verifies that an AllowedValues violation exists for the given field.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity object to validate.

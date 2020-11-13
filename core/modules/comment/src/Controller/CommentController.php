@@ -242,7 +242,7 @@ class CommentController extends ControllerBase {
         $build['comment_parent'] = $this->entityTypeManager()->getViewBuilder('comment')->view($comment);
       }
 
-      // The comment is in response to a entity.
+      // The comment is in response to an entity.
       elseif ($entity->access('view', $account)) {
         // We make sure the field value isn't set so we don't end up with a
         // redirect loop.

@@ -15,7 +15,7 @@ class InvalidPluginDefinitionException extends PluginException {
   protected $pluginId;
 
   /**
-   * Constructs a InvalidPluginDefinitionException.
+   * Constructs an InvalidPluginDefinitionException.
    *
    * For the remaining parameters see \Exception.
    *

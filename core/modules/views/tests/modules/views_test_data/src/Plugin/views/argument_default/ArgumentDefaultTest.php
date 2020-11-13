@@ -5,7 +5,7 @@ namespace Drupal\views_test_data\Plugin\views\argument_default;
 use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
 
 /**
- * Defines a argument default test plugin.
+ * Defines an argument default test plugin.
  *
  * @ViewsArgumentDefault(
  *   id = "argument_default_test",

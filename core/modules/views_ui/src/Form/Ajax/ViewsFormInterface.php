@@ -44,7 +44,7 @@ interface ViewsFormInterface extends FormInterface {
    *   be 'nojs'. This determines the response.
    *
    * @return array
-   *   An form for a specific operation in the Views UI, or an array of AJAX
+   *   A form for a specific operation in the Views UI, or an array of AJAX
    *   commands to render a form.
    *
    * @todo When https://www.drupal.org/node/1843224 is in, this will return

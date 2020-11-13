@@ -6,7 +6,7 @@ use Symfony\Component\Routing\Matcher\Dumper\MatcherDumperInterface as SymfonyMa
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Extends the symfony matcher dumper interface with a addRoutes method.
+ * Extends the symfony matcher dumper interface with an addRoutes method.
  */
 interface MatcherDumperInterface extends SymfonyMatcherDumperInterface {
 

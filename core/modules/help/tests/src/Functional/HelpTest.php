@@ -89,8 +89,8 @@ class HelpTest extends BrowserTestBase {
       $this->assertSession()->linkExists($name, 0, new FormattableMarkup('Link properly added to @name (admin/help/@module)', ['@module' => $module, '@name' => $name]));
     }
 
-    // Ensure that module which does not provide an module overview page is
-    // handled correctly.
+    // Ensure a module which does not provide a module overview page is handled
+    // correctly.
     $this->clickLink(\Drupal::moduleHandler()->getName('help_test'));
     $this->assertRaw(t('No help is available for module %module.', ['%module' => \Drupal::moduleHandler()->getName('help_test')]));
 

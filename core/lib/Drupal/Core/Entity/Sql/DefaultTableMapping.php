@@ -475,7 +475,7 @@ class DefaultTableMapping implements TableMappingInterface {
   }
 
   /**
-   * Adds a extra columns for a table to the table mapping.
+   * Adds extra columns for a table to the table mapping.
    *
    * @param string $table_name
    *   The name of table to add the extra columns for.

@@ -70,7 +70,7 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
   protected $emailValidator;
 
   /**
-   * Constructs a EmailAction object.
+   * Constructs an EmailAction object.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.

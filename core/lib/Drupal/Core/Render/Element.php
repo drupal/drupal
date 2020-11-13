@@ -56,7 +56,7 @@ class Element {
   /**
    * Identifies the children of an element array, optionally sorted by weight.
    *
-   * The children of a element array are those key/value pairs whose key does
+   * The children of an element array are those key/value pairs whose key does
    * not start with a '#'. See drupal_render() for details.
    *
    * @param array $elements

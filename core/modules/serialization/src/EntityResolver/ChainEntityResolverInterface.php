@@ -3,7 +3,7 @@
 namespace Drupal\serialization\EntityResolver;
 
 /**
- * An interface for delegating a entity resolution to a chain of resolvers.
+ * An interface for delegating an entity resolution to a chain of resolvers.
  */
 interface ChainEntityResolverInterface extends EntityResolverInterface {
 

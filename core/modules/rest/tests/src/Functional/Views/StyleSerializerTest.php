@@ -586,7 +586,7 @@ class StyleSerializerTest extends ViewTestBase {
    * Tests the live preview output for json output.
    */
   public function testLivePreview() {
-    // We set up a request so it looks like an request in the live preview.
+    // We set up a request so it looks like a request in the live preview.
     $request = new Request();
     $request->query->add([MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']);
     /** @var \Symfony\Component\HttpFoundation\RequestStack $request_stack */

@@ -39,7 +39,7 @@ class AdminRouteSubscriber extends RouteSubscriberBase {
   }
 
   /**
-   * Determines whether the given route is a HTML route.
+   * Determines whether the given route is an HTML route.
    *
    * @param \Symfony\Component\Routing\Route $route
    *   The route to analyze.

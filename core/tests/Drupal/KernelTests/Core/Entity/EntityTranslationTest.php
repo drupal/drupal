@@ -639,7 +639,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
 
     // Check that if the entity has no translation no fallback is applied.
     $entity2 = $controller->create([$langcode_key => $default_langcode]);
-    // Get an view builder.
+    // Get a view builder.
     $controller = $this->entityTypeManager->getViewBuilder($entity_type);
     $entity2_build = $controller->view($entity2);
     $entity2_output = (string) $renderer->renderRoot($entity2_build);

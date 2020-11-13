@@ -317,7 +317,7 @@ class DefaultTableMappingTest extends UnitTestCase {
    * Provides test data for testGetFieldColumnName().
    *
    * @return array[]
-   *   An nested array where each inner array has the following values: test
+   *   A nested array where each inner array has the following values: test
    *   field name, base field status, list of field columns, name of the column
    *   to be retrieved, expected result, whether an exception is expected.
    */

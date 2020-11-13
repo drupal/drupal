@@ -42,7 +42,7 @@ class FormValuesTest extends WebDriverTestBase {
 
     // Verify form values of a select element.
     foreach (['green', 'blue', 'red'] as $item) {
-      // Updating the field will trigger a AJAX request/response.
+      // Updating the field will trigger an AJAX request/response.
       $session->getPage()->selectFieldOption('select', $item);
 
       // The AJAX command in the response will update the DOM
@@ -67,7 +67,7 @@ class FormValuesTest extends WebDriverTestBase {
     $this->assertAjaxHeader = FALSE;
     foreach (['null', 'empty', 'nonexistent'] as $key) {
       $element_name = 'select_' . $key . '_callback';
-      // Updating the field will trigger a AJAX request/response.
+      // Updating the field will trigger an AJAX request/response.
       $session->getPage()->selectFieldOption($element_name, 'green');
 
       // The select element is disabled as the AJAX request is issued.

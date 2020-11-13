@@ -41,7 +41,7 @@ class ViewsEntityArgumentValidator extends DeriverBase implements ContainerDeriv
   protected $derivatives = [];
 
   /**
-   * Constructs an ViewsEntityArgumentValidator object.
+   * Constructs a ViewsEntityArgumentValidator object.
    *
    * @param string $base_plugin_id
    *   The base plugin ID.

@@ -100,7 +100,7 @@ class TestSiteTearDownCommand extends Command {
    * test site can be torn down even if something in the test site is broken.
    *
    * @param string $path
-   *   A string containing either an URI or a file or directory path.
+   *   A string containing either a URI or a file or directory path.
    * @param callable $callback
    *   (optional) Callback function to run on each file prior to deleting it and
    *   on each directory prior to traversing it. For example, can be used to

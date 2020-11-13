@@ -14,14 +14,14 @@ use Drupal\views\Views;
 abstract class FieldFieldAccessTestBase extends ViewsKernelTestBase {
 
   /**
-   * Stores an user entity with access to fields.
+   * Stores a user entity with access to fields.
    *
    * @var \Drupal\user\UserInterface
    */
   protected $userWithAccess;
 
   /**
-   * Stores an user entity without access to fields.
+   * Stores a user entity without access to fields.
    *
    * @var \Drupal\user\UserInterface
    */

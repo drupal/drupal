@@ -23,7 +23,7 @@ namespace Drupal\Core\Render;
  * use a @code _controller @endcode route, and return a render array.
  * This will cause a main content renderer
  * (\Drupal\Core\Render\MainContent\MainContentRendererInterface) to be
- * used, and in case of a HTML request that will be
+ * used, and in case of an HTML request that will be
  * \Drupal\Core\Render\MainContent\HtmlRenderer.
  *
  * In fact, this is not only *typically* used in a limited environment, it even

@@ -334,7 +334,7 @@ class Url implements TrustedCallbackInterface {
    * Create a new Url object for entity URIs.
    *
    * @param array $uri_parts
-   *   Parts from an URI of the form entity:{entity_type}/{entity_id} as from
+   *   Parts from a URI of the form entity:{entity_type}/{entity_id} as from
    *   parse_url().
    * @param array $options
    *   An array of options, see \Drupal\Core\Url::fromUri() for details.
@@ -387,12 +387,12 @@ class Url implements TrustedCallbackInterface {
    * - 'internal:/some-path' (path component is '/some-path') to 'some-path'
    *
    * @param array $uri_parts
-   *   Parts from an URI of the form internal:{path} as from parse_url().
+   *   Parts from a URI of the form internal:{path} as from parse_url().
    * @param array $options
    *   An array of options, see \Drupal\Core\Url::fromUri() for details.
    *
    * @return static
-   *   A new Url object for a 'internal:' URI.
+   *   A new Url object for an 'internal:' URI.
    *
    * @throws \InvalidArgumentException
    *   Thrown when the URI's path component doesn't have a leading slash.
@@ -432,7 +432,7 @@ class Url implements TrustedCallbackInterface {
    * Creates a new Url object for 'route:' URIs.
    *
    * @param array $uri_parts
-   *   Parts from an URI of the form route:{route_name};{route_parameters} as
+   *   Parts from a URI of the form route:{route_name};{route_parameters} as
    *   from parse_url(), where the path is the route name optionally followed by
    *   a ";" followed by route parameters in key=value format with & separators.
    * @param array $options
@@ -511,7 +511,7 @@ class Url implements TrustedCallbackInterface {
    * Generates a URI string that represents the data in the Url object.
    *
    * The URI will typically have the scheme of route: even if the object was
-   * constructed using an entity: or internal: scheme. A internal: URI that
+   * constructed using an entity: or internal: scheme. An internal: URI that
    * does not match a Drupal route with be returned here with the base: scheme,
    * and external URLs will be returned in their original form.
    *

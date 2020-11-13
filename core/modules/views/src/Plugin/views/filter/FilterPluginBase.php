@@ -77,7 +77,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
 
   /**
    * @var bool
-   * Disable the possibility to allow a exposed input to be optional.
+   * Disable the possibility to allow an exposed input to be optional.
    */
   public $always_required = FALSE;
 
@@ -739,7 +739,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
   /**
    * Validates a filter identifier.
    *
-   * Sets the form error if $form_state is passed or a error string if
+   * Sets the form error if $form_state is passed or an error string if
    * $form_state is not passed.
    *
    * @param string $identifier

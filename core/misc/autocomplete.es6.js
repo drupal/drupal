@@ -45,7 +45,7 @@
   }
 
   /**
-   * Returns the last value of an multi-value textfield.
+   * Returns the last value of a multi-value textfield.
    *
    * @function Drupal.autocomplete.extractLastTerm
    *

@@ -107,7 +107,7 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends BrowserTestBase {
   protected $translatedLabel;
 
   /**
-   * An user with permission to edit the referrer entity.
+   * A user with permission to edit the referrer entity.
    *
    * @var \Drupal\user\UserInterface
    */

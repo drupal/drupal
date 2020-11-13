@@ -29,7 +29,7 @@ abstract class EntityTestMapFieldResourceTestBase extends EntityResourceTestBase
   protected $entity;
 
   /**
-   * The complex nested value to assign to a @FieldType=map field.
+   * The complex nested value to assign to a map field.
    *
    * @var array
    */

@@ -792,7 +792,7 @@ class ViewEditForm extends ViewFormBase {
         '#submit' => ['::submitDisplayAdd', '::submitDelayDestination'],
         '#attributes' => ['class' => ['add-display']],
         // Allow JavaScript to remove the 'Add ' prefix from the button label when
-        // placing the button in a "Add" dropdown menu.
+        // placing the button in an "Add" dropdown menu.
         '#process' => array_merge(['views_ui_form_button_was_clicked'], $this->elementInfo->getInfoProperty('submit', '#process', [])),
         '#values' => [$this->t('Add @display', ['@display' => $label]), $label],
       ];

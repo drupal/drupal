@@ -22,7 +22,7 @@ function comment_views_data_alter(&$data) {
     ],
   ];
 
-  // Provide a integration for each entity type except comment.
+  // Provides an integration for each entity type except comment.
   foreach (\Drupal::entityTypeManager()->getDefinitions() as $entity_type_id => $entity_type) {
     if ($entity_type_id == 'comment' || !$entity_type->entityClassImplements(ContentEntityInterface::class) || !$entity_type->getBaseTable()) {
       continue;

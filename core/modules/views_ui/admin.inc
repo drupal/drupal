@@ -248,7 +248,7 @@ function views_ui_standard_display_dropdown(&$form, FormStateInterface $form_sta
 
   $display_dropdown['default'] = ($section_overrides ? t('All displays (except overridden)') : t('All displays'));
   $display_dropdown[$display_id] = t('This @display_type (override)', ['@display_type' => $current_display->getPluginId()]);
-  // Only display the revert option if we are in a overridden section.
+  // Only display the revert option if we are in an overridden section.
   if (!$section_defaulted) {
     $display_dropdown['default_revert'] = t('Revert to default');
   }

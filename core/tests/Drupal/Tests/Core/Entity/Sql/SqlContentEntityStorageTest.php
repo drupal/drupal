@@ -168,7 +168,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * Provides test data for testGetBaseTable().
    *
    * @return array[]
-   *   An nested array where each inner array has the base table to be returned
+   *   A nested array where each inner array has the base table to be returned
    *   by the mocked entity type as the first value and the expected return
    *   value of SqlContentEntityStorage::getBaseTable() as the second
    *   value.
@@ -216,7 +216,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * Provides test data for testGetRevisionTable().
    *
    * @return array[]
-   *   An nested array where each inner array has the revision table to be
+   *   A nested array where each inner array has the revision table to be
    *   returned by the mocked entity type as the first value and the expected
    *   return value of SqlContentEntityStorage::getRevisionTable() as the
    *   second value.
@@ -294,7 +294,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * Provides test data for testGetRevisionDataTable().
    *
    * @return array[]
-   *   An nested array where each inner array has the revision data table to be
+   *   A nested array where each inner array has the revision data table to be
    *   returned by the mocked entity type as the first value and the expected
    *   return value of SqlContentEntityStorage::getRevisionDataTable() as
    *   the second value.

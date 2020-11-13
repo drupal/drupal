@@ -53,7 +53,7 @@ class MenuAccessControlHandlerTest extends KernelTestBase {
    * @dataProvider testAccessProvider
    */
   public function testAccess($which_user, $which_entity, $view_label_access_result, $view_access_result, $update_access_result, $delete_access_result, $create_access_result) {
-    // We must always create user 1, so that a "normal" user has a ID >1.
+    // We must always create user 1, so that a "normal" user has an ID >1.
     $root_user = $this->drupalCreateUser();
 
     if ($which_user === 'user1') {

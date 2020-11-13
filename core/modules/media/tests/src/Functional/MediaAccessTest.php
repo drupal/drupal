@@ -328,7 +328,7 @@ class MediaAccessTest extends MediaFunctionalTestBase {
 
     $this->container->get('router.builder')->rebuild();
 
-    // Create a media type and a entity reference to itself.
+    // Create a media type and an entity reference to itself.
     $media_type = $this->createMediaType('test');
 
     FieldStorageConfig::create([

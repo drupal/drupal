@@ -21,7 +21,7 @@ interface ConfigFactoryInterface {
   public function get($name);
 
   /**
-   * Returns an mutable configuration object for a given name.
+   * Returns a mutable configuration object for a given name.
    *
    * Should not be used for config that will have runtime effects. Therefore it
    * is always loaded override free.

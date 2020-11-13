@@ -29,7 +29,7 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * An user with permissions to administer taxonomy.
+   * A user with permissions to administer taxonomy.
    *
    * @var \Drupal\user\UserInterface
    */

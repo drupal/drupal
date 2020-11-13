@@ -104,7 +104,7 @@ class LinkWidget extends WidgetBase {
    * @see static::getUriAsDisplayableString()
    */
   protected static function getUserEnteredStringAsUri($string) {
-    // By default, assume the entered string is an URI.
+    // By default, assume the entered string is a URI.
     $uri = trim($string);
 
     // Detect entity autocomplete string, map to 'entity:' URI.
@@ -142,7 +142,7 @@ class LinkWidget extends WidgetBase {
     $uri = static::getUserEnteredStringAsUri($element['#value']);
     $form_state->setValueForElement($element, $uri);
 
-    // If getUserEnteredStringAsUri() mapped the entered value to a 'internal:'
+    // If getUserEnteredStringAsUri() mapped the entered value to an 'internal:'
     // URI , ensure the raw value begins with '/', '?' or '#'.
     // @todo '<front>' is valid input for BC reasons, may be removed by
     //   https://www.drupal.org/node/2421941

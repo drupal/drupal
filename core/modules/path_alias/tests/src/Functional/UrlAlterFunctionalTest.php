@@ -107,7 +107,7 @@ class UrlAlterFunctionalTest extends BrowserTestBase {
   }
 
   /**
-   * Assert that a inbound path is altered to an expected value.
+   * Assert that an inbound path is altered to an expected value.
    *
    * @param $original
    *   The original path before it has been altered by inbound URL processing.

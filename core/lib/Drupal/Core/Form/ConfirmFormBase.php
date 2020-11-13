@@ -3,7 +3,7 @@
 namespace Drupal\Core\Form;
 
 /**
- * Provides an generic base class for a confirmation form.
+ * Provides a generic base class for a confirmation form.
  */
 abstract class ConfirmFormBase extends FormBase implements ConfirmFormInterface {
 

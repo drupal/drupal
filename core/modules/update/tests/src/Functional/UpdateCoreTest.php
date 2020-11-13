@@ -787,7 +787,7 @@ class UpdateCoreTest extends UpdateTestBase {
     $this->assertEqual($queue->numberOfItems(), 1, 'Queue contains one item');
     update_create_fetch_task($projectb);
     $this->assertEqual($queue->numberOfItems(), 2, 'Queue contains two items');
-    // Try to add project a again.
+    // Try to add a project again.
     update_create_fetch_task($projecta);
     $this->assertEqual($queue->numberOfItems(), 2, 'Queue still contains two items');
 

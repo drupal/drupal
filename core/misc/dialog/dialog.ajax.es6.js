@@ -54,7 +54,7 @@
      * Scan a dialog for any primary buttons and move them to the button area.
      *
      * @param {jQuery} $dialog
-     *   An jQuery object containing the element that is the dialog target.
+     *   A jQuery object containing the element that is the dialog target.
      *
      * @return {Array}
      *   An array of buttons that need to be added to the button area.

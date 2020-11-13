@@ -72,7 +72,7 @@ class QuickEditAutocompleteTermTest extends WebDriverTestBase {
   protected $fieldName;
 
   /**
-   * An user with permissions to access in-place editor.
+   * A user with permissions to access in-place editor.
    *
    * @var \Drupal\user\UserInterface
    */

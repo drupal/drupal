@@ -272,7 +272,7 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
   public function testInvalidEntityAutocompleteElement() {
     $form_builder = $this->container->get('form_builder');
 
-    // Test 'single' with a entity label that doesn't exist
+    // Test 'single' with an entity label that doesn't exist
     $form_state = (new FormState())
       ->setValues([
         'single' => 'single - non-existent label',
@@ -281,7 +281,7 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
     $this->assertCount(1, $form_state->getErrors());
     $this->assertEqual($form_state->getErrors()['single'], t('There are no entities matching "%value".', ['%value' => 'single - non-existent label']));
 
-    // Test 'single' with a entity ID that doesn't exist.
+    // Test 'single' with an entity ID that doesn't exist.
     $form_state = (new FormState())
       ->setValues([
         'single' => 'single - non-existent label (42)',

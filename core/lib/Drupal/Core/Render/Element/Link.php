@@ -13,7 +13,7 @@ use Drupal\Core\Url as CoreUrl;
  *
  * Properties:
  * - #title: The link text.
- * - #url: \Drupal\Core\Url object containing URL information pointing to a
+ * - #url: \Drupal\Core\Url object containing URL information pointing to an
  *   internal or external link. See \Drupal\Core\Utility\LinkGeneratorInterface.
  *
  * Usage example:
@@ -69,7 +69,7 @@ class Link extends RenderElement {
     }
 
     // This #pre_render callback can be invoked from inside or outside of a Form
-    // API context, and depending on that, a HTML ID may be already set in
+    // API context, and depending on that, an HTML ID may be already set in
     // different locations. #options should have precedence over Form API's #id.
     // #attributes have been taken over into #options above already.
     if (isset($element['#options']['attributes']['id'])) {

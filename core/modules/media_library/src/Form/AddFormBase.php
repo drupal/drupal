@@ -63,7 +63,7 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
   protected $openerResolver;
 
   /**
-   * Constructs a AddFormBase object.
+   * Constructs an AddFormBase object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
@@ -738,7 +738,7 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
    *   The current form state.
    *
    * @return array|\Drupal\Core\Ajax\AjaxResponse
-   *   The form array when there are form errors or a AJAX response to select
+   *   The form array when there are form errors or an AJAX response to select
    *   the created items in the media library.
    */
   public function updateWidget(array &$form, FormStateInterface $form_state) {

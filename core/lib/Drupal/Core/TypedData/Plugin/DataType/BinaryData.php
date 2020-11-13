@@ -10,7 +10,7 @@ use Drupal\Core\TypedData\Type\BinaryInterface;
  *
  * The plain value of binary data is a PHP file resource, see
  * http://php.net/manual/language.types.resource.php. For setting the value
- * a PHP file resource or a (absolute) stream resource URI may be passed.
+ * a PHP file resource or an (absolute) stream resource URI may be passed.
  *
  * @DataType(
  *   id = "binary",
@@ -48,7 +48,7 @@ class BinaryData extends PrimitiveBase implements BinaryInterface {
   /**
    * Overrides TypedData::setValue().
    *
-   * Supports a PHP file resource or a (absolute) stream resource URI as value.
+   * Supports a PHP file resource or an (absolute) stream resource URI as value.
    */
   public function setValue($value, $notify = TRUE) {
     if (!isset($value)) {

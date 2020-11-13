@@ -1129,7 +1129,7 @@ class EntityViewsDataTest extends UnitTestCase {
   }
 
   /**
-   * Tests views data for a entity reference field.
+   * Tests views data for an entity reference field.
    */
   protected function assertEntityReferenceField($data) {
     $this->assertEquals('field', $data['field']['id']);

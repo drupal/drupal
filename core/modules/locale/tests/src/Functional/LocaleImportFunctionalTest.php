@@ -447,7 +447,7 @@ EOF;
   }
 
   /**
-   * Helper function that returns a empty .po file.
+   * Helper function that returns an empty .po file.
    */
   public function getEmptyPoFile() {
     return '';

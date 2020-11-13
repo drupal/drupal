@@ -120,7 +120,7 @@ class FormStateTest extends UnitTestCase {
     return [
       // Only validate the 'options' element.
       [[['options']], ['options' => '']],
-      // Do not limit an validation, and, ensuring the first error is returned
+      // Do not limit a validation, ensure the first error is returned
       // for the 'test' element.
       [NULL, ['test' => 'Fail 1', 'options' => '']],
       // Limit all validation.

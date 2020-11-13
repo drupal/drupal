@@ -141,7 +141,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
    * Tests toolbar cache tags implementation.
    */
   public function testMenuLinkUpdateSubtreesHashCacheClear() {
-    // The ID of a (any) admin menu link.
+    // The ID of (any) admin menu link.
     $admin_menu_link_id = 'system.admin_config_development';
 
     // Disable the link.

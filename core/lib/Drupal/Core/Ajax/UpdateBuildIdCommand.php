@@ -34,7 +34,7 @@ class UpdateBuildIdCommand implements CommandInterface {
   protected $new;
 
   /**
-   * Constructs a UpdateBuildIdCommand object.
+   * Constructs an UpdateBuildIdCommand object.
    *
    * @param string $old
    *   The old build_id.

@@ -77,7 +77,7 @@ class EntityUrlLanguageTest extends LanguageTestBase {
     ]);
     $config->save();
 
-    // Without being on an content entity route the default entity URL tests
+    // Without being on a content entity route the default entity URL tests
     // should still pass.
     $this->testEntityUrlLanguage();
 

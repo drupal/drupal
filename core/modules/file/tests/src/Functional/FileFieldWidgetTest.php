@@ -407,7 +407,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
     $elements = $this->xpath($xpath);
 
-    // If the field has at least a item, the table should be visible.
+    // If the field has at least one item, the table should be visible.
     $this->assertCount(1, $elements);
 
     // Test for AJAX error when using progress bar on file field widget.

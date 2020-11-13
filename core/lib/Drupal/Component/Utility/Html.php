@@ -45,8 +45,8 @@ class Html {
    *   <command> tag anymore.
    *  See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/command.
    * - The 'manifest' attribute is omitted because it only exists for the <html>
-   *   tag. That tag only makes sense in a HTML-served-as-HTML context, in which
-   *   case relative URLs are guaranteed to work.
+   *   tag. That tag only makes sense in an HTML-served-as-HTML context, in
+   *   which case relative URLs are guaranteed to work.
    *
    * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes
    * @see https://stackoverflow.com/questions/2725156/complete-list-of-html-tag-attributes-which-have-a-url-value

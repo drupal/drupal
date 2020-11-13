@@ -9,7 +9,7 @@ use Drupal\Core\TypedData\PrimitiveInterface;
  *
  * The plain value of binary data is a PHP file resource, see
  * http://php.net/manual/language.types.resource.php. For setting the value
- * a PHP file resource or a (absolute) stream resource URI may be passed.
+ * a PHP file resource or an (absolute) stream resource URI may be passed.
  *
  * @ingroup typed_data
  */

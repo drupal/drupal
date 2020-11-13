@@ -541,7 +541,7 @@ use Drupal\node\Entity\NodeType;
  * @link container Services and Dependency Injection topic @endlink for more
  * about how to properly retrieve services.
  *
- * To query to find entities to load, use an entity query, which is a object
+ * To query to find entities to load, use an entity query, which is an object
  * implementing \Drupal\Core\Entity\Query\QueryInterface that you can retrieve
  * with:
  * @code

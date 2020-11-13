@@ -166,7 +166,7 @@ class IncludeResolver {
    *   The raw include parameter value.
    *
    * @return array
-   *   An multi-dimensional array representing a tree of field names to be
+   *   A multi-dimensional array representing a tree of field names to be
    *   included. Array keys are the field names. Leaves are empty arrays.
    */
   protected static function toIncludeTree(ResourceObjectData $data, $include_parameter) {
@@ -238,7 +238,7 @@ class IncludeResolver {
    *   An array of exploded include paths.
    *
    * @return array
-   *   An multi-dimensional array representing a tree of field names to be
+   *   A multi-dimensional array representing a tree of field names to be
    *   included. Array keys are the field names. Leaves are empty arrays.
    */
   protected static function buildTree(array $paths) {

@@ -65,7 +65,7 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
   protected static $recursiveRenderDepth = [];
 
   /**
-   * Constructs a EntityReferenceEntityFormatter instance.
+   * Constructs an EntityReferenceEntityFormatter instance.
    *
    * @param string $plugin_id
    *   The plugin_id for the formatter.

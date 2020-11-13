@@ -37,7 +37,7 @@ class UnpublishByKeywordComment extends ConfigurableActionBase implements Contai
   protected $renderer;
 
   /**
-   * Constructs a UnpublishByKeywordComment object.
+   * Constructs an UnpublishByKeywordComment object.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.

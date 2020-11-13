@@ -21,7 +21,7 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 class AggregatorPluginManager extends DefaultPluginManager {
 
   /**
-   * Constructs a AggregatorPluginManager object.
+   * Constructs an AggregatorPluginManager object.
    *
    * @param string $type
    *   The plugin type, for example fetcher.

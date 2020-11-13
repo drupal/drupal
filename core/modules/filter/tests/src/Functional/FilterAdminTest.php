@@ -34,14 +34,14 @@ class FilterAdminTest extends BrowserTestBase {
   protected $defaultTheme = 'classy';
 
   /**
-   * An user with administration permissions.
+   * A user with administration permissions.
    *
    * @var \Drupal\user\UserInterface
    */
   protected $adminUser;
 
   /**
-   * An user with permissions to create pages.
+   * A user with permissions to create pages.
    *
    * @var \Drupal\user\UserInterface
    */

@@ -1722,7 +1722,7 @@ abstract class Connection {
   }
 
   /**
-   * Retrieves an unique ID from a given sequence.
+   * Retrieves a unique ID from a given sequence.
    *
    * Use this function if for some reason you can't use a serial field. For
    * example, MySQL has no ways of reading of the current value of a sequence

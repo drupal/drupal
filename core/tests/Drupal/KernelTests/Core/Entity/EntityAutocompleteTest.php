@@ -54,14 +54,14 @@ class EntityAutocompleteTest extends EntityKernelTestBase {
       ->create(['name' => 'label with, and / test']);
     $entity_3->save();
 
-    // Try to autocomplete a entity label that matches both entities.
+    // Try to autocomplete an entity label that matches both entities.
     // We should get both entities in a JSON encoded string.
     $input = '10/';
     $data = $this->getAutocompleteResult($input);
     $this->assertIdentical($data[0]['label'], Html::escape($entity_1->name->value), 'Autocomplete returned the first matching entity');
     $this->assertIdentical($data[1]['label'], Html::escape($entity_2->name->value), 'Autocomplete returned the second matching entity');
 
-    // Try to autocomplete a entity label that matches the first entity.
+    // Try to autocomplete an entity label that matches the first entity.
     // We should only get the first entity in a JSON encoded string.
     $input = '10/16';
     $data = $this->getAutocompleteResult($input);
@@ -71,13 +71,13 @@ class EntityAutocompleteTest extends EntityKernelTestBase {
     ];
     $this->assertIdentical(reset($data), $target, 'Autocomplete returns only the expected matching entity.');
 
-    // Try to autocomplete a entity label that matches the second entity, and
+    // Try to autocomplete an entity label that matches the second entity, and
     // the first entity  is already typed in the autocomplete (tags) widget.
     $input = $entity_1->name->value . ' (1), 10/17';
     $data = $this->getAutocompleteResult($input);
     $this->assertIdentical($data[0]['label'], Html::escape($entity_2->name->value), 'Autocomplete returned the second matching entity');
 
-    // Try to autocomplete a entity label with both a comma, a slash and markup.
+    // Try to autocomplete an entity label with both comma, slash and markup.
     $input = '"label with, and /"';
     $data = $this->getAutocompleteResult($input);
     $n = $entity_3->name->value . ' (3)';

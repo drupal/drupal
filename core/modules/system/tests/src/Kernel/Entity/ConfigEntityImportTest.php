@@ -54,7 +54,7 @@ class ConfigEntityImportTest extends KernelTestBase {
   }
 
   /**
-   * Tests updating a action during import.
+   * Tests updating an action during import.
    */
   protected function doActionUpdate() {
     // Create a test action with a known label.

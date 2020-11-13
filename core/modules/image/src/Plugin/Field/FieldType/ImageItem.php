@@ -468,7 +468,7 @@ class ImageItem extends FileItem {
    * Validates the managed_file element for the default Image form.
    *
    * This function ensures the fid is a scalar value and not an array. It is
-   * assigned as a #element_validate callback in
+   * assigned as an #element_validate callback in
    * \Drupal\image\Plugin\Field\FieldType\ImageItem::defaultImageForm().
    *
    * @param array $element

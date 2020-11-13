@@ -466,7 +466,7 @@ class DateRangeFieldTest extends DateTestBase {
     $field_name = $this->fieldStorage->getName();
     $field_label = $this->field->label();
 
-    // Ensure field is set to a all-day field.
+    // Ensure field is set to an all-day field.
     $this->fieldStorage->setSetting('datetime_type', DateRangeItem::DATETIME_TYPE_ALLDAY);
     $this->fieldStorage->save();
 

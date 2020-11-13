@@ -56,7 +56,7 @@ interface FieldStorageDefinitionInterface extends CacheableDependencyInterface {
    *
    * Each field type defines the settings that are meaningful for that type.
    * For example, a text field can define a 'max_length' setting, and an image
-   * field can define a 'alt_field_required' setting.
+   * field can define an 'alt_field_required' setting.
    *
    * The method always returns an array of all available settings for this field
    * type, possibly with the default values merged in if values have not been

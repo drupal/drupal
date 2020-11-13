@@ -132,7 +132,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
    *
    * This property is overlooked if the $default_value_callback is non-empty.
    *
-   * Example for a integer field:
+   * Example for an integer field:
    * @code
    * array(
    *   array('value' => 1),

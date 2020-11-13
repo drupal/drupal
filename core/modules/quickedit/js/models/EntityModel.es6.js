@@ -68,7 +68,7 @@
         fields: null,
 
         // The attributes below are stateful. The ones above will never change
-        // during the life of a EntityModel instance.
+        // during the life of an EntityModel instance.
 
         /**
          * Indicates whether this entity is currently being edited in-place.

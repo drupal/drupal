@@ -27,7 +27,7 @@ class EntityReferenceFieldItemNormalizer extends FieldItemNormalizer {
   protected $entityRepository;
 
   /**
-   * Constructs a EntityReferenceFieldItemNormalizer object.
+   * Constructs an EntityReferenceFieldItemNormalizer object.
    *
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity repository.

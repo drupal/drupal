@@ -25,7 +25,7 @@ class ArchiverManager extends DefaultPluginManager {
   protected $fileSystem;
 
   /**
-   * Constructs a ArchiverManager object.
+   * Constructs an ArchiverManager object.
    *
    * @param \Traversable $namespaces
    *   An object that implements \Traversable which contains the root paths

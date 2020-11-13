@@ -227,7 +227,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
             // If the view mode is teaser, or the user can access comments and
             // comments exist or the form is on a separate page.
             if ($combination['view_mode'] == 'teaser' || ($combination['has_access_comments'] && $combination['comment_count']) || $combination['form_location'] == CommentItemInterface::FORM_SEPARATE_PAGE) {
-              // There should be a add comment link.
+              // There should be an add comment link.
               $expected['comment-add'] = ['title' => 'Add new comment'];
               if ($combination['form_location'] == CommentItemInterface::FORM_BELOW) {
                 // On the same page.
