@@ -55,7 +55,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
   public function testUpdateCheckStatus() {
     // Case when contributed modules are absent.
     $this->drupalGet('admin/reports/translations');
-    $this->assertText(t('Missing translations for one project'));
+    $this->assertText('Missing translations for one project');
 
     $config = $this->config('locale.settings');
     // Set a flag to let the locale_test module replace the project data with a
@@ -421,8 +421,8 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Ensure the translation file is automatically imported when the language
     // was added.
-    $this->assertText(t('One translation file imported.'), 'Language file automatically imported.');
-    $this->assertText(t('One translation string was skipped because of disallowed or malformed HTML'), 'Language file automatically imported.');
+    $this->assertText('One translation file imported.', 'Language file automatically imported.');
+    $this->assertText('One translation string was skipped because of disallowed or malformed HTML', 'Language file automatically imported.');
 
     // Ensure the strings were successfully imported.
     $search = [

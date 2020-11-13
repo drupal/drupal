@@ -68,7 +68,7 @@ class CommentBlockTest extends CommentTestBase {
     // block.
     $this->drupalLogin($this->webUser);
     $this->drupalGet('');
-    $this->assertText(t('Recent comments'));
+    $this->assertText('Recent comments');
 
     // Test the only the 10 latest comments are shown and in the proper order.
     $this->assertNoText($comments[10]->getSubject(), 'Comment 11 not found in block.');

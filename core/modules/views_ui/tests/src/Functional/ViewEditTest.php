@@ -77,7 +77,7 @@ class ViewEditTest extends UITestBase {
 
     // Test the form validation with invalid IDs.
     $machine_name_edit_url = 'admin/structure/views/nojs/display/test_view/test_1/display_id';
-    $error_text = t('Display machine name must contain only lowercase letters, numbers, or underscores.');
+    $error_text = 'Display machine name must contain only lowercase letters, numbers, or underscores.';
 
     // Test that potential invalid display ID requests are detected
     try {
@@ -99,7 +99,7 @@ class ViewEditTest extends UITestBase {
     // Test using an existing display ID.
     $edit = ['display_id' => 'default'];
     $this->drupalPostForm($machine_name_edit_url, $edit, 'Apply');
-    $this->assertText(t('Display id should be unique.'));
+    $this->assertText('Display id should be unique.');
 
     // Test that the display ID has not been changed.
     $this->drupalGet('admin/structure/views/view/test_view/edit/test_1');
@@ -166,7 +166,7 @@ class ViewEditTest extends UITestBase {
       $this->drupalGet($langcode_url);
       $this->assertSession()->statusCodeEquals(200);
       if ($view_name == 'test_view') {
-        $this->assertText(t('The view is not based on a translatable entity type or the site is not multilingual.'));
+        $this->assertText('The view is not based on a translatable entity type or the site is not multilingual.');
       }
       else {
         $this->assertSession()->fieldValueEquals('rendering_language', '***LANGUAGE_entity_translation***');

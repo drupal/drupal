@@ -207,7 +207,7 @@ class TextFieldTest extends StringFieldTest {
     $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText(t('entity_test @id has been created.', ['@id' => $id]), 'Entity was created');
+    $this->assertText('entity_test ' . $id . ' has been created.', 'Entity was created');
 
     // Display the entity.
     $entity = EntityTest::load($id);
@@ -245,7 +245,7 @@ class TextFieldTest extends StringFieldTest {
       "{$field_name}[0][format]" => $format_id,
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertText(t('entity_test @id has been updated.', ['@id' => $id]), 'Entity was updated');
+    $this->assertText('entity_test ' . $id . ' has been updated.', 'Entity was updated');
 
     // Display the entity.
     $this->container->get('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);

@@ -70,7 +70,7 @@ class UpdateUploadTest extends UpdateTestBase {
       'files[project_upload]' => $validArchiveFile,
     ];
     $this->drupalPostForm('admin/modules/install', $edit, t('Install'));
-    $this->assertText(t('@module_name is already installed.', ['@module_name' => 'AAA Update test']), 'Existing module was extracted and not reinstalled.');
+    $this->assertText('AAA Update test is already installed.', 'Existing module was extracted and not reinstalled.');
     $this->assertSession()->addressEquals('admin/modules/install');
 
     // Ensure that a new module can be extracted and installed.
@@ -132,7 +132,7 @@ class UpdateUploadTest extends UpdateTestBase {
     // Run the updates for the new module.
     $this->drupalPostForm('admin/reports/updates/update', ['projects[update_test_new_module]' => TRUE], t('Download these updates'));
     $this->drupalPostForm(NULL, ['maintenance_mode' => FALSE], t('Continue'));
-    $this->assertText(t('Update was completed successfully.'));
+    $this->assertText('Update was completed successfully.');
     $this->assertRaw(t('Installed %project_name successfully', ['%project_name' => 'update_test_new_module']));
 
     // Parse the info file again to check that the module has been updated to

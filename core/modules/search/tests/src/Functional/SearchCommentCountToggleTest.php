@@ -95,8 +95,8 @@ class SearchCommentCountToggleTest extends BrowserTestBase {
 
     // Test comment count display for nodes with comment status set to Open
     $this->drupalPostForm(NULL, $edit, t('Search'));
-    $this->assertText(t('0 comments'), 'Empty comment count displays for nodes with comment status set to Open');
-    $this->assertText(t('1 comment'), 'Non-empty comment count displays for nodes with comment status set to Open');
+    $this->assertText('0 comments', 'Empty comment count displays for nodes with comment status set to Open');
+    $this->assertText('1 comment', 'Non-empty comment count displays for nodes with comment status set to Open');
 
     // Test comment count display for nodes with comment status set to Closed
     $this->searchableNodes['0 comments']->set('comment', CommentItemInterface::CLOSED);
@@ -106,7 +106,7 @@ class SearchCommentCountToggleTest extends BrowserTestBase {
 
     $this->drupalPostForm(NULL, $edit, t('Search'));
     $this->assertNoText('0 comments', 'Empty comment count does not display for nodes with comment status set to Closed');
-    $this->assertText(t('1 comment'), 'Non-empty comment count displays for nodes with comment status set to Closed');
+    $this->assertText('1 comment', 'Non-empty comment count displays for nodes with comment status set to Closed');
 
     // Test comment count display for nodes with comment status set to Hidden
     $this->searchableNodes['0 comments']->set('comment', CommentItemInterface::HIDDEN);

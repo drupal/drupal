@@ -56,7 +56,7 @@ class DisplayPathTest extends UITestBase {
 
     // Add a new page display and check the appearing text.
     $this->drupalPostForm(NULL, [], 'Add Page');
-    $this->assertText(t('No path is set'), 'The right text appears if no path was set.');
+    $this->assertText('No path is set', 'The right text appears if no path was set.');
     $this->assertSession()->linkNotExists('View page', 'No view page link found on the page.');
 
     // Save a path and make sure the summary appears as expected.

@@ -172,7 +172,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     $this->drupalPostForm('node/add/' . $this->type, $edit, t('Save'));
 
     // Assert that entity reference autocomplete field is validated.
-    $this->assertText(t('There are no entities matching "@entity"', ['@entity' => 'Test']));
+    $this->assertText('There are no entities matching "Test"');
 
     $edit = [
       'title[0][value]' => 'Test',
@@ -182,10 +182,10 @@ class EntityReferenceAdminTest extends BrowserTestBase {
 
     // Assert the results multiple times to avoid sorting problem of nodes with
     // the same title.
-    $this->assertText(t('Multiple entities match this reference;'));
-    $this->assertText(t("@node1", ['@node1' => $node1->getTitle() . ' (' . $node1->id() . ')']));
-    $this->assertText(t("@node2", ['@node2' => $node2->getTitle() . ' (' . $node2->id() . ')']));
-    $this->assertText(t('Specify the one you want by appending the id in parentheses, like "@example".', ['@example' => $node2->getTitle() . ' (' . $node2->id() . ')']));
+    $this->assertText('Multiple entities match this reference;');
+    $this->assertText($node1->getTitle() . ' (' . $node1->id() . ')');
+    $this->assertText($node2->getTitle() . ' (' . $node2->id() . ')');
+    $this->assertText('Specify the one you want by appending the id in parentheses, like "' . $node2->getTitle() . ' (' . $node2->id() . ')' . '".');
 
     $edit = [
       'title[0][value]' => 'Test',

@@ -85,7 +85,7 @@ class SearchNumberMatchingTest extends BrowserTestBase {
     // Run cron to ensure the content is indexed.
     $this->cronRun();
     $this->drupalGet('admin/reports/dblog');
-    $this->assertText(t('Cron run completed'), 'Log shows cron run completed');
+    $this->assertText('Cron run completed', 'Log shows cron run completed');
   }
 
   /**

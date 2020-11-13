@@ -410,7 +410,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
     $this->container->get('language_manager')->reset();
     $this->drupalGet($test['path'], $test['path_options'], $test['http_header']);
     $this->assertText($test['expect'], $test['message']);
-    $this->assertText(t('Language negotiation method: @name', ['@name' => $test['expected_method_id']]));
+    $this->assertText('Language negotiation method: ' . $test['expected_method_id']);
 
     // Get the private file and ensure it is a 200. It is important to
     // invalidate the router cache to ensure the routing system runs a full

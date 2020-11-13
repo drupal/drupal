@@ -286,7 +286,7 @@ class FilterFormatAccessTest extends BrowserTestBase {
     $edit = [];
     $edit['title[0][value]'] = $new_title;
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
-    $this->assertText(t('@name field is required.', ['@name' => t('Text format')]), 'Error message is displayed.');
+    $this->assertText('Text format field is required.', 'Error message is displayed.');
     $this->drupalGet('node/' . $node->id());
     $this->assertText($old_title, 'Old title found.');
     $this->assertNoText($new_title, 'New title not found.');
@@ -321,7 +321,7 @@ class FilterFormatAccessTest extends BrowserTestBase {
     $edit = [];
     $edit['title[0][value]'] = $new_title;
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
-    $this->assertText(t('@name field is required.', ['@name' => t('Text format')]), 'Error message is displayed.');
+    $this->assertText('Text format field is required.', 'Error message is displayed.');
     $this->drupalGet('node/' . $node->id());
     $this->assertText($old_title, 'Old title found.');
     $this->assertNoText($new_title, 'New title not found.');

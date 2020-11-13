@@ -108,9 +108,9 @@ class SearchLanguageTest extends BrowserTestBase {
 
     // Now we should have languages displayed.
     $this->drupalGet('search/node');
-    $this->assertText(t('Languages'), 'Languages displayed to choose from.');
-    $this->assertText(t('English'), 'English is a possible choice.');
-    $this->assertText(t('French'), 'French is a possible choice.');
+    $this->assertText('Languages', 'Languages displayed to choose from.');
+    $this->assertText('English', 'English is a possible choice.');
+    $this->assertText('French', 'French is a possible choice.');
 
     // Ensure selecting no language does not make the query different.
     $this->drupalPostForm('search/node', [], 'edit-submit--2');

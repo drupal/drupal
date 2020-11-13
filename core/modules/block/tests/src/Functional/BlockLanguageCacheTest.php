@@ -68,7 +68,7 @@ class BlockLanguageCacheTest extends BrowserTestBase {
     $edit['label'] = $this->randomMachineName();
     $edit['id'] = mb_strtolower($edit['label']);
     $this->drupalPostForm('admin/structure/menu/add', $edit, t('Save'));
-    $this->assertText(t('Menu @label has been added.', ['@label' => $edit['label']]));
+    $this->assertText('Menu ' . $edit['label'] . ' has been added.');
 
     // Check that the block is listed for all languages.
     foreach ($this->langcodes as $langcode) {

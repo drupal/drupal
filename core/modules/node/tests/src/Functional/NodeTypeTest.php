@@ -197,7 +197,7 @@ class NodeTypeTest extends NodeTestBase {
     $this->assertRaw(
       t('Are you sure you want to delete the content type %type?', ['%type' => $type->label()])
     );
-    $this->assertText(t('This action cannot be undone.'), 'The node type deletion confirmation form is available.');
+    $this->assertText('This action cannot be undone.', 'The node type deletion confirmation form is available.');
 
     // Test that a locked node type could not be deleted.
     $this->container->get('module_installer')->install(['node_test_config']);

@@ -440,7 +440,7 @@ class FormTest extends BrowserTestBase {
         'multiple_no_default_required',
     ];
     foreach ($expected_errors as $key) {
-      $this->assertText(t('@name field is required.', ['@name' => $form[$key]['#title']]));
+      $this->assertText($form[$key]['#title'] . ' field is required.');
     }
 
     // Post values for required fields.

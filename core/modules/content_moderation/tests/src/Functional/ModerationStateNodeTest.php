@@ -57,7 +57,7 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
 
     // Delete the node.
     $this->drupalPostForm('node/' . $node->id() . '/delete', [], t('Delete'));
-    $this->assertText(t('The Moderated content moderated content has been deleted.'));
+    $this->assertText('The Moderated content moderated content has been deleted.');
 
     // Disable content moderation.
     $edit['bundles[moderated_content]'] = FALSE;

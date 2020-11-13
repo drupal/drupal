@@ -100,7 +100,7 @@ class EmailFieldTest extends BrowserTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
+    $this->assertText('entity_test ' . $id . ' has been created.');
     $this->assertRaw($value);
 
     // Verify that a mailto link is displayed.

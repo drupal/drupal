@@ -69,7 +69,7 @@ class NodeAccessPagerTest extends BrowserTestBase {
     // be two pages (0, 1) but no third (2) page.
     $this->drupalGet('node/' . $node->id());
     $this->assertText($node->label());
-    $this->assertText(t('Comments'));
+    $this->assertText('Comments');
     $this->assertRaw('page=1');
     $this->assertNoRaw('page=2');
   }

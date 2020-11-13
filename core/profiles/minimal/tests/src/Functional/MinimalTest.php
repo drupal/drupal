@@ -39,8 +39,8 @@ class MinimalTest extends BrowserTestBase {
     ]);
     $this->drupalLogin($user);
     $this->drupalGet('');
-    $this->assertText(t('Tools'));
-    $this->assertText(t('Administration'));
+    $this->assertText('Tools');
+    $this->assertText('Administration');
 
     // Ensure that there are no pending updates after installation.
     $this->drupalLogin($this->rootUser);

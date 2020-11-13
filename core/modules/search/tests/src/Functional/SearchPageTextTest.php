@@ -70,8 +70,8 @@ class SearchPageTextTest extends BrowserTestBase {
   public function testSearchText() {
     $this->drupalLogin($this->searchingUser);
     $this->drupalGet('search/node');
-    $this->assertText(t('Enter your keywords'));
-    $this->assertText(t('Search'));
+    $this->assertText('Enter your keywords');
+    $this->assertText('Search');
     $this->assertSession()->titleEquals('Search | Drupal');
 
     $edit = [];
@@ -79,12 +79,12 @@ class SearchPageTextTest extends BrowserTestBase {
     $edit['keys'] = $search_terms;
     $this->drupalPostForm('search/node', $edit, t('Search'));
     $this->assertText('search yielded no results');
-    $this->assertText(t('Search'));
+    $this->assertText('Search');
     $title_source = 'Search for @keywords | Drupal';
     $this->assertSession()->titleEquals('Search for ' . Unicode::truncate($search_terms, 60, TRUE, TRUE) . ' | Drupal');
     $this->assertNoText('Node', 'Erroneous tab and breadcrumb text is not present');
     $this->assertNoText('Node', 'Erroneous translated tab and breadcrumb text is not present');
-    $this->assertText(t('Content'), 'Tab and breadcrumb text is present');
+    $this->assertText('Content', 'Tab and breadcrumb text is present');
 
     $this->clickLink('About searching');
     $this->assertText('About searching', 'Correct title is on search help page');
@@ -106,7 +106,7 @@ class SearchPageTextTest extends BrowserTestBase {
 
     $edit['keys'] = $this->searchingUser->getAccountName();
     $this->drupalPostForm('search/user', $edit, t('Search'));
-    $this->assertText(t('Search'));
+    $this->assertText('Search');
     $this->assertSession()->titleEquals('Search for ' . Unicode::truncate($this->searchingUser->getAccountName(), 60, TRUE, TRUE) . ' | Drupal');
 
     $this->clickLink('About searching');
@@ -138,9 +138,9 @@ class SearchPageTextTest extends BrowserTestBase {
     // Test that a search on Node or User with no keywords entered generates
     // the "Please enter some keywords" message.
     $this->drupalPostForm('search/node', [], t('Search'));
-    $this->assertText(t('Please enter some keywords'), 'With no keywords entered, message is displayed on node page');
+    $this->assertText('Please enter some keywords', 'With no keywords entered, message is displayed on node page');
     $this->drupalPostForm('search/user', [], t('Search'));
-    $this->assertText(t('Please enter some keywords'), 'With no keywords entered, message is displayed on user page');
+    $this->assertText('Please enter some keywords', 'With no keywords entered, message is displayed on user page');
 
     // Make sure the "Please enter some keywords" message is NOT displayed if
     // you use "or" words or phrases in Advanced Search.

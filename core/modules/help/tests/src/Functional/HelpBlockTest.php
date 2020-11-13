@@ -43,7 +43,7 @@ class HelpBlockTest extends BrowserTestBase {
    */
   public function testHelp() {
     $this->drupalGet('help_page_test/has_help');
-    $this->assertText(t('I have help!'));
+    $this->assertText('I have help!');
     $this->assertText($this->helpBlock->label());
 
     $this->drupalGet('help_page_test/no_help');

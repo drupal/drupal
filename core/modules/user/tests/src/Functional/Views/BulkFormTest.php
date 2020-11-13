@@ -52,7 +52,7 @@ class BulkFormTest extends UserTestBase {
       'action' => 'user_block_user_action',
     ];
     $this->drupalPostForm('test-user-bulk-form', $edit, t('Apply to selected items'));
-    $this->assertText(t('No users selected.'));
+    $this->assertText('No users selected.');
 
     // Assign a role to a user.
     $account = $user_storage->load($this->users[0]->id());

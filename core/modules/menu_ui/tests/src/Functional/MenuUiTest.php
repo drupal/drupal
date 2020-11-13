@@ -274,7 +274,7 @@ class MenuUiTest extends BrowserTestBase {
 
     // Try to delete the main menu.
     $this->drupalGet('admin/structure/menu/manage/main/delete');
-    $this->assertText(t('You are not authorized to access this page.'));
+    $this->assertText('You are not authorized to access this page.');
   }
 
   /**
@@ -951,21 +951,21 @@ class MenuUiTest extends BrowserTestBase {
     $this->drupalGet('admin/help/menu');
     $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
-      $this->assertText(t('Menu'), 'Menu help was displayed');
+      $this->assertText('Menu', 'Menu help was displayed');
     }
 
     // View menu build overview page.
     $this->drupalGet('admin/structure/menu');
     $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
-      $this->assertText(t('Menus'), 'Menu build overview page was displayed');
+      $this->assertText('Menus', 'Menu build overview page was displayed');
     }
 
     // View tools menu customization page.
     $this->drupalGet('admin/structure/menu/manage/' . $this->menu->id());
     $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
-      $this->assertText(t('Tools'), 'Tools menu page was displayed');
+      $this->assertText('Tools', 'Tools menu page was displayed');
     }
 
     // View menu edit page for a static link.
@@ -973,14 +973,14 @@ class MenuUiTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/menu/link/' . $item->getPluginId() . '/edit');
     $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
-      $this->assertText(t('Edit menu item'), 'Menu edit page was displayed');
+      $this->assertText('Edit menu item', 'Menu edit page was displayed');
     }
 
     // View add menu page.
     $this->drupalGet('admin/structure/menu/add');
     $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
-      $this->assertText(t('Menus'), 'Add menu page was displayed');
+      $this->assertText('Menus', 'Add menu page was displayed');
     }
   }
 

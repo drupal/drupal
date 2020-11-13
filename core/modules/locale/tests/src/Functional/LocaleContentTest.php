@@ -98,7 +98,7 @@ class LocaleContentTest extends BrowserTestBase {
 
     // Set the content type to use multilingual support.
     $this->drupalGet("admin/structure/types/manage/{$type2->id()}");
-    $this->assertText(t('Language settings'), 'Multilingual support widget present on content type configuration form.');
+    $this->assertText('Language settings', 'Multilingual support widget present on content type configuration form.');
     $edit = [
       'language_configuration[language_alterable]' => TRUE,
     ];
@@ -139,7 +139,7 @@ class LocaleContentTest extends BrowserTestBase {
       'langcode[0][value]' => 'en',
     ];
     $this->drupalPostForm($path, $edit, t('Save'));
-    $this->assertText(t('@title has been updated.', ['@title' => $node_title]));
+    $this->assertText($node_title . ' has been updated.');
 
     // Verify that the creation message contains a link to a node.
     $xpath = $this->assertSession()->buildXPathQuery('//div[@data-drupal-messages]//a[contains(@href, :href)]', [

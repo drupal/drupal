@@ -163,9 +163,9 @@ class NodeRevisionsTest extends NodeTestBase {
     }
     // Original author, and editor names should appear on revisions overview.
     $web_user = $nodes[0]->revision_uid->entity;
-    $this->assertText(t('by @name', ['@name' => $web_user->getAccountName()]));
+    $this->assertText('by ' . $web_user->getAccountName());
     $editor = $nodes[2]->revision_uid->entity;
-    $this->assertText(t('by @name', ['@name' => $editor->getAccountName()]));
+    $this->assertText('by ' . $editor->getAccountName());
 
     // Confirm that this is the default revision.
     $this->assertTrue($node->isDefaultRevision(), 'Third node revision is the default one.');

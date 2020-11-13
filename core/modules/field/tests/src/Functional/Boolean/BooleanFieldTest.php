@@ -117,7 +117,7 @@ class BooleanFieldTest extends BrowserTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
+    $this->assertText('entity_test ' . $id . ' has been created.');
 
     // Verify that boolean value is displayed.
     $entity = EntityTest::load($id);
@@ -236,7 +236,7 @@ class BooleanFieldTest extends BrowserTestBase {
     $this->drupalPostForm(NULL, [], t('Save'));
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
+    $this->assertText('entity_test ' . $id . ' has been created.');
 
     // Tell the test module to disable access to the field.
     \Drupal::state()->set('field.test_boolean_field_access_field', $field_name);
@@ -247,7 +247,7 @@ class BooleanFieldTest extends BrowserTestBase {
     $this->drupalPostForm(NULL, [], t('Save'));
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
+    $this->assertText('entity_test ' . $id . ' has been created.');
   }
 
 }

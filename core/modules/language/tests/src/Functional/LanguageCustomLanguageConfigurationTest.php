@@ -44,8 +44,8 @@ class LanguageCustomLanguageConfigurationTest extends BrowserTestBase {
     ];
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
     // Test validation on missing values.
-    $this->assertText(t('@name field is required.', ['@name' => t('Language code')]));
-    $this->assertText(t('@name field is required.', ['@name' => t('Language name')]));
+    $this->assertText('Language code field is required.');
+    $this->assertText('Language name field is required.');
     $empty_language = new Language();
     $this->assertSession()->checkboxChecked('edit-direction-' . $empty_language->getDirection());
     $this->assertSession()->addressEquals(Url::fromRoute('language.add'));

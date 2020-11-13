@@ -78,7 +78,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     // Reset locale cache.
     $this->container->get('string_translation')->reset();
     $this->assertRaw('"edit-languages-' . $langcode . '-weight"');
-    $this->assertText(t($name), 'Test language added.');
+    $this->assertText($name, 'Test language added.');
     $this->drupalLogout();
 
     // Add a whitespace at the end of string to ensure it is found.
@@ -113,7 +113,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
       $lid => $translation,
     ];
     $this->drupalPostForm('admin/config/regional/translate', $edit, t('Save translations'));
-    $this->assertText(t('The strings have been saved.'), 'The strings have been saved.');
+    $this->assertText('The strings have been saved.', 'The strings have been saved.');
     $url_bits = explode('?', $this->getUrl());
     $this->assertEqual($url_bits[0], Url::fromRoute('locale.translate_page', [], ['absolute' => TRUE])->toString(), 'Correct page redirection.');
     $search = [
@@ -161,7 +161,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
       'translation' => 'untranslated',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
-    $this->assertText(t('No strings available.'), 'String is translated.');
+    $this->assertText('No strings available.', 'String is translated.');
 
     // Test invalidation of 'rendered' cache tag after string translation.
     $this->drupalLogout();
@@ -418,7 +418,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
       'translation' => 'translated',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
-    $this->assertText(t('No strings available.'), "Search didn't find the string.");
+    $this->assertText('No strings available.', "Search didn't find the string.");
 
     // Ensure untranslated string appears if searching on 'only untranslated
     // strings'.
@@ -458,7 +458,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
       'translation' => 'untranslated',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
-    $this->assertText(t('No strings available.'), "Search didn't find the source string.");
+    $this->assertText('No strings available.', "Search didn't find the source string.");
 
     // Ensure translated string doesn't appear if searching on 'only
     // untranslated strings'.
@@ -468,7 +468,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
       'translation' => 'untranslated',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
-    $this->assertText(t('No strings available.'), "Search didn't find the translation.");
+    $this->assertText('No strings available.', "Search didn't find the translation.");
 
     // Ensure translated string does appear if searching on the custom language.
     $search = [
@@ -486,7 +486,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
       'translation' => 'all',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
-    $this->assertText(t('No strings available.'), "Search didn't find the translation.");
+    $this->assertText('No strings available.', "Search didn't find the translation.");
 
     // Search for a string that isn't in the system.
     $unavailable_string = $this->randomMachineName(16);
@@ -496,7 +496,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
       'translation' => 'all',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
-    $this->assertText(t('No strings available.'), "Search didn't find the invalid string.");
+    $this->assertText('No strings available.', "Search didn't find the invalid string.");
   }
 
   /**

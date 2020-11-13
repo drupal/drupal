@@ -132,7 +132,7 @@ class DisplayCRUDTest extends UITestBase {
     $this->drupalPostForm(NULL, [], 'Duplicate as Block');
     $this->assertSession()->linkByHrefExists($path_prefix . '/block_1', 0, 'Make sure after duplicating the new display appears in the UI');
     $this->assertSession()->addressEquals($path_prefix . '/block_1');
-    $this->assertText(t('Block settings'));
+    $this->assertText('Block settings');
     $this->assertNoText('Page settings');
 
     $this->drupalPostForm(NULL, [], t('Save'));

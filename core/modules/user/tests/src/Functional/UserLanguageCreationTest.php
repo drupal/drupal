@@ -46,7 +46,7 @@ class UserLanguageCreationTest extends BrowserTestBase {
       'language_interface[enabled][language-url]' => TRUE,
     ];
     $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));
-    $this->assertText(t('Language detection configuration saved.'), 'Set language negotiation.');
+    $this->assertText('Language detection configuration saved.', 'Set language negotiation.');
 
     // Check if the language selector is available on admin/people/create and
     // set to the currently active language.

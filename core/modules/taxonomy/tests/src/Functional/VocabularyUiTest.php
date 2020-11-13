@@ -66,12 +66,12 @@ class VocabularyUiTest extends TaxonomyTestBase {
     // Try to submit a vocabulary with a duplicate machine name.
     $edit['vid'] = $vid;
     $this->drupalPostForm('admin/structure/taxonomy/add', $edit, t('Save'));
-    $this->assertText(t('The machine-readable name is already in use. It must be unique.'));
+    $this->assertText('The machine-readable name is already in use. It must be unique.');
 
     // Try to submit an invalid machine name.
     $edit['vid'] = '!&^%';
     $this->drupalPostForm('admin/structure/taxonomy/add', $edit, t('Save'));
-    $this->assertText(t('The machine-readable name must contain only lowercase letters, numbers, and underscores.'));
+    $this->assertText('The machine-readable name must contain only lowercase letters, numbers, and underscores.');
 
     // Ensure that vocabulary titles are escaped properly.
     $edit = [];
@@ -126,7 +126,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
     $this->assertEmpty(Vocabulary::loadMultiple(), 'No vocabularies found.');
     $this->drupalGet('admin/structure/taxonomy');
     // Check the default message for no vocabularies.
-    $this->assertText(t('No vocabularies available.'));
+    $this->assertText('No vocabularies available.');
   }
 
   /**
@@ -140,7 +140,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
       'vid' => $vid,
     ];
     $this->drupalPostForm('admin/structure/taxonomy/add', $edit, t('Save'));
-    $this->assertText(t('Created new vocabulary'), 'New vocabulary was created.');
+    $this->assertText('Created new vocabulary', 'New vocabulary was created.');
 
     // Check the created vocabulary.
     $this->container->get('entity_type.manager')->getStorage('taxonomy_vocabulary')->resetCache();
@@ -151,7 +151,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
     $this->drupalGet('admin/structure/taxonomy/manage/' . $vocabulary->id());
     $this->clickLink(t('Delete'));
     $this->assertRaw(t('Are you sure you want to delete the vocabulary %name?', ['%name' => $vocabulary->label()]));
-    $this->assertText(t('Deleting a vocabulary will delete all the terms in it. This action cannot be undone.'), '[confirm deletion] Inform that all terms will be deleted.');
+    $this->assertText('Deleting a vocabulary will delete all the terms in it. This action cannot be undone.', '[confirm deletion] Inform that all terms will be deleted.');
 
     // Confirm deletion.
     $this->drupalPostForm(NULL, [], t('Delete'));

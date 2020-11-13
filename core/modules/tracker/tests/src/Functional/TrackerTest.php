@@ -446,7 +446,7 @@ class TrackerTest extends BrowserTestBase {
     $this->drupalPostForm('admin/content', $edit, t('Apply to selected items'));
 
     $this->drupalGet('activity');
-    $this->assertText(t('No content available.'), 'A node is displayed on the tracker listing pages.');
+    $this->assertText('No content available.', 'A node is displayed on the tracker listing pages.');
   }
 
   /**

@@ -61,16 +61,16 @@ class FrontPageTest extends BrowserTestBase {
     $this->drupalGet('');
     $this->assertSession()->titleEquals('Home | Drupal');
 
-    $this->assertText(t('On front page.'), 'Path is the front page.');
+    $this->assertText('On front page.', 'Path is the front page.');
     $this->drupalGet('node');
-    $this->assertText(t('On front page.'), 'Path is the front page.');
+    $this->assertText('On front page.', 'Path is the front page.');
     $this->drupalGet($this->nodePath);
     $this->assertNoText('On front page.', 'Path is not the front page.');
 
     // Change the front page to an invalid path.
     $edit = ['site_frontpage' => '/kittens'];
     $this->drupalPostForm('admin/config/system/site-information', $edit, t('Save configuration'));
-    $this->assertText(t("Either the path '@path' is invalid or you do not have access to it.", ['@path' => $edit['site_frontpage']]));
+    $this->assertText("Either the path '" . $edit['site_frontpage'] . "' is invalid or you do not have access to it.");
 
     // Change the front page to a path without a starting slash.
     $edit = ['site_frontpage' => $this->nodePath];
@@ -80,14 +80,14 @@ class FrontPageTest extends BrowserTestBase {
     // Change the front page to a valid path.
     $edit['site_frontpage'] = '/' . $this->nodePath;
     $this->drupalPostForm('admin/config/system/site-information', $edit, t('Save configuration'));
-    $this->assertText(t('The configuration options have been saved.'), 'The front page path has been saved.');
+    $this->assertText('The configuration options have been saved.', 'The front page path has been saved.');
 
     $this->drupalGet('');
-    $this->assertText(t('On front page.'), 'Path is the front page.');
+    $this->assertText('On front page.', 'Path is the front page.');
     $this->drupalGet('node');
     $this->assertNoText('On front page.', 'Path is not the front page.');
     $this->drupalGet($this->nodePath);
-    $this->assertText(t('On front page.'), 'Path is the front page.');
+    $this->assertText('On front page.', 'Path is the front page.');
   }
 
 }

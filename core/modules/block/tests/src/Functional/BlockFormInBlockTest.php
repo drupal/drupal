@@ -49,7 +49,7 @@ class BlockFormInBlockTest extends BrowserTestBase {
     // form.
     $this->drupalPostForm(NULL, $form_values, t('Submit'));
     $this->assertSession()->addressEquals('test-page');
-    $this->assertText(t('Your email address is @email', ['@email' => 'test@example.com']));
+    $this->assertText('Your email address is test@example.com');
 
     // Go to a different page and see if the block is enabled there as well.
     $this->drupalGet('test-render-title');
@@ -61,7 +61,7 @@ class BlockFormInBlockTest extends BrowserTestBase {
     // /test-render-title.
     $this->drupalPostForm(NULL, $form_values, t('Submit'));
     $this->assertSession()->addressEquals('test-render-title');
-    $this->assertText(t('Your email address is @email', ['@email' => 'test@example.com']));
+    $this->assertText('Your email address is test@example.com');
   }
 
   /**

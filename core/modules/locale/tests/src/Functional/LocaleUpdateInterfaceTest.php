@@ -64,10 +64,10 @@ class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
 
     // One language added, all translations up to date.
     $this->drupalGet('admin/reports/status');
-    $this->assertText(t('Translation update status'), 'Status message');
-    $this->assertText(t('Up to date'), 'Translations up to date');
+    $this->assertText('Translation update status', 'Status message');
+    $this->assertText('Up to date', 'Translations up to date');
     $this->drupalGet('admin/reports/translations');
-    $this->assertText(t('All translations up to date.'), 'Translations up to date');
+    $this->assertText('All translations up to date.', 'Translations up to date');
 
     // Set locale_test_translate module to have a local translation available.
     $status = locale_translation_get_status();
@@ -76,10 +76,10 @@ class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
 
     // Check if updates are available for German.
     $this->drupalGet('admin/reports/status');
-    $this->assertText(t('Translation update status'), 'Status message');
+    $this->assertText('Translation update status', 'Status message');
     $this->assertRaw(t('Updates available for: @languages. See the <a href=":updates">Available translation updates</a> page for more information.', ['@languages' => t('German'), ':updates' => Url::fromRoute('locale.translate_status')->toString()]));
     $this->drupalGet('admin/reports/translations');
-    $this->assertText(t('Updates for: @modules', ['@modules' => 'Locale test translate']), 'Translations available');
+    $this->assertText('Updates for: Locale test translate', 'Translations available');
 
     // Set locale_test_translate module to have a dev release and no
     // translation found.
@@ -90,10 +90,10 @@ class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
 
     // Check if no updates were found.
     $this->drupalGet('admin/reports/status');
-    $this->assertText(t('Translation update status'), 'Status message');
+    $this->assertText('Translation update status', 'Status message');
     $this->assertRaw(t('Missing translations for: @languages. See the <a href=":updates">Available translation updates</a> page for more information.', ['@languages' => t('German'), ':updates' => Url::fromRoute('locale.translate_status')->toString()]));
     $this->drupalGet('admin/reports/translations');
-    $this->assertText(t('Missing translations for one project'), 'No translations found');
+    $this->assertText('Missing translations for one project', 'No translations found');
     $release_details = new FormattableMarkup('@module (@version). @info', [
       '@module' => 'Locale test translate',
       '@version' => '1.3-dev',
@@ -110,8 +110,8 @@ class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
 
     // Check if Drupal core is not translated.
     $this->drupalGet('admin/reports/translations');
-    $this->assertText(t('Missing translations for 2 projects'), 'No translations found');
-    $this->assertText(t('@module (@version).', ['@module' => t('Drupal core'), '@version' => '8.1.1']), 'Release details');
+    $this->assertText('Missing translations for 2 projects', 'No translations found');
+    $this->assertText('Drupal core (8.1.1).', 'Release details');
 
     // Override Drupal core translation status as 'translations available'.
     $status = locale_translation_get_status();
@@ -122,11 +122,8 @@ class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
 
     // Check if translations are available for Drupal core.
     $this->drupalGet('admin/reports/translations');
-    $this->assertText(t('Updates for: @project', ['@project' => t('Drupal core')]), 'Translations found');
-    $this->assertText(new FormattableMarkup('@module (@date)', [
-      '@module' => t('Drupal core'),
-      '@date' => $this->container->get('date.formatter')->format(REQUEST_TIME, 'html_date'),
-    ]), 'Core translation update');
+    $this->assertText('Updates for: Drupal core', 'Translations found');
+    $this->assertText('Drupal core (' . $this->container->get('date.formatter')->format(REQUEST_TIME, 'html_date') . ')', 'Core translation update');
     $update_button = $this->xpath('//input[@type="submit"][@value="' . t('Update translations') . '"]');
     $this->assertNotEmpty($update_button, 'Update translations button');
   }

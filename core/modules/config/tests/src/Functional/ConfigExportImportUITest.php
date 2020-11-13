@@ -92,7 +92,7 @@ class ConfigExportImportUITest extends BrowserTestBase {
     // After installation there is no snapshot and nothing to import.
     $this->drupalGet('admin/config/development/configuration');
     $this->assertNoText('Warning message');
-    $this->assertText(t('There are no configuration changes to import.'));
+    $this->assertText('There are no configuration changes to import.');
 
     $this->originalSlogan = $this->config('system.site')->get('slogan');
     $this->newSlogan = $this->randomString(16);
@@ -175,7 +175,7 @@ class ConfigExportImportUITest extends BrowserTestBase {
     $this->drupalPostForm(NULL, [], 'Import all');
     // After importing the snapshot has been updated an there are no warnings.
     $this->assertNoText('Warning message');
-    $this->assertText(t('There are no configuration changes to import.'));
+    $this->assertText('There are no configuration changes to import.');
 
     $this->assertEquals($this->newSlogan, $this->config('system.site')->get('slogan'));
 
@@ -186,7 +186,7 @@ class ConfigExportImportUITest extends BrowserTestBase {
       ->set('slogan', $this->originalSlogan)
       ->save();
     $this->drupalGet('admin/config/development/configuration');
-    $this->assertText(t('Warning message'));
+    $this->assertText('Warning message');
     $this->assertText('The following items in your active configuration have changes since the last import that may be lost on the next import.');
     // Ensure the item is displayed as part of a list (to avoid false matches
     // on the rest of the page) and that the list markup is not escaped.
@@ -197,7 +197,7 @@ class ConfigExportImportUITest extends BrowserTestBase {
     $this->drupalGet('admin/config/development/configuration');
     $this->assertNoText('Warning message');
     $this->assertNoText('The following items in your active configuration have changes since the last import that may be lost on the next import.');
-    $this->assertText(t('There are no configuration changes to import.'));
+    $this->assertText('There are no configuration changes to import.');
     // Write a file to sync. The warning about differences between the active
     // and snapshot should now exist.
     /** @var \Drupal\Core\Config\StorageInterface $sync */
@@ -207,7 +207,7 @@ class ConfigExportImportUITest extends BrowserTestBase {
     $this->copyConfig($this->container->get('config.storage'), $sync);
     $sync->write('system.site', $data);
     $this->drupalGet('admin/config/development/configuration');
-    $this->assertText(t('Warning message'));
+    $this->assertText('Warning message');
     $this->assertText('The following items in your active configuration have changes since the last import that may be lost on the next import.');
     // Ensure the item is displayed as part of a list (to avoid false matches
     // on the rest of the page) and that the list markup is not escaped.
@@ -279,8 +279,8 @@ class ConfigExportImportUITest extends BrowserTestBase {
     // Verify that there are configuration differences to import.
     $this->drupalGet('admin/config/development/configuration');
     $this->assertNoText('There are no configuration changes to import.');
-    $this->assertText(t('@collection configuration collection', ['@collection' => 'collection.test1']));
-    $this->assertText(t('@collection configuration collection', ['@collection' => 'collection.test2']));
+    $this->assertText('collection.test1 configuration collection');
+    $this->assertText('collection.test2 configuration collection');
     $this->assertText('config_test.create');
     $this->assertSession()->linkByHrefExists('admin/config/development/configuration/sync/diff_collection/collection.test1/config_test.create');
     $this->assertText('config_test.update');
@@ -295,7 +295,7 @@ class ConfigExportImportUITest extends BrowserTestBase {
     $this->assertSession()->linkByHrefExists('admin/config/development/configuration/sync/diff_collection/collection.test2/config_test.another_delete');
 
     $this->drupalPostForm(NULL, [], 'Import all');
-    $this->assertText(t('There are no configuration changes to import.'));
+    $this->assertText('There are no configuration changes to import.');
 
     // Test data in collections.
     $data = $test1_storage->read('config_test.create');

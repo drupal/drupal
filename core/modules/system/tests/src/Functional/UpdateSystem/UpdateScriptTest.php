@@ -130,9 +130,9 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->updateRequirementsProblem();
     $this->clickLink(t('Continue'));
-    $this->assertText(t('No pending updates.'), 'End of update process was reached.');
+    $this->assertText('No pending updates.', 'End of update process was reached.');
     // Confirm that all caches were cleared.
-    $this->assertText(t('hook_cache_flush() invoked for update_script_test.module.'), 'Caches were cleared when there were no requirements warnings or errors.');
+    $this->assertText('hook_cache_flush() invoked for update_script_test.module.', 'Caches were cleared when there were no requirements warnings or errors.');
 
     // If there is a requirements warning, we expect it to be initially
     // displayed, but clicking the link to proceed should allow us to go
@@ -150,9 +150,9 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->clickLink(t('Continue'));
     $this->clickLink(t('Apply pending updates'));
     $this->checkForMetaRefresh();
-    $this->assertText(t('The update_script_test_update_8001() update was executed successfully.'), 'End of update process was reached.');
+    $this->assertText('The update_script_test_update_8001() update was executed successfully.', 'End of update process was reached.');
     // Confirm that all caches were cleared.
-    $this->assertText(t('hook_cache_flush() invoked for update_script_test.module.'), 'Caches were cleared after resolving a requirements warning and applying updates.');
+    $this->assertText('hook_cache_flush() invoked for update_script_test.module.', 'Caches were cleared after resolving a requirements warning and applying updates.');
 
     // Now try again without pending updates to make sure that works too.
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
@@ -160,9 +160,9 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->clickLink('try again');
     $this->assertNoText('This is a requirements warning provided by the update_script_test module.');
     $this->clickLink(t('Continue'));
-    $this->assertText(t('No pending updates.'), 'End of update process was reached.');
+    $this->assertText('No pending updates.', 'End of update process was reached.');
     // Confirm that all caches were cleared.
-    $this->assertText(t('hook_cache_flush() invoked for update_script_test.module.'), 'Caches were cleared after applying updates and re-running the script.');
+    $this->assertText('hook_cache_flush() invoked for update_script_test.module.', 'Caches were cleared after applying updates and re-running the script.');
 
     // If there is a requirements error, it should be displayed even after
     // clicking the link to proceed (since the problem that triggered the error
@@ -517,7 +517,7 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->updateRequirementsProblem();
     $this->clickLink(t('Continue'));
-    $this->assertText(t('No pending updates.'));
+    $this->assertText('No pending updates.');
     $this->assertSession()->linkNotExists('Administration pages');
     $this->assertEmpty($this->xpath('//main//a[contains(@href, :href)]', [':href' => 'update.php']));
     $this->clickLink('Front page');
@@ -532,7 +532,7 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->updateRequirementsProblem();
     $this->clickLink(t('Continue'));
-    $this->assertText(t('No pending updates.'));
+    $this->assertText('No pending updates.');
     $this->assertSession()->linkExists('Administration pages');
     $this->assertEmpty($this->xpath('//main//a[contains(@href, :href)]', [':href' => 'update.php']));
     $this->clickLink('Administration pages');

@@ -35,8 +35,8 @@ class UserFieldsAccessChangeTest extends UserTestBase {
     $this->drupalGet('test_user_fields_access');
 
     // User has access to name and created date by default.
-    $this->assertText(t('Name'));
-    $this->assertText(t('Created'));
+    $this->assertText('Name');
+    $this->assertText('Created');
 
     // User does not by default have access to init, mail and status.
     $this->assertNoText('Init');
@@ -49,9 +49,9 @@ class UserFieldsAccessChangeTest extends UserTestBase {
     $this->drupalGet('test_user_fields_access');
 
     // Access for init, mail and status is added in hook_entity_field_access().
-    $this->assertText(t('Init'));
-    $this->assertText(t('Email'));
-    $this->assertText(t('Status'));
+    $this->assertText('Init');
+    $this->assertText('Email');
+    $this->assertText('Status');
   }
 
   /**

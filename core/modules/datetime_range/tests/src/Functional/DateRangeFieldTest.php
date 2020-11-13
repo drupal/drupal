@@ -92,7 +92,7 @@ class DateRangeFieldTest extends DateTestBase {
       $this->drupalPostForm(NULL, $edit, t('Save'));
       preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
       $id = $match[1];
-      $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
+      $this->assertText('entity_test ' . $id . ' has been created.');
       $this->assertRaw($start_date->format($date_format));
       $this->assertNoRaw($start_date->format($time_format));
       $this->assertRaw($end_date->format($date_format));
@@ -218,7 +218,7 @@ class DateRangeFieldTest extends DateTestBase {
       $this->drupalPostForm(NULL, $edit, t('Save'));
       preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
       $id = $match[1];
-      $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
+      $this->assertText('entity_test ' . $id . ' has been created.');
 
       $this->massageTestDate($start_date);
 
@@ -325,7 +325,7 @@ class DateRangeFieldTest extends DateTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
+    $this->assertText('entity_test ' . $id . ' has been created.');
     $this->assertRaw($start_date->format($date_format));
     $this->assertRaw($start_date->format($time_format));
     $this->assertRaw($end_date->format($date_format));
@@ -410,7 +410,7 @@ class DateRangeFieldTest extends DateTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
+    $this->assertText('entity_test ' . $id . ' has been created.');
 
     $this->displayOptions = [
       'type' => 'daterange_default',
@@ -498,7 +498,7 @@ class DateRangeFieldTest extends DateTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
+    $this->assertText('entity_test ' . $id . ' has been created.');
     $this->assertRaw($start_date->format($date_format));
     $this->assertNoRaw($start_date->format($time_format));
     $this->assertRaw($end_date->format($date_format));
@@ -582,7 +582,7 @@ class DateRangeFieldTest extends DateTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
+    $this->assertText('entity_test ' . $id . ' has been created.');
 
     $this->displayOptions = [
       'type' => 'daterange_default',
@@ -770,7 +770,7 @@ class DateRangeFieldTest extends DateTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
+    $this->assertText('entity_test ' . $id . ' has been created.');
 
     $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-year", '2012')->isSelected());
     $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-month", '12')->isSelected());
@@ -825,7 +825,7 @@ class DateRangeFieldTest extends DateTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
+    $this->assertText('entity_test ' . $id . ' has been created.');
 
     $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-year", '2012')->isSelected());
     $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-month", '12')->isSelected());
@@ -871,7 +871,7 @@ class DateRangeFieldTest extends DateTestBase {
       $this->drupalPostForm(NULL, $edit, t('Save'));
       $this->assertSession()->statusCodeEquals(200);
       foreach ($expected as $expected_text) {
-        $this->assertText(t($expected_text));
+        $this->assertText($expected_text);
       }
     }
 
@@ -892,7 +892,7 @@ class DateRangeFieldTest extends DateTestBase {
     $this->assertSession()->statusCodeEquals(200);
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
+    $this->assertText('entity_test ' . $id . ' has been created.');
 
     // Test the widget to ensure zeros are not deselected on validation.
     $this->drupalGet('entity_test/add');
@@ -1201,7 +1201,7 @@ class DateRangeFieldTest extends DateTestBase {
       "{$field_name}[0][end_value][time]" => '12:00:00',
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertText('date is invalid', new FormattableMarkup('Invalid start year value %date has been caught.', ['%date' => $date_value]));
+    $this->assertText('date is invalid', 'Invalid start year value ' . $date_value . ' has been caught.');
 
     $date_value = '2012-75-01';
     $edit = [
@@ -1211,7 +1211,7 @@ class DateRangeFieldTest extends DateTestBase {
       "{$field_name}[0][end_value][time]" => '12:00:00',
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertText('date is invalid', new FormattableMarkup('Invalid start month value %date has been caught.', ['%date' => $date_value]));
+    $this->assertText('date is invalid', 'Invalid start month value ' . $date_value . ' has been caught.');
 
     $date_value = '2012-12-99';
     $edit = [
@@ -1221,7 +1221,7 @@ class DateRangeFieldTest extends DateTestBase {
       "{$field_name}[0][end_value][time]" => '12:00:00',
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertText('date is invalid', new FormattableMarkup('Invalid start day value %date has been caught.', ['%date' => $date_value]));
+    $this->assertText('date is invalid', 'Invalid start day value ' . $date_value . ' has been caught.');
 
     // Submit invalid start times and ensure they is not accepted.
     $time_value = '';
@@ -1242,7 +1242,7 @@ class DateRangeFieldTest extends DateTestBase {
       "{$field_name}[0][end_value][time]" => '12:00:00',
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertText('date is invalid', new FormattableMarkup('Invalid start hour value %time has been caught.', ['%time' => $time_value]));
+    $this->assertText('date is invalid', 'Invalid start hour value ' . $time_value . ' has been caught.');
 
     $time_value = '12:99:00';
     $edit = [
@@ -1252,7 +1252,7 @@ class DateRangeFieldTest extends DateTestBase {
       "{$field_name}[0][end_value][time]" => '12:00:00',
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertText('date is invalid', new FormattableMarkup('Invalid start minute value %time has been caught.', ['%time' => $time_value]));
+    $this->assertText('date is invalid', 'Invalid start minute value ' . $time_value . ' has been caught.');
 
     $time_value = '12:15:99';
     $edit = [
@@ -1262,7 +1262,7 @@ class DateRangeFieldTest extends DateTestBase {
       "{$field_name}[0][end_value][time]" => '12:00:00',
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertText('date is invalid', new FormattableMarkup('Invalid start second value %time has been caught.', ['%time' => $time_value]));
+    $this->assertText('date is invalid', 'Invalid start second value ' . $time_value . ' has been caught.');
 
     // Submit invalid end dates and ensure they is not accepted.
     $date_value = '';
@@ -1283,7 +1283,7 @@ class DateRangeFieldTest extends DateTestBase {
       "{$field_name}[0][end_value][time]" => '00:00:00',
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertText('date is invalid', new FormattableMarkup('Invalid end year value %date has been caught.', ['%date' => $date_value]));
+    $this->assertText('date is invalid', 'Invalid end year value ' . $date_value . ' has been caught.');
 
     $date_value = '2012-75-01';
     $edit = [
@@ -1293,7 +1293,7 @@ class DateRangeFieldTest extends DateTestBase {
       "{$field_name}[0][end_value][time]" => '00:00:00',
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertText('date is invalid', new FormattableMarkup('Invalid end month value %date has been caught.', ['%date' => $date_value]));
+    $this->assertText('date is invalid', 'Invalid end month value ' . $date_value . ' has been caught.');
 
     $date_value = '2012-12-99';
     $edit = [
@@ -1303,7 +1303,7 @@ class DateRangeFieldTest extends DateTestBase {
       "{$field_name}[0][end_value][time]" => '00:00:00',
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertText('date is invalid', new FormattableMarkup('Invalid end day value %date has been caught.', ['%date' => $date_value]));
+    $this->assertText('date is invalid', 'Invalid end day value ' . $date_value . ' has been caught.');
 
     // Submit invalid start times and ensure they is not accepted.
     $time_value = '';
@@ -1324,7 +1324,7 @@ class DateRangeFieldTest extends DateTestBase {
       "{$field_name}[0][end_value][time]" => $time_value,
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertText('date is invalid', new FormattableMarkup('Invalid end hour value %time has been caught.', ['%time' => $time_value]));
+    $this->assertText('date is invalid', 'Invalid end hour value ' . $time_value . ' has been caught.');
 
     $time_value = '12:99:00';
     $edit = [
@@ -1334,7 +1334,7 @@ class DateRangeFieldTest extends DateTestBase {
       "{$field_name}[0][end_value][time]" => $time_value,
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertText('date is invalid', new FormattableMarkup('Invalid end minute value %time has been caught.', ['%time' => $time_value]));
+    $this->assertText('date is invalid', 'Invalid end minute value ' . $time_value . ' has been caught.');
 
     $time_value = '12:15:99';
     $edit = [
@@ -1344,7 +1344,7 @@ class DateRangeFieldTest extends DateTestBase {
       "{$field_name}[0][end_value][time]" => $time_value,
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertText('date is invalid', new FormattableMarkup('Invalid end second value %time has been caught.', ['%time' => $time_value]));
+    $this->assertText('date is invalid', 'Invalid end second value ' . $time_value . ' has been caught.');
 
     $edit = [
       "{$field_name}[0][value][date]" => '2012-12-01',
@@ -1353,7 +1353,7 @@ class DateRangeFieldTest extends DateTestBase {
       "{$field_name}[0][end_value][time]" => '12:00:00',
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertText(new FormattableMarkup('The @title end date cannot be before the start date', ['@title' => $field_label]), 'End date before start date has been caught.');
+    $this->assertText('The ' . $field_label . ' end date cannot be before the start date', 'End date before start date has been caught.');
 
     $edit = [
       "{$field_name}[0][value][date]" => '2012-12-01',
@@ -1362,7 +1362,7 @@ class DateRangeFieldTest extends DateTestBase {
       "{$field_name}[0][end_value][time]" => '11:00:00',
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertText(new FormattableMarkup('The @title end date cannot be before the start date', ['@title' => $field_label]), 'End time before start time has been caught.');
+    $this->assertText('The ' . $field_label . ' end date cannot be before the start date', 'End time before start time has been caught.');
   }
 
   /**

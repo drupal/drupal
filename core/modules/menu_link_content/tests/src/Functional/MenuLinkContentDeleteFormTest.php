@@ -47,7 +47,7 @@ class MenuLinkContentDeleteFormTest extends BrowserTestBase {
       ],
       t('Save')
     );
-    $this->assertText(t('The menu link has been saved.'));
+    $this->assertText('The menu link has been saved.');
 
     $menu_link = MenuLinkContent::load(1);
     $this->drupalGet($menu_link->toUrl('delete-form'));

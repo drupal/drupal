@@ -68,7 +68,7 @@ EOD;
     ];
     // Attempt an import with a missing ID.
     $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, t('Import'));
-    $this->assertText(t('Missing ID key "@id_key" for this @entity_type import.', ['@id_key' => 'id', '@entity_type' => 'Test configuration']));
+    $this->assertText('Missing ID key "id" for this Test configuration import.');
 
     // Perform an import with no specified UUID and a unique ID.
     $this->assertNull($storage->load('first'));
@@ -84,12 +84,12 @@ EOD;
 
     // Attempt an import with an existing ID but missing UUID.
     $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, t('Import'));
-    $this->assertText(t('An entity with this machine name already exists but the import did not specify a UUID.'));
+    $this->assertText('An entity with this machine name already exists but the import did not specify a UUID.');
 
     // Attempt an import with a mismatched UUID and existing ID.
     $edit['import'] .= "\nuuid: " . $uuid->generate();
     $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, t('Import'));
-    $this->assertText(t('An entity with this machine name already exists but the UUID does not match.'));
+    $this->assertText('An entity with this machine name already exists but the UUID does not match.');
 
     // Attempt an import with a custom ID.
     $edit['custom_entity_id'] = 'custom_id';
@@ -229,7 +229,7 @@ EOD;
       'import' => Yaml::encode($config_data),
     ];
     $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, t('Import'));
-    $this->assertText(t('Can not uninstall the Configuration module as part of a configuration synchronization through the user interface.'));
+    $this->assertText('Can not uninstall the Configuration module as part of a configuration synchronization through the user interface.');
 
     // Try to import without any values.
     $this->drupalPostForm('admin/config/development/configuration/single/import', [], t('Import'));

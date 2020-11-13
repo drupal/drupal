@@ -52,7 +52,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
     $this->drupalLogin($this->drupalCreateUser(['administer display modes']));
     $this->drupalGet('admin/structure/display-modes/view');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText(t('Add view mode'));
+    $this->assertText('Add view mode');
     $this->assertSession()->linkByHrefExists('admin/structure/display-modes/view/add');
     $this->assertSession()->linkByHrefExists('admin/structure/display-modes/view/add/entity_test');
 
@@ -107,7 +107,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
     $this->drupalLogin($this->drupalCreateUser(['administer display modes']));
     $this->drupalGet('admin/structure/display-modes/form');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText(t('Add form mode'));
+    $this->assertText('Add form mode');
     $this->assertSession()->linkByHrefExists('admin/structure/display-modes/form/add');
 
     $this->drupalGet('admin/structure/display-modes/form/add/entity_test_no_label');

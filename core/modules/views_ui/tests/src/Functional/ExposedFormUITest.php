@@ -56,9 +56,9 @@ class ExposedFormUITest extends UITestBase {
     }
 
     // Error strings used in the grouped filter form validation.
-    $this->groupFormUiErrors['missing_value'] = t('A value is required if the label for this item is defined.');
-    $this->groupFormUiErrors['missing_title'] = t('A label is required if the value for this item is defined.');
-    $this->groupFormUiErrors['missing_title_empty_operator'] = t('A label is required for the specified operator.');
+    $this->groupFormUiErrors['missing_value'] = 'A value is required if the label for this item is defined.';
+    $this->groupFormUiErrors['missing_title'] = 'A label is required if the value for this item is defined.';
+    $this->groupFormUiErrors['missing_title_empty_operator'] = 'A label is required for the specified operator.';
   }
 
   /**
@@ -93,12 +93,12 @@ class ExposedFormUITest extends UITestBase {
     $edit = [];
     $edit['options[expose][identifier]'] = '';
     $this->drupalPostForm(NULL, $edit, t('Apply'));
-    $this->assertText(t('The identifier is required if the filter is exposed.'));
+    $this->assertText('The identifier is required if the filter is exposed.');
 
     $edit = [];
     $edit['options[expose][identifier]'] = 'value';
     $this->drupalPostForm(NULL, $edit, t('Apply'));
-    $this->assertText(t('This identifier is not allowed.'));
+    $this->assertText('This identifier is not allowed.');
 
     // Now check the sort criteria.
     $this->drupalGet('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/sort/created');

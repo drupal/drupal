@@ -202,7 +202,7 @@ class SessionTest extends BrowserTestBase {
     $this->assertSessionEmpty(FALSE);
     // Verify that caching was bypassed.
     $this->assertSession()->responseHeaderDoesNotExist('X-Drupal-Cache');
-    $this->assertText(t('This is a dummy message.'), 'Message was displayed.');
+    $this->assertText('This is a dummy message.', 'Message was displayed.');
     // Verify that session cookie was deleted.
     $this->assertSession()->responseHeaderMatches('Set-Cookie', '/SESS\w+=deleted/');
 

@@ -82,7 +82,7 @@ class HelpTest extends BrowserTestBase {
     // Verify that an empty section is handled correctly.
     $this->assertRaw('<h2>' . t('Empty section') . '</h2>');
     $this->assertRaw('<p>' . t('This description should appear.') . '</p>');
-    $this->assertText(t('There is currently nothing in this section.'));
+    $this->assertText('There is currently nothing in this section.');
 
     // Make sure links are properly added for modules implementing hook_help().
     foreach ($this->getModuleList() as $module => $name) {
@@ -136,7 +136,7 @@ class HelpTest extends BrowserTestBase {
         $info = \Drupal::service('extension.list.module')->getExtensionInfo($module);
         $admin_tasks = system_get_module_admin_tasks($module, $info);
         if (!empty($admin_tasks)) {
-          $this->assertText(t('@module administration pages', ['@module' => $name]));
+          $this->assertText($name . ' administration pages');
         }
         foreach ($admin_tasks as $task) {
           $this->assertSession()->linkExists($task['title']);

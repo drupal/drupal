@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\image\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\Url;
@@ -263,9 +262,9 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->assertSession()->fieldValueEquals('settings[min_resolution][y]', '10');
 
     $this->drupalGet('node/add/article');
-    $this->assertText(t('50 KB limit.'), 'Image widget max file size is displayed on article form.');
-    $this->assertText(t('Allowed types: @extensions.', ['@extensions' => $test_image_extension]), 'Image widget allowed file types displayed on article form.');
-    $this->assertText(t('Images must be larger than 10x10 pixels. Images larger than 100x100 pixels will be resized.'), 'Image widget allowed resolution displayed on article form.');
+    $this->assertText('50 KB limit.', 'Image widget max file size is displayed on article form.');
+    $this->assertText('Allowed types: ' . $test_image_extension . '.', 'Image widget allowed file types displayed on article form.');
+    $this->assertText('Images must be larger than 10x10 pixels. Images larger than 100x100 pixels will be resized.', 'Image widget allowed resolution displayed on article form.');
 
     // We have to create the article first and then edit it because the alt
     // and title fields do not display until the image has been attached.
@@ -337,7 +336,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
     // Add the required alt text.
     $this->drupalPostForm(NULL, [$field_name . '[1][alt]' => $alt], t('Save'));
-    $this->assertText(new FormattableMarkup('Article @title has been updated.', ['@title' => $node->getTitle()]));
+    $this->assertText('Article ' . $node->getTitle() . ' has been updated.');
 
     // Assert ImageWidget::process() calls FieldWidget::process().
     $this->drupalGet('node/' . $node->id() . '/edit');

@@ -37,7 +37,7 @@ class AggregatorAdminTest extends AggregatorTestBase {
       'aggregator_processors[aggregator_test_processor]' => 'aggregator_test_processor',
     ];
     $this->drupalPostForm('admin/config/services/aggregator/settings', $edit, t('Save configuration'));
-    $this->assertText(t('The configuration options have been saved.'));
+    $this->assertText('The configuration options have been saved.');
 
     // Check that settings have the correct default value.
     foreach ($edit as $name => $value) {
@@ -45,13 +45,13 @@ class AggregatorAdminTest extends AggregatorTestBase {
     }
 
     // Check for our test processor settings form.
-    $this->assertText(t('Dummy length setting'));
+    $this->assertText('Dummy length setting');
     // Change its value to ensure that settingsSubmit is called.
     $edit = [
       'dummy_length' => 100,
     ];
     $this->drupalPostForm('admin/config/services/aggregator/settings', $edit, t('Save configuration'));
-    $this->assertText(t('The configuration options have been saved.'));
+    $this->assertText('The configuration options have been saved.');
     $this->assertSession()->fieldValueEquals('dummy_length', 100);
 
     // Make sure settings form is still accessible even after uninstalling a module

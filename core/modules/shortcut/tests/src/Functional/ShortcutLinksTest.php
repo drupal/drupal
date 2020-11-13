@@ -81,7 +81,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
       ];
       $this->drupalPostForm('admin/config/user-interface/shortcut/manage/' . $set->id() . '/add-link', $form_data, t('Save'));
       $this->assertSession()->statusCodeEquals(200);
-      $this->assertText(t('Added a shortcut for @title.', ['@title' => $title]));
+      $this->assertText('Added a shortcut for ' . $title . '.');
       $saved_set = ShortcutSet::load($set->id());
       $paths = $this->getShortcutInformation($saved_set, 'link');
       $this->assertContains('internal:' . $test_path, $paths, 'Shortcut created: ' . $test_path);
@@ -199,12 +199,12 @@ class ShortcutLinksTest extends ShortcutTestBase {
 
     // Test the "Add to shortcuts" link for node view route.
     $this->clickLink('Add to Default shortcuts');
-    $this->assertText(new FormattableMarkup('Added a shortcut for @title.', ['@title' => $title]));
+    $this->assertText("Added a shortcut for $title.");
     $this->assertShortcutQuickLink('Remove from Default shortcuts');
 
     // Test the "Remove from shortcuts" link for node view route.
     $this->clickLink('Remove from Default shortcuts');
-    $this->assertText(new FormattableMarkup('The shortcut @title has been deleted.', ['@title' => $title]));
+    $this->assertText("The shortcut $title has been deleted.");
     $this->assertShortcutQuickLink('Add to Default shortcuts');
 
     \Drupal::service('module_installer')->install(['block_content']);
@@ -241,7 +241,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $titles = $this->getShortcutInformation($saved_set, 'title');
     $this->assertContains($new_link_name, $titles, 'Shortcut renamed: ' . $new_link_name);
     $this->assertSession()->linkExists($new_link_name, 0, 'Renamed shortcut link appears on the page.');
-    $this->assertText(t('The shortcut @link has been updated.', ['@link' => $new_link_name]));
+    $this->assertText('The shortcut ' . $new_link_name . ' has been updated.');
   }
 
   /**
@@ -260,7 +260,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $paths = $this->getShortcutInformation($saved_set, 'link');
     $this->assertContains('internal:' . $new_link_path, $paths, 'Shortcut path changed: ' . $new_link_path);
     $this->assertSession()->linkByHrefExists($new_link_path, 0, 'Shortcut with new path appears on the page.');
-    $this->assertText(t('The shortcut @link has been updated.', ['@link' => $shortcut->getTitle()]));
+    $this->assertText('The shortcut ' . $shortcut->getTitle() . ' has been updated.');
   }
 
   /**

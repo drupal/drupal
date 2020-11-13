@@ -52,7 +52,7 @@ class ConfigurationTest extends BrowserTestBase {
     $action_id = $edit['id'];
 
     // Make sure that the new complex action was saved properly.
-    $this->assertText(t('The action has been successfully saved.'), "Make sure we get a confirmation that we've successfully saved the complex action.");
+    $this->assertText('The action has been successfully saved.', "Make sure we get a confirmation that we've successfully saved the complex action.");
     $this->assertText($action_label, "Make sure the action label appears on the configuration page after we've saved the complex action.");
 
     // Make another POST request to the action edit page.
@@ -66,7 +66,7 @@ class ConfigurationTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Make sure that the action updated properly.
-    $this->assertText(t('The action has been successfully saved.'), "Make sure we get a confirmation that we've successfully updated the complex action.");
+    $this->assertText('The action has been successfully saved.', "Make sure we get a confirmation that we've successfully updated the complex action.");
     $this->assertNoText($action_label, "Make sure the old action label does NOT appear on the configuration page after we've updated the complex action.");
     $this->assertText($new_action_label, "Make sure the action label appears on the configuration page after we've updated the complex action.");
 
