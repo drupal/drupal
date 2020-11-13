@@ -13,20 +13,6 @@ use Drupal\Tests\BrowserTestBase;
 class UncaughtExceptionTest extends BrowserTestBase {
 
   /**
-   * Last cURL response.
-   *
-   * @var string
-   */
-  protected $response = '';
-
-  /**
-   * Last cURL info.
-   *
-   * @var array
-   */
-  protected $info = [];
-
-  /**
    * Exceptions thrown by site under test that contain this text are ignored.
    *
    * @var string
@@ -56,6 +42,9 @@ class UncaughtExceptionTest extends BrowserTestBase {
     $settings_php = file_get_contents($settings_filename);
     $settings_php .= "\ninclude_once 'core/tests/Drupal/FunctionalTests/Bootstrap/ErrorContainer.php';\n";
     $settings_php .= "\ninclude_once 'core/tests/Drupal/FunctionalTests/Bootstrap/ExceptionContainer.php';\n";
+    // Ensure we can test errors rather than being caught in
+    // \Drupal\Core\Test\HttpClientMiddleware\TestHttpClientMiddleware.
+    $settings_php .= "\ndefine('SIMPLETEST_COLLECT_ERRORS', FALSE);\n";
     file_put_contents($settings_filename, $settings_php);
 
     $settings = [];
@@ -73,9 +62,6 @@ class UncaughtExceptionTest extends BrowserTestBase {
     $this->expectedExceptionMessage = 'Oh oh, bananas in the instruments.';
     \Drupal::state()->set('error_service_test.break_bare_html_renderer', TRUE);
 
-    $this->config('system.logging')
-      ->set('error_level', ERROR_REPORTING_HIDE)
-      ->save();
     $settings = [];
     $settings['config']['system.logging']['error_level'] = (object) [
       'value' => ERROR_REPORTING_HIDE,
@@ -84,13 +70,10 @@ class UncaughtExceptionTest extends BrowserTestBase {
     $this->writeSettings($settings);
 
     $this->drupalGet('');
-    $this->assertResponse(500);
-    $this->assertText('The website encountered an unexpected error. Please try again later.');
-    $this->assertNoText($this->expectedExceptionMessage);
+    $this->assertSession()->statusCodeEquals(500);
+    $this->assertSession()->pageTextContains('The website encountered an unexpected error. Please try again later.');
+    $this->assertSession()->pageTextNotContains($this->expectedExceptionMessage);
 
-    $this->config('system.logging')
-      ->set('error_level', ERROR_REPORTING_DISPLAY_ALL)
-      ->save();
     $settings = [];
     $settings['config']['system.logging']['error_level'] = (object) [
       'value' => ERROR_REPORTING_DISPLAY_ALL,
@@ -99,9 +82,9 @@ class UncaughtExceptionTest extends BrowserTestBase {
     $this->writeSettings($settings);
 
     $this->drupalGet('');
-    $this->assertResponse(500);
-    $this->assertText('The website encountered an unexpected error. Please try again later.');
-    $this->assertText($this->expectedExceptionMessage);
+    $this->assertSession()->statusCodeEquals(500);
+    $this->assertSession()->pageTextContains('The website encountered an unexpected error. Please try again later.');
+    $this->assertSession()->pageTextContains($this->expectedExceptionMessage);
     $this->assertErrorLogged($this->expectedExceptionMessage);
   }
 
@@ -117,13 +100,13 @@ class UncaughtExceptionTest extends BrowserTestBase {
       '%function' => 'Drupal\error_test\Controller\ErrorTestController->Drupal\error_test\Controller\{closure}()',
     ];
     $this->drupalGet('error-test/generate-fatals');
-    $this->assertResponse(500);
+    $this->assertSession()->statusCodeEquals(500);
     $message = new FormattableMarkup('%type: @message in %function (line ', $fatal_error);
-    $this->assertRaw((string) $message);
-    $this->assertRaw('<pre class="backtrace">');
+    $this->assertSession()->responseContains((string) $message);
+    $this->assertSession()->responseContains('<pre class="backtrace">');
     // Ensure we are escaping but not double escaping.
-    $this->assertRaw('&#039;');
-    $this->assertNoRaw('&amp;#039;');
+    $this->assertSession()->responseContains('&#039;');
+    $this->assertSession()->responseNotContains('&amp;#039;');
   }
 
   /**
@@ -143,10 +126,10 @@ class UncaughtExceptionTest extends BrowserTestBase {
     \Drupal::state()->set('error_service_test.break_bare_html_renderer', TRUE);
 
     $this->drupalGet('');
-    $this->assertResponse(418);
-    $this->assertNoText('The website encountered an unexpected error. Please try again later.');
-    $this->assertNoText('Oh oh, bananas in the instruments');
-    $this->assertText('Oh oh, flying teapots');
+    $this->assertSession()->statusCodeEquals(418);
+    $this->assertSession()->pageTextNotContains('The website encountered an unexpected error. Please try again later.');
+    $this->assertSession()->pageTextNotContains('Oh oh, bananas in the instruments');
+    $this->assertSession()->pageTextContains('Oh oh, flying teapots');
   }
 
   /**
@@ -160,10 +143,10 @@ class UncaughtExceptionTest extends BrowserTestBase {
       $this->expectedExceptionMessage = 'Too few arguments to function Drupal\error_service_test\LonelyMonkeyClass::__construct(), 0 passed';
     }
     $this->drupalGet('broken-service-class');
-    $this->assertResponse(500);
+    $this->assertSession()->statusCodeEquals(500);
 
-    $this->assertRaw('The website encountered an unexpected error.');
-    $this->assertRaw($this->expectedExceptionMessage);
+    $this->assertSession()->pageTextContains('The website encountered an unexpected error.');
+    $this->assertSession()->pageTextContains($this->expectedExceptionMessage);
     $this->assertErrorLogged($this->expectedExceptionMessage);
   }
 
@@ -184,8 +167,8 @@ class UncaughtExceptionTest extends BrowserTestBase {
     file_put_contents($settings_filename, $settings_php);
 
     $this->drupalGet('broken-service-class');
-    $this->assertResponse(418);
-    $this->assertSame('Oh oh, flying teapots', $this->response);
+    $this->assertSession()->statusCodeEquals(418);
+    $this->assertSession()->responseContains('Oh oh, flying teapots');
   }
 
   /**
@@ -204,9 +187,9 @@ class UncaughtExceptionTest extends BrowserTestBase {
       'Drupal\FunctionalTests\Bootstrap\ErrorContainer::Drupal\FunctionalTests\Bootstrap\{closure}(): Argument #1 ($container) must be of type Drupal\FunctionalTests\Bootstrap\ErrorContainer' :
       'Argument 1 passed to Drupal\FunctionalTests\Bootstrap\ErrorContainer::Drupal\FunctionalTests\Bootstrap\{closur';
     $this->drupalGet('');
-    $this->assertResponse(500);
+    $this->assertSession()->statusCodeEquals(500);
 
-    $this->assertRaw($this->expectedExceptionMessage);
+    $this->assertSession()->pageTextContains($this->expectedExceptionMessage);
     $this->assertErrorLogged($this->expectedExceptionMessage);
   }
 
@@ -224,10 +207,10 @@ class UncaughtExceptionTest extends BrowserTestBase {
 
     $this->expectedExceptionMessage = 'Thrown exception during Container::get';
     $this->drupalGet('');
-    $this->assertResponse(500);
+    $this->assertSession()->statusCodeEquals(500);
 
-    $this->assertRaw('The website encountered an unexpected error');
-    $this->assertRaw($this->expectedExceptionMessage);
+    $this->assertSession()->pageTextContains('The website encountered an unexpected error');
+    $this->assertSession()->pageTextContains($this->expectedExceptionMessage);
     $this->assertErrorLogged($this->expectedExceptionMessage);
   }
 
@@ -261,8 +244,8 @@ class UncaughtExceptionTest extends BrowserTestBase {
     $this->writeSettings($settings);
 
     $this->drupalGet('');
-    $this->assertResponse(500);
-    $this->assertRaw('DatabaseAccessDeniedException');
+    $this->assertSession()->statusCodeEquals(500);
+    $this->assertSession()->pageTextContains('DatabaseAccessDeniedException');
     $this->assertErrorLogged($this->expectedExceptionMessage);
   }
 
@@ -277,9 +260,9 @@ class UncaughtExceptionTest extends BrowserTestBase {
     \Drupal::state()->set('error_service_test.break_logger', TRUE);
 
     $this->drupalGet('');
-    $this->assertResponse(500);
-    $this->assertText('The website encountered an unexpected error. Please try again later.');
-    $this->assertRaw($this->expectedExceptionMessage);
+    $this->assertSession()->statusCodeEquals(500);
+    $this->assertSession()->pageTextContains('The website encountered an unexpected error. Please try again later.');
+    $this->assertSession()->pageTextContains($this->expectedExceptionMessage);
 
     // Find fatal error logged to the error.log
     $errors = file(\Drupal::root() . '/' . $this->siteDirectory . '/error.log');
@@ -337,70 +320,6 @@ class UncaughtExceptionTest extends BrowserTestBase {
     // Since PHP only creates the error.log file when an actual error is
     // triggered, it is sufficient to check whether the file exists.
     $this->assertFileNotExists(DRUPAL_ROOT . '/' . $this->siteDirectory . '/error.log');
-  }
-
-  /**
-   * Retrieves a Drupal path or an absolute path.
-   *
-   * Executes a cURL request for processing errors and exceptions.
-   *
-   * @param string|\Drupal\Core\Url $path
-   *   Request path.
-   * @param array $extra_options
-   *   (optional) Curl options to pass to curl_setopt()
-   * @param array $headers
-   *   (optional) Not used.
-   */
-  protected function drupalGet($path, array $extra_options = [], array $headers = []) {
-    $url = $this->buildUrl($path, ['absolute' => TRUE]);
-
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_HEADER, FALSE);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-    curl_setopt($ch, CURLOPT_USERAGENT, drupal_generate_test_ua($this->databasePrefix));
-    $this->response = curl_exec($ch);
-    $this->info = curl_getinfo($ch);
-    curl_close($ch);
-  }
-
-  /**
-   * Asserts the page responds with the specified response code.
-   *
-   * @param int $code
-   *   Response code. For example 200 is a successful page request. For a list
-   *   of all codes see http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html.
-   */
-  protected function assertResponse($code) {
-    $this->assertSame($code, $this->info['http_code']);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function assertText($text) {
-    $this->assertStringContainsString($text, $this->response);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function assertNoText($text) {
-    $this->assertStringNotContainsString($text, $this->response);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function assertRaw($text) {
-    $this->assertText($text);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function assertNoRaw($text) {
-    $this->assertNoText($text);
   }
 
 }
