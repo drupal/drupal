@@ -240,7 +240,6 @@ cfield
 chainable
 chainedfast
 changelist
-charcodes
 checkbox's
 checkboxified
 checkboxifier
@@ -300,7 +299,6 @@ configentity
 configtranslation
 configurability
 configurator
-confirm's
 conformant
 conneg
 contaynz
@@ -333,7 +331,6 @@ cscript
 csrf
 csrftoken
 cssidentifier
-csslint
 csslintrc
 csstools
 ctags
@@ -631,7 +628,6 @@ fourcol
 fourthcolumn
 fozzie
 fqcn
-fqdn
 francais
 français
 fraîche
@@ -737,7 +733,6 @@ httpkernel
 httponly
 httpoxy
 huhuu
-humfrey
 hurlant
 hustlin
 hwldf
@@ -814,7 +809,6 @@ jssdk
 jumplinks
 juni
 junidecode
-junit
 justifyblock
 justifycenter
 justifyleft
@@ -950,7 +944,6 @@ mikey
 milli
 mimeheaders
 mimetypes
-minifiers
 minifyzombies
 minimatch
 minimise
@@ -1277,7 +1270,6 @@ prophesizing
 protossl
 proxied
 proxying
-pseudocode
 pseudotag
 ptablenode
 pterm
@@ -1471,7 +1463,6 @@ sloopal
 smacss
 smalldatetime
 smallint
-smtp
 someclass
 somecompany
 somefieldname
@@ -1872,7 +1863,6 @@ users's
 userspace
 usuario
 uuid's
-uuids
 validatable
 valign
 vals
