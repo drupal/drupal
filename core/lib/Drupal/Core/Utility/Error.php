@@ -71,6 +71,7 @@ class Error {
       'severity_level' => static::ERROR,
       'backtrace' => $backtrace,
       '@backtrace_string' => $exception->getTraceAsString(),
+      'exception' => $exception,
     ];
   }
 
@@ -86,7 +87,7 @@ class Error {
   public static function renderExceptionSafe($exception) {
     $decode = static::decodeException($exception);
     $backtrace = $decode['backtrace'];
-    unset($decode['backtrace']);
+    unset($decode['backtrace'], $decode['exception']);
     // Remove 'main()'.
     array_shift($backtrace);
 

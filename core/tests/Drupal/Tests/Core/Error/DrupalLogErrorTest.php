@@ -35,6 +35,7 @@ $error = [
   '@backtrace_string' => 'backtrace',
   'severity_level' => 0,
   'backtrace' => [],
+  'exception' => NULL,
 ];
 _drupal_log_error($error, TRUE);
 EOT;
