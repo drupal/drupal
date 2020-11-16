@@ -888,11 +888,6 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $this->container->get('state')->set('config_translation_test_config_translation_info_alter', TRUE);
     $this->container->get('plugin.manager.config_translation.mapper')->clearCachedDefinitions();
 
-    // Check out if the translation page has the altered in settings.
-    $this->drupalGet('admin/config/system/site-information/translate/fr/add');
-    $this->assertText('Feed channel');
-    $this->assertText('Feed description');
-
     // Check if the translation page does not have the altered out settings.
     $this->drupalGet('admin/config/people/accounts/translate/fr/add');
     $this->assertText('Name');

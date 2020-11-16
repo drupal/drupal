@@ -161,14 +161,13 @@ abstract class AggregatorTestBase extends BrowserTestBase {
   public function getDefaultFeedItemCount() {
     // Our tests are based off of rss.xml, so let's find out how many elements
     // should be related.
-    $feed_count = \Drupal::entityQuery('node')
+    return \Drupal::entityQuery('node')
       ->condition('promote', NodeInterface::PROMOTED)
       ->condition('status', NodeInterface::PUBLISHED)
       ->accessCheck(FALSE)
-      ->range(0, $this->config('system.rss')->get('items.limit'))
+      ->range(0, 10)
       ->count()
       ->execute();
-    return min($feed_count, 10);
   }
 
   /**

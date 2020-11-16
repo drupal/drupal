@@ -502,8 +502,6 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     $this->doSettingsPageTest('admin/config/system/site-information');
     // Test the account settings page.
     $this->doSettingsPageTest('admin/config/people/accounts');
-    // Test the RSS settings page.
-    $this->doSettingsPageTest('admin/config/services/rss-publishing');
   }
 
 }

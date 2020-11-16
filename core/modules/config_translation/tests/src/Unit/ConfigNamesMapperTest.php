@@ -469,7 +469,6 @@ class ConfigNamesMapperTest extends UnitTestCase {
       ],
       'system.rss' => [
         'items' => [
-          'limit' => 10,
           'view_mode' => 'rss',
         ],
       ],

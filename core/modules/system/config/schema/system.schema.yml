@@ -196,20 +196,10 @@ system.rss:
   type: config_object
   label: 'Feed settings'
   mapping:
-    channel:
-      type: mapping
-      label: 'Feed channel'
-      mapping:
-        description:
-          type: text
-          label: 'Feed description'
     items:
       type: mapping
       label: 'Feed items'
       mapping:
-        limit:
-          type: integer
-          label: 'Feed item limit'
         view_mode:
           type: string
           label: 'Feed content'

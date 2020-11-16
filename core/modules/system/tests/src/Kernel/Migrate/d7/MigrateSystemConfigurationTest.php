@@ -94,14 +94,9 @@ class MigrateSystemConfigurationTest extends MigrateDrupal7TestBase {
       'stale_file_threshold' => 2592000,
     ],
     'system.rss' => [
-      'channel' => [
-        'description' => '',
-      ],
       'items' => [
-        'limit' => 27,
         'view_mode' => 'fulltext',
       ],
-      'langcode' => 'en',
     ],
     'system.site' => [
       // uuid is not handled by the migration.

@@ -91,16 +91,9 @@ class MigrateSystemConfigurationTest extends MigrateDrupal6TestBase {
       'stale_file_threshold' => 2592000,
     ],
     'system.rss' => [
-      // channel is not handled by the migration.
-      'channel' => [
-        'description' => '',
-      ],
       'items' => [
-        'limit' => 10,
         'view_mode' => 'title',
       ],
-      // langcode is not handled by the migration.
-      'langcode' => 'en',
     ],
     'system.site' => [
       // uuid is not handled by the migration.
