@@ -34,13 +34,13 @@ class UserRolesAssignmentTest extends BrowserTestBase {
     $account = $this->drupalCreateUser();
 
     // Assign the role to the user.
-    $this->drupalPostForm('user/' . $account->id() . '/edit', ["roles[$rid]" => $rid], t('Save'));
+    $this->drupalPostForm('user/' . $account->id() . '/edit', ["roles[$rid]" => $rid], 'Save');
     $this->assertText('The changes have been saved.');
     $this->assertSession()->checkboxChecked('edit-roles-' . $rid);
     $this->userLoadAndCheckRoleAssigned($account, $rid);
 
     // Remove the role from the user.
-    $this->drupalPostForm('user/' . $account->id() . '/edit', ["roles[$rid]" => FALSE], t('Save'));
+    $this->drupalPostForm('user/' . $account->id() . '/edit', ["roles[$rid]" => FALSE], 'Save');
     $this->assertText('The changes have been saved.');
     $this->assertSession()->checkboxNotChecked('edit-roles-' . $rid);
     $this->userLoadAndCheckRoleAssigned($account, $rid, FALSE);
@@ -60,7 +60,7 @@ class UserRolesAssignmentTest extends BrowserTestBase {
       'pass[pass2]' => $pass,
       "roles[$rid]" => $rid,
     ];
-    $this->drupalPostForm('admin/people/create', $edit, t('Create new account'));
+    $this->drupalPostForm('admin/people/create', $edit, 'Create new account');
     $this->assertText('Created a new user account for ' . $edit['name'] . '.');
     // Get the newly added user.
     $account = user_load_by_name($edit['name']);
@@ -70,7 +70,7 @@ class UserRolesAssignmentTest extends BrowserTestBase {
     $this->userLoadAndCheckRoleAssigned($account, $rid);
 
     // Remove the role again.
-    $this->drupalPostForm('user/' . $account->id() . '/edit', ["roles[$rid]" => FALSE], t('Save'));
+    $this->drupalPostForm('user/' . $account->id() . '/edit', ["roles[$rid]" => FALSE], 'Save');
     $this->assertText('The changes have been saved.');
     $this->assertSession()->checkboxNotChecked('edit-roles-' . $rid);
     $this->userLoadAndCheckRoleAssigned($account, $rid, FALSE);

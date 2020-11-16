@@ -76,7 +76,7 @@ class DisplayFeedTranslationTest extends ViewTestBase {
       'settings[node][page][translatable]' => TRUE,
       'settings[node][page][settings][language][language_alterable]' => TRUE,
     ];
-    $this->drupalPostForm('admin/config/regional/content-language', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/regional/content-language', $edit, 'Save configuration');
 
     // Rebuild the container so that the new languages are picked up by services
     // that hold a list of languages.

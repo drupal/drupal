@@ -56,7 +56,7 @@ class StandardTest extends BrowserTestBase {
     $this->drupalPostForm(NULL, [
       'region' => 'sidebar_first',
       'id' => 'main_navigation',
-    ], t('Save block'));
+    ], 'Save block');
     // Verify admin user can see the block.
     $this->drupalGet('');
     $this->assertText('Main navigation');
@@ -92,7 +92,7 @@ class StandardTest extends BrowserTestBase {
     $this->drupalPostForm(NULL, [
       'subject[0][value]' => 'Barfoo',
       'comment_body[0][value]' => 'Then she picked out two somebodies, Sally and me',
-    ], t('Save'));
+    ], 'Save');
     // Fetch the feed.
     $this->drupalGet('rss.xml');
     $this->assertText('Foobar');

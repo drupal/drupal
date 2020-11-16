@@ -92,7 +92,7 @@ class BulkFormAccessTest extends NodeTestBase {
       'node_bulk_form[0]' => TRUE,
       'action' => 'node_unpublish_action',
     ];
-    $this->drupalPostForm('test-node-bulk-form', $edit, t('Apply to selected items'));
+    $this->drupalPostForm('test-node-bulk-form', $edit, 'Apply to selected items');
     $this->assertRaw(new FormattableMarkup('No access to execute %action on the @entity_type_label %entity_label.', [
       '%action' => 'Unpublish content',
       '@entity_type_label' => 'Content',
@@ -120,7 +120,7 @@ class BulkFormAccessTest extends NodeTestBase {
       'node_bulk_form[0]' => TRUE,
       'action' => 'node_unpublish_action',
     ];
-    $this->drupalPostForm('test-node-bulk-form', $edit, t('Apply to selected items'));
+    $this->drupalPostForm('test-node-bulk-form', $edit, 'Apply to selected items');
     // Test that the action message isn't shown.
     $this->assertNoRaw(new FormattableMarkup('%action was applied to 1 item.', [
       '%action' => 'Unpublish content',
@@ -136,7 +136,7 @@ class BulkFormAccessTest extends NodeTestBase {
       'node_bulk_form[0]' => TRUE,
       'action' => 'node_delete_action',
     ];
-    $this->drupalPostForm('test-node-bulk-form', $edit, t('Apply to selected items'));
+    $this->drupalPostForm('test-node-bulk-form', $edit, 'Apply to selected items');
     // Test that the action message isn't shown.
     $this->assertRaw(new FormattableMarkup('No access to execute %action on the @entity_type_label %entity_label.', [
       '%action' => 'Delete content',
@@ -190,8 +190,8 @@ class BulkFormAccessTest extends NodeTestBase {
       'node_bulk_form[1]' => TRUE,
       'action' => 'node_delete_action',
     ];
-    $this->drupalPostForm('test-node-bulk-form', $edit, t('Apply to selected items'));
-    $this->drupalPostForm(NULL, [], t('Delete'));
+    $this->drupalPostForm('test-node-bulk-form', $edit, 'Apply to selected items');
+    $this->drupalPostForm(NULL, [], 'Delete');
     // Ensure the private node still exists.
     $private_node = Node::load($private_node->id());
     $this->assertNotNull($private_node, 'The private node has not been deleted.');

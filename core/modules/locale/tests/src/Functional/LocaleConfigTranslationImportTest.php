@@ -64,7 +64,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
     $edit = [
       'authenticated[translate interface]' => 'translate interface',
     ];
-    $this->drupalPostForm('admin/people/permissions', $edit, t('Save permissions'));
+    $this->drupalPostForm('admin/people/permissions', $edit, 'Save permissions');
 
     // Check and update the translation status. This will import the Afrikaans
     // translations of locale_test_translate module.
@@ -76,7 +76,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
     $status['drupal']['af']->type = 'current';
     \Drupal::state()->set('locale.translation_status', $status);
 
-    $this->drupalPostForm('admin/reports/translations', [], t('Update translations'));
+    $this->drupalPostForm('admin/reports/translations', [], 'Update translations');
 
     // Check if configuration translations have been imported.
     $override = \Drupal::languageManager()->getLanguageConfigOverride('af', 'system.maintenance');
@@ -115,7 +115,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
       ->save();
 
     // Add predefined language.
-    $this->drupalPostForm('admin/config/regional/language/add', ['predefined_langcode' => 'af'], t('Add language'));
+    $this->drupalPostForm('admin/config/regional/language/add', ['predefined_langcode' => 'af'], 'Add language');
 
     // Add the system branding block to the page.
     $this->drupalPlaceBlock('system_branding_block', ['region' => 'header', 'id' => 'site-branding']);
@@ -137,7 +137,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
       ->save();
 
     // Install any module.
-    $this->drupalPostForm('admin/modules', ['modules[dblog][enable]' => 'dblog'], t('Install'));
+    $this->drupalPostForm('admin/modules', ['modules[dblog][enable]' => 'dblog'], 'Install');
     $this->assertText('Module Database Logging has been enabled.');
 
     // Get the front page and ensure that the translated configuration still
@@ -181,7 +181,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
       ->save();
 
     // Add predefined language.
-    $this->drupalPostForm('admin/config/regional/language/add', ['predefined_langcode' => 'af'], t('Add language'));
+    $this->drupalPostForm('admin/config/regional/language/add', ['predefined_langcode' => 'af'], 'Add language');
 
     $override = \Drupal::languageManager()->getLanguageConfigOverride('af', 'locale_test_translate.settings');
     $this->assertEqual(['translatable_default_with_translation' => 'Locale can translate Afrikaans'], $override->get());
@@ -226,7 +226,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
       ->save();
 
     // Add predefined language.
-    $this->drupalPostForm('admin/config/regional/language/add', ['predefined_langcode' => 'af'], t('Add language'));
+    $this->drupalPostForm('admin/config/regional/language/add', ['predefined_langcode' => 'af'], 'Add language');
 
     $override = \Drupal::languageManager()->getLanguageConfigOverride('af', 'locale_test_translate.settings');
     // Update test configuration.
@@ -247,14 +247,14 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
       'langcode' => 'af',
       'translation' => 'all',
     ];
-    $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
+    $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
     $textareas = $this->xpath('//textarea');
     $textarea = current($textareas);
     $lid = $textarea->getAttribute('name');
     $edit = [
       $lid => '',
     ];
-    $this->drupalPostForm('admin/config/regional/translate', $edit, t('Save translations'));
+    $this->drupalPostForm('admin/config/regional/translate', $edit, 'Save translations');
 
     $override = \Drupal::languageManager()->getLanguageConfigOverride('af', 'locale_test_translate.settings');
     $expected = [

@@ -90,7 +90,7 @@ class NodeAccessTest extends ModerationStateTestBase {
     $this->drupalPostForm(NULL, [
       'title[0][value]' => 'moderated content',
       'moderation_state[0][state]' => 'draft',
-    ], t('Save'));
+    ], 'Save');
     $node = $this->getNodeByTitle('moderated content');
     if (!$node) {
       $this->fail('Test node was not saved correctly.');
@@ -120,7 +120,7 @@ class NodeAccessTest extends ModerationStateTestBase {
     $this->drupalLogin($this->adminUser);
     $this->drupalPostForm($edit_path, [
       'moderation_state[0][state]' => 'published',
-    ], t('Save'));
+    ], 'Save');
 
     // Ensure access works correctly for anonymous users.
     $this->drupalLogout();
@@ -138,7 +138,7 @@ class NodeAccessTest extends ModerationStateTestBase {
     $this->drupalPostForm($edit_path, [
       'title[0][value]' => 'moderated content revised',
       'moderation_state[0][state]' => 'draft',
-    ], t('Save'));
+    ], 'Save');
 
     $this->drupalLogin($user);
 
@@ -184,7 +184,7 @@ class NodeAccessTest extends ModerationStateTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Verify the moderation form is in place by publishing the node.
-    $this->drupalPostForm(NULL, [], t('Apply'));
+    $this->drupalPostForm(NULL, [], 'Apply');
     $node = \Drupal::entityTypeManager()->getStorage('node')->loadUnchanged($node->id());
     $this->assertEquals('published', $node->moderation_state->value);
   }

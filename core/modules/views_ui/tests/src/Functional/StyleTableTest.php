@@ -30,7 +30,7 @@ class StyleTableTest extends UITestBase {
     $view['page[style][style_plugin]'] = 'table';
     $view['page[title]'] = $this->randomMachineName(16);
     $view['page[path]'] = $view['id'];
-    $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
+    $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
 
     $view = Views::getView($view['id']);
     $view->initHandlers();

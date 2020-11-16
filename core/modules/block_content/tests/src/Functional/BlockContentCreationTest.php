@@ -56,7 +56,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $edit = [];
     $edit['info[0][value]'] = 'Test Block';
     $edit['body[0][value]'] = $this->randomMachineName(16);
-    $this->drupalPostForm('block/add/basic', $edit, t('Save'));
+    $this->drupalPostForm('block/add/basic', $edit, 'Save');
 
     // Check that the Basic block has been created.
     $this->assertRaw(new FormattableMarkup('@block %name has been created.', [
@@ -76,7 +76,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
 
     // Check that attempting to create another block with the same value for
     // 'info' returns an error.
-    $this->drupalPostForm('block/add/basic', $edit, t('Save'));
+    $this->drupalPostForm('block/add/basic', $edit, 'Save');
 
     // Check that the Basic block has been created.
     $this->assertRaw(new FormattableMarkup('A custom block with block description %value already exists.', [
@@ -96,7 +96,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
       'id' => 'test_view_mode',
       'label' => 'Test View Mode',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $this->assertRaw(t('Saved the %label view mode.', ['%label' => $edit['label']]));
 
     $this->drupalLogin($this->adminUser);
@@ -105,7 +105,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $edit = [];
     $edit['info[0][value]'] = 'Test Block';
     $edit['body[0][value]'] = $this->randomMachineName(16);
-    $this->drupalPostForm('block/add/basic', $edit, t('Save'));
+    $this->drupalPostForm('block/add/basic', $edit, 'Save');
 
     // Check that the Basic block has been created.
     $this->assertRaw(new FormattableMarkup('@block %name has been created.', [
@@ -114,7 +114,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     ]));
 
     // Save our block permanently
-    $this->drupalPostForm(NULL, ['region' => 'content'], t('Save block'));
+    $this->drupalPostForm(NULL, ['region' => 'content'], 'Save block');
 
     // Set test_view_mode as a custom display to be available on the list.
     $this->drupalGet('admin/structure/block/block-content');
@@ -124,7 +124,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $custom_view_mode = [
       'display_modes_custom[test_view_mode]' => 1,
     ];
-    $this->drupalPostForm(NULL, $custom_view_mode, t('Save'));
+    $this->drupalPostForm(NULL, $custom_view_mode, 'Save');
 
     // Go to the configure page and change the view mode.
     $this->drupalGet('admin/structure/block/manage/testblock');
@@ -136,7 +136,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->assertSession()->optionExists('edit-settings-view-mode', 'test_view_mode');
 
     $view_mode['settings[view_mode]'] = 'test_view_mode';
-    $this->drupalPostForm(NULL, $view_mode, t('Save block'));
+    $this->drupalPostForm(NULL, $view_mode, 'Save block');
 
     // Check that the view mode setting is shown because more than one exists.
     $this->drupalGet('admin/structure/block/manage/testblock');
@@ -145,7 +145,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     // Change the view mode.
     $view_mode['region'] = 'content';
     $view_mode['settings[view_mode]'] = 'test_view_mode';
-    $this->drupalPostForm(NULL, $view_mode, t('Save block'));
+    $this->drupalPostForm(NULL, $view_mode, 'Save block');
 
     // Go to the configure page and verify the view mode has changed.
     $this->drupalGet('admin/structure/block/manage/testblock');
@@ -160,7 +160,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
 
     // Check that attempting to create another block with the same value for
     // 'info' returns an error.
-    $this->drupalPostForm('block/add/basic', $edit, t('Save'));
+    $this->drupalPostForm('block/add/basic', $edit, 'Save');
 
     // Check that the Basic block has been created.
     $this->assertRaw(new FormattableMarkup('A custom block with block description %value already exists.', [
@@ -180,7 +180,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $edit['info[0][value]'] = $this->randomMachineName(8);
     $edit['body[0][value]'] = $this->randomMachineName(16);
     // Don't pass the custom block type in the url so the default is forced.
-    $this->drupalPostForm('block/add', $edit, t('Save'));
+    $this->drupalPostForm('block/add', $edit, 'Save');
 
     // Check that the block has been created and that it is a basic block.
     $this->assertRaw(new FormattableMarkup('@block %name has been created.', [
@@ -229,7 +229,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $edit['info[0][value]'] = $this->randomMachineName(8);
     $body = $this->randomMachineName(16);
     $edit['body[0][value]'] = $body;
-    $this->drupalPostForm('block/add/basic', $edit, t('Save'));
+    $this->drupalPostForm('block/add/basic', $edit, 'Save');
 
     // Place the block.
     $instance = [
@@ -239,7 +239,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     ];
     $block = BlockContent::load(1);
     $url = 'admin/structure/block/add/block_content:' . $block->uuid() . '/' . $this->config('system.theme')->get('default');
-    $this->drupalPostForm($url, $instance, t('Save block'));
+    $this->drupalPostForm($url, $instance, 'Save block');
 
     $block = BlockContent::load(1);
 
@@ -262,7 +262,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $edit2['info[0][value]'] = $this->randomMachineName(8);
     $body2 = $this->randomMachineName(16);
     $edit2['body[0][value]'] = $body2;
-    $this->drupalPostForm('block/add/basic', $edit2, t('Save'));
+    $this->drupalPostForm('block/add/basic', $edit2, 'Save');
 
     $this->assertNoRaw('Error message');
 
@@ -272,7 +272,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $edit3['info[0][value]'] = $this->randomMachineName(8);
     $body = $this->randomMachineName(16);
     $edit3['body[0][value]'] = $body;
-    $this->drupalPostForm('block/add/basic', $edit3, t('Save'));
+    $this->drupalPostForm('block/add/basic', $edit3, 'Save');
 
     // Show the delete confirm form.
     $this->drupalGet('block/3/delete');
@@ -293,7 +293,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     ];
     $block = BlockContent::load(1);
     $url = 'admin/structure/block/add/block_content:' . $block->uuid() . '/' . $this->config('system.theme')->get('default');
-    $this->drupalPostForm($url, $instance, t('Save block'));
+    $this->drupalPostForm($url, $instance, 'Save block');
 
     $dependencies = \Drupal::service('config.manager')->findConfigEntityDependentsAsEntities('content', [$block->getConfigDependencyName()]);
     $block_placement = reset($dependencies);

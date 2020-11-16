@@ -81,7 +81,7 @@ class CronRunTest extends BrowserTestBase {
     $this->assertTrue($cron_last < \Drupal::state()->get('system.cron_last'), 'Cron runs when the cron interval is passed.');
 
     // Disable cron through the interface by setting the interval to zero.
-    $this->drupalPostForm('admin/config/system/cron', ['interval' => 0], t('Save configuration'));
+    $this->drupalPostForm('admin/config/system/cron', ['interval' => 0], 'Save configuration');
     $this->assertText('The configuration options have been saved.');
     $this->drupalLogout();
 

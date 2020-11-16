@@ -125,7 +125,7 @@ class DisplayPageWebTest extends ViewTestBase {
     // Update the menu link.
     $this->drupalPostForm("admin/structure/menu/link/views_view:views.test_page_display_menu.page_3/edit", [
       'title' => 'New title',
-    ], t('Save'));
+    ], 'Save');
 
     $this->drupalGet('<front>');
     $menu_link = $this->cssSelect('nav.block-menu ul.menu a');

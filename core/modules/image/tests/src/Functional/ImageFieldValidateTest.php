@@ -41,8 +41,8 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $this->assertFileExists($expected_path . '/' . $image_files[0]->filename);
 
     // Remove the image.
-    $this->drupalPostForm('node/' . $node . '/edit', [], t('Remove'));
-    $this->drupalPostForm(NULL, [], t('Save'));
+    $this->drupalPostForm('node/' . $node . '/edit', [], 'Remove');
+    $this->drupalPostForm(NULL, [], 'Save');
 
     // Get invalid image test files from simpletest.
     $dir = 'core/tests/fixtures/files';
@@ -60,7 +60,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $edit = [
       'files[' . $field_name . '_0]' => $file_system->realpath($zero_size_image->uri),
     ];
-    $this->drupalPostForm('node/' . $node . '/edit', $edit, t('Upload'));
+    $this->drupalPostForm('node/' . $node . '/edit', $edit, 'Upload');
     $this->assertFileNotExists($expected_path . '/' . $zero_size_image->filename);
 
     // Try uploading an invalid image.
@@ -68,7 +68,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $edit = [
       'files[' . $field_name . '_0]' => $file_system->realpath($invalid_image->uri),
     ];
-    $this->drupalPostForm('node/' . $node . '/edit', $edit, t('Upload'));
+    $this->drupalPostForm('node/' . $node . '/edit', $edit, 'Upload');
     $this->assertFileNotExists($expected_path . '/' . $invalid_image->filename);
 
     // Upload a valid image again.
@@ -76,7 +76,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $edit = [
       'files[' . $field_name . '_0]' => $file_system->realpath($valid_image->uri),
     ];
-    $this->drupalPostForm('node/' . $node . '/edit', $edit, t('Upload'));
+    $this->drupalPostForm('node/' . $node . '/edit', $edit, 'Upload');
     $this->assertFileExists($expected_path . '/' . $valid_image->filename);
   }
 
@@ -196,7 +196,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $edit = [
       'title[0][value]' => $this->randomMachineName(),
     ];
-    $this->drupalPostForm('node/add/article', $edit, t('Save'));
+    $this->drupalPostForm('node/add/article', $edit, 'Save');
 
     $this->assertNoText('Alternative text field is required.');
     $this->assertNoText('Title field is required.');
@@ -209,7 +209,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $edit = [
       'title[0][value]' => $this->randomMachineName(),
     ];
-    $this->drupalPostForm('node/add/article', $edit, t('Save'));
+    $this->drupalPostForm('node/add/article', $edit, 'Save');
 
     $this->assertNoText('Alternative text field is required.');
     $this->assertNoText('Title field is required.');
@@ -232,7 +232,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $edit = [
       'title[0][value]' => 'Article with edit-access-allowed image field',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $this->assertSession()->pageTextContains($expected_page_text_when_edit_access_allowed);
 
     // Test with field edit access forbidden.
@@ -242,7 +242,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $edit = [
       'title[0][value]' => 'Article with edit-access-forbidden image field',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $this->assertSession()->pageTextContains($expected_page_text_when_edit_access_forbidden);
   }
 

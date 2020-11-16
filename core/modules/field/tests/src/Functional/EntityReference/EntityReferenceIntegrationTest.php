@@ -92,7 +92,7 @@ class EntityReferenceIntegrationTest extends BrowserTestBase {
         // Test an input of the entity label without an ' (entity_id)' suffix.
         $this->fieldName . '[1][target_id]' => $referenced_entities[1]->label(),
       ];
-      $this->drupalPostForm($this->entityType . '/add', $edit, t('Save'));
+      $this->drupalPostForm($this->entityType . '/add', $edit, 'Save');
       $this->assertFieldValues($entity_name, $referenced_entities);
 
       // Try to post the form again with no modification and check if the field
@@ -104,7 +104,7 @@ class EntityReferenceIntegrationTest extends BrowserTestBase {
       $this->assertSession()->fieldValueEquals($this->fieldName . '[0][target_id]', $referenced_entities[0]->label() . ' (' . $referenced_entities[0]->id() . ')');
       $this->assertSession()->fieldValueEquals($this->fieldName . '[1][target_id]', $referenced_entities[1]->label() . ' (' . $referenced_entities[1]->id() . ')');
 
-      $this->drupalPostForm(NULL, [], t('Save'));
+      $this->drupalPostForm(NULL, [], 'Save');
       $this->assertFieldValues($entity_name, $referenced_entities);
 
       // Test the 'entity_reference_autocomplete_tags' widget.
@@ -121,7 +121,7 @@ class EntityReferenceIntegrationTest extends BrowserTestBase {
         'name[0][value]' => $entity_name,
         $this->fieldName . '[target_id]' => $target_id,
       ];
-      $this->drupalPostForm($this->entityType . '/add', $edit, t('Save'));
+      $this->drupalPostForm($this->entityType . '/add', $edit, 'Save');
       $this->assertFieldValues($entity_name, $referenced_entities);
 
       // Try to post the form again with no modification and check if the field
@@ -130,7 +130,7 @@ class EntityReferenceIntegrationTest extends BrowserTestBase {
       $this->drupalGet($this->entityType . '/manage/' . $entity->id() . '/edit');
       $this->assertSession()->fieldValueEquals($this->fieldName . '[target_id]', $target_id . ' (' . $referenced_entities[1]->id() . ')');
 
-      $this->drupalPostForm(NULL, [], t('Save'));
+      $this->drupalPostForm(NULL, [], 'Save');
       $this->assertFieldValues($entity_name, $referenced_entities);
 
       // Test all the other widgets supported by the entity reference field.
@@ -147,7 +147,7 @@ class EntityReferenceIntegrationTest extends BrowserTestBase {
             'type' => $widget_type,
           ])->save();
 
-        $this->drupalPostForm($this->entityType . '/manage/' . $entity->id() . '/edit', [], t('Save'));
+        $this->drupalPostForm($this->entityType . '/manage/' . $entity->id() . '/edit', [], 'Save');
         $this->assertFieldValues($entity_name, $referenced_entities);
       }
 
@@ -163,7 +163,7 @@ class EntityReferenceIntegrationTest extends BrowserTestBase {
       if ($key == 'content') {
         $field_edit['settings[handler_settings][target_bundles][' . $referenced_entities[0]->getEntityTypeId() . ']'] = TRUE;
       }
-      $this->drupalPostForm($this->entityType . '/structure/' . $this->bundle . '/fields/' . $this->entityType . '.' . $this->bundle . '.' . $this->fieldName, $field_edit, t('Save settings'));
+      $this->drupalPostForm($this->entityType . '/structure/' . $this->bundle . '/fields/' . $this->entityType . '.' . $this->bundle . '.' . $this->fieldName, $field_edit, 'Save settings');
       // Ensure the configuration has the expected dependency on the entity that
       // is being used a default value.
       $field = FieldConfig::loadByName($this->entityType, $this->bundle, $this->fieldName);

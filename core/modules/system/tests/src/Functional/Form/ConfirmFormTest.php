@@ -38,12 +38,12 @@ class ConfirmFormTest extends BrowserTestBase {
     $this->assertSession()->addressEquals('form-test/autocomplete');
 
     // Test submitting the form.
-    $this->drupalPostForm('form-test/confirm-form', [], t('ConfirmFormTestForm::getConfirmText().'));
+    $this->drupalPostForm('form-test/confirm-form', [], 'ConfirmFormTestForm::getConfirmText().');
     $this->assertText('The ConfirmFormTestForm::submitForm() method was used for this form.');
     $this->assertSession()->addressEquals('');
 
     // Test submitting the form with a destination.
-    $this->drupalPostForm('form-test/confirm-form', [], t('ConfirmFormTestForm::getConfirmText().'), ['query' => ['destination' => 'admin/config']]);
+    $this->drupalPostForm('form-test/confirm-form', [], 'ConfirmFormTestForm::getConfirmText().', ['query' => ['destination' => 'admin/config']]);
     $this->assertSession()->addressEquals('admin/config');
 
     // Test cancelling the form with a complex destination.

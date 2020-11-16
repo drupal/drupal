@@ -69,14 +69,14 @@ class OptionsFloatFieldImportTest extends FieldTestBase {
 
     // Set the active to not use dots in the allowed values key names.
     $edit = ['settings[allowed_values]' => "0|Zero\n1|One"];
-    $this->drupalPostForm($admin_path, $edit, t('Save field settings'));
+    $this->drupalPostForm($admin_path, $edit, 'Save field settings');
     $field_storage = FieldStorageConfig::loadByName('node', $field_name);
     $this->assertIdentical($field_storage->getSetting('allowed_values'), $array = ['0' => 'Zero', '1' => 'One']);
 
     // Import configuration with dots in the allowed values key names. This
     // tests \Drupal\Core\Config\Entity\ConfigEntityStorage::importUpdate().
     $this->drupalGet('admin/config/development/configuration');
-    $this->drupalPostForm(NULL, [], t('Import all'));
+    $this->drupalPostForm(NULL, [], 'Import all');
     $field_storage = FieldStorageConfig::loadByName('node', $field_name);
     $this->assertIdentical($field_storage->getSetting('allowed_values'), $array = ['0' => 'Zero', '0.5' => 'Point five']);
 
@@ -85,7 +85,7 @@ class OptionsFloatFieldImportTest extends FieldTestBase {
     FieldConfig::loadByName('node', $type, $field_name)->delete();
 
     $this->drupalGet('admin/config/development/configuration');
-    $this->drupalPostForm(NULL, [], t('Import all'));
+    $this->drupalPostForm(NULL, [], 'Import all');
     $field_storage = FieldStorageConfig::loadByName('node', $field_name);
     $this->assertIdentical($field_storage->getSetting('allowed_values'), $array = ['0' => 'Zero', '0.5' => 'Point five']);
   }

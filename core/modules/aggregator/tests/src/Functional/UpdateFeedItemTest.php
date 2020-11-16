@@ -43,7 +43,7 @@ class UpdateFeedItemTest extends AggregatorTestBase {
     $this->drupalGet($edit['url[0][value]']);
     $this->assertSession()->statusCodeEquals(200);
 
-    $this->drupalPostForm('aggregator/sources/add', $edit, t('Save'));
+    $this->drupalPostForm('aggregator/sources/add', $edit, 'Save');
     $this->assertText('The feed ' . $edit['title[0][value]'] . ' has been added.', new FormattableMarkup('The feed @name has been added.', ['@name' => $edit['title[0][value]']]));
 
     // Verify that the creation message contains a link to a feed.

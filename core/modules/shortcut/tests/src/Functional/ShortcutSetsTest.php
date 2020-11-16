@@ -42,7 +42,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
       'label' => $this->randomMachineName(),
       'id' => strtolower($this->randomMachineName()),
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $new_set = $this->container->get('entity_type.manager')->getStorage('shortcut_set')->load($edit['id']);
     $this->assertIdentical($new_set->id(), $edit['id'], 'Successfully created a shortcut set.');
     $this->drupalGet('user/' . $this->adminUser->id() . '/shortcuts');
@@ -93,7 +93,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
       $weight--;
     }
 
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $this->assertRaw(t('The shortcut set has been updated.'));
 
     \Drupal::entityTypeManager()->getStorage('shortcut')->resetCache();
@@ -110,7 +110,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
 
     // Attempt to switch the default shortcut set to the newly created shortcut
     // set.
-    $this->drupalPostForm('user/' . $this->adminUser->id() . '/shortcuts', ['set' => $new_set->id()], t('Change set'));
+    $this->drupalPostForm('user/' . $this->adminUser->id() . '/shortcuts', ['set' => $new_set->id()], 'Change set');
     $this->assertSession()->statusCodeEquals(200);
     $current_set = shortcut_current_displayed_set($this->adminUser);
     $this->assertTrue($new_set->id() == $current_set->id(), 'Successfully switched own shortcut set.');
@@ -136,7 +136,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
       'id' => strtolower($this->randomMachineName()),
       'label' => $this->randomString(),
     ];
-    $this->drupalPostForm('user/' . $this->adminUser->id() . '/shortcuts', $edit, t('Change set'));
+    $this->drupalPostForm('user/' . $this->adminUser->id() . '/shortcuts', $edit, 'Change set');
     $current_set = shortcut_current_displayed_set($this->adminUser);
     $this->assertNotEqual($current_set->id(), $this->set->id(), 'A shortcut set can be switched to at the same time as it is created.');
     $this->assertEqual($current_set->label(), $edit['label'], 'The new set is correctly assigned to the user.');
@@ -147,7 +147,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
    */
   public function testShortcutSetSwitchNoSetName() {
     $edit = ['set' => 'new'];
-    $this->drupalPostForm('user/' . $this->adminUser->id() . '/shortcuts', $edit, t('Change set'));
+    $this->drupalPostForm('user/' . $this->adminUser->id() . '/shortcuts', $edit, 'Change set');
     $this->assertText('The new set label is required.');
     $current_set = shortcut_current_displayed_set($this->adminUser);
     $this->assertEqual($current_set->id(), $this->set->id(), 'Attempting to switch to a new shortcut set without providing a set name does not succeed.');
@@ -164,7 +164,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
     $new_label = $this->randomMachineName();
     $this->drupalGet('admin/config/user-interface/shortcut');
     $this->clickLink(t('Edit shortcut set'));
-    $this->drupalPostForm(NULL, ['label' => $new_label], t('Save'));
+    $this->drupalPostForm(NULL, ['label' => $new_label], 'Save');
     $set = ShortcutSet::load($set->id());
     $this->assertTrue($set->label() == $new_label, 'Shortcut set has been successfully renamed.');
   }
@@ -189,7 +189,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
   public function testShortcutSetDelete() {
     $new_set = $this->generateShortcutSet($this->randomMachineName());
 
-    $this->drupalPostForm('admin/config/user-interface/shortcut/manage/' . $new_set->id() . '/delete', [], t('Delete'));
+    $this->drupalPostForm('admin/config/user-interface/shortcut/manage/' . $new_set->id() . '/delete', [], 'Delete');
     $sets = ShortcutSet::loadMultiple();
     $this->assertFalse(isset($sets[$new_set->id()]), 'Successfully deleted a shortcut set.');
   }

@@ -61,7 +61,7 @@ class NodeRevisionsUiTest extends NodeTestBase {
 
     // Uncheck the create new revision checkbox and save the node.
     $edit = ['revision' => FALSE];
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
 
     // Load the node again and check the revision is the same as before.
     $node_storage->resetCache([$node->id()]);
@@ -74,7 +74,7 @@ class NodeRevisionsUiTest extends NodeTestBase {
 
     // Submit the form without changing the checkbox.
     $edit = [];
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
 
     // Load the node again and check the revision is different from before.
     $node_storage->resetCache([$node->id()]);

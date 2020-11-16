@@ -213,7 +213,7 @@ class PathWorkspacesTest extends BrowserTestBase {
     $edit_new_translation_draft = [
       'body[0][value]' => $this->randomMachineName(),
     ];
-    $this->drupalPostForm('ro/node/' . $default_node->id() . '/edit', $edit_new_translation_draft, t('Save (this translation)'));
+    $this->drupalPostForm('ro/node/' . $default_node->id() . '/edit', $edit_new_translation_draft, 'Save (this translation)');
     // Confirm that the new draft revision was created.
     $this->assertSession()->pageTextContains($edit_new_translation_draft['body[0][value]']);
 

@@ -86,7 +86,7 @@ class NodeTypeTest extends NodeTestBase {
       'title_label' => 'title for foo',
       'type' => 'foo',
     ];
-    $this->drupalPostForm('admin/structure/types/add', $edit, t('Save and manage fields'));
+    $this->drupalPostForm('admin/structure/types/add', $edit, 'Save and manage fields');
     $type_exists = (bool) NodeType::load('foo');
     $this->assertTrue($type_exists, 'The new content type has been created in the database.');
 
@@ -120,7 +120,7 @@ class NodeTypeTest extends NodeTestBase {
     $edit = [
       'title_label' => 'Foo',
     ];
-    $this->drupalPostForm('admin/structure/types/manage/page', $edit, t('Save content type'));
+    $this->drupalPostForm('admin/structure/types/manage/page', $edit, 'Save content type');
 
     $this->drupalGet('node/add/page');
     $assert->pageTextContains('Foo');
@@ -131,7 +131,7 @@ class NodeTypeTest extends NodeTestBase {
       'name' => 'Bar',
       'description' => 'Lorem ipsum.',
     ];
-    $this->drupalPostForm('admin/structure/types/manage/page', $edit, t('Save content type'));
+    $this->drupalPostForm('admin/structure/types/manage/page', $edit, 'Save content type');
 
     $this->drupalGet('node/add');
     $assert->pageTextContains('Bar');
@@ -152,9 +152,9 @@ class NodeTypeTest extends NodeTestBase {
     $this->assertEqual($node_bundles['page']['label'], 'NewBar', 'Node type bundle cache is updated');
 
     // Remove the body field.
-    $this->drupalPostForm('admin/structure/types/manage/page/fields/node.page.body/delete', [], t('Delete'));
+    $this->drupalPostForm('admin/structure/types/manage/page/fields/node.page.body/delete', [], 'Delete');
     // Resave the settings for this type.
-    $this->drupalPostForm('admin/structure/types/manage/page', [], t('Save content type'));
+    $this->drupalPostForm('admin/structure/types/manage/page', [], 'Save content type');
     $front_page_path = Url::fromRoute('<front>')->toString();
     $this->assertBreadcrumb('admin/structure/types/manage/page/fields', [
       $front_page_path => 'Home',
@@ -219,7 +219,7 @@ class NodeTypeTest extends NodeTestBase {
     $this->drupalGet('admin/structure/types/manage/default');
     $this->clickLink(t('Delete'));
     $this->assertSession()->statusCodeEquals(200);
-    $this->drupalPostForm(NULL, [], t('Delete'));
+    $this->drupalPostForm(NULL, [], 'Delete');
     $this->assertFalse((bool) NodeType::load('default'), 'Node type with machine default deleted.');
   }
 
@@ -263,9 +263,9 @@ class NodeTypeTest extends NodeTestBase {
     $this->drupalLogin($web_user);
 
     // Delete 'article' bundle.
-    $this->drupalPostForm('admin/structure/types/manage/article/delete', [], t('Delete'));
+    $this->drupalPostForm('admin/structure/types/manage/article/delete', [], 'Delete');
     // Delete 'page' bundle.
-    $this->drupalPostForm('admin/structure/types/manage/page/delete', [], t('Delete'));
+    $this->drupalPostForm('admin/structure/types/manage/page/delete', [], 'Delete');
 
     // Navigate to content type administration screen
     $this->drupalGet('admin/structure/types');

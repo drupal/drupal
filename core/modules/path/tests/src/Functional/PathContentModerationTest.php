@@ -81,7 +81,7 @@ class PathContentModerationTest extends BrowserTestBase {
       'title[0][value]' => 'moderated content',
       'path[0][alias]' => '/moderated-content',
       'moderation_state[0][state]' => 'published',
-    ], t('Save'));
+    ], 'Save');
     $node = $this->getNodeByTitle('moderated content');
 
     // Add a pending revision with the same alias.
@@ -91,7 +91,7 @@ class PathContentModerationTest extends BrowserTestBase {
       'title[0][value]' => 'pending revision',
       'path[0][alias]' => '/moderated-content',
       'moderation_state[0][state]' => 'draft',
-    ], t('Save'));
+    ], 'Save');
     $this->assertSession()->pageTextNotContains('You can only change the URL alias for the published version of this content.');
 
     // Create some moderated content with no path alias.
@@ -101,7 +101,7 @@ class PathContentModerationTest extends BrowserTestBase {
       'title[0][value]' => 'moderated content 2',
       'path[0][alias]' => '',
       'moderation_state[0][state]' => 'published',
-    ], t('Save'));
+    ], 'Save');
     $node = $this->getNodeByTitle('moderated content 2');
 
     // Add a pending revision with a new alias.
@@ -111,7 +111,7 @@ class PathContentModerationTest extends BrowserTestBase {
       'title[0][value]' => 'pending revision',
       'path[0][alias]' => '/pending-revision',
       'moderation_state[0][state]' => 'draft',
-    ], t('Save'));
+    ], 'Save');
     $this->assertSession()->pageTextContains('You can only change the URL alias for the published version of this content.');
 
     // Create some moderated content with no path alias.
@@ -121,7 +121,7 @@ class PathContentModerationTest extends BrowserTestBase {
       'title[0][value]' => 'moderated content 3',
       'path[0][alias]' => '',
       'moderation_state[0][state]' => 'published',
-    ], t('Save'));
+    ], 'Save');
     $node = $this->getNodeByTitle('moderated content 3');
 
     // Add a pending revision with no path alias.
@@ -131,7 +131,7 @@ class PathContentModerationTest extends BrowserTestBase {
       'title[0][value]' => 'pending revision',
       'path[0][alias]' => '',
       'moderation_state[0][state]' => 'draft',
-    ], t('Save'));
+    ], 'Save');
     $this->assertSession()->pageTextNotContains('You can only change the URL alias for the published version of this content.');
   }
 
@@ -180,7 +180,7 @@ class PathContentModerationTest extends BrowserTestBase {
       'body[0][value]' => $this->randomMachineName(),
       'moderation_state[0][state]' => 'draft',
     ];
-    $this->drupalPostForm('fr/node/' . $default_node->id() . '/edit', $edit_new_translation_draft, t('Save (this translation)'));
+    $this->drupalPostForm('fr/node/' . $default_node->id() . '/edit', $edit_new_translation_draft, 'Save (this translation)');
     // Confirm that the new draft revision was created.
     $this->assertSession()->pageTextNotContains('You can only change the URL alias for the published version of this content.');
     $this->assertSession()->pageTextContains($edit_new_translation_draft['body[0][value]']);

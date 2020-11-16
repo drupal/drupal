@@ -69,12 +69,12 @@ class AreaTest extends ViewTestBase {
       $edit_path = 'admin/structure/views/nojs/handler/test_example_area/default/' . $type . '/test_example';
 
       // First setup an empty label.
-      $this->drupalPostForm($edit_path, [], t('Apply'));
+      $this->drupalPostForm($edit_path, [], 'Apply');
       $this->assertText('Test Example area');
 
       // Then setup a no empty label.
       $labels[$type] = $this->randomMachineName();
-      $this->drupalPostForm($edit_path, ['options[admin_label]' => $labels[$type]], t('Apply'));
+      $this->drupalPostForm($edit_path, ['options[admin_label]' => $labels[$type]], 'Apply');
       // Make sure that the new label appears on the site.
       $this->assertText($labels[$type]);
 

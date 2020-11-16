@@ -73,7 +73,7 @@ class ArbitraryRebuildTest extends BrowserTestBase {
       'name' => 'foo',
       'mail' => 'bar@example.com',
     ];
-    $this->drupalPostForm('user/register', $edit, t('Add another item'));
+    $this->drupalPostForm('user/register', $edit, 'Add another item');
     $this->assertText('Test a multiple valued field', 'Form has been rebuilt.');
     $this->assertSession()->fieldValueEquals('name', 'foo');
     $this->assertSession()->fieldValueEquals('mail', 'bar@example.com');

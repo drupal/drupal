@@ -92,7 +92,7 @@ class FilterFormatAccessTest extends BrowserTestBase {
         'format' => mb_strtolower($this->randomMachineName()),
         'name' => $this->randomMachineName(),
       ];
-      $this->drupalPostForm('admin/config/content/formats/add', $edit, t('Save configuration'));
+      $this->drupalPostForm('admin/config/content/formats/add', $edit, 'Save configuration');
       $this->resetFilterCaches();
       $formats[] = FilterFormat::load($edit['format']);
     }
@@ -226,7 +226,7 @@ class FilterFormatAccessTest extends BrowserTestBase {
     $edit['title[0][value]'] = $this->randomMachineName(8);
     $edit[$body_value_key] = $this->randomMachineName(16);
     $edit[$body_format_key] = $this->disallowedFormat->id();
-    $this->drupalPostForm('node/add/page', $edit, t('Save'));
+    $this->drupalPostForm('node/add/page', $edit, 'Save');
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
 
     // Try to edit with a less privileged user.
@@ -241,11 +241,11 @@ class FilterFormatAccessTest extends BrowserTestBase {
     // Verify that title can be changed, but preview displays original body.
     $new_edit = [];
     $new_edit['title[0][value]'] = $this->randomMachineName(8);
-    $this->drupalPostForm(NULL, $new_edit, t('Preview'));
+    $this->drupalPostForm(NULL, $new_edit, 'Preview');
     $this->assertText($edit[$body_value_key], 'Old body found in preview.');
 
     // Save and verify that only the title was changed.
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $new_edit, t('Save'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $new_edit, 'Save');
     $this->assertNoText($edit['title[0][value]'], 'Old title not found.');
     $this->assertText($new_edit['title[0][value]'], 'New title found.');
     $this->assertText($edit[$body_value_key], 'Old body found.');
@@ -285,7 +285,7 @@ class FilterFormatAccessTest extends BrowserTestBase {
     $new_title = $this->randomMachineName(8);
     $edit = [];
     $edit['title[0][value]'] = $new_title;
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
     $this->assertText('Text format field is required.', 'Error message is displayed.');
     $this->drupalGet('node/' . $node->id());
     $this->assertText($old_title, 'Old title found.');
@@ -293,7 +293,7 @@ class FilterFormatAccessTest extends BrowserTestBase {
 
     // Now select a new text format and make sure the node can be saved.
     $edit[$body_format_key] = filter_fallback_format();
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
     $this->assertSession()->addressEquals('node/' . $node->id());
     $this->assertText($new_title, 'New title found.');
     $this->assertNoText($old_title, 'Old title not found.');
@@ -302,7 +302,7 @@ class FilterFormatAccessTest extends BrowserTestBase {
     // other formats on the site (leaving only the fallback format).
     $this->drupalLogin($this->adminUser);
     $edit = [$body_format_key => $this->allowedFormat->id()];
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
     $this->assertSession()->addressEquals('node/' . $node->id());
     foreach (filter_formats() as $format) {
       if (!$format->isFallbackFormat()) {
@@ -320,13 +320,13 @@ class FilterFormatAccessTest extends BrowserTestBase {
     $new_title = $this->randomMachineName(8);
     $edit = [];
     $edit['title[0][value]'] = $new_title;
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
     $this->assertText('Text format field is required.', 'Error message is displayed.');
     $this->drupalGet('node/' . $node->id());
     $this->assertText($old_title, 'Old title found.');
     $this->assertNoText($new_title, 'New title not found.');
     $edit[$body_format_key] = filter_fallback_format();
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
     $this->assertSession()->addressEquals('node/' . $node->id());
     $this->assertText($new_title, 'New title found.');
     $this->assertNoText($old_title, 'Old title not found.');

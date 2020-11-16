@@ -380,11 +380,11 @@ class FormTest extends BrowserTestBase {
   public function testCheckboxProcessing() {
     // First, try to submit without the required checkbox.
     $edit = [];
-    $this->drupalPostForm('form-test/checkbox', $edit, t('Submit'));
+    $this->drupalPostForm('form-test/checkbox', $edit, 'Submit');
     $this->assertRaw(t('@name field is required.', ['@name' => 'required_checkbox']));
 
     // Now try to submit the form correctly.
-    $this->drupalPostForm(NULL, ['required_checkbox' => 1], t('Submit'));
+    $this->drupalPostForm(NULL, ['required_checkbox' => 1], 'Submit');
     $values = Json::decode($this->getSession()->getPage()->getContent());
     $expected_values = [
       'disabled_checkbox_on' => 'disabled_checkbox_on',
@@ -753,7 +753,7 @@ class FormTest extends BrowserTestBase {
 
     // Submit the form with no input, as the browser does for disabled elements,
     // and fetch the $form_state->getValues() that is passed to the submit handler.
-    $this->drupalPostForm('form-test/disabled-elements', [], t('Submit'));
+    $this->drupalPostForm('form-test/disabled-elements', [], 'Submit');
     $returned_values['normal'] = Json::decode($this->getSession()->getPage()->getContent());
 
     // Do the same with input, as could happen if JavaScript un-disables an
@@ -780,7 +780,7 @@ class FormTest extends BrowserTestBase {
       ->elementExists('css', 'input[name="hidden"]')
       ->setValue($edit['hidden']);
     unset($edit['hidden']);
-    $this->drupalPostForm(NULL, $edit, t('Submit'));
+    $this->drupalPostForm(NULL, $edit, 'Submit');
     $returned_values['hijacked'] = Json::decode($this->getSession()->getPage()->getContent());
 
     // Ensure that the returned values match the form's default values in both
@@ -890,7 +890,7 @@ class FormTest extends BrowserTestBase {
     // The value for checkboxes[two] was changed using post render to simulate
     // an input forgery.
     // @see \Drupal\form_test\Form\FormTestInputForgeryForm::postRender
-    $this->drupalPostForm(NULL, ['checkboxes[one]' => TRUE, 'checkboxes[two]' => TRUE], t('Submit'));
+    $this->drupalPostForm(NULL, ['checkboxes[one]' => TRUE, 'checkboxes[two]' => TRUE], 'Submit');
     $this->assertText('An illegal choice has been detected.', 'Input forgery was detected.');
   }
 

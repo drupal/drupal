@@ -46,7 +46,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
     $edit['name'] = $this->randomMachineName();
     $edit['description'] = $this->randomMachineName();
     $edit['vid'] = $vid;
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $this->assertRaw(t('Created new vocabulary %name.', ['%name' => $edit['name']]));
 
     // Edit the vocabulary.
@@ -58,19 +58,19 @@ class VocabularyUiTest extends TaxonomyTestBase {
     $edit = [];
     $edit['name'] = $this->randomMachineName();
     $edit['description'] = $this->randomMachineName();
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $this->drupalGet('admin/structure/taxonomy');
     $this->assertText($edit['name'], 'Vocabulary name found in the vocabulary overview listing.');
     $this->assertText($edit['description'], 'Vocabulary description found in the vocabulary overview listing.');
 
     // Try to submit a vocabulary with a duplicate machine name.
     $edit['vid'] = $vid;
-    $this->drupalPostForm('admin/structure/taxonomy/add', $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/taxonomy/add', $edit, 'Save');
     $this->assertText('The machine-readable name is already in use. It must be unique.');
 
     // Try to submit an invalid machine name.
     $edit['vid'] = '!&^%';
-    $this->drupalPostForm('admin/structure/taxonomy/add', $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/taxonomy/add', $edit, 'Save');
     $this->assertText('The machine-readable name must contain only lowercase letters, numbers, and underscores.');
 
     // Ensure that vocabulary titles are escaped properly.
@@ -78,7 +78,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
     $edit['name'] = 'Don\'t Panic';
     $edit['description'] = $this->randomMachineName();
     $edit['vid'] = 'don_t_panic';
-    $this->drupalPostForm('admin/structure/taxonomy/add', $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/taxonomy/add', $edit, 'Save');
 
     $site_name = $this->config('system.site')->get('name');
     $this->assertSession()->titleEquals("Don't Panic | $site_name");
@@ -101,7 +101,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
       $edit['vocabularies[' . $key . '][weight]'] = $weight;
     }
     // Saving the new weights via the interface.
-    $this->drupalPostForm('admin/structure/taxonomy', $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/taxonomy', $edit, 'Save');
 
     // Load the vocabularies from the database.
     $this->container->get('entity_type.manager')->getStorage('taxonomy_vocabulary')->resetCache();
@@ -139,7 +139,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
       'name' => $this->randomMachineName(),
       'vid' => $vid,
     ];
-    $this->drupalPostForm('admin/structure/taxonomy/add', $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/taxonomy/add', $edit, 'Save');
     $this->assertText('Created new vocabulary', 'New vocabulary was created.');
 
     // Check the created vocabulary.
@@ -154,7 +154,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
     $this->assertText('Deleting a vocabulary will delete all the terms in it. This action cannot be undone.', '[confirm deletion] Inform that all terms will be deleted.');
 
     // Confirm deletion.
-    $this->drupalPostForm(NULL, [], t('Delete'));
+    $this->drupalPostForm(NULL, [], 'Delete');
     $this->assertRaw(t('Deleted vocabulary %name.', ['%name' => $vocabulary->label()]));
     $this->container->get('entity_type.manager')->getStorage('taxonomy_vocabulary')->resetCache();
     $this->assertNull(Vocabulary::load($vid), 'Vocabulary not found.');

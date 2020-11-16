@@ -76,7 +76,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     $edit = [];
     $edit['info[0][value]'] = $label;
     $edit['body[0][value]'] = $this->randomMachineName(16);
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
 
     // Confirm that once the user returns to the listing, the text of the label
     // (versus elsewhere on the page).
@@ -102,7 +102,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
       $this->assertSession()->statusCodeEquals(200);
       $this->assertSession()->titleEquals("Edit custom block $label | Drupal");
       $edit = ['info[0][value]' => $new_label];
-      $this->drupalPostForm(NULL, $edit, t('Save'));
+      $this->drupalPostForm(NULL, $edit, 'Save');
     }
     else {
       $this->fail('Did not find Albatross block in the database.');
@@ -114,11 +114,10 @@ class BlockContentListViewsTest extends BlockContentTestBase {
 
     // Delete the added entity using the operations link.
     $this->assertSession()->linkByHrefExists('block/' . $block->id() . '/delete');
-    $delete_text = t('Delete');
-    $this->clickLink($delete_text);
+    $this->clickLink('Delete');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->titleEquals("Are you sure you want to delete the custom block $new_label? | Drupal");
-    $this->drupalPostForm(NULL, [], $delete_text);
+    $this->drupalPostForm(NULL, [], 'Delete');
 
     // Verify that the text of the label and machine name does not appear in
     // the list (though it may appear elsewhere on the page).

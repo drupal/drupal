@@ -60,7 +60,7 @@ class PageTitleTest extends BrowserTestBase {
       'body[0][value]' => '!SimpleTest! test body' . $this->randomMachineName(200),
     ];
     // Create the node with HTML in the title.
-    $this->drupalPostForm('node/add/page', $edit, t('Save'));
+    $this->drupalPostForm('node/add/page', $edit, 'Save');
 
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->assertNotNull($node, 'Node created and found in database');
@@ -85,7 +85,7 @@ class PageTitleTest extends BrowserTestBase {
       'site_name'    => $title,
       'site_slogan'  => $slogan,
     ];
-    $this->drupalPostForm('admin/config/system/site-information', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/system/site-information', $edit, 'Save configuration');
 
     // Place branding block with site name and slogan into header region.
     $this->drupalPlaceBlock('system_branding_block', ['region' => 'header']);

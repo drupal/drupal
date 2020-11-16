@@ -131,7 +131,7 @@ class BlockUiTest extends BrowserTestBase {
       // Change the test block's weight.
       $edit['blocks[' . $values['settings']['id'] . '][weight]'] = $values['test_weight'];
     }
-    $this->drupalPostForm('admin/structure/block', $edit, t('Save blocks'));
+    $this->drupalPostForm('admin/structure/block', $edit, 'Save blocks');
     foreach ($this->blockValues as $values) {
       // Check if the region and weight settings changes have persisted.
       $this->assertTrue($this->assertSession()->optionExists('edit-blocks-' . $values['settings']['id'] . '-region', 'header')->isSelected());
@@ -326,11 +326,11 @@ class BlockUiTest extends BrowserTestBase {
     $block['region'] = 'content';
 
     // After adding a block, it will indicate which block was just added.
-    $this->drupalPostForm('admin/structure/block/add/system_powered_by_block', $block, t('Save block'));
+    $this->drupalPostForm('admin/structure/block/add/system_powered_by_block', $block, 'Save block');
     $this->assertSession()->addressEquals('admin/structure/block/list/classy?block-placement=' . Html::getClass($block['id']));
 
     // Resaving the block page will remove the block placement indicator.
-    $this->drupalPostForm(NULL, [], t('Save blocks'));
+    $this->drupalPostForm(NULL, [], 'Save blocks');
     $this->assertSession()->addressEquals('admin/structure/block/list/classy');
 
     // Place another block and test the remove functionality works with the
@@ -356,7 +356,7 @@ class BlockUiTest extends BrowserTestBase {
    * Tests if validation errors are passed plugin form to the parent form.
    */
   public function testBlockValidateErrors() {
-    $this->drupalPostForm('admin/structure/block/add/test_settings_validation/classy', ['region' => 'content', 'settings[digits]' => 'abc'], t('Save block'));
+    $this->drupalPostForm('admin/structure/block/add/test_settings_validation/classy', ['region' => 'content', 'settings[digits]' => 'abc'], 'Save block');
 
     $arguments = [':message' => 'Only digits are allowed'];
     $pattern = '//div[contains(@class,"messages messages--error")]/div[contains(text()[2],:message)]';

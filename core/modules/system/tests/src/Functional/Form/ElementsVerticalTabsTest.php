@@ -97,7 +97,7 @@ class ElementsVerticalTabsTest extends BrowserTestBase {
    * Ensures that vertical tab form values are cleaned.
    */
   public function testDefaultTabCleaned() {
-    $values = Json::decode($this->drupalPostForm('form_test/form-state-values-clean', [], t('Submit')));
+    $values = Json::decode($this->drupalPostForm('form_test/form-state-values-clean', [], 'Submit'));
     $this->assertFalse(isset($values['vertical_tabs__active_tab']), new FormattableMarkup('%element was removed.', ['%element' => 'vertical_tabs__active_tab']));
   }
 

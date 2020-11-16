@@ -46,7 +46,7 @@ class ConfigFormOverrideTest extends BrowserTestBase {
     $edit = [
       'site_name' => 'Custom site name',
     ];
-    $this->drupalPostForm('admin/config/system/site-information', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/system/site-information', $edit, 'Save configuration');
     $this->assertSession()->titleEquals('Basic site settings | ' . $overridden_name);
     $elements = $this->xpath('//input[@name="site_name"]');
     $this->assertIdentical($elements[0]->getValue(), $edit['site_name']);

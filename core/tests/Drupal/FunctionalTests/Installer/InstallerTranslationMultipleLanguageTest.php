@@ -129,7 +129,7 @@ ENDPO;
 
         // Adding English should make the English override available.
         $edit = ['predefined_langcode' => 'en'];
-        $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
+        $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
         $override_en = $language_manager->getLanguageConfigOverride('en', 'user.settings');
         $this->assertEqual($override_en->get('anonymous'), 'Anonymous');
       }
@@ -140,7 +140,7 @@ ENDPO;
         'modules[views][enable]' => TRUE,
         'modules[filter][enable]' => TRUE,
       ];
-      $this->drupalPostForm('admin/modules', $edit, t('Install'));
+      $this->drupalPostForm('admin/modules', $edit, 'Install');
 
       // Verify the strings from the translation are still as expected.
       $this->verifyImportedStringsTranslated();
@@ -173,7 +173,7 @@ ENDPO;
         $edit['langcode'] = $langcode;
         $edit['translation'] = 'translated';
         $edit['string'] = $sample;
-        $this->drupalPostForm('admin/config/regional/translate', $edit, t('Filter'));
+        $this->drupalPostForm('admin/config/regional/translate', $edit, 'Filter');
         $this->assertText($sample . ' ' . $langcode);
       }
     }

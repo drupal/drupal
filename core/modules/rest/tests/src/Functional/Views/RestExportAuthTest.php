@@ -49,7 +49,7 @@ class RestExportAuthTest extends ViewTestBase {
       'show[wizard_key]' => 'users',
       'rest_export[path]' => $view_rest_path,
       'rest_export[create]' => TRUE,
-    ], t('Save and edit'));
+    ], 'Save and edit');
 
     $this->drupalGet("admin/structure/views/nojs/display/$view_id/$view_display/auth");
     // The "basic_auth" will always be available since module,

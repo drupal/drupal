@@ -67,11 +67,11 @@ class LocalePathTest extends BrowserTestBase {
       'label' => $name,
       'direction' => LanguageInterface::DIRECTION_LTR,
     ];
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add custom language');
 
     // Set path prefix.
     $edit = ["prefix[$langcode]" => $prefix];
-    $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, 'Save configuration');
 
     // Check that the "xx" front page is readily available because path prefix
     // negotiation is pre-configured.
@@ -89,7 +89,7 @@ class LocalePathTest extends BrowserTestBase {
       'alias[0][value]' => '/' . $english_path,
       'langcode[0][value]' => 'en',
     ];
-    $this->drupalPostForm($path, $edit, t('Save'));
+    $this->drupalPostForm($path, $edit, 'Save');
 
     // Create a path alias in new custom language.
     $custom_language_path = $this->randomMachineName(8);
@@ -98,7 +98,7 @@ class LocalePathTest extends BrowserTestBase {
       'alias[0][value]' => '/' . $custom_language_path,
       'langcode[0][value]' => $langcode,
     ];
-    $this->drupalPostForm($path, $edit, t('Save'));
+    $this->drupalPostForm($path, $edit, 'Save');
 
     // Confirm English language path alias works.
     $this->drupalGet($english_path);

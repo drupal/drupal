@@ -152,7 +152,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->assertSame('purple', $value);
 
     // Test drupalPostForm() with no-html response.
-    $values = Json::decode($this->drupalPostForm('form_test/form-state-values-clean', [], t('Submit')));
+    $values = Json::decode($this->drupalPostForm('form_test/form-state-values-clean', [], 'Submit'));
     $this->assertSame(1000, $values['beer']);
 
     // Test drupalPostForm() with form by HTML id.
@@ -863,7 +863,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
    */
   public function testLegacyDrupalPostForm(): void {
     $this->expectDeprecation('Calling Drupal\Tests\UiHelperTrait::drupalPostForm() with $edit set to NULL is deprecated in drupal:9.1.0 and the method is removed in drupal:10.0.0. Use $this->submitForm() instead. See https://www.drupal.org/node/3168858');
-    $this->drupalPostForm(NULL, NULL, '');
+    $this->drupalPostForm('form-test/object-builder', NULL, t('Save'));
   }
 
   /**

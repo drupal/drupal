@@ -48,18 +48,18 @@ class AccessRoleUITest extends UITestBase {
     $entity_type_manager = $this->container->get('entity_type.manager');
     $entity_type_manager->getStorage('user_role')->create(['id' => 'custom_role', 'label' => 'Custom role'])->save();
     $access_url = "admin/structure/views/nojs/display/test_access_role/default/access_options";
-    $this->drupalPostForm($access_url, ['access_options[role][custom_role]' => 1], t('Apply'));
+    $this->drupalPostForm($access_url, ['access_options[role][custom_role]' => 1], 'Apply');
     $this->assertSession()->statusCodeEquals(200);
 
-    $this->drupalPostForm(NULL, [], t('Save'));
+    $this->drupalPostForm(NULL, [], 'Save');
     $view = $entity_type_manager->getStorage('view')->load('test_access_role');
 
     $display = $view->getDisplay('default');
     $this->assertEqual($display['display_options']['access']['options']['role'], ['custom_role' => 'custom_role']);
 
     // Test changing access plugin from role to none.
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_access_role/default/access', ['access[type]' => 'none'], t('Apply'));
-    $this->drupalPostForm(NULL, [], t('Save'));
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_access_role/default/access', ['access[type]' => 'none'], 'Apply');
+    $this->drupalPostForm(NULL, [], 'Save');
     // Verify that role option is not set.
     $view = $entity_type_manager->getStorage('view')->load('test_access_role');
     $display = $view->getDisplay('default');

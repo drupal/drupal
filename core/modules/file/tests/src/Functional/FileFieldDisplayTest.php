@@ -54,7 +54,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
           "fields[$field_name][region]" => 'content',
         ];
       }
-      $this->drupalPostForm("admin/structure/types/manage/$type_name/display", $edit, t('Save'));
+      $this->drupalPostForm("admin/structure/types/manage/$type_name/display", $edit, 'Save');
       $this->drupalGet('node/' . $node->id());
       $this->assertNoText($field_name, new FormattableMarkup('Field label is hidden when no file attached for formatter %formatter', ['%formatter' => $formatter]));
     }
@@ -83,7 +83,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
 
     // Turn the "display" option off and check that the file is no longer displayed.
     $edit = [$field_name . '[0][display]' => FALSE];
-    $this->drupalPostForm('node/' . $nid . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('node/' . $nid . '/edit', $edit, 'Save');
 
     $this->assertNoRaw($default_output);
 
@@ -93,7 +93,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
       $field_name . '[0][description]' => $description,
       $field_name . '[0][display]' => TRUE,
     ];
-    $this->drupalPostForm('node/' . $nid . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('node/' . $nid . '/edit', $edit, 'Save');
     $this->assertText($description);
 
     // Ensure the filename in the link's title attribute is escaped.
@@ -103,12 +103,12 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     // Add a second file.
     $name = 'files[' . $field_name . '_1][]';
     $edit_upload[$name] = \Drupal::service('file_system')->realpath($test_file->getFileUri());
-    $this->drupalPostForm("node/$nid/edit", $edit_upload, t('Upload'));
+    $this->drupalPostForm("node/$nid/edit", $edit_upload, 'Upload');
 
     // Uncheck the display checkboxes and go to the preview.
     $edit[$field_name . '[0][display]'] = FALSE;
     $edit[$field_name . '[1][display]'] = FALSE;
-    $this->drupalPostForm(NULL, $edit, t('Preview'));
+    $this->drupalPostForm(NULL, $edit, 'Preview');
     $this->clickLink(t('Back to content editing'));
     // First file.
     $this->assertRaw($field_name . '[0][display]');
@@ -159,20 +159,20 @@ class FileFieldDisplayTest extends FileFieldTestBase {
       'name' => $type_name,
       'type' => $type_name,
     ];
-    $this->drupalPostForm('admin/structure/types/add', $edit, t('Save and manage fields'));
+    $this->drupalPostForm('admin/structure/types/add', $edit, 'Save and manage fields');
     $edit = [
       'new_storage_type' => $field_type,
       'field_name' => $field_name,
       'label' => $this->randomString(),
     ];
-    $this->drupalPostForm('/admin/structure/types/manage/' . $type_name . '/fields/add-field', $edit, t('Save and continue'));
-    $this->drupalPostForm(NULL, [], t('Save field settings'));
+    $this->drupalPostForm('/admin/structure/types/manage/' . $type_name . '/fields/add-field', $edit, 'Save and continue');
+    $this->drupalPostForm(NULL, [], 'Save field settings');
     // Ensure the description field is selected on the field instance settings
     // form. That's what this test is all about.
     $edit = [
       'settings[description_field]' => TRUE,
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save settings'));
+    $this->drupalPostForm(NULL, $edit, 'Save settings');
     // Add a node of our new type and upload a file to it.
     $file = current($this->drupalGetTestFiles('text'));
     $title = $this->randomString();
@@ -180,7 +180,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
       'title[0][value]' => $title,
       'files[field_' . $field_name . '_0]' => \Drupal::service('file_system')->realpath($file->uri),
     ];
-    $this->drupalPostForm('node/add/' . $type_name, $edit, t('Save'));
+    $this->drupalPostForm('node/add/' . $type_name, $edit, 'Save');
     $node = $this->drupalGetNodeByTitle($title);
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->assertText('The description may be used as the label of the link to the file.');
@@ -210,7 +210,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
 
     // Add file description.
     $description = 'This is the test file description';
-    $this->drupalPostForm("node/$nid/edit", [$field_name . '[0][description]' => $description], t('Save'));
+    $this->drupalPostForm("node/$nid/edit", [$field_name . '[0][description]' => $description], 'Save');
 
     // Load uncached node.
     \Drupal::entityTypeManager()->getStorage('node')->resetCache([$nid]);

@@ -26,7 +26,7 @@ class FilterBooleanWebTest extends UITestBase {
    * Tests the filter boolean UI.
    */
   public function testFilterBooleanUI() {
-    $this->drupalPostForm('admin/structure/views/nojs/add-handler/test_view/default/filter', ['name[views_test_data.status]' => TRUE], t('Add and configure @handler', ['@handler' => t('filter criteria')]));
+    $this->drupalPostForm('admin/structure/views/nojs/add-handler/test_view/default/filter', ['name[views_test_data.status]' => TRUE], 'Add and configure filter criteria');
 
     // Check the field widget label. 'title' should be used as a fallback.
     $result = $this->cssSelect('#edit-options-value--wrapper legend span');
@@ -37,8 +37,8 @@ class FilterBooleanWebTest extends UITestBase {
     $this->assertSession()->elementExists('css', '.views-left-30 .form-item-options-operator');
     $this->assertSession()->elementExists('css', '.views-right-70 .form-item-options-value');
 
-    $this->drupalPostForm(NULL, [], t('Expose filter'));
-    $this->drupalPostForm(NULL, [], t('Grouped filters'));
+    $this->drupalPostForm(NULL, [], 'Expose filter');
+    $this->drupalPostForm(NULL, [], 'Grouped filters');
 
     $edit = [];
     $edit['options[group_info][group_items][1][title]'] = 'Published';
@@ -51,7 +51,7 @@ class FilterBooleanWebTest extends UITestBase {
     $edit['options[group_info][group_items][3][operator]'] = '!=';
     $edit['options[group_info][group_items][3][value]'] = 1;
 
-    $this->drupalPostForm(NULL, $edit, t('Apply'));
+    $this->drupalPostForm(NULL, $edit, 'Apply');
 
     $this->drupalGet('admin/structure/views/nojs/handler/test_view/default/filter/status');
 
@@ -69,7 +69,7 @@ class FilterBooleanWebTest extends UITestBase {
     $edit = [];
     $edit['options[group_info][default_group]'] = 2;
     $edit['options[group_info][group_items][3][remove]'] = 1;
-    $this->drupalPostForm(NULL, $edit, t('Apply'));
+    $this->drupalPostForm(NULL, $edit, 'Apply');
     $this->drupalGet('admin/structure/views/nojs/handler/test_view/default/filter/status');
     $this->assertSession()->fieldValueEquals('options[group_info][default_group]', 2);
     $this->assertSession()->fieldNotExists('options[group_info][group_items][3][remove]');

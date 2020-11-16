@@ -92,7 +92,7 @@ class ClassLoaderTest extends BrowserTestBase {
       "modules[module_install_class_loader_test1][enable]" => TRUE,
       "modules[module_install_class_loader_test2][enable]" => TRUE,
     ];
-    $this->drupalPostForm('admin/modules', $edit, t('Install'));
+    $this->drupalPostForm('admin/modules', $edit, 'Install');
     $this->rebuildContainer();
     $this->assertTrue(\Drupal::moduleHandler()->moduleExists('module_install_class_loader_test2'), 'The module_install_class_loader_test2 module has been installed.');
   }
@@ -106,7 +106,7 @@ class ClassLoaderTest extends BrowserTestBase {
     $edit = [
       "modules[module_autoload_test][enable]" => TRUE,
     ];
-    $this->drupalPostForm('admin/modules', $edit, t('Install'));
+    $this->drupalPostForm('admin/modules', $edit, 'Install');
     $this->assertSession()->statusCodeEquals(200);
     $this->resetAll();
     $this->assertSame(SomeClass::TEST, MODULE_AUTOLOAD_TEST_CONSTANT);

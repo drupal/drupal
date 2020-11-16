@@ -67,8 +67,8 @@ class NumericFormatPluralTest extends ViewTestBase {
 
     // Assert that changing the settings will change configuration properly.
     $edit = ['options[format_plural_values][0]' => '1 time', 'options[format_plural_values][1]' => '@count times'];
-    $this->drupalPostForm(NULL, $edit, t('Apply'));
-    $this->drupalPostForm(NULL, [], t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Apply');
+    $this->drupalPostForm(NULL, [], 'Save');
 
     $config = $this->config('views.view.numeric_test');
     $field_config_prefix = 'display.default.display_options.fields.count.';
@@ -87,7 +87,7 @@ class NumericFormatPluralTest extends ViewTestBase {
 
     // Add Slovenian and set its plural formula to test multiple plural forms.
     $edit = ['predefined_langcode' => 'sl'];
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
     $formula = 'nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);';
     $header = new PoHeader();
     list($nplurals, $formula) = $header->parsePluralForms($formula);
@@ -111,8 +111,8 @@ class NumericFormatPluralTest extends ViewTestBase {
       'options[format_plural_values][2]' => '@count time2',
       'options[format_plural_values][3]' => '@count time3',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Apply'));
-    $this->drupalPostForm(NULL, [], t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Apply');
+    $this->drupalPostForm(NULL, [], 'Save');
     $config = $this->config('views.view.numeric_test');
     $field_config_prefix = 'display.default.display_options.fields.count.';
     $this->assertEqual($config->get($field_config_prefix . 'format_plural'), TRUE);

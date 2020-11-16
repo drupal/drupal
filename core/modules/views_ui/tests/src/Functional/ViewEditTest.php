@@ -35,7 +35,7 @@ class ViewEditTest extends UITestBase {
     $this->assertInstanceOf(View::class, $view);
     $this->clickLink(t('Delete view'));
     $this->assertSession()->addressEquals('admin/structure/views/view/test_view/delete');
-    $this->drupalPostForm(NULL, [], t('Delete'));
+    $this->drupalPostForm(NULL, [], 'Delete');
     $this->assertRaw(t('The view %name has been deleted.', ['%name' => $view->label()]));
 
     $this->assertSession()->addressEquals('admin/structure/views');
@@ -112,9 +112,9 @@ class ViewEditTest extends UITestBase {
     $fields['fields[age][removed]'] = 1;
     $fields['fields[id][removed]'] = 1;
     $fields['fields[name][removed]'] = 1;
-    $this->drupalPostForm('admin/structure/views/nojs/rearrange/test_view/default/field', $fields, t('Apply'));
+    $this->drupalPostForm('admin/structure/views/nojs/rearrange/test_view/default/field', $fields, 'Apply');
     $this->drupalPostForm(NULL, [], 'Save');
-    $this->drupalPostForm(NULL, [], t('Cancel'));
+    $this->drupalPostForm(NULL, [], 'Cancel');
     // Verify that no error message is displayed.
     $this->assertSession()->elementNotExists('xpath', '//div[contains(@class, "error")]');
     // Verify page was redirected to the view listing.
@@ -192,25 +192,25 @@ class ViewEditTest extends UITestBase {
         $edit = [
           'authenticated[administer languages]' => TRUE,
         ];
-        $this->drupalPostForm('/admin/people/permissions', $edit, t('Save permissions'));
+        $this->drupalPostForm('/admin/people/permissions', $edit, 'Save permissions');
         // Enable Content language negotiation so we have one more item
         // to select.
         $edit = [
           'language_content[configurable]' => TRUE,
         ];
-        $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));
+        $this->drupalPostForm('admin/config/regional/language/detection', $edit, 'Save settings');
 
         // Choose the new negotiation as the rendering language.
         $edit = [
           'rendering_language' => '***LANGUAGE_language_content***',
         ];
-        $this->drupalPostForm('/admin/structure/views/nojs/display/' . $view_name . '/' . $display . '/rendering_language', $edit, t('Apply'));
+        $this->drupalPostForm('/admin/structure/views/nojs/display/' . $view_name . '/' . $display . '/rendering_language', $edit, 'Apply');
 
         // Disable language content negotiation.
         $edit = [
           'language_content[configurable]' => FALSE,
         ];
-        $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));
+        $this->drupalPostForm('admin/config/regional/language/detection', $edit, 'Save settings');
 
         // Check that the previous selection is listed and selected.
         $this->drupalGet($langcode_url);

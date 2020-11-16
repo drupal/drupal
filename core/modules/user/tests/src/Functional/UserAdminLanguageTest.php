@@ -135,7 +135,7 @@ class UserAdminLanguageTest extends BrowserTestBase {
     // Set a preferred language code for the user.
     $edit = [];
     $edit['preferred_admin_langcode'] = 'xx';
-    $this->drupalPostForm($path, $edit, t('Save'));
+    $this->drupalPostForm($path, $edit, 'Save');
 
     // Test negotiation with the URL method first. The admin method will only
     // be used if the URL method did not match.
@@ -155,7 +155,7 @@ class UserAdminLanguageTest extends BrowserTestBase {
     // Unset the preferred language code for the user.
     $edit = [];
     $edit['preferred_admin_langcode'] = '';
-    $this->drupalPostForm($path, $edit, t('Save'));
+    $this->drupalPostForm($path, $edit, 'Save');
     $this->drupalGet($path);
     $this->assertText('Language negotiation method: language-default');
     $this->drupalGet('xx/' . $path);
@@ -178,7 +178,7 @@ class UserAdminLanguageTest extends BrowserTestBase {
       'language_interface[weight][language-user-admin]' => ($admin_first ? -12 : -8),
       'language_interface[weight][language-url]' => -10,
     ];
-    $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));
+    $this->drupalPostForm('admin/config/regional/language/detection', $edit, 'Save settings');
   }
 
   /**
@@ -194,7 +194,7 @@ class UserAdminLanguageTest extends BrowserTestBase {
       'label' => $name,
       'direction' => LanguageInterface::DIRECTION_LTR,
     ];
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add custom language');
   }
 
 }

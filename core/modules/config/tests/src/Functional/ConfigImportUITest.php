@@ -128,7 +128,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->assertSession()->buttonExists('Import all');
 
     // Import and verify that both do not appear anymore.
-    $this->drupalPostForm(NULL, [], t('Import all'));
+    $this->drupalPostForm(NULL, [], 'Import all');
     $this->assertNoRaw('<td>' . $name);
     $this->assertNoRaw('<td>' . $dynamic_name);
     $this->assertNoRaw('<td>core.extension');
@@ -199,7 +199,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->assertRaw('<td>automated_cron.settings');
 
     // Import and verify that both do not appear anymore.
-    $this->drupalPostForm(NULL, [], t('Import all'));
+    $this->drupalPostForm(NULL, [], 'Import all');
     $this->assertNoRaw('<td>core.extension');
     $this->assertNoRaw('<td>system.theme');
     $this->assertNoRaw('<td>automated_cron.settings');
@@ -244,7 +244,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->container->get('lock.persistent')->acquire($config_importer::LOCK_NAME);
 
     // Attempt to import configuration and verify that an error message appears.
-    $this->drupalPostForm(NULL, [], t('Import all'));
+    $this->drupalPostForm(NULL, [], 'Import all');
     $this->assertText('Another request may be synchronizing configuration already.');
 
     // Release the lock, just to keep testing sane.
@@ -362,7 +362,7 @@ class ConfigImportUITest extends BrowserTestBase {
 
     $this->drupalGet('admin/config/development/configuration');
     $this->assertNoText('There are no configuration changes to import.');
-    $this->drupalPostForm(NULL, [], t('Import all'));
+    $this->drupalPostForm(NULL, [], 'Import all');
 
     // Verify that the validation messages appear.
     $this->assertText('The configuration cannot be imported because it failed validation for the following reasons:');
@@ -384,7 +384,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->assertText('core.extension');
 
     // Import and verify that both do not appear anymore.
-    $this->drupalPostForm(NULL, [], t('Import all'));
+    $this->drupalPostForm(NULL, [], 'Import all');
     $this->assertText('Can not uninstall the Configuration module as part of a configuration synchronization through the user interface.');
   }
 
@@ -441,7 +441,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->assertNoText('There are no configuration changes to import.');
 
     // Attempt to import configuration and verify that an error message appears.
-    $this->drupalPostForm(NULL, [], t('Import all'));
+    $this->drupalPostForm(NULL, [], 'Import all');
     $this->assertText('Deleted and replaced configuration entity "' . $name_secondary . '"');
     $this->assertText('The configuration was imported with errors.');
     $this->assertNoText('The configuration was imported successfully.');
@@ -471,7 +471,7 @@ class ConfigImportUITest extends BrowserTestBase {
     // Attempt to import configuration and verify that an error message appears
     // and the node type, body field and entity displays are still scheduled for
     // removal.
-    $this->drupalPostForm(NULL, [], t('Import all'));
+    $this->drupalPostForm(NULL, [], 'Import all');
     $validation_message = t('Entities exist of type %entity_type and %bundle_label %bundle. These entities need to be deleted before importing.', ['%entity_type' => $node->getEntityType()->getLabel(), '%bundle_label' => $node->getEntityType()->getBundleLabel(), '%bundle' => $node_type->label()]);
     $this->assertRaw($validation_message);
     $this->assertText('node.type.' . $node_type->id());
@@ -482,7 +482,7 @@ class ConfigImportUITest extends BrowserTestBase {
 
     // Delete the node and try to import again.
     $node->delete();
-    $this->drupalPostForm(NULL, [], t('Import all'));
+    $this->drupalPostForm(NULL, [], 'Import all');
     $this->assertNoRaw($validation_message);
     $this->assertText('There are no configuration changes to import.');
     $this->assertNoText('node.type.' . $node_type->id());
@@ -519,7 +519,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $core['theme']['does_not_exist'] = 0;
     $sync->write('core.extension', $core);
 
-    $this->drupalPostForm('admin/config/development/configuration', [], t('Import all'));
+    $this->drupalPostForm('admin/config/development/configuration', [], 'Import all');
     $this->assertText('The configuration cannot be imported because it failed validation for the following reasons:');
     $this->assertText('Unable to uninstall the Text module since the Node module is installed.');
     $this->assertText('Unable to uninstall the Theme test base theme theme since the Theme test subtheme theme is installed.');
@@ -534,7 +534,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $new_site_name = 'Config import test ' . $this->randomString();
     $this->prepareSiteNameUpdate($new_site_name);
     \Drupal::state()->set('config_import_steps_alter.error', TRUE);
-    $this->drupalPostForm('admin/config/development/configuration', [], t('Import all'));
+    $this->drupalPostForm('admin/config/development/configuration', [], 'Import all');
     $this->assertSession()->responseContains('_config_import_test_config_import_steps_alter batch error');
     $this->assertSession()->responseContains('_config_import_test_config_import_steps_alter ConfigImporter error');
     $this->assertSession()->responseContains('The configuration was imported with errors.');

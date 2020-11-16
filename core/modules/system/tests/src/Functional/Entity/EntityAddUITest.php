@@ -75,7 +75,7 @@ class EntityAddUITest extends BrowserTestBase {
     $this->clickLink('Test2 label');
     $this->drupalGet('/entity_test_with_bundle/add/test2');
 
-    $this->drupalPostForm(NULL, ['name[0][value]' => 'test name'], t('Save'));
+    $this->drupalPostForm(NULL, ['name[0][value]' => 'test name'], 'Save');
     $entity = EntityTestWithBundle::load(1);
     $this->assertEqual('test name', $entity->label());
 
@@ -147,7 +147,7 @@ class EntityAddUITest extends BrowserTestBase {
     $this->clickLink('Test2 label');
     $this->drupalGet('/entity_test_mul/add/test2');
 
-    $this->drupalPostForm(NULL, ['name[0][value]' => 'test name'], t('Save'));
+    $this->drupalPostForm(NULL, ['name[0][value]' => 'test name'], 'Save');
     $entity = EntityTestMul::load(1);
     $this->assertEqual('test name', $entity->label());
   }

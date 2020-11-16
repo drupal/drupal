@@ -68,7 +68,7 @@ class FeedLanguageTest extends AggregatorTestBase {
     $edit['entity_types[aggregator_feed]'] = TRUE;
     $edit['settings[aggregator_feed][aggregator_feed][settings][language][language_alterable]'] = TRUE;
 
-    $this->drupalPostForm('admin/config/regional/content-language', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/regional/content-language', $edit, 'Save configuration');
 
     /** @var \Drupal\aggregator\FeedInterface[] $feeds */
     $feeds = [];

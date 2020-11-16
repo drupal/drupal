@@ -38,7 +38,7 @@ class LanguageNegotiationFormOverrideTest extends BrowserTestBase {
     $edit = [
       'predefined_langcode' => 'es',
     ];
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
 
     // Overridden string for language-negotiation should not exist in the form.
     $this->drupalGet('admin/config/regional/language/detection/url');

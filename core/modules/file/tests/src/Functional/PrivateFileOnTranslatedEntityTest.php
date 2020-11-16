@@ -59,7 +59,7 @@ class PrivateFileOnTranslatedEntityTest extends FileFieldTestBase {
     // Add a second language.
     $edit = [];
     $edit['predefined_langcode'] = 'fr';
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
 
     // Enable translation for "Basic page" nodes.
     $edit = [
@@ -67,7 +67,7 @@ class PrivateFileOnTranslatedEntityTest extends FileFieldTestBase {
       'settings[node][page][translatable]' => 1,
       "settings[node][page][fields][$this->fieldName]" => 1,
     ];
-    $this->drupalPostForm('admin/config/regional/content-language', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/regional/content-language', $edit, 'Save configuration');
   }
 
   /**
@@ -85,7 +85,7 @@ class PrivateFileOnTranslatedEntityTest extends FileFieldTestBase {
     $edit = [];
     $name = 'files[' . $this->fieldName . '_0]';
     $edit[$name] = \Drupal::service('file_system')->realpath($this->drupalGetTestFiles('text')[0]->uri);
-    $this->drupalPostForm('node/' . $default_language_node->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('node/' . $default_language_node->id() . '/edit', $edit, 'Save');
     $last_fid_prior = $this->getLastFileId();
 
     // Languages are cached on many levels, and we need to clear those caches.
@@ -103,14 +103,14 @@ class PrivateFileOnTranslatedEntityTest extends FileFieldTestBase {
     $this->clickLink(t('Add'));
 
     // Remove the existing file.
-    $this->drupalPostForm(NULL, [], t('Remove'));
+    $this->drupalPostForm(NULL, [], 'Remove');
 
     // Upload a different file.
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName();
     $name = 'files[' . $this->fieldName . '_0]';
     $edit[$name] = \Drupal::service('file_system')->realpath($this->drupalGetTestFiles('text')[1]->uri);
-    $this->drupalPostForm(NULL, $edit, t('Save (this translation)'));
+    $this->drupalPostForm(NULL, $edit, 'Save (this translation)');
     $last_fid = $this->getLastFileId();
 
     // Verify the translation was created.

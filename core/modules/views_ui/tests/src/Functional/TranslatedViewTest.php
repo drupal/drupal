@@ -77,7 +77,7 @@ class TranslatedViewTest extends UITestBase {
     $edit = [
       'translation[config_names][views.view.files][label]' => 'Fichiers',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save translation'));
+    $this->drupalPostForm(NULL, $edit, 'Save translation');
 
     // Check if the label is translated.
     $this->drupalGet($edit_url, ['language' => \Drupal::languageManager()->getLanguage('fr')]);

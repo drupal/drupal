@@ -63,7 +63,7 @@ class UserRoleAdminTest extends BrowserTestBase {
     // correctly distinguish between role names and IDs.)
     $role_name = '123';
     $edit = ['label' => $role_name, 'id' => $role_name];
-    $this->drupalPostForm('admin/people/roles/add', $edit, t('Save'));
+    $this->drupalPostForm('admin/people/roles/add', $edit, 'Save');
     $this->assertRaw(t('Role %label has been added.', ['%label' => 123]));
     $role = Role::load($role_name);
     $this->assertIsObject($role);
@@ -72,13 +72,13 @@ class UserRoleAdminTest extends BrowserTestBase {
     $this->assertEqual($role->language()->getId(), $default_langcode);
 
     // Try adding a duplicate role.
-    $this->drupalPostForm('admin/people/roles/add', $edit, t('Save'));
+    $this->drupalPostForm('admin/people/roles/add', $edit, 'Save');
     $this->assertRaw(t('The machine-readable name is already in use. It must be unique.'));
 
     // Test renaming a role.
     $role_name = '456';
     $edit = ['label' => $role_name];
-    $this->drupalPostForm("admin/people/roles/manage/{$role->id()}", $edit, t('Save'));
+    $this->drupalPostForm("admin/people/roles/manage/{$role->id()}", $edit, 'Save');
     $this->assertRaw(t('Role %label has been updated.', ['%label' => $role_name]));
     \Drupal::entityTypeManager()->getStorage('user_role')->resetCache([$role->id()]);
     $new_role = Role::load($role->id());
@@ -87,7 +87,7 @@ class UserRoleAdminTest extends BrowserTestBase {
     // Test deleting a role.
     $this->drupalGet("admin/people/roles/manage/{$role->id()}");
     $this->clickLink(t('Delete'));
-    $this->drupalPostForm(NULL, [], t('Delete'));
+    $this->drupalPostForm(NULL, [], 'Delete');
     $this->assertRaw(t('The role %label has been deleted.', ['%label' => $role_name]));
     $this->assertSession()->linkByHrefNotExists("admin/people/roles/manage/{$role->id()}", 'Role edit link removed.');
     \Drupal::entityTypeManager()->getStorage('user_role')->resetCache([$role->id()]);
@@ -121,7 +121,7 @@ class UserRoleAdminTest extends BrowserTestBase {
       $saved_rids[] = $role->id();
       $weight--;
     }
-    $this->drupalPostForm('admin/people/roles', $edit, t('Save'));
+    $this->drupalPostForm('admin/people/roles', $edit, 'Save');
     $this->assertText('The role settings have been updated.', 'The role settings form submitted successfully.');
 
     // Load up the user roles with the new weights.

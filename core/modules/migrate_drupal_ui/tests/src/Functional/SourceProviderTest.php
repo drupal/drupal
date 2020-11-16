@@ -56,10 +56,10 @@ class SourceProviderTest extends MigrateUpgradeTestBase {
     $this->drupalGet('/upgrade');
     [$new_site_version] = explode('.', \Drupal::VERSION, 2);
     $session->responseContains("Upgrade a site by importing its files and the data from its database into a clean and empty new install of Drupal $new_site_version.");
-    $this->drupalPostForm(NULL, [], t('Continue'));
+    $this->drupalPostForm(NULL, [], 'Continue');
     $session->pageTextContains('Provide credentials for the database of the Drupal site you want to upgrade.');
     $session->fieldExists('mysql[host]');
-    $this->drupalPostForm(NULL, $edits, t('Review upgrade'));
+    $this->drupalPostForm(NULL, $edits, 'Review upgrade');
 
     // Ensure we get errors about missing modules.
     $session->pageTextContains(t('Resolve all issues below to continue the upgrade.'));
@@ -72,10 +72,10 @@ class SourceProviderTest extends MigrateUpgradeTestBase {
     // Restart the upgrade process and test there is no source_module error.
     $this->drupalGet('/upgrade');
     $session->responseContains("Upgrade a site by importing its files and the data from its database into a clean and empty new install of Drupal $new_site_version.");
-    $this->drupalPostForm(NULL, [], t('Continue'));
+    $this->drupalPostForm(NULL, [], 'Continue');
     $session->pageTextContains('Provide credentials for the database of the Drupal site you want to upgrade.');
     $session->fieldExists('mysql[host]');
-    $this->drupalPostForm(NULL, $edits, t('Review upgrade'));
+    $this->drupalPostForm(NULL, $edits, 'Review upgrade');
 
     // Ensure there are no errors about missing modules from the test module.
     $session->pageTextNotContains(t('Source module not found for migration_provider_no_annotation.'));

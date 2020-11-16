@@ -206,14 +206,14 @@ class BreadcrumbTest extends BrowserTestBase {
       'title[0][value]' => 'Root',
       'link[0][uri]' => '/node',
     ];
-    $this->drupalPostForm("admin/structure/menu/manage/$menu/add", $edit, t('Save'));
+    $this->drupalPostForm("admin/structure/menu/manage/$menu/add", $edit, 'Save');
     $menu_links = \Drupal::entityTypeManager()->getStorage('menu_link_content')->loadByProperties(['title' => 'Root']);
     $link = reset($menu_links);
 
     $edit = [
       'menu[menu_parent]' => $link->getMenuName() . ':' . $link->getPluginId(),
     ];
-    $this->drupalPostForm('node/' . $parent->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('node/' . $parent->id() . '/edit', $edit, 'Save');
     $expected = [
       "node" => $link->getTitle(),
     ];
@@ -234,7 +234,7 @@ class BreadcrumbTest extends BrowserTestBase {
     $edit = [
       'field_tags[target_id]' => implode(',', array_keys($tags)),
     ];
-    $this->drupalPostForm('node/' . $parent->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('node/' . $parent->id() . '/edit', $edit, 'Save');
 
     // Put both terms into a hierarchy Drupal » Breadcrumbs. Required for both
     // the menu links and the terms itself, since taxonomy_term_page() resets
@@ -248,7 +248,7 @@ class BreadcrumbTest extends BrowserTestBase {
         $edit = [
           'parent[]' => [$parent_tid],
         ];
-        $this->drupalPostForm("taxonomy/term/{$term->id()}/edit", $edit, t('Save'));
+        $this->drupalPostForm("taxonomy/term/{$term->id()}/edit", $edit, 'Save');
       }
       $parent_tid = $term->id();
     }
@@ -261,7 +261,7 @@ class BreadcrumbTest extends BrowserTestBase {
         'menu_parent' => "$menu:{$parent_mlid}",
         'enabled[value]' => 1,
       ];
-      $this->drupalPostForm("admin/structure/menu/manage/$menu/add", $edit, t('Save'));
+      $this->drupalPostForm("admin/structure/menu/manage/$menu/add", $edit, 'Save');
       $menu_links = \Drupal::entityTypeManager()->getStorage('menu_link_content')->loadByProperties([
         'title' => $edit['title[0][value]'],
         'link.uri' => 'internal:/taxonomy/term/' . $term->id(),

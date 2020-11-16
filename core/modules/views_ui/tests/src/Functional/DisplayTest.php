@@ -40,7 +40,7 @@ class DisplayTest extends UITestBase {
     $this->assertNoText('Block');
     $this->assertNoText('Block 2');
 
-    $this->drupalPostForm(NULL, [], t('Add @display', ['@display' => 'Block']));
+    $this->drupalPostForm(NULL, [], 'Add Block');
     $this->assertText('Block');
     $this->assertNoText('Block 2');
   }
@@ -67,8 +67,8 @@ class DisplayTest extends UITestBase {
       'displays[page_1][weight]' => 2,
       'displays[block_1][weight]' => 1,
     ];
-    $this->drupalPostForm(NULL, $edit, t('Apply'));
-    $this->drupalPostForm(NULL, [], t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Apply');
+    $this->drupalPostForm(NULL, [], 'Save');
 
     $view = Views::getView($view['id']);
     $displays = $view->storage->get('display');
@@ -162,21 +162,21 @@ class DisplayTest extends UITestBase {
     $this->assertSession()->checkboxChecked('edit-link-display-0');
 
     // Test the default radio option on the link display form.
-    $this->drupalPostForm($link_display_path, ['link_display' => 'page_1'], t('Apply'));
+    $this->drupalPostForm($link_display_path, ['link_display' => 'page_1'], 'Apply');
     // The form redirects to the master display.
     $this->drupalGet($path);
 
     $result = $this->xpath("//a[contains(@href, :path)]", [':path' => $link_display_path]);
     $this->assertEqual($result[0]->getHtml(), 'Page', 'Make sure that the link option summary shows the right linked display.');
 
-    $this->drupalPostForm($link_display_path, ['link_display' => 'custom_url', 'link_url' => 'a-custom-url'], t('Apply'));
+    $this->drupalPostForm($link_display_path, ['link_display' => 'custom_url', 'link_url' => 'a-custom-url'], 'Apply');
     // The form redirects to the master display.
     $this->drupalGet($path);
 
     $this->assertSession()->linkExists('Custom URL', 0, 'The link option has custom URL as summary.');
 
     // Test the default link_url value for new display
-    $this->drupalPostForm(NULL, [], t('Add Block'));
+    $this->drupalPostForm(NULL, [], 'Add Block');
     $this->assertSession()->addressEquals('admin/structure/views/view/test_display/edit/block_2');
     $this->clickLink(t('Custom URL'));
     $this->assertSession()->fieldValueEquals('link_url', 'a-custom-url');
@@ -240,7 +240,7 @@ class DisplayTest extends UITestBase {
     $display_title = "'<test>'";
     $this->drupalGet('admin/structure/views/view/test_display');
     $display_title_path = 'admin/structure/views/nojs/display/test_display/block_1/display_title';
-    $this->drupalPostForm($display_title_path, ['display_title' => $display_title], t('Apply'));
+    $this->drupalPostForm($display_title_path, ['display_title' => $display_title], 'Apply');
 
     // Ensure that the title is escaped as expected.
     $this->assertSession()->assertEscaped($display_title);
@@ -271,8 +271,8 @@ class DisplayTest extends UITestBase {
     $this->assertText('All displays');
 
     // Remove a display and test if the override option is hidden.
-    $this->drupalPostForm('admin/structure/views/view/test_display/edit/block_1', [], t('Delete @display', ['@display' => 'Block']));
-    $this->drupalPostForm(NULL, [], t('Save'));
+    $this->drupalPostForm('admin/structure/views/view/test_display/edit/block_1', [], 'Delete Block');
+    $this->drupalPostForm(NULL, [], 'Save');
 
     $this->drupalGet('admin/structure/views/nojs/handler/test_display/page_1/field/title');
     $this->assertNoText('All displays');
@@ -284,7 +284,7 @@ class DisplayTest extends UITestBase {
 
     // Test that the override option is shown if the current display is
     // overridden so that the option to revert is available.
-    $this->drupalPostForm(NULL, ['override[dropdown]' => 'page_1'], t('Apply'));
+    $this->drupalPostForm(NULL, ['override[dropdown]' => 'page_1'], 'Apply');
     \Drupal::configFactory()->getEditable('views.settings')->set('ui.show.master_display', FALSE)->save();
     $this->drupalGet('admin/structure/views/nojs/handler/test_display/page_1/field/title');
     $this->assertText('Revert to default');

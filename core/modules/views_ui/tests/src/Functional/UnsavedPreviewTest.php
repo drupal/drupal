@@ -55,26 +55,26 @@ class UnsavedPreviewTest extends UITestBase {
     $this->drupalGet('admin/structure/views/view/content');
     $this->assertSession()->statusCodeEquals(200);
 
-    $this->drupalPostForm(NULL, [], t('Add Page'));
+    $this->drupalPostForm(NULL, [], 'Add Page');
     $this->assertSession()->statusCodeEquals(200);
 
     $this->drupalGet('admin/structure/views/nojs/display/content/page_2/path');
     $this->assertSession()->statusCodeEquals(200);
 
-    $this->drupalPostForm(NULL, ['path' => 'foobarbaz'], t('Apply'));
+    $this->drupalPostForm(NULL, ['path' => 'foobarbaz'], 'Apply');
     $this->assertSession()->statusCodeEquals(200);
 
-    $this->drupalPostForm(NULL, [], t('Update preview'));
+    $this->drupalPostForm(NULL, [], 'Update preview');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertText('This display has no path');
 
     $this->drupalGet('admin/structure/views/view/content/edit/page_2');
     $this->assertSession()->statusCodeEquals(200);
 
-    $this->drupalPostForm(NULL, [], t('Save'));
+    $this->drupalPostForm(NULL, [], 'Save');
     $this->assertSession()->statusCodeEquals(200);
 
-    $this->drupalPostForm(NULL, [], t('Update preview'));
+    $this->drupalPostForm(NULL, [], 'Update preview');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->linkByHrefExists('foobarbaz');
   }

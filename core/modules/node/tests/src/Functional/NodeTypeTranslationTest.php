@@ -112,17 +112,17 @@ class NodeTypeTranslationTest extends BrowserTestBase {
     ];
 
     // Edit the title label to avoid having an exception when we save the translation.
-    $this->drupalPostForm("admin/structure/types/manage/$type/translate/$langcode/add", $edit, t('Save translation'));
+    $this->drupalPostForm("admin/structure/types/manage/$type/translate/$langcode/add", $edit, 'Save translation');
 
     // Check the name is translated without admin theme for editing.
-    $this->drupalPostForm('admin/appearance', ['use_admin_theme' => '0'], t('Save configuration'));
+    $this->drupalPostForm('admin/appearance', ['use_admin_theme' => '0'], 'Save configuration');
     $this->drupalGet("$langcode/node/add/$type");
     // This is a Spanish page, so ensure the text asserted is translated in
     // Spanish and not French by adding the langcode option.
     $this->assertRaw(t('Create @name', ['@name' => $translated_name], ['langcode' => $langcode]));
 
     // Check the name is translated with admin theme for editing.
-    $this->drupalPostForm('admin/appearance', ['use_admin_theme' => '1'], t('Save configuration'));
+    $this->drupalPostForm('admin/appearance', ['use_admin_theme' => '1'], 'Save configuration');
     $this->drupalGet("$langcode/node/add/$type");
     // This is a Spanish page, so ensure the text asserted is translated in
     // Spanish and not French by adding the langcode option.
@@ -140,14 +140,14 @@ class NodeTypeTranslationTest extends BrowserTestBase {
     $langcode = $this->additionalLangcodes[0];
 
     // Edit the title label for it to be displayed on the translation form.
-    $this->drupalPostForm("admin/structure/types/manage/$type", ['title_label' => 'Edited title'], t('Save content type'));
+    $this->drupalPostForm("admin/structure/types/manage/$type", ['title_label' => 'Edited title'], 'Save content type');
 
     // Assert that the title label is displayed on the translation form with the right value.
     $this->drupalGet("admin/structure/types/manage/$type/translate/$langcode/add");
     $this->assertText('Edited title');
 
     // Translate the title label.
-    $this->drupalPostForm(NULL, ["translation[config_names][core.base_field_override.node.$type.title][label]" => 'Translated title'], t('Save translation'));
+    $this->drupalPostForm(NULL, ["translation[config_names][core.base_field_override.node.$type.title][label]" => 'Translated title'], 'Save translation');
 
     // Assert that the right title label is displayed on the node add form. The
     // translations are created in this test; therefore, the assertions do not

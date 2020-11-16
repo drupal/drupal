@@ -49,7 +49,7 @@ class NodeRevisionWizardTest extends WizardTestBase {
     $type = [
       'show[wizard_key]' => 'node_revision',
     ];
-    $this->drupalPostForm('admin/structure/views/add', $type, t('Update "Show" choice'));
+    $this->drupalPostForm('admin/structure/views/add', $type, 'Update "Show" choice');
 
     $view = [];
     $view['label'] = $this->randomMachineName(16);
@@ -58,7 +58,7 @@ class NodeRevisionWizardTest extends WizardTestBase {
     $view['page[create]'] = FALSE;
     $view['show[type]'] = 'article';
     $view['show[sort]'] = 'changed:DESC';
-    $this->drupalPostForm(NULL, $view, t('Save and edit'));
+    $this->drupalPostForm(NULL, $view, 'Save and edit');
 
     $view = Views::getView($view['id']);
     $view->initHandlers();
@@ -85,7 +85,7 @@ class NodeRevisionWizardTest extends WizardTestBase {
     $type = [
       'show[wizard_key]' => 'node_revision',
     ];
-    $this->drupalPostForm('admin/structure/views/add', $type, t('Update "Show" choice'));
+    $this->drupalPostForm('admin/structure/views/add', $type, 'Update "Show" choice');
     $view = [];
     $view['label'] = $this->randomMachineName(16);
     $view['id'] = strtolower($this->randomMachineName(16));
@@ -93,7 +93,7 @@ class NodeRevisionWizardTest extends WizardTestBase {
     $view['page[create]'] = FALSE;
     $view['show[type]'] = 'all';
     $view['show[sort]'] = 'changed:DESC';
-    $this->drupalPostForm(NULL, $view, t('Save and edit'));
+    $this->drupalPostForm(NULL, $view, 'Save and edit');
 
     $view = Views::getView($view['id']);
     $view->initHandlers();

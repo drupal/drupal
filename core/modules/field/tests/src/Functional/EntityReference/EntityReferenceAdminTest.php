@@ -90,22 +90,22 @@ class EntityReferenceAdminTest extends BrowserTestBase {
       'page[style][style_plugin]' => 'default',
       'page[style][row_plugin]' => 'fields',
     ];
-    $this->drupalPostForm('admin/structure/views/add', $edit, t('Save and edit'));
-    $this->drupalPostForm(NULL, [], t('Duplicate as Entity Reference'));
+    $this->drupalPostForm('admin/structure/views/add', $edit, 'Save and edit');
+    $this->drupalPostForm(NULL, [], 'Duplicate as Entity Reference');
     $this->clickLink(t('Settings'));
     $edit = [
       'style_options[search_fields][title]' => 'title',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Apply'));
+    $this->drupalPostForm(NULL, $edit, 'Apply');
 
     // Set sort to NID ascending.
     $edit = [
       'name[node_field_data.nid]' => 1,
     ];
-    $this->drupalPostForm('admin/structure/views/nojs/add-handler/node_test_view/entity_reference_1/sort', $edit, t('Add and configure sort criteria'));
-    $this->drupalPostForm(NULL, [], t('Apply'));
+    $this->drupalPostForm('admin/structure/views/nojs/add-handler/node_test_view/entity_reference_1/sort', $edit, 'Add and configure sort criteria');
+    $this->drupalPostForm(NULL, [], 'Apply');
 
-    $this->drupalPostForm('admin/structure/views/view/node_test_view/edit/entity_reference_1', [], t('Save'));
+    $this->drupalPostForm('admin/structure/views/view/node_test_view/edit/entity_reference_1', [], 'Save');
     $this->clickLink(t('Settings'));
 
     // Create a test entity reference field.
@@ -115,24 +115,24 @@ class EntityReferenceAdminTest extends BrowserTestBase {
       'label' => 'Test Entity Reference Field',
       'field_name' => $field_name,
     ];
-    $this->drupalPostForm($bundle_path . '/fields/add-field', $edit, t('Save and continue'));
+    $this->drupalPostForm($bundle_path . '/fields/add-field', $edit, 'Save and continue');
 
     // Set to unlimited.
     $edit = [
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save field settings'));
+    $this->drupalPostForm(NULL, $edit, 'Save field settings');
 
     // Add the view to the test field.
     $edit = [
       'settings[handler]' => 'views',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Change handler'));
+    $this->drupalPostForm(NULL, $edit, 'Change handler');
     $edit = [
       'required' => FALSE,
       'settings[handler_settings][view][view_and_display]' => 'node_test_view:entity_reference_1',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save settings'));
+    $this->drupalPostForm(NULL, $edit, 'Save settings');
 
     // Create nodes.
     $node1 = Node::create([
@@ -156,20 +156,20 @@ class EntityReferenceAdminTest extends BrowserTestBase {
 
     // Try to add a new node, fill the entity reference field and submit the
     // form.
-    $this->drupalPostForm('node/add/' . $this->type, [], t('Add another item'));
+    $this->drupalPostForm('node/add/' . $this->type, [], 'Add another item');
     $edit = [
       'title[0][value]' => 'Example',
       'field_test_entity_ref_field[0][target_id]' => 'Foo Node (' . $node1->id() . ')',
       'field_test_entity_ref_field[1][target_id]' => 'Foo Node (' . $node2->id() . ')',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
 
     $edit = [
       'title[0][value]' => 'Example',
       'field_test_entity_ref_field[0][target_id]' => 'Test',
     ];
-    $this->drupalPostForm('node/add/' . $this->type, $edit, t('Save'));
+    $this->drupalPostForm('node/add/' . $this->type, $edit, 'Save');
 
     // Assert that entity reference autocomplete field is validated.
     $this->assertText('There are no entities matching "Test"');
@@ -178,7 +178,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
       'title[0][value]' => 'Test',
       'field_test_entity_ref_field[0][target_id]' => $node1->getTitle(),
     ];
-    $this->drupalPostForm('node/add/' . $this->type, $edit, t('Save'));
+    $this->drupalPostForm('node/add/' . $this->type, $edit, 'Save');
 
     // Assert the results multiple times to avoid sorting problem of nodes with
     // the same title.
@@ -191,7 +191,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
       'title[0][value]' => 'Test',
       'field_test_entity_ref_field[0][target_id]' => $node1->getTitle() . ' (' . $node1->id() . ')',
     ];
-    $this->drupalPostForm('node/add/' . $this->type, $edit, t('Save'));
+    $this->drupalPostForm('node/add/' . $this->type, $edit, 'Save');
     $this->assertSession()->linkExists($node1->getTitle());
 
     // Tests adding default values to autocomplete widgets.
@@ -202,7 +202,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     $edit = [
       'cardinality' => -1,
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save field settings'));
+    $this->drupalPostForm(NULL, $edit, 'Save field settings');
     $this->drupalGet($bundle_path . '/fields/' . $field_path);
     $term_name = $this->randomString();
     $result = \Drupal::entityQuery('taxonomy_term')
@@ -215,13 +215,13 @@ class EntityReferenceAdminTest extends BrowserTestBase {
       // This must be set before new entities will be auto-created.
       'settings[handler_settings][auto_create]' => 1,
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save settings'));
+    $this->drupalPostForm(NULL, $edit, 'Save settings');
     $this->drupalGet($bundle_path . '/fields/' . $field_path);
     $edit = [
       // A term that doesn't yet exist.
       'default_value_input[field_' . $taxonomy_term_field_name . '][0][target_id]' => $term_name,
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save settings'));
+    $this->drupalPostForm(NULL, $edit, 'Save settings');
     // The term should now exist.
     $result = \Drupal::entityQuery('taxonomy_term')
       ->condition('name', $term_name)
@@ -330,7 +330,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
       'settings[handler_settings][auto_create]' => TRUE,
       'settings[handler_settings][auto_create_bundle]' => $vocabularies[1]->id(),
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save settings'));
+    $this->drupalPostForm(NULL, $edit, 'Save settings');
 
     /** @var \Drupal\field\Entity\FieldConfig $field_config */
     $field_config = FieldConfig::load($field_id);

@@ -61,7 +61,7 @@ class ImportOpmlTest extends AggregatorTestBase {
     $before = $count_query->execute();
 
     $edit = [];
-    $this->drupalPostForm('admin/config/services/aggregator/add/opml', $edit, t('Import'));
+    $this->drupalPostForm('admin/config/services/aggregator/add/opml', $edit, 'Import');
     $this->assertRaw(t('<em>Either</em> upload a file or enter a URL.'));
 
     $path = $this->getEmptyOpml();
@@ -69,11 +69,11 @@ class ImportOpmlTest extends AggregatorTestBase {
       'files[upload]' => $path,
       'remote' => file_create_url($path),
     ];
-    $this->drupalPostForm('admin/config/services/aggregator/add/opml', $edit, t('Import'));
+    $this->drupalPostForm('admin/config/services/aggregator/add/opml', $edit, 'Import');
     $this->assertRaw(t('<em>Either</em> upload a file or enter a URL.'));
 
     $edit = ['remote' => 'invalidUrl://empty'];
-    $this->drupalPostForm('admin/config/services/aggregator/add/opml', $edit, t('Import'));
+    $this->drupalPostForm('admin/config/services/aggregator/add/opml', $edit, 'Import');
     $this->assertText('The URL invalidUrl://empty is not valid.', 'Error if the URL is invalid.');
 
     $after = $count_query->execute();
@@ -88,11 +88,11 @@ class ImportOpmlTest extends AggregatorTestBase {
     $before = $count_query->execute();
 
     $form['files[upload]'] = $this->getInvalidOpml();
-    $this->drupalPostForm('admin/config/services/aggregator/add/opml', $form, t('Import'));
+    $this->drupalPostForm('admin/config/services/aggregator/add/opml', $form, 'Import');
     $this->assertText('No new feed has been added.', 'Attempting to upload invalid XML.');
 
     $edit = ['remote' => file_create_url($this->getEmptyOpml())];
-    $this->drupalPostForm('admin/config/services/aggregator/add/opml', $edit, t('Import'));
+    $this->drupalPostForm('admin/config/services/aggregator/add/opml', $edit, 'Import');
     $this->assertText('No new feed has been added.', 'Attempting to load empty OPML from remote URL.');
 
     $after = $count_query->execute();
@@ -109,7 +109,7 @@ class ImportOpmlTest extends AggregatorTestBase {
       'files[upload]' => $this->getValidOpml($feeds),
       'refresh'       => '900',
     ];
-    $this->drupalPostForm('admin/config/services/aggregator/add/opml', $edit, t('Import'));
+    $this->drupalPostForm('admin/config/services/aggregator/add/opml', $edit, 'Import');
     // Verify that a duplicate URL was identified.
     $this->assertRaw(t('A feed with the URL %url already exists.', ['%url' => $feeds[0]['url[0][value]']]));
     // Verify that a duplicate title was identified.

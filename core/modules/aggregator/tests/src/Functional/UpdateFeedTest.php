@@ -31,7 +31,7 @@ class UpdateFeedTest extends AggregatorTestBase {
       if (isset($feed->{$same_field}->value)) {
         $edit[$same_field] = $feed->{$same_field}->value;
       }
-      $this->drupalPostForm('aggregator/sources/' . $feed->id() . '/configure', $edit, t('Save'));
+      $this->drupalPostForm('aggregator/sources/' . $feed->id() . '/configure', $edit, 'Save');
       $this->assertText('The feed ' . $edit['title[0][value]'] . ' has been updated.', new FormattableMarkup('The feed %name has been updated.', ['%name' => $edit['title[0][value]']]));
 
       // Verify that the creation message contains a link to a feed.

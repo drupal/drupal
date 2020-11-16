@@ -171,7 +171,7 @@ class NodeRevisionsTest extends NodeTestBase {
     $this->assertTrue($node->isDefaultRevision(), 'Third node revision is the default one.');
 
     // Confirm that revisions revert properly.
-    $this->drupalPostForm("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionid() . "/revert", [], t('Revert'));
+    $this->drupalPostForm("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionid() . "/revert", [], 'Revert');
     $this->assertRaw(t('@type %title has been reverted to the revision from %revision-date.', [
       '@type' => 'Basic page',
       '%title' => $nodes[1]->label(),
@@ -190,7 +190,7 @@ class NodeRevisionsTest extends NodeTestBase {
     $this->assertFalse($node->isDefaultRevision(), 'Third node revision is not the default one.');
 
     // Confirm revisions delete properly.
-    $this->drupalPostForm("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionId() . "/delete", [], t('Delete'));
+    $this->drupalPostForm("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionId() . "/delete", [], 'Delete');
     $this->assertRaw(t('Revision from %revision-date of @type %title has been deleted.', [
       '%revision-date' => $this->container->get('date.formatter')->format($nodes[1]->getRevisionCreationTime()),
       '@type' => 'Basic page',
@@ -214,7 +214,7 @@ class NodeRevisionsTest extends NodeTestBase {
         'revision_timestamp' => $old_revision_date,
       ])
       ->execute();
-    $this->drupalPostForm("node/" . $node->id() . "/revisions/" . $nodes[2]->getRevisionId() . "/revert", [], t('Revert'));
+    $this->drupalPostForm("node/" . $node->id() . "/revisions/" . $nodes[2]->getRevisionId() . "/revert", [], 'Revert');
     $this->assertRaw(t('@type %title has been reverted to the revision from %revision-date.', [
       '@type' => 'Basic page',
       '%title' => $nodes[2]->label(),
@@ -420,7 +420,7 @@ class NodeRevisionsTest extends NodeTestBase {
       'node_revision' => $revert_id,
       'langcode' => 'it',
     ]);
-    $this->drupalPostForm($revert_translation_url, [], t('Revert'));
+    $this->drupalPostForm($revert_translation_url, [], 'Revert');
     /** @var \Drupal\node\NodeStorage $node_storage */
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $node_storage->resetCache();
@@ -437,7 +437,7 @@ class NodeRevisionsTest extends NodeTestBase {
     // translation revision again, and check that the desired value was reverted
     // but the default translation value was preserved. But in addition the
     // untranslated field will be reverted as well.
-    $this->drupalPostForm($revert_translation_url, ['revert_untranslated_fields' => TRUE], t('Revert'));
+    $this->drupalPostForm($revert_translation_url, ['revert_untranslated_fields' => TRUE], 'Revert');
     $node_storage->resetCache();
     /** @var \Drupal\node\NodeInterface $node */
     $node = $node_storage->load($node->id());
@@ -454,7 +454,7 @@ class NodeRevisionsTest extends NodeTestBase {
       'node' => $node->id(),
       'node_revision' => $initial_revision_id,
     ]);
-    $this->drupalPostForm($revert_url, [], t('Revert'));
+    $this->drupalPostForm($revert_url, [], 'Revert');
     $node_storage->resetCache();
     /** @var \Drupal\node\NodeInterface $node */
     $node = $node_storage->load($node->id());

@@ -102,7 +102,7 @@ class UserTranslationUITest extends ContentTranslationUITestBase {
       'edit-form',
       ['language' => $this->container->get('language_manager')->getLanguage('en')]
     );
-    $this->drupalPostForm($url, [], t('Cancel account'));
+    $this->drupalPostForm($url, [], 'Cancel account');
     $this->assertSession()->statusCodeEquals(200);
   }
 

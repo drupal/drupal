@@ -80,7 +80,7 @@ class SearchPageCacheTagsTest extends BrowserTestBase {
     // Node search results.
     $edit = [];
     $edit['keys'] = 'bike shed';
-    $this->drupalPostForm('search/node', $edit, t('Search'));
+    $this->drupalPostForm('search/node', $edit, 'Search');
     $this->assertText('bike shed shop');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:search.page.node_search');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'search_index');
@@ -94,7 +94,7 @@ class SearchPageCacheTagsTest extends BrowserTestBase {
     // Updating a node should invalidate the search plugin's index cache tag.
     $this->node->title = 'bike shop';
     $this->node->save();
-    $this->drupalPostForm('search/node', $edit, t('Search'));
+    $this->drupalPostForm('search/node', $edit, 'Search');
     $this->assertText('bike shop');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:search.page.node_search');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'search_index');
@@ -107,7 +107,7 @@ class SearchPageCacheTagsTest extends BrowserTestBase {
 
     // Deleting a node should invalidate the search plugin's index cache tag.
     $this->node->delete();
-    $this->drupalPostForm('search/node', $edit, t('Search'));
+    $this->drupalPostForm('search/node', $edit, 'Search');
     $this->assertText('Your search yielded no results.');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:search.page.node_search');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'search_index');
@@ -123,7 +123,7 @@ class SearchPageCacheTagsTest extends BrowserTestBase {
 
     // User search results.
     $edit['keys'] = $this->searchingUser->getAccountName();
-    $this->drupalPostForm('search/user', $edit, t('Search'));
+    $this->drupalPostForm('search/user', $edit, 'Search');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:search.page.user_search');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'user_list');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'user:2');
@@ -162,10 +162,10 @@ class SearchPageCacheTagsTest extends BrowserTestBase {
       'label' => 'Test label',
       'field_name' => 'test__ref',
       'new_storage_type' => 'entity_reference',
-    ], t('Save and continue'));
+    ], 'Save and continue');
 
     // Second step: 'Field settings' form.
-    $this->drupalPostForm(NULL, [], t('Save field settings'));
+    $this->drupalPostForm(NULL, [], 'Save field settings');
 
     // Create a new node of our newly created node type and fill in the entity
     // reference field.
@@ -173,7 +173,7 @@ class SearchPageCacheTagsTest extends BrowserTestBase {
       'title[0][value]' => 'Llama shop',
       'field_test__ref[0][target_id]' => $this->node->getTitle(),
     ];
-    $this->drupalPostForm('node/add/' . $type->id(), $edit, t('Save'));
+    $this->drupalPostForm('node/add/' . $type->id(), $edit, 'Save');
 
     // Test that the value of the entity reference field is shown.
     $this->drupalGet('node/2');
@@ -200,7 +200,7 @@ class SearchPageCacheTagsTest extends BrowserTestBase {
     // well.
     $edit = [];
     $edit['keys'] = 'shop';
-    $this->drupalPostForm('search/node', $edit, t('Search'));
+    $this->drupalPostForm('search/node', $edit, 'Search');
     $this->assertText('bike shed shop');
     $this->assertText('Llama shop');
     $expected_cache_tags = Cache::mergeTags($default_search_tags, [
@@ -218,7 +218,7 @@ class SearchPageCacheTagsTest extends BrowserTestBase {
     // because node:2 is reference in node:1 as an entity reference.
     $edit = [];
     $edit['keys'] = 'Llama';
-    $this->drupalPostForm('search/node', $edit, t('Search'));
+    $this->drupalPostForm('search/node', $edit, 'Search');
     $this->assertText('Llama shop');
     $expected_cache_tags = Cache::mergeTags($default_search_tags, [
       'node:1',
