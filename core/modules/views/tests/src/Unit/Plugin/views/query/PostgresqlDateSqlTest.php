@@ -38,7 +38,7 @@ class PostgresqlDateSqlTest extends UnitTestCase {
   public function testGetDateField() {
     $date_sql = new PostgresqlDateSql($this->database);
 
-    $expected = "TO_TIMESTAMP(foo.field, 'YYYY-MM-DD HH24:MI:SS')";
+    $expected = "TO_TIMESTAMP(foo.field, 'YYYY-MM-DD\"T\"HH24:MI:SS')";
     $this->assertEquals($expected, $date_sql->getDateField('foo.field', TRUE));
 
     $expected = 'TO_TIMESTAMP(foo.field)';
