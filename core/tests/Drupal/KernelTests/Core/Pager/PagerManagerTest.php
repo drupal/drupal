@@ -38,4 +38,19 @@ class PagerManagerTest extends KernelTestBase {
     $this->assertEquals(",,$index", $query['page']);
   }
 
+  /**
+   * @covers ::findPage
+   */
+  public function testFindPage() {
+    $request = Request::create('http://example.com', 'GET', ['page' => '0,10']);
+
+    /* @var $request_stack \Symfony\Component\HttpFoundation\RequestStack */
+    $request_stack = $this->container->get('request_stack');
+    $request_stack->push($request);
+
+    $pager_manager = $this->container->get('pager.manager');
+
+    $this->assertEquals(10, $pager_manager->findPage(1));
+  }
+
 }

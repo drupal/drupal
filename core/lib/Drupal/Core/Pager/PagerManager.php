@@ -61,6 +61,13 @@ class PagerManager implements PagerManagerInterface {
   /**
    * {@inheritdoc}
    */
+  public function findPage(int $pager_id = 0): int {
+    return $this->pagerParams->findPage($pager_id);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getUpdatedParameters(array $query, $element, $index) {
     // Build the 'page' query parameter. This is built based on the current
     // page of each pager element (or NULL if the pager is not set), with the
