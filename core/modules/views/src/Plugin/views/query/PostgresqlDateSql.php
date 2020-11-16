@@ -66,7 +66,7 @@ class PostgresqlDateSql implements DateSqlInterface {
   public function getDateField($field, $string_date) {
     if ($string_date) {
       // Ensures compatibility with field offset operation below.
-      return "TO_TIMESTAMP($field, 'YYYY-MM-DD HH24:MI:SS')";
+      return "TO_TIMESTAMP($field, 'YYYY-MM-DD\"T\"HH24:MI:SS')";
     }
     return "TO_TIMESTAMP($field)";
   }
