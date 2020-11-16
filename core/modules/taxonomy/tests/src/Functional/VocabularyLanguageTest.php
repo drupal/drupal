@@ -52,7 +52,7 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
     $edit['description'] = $this->randomMachineName();
     $edit['langcode'] = 'aa';
     $edit['vid'] = $vid;
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
 
     // Check the language on the edit page.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $vid);
@@ -61,7 +61,7 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
     // Change the language and save again.
     $edit['langcode'] = 'bb';
     unset($edit['vid']);
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
 
     // Check again the language on the edit page.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $vid);
@@ -81,7 +81,7 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
       'default_language[language_alterable]' => TRUE,
     ];
     $vid = $edit['vid'];
-    $this->drupalPostForm('admin/structure/taxonomy/add', $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/taxonomy/add', $edit, 'Save');
 
     // Check that the vocabulary was actually created.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $edit['vid']);
@@ -101,7 +101,7 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
       'default_language[langcode]' => 'aa',
       'default_language[language_alterable]' => FALSE,
     ];
-    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $vid, $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $vid, $edit, 'Save');
 
     // And check again the settings and also the interface.
     $language_settings = ContentLanguageSettings::loadByEntityTypeBundle('taxonomy_term', $vid);
@@ -118,7 +118,7 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
       'default_language[langcode]' => 'authors_default',
       'default_language[language_alterable]' => FALSE,
     ];
-    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $vid, $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $vid, $edit, 'Save');
 
     // Check that we have the new settings.
     $new_settings = ContentLanguageSettings::loadByEntityTypeBundle('taxonomy_term', $vid);

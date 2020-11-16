@@ -37,16 +37,16 @@ class LanguagePathMonolingualTest extends BrowserTestBase {
     // Enable French language.
     $edit = [];
     $edit['predefined_langcode'] = 'fr';
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
 
     // Make French the default language.
     $edit = [
       'site_default_language' => 'fr',
     ];
-    $this->drupalPostForm('admin/config/regional/language', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/regional/language', $edit, 'Save configuration');
 
     // Delete English.
-    $this->drupalPostForm('admin/config/regional/language/delete/en', [], t('Delete'));
+    $this->drupalPostForm('admin/config/regional/language/delete/en', [], 'Delete');
 
     // Changing the default language causes a container rebuild. Therefore need
     // to rebuild the container in the test environment.
@@ -59,7 +59,7 @@ class LanguagePathMonolingualTest extends BrowserTestBase {
 
     // Set language detection to URL.
     $edit = ['language_interface[enabled][language-url]' => TRUE];
-    $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));
+    $this->drupalPostForm('admin/config/regional/language/detection', $edit, 'Save settings');
     $this->drupalPlaceBlock('local_actions_block');
   }
 

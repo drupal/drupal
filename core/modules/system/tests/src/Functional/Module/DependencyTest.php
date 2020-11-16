@@ -23,12 +23,12 @@ class DependencyTest extends ModuleTestBase {
     $edit = [
       'modules[filter][enable]' => TRUE,
     ];
-    $this->drupalPostForm('admin/modules', $edit, t('Install'));
+    $this->drupalPostForm('admin/modules', $edit, 'Install');
     // Enable module with project namespace to ensure nothing breaks.
     $edit = [
       'modules[system_project_namespace_test][enable]' => TRUE,
     ];
-    $this->drupalPostForm('admin/modules', $edit, t('Install'));
+    $this->drupalPostForm('admin/modules', $edit, 'Install');
     $this->assertModules(['system_project_namespace_test'], TRUE);
   }
 
@@ -39,7 +39,7 @@ class DependencyTest extends ModuleTestBase {
     // Attempt to enable Content Translation without Language enabled.
     $edit = [];
     $edit['modules[content_translation][enable]'] = 'content_translation';
-    $this->drupalPostForm('admin/modules', $edit, t('Install'));
+    $this->drupalPostForm('admin/modules', $edit, 'Install');
     $this->assertText('Some required modules must be enabled', 'Dependency required.');
 
     $this->assertModules(['content_translation', 'language'], FALSE);
@@ -47,7 +47,7 @@ class DependencyTest extends ModuleTestBase {
     // Assert that the language tables weren't enabled.
     $this->assertTableCount('language', FALSE);
 
-    $this->drupalPostForm(NULL, [], t('Continue'));
+    $this->drupalPostForm(NULL, [], 'Continue');
     $this->assertText('2 modules have been enabled: Content Translation, Language.', 'Modules status has been updated.');
     $this->assertModules(['content_translation', 'language'], TRUE);
 
@@ -125,7 +125,7 @@ class DependencyTest extends ModuleTestBase {
     // Ensure the modules can actually be installed.
     $edit['modules[common_test][enable]'] = 'common_test';
     $edit['modules[system_core_semver_test][enable]'] = 'system_core_semver_test';
-    $this->drupalPostForm('admin/modules', $edit, t('Install'));
+    $this->drupalPostForm('admin/modules', $edit, 'Install');
     $this->assertModules(['common_test', 'system_core_semver_test'], TRUE);
   }
 
@@ -142,7 +142,7 @@ class DependencyTest extends ModuleTestBase {
     $edit = [];
     $edit['modules[requirements1_test][enable]'] = 'requirements1_test';
     $edit['modules[requirements2_test][enable]'] = 'requirements2_test';
-    $this->drupalPostForm('admin/modules', $edit, t('Install'));
+    $this->drupalPostForm('admin/modules', $edit, 'Install');
 
     // Makes sure the modules were NOT installed.
     $this->assertText('Requirements 1 Test failed requirements', 'Modules status has been updated.');
@@ -173,7 +173,7 @@ class DependencyTest extends ModuleTestBase {
     // is correct.
     $edit = [];
     $edit['modules[color][enable]'] = 'color';
-    $this->drupalPostForm('admin/modules', $edit, t('Install'));
+    $this->drupalPostForm('admin/modules', $edit, 'Install');
     $this->assertModules(['color'], FALSE);
     // Note that dependencies are sorted alphabetically in the confirmation
     // message.
@@ -181,7 +181,7 @@ class DependencyTest extends ModuleTestBase {
 
     $edit['modules[config][enable]'] = 'config';
     $edit['modules[help][enable]'] = 'help';
-    $this->drupalPostForm('admin/modules', $edit, t('Install'));
+    $this->drupalPostForm('admin/modules', $edit, 'Install');
     $this->assertModules(['color', 'config', 'help'], TRUE);
 
     // Check the actual order which is saved by module_test_modules_enabled().
@@ -195,8 +195,8 @@ class DependencyTest extends ModuleTestBase {
   public function testUninstallDependents() {
     // Enable the forum module.
     $edit = ['modules[forum][enable]' => 'forum'];
-    $this->drupalPostForm('admin/modules', $edit, t('Install'));
-    $this->drupalPostForm(NULL, [], t('Continue'));
+    $this->drupalPostForm('admin/modules', $edit, 'Install');
+    $this->drupalPostForm(NULL, [], 'Continue');
     $this->assertModules(['forum'], TRUE);
 
     // Check that the comment module cannot be uninstalled.
@@ -216,14 +216,14 @@ class DependencyTest extends ModuleTestBase {
     // Uninstall the forum module, and check that taxonomy now can also be
     // uninstalled.
     $edit = ['uninstall[forum]' => 'forum'];
-    $this->drupalPostForm('admin/modules/uninstall', $edit, t('Uninstall'));
-    $this->drupalPostForm(NULL, [], t('Uninstall'));
+    $this->drupalPostForm('admin/modules/uninstall', $edit, 'Uninstall');
+    $this->drupalPostForm(NULL, [], 'Uninstall');
     $this->assertText('The selected modules have been uninstalled.', 'Modules status has been updated.');
 
     // Uninstall comment module.
     $edit = ['uninstall[comment]' => 'comment'];
-    $this->drupalPostForm('admin/modules/uninstall', $edit, t('Uninstall'));
-    $this->drupalPostForm(NULL, [], t('Uninstall'));
+    $this->drupalPostForm('admin/modules/uninstall', $edit, 'Uninstall');
+    $this->drupalPostForm(NULL, [], 'Uninstall');
     $this->assertText('The selected modules have been uninstalled.', 'Modules status has been updated.');
   }
 

@@ -33,7 +33,7 @@ class CachedDataUITest extends UITestBase {
 
     $this->drupalGet('admin/structure/views/view/test_view/edit');
     // Make sure we have 'changes' to the view.
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/title', [], t('Apply'));
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/title', [], 'Apply');
     $this->assertText('You have unsaved changes.');
     $this->assertEqual($temp_store->getMetadata('test_view')->getOwnerId(), $views_admin_user_uid, 'View cache has been saved.');
 
@@ -44,13 +44,13 @@ class CachedDataUITest extends UITestBase {
     $this->assertEqual($temp_store->getMetadata('test_view')->getOwnerId(), $views_admin_user_uid, 'The view is locked.');
 
     // Cancel the view edit and make sure the cache is deleted.
-    $this->drupalPostForm(NULL, [], t('Cancel'));
+    $this->drupalPostForm(NULL, [], 'Cancel');
     $this->assertEqual($temp_store->getMetadata('test_view'), NULL, 'Shared tempstore data has been removed.');
     // Test we are redirected to the view listing page.
     $this->assertSession()->addressEquals('admin/structure/views');
 
     // Log in with another user and make sure the view is locked and break.
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/title', [], t('Apply'));
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/title', [], 'Apply');
     $this->drupalLogin($this->adminUser);
 
     $this->drupalGet('admin/structure/views/view/test_view/edit');
@@ -61,17 +61,17 @@ class CachedDataUITest extends UITestBase {
     $this->assertSession()->linkByHrefExists('admin/structure/views/view/test_view/break-lock');
     // Break the lock.
     $this->clickLink(t('break this lock'));
-    $this->drupalPostForm(NULL, [], t('Break lock'));
+    $this->drupalPostForm(NULL, [], 'Break lock');
     // Test that save and cancel buttons are shown.
     $this->assertSession()->buttonExists('Save');
     $this->assertSession()->buttonExists('Cancel');
     // Test we can save the view.
-    $this->drupalPostForm('admin/structure/views/view/test_view/edit', [], t('Save'));
+    $this->drupalPostForm('admin/structure/views/view/test_view/edit', [], 'Save');
     $this->assertRaw(t('The view %view has been saved.', ['%view' => 'Test view']));
 
     // Test that a deleted view has no tempstore data.
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/title', [], t('Apply'));
-    $this->drupalPostForm('admin/structure/views/view/test_view/delete', [], t('Delete'));
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/title', [], 'Apply');
+    $this->drupalPostForm('admin/structure/views/view/test_view/delete', [], 'Delete');
     // No view tempstore data should be returned for this view after deletion.
     $this->assertEqual($temp_store->getMetadata('test_view'), NULL, 'View tempstore data has been removed after deletion.');
   }

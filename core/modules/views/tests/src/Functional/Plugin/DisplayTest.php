@@ -132,7 +132,7 @@ class DisplayTest extends ViewTestBase {
     $this->clickLink('Test option title');
 
     $test_option = $this->randomString();
-    $this->drupalPostForm(NULL, ['test_option' => $test_option], t('Apply'));
+    $this->drupalPostForm(NULL, ['test_option' => $test_option], 'Apply');
 
     // Check the new value has been saved by checking the UI summary text.
     $this->drupalGet('admin/structure/views/view/test_view/edit/display_test_1');

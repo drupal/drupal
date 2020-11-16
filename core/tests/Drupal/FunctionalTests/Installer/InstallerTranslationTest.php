@@ -100,12 +100,12 @@ class InstallerTranslationTest extends InstallerTestBase {
     $this->assertEqual($account->language()->getId(), 'de', 'New user is German.');
 
     // Ensure that we can enable basic_auth on a non-english site.
-    $this->drupalPostForm('admin/modules', ['modules[basic_auth][enable]' => TRUE], t('Install'));
+    $this->drupalPostForm('admin/modules', ['modules[basic_auth][enable]' => TRUE], 'Install');
     $this->assertSession()->statusCodeEquals(200);
 
     // Assert that the theme CSS was added to the page.
     $edit = ['preprocess_css' => FALSE];
-    $this->drupalPostForm('admin/config/development/performance', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/development/performance', $edit, 'Save configuration');
     $this->drupalGet('<front>');
     $this->assertRaw('classy/css/components/action-links.css');
 
@@ -116,7 +116,7 @@ class InstallerTranslationTest extends InstallerTestBase {
       $edit['langcode'] = 'de';
       $edit['translation'] = 'translated';
       $edit['string'] = $sample;
-      $this->drupalPostForm('admin/config/regional/translate', $edit, t('Filter'));
+      $this->drupalPostForm('admin/config/regional/translate', $edit, 'Filter');
       $this->assertText($sample . ' de');
     }
 
@@ -135,7 +135,7 @@ class InstallerTranslationTest extends InstallerTestBase {
 
     // Assert that adding English makes the English override available.
     $edit = ['predefined_langcode' => 'en'];
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
     $override_en = $language_manager->getLanguageConfigOverride('en', 'user.settings');
     $this->assertFalse($override_en->isNew());
     $this->assertEqual($override_en->get('anonymous'), 'Anonymous');

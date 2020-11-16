@@ -93,7 +93,7 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
     $edit['title[0][value]'] = $original_title = $this->randomMachineName();
     $edit['body[0][value]'] = $this->randomMachineName();
     $edit["{$this->fieldName1}[]"] = $term->id();
-    $this->drupalPostForm('node/add/article', $edit, t('Save'));
+    $this->drupalPostForm('node/add/article', $edit, 'Save');
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
 
     $this->drupalGet('taxonomy/term/' . $term->id());
@@ -113,7 +113,7 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
 
     $edit['title[0][value]'] = $translated_title = $this->randomMachineName();
 
-    $this->drupalPostForm('node/' . $node->id() . '/translations/add/en/ur', $edit, t('Save (this translation)'));
+    $this->drupalPostForm('node/' . $node->id() . '/translations/add/en/ur', $edit, 'Save (this translation)');
 
     $this->drupalGet('taxonomy/term/' . $term->id());
     $this->assertText($term->label());

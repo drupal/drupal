@@ -347,11 +347,11 @@ class CommentPagerTest extends CommentTestBase {
     $this->assertText('Pager ID: 1');
     $this->drupalPostForm(NULL, [], 'comment_settings_edit');
     // Change default pager to 2.
-    $this->drupalPostForm(NULL, ['fields[comment][settings_edit_form][settings][pager_id]' => 2], t('Save'));
+    $this->drupalPostForm(NULL, ['fields[comment][settings_edit_form][settings][pager_id]' => 2], 'Save');
     $this->assertText('Pager ID: 2');
     // Revert the changes.
     $this->drupalPostForm(NULL, [], 'comment_settings_edit');
-    $this->drupalPostForm(NULL, ['fields[comment][settings_edit_form][settings][pager_id]' => 0], t('Save'));
+    $this->drupalPostForm(NULL, ['fields[comment][settings_edit_form][settings][pager_id]' => 0], 'Save');
     $this->assertNoText('Pager ID: 0', 'No summary for standard pager');
 
     $this->drupalLogin($this->adminUser);

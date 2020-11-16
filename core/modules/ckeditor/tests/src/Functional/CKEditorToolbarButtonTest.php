@@ -62,10 +62,10 @@ class CKEditorToolbarButtonTest extends BrowserTestBase {
     // Install the Arabic language (which is RTL) and configure as the default.
     $edit = [];
     $edit['predefined_langcode'] = 'ar';
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
 
     $edit = ['site_default_language' => 'ar'];
-    $this->drupalPostForm('admin/config/regional/language', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/regional/language', $edit, 'Save configuration');
     // Once the default language is changed, go to the tested text format
     // configuration page.
     $this->drupalGet('admin/config/content/formats/manage/full_html');

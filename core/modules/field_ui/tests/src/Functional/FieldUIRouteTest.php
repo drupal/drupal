@@ -55,7 +55,7 @@ class FieldUIRouteTest extends BrowserTestBase {
     $this->assertLocalTasks();
 
     $edit = ['display_modes_custom[compact]' => TRUE];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $this->drupalGet('admin/config/people/accounts/display/compact');
     $this->assertSession()->titleEquals('Manage display | Drupal');
     $this->assertLocalTasks();
@@ -69,7 +69,7 @@ class FieldUIRouteTest extends BrowserTestBase {
     $this->assertLocalTasks();
 
     $edit = ['display_modes_custom[register]' => TRUE];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet('admin/config/people/accounts/form-display/register');
     $this->assertSession()->titleEquals('Manage form display | Drupal');
@@ -86,7 +86,7 @@ class FieldUIRouteTest extends BrowserTestBase {
     $this->container->get('router.builder')->rebuildIfNeeded();
 
     $edit = ['display_modes_custom[test]' => TRUE];
-    $this->drupalPostForm('admin/config/people/accounts/display', $edit, t('Save'));
+    $this->drupalPostForm('admin/config/people/accounts/display', $edit, 'Save');
     $this->assertSession()->linkExists('Test');
 
     // Create new form mode and verify it's available on the Manage Form
@@ -99,7 +99,7 @@ class FieldUIRouteTest extends BrowserTestBase {
     $this->container->get('router.builder')->rebuildIfNeeded();
 
     $edit = ['display_modes_custom[test]' => TRUE];
-    $this->drupalPostForm('admin/config/people/accounts/form-display', $edit, t('Save'));
+    $this->drupalPostForm('admin/config/people/accounts/form-display', $edit, 'Save');
     $this->assertSession()->linkExists('Test');
   }
 

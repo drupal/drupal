@@ -59,13 +59,13 @@ class LocaleExportTest extends BrowserTestBase {
     $this->drupalPostForm('admin/config/regional/translate/import', [
       'langcode' => 'fr',
       'files[file]' => $name,
-    ], t('Import'));
+    ], 'Import');
     $file_system->unlink($name);
 
     // Get the French translations.
     $this->drupalPostForm('admin/config/regional/translate/export', [
       'langcode' => 'fr',
-    ], t('Export'));
+    ], 'Export');
 
     // Ensure we have a translation file.
     $this->assertRaw('# French translation of Drupal');
@@ -79,7 +79,7 @@ class LocaleExportTest extends BrowserTestBase {
       'langcode' => 'fr',
       'files[file]' => $name,
       'customized' => 1,
-    ], t('Import'));
+    ], 'Import');
     $file_system->unlink($name);
 
     // Create string without translation in the locales_source table.
@@ -95,7 +95,7 @@ class LocaleExportTest extends BrowserTestBase {
       'content_options[not_customized]' => FALSE,
       'content_options[customized]' => TRUE,
       'content_options[not_translated]' => FALSE,
-    ], t('Export'));
+    ], 'Export');
 
     // Ensure we have a translation file.
     $this->assertRaw('# French translation of Drupal');
@@ -110,7 +110,7 @@ class LocaleExportTest extends BrowserTestBase {
       'content_options[not_customized]' => FALSE,
       'content_options[customized]' => FALSE,
       'content_options[not_translated]' => TRUE,
-    ], t('Export'));
+    ], 'Export');
 
     // Ensure we have a translation file.
     $this->assertRaw('# French translation of Drupal');
@@ -129,7 +129,7 @@ class LocaleExportTest extends BrowserTestBase {
     // the locales_source table gets populated with something.
     $this->drupalGet('admin/config/regional/language');
     // Get the translation template file.
-    $this->drupalPostForm('admin/config/regional/translate/export', [], t('Export'));
+    $this->drupalPostForm('admin/config/regional/translate/export', [], 'Export');
     // Ensure we have a translation file.
     $this->assertRaw('# LANGUAGE translation of PROJECT');
   }

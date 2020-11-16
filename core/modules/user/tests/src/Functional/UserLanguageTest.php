@@ -48,7 +48,7 @@ class UserLanguageTest extends BrowserTestBase {
       'label' => $name,
       'direction' => LanguageInterface::DIRECTION_LTR,
     ];
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add custom language');
     $this->drupalLogout();
 
     // Log in as normal user and edit account settings.
@@ -63,7 +63,7 @@ class UserLanguageTest extends BrowserTestBase {
     $edit = [
       'preferred_langcode' => $langcode,
     ];
-    $this->drupalPostForm($path, $edit, t('Save'));
+    $this->drupalPostForm($path, $edit, 'Save');
     // Ensure form was submitted successfully.
     $this->assertText('The changes have been saved.', 'Changes were saved.');
     // Check if language was changed.

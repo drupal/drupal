@@ -58,7 +58,7 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
       'breakpoint_group' => 'responsive_image_test_module',
       'fallback_image_style' => 'thumbnail',
     ];
-    $this->drupalPostForm('admin/config/media/responsive-image-style/add', $edit, t('Save'));
+    $this->drupalPostForm('admin/config/media/responsive-image-style/add', $edit, 'Save');
 
     // Check if the new group is created.
     $this->assertSession()->statusCodeEquals(200);
@@ -121,7 +121,7 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
       'keyed_styles[responsive_image_test_module.wide][1x][image_mapping_type]' => 'image_style',
       'keyed_styles[responsive_image_test_module.wide][1x][image_style]' => 'large',
     ];
-    $this->drupalPostForm('admin/config/media/responsive-image-style/style_one', $edit, t('Save'));
+    $this->drupalPostForm('admin/config/media/responsive-image-style/style_one', $edit, 'Save');
     $this->drupalGet('admin/config/media/responsive-image-style/style_one');
 
     // Check the mapping for multipliers 1x and 2x for the mobile breakpoint.
@@ -144,7 +144,7 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
 
     // Delete the style.
     $this->drupalGet('admin/config/media/responsive-image-style/style_one/delete');
-    $this->drupalPostForm(NULL, [], t('Delete'));
+    $this->drupalPostForm(NULL, [], 'Delete');
     $this->drupalGet('admin/config/media/responsive-image-style');
     $this->assertText('There are no responsive image styles yet.');
   }

@@ -68,7 +68,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
       'id' => 'foo',
       'label' => 'title for foo',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $block_type = BlockContentType::load('foo');
     $this->assertInstanceOf(BlockContentType::class, $block_type);
 
@@ -121,7 +121,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     ];
     $this->drupalGet('admin/structure/block/block-content/manage/basic');
     $this->assertSession()->titleEquals('Edit basic custom block type | Drupal');
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $front_page_path = Url::fromRoute('<front>')->toString();
     $this->assertBreadcrumb('admin/structure/block/block-content/manage/basic/fields', [
       $front_page_path => 'Home',
@@ -138,9 +138,9 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $this->assertSession()->addressEquals(Url::fromRoute('block_content.add_form', ['block_content_type' => 'basic']));
 
     // Remove the body field.
-    $this->drupalPostForm('admin/structure/block/block-content/manage/basic/fields/block_content.basic.body/delete', [], t('Delete'));
+    $this->drupalPostForm('admin/structure/block/block-content/manage/basic/fields/block_content.basic.body/delete', [], 'Delete');
     // Resave the settings for this type.
-    $this->drupalPostForm('admin/structure/block/block-content/manage/basic', [], t('Save'));
+    $this->drupalPostForm('admin/structure/block/block-content/manage/basic', [], 'Save');
     // Check that the body field doesn't exist.
     $this->drupalGet('block/add/basic');
     $this->assertEmpty($this->cssSelect('#edit-body-0-value'), 'Body field was not found.');
@@ -221,12 +221,12 @@ class BlockContentTypeTest extends BlockContentTestBase {
         }
         // Create a new block.
         $edit = ['info[0][value]' => $this->randomMachineName(8)];
-        $this->drupalPostForm(NULL, $edit, t('Save'));
+        $this->drupalPostForm(NULL, $edit, 'Save');
         $blocks = $storage->loadByProperties(['info' => $edit['info[0][value]']]);
         if (!empty($blocks)) {
           $block = reset($blocks);
           $this->assertSession()->addressEquals(Url::fromRoute('block.admin_add', ['plugin_id' => 'block_content:' . $block->uuid(), 'theme' => $theme]));
-          $this->drupalPostForm(NULL, ['region' => 'content'], t('Save block'));
+          $this->drupalPostForm(NULL, ['region' => 'content'], 'Save block');
           $this->assertSession()->addressEquals(Url::fromRoute('block.admin_display_theme', ['theme' => $theme], ['query' => ['block-placement' => Html::getClass($edit['info[0][value]'])]]));
         }
         else {
@@ -241,7 +241,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $this->clickLink(t('Add custom block'));
     $this->clickLink('foo');
     $edit = ['info[0][value]' => $this->randomMachineName(8)];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $blocks = $storage->loadByProperties(['info' => $edit['info[0][value]']]);
     if (!empty($blocks)) {
       $this->assertSession()->addressEquals(Url::fromRoute('entity.block_content.collection'));

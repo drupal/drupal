@@ -103,17 +103,17 @@ class HandlerTest extends UITestBase {
 
       // Area handler types need to use a different handler.
       if (in_array($type, ['header', 'footer', 'empty'])) {
-        $this->drupalPostForm($add_handler_url, ['name[views.area]' => TRUE], t('Add and configure @handler', ['@handler' => $type_info['ltitle']]));
+        $this->drupalPostForm($add_handler_url, ['name[views.area]' => TRUE], 'Add and configure ' . $type_info['ltitle']);
         $id = 'area';
         $edit_handler_url = "admin/structure/views/nojs/handler/test_view_empty/default/$type/$id";
       }
       elseif ($type == 'relationship') {
-        $this->drupalPostForm($add_handler_url, ['name[views_test_data.uid]' => TRUE], t('Add and configure @handler', ['@handler' => $type_info['ltitle']]));
+        $this->drupalPostForm($add_handler_url, ['name[views_test_data.uid]' => TRUE], 'Add and configure ' . $type_info['ltitle']);
         $id = 'uid';
         $edit_handler_url = "admin/structure/views/nojs/handler/test_view_empty/default/$type/$id";
       }
       else {
-        $this->drupalPostForm($add_handler_url, ['name[views_test_data.job]' => TRUE], t('Add and configure @handler', ['@handler' => $type_info['ltitle']]));
+        $this->drupalPostForm($add_handler_url, ['name[views_test_data.job]' => TRUE], 'Add and configure ' . $type_info['ltitle']);
         $id = 'job';
         $edit_handler_url = "admin/structure/views/nojs/handler/test_view_empty/default/$type/$id";
       }
@@ -121,7 +121,7 @@ class HandlerTest extends UITestBase {
       // Verify that the user got redirected to the handler edit form.
       $this->assertSession()->addressEquals($edit_handler_url);
       $random_label = $this->randomMachineName();
-      $this->drupalPostForm(NULL, ['options[admin_label]' => $random_label], t('Apply'));
+      $this->drupalPostForm(NULL, ['options[admin_label]' => $random_label], 'Apply');
 
       // Verify that the user got redirected to the views edit form.
       $this->assertSession()->addressEquals('admin/structure/views/view/test_view_empty/edit/default');
@@ -131,16 +131,16 @@ class HandlerTest extends UITestBase {
       $this->assertTrue(isset($links[0]), 'The handler edit link has the right label');
 
       // Save the view and have a look whether the handler was added as expected.
-      $this->drupalPostForm(NULL, [], t('Save'));
+      $this->drupalPostForm(NULL, [], 'Save');
       $view = $this->container->get('entity_type.manager')->getStorage('view')->load('test_view_empty');
       $display = $view->getDisplay('default');
       $this->assertTrue(isset($display['display_options'][$type_info['plural']][$id]), 'Ensure the field was added to the view itself.');
 
       // Remove the item and check that it's removed
-      $this->drupalPostForm($edit_handler_url, [], t('Remove'));
+      $this->drupalPostForm($edit_handler_url, [], 'Remove');
       $this->assertSession()->linkByHrefNotExists($edit_handler_url, 0, 'The handler edit link does not appears in the UI after removing.');
 
-      $this->drupalPostForm(NULL, [], t('Save'));
+      $this->drupalPostForm(NULL, [], 'Save');
       $view = $this->container->get('entity_type.manager')->getStorage('view')->load('test_view_empty');
       $display = $view->getDisplay('default');
       $this->assertFalse(isset($display['display_options'][$type_info['plural']][$id]), 'Ensure the field was removed from the view itself.');
@@ -149,20 +149,20 @@ class HandlerTest extends UITestBase {
     // Test adding a field of the user table using the uid relationship.
     $type_info = $handler_types['relationship'];
     $add_handler_url = "admin/structure/views/nojs/add-handler/test_view_empty/default/relationship";
-    $this->drupalPostForm($add_handler_url, ['name[views_test_data.uid]' => TRUE], t('Add and configure @handler', ['@handler' => $type_info['ltitle']]));
+    $this->drupalPostForm($add_handler_url, ['name[views_test_data.uid]' => TRUE], 'Add and configure ' . $type_info['ltitle']);
 
     $add_handler_url = "admin/structure/views/nojs/add-handler/test_view_empty/default/field";
     $type_info = $handler_types['field'];
-    $this->drupalPostForm($add_handler_url, ['name[users_field_data.name]' => TRUE], t('Add and configure @handler', ['@handler' => $type_info['ltitle']]));
+    $this->drupalPostForm($add_handler_url, ['name[users_field_data.name]' => TRUE], 'Add and configure ' . $type_info['ltitle']);
     $id = 'name';
     $edit_handler_url = "admin/structure/views/nojs/handler/test_view_empty/default/field/$id";
 
     // Verify that the user got redirected to the handler edit form.
     $this->assertSession()->addressEquals($edit_handler_url);
     $this->assertSession()->fieldValueEquals('options[relationship]', 'uid');
-    $this->drupalPostForm(NULL, [], t('Apply'));
+    $this->drupalPostForm(NULL, [], 'Apply');
 
-    $this->drupalPostForm(NULL, [], t('Save'));
+    $this->drupalPostForm(NULL, [], 'Save');
     $view = $this->container->get('entity_type.manager')->getStorage('view')->load('test_view_empty');
     $display = $view->getDisplay('default');
     $this->assertTrue(isset($display['display_options'][$type_info['plural']][$id]), 'Ensure the field was added to the view itself.');

@@ -50,8 +50,8 @@ class DisplayCRUDTest extends UITestBase {
     $this->assertSession()->linkNotExists('Master*', 'Make sure the master display is not marked as changed.');
     $this->assertSession()->linkExists('Page*', 0, 'Make sure the added display is marked as changed.');
 
-    $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_1/path", ['path' => 'test/path'], t('Apply'));
-    $this->drupalPostForm(NULL, [], t('Save'));
+    $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_1/path", ['path' => 'test/path'], 'Apply');
+    $this->drupalPostForm(NULL, [], 'Save');
   }
 
   /**
@@ -84,7 +84,7 @@ class DisplayCRUDTest extends UITestBase {
 
     // Now delete again and save the view.
     $this->drupalPostForm($path_prefix . '/page_1', [], 'Delete Page');
-    $this->drupalPostForm(NULL, [], t('Save'));
+    $this->drupalPostForm(NULL, [], 'Save');
 
     $this->assertSession()->linkByHrefNotExists($path_prefix . '/page_1', 'Make sure there is no display tab for the deleted display.');
 
@@ -94,7 +94,7 @@ class DisplayCRUDTest extends UITestBase {
     $path_prefix = 'admin/structure/views/view/' . $view['id'] . '/edit';
     $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_1/display_id", ['display_id' => $machine_name], 'Apply');
     $this->drupalPostForm(NULL, [], 'Delete Page');
-    $this->drupalPostForm(NULL, [], t('Save'));
+    $this->drupalPostForm(NULL, [], 'Save');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->linkByHrefNotExists($path_prefix . '/new_machine_name', 'Make sure there is no display tab for the deleted display.');
   }
@@ -125,8 +125,8 @@ class DisplayCRUDTest extends UITestBase {
     // Set the title and override the css classes.
     $random_title = $this->randomMachineName();
     $random_css = $this->randomMachineName();
-    $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_2/title", ['title' => $random_title], t('Apply'));
-    $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_2/css_class", ['override[dropdown]' => 'page_2', 'css_class' => $random_css], t('Apply'));
+    $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_2/title", ['title' => $random_title], 'Apply');
+    $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_2/css_class", ['override[dropdown]' => 'page_2', 'css_class' => $random_css], 'Apply');
 
     // Duplicate as a different display type.
     $this->drupalPostForm(NULL, [], 'Duplicate as Block');
@@ -135,7 +135,7 @@ class DisplayCRUDTest extends UITestBase {
     $this->assertText('Block settings');
     $this->assertNoText('Page settings');
 
-    $this->drupalPostForm(NULL, [], t('Save'));
+    $this->drupalPostForm(NULL, [], 'Save');
     $view = Views::getView($view['id']);
     $view->initDisplay();
 
@@ -155,7 +155,7 @@ class DisplayCRUDTest extends UITestBase {
     $view_id = $view->id();
     $this->drupalPostForm("admin/structure/views/nojs/display/$view_id/page_2/display_id", ['display_id' => 'page_new'], 'Apply');
     $this->drupalPostForm(NULL, [], 'Duplicate as Block');
-    $this->drupalPostForm(NULL, [], t('Save'));
+    $this->drupalPostForm(NULL, [], 'Save');
     $view = Views::getView($view_id);
     $view->initDisplay();
     $this->assertNotNull($view->displayHandlers->get('page_new'), 'The original display is saved with a changed id');

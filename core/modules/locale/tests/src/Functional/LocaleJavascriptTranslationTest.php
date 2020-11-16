@@ -136,11 +136,11 @@ class LocaleJavascriptTranslationTest extends BrowserTestBase {
       'label' => $name,
       'direction' => LanguageInterface::DIRECTION_LTR,
     ];
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add custom language');
 
     // Set path prefix.
     $edit = ["prefix[$langcode]" => $prefix];
-    $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, 'Save configuration');
 
     // This forces locale.admin.js string sources to be imported, which contains
     // the next translation.
@@ -155,9 +155,9 @@ class LocaleJavascriptTranslationTest extends BrowserTestBase {
       ]);
     $string = $strings[0];
 
-    $this->drupalPostForm(NULL, ['string' => 'Show description'], t('Filter'));
+    $this->drupalPostForm(NULL, ['string' => 'Show description'], 'Filter');
     $edit = ['strings[' . $string->lid . '][translations][0]' => 'Mostrar descripcion'];
-    $this->drupalPostForm(NULL, $edit, t('Save translations'));
+    $this->drupalPostForm(NULL, $edit, 'Save translations');
 
     // Calculate the filename of the JS including the translations.
     $js_translation_files = \Drupal::state()->get('locale.translation.javascript');

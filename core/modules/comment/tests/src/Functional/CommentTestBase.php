@@ -149,19 +149,19 @@ abstract class CommentTestBase extends BrowserTestBase {
       case DRUPAL_REQUIRED:
         // Preview required so no save button should be found.
         $this->assertSession()->buttonNotExists(t('Save'));
-        $this->drupalPostForm(NULL, $edit, t('Preview'));
+        $this->drupalPostForm(NULL, $edit, 'Preview');
         // Don't break here so that we can test post-preview field presence and
         // function below.
       case DRUPAL_OPTIONAL:
         $this->assertSession()->buttonExists(t('Preview'));
         $this->assertSession()->buttonExists(t('Save'));
-        $this->drupalPostForm(NULL, $edit, t('Save'));
+        $this->drupalPostForm(NULL, $edit, 'Save');
         break;
 
       case DRUPAL_DISABLED:
         $this->assertSession()->buttonNotExists(t('Preview'));
         $this->assertSession()->buttonExists(t('Save'));
-        $this->drupalPostForm(NULL, $edit, t('Save'));
+        $this->drupalPostForm(NULL, $edit, 'Save');
         break;
     }
     $match = [];
@@ -227,7 +227,7 @@ abstract class CommentTestBase extends BrowserTestBase {
    *   Comment to delete.
    */
   public function deleteComment(CommentInterface $comment) {
-    $this->drupalPostForm('comment/' . $comment->id() . '/delete', [], t('Delete'));
+    $this->drupalPostForm('comment/' . $comment->id() . '/delete', [], 'Delete');
     $this->assertText('The comment and all its replies have been deleted.', 'Comment deleted.');
   }
 
@@ -361,10 +361,10 @@ abstract class CommentTestBase extends BrowserTestBase {
     $edit = [];
     $edit['operation'] = $operation;
     $edit['comments[' . $comment->id() . ']'] = TRUE;
-    $this->drupalPostForm('admin/content/comment' . ($approval ? '/approval' : ''), $edit, t('Update'));
+    $this->drupalPostForm('admin/content/comment' . ($approval ? '/approval' : ''), $edit, 'Update');
 
     if ($operation == 'delete') {
-      $this->drupalPostForm(NULL, [], t('Delete'));
+      $this->drupalPostForm(NULL, [], 'Delete');
       $this->assertRaw(\Drupal::translation()->formatPlural(1, 'Deleted 1 comment.', 'Deleted @count comments.'));
     }
     else {

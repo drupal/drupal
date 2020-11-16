@@ -55,7 +55,7 @@ class ContentTranslationOutdatedRevisionTranslationTest extends ContentTranslati
       'title[0][value]' => 'Test 1.2 IT',
       'moderation_state[0][state]' => 'published',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save (this translation)'));
+    $this->drupalPostForm(NULL, $edit, 'Save (this translation)');
 
     // Add a published French translation.
     $add_translation_url = Url::fromRoute("entity.{$this->entityTypeId}.content_translation_add", [
@@ -74,7 +74,7 @@ class ContentTranslationOutdatedRevisionTranslationTest extends ContentTranslati
       'title[0][value]' => 'Test 1.3 FR',
       'moderation_state[0][state]' => 'published',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save (this translation)'));
+    $this->drupalPostForm(NULL, $edit, 'Save (this translation)');
 
     // Create an English draft.
     $entity = $this->storage->loadUnchanged($id);

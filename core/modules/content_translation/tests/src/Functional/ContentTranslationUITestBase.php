@@ -178,7 +178,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     ], ['language' => $language]);
     // This does not save anything, it merely reloads the form and fills in the
     // fields with the values from the different source language.
-    $this->drupalPostForm($add_url, $edit, t('Change'));
+    $this->drupalPostForm($add_url, $edit, 'Change');
     $this->assertSession()->fieldValueEquals("{$this->fieldName}[0][value]", $values[$source_langcode][$this->fieldName][0]['value']);
 
     // Add another translation and mark the other ones as outdated.
@@ -370,8 +370,8 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     $entity = $storage->load($this->entityId);
     $language = ConfigurableLanguage::load($langcode);
     $url = $entity->toUrl('edit-form', ['language' => $language]);
-    $this->drupalPostForm($url, [], t('Delete translation'));
-    $this->drupalPostForm(NULL, [], t('Delete @language translation', ['@language' => $language->getName()]));
+    $this->drupalPostForm($url, [], 'Delete translation');
+    $this->drupalPostForm(NULL, [], 'Delete ' . $language->getName() . ' translation');
     $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId, TRUE);
     $this->assertIsObject($entity);

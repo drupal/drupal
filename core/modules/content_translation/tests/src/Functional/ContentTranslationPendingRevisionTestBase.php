@@ -81,7 +81,7 @@ abstract class ContentTranslationPendingRevisionTestBase extends ContentTranslat
     $workflow_id = 'editorial';
     $this->drupalGet('/admin/config/workflow/workflows');
     $edit['bundles[' . $this->bundle . ']'] = TRUE;
-    $this->drupalPostForm('admin/config/workflow/workflows/manage/' . $workflow_id . '/type/' . $this->entityTypeId, $edit, t('Save'));
+    $this->drupalPostForm('admin/config/workflow/workflows/manage/' . $workflow_id . '/type/' . $this->entityTypeId, $edit, 'Save');
     // Ensure the parent environment is up-to-date.
     // @see content_moderation_workflow_insert()
     \Drupal::service('entity_type.bundle.info')->clearCachedBundles();

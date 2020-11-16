@@ -146,7 +146,7 @@ class NumberFieldTest extends WebDriverTestBase {
     }
     $page->pressButton("${float_field}_plugin_settings_update");
     $assert_session->waitForElement('css', '.field-plugin-summary-cell > .ajax-new-content');
-    $this->drupalPostForm(NULL, [], t('Save'));
+    $this->drupalPostForm(NULL, [], 'Save');
 
     // Check number_decimal and number_unformatted formatters behavior.
     $this->drupalGet('node/' . $node->id());
@@ -176,7 +176,7 @@ class NumberFieldTest extends WebDriverTestBase {
     }
     $page->pressButton("${integer_field}_plugin_settings_update");
     $assert_session->waitForElement('css', '.field-plugin-summary-cell > .ajax-new-content');
-    $this->drupalPostForm(NULL, [], t('Save'));
+    $this->drupalPostForm(NULL, [], 'Save');
 
     // Check number_integer formatter behavior.
     $this->drupalGet('node/' . $node->id());

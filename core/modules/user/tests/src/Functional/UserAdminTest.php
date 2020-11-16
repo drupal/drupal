@@ -111,7 +111,7 @@ class UserAdminTest extends BrowserTestBase {
     $config
       ->set('notify.status_blocked', TRUE)
       ->save();
-    $this->drupalPostForm('admin/people', $edit, t('Apply to selected items'), [
+    $this->drupalPostForm('admin/people', $edit, 'Apply to selected items', [
       // Sort the table by username so that we know reliably which user will be
       // targeted with the blocking action.
       'query' => ['order' => 'name', 'sort' => 'asc'],
@@ -132,7 +132,7 @@ class UserAdminTest extends BrowserTestBase {
     $editunblock = [];
     $editunblock['action'] = 'user_unblock_user_action';
     $editunblock['user_bulk_form[4]'] = TRUE;
-    $this->drupalPostForm('admin/people', $editunblock, t('Apply to selected items'), [
+    $this->drupalPostForm('admin/people', $editunblock, 'Apply to selected items', [
       // Sort the table by username so that we know reliably which user will be
       // targeted with the blocking action.
       'query' => ['order' => 'name', 'sort' => 'asc'],
@@ -146,11 +146,11 @@ class UserAdminTest extends BrowserTestBase {
     $user_d = $this->drupalCreateUser([]);
     $user_storage->resetCache([$user_d->id()]);
     $account1 = $user_storage->load($user_d->id());
-    $this->drupalPostForm('user/' . $account1->id() . '/edit', ['status' => 0], t('Save'));
+    $this->drupalPostForm('user/' . $account1->id() . '/edit', ['status' => 0], 'Save');
     $user_storage->resetCache([$user_d->id()]);
     $account1 = $user_storage->load($user_d->id());
     $this->assertTrue($account1->isBlocked(), 'User D blocked');
-    $this->drupalPostForm('user/' . $account1->id() . '/edit', ['status' => TRUE], t('Save'));
+    $this->drupalPostForm('user/' . $account1->id() . '/edit', ['status' => TRUE], 'Save');
     $user_storage->resetCache([$user_d->id()]);
     $account1 = $user_storage->load($user_d->id());
     $this->assertTrue($account1->isActive(), 'User D unblocked');
@@ -190,7 +190,7 @@ class UserAdminTest extends BrowserTestBase {
     $edit = [];
     $edit['name'] = $this->randomMachineName();
     $edit['mail'] = $edit['name'] . '@example.com';
-    $this->drupalPostForm('user/register', $edit, t('Create new account'));
+    $this->drupalPostForm('user/register', $edit, 'Create new account');
     $subject = 'Account details for ' . $edit['name'] . ' at ' . $system->get('name') . ' (pending admin approval)';
     // Ensure that admin notification mail is sent to the configured
     // Notification Email address.

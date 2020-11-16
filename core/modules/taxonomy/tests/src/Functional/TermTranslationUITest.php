@@ -192,7 +192,7 @@ class TermTranslationUITest extends ContentTranslationUITestBase {
       foreach ($this->langcodes as $langcode) {
         $options = ['language' => $languages[$langcode]];
         $url = $entity->toUrl('edit-form', $options);
-        $this->drupalPostForm($url, ['status[value]' => $value], t('Save'), $options);
+        $this->drupalPostForm($url, ['status[value]' => $value], 'Save', $options);
       }
       $storage->resetCache([$this->entityId]);
       $entity = $storage->load($this->entityId);

@@ -116,7 +116,7 @@ class FieldImportDeleteUninstallUiTest extends FieldTestBase {
 
     // This will purge all the data, delete the field and uninstall the
     // Telephone and Text modules.
-    $this->drupalPostForm(NULL, [], t('Import all'));
+    $this->drupalPostForm(NULL, [], 'Import all');
     $this->assertNoText('Field data will be deleted by this synchronization.');
     $this->rebuildContainer();
     $this->assertFalse(\Drupal::moduleHandler()->moduleExists('telephone'));

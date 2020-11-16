@@ -247,8 +247,8 @@ class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
     $this->drupalLogin($this->rootUser);
     $edit = [];
     $edit['uninstall[help_topics]'] = TRUE;
-    $this->drupalPostForm('admin/modules/uninstall', $edit, t('Uninstall'));
-    $this->drupalPostForm(NULL, [], t('Uninstall'));
+    $this->drupalPostForm('admin/modules/uninstall', $edit, 'Uninstall');
+    $this->drupalPostForm(NULL, [], 'Uninstall');
     $this->assertText('The selected modules have been uninstalled.', 'Modules status has been updated.');
     $this->drupalGet('admin/help');
     $this->assertSession()->statusCodeEquals(200);

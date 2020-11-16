@@ -70,7 +70,7 @@ class LanguageSelectorTranslatableTest extends BrowserTestBase {
   public function testLanguageStringSelector() {
     // Add another language.
     $edit = ['predefined_langcode' => 'es'];
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
 
     // Translate the string English in Spanish (Inglés). Override config entity.
     $name_translation = 'Inglés';

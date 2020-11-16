@@ -109,7 +109,7 @@ class NodeAccessFieldTest extends NodeTestBase {
     $this->drupalPostForm(
       "admin/structure/types/manage/page/fields/node.page.{$this->fieldName}",
       $edit,
-      t('Save settings')
+      'Save settings'
     );
 
     // Log in as the administrator.

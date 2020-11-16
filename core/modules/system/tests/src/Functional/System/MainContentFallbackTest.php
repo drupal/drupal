@@ -48,8 +48,8 @@ class MainContentFallbackTest extends BrowserTestBase {
     $edit = [];
     // Uninstall the block module.
     $edit['uninstall[block]'] = 'block';
-    $this->drupalPostForm('admin/modules/uninstall', $edit, t('Uninstall'));
-    $this->drupalPostForm(NULL, [], t('Uninstall'));
+    $this->drupalPostForm('admin/modules/uninstall', $edit, 'Uninstall');
+    $this->drupalPostForm(NULL, [], 'Uninstall');
     $this->assertText('The selected modules have been uninstalled.', 'Modules status has been updated.');
     $this->rebuildContainer();
     $this->assertFalse(\Drupal::moduleHandler()->moduleExists('block'), 'Block module uninstall.');
@@ -70,7 +70,7 @@ class MainContentFallbackTest extends BrowserTestBase {
     $this->drupalLogin($this->adminUser);
     $edit = [];
     $edit['modules[block][enable]'] = 'block';
-    $this->drupalPostForm('admin/modules', $edit, t('Install'));
+    $this->drupalPostForm('admin/modules', $edit, 'Install');
     $this->assertText('Module Block has been enabled.', 'Modules status has been updated.');
     $this->rebuildContainer();
     $this->assertTrue(\Drupal::moduleHandler()->moduleExists('block'), 'Block module re-enabled.');

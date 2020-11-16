@@ -57,7 +57,7 @@ class UpdateUploadTest extends UpdateTestBase {
       'files[project_upload]' => $invalidArchiveFile->uri,
     ];
     // This also checks that the correct archive extensions are allowed.
-    $this->drupalPostForm('admin/modules/install', $edit, t('Install'));
+    $this->drupalPostForm('admin/modules/install', $edit, 'Install');
     $extensions = \Drupal::service('plugin.manager.archiver')->getExtensions();
     $this->assertSession()->pageTextContains(t('Only files with the following extensions are allowed: @archive_extensions.', ['@archive_extensions' => $extensions]));
     $this->assertSession()->addressEquals('admin/modules/install');
@@ -69,7 +69,7 @@ class UpdateUploadTest extends UpdateTestBase {
     $edit = [
       'files[project_upload]' => $validArchiveFile,
     ];
-    $this->drupalPostForm('admin/modules/install', $edit, t('Install'));
+    $this->drupalPostForm('admin/modules/install', $edit, 'Install');
     $this->assertText('AAA Update test is already installed.', 'Existing module was extracted and not reinstalled.');
     $this->assertSession()->addressEquals('admin/modules/install');
 
@@ -82,7 +82,7 @@ class UpdateUploadTest extends UpdateTestBase {
     $edit = [
       'files[project_upload]' => $validArchiveFile,
     ];
-    $this->drupalPostForm('admin/modules/install', $edit, t('Install'));
+    $this->drupalPostForm('admin/modules/install', $edit, 'Install');
     // Check that submitting the form takes the user to authorize.php.
     $this->assertSession()->addressEquals('core/authorize.php');
     $this->assertSession()->titleEquals('Update manager | Drupal');
@@ -113,7 +113,7 @@ class UpdateUploadTest extends UpdateTestBase {
     $this->assertEqual($info['version'], '8.x-1.0');
 
     // Enable the module.
-    $this->drupalPostForm('admin/modules', ['modules[update_test_new_module][enable]' => TRUE], t('Install'));
+    $this->drupalPostForm('admin/modules', ['modules[update_test_new_module][enable]' => TRUE], 'Install');
 
     // Define the update XML such that the new module downloaded above needs an
     // update from 8.x-1.0 to 8.x-1.1.
@@ -130,8 +130,8 @@ class UpdateUploadTest extends UpdateTestBase {
     $this->refreshUpdateStatus($xml_mapping);
 
     // Run the updates for the new module.
-    $this->drupalPostForm('admin/reports/updates/update', ['projects[update_test_new_module]' => TRUE], t('Download these updates'));
-    $this->drupalPostForm(NULL, ['maintenance_mode' => FALSE], t('Continue'));
+    $this->drupalPostForm('admin/reports/updates/update', ['projects[update_test_new_module]' => TRUE], 'Download these updates');
+    $this->drupalPostForm(NULL, ['maintenance_mode' => FALSE], 'Continue');
     $this->assertText('Update was completed successfully.');
     $this->assertRaw(t('Installed %project_name successfully', ['%project_name' => 'update_test_new_module']));
 

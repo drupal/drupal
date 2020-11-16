@@ -76,7 +76,7 @@ class UserBlocksTest extends BrowserTestBase {
     $edit = [];
     $edit['name'] = $user->getAccountName();
     $edit['pass'] = $user->passRaw;
-    $this->drupalPostForm('admin/people/permissions', $edit, t('Log in'));
+    $this->drupalPostForm('admin/people/permissions', $edit, 'Log in');
     $this->assertNoText('User login', 'Logged in.');
 
     // Check that we are still on the same page.
@@ -86,7 +86,7 @@ class UserBlocksTest extends BrowserTestBase {
     $this->drupalLogout();
     $this->drupalGet('filter/tips');
     $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'MISS');
-    $this->drupalPostForm(NULL, $edit, t('Log in'));
+    $this->drupalPostForm(NULL, $edit, 'Log in');
     $this->assertNoText('User login', 'Logged in.');
     // Verify that we are still on the same page after login for allowed page.
     $this->assertSession()->responseMatches('!<title.*?Compose tips.*?</title>!');
@@ -95,7 +95,7 @@ class UserBlocksTest extends BrowserTestBase {
     $this->drupalLogout();
     $this->drupalGet('filter/tips', ['query' => ['foo' => 'bar']]);
     $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'HIT');
-    $this->drupalPostForm(NULL, $edit, t('Log in'));
+    $this->drupalPostForm(NULL, $edit, 'Log in');
     $this->assertNoText('User login', 'Logged in.');
     // Verify that we are still on the same page after login for allowed page.
     $this->assertSession()->responseMatches('!<title.*?Compose tips.*?</title>!');
@@ -105,7 +105,7 @@ class UserBlocksTest extends BrowserTestBase {
     $this->drupalLogout();
     $this->drupalGet('filter/tips', ['query' => ['foo' => 'baz']]);
     $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'HIT');
-    $this->drupalPostForm(NULL, $edit, t('Log in'));
+    $this->drupalPostForm(NULL, $edit, 'Log in');
     $this->assertNoText('User login', 'Logged in.');
     // Verify that we are still on the same page after login for allowed page.
     $this->assertSession()->responseMatches('!<title.*?Compose tips.*?</title>!');
@@ -114,7 +114,7 @@ class UserBlocksTest extends BrowserTestBase {
     // Check that the user login block is not vulnerable to information
     // disclosure to third party sites.
     $this->drupalLogout();
-    $this->drupalPostForm('http://example.com/', $edit, t('Log in'), ['external' => FALSE]);
+    $this->drupalPostForm('http://example.com/', $edit, 'Log in', ['external' => FALSE]);
     // Check that we remain on the site after login.
     $this->assertSession()->addressEquals($user->toUrl('canonical'));
 
@@ -124,7 +124,7 @@ class UserBlocksTest extends BrowserTestBase {
     $edit = [];
     $edit['name'] = 'foo';
     $edit['pass'] = 'invalid password';
-    $this->drupalPostForm('filter/tips', $edit, t('Log in'));
+    $this->drupalPostForm('filter/tips', $edit, 'Log in');
     $this->assertText('Unrecognized username or password. Forgot your password?');
     $this->drupalGet('filter/tips');
     $this->assertNoText('Unrecognized username or password. Forgot your password?');

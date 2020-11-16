@@ -36,15 +36,15 @@ class GroupByTest extends UITestBase {
     $edit = [
       'group_by' => TRUE,
     ];
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_views_groupby_save/default/group_by', $edit, t('Apply'));
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_views_groupby_save/default/group_by', $edit, 'Apply');
 
     $this->assertSession()->linkByHrefExists($edit_groupby_url, 0, 'Aggregation link found.');
 
     // Change the groupby type in the UI.
-    $this->drupalPostForm($edit_groupby_url, ['options[group_type]' => 'count'], t('Apply'));
+    $this->drupalPostForm($edit_groupby_url, ['options[group_type]' => 'count'], 'Apply');
     $this->assertSession()->linkExists('COUNT(Views test: ID)', 0, 'The count setting is displayed in the UI');
 
-    $this->drupalPostForm(NULL, [], t('Save'));
+    $this->drupalPostForm(NULL, [], 'Save');
 
     $view = $this->container->get('entity_type.manager')->getStorage('view')->load('test_views_groupby_save');
     $display = $view->getDisplay('default');

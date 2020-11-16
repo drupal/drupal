@@ -153,7 +153,7 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Select first option.
     $edit = ['card_1' => 0];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $this->assertFieldValues($entity_init, 'card_1', [0]);
 
     // Check that the selected button is checked.
@@ -164,7 +164,7 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Unselect option.
     $edit = ['card_1' => '_none'];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $this->assertFieldValues($entity_init, 'card_1', []);
 
     // Check that required radios with one option is auto-selected.
@@ -214,7 +214,7 @@ class OptionsWidgetsTest extends FieldTestBase {
       'card_2[1]' => FALSE,
       'card_2[2]' => TRUE,
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $this->assertFieldValues($entity_init, 'card_2', [0, 2]);
 
     // Display form: check that the right options are selected.
@@ -229,7 +229,7 @@ class OptionsWidgetsTest extends FieldTestBase {
       'card_2[1]' => FALSE,
       'card_2[2]' => FALSE,
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $this->assertFieldValues($entity_init, 'card_2', [0]);
 
     // Display form: check that the right options are selected.
@@ -244,7 +244,7 @@ class OptionsWidgetsTest extends FieldTestBase {
       'card_2[1]' => TRUE,
       'card_2[2]' => TRUE,
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $this->assertText('this field cannot hold more than 2 values', 'Validation error was displayed.');
 
     // Submit form: uncheck all options.
@@ -253,7 +253,7 @@ class OptionsWidgetsTest extends FieldTestBase {
       'card_2[1]' => FALSE,
       'card_2[2]' => FALSE,
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
     // Check that the value was saved.
     $this->assertFieldValues($entity_init, 'card_2', []);
 
@@ -306,12 +306,12 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Submit form: select invalid 'none' option.
     $edit = ['card_1' => '_none'];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $this->assertRaw(t('@title field is required.', ['@title' => $field->getName()]));
 
     // Submit form: select first option.
     $edit = ['card_1' => 0];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $this->assertFieldValues($entity_init, 'card_1', [0]);
 
     // Display form: check that the right options are selected.
@@ -332,7 +332,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->assertNotEmpty($this->xpath('//select[@id=:id]//option[@value="_none" and text()=:label]', [':id' => 'edit-card-1', ':label' => '- None -']), 'A non-required select list has a "None" choice.');
     // Submit form: Unselect the option.
     $edit = ['card_1' => '_none'];
-    $this->drupalPostForm('entity_test/manage/' . $entity->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('entity_test/manage/' . $entity->id() . '/edit', $edit, 'Save');
     $this->assertFieldValues($entity_init, 'card_1', []);
 
     // Test optgroups.
@@ -352,7 +352,7 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Submit form: select first option.
     $edit = ['card_1' => 0];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $this->assertFieldValues($entity_init, 'card_1', [0]);
 
     // Display form: check that the right options are selected.
@@ -363,7 +363,7 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Submit form: Unselect the option.
     $edit = ['card_1' => '_none'];
-    $this->drupalPostForm('entity_test/manage/' . $entity->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('entity_test/manage/' . $entity->id() . '/edit', $edit, 'Save');
     $this->assertFieldValues($entity_init, 'card_1', []);
   }
 
@@ -402,7 +402,7 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Submit form: select first and third options.
     $edit = ['card_2[]' => [0 => 0, 2 => 2]];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $this->assertFieldValues($entity_init, 'card_2', [0, 2]);
 
     // Display form: check that the right options are selected.
@@ -413,7 +413,7 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Submit form: select only first option.
     $edit = ['card_2[]' => [0 => 0]];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $this->assertFieldValues($entity_init, 'card_2', [0]);
 
     // Display form: check that the right options are selected.
@@ -424,12 +424,12 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Submit form: select the three options while the field accepts only 2.
     $edit = ['card_2[]' => [0 => 0, 1 => 1, 2 => 2]];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $this->assertText('this field cannot hold more than 2 values', 'Validation error was displayed.');
 
     // Submit form: uncheck all options.
     $edit = ['card_2[]' => []];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $this->assertFieldValues($entity_init, 'card_2', []);
 
     // Test the 'None' option.
@@ -437,12 +437,12 @@ class OptionsWidgetsTest extends FieldTestBase {
     // Check that the 'none' option has no effect if actual options are selected
     // as well.
     $edit = ['card_2[]' => ['_none' => '_none', 0 => 0]];
-    $this->drupalPostForm('entity_test/manage/' . $entity->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('entity_test/manage/' . $entity->id() . '/edit', $edit, 'Save');
     $this->assertFieldValues($entity_init, 'card_2', [0]);
 
     // Check that selecting the 'none' option empties the field.
     $edit = ['card_2[]' => ['_none' => '_none']];
-    $this->drupalPostForm('entity_test/manage/' . $entity->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('entity_test/manage/' . $entity->id() . '/edit', $edit, 'Save');
     $this->assertFieldValues($entity_init, 'card_2', []);
 
     // A required select list does not have an empty key.
@@ -474,7 +474,7 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Submit form: select first option.
     $edit = ['card_2[]' => [0 => 0]];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $this->assertFieldValues($entity_init, 'card_2', [0]);
 
     // Display form: check that the right options are selected.
@@ -485,7 +485,7 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Submit form: Unselect the option.
     $edit = ['card_2[]' => ['_none' => '_none']];
-    $this->drupalPostForm('entity_test/manage/' . $entity->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('entity_test/manage/' . $entity->id() . '/edit', $edit, 'Save');
     $this->assertFieldValues($entity_init, 'card_2', []);
   }
 
@@ -526,7 +526,7 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Submit form.
     $edit = ['float' => 1.5];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $this->assertFieldValues($entity, 'float', [1.5]);
 
     // Display form: check that the right options are selected.

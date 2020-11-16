@@ -86,7 +86,7 @@ class EditorAdminTest extends BrowserTestBase {
     $edit = $this->selectUnicornEditor();
     // Configure Unicorn Editor's setting to another value.
     $edit['editor[settings][ponies_too]'] = FALSE;
-    $this->drupalPostForm(NULL, $edit, t('Save configuration'));
+    $this->drupalPostForm(NULL, $edit, 'Save configuration');
     $this->verifyUnicornEditorConfiguration('filtered_html', FALSE);
 
     // Switch back to 'None' and check the Unicorn Editor's settings are gone.
@@ -174,7 +174,7 @@ class EditorAdminTest extends BrowserTestBase {
       'format' => $format_id,
     ];
     $edit += $this->selectUnicornEditor();
-    $this->drupalPostForm(NULL, $edit, t('Save configuration'));
+    $this->drupalPostForm(NULL, $edit, 'Save configuration');
   }
 
   /**

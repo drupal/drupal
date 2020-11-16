@@ -72,7 +72,7 @@ class InstallUninstallTest extends ModuleTestBase {
     $this->assertModuleNotInstalled('help');
     $edit = [];
     $edit["modules[help][enable]"] = TRUE;
-    $this->drupalPostForm('admin/modules', $edit, t('Install'));
+    $this->drupalPostForm('admin/modules', $edit, 'Install');
     $this->assertText('has been enabled', 'Modules status has been updated.');
     $this->assertText('hook_modules_installed fired for help');
     $this->assertModuleSuccessfullyInstalled('help');
@@ -105,7 +105,7 @@ class InstallUninstallTest extends ModuleTestBase {
       $edit = [];
       $package = $module->info['package'];
       $edit['modules[' . $name . '][enable]'] = TRUE;
-      $this->drupalPostForm('admin/modules', $edit, t('Install'));
+      $this->drupalPostForm('admin/modules', $edit, 'Install');
 
       // Handle experimental modules, which require a confirmation screen.
       if ($package == 'Core (Experimental)') {
@@ -116,7 +116,7 @@ class InstallUninstallTest extends ModuleTestBase {
           // indicating they need to be enabled.
           $this->assertText('You must enable');
         }
-        $this->drupalPostForm(NULL, [], t('Continue'));
+        $this->drupalPostForm(NULL, [], 'Continue');
       }
       // Handle the case where modules were installed along with this one and
       // where we therefore hit a confirmation screen.
@@ -125,7 +125,7 @@ class InstallUninstallTest extends ModuleTestBase {
         // about enabling dependencies appears.
         $this->assertText('Some required modules must be enabled');
         $this->assertText('You must enable');
-        $this->drupalPostForm(NULL, [], t('Continue'));
+        $this->drupalPostForm(NULL, [], 'Continue');
       }
 
       // List the module display names to check the confirmation message.
@@ -215,12 +215,12 @@ class InstallUninstallTest extends ModuleTestBase {
         $experimental = TRUE;
       }
     }
-    $this->drupalPostForm('admin/modules', $edit, t('Install'));
+    $this->drupalPostForm('admin/modules', $edit, 'Install');
 
     // If there are experimental modules, click the confirm form.
     if ($experimental) {
       $this->assertText('Are you sure you wish to enable experimental modules?');
-      $this->drupalPostForm(NULL, [], t('Continue'));
+      $this->drupalPostForm(NULL, [], 'Continue');
     }
     $this->assertText(count($all_modules) . ' modules have been enabled: ', 'Modules status has been updated.');
   }
@@ -260,8 +260,8 @@ class InstallUninstallTest extends ModuleTestBase {
   protected function assertSuccessfulUninstall($module, $package = 'Core') {
     $edit = [];
     $edit['uninstall[' . $module . ']'] = TRUE;
-    $this->drupalPostForm('admin/modules/uninstall', $edit, t('Uninstall'));
-    $this->drupalPostForm(NULL, [], t('Uninstall'));
+    $this->drupalPostForm('admin/modules/uninstall', $edit, 'Uninstall');
+    $this->drupalPostForm(NULL, [], 'Uninstall');
     $this->assertText('The selected modules have been uninstalled.', 'Modules status has been updated.');
     $this->assertModules([$module], FALSE);
 

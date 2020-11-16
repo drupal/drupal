@@ -109,7 +109,7 @@ class DateTimeTimeAgoFormatterTest extends BrowserTestBase {
       'fields[field_datetime][region]' => 'content',
       'fields[field_datetime][type]' => 'datetime_time_ago',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
 
     $this->drupalPostForm(NULL, [], 'field_datetime_settings_edit');
     $edit = [

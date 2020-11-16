@@ -106,7 +106,7 @@ class ContactSitewideTest extends BrowserTestBase {
     // Set settings.
     $edit = [];
     $edit['contact_default_status'] = TRUE;
-    $this->drupalPostForm('admin/config/people/accounts', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/people/accounts', $edit, 'Save configuration');
     $this->assertText('The configuration options have been saved.');
 
     $this->drupalGet('admin/structure/contact');
@@ -333,7 +333,7 @@ class ContactSitewideTest extends BrowserTestBase {
       'message[0][value]' => $this->randomMachineName(),
       $field_name . '[0][value]' => $this->randomMachineName(),
     ];
-    $this->drupalPostForm(NULL, $edit, t('Send message'));
+    $this->drupalPostForm(NULL, $edit, 'Send message');
     $mails = $this->getMails();
     $mail = array_pop($mails);
     $this->assertEqual($mail['subject'], t('[@label] @subject', ['@label' => $label, '@subject' => $edit['subject[0][value]']]));
@@ -355,7 +355,7 @@ class ContactSitewideTest extends BrowserTestBase {
       'message[0][value]' => $this->randomMachineName(),
       $field_name . '[0][value]' => $this->randomMachineName(),
     ];
-    $this->drupalPostForm(NULL, $edit, t('Send message'));
+    $this->drupalPostForm(NULL, $edit, 'Send message');
     $this->assertText('Thanks for your submission.');
     $this->assertSession()->addressEquals('user/' . $admin_user->id());
 
@@ -375,7 +375,7 @@ class ContactSitewideTest extends BrowserTestBase {
       'message[0][value]' => $this->randomMachineName(),
       $field_name . '[0][value]' => $this->randomMachineName(),
     ];
-    $this->drupalPostForm(NULL, $edit, t('Send message'));
+    $this->drupalPostForm(NULL, $edit, 'Send message');
     $result = $this->xpath('//div[@role=:role]', [':role' => 'contentinfo']);
     $this->assertCount(0, $result, 'Messages not found.');
     $this->assertSession()->addressEquals('user/' . $admin_user->id());
@@ -387,7 +387,7 @@ class ContactSitewideTest extends BrowserTestBase {
       'message[0][value]' => $this->randomMachineName(),
       $field_name . '[0][value]' => $this->randomMachineName(),
     ];
-    $this->drupalPostForm($form->toUrl('canonical'), $edit, t('Preview'));
+    $this->drupalPostForm($form->toUrl('canonical'), $edit, 'Preview');
 
     // Message is now by default displayed twice, once for the form element and
     // once for the viewed message.
@@ -400,9 +400,9 @@ class ContactSitewideTest extends BrowserTestBase {
     $display_edit = [
       'fields[message][label]' => 'hidden',
     ];
-    $this->drupalPostForm('admin/structure/contact/manage/' . $contact_form . '/display', $display_edit, t('Save'));
+    $this->drupalPostForm('admin/structure/contact/manage/' . $contact_form . '/display', $display_edit, 'Save');
 
-    $this->drupalPostForm($form->toUrl('canonical'), $edit, t('Preview'));
+    $this->drupalPostForm($form->toUrl('canonical'), $edit, 'Preview');
     // Message should only be displayed once now.
     $page_text = $this->getSession()->getPage()->getText();
     $this->assertEquals(1, substr_count($page_text, t('Message')));
@@ -505,7 +505,7 @@ class ContactSitewideTest extends BrowserTestBase {
     $edit['reply'] = $reply;
     $edit['selected'] = ($selected ? TRUE : FALSE);
     $edit += $third_party_settings;
-    $this->drupalPostForm('admin/structure/contact/add', $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/contact/add', $edit, 'Save');
   }
 
   /**
@@ -536,7 +536,7 @@ class ContactSitewideTest extends BrowserTestBase {
     $edit['selected'] = ($selected ? TRUE : FALSE);
     $edit['message'] = $message;
     $edit['redirect'] = $redirect;
-    $this->drupalPostForm("admin/structure/contact/manage/$id", $edit, t('Save'));
+    $this->drupalPostForm("admin/structure/contact/manage/$id", $edit, 'Save');
   }
 
   /**
@@ -560,10 +560,10 @@ class ContactSitewideTest extends BrowserTestBase {
     $edit['subject[0][value]'] = $subject;
     $edit['message[0][value]'] = $message;
     if ($id == $this->config('contact.settings')->get('default_form')) {
-      $this->drupalPostForm('contact', $edit, t('Send message'));
+      $this->drupalPostForm('contact', $edit, 'Send message');
     }
     else {
-      $this->drupalPostForm('contact/' . $id, $edit, t('Send message'));
+      $this->drupalPostForm('contact/' . $id, $edit, 'Send message');
     }
   }
 
@@ -579,7 +579,7 @@ class ContactSitewideTest extends BrowserTestBase {
         $this->assertSession()->statusCodeEquals(403);
       }
       else {
-        $this->drupalPostForm("admin/structure/contact/manage/$id/delete", [], t('Delete'));
+        $this->drupalPostForm("admin/structure/contact/manage/$id/delete", [], 'Delete');
         $this->assertRaw(t('The contact form %label has been deleted.', ['%label' => $contact_form->label()]));
         $this->assertNull(ContactForm::load($id), new FormattableMarkup('Form %contact_form not found', ['%contact_form' => $contact_form->label()]));
       }

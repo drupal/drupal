@@ -49,7 +49,7 @@ class TermLanguageTest extends TaxonomyTestBase {
     $edit = [
       'default_language[language_alterable]' => TRUE,
     ];
-    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id(), $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id(), $edit, 'Save');
 
     // Add a term.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
@@ -60,7 +60,7 @@ class TermLanguageTest extends TaxonomyTestBase {
       'name[0][value]' => $this->randomMachineName(),
       'langcode[0][value]' => 'aa',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $terms = taxonomy_term_load_multiple_by_name($edit['name[0][value]']);
     $term = reset($terms);
     $this->assertEqual($term->language()->getId(), $edit['langcode[0][value]'], 'The term contains the correct langcode.');
@@ -71,7 +71,7 @@ class TermLanguageTest extends TaxonomyTestBase {
 
     // Change the language of the term.
     $edit['langcode[0][value]'] = 'bb';
-    $this->drupalPostForm('taxonomy/term/' . $term->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('taxonomy/term/' . $term->id() . '/edit', $edit, 'Save');
 
     // Check again that on the edit page the language is correct.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/edit');
@@ -85,7 +85,7 @@ class TermLanguageTest extends TaxonomyTestBase {
       'default_language[langcode]' => 'bb',
       'default_language[language_alterable]' => TRUE,
     ];
-    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id(), $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id(), $edit, 'Save');
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
     $this->assertTrue($this->assertSession()->optionExists('edit-langcode-0-value', 'bb')->isSelected());
 
@@ -94,7 +94,7 @@ class TermLanguageTest extends TaxonomyTestBase {
       'default_language[langcode]' => 'current_interface',
       'default_language[language_alterable]' => TRUE,
     ];
-    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id(), $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id(), $edit, 'Save');
     $this->drupalGet('aa/admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
     $this->assertTrue($this->assertSession()->optionExists('edit-langcode-0-value', 'aa')->isSelected());
     $this->drupalGet('bb/admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
@@ -107,7 +107,7 @@ class TermLanguageTest extends TaxonomyTestBase {
       'default_language[langcode]' => LanguageInterface::LANGCODE_SITE_DEFAULT,
       'default_language[language_alterable]' => TRUE,
     ];
-    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id(), $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id(), $edit, 'Save');
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
     $this->assertTrue($this->assertSession()->optionExists('edit-langcode-0-value', 'cc')->isSelected());
   }
@@ -120,7 +120,7 @@ class TermLanguageTest extends TaxonomyTestBase {
     $edit = [
       'default_language[language_alterable]' => TRUE,
     ];
-    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id(), $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id(), $edit, 'Save');
 
     // Add a term.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
@@ -129,7 +129,7 @@ class TermLanguageTest extends TaxonomyTestBase {
       'name[0][value]' => $this->randomMachineName(),
       'langcode[0][value]' => 'aa',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $terms = taxonomy_term_load_multiple_by_name($edit['name[0][value]']);
     $term = reset($terms);
 

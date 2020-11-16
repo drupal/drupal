@@ -288,7 +288,7 @@ class CommentInterfaceTest extends CommentTestBase {
       'comment_body[0][value]' => $body_text1,
       'comment_body[0][format]' => 'filtered_html',
     ];
-    $this->drupalPostForm(NULL, $edit1, t('Save'));
+    $this->drupalPostForm(NULL, $edit1, 'Save');
     $this->assertEqual('Hello World', Comment::load(1)->getSubject());
 
     // If there's nothing other than HTML, the subject should be '(No subject)'.
@@ -297,7 +297,7 @@ class CommentInterfaceTest extends CommentTestBase {
       'comment_body[0][value]' => $body_text2,
       'comment_body[0][format]' => 'filtered_html',
     ];
-    $this->drupalPostForm(NULL, $edit2, t('Save'));
+    $this->drupalPostForm(NULL, $edit2, 'Save');
     $this->assertEqual('(No subject)', Comment::load(2)->getSubject());
   }
 

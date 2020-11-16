@@ -77,7 +77,7 @@ class ContentTranslationRevisionTranslationDeletionTest extends ContentTranslati
       'title[0][value]' => "Test $index.2 IT",
       'moderation_state[0][state]' => 'draft',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save (this translation)'));
+    $this->drupalPostForm(NULL, $edit, 'Save (this translation)');
     $entity = $this->storage->loadUnchanged($id);
     $this->assertFalse($entity->hasTranslation('it'));
     $it_revision = $this->loadRevisionTranslation($entity, 'it');
@@ -99,7 +99,7 @@ class ContentTranslationRevisionTranslationDeletionTest extends ContentTranslati
       'title[0][value]' => "Test $index.3 IT",
       'moderation_state[0][state]' => 'published',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save (this translation)'));
+    $this->drupalPostForm(NULL, $edit, 'Save (this translation)');
     $entity = $this->storage->loadUnchanged($id);
     $this->assertTrue($entity->hasTranslation('it'));
     $it_revision = $this->loadRevisionTranslation($entity, 'it');
@@ -119,7 +119,7 @@ class ContentTranslationRevisionTranslationDeletionTest extends ContentTranslati
       'title[0][value]' => "Test $index.4 EN",
       'moderation_state[0][state]' => 'draft',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save (this translation)'));
+    $this->drupalPostForm(NULL, $edit, 'Save (this translation)');
     $entity = $this->storage->loadUnchanged($id);
     $this->assertTrue($entity->hasTranslation('it'));
     $en_revision = $this->loadRevisionTranslation($entity, 'en');
@@ -149,7 +149,7 @@ class ContentTranslationRevisionTranslationDeletionTest extends ContentTranslati
       'title[0][value]' => "Test $index.6 EN",
       'moderation_state[0][state]' => 'published',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $entity = $this->storage->loadUnchanged($id);
     $this->assertFalse($entity->hasTranslation('it'));
     $this->drupalLogin($this->currentAccount);
@@ -160,7 +160,7 @@ class ContentTranslationRevisionTranslationDeletionTest extends ContentTranslati
       'title[0][value]' => "Test $index.7 IT",
       'moderation_state[0][state]' => 'published',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save (this translation)'));
+    $this->drupalPostForm(NULL, $edit, 'Save (this translation)');
     $entity = $this->storage->loadUnchanged($id);
     $this->assertTrue($entity->hasTranslation('it'));
     $it_revision = $this->loadRevisionTranslation($entity, 'it');
@@ -174,7 +174,7 @@ class ContentTranslationRevisionTranslationDeletionTest extends ContentTranslati
       'title[0][value]' => "Test $index.8 IT",
       'moderation_state[0][state]' => 'draft',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save (this translation)'));
+    $this->drupalPostForm(NULL, $edit, 'Save (this translation)');
     $entity = $this->storage->loadUnchanged($id);
     $this->assertTrue($entity->hasTranslation('it'));
     $it_revision = $this->loadRevisionTranslation($entity, 'it');

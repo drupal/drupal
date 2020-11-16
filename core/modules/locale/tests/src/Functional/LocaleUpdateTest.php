@@ -70,7 +70,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $edit = [
       'use_source' => LOCALE_TRANSLATION_USE_SOURCE_LOCAL,
     ];
-    $this->drupalPostForm('admin/config/regional/translate/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/regional/translate/settings', $edit, 'Save configuration');
 
     // Get status of translation sources at local file system.
     $this->drupalGet('admin/reports/translations/check');
@@ -86,7 +86,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $edit = [
       'use_source' => LOCALE_TRANSLATION_USE_SOURCE_REMOTE_AND_LOCAL,
     ];
-    $this->drupalPostForm('admin/config/regional/translate/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/regional/translate/settings', $edit, 'Save configuration');
 
     // Get status of translation sources at both local and remote locations.
     $this->drupalGet('admin/reports/translations/check');
@@ -121,7 +121,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
       'use_source' => LOCALE_TRANSLATION_USE_SOURCE_REMOTE_AND_LOCAL,
       'overwrite' => LOCALE_TRANSLATION_OVERWRITE_ALL,
     ];
-    $this->drupalPostForm('admin/config/regional/translate/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/regional/translate/settings', $edit, 'Save configuration');
 
     // Get the translation status.
     $this->drupalGet('admin/reports/translations/check');
@@ -135,7 +135,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $this->assertText('Contributed module two (' . $date_formatter->format($this->timestampNew, 'html_date') . ')', 'Updates for Contrib module two');
 
     // Execute the translation update.
-    $this->drupalPostForm('admin/reports/translations', [], t('Update translations'));
+    $this->drupalPostForm('admin/reports/translations', [], 'Update translations');
 
     // Check if the translation has been updated, using the status cache.
     $status = locale_translation_get_status();
@@ -187,11 +187,11 @@ class LocaleUpdateTest extends LocaleUpdateBase {
       'use_source' => LOCALE_TRANSLATION_USE_SOURCE_LOCAL,
       'overwrite' => LOCALE_TRANSLATION_OVERWRITE_ALL,
     ];
-    $this->drupalPostForm('admin/config/regional/translate/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/regional/translate/settings', $edit, 'Save configuration');
 
     // Execute the translation update.
     $this->drupalGet('admin/reports/translations/check');
-    $this->drupalPostForm('admin/reports/translations', [], t('Update translations'));
+    $this->drupalPostForm('admin/reports/translations', [], 'Update translations');
 
     // Check if the translation has been updated, using the status cache.
     $status = locale_translation_get_status();
@@ -243,11 +243,11 @@ class LocaleUpdateTest extends LocaleUpdateBase {
       'use_source' => LOCALE_TRANSLATION_USE_SOURCE_REMOTE_AND_LOCAL,
       'overwrite' => LOCALE_TRANSLATION_OVERWRITE_NON_CUSTOMIZED,
     ];
-    $this->drupalPostForm('admin/config/regional/translate/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/regional/translate/settings', $edit, 'Save configuration');
 
     // Execute translation update.
     $this->drupalGet('admin/reports/translations/check');
-    $this->drupalPostForm('admin/reports/translations', [], t('Update translations'));
+    $this->drupalPostForm('admin/reports/translations', [], 'Update translations');
 
     // Check whether existing translations have (not) been overwritten.
     // cSpell:disable
@@ -281,11 +281,11 @@ class LocaleUpdateTest extends LocaleUpdateBase {
       'use_source' => LOCALE_TRANSLATION_USE_SOURCE_REMOTE_AND_LOCAL,
       'overwrite' => LOCALE_TRANSLATION_OVERWRITE_NONE,
     ];
-    $this->drupalPostForm('admin/config/regional/translate/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/regional/translate/settings', $edit, 'Save configuration');
 
     // Execute translation update.
     $this->drupalGet('admin/reports/translations/check');
-    $this->drupalPostForm('admin/reports/translations', [], t('Update translations'));
+    $this->drupalPostForm('admin/reports/translations', [], 'Update translations');
 
     // Check whether existing translations have (not) been overwritten.
     // cSpell:disable
@@ -313,7 +313,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $edit = [
       'modules[locale_test_translate][enable]' => 'locale_test_translate',
     ];
-    $this->drupalPostForm('admin/modules', $edit, t('Install'));
+    $this->drupalPostForm('admin/modules', $edit, 'Install');
 
     // Check if translations have been imported.
     $this->assertRaw(t('One translation file imported. %number translations were added, %update translations were updated and %delete translations were removed.',
@@ -324,8 +324,8 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $edit = [
       'uninstall[locale_test_translate]' => 1,
     ];
-    $this->drupalPostForm('admin/modules/uninstall', $edit, t('Uninstall'));
-    $this->drupalPostForm(NULL, [], t('Uninstall'));
+    $this->drupalPostForm('admin/modules/uninstall', $edit, 'Uninstall');
+    $this->drupalPostForm(NULL, [], 'Uninstall');
 
     // Check if the file data is removed from the database.
     $history = locale_translation_get_file_history();
@@ -349,7 +349,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $edit = [
       'modules[locale_test_translate][enable]' => 'locale_test_translate',
     ];
-    $this->drupalPostForm('admin/modules', $edit, t('Install'));
+    $this->drupalPostForm('admin/modules', $edit, 'Install');
 
     // Check if there is no Dutch translation yet.
     $this->assertTranslation('Extraday', '', 'nl');
@@ -360,7 +360,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $edit = [
       'predefined_langcode' => 'nl',
     ];
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
 
     // Check if the right number of translations are added.
     $this->assertRaw(t('One translation file imported. %number translations were added, %update translations were updated and %delete translations were removed.',
@@ -378,7 +378,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $this->assertNotEmpty($result, 'Files added to file history');
 
     // Remove a language.
-    $this->drupalPostForm('admin/config/regional/language/delete/nl', [], t('Delete'));
+    $this->drupalPostForm('admin/config/regional/language/delete/nl', [], 'Delete');
 
     // Check if the language data is removed from the database.
     $result = $connection->select('locale_file', 'lf')
@@ -405,7 +405,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $edit = [
       'modules[locale_test_translate][enable]' => 'locale_test_translate',
     ];
-    $this->drupalPostForm('admin/modules', $edit, t('Install'));
+    $this->drupalPostForm('admin/modules', $edit, 'Install');
 
     // Create a custom language with language code 'xx' and a random
     // name.
@@ -417,7 +417,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
       'label' => $name,
       'direction' => LanguageInterface::DIRECTION_LTR,
     ];
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add custom language');
 
     // Ensure the translation file is automatically imported when the language
     // was added.
@@ -430,7 +430,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
       'langcode' => $langcode,
       'translation' => 'translated',
     ];
-    $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
+    $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
     $this->assertNoText('No strings available.', 'String successfully imported.');
 
     // Ensure the multiline string was imported.
@@ -439,7 +439,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
       'langcode' => $langcode,
       'translation' => 'all',
     ];
-    $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
+    $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
     $this->assertText('Multiline translation string to make sure that import works with it.', 'String successfully imported.');
 
     // Ensure 'Allowed HTML source string' was imported but the translation for
@@ -450,7 +450,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
       'langcode' => $langcode,
       'translation' => 'all',
     ];
-    $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
+    $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
     $this->assertText('Allowed HTML source string', 'String successfully imported.');
     $this->assertNoText('Another allowed HTML source string', 'String with disallowed translation not imported.');
   }

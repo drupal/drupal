@@ -161,7 +161,7 @@ class CommentFieldsTest extends CommentTestBase {
 
     // Try to save the comment field without selecting a comment type.
     $edit = [];
-    $this->drupalPostForm('admin/config/people/accounts/fields/user.user.field_user_comment/storage', $edit, t('Save field settings'));
+    $this->drupalPostForm('admin/config/people/accounts/fields/user.user.field_user_comment/storage', $edit, 'Save field settings');
     // We should get an error message.
     $this->assertText('An illegal choice has been detected. Please contact the site administrator.');
 
@@ -178,7 +178,7 @@ class CommentFieldsTest extends CommentTestBase {
     $edit = [
       'settings[comment_type]' => 'user_comment_type',
     ];
-    $this->drupalPostForm('admin/config/people/accounts/fields/user.user.field_user_comment/storage', $edit, t('Save field settings'));
+    $this->drupalPostForm('admin/config/people/accounts/fields/user.user.field_user_comment/storage', $edit, 'Save field settings');
     // We shouldn't get an error message.
     $this->assertNoText('An illegal choice has been detected. Please contact the site administrator.');
   }
@@ -207,20 +207,20 @@ class CommentFieldsTest extends CommentTestBase {
     // Uninstall the comment module.
     $edit = [];
     $edit['uninstall[comment]'] = TRUE;
-    $this->drupalPostForm('admin/modules/uninstall', $edit, t('Uninstall'));
-    $this->drupalPostForm(NULL, [], t('Uninstall'));
+    $this->drupalPostForm('admin/modules/uninstall', $edit, 'Uninstall');
+    $this->drupalPostForm(NULL, [], 'Uninstall');
     $this->rebuildContainer();
     $this->assertFalse($this->container->get('module_handler')->moduleExists('comment'), 'Comment module uninstalled.');
 
     // Install core content type module (book).
     $edit = [];
     $edit['modules[book][enable]'] = 'book';
-    $this->drupalPostForm('admin/modules', $edit, t('Install'));
+    $this->drupalPostForm('admin/modules', $edit, 'Install');
 
     // Now install the comment module.
     $edit = [];
     $edit['modules[comment][enable]'] = 'comment';
-    $this->drupalPostForm('admin/modules', $edit, t('Install'));
+    $this->drupalPostForm('admin/modules', $edit, 'Install');
     $this->rebuildContainer();
     $this->assertTrue($this->container->get('module_handler')->moduleExists('comment'), 'Comment module enabled.');
 

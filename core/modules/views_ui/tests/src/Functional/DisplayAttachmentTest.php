@@ -41,22 +41,22 @@ class DisplayAttachmentTest extends UITestBase {
     $this->assertSession()->checkboxNotChecked("edit-displays-page-1");
 
     // Save the attachments and test the value on the view.
-    $this->drupalPostForm($attachment_display_url, ['displays[page_1]' => 1], t('Apply'));
+    $this->drupalPostForm($attachment_display_url, ['displays[page_1]' => 1], 'Apply');
     // Options summary should be escaped.
     $this->assertSession()->assertEscaped('<em>Page</em>');
     $this->assertNoRaw('<em>Page</em>');
     $result = $this->xpath('//a[@id = :id]', [':id' => 'views-attachment-1-displays']);
     $this->assertEqual($result[0]->getAttribute('title'), t('Page'));
-    $this->drupalPostForm(NULL, [], t('Save'));
+    $this->drupalPostForm(NULL, [], 'Save');
 
     $view = Views::getView('test_attachment_ui');
     $view->initDisplay();
     $this->assertEqual(array_keys(array_filter($view->displayHandlers->get('attachment_1')->getOption('displays'))), ['page_1'], 'The attached displays got saved as expected');
 
-    $this->drupalPostForm($attachment_display_url, ['displays[default]' => 1, 'displays[page_1]' => 1], t('Apply'));
+    $this->drupalPostForm($attachment_display_url, ['displays[default]' => 1, 'displays[page_1]' => 1], 'Apply');
     $result = $this->xpath('//a[@id = :id]', [':id' => 'views-attachment-1-displays']);
     $this->assertEqual($result[0]->getAttribute('title'), t('Multiple displays'));
-    $this->drupalPostForm(NULL, [], t('Save'));
+    $this->drupalPostForm(NULL, [], 'Save');
 
     $view = Views::getView('test_attachment_ui');
     $view->initDisplay();
@@ -78,8 +78,8 @@ class DisplayAttachmentTest extends UITestBase {
     $this->assertText('Not defined', 'The right text appears if there is no attachment selection yet.');
 
     // Attach the Attachment to the Page display.
-    $this->drupalPostForm($attachment_display_url, ['displays[page_1]' => 1], t('Apply'));
-    $this->drupalPostForm(NULL, [], t('Save'));
+    $this->drupalPostForm($attachment_display_url, ['displays[page_1]' => 1], 'Apply');
+    $this->drupalPostForm(NULL, [], 'Save');
 
     // Open the Page display and mark it as deleted.
     $this->drupalGet($path_prefix . '/page_1');
@@ -88,7 +88,7 @@ class DisplayAttachmentTest extends UITestBase {
 
     // Open the attachment display and save it.
     $this->drupalGet($path_prefix . '/attachment_1');
-    $this->drupalPostForm(NULL, [], t('Save'));
+    $this->drupalPostForm(NULL, [], 'Save');
 
     // Check that there is no warning for the removed page display.
     $this->assertNoText("Plugin ID &#039;page_1&#039; was not found.");

@@ -35,7 +35,7 @@ class UserLoginTest extends BrowserTestBase {
     $user = $this->drupalCreateUser([]);
     $this->drupalGet('user/login', ['query' => ['destination' => 'foo']]);
     $edit = ['name' => $user->getAccountName(), 'pass' => $user->passRaw];
-    $this->drupalPostForm(NULL, $edit, t('Log in'));
+    $this->drupalPostForm(NULL, $edit, 'Log in');
     $this->assertSession()->addressEquals('foo');
   }
 
@@ -171,7 +171,7 @@ class UserLoginTest extends BrowserTestBase {
       'name' => $account->getAccountName(),
       'pass' => $account->passRaw,
     ];
-    $this->drupalPostForm('user/login', $edit, t('Log in'));
+    $this->drupalPostForm('user/login', $edit, 'Log in');
     if (isset($flood_trigger)) {
       $this->assertSession()->statusCodeEquals(403);
       $this->assertSession()->fieldNotExists('pass');

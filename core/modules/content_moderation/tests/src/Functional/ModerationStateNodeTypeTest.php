@@ -29,7 +29,7 @@ class ModerationStateNodeTypeTest extends ModerationStateTestBase {
     $this->assertRaw('Save');
     $this->drupalPostForm(NULL, [
       'title[0][value]' => 'Test',
-    ], t('Save'));
+    ], 'Save');
     $this->assertText('Not moderated Test has been created.');
   }
 
@@ -64,7 +64,7 @@ class ModerationStateNodeTypeTest extends ModerationStateTestBase {
     $this->drupalGet('node/add/not_moderated');
     $this->drupalPostForm(NULL, [
       'title[0][value]' => 'Test',
-    ], t('Save'));
+    ], 'Save');
     $this->assertText('Not moderated Test has been created.');
 
     // Check that the 'Create new revision' is not disabled.

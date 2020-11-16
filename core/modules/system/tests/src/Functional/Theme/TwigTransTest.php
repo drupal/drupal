@@ -209,7 +209,7 @@ class TwigTransTest extends BrowserTestBase {
         ];
 
         // Install the language in Drupal.
-        $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
+        $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add custom language');
         $this->assertRaw('"edit-languages-' . $langcode . '-weight"');
 
         // Import the custom .po contents for the language.
@@ -220,7 +220,7 @@ class TwigTransTest extends BrowserTestBase {
           'langcode' => $langcode,
           'customized' => TRUE,
         ];
-        $this->drupalPostForm('admin/config/regional/translate/import', $options, t('Import'));
+        $this->drupalPostForm('admin/config/regional/translate/import', $options, 'Import');
         $file_system->unlink($filename);
       }
     }

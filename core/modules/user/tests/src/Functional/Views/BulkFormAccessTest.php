@@ -56,7 +56,7 @@ class BulkFormAccessTest extends UserTestBase {
       'user_bulk_form[' . ($no_edit_user->id() - 1) . ']' => TRUE,
       'action' => 'user_block_user_action',
     ];
-    $this->drupalPostForm('test-user-bulk-form', $edit, t('Apply to selected items'));
+    $this->drupalPostForm('test-user-bulk-form', $edit, 'Apply to selected items');
     $this->assertSession()->statusCodeEquals(200);
 
     $this->assertRaw(new FormattableMarkup('No access to execute %action on the @entity_type_label %entity_label.', [
@@ -77,7 +77,7 @@ class BulkFormAccessTest extends UserTestBase {
       'user_bulk_form[' . ($normal_user->id() - 1) . ']' => TRUE,
       'action' => 'user_block_user_action',
     ];
-    $this->drupalPostForm('test-user-bulk-form', $edit, t('Apply to selected items'));
+    $this->drupalPostForm('test-user-bulk-form', $edit, 'Apply to selected items');
 
     $normal_user = User::load($normal_user->id());
     $this->assertTrue($normal_user->isBlocked(), 'The user is blocked.');
@@ -89,7 +89,7 @@ class BulkFormAccessTest extends UserTestBase {
       'user_bulk_form[' . ($normal_user->id() - 1) . ']' => TRUE,
       'action' => 'user_unblock_user_action',
     ];
-    $this->drupalPostForm('test-user-bulk-form', $edit, t('Apply to selected items'));
+    $this->drupalPostForm('test-user-bulk-form', $edit, 'Apply to selected items');
 
     // Re-load the normal user and ensure it is still blocked.
     $normal_user = User::load($normal_user->id());
@@ -120,11 +120,11 @@ class BulkFormAccessTest extends UserTestBase {
       'user_bulk_form[' . ($account2->id() - 1) . ']' => TRUE,
       'action' => 'user_cancel_user_action',
     ];
-    $this->drupalPostForm('test-user-bulk-form', $edit, t('Apply to selected items'));
+    $this->drupalPostForm('test-user-bulk-form', $edit, 'Apply to selected items');
     $edit = [
       'user_cancel_method' => 'user_cancel_delete',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Cancel accounts'));
+    $this->drupalPostForm(NULL, $edit, 'Cancel accounts');
 
     // Ensure the account "no_delete" still exists.
     $account = User::load($account->id());

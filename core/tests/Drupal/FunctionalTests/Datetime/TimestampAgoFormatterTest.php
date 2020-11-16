@@ -109,7 +109,7 @@ class TimestampAgoFormatterTest extends BrowserTestBase {
       'fields[field_timestamp][region]' => 'content',
       'fields[field_timestamp][type]' => 'timestamp_ago',
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
 
     $this->drupalPostForm(NULL, [], 'field_timestamp_settings_edit');
     $edit = [

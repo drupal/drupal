@@ -106,7 +106,7 @@ class TelephoneFieldTest extends BrowserTestBase {
       'field_telephone[0][value]' => $input,
     ];
 
-    $this->drupalPostForm('node/add/article', $edit, t('Save'));
+    $this->drupalPostForm('node/add/article', $edit, 'Save');
     $this->assertRaw('<a href="tel:' . $expected . '">');
   }
 

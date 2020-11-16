@@ -110,8 +110,8 @@ class SearchRankingTest extends BrowserTestBase {
     $edit['subject[0][value]'] = 'my comment title';
     $edit['comment_body[0][value]'] = 'some random comment';
     $this->drupalGet('comment/reply/node/' . $nodes['comments'][1]->id() . '/comment');
-    $this->drupalPostForm(NULL, $edit, t('Preview'));
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Preview');
+    $this->drupalPostForm(NULL, $edit, 'Save');
 
     // Enable counting of statistics.
     $this->config('statistics.settings')->set('count_content_views', 1)->save();
@@ -141,7 +141,7 @@ class SearchRankingTest extends BrowserTestBase {
     foreach ($node_ranks as $node_rank) {
       // Enable the ranking we are testing.
       $edit['rankings[' . $node_rank . '][value]'] = 10;
-      $this->drupalPostForm('admin/config/search/pages/manage/node_search', $edit, t('Save search page'));
+      $this->drupalPostForm('admin/config/search/pages/manage/node_search', $edit, 'Save search page');
       $this->drupalGet('admin/config/search/pages/manage/node_search');
       $this->assertNotEmpty($this->xpath('//select[@id="edit-rankings-' . $node_rank . '-value"]//option[@value="10"]'), 'Select list to prioritize ' . $node_rank . ' for node ranks is visible and set to 10.');
 
@@ -158,7 +158,7 @@ class SearchRankingTest extends BrowserTestBase {
 
     // Save the final node_rank change then check that all rankings are visible
     // and have been set back to 0.
-    $this->drupalPostForm('admin/config/search/pages/manage/node_search', $edit, t('Save search page'));
+    $this->drupalPostForm('admin/config/search/pages/manage/node_search', $edit, 'Save search page');
     $this->drupalGet('admin/config/search/pages/manage/node_search');
     foreach ($node_ranks as $node_rank) {
       $this->assertNotEmpty($this->xpath('//select[@id="edit-rankings-' . $node_rank . '-value"]//option[@value="0"]'), 'Select list to prioritize ' . $node_rank . ' for node ranks is visible and set to 0.');

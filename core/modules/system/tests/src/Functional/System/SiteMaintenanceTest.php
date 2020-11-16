@@ -69,7 +69,7 @@ class SiteMaintenanceTest extends BrowserTestBase {
     $edit = [
       'maintenance_mode' => 1,
     ];
-    $this->drupalPostForm('admin/config/development/maintenance', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/development/maintenance', $edit, 'Save configuration');
 
     $admin_message = t('Operating in maintenance mode. <a href=":url">Go online.</a>', [':url' => Url::fromRoute('system.site_maintenance_mode')->toString()]);
     $user_message = 'Operating in maintenance mode.';
@@ -105,7 +105,7 @@ class SiteMaintenanceTest extends BrowserTestBase {
       'name' => $this->user->getAccountName(),
       'pass' => $this->user->pass_raw,
     ];
-    $this->drupalPostForm(NULL, $edit, t('Log in'));
+    $this->drupalPostForm(NULL, $edit, 'Log in');
     $this->assertText($user_message);
 
     // Log in administrative user and configure a custom site offline message.
@@ -118,7 +118,7 @@ class SiteMaintenanceTest extends BrowserTestBase {
     $edit = [
       'maintenance_mode_message' => $offline_message,
     ];
-    $this->drupalPostForm(NULL, $edit, t('Save configuration'));
+    $this->drupalPostForm(NULL, $edit, 'Save configuration');
 
     // Logout and verify that custom site offline message is displayed.
     $this->drupalLogout();
@@ -134,13 +134,13 @@ class SiteMaintenanceTest extends BrowserTestBase {
     $edit = [
       'name' => $this->user->getAccountName(),
     ];
-    $this->drupalPostForm('user/password', $edit, t('Submit'));
+    $this->drupalPostForm('user/password', $edit, 'Submit');
     $mails = $this->drupalGetMails();
     $start = strpos($mails[0]['body'], 'user/reset/' . $this->user->id());
     $path = substr($mails[0]['body'], $start, 66 + strlen($this->user->id()));
 
     // Log in with temporary login link.
-    $this->drupalPostForm($path, [], t('Log in'));
+    $this->drupalPostForm($path, [], 'Log in');
     $this->assertText($user_message);
 
     // Regression test to check if title displays in Bartik on maintenance page.

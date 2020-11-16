@@ -117,9 +117,9 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     // Uninstall a module.
     $edit = [];
     $edit['uninstall[taxonomy]'] = TRUE;
-    $this->drupalPostForm('admin/modules/uninstall', $edit, t('Uninstall'));
+    $this->drupalPostForm('admin/modules/uninstall', $edit, 'Uninstall');
     // Confirm the uninstall form.
-    $this->drupalPostForm(NULL, [], t('Uninstall'));
+    $this->drupalPostForm(NULL, [], 'Uninstall');
     $this->rebuildContainer();
 
     // Assert that the subtrees hash has been altered because the subtrees
@@ -129,7 +129,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     // Enable a module.
     $edit = [];
     $edit['modules[taxonomy][enable]'] = TRUE;
-    $this->drupalPostForm('admin/modules', $edit, t('Install'));
+    $this->drupalPostForm('admin/modules', $edit, 'Install');
     $this->rebuildContainer();
 
     // Assert that the subtrees hash has been altered because the subtrees
@@ -147,7 +147,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     // Disable the link.
     $edit = [];
     $edit['enabled'] = FALSE;
-    $this->drupalPostForm("admin/structure/menu/link/" . $admin_menu_link_id . "/edit", $edit, t('Save'));
+    $this->drupalPostForm("admin/structure/menu/link/" . $admin_menu_link_id . "/edit", $edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertText('The menu link has been saved.');
 
@@ -168,7 +168,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
 
     $edit = [];
     $edit[$rid . '[administer taxonomy]'] = FALSE;
-    $this->drupalPostForm('admin/people/permissions', $edit, t('Save permissions'));
+    $this->drupalPostForm('admin/people/permissions', $edit, 'Save permissions');
 
     // Assert that the subtrees hash has been altered because the subtrees
     // structure changed.
@@ -198,7 +198,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     $rid = $this->drupalCreateRole(['administer content types']);
 
     // Assign the role to the user.
-    $this->drupalPostForm('user/' . $this->adminUser->id() . '/edit', ["roles[$rid]" => $rid], t('Save'));
+    $this->drupalPostForm('user/' . $this->adminUser->id() . '/edit', ["roles[$rid]" => $rid], 'Save');
     $this->assertText('The changes have been saved.');
 
     // Assert that the subtrees hash has been altered because the subtrees
@@ -239,7 +239,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     $admin_user_2_hash = $this->getSubtreesHash();
 
     // Assign the role to the user.
-    $this->drupalPostForm('user/' . $admin_user_id . '/edit', ["roles[$rid]" => $rid], t('Save'));
+    $this->drupalPostForm('user/' . $admin_user_id . '/edit', ["roles[$rid]" => $rid], 'Save');
     $this->assertText('The changes have been saved.');
 
     // Log in adminUser and assert that the subtrees hash has changed.
@@ -282,7 +282,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
       'label' => $name,
       'direction' => LanguageInterface::DIRECTION_LTR,
     ];
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add custom language');
     t($name, [], ['langcode' => $langcode]);
     // Reset locale cache.
     $this->container->get('string_translation')->reset();
@@ -309,7 +309,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
       'langcode' => $langcode,
       'translation' => 'untranslated',
     ];
-    $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
+    $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
     $this->assertNoText('No strings available');
     $this->assertText($name, 'Search found the string as untranslated.');
 
@@ -320,7 +320,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     $edit = [
       $lid => $translation,
     ];
-    $this->drupalPostForm('admin/config/regional/translate', $edit, t('Save translations'));
+    $this->drupalPostForm('admin/config/regional/translate', $edit, 'Save translations');
     $this->assertText('The strings have been saved.', 'The strings have been saved.');
     // Verify that the user is redirected to the correct page.
     $this->assertSession()->addressEquals(Url::fromRoute('locale.translate_page'));

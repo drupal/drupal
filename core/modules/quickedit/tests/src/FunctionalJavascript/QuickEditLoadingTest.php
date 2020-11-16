@@ -375,9 +375,7 @@ class QuickEditLoadingTest extends WebDriverTestBase {
     $page->attachFileToField('files[field_image_0]', $image_path);
     $alt_field = $assert->waitForField('field_image[0][alt]');
     $this->assertNotEmpty($alt_field);
-    $this->drupalPostForm(NULL, [
-      'field_image[0][alt]' => 'Vivamus aliquet elit',
-    ], t('Save'));
+    $this->drupalPostForm(NULL, ['field_image[0][alt]' => 'Vivamus aliquet elit'], 'Save');
 
     // The image field form should load normally.
     // Wait "Quick edit" button for node.

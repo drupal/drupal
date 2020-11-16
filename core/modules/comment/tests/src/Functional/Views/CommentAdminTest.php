@@ -69,7 +69,7 @@ class CommentAdminTest extends CommentBrowserTestBase {
     $this->drupalPostForm('comment/reply/node/' . $this->node->id() . '/comment', [
       'name' => $author_name,
       'comment_body[0][value]' => $body,
-    ], t('Save'));
+    ], 'Save');
     $this->assertText('Your comment has been queued for review by site administrators and will be published after approval.', 'Comment requires approval.');
 
     // Get unapproved comment id.
@@ -92,7 +92,7 @@ class CommentAdminTest extends CommentBrowserTestBase {
     $edit = [];
     $edit['action'] = 'comment_publish_action';
     $edit['comment_bulk_form[0]'] = $anonymous_comment4->id();
-    $this->drupalPostForm('admin/content/comment/approval', $edit, t('Apply to selected items'));
+    $this->drupalPostForm('admin/content/comment/approval', $edit, 'Apply to selected items');
 
     $this->assertText('Publish comment was applied to 1 item.', new FormattableMarkup('Operation "@operation" was performed on comment.', ['@operation' => 'publish']));
     $this->drupalLogout();
@@ -119,11 +119,11 @@ class CommentAdminTest extends CommentBrowserTestBase {
       "comment_bulk_form[1]" => $comments[0]->id(),
       "comment_bulk_form[0]" => $comments[1]->id(),
     ];
-    $this->drupalPostForm(NULL, $edit, t('Apply to selected items'));
+    $this->drupalPostForm(NULL, $edit, 'Apply to selected items');
     $this->assertText('Unapproved comments (0)', 'All comments were approved.');
 
     // Test message when no comments selected.
-    $this->drupalPostForm('admin/content/comment', [], t('Apply to selected items'));
+    $this->drupalPostForm('admin/content/comment', [], 'Apply to selected items');
     $this->assertText('Select one or more comments to perform the update on.');
 
     $subject_link = $this->xpath('//table/tbody/tr/td/a[contains(@href, :href) and contains(@title, :title) and text()=:text]', [
@@ -149,9 +149,9 @@ class CommentAdminTest extends CommentBrowserTestBase {
       "comment_bulk_form[0]" => $comments[1]->id(),
       "comment_bulk_form[2]" => $anonymous_comment4->id(),
     ];
-    $this->drupalPostForm(NULL, $edit, t('Apply to selected items'));
+    $this->drupalPostForm(NULL, $edit, 'Apply to selected items');
     $this->assertText('Are you sure you want to delete these comments and all their children?', 'Confirmation required.');
-    $this->drupalPostForm(NULL, [], t('Delete'));
+    $this->drupalPostForm(NULL, [], 'Delete');
     $this->assertText('No comments available.', 'All comments were deleted.');
 
     // Make sure the label of unpublished node is not visible on listing page.

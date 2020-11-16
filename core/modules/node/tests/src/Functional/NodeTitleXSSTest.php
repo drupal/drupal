@@ -33,7 +33,7 @@ class NodeTitleXSSTest extends NodeTestBase {
     $edit = [];
     $edit['title[0][value]'] = $title;
 
-    $this->drupalPostForm('node/add/page', $edit, t('Preview'));
+    $this->drupalPostForm('node/add/page', $edit, 'Preview');
     // Verify that harmful tags are escaped when previewing a node.
     $this->assertNoRaw($xss);
 

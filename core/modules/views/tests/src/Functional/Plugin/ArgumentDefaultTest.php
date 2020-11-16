@@ -101,7 +101,7 @@ class ArgumentDefaultTest extends ViewTestBase {
     $edit = [
       'options[default_argument_type]' => $argument_type,
     ];
-    $this->drupalPostForm('admin/structure/views/nojs/handler/test_argument_default_current_user/default/argument/uid', $edit, t('Apply'));
+    $this->drupalPostForm('admin/structure/views/nojs/handler/test_argument_default_current_user/default/argument/uid', $edit, 'Apply');
 
     // Note, the undefined index error has two spaces after it.
     $error = [

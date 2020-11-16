@@ -85,7 +85,7 @@ class PrepareUninstallTest extends BrowserTestBase {
     $this->assertText("And $term_count more taxonomy terms.");
     $this->assertText('This action cannot be undone.');
     $this->assertText('Make a backup of your database if you want to be able to restore these items.');
-    $this->drupalPostForm(NULL, [], t('Delete all taxonomy terms'));
+    $this->drupalPostForm(NULL, [], 'Delete all taxonomy terms');
 
     // Check that we are redirected to the uninstall page and data has been
     // removed.
@@ -98,8 +98,8 @@ class PrepareUninstallTest extends BrowserTestBase {
     $this->assertSession()->linkByHrefNotExists('admin/modules/uninstall/entity/taxonomy_term');
 
     // Uninstall the Taxonomy module.
-    $this->drupalPostForm('admin/modules/uninstall', ['uninstall[taxonomy]' => TRUE], t('Uninstall'));
-    $this->drupalPostForm(NULL, [], t('Uninstall'));
+    $this->drupalPostForm('admin/modules/uninstall', ['uninstall[taxonomy]' => TRUE], 'Uninstall');
+    $this->drupalPostForm(NULL, [], 'Uninstall');
     $this->assertText('The selected modules have been uninstalled.');
     $this->assertNoText('Enables the categorization of content.');
 
@@ -134,7 +134,7 @@ class PrepareUninstallTest extends BrowserTestBase {
     // the first 10's labels.
     $this->assertText('And 2 more content items.');
 
-    $this->drupalPostForm(NULL, [], t('Delete all content items'));
+    $this->drupalPostForm(NULL, [], 'Delete all content items');
 
     // Check we are redirected to the uninstall page and data has been removed.
     $this->assertSession()->addressEquals('admin/modules/uninstall');
@@ -146,8 +146,8 @@ class PrepareUninstallTest extends BrowserTestBase {
     $this->assertSession()->linkByHrefNotExists('admin/modules/uninstall/entity/node');
 
     // Uninstall Node module.
-    $this->drupalPostForm('admin/modules/uninstall', ['uninstall[node]' => TRUE], t('Uninstall'));
-    $this->drupalPostForm(NULL, [], t('Uninstall'));
+    $this->drupalPostForm('admin/modules/uninstall', ['uninstall[node]' => TRUE], 'Uninstall');
+    $this->drupalPostForm(NULL, [], 'Uninstall');
     $this->assertText('The selected modules have been uninstalled.');
     $this->assertNoText('Allows content to be submitted to the site and displayed on pages.');
 

@@ -37,7 +37,7 @@ class NodeActionsConfigurationTest extends BrowserTestBase {
     // Make a POST request to admin/config/system/actions.
     $edit = [];
     $edit['action'] = 'node_assign_owner_action';
-    $this->drupalPostForm('admin/config/system/actions', $edit, t('Create'));
+    $this->drupalPostForm('admin/config/system/actions', $edit, 'Create');
     $this->assertSession()->statusCodeEquals(200);
 
     // Make a POST request to the individual action configuration page.
@@ -46,7 +46,7 @@ class NodeActionsConfigurationTest extends BrowserTestBase {
     $edit['label'] = $action_label;
     $edit['id'] = strtolower($action_label);
     $edit['owner_uid'] = $user->id();
-    $this->drupalPostForm('admin/config/system/actions/add/node_assign_owner_action', $edit, t('Save'));
+    $this->drupalPostForm('admin/config/system/actions/add/node_assign_owner_action', $edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
 
     $action_id = $edit['id'];
@@ -61,7 +61,7 @@ class NodeActionsConfigurationTest extends BrowserTestBase {
     $new_action_label = $this->randomMachineName();
     $edit['label'] = $new_action_label;
     $edit['owner_uid'] = $user->id();
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
 
     // Make sure that the action updated properly.
@@ -74,7 +74,7 @@ class NodeActionsConfigurationTest extends BrowserTestBase {
     $this->clickLink(t('Delete'));
     $this->assertSession()->statusCodeEquals(200);
     $edit = [];
-    $this->drupalPostForm(NULL, $edit, t('Delete'));
+    $this->drupalPostForm(NULL, $edit, 'Delete');
     $this->assertSession()->statusCodeEquals(200);
 
     // Make sure that the action was actually deleted.

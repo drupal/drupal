@@ -42,14 +42,14 @@ class SettingsTest extends UITestBase {
     $this->assertSession()->linkNotExists('admin/structure/views/settings');
 
     // Test the confirmation message.
-    $this->drupalPostForm('admin/structure/views/settings', [], t('Save configuration'));
+    $this->drupalPostForm('admin/structure/views/settings', [], 'Save configuration');
     $this->assertText('The configuration options have been saved.');
 
     // Configure to always show the master display.
     $edit = [
       'ui_show_master_display' => TRUE,
     ];
-    $this->drupalPostForm('admin/structure/views/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/structure/views/settings', $edit, 'Save configuration');
 
     $view = [];
     $view['label'] = $this->randomMachineName(16);
@@ -58,7 +58,7 @@ class SettingsTest extends UITestBase {
     $view['page[create]'] = TRUE;
     $view['page[title]'] = $this->randomMachineName(16);
     $view['page[path]'] = $this->randomMachineName(16);
-    $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
+    $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
 
     // Configure to not always show the master display.
     // If you have a view without a page or block the master display should be
@@ -66,15 +66,15 @@ class SettingsTest extends UITestBase {
     $edit = [
       'ui_show_master_display' => FALSE,
     ];
-    $this->drupalPostForm('admin/structure/views/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/structure/views/settings', $edit, 'Save configuration');
 
     $view['page[create]'] = FALSE;
-    $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
+    $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
 
     // Create a view with an additional display, so master should be hidden.
     $view['page[create]'] = TRUE;
     $view['id'] = strtolower($this->randomMachineName());
-    $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
+    $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
 
     $this->assertSession()->linkNotExists('Master');
 
@@ -85,42 +85,42 @@ class SettingsTest extends UITestBase {
     $edit = [
       'ui_show_display_embed' => TRUE,
     ];
-    $this->drupalPostForm('admin/structure/views/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/structure/views/settings', $edit, 'Save configuration');
 
     $view['id'] = strtolower($this->randomMachineName());
-    $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
+    $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
     $this->assertSession()->buttonExists('edit-displays-top-add-display-embed');
 
     $edit = [
       'ui_show_display_embed' => FALSE,
     ];
-    $this->drupalPostForm('admin/structure/views/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/structure/views/settings', $edit, 'Save configuration');
 
-    $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
+    $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
     $this->assertSession()->buttonNotExists('edit-displays-top-add-display-embed');
 
     // Configure to hide/show the sql at the preview.
     $edit = [
       'ui_show_sql_query_enabled' => FALSE,
     ];
-    $this->drupalPostForm('admin/structure/views/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/structure/views/settings', $edit, 'Save configuration');
 
     $view['id'] = strtolower($this->randomMachineName());
-    $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
+    $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
 
-    $this->drupalPostForm(NULL, [], t('Update preview'));
+    $this->drupalPostForm(NULL, [], 'Update preview');
     $xpath = $this->xpath('//div[@class="views-query-info"]/pre');
     $this->assertCount(0, $xpath, 'The views sql is hidden.');
 
     $edit = [
       'ui_show_sql_query_enabled' => TRUE,
     ];
-    $this->drupalPostForm('admin/structure/views/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/structure/views/settings', $edit, 'Save configuration');
 
     $view['id'] = strtolower($this->randomMachineName());
-    $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
+    $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
 
-    $this->drupalPostForm(NULL, [], t('Update preview'));
+    $this->drupalPostForm(NULL, [], 'Update preview');
     $xpath = $this->xpath('//div[@class="views-query-info"]//pre');
     $this->assertCount(1, $xpath, 'The views sql is shown.');
     $this->assertStringNotContainsString('db_condition_placeholder', $xpath[0]->getText(), 'No placeholders are shown in the views sql.');
@@ -129,20 +129,20 @@ class SettingsTest extends UITestBase {
     // Test the advanced settings form.
 
     // Test the confirmation message.
-    $this->drupalPostForm('admin/structure/views/settings/advanced', [], t('Save configuration'));
+    $this->drupalPostForm('admin/structure/views/settings/advanced', [], 'Save configuration');
     $this->assertText('The configuration options have been saved.');
 
     $edit = [
       'skip_cache' => TRUE,
       'sql_signature' => TRUE,
     ];
-    $this->drupalPostForm('admin/structure/views/settings/advanced', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/structure/views/settings/advanced', $edit, 'Save configuration');
 
     $this->assertSession()->checkboxChecked('edit-skip-cache');
     $this->assertSession()->checkboxChecked('edit-sql-signature');
 
     // Test the "Clear Views' cache" button.
-    $this->drupalPostForm('admin/structure/views/settings/advanced', [], t("Clear Views' cache"));
+    $this->drupalPostForm('admin/structure/views/settings/advanced', [], "Clear Views' cache");
     $this->assertText('The cache has been cleared.');
   }
 

@@ -38,7 +38,7 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
       'administer modules',
     ]);
     $this->drupalLogin($admin_user);
-    $this->drupalPostForm('admin/config/regional/language/add', ['predefined_langcode' => 'it'], t('Add language'));
+    $this->drupalPostForm('admin/config/regional/language/add', ['predefined_langcode' => 'it'], 'Add language');
   }
 
   /**
@@ -104,7 +104,7 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
       $test_type . '[enabled][' . $test_method_id . ']' => TRUE,
       $test_type . '[configurable]' => TRUE,
     ];
-    $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));
+    $this->drupalPostForm('admin/config/regional/language/detection', $edit, 'Save settings');
 
     // Alter language negotiation info to remove interface language negotiation
     // method.
@@ -188,15 +188,15 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
 
     // Editing config.
     $edit = [$test_type . '[configurable]' => TRUE];
-    $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));
+    $this->drupalPostForm('admin/config/regional/language/detection', $edit, 'Save settings');
     $this->assertTrue($this->isLanguageTypeConfigurable($test_type), 'Language type is now configurable.');
 
     // After installing another module, the config should be the same.
-    $this->drupalPostForm('admin/modules', ['modules[test_module][enable]' => 1], t('Install'));
+    $this->drupalPostForm('admin/modules', ['modules[test_module][enable]' => 1], 'Install');
     $this->assertTrue($this->isLanguageTypeConfigurable($test_type), 'Language type is still configurable.');
 
     // After uninstalling the other module, the config should be the same.
-    $this->drupalPostForm('admin/modules/uninstall', ['uninstall[test_module]' => 1], t('Uninstall'));
+    $this->drupalPostForm('admin/modules/uninstall', ['uninstall[test_module]' => 1], 'Uninstall');
     $this->assertTrue($this->isLanguageTypeConfigurable($test_type), 'Language type is still configurable.');
   }
 

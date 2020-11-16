@@ -77,7 +77,7 @@ class IdConflictTest extends MigrateUpgradeExecuteTestBase {
     $session = $this->assertSession();
     $session->responseContains("Upgrade a site by importing its files and the data from its database into a clean and empty new install of Drupal $this->destinationSiteVersion.");
 
-    $this->drupalPostForm(NULL, [], t('Continue'));
+    $this->drupalPostForm(NULL, [], 'Continue');
     $session->pageTextContains('Provide credentials for the database of the Drupal site you want to upgrade.');
     $session->fieldExists('mysql[host]');
 
@@ -88,11 +88,11 @@ class IdConflictTest extends MigrateUpgradeExecuteTestBase {
     $this->drupalGet('/upgrade');
     $session->responseContains("Upgrade a site by importing its files and the data from its database into a clean and empty new install of Drupal $this->destinationSiteVersion.");
 
-    $this->drupalPostForm(NULL, [], t('Continue'));
+    $this->drupalPostForm(NULL, [], 'Continue');
     $session->pageTextContains('Provide credentials for the database of the Drupal site you want to upgrade.');
     $session->fieldExists('mysql[host]');
 
-    $this->drupalPostForm(NULL, $edits, t('Review upgrade'));
+    $this->drupalPostForm(NULL, $edits, 'Review upgrade');
     $entity_types = [
       'block_content',
       'menu_link_content',

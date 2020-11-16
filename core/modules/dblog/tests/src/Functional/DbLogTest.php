@@ -255,7 +255,7 @@ class DbLogTest extends BrowserTestBase {
     // Change the database log row limit.
     $edit = [];
     $edit['dblog_row_limit'] = $row_limit;
-    $this->drupalPostForm('admin/config/development/logging', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/development/logging', $edit, 'Save configuration');
     $this->assertSession()->statusCodeEquals(200);
 
     // Check row limit variable.
@@ -286,7 +286,7 @@ class DbLogTest extends BrowserTestBase {
     if (isset($severity)) {
       $edit['severity[]'] = $severity;
     }
-    $this->drupalPostForm(NULL, $edit, t('Filter'));
+    $this->drupalPostForm(NULL, $edit, 'Filter');
   }
 
   /**
@@ -419,7 +419,7 @@ class DbLogTest extends BrowserTestBase {
     $edit['pass[pass1]'] = $pass;
     $edit['pass[pass2]'] = $pass;
     $edit['status'] = 1;
-    $this->drupalPostForm('admin/people/create', $edit, t('Create new account'));
+    $this->drupalPostForm('admin/people/create', $edit, 'Create new account');
     $this->assertSession()->statusCodeEquals(200);
     // Retrieve the user object.
     $user = user_load_by_name($name);
@@ -442,7 +442,7 @@ class DbLogTest extends BrowserTestBase {
     $this->drupalLogin($this->adminUser);
     // Delete the user created at the start of this test.
     // We need to POST here to invoke batch_process() in the internal browser.
-    $this->drupalPostForm('user/' . $user->id() . '/cancel', ['user_cancel_method' => 'user_cancel_reassign'], t('Cancel account'));
+    $this->drupalPostForm('user/' . $user->id() . '/cancel', ['user_cancel_method' => 'user_cancel_reassign'], 'Cancel account');
 
     // View the database log report.
     $this->drupalGet('admin/reports/dblog');
@@ -502,17 +502,17 @@ class DbLogTest extends BrowserTestBase {
     // (which is not triggered by drupalCreateNode).
     $edit = $this->getContent($type);
     $title = $edit['title[0][value]'];
-    $this->drupalPostForm('node/add/' . $type, $edit, t('Save'));
+    $this->drupalPostForm('node/add/' . $type, $edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
     // Retrieve the node object.
     $node = $this->drupalGetNodeByTitle($title);
     $this->assertNotNull($node, new FormattableMarkup('Node @title was loaded', ['@title' => $title]));
     // Edit the node.
     $edit = $this->getContentUpdate($type);
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
     // Delete the node.
-    $this->drupalPostForm('node/' . $node->id() . '/delete', [], t('Delete'));
+    $this->drupalPostForm('node/' . $node->id() . '/delete', [], 'Delete');
     $this->assertSession()->statusCodeEquals(200);
     // View the node (to generate page not found event).
     $this->drupalGet('node/' . $node->id());

@@ -63,7 +63,7 @@ class LanguageConfigSchemaTest extends BrowserTestBase {
     $edit['settings[user][user][settings][language][language_alterable]'] = TRUE;
     $edit['settings[user][user][settings][language][langcode]'] = 'en';
 
-    $this->drupalPostForm($settings_path, $edit, t('Save configuration'));
+    $this->drupalPostForm($settings_path, $edit, 'Save configuration');
 
     $config_data = $this->config('language.content_settings.menu_link_content.menu_link_content');
     // Make sure configuration saved correctly.

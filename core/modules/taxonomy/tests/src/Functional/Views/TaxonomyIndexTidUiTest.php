@@ -226,7 +226,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
     $edit = ['options[value][empty_vocabulary]' => TRUE];
     $this->drupalPostForm('admin/structure/views/nojs/handler/test_taxonomy_term_name/default/filter/vid', $edit, 'Apply');
     $this->drupalPostForm('admin/structure/views/view/test_taxonomy_term_name/edit/default', [], 'Save');
-    $this->drupalPostForm(NULL, [], t('Update preview'));
+    $this->drupalPostForm(NULL, [], 'Update preview');
     $preview = $this->xpath("//div[@class='view-content']");
     $this->assertTrue(empty($preview), 'No results.');
   }

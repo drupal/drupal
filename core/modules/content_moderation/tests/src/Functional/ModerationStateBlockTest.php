@@ -58,7 +58,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
 
     // Enable moderation for custom blocks.
     $edit['bundles[basic]'] = TRUE;
-    $this->drupalPostForm('admin/config/workflow/workflows/manage/editorial/type/block_content', $edit, t('Save'));
+    $this->drupalPostForm('admin/config/workflow/workflows/manage/editorial/type/block_content', $edit, 'Save');
 
     // Create a custom block at block/add and save it as draft.
     $body = 'Body of moderated block';
@@ -67,7 +67,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
       'moderation_state[0][state]' => 'draft',
       'body[0][value]' => $body,
     ];
-    $this->drupalPostForm('block/add', $edit, t('Save'));
+    $this->drupalPostForm('block/add', $edit, 'Save');
     $this->assertText('basic Moderated block has been created.');
 
     // Place the block in the Sidebar First region.
@@ -78,7 +78,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
     ];
     $block = BlockContent::load(1);
     $url = 'admin/structure/block/add/block_content:' . $block->uuid() . '/' . $this->config('system.theme')->get('default');
-    $this->drupalPostForm($url, $instance, t('Save block'));
+    $this->drupalPostForm($url, $instance, 'Save block');
 
     // Navigate to home page and check that the block is visible. It should be
     // visible because it is the default revision.
@@ -91,7 +91,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
       'body[0][value]' => $updated_body,
       'moderation_state[0][state]' => 'draft',
     ];
-    $this->drupalPostForm('block/' . $block->id(), $edit, t('Save'));
+    $this->drupalPostForm('block/' . $block->id(), $edit, 'Save');
     $this->assertText('basic Moderated block has been updated.');
 
     // Navigate to the home page and check that the block shows the updated
@@ -103,7 +103,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
     // Publish the block so we can create a pending revision.
     $this->drupalPostForm('block/' . $block->id(), [
       'moderation_state[0][state]' => 'published',
-    ], t('Save'));
+    ], 'Save');
 
     // Create a pending revision.
     $pending_revision_body = 'This is the pending revision body value';
@@ -111,7 +111,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
       'body[0][value]' => $pending_revision_body,
       'moderation_state[0][state]' => 'draft',
     ];
-    $this->drupalPostForm('block/' . $block->id(), $edit, t('Save'));
+    $this->drupalPostForm('block/' . $block->id(), $edit, 'Save');
     $this->assertText('basic Moderated block has been updated.');
 
     // Navigate to home page and check that the pending revision doesn't show,
@@ -123,7 +123,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
     $edit = [
       'new_state' => 'published',
     ];
-    $this->drupalPostForm('block/' . $block->id() . '/latest', $edit, t('Apply'));
+    $this->drupalPostForm('block/' . $block->id() . '/latest', $edit, 'Apply');
     $this->assertText('The moderation state has been updated.');
 
     // Navigate to home page and check that the pending revision is now the

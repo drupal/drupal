@@ -97,9 +97,7 @@ class SearchNumberMatchingTest extends BrowserTestBase {
 
       // Verify that the node title does not appear on the search page
       // with a dummy search.
-      $this->drupalPostForm('search/node',
-        ['keys' => 'foo'],
-        t('Search'));
+      $this->drupalPostForm('search/node', ['keys' => 'foo'], 'Search');
       $this->assertNoText($node->label(), new FormattableMarkup('%number: node title not shown in dummy search', ['%number' => $i]));
 
       // Now verify that we can find node i by searching for any of the
@@ -110,9 +108,7 @@ class SearchNumberMatchingTest extends BrowserTestBase {
         // "not keyword" when searching.
         $number = ltrim($number, '-');
 
-        $this->drupalPostForm('search/node',
-          ['keys' => $number],
-          t('Search'));
+        $this->drupalPostForm('search/node', ['keys' => $number], 'Search');
         $this->assertText($node->label(), new FormattableMarkup('%i: node title shown (search found the node) in search for number %number', ['%i' => $i, '%number' => $number]));
       }
     }

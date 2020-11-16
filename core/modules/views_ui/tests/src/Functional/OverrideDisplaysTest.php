@@ -32,7 +32,7 @@ class OverrideDisplaysTest extends UITestBase {
     $view['page[path]'] = $this->randomMachineName(16);
     $view['block[create]'] = 1;
     $view_path = $view['page[path]'];
-    $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
+    $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
 
     // Configure its title. Since the page and block both started off with the
     // same (empty) title in the views wizard, we expect the wizard to have set
@@ -41,8 +41,8 @@ class OverrideDisplaysTest extends UITestBase {
     $edit = [];
     $edit['title'] = $original_title = $this->randomMachineName(16);
     $edit['override[dropdown]'] = 'default';
-    $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_1/title", $edit, t('Apply'));
-    $this->drupalPostForm("admin/structure/views/view/{$view['id']}/edit/page_1", [], t('Save'));
+    $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_1/title", $edit, 'Apply');
+    $this->drupalPostForm("admin/structure/views/view/{$view['id']}/edit/page_1", [], 'Save');
 
     // Add a node that will appear in the view, so that the block will actually
     // be displayed.
@@ -71,8 +71,8 @@ class OverrideDisplaysTest extends UITestBase {
     $edit = [];
     $edit['title'] = $new_title = $this->randomMachineName(16);
     $edit['override[dropdown]'] = 'page_1';
-    $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_1/title", $edit, t('Apply'));
-    $this->drupalPostForm("admin/structure/views/view/{$view['id']}/edit/page_1", [], t('Save'));
+    $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_1/title", $edit, 'Apply');
+    $this->drupalPostForm("admin/structure/views/view/{$view['id']}/edit/page_1", [], 'Save');
     $this->drupalGet($view_path);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertText($new_title);
@@ -96,7 +96,7 @@ class OverrideDisplaysTest extends UITestBase {
     $view['page[feed_properties][path]'] = $this->randomMachineName(16);
     $view['block[create]'] = 1;
     $view['block[title]'] = $this->randomMachineName(16);
-    $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
+    $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
 
     // Add a node that will appear in the view, so that the block will actually
     // be displayed.
@@ -139,8 +139,8 @@ class OverrideDisplaysTest extends UITestBase {
     // the feed's title also, but not the block.
     $edit = [];
     $edit['title'] = $new_default_title = $this->randomMachineName(16);
-    $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_1/title", $edit, t('Apply'));
-    $this->drupalPostForm("admin/structure/views/view/{$view['id']}/edit/page_1", [], t('Save'));
+    $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_1/title", $edit, 'Apply');
+    $this->drupalPostForm("admin/structure/views/view/{$view['id']}/edit/page_1", [], 'Save');
     $this->drupalGet($view['page[path]']);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertText($new_default_title);
@@ -160,8 +160,8 @@ class OverrideDisplaysTest extends UITestBase {
     // the block title only, and leave the defaults alone.
     $edit = [];
     $edit['title'] = $new_block_title = $this->randomMachineName(16);
-    $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/block_1/title", $edit, t('Apply'));
-    $this->drupalPostForm("admin/structure/views/view/{$view['id']}/edit/block_1", [], t('Save'));
+    $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/block_1/title", $edit, 'Apply');
+    $this->drupalPostForm("admin/structure/views/view/{$view['id']}/edit/block_1", [], 'Save');
     $this->drupalGet($view['page[path]']);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertText($new_default_title);
@@ -188,7 +188,7 @@ class OverrideDisplaysTest extends UITestBase {
     $view['page[path]'] = $this->randomMachineName(16);
     $view['block[create]'] = 1;
     $view['block[title]'] = $this->randomMachineName(16);
-    $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
+    $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
 
     // Revert the title of the block to the default ones, but submit some new
     // values to be sure that the new value is not stored.
@@ -196,8 +196,8 @@ class OverrideDisplaysTest extends UITestBase {
     $edit['title'] = $this->randomMachineName();
     $edit['override[dropdown]'] = 'default_revert';
 
-    $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/block_1/title", $edit, t('Apply'));
-    $this->drupalPostForm("admin/structure/views/view/{$view['id']}/edit/block_1", [], t('Save'));
+    $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/block_1/title", $edit, 'Apply');
+    $this->drupalPostForm("admin/structure/views/view/{$view['id']}/edit/block_1", [], 'Save');
     $this->assertText($view['page[title]']);
   }
 

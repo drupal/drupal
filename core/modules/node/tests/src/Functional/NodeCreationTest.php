@@ -57,7 +57,7 @@ class NodeCreationTest extends NodeTestBase {
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName(8);
     $edit['body[0][value]'] = $this->randomMachineName(16);
-    $this->drupalPostForm('node/add/page', $edit, t('Save'));
+    $this->drupalPostForm('node/add/page', $edit, 'Save');
 
     // Check that the Basic page has been created.
     $this->assertText('Basic page ' . $edit['title[0][value]'] . ' has been created.', 'Basic page created.');
@@ -143,7 +143,7 @@ class NodeCreationTest extends NodeTestBase {
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName(8);
     $edit['body[0][value]'] = $this->randomMachineName(16);
-    $this->drupalPostForm('node/add/page', $edit, t('Save'));
+    $this->drupalPostForm('node/add/page', $edit, 'Save');
 
     // Check that the user was redirected to the home page.
     $this->assertSession()->addressEquals('');

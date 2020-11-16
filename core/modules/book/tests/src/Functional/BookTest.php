@@ -161,7 +161,7 @@ class BookTest extends BrowserTestBase {
 
     // Log in as a user with access to the book outline and save the form.
     $this->drupalLogin($this->adminUser);
-    $this->drupalPostForm('admin/structure/book/' . $book->id(), [], t('Save book pages'));
+    $this->drupalPostForm('admin/structure/book/' . $book->id(), [], 'Save book pages');
     $this->assertText('Updated book ' . $book->label() . '.');
   }
 
@@ -214,7 +214,7 @@ class BookTest extends BrowserTestBase {
     $other_book = $this->createBookNode('new');
     $node = $this->createBookNode($book->id());
     $edit = ['book[bid]' => $other_book->id()];
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
 
     $this->drupalLogout();
     $this->drupalLogin($this->webUser);
@@ -297,7 +297,7 @@ class BookTest extends BrowserTestBase {
     // Give anonymous users the permission 'node test view'.
     $edit = [];
     $edit[RoleInterface::ANONYMOUS_ID . '[node test view]'] = TRUE;
-    $this->drupalPostForm('admin/people/permissions/' . RoleInterface::ANONYMOUS_ID, $edit, t('Save permissions'));
+    $this->drupalPostForm('admin/people/permissions/' . RoleInterface::ANONYMOUS_ID, $edit, 'Save permissions');
     $this->assertText('The changes have been saved.', "Permission 'node test view' successfully assigned to anonymous users.");
 
     // Test correct display of the block.
@@ -395,7 +395,7 @@ class BookTest extends BrowserTestBase {
     // Give anonymous users the permission 'node test view'.
     $edit = [];
     $edit[RoleInterface::ANONYMOUS_ID . '[node test view]'] = TRUE;
-    $this->drupalPostForm('admin/people/permissions/' . RoleInterface::ANONYMOUS_ID, $edit, t('Save permissions'));
+    $this->drupalPostForm('admin/people/permissions/' . RoleInterface::ANONYMOUS_ID, $edit, 'Save permissions');
     $this->assertText('The changes have been saved.', "Permission 'node test view' successfully assigned to anonymous users.");
 
     // Create a book.
@@ -430,7 +430,7 @@ class BookTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(403);
 
     // Ensure that a child book node can be deleted.
-    $this->drupalPostForm('node/' . $nodes[4]->id() . '/outline/remove', $edit, t('Remove'));
+    $this->drupalPostForm('node/' . $nodes[4]->id() . '/outline/remove', $edit, 'Remove');
     $node_storage->resetCache([$nodes[4]->id()]);
     $node4 = $node_storage->load($nodes[4]->id());
     $this->assertTrue(empty($node4->book), 'Deleting child book node properly allowed.');
@@ -442,7 +442,7 @@ class BookTest extends BrowserTestBase {
     // Delete all child book nodes and retest top-level node deletion.
     $node_storage->delete($nodes);
 
-    $this->drupalPostForm('node/' . $this->book->id() . '/outline/remove', $edit, t('Remove'));
+    $this->drupalPostForm('node/' . $this->book->id() . '/outline/remove', $edit, 'Remove');
     $node_storage->resetCache([$this->book->id()]);
     $node = $node_storage->load($this->book->id());
     $this->assertTrue(empty($node->book), 'Deleting childless top-level book node properly allowed.');
@@ -453,7 +453,7 @@ class BookTest extends BrowserTestBase {
     $this->drupalGet($this->book->toUrl('delete-form'));
     $this->assertRaw(t('%title is part of a book outline, and has associated child pages. If you proceed with deletion, the child pages will be relocated automatically.', ['%title' => $this->book->label()]));
     // Delete parent, and visit a child page.
-    $this->drupalPostForm($this->book->toUrl('delete-form'), [], t('Delete'));
+    $this->drupalPostForm($this->book->toUrl('delete-form'), [], 'Delete');
     $this->drupalGet($nodes[0]->toUrl());
     $this->assertSession()->statusCodeEquals(200);
     $this->assertText($nodes[0]->label());
@@ -487,7 +487,7 @@ class BookTest extends BrowserTestBase {
 
     $edit = [];
     $edit['book[bid]'] = '1';
-    $this->drupalPostForm('node/' . $empty_book->id() . '/outline', $edit, t('Add to book outline'));
+    $this->drupalPostForm('node/' . $empty_book->id() . '/outline', $edit, 'Add to book outline');
     $node = \Drupal::entityTypeManager()->getStorage('node')->load($empty_book->id());
     // Test the book array.
     $this->assertEqual($node->book['nid'], $empty_book->id());
@@ -510,7 +510,7 @@ class BookTest extends BrowserTestBase {
     $node = $this->drupalCreateNode(['type' => 'book']);
     $edit = [];
     $edit['book[bid]'] = $node->id();
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
     $node = \Drupal::entityTypeManager()->getStorage('node')->load($node->id());
 
     // Test the book array.
@@ -705,7 +705,7 @@ class BookTest extends BrowserTestBase {
 
     // Unpublish book node.
     $edit = ['status[value]' => FALSE];
-    $this->drupalPostForm('node/' . $this->book->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('node/' . $this->book->id() . '/edit', $edit, 'Save');
 
     // Test node page.
     $this->drupalGet('node/' . $this->book->id());

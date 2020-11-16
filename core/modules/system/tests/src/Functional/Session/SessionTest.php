@@ -70,7 +70,7 @@ class SessionTest extends BrowserTestBase {
       'name' => $user->getAccountName(),
       'pass' => $user->passRaw,
     ];
-    $this->drupalPostForm('user/login', $edit, t('Log in'));
+    $this->drupalPostForm('user/login', $edit, 'Log in');
     $this->drupalGet('user');
     $pass = $this->assertText($user->getAccountName(), new FormattableMarkup('Found name: %name', ['%name' => $user->getAccountName()]), 'User login');
     $this->_logged_in = $pass;

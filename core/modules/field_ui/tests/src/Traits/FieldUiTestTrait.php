@@ -44,17 +44,17 @@ trait FieldUiTestTrait {
     }
 
     // First step: 'Add field' page.
-    $this->drupalPostForm($bundle_path, $initial_edit, t('Save and continue'));
+    $this->drupalPostForm($bundle_path, $initial_edit, 'Save and continue');
     $this->assertRaw(t('These settings apply to the %label field everywhere it is used.', ['%label' => $label]));
     // Test Breadcrumbs.
     $this->assertSession()->linkExists($label, 0, 'Field label is correct in the breadcrumb of the storage settings page.');
 
     // Second step: 'Storage settings' form.
-    $this->drupalPostForm(NULL, $storage_edit, t('Save field settings'));
+    $this->drupalPostForm(NULL, $storage_edit, 'Save field settings');
     $this->assertRaw(t('Updated field %label field settings.', ['%label' => $label]));
 
     // Third step: 'Field settings' form.
-    $this->drupalPostForm(NULL, $field_edit, t('Save settings'));
+    $this->drupalPostForm(NULL, $field_edit, 'Save settings');
     $this->assertRaw(t('Saved %label configuration.', ['%label' => $label]));
 
     // Check that the field appears in the overview form.
@@ -86,7 +86,7 @@ trait FieldUiTestTrait {
     ];
 
     // First step: 'Re-use existing field' on the 'Add field' page.
-    $this->drupalPostForm("$bundle_path/fields/add-field", $initial_edit, t('Save and continue'));
+    $this->drupalPostForm("$bundle_path/fields/add-field", $initial_edit, 'Save and continue');
     // Set the main content to only the content region because the label can
     // contain HTML which will be auto-escaped by Twig.
     $this->assertRaw('field-config-edit-form');
@@ -94,7 +94,7 @@ trait FieldUiTestTrait {
     $this->assertNoRaw('&amp;lt;');
 
     // Second step: 'Field settings' form.
-    $this->drupalPostForm(NULL, $field_edit, t('Save settings'));
+    $this->drupalPostForm(NULL, $field_edit, 'Save settings');
     $this->assertRaw(t('Saved %label configuration.', ['%label' => $label]));
 
     // Check that the field appears in the overview form.
@@ -125,7 +125,7 @@ trait FieldUiTestTrait {
     $this->assertSession()->linkExists($label, 0, 'Field label is correct in the breadcrumb of the field delete page.');
 
     // Submit confirmation form.
-    $this->drupalPostForm(NULL, [], t('Delete'));
+    $this->drupalPostForm(NULL, [], 'Delete');
     $this->assertRaw(t('The field %label has been deleted from the %type content type.', ['%label' => $label, '%type' => $bundle_label]));
 
     // Check that the field does not appear in the overview form.

@@ -79,7 +79,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
         'title[0][value]' => $title,
         'link[0][uri]' => $test_path,
       ];
-      $this->drupalPostForm('admin/config/user-interface/shortcut/manage/' . $set->id() . '/add-link', $form_data, t('Save'));
+      $this->drupalPostForm('admin/config/user-interface/shortcut/manage/' . $set->id() . '/add-link', $form_data, 'Save');
       $this->assertSession()->statusCodeEquals(200);
       $this->assertText('Added a shortcut for ' . $title . '.');
       $saved_set = ShortcutSet::load($set->id());
@@ -112,7 +112,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
       'title[0][value]' => $title,
       'link[0][uri]' => '/admin',
     ];
-    $this->drupalPostForm('admin/config/user-interface/shortcut/manage/' . $set->id() . '/add-link', $form_data, t('Save'));
+    $this->drupalPostForm('admin/config/user-interface/shortcut/manage/' . $set->id() . '/add-link', $form_data, 'Save');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertRaw(t("The path '@link_path' is inaccessible.", ['@link_path' => '/admin']));
 
@@ -120,7 +120,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
       'title[0][value]' => $title,
       'link[0][uri]' => '/node',
     ];
-    $this->drupalPostForm('admin/config/user-interface/shortcut/manage/' . $set->id() . '/add-link', $form_data, t('Save'));
+    $this->drupalPostForm('admin/config/user-interface/shortcut/manage/' . $set->id() . '/add-link', $form_data, 'Save');
     $this->assertSession()->linkExists($title, 0, 'Shortcut link found on the page.');
 
     // Create a new shortcut set and add a link to it.
@@ -129,13 +129,13 @@ class ShortcutLinksTest extends ShortcutTestBase {
       'label' => $this->randomMachineName(),
       'id' => strtolower($this->randomMachineName()),
     ];
-    $this->drupalPostForm('admin/config/user-interface/shortcut/add-set', $edit, t('Save'));
+    $this->drupalPostForm('admin/config/user-interface/shortcut/add-set', $edit, 'Save');
     $title = $this->randomMachineName();
     $form_data = [
       'title[0][value]' => $title,
       'link[0][uri]' => '/admin',
     ];
-    $this->drupalPostForm('admin/config/user-interface/shortcut/manage/' . $edit['id'] . '/add-link', $form_data, t('Save'));
+    $this->drupalPostForm('admin/config/user-interface/shortcut/manage/' . $edit['id'] . '/add-link', $form_data, 'Save');
     $this->assertSession()->statusCodeEquals(200);
   }
 
@@ -236,7 +236,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
 
     $shortcuts = $set->getShortcuts();
     $shortcut = reset($shortcuts);
-    $this->drupalPostForm('admin/config/user-interface/shortcut/link/' . $shortcut->id(), ['title[0][value]' => $new_link_name], t('Save'));
+    $this->drupalPostForm('admin/config/user-interface/shortcut/link/' . $shortcut->id(), ['title[0][value]' => $new_link_name], 'Save');
     $saved_set = ShortcutSet::load($set->id());
     $titles = $this->getShortcutInformation($saved_set, 'title');
     $this->assertContains($new_link_name, $titles, 'Shortcut renamed: ' . $new_link_name);
@@ -255,7 +255,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
 
     $shortcuts = $set->getShortcuts();
     $shortcut = reset($shortcuts);
-    $this->drupalPostForm('admin/config/user-interface/shortcut/link/' . $shortcut->id(), ['title[0][value]' => $shortcut->getTitle(), 'link[0][uri]' => $new_link_path], t('Save'));
+    $this->drupalPostForm('admin/config/user-interface/shortcut/link/' . $shortcut->id(), ['title[0][value]' => $shortcut->getTitle(), 'link[0][uri]' => $new_link_path], 'Save');
     $saved_set = ShortcutSet::load($set->id());
     $paths = $this->getShortcutInformation($saved_set, 'link');
     $this->assertContains('internal:' . $new_link_path, $paths, 'Shortcut path changed: ' . $new_link_path);

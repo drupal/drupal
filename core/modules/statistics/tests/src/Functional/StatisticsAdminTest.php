@@ -77,7 +77,7 @@ class StatisticsAdminTest extends BrowserTestBase {
 
     // Enable counter on content view.
     $edit['statistics_count_content_views'] = 1;
-    $this->drupalPostForm('admin/config/system/statistics', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/system/statistics', $edit, 'Save configuration');
     $config = $this->config('statistics.settings');
     $this->assertNotEmpty($config->get('count_content_views'), 'Count content view log is enabled.');
 

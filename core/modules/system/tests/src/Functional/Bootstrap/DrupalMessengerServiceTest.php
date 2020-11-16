@@ -55,7 +55,7 @@ class DrupalMessengerServiceTest extends BrowserTestBase {
     $this->drupalLogin($this->rootUser);
     $edit = [];
     $edit["modules[help][enable]"] = TRUE;
-    $this->drupalPostForm('admin/modules', $edit, t('Install'));
+    $this->drupalPostForm('admin/modules', $edit, 'Install');
     $assert->pageTextContains('Help has been enabled');
     $assert->pageTextContains('system_test_preinstall_module called');
   }

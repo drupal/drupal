@@ -85,7 +85,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
       'file_test_replace' => FileSystemInterface::EXISTS_REPLACE,
       'files[file_test_upload][]' => $file_system->realpath($this->image->getFileUri()),
     ];
-    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, t('Submit'));
+    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, 'Submit');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertRaw(t('You WIN!'));
 
@@ -114,7 +114,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
     $edit = ['files[file_test_upload][]' => $file_system->realpath($image2->uri)];
-    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, t('Submit'));
+    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, 'Submit');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertRaw(t('You WIN!'));
     $max_fid_after = (int) \Drupal::entityQueryAggregate('file')->aggregate('fid', 'max')->execute()[0]['fid_max'];
@@ -140,7 +140,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
       'files[file_test_upload][]' => $image3_realpath,
       'file_subdir' => $dir,
     ];
-    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, t('Submit'));
+    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, 'Submit');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertRaw(t('You WIN!'));
     $this->assertFileExists('temporary://' . $dir . '/' . trim(\Drupal::service('file_system')->basename($image3_realpath)));
@@ -163,7 +163,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
       'extensions' => $extensions,
     ];
 
-    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, t('Submit'));
+    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, 'Submit');
     $this->assertSession()->statusCodeEquals(200);
     $message = t('Only files with the following extensions are allowed:') . ' <em class="placeholder">' . $extensions . '</em>';
     $this->assertRaw($message);
@@ -183,7 +183,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
       'extensions' => $extensions,
     ];
 
-    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, t('Submit'));
+    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, 'Submit');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertNoRaw(t('Only files with the following extensions are allowed:'));
     $this->assertRaw(t('You WIN!'));
@@ -200,7 +200,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
       'files[file_test_upload][]' => $file_system->realpath($this->image->getFileUri()),
       'allow_all_extensions' => TRUE,
     ];
-    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, t('Submit'));
+    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, 'Submit');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertNoRaw(t('Only files with the following extensions are allowed:'));
     $this->assertRaw(t('You WIN!'));
@@ -225,7 +225,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
       'extensions' => 'php',
     ];
 
-    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, t('Submit'));
+    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, 'Submit');
     $this->assertSession()->statusCodeEquals(200);
     $message = t('For security reasons, your upload has been renamed to') . ' <em class="placeholder">' . $this->phpfile->filename . '.txt' . '</em>';
     $this->assertRaw($message);
@@ -241,7 +241,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     // Reset the hook counters.
     file_test_reset();
 
-    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, t('Submit'));
+    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, 'Submit');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertNoRaw(t('For security reasons, your upload has been renamed'));
     $this->assertRaw(t('File name is @filename', ['@filename' => $this->phpfile->filename]));
@@ -277,7 +277,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     $munged_filename = substr($munged_filename, 0, strrpos($munged_filename, '.'));
     $munged_filename .= '_.' . $this->imageExtension;
 
-    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, t('Submit'));
+    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, 'Submit');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertRaw(t('For security reasons, your upload has been renamed'));
     $this->assertRaw(t('File name is @filename', ['@filename' => $munged_filename]));
@@ -295,7 +295,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
       'allow_all_extensions' => TRUE,
     ];
 
-    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, t('Submit'));
+    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, 'Submit');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertNoRaw(t('For security reasons, your upload has been renamed'));
     $this->assertRaw(t('File name is @filename', ['@filename' => $this->image->getFilename()]));
@@ -315,7 +315,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
       'file_test_replace' => FileSystemInterface::EXISTS_RENAME,
       'files[file_test_upload][]' => $file_system->realpath($this->image->getFileUri()),
     ];
-    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, t('Submit'));
+    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, 'Submit');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertRaw(t('You WIN!'));
 
@@ -333,7 +333,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
       'file_test_replace' => FileSystemInterface::EXISTS_REPLACE,
       'files[file_test_upload][]' => $file_system->realpath($this->image->getFileUri()),
     ];
-    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, t('Submit'));
+    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, 'Submit');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertRaw(t('You WIN!'));
 
@@ -351,7 +351,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
       'file_test_replace' => FileSystemInterface::EXISTS_ERROR,
       'files[file_test_upload][]' => $file_system->realpath($this->image->getFileUri()),
     ];
-    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, t('Submit'));
+    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, 'Submit');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertRaw(t('Epic upload FAIL!'));
 
@@ -363,7 +363,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
    * Tests for no failures when not uploading a file.
    */
   public function testNoUpload() {
-    $this->drupalPostForm('file-test/save_upload_from_form_test', [], t('Submit'));
+    $this->drupalPostForm('file-test/save_upload_from_form_test', [], 'Submit');
     $this->assertNoRaw(t('Epic upload FAIL!'));
   }
 
@@ -384,7 +384,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     ];
 
     \Drupal::state()->set('file_test.disable_error_collection', TRUE);
-    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, t('Submit'));
+    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, 'Submit');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertRaw(t('File upload error. Could not move uploaded file.'));
     $this->assertRaw(t('Epic upload FAIL!'));
@@ -410,7 +410,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
       'files[file_test_upload][]' => $file_system->realpath($this->image->getFileUri()),
       'error_message' => $error,
     ];
-    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, t('Submit'));
+    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, 'Submit');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertRaw(t('You WIN!'));
 
@@ -426,7 +426,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
       'error_message' => $error,
       'extensions' => 'foo',
     ];
-    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, t('Submit'));
+    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, 'Submit');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertRaw(t('Epic upload FAIL!'));
 
@@ -440,7 +440,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     $edit = [
       'files[file_test_upload][]' => $file_system->realpath($this->image->getFileUri()),
     ];
-    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, t('Submit'));
+    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, 'Submit');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertRaw(t('You WIN!'));
 
@@ -494,7 +494,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
       'files[file_test_upload][]' => $file_system->realpath($this->image->getFileUri()),
       'extensions' => 'foo',
     ];
-    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, t('Submit'));
+    $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, 'Submit');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertRaw(t('Epic upload FAIL!'));
     $this->assertCount(1, $this->cssSelect('input[name="files[file_test_upload][]"].error'), 'File upload field has error.');

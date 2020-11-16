@@ -73,7 +73,7 @@ class FileManagedFileElementTest extends WebDriverTestBase {
           $this->assertNotEmpty($uploaded_file);
           $last_fid = $this->getLastFileId();
           $this->assertGreaterThan($last_fid_prior, $last_fid, 'New file got uploaded.');
-          $this->drupalPostForm(NULL, [], t('Save'));
+          $this->drupalPostForm(NULL, [], 'Save');
 
           // Remove, then Submit.
           $remove_button_title = $multiple ? t('Remove selected') : t('Remove');
@@ -84,7 +84,7 @@ class FileManagedFileElementTest extends WebDriverTestBase {
           }
           $this->getSession()->getPage()->pressButton($remove_button_title);
           $this->assertSession()->assertWaitOnAjaxRequest();
-          $this->drupalPostForm(NULL, [], t('Save'));
+          $this->drupalPostForm(NULL, [], 'Save');
           $this->assertSession()->responseContains(t('The file ids are %fids.', ['%fids' => '']));
 
           // Upload, then Remove, then Submit.
@@ -99,7 +99,7 @@ class FileManagedFileElementTest extends WebDriverTestBase {
           $this->getSession()->getPage()->pressButton($remove_button_title);
           $this->assertSession()->assertWaitOnAjaxRequest();
 
-          $this->drupalPostForm(NULL, [], t('Save'));
+          $this->drupalPostForm(NULL, [], 'Save');
           $this->assertSession()->responseContains(t('The file ids are %fids.', ['%fids' => '']));
         }
       }
