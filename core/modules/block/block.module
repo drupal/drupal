@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
@@ -86,8 +87,18 @@ function block_page_top(array &$page_top) {
  *
  * @param $theme_list
  *   An array of theme names.
+ *
+ * @see block_modules_installed()
  */
 function block_themes_installed($theme_list) {
+  // Disable this functionality prior to install profile installation because
+  // block configuration is often optional or provided by the install profile
+  // itself. block_theme_initialize() will be called when the install profile is
+  // installed.
+  if (InstallerKernel::installationAttempted() && \Drupal::config('core.extension')->get('module.' . \Drupal::installProfile()) === NULL) {
+    return;
+  }
+
   foreach ($theme_list as $theme) {
     // Don't initialize themes that are not displayed in the UI.
     if (\Drupal::service('theme_handler')->hasUi($theme)) {
@@ -129,6 +140,24 @@ function block_theme_initialize($theme) {
         $block->setRegion(system_default_region($theme));
       }
       $block->save();
+    }
+  }
+}
+
+/**
+ * Implements hook_modules_installed().
+ *
+ * @see block_themes_installed()
+ */
+function block_modules_installed($modules) {
+  // block_themes_installed() does not call block_theme_initialize() during site
+  // installation because block configuration can be optional or provided by the
+  // profile. Now, when the profile is installed, this configuration exists,
+  // call block_theme_initialize() for all installed themes.
+  $profile = \Drupal::installProfile();
+  if (in_array($profile, $modules, TRUE)) {
+    foreach (\Drupal::service('theme_handler')->listInfo() as $theme => $data) {
+      block_theme_initialize($theme);
     }
   }
 }
