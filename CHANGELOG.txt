@@ -1,3 +1,8 @@
+Drupal 7.74, 2020-11-17
+-----------------------
+- Fixed security issues:
+   - SA-CORE-2020-012
+
 Drupal 7.73, 2020-09-16
 -----------------------
 - Fixed security issues:
