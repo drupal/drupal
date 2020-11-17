@@ -90,9 +90,14 @@ class FileTestSaveUploadFromForm extends FormBase {
     ];
 
     $form['allow_all_extensions'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Allow all extensions?'),
-      '#default_value' => FALSE,
+      '#title' => t('Allow all extensions?'),
+      '#type' => 'radios',
+      '#options' => [
+        'false' => 'No',
+        'empty_array' => 'Empty array',
+        'empty_string' => 'Empty string',
+      ],
+      '#default_value' => 'false',
     ];
 
     $form['is_image_file'] = [
@@ -139,8 +144,12 @@ class FileTestSaveUploadFromForm extends FormBase {
       $validators['file_validate_is_image'] = [];
     }
 
-    if ($form_state->getValue('allow_all_extensions')) {
+    $allow = $form_state->getValue('allow_all_extensions');
+    if ($allow === 'empty_array') {
       $validators['file_validate_extensions'] = [];
+    }
+    elseif ($allow === 'empty_string') {
+      $validators['file_validate_extensions'] = [''];
     }
     elseif (!$form_state->isValueEmpty('extensions')) {
       $validators['file_validate_extensions'] = [$form_state->getValue('extensions')];

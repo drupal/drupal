@@ -35,4 +35,23 @@ class ValidateTest extends FileManagedUnitTestBase {
     $this->assertFileHooksCalled(['validate']);
   }
 
+  /**
+   * Tests hard-coded security check in file_validate().
+   */
+  public function testInsecureExtensions() {
+    $file = $this->createFile('test.php', 'Invalid PHP');
+
+    // Test that file_validate() will check for insecure extensions by default.
+    $errors = file_validate($file, []);
+    $this->assertEquals('For security reasons, your upload has been rejected.', $errors[0]);
+    $this->assertFileHooksCalled(['validate']);
+    file_test_reset();
+
+    // Test that the 'allow_insecure_uploads' is respected.
+    $this->config('system.file')->set('allow_insecure_uploads', TRUE)->save();
+    $errors = file_validate($file, []);
+    $this->assertEmpty($errors);
+    $this->assertFileHooksCalled(['validate']);
+  }
+
 }
