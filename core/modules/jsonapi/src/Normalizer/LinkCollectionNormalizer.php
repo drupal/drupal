@@ -17,7 +17,8 @@ use Drupal\jsonapi\Normalizer\Value\CacheableNormalization;
  *
  * When normalizing more than one link in a LinkCollection with the same key, a
  * unique and random string is appended to the link's key after a double dash
- * (--) to differentiate the links.
+ * (--) to differentiate the links. See this class's hashByHref() method for
+ * details.
  *
  * This may change with a later version of the JSON:API specification.
  *
@@ -82,7 +83,15 @@ class LinkCollectionNormalizer extends NormalizerBase {
   }
 
   /**
-   * Hashes a link by its href.
+   * Hashes a link using its href and its target attributes, if any.
+   *
+   * This method generates an unpredictable, but deterministic, 7 character
+   * alphanumeric hash for a given link.
+   *
+   * The hash is unpredictable because a random hash salt will be used for every
+   * request. The hash is deterministic because, within a single request, links
+   * with the same href and target attributes (i.o.w. duplicates) will generate
+   * equivalent hash values.
    *
    * @param \Drupal\jsonapi\JsonApiResource\Link $link
    *   A link to be hashed.
@@ -91,10 +100,23 @@ class LinkCollectionNormalizer extends NormalizerBase {
    *   A 7 character alphanumeric hash.
    */
   protected function hashByHref(Link $link) {
+    // Generate a salt unique to each instance of this class.
     if (!$this->hashSalt) {
       $this->hashSalt = Crypt::randomBytesBase64();
     }
-    return substr(str_replace(['-', '_'], '', Crypt::hashBase64($this->hashSalt . $link->getHref())), 0, 7);
+    // Create a dictionary of link parameters.
+    $link_parameters = [
+      'href' => $link->getHref(),
+    ] + $link->getTargetAttributes();
+    // Serialize the dictionary into a string.
+    foreach ($link_parameters as $name => $value) {
+      $serialized_parameters[] = sprintf('%s="%s"', $name, implode(' ', (array) $value));
+    }
+    // Hash the string.
+    $b64_hash = Crypt::hashBase64($this->hashSalt . implode('; ', $serialized_parameters));
+    // Remove any dashes and underscores from the base64 hash and then return
+    // the first 7 characters.
+    return substr(str_replace(['-', '_'], '', $b64_hash), 0, 7);
   }
 
 }
