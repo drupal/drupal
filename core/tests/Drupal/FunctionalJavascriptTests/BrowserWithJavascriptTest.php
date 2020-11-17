@@ -2,7 +2,6 @@
 
 namespace Drupal\FunctionalJavascriptTests;
 
-use Behat\Mink\Driver\GoutteDriver;
 use PHPUnit\Framework\AssertionFailedError;
 
 /**
@@ -41,6 +40,10 @@ class BrowserWithJavascriptTest extends WebDriverTestBase {
     }());
 JS;
     $this->assertJsCondition($javascript);
+
+    // Ensure that \Drupal\Tests\UiHelperTrait::isTestUsingGuzzleClient() works
+    // as expected.
+    $this->assertFalse($this->isTestUsingGuzzleClient());
   }
 
   public function testAssertJsCondition() {
@@ -151,9 +154,9 @@ JS;
       $this->metaRefreshCount = 0;
     }
 
-    // Log only for WebDriverTestBase tests because for Goutte we log with
-    // ::getResponseLogHandler.
-    if ($this->htmlOutputEnabled && !($this->getSession()->getDriver() instanceof GoutteDriver)) {
+    // Log only for WebDriverTestBase tests because for DrupalTestBrowser we log
+    // with ::getResponseLogHandler.
+    if ($this->htmlOutputEnabled && !$this->isTestUsingGuzzleClient()) {
       $html_output = 'GET request to: ' . $url .
         '<hr />Ending URL: ' . $this->getSession()->getCurrentUrl();
       $html_output .= '<hr />' . $out;

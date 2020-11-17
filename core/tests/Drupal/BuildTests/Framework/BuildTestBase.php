@@ -2,11 +2,11 @@
 
 namespace Drupal\BuildTests\Framework;
 
-use Behat\Mink\Driver\Goutte\Client;
-use Behat\Mink\Driver\GoutteDriver;
+use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\Mink\Mink;
 use Behat\Mink\Session;
 use Drupal\Component\FileSystem\FileSystem as DrupalFilesystem;
+use Drupal\Tests\DrupalTestBrowser;
 use Drupal\Tests\PhpUnitCompatibilityTrait;
 use Drupal\Tests\Traits\PhpUnitWarnings;
 use PHPUnit\Framework\TestCase;
@@ -219,9 +219,9 @@ abstract class BuildTestBase extends TestCase {
    * @return \Behat\Mink\Session
    */
   protected function initMink() {
-    $client = new Client();
+    $client = new DrupalTestBrowser();
     $client->followMetaRefresh(TRUE);
-    $driver = new GoutteDriver($client);
+    $driver = new BrowserKitDriver($client);
     $session = new Session($driver);
     $this->mink = new Mink();
     $this->mink->registerSession('default', $session);

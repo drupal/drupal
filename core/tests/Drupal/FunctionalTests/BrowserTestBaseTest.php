@@ -78,6 +78,10 @@ class BrowserTestBaseTest extends BrowserTestBase {
     ]);
     $this->assertSession()->responseHeaderExists('Test-Header');
     $this->assertSession()->responseHeaderEquals('Test-Header', 'header value');
+
+    // Ensure that \Drupal\Tests\UiHelperTrait::isTestUsingGuzzleClient() works
+    // as expected.
+    $this->assertTrue($this->isTestUsingGuzzleClient());
   }
 
   /**

@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests;
 
+use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\Mink\Driver\GoutteDriver;
 use Behat\Mink\Element\Element;
 use Behat\Mink\Mink;
@@ -145,7 +146,7 @@ abstract class BrowserTestBase extends TestCase {
    *
    * @var string
    */
-  protected $minkDefaultDriverClass = GoutteDriver::class;
+  protected $minkDefaultDriverClass = BrowserKitDriver::class;
 
   /*
    * Mink default driver params.
@@ -220,8 +221,11 @@ abstract class BrowserTestBase extends TestCase {
    */
   protected function initMink() {
     $driver = $this->getDefaultDriverInstance();
-
     if ($driver instanceof GoutteDriver) {
+      @trigger_error('Using \Behat\Mink\Driver\GoutteDriver is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. The dependencies behat/mink-goutte-driver and fabpot/goutte will be removed. See https://www.drupal.org/node/3177235', E_USER_DEPRECATED);
+    }
+
+    if ($driver instanceof BrowserKitDriver) {
       // Turn off curl timeout. Having a timeout is not a problem in a normal
       // test running, but it is a problem when debugging. Also, disable SSL
       // peer verification so that testing under HTTPS always works.
@@ -306,7 +310,10 @@ abstract class BrowserTestBase extends TestCase {
       }
     }
 
-    if (is_array($this->minkDefaultDriverArgs)) {
+    if ($this->minkDefaultDriverClass === BrowserKitDriver::class) {
+      $driver = new $this->minkDefaultDriverClass(new DrupalTestBrowser());
+    }
+    elseif (is_array($this->minkDefaultDriverArgs)) {
       // Use ReflectionClass to instantiate class with received params.
       $reflector = new \ReflectionClass($this->minkDefaultDriverClass);
       $driver = $reflector->newInstanceArgs($this->minkDefaultDriverArgs);
@@ -539,7 +546,7 @@ abstract class BrowserTestBase extends TestCase {
   protected function getHttpClient() {
     /* @var $mink_driver \Behat\Mink\Driver\DriverInterface */
     $mink_driver = $this->getSession()->getDriver();
-    if ($mink_driver instanceof GoutteDriver) {
+    if ($this->isTestUsingGuzzleClient()) {
       return $mink_driver->getClient()->getClient();
     }
     throw new \RuntimeException('The Mink client type ' . get_class($mink_driver) . ' does not support getHttpClient().');
