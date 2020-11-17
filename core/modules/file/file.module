@@ -280,7 +280,17 @@ function file_validate(FileInterface $file, $validators = []) {
   }
 
   // Let other modules perform validation on the new file.
-  return array_merge($errors, \Drupal::moduleHandler()->invokeAll('file_validate', [$file]));
+  $errors = array_merge($errors, \Drupal::moduleHandler()->invokeAll('file_validate', [$file]));
+
+  // Ensure the file does not contain a malicious extension. At this point
+  // _file_save_upload_single() will have munged the file so it does not contain
+  // a malicious extension. Contributed and custom code that calls this method
+  // needs to take similar steps if they need to permit files with malicious
+  // extensions to be uploaded.
+  if (empty($errors) && !\Drupal::config('system.file')->get('allow_insecure_uploads') && preg_match(FILE_INSECURE_EXTENSION_REGEX, $file->getFilename())) {
+    $errors[] = t('For security reasons, your upload has been rejected.');
+  }
+  return $errors;
 }
 
 /**
@@ -970,25 +980,36 @@ function _file_save_upload_single(\SplFileInfo $file_info, $form_field_name, $va
     $validators['file_validate_extensions'][0] = $extensions;
   }
 
-  if (!empty($extensions)) {
-    // Munge the filename to protect against possible malicious extension
-    // hiding within an unknown file type (ie: filename.html.foo).
-    $file->setFilename(file_munge_filename($file->getFilename(), $extensions));
-  }
-
-  // Rename potentially executable files, to help prevent exploits (i.e. will
-  // rename filename.php.foo and filename.php to filename.php.foo.txt and
-  // filename.php.txt, respectively). Don't rename if 'allow_insecure_uploads'
-  // evaluates to TRUE.
-  if (!\Drupal::config('system.file')->get('allow_insecure_uploads') && preg_match(FILE_INSECURE_EXTENSION_REGEX, $file->getFilename()) && (substr($file->getFilename(), -4) != '.txt')) {
-    $file->setMimeType('text/plain');
-    // The destination filename will also later be used to create the URI.
-    $file->setFilename($file->getFilename() . '.txt');
-    // The .txt extension may not be in the allowed list of extensions. We have
-    // to add it here or else the file upload will fail.
+  //  Don't rename if 'allow_insecure_uploads' evaluates to TRUE.
+  if (!\Drupal::config('system.file')->get('allow_insecure_uploads')) {
     if (!empty($extensions)) {
-      $validators['file_validate_extensions'][0] .= ' txt';
-      \Drupal::messenger()->addStatus(t('For security reasons, your upload has been renamed to %filename.', ['%filename' => $file->getFilename()]));
+      // Munge the filename to protect against possible malicious extension
+      // hiding within an unknown file type (ie: filename.html.foo).
+      $file->setFilename(file_munge_filename($file->getFilename(), $extensions));
+    }
+
+    // Rename potentially executable files, to help prevent exploits (i.e. will
+    // rename filename.php.foo and filename.php to filename.php_.foo_.txt and
+    // filename.php_.txt, respectively).
+    if (preg_match(FILE_INSECURE_EXTENSION_REGEX, $file->getFilename())) {
+      // If the file will be rejected anyway due to a disallowed extension, it
+      // should not be renamed; rather, we'll let file_validate_extensions()
+      // reject it below.
+      if (!isset($validators['file_validate_extensions']) || empty(file_validate_extensions($file, $extensions))) {
+        $file->setMimeType('text/plain');
+        $filename = $file->getFilename();
+        if (substr($filename, -4) != '.txt') {
+          // The destination filename will also later be used to create the URI.
+          $filename .= '.txt';
+        }
+        $file->setFilename(file_munge_filename($filename, $extensions));
+        \Drupal::messenger()->addStatus(t('For security reasons, your upload has been renamed to %filename.', ['%filename' => $file->getFilename()]));
+        // The .txt extension may not be in the allowed list of extensions. We
+        // have to add it here or else the file upload will fail.
+        if (!empty($validators['file_validate_extensions'][0])) {
+          $validators['file_validate_extensions'][0] .= ' txt';
+        }
+      }
     }
   }
 
