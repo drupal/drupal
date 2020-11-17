@@ -1147,8 +1147,8 @@ function file_unmanaged_move($source, $destination = NULL, $replace = FILE_EXIST
  * exploit.php_.pps.
  *
  * Specifically, this function adds an underscore to all extensions that are
- * between 2 and 5 characters in length, internal to the file name, and not
- * included in $extensions.
+ * between 2 and 5 characters in length, internal to the file name, and either
+ * included in the list of unsafe extensions, or not included in $extensions.
  *
  * Function behavior is also controlled by the Drupal variable
  * 'allow_insecure_uploads'. If 'allow_insecure_uploads' evaluates to TRUE, no
@@ -1157,7 +1157,8 @@ function file_unmanaged_move($source, $destination = NULL, $replace = FILE_EXIST
  * @param $filename
  *   File name to modify.
  * @param $extensions
- *   A space-separated list of extensions that should not be altered.
+ *   A space-separated list of extensions that should not be altered. Note that
+ *   extensions that are unsafe will be altered regardless of this parameter.
  * @param $alerts
  *   If TRUE, drupal_set_message() will be called to display a message if the
  *   file name was changed.
@@ -1174,6 +1175,10 @@ function file_munge_filename($filename, $extensions, $alerts = TRUE) {
     $filename = str_replace(chr(0), '', $filename);
 
     $whitelist = array_unique(explode(' ', strtolower(trim($extensions))));
+
+    // Remove unsafe extensions from the list of allowed extensions. The list is
+    // copied from file_save_upload().
+    $whitelist = array_diff($whitelist, explode('|', 'php|phar|pl|py|cgi|asp|js'));
 
     // Split the filename up by periods. The first part becomes the basename
     // the last part the final extension.
@@ -1542,25 +1547,35 @@ function file_save_upload($form_field_name, $validators = array(), $destination 
     $validators['file_validate_extensions'][0] = $extensions;
   }
 
-  if (!empty($extensions)) {
-    // Munge the filename to protect against possible malicious extension hiding
-    // within an unknown file type (ie: filename.html.foo).
-    $file->filename = file_munge_filename($file->filename, $extensions);
-  }
-
-  // Rename potentially executable files, to help prevent exploits (i.e. will
-  // rename filename.php.foo and filename.php to filename.php.foo.txt and
-  // filename.php.txt, respectively). Don't rename if 'allow_insecure_uploads'
-  // evaluates to TRUE.
-  if (!variable_get('allow_insecure_uploads', 0) && preg_match('/\.(php|phar|pl|py|cgi|asp|js)(\.|$)/i', $file->filename) && (substr($file->filename, -4) != '.txt')) {
-    $file->filemime = 'text/plain';
-    // The destination filename will also later be used to create the URI.
-    $file->filename .= '.txt';
-    // The .txt extension may not be in the allowed list of extensions. We have
-    // to add it here or else the file upload will fail.
+  if (!variable_get('allow_insecure_uploads', 0)) {
     if (!empty($extensions)) {
-      $validators['file_validate_extensions'][0] .= ' txt';
-      drupal_set_message(t('For security reasons, your upload has been renamed to %filename.', array('%filename' => $file->filename)));
+      // Munge the filename to protect against possible malicious extension hiding
+      // within an unknown file type (ie: filename.html.foo).
+      $file->filename = file_munge_filename($file->filename, $extensions);
+    }
+
+    // Rename potentially executable files, to help prevent exploits (i.e. will
+    // rename filename.php.foo and filename.php to filename.php_.foo_.txt and
+    // filename.php_.txt, respectively). Don't rename if 'allow_insecure_uploads'
+    // evaluates to TRUE.
+    if (preg_match('/\.(php|phar|pl|py|cgi|asp|js)(\.|$)/i', $file->filename)) {
+      // If the file will be rejected anyway due to a disallowed extension, it
+      // should not be renamed; rather, we'll let file_validate_extensions()
+      // reject it below.
+      if (!isset($validators['file_validate_extensions']) || !file_validate_extensions($file, $extensions)) {
+        $file->filemime = 'text/plain';
+        if (substr($file->filename, -4) != '.txt') {
+          // The destination filename will also later be used to create the URI.
+          $file->filename .= '.txt';
+        }
+        $file->filename = file_munge_filename($file->filename, $extensions, FALSE);
+        drupal_set_message(t('For security reasons, your upload has been renamed to %filename.', array('%filename' => $file->filename)));
+        // The .txt extension may not be in the allowed list of extensions. We have
+        // to add it here or else the file upload will fail.
+        if (!empty($validators['file_validate_extensions'][0])) {
+          $validators['file_validate_extensions'][0] .= ' txt';
+        }
+      }
     }
   }
 
@@ -1728,7 +1743,18 @@ function file_validate(stdClass &$file, $validators = array()) {
   }
 
   // Let other modules perform validation on the new file.
-  return array_merge($errors, module_invoke_all('file_validate', $file));
+  $errors = array_merge($errors, module_invoke_all('file_validate', $file));
+
+  // Ensure the file does not contain a malicious extension. At this point
+  // file_save_upload() will have munged the file so it does not contain a
+  // malicious extension. Contributed and custom code that calls this method
+  // needs to take similar steps if they need to permit files with malicious
+  // extensions to be uploaded.
+  if (empty($errors) && !variable_get('allow_insecure_uploads', 0) && preg_match('/\.(php|phar|pl|py|cgi|asp|js)(\.|$)/i', $file->filename)) {
+    $errors[] = t('For security reasons, your upload has been rejected.');
+  }
+
+  return $errors;
 }
 
 /**
