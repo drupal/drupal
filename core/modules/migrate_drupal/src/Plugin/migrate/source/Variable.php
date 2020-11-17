@@ -13,9 +13,10 @@ use Drupal\migrate\Plugin\MigrationInterface;
  * Depending on the configuration, this returns zero or a single row and as such
  * is not a good example for any normal source class returning multiple rows.
  *
- * The configuration may contain optional and required variable names. If any of
- * the required variables is missing in the source, then the source will return
- * zero rows.
+ * The configuration may contain two lists of variable names, variables and
+ * variables_no_row_if_missing. If any of the variables listed in
+ * variables_no_row_if_missing is missing in the source, then the source will
+ * return zero rows.
  *
  * With this configuration, the source will return one row even when the
  * "filter_fallback_format" variable isn't available:
@@ -31,12 +32,12 @@ use Drupal\migrate\Plugin\MigrationInterface;
  * @code
  * source:
  *   plugin: variable
- *   variables_required:
+ *   variables_no_row_if_missing:
  *     - filter_fallback_format
  * @endcode
  *
- * The optional and the required variable names are always merged together. All
- * of the following configurations are valid:
+ * The variables and the variables_no_row_if_missing lists are always merged
+ * together. All of the following configurations are valid:
  * @code
  * source:
  *   plugin: variable
@@ -44,7 +45,7 @@ use Drupal\migrate\Plugin\MigrationInterface;
  *     - book_child_type
  *     - book_block_mode
  *     - book_allowed_types
- *   variables_required:
+ *   variables_no_row_if_missing:
  *     - book_child_type
  *     - book_block_mode
  *     - book_allowed_types
@@ -54,12 +55,12 @@ use Drupal\migrate\Plugin\MigrationInterface;
  *   variables:
  *     - book_child_type
  *     - book_block_mode
- *   variables_required:
+ *   variables_no_row_if_missing:
  *     - book_allowed_types
  *
  * source:
  *   plugin: variable
- *   variables_required:
+ *   variables_no_row_if_missing:
  *     - book_child_type
  *     - book_block_mode
  *     - book_allowed_types
@@ -80,28 +81,20 @@ class Variable extends DrupalSqlBase {
   protected $variables;
 
   /**
-   * The optional variables.
+   * The variables that result in no row if any are missing from the source.
    *
    * @var array
    */
-  protected $optionalVariables;
-
-  /**
-   * The required variables.
-   *
-   * @var array
-   */
-  protected $requiredVariables;
+  protected $variablesNoRowIfMissing;
 
   /**
    * {@inheritdoc}
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, StateInterface $state, EntityTypeManagerInterface $entity_type_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $state, $entity_type_manager);
-    $this->requiredVariables = $this->configuration['variables_required'] ?? [];
+    $this->variablesNoRowIfMissing = $this->configuration['variables_no_row_if_missing'] ?? [];
     $variables = $this->configuration['variables'] ?? [];
-    $this->variables = array_unique(array_merge(array_values($variables), array_values($this->requiredVariables)));
-    $this->optionalVariables = array_diff($this->variables, $this->requiredVariables);
+    $this->variables = array_unique(array_merge(array_values($variables), array_values($this->variablesNoRowIfMissing)));
   }
 
   /**
@@ -134,12 +127,12 @@ class Variable extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function count($refresh = FALSE) {
-    if (empty($this->requiredVariables)) {
+    if (empty($this->variablesNoRowIfMissing)) {
       return 1;
     }
     $variable_names = array_keys($this->query()->execute()->fetchAllAssoc('name'));
 
-    if (!empty(array_diff($this->requiredVariables, $variable_names))) {
+    if (!empty(array_diff($this->variablesNoRowIfMissing, $variable_names))) {
       return 0;
     }
     return 1;
