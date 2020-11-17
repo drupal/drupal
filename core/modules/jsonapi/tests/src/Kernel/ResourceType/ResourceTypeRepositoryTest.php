@@ -188,6 +188,16 @@ class ResourceTypeRepositoryTest extends JsonapiKernelTestBase {
   }
 
   /**
+   * Tests that resource type fields can be aliased per resource type.
+   */
+  public function testResourceTypeNameAliasing() {
+    // When this test is implemented, ensure the the tested behaviors in
+    // ResourceTypeNameAliasTest have been covered and remove it. Then remove
+    // the jsonapi_test_resource_type_aliasing test module.
+    $this->markTestSkipped('Remove in https://www.drupal.org/project/drupal/issues/3105318');
+  }
+
+  /**
    * Tests that resource type fields can be disabled per resource type.
    */
   public function testResourceTypeFieldDisabling() {
