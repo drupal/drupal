@@ -621,11 +621,11 @@ class FileUploadTest extends ResourceTestBase {
     $response = $this->fileRequest($uri, $php_string, ['Content-Disposition' => 'filename="example.php"']);
     // The filename is not munged because .txt is added and it is a known
     // extension to apache.
-    $expected = $this->getExpectedDocument(1, 'example.php.txt', TRUE);
+    $expected = $this->getExpectedDocument(1, 'example.php_.txt', TRUE);
     // Override the expected filesize.
     $expected['data']['attributes']['filesize'] = strlen($php_string);
     $this->assertResponseData($expected, $response);
-    $this->assertFileExists('public://foobar/example.php.txt');
+    $this->assertFileExists('public://foobar/example.php_.txt');
 
     // Add php as an allowed format. Allow insecure uploads still being FALSE
     // should still not allow this. So it should still have a .txt extension
@@ -635,11 +635,11 @@ class FileUploadTest extends ResourceTestBase {
     $this->rebuildAll();
 
     $response = $this->fileRequest($uri, $php_string, ['Content-Disposition' => 'filename="example_2.php"']);
-    $expected = $this->getExpectedDocument(2, 'example_2.php.txt', TRUE);
+    $expected = $this->getExpectedDocument(2, 'example_2.php_.txt', TRUE);
     // Override the expected filesize.
     $expected['data']['attributes']['filesize'] = strlen($php_string);
     $this->assertResponseData($expected, $response);
-    $this->assertFileExists('public://foobar/example_2.php.txt');
+    $this->assertFileExists('public://foobar/example_2.php_.txt');
     $this->assertFileNotExists('public://foobar/example_2.php');
 
     // Allow .doc file uploads and ensure even a mis-configured apache will not
@@ -659,6 +659,45 @@ class FileUploadTest extends ResourceTestBase {
     $this->assertFileExists('public://foobar/example_3.php_.doc');
     $this->assertFileNotExists('public://foobar/example_3.php.doc');
 
+    // Test that a dangerous extension such as .php is munged even if it is in
+    // the list of allowed extensions.
+    $this->field->setSetting('file_extensions', 'doc php')->save();
+    $this->rebuildAll();
+
+    // Test using a masked exploit file.
+    $response = $this->fileRequest($uri, $php_string, ['Content-Disposition' => 'filename="example_4.php.doc"']);
+    // The filename is munged.
+    $expected = $this->getExpectedDocument(4, 'example_4.php_.doc', TRUE);
+    // Override the expected filesize.
+    $expected['data']['attributes']['filesize'] = strlen($php_string);
+    // The file mime should be 'application/msword'.
+    $expected['data']['attributes']['filemime'] = 'application/msword';
+    $this->assertResponseData($expected, $response);
+    $this->assertFileExists('public://foobar/example_4.php_.doc');
+    $this->assertFileNotExists('public://foobar/example_4.php.doc');
+
+    // Dangerous extensions are munged even when all extensions are allowed.
+    $this->field->setSetting('file_extensions', '')->save();
+    $this->rebuildAll();
+    $response = $this->fileRequest($uri, $php_string, ['Content-Disposition' => 'filename="example_5.php.png"']);
+    $expected = $this->getExpectedDocument(5, 'example_5.php_.png_.txt', TRUE);
+    // Override the expected filesize.
+    $expected['data']['attributes']['filesize'] = strlen($php_string);
+    // The file mime should also now be text.
+    $expected['data']['attributes']['filemime'] = 'text/plain';
+    $this->assertResponseData($expected, $response);
+    $this->assertFileExists('public://foobar/example_5.php_.png_.txt');
+
+    // Dangerous extensions are munged if is renamed to end in .txt.
+    $response = $this->fileRequest($uri, $php_string, ['Content-Disposition' => 'filename="example_6.cgi.png.txt"']);
+    $expected = $this->getExpectedDocument(6, 'example_6.cgi_.png_.txt', TRUE);
+    // Override the expected filesize.
+    $expected['data']['attributes']['filesize'] = strlen($php_string);
+    // The file mime should also now be text.
+    $expected['data']['attributes']['filemime'] = 'text/plain';
+    $this->assertResponseData($expected, $response);
+    $this->assertFileExists('public://foobar/example_6.cgi_.png_.txt');
+
     // Now allow insecure uploads.
     \Drupal::configFactory()
       ->getEditable('system.file')
@@ -668,14 +707,14 @@ class FileUploadTest extends ResourceTestBase {
     $this->field->setSetting('file_extensions', '')->save();
     $this->rebuildAll();
 
-    $response = $this->fileRequest($uri, $php_string, ['Content-Disposition' => 'filename="example_4.php"']);
-    $expected = $this->getExpectedDocument(4, 'example_4.php', TRUE);
+    $response = $this->fileRequest($uri, $php_string, ['Content-Disposition' => 'filename="example_7.php"']);
+    $expected = $this->getExpectedDocument(7, 'example_7.php', TRUE);
     // Override the expected filesize.
     $expected['data']['attributes']['filesize'] = strlen($php_string);
     // The file mime should also now be PHP.
     $expected['data']['attributes']['filemime'] = 'application/x-httpd-php';
     $this->assertResponseData($expected, $response);
-    $this->assertFileExists('public://foobar/example_4.php');
+    $this->assertFileExists('public://foobar/example_7.php');
   }
 
   /**

@@ -159,8 +159,8 @@ function file_build_uri($path) {
  * exploit.php_.pps.
  *
  * Specifically, this function adds an underscore to all extensions that are
- * between 2 and 5 characters in length, internal to the file name, and not
- * included in $extensions.
+ * between 2 and 5 characters in length, internal to the file name, and either
+ * included in the list of unsafe extensions, or not included in $extensions.
  *
  * Function behavior is also controlled by the configuration
  * 'system.file:allow_insecure_uploads'. If it evaluates to TRUE, no alterations
@@ -168,7 +168,8 @@ function file_build_uri($path) {
  * @param $filename
  *   File name to modify.
  * @param $extensions
- *   A space-separated list of extensions that should not be altered.
+ *   A space-separated list of extensions that should not be altered. Note that
+ *   extensions that are unsafe will be altered regardless of this parameter.
  * @param $alerts
  *   If TRUE, \Drupal::messenger()->addStatus() will be called to display
  *   a message if the file name was changed.
@@ -186,6 +187,12 @@ function file_munge_filename($filename, $extensions, $alerts = TRUE) {
     $filename = str_replace(chr(0), '', $filename);
 
     $allowed_extensions = array_unique(explode(' ', strtolower(trim($extensions))));
+
+    // Remove unsafe extensions from the allowed list of extensions.
+    // @todo https://www.drupal.org/project/drupal/issues/3032390 Make the list
+    //   of unsafe extensions a constant. The list is copied from
+    //   FILE_INSECURE_EXTENSION_REGEX.
+    $allowed_extensions = array_diff($allowed_extensions, explode('|', 'phar|php|pl|py|cgi|asp|js'));
 
     // Split the filename up by periods. The first part becomes the basename
     // the last part the final extension.
