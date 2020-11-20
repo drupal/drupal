@@ -1,0 +1,55 @@
+{
+    "name": "symfony/dependency-injection",
+    "type": "library",
+    "description": "Symfony DependencyInjection Component",
+    "keywords": [],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Fabien Potencier",
+            "email": "fabien@symfony.com"
+        },
+        {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+        }
+    ],
+    "require": {
+        "php": "^5.5.9|>=7.0.8",
+        "psr/container": "^1.0"
+    },
+    "require-dev": {
+        "symfony/yaml": "~3.4|~4.0",
+        "symfony/config": "~3.3|~4.0",
+        "symfony/expression-language": "~2.8|~3.0|~4.0"
+    },
+    "suggest": {
+        "symfony/yaml": "",
+        "symfony/config": "",
+        "symfony/finder": "For using double-star glob patterns or when GLOB_BRACE portability is required",
+        "symfony/expression-language": "For using expressions in service container configuration",
+        "symfony/proxy-manager-bridge": "Generate service proxies to lazy load them"
+    },
+    "conflict": {
+        "symfony/config": "<3.3.7",
+        "symfony/finder": "<3.3",
+        "symfony/proxy-manager-bridge": "<3.4",
+        "symfony/yaml": "<3.4"
+    },
+    "provide": {
+        "psr/container-implementation": "1.0"
+    },
+    "autoload": {
+        "psr-4": { "Symfony\\Component\\DependencyInjection\\": "" },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
+    },
+    "minimum-stability": "dev",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "3.4-dev"
+        }
+    }
+}

@@ -1,0 +1,9 @@
+.idea/*
+vendor/*
+bin/behat
+bin/phantomjs
+bin/phpunit
+bin/mink-test-server
+composer.lock
+tmp/*
+tests/integration/ScreenShotContext.php

@@ -1,0 +1,8 @@
+.idea/*
+vendor/*
+bin/behat
+bin/phantomjs
+bin/phpunit
+composer.lock
+tmp/*
+tests/integration/ScreenShotContext.php

@@ -1,0 +1,35 @@
+{% autoescape 'js' %}
+(function (xpath, check) {
+  function getPolterNode(xpath) {
+    var polterAgent = window.__poltergeist;
+    var ids = polterAgent.find("xpath", xpath, document);
+    return polterAgent.get(ids[0]);
+  }
+
+  var pNode = getPolterNode(xpath);
+
+  if (check && pNode.element.checked) {
+    //requested to check the element and is already check, do nothing.
+    return true;
+  }
+
+  if (!check && pNode.element.checked == false) {
+    //move along nothing to be done
+    return true;
+  }
+
+  if (check && pNode.element.checked == false) {
+    //we have to check the element, we will do so by triggering a click event so all change listeners are aware.
+    pNode.trigger("click");
+    pNode.element.checked = true;
+  }
+
+  if (!check && pNode.element.checked) {
+    //move along nothing to be done
+    pNode.trigger("click");
+    pNode.element.checked = false;
+    return true;
+  }
+  return false;
+}('{{xpath}}', {{check}}));
+{% endautoescape %}

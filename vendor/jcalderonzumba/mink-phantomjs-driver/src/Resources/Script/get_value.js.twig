@@ -1,0 +1,63 @@
+{% autoescape 'js' %}
+(function (xpath) {
+  function getElement(xpath) {
+    var polterAgent = window.__poltergeist;
+    var ids = polterAgent.find("xpath", xpath, document);
+    var polterNode = polterAgent.get(ids[0]);
+    return polterNode.element;
+  }
+
+  function inputRadioGetValue(element){
+    var value = null;
+    var name = element.getAttribute('name');
+    if (!name){
+      return null;
+    }
+    var fields = window.document.getElementsByName(name);
+    var i;
+    var l = fields.length;
+    for (i = 0; i < l; i++) {
+      var field = fields.item(i);
+      if (field.form === element.form && field.checked) {
+        return field.value;
+      }
+    }
+    return null;
+  }
+
+  var node = getElement(xpath);
+  var tagName = node.tagName.toLowerCase();
+  var value = null;
+  if (tagName == "input") {
+    var type = node.type.toLowerCase();
+    if (type == "checkbox") {
+      value = node.checked ? node.value : null;
+    } else if (type == "radio") {
+      value = inputRadioGetValue(node);
+    } else {
+      value = node.value;
+    }
+  } else if (tagName == "textarea") {
+    value = node.value;
+  } else if (tagName == "select") {
+    if (node.multiple) {
+      value = [];
+      for (var i = 0; i < node.options.length; i++) {
+        if (node.options[i].selected) {
+          value.push(node.options[i].value);
+        }
+      }
+    } else {
+      var idx = node.selectedIndex;
+      if (idx >= 0) {
+        value = node.options.item(idx).value;
+      } else {
+        value = null;
+      }
+    }
+  } else {
+    value = node.value;
+  }
+  return value;
+}('{{ xpath }}'));
+{% endautoescape %}

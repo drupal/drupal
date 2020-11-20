@@ -1,0 +1,23 @@
+build: false
+shallow_clone: true
+
+cache:
+  - .\php -> appveyor.yml
+  - vendor -> composer.lock
+
+init:
+  - set PATH=%PATH%;.\php
+  - set COMPOSER_NO_INTERACTION=1
+  - set CACHED=0
+
+install:
+  - if exist .\php (set CACHED=1) else (mkdir .\php)
+  - if %CACHED%==0 cd .\php
+  - if %CACHED%==0 appveyor DownloadFile http://windows.php.net/downloads/releases/archives/php-7.0.7-nts-Win32-VC14-x64.zip -FileName php.zip
+  - if %CACHED%==0 appveyor DownloadFile https://getcomposer.org/composer.phar
+  - if %CACHED%==0 7z x php.zip -y
+  - if %CACHED%==0 cd ..
+
+test_script:
+  - php -d extension_dir=.\php\ext -d extension=php_openssl.dll .\php\composer.phar install
+  - vendor/bin/phpunit.bat --coverage-text

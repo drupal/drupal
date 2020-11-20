@@ -1,0 +1,40 @@
+site_name: GastonJS Documentation
+pages:
+  - GastonJS introduction: index.md
+  - GastonJS API :
+    - 'Introduction': api/index.md
+    - 'Available commands': api/command-list.md
+    - 'Navigation commands':
+      - 'visit': api/commands/navigation/visit.md
+      - 'current_url': api/commands/navigation/current_url.md
+      - 'reload': api/commands/navigation/reload.md
+      - 'go_back': api/commands/navigation/go_back.md
+      - 'go_forward': api/commands/navigation/go_forward.md
+    - 'Header commands' :
+      - 'get_headers': api/commands/headers/get_headers.md
+      - 'response_headers': api/commands/headers/response_headers.md
+      - 'set_headers': api/commands/headers/set_headers.md
+      - 'add_headers': api/commands/headers/add_headers.md
+      - 'add_header': api/commands/headers/add_header.md
+    - 'Javascript commands' :
+      - 'add_extension': api/commands/javascript/add_extension.md
+      - 'execute': api/commands/javascript/execute.md
+      - 'evaluate': api/commands/javascript/evaluate.md
+      - 'set_js_errors': api/commands/javascript/set_js_errors.md
+    - 'Cookies commands' :
+      - 'cookies': api/commands/cookies/cookies.md
+      - 'clear_cookies': api/commands/cookies/clear_cookies.md
+      - 'cookies_enabled': api/commands/cookies/cookies_enabled.md
+      - 'remove_cookie': api/commands/cookies/remove_cookie.md
+      - 'set_cookie': api/commands/cookies/set_cookie.md
+    - 'Mouse commands':
+        - 'click': api/commands/mouse/click.md
+        - 'right_click': api/commands/mouse/right_click.md
+        - 'hover': api/commands/mouse/hover.md
+        - 'double_click': api/commands/mouse/double_click.md
+        - 'click_coordinates': api/commands/mouse/click_coordinates.md
+        - 'mouse_event': api/commands/mouse/mouse_event.md
+    - 'Render commands':
+        - 'render': api/commands/render/render.md
+        - 'render_base64': api/commands/render/render_base64.md
+  - GastonJS PHP client: clients/php/index.md

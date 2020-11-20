@@ -1,0 +1,32 @@
+dist: trusty
+
+language: php
+
+php:
+  # - 5.3
+  - 5.4
+  - 5.5
+  - 5.6
+  - 7.0
+  - 7.1
+  - hhvm
+
+#before_install:
+#  # This update is mandatory or the 'apt-get install' calls following will fail
+#  - sudo apt-get update -qq
+#  - sudo apt-get install -y apache2 libapache2-mod-fastcgi
+#  # start the xvfb display needed for firefox
+#  - export DISPLAY=:99.0
+#  - sh -e /etc/init.d/xvfb start
+#  - sh ./test/CI/Travis/setup_selenium.sh
+#  - sh ./test/CI/Travis/setup_apache.sh
+
+before_script:
+  - composer install --no-interaction
+
+script:
+  - mkdir -p build/logs
+  - vendor/bin/phpunit --coverage-clover build/logs/clover.xml --group Unit
+
+after_script:
+  - vendor/bin/coveralls

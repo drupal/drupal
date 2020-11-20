@@ -1,0 +1,41 @@
+tools:
+    php_mess_detector: true
+    php_analyzer:
+        config:
+            parameter_reference_check: { enabled: false }
+            checkstyle: { enabled: false, no_trailing_whitespace: true, naming: { enabled: true, local_variable: '^[a-z][a-zA-Z0-9]*$', abstract_class_name: ^Abstract|Factory$, utility_class_name: 'Utils?$', constant_name: '^[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)*$', property_name: '^[a-z][a-zA-Z0-9]*$', method_name: '^(?:[a-z]|__)[a-zA-Z0-9]*$', parameter_name: '^[a-z][a-zA-Z0-9]*$', interface_name: '^[A-Z][a-zA-Z0-9]*Interface$', type_name: '^[A-Z][a-zA-Z0-9]*$', exception_name: '^[A-Z][a-zA-Z0-9]*Exception$', isser_method_name: '^(?:is|has|should|may|supports)' } }
+            unreachable_code: { enabled: false }
+            check_access_control: { enabled: false }
+            typo_checks: { enabled: false }
+            check_variables: { enabled: false }
+            check_calls: { enabled: true, too_many_arguments: true, missing_argument: true, argument_type_checks: lenient }
+            suspicious_code: { enabled: false, overriding_parameter: false, overriding_closure_use: false, parameter_closure_use_conflict: false, parameter_multiple_times: false, non_existent_class_in_instanceof_check: false, non_existent_class_in_catch_clause: false, assignment_of_null_return: false, non_commented_switch_fallthrough: false, non_commented_empty_catch_block: false, overriding_private_members: false, use_statement_alias_conflict: false, precedence_in_condition_assignment: false }
+            dead_assignments: { enabled: false }
+            verify_php_doc_comments: { enabled: false, parameters: false, return: false, suggest_more_specific_types: false, ask_for_return_if_not_inferrable: false, ask_for_param_type_annotation: false }
+            loops_must_use_braces: { enabled: false }
+            check_usage_context: { enabled: true, foreach: { value_as_reference: true, traversable: true } }
+            simplify_boolean_return: { enabled: false }
+            phpunit_checks: { enabled: false }
+            reflection_checks: { enabled: false }
+            precedence_checks: { enabled: true, assignment_in_condition: true, comparison_of_bit_result: true }
+            basic_semantic_checks: { enabled: false }
+            unused_code: { enabled: false }
+            deprecation_checks: { enabled: false }
+            useless_function_calls: { enabled: false }
+            metrics_lack_of_cohesion_methods: { enabled: false }
+            metrics_coupling: { enabled: true, stable_code: { namespace_prefixes: {  }, classes: {  } } }
+            doctrine_parameter_binding: { enabled: false }
+            doctrine_entity_manager_injection: { enabled: false }
+            symfony_request_injection: { enabled: false }
+            doc_comment_fixes: { enabled: false }
+            reflection_fixes: { enabled: false }
+            use_statement_fixes: { enabled: true, remove_unused: true, preserve_multiple: false, preserve_blanklines: false, order_alphabetically: false }
+    php_code_sniffer: true
+    sensiolabs_security_checker: true
+    php_cpd: true
+    php_loc: true
+    php_pdepend: true
+    external_code_coverage: true
+filter:
+    paths:
+        - src/*

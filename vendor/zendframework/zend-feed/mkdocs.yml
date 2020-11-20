@@ -1,0 +1,20 @@
+docs_dir: doc/book
+site_dir: doc/html
+pages:
+    - index.md
+    - Introduction: intro.md
+    - Reader:
+        - "Zend\\Feed\\Reader": reader.md
+        - 'HTTP Clients': http-clients.md
+        - 'Importing Feeds': importing.md
+        - 'Feed Discovery': find-feeds.md
+        - 'Consuming RSS Feeds': consuming-rss.md
+        - 'Consuming Atom Feeds': consuming-atom.md
+        - 'Consuming Atom Entries': consuming-atom-entry.md
+        - Security: security.md
+    - Writer: writer.md
+    - Pubsubhubbub: pubsubhubbub.md
+site_name: zend-feed
+site_description: Zend\Feed
+repo_url: 'https://github.com/zendframework/zend-feed'
+copyright: 'Copyright (c) 2016 <a href="http://www.zend.com/">Zend Technologies USA Inc.</a>'

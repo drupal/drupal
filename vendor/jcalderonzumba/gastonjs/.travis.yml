@@ -1,0 +1,37 @@
+language: php
+
+php:
+  - 5.4
+  - 5.5
+  - 5.6
+  - 7.0
+  - hhvm
+
+matrix:
+  fast_finish: true
+  include:
+    - php: 5.4
+      env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable' SYMFONY_DEPRECATIONS_HELPER=weak
+    - php: 5.6
+      env: DEPENDENCIES=dev
+  allow_failures:
+    - php: 7.0
+    - php: hhvm
+
+cache:
+  directories:
+    - $HOME/.composer/cache/files
+
+before_install:
+  - composer self-update
+  - if [ "$DEPENDENCIES" = "dev" ]; then perl -pi -e 's/^}$/,"minimum-stability":"dev"}/' composer.json; fi;
+
+install:
+  - composer update $COMPOSER_FLAGS
+
+script:
+  - bin/run-tests.sh
+
+after_script:
+  - ps axo pid,command | grep phantomjs | grep -v grep | awk '{print $1}' | xargs -I {} kill {}
+  - ps axo pid,command | grep php | grep -v grep | awk '{print $1}' | xargs -I {} kill {}

@@ -1,0 +1,7 @@
+build/
+logs/
+nbproject/
+vendor/
+.idea/
+composer.lock
+composer.phar

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit colors="true" bootstrap="vendor/autoload.php">
+    <testsuites>
+        <testsuite name="Driver test suite">
+            <directory>tests</directory>
+            <directory>vendor/mink/driver-testsuite/tests</directory>
+        </testsuite>
+    </testsuites>
+
+    <php>
+        <var name="driver_config_factory" value="Behat\Mink\Tests\Driver\Selenium2Config::getInstance" />
+
+        <!--server name="WEB_FIXTURES_HOST" value="http://test.mink.dev" /-->
+        <!-- MacOS -->
+        <!--<server name="WEB_FIXTURES_HOST" value="http://docker.for.mac.localhost:8002"/>-->
+
+        <!--<server name="WEB_FIXTURES_BROWSER" value="firefox"/>-->
+
+        <!-- where driver will connect to -->
+        <server name="DRIVER_URL" value="http://localhost:4444/wd/hub" />
+
+        <!-- where DocumentRoot of 'Test Machine' is mounted to on 'Driver Machine' (only if these are 2 different machines) -->
+        <!--server name="DRIVER_MACHINE_BASE_PATH" value="" /-->
+        <!--server name="TEST_MACHINE_BASE_PATH" value="" /-->
+    </php>
+
+    <filter>
+        <whitelist>
+            <directory>./src</directory>
+        </whitelist>
+    </filter>
+</phpunit>
