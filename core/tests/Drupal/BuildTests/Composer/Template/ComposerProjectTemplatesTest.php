@@ -312,7 +312,7 @@ JSON;
             "name" => $name,
             "dist" => [
               "type" => "path",
-              "url" => $path,
+              "url" => $full_path,
             ],
             "version" => $version,
           ],
