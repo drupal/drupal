@@ -45,7 +45,10 @@
     "prefer-stable": true,
     "config": {
         "preferred-install": "dist",
-        "autoloader-suffix": "Drupal9"
+        "autoloader-suffix": "Drupal9",
+        "platform": {
+            "php": "7.3.0"
+        }
     },
     "extra": {
         "_readme": [
