@@ -653,12 +653,12 @@ use Drupal\node\Entity\NodeType;
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity to check access to.
  * @param string $operation
- *   The operation that is to be performed on $entity.
- * @param \Drupal\Core\Session\AccountInterface $account
- *   The account trying to access the entity. Usually one of:
+ *   The operation that is to be performed on $entity. Usually one of:
  *   - "view"
  *   - "update"
  *   - "delete"
+ * @param \Drupal\Core\Session\AccountInterface $account
+ *   The account trying to access the entity.
  *
  * @return \Drupal\Core\Access\AccessResultInterface
  *   The access result. The final result is calculated by using
