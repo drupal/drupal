@@ -128,7 +128,7 @@ class CommentLanguageTest extends BrowserTestBase {
           'comment_body[0][value]' => $comment_values[$node_langcode][$langcode],
         ];
         $this->drupalPostForm($prefix . 'node/' . $node->id(), $edit, 'Preview');
-        $this->drupalPostForm(NULL, $edit, 'Save');
+        $this->submitForm($edit, 'Save');
 
         // Check that comment language matches the current content language.
         $cids = \Drupal::entityQuery('comment')

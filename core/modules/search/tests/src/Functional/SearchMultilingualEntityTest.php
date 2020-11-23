@@ -165,7 +165,7 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
 
     // Click the reindex button on the admin page, verify counts, and reindex.
     $this->drupalPostForm('admin/config/search/pages', [], 'Re-index site');
-    $this->drupalPostForm(NULL, [], 'Re-index site');
+    $this->submitForm([], 'Re-index site');
     $this->assertIndexCounts(8, 8, 'after reindex');
     $this->assertDatabaseCounts(8, 0, 'after reindex');
     $this->plugin->updateIndex();

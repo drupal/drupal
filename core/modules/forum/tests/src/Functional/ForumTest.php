@@ -486,7 +486,7 @@ class ForumTest extends BrowserTestBase {
     $this->assertText('Are you sure you want to delete the forum');
     $this->assertNoText('Add forum');
     $this->assertNoText('Add forum container');
-    $this->drupalPostForm(NULL, [], 'Delete');
+    $this->submitForm([], 'Delete');
 
     // Assert that the forum no longer exists.
     $this->drupalGet('forum/' . $tid);

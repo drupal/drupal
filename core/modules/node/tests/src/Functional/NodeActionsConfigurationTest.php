@@ -61,7 +61,7 @@ class NodeActionsConfigurationTest extends BrowserTestBase {
     $new_action_label = $this->randomMachineName();
     $edit['label'] = $new_action_label;
     $edit['owner_uid'] = $user->id();
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
 
     // Make sure that the action updated properly.
@@ -74,7 +74,7 @@ class NodeActionsConfigurationTest extends BrowserTestBase {
     $this->clickLink(t('Delete'));
     $this->assertSession()->statusCodeEquals(200);
     $edit = [];
-    $this->drupalPostForm(NULL, $edit, 'Delete');
+    $this->submitForm($edit, 'Delete');
     $this->assertSession()->statusCodeEquals(200);
 
     // Make sure that the action was actually deleted.

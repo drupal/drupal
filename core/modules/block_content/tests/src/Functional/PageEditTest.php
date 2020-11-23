@@ -51,7 +51,7 @@ class PageEditTest extends BlockContentTestBase {
     $edit[$title_key] = $this->randomMachineName(8);
     $edit[$body_key] = $this->randomMachineName(16);
     // Stay on the current page, without reloading.
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
 
     // Edit the same block, creating a new revision.
     $this->drupalGet("block/" . $block->id());
@@ -59,7 +59,7 @@ class PageEditTest extends BlockContentTestBase {
     $edit['info[0][value]'] = $this->randomMachineName(8);
     $edit[$body_key] = $this->randomMachineName(16);
     $edit['revision'] = TRUE;
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
 
     // Ensure that the block revision has been created.
     \Drupal::entityTypeManager()->getStorage('block_content')->resetCache([$block->id()]);

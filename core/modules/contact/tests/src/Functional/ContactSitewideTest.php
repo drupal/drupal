@@ -333,7 +333,7 @@ class ContactSitewideTest extends BrowserTestBase {
       'message[0][value]' => $this->randomMachineName(),
       $field_name . '[0][value]' => $this->randomMachineName(),
     ];
-    $this->drupalPostForm(NULL, $edit, 'Send message');
+    $this->submitForm($edit, 'Send message');
     $mails = $this->getMails();
     $mail = array_pop($mails);
     $this->assertEqual($mail['subject'], t('[@label] @subject', ['@label' => $label, '@subject' => $edit['subject[0][value]']]));
@@ -355,7 +355,7 @@ class ContactSitewideTest extends BrowserTestBase {
       'message[0][value]' => $this->randomMachineName(),
       $field_name . '[0][value]' => $this->randomMachineName(),
     ];
-    $this->drupalPostForm(NULL, $edit, 'Send message');
+    $this->submitForm($edit, 'Send message');
     $this->assertText('Thanks for your submission.');
     $this->assertSession()->addressEquals('user/' . $admin_user->id());
 
@@ -375,7 +375,7 @@ class ContactSitewideTest extends BrowserTestBase {
       'message[0][value]' => $this->randomMachineName(),
       $field_name . '[0][value]' => $this->randomMachineName(),
     ];
-    $this->drupalPostForm(NULL, $edit, 'Send message');
+    $this->submitForm($edit, 'Send message');
     $result = $this->xpath('//div[@role=:role]', [':role' => 'contentinfo']);
     $this->assertCount(0, $result, 'Messages not found.');
     $this->assertSession()->addressEquals('user/' . $admin_user->id());

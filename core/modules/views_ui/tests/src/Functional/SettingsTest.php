@@ -108,7 +108,7 @@ class SettingsTest extends UITestBase {
     $view['id'] = strtolower($this->randomMachineName());
     $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
 
-    $this->drupalPostForm(NULL, [], 'Update preview');
+    $this->submitForm([], 'Update preview');
     $xpath = $this->xpath('//div[@class="views-query-info"]/pre');
     $this->assertCount(0, $xpath, 'The views sql is hidden.');
 
@@ -120,7 +120,7 @@ class SettingsTest extends UITestBase {
     $view['id'] = strtolower($this->randomMachineName());
     $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
 
-    $this->drupalPostForm(NULL, [], 'Update preview');
+    $this->submitForm([], 'Update preview');
     $xpath = $this->xpath('//div[@class="views-query-info"]//pre');
     $this->assertCount(1, $xpath, 'The views sql is shown.');
     $this->assertStringNotContainsString('db_condition_placeholder', $xpath[0]->getText(), 'No placeholders are shown in the views sql.');

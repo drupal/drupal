@@ -47,7 +47,7 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
       'title[0][value]' => $node_title,
       'body[0][value]' => 'Test article',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
     $t_args = ['@type' => $bundle_label, '%title' => $node_title];
     $this->assertText(strip_tags(t('@type %title has been created.', $t_args)), 'The node was created.');
@@ -83,7 +83,7 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
       'body[0][value]' => 'Test article',
       'files[field_image_0]' => $this->container->get('file_system')->realpath($image->getFileUri()),
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
     $t_args = ['@type' => $bundle_label, '%title' => $node_title];
     $this->assertText(strip_tags(t('@type %title has been created.', $t_args)), 'The node was created.');
@@ -145,7 +145,7 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
     else {
       $label = 'Save';
     }
-    $this->drupalPostForm(NULL, $edit, $label);
+    $this->submitForm($edit, $label);
     $this->assertSession()->statusCodeEquals(200);
     $t_args = ['@type' => $bundle_label, '%title' => $node_title];
     $this->assertNoText(strip_tags(t('@type %title has been created.', $t_args)), 'The node was created.');
@@ -156,7 +156,7 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
     $edit = [
       'title[0][value]' => $node_title,
     ];
-    $this->drupalPostForm(NULL, $edit, $label);
+    $this->submitForm($edit, $label);
 
     // Confirm the final submission actually worked.
     $t_args = ['@type' => $bundle_label, '%title' => $node_title];

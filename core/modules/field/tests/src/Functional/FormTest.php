@@ -137,7 +137,7 @@ class FormTest extends FieldTestBase {
     $edit = [
       "{$field_name}[0][value]" => -1,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $this->assertRaw(t('%name does not accept the value -1.', ['%name' => $this->field['label']]));
     // TODO : check that the correct field is flagged for error.
 
@@ -146,7 +146,7 @@ class FormTest extends FieldTestBase {
     $edit = [
       "{$field_name}[0][value]" => $value,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertText('entity_test ' . $id . ' has been created.', 'Entity was created');
@@ -165,7 +165,7 @@ class FormTest extends FieldTestBase {
     $edit = [
       "{$field_name}[0][value]" => $value,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $this->assertText('entity_test ' . $id . ' has been updated.', 'Entity was updated');
     $this->container->get('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);
     $entity = EntityTest::load($id);
@@ -208,7 +208,7 @@ class FormTest extends FieldTestBase {
     $edit = [
       "{$field_name}[0][value]" => '',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertText('entity_test ' . $id . ' has been created.', 'Entity was created.');
@@ -238,7 +238,7 @@ class FormTest extends FieldTestBase {
     $edit = [
       "{$field_name}[0][value]" => $value,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertText('entity_test ' . $id . ' has been created.', 'Entity was created');
@@ -276,7 +276,7 @@ class FormTest extends FieldTestBase {
     $this->assertTrue(isset($elements[0]), 'aria-describedby attribute is properly placed on multiple value widgets.');
 
     // Press 'add more' button -> 2 widgets.
-    $this->drupalPostForm(NULL, [], 'Add another item');
+    $this->submitForm([], 'Add another item');
     $this->assertSession()->fieldValueEquals("{$field_name}[0][value]", '');
     $this->assertSession()->fieldValueEquals("{$field_name}[1][value]", '');
     // Verify that no extraneous widget is displayed.
@@ -284,7 +284,7 @@ class FormTest extends FieldTestBase {
     // TODO : check that non-field inputs are preserved ('title'), etc.
 
     // Yet another time so that we can play with more values -> 3 widgets.
-    $this->drupalPostForm(NULL, [], 'Add another item');
+    $this->submitForm([], 'Add another item');
 
     // Prepare values and weights.
     $count = 3;
@@ -309,7 +309,7 @@ class FormTest extends FieldTestBase {
     }
 
     // Press 'add more' button -> 4 widgets
-    $this->drupalPostForm(NULL, $edit, 'Add another item');
+    $this->submitForm($edit, 'Add another item');
     for ($delta = 0; $delta <= $delta_range; $delta++) {
       $this->assertSession()->fieldValueEquals("{$field_name}[$delta][value]", $values[$delta]);
       $this->assertSession()->fieldValueEquals("{$field_name}[$delta][_weight]", $weights[$delta]);
@@ -324,7 +324,7 @@ class FormTest extends FieldTestBase {
     $this->assertSession()->fieldNotExists("{$field_name}[" . ($delta + 1) . '][value]');
 
     // Submit the form and create the entity.
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertText('entity_test ' . $id . ' has been created.', 'Entity was created');
@@ -410,7 +410,7 @@ class FormTest extends FieldTestBase {
     $this->drupalGet('entity_test/add');
 
     // Press the 'Add more' button.
-    $this->drupalPostForm(NULL, [], 'Add another item');
+    $this->submitForm([], 'Add another item');
 
     // Verify that no error is thrown by the radio element.
     $this->assertSession()->elementNotExists('xpath', '//div[contains(@class, "error")]');
@@ -448,7 +448,7 @@ class FormTest extends FieldTestBase {
     $edit = [
       $field_name => '1, 2, 3',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
 
@@ -462,7 +462,7 @@ class FormTest extends FieldTestBase {
 
     // Submit the form with more values than the field accepts.
     $edit = [$field_name => '1, 2, 3, 4, 5'];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $this->assertRaw('this field cannot hold more than 4 values');
     // Check that the field values were not submitted.
     $this->assertFieldValues($entity_init, $field_name, [1, 2, 3]);
@@ -542,7 +542,7 @@ class FormTest extends FieldTestBase {
     $edit = [
       "{$field_name}[0][value]" => 1,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     preg_match("|$entity_type/manage/(\d+)|", $this->getUrl(), $match);
     $id = $match[1];
 
@@ -598,7 +598,7 @@ class FormTest extends FieldTestBase {
     // Create an entity and test that the default value is assigned correctly to
     // the field that uses the hidden widget.
     $this->assertSession()->fieldNotExists("{$field_name}[0][value]");
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
     preg_match('|' . $entity_type . '/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertText('entity_test_rev ' . $id . ' has been created.', 'Entity was created');
@@ -626,7 +626,7 @@ class FormTest extends FieldTestBase {
     // Update the entity.
     $value = mt_rand(1, 127);
     $edit = ["{$field_name}[0][value]" => $value];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $this->assertText('entity_test_rev ' . $id . ' has been updated.', 'Entity was updated');
     $storage->resetCache([$id]);
     $entity = $storage->load($id);

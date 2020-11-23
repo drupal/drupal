@@ -114,7 +114,7 @@ class NestedFormTest extends FieldTestBase {
       'entity_2[field_unlimited][0][value]' => 12,
       'entity_2[field_unlimited][1][value]' => 13,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $entity_1 = $storage->load(1);
     $entity_2 = $storage->load(2);
     $this->assertFieldValues($entity_1, 'field_single', [1]);
@@ -153,7 +153,7 @@ class NestedFormTest extends FieldTestBase {
     // Test the 'add more' buttons.
     // 'Add more' button in the first entity:
     $this->drupalGet('test-entity/nested/1/2');
-    $this->drupalPostForm(NULL, [], 'field_unlimited_add_more');
+    $this->submitForm([], 'field_unlimited_add_more');
     $this->assertSession()->fieldValueEquals('field_unlimited[0][value]', 3);
     $this->assertSession()->fieldValueEquals('field_unlimited[1][value]', 2);
     $this->assertSession()->fieldValueEquals('field_unlimited[2][value]', '');
@@ -164,13 +164,13 @@ class NestedFormTest extends FieldTestBase {
       'entity_2[field_unlimited][1][value]' => 14,
       'entity_2[field_unlimited][2][value]' => 15,
     ];
-    $this->drupalPostForm(NULL, $edit, 'entity_2_field_unlimited_add_more');
+    $this->submitForm($edit, 'entity_2_field_unlimited_add_more');
     $this->assertSession()->fieldValueEquals('entity_2[field_unlimited][0][value]', 13);
     $this->assertSession()->fieldValueEquals('entity_2[field_unlimited][1][value]', 14);
     $this->assertSession()->fieldValueEquals('entity_2[field_unlimited][2][value]', 15);
     $this->assertSession()->fieldValueEquals('entity_2[field_unlimited][3][value]', '');
     // Save the form and check values are saved correctly.
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
     $this->assertFieldValues($entity_1, 'field_unlimited', [3, 2]);
     $this->assertFieldValues($entity_2, 'field_unlimited', [13, 14, 15]);
   }

@@ -82,7 +82,7 @@ class CKEditorStylesComboAdminTest extends BrowserTestBase {
     $edit = [
       'editor[settings][plugins][stylescombo][styles]' => "h1.title|Title\np.callout|Callout\ndrupal-entity.has-dashes|Allowing Dashes\n\n",
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save configuration');
+    $this->submitForm($edit, 'Save configuration');
     $expected_settings['plugins']['stylescombo']['styles'] = "h1.title|Title\np.callout|Callout\ndrupal-entity.has-dashes|Allowing Dashes\n\n";
     $editor = Editor::load($this->format);
     $this->assertEqual($expected_settings, $editor->getSettings(), 'The Editor config entity has the correct settings.');
@@ -94,7 +94,7 @@ class CKEditorStylesComboAdminTest extends BrowserTestBase {
     $edit = [
       'editor[settings][plugins][stylescombo][styles]' => "h1.title|Title\np.callout|Title\n\n",
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save configuration');
+    $this->submitForm($edit, 'Save configuration');
     $this->assertRaw(t('Each style must have a unique label.'));
     $editor = Editor::load($this->format);
     $this->assertEqual($expected_settings, $editor->getSettings(), 'The Editor config entity has the correct settings.');

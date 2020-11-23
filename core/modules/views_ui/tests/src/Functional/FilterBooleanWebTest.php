@@ -37,8 +37,8 @@ class FilterBooleanWebTest extends UITestBase {
     $this->assertSession()->elementExists('css', '.views-left-30 .form-item-options-operator');
     $this->assertSession()->elementExists('css', '.views-right-70 .form-item-options-value');
 
-    $this->drupalPostForm(NULL, [], 'Expose filter');
-    $this->drupalPostForm(NULL, [], 'Grouped filters');
+    $this->submitForm([], 'Expose filter');
+    $this->submitForm([], 'Grouped filters');
 
     $edit = [];
     $edit['options[group_info][group_items][1][title]'] = 'Published';
@@ -51,7 +51,7 @@ class FilterBooleanWebTest extends UITestBase {
     $edit['options[group_info][group_items][3][operator]'] = '!=';
     $edit['options[group_info][group_items][3][value]'] = 1;
 
-    $this->drupalPostForm(NULL, $edit, 'Apply');
+    $this->submitForm($edit, 'Apply');
 
     $this->drupalGet('admin/structure/views/nojs/handler/test_view/default/filter/status');
 
@@ -69,7 +69,7 @@ class FilterBooleanWebTest extends UITestBase {
     $edit = [];
     $edit['options[group_info][default_group]'] = 2;
     $edit['options[group_info][group_items][3][remove]'] = 1;
-    $this->drupalPostForm(NULL, $edit, 'Apply');
+    $this->submitForm($edit, 'Apply');
     $this->drupalGet('admin/structure/views/nojs/handler/test_view/default/filter/status');
     $this->assertSession()->fieldValueEquals('options[group_info][default_group]', 2);
     $this->assertSession()->fieldNotExists('options[group_info][group_items][3][remove]');

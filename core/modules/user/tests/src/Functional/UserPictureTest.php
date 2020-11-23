@@ -77,7 +77,7 @@ class UserPictureTest extends BrowserTestBase {
     // Delete the picture.
     $edit = [];
     $this->drupalPostForm('user/' . $this->webUser->id() . '/edit', $edit, 'Remove');
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
 
     // Call file_cron() to clean up the file. Make sure the timestamp
     // of the file is older than the system.file.temporary_maximum_age

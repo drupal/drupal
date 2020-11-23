@@ -110,8 +110,8 @@ class SearchRankingTest extends BrowserTestBase {
     $edit['subject[0][value]'] = 'my comment title';
     $edit['comment_body[0][value]'] = 'some random comment';
     $this->drupalGet('comment/reply/node/' . $nodes['comments'][1]->id() . '/comment');
-    $this->drupalPostForm(NULL, $edit, 'Preview');
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Preview');
+    $this->submitForm($edit, 'Save');
 
     // Enable counting of statistics.
     $this->config('statistics.settings')->set('count_content_views', 1)->save();

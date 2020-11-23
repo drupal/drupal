@@ -38,7 +38,7 @@ class WorkspacesUninstallTest extends BrowserTestBase {
     $session->pageTextContains('Are you sure you want to delete all workspaces?');
     $this->drupalPostForm('/admin/modules/uninstall/entity/workspace', [], 'Delete all workspaces');
     $this->drupalPostForm('admin/modules/uninstall', ['uninstall[workspaces]' => TRUE], 'Uninstall');
-    $this->drupalPostForm(NULL, [], 'Uninstall');
+    $this->submitForm([], 'Uninstall');
     $session->pageTextContains('The selected modules have been uninstalled.');
     $session->pageTextNotContains('Workspaces');
 

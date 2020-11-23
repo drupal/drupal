@@ -105,7 +105,7 @@ class SiteMaintenanceTest extends BrowserTestBase {
       'name' => $this->user->getAccountName(),
       'pass' => $this->user->pass_raw,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Log in');
+    $this->submitForm($edit, 'Log in');
     $this->assertText($user_message);
 
     // Log in administrative user and configure a custom site offline message.
@@ -118,7 +118,7 @@ class SiteMaintenanceTest extends BrowserTestBase {
     $edit = [
       'maintenance_mode_message' => $offline_message,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save configuration');
+    $this->submitForm($edit, 'Save configuration');
 
     // Logout and verify that custom site offline message is displayed.
     $this->drupalLogout();

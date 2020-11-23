@@ -35,7 +35,7 @@ class ValidationTest extends BrowserTestBase {
     $edit = [
       'name' => 'element_validate',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->fieldValueEquals('name', '#value changed by #element_validate');
     $this->assertText('Name value: value changed by setValueForElement() in #element_validate', 'Form element value in $form_state was altered.');
 
@@ -44,7 +44,7 @@ class ValidationTest extends BrowserTestBase {
     $edit = [
       'name' => 'validate',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->fieldValueEquals('name', '#value changed by #validate');
     $this->assertText('Name value: value changed by setValueForElement() in #validate', 'Form element value in $form_state was altered.');
 
@@ -53,12 +53,12 @@ class ValidationTest extends BrowserTestBase {
     $edit = [
       'name' => 'element_validate_access',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->fieldNotExists('name');
     $this->assertText('Name value: element_validate_access', 'Value for inaccessible form element exists.');
 
     // Verify that value for inaccessible form element persists.
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
     $this->assertSession()->fieldValueNotEquals('name', 'Form element was hidden.');
     $this->assertText('Name value: element_validate_access', 'Value for inaccessible form element exists.');
 
@@ -71,7 +71,7 @@ class ValidationTest extends BrowserTestBase {
     $this->assertSession()
       ->elementExists('css', 'input[name="form_token"]')
       ->setValue('invalid_token');
-    $this->drupalPostForm(NULL, ['name' => 'validate'], 'Save');
+    $this->submitForm(['name' => 'validate'], 'Save');
     $this->assertSession()->fieldValueNotEquals('name', '#value changed by #validate');
     $this->assertNoText('Name value: value changed by setValueForElement() in #validate', 'Form element value in $form_state was not altered.');
     $this->assertText('The form has become outdated.');

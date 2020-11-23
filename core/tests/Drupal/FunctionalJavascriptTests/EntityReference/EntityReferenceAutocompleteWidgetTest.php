@@ -137,7 +137,7 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
     $this->drupalGet('/admin/structure/types/manage/page/form-display');
     $assert_session->pageTextContains('Autocomplete suggestion list size: 1');
     // Click on the widget settings button to open the widget settings form.
-    $this->drupalPostForm(NULL, [], $field_name . "_settings_edit");
+    $this->submitForm([], $field_name . "_settings_edit");
     $this->assertSession()->waitForElement('css', sprintf('[name="fields[%s][settings_edit_form][settings][match_limit]"]', $field_name));
     $page->fillField('Number of results', 2);
     $page->pressButton('Save');

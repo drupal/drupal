@@ -30,7 +30,7 @@ class SystemConfigFormTest extends BrowserTestBase {
     $this->drupalGet('form-test/system-config-form');
     $element = $this->xpath('//div[@id = :id]/input[contains(@class, :class)]', [':id' => 'edit-actions', ':class' => 'button--primary']);
     $this->assertNotEmpty($element, 'The primary action submit button was found.');
-    $this->drupalPostForm(NULL, [], 'Save configuration');
+    $this->submitForm([], 'Save configuration');
     $this->assertText('The configuration options have been saved.');
   }
 

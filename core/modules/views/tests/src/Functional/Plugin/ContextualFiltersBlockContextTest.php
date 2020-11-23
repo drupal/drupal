@@ -109,7 +109,7 @@ class ContextualFiltersBlockContextTest extends ViewTestBase {
     $edit = [
       'settings[context_mapping][nid]' => '@node.node_route_context:node',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save block');
+    $this->submitForm($edit, 'Save block');
 
     // Check if mapping saved correctly.
     /** @var \Drupal\block\BlockInterface $block */

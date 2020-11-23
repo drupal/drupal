@@ -88,7 +88,7 @@ class LanguageSelectElementTest extends BrowserTestBase {
     // Check that the submitted values were the default values of the language
     // field elements.
     $edit = [];
-    $this->drupalPostForm(NULL, $edit, 'Submit');
+    $this->submitForm($edit, 'Submit');
     $values = Json::decode($this->getSession()->getPage()->getContent());
     $this->assertEqual($values['languages_all'], 'xx');
     $this->assertEqual($values['languages_configurable'], 'en');

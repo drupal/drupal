@@ -71,7 +71,7 @@ class SearchEmbedFormTest extends BrowserTestBase {
     // Now verify that we can see and submit the form from the search results.
     $this->drupalGet('search/node', ['query' => ['keys' => $this->node->label()]]);
     $this->assertText('Your name', 'Form is visible');
-    $this->drupalPostForm(NULL, ['name' => 'John'], 'Send away');
+    $this->submitForm(['name' => 'John'], 'Send away');
     $this->assertText('Test form was submitted', 'Form message appears');
     $count = \Drupal::state()->get('search_embedded_form.submit_count');
     $this->assertEqual($this->submitCount + 1, $count, 'Form submission count is correct');

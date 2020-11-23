@@ -143,7 +143,7 @@ class UserCancelTest extends BrowserTestBase {
 
     // Confirm account cancellation.
     $timestamp = time();
-    $this->drupalPostForm(NULL, [], 'Cancel account');
+    $this->submitForm([], 'Cancel account');
     $this->assertText('A confirmation request to cancel your account has been sent to your email address.', 'Account cancellation request mailed message displayed.');
 
     // Attempt bogus account cancellation request confirmation.
@@ -186,7 +186,7 @@ class UserCancelTest extends BrowserTestBase {
 
     // Attempt to cancel account.
     $this->drupalGet('user/' . $account->id() . '/edit');
-    $this->drupalPostForm(NULL, [], 'Cancel account');
+    $this->submitForm([], 'Cancel account');
     $this->assertText('Are you sure you want to cancel your account?', 'Confirmation form to cancel account displayed.');
     $this->assertText('Your account will be blocked and you will no longer be able to log in. All of your content will remain attributed to your username.', 'Informs that all content will be remain as is.');
     $this->assertNoText('Select the method to cancel the account above.', 'Does not allow user to select account cancellation method.');
@@ -194,7 +194,7 @@ class UserCancelTest extends BrowserTestBase {
     // Confirm account cancellation.
     $timestamp = time();
 
-    $this->drupalPostForm(NULL, [], 'Cancel account');
+    $this->submitForm([], 'Cancel account');
     $this->assertText('A confirmation request to cancel your account has been sent to your email address.', 'Account cancellation request mailed message displayed.');
 
     // Confirm account cancellation request.
@@ -246,13 +246,13 @@ class UserCancelTest extends BrowserTestBase {
 
     // Attempt to cancel account.
     $this->drupalGet('user/' . $account->id() . '/edit');
-    $this->drupalPostForm(NULL, [], 'Cancel account');
+    $this->submitForm([], 'Cancel account');
     $this->assertText('Are you sure you want to cancel your account?', 'Confirmation form to cancel account displayed.');
     $this->assertText('Your account will be blocked and you will no longer be able to log in. All of your content will be hidden from everyone but administrators.', 'Informs that all content will be unpublished.');
 
     // Confirm account cancellation.
     $timestamp = time();
-    $this->drupalPostForm(NULL, [], 'Cancel account');
+    $this->submitForm([], 'Cancel account');
     $this->assertText('A confirmation request to cancel your account has been sent to your email address.', 'Account cancellation request mailed message displayed.');
 
     // Confirm account cancellation request.
@@ -326,13 +326,13 @@ class UserCancelTest extends BrowserTestBase {
 
     // Attempt to cancel account.
     $this->drupalGet('user/' . $account->id() . '/edit');
-    $this->drupalPostForm(NULL, [], 'Cancel account');
+    $this->submitForm([], 'Cancel account');
     $this->assertText('Are you sure you want to cancel your account?', 'Confirmation form to cancel account displayed.');
     $this->assertRaw(t('Your account will be removed and all account information deleted. All of your content will be assigned to the %anonymous-name user.', ['%anonymous-name' => $this->config('user.settings')->get('anonymous')]));
 
     // Confirm account cancellation.
     $timestamp = time();
-    $this->drupalPostForm(NULL, [], 'Cancel account');
+    $this->submitForm([], 'Cancel account');
     $this->assertText('A confirmation request to cancel your account has been sent to your email address.', 'Account cancellation request mailed message displayed.');
 
     // Confirm account cancellation request.
@@ -390,13 +390,13 @@ class UserCancelTest extends BrowserTestBase {
 
     // Attempt to cancel account.
     $this->drupalGet('user/' . $account->id() . '/edit');
-    $this->drupalPostForm(NULL, [], 'Cancel account');
+    $this->submitForm([], 'Cancel account');
     $this->assertText('Are you sure you want to cancel your account?', 'Confirmation form to cancel account displayed.');
     $this->assertRaw(t('Your account will be removed and all account information deleted. All of your content will be assigned to the %anonymous-name user.', ['%anonymous-name' => $this->config('user.settings')->get('anonymous')]));
 
     // Confirm account cancellation.
     $timestamp = time();
-    $this->drupalPostForm(NULL, [], 'Cancel account');
+    $this->submitForm([], 'Cancel account');
     $this->assertText('A confirmation request to cancel your account has been sent to your email address.', 'Account cancellation request mailed message displayed.');
 
     // Confirm account cancellation request.
@@ -444,7 +444,7 @@ class UserCancelTest extends BrowserTestBase {
     $edit['comment_body[0][value]'] = $this->randomMachineName(16);
 
     $this->drupalPostForm('comment/reply/node/' . $node->id() . '/comment', $edit, 'Preview');
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
     $this->assertText('Your comment has been posted.');
     $comments = \Drupal::entityTypeManager()->getStorage('comment')->loadByProperties(['subject' => $edit['subject[0][value]']]);
     $comment = reset($comments);
@@ -462,13 +462,13 @@ class UserCancelTest extends BrowserTestBase {
 
     // Attempt to cancel account.
     $this->drupalGet('user/' . $account->id() . '/edit');
-    $this->drupalPostForm(NULL, [], 'Cancel account');
+    $this->submitForm([], 'Cancel account');
     $this->assertText('Are you sure you want to cancel your account?', 'Confirmation form to cancel account displayed.');
     $this->assertText('Your account will be removed and all account information deleted. All of your content will also be deleted.', 'Informs that all content will be deleted.');
 
     // Confirm account cancellation.
     $timestamp = time();
-    $this->drupalPostForm(NULL, [], 'Cancel account');
+    $this->submitForm([], 'Cancel account');
     $this->assertText('A confirmation request to cancel your account has been sent to your email address.', 'Account cancellation request mailed message displayed.');
 
     // Confirm account cancellation request.
@@ -504,12 +504,12 @@ class UserCancelTest extends BrowserTestBase {
 
     // Delete regular user.
     $this->drupalGet('user/' . $account->id() . '/edit');
-    $this->drupalPostForm(NULL, [], 'Cancel account');
+    $this->submitForm([], 'Cancel account');
     $this->assertRaw(t('Are you sure you want to cancel the account %name?', ['%name' => $account->getAccountName()]));
     $this->assertText('Select the method to cancel the account above.', 'Allows to select account cancellation method.');
 
     // Confirm deletion.
-    $this->drupalPostForm(NULL, [], 'Cancel account');
+    $this->submitForm([], 'Cancel account');
     $this->assertRaw(t('%name has been deleted.', ['%name' => $account->getAccountName()]));
     $this->assertNull(User::load($account->id()), 'User is not found in the database.');
   }
@@ -532,12 +532,12 @@ class UserCancelTest extends BrowserTestBase {
 
     // Delete regular user without email address.
     $this->drupalGet('user/' . $account->id() . '/edit');
-    $this->drupalPostForm(NULL, [], 'Cancel account');
+    $this->submitForm([], 'Cancel account');
     $this->assertRaw(t('Are you sure you want to cancel the account %name?', ['%name' => $account->getAccountName()]));
     $this->assertText('Select the method to cancel the account above.', 'Allows to select account cancellation method.');
 
     // Confirm deletion.
-    $this->drupalPostForm(NULL, [], 'Cancel account');
+    $this->submitForm([], 'Cancel account');
     $this->assertRaw(t('%name has been deleted.', ['%name' => $account->getAccountName()]));
     $this->assertNull(User::load($account->id()), 'User is not found in the database.');
   }
@@ -576,7 +576,7 @@ class UserCancelTest extends BrowserTestBase {
     $this->assertText('Notify user when account is canceled', 'Allows to send notification mail.');
 
     // Confirm deletion.
-    $this->drupalPostForm(NULL, [], 'Cancel accounts');
+    $this->submitForm([], 'Cancel accounts');
     $status = TRUE;
     foreach ($users as $account) {
       $status = $status && (strpos($this->getTextContent(), $account->getAccountName() . ' has been deleted.') !== FALSE);

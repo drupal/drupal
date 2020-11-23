@@ -52,7 +52,7 @@ class InstallerExistingDatabaseSettingsTest extends InstallerTestBase {
         ],
       ]);
     }
-    $this->drupalPostForm(NULL, $edit, $this->translations['Save and continue']);
+    $this->submitForm($edit, $this->translations['Save and continue']);
   }
 
   /**

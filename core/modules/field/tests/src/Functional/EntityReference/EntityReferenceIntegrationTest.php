@@ -104,7 +104,7 @@ class EntityReferenceIntegrationTest extends BrowserTestBase {
       $this->assertSession()->fieldValueEquals($this->fieldName . '[0][target_id]', $referenced_entities[0]->label() . ' (' . $referenced_entities[0]->id() . ')');
       $this->assertSession()->fieldValueEquals($this->fieldName . '[1][target_id]', $referenced_entities[1]->label() . ' (' . $referenced_entities[1]->id() . ')');
 
-      $this->drupalPostForm(NULL, [], 'Save');
+      $this->submitForm([], 'Save');
       $this->assertFieldValues($entity_name, $referenced_entities);
 
       // Test the 'entity_reference_autocomplete_tags' widget.
@@ -130,7 +130,7 @@ class EntityReferenceIntegrationTest extends BrowserTestBase {
       $this->drupalGet($this->entityType . '/manage/' . $entity->id() . '/edit');
       $this->assertSession()->fieldValueEquals($this->fieldName . '[target_id]', $target_id . ' (' . $referenced_entities[1]->id() . ')');
 
-      $this->drupalPostForm(NULL, [], 'Save');
+      $this->submitForm([], 'Save');
       $this->assertFieldValues($entity_name, $referenced_entities);
 
       // Test all the other widgets supported by the entity reference field.

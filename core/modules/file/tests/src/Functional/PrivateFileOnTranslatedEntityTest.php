@@ -103,14 +103,14 @@ class PrivateFileOnTranslatedEntityTest extends FileFieldTestBase {
     $this->clickLink(t('Add'));
 
     // Remove the existing file.
-    $this->drupalPostForm(NULL, [], 'Remove');
+    $this->submitForm([], 'Remove');
 
     // Upload a different file.
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName();
     $name = 'files[' . $this->fieldName . '_0]';
     $edit[$name] = \Drupal::service('file_system')->realpath($this->drupalGetTestFiles('text')[1]->uri);
-    $this->drupalPostForm(NULL, $edit, 'Save (this translation)');
+    $this->submitForm($edit, 'Save (this translation)');
     $last_fid = $this->getLastFileId();
 
     // Verify the translation was created.

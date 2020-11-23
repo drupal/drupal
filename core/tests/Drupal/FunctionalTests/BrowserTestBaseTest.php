@@ -159,13 +159,13 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $values = Json::decode($this->drupalPostForm('form_test/form-state-values-clean', [], 'Submit'));
     $this->assertSame(1000, $values['beer']);
 
-    // Test drupalPostForm() with form by HTML id.
+    // Test submitForm() with form by HTML id.
     $this->drupalCreateContentType(['type' => 'page']);
     $this->drupalLogin($this->drupalCreateUser(['create page content']));
     $this->drupalGet('form-test/two-instances-of-same-form');
     $this->getSession()->getPage()->fillField('edit-title-0-value', 'form1');
     $this->getSession()->getPage()->fillField('edit-title-0-value--2', 'form2');
-    $this->drupalPostForm(NULL, [], 'Save', [], 'node-page-form--2');
+    $this->submitForm([], 'Save', 'node-page-form--2');
     $this->assertSession()->pageTextContains('Page form2 has been created.');
   }
 
@@ -869,6 +869,8 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->expectDeprecation('Calling Drupal\Tests\UiHelperTrait::drupalPostForm() with $submit as an object is deprecated in drupal:9.2.0 and the method is removed in drupal:10.0.0. Use $this->submitForm() instead. See https://www.drupal.org/node/3168858');
     $this->expectDeprecation('Calling Drupal\Tests\UiHelperTrait::drupalPostForm() with $edit set to NULL is deprecated in drupal:9.1.0 and the method is removed in drupal:10.0.0. Use $this->submitForm() instead. See https://www.drupal.org/node/3168858');
     $this->drupalPostForm('form-test/object-builder', NULL, t('Save'));
+    $this->expectDeprecation('Calling Drupal\Tests\UiHelperTrait::drupalPostForm() with $path set to NULL is deprecated in drupal:9.2.0 and the method is removed in drupal:10.0.0. Use $this->submitForm() instead. See https://www.drupal.org/node/3168858');
+    $this->drupalPostForm(NULL, [], 'Save');
   }
 
   /**

@@ -91,19 +91,19 @@ class EntityReferenceAdminTest extends BrowserTestBase {
       'page[style][row_plugin]' => 'fields',
     ];
     $this->drupalPostForm('admin/structure/views/add', $edit, 'Save and edit');
-    $this->drupalPostForm(NULL, [], 'Duplicate as Entity Reference');
+    $this->submitForm([], 'Duplicate as Entity Reference');
     $this->clickLink(t('Settings'));
     $edit = [
       'style_options[search_fields][title]' => 'title',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Apply');
+    $this->submitForm($edit, 'Apply');
 
     // Set sort to NID ascending.
     $edit = [
       'name[node_field_data.nid]' => 1,
     ];
     $this->drupalPostForm('admin/structure/views/nojs/add-handler/node_test_view/entity_reference_1/sort', $edit, 'Add and configure sort criteria');
-    $this->drupalPostForm(NULL, [], 'Apply');
+    $this->submitForm([], 'Apply');
 
     $this->drupalPostForm('admin/structure/views/view/node_test_view/edit/entity_reference_1', [], 'Save');
     $this->clickLink(t('Settings'));
@@ -121,18 +121,18 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     $edit = [
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save field settings');
+    $this->submitForm($edit, 'Save field settings');
 
     // Add the view to the test field.
     $edit = [
       'settings[handler]' => 'views',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Change handler');
+    $this->submitForm($edit, 'Change handler');
     $edit = [
       'required' => FALSE,
       'settings[handler_settings][view][view_and_display]' => 'node_test_view:entity_reference_1',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save settings');
+    $this->submitForm($edit, 'Save settings');
 
     // Create nodes.
     $node1 = Node::create([
@@ -162,7 +162,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
       'field_test_entity_ref_field[0][target_id]' => 'Foo Node (' . $node1->id() . ')',
       'field_test_entity_ref_field[1][target_id]' => 'Foo Node (' . $node2->id() . ')',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
 
     $edit = [
@@ -202,7 +202,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     $edit = [
       'cardinality' => -1,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save field settings');
+    $this->submitForm($edit, 'Save field settings');
     $this->drupalGet($bundle_path . '/fields/' . $field_path);
     $term_name = $this->randomString();
     $result = \Drupal::entityQuery('taxonomy_term')
@@ -215,13 +215,13 @@ class EntityReferenceAdminTest extends BrowserTestBase {
       // This must be set before new entities will be auto-created.
       'settings[handler_settings][auto_create]' => 1,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save settings');
+    $this->submitForm($edit, 'Save settings');
     $this->drupalGet($bundle_path . '/fields/' . $field_path);
     $edit = [
       // A term that doesn't yet exist.
       'default_value_input[field_' . $taxonomy_term_field_name . '][0][target_id]' => $term_name,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save settings');
+    $this->submitForm($edit, 'Save settings');
     // The term should now exist.
     $result = \Drupal::entityQuery('taxonomy_term')
       ->condition('name', $term_name)
@@ -330,7 +330,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
       'settings[handler_settings][auto_create]' => TRUE,
       'settings[handler_settings][auto_create_bundle]' => $vocabularies[1]->id(),
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save settings');
+    $this->submitForm($edit, 'Save settings');
 
     /** @var \Drupal\field\Entity\FieldConfig $field_config */
     $field_config = FieldConfig::load($field_id);

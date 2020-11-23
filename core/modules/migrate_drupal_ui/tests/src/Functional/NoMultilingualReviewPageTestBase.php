@@ -16,12 +16,12 @@ abstract class NoMultilingualReviewPageTestBase extends MultilingualReviewPageTe
     $this->prepare();
     // Start the upgrade process.
     $this->drupalGet('/upgrade');
-    $this->drupalPostForm(NULL, [], 'Continue');
+    $this->submitForm([], 'Continue');
 
     // Get valid credentials.
     $edits = $this->translatePostValues($this->getCredentials());
 
-    $this->drupalPostForm(NULL, $edits, 'Review upgrade');
+    $this->submitForm($edits, 'Review upgrade');
 
     $session = $this->assertSession();
     $session->pageTextContains('WARNING: Content may be overwritten on your new site.');
@@ -30,7 +30,7 @@ abstract class NoMultilingualReviewPageTestBase extends MultilingualReviewPageTe
     $session->pageTextContains('There is translated content of these types:');
     $session->pageTextContainsOnce('content items');
 
-    $this->drupalPostForm(NULL, [], 'I acknowledge I may lose data. Continue anyway.');
+    $this->submitForm([], 'I acknowledge I may lose data. Continue anyway.');
     $session->statusCodeEquals(200);
 
     // Ensure there are no errors about missing modules from the test module.

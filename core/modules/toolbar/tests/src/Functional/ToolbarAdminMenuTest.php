@@ -119,7 +119,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     $edit['uninstall[taxonomy]'] = TRUE;
     $this->drupalPostForm('admin/modules/uninstall', $edit, 'Uninstall');
     // Confirm the uninstall form.
-    $this->drupalPostForm(NULL, [], 'Uninstall');
+    $this->submitForm([], 'Uninstall');
     $this->rebuildContainer();
 
     // Assert that the subtrees hash has been altered because the subtrees

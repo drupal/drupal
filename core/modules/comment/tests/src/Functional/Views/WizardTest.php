@@ -72,7 +72,7 @@ class WizardTest extends WizardTestBase {
     $this->assertEquals($expected_options, $actual_options);
 
     $view['id'] = strtolower($this->randomMachineName(16));
-    $this->drupalPostForm(NULL, $view, 'Save and edit');
+    $this->submitForm($view, 'Save and edit');
     // Verify that the view saving was successful and the browser got redirected
     // to the edit page.
     $this->assertSession()->addressEquals('admin/structure/views/view/' . $view['id']);

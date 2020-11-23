@@ -103,7 +103,7 @@ class PathLanguageTest extends PathTestBase {
     $edit['body[0][value]'] = $this->randomMachineName();
     $french_alias = $this->randomMachineName();
     $edit['path[0][alias]'] = '/' . $french_alias;
-    $this->drupalPostForm(NULL, $edit, 'Save (this translation)');
+    $this->submitForm($edit, 'Save (this translation)');
 
     // Clear the path lookup cache.
     $this->container->get('path_alias.manager')->cacheClear();

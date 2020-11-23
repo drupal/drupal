@@ -99,7 +99,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $this->assertFieldSelectOptions('settings[target_type]', array_keys(\Drupal::entityTypeManager()->getDefinitions()));
 
     // Second step: 'Field settings' form.
-    $this->drupalPostForm(NULL, [], 'Save field settings');
+    $this->submitForm([], 'Save field settings');
 
     // The base handler should be selected by default.
     $this->assertSession()->fieldValueEquals('settings[handler]', 'default:node');
@@ -176,7 +176,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     }
 
     // Third step: confirm.
-    $this->drupalPostForm(NULL, ['required' => '1'], 'Save settings');
+    $this->submitForm(['required' => '1'], 'Save settings');
 
     // Check that the field appears in the overview form.
     $this->assertSession()->elementTextContains('xpath', '//table[@id="field-overview"]//tr[@id="field-test"]/td[1]', "Test");
@@ -185,7 +185,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     // field is required.
     // The first 'Edit' link is for the Body field.
     $this->clickLink(t('Edit'), 1);
-    $this->drupalPostForm(NULL, [], 'Save settings');
+    $this->submitForm([], 'Save settings');
 
     // Switch the target type to 'taxonomy_term' and check that the settings
     // specific to its selection handler are displayed.
@@ -232,7 +232,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $assert_session->waitForElement('xpath', '//a[contains(text(), "Create a view")]');
     $assert_session->responseContains($views_text);
 
-    $this->drupalPostForm(NULL, [], 'Save settings');
+    $this->submitForm([], 'Save settings');
     // If no eligible view is available we should see a message.
     $assert_session->pageTextContains('The views entity selection mode requires a view.');
 
@@ -245,7 +245,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $assert_session
       ->waitForField('settings[handler_settings][view][view_and_display]')
       ->setValue('test_entity_reference:entity_reference_1');
-    $this->drupalPostForm(NULL, [], 'Save settings');
+    $this->submitForm([], 'Save settings');
     $assert_session->pageTextContains('Saved Test configuration.');
 
     // Switch the target type to 'entity_test'.
@@ -261,7 +261,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $edit = [
       'required' => FALSE,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save settings');
+    $this->submitForm($edit, 'Save settings');
     $assert_session->pageTextContains('Saved Test configuration.');
   }
 

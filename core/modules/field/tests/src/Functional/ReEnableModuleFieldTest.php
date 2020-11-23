@@ -91,7 +91,7 @@ class ReEnableModuleFieldTest extends BrowserTestBase {
       'title[0][value]' => $this->randomMachineName(),
       'field_telephone[0][value]' => "123456789",
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $this->assertRaw('<a href="tel:123456789">');
 
     // Test that the module can't be uninstalled from the UI while there is data

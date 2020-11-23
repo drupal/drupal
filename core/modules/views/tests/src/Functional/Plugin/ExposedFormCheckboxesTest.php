@@ -161,7 +161,7 @@ class ExposedFormCheckboxesTest extends ViewTestBase {
 
     // Select one option and ensure we still have results.
     $tid = $this->terms[0]->id();
-    $this->drupalPostForm(NULL, ["tid[$tid]" => $tid], 'Apply');
+    $this->submitForm(["tid[$tid]" => $tid], 'Apply');
 
     // Ensure only nodes tagged with $tid are displayed.
     $rows = $this->xpath("//div[contains(@class, 'views-row')]");

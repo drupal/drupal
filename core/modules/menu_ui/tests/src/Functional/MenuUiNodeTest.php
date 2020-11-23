@@ -100,7 +100,7 @@ class MenuUiNodeTest extends BrowserTestBase {
       'title[0][value]' => $node_title,
       'body[0][value]' => $this->randomString(),
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $node = $this->drupalGetNodeByTitle($node_title);
     $this->assertEqual($node->getTitle(), $edit['title[0][value]']);
 
@@ -350,7 +350,7 @@ class MenuUiNodeTest extends BrowserTestBase {
     $url = $node->toUrl('edit-form', $options);
     $this->drupalGet($url);
     $this->assertSession()->fieldValueEquals('edit-menu-title', $node_title);
-    $this->drupalPostForm(NULL, [], 'Save (this translation)');
+    $this->submitForm([], 'Save (this translation)');
 
     // Revisit the edit page of the translation and check the loaded menu item title.
     $options = ['language' => $languages[$langcodes[1]]];

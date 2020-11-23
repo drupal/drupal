@@ -178,7 +178,7 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
 
     // Uninstall the module.
     $this->drupalPostForm('admin/modules/uninstall', ['uninstall[image]' => "image"], 'Uninstall');
-    $this->drupalPostForm(NULL, [], 'Uninstall');
+    $this->submitForm([], 'Uninstall');
 
     // Ensure that the translated configuration has been removed.
     $override = \Drupal::languageManager()->getLanguageConfigOverride('xx', 'image.style.medium');
@@ -217,7 +217,7 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
     $this->assertNodeConfig(FALSE, FALSE);
     // Enable the node module.
     $this->drupalPostForm('admin/modules', ['modules[node][enable]' => "1"], 'Install');
-    $this->drupalPostForm(NULL, [], 'Continue');
+    $this->submitForm([], 'Continue');
     $this->rebuildContainer();
     $this->assertNodeConfig(TRUE, FALSE);
     // Enable the views module (which node provides some optional config for).

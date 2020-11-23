@@ -41,14 +41,14 @@ class RowUITest extends UITestBase {
     $edit = [
       'row[type]' => 'test_row',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Apply');
+    $this->submitForm($edit, 'Apply');
     // Make sure the custom settings form from the test plugin appears.
     $this->assertSession()->fieldExists('row_options[test_option]');
     $random_name = $this->randomMachineName();
     $edit = [
       'row_options[test_option]' => $random_name,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Apply');
+    $this->submitForm($edit, 'Apply');
     $this->drupalGet($row_options_url);
     // Make sure the custom settings form field has the expected value stored.
     $this->assertSession()->fieldValueEquals('row_options[test_option]', $random_name);
@@ -74,7 +74,7 @@ class RowUITest extends UITestBase {
     $row_options_url = "admin/structure/views/nojs/display/$view_name/default/row_options";
 
     $this->drupalGet($row_plugin_url);
-    $this->drupalPostForm(NULL, ['row[type]' => 'entity:node'], 'Apply');
+    $this->submitForm(['row[type]' => 'entity:node'], 'Apply');
     $this->assertSession()->addressEquals($row_options_url);
     // Make sure the custom settings form from the entity row plugin appears.
     $this->assertSession()->fieldValueEquals('row_options[view_mode]', 'teaser');

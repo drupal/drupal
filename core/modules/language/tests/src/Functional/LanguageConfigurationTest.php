@@ -55,7 +55,7 @@ class LanguageConfigurationTest extends BrowserTestBase {
     $edit = [
       'predefined_langcode' => 'fr',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Add language');
+    $this->submitForm($edit, 'Add language');
     $this->assertText('French');
     $this->assertSession()->addressEquals(Url::fromRoute('entity.configurable_language.collection'));
     // Langcode for Languages is always 'en'.
@@ -77,7 +77,7 @@ class LanguageConfigurationTest extends BrowserTestBase {
     $edit = [
       'site_default_language' => 'fr',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save configuration');
+    $this->submitForm($edit, 'Save configuration');
     $this->rebuildContainer();
     $this->assertSession()->checkboxChecked('edit-site-default-language-fr');
     $this->assertSession()->addressEquals(Url::fromRoute('entity.configurable_language.collection', [], ['langcode' => 'fr']));
@@ -94,14 +94,14 @@ class LanguageConfigurationTest extends BrowserTestBase {
     $edit = [
       'prefix[fr]' => 'french',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save configuration');
+    $this->submitForm($edit, 'Save configuration');
     $this->assertSession()->fieldValueEquals("prefix[fr]", 'french');
 
     // Check that the prefix can be removed.
     $edit = [
       'prefix[fr]' => '',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save configuration');
+    $this->submitForm($edit, 'Save configuration');
     $this->assertNoText('The prefix may only be left blank for the selected detection fallback language.', 'The path prefix can be removed for the default language');
 
     // Change default negotiation language.
@@ -111,14 +111,14 @@ class LanguageConfigurationTest extends BrowserTestBase {
     $edit = [
       'prefix[en]' => '',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save configuration');
+    $this->submitForm($edit, 'Save configuration');
     $this->assertText('The prefix may only be left blank for the selected detection fallback language.');
 
     //  Check that prefix cannot be changed to contain a slash.
     $edit = [
       'prefix[en]' => 'foo/bar',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save configuration');
+    $this->submitForm($edit, 'Save configuration');
     $this->assertText('The prefix may not contain a slash.', 'English prefix cannot be changed to contain a slash.');
 
     // Remove English language and add a new Language to check if langcode of

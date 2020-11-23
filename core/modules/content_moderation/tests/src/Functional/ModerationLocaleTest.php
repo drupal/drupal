@@ -54,7 +54,7 @@ class ModerationLocaleTest extends ModerationStateTestBase {
       'settings[node][article][translatable]' => TRUE,
       'settings[node][article][settings][language][language_alterable]' => TRUE,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save configuration');
+    $this->submitForm($edit, 'Save configuration');
 
     // Adding languages requires a container rebuild in the test running
     // environment so that multilingual services are used.
@@ -82,7 +82,7 @@ class ModerationLocaleTest extends ModerationStateTestBase {
       'title[0][value]' => 'French node Draft',
       'moderation_state[0][state]' => 'draft',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save (this translation)');
+    $this->submitForm($edit, 'Save (this translation)');
     // Here the error has occurred "The website encountered an unexpected error.
     // Please try again later."
     // If the translation has got lost.
@@ -105,7 +105,7 @@ class ModerationLocaleTest extends ModerationStateTestBase {
       'title[0][value]' => 'French node',
       'moderation_state[0][state]' => 'draft',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save (this translation)');
+    $this->submitForm($edit, 'Save (this translation)');
     $this->assertText('Article French node has been updated.');
     $english_node = $this->drupalGetNodeByTitle('English node', TRUE);
 
@@ -141,7 +141,7 @@ class ModerationLocaleTest extends ModerationStateTestBase {
       'title[0][value]' => 'Translated node',
       'moderation_state[0][state]' => 'draft',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save (this translation)');
+    $this->submitForm($edit, 'Save (this translation)');
     $this->assertText('Article Translated node has been updated.');
     $english_node = $this->drupalGetNodeByTitle('Another node', TRUE);
 
@@ -467,7 +467,7 @@ class ModerationLocaleTest extends ModerationStateTestBase {
       $edit['langcode[0][value]'] = $langcode;
     }
     $submit = $default_translation ? 'Save' : 'Save (this translation)';
-    $this->drupalPostForm(NULL, $edit, $submit);
+    $this->submitForm($edit, $submit);
     $message = $is_new ? "Article $title has been created." : "Article $title has been updated.";
     $this->assertSession()->pageTextContains($message);
     return $is_new ? $this->drupalGetNodeByTitle($title) : NULL;

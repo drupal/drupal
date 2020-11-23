@@ -93,7 +93,7 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
       $title_key => $this->randomMachineName(8),
       'langcode[0][value]' => $langcode,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $node = $this->drupalGetNodeByTitle($edit[$title_key], TRUE);
     $this->assertNotEmpty($node, 'Node found in database.');
     $this->assertSame($langcode, $node->language()->getId());

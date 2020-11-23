@@ -126,7 +126,7 @@ class SelectProfileFormTest extends WebDriverTestBase {
     $edit = [
       'langcode' => 'en',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save and continue');
+    $this->submitForm($edit, 'Save and continue');
     $page = $this->getSession()->getPage();
     $warning_message = $page->find('css', '.description .messages--warning');
     $this->assertFalse($warning_message->isVisible());

@@ -62,7 +62,7 @@ class MenuLinkContentDeleteFormTest extends BrowserTestBase {
     $this->drupalGet($menu_link->toUrl('delete-form'));
     $menu = Menu::load($menu_link->getMenuName());
     $this->assertSession()->linkByHrefExists($menu->toUrl('edit-form')->toString());
-    $this->drupalPostForm(NULL, [], 'Delete');
+    $this->submitForm([], 'Delete');
     $this->assertRaw(t('The menu link %title has been deleted.', ['%title' => $menu_link->label()]));
   }
 

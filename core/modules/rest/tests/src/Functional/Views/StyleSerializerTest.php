@@ -395,7 +395,7 @@ class StyleSerializerTest extends ViewTestBase {
 
     // Select only 'xml' as an accepted format.
     $this->drupalPostForm($style_options, ['style_options[formats][xml]' => 'xml'], 'Apply');
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
 
     // Ensure a request for JSON returns 406 Not Acceptable.
     $this->drupalGet('test/serialize/field', ['query' => ['_format' => 'json']]);
@@ -408,7 +408,7 @@ class StyleSerializerTest extends ViewTestBase {
 
     // Add 'json' as an accepted format, so we have multiple.
     $this->drupalPostForm($style_options, ['style_options[formats][json]' => 'json'], 'Apply');
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
 
     // Should return a 406. Emulates a sample Firefox header.
     $this->drupalGet('test/serialize/field', [], ['Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8']);
@@ -463,7 +463,7 @@ class StyleSerializerTest extends ViewTestBase {
     // Test an empty string for an alias, this should not be used. This also
     // tests that the form can be submitted with no aliases.
     $this->drupalPostForm($row_options, ['row_options[field_options][name][alias]' => ''], 'Apply');
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
 
     $view = Views::getView('test_serializer_display_field');
     $view->setDisplay('rest_export_1');
@@ -498,7 +498,7 @@ class StyleSerializerTest extends ViewTestBase {
     $edit = ['row_options[field_options][name][alias]' => $alias_map['name'], 'row_options[field_options][nothing][alias]' => $alias_map['nothing']];
     $this->drupalPostForm($row_options, $edit, 'Apply');
 
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
 
     $view = Views::getView('test_serializer_display_field');
     $view->setDisplay('rest_export_1');
@@ -534,7 +534,7 @@ class StyleSerializerTest extends ViewTestBase {
       'row_options[field_options][name][raw_output]' => '1',
     ];
     $this->drupalPostForm($row_options, $values, 'Apply');
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
 
     $view = Views::getView('test_serializer_display_field');
     $view->setDisplay('rest_export_1');
@@ -679,7 +679,7 @@ class StyleSerializerTest extends ViewTestBase {
     // Test an empty string for an alias, this should not be used. This also
     // tests that the form can be submitted with no aliases.
     $this->drupalPostForm($row_options, ['row_options[field_options][title][raw_output]' => '1'], 'Apply');
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
 
     $view = Views::getView('test_serializer_node_display_field');
     $view->setDisplay('rest_export_1');
@@ -697,7 +697,7 @@ class StyleSerializerTest extends ViewTestBase {
     $storage_definition->save();
 
     $this->drupalPostForm($row_options, ['row_options[field_options][body][raw_output]' => '1'], 'Apply');
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
 
     $node = $this->drupalCreateNode();
 

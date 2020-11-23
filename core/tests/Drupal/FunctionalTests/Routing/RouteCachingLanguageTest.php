@@ -174,7 +174,7 @@ class RouteCachingLanguageTest extends BrowserTestBase {
       'title[0][value]' => 'Translated link page',
       'path[0][alias]' => '/translated-link-page',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save (this translation)');
+    $this->submitForm($edit, 'Save (this translation)');
 
     $assert_session->pageTextContains('Translated link page');
 

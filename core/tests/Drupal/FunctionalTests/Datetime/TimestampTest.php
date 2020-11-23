@@ -132,7 +132,7 @@ class TimestampTest extends BrowserTestBase {
       'field_timestamp[0][value][date]' => $date->format($date_format),
       'field_timestamp[0][value][time]' => $date->format($time_format),
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
 
     // Make sure the submitted date is set as the default in the widget.
     $this->assertSession()->fieldExists('field_timestamp[0][value][date]');

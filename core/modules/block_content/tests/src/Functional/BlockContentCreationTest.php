@@ -96,7 +96,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
       'id' => 'test_view_mode',
       'label' => 'Test View Mode',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $this->assertRaw(t('Saved the %label view mode.', ['%label' => $edit['label']]));
 
     $this->drupalLogin($this->adminUser);
@@ -114,7 +114,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     ]));
 
     // Save our block permanently
-    $this->drupalPostForm(NULL, ['region' => 'content'], 'Save block');
+    $this->submitForm(['region' => 'content'], 'Save block');
 
     // Set test_view_mode as a custom display to be available on the list.
     $this->drupalGet('admin/structure/block/block-content');
@@ -124,7 +124,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $custom_view_mode = [
       'display_modes_custom[test_view_mode]' => 1,
     ];
-    $this->drupalPostForm(NULL, $custom_view_mode, 'Save');
+    $this->submitForm($custom_view_mode, 'Save');
 
     // Go to the configure page and change the view mode.
     $this->drupalGet('admin/structure/block/manage/testblock');
@@ -136,7 +136,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->assertSession()->optionExists('edit-settings-view-mode', 'test_view_mode');
 
     $view_mode['settings[view_mode]'] = 'test_view_mode';
-    $this->drupalPostForm(NULL, $view_mode, 'Save block');
+    $this->submitForm($view_mode, 'Save block');
 
     // Check that the view mode setting is shown because more than one exists.
     $this->drupalGet('admin/structure/block/manage/testblock');
@@ -145,7 +145,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     // Change the view mode.
     $view_mode['region'] = 'content';
     $view_mode['settings[view_mode]'] = 'test_view_mode';
-    $this->drupalPostForm(NULL, $view_mode, 'Save block');
+    $this->submitForm($view_mode, 'Save block');
 
     // Go to the configure page and verify the view mode has changed.
     $this->drupalGet('admin/structure/block/manage/testblock');
@@ -254,7 +254,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->drupalGet('block/1/delete');
     $this->assertText('This will also remove 1 placed block instance.');
 
-    $this->drupalPostForm(NULL, [], 'Delete');
+    $this->submitForm([], 'Delete');
     $this->assertRaw(t('The custom block %name has been deleted.', ['%name' => $edit['info[0][value]']]));
 
     // Create another block and force the plugin cache to flush.

@@ -75,7 +75,7 @@ class SearchBlockTest extends BrowserTestBase {
     // Test a search from the block on a 404 page.
     $this->drupalGet('foo');
     $this->assertSession()->statusCodeEquals(404);
-    $this->drupalPostForm(NULL, $terms, 'Search');
+    $this->submitForm($terms, 'Search');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertText('Your search yielded no results');
 
@@ -116,13 +116,13 @@ class SearchBlockTest extends BrowserTestBase {
     $this->drupalPostForm('node', ['keys' => $this->randomMachineName(1)], 'Search');
     $this->assertText('You must include at least one keyword to match in the content', 'Keyword message is displayed when searching for short word');
     $this->assertNoText('Please enter some keywords', 'With short word entered, no keywords message is not displayed');
-    $this->drupalPostForm(NULL, ['keys' => $this->randomMachineName()], 'Search', [], 'search-block-form');
+    $this->submitForm(['keys' => $this->randomMachineName()], 'Search', 'search-block-form');
     $this->assertNoText('You must include at least one keyword to match in the content', 'Keyword message is not displayed when searching for long word after short word search');
 
     // Same test again, using the search page form for the second search this
     // time.
     $this->drupalPostForm('node', ['keys' => $this->randomMachineName(1)], 'Search');
-    $this->drupalPostForm(NULL, ['keys' => $this->randomMachineName()], 'Search', [], 'search-form');
+    $this->submitForm(['keys' => $this->randomMachineName()], 'Search', 'search-form');
     $this->assertNoText('You must include at least one keyword to match in the content', 'Keyword message is not displayed when searching for long word after short word search');
 
     // Edit the block configuration so that it searches users instead of nodes,

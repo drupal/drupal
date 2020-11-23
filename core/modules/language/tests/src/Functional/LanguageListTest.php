@@ -84,7 +84,7 @@ class LanguageListTest extends BrowserTestBase {
     $edit = [
       'site_default_language' => $langcode,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save configuration');
+    $this->submitForm($edit, 'Save configuration');
     $this->rebuildContainer();
     $this->assertSession()->checkboxNotChecked('edit-site-default-language-en');
     $this->assertSession()->addressEquals(Url::fromRoute('entity.configurable_language.collection', [], ['language' => $language]));
@@ -169,7 +169,7 @@ class LanguageListTest extends BrowserTestBase {
     $edit = [
       'site_default_language' => $langcode,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save configuration');
+    $this->submitForm($edit, 'Save configuration');
     $this->rebuildContainer();
     $this->assertSession()->checkboxNotChecked('edit-site-default-language-en');
     $this->assertSession()->addressEquals(Url::fromRoute('entity.configurable_language.collection', [], ['language' => $language]));
@@ -198,7 +198,7 @@ class LanguageListTest extends BrowserTestBase {
     $language_storage = $this->container->get('entity_type.manager')->getStorage('configurable_language');
     $language_storage->load('nl')->delete();
 
-    $this->drupalPostForm(NULL, ['site_default_language' => 'nl'], 'Save configuration');
+    $this->submitForm(['site_default_language' => 'nl'], 'Save configuration');
     $this->assertText('Selected default language no longer exists.');
     $this->assertSession()->checkboxNotChecked('edit-site-default-language-xx');
   }

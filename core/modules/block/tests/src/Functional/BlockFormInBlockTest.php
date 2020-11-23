@@ -47,7 +47,7 @@ class BlockFormInBlockTest extends BrowserTestBase {
 
     // Make sure that we're currently still on /test-page after submitting the
     // form.
-    $this->drupalPostForm(NULL, $form_values, 'Submit');
+    $this->submitForm($form_values, 'Submit');
     $this->assertSession()->addressEquals('test-page');
     $this->assertText('Your email address is test@example.com');
 
@@ -59,7 +59,7 @@ class BlockFormInBlockTest extends BrowserTestBase {
     // Make sure that submitting the form didn't redirect us to the first page
     // we submitted the form from after submitting the form from
     // /test-render-title.
-    $this->drupalPostForm(NULL, $form_values, 'Submit');
+    $this->submitForm($form_values, 'Submit');
     $this->assertSession()->addressEquals('test-render-title');
     $this->assertText('Your email address is test@example.com');
   }

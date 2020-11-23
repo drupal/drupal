@@ -148,7 +148,7 @@ class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
     // Verify that we can search from the admin/help page.
     $this->drupalGet('admin/help');
     $session->pageTextContains('Search help');
-    $this->drupalPostForm(NULL, ['keys' => 'nonworditem'], 'Search');
+    $this->submitForm(['keys' => 'nonworditem'], 'Search');
     $this->assertSearchResultsCount(1);
     $session->linkExists('ABC Help Test module');
 
@@ -248,7 +248,7 @@ class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
     $edit = [];
     $edit['uninstall[help_topics]'] = TRUE;
     $this->drupalPostForm('admin/modules/uninstall', $edit, 'Uninstall');
-    $this->drupalPostForm(NULL, [], 'Uninstall');
+    $this->submitForm([], 'Uninstall');
     $this->assertText('The selected modules have been uninstalled.', 'Modules status has been updated.');
     $this->drupalGet('admin/help');
     $this->assertSession()->statusCodeEquals(200);

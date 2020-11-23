@@ -53,7 +53,7 @@ class StandardTest extends BrowserTestBase {
     $this->drupalLogin($this->adminUser);
     // Configure the block.
     $this->drupalGet('admin/structure/block/add/system_menu_block:main/bartik');
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'region' => 'sidebar_first',
       'id' => 'main_navigation',
     ], 'Save block');
@@ -89,7 +89,7 @@ class StandardTest extends BrowserTestBase {
     $this->drupalGet('node/1');
     // Verify that a line break is present.
     $this->assertRaw('Then she picked out two somebodies,<br />Sally and me');
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'subject[0][value]' => 'Barfoo',
       'comment_body[0][value]' => 'Then she picked out two somebodies, Sally and me',
     ], 'Save');

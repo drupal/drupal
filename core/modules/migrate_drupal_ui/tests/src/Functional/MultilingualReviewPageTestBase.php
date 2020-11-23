@@ -44,13 +44,13 @@ abstract class MultilingualReviewPageTestBase extends MigrateUpgradeTestBase {
     $this->prepare();
     // Start the upgrade process.
     $this->drupalGet('/upgrade');
-    $this->drupalPostForm(NULL, [], 'Continue');
+    $this->submitForm([], 'Continue');
 
     // Get valid credentials.
     $edits = $this->translatePostValues($this->getCredentials());
 
-    $this->drupalPostForm(NULL, $edits, 'Review upgrade');
-    $this->drupalPostForm(NULL, [], 'I acknowledge I may lose data. Continue anyway.');
+    $this->submitForm($edits, 'Review upgrade');
+    $this->submitForm([], 'I acknowledge I may lose data. Continue anyway.');
 
     // Ensure there are no errors about missing modules from the test module.
     $session = $this->assertSession();
@@ -75,9 +75,9 @@ abstract class MultilingualReviewPageTestBase extends MigrateUpgradeTestBase {
 
     // Start the upgrade process.
     $this->drupalGet('/upgrade');
-    $this->drupalPostForm(NULL, [], 'Continue');
-    $this->drupalPostForm(NULL, $edits, 'Review upgrade');
-    $this->drupalPostForm(NULL, [], 'I acknowledge I may lose data. Continue anyway.');
+    $this->submitForm([], 'Continue');
+    $this->submitForm($edits, 'Review upgrade');
+    $this->submitForm([], 'I acknowledge I may lose data. Continue anyway.');
 
     // Test the upgrade paths. First remove the module from the available paths
     // list.

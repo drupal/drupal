@@ -44,7 +44,7 @@ class CachedDataUITest extends UITestBase {
     $this->assertEqual($temp_store->getMetadata('test_view')->getOwnerId(), $views_admin_user_uid, 'The view is locked.');
 
     // Cancel the view edit and make sure the cache is deleted.
-    $this->drupalPostForm(NULL, [], 'Cancel');
+    $this->submitForm([], 'Cancel');
     $this->assertEqual($temp_store->getMetadata('test_view'), NULL, 'Shared tempstore data has been removed.');
     // Test we are redirected to the view listing page.
     $this->assertSession()->addressEquals('admin/structure/views');
@@ -61,7 +61,7 @@ class CachedDataUITest extends UITestBase {
     $this->assertSession()->linkByHrefExists('admin/structure/views/view/test_view/break-lock');
     // Break the lock.
     $this->clickLink(t('break this lock'));
-    $this->drupalPostForm(NULL, [], 'Break lock');
+    $this->submitForm([], 'Break lock');
     // Test that save and cancel buttons are shown.
     $this->assertSession()->buttonExists('Save');
     $this->assertSession()->buttonExists('Cancel');

@@ -219,7 +219,7 @@ class NodeTypeTest extends NodeTestBase {
     $this->drupalGet('admin/structure/types/manage/default');
     $this->clickLink(t('Delete'));
     $this->assertSession()->statusCodeEquals(200);
-    $this->drupalPostForm(NULL, [], 'Delete');
+    $this->submitForm([], 'Delete');
     $this->assertFalse((bool) NodeType::load('default'), 'Node type with machine default deleted.');
   }
 

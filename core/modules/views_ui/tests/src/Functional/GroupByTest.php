@@ -44,7 +44,7 @@ class GroupByTest extends UITestBase {
     $this->drupalPostForm($edit_groupby_url, ['options[group_type]' => 'count'], 'Apply');
     $this->assertSession()->linkExists('COUNT(Views test: ID)', 0, 'The count setting is displayed in the UI');
 
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
 
     $view = $this->container->get('entity_type.manager')->getStorage('view')->load('test_views_groupby_save');
     $display = $view->getDisplay('default');

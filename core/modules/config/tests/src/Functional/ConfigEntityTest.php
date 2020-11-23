@@ -266,7 +266,7 @@ class ConfigEntityTest extends BrowserTestBase {
     $this->drupalGet("admin/structure/config_test/manage/$id");
     $this->clickLink(t('Delete'));
     $this->assertSession()->addressEquals("admin/structure/config_test/manage/$id/delete");
-    $this->drupalPostForm(NULL, [], 'Delete');
+    $this->submitForm([], 'Delete');
     $this->assertSession()->addressEquals('admin/structure/config_test');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertNoRaw($message_update);
@@ -331,14 +331,14 @@ class ConfigEntityTest extends BrowserTestBase {
     $this->assertSession()->fieldExists('size');
     $this->assertSession()->fieldNotExists('size_value');
 
-    $this->drupalPostForm(NULL, $edit, 'Change size');
+    $this->submitForm($edit, 'Change size');
     $this->assertSession()->fieldExists('size');
     $this->assertSession()->fieldExists('size_value');
 
     // Submit the form with the regular 'Save' button and check that the entity
     // values are correct.
     $edit += ['size_value' => 'medium'];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
 
     $entity = $storage->load($id);
     $this->assertEquals('custom', $entity->get('size'));

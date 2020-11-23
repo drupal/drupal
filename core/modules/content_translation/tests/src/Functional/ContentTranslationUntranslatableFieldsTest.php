@@ -104,7 +104,7 @@ class ContentTranslationUntranslatableFieldsTest extends ContentTranslationPendi
     $this->assertNotEmpty($this->xpath($field_xpath));
     $this->assertNotEmpty($this->xpath($clue_xpath));
     $this->assertSession()->pageTextContains('Untranslatable-but-visible test field');
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
 
     // Check that the widget is displayed along with its clue in the edit form
     // for both languages.
@@ -174,7 +174,7 @@ class ContentTranslationUntranslatableFieldsTest extends ContentTranslationPendi
     $input_xpath = '//input[@name="settings[' . $this->entityTypeId . '][' . $this->bundle . '][settings][content_translation][untranslatable_fields_hide]" and @value=1 and @disabled="disabled"]';
     $elements = $this->xpath($input_xpath);
     $this->assertNotEmpty($elements);
-    $this->drupalPostForm(NULL, [$settings_key => 0], 'Save configuration');
+    $this->submitForm([$settings_key => 0], 'Save configuration');
     $elements = $this->xpath($input_xpath);
     $this->assertNotEmpty($elements);
   }

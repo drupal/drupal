@@ -165,7 +165,7 @@ class FilterTest extends ViewTestBase {
     $edit['options[value][page]'] = TRUE;
     $this->drupalPostForm('admin/structure/views/nojs/handler/test_filter_in_operator_ui/default/filter/type', $edit, 'Apply');
     $this->drupalPostForm('admin/structure/views/view/test_filter_in_operator_ui/edit/default', [], 'Save');
-    $this->drupalPostForm(NULL, [], 'Update preview');
+    $this->submitForm([], 'Update preview');
     $this->assertNoText('An illegal choice has been detected.');
   }
 

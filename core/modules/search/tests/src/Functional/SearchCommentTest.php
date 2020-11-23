@@ -167,7 +167,7 @@ class SearchCommentTest extends BrowserTestBase {
     $edit = [
       'keys' => "'" . $comment_body . "'",
     ];
-    $this->drupalPostForm(NULL, $edit, 'Search');
+    $this->submitForm($edit, 'Search');
     $this->assertText($node2->label(), 'Node found in search results.');
 
     // Verify that comment is rendered using proper format.

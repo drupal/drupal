@@ -105,13 +105,13 @@ class DisplayBlockTest extends ViewTestBase {
     $this->assertTrue(!empty($link));
     $this->clickLink(t('Lists (Views)'));
     $category = $this->randomString();
-    $this->drupalPostForm(NULL, ['block_category' => $category], 'Apply');
+    $this->submitForm(['block_category' => $category], 'Apply');
 
     // Duplicate the block after changing the category.
-    $this->drupalPostForm(NULL, [], 'Duplicate Block');
+    $this->submitForm([], 'Duplicate Block');
     $this->assertSession()->addressEquals('admin/structure/views/view/' . $edit['id'] . '/edit/block_3');
 
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
 
     // Test that the blocks are listed under the correct categories.
     $arguments[':category'] = $category;
@@ -209,7 +209,7 @@ class DisplayBlockTest extends ViewTestBase {
 
     // Save the block.
     $edit = ['region' => 'content'];
-    $this->drupalPostForm(NULL, $edit, 'Save block');
+    $this->submitForm($edit, 'Save block');
     $storage = $this->container->get('entity_type.manager')->getStorage('block');
     $block = $storage->load('views_block__test_view_block_block_1');
     // This will only return a result if our new block has been created with the

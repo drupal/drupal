@@ -155,7 +155,7 @@ class SearchPageTextTest extends BrowserTestBase {
     $this->drupalPostForm('search/node', ['keys' => $this->randomMachineName(1)], 'Search');
     $this->assertText('You must include at least one keyword', 'Keyword message is displayed when searching for short word');
     $this->assertNoText('Please enter some keywords', 'With short word entered, no keywords message is not displayed');
-    $this->drupalPostForm(NULL, ['keys' => $this->randomMachineName()], 'Search');
+    $this->submitForm(['keys' => $this->randomMachineName()], 'Search');
     $this->assertNoText('You must include at least one keyword', 'Keyword message is not displayed when searching for long word after short word search');
 
     // Test that if you search for a URL with .. in it, you still end up at

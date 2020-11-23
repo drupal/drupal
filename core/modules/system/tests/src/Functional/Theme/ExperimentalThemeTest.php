@@ -67,7 +67,7 @@ class ExperimentalThemeTest extends BrowserTestBase {
     $this->assertNoText('You must enable');
 
     // Enable the theme and confirm that it worked.
-    $this->drupalPostForm(NULL, [], 'Continue');
+    $this->submitForm([], 'Continue');
     $this->assertText('The Experimental test theme has been installed.');
 
     // Setting it as the default should not ask for another confirmation.
@@ -108,7 +108,7 @@ class ExperimentalThemeTest extends BrowserTestBase {
     $this->assertText('You must enable the Experimental test theme to install Experimental dependency test');
 
     // Enable the theme and confirm that it worked.
-    $this->drupalPostForm(NULL, [], 'Continue');
+    $this->submitForm([], 'Continue');
     $this->assertText('The Experimental dependency test theme has been installed.');
     $this->assertText(sprintf('Experimental test %s                (experimental theme)', \Drupal::VERSION));
     $this->assertText(sprintf('Experimental dependency test %s', \Drupal::VERSION));

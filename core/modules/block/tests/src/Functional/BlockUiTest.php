@@ -262,7 +262,7 @@ class BlockUiTest extends BrowserTestBase {
     $edit = [
       'settings[context_mapping][user]' => '',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save block');
+    $this->submitForm($edit, 'Save block');
     $this->drupalGet('');
     $this->assertText('No context mapping selected.');
     $this->assertNoText('User context found.');
@@ -330,7 +330,7 @@ class BlockUiTest extends BrowserTestBase {
     $this->assertSession()->addressEquals('admin/structure/block/list/classy?block-placement=' . Html::getClass($block['id']));
 
     // Resaving the block page will remove the block placement indicator.
-    $this->drupalPostForm(NULL, [], 'Save blocks');
+    $this->submitForm([], 'Save blocks');
     $this->assertSession()->addressEquals('admin/structure/block/list/classy');
 
     // Place another block and test the remove functionality works with the

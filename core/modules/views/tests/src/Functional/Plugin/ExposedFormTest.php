@@ -402,7 +402,7 @@ class ExposedFormTest extends ViewTestBase {
     $this->assertRaw(t('Apply'));
     $this->assertRaw('<div class="views-row">');
 
-    $this->drupalPostForm(NULL, [], 'Submit');
+    $this->submitForm([], 'Submit');
     $this->assertSession()->statusCodeEquals(200);
     $form = $this->cssSelect('form.views-exposed-form');
     $this->assertNotEmpty($form, 'The exposed form element was found.');

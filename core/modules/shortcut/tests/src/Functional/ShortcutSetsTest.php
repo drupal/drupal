@@ -42,7 +42,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
       'label' => $this->randomMachineName(),
       'id' => strtolower($this->randomMachineName()),
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $new_set = $this->container->get('entity_type.manager')->getStorage('shortcut_set')->load($edit['id']);
     $this->assertIdentical($new_set->id(), $edit['id'], 'Successfully created a shortcut set.');
     $this->drupalGet('user/' . $this->adminUser->id() . '/shortcuts');
@@ -93,7 +93,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
       $weight--;
     }
 
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $this->assertRaw(t('The shortcut set has been updated.'));
 
     \Drupal::entityTypeManager()->getStorage('shortcut')->resetCache();
@@ -164,7 +164,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
     $new_label = $this->randomMachineName();
     $this->drupalGet('admin/config/user-interface/shortcut');
     $this->clickLink(t('Edit shortcut set'));
-    $this->drupalPostForm(NULL, ['label' => $new_label], 'Save');
+    $this->submitForm(['label' => $new_label], 'Save');
     $set = ShortcutSet::load($set->id());
     $this->assertTrue($set->label() == $new_label, 'Shortcut set has been successfully renamed.');
   }

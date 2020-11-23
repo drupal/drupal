@@ -33,7 +33,7 @@ class EntityTestRevisionTest extends WizardTestBase {
     $view['description'] = $this->randomMachineName(16);
     $view['page[create]'] = FALSE;
     $view['show[type]'] = 'entity_test_rev';
-    $this->drupalPostForm(NULL, $view, 'Save and edit');
+    $this->submitForm($view, 'Save and edit');
 
     $view_storage_controller = \Drupal::entityTypeManager()->getStorage('view');
     /** @var \Drupal\views\Entity\View $view */

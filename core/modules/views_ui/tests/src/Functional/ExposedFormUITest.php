@@ -92,12 +92,12 @@ class ExposedFormUITest extends UITestBase {
     // Check the validations of the filter handler.
     $edit = [];
     $edit['options[expose][identifier]'] = '';
-    $this->drupalPostForm(NULL, $edit, 'Apply');
+    $this->submitForm($edit, 'Apply');
     $this->assertText('The identifier is required if the filter is exposed.');
 
     $edit = [];
     $edit['options[expose][identifier]'] = 'value';
-    $this->drupalPostForm(NULL, $edit, 'Apply');
+    $this->submitForm($edit, 'Apply');
     $this->assertText('This identifier is not allowed.');
 
     // Now check the sort criteria.
@@ -107,7 +107,7 @@ class ExposedFormUITest extends UITestBase {
 
     // Un-expose the filter.
     $this->drupalGet('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/filter/type');
-    $this->drupalPostForm(NULL, [], 'Hide filter');
+    $this->submitForm([], 'Hide filter');
 
     // After Un-exposing the filter, Operator and Value should be shown again.
     $this->assertSession()->fieldValueEquals('edit-options-operator-in', 'in');
@@ -125,17 +125,17 @@ class ExposedFormUITest extends UITestBase {
     // Test adding a new exposed sort criteria.
     $view_id = $this->randomView()['id'];
     $this->drupalGet("admin/structure/views/nojs/add-handler/$view_id/default/sort");
-    $this->drupalPostForm(NULL, ['name[node_field_data.created]' => 1], 'Add and configure sort criteria');
+    $this->submitForm(['name[node_field_data.created]' => 1], 'Add and configure sort criteria');
     $this->assertSession()->fieldValueEquals('options[order]', 'ASC');
     // Change the order and expose the sort.
-    $this->drupalPostForm(NULL, ['options[order]' => 'DESC'], 'Apply');
+    $this->submitForm(['options[order]' => 'DESC'], 'Apply');
     $this->drupalPostForm("admin/structure/views/nojs/handler/$view_id/default/sort/created", [], 'Expose sort');
     $this->assertSession()->fieldValueEquals('options[order]', 'DESC');
     $this->assertSession()->fieldValueEquals('options[expose][label]', 'Authored on');
     // Change the label and save the view.
     $edit = ['options[expose][label]' => $this->randomString()];
-    $this->drupalPostForm(NULL, $edit, 'Apply');
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm($edit, 'Apply');
+    $this->submitForm([], 'Save');
     // Check that the values were saved.
     $display = View::load($view_id)->getDisplay('default');
     $this->assertTrue($display['display_options']['sorts']['created']['exposed']);
@@ -158,7 +158,7 @@ class ExposedFormUITest extends UITestBase {
 
     // Click the Grouped Filters button.
     $this->drupalGet('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/filter/type');
-    $this->drupalPostForm(NULL, [], 'Grouped filters');
+    $this->submitForm([], 'Grouped filters');
 
     // After click on 'Grouped Filters', the standard operator and value should
     // not be displayed.
@@ -176,7 +176,7 @@ class ExposedFormUITest extends UITestBase {
     $edit = [];
     $edit["options[group_info][group_items][1][title]"] = 'Is Article';
     $edit["options[group_info][group_items][1][value][article]"] = 'article';
-    $this->drupalPostForm(NULL, $edit, 'Apply');
+    $this->submitForm($edit, 'Apply');
     $this->assertSession()->addressEquals('admin/structure/views/view/test_exposed_admin_ui/edit/default');
     $this->assertNoGroupedFilterErrors();
 
@@ -190,7 +190,7 @@ class ExposedFormUITest extends UITestBase {
     $edit["options[group_info][group_items][3][title]"] = 'Is Page and Article';
     $edit["options[group_info][group_items][3][value][article]"] = 'article';
     $edit["options[group_info][group_items][3][value][page]"] = 'page';
-    $this->drupalPostForm(NULL, $edit, 'Apply');
+    $this->submitForm($edit, 'Apply');
     $this->assertSession()->addressEquals('admin/structure/views/view/test_exposed_admin_ui/edit/default');
     $this->assertNoGroupedFilterErrors();
 
@@ -199,19 +199,19 @@ class ExposedFormUITest extends UITestBase {
     $edit = [];
     $edit["options[group_info][group_items][1][title]"] = 'No body';
     $edit["options[group_info][group_items][1][operator]"] = 'empty';
-    $this->drupalPostForm(NULL, $edit, 'Apply');
+    $this->submitForm($edit, 'Apply');
     $this->assertSession()->addressEquals('admin/structure/views/view/test_exposed_admin_ui/edit/default');
     $this->assertNoGroupedFilterErrors();
 
     // Ensure the string "0" can be used as a value for numeric filters.
     $this->drupalPostForm('admin/structure/views/nojs/add-handler/test_exposed_admin_ui/default/filter', ['name[node_field_data.nid]' => TRUE], 'Add and configure filter criteria');
-    $this->drupalPostForm(NULL, [], 'Expose filter');
-    $this->drupalPostForm(NULL, [], 'Grouped filters');
+    $this->submitForm([], 'Expose filter');
+    $this->submitForm([], 'Grouped filters');
     $edit = [];
     $edit['options[group_info][group_items][1][title]'] = 'Testing zero';
     $edit['options[group_info][group_items][1][operator]'] = '>';
     $edit['options[group_info][group_items][1][value][value]'] = '0';
-    $this->drupalPostForm(NULL, $edit, 'Apply');
+    $this->submitForm($edit, 'Apply');
     $this->assertSession()->addressEquals('admin/structure/views/view/test_exposed_admin_ui/edit/default');
     $this->assertNoGroupedFilterErrors();
 
@@ -221,7 +221,7 @@ class ExposedFormUITest extends UITestBase {
     $edit['options[group_info][group_items][1][operator]'] = 'between';
     $edit['options[group_info][group_items][1][value][min]'] = '0';
     $edit['options[group_info][group_items][1][value][max]'] = '10';
-    $this->drupalPostForm(NULL, $edit, 'Apply');
+    $this->submitForm($edit, 'Apply');
     $this->assertSession()->addressEquals('admin/structure/views/view/test_exposed_admin_ui/edit/default');
     $this->assertNoGroupedFilterErrors();
   }
@@ -232,7 +232,7 @@ class ExposedFormUITest extends UITestBase {
     $edit = [];
     $edit["options[group_info][group_items][1][title]"] = '';
     $edit["options[group_info][group_items][1][operator]"] = 'empty';
-    $this->drupalPostForm(NULL, $edit, 'Apply');
+    $this->submitForm($edit, 'Apply');
     $this->assertText($this->groupFormUiErrors['missing_title_empty_operator']);
 
     // Specify a title without a value.
@@ -241,7 +241,7 @@ class ExposedFormUITest extends UITestBase {
     $this->drupalPostForm('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/filter/type', [], 'Grouped filters');
     $edit = [];
     $edit["options[group_info][group_items][1][title]"] = 'Is Article';
-    $this->drupalPostForm(NULL, $edit, 'Apply');
+    $this->submitForm($edit, 'Apply');
     $this->assertText($this->groupFormUiErrors['missing_value']);
 
     // Specify a value without a title.
@@ -249,7 +249,7 @@ class ExposedFormUITest extends UITestBase {
     $edit = [];
     $edit["options[group_info][group_items][1][title]"] = '';
     $edit["options[group_info][group_items][1][value][article]"] = 'article';
-    $this->drupalPostForm(NULL, $edit, 'Apply');
+    $this->submitForm($edit, 'Apply');
     $this->assertText($this->groupFormUiErrors['missing_title']);
   }
 
@@ -292,9 +292,9 @@ class ExposedFormUITest extends UITestBase {
       'options[group_info][group_items][3][value][page]' => 'page',
     ];
     // Apply the filter settings.
-    $this->drupalPostForm(NULL, $edit, 'Apply');
+    $this->submitForm($edit, 'Apply');
     // Check that the view is saved without errors.
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
     $this->assertSession()->statusCodeEquals(200);
 
     // Click the Expose filter button.
@@ -313,9 +313,9 @@ class ExposedFormUITest extends UITestBase {
       'options[group_info][group_items][3][value]' => 0,
     ];
     // Apply the filter settings.
-    $this->drupalPostForm(NULL, $edit, 'Apply');
+    $this->submitForm($edit, 'Apply');
     // Check that the view is saved without errors.
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
     $this->assertSession()->statusCodeEquals(200);
 
     $this->drupalGet('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/filter/status');

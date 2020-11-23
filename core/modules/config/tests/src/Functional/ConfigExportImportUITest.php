@@ -172,7 +172,7 @@ class ConfigExportImportUITest extends BrowserTestBase {
     $this->assertNoText('There are no configuration changes to import.');
     $this->assertText($this->contentType->label());
 
-    $this->drupalPostForm(NULL, [], 'Import all');
+    $this->submitForm([], 'Import all');
     // After importing the snapshot has been updated and there are no warnings.
     $this->assertNoText('Warning message');
     $this->assertText('There are no configuration changes to import.');
@@ -294,7 +294,7 @@ class ConfigExportImportUITest extends BrowserTestBase {
     $this->assertText('config_test.another_delete');
     $this->assertSession()->linkByHrefExists('admin/config/development/configuration/sync/diff_collection/collection.test2/config_test.another_delete');
 
-    $this->drupalPostForm(NULL, [], 'Import all');
+    $this->submitForm([], 'Import all');
     $this->assertText('There are no configuration changes to import.');
 
     // Test data in collections.

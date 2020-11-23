@@ -78,7 +78,7 @@ class CKEditorAdminTest extends BrowserTestBase {
     $edit = [
       'editor[editor]' => 'ckeditor',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save configuration');
+    $this->submitForm($edit, 'Save configuration');
     $this->assertRaw(t('You must configure the selected text editor.'));
 
     // Ensure the CKEditor editor returns the expected default settings.
@@ -115,7 +115,7 @@ class CKEditorAdminTest extends BrowserTestBase {
     $this->assertEquals($expected_default_settings, $ckeditor->getDefaultSettings());
 
     // Keep the "CKEditor" editor selected and click the "Configure" button.
-    $this->drupalPostForm(NULL, $edit, 'editor_configure');
+    $this->submitForm($edit, 'editor_configure');
     $editor = Editor::load('filtered_html');
     $this->assertNull($editor, 'No Editor config entity exists yet.');
 
@@ -144,7 +144,7 @@ class CKEditorAdminTest extends BrowserTestBase {
     $this->assertCount(1, $styles_textarea, 'The "styles" textarea exists.');
 
     // Submit the form to save the selection of CKEditor as the chosen editor.
-    $this->drupalPostForm(NULL, $edit, 'Save configuration');
+    $this->submitForm($edit, 'Save configuration');
 
     // Ensure an Editor object exists now, with the proper settings.
     $expected_settings = $expected_default_settings;
@@ -158,7 +158,7 @@ class CKEditorAdminTest extends BrowserTestBase {
     $edit = [
       'editor[settings][plugins][stylescombo][styles]' => "h1.title|Title\np.callout|Callout\n\n",
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save configuration');
+    $this->submitForm($edit, 'Save configuration');
     $expected_settings['plugins']['stylescombo']['styles'] = "h1.title|Title\np.callout|Callout\n\n";
     $editor = Editor::load('filtered_html');
     $this->assertInstanceOf(Editor::class, $editor);
@@ -175,7 +175,7 @@ class CKEditorAdminTest extends BrowserTestBase {
     $edit = [
       'editor[settings][toolbar][button_groups]' => json_encode($expected_settings['toolbar']['rows']),
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save configuration');
+    $this->submitForm($edit, 'Save configuration');
     $editor = Editor::load('filtered_html');
     $this->assertInstanceOf(Editor::class, $editor);
     $this->assertEqual($expected_settings, $editor->getSettings(), 'The Editor config entity has the correct settings.');
@@ -213,7 +213,7 @@ class CKEditorAdminTest extends BrowserTestBase {
     $edit = [
       'editor[settings][plugins][llama_contextual_and_button][ultra_llama_mode]' => '1',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save configuration');
+    $this->submitForm($edit, 'Save configuration');
     $this->drupalGet('admin/config/content/formats/manage/filtered_html');
     $ultra_llama_mode_checkbox = $this->xpath('//input[@type="checkbox" and @name="editor[settings][plugins][llama_contextual_and_button][ultra_llama_mode]" and @checked="checked"]');
     $this->assertCount(1, $ultra_llama_mode_checkbox, 'The "Ultra llama mode" checkbox exists and is checked.');
@@ -264,7 +264,7 @@ class CKEditorAdminTest extends BrowserTestBase {
       'format' => 'amazing_format',
       'editor[editor]' => 'ckeditor',
     ];
-    $this->drupalPostForm(NULL, $edit, 'editor_configure');
+    $this->submitForm($edit, 'editor_configure');
     $filter_format = FilterFormat::load('amazing_format');
     $this->assertNull($filter_format, 'No FilterFormat config entity exists yet.');
     $editor = Editor::load('amazing_format');
@@ -289,7 +289,7 @@ class CKEditorAdminTest extends BrowserTestBase {
 
     // Submit the form to create both a new text format and an associated text
     // editor.
-    $this->drupalPostForm(NULL, $edit, 'Save configuration');
+    $this->submitForm($edit, 'Save configuration');
 
     // Ensure a FilterFormat object exists now.
     $filter_format = FilterFormat::load('amazing_format');
