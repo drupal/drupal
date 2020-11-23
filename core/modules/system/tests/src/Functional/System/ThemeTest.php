@@ -179,7 +179,7 @@ class ThemeTest extends BrowserTestBase {
         'default_logo' => FALSE,
         'logo_path' => $path,
       ];
-      $this->drupalPostForm(NULL, $edit, 'Save configuration');
+      $this->submitForm($edit, 'Save configuration');
       $this->assertText('The custom logo path is invalid.');
     }
 

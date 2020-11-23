@@ -563,7 +563,7 @@ class UserLoginHttpTest extends BrowserTestBase {
     preg_match('#.+user/reset/.+#', $email['body'], $urls);
     $resetURL = $urls[0];
     $this->drupalGet($resetURL);
-    $this->drupalPostForm(NULL, [], 'Log in');
+    $this->submitForm([], 'Log in');
   }
 
 }

@@ -231,7 +231,7 @@ class FormTest extends BrowserTestBase {
       'select' => 'foo',
       'radios' => 'bar',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Submit');
+    $this->submitForm($edit, 'Submit');
     // Verify that no error message is displayed when all required fields are
     // filled.
     $this->assertSession()->elementNotExists('xpath', '//div[contains(@class, "error")]');
@@ -260,7 +260,7 @@ class FormTest extends BrowserTestBase {
       'select' => 'bar',
       'radios' => 'foo',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Submit');
+    $this->submitForm($edit, 'Submit');
     // Verify that error message is displayed with invalid token even when
     // required fields are filled.
     $this->assertSession()->elementExists('xpath', '//div[contains(@class, "error")]');
@@ -286,7 +286,7 @@ class FormTest extends BrowserTestBase {
       'textfield' => $this->randomString(),
       'textarea' => $this->randomString() . "\n",
     ];
-    $this->drupalPostForm(NULL, $edit, 'Submit');
+    $this->submitForm($edit, 'Submit');
     // Verify that the error message is displayed with invalid token even when
     // required fields are filled.
     $this->assertSession()->elementExists('xpath', '//div[contains(@class, "error")]');
@@ -304,7 +304,7 @@ class FormTest extends BrowserTestBase {
       // so we don't accidentally generate the default value.
       'integer_step' => mt_rand(6, 100),
     ];
-    $this->drupalPostForm(NULL, $edit, 'Submit');
+    $this->submitForm($edit, 'Submit');
     // Verify that the error message is displayed with invalid token even when
     // required fields are filled.'
     $this->assertSession()->elementExists('xpath', '//div[contains(@class, "error")]');
@@ -319,7 +319,7 @@ class FormTest extends BrowserTestBase {
     $edit = [
       'url' => $this->randomString(),
     ];
-    $this->drupalPostForm(NULL, $edit, 'Submit');
+    $this->submitForm($edit, 'Submit');
     // Verify that the error message is displayed with invalid token even when
     // required fields are filled.
     $this->assertSession()->elementExists('xpath', '//div[contains(@class, "error")]');
@@ -366,7 +366,7 @@ class FormTest extends BrowserTestBase {
     $edit = [
       'textfield' => $this->randomString(),
     ];
-    $this->drupalPostForm(NULL, $edit, 'Submit');
+    $this->submitForm($edit, 'Submit');
     // Verify that no error input form element class is present.
     $this->assertSession()->elementNotExists('xpath', '//input[contains(@class, "error")]');
     $this->assertRaw("The form_test_validate_required_form_no_title form was submitted successfully.");
@@ -384,7 +384,7 @@ class FormTest extends BrowserTestBase {
     $this->assertRaw(t('@name field is required.', ['@name' => 'required_checkbox']));
 
     // Now try to submit the form correctly.
-    $this->drupalPostForm(NULL, ['required_checkbox' => 1], 'Submit');
+    $this->submitForm(['required_checkbox' => 1], 'Submit');
     $values = Json::decode($this->getSession()->getPage()->getContent());
     $expected_values = [
       'disabled_checkbox_on' => 'disabled_checkbox_on',
@@ -415,7 +415,7 @@ class FormTest extends BrowserTestBase {
     $this->assertNoRaw('<strong>four</strong>');
 
     // Posting without any values should throw validation errors.
-    $this->drupalPostForm(NULL, [], 'Submit');
+    $this->submitForm([], 'Submit');
     $no_errors = [
         'select',
         'select_required',
@@ -451,7 +451,7 @@ class FormTest extends BrowserTestBase {
       'no_default_empty_value_one' => 'three',
       'multiple_no_default_required[]' => 'three',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Submit');
+    $this->submitForm($edit, 'Submit');
     $values = Json::decode($this->getSession()->getPage()->getContent());
 
     // Verify expected values.
@@ -780,7 +780,7 @@ class FormTest extends BrowserTestBase {
       ->elementExists('css', 'input[name="hidden"]')
       ->setValue($edit['hidden']);
     unset($edit['hidden']);
-    $this->drupalPostForm(NULL, $edit, 'Submit');
+    $this->submitForm($edit, 'Submit');
     $returned_values['hijacked'] = Json::decode($this->getSession()->getPage()->getContent());
 
     // Ensure that the returned values match the form's default values in both
@@ -890,7 +890,7 @@ class FormTest extends BrowserTestBase {
     // The value for checkboxes[two] was changed using post render to simulate
     // an input forgery.
     // @see \Drupal\form_test\Form\FormTestInputForgeryForm::postRender
-    $this->drupalPostForm(NULL, ['checkboxes[one]' => TRUE, 'checkboxes[two]' => TRUE], 'Submit');
+    $this->submitForm(['checkboxes[one]' => TRUE, 'checkboxes[two]' => TRUE], 'Submit');
     $this->assertText('An illegal choice has been detected.', 'Input forgery was detected.');
   }
 

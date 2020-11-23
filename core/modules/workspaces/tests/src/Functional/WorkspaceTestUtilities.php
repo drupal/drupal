@@ -100,7 +100,7 @@ trait WorkspaceTestUtilities {
     /** @var \Drupal\Tests\WebAssert $session */
     $session = $this->assertSession();
     $session->buttonExists('Activate');
-    $this->drupalPostForm(NULL, ['workspace_id' => $workspace->id()], 'Activate');
+    $this->submitForm(['workspace_id' => $workspace->id()], 'Activate');
     $session->pageTextContains($workspace->label() . ' is now the active workspace.');
   }
 
@@ -113,7 +113,7 @@ trait WorkspaceTestUtilities {
   protected function switchToLive() {
     /** @var \Drupal\Tests\WebAssert $session */
     $session = $this->assertSession();
-    $this->drupalPostForm(NULL, [], 'Switch to Live');
+    $this->submitForm([], 'Switch to Live');
     $session->pageTextContains('You are now viewing the live version of the site.');
   }
 

@@ -40,13 +40,13 @@ class StyleUITest extends UITestBase {
     $edit = [
       'style[type]' => 'test_style',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Apply');
+    $this->submitForm($edit, 'Apply');
     $this->assertSession()->fieldExists('style_options[test_option]');
     $random_name = $this->randomMachineName();
     $edit = [
       'style_options[test_option]' => $random_name,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Apply');
+    $this->submitForm($edit, 'Apply');
     $this->drupalGet($style_options_url);
     $this->assertSession()->fieldValueEquals('style_options[test_option]', $random_name);
 

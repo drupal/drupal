@@ -108,7 +108,7 @@ class RebuildTest extends WebDriverTestBase {
     $edit = [
       'title[0][value]' => $this->randomString(),
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('Test file field is required.');
 
     // Ensure that the form contains two items in the multi-valued field, so we

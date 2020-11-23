@@ -87,7 +87,7 @@ class ImageStyleFlushTest extends ImageFieldTestBase {
       // Add the effect.
       $this->drupalPostForm($style_path, ['new' => $effect], 'Add');
       if (!empty($edit)) {
-        $this->drupalPostForm(NULL, $edit, 'Add effect');
+        $this->submitForm($edit, 'Add effect');
       }
     }
 

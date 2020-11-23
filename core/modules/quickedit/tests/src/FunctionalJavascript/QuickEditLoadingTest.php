@@ -311,7 +311,7 @@ class QuickEditLoadingTest extends WebDriverTestBase {
     $this->loggedInUser = $logged_in_user;
     // Ensure different save timestamps for field editing.
     sleep(2);
-    $this->drupalPostForm(NULL, ['body[0][value]' => '<p>Concurrent edit!</p>'], 'Save');
+    $this->submitForm(['body[0][value]' => '<p>Concurrent edit!</p>'], 'Save');
 
     $this->getSession()->getPage()->hasContent('The content has either been modified by another user, or you have already submitted modifications. As a result, your changes cannot be saved.');
   }
@@ -375,7 +375,7 @@ class QuickEditLoadingTest extends WebDriverTestBase {
     $page->attachFileToField('files[field_image_0]', $image_path);
     $alt_field = $assert->waitForField('field_image[0][alt]');
     $this->assertNotEmpty($alt_field);
-    $this->drupalPostForm(NULL, ['field_image[0][alt]' => 'Vivamus aliquet elit'], 'Save');
+    $this->submitForm(['field_image[0][alt]' => 'Vivamus aliquet elit'], 'Save');
 
     // The image field form should load normally.
     // Wait "Quick edit" button for node.

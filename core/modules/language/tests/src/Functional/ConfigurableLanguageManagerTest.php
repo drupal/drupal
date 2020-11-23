@@ -256,12 +256,12 @@ class ConfigurableLanguageManagerTest extends BrowserTestBase {
     $assert_session->pageTextNotContains($field_label_es);
 
     // Set admin language to Spanish.
-    $this->drupalPostForm(NULL, ['edit-preferred-admin-langcode' => 'es'], 'edit-submit');
+    $this->submitForm(['edit-preferred-admin-langcode' => 'es'], 'edit-submit');
     $assert_session->pageTextContains($field_label_es);
     $assert_session->pageTextNotContains($field_label_en);
 
     // Set admin language to English.
-    $this->drupalPostForm(NULL, ['edit-preferred-admin-langcode' => 'en'], 'edit-submit');
+    $this->submitForm(['edit-preferred-admin-langcode' => 'en'], 'edit-submit');
     $assert_session->pageTextContains($field_label_en);
     $assert_session->pageTextNotContains($field_label_es);
   }

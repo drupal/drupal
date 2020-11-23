@@ -175,11 +175,11 @@ abstract class FileFieldTestBase extends BrowserTestBase {
       }
       else {
         $page->attachFileToField($name, $file_path);
-        $this->drupalPostForm(NULL, [], 'Upload');
+        $this->submitForm([], 'Upload');
       }
     }
 
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
 
     return $nid;
   }
@@ -195,7 +195,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
     ];
 
     $this->drupalPostForm('node/' . $nid . '/edit', [], 'Remove');
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
   }
 
   /**
@@ -208,7 +208,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
     ];
 
     $this->drupalPostForm('node/' . $nid . '/edit', [], 'Remove');
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
   }
 
   /**

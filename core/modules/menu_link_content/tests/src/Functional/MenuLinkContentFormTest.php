@@ -89,14 +89,10 @@ class MenuLinkContentFormTest extends BrowserTestBase {
     // Test that the field description is present.
     $this->assertRaw('The location this menu link points to.');
 
-    $this->drupalPostForm(
-      NULL,
-      [
-        'title[0][value]' => t('Front page'),
-        'link[0][uri]' => '<front>',
-      ],
-      'Save'
-    );
+    $this->submitForm([
+      'title[0][value]' => t('Front page'),
+      'link[0][uri]' => '<front>',
+    ], 'Save');
     $this->assertText('The menu link has been saved.');
   }
 
@@ -105,14 +101,10 @@ class MenuLinkContentFormTest extends BrowserTestBase {
    */
   public function testMenuLinkContentFormValidation() {
     $this->drupalGet('admin/structure/menu/manage/admin/add');
-    $this->drupalPostForm(
-      NULL,
-      [
-        'title[0][value]' => t('Test page'),
-        'link[0][uri]' => '<test>',
-      ],
-      'Save'
-    );
+    $this->submitForm([
+      'title[0][value]' => t('Test page'),
+      'link[0][uri]' => '<test>',
+    ], 'Save');
     $this->assertText('Manually entered paths should start with one of the following characters: / ? #');
   }
 

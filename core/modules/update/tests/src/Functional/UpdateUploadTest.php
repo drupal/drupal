@@ -131,7 +131,7 @@ class UpdateUploadTest extends UpdateTestBase {
 
     // Run the updates for the new module.
     $this->drupalPostForm('admin/reports/updates/update', ['projects[update_test_new_module]' => TRUE], 'Download these updates');
-    $this->drupalPostForm(NULL, ['maintenance_mode' => FALSE], 'Continue');
+    $this->submitForm(['maintenance_mode' => FALSE], 'Continue');
     $this->assertText('Update was completed successfully.');
     $this->assertRaw(t('Installed %project_name successfully', ['%project_name' => 'update_test_new_module']));
 

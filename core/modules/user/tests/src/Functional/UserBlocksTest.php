@@ -86,7 +86,7 @@ class UserBlocksTest extends BrowserTestBase {
     $this->drupalLogout();
     $this->drupalGet('filter/tips');
     $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'MISS');
-    $this->drupalPostForm(NULL, $edit, 'Log in');
+    $this->submitForm($edit, 'Log in');
     $this->assertNoText('User login', 'Logged in.');
     // Verify that we are still on the same page after login for allowed page.
     $this->assertSession()->responseMatches('!<title.*?Compose tips.*?</title>!');
@@ -95,7 +95,7 @@ class UserBlocksTest extends BrowserTestBase {
     $this->drupalLogout();
     $this->drupalGet('filter/tips', ['query' => ['foo' => 'bar']]);
     $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'HIT');
-    $this->drupalPostForm(NULL, $edit, 'Log in');
+    $this->submitForm($edit, 'Log in');
     $this->assertNoText('User login', 'Logged in.');
     // Verify that we are still on the same page after login for allowed page.
     $this->assertSession()->responseMatches('!<title.*?Compose tips.*?</title>!');
@@ -105,7 +105,7 @@ class UserBlocksTest extends BrowserTestBase {
     $this->drupalLogout();
     $this->drupalGet('filter/tips', ['query' => ['foo' => 'baz']]);
     $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'HIT');
-    $this->drupalPostForm(NULL, $edit, 'Log in');
+    $this->submitForm($edit, 'Log in');
     $this->assertNoText('User login', 'Logged in.');
     // Verify that we are still on the same page after login for allowed page.
     $this->assertSession()->responseMatches('!<title.*?Compose tips.*?</title>!');

@@ -82,17 +82,17 @@ class FilterUITest extends UITestBase {
     $this->assertNoRaw('<span>Group 3</span>');
 
     // Create 2 new groups.
-    $this->drupalPostForm(NULL, [], 'Create new filter group');
-    $this->drupalPostForm(NULL, [], 'Create new filter group');
+    $this->submitForm([], 'Create new filter group');
+    $this->submitForm([], 'Create new filter group');
 
     // Remove the new group 3.
-    $this->drupalPostForm(NULL, [], 'Remove group 3');
+    $this->submitForm([], 'Remove group 3');
 
     // Verify that the group 4 is now named as 3.
     $this->assertRaw('<span>Group 3</span>');
 
     // Remove the group 3 again.
-    $this->drupalPostForm(NULL, [], 'Remove group 3');
+    $this->submitForm([], 'Remove group 3');
 
     // Group 3 now does not exist.
     $this->assertNoRaw('<span>Group 3</span>');

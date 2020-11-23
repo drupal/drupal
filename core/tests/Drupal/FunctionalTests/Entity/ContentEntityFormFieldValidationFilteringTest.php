@@ -136,7 +136,7 @@ class ContentEntityFormFieldValidationFilteringTest extends BrowserTestBase {
     // try to add a new item for it. This tests the '#limit_validation_errors'
     // property set by \Drupal\Core\Field\WidgetBase::formMultipleElements().
     $assert_session->elementsCount('css', 'div#edit-test-multiple-wrapper div.form-type-textfield input', 1);
-    $this->drupalPostForm(NULL, [], 'Add another item');
+    $this->submitForm([], 'Add another item');
     $assert_session->elementsCount('css', 'div#edit-test-multiple-wrapper div.form-type-textfield input', 2);
 
     // Now try to upload a file. This tests the '#limit_validation_errors'
@@ -147,7 +147,7 @@ class ContentEntityFormFieldValidationFilteringTest extends BrowserTestBase {
       'files[test_file_0]' => \Drupal::service('file_system')->realpath($text_file->uri),
     ];
     $assert_session->elementNotExists('css', 'input#edit-test-file-0-remove-button');
-    $this->drupalPostForm(NULL, $edit, 'Upload');
+    $this->submitForm($edit, 'Upload');
     $assert_session->elementExists('css', 'input#edit-test-file-0-remove-button');
 
     // Make the 'Test multiple' field required and check that adding another
@@ -161,7 +161,7 @@ class ContentEntityFormFieldValidationFilteringTest extends BrowserTestBase {
 
     // Check that saving the form without entering any value for the required
     // field still throws the proper validation errors.
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
     $assert_session->pageTextContains('Test single field is required.');
     $assert_session->pageTextContains('Test multiple (value 1) field is required.');
   }

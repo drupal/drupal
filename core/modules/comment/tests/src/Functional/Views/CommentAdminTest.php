@@ -119,7 +119,7 @@ class CommentAdminTest extends CommentBrowserTestBase {
       "comment_bulk_form[1]" => $comments[0]->id(),
       "comment_bulk_form[0]" => $comments[1]->id(),
     ];
-    $this->drupalPostForm(NULL, $edit, 'Apply to selected items');
+    $this->submitForm($edit, 'Apply to selected items');
     $this->assertText('Unapproved comments (0)', 'All comments were approved.');
 
     // Test message when no comments selected.
@@ -149,9 +149,9 @@ class CommentAdminTest extends CommentBrowserTestBase {
       "comment_bulk_form[0]" => $comments[1]->id(),
       "comment_bulk_form[2]" => $anonymous_comment4->id(),
     ];
-    $this->drupalPostForm(NULL, $edit, 'Apply to selected items');
+    $this->submitForm($edit, 'Apply to selected items');
     $this->assertText('Are you sure you want to delete these comments and all their children?', 'Confirmation required.');
-    $this->drupalPostForm(NULL, [], 'Delete');
+    $this->submitForm([], 'Delete');
     $this->assertText('No comments available.', 'All comments were deleted.');
 
     // Make sure the label of unpublished node is not visible on listing page.

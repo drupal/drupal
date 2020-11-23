@@ -60,7 +60,7 @@ class TermLanguageTest extends TaxonomyTestBase {
       'name[0][value]' => $this->randomMachineName(),
       'langcode[0][value]' => 'aa',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $terms = taxonomy_term_load_multiple_by_name($edit['name[0][value]']);
     $term = reset($terms);
     $this->assertEqual($term->language()->getId(), $edit['langcode[0][value]'], 'The term contains the correct langcode.');
@@ -129,7 +129,7 @@ class TermLanguageTest extends TaxonomyTestBase {
       'name[0][value]' => $this->randomMachineName(),
       'langcode[0][value]' => 'aa',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $terms = taxonomy_term_load_multiple_by_name($edit['name[0][value]']);
     $term = reset($terms);
 

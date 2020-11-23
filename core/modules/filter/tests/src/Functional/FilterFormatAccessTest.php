@@ -241,7 +241,7 @@ class FilterFormatAccessTest extends BrowserTestBase {
     // Verify that title can be changed, but preview displays original body.
     $new_edit = [];
     $new_edit['title[0][value]'] = $this->randomMachineName(8);
-    $this->drupalPostForm(NULL, $new_edit, 'Preview');
+    $this->submitForm($new_edit, 'Preview');
     $this->assertText($edit[$body_value_key], 'Old body found in preview.');
 
     // Save and verify that only the title was changed.

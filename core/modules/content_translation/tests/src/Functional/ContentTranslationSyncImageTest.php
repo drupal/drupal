@@ -109,7 +109,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
       'third_party_settings[content_translation][translation_sync][alt]' => FALSE,
       'third_party_settings[content_translation][translation_sync][title]' => FALSE,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save settings');
+    $this->submitForm($edit, 'Save settings');
 
     // Check that the content translation settings page reflects the changes
     // performed in the field edit page.

@@ -139,7 +139,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
     $edit = [
       'extra_type_settings[boost]' => 'ii',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save search page');
+    $this->submitForm($edit, 'Save search page');
 
     // Ensure that the modifications took effect.
     $this->assertRaw(t('The %label search page has been updated.', ['%label' => 'Dummy search type']));
@@ -262,26 +262,26 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
     // Add a search page.
     $edit = [];
     $edit['search_type'] = 'search_extra_type_search';
-    $this->drupalPostForm(NULL, $edit, 'Add search page');
+    $this->submitForm($edit, 'Add search page');
     $this->assertSession()->titleEquals('Add new search page | Drupal');
 
     $first = [];
     $first['label'] = $this->randomString();
     $first_id = $first['id'] = strtolower($this->randomMachineName(8));
     $first['path'] = strtolower($this->randomMachineName(8));
-    $this->drupalPostForm(NULL, $first, 'Save');
+    $this->submitForm($first, 'Save');
     $this->assertDefaultSearch($first_id, 'The default page matches the only search page.');
     $this->assertRaw(t('The %label search page has been added.', ['%label' => $first['label']]));
 
     // Attempt to add a search page with an existing path.
     $edit = [];
     $edit['search_type'] = 'search_extra_type_search';
-    $this->drupalPostForm(NULL, $edit, 'Add search page');
+    $this->submitForm($edit, 'Add search page');
     $edit = [];
     $edit['label'] = $this->randomString();
     $edit['id'] = strtolower($this->randomMachineName(8));
     $edit['path'] = $first['path'];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $this->assertText('The search page path must be unique.');
 
     // Add a second search page.
@@ -289,7 +289,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
     $second['label'] = $this->randomString();
     $second_id = $second['id'] = strtolower($this->randomMachineName(8));
     $second['path'] = strtolower($this->randomMachineName(8));
-    $this->drupalPostForm(NULL, $second, 'Save');
+    $this->submitForm($second, 'Save');
     $this->assertDefaultSearch($first_id, 'The default page matches the only search page.');
 
     // Ensure both search pages have their tabs displayed.
@@ -336,7 +336,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
     // Test deleting.
     $this->clickLink(t('Delete'));
     $this->assertRaw(t('Are you sure you want to delete the search page %label?', ['%label' => $first['label']]));
-    $this->drupalPostForm(NULL, [], 'Delete');
+    $this->submitForm([], 'Delete');
     $this->assertRaw(t('The search page %label has been deleted.', ['%label' => $first['label']]));
     $this->verifySearchPageOperations($first_id, FALSE, FALSE, FALSE, FALSE);
   }

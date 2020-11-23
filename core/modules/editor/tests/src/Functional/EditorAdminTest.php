@@ -86,14 +86,14 @@ class EditorAdminTest extends BrowserTestBase {
     $edit = $this->selectUnicornEditor();
     // Configure Unicorn Editor's setting to another value.
     $edit['editor[settings][ponies_too]'] = FALSE;
-    $this->drupalPostForm(NULL, $edit, 'Save configuration');
+    $this->submitForm($edit, 'Save configuration');
     $this->verifyUnicornEditorConfiguration('filtered_html', FALSE);
 
     // Switch back to 'None' and check the Unicorn Editor's settings are gone.
     $edit = [
       'editor[editor]' => '',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Configure');
+    $this->submitForm($edit, 'Configure');
     $unicorn_setting = $this->xpath('//input[@name="editor[settings][ponies_too]" and @type="checkbox" and @checked]');
     $this->assertCount(0, $unicorn_setting, "Unicorn Editor's settings form is no longer present.");
   }
@@ -174,7 +174,7 @@ class EditorAdminTest extends BrowserTestBase {
       'format' => $format_id,
     ];
     $edit += $this->selectUnicornEditor();
-    $this->drupalPostForm(NULL, $edit, 'Save configuration');
+    $this->submitForm($edit, 'Save configuration');
   }
 
   /**
@@ -210,7 +210,7 @@ class EditorAdminTest extends BrowserTestBase {
     $edit = [
       'editor[editor]' => 'unicorn',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Configure');
+    $this->submitForm($edit, 'Configure');
     $unicorn_setting = $this->xpath('//input[@name="editor[settings][ponies_too]" and @type="checkbox" and @checked]');
     $this->assertCount(1, $unicorn_setting, "Unicorn Editor's settings form is present.");
 

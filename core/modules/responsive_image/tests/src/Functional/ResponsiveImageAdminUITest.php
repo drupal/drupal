@@ -144,7 +144,7 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
 
     // Delete the style.
     $this->drupalGet('admin/config/media/responsive-image-style/style_one/delete');
-    $this->drupalPostForm(NULL, [], 'Delete');
+    $this->submitForm([], 'Delete');
     $this->drupalGet('admin/config/media/responsive-image-style');
     $this->assertText('There are no responsive image styles yet.');
   }

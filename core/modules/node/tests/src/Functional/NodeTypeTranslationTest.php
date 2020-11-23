@@ -147,7 +147,7 @@ class NodeTypeTranslationTest extends BrowserTestBase {
     $this->assertText('Edited title');
 
     // Translate the title label.
-    $this->drupalPostForm(NULL, ["translation[config_names][core.base_field_override.node.$type.title][label]" => 'Translated title'], 'Save translation');
+    $this->submitForm(["translation[config_names][core.base_field_override.node.$type.title][label]" => 'Translated title'], 'Save translation');
 
     // Assert that the right title label is displayed on the node add form. The
     // translations are created in this test; therefore, the assertions do not
@@ -160,8 +160,8 @@ class NodeTypeTranslationTest extends BrowserTestBase {
 
     // Add an e-mail field.
     $this->drupalPostForm("admin/structure/types/manage/$type/fields/add-field", ['new_storage_type' => 'email', 'label' => 'Email', 'field_name' => 'email'], 'Save and continue');
-    $this->drupalPostForm(NULL, [], 'Save field settings');
-    $this->drupalPostForm(NULL, [], 'Save settings');
+    $this->submitForm([], 'Save field settings');
+    $this->submitForm([], 'Save settings');
 
     $type = mb_strtolower($this->randomMachineName(16));
     $name = $this->randomString();
@@ -175,7 +175,7 @@ class NodeTypeTranslationTest extends BrowserTestBase {
 
     // Try re-using the email field.
     $this->drupalGet("es/admin/structure/types/manage/$type/fields/add-field");
-    $this->drupalPostForm(NULL, ['existing_storage_name' => 'field_email', 'existing_storage_label' => 'Email'], 'Save and continue');
+    $this->submitForm(['existing_storage_name' => 'field_email', 'existing_storage_label' => 'Email'], 'Save and continue');
     $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet("es/admin/structure/types/manage/$type/fields/node.$type.field_email/translate");
     $this->assertSession()->statusCodeEquals(200);

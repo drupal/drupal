@@ -42,7 +42,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
 
     // Remove the image.
     $this->drupalPostForm('node/' . $node . '/edit', [], 'Remove');
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
 
     // Get invalid image test files from simpletest.
     $dir = 'core/tests/fixtures/files';
@@ -232,7 +232,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $edit = [
       'title[0][value]' => 'Article with edit-access-allowed image field',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains($expected_page_text_when_edit_access_allowed);
 
     // Test with field edit access forbidden.
@@ -242,7 +242,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $edit = [
       'title[0][value]' => 'Article with edit-access-forbidden image field',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains($expected_page_text_when_edit_access_forbidden);
   }
 

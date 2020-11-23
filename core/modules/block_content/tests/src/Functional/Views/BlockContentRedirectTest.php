@@ -40,7 +40,7 @@ class BlockContentRedirectTest extends BlockContentTestBase {
     $edit = [];
     $edit['info[0][value]'] = 'Test redirect destination';
     $edit['body[0][value]'] = $this->randomMachineName(16);
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
 
     // Check the block content is present in the view redirect destination.
     $this->drupalGet('admin/content/redirect_destination');
@@ -48,7 +48,7 @@ class BlockContentRedirectTest extends BlockContentTestBase {
 
     // Edit the created block and save.
     $this->clickLink('Edit');
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
     $this->assertSession()->addressEquals('admin/content/redirect_destination');
   }
 

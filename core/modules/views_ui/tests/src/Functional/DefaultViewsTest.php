@@ -94,14 +94,14 @@ class DefaultViewsTest extends UITestBase {
       'id' => 'duplicate_of_glossary',
     ];
     $this->assertSession()->titleEquals('Duplicate of Glossary | Drupal');
-    $this->drupalPostForm(NULL, $edit, 'Duplicate');
+    $this->submitForm($edit, 'Duplicate');
     $this->assertSession()->addressEquals('admin/structure/views/view/duplicate_of_glossary');
 
     // Duplicate a view and set a custom name.
     $this->drupalGet('admin/structure/views');
     $this->clickViewsOperationLink('Duplicate', '/glossary');
     $random_name = strtolower($this->randomMachineName());
-    $this->drupalPostForm(NULL, ['id' => $random_name], 'Duplicate');
+    $this->submitForm(['id' => $random_name], 'Duplicate');
     $this->assertSession()->addressEquals("admin/structure/views/view/$random_name");
 
     // Now disable the view, and make sure it stops appearing on the main view
@@ -134,7 +134,7 @@ class DefaultViewsTest extends UITestBase {
     $this->drupalGet('admin/structure/views');
     $this->clickViewsOperationLink('Delete', '/glossary/');
     // Submit the confirmation form.
-    $this->drupalPostForm(NULL, [], 'Delete');
+    $this->submitForm([], 'Delete');
     // Ensure the view is no longer listed.
     $this->assertSession()->addressEquals('admin/structure/views');
     $this->assertSession()->linkByHrefNotExists($edit_href);
@@ -147,7 +147,7 @@ class DefaultViewsTest extends UITestBase {
     $this->drupalGet('admin/structure/views');
     $this->clickViewsOperationLink('Delete', 'duplicate_of_glossary');
     // Submit the confirmation form.
-    $this->drupalPostForm(NULL, [], 'Delete');
+    $this->submitForm([], 'Delete');
 
     $this->drupalGet('glossary');
     $this->assertSession()->statusCodeEquals(200);
@@ -155,7 +155,7 @@ class DefaultViewsTest extends UITestBase {
     $this->drupalGet('admin/structure/views');
     $this->clickViewsOperationLink('Delete', $random_name);
     // Submit the confirmation form.
-    $this->drupalPostForm(NULL, [], 'Delete');
+    $this->submitForm([], 'Delete');
     $this->drupalGet('glossary');
     $this->assertSession()->statusCodeEquals(404);
     $this->assertText('Page not found');

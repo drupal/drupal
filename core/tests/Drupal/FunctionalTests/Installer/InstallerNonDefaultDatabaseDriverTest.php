@@ -44,7 +44,7 @@ class InstallerNonDefaultDatabaseDriverTest extends InstallerTestBase {
     $settings[$this->testDriverName] = $settings[$driver];
     unset($settings[$driver]);
     $edit = $this->translatePostValues($settings);
-    $this->drupalPostForm(NULL, $edit, $this->translations['Save and continue']);
+    $this->submitForm($edit, $this->translations['Save and continue']);
   }
 
   /**

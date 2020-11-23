@@ -371,7 +371,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     $language = ConfigurableLanguage::load($langcode);
     $url = $entity->toUrl('edit-form', ['language' => $language]);
     $this->drupalPostForm($url, [], 'Delete translation');
-    $this->drupalPostForm(NULL, [], 'Delete ' . $language->getName() . ' translation');
+    $this->submitForm([], 'Delete ' . $language->getName() . ' translation');
     $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId, TRUE);
     $this->assertIsObject($entity);

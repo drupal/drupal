@@ -65,7 +65,7 @@ class EntityTranslationFormTest extends BrowserTestBase {
     $edit['body[0][value]'] = $this->randomMachineName(16);
     $this->drupalGet('node/add/page');
     $form_langcode = \Drupal::state()->get('entity_test.form_langcode');
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
 
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
 

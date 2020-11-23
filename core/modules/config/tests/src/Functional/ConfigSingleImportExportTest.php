@@ -75,7 +75,7 @@ EOD;
     $edit['import'] = "id: first\n" . $edit['import'];
     $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, 'Import');
     $this->assertRaw(t('Are you sure you want to create a new %name @type?', ['%name' => 'first', '@type' => 'test configuration']));
-    $this->drupalPostForm(NULL, [], 'Confirm');
+    $this->submitForm([], 'Confirm');
     $entity = $storage->load('first');
     $this->assertIdentical($entity->label(), 'First');
     $this->assertIdentical($entity->id(), 'first');
@@ -95,7 +95,7 @@ EOD;
     $edit['custom_entity_id'] = 'custom_id';
     $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, 'Import');
     $this->assertRaw(t('Are you sure you want to create a new %name @type?', ['%name' => 'custom_id', '@type' => 'test configuration']));
-    $this->drupalPostForm(NULL, [], 'Confirm');
+    $this->submitForm([], 'Confirm');
     $this->assertRaw(t('The configuration was imported successfully.'));
 
     // Perform an import with a unique ID and UUID.
@@ -114,7 +114,7 @@ EOD;
     $edit['import'] .= "\nuuid: " . $second_uuid;
     $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, 'Import');
     $this->assertRaw(t('Are you sure you want to create a new %name @type?', ['%name' => 'second', '@type' => 'test configuration']));
-    $this->drupalPostForm(NULL, [], 'Confirm');
+    $this->submitForm([], 'Confirm');
     $entity = $storage->load('second');
     $this->assertRaw(t('The configuration was imported successfully.'));
     $this->assertIdentical($entity->label(), 'Second');
@@ -137,7 +137,7 @@ EOD;
     ];
     $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, 'Import');
     $this->assertRaw(t('Are you sure you want to update the %name @type?', ['%name' => 'second', '@type' => 'test configuration']));
-    $this->drupalPostForm(NULL, [], 'Confirm');
+    $this->submitForm([], 'Confirm');
     $entity = $storage->load('second');
     $this->assertRaw(t('The configuration was imported successfully.'));
     $this->assertIdentical($entity->label(), 'Second updated');
@@ -184,7 +184,7 @@ EOD;
         '%name' => 'second',
         '@type' => 'test configuration',
       ]));
-      $this->drupalPostForm(NULL, [], 'Confirm');
+      $this->submitForm([], 'Confirm');
       $entity = $storage->load('second');
       $this->assertRaw(t('The configuration was imported successfully.'));
       $this->assertIsString($entity->label());
@@ -214,7 +214,7 @@ EOD;
     ];
     $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, 'Import');
     $this->assertRaw(t('Are you sure you want to update the %name @type?', ['%name' => $config->getName(), '@type' => 'simple configuration']));
-    $this->drupalPostForm(NULL, [], 'Confirm');
+    $this->submitForm([], 'Confirm');
     $this->drupalGet('');
     $this->assertText('Test simple import');
 

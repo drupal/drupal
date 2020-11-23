@@ -289,7 +289,7 @@ class ModerationFormTest extends ModerationStateTestBase {
       'settings[node][moderated_content][translatable]' => TRUE,
       'settings[node][moderated_content][settings][language][language_alterable]' => TRUE,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save configuration');
+    $this->submitForm($edit, 'Save configuration');
 
     // Adding languages requires a container rebuild in the test running
     // environment so that multilingual services are used.
@@ -319,7 +319,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->assertSession()->optionExists('moderation_state[0][state]', 'draft');
     $this->assertSession()->optionExists('moderation_state[0][state]', 'published');
     $this->assertSession()->optionNotExists('moderation_state[0][state]', 'archived');
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'body[0][value]' => 'Second version of the content.',
       'moderation_state[0][state]' => 'published',
     ], 'Save (this translation)');
@@ -343,7 +343,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->assertSession()->optionExists('moderation_state[0][state]', 'published');
     $this->assertSession()->optionExists('moderation_state[0][state]', 'archived');
 
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'body[0][value]' => 'Third version of the content.',
       'moderation_state[0][state]' => 'draft',
     ], 'Save (this translation)');
@@ -363,7 +363,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->assertSession()->optionExists('moderation_state[0][state]', 'draft');
     $this->assertSession()->optionExists('moderation_state[0][state]', 'published');
     $this->assertSession()->optionNotExists('moderation_state[0][state]', 'archived');
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'body[0][value]' => 'Fifth version of the content.',
       'moderation_state[0][state]' => 'published',
     ], 'Save (this translation)');
@@ -376,7 +376,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->assertSession()->optionExists('moderation_state[0][state]', 'draft');
     $this->assertSession()->optionExists('moderation_state[0][state]', 'published');
     $this->assertSession()->optionNotExists('moderation_state[0][state]', 'archived');
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'body[0][value]' => 'Sixth version of the content.',
       'moderation_state[0][state]' => 'published',
     ], 'Save (this translation)');
@@ -395,7 +395,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->assertSession()->optionExists('moderation_state[0][state]', 'draft');
     $this->assertSession()->optionExists('moderation_state[0][state]', 'published');
     $this->assertSession()->optionExists('moderation_state[0][state]', 'archived');
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'body[0][value]' => 'Seventh version of the content.',
       'moderation_state[0][state]' => 'draft',
     ], 'Save (this translation)');
@@ -410,7 +410,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->assertSession()->optionExists('moderation_state[0][state]', 'draft');
     $this->assertSession()->optionExists('moderation_state[0][state]', 'published');
     $this->assertSession()->optionNotExists('moderation_state[0][state]', 'archived');
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'body[0][value]' => 'Eighth version of the content.',
       'moderation_state[0][state]' => 'published',
     ], 'Save (this translation)');
@@ -446,7 +446,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->assertSession()->optionExists('moderation_state[0][state]', 'draft');
     $this->assertSession()->optionExists('moderation_state[0][state]', 'published');
     $this->assertSession()->optionExists('moderation_state[0][state]', 'archived');
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'moderation_state[0][state]' => 'draft',
     ], 'Save (this translation)');
 
@@ -455,7 +455,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->assertSession()->optionExists('moderation_state[0][state]', 'draft');
     $this->assertSession()->optionExists('moderation_state[0][state]', 'published');
     $this->assertSession()->optionNotExists('moderation_state[0][state]', 'archived');
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'moderation_state[0][state]' => 'draft',
     ], 'Save (this translation)');
 
@@ -464,7 +464,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->assertSession()->optionExists('moderation_state[0][state]', 'draft');
     $this->assertSession()->optionExists('moderation_state[0][state]', 'published');
     $this->assertSession()->optionNotExists('moderation_state[0][state]', 'archived');
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'moderation_state[0][state]' => 'published',
     ], 'Save (this translation)');
 
@@ -473,7 +473,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->assertSession()->optionExists('moderation_state[0][state]', 'draft');
     $this->assertSession()->optionExists('moderation_state[0][state]', 'published');
     $this->assertSession()->optionExists('moderation_state[0][state]', 'archived');
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'moderation_state[0][state]' => 'draft',
     ], 'Save (this translation)');
   }

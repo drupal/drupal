@@ -35,7 +35,7 @@ class ViewEditTest extends UITestBase {
     $this->assertInstanceOf(View::class, $view);
     $this->clickLink(t('Delete view'));
     $this->assertSession()->addressEquals('admin/structure/views/view/test_view/delete');
-    $this->drupalPostForm(NULL, [], 'Delete');
+    $this->submitForm([], 'Delete');
     $this->assertRaw(t('The view %name has been deleted.', ['%name' => $view->label()]));
 
     $this->assertSession()->addressEquals('admin/structure/views');
@@ -49,7 +49,7 @@ class ViewEditTest extends UITestBase {
   public function testOtherOptions() {
     $this->drupalGet('admin/structure/views/view/test_view');
     // Add a new attachment display.
-    $this->drupalPostForm(NULL, [], 'Add Attachment');
+    $this->submitForm([], 'Add Attachment');
 
     // Test that a long administrative comment is truncated.
     $edit = ['display_comment' => 'one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen'];
@@ -62,7 +62,7 @@ class ViewEditTest extends UITestBase {
     $this->assertSession()->linkExists('test_1');
 
     // Save the view, and test the new ID has been saved.
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
     $view = \Drupal::entityTypeManager()->getStorage('view')->load('test_view');
     $displays = $view->get('display');
     $this->assertTrue(!empty($displays['test_1']), 'Display data found for new display ID key.');
@@ -72,7 +72,7 @@ class ViewEditTest extends UITestBase {
     // Set to the same machine name and save the View.
     $edit = ['display_id' => 'test_1'];
     $this->drupalPostForm('admin/structure/views/nojs/display/test_view/test_1/display_id', $edit, 'Apply');
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
     $this->assertSession()->linkExists('test_1');
 
     // Test the form validation with invalid IDs.
@@ -113,8 +113,8 @@ class ViewEditTest extends UITestBase {
     $fields['fields[id][removed]'] = 1;
     $fields['fields[name][removed]'] = 1;
     $this->drupalPostForm('admin/structure/views/nojs/rearrange/test_view/default/field', $fields, 'Apply');
-    $this->drupalPostForm(NULL, [], 'Save');
-    $this->drupalPostForm(NULL, [], 'Cancel');
+    $this->submitForm([], 'Save');
+    $this->submitForm([], 'Cancel');
     // Verify that no error message is displayed.
     $this->assertSession()->elementNotExists('xpath', '//div[contains(@class, "error")]');
     // Verify page was redirected to the view listing.

@@ -69,13 +69,13 @@ class FieldUITest extends FieldTestBase {
     sort($options, SORT_STRING);
     $this->assertEqual($options, ['text_default', 'text_trimmed'], 'The text formatters for a simple text field appear as expected.');
 
-    $this->drupalPostForm(NULL, ['options[type]' => 'text_trimmed'], 'Apply');
+    $this->submitForm(['options[type]' => 'text_trimmed'], 'Apply');
 
     $this->drupalGet($url);
     $this->assertTrue($this->assertSession()->optionExists('edit-options-type', 'text_trimmed')->isSelected());
 
     $random_number = rand(100, 400);
-    $this->drupalPostForm(NULL, ['options[settings][trim_length]' => $random_number], 'Apply');
+    $this->submitForm(['options[settings][trim_length]' => $random_number], 'Apply');
     $this->drupalGet($url);
     $this->assertSession()->fieldValueEquals('options[settings][trim_length]', $random_number);
 
@@ -154,11 +154,11 @@ class FieldUITest extends FieldTestBase {
 
     // Expose the filter and see if the 'Any' option is added and if we can save
     // it.
-    $this->drupalPostForm(NULL, [], 'Expose filter');
+    $this->submitForm([], 'Expose filter');
     $option = $this->xpath('//label[@for="edit-options-value-all"]');
     $this->assertEqual(t('- Any -'), $option[0]->getText());
-    $this->drupalPostForm(NULL, ['options[value]' => 'All', 'options[expose][required]' => FALSE], 'Apply');
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm(['options[value]' => 'All', 'options[expose][required]' => FALSE], 'Apply');
+    $this->submitForm([], 'Save');
     $this->drupalGet('/admin/structure/views/nojs/handler/test_view_fieldapi/default/filter/field_boolean_value');
     $this->assertSession()->checkboxChecked('edit-options-value-all');
   }

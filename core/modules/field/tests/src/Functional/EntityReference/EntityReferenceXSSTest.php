@@ -67,7 +67,7 @@ class EntityReferenceXSSTest extends BrowserTestBase {
       'title[0][value]' => $this->randomString(),
       'entity_reference_test' => $referenced_node->id(),
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->assertEscaped($referenced_node->getTitle());
 
     // Test the options_buttons type.

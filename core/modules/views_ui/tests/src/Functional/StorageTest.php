@@ -50,7 +50,7 @@ class StorageTest extends UITestBase {
     ];
 
     $this->drupalPostForm("admin/structure/views/nojs/edit-details/$view_name/default", $edit, 'Apply');
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
 
     $view = Views::getView($view_name);
 

@@ -52,7 +52,7 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
     $edit['description'] = $this->randomMachineName();
     $edit['langcode'] = 'aa';
     $edit['vid'] = $vid;
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
 
     // Check the language on the edit page.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $vid);
@@ -61,7 +61,7 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
     // Change the language and save again.
     $edit['langcode'] = 'bb';
     unset($edit['vid']);
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
 
     // Check again the language on the edit page.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $vid);

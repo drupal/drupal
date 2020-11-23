@@ -199,7 +199,7 @@ class PagePreviewTest extends NodeTestBase {
     $this->drupalPostForm('node/add/page', $edit, 'Upload');
 
     // Add an alt tag and preview the node.
-    $this->drupalPostForm(NULL, ['field_image[0][alt]' => 'Picture of llamas'], 'Preview');
+    $this->submitForm(['field_image[0][alt]' => 'Picture of llamas'], 'Preview');
 
     // Check that the preview is displaying the title, body and term.
     $expected_title = $edit[$title_key] . ' | Drupal';
@@ -242,7 +242,7 @@ class PagePreviewTest extends NodeTestBase {
     $this->assertSession()->fieldExists('field_test_multi[1][value]');
 
     // Return to page preview to check everything is as expected.
-    $this->drupalPostForm(NULL, [], 'Preview');
+    $this->submitForm([], 'Preview');
     $this->assertSession()->titleEquals($expected_title);
     $this->assertSession()->assertEscaped($edit[$title_key]);
     $this->assertText($edit[$body_key], 'Body displayed.');
@@ -257,7 +257,7 @@ class PagePreviewTest extends NodeTestBase {
 
     // Save the node - this is a new POST, so we need to upload the image.
     $this->drupalPostForm('node/add/page', $edit, 'Upload');
-    $this->drupalPostForm(NULL, ['field_image[0][alt]' => 'Picture of llamas'], 'Save');
+    $this->submitForm(['field_image[0][alt]' => 'Picture of llamas'], 'Save');
     $node = $this->drupalGetNodeByTitle($edit[$title_key]);
 
     // Check the term was displayed on the saved node.
@@ -331,18 +331,18 @@ class PagePreviewTest extends NodeTestBase {
     $parameters = ['node_preview' => $node->uuid(), 'view_mode_id' => 'full'];
     $options = ['absolute' => TRUE, 'query' => ['destination' => $destination]];
     $this->assertSession()->addressEquals(Url::fromRoute('entity.node.preview', $parameters, $options));
-    $this->drupalPostForm(NULL, ['view_mode' => 'teaser'], 'Switch');
+    $this->submitForm(['view_mode' => 'teaser'], 'Switch');
     $this->clickLink(t('Back to content editing'));
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
     $this->assertSession()->addressEquals($destination);
 
     // Check that preview page works as expected without a destination set.
     $this->drupalPostForm($node->toUrl('edit-form'), [], 'Preview');
     $parameters = ['node_preview' => $node->uuid(), 'view_mode_id' => 'full'];
     $this->assertSession()->addressEquals(Url::fromRoute('entity.node.preview', $parameters));
-    $this->drupalPostForm(NULL, ['view_mode' => 'teaser'], 'Switch');
+    $this->submitForm(['view_mode' => 'teaser'], 'Switch');
     $this->clickLink(t('Back to content editing'));
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
     $this->assertSession()->addressEquals($node->toUrl());
     $this->assertSession()->statusCodeEquals(200);
 
@@ -356,10 +356,10 @@ class PagePreviewTest extends NodeTestBase {
     $edit['field_image[0][alt]'] = 'Alt 1';
 
     $this->drupalPostForm('node/add/page', $edit_image_1, 'Upload');
-    $this->drupalPostForm(NULL, $edit, 'Preview');
+    $this->submitForm($edit, 'Preview');
     $this->clickLink(t('Back to content editing'));
     $this->assertSession()->fieldExists('files[field_image_1][]');
-    $this->drupalPostForm(NULL, $edit_image_2, 'Upload');
+    $this->submitForm($edit_image_2, 'Upload');
     $this->assertSession()->fieldNotExists('files[field_image_1][]');
 
     $title = 'node_test_title';
@@ -372,11 +372,11 @@ class PagePreviewTest extends NodeTestBase {
       'field_test_multi[0][value]' => $example_text_1,
     ];
     $this->assertRaw('Storage is not set');
-    $this->drupalPostForm(NULL, $edit, 'Preview');
+    $this->submitForm($edit, 'Preview');
     $this->clickLink(t('Back to content editing'));
     $this->assertRaw('Storage is set');
     $this->assertSession()->fieldExists('field_test_multi[0][value]');
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
     $this->assertText('Basic page ' . $title . ' has been created.');
     $node = $this->drupalGetNodeByTitle($title);
     $this->drupalGet('node/' . $node->id() . '/edit');
@@ -386,16 +386,16 @@ class PagePreviewTest extends NodeTestBase {
       'field_test_multi[1][value]' => $example_text_2,
       'field_test_multi[2][value]' => $example_text_3,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Preview');
+    $this->submitForm($edit, 'Preview');
     $this->clickLink(t('Back to content editing'));
-    $this->drupalPostForm(NULL, $edit, 'Preview');
+    $this->submitForm($edit, 'Preview');
     $this->clickLink(t('Back to content editing'));
     $this->assertSession()->fieldValueEquals('field_test_multi[0][value]', $example_text_1);
     $this->assertSession()->fieldValueEquals('field_test_multi[1][value]', $example_text_2);
     $this->assertSession()->fieldValueEquals('field_test_multi[2][value]', $example_text_3);
 
     // Now save the node and make sure all values got saved.
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
     $this->assertText($example_text_1);
     $this->assertText($example_text_2);
     $this->assertText($example_text_3);
@@ -406,7 +406,7 @@ class PagePreviewTest extends NodeTestBase {
       'menu[enabled]' => TRUE,
       'menu[title]' => 'Changed title',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Preview');
+    $this->submitForm($edit, 'Preview');
     $this->clickLink(t('Back to content editing'));
     $this->assertSession()->checkboxChecked('edit-menu-enabled');
     $this->assertSession()->fieldValueEquals('menu[title]', 'Changed title');
@@ -417,7 +417,7 @@ class PagePreviewTest extends NodeTestBase {
       'menu[enabled]' => TRUE,
       'menu[title]' => 'Second title change',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->assertSession()->fieldValueEquals('menu[title]', 'Second title change');
 
@@ -461,7 +461,7 @@ class PagePreviewTest extends NodeTestBase {
 
     // Save the node after coming back from the preview page so we can create a
     // pending revision for it.
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
     $node = $this->drupalGetNodeByTitle($edit[$title_key]);
 
     // Check that previewing a pending revision of a node works. This can not be

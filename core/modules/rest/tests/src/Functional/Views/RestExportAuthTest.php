@@ -62,8 +62,8 @@ class RestExportAuthTest extends ViewTestBase {
     // @see \Drupal\rest\Plugin\views\display\RestExport::getAuthOptions()
     $this->assertSession()->fieldNotExists('edit-auth-user');
 
-    $this->drupalPostForm(NULL, ['auth[basic_auth]' => 1, 'auth[cookie]' => 1], 'Apply');
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm(['auth[basic_auth]' => 1, 'auth[cookie]' => 1], 'Apply');
+    $this->submitForm([], 'Save');
 
     $view = View::load($view_id);
     $this->assertEquals(['basic_auth', 'cookie'], $view->getDisplay('rest_export_1')['display_options']['auth']);

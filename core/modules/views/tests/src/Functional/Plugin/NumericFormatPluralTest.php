@@ -67,8 +67,8 @@ class NumericFormatPluralTest extends ViewTestBase {
 
     // Assert that changing the settings will change configuration properly.
     $edit = ['options[format_plural_values][0]' => '1 time', 'options[format_plural_values][1]' => '@count times'];
-    $this->drupalPostForm(NULL, $edit, 'Apply');
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm($edit, 'Apply');
+    $this->submitForm([], 'Save');
 
     $config = $this->config('views.view.numeric_test');
     $field_config_prefix = 'display.default.display_options.fields.count.';
@@ -111,8 +111,8 @@ class NumericFormatPluralTest extends ViewTestBase {
       'options[format_plural_values][2]' => '@count time2',
       'options[format_plural_values][3]' => '@count time3',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Apply');
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm($edit, 'Apply');
+    $this->submitForm([], 'Save');
     $config = $this->config('views.view.numeric_test');
     $field_config_prefix = 'display.default.display_options.fields.count.';
     $this->assertEqual($config->get($field_config_prefix . 'format_plural'), TRUE);

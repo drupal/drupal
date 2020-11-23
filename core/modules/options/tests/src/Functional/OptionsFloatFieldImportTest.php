@@ -76,7 +76,7 @@ class OptionsFloatFieldImportTest extends FieldTestBase {
     // Import configuration with dots in the allowed values key names. This
     // tests \Drupal\Core\Config\Entity\ConfigEntityStorage::importUpdate().
     $this->drupalGet('admin/config/development/configuration');
-    $this->drupalPostForm(NULL, [], 'Import all');
+    $this->submitForm([], 'Import all');
     $field_storage = FieldStorageConfig::loadByName('node', $field_name);
     $this->assertIdentical($field_storage->getSetting('allowed_values'), $array = ['0' => 'Zero', '0.5' => 'Point five']);
 
@@ -85,7 +85,7 @@ class OptionsFloatFieldImportTest extends FieldTestBase {
     FieldConfig::loadByName('node', $type, $field_name)->delete();
 
     $this->drupalGet('admin/config/development/configuration');
-    $this->drupalPostForm(NULL, [], 'Import all');
+    $this->submitForm([], 'Import all');
     $field_storage = FieldStorageConfig::loadByName('node', $field_name);
     $this->assertIdentical($field_storage->getSetting('allowed_values'), $array = ['0' => 'Zero', '0.5' => 'Point five']);
   }

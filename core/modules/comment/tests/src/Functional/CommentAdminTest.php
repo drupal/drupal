@@ -88,7 +88,7 @@ class CommentAdminTest extends CommentTestBase {
       "comments[{$comments[0]->id()}]" => 1,
       "comments[{$comments[1]->id()}]" => 1,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Update');
+    $this->submitForm($edit, 'Update');
     $this->assertText('Unapproved comments (0)', 'All comments were approved.');
 
     // Delete multiple comments in one operation.
@@ -98,15 +98,15 @@ class CommentAdminTest extends CommentTestBase {
       "comments[{$comments[1]->id()}]" => 1,
       "comments[{$anonymous_comment4->id()}]" => 1,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Update');
+    $this->submitForm($edit, 'Update');
     $this->assertText('Are you sure you want to delete these comments and all their children?', 'Confirmation required.');
-    $this->drupalPostForm(NULL, [], 'Delete');
+    $this->submitForm([], 'Delete');
     $this->assertText('No comments available.', 'All comments were deleted.');
     // Test message when no comments selected.
     $edit = [
       'operation' => 'delete',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Update');
+    $this->submitForm($edit, 'Update');
     $this->assertText('Select one or more comments to perform the update on.');
 
     // Make sure the label of unpublished node is not visible on listing page.
@@ -281,7 +281,7 @@ class CommentAdminTest extends CommentTestBase {
     $this->assertRaw(new FormattableMarkup('@label (Original translation) - <em>The following comment translations will be deleted:</em>', ['@label' => $comment2->label()]));
     $this->assertText('English');
     $this->assertText('Urdu');
-    $this->drupalPostForm(NULL, [], 'Delete');
+    $this->submitForm([], 'Delete');
     $after_count = $count_query->execute();
     $this->assertEqual($after_count, $before_count, 'No comment or translation found.');
   }

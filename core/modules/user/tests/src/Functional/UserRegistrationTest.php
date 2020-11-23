@@ -252,7 +252,7 @@ class UserRegistrationTest extends BrowserTestBase {
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
     $edit['pass[pass1]'] = $new_pass = $this->randomMachineName();
     $edit['pass[pass2]'] = $new_pass;
-    $this->drupalPostForm(NULL, $edit, 'Create new account');
+    $this->submitForm($edit, 'Create new account');
 
     // Check user fields.
     $accounts = $this->container->get('entity_type.manager')->getStorage('user')
@@ -336,19 +336,19 @@ class UserRegistrationTest extends BrowserTestBase {
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
     // Missing input in required field.
     $edit['test_user_field[0][value]'] = '';
-    $this->drupalPostForm(NULL, $edit, 'Create new account');
+    $this->submitForm($edit, 'Create new account');
     $this->assertRegistrationFormCacheTagsWithUserFields();
     $this->assertRaw(t('@name field is required.', ['@name' => $field->label()]));
     // Invalid input.
     $edit['test_user_field[0][value]'] = '-1';
-    $this->drupalPostForm(NULL, $edit, 'Create new account');
+    $this->submitForm($edit, 'Create new account');
     $this->assertRegistrationFormCacheTagsWithUserFields();
     $this->assertRaw(t('%name does not accept the value -1.', ['%name' => $field->label()]));
 
     // Submit with valid data.
     $value = rand(1, 255);
     $edit['test_user_field[0][value]'] = $value;
-    $this->drupalPostForm(NULL, $edit, 'Create new account');
+    $this->submitForm($edit, 'Create new account');
     // Check user fields.
     $accounts = $this->container->get('entity_type.manager')->getStorage('user')
       ->loadByProperties(['name' => $name, 'mail' => $mail]);
@@ -364,14 +364,14 @@ class UserRegistrationTest extends BrowserTestBase {
     $value = rand(1, 255);
     $edit = [];
     $edit['test_user_field[0][value]'] = $value;
-    $this->drupalPostForm(NULL, $edit, 'Add another item');
-    $this->drupalPostForm(NULL, $edit, 'Add another item');
+    $this->submitForm($edit, 'Add another item');
+    $this->submitForm($edit, 'Add another item');
     // Submit with three values.
     $edit['test_user_field[1][value]'] = $value + 1;
     $edit['test_user_field[2][value]'] = $value + 2;
     $edit['name'] = $name = $this->randomMachineName();
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
-    $this->drupalPostForm(NULL, $edit, 'Create new account');
+    $this->submitForm($edit, 'Create new account');
     // Check user fields.
     $accounts = $this->container->get('entity_type.manager')->getStorage('user')
       ->loadByProperties(['name' => $name, 'mail' => $mail]);

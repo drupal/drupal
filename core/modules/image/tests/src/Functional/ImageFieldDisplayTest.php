@@ -69,7 +69,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->drupalGet("admin/structure/types/manage/article/display");
 
     // Test for existence of link to image styles configuration.
-    $this->drupalPostForm(NULL, [], "{$field_name}_settings_edit");
+    $this->submitForm([], "{$field_name}_settings_edit");
     $this->assertSession()->linkByHrefExists(Url::fromRoute('entity.image_style.collection')->toString(), 0, 'Link to image styles configuration is found');
 
     // Remove 'administer image styles' permission from testing admin user.
@@ -80,7 +80,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->drupalGet("admin/structure/types/manage/article/display");
 
     // Test for absence of link to image styles configuration.
-    $this->drupalPostForm(NULL, [], "{$field_name}_settings_edit");
+    $this->submitForm([], "{$field_name}_settings_edit");
     $this->assertSession()->linkByHrefNotExists(Url::fromRoute('entity.image_style.collection')->toString(), 'Link to image styles configuration is absent when permissions are insufficient');
 
     // Restore 'administer image styles' permission to testing admin user
@@ -335,7 +335,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     ];
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
     // Add the required alt text.
-    $this->drupalPostForm(NULL, [$field_name . '[1][alt]' => $alt], 'Save');
+    $this->submitForm([$field_name . '[1][alt]' => $alt], 'Save');
     $this->assertText('Article ' . $node->getTitle() . ' has been updated.');
 
     // Assert ImageWidget::process() calls FieldWidget::process().
@@ -343,7 +343,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $edit = [
       'files[' . $field_name . '_2][]' => \Drupal::service('file_system')->realpath($test_image->uri),
     ];
-    $this->drupalPostForm(NULL, $edit, $field_name . '_2_upload_button');
+    $this->submitForm($edit, $field_name . '_2_upload_button');
     $this->assertSession()->elementNotExists('css', 'input[name="files[' . $field_name . '_2][]"]');
     $this->assertSession()->elementExists('css', 'input[name="files[' . $field_name . '_3][]"]');
   }

@@ -156,7 +156,7 @@ class PathAliasTest extends PathTestBase {
     $this->drupalGet('admin/config/search/path/edit/' . $pid);
     $this->clickLink(t('Delete'));
     $this->assertRaw(t('Are you sure you want to delete the URL alias %name?', ['%name' => $edit['alias[0][value]']]));
-    $this->drupalPostForm(NULL, [], 'Delete');
+    $this->submitForm([], 'Delete');
 
     // Confirm that the alias no longer works.
     $this->drupalGet($edit['alias[0][value]']);

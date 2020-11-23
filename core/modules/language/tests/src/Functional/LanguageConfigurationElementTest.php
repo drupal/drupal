@@ -50,7 +50,7 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
     $this->drupalGet('language-tests/language_configuration_element');
     $edit['lang_configuration[langcode]'] = 'current_interface';
     $edit['lang_configuration[language_alterable]'] = FALSE;
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $lang_conf = ContentLanguageSettings::loadByEntityTypeBundle('entity_test', 'some_bundle');
 
     // Check that the settings have been saved.
@@ -64,7 +64,7 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
     $this->drupalGet('language-tests/language_configuration_element');
     $edit['lang_configuration[langcode]'] = 'authors_default';
     $edit['lang_configuration[language_alterable]'] = TRUE;
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $lang_conf = ContentLanguageSettings::loadByEntityTypeBundle('entity_test', 'some_bundle');
 
     // Check that the settings have been saved.

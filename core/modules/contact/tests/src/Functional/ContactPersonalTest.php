@@ -239,7 +239,7 @@ class ContactPersonalTest extends BrowserTestBase {
     $this->drupalGet('user/' . $this->webUser->id() . '/edit');
     $this->assertSession()->checkboxNotChecked('edit-contact--2');
     $this->assertNull(\Drupal::service('user.data')->get('contact', $this->webUser->id(), 'enabled'), 'Personal contact form disabled');
-    $this->drupalPostForm(NULL, ['contact' => TRUE], 'Save');
+    $this->submitForm(['contact' => TRUE], 'Save');
     $this->assertSession()->checkboxChecked('edit-contact--2');
     $this->assertNotEmpty(\Drupal::service('user.data')->get('contact', $this->webUser->id(), 'enabled'), 'Personal contact form enabled');
 

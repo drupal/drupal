@@ -55,7 +55,7 @@ class DisplayPathTest extends UITestBase {
     $this->drupalGet('admin/structure/views/view/test_view');
 
     // Add a new page display and check the appearing text.
-    $this->drupalPostForm(NULL, [], 'Add Page');
+    $this->submitForm([], 'Add Page');
     $this->assertText('No path is set', 'The right text appears if no path was set.');
     $this->assertSession()->linkNotExists('View page', 'No view page link found on the page.');
 
@@ -78,11 +78,11 @@ class DisplayPathTest extends UITestBase {
    */
   public function doPathXssFilterTest() {
     $this->drupalGet('admin/structure/views/view/test_view');
-    $this->drupalPostForm(NULL, [], 'Add Page');
+    $this->submitForm([], 'Add Page');
     $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_2/path', ['path' => '<object>malformed_path</object>'], 'Apply');
-    $this->drupalPostForm(NULL, [], 'Add Page');
+    $this->submitForm([], 'Add Page');
     $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_3/path', ['path' => '<script>alert("hello");</script>'], 'Apply');
-    $this->drupalPostForm(NULL, [], 'Add Page');
+    $this->submitForm([], 'Add Page');
     $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_4/path', ['path' => '<script>alert("hello I have placeholders %");</script>'], 'Apply');
     $this->drupalPostForm('admin/structure/views/view/test_view', [], 'Save');
     $this->drupalGet('admin/structure/views');
@@ -115,9 +115,9 @@ class DisplayPathTest extends UITestBase {
    */
   public function testDeleteWithNoPath() {
     $this->drupalGet('admin/structure/views/view/test_view');
-    $this->drupalPostForm(NULL, [], 'Add Page');
-    $this->drupalPostForm(NULL, [], 'Delete Page');
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Add Page');
+    $this->submitForm([], 'Delete Page');
+    $this->submitForm([], 'Save');
     $this->assertRaw(t('The view %view has been saved.', ['%view' => 'Test view']));
   }
 
@@ -129,7 +129,7 @@ class DisplayPathTest extends UITestBase {
     $this->drupalGet('admin/structure/views/view/test_view');
 
     // Add a new page display.
-    $this->drupalPostForm(NULL, [], 'Add Page');
+    $this->submitForm([], 'Add Page');
 
     // Add an invalid path (only fragment).
     $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/path', ['path' => '#foo'], 'Apply');
@@ -154,7 +154,7 @@ class DisplayPathTest extends UITestBase {
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->addressEquals('admin/structure/views/nojs/display/test_view/page_1/tab_options');
 
-    $this->drupalPostForm(NULL, ['tab_options[type]' => 'tab', 'tab_options[title]' => $this->randomString()], 'Apply');
+    $this->submitForm(['tab_options[type]' => 'tab', 'tab_options[title]' => $this->randomString()], 'Apply');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->addressEquals('admin/structure/views/view/test_view/edit/page_1');
 
@@ -242,19 +242,19 @@ class DisplayPathTest extends UITestBase {
 
     $this->clickLink(t('No menu'));
 
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'menu[type]' => 'default tab',
       'menu[title]' => 'Menu title',
     ], 'Apply');
 
     $this->assertText('Default tab options');
 
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'tab_options[type]' => 'normal',
       'tab_options[title]' => 'Parent title',
     ], 'Apply');
 
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
     // Assert that saving the view will not cause an exception.
     $this->assertSession()->statusCodeEquals(200);
   }

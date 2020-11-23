@@ -89,7 +89,7 @@ class CommentTypeTest extends CommentTestBase {
     $this->assertText('Target entity type');
     // Save the form and ensure the entity-type value is preserved even though
     // the field isn't present.
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
     \Drupal::entityTypeManager()->getStorage('comment_type')->resetCache(['foo']);
     $comment_type = CommentType::load('foo');
     $this->assertEqual($comment_type->getTargetEntityTypeId(), 'node');

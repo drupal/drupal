@@ -131,7 +131,7 @@ class TextFieldTest extends StringFieldTest {
     $edit = [
       'text_long[0][value]' => 'Long text',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet('entity_test/1');
     $this->assertText('Long text');
@@ -204,7 +204,7 @@ class TextFieldTest extends StringFieldTest {
     $edit = [
       "{$field_name}[0][value]" => $value,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertText('entity_test ' . $id . ' has been created.', 'Entity was created');
@@ -244,7 +244,7 @@ class TextFieldTest extends StringFieldTest {
     $edit = [
       "{$field_name}[0][format]" => $format_id,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $this->assertText('entity_test ' . $id . ' has been updated.', 'Entity was updated');
 
     // Display the entity.

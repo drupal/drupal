@@ -89,7 +89,7 @@ class UninstallTest extends BrowserTestBase {
     $this->assertNoText('Configuration deletions', 'No configuration deletions listed on the module install confirmation page.');
     $this->assertText('Configuration updates', 'Configuration updates listed on the module install confirmation page.');
     $this->assertText($node_type->label());
-    $this->drupalPostForm(NULL, [], 'Uninstall');
+    $this->submitForm([], 'Uninstall');
     $this->assertText('The selected modules have been uninstalled.', 'Modules status has been updated.');
 
     // Uninstall node testing that the configuration that will be deleted is
@@ -121,7 +121,7 @@ class UninstallTest extends BrowserTestBase {
     $cached = \Drupal::cache()->get('uninstall_test');
     $this->assertEqual($cached->data, 'test_uninstall_page', new FormattableMarkup('Cache entry found: @bin', ['@bin' => $cached->data]));
 
-    $this->drupalPostForm(NULL, [], 'Uninstall');
+    $this->submitForm([], 'Uninstall');
     $this->assertText('The selected modules have been uninstalled.', 'Modules status has been updated.');
     // Check that the page does not have double escaped HTML tags.
     $this->assertNoRaw('&lt;label');
@@ -167,7 +167,7 @@ class UninstallTest extends BrowserTestBase {
     $this->assertText('Module installer config test');
     $edit['uninstall[module_installer_config_test]'] = TRUE;
     $this->drupalPostForm('admin/modules/uninstall', $edit, 'Uninstall');
-    $this->drupalPostForm(NULL, [], 'Uninstall');
+    $this->submitForm([], 'Uninstall');
     $this->assertText('The selected modules have been uninstalled.');
     $this->assertNoText('Module installer config test');
   }

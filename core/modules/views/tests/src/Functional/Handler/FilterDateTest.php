@@ -195,7 +195,7 @@ class FilterDateTest extends ViewTestBase {
     $edit = [];
     // Generate a definitive wrong value, which should be checked by validation.
     $edit['options[value][value]'] = $this->randomString() . '-------';
-    $this->drupalPostForm(NULL, $edit, 'Apply');
+    $this->submitForm($edit, 'Apply');
     $this->assertText('Invalid date format.', 'Make sure that validation is run and the invalidate date format is identified.');
   }
 
@@ -205,8 +205,8 @@ class FilterDateTest extends ViewTestBase {
   protected function _testFilterDateUI() {
     $this->drupalLogin($this->drupalCreateUser(['administer views']));
     $this->drupalGet('admin/structure/views/nojs/handler/test_filter_date_between/default/filter/created');
-    $this->drupalPostForm(NULL, [], 'Expose filter');
-    $this->drupalPostForm(NULL, [], 'Grouped filters');
+    $this->submitForm([], 'Expose filter');
+    $this->submitForm([], 'Grouped filters');
 
     $edit = [];
     $edit['options[group_info][group_items][1][title]'] = 'simple-offset';
@@ -223,7 +223,7 @@ class FilterDateTest extends ViewTestBase {
     $edit['options[group_info][group_items][3][value][min]'] = $this->dateFormatter->format(150000, 'custom', 'Y-m-d H:i:s');
     $edit['options[group_info][group_items][3][value][max]'] = $this->dateFormatter->format(250000, 'custom', 'Y-m-d H:i:s');
 
-    $this->drupalPostForm(NULL, $edit, 'Apply');
+    $this->submitForm($edit, 'Apply');
 
     $this->drupalGet('admin/structure/views/nojs/handler/test_filter_date_between/default/filter/created');
     foreach ($edit as $name => $value) {
@@ -241,21 +241,21 @@ class FilterDateTest extends ViewTestBase {
     $path = 'test_filter_date_between-path';
     $this->drupalPostForm('admin/structure/views/view/test_filter_date_between/edit', [], 'Add Page');
     $this->drupalPostForm('admin/structure/views/nojs/display/test_filter_date_between/page_1/path', ['path' => $path], 'Apply');
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
 
     $this->drupalGet($path);
-    $this->drupalPostForm(NULL, [], 'Apply');
+    $this->submitForm([], 'Apply');
     $results = $this->cssSelect('.view-content .field-content');
     $this->assertCount(4, $results);
-    $this->drupalPostForm(NULL, ['created' => '1'], 'Apply');
+    $this->submitForm(['created' => '1'], 'Apply');
     $results = $this->cssSelect('.view-content .field-content');
     $this->assertCount(1, $results);
     $this->assertEqual($results[0]->getText(), $this->nodes[3]->id());
-    $this->drupalPostForm(NULL, ['created' => '2'], 'Apply');
+    $this->submitForm(['created' => '2'], 'Apply');
     $results = $this->cssSelect('.view-content .field-content');
     $this->assertCount(1, $results);
     $this->assertEqual($results[0]->getText(), $this->nodes[3]->id());
-    $this->drupalPostForm(NULL, ['created' => '3'], 'Apply');
+    $this->submitForm(['created' => '3'], 'Apply');
     $results = $this->cssSelect('.view-content .field-content');
     $this->assertCount(1, $results);
     $this->assertEqual($results[0]->getText(), $this->nodes[1]->id());
@@ -267,7 +267,7 @@ class FilterDateTest extends ViewTestBase {
     $edit['options[operator]'] = '>';
     $edit['options[value][type]'] = 'date';
     $edit['options[value][value]'] = $this->dateFormatter->format(350000, 'custom', 'Y-m-d H:i:s');
-    $this->drupalPostForm(NULL, $edit, 'Apply');
+    $this->submitForm($edit, 'Apply');
     $this->drupalPostForm('admin/structure/views/view/test_filter_date_between', [], 'Save');
     $this->assertConfigSchemaByName('views.view.test_filter_date_between');
 
@@ -276,7 +276,7 @@ class FilterDateTest extends ViewTestBase {
     $results = $this->cssSelect('.view-content .field-content');
     $this->assertCount(1, $results);
     $this->assertEqual($results[0]->getText(), $this->nodes[3]->id());
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'created' => $this->dateFormatter->format(250000, 'custom', 'Y-m-d H:i:s'),
     ], 'Apply');
     $results = $this->cssSelect('.view-content .field-content');
@@ -292,8 +292,8 @@ class FilterDateTest extends ViewTestBase {
     $this->drupalLogin($this->drupalCreateUser(['administer views']));
     $this->drupalPostForm('admin/structure/views/nojs/add-handler/test_filter_date_between/default/filter', ['name[node__field_date.field_date_value]' => 'node__field_date.field_date_value'], 'Add and configure filter criteria');
 
-    $this->drupalPostForm(NULL, [], 'Expose filter');
-    $this->drupalPostForm(NULL, [], 'Grouped filters');
+    $this->submitForm([], 'Expose filter');
+    $this->submitForm([], 'Grouped filters');
 
     $edit = [];
     $edit['options[group_info][group_items][1][title]'] = 'simple-offset';
@@ -310,7 +310,7 @@ class FilterDateTest extends ViewTestBase {
     $edit['options[group_info][group_items][3][value][min]'] = $this->dateFormatter->format(150000, 'custom', 'Y-m-d H:i:s');
     $edit['options[group_info][group_items][3][value][max]'] = $this->dateFormatter->format(250000, 'custom', 'Y-m-d H:i:s');
 
-    $this->drupalPostForm(NULL, $edit, 'Apply');
+    $this->submitForm($edit, 'Apply');
 
     $this->drupalPostForm('admin/structure/views/view/test_filter_date_between', [], 'Save');
     $this->assertConfigSchemaByName('views.view.test_filter_date_between');
@@ -328,7 +328,7 @@ class FilterDateTest extends ViewTestBase {
     ];
     $this->drupalPostForm('admin/structure/views/nojs/display/test_filter_date_between/page_1/path', $edit, 'Apply');
 
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
 
     $this->drupalGet('exposed-date-filter');
     $this->assertSession()->fieldExists('created');

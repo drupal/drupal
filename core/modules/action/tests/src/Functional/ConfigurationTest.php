@@ -62,7 +62,7 @@ class ConfigurationTest extends BrowserTestBase {
     $new_action_label = $this->randomMachineName();
     $edit['label'] = $new_action_label;
     $edit['url'] = 'admin';
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
 
     // Make sure that the action updated properly.
@@ -79,7 +79,7 @@ class ConfigurationTest extends BrowserTestBase {
     $this->clickLink(t('Delete'));
     $this->assertSession()->statusCodeEquals(200);
     $edit = [];
-    $this->drupalPostForm(NULL, $edit, 'Delete');
+    $this->submitForm($edit, 'Delete');
     $this->assertSession()->statusCodeEquals(200);
 
     // Make sure that the action was actually deleted.

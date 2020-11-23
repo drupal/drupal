@@ -226,7 +226,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $edit = [
       'settings[test_field_storage_setting]' => $string,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save field settings');
+    $this->submitForm($edit, 'Save field settings');
 
     // Go to the field edit page.
     $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/' . $field_id);
@@ -234,7 +234,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       'settings[test_field_setting]' => $string,
     ];
     $this->assertText('Default value', 'Default value heading is shown');
-    $this->drupalPostForm(NULL, $edit, 'Save settings');
+    $this->submitForm($edit, 'Save settings');
 
     // Assert the field settings are correct.
     $this->assertFieldSettings($this->contentType, $this->fieldName, $string);
@@ -369,7 +369,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       // Delete all the body field instances.
       $this->drupalGet('admin/structure/types/manage/' . $node_type . '/fields/node.' . $node_type . '.' . $this->fieldName);
       $this->clickLink(t('Delete'));
-      $this->drupalPostForm(NULL, [], 'Delete');
+      $this->submitForm([], 'Delete');
     }
     // Check "Re-use existing field" appears.
     $this->drupalGet('admin/structure/types/manage/page/fields/add-field');
@@ -478,7 +478,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
 
     // Check that the default value can be emptied.
     $edit = [$element_name => ''];
-    $this->drupalPostForm(NULL, $edit, 'Save settings');
+    $this->submitForm($edit, 'Save settings');
     $this->assertText("Saved $field_name configuration", 'The form was successfully submitted.');
     $field = FieldConfig::loadByName('node', $this->contentType, $field_name);
     $this->assertEqual($field->getDefaultValueLiteral(), [], 'The default value was correctly saved.');
@@ -493,10 +493,10 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $edit = [
       'required' => 1,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save settings');
+    $this->submitForm($edit, 'Save settings');
 
     $this->drupalGet($admin_path);
-    $this->drupalPostForm(NULL, [], 'Save settings');
+    $this->submitForm([], 'Save settings');
     $this->assertText("Saved $field_name configuration", 'The form was successfully submitted.');
     $field = FieldConfig::loadByName('node', $this->contentType, $field_name);
     $this->assertEqual($field->getDefaultValueLiteral(), [], 'The default value was correctly saved.');

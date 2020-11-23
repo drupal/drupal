@@ -40,7 +40,7 @@ class DisplayTest extends UITestBase {
     $this->assertNoText('Block');
     $this->assertNoText('Block 2');
 
-    $this->drupalPostForm(NULL, [], 'Add Block');
+    $this->submitForm([], 'Add Block');
     $this->assertText('Block');
     $this->assertNoText('Block 2');
   }
@@ -67,8 +67,8 @@ class DisplayTest extends UITestBase {
       'displays[page_1][weight]' => 2,
       'displays[block_1][weight]' => 1,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Apply');
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm($edit, 'Apply');
+    $this->submitForm([], 'Save');
 
     $view = Views::getView($view['id']);
     $displays = $view->storage->get('display');
@@ -92,12 +92,12 @@ class DisplayTest extends UITestBase {
 
     $this->assertSession()->buttonExists('edit-displays-settings-settings-content-tab-content-details-top-actions-disable');
     $this->assertSession()->buttonNotExists('edit-displays-settings-settings-content-tab-content-details-top-actions-enable');
-    $this->drupalPostForm(NULL, [], 'Disable Page');
+    $this->submitForm([], 'Disable Page');
     $this->assertNotEmpty($this->xpath('//div[contains(@class, :class)]', [':class' => 'views-display-disabled']), 'Make sure the disabled display css class appears once the display is marked as such.');
 
     $this->assertSession()->buttonNotExists('edit-displays-settings-settings-content-tab-content-details-top-actions-disable');
     $this->assertSession()->buttonExists('edit-displays-settings-settings-content-tab-content-details-top-actions-enable');
-    $this->drupalPostForm(NULL, [], 'Enable Page');
+    $this->submitForm([], 'Enable Page');
     $this->assertEmpty($this->xpath('//div[contains(@class, :class)]', [':class' => 'views-display-disabled']), 'Make sure the disabled display css class does not appears once the display is enabled again.');
   }
 
@@ -176,7 +176,7 @@ class DisplayTest extends UITestBase {
     $this->assertSession()->linkExists('Custom URL', 0, 'The link option has custom URL as summary.');
 
     // Test the default link_url value for new display
-    $this->drupalPostForm(NULL, [], 'Add Block');
+    $this->submitForm([], 'Add Block');
     $this->assertSession()->addressEquals('admin/structure/views/view/test_display/edit/block_2');
     $this->clickLink(t('Custom URL'));
     $this->assertSession()->fieldValueEquals('link_url', 'a-custom-url');
@@ -253,7 +253,7 @@ class DisplayTest extends UITestBase {
     $this->assertSession()->buttonNotExists('Enable ' . $display_title);
 
     // Disable the display so we can test the rendering of the "Enable" button.
-    $this->drupalPostForm(NULL, [], 'Disable ' . $display_title);
+    $this->submitForm([], 'Disable ' . $display_title);
     $this->assertSession()->buttonExists('Enable ' . $display_title);
     $this->assertSession()->buttonNotExists('Disable ' . $display_title);
 
@@ -272,7 +272,7 @@ class DisplayTest extends UITestBase {
 
     // Remove a display and test if the override option is hidden.
     $this->drupalPostForm('admin/structure/views/view/test_display/edit/block_1', [], 'Delete Block');
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
 
     $this->drupalGet('admin/structure/views/nojs/handler/test_display/page_1/field/title');
     $this->assertNoText('All displays');
@@ -284,7 +284,7 @@ class DisplayTest extends UITestBase {
 
     // Test that the override option is shown if the current display is
     // overridden so that the option to revert is available.
-    $this->drupalPostForm(NULL, ['override[dropdown]' => 'page_1'], 'Apply');
+    $this->submitForm(['override[dropdown]' => 'page_1'], 'Apply');
     \Drupal::configFactory()->getEditable('views.settings')->set('ui.show.master_display', FALSE)->save();
     $this->drupalGet('admin/structure/views/nojs/handler/test_display/page_1/field/title');
     $this->assertText('Revert to default');

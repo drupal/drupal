@@ -52,7 +52,7 @@ class LocaleFileSystemFormTest extends BrowserTestBase {
     $fields = [
       'translation_path' => $translation_path,
     ];
-    $this->drupalPostForm(NULL, $fields, 'Save configuration');
+    $this->submitForm($fields, 'Save configuration');
     $this->drupalGet('admin/config/media/file-system');
     $this->assertSession()->fieldValueEquals('translation_path', $translation_path);
     $this->assertEqual($translation_path, $this->config('locale.settings')->get('translation.path'));

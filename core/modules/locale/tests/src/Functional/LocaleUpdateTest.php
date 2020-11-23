@@ -325,7 +325,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
       'uninstall[locale_test_translate]' => 1,
     ];
     $this->drupalPostForm('admin/modules/uninstall', $edit, 'Uninstall');
-    $this->drupalPostForm(NULL, [], 'Uninstall');
+    $this->submitForm([], 'Uninstall');
 
     // Check if the file data is removed from the database.
     $history = locale_translation_get_file_history();

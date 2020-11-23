@@ -58,7 +58,7 @@ class NodeRevisionWizardTest extends WizardTestBase {
     $view['page[create]'] = FALSE;
     $view['show[type]'] = 'article';
     $view['show[sort]'] = 'changed:DESC';
-    $this->drupalPostForm(NULL, $view, 'Save and edit');
+    $this->submitForm($view, 'Save and edit');
 
     $view = Views::getView($view['id']);
     $view->initHandlers();
@@ -93,7 +93,7 @@ class NodeRevisionWizardTest extends WizardTestBase {
     $view['page[create]'] = FALSE;
     $view['show[type]'] = 'all';
     $view['show[sort]'] = 'changed:DESC';
-    $this->drupalPostForm(NULL, $view, 'Save and edit');
+    $this->submitForm($view, 'Save and edit');
 
     $view = Views::getView($view['id']);
     $view->initHandlers();

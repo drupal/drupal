@@ -288,18 +288,18 @@ class MenuUiTest extends BrowserTestBase {
 
     $this->clickLink(t('Add link'));
     $link_title = $this->randomString();
-    $this->drupalPostForm(NULL, ['link[0][uri]' => '/', 'title[0][value]' => $link_title], 'Save');
+    $this->submitForm(['link[0][uri]' => '/', 'title[0][value]' => $link_title], 'Save');
     $this->assertSession()->addressEquals(Url::fromRoute('entity.menu.edit_form', ['menu' => $menu_name]));
     // Test the 'Edit' operation.
     $this->clickLink(t('Edit'));
     $this->assertSession()->fieldValueEquals('title[0][value]', $link_title);
     $link_title = $this->randomString();
-    $this->drupalPostForm(NULL, ['title[0][value]' => $link_title], 'Save');
+    $this->submitForm(['title[0][value]' => $link_title], 'Save');
     $this->assertSession()->addressEquals(Url::fromRoute('entity.menu.edit_form', ['menu' => $menu_name]));
     // Test the 'Delete' operation.
     $this->clickLink(t('Delete'));
     $this->assertRaw(t('Are you sure you want to delete the custom menu link %item?', ['%item' => $link_title]));
-    $this->drupalPostForm(NULL, [], 'Delete');
+    $this->submitForm([], 'Delete');
     $this->assertSession()->addressEquals(Url::fromRoute('entity.menu.edit_form', ['menu' => $menu_name]));
 
     // Add nodes to use as links for menu links.
@@ -626,7 +626,7 @@ class MenuUiTest extends BrowserTestBase {
     ];
 
     // Add menu link.
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertText('The menu link has been saved.');
 
@@ -905,7 +905,7 @@ class MenuUiTest extends BrowserTestBase {
     $block_id = $this->blockPlacements[$menu->id()];
     $this->drupalGet('admin/structure/block/manage/' . $block_id);
     $this->assertSession()->checkboxNotChecked('settings[expand_all_items]');
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'settings[depth]' => 2,
       'settings[level]' => 1,
       'settings[expand_all_items]' => 1,
@@ -991,7 +991,7 @@ class MenuUiTest extends BrowserTestBase {
     $menu_id = $this->menu->id();
     $block_id = $this->blockPlacements[$menu_id];
     $this->drupalGet('admin/structure/block/manage/' . $block_id);
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'settings[depth]' => 3,
       'settings[level]' => 2,
     ], 'Save block');

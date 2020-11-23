@@ -51,7 +51,7 @@ class LayoutBuilderThemeSuggestionsTest extends BrowserTestBase {
     ]));
 
     $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default');
-    $this->drupalPostForm(NULL, ['layout[enabled]' => TRUE], 'Save');
+    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
   }
 
   /**

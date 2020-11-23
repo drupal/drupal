@@ -99,7 +99,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $this->drupalGet("node/$nid/edit");
     $this->assertSession()->buttonNotExists('Upload');
     $this->assertSession()->buttonExists('Remove');
-    $this->drupalPostForm(NULL, [], 'Remove');
+    $this->submitForm([], 'Remove');
 
     // Ensure the page now has an upload button instead of a remove button.
     $this->assertSession()->buttonNotExists('Remove');
@@ -110,7 +110,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $this->assertTrue(isset($label[0]), 'Label for upload found.');
 
     // Save the node and ensure it does not have the file.
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
     $node = $node_storage->loadUnchanged($nid);
     $this->assertTrue(empty($node->{$field_name}->target_id), 'File was successfully removed from the node.');
   }
@@ -146,7 +146,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
         $edit = ['files[' . $each_field_name . '_' . $delta . '][]' => \Drupal::service('file_system')->realpath($test_file->getFileUri())];
         // If the Upload button doesn't exist, drupalPostForm() will
         // automatically fail with an assertion message.
-        $this->drupalPostForm(NULL, $edit, 'Upload');
+        $this->submitForm($edit, 'Upload');
       }
     }
     $this->assertSession()->buttonNotExists('Upload');
@@ -200,7 +200,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $this->assertSession()->buttonNotExists('Remove');
 
     // Save the node and ensure it does not have any files.
-    $this->drupalPostForm(NULL, ['title[0][value]' => $this->randomMachineName()], 'Save');
+    $this->submitForm(['title[0][value]' => $this->randomMachineName()], 'Save');
     preg_match('/node\/([0-9])/', $this->getUrl(), $matches);
     $nid = $matches[1];
     $node = $node_storage->loadUnchanged($nid);
@@ -373,14 +373,14 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
     // Upload file with incorrect extension, check for validation error.
     $edit[$name] = \Drupal::service('file_system')->realpath($test_file_image->getFileUri());
-    $this->drupalPostForm(NULL, $edit, 'Upload');
+    $this->submitForm($edit, 'Upload');
 
     $error_message = t('Only files with the following extensions are allowed: %files-allowed.', ['%files-allowed' => 'txt']);
     $this->assertRaw($error_message);
 
     // Upload file with correct extension, check that error message is removed.
     $edit[$name] = \Drupal::service('file_system')->realpath($test_file_text->getFileUri());
-    $this->drupalPostForm(NULL, $edit, 'Upload');
+    $this->submitForm($edit, 'Upload');
     $this->assertNoRaw($error_message);
   }
 
@@ -403,7 +403,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
     // Upload a file.
     $edit['files[' . $field_name . '_0][]'] = $this->container->get('file_system')->realpath($file->getFileUri());
-    $this->drupalPostForm(NULL, $edit, "{$field_name}_0_upload_button");
+    $this->submitForm($edit, "{$field_name}_0_upload_button");
 
     $elements = $this->xpath($xpath);
 
@@ -521,7 +521,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
     $file_id_field = $this->assertSession()->hiddenFieldExists($field_name . '[0][fids]');
     $file_id_field->setValue((string) $victim_tmp_file->id());
-    $this->drupalPostForm(NULL, [], 'Remove');
+    $this->submitForm([], 'Remove');
 
     // The victim's temporary file should not be removed by the attacker's
     // POST request.

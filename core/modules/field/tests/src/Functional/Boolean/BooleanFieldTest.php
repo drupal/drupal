@@ -114,7 +114,7 @@ class BooleanFieldTest extends BrowserTestBase {
     $edit = [
       "{$field_name}[value]" => 1,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertText('entity_test ' . $id . ' has been created.');
@@ -155,7 +155,7 @@ class BooleanFieldTest extends BrowserTestBase {
     $this->drupalGet($fieldEditUrl);
 
     // Click on the widget settings button to open the widget settings form.
-    $this->drupalPostForm(NULL, [], $field_name . "_settings_edit");
+    $this->submitForm([], $field_name . "_settings_edit");
 
     $this->assertText(
       'Use field label instead of the "On" label as the label.',
@@ -164,15 +164,15 @@ class BooleanFieldTest extends BrowserTestBase {
 
     // Enable setting.
     $edit = ['fields[' . $field_name . '][settings_edit_form][settings][display_label]' => 1];
-    $this->drupalPostForm(NULL, $edit, $field_name . "_plugin_settings_update");
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm($edit, $field_name . "_plugin_settings_update");
+    $this->submitForm([], 'Save');
 
     // Go again to the form display page and check if the setting
     // is stored and has the expected effect.
     $this->drupalGet($fieldEditUrl);
     $this->assertText('Use field label: Yes', 'Checking the display settings checkbox updated the value.');
 
-    $this->drupalPostForm(NULL, [], $field_name . "_settings_edit");
+    $this->submitForm([], $field_name . "_settings_edit");
     $this->assertText(
       'Use field label instead of the "On" label as the label.',
       t('Display setting checkbox is available')
@@ -233,7 +233,7 @@ class BooleanFieldTest extends BrowserTestBase {
     $this->assertSession()->fieldExists("{$field_name}[value]");
 
     // Should be posted OK.
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertText('entity_test ' . $id . ' has been created.');
@@ -244,7 +244,7 @@ class BooleanFieldTest extends BrowserTestBase {
     // Field should not be there anymore.
     $this->assertSession()->fieldNotExists("{$field_name}[value]");
     // Should still be able to post the form.
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertText('entity_test ' . $id . ' has been created.');

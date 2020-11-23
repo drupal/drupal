@@ -106,7 +106,7 @@ class ForumUninstallTest extends BrowserTestBase {
     $this->drupalPostForm('admin/modules/uninstall', [
       'uninstall[forum]' => 1,
     ], 'Uninstall');
-    $this->drupalPostForm(NULL, [], 'Uninstall');
+    $this->submitForm([], 'Uninstall');
 
     // Check that the field is now deleted.
     $field_storage = FieldStorageConfig::loadByName('node', 'taxonomy_forums');
@@ -123,7 +123,7 @@ class ForumUninstallTest extends BrowserTestBase {
     $this->assertTrue((bool) NodeType::load('forum'), 'Node type with machine forum created.');
     $this->drupalGet('admin/structure/types/manage/forum');
     $this->clickLink(t('Delete'));
-    $this->drupalPostForm(NULL, [], 'Delete');
+    $this->submitForm([], 'Delete');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertFalse((bool) NodeType::load('forum'), 'Node type with machine forum deleted.');
 

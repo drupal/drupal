@@ -191,7 +191,7 @@ class BulkFormAccessTest extends NodeTestBase {
       'action' => 'node_delete_action',
     ];
     $this->drupalPostForm('test-node-bulk-form', $edit, 'Apply to selected items');
-    $this->drupalPostForm(NULL, [], 'Delete');
+    $this->submitForm([], 'Delete');
     // Ensure the private node still exists.
     $private_node = Node::load($private_node->id());
     $this->assertNotNull($private_node, 'The private node has not been deleted.');

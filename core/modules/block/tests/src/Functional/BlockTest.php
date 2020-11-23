@@ -44,7 +44,7 @@ class BlockTest extends BlockTestBase {
     $this->drupalGet('admin/structure/block/add/' . $block_name . '/' . $default_theme);
     $this->assertSession()->checkboxChecked('edit-visibility-request-path-negate-0');
 
-    $this->drupalPostForm(NULL, $edit, 'Save block');
+    $this->submitForm($edit, 'Save block');
     $this->assertText('The block configuration has been saved.', 'Block was saved');
 
     $this->clickLink('Configure');
@@ -90,7 +90,7 @@ class BlockTest extends BlockTestBase {
     $edit = [
       'visibility[user_role][roles][' . RoleInterface::AUTHENTICATED_ID . ']' => FALSE,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save block');
+    $this->submitForm($edit, 'Save block');
     $this->clickLink('Configure');
     $this->assertSession()->checkboxNotChecked('edit-visibility-user-role-roles-authenticated');
 
@@ -230,7 +230,7 @@ class BlockTest extends BlockTestBase {
     $this->drupalGet('admin/structure/block/manage/' . $block['id']);
     $this->clickLink(t('Remove block'));
     $this->assertRaw(t('Are you sure you want to remove the block @name?', ['@name' => $block['settings[label]']]));
-    $this->drupalPostForm(NULL, [], 'Remove');
+    $this->submitForm([], 'Remove');
     $this->assertRaw(t('The block %name has been removed.', ['%name' => $block['settings[label]']]));
 
     // Test deleting a block via "Configure block" link.
@@ -238,7 +238,7 @@ class BlockTest extends BlockTestBase {
     $this->drupalGet('admin/structure/block/manage/' . $block->id(), ['query' => ['destination' => 'admin']]);
     $this->clickLink(t('Remove block'));
     $this->assertRaw(t('Are you sure you want to remove the block @name?', ['@name' => $block->label()]));
-    $this->drupalPostForm(NULL, [], 'Remove');
+    $this->submitForm([], 'Remove');
     $this->assertRaw(t('The block %name has been removed.', ['%name' => $block->label()]));
     $this->assertSession()->addressEquals('admin');
     $this->assertNoRaw($block->id());

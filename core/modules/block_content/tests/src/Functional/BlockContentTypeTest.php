@@ -68,7 +68,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
       'id' => 'foo',
       'label' => 'title for foo',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $block_type = BlockContentType::load('foo');
     $this->assertInstanceOf(BlockContentType::class, $block_type);
 
@@ -121,7 +121,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     ];
     $this->drupalGet('admin/structure/block/block-content/manage/basic');
     $this->assertSession()->titleEquals('Edit basic custom block type | Drupal');
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $front_page_path = Url::fromRoute('<front>')->toString();
     $this->assertBreadcrumb('admin/structure/block/block-content/manage/basic/fields', [
       $front_page_path => 'Home',
@@ -221,12 +221,12 @@ class BlockContentTypeTest extends BlockContentTestBase {
         }
         // Create a new block.
         $edit = ['info[0][value]' => $this->randomMachineName(8)];
-        $this->drupalPostForm(NULL, $edit, 'Save');
+        $this->submitForm($edit, 'Save');
         $blocks = $storage->loadByProperties(['info' => $edit['info[0][value]']]);
         if (!empty($blocks)) {
           $block = reset($blocks);
           $this->assertSession()->addressEquals(Url::fromRoute('block.admin_add', ['plugin_id' => 'block_content:' . $block->uuid(), 'theme' => $theme]));
-          $this->drupalPostForm(NULL, ['region' => 'content'], 'Save block');
+          $this->submitForm(['region' => 'content'], 'Save block');
           $this->assertSession()->addressEquals(Url::fromRoute('block.admin_display_theme', ['theme' => $theme], ['query' => ['block-placement' => Html::getClass($edit['info[0][value]'])]]));
         }
         else {
@@ -241,7 +241,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $this->clickLink(t('Add custom block'));
     $this->clickLink('foo');
     $edit = ['info[0][value]' => $this->randomMachineName(8)];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $blocks = $storage->loadByProperties(['info' => $edit['info[0][value]']]);
     if (!empty($blocks)) {
       $this->assertSession()->addressEquals(Url::fromRoute('entity.block_content.collection'));
