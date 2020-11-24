@@ -156,6 +156,23 @@ class EditorAdminTest extends BrowserTestBase {
   }
 
   /**
+   * Tests switching text editor to none does not throw a TypeError.
+   */
+  public function testSwitchEditorToNone() {
+    $this->enableUnicornEditor();
+    $this->drupalLogin($this->adminUser);
+    $this->drupalGet('admin/config/content/formats/manage/filtered_html');
+    $edit = $this->selectUnicornEditor();
+
+    // Switch editor to 'None'.
+    $edit = [
+      'editor[editor]' => '',
+    ];
+    $this->submitForm($edit, 'Configure');
+    $this->submitForm($edit, 'Save configuration');
+  }
+
+  /**
    * Adds an editor to a new format using the UI.
    *
    * @param string $format_id
