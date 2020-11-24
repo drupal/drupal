@@ -1067,7 +1067,7 @@ function menu_tree_output($tree) {
     // the active class accordingly. But local tasks do not appear in menu
     // trees, so if the current path is a local task, and this link is its
     // tab root, then we have to set the class manually.
-    if ($data['link']['href'] == $router_item['tab_root_href'] && $data['link']['href'] != $_GET['q']) {
+    if ($router_item && $data['link']['href'] == $router_item['tab_root_href'] && $data['link']['href'] != $_GET['q']) {
       $data['link']['localized_options']['attributes']['class'][] = 'active';
     }
 
