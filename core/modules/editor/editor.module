@@ -247,7 +247,9 @@ function editor_form_filter_admin_format_submit($form, FormStateInterface $form_
     $original_editor->delete();
   }
 
-  if ($editor_plugin = $form_state->get('editor_plugin')) {
+  $editor_set = $form_state->getValue(['editor', 'editor']) !== "";
+  $subform_array_exists = (!empty($form['editor']['settings']['subform']) && is_array($form['editor']['settings']['subform']));
+  if (($editor_plugin = $form_state->get('editor_plugin')) && $editor_set && $subform_array_exists) {
     $subform_state = SubformState::createForSubform($form['editor']['settings']['subform'], $form, $form_state);
     $editor_plugin->submitConfigurationForm($form['editor']['settings']['subform'], $subform_state);
   }
