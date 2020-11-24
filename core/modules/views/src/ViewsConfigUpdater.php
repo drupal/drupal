@@ -138,6 +138,9 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
       if ($this->processMultivalueBaseFieldHandler($handler, $handler_type, $key, $display_id, $view)) {
         $changed = TRUE;
       }
+      if ($this->processSortIdentifierUpdateHandler($handler, $handler_type)) {
+        $changed = TRUE;
+      }
       return $changed;
     });
   }
@@ -475,6 +478,40 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
       default:
         return $single_operator;
     }
+  }
+
+  /**
+   * Updates the sort handlers by adding default sort identifiers.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The View to update.
+   *
+   * @return bool
+   *   Whether the view was updated.
+   */
+  public function needsSortIdentifierUpdate(ViewEntityInterface $view): bool {
+    return $this->processDisplayHandlers($view, TRUE, function (array &$handler, string $handler_type): bool {
+      return $this->processSortIdentifierUpdateHandler($handler, $handler_type);
+    });
+  }
+
+  /**
+   * Processes sort handlers by adding the sort identifier.
+   *
+   * @param array $handler
+   *   A display handler.
+   * @param string $handler_type
+   *   The handler type.
+   *
+   * @return bool
+   *   Whether the handler was updated.
+   */
+  protected function processSortIdentifierUpdateHandler(array &$handler, string $handler_type): bool {
+    if ($handler_type === 'sort' && !isset($handler['expose']['identifier'])) {
+      $handler['expose']['identifier'] = $handler['id'];
+      return TRUE;
+    }
+    return FALSE;
   }
 
 }

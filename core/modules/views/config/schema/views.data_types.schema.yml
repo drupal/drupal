@@ -281,6 +281,9 @@ views_sort_expose:
     label:
       type: label
       label: 'Label'
+    identifier:
+      type: string
+      label: 'Identifier'
 
 views_area:
   type: views_handler

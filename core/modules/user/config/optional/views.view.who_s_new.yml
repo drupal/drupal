@@ -156,6 +156,7 @@ display:
           exposed: false
           expose:
             label: ''
+            identifier: created
           granularity: second
           plugin_id: date
           entity_type: user
