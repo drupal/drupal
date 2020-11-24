@@ -103,6 +103,15 @@ h2 {
 }
   }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "metropolis", sans-serif;
+}
+
 [dir="ltr"] ul {
   margin-left: 1.5em;
 }
