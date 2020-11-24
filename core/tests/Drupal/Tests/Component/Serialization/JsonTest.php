@@ -69,7 +69,8 @@ class JsonTest extends TestCase {
   public function testEncodingLength() {
     // Verify that JSON encoding produces a string with all of the characters.
     $json = Json::encode($this->string);
-    $this->assertTrue(strlen($json) > strlen($this->string), 'A JSON encoded string is larger than the source string.');
+    // Verify that a JSON-encoded string is larger than the source string.
+    $this->assertGreaterThan(strlen($this->string), strlen($json));
   }
 
   /**

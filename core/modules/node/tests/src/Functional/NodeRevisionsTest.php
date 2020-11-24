@@ -246,7 +246,7 @@ class NodeRevisionsTest extends NodeTestBase {
       ->execute()
       ->fetchCol();
     $default_revision_vid = $default_revision[0];
-    $this->assertTrue($new_node_revision->getRevisionId() > $default_revision_vid, 'Revision vid is greater than default revision vid.');
+    $this->assertGreaterThan($default_revision_vid, $new_node_revision->getRevisionId());
 
     // Create an 'EN' node with a revision log message.
     $node = $this->drupalCreateNode();
@@ -426,7 +426,7 @@ class NodeRevisionsTest extends NodeTestBase {
     $node_storage->resetCache();
     /** @var \Drupal\node\NodeInterface $node */
     $node = $node_storage->load($node->id());
-    $this->assertTrue($node->getRevisionId() > $translation_revision_id);
+    $this->assertGreaterThan($translation_revision_id, $node->getRevisionId());
     $this->assertEqual($node->label(), $default_translation_title);
     $this->assertEqual($node->getTranslation('it')->label(), $translated_title);
     $this->assertNotEqual($node->untranslatable_string_field->value, $untranslatable_string);
@@ -441,7 +441,7 @@ class NodeRevisionsTest extends NodeTestBase {
     $node_storage->resetCache();
     /** @var \Drupal\node\NodeInterface $node */
     $node = $node_storage->load($node->id());
-    $this->assertTrue($node->getRevisionId() > $latest_revision_id);
+    $this->assertGreaterThan($latest_revision_id, $node->getRevisionId());
     $this->assertEqual($node->label(), $default_translation_title);
     $this->assertEqual($node->getTranslation('it')->label(), $translated_title);
     $this->assertEqual($node->untranslatable_string_field->value, $untranslatable_string);
@@ -458,7 +458,7 @@ class NodeRevisionsTest extends NodeTestBase {
     $node_storage->resetCache();
     /** @var \Drupal\node\NodeInterface $node */
     $node = $node_storage->load($node->id());
-    $this->assertTrue($node->getRevisionId() > $latest_revision_id);
+    $this->assertGreaterThan($latest_revision_id, $node->getRevisionId());
     $this->assertEqual($node->label(), $initial_title);
     $this->assertFalse($node->hasTranslation('it'));
   }

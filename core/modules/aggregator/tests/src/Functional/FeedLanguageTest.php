@@ -89,7 +89,8 @@ class FeedLanguageTest extends AggregatorTestBase {
     foreach ($feeds as $feed) {
       /** @var \Drupal\aggregator\ItemInterface[] $items */
       $items = \Drupal::entityTypeManager()->getStorage('aggregator_item')->loadByProperties(['fid' => $feed->id()]);
-      $this->assertTrue(count($items) > 0, 'Feed items were created.');
+      // Verify that the feed items were created.
+      $this->assertNotEmpty($items);
       foreach ($items as $item) {
         $this->assertEqual($item->language()->getId(), $feed->language()->getId());
       }

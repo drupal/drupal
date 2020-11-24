@@ -52,9 +52,9 @@ class InstallTest extends BrowserTestBase {
    */
   public function testRequiredModuleSchemaVersions() {
     $version = drupal_get_installed_schema_version('system', TRUE);
-    $this->assertTrue($version > 0, 'System module version is > 0.');
+    $this->assertGreaterThan(0, $version);
     $version = drupal_get_installed_schema_version('user', TRUE);
-    $this->assertTrue($version > 0, 'User module version is > 0.');
+    $this->assertGreaterThan(0, $version);
 
     $post_update_key_value = \Drupal::keyValue('post_update');
     $existing_updates = $post_update_key_value->get('existing_updates', []);

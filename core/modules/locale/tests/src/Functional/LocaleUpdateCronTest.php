@@ -119,8 +119,10 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
     $history = locale_translation_get_file_history();
     $initial = $initial_history['contrib_module_two']['de'];
     $current = $history['contrib_module_two']['de'];
-    $this->assertTrue($current->timestamp > $initial->timestamp, 'Timestamp is updated');
-    $this->assertTrue($current->last_checked > $initial->last_checked, 'Last checked is updated');
+    // Verify that the translation of contrib_module_one is imported and
+    // updated.
+    $this->assertGreaterThan($initial->timestamp, $current->timestamp);
+    $this->assertGreaterThan($initial->last_checked, $current->last_checked);
   }
 
 }

@@ -66,8 +66,8 @@ class FieldValidationTest extends FieldKernelTestBase {
     $cardinality = $this->fieldTestData->field_storage->getCardinality();
     $entity = $this->entity;
 
-    // The test is only valid if the field cardinality is greater than 2.
-    $this->assertTrue($cardinality >= 2);
+    // The test is only valid if the field cardinality is greater than 1.
+    $this->assertGreaterThan(1, $cardinality);
 
     // Set up values for the field.
     $expected_violations = [];

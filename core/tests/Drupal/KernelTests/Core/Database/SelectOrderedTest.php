@@ -23,7 +23,8 @@ class SelectOrderedTest extends DatabaseTestBase {
     $last_age = 0;
     foreach ($result as $record) {
       $num_records++;
-      $this->assertTrue($record->age >= $last_age, 'Results returned in correct order.');
+      // Verify that the results are returned in the correct order.
+      $this->assertGreaterThanOrEqual($last_age, $record->age);
       $last_age = $record->age;
     }
 
@@ -75,7 +76,8 @@ class SelectOrderedTest extends DatabaseTestBase {
     $last_age = 100000000;
     foreach ($result as $record) {
       $num_records++;
-      $this->assertTrue($record->age <= $last_age, 'Results returned in correct order.');
+      // Verify that the results are returned in the correct order.
+      $this->assertLessThanOrEqual($last_age, $record->age);
       $last_age = $record->age;
     }
 

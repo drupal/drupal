@@ -148,9 +148,10 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
 
     $created_field_name = $entity->hasField('content_translation_created') ? 'content_translation_created' : 'created';
     if ($entity->getFieldDefinition($created_field_name)->isTranslatable()) {
-      $this->assertTrue($metadata_target_translation->getCreatedTime() > $metadata_source_translation->getCreatedTime(),
-        new FormattableMarkup('Translation creation timestamp of the target translation @target is newer than the creation timestamp of the source translation @source for translatable created field.',
-          ['@target' => $langcode, '@source' => $default_langcode]));
+      // Verify that the translation creation timestamp of the target
+      // translation language is newer than the creation timestamp of the source
+      // translation default language for the translatable created field.
+      $this->assertGreaterThan($metadata_source_translation->getCreatedTime(), $metadata_target_translation->getCreatedTime());
     }
     else {
       $this->assertEqual($metadata_target_translation->getCreatedTime(), $metadata_source_translation->getCreatedTime(), 'Creation timestamp of the entity remained untouched after translation for non translatable created field.');

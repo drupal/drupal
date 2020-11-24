@@ -106,7 +106,7 @@ class HelpTopicTest extends BrowserTestBase {
       $name = $info['name'];
       $session->linkExists($name);
       $new_pos = strpos($page_text, $name, $start);
-      $this->assertTrue($new_pos > $pos, 'Order of ' . $name . ' is correct on page');
+      $this->assertGreaterThan($pos, $new_pos, "Order of $name is not correct on page");
       $pos = $new_pos;
     }
 

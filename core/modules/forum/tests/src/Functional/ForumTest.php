@@ -152,8 +152,8 @@ class ForumTest extends BrowserTestBase {
     $taxonomy = $display->getComponent('taxonomy_forums');
 
     // Assert field order is body » taxonomy » comments.
-    $this->assertTrue($taxonomy['weight'] < $body['weight']);
-    $this->assertTrue($body['weight'] < $comment['weight']);
+    $this->assertLessThan($body['weight'], $taxonomy['weight']);
+    $this->assertLessThan($comment['weight'], $body['weight']);
 
     // Check form order.
     $display = EntityFormDisplay::load('node.forum.default');
@@ -162,7 +162,7 @@ class ForumTest extends BrowserTestBase {
     $taxonomy = $display->getComponent('taxonomy_forums');
 
     // Assert category comes before body in order.
-    $this->assertTrue($taxonomy['weight'] < $body['weight']);
+    $this->assertLessThan($body['weight'], $taxonomy['weight']);
 
     $this->generateForumTopics();
 

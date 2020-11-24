@@ -78,7 +78,8 @@ class CronRunTest extends BrowserTestBase {
     \Drupal::state()->set('system.cron_last', $cron_last);
     $this->drupalGet('');
     sleep(1);
-    $this->assertTrue($cron_last < \Drupal::state()->get('system.cron_last'), 'Cron runs when the cron interval is passed.');
+    // Verify that cron runs when the cron interval has passed.
+    $this->assertLessThan(\Drupal::state()->get('system.cron_last'), $cron_last);
 
     // Disable cron through the interface by setting the interval to zero.
     $this->drupalPostForm('admin/config/system/cron', ['interval' => 0], 'Save configuration');
@@ -129,7 +130,8 @@ class CronRunTest extends BrowserTestBase {
 
     // Check that cron runs when triggered manually.
     $this->submitForm([], 'Run cron');
-    $this->assertTrue($cron_last < \Drupal::state()->get('system.cron_last'), 'Cron runs when triggered manually.');
+    // Verify that cron runs when triggered manually.
+    $this->assertLessThan(\Drupal::state()->get('system.cron_last'), $cron_last);
   }
 
   /**

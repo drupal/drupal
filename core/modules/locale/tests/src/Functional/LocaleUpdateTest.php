@@ -148,10 +148,13 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     // from the database. The function was called earlier during this test.
     drupal_static_reset('locale_translation_get_file_history');
     $history = locale_translation_get_file_history();
-    $this->assertTrue($history['contrib_module_one']['de']->timestamp >= $this->timestampNow, 'Translation of contrib_module_one is imported');
-    $this->assertTrue($history['contrib_module_one']['de']->last_checked >= $this->timestampNow, 'Translation of contrib_module_one is updated');
+    // Verify that the translation of contrib_module_one is imported and
+    // updated.
+    $this->assertGreaterThanOrEqual($this->timestampNow, $history['contrib_module_one']['de']->timestamp);
+    $this->assertGreaterThanOrEqual($this->timestampNow, $history['contrib_module_one']['de']->last_checked);
     $this->assertEqual($history['contrib_module_two']['de']->timestamp, $this->timestampNew, 'Translation of contrib_module_two is imported');
-    $this->assertTrue($history['contrib_module_two']['de']->last_checked >= $this->timestampNow, 'Translation of contrib_module_two is updated');
+    // Verify that the translation of contrib_module_two is updated.
+    $this->assertGreaterThanOrEqual($this->timestampNow, $history['contrib_module_two']['de']->last_checked);
     $this->assertEqual($history['contrib_module_three']['de']->timestamp, $this->timestampMedium, 'Translation of contrib_module_three is not imported');
     $this->assertEqual($history['contrib_module_three']['de']->last_checked, $this->timestampMedium, 'Translation of contrib_module_three is not updated');
 
@@ -204,10 +207,12 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     // from the database. The function was called earlier during this test.
     drupal_static_reset('locale_translation_get_file_history');
     $history = locale_translation_get_file_history();
-    $this->assertTrue($history['contrib_module_one']['de']->timestamp >= $this->timestampMedium, 'Translation of contrib_module_one is imported');
+    // Verify that the translation of contrib_module_one is imported.
+    $this->assertGreaterThanOrEqual($this->timestampMedium, $history['contrib_module_one']['de']->timestamp);
     $this->assertEqual($history['contrib_module_one']['de']->last_checked, $this->timestampMedium, 'Translation of contrib_module_one is updated');
     $this->assertEqual($history['contrib_module_two']['de']->timestamp, $this->timestampNew, 'Translation of contrib_module_two is imported');
-    $this->assertTrue($history['contrib_module_two']['de']->last_checked >= $this->timestampNow, 'Translation of contrib_module_two is updated');
+    // Verify that the translation of contrib_module_two is updated.
+    $this->assertGreaterThanOrEqual($this->timestampNow, $history['contrib_module_two']['de']->last_checked);
     $this->assertEqual($history['contrib_module_three']['de']->timestamp, $this->timestampMedium, 'Translation of contrib_module_three is not imported');
     $this->assertEqual($history['contrib_module_three']['de']->last_checked, $this->timestampMedium, 'Translation of contrib_module_three is not updated');
 

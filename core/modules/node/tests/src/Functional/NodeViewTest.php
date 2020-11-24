@@ -93,7 +93,9 @@ class NodeViewTest extends NodeTestBase {
    */
   public function testMultiByteUtf8() {
     $title = '🐝';
-    $this->assertTrue(mb_strlen($title, 'utf-8') < strlen($title), 'Title has multi-byte characters.');
+    // To ensure that the title has multi-byte characters, we compare the byte
+    // length to the character length.
+    $this->assertLessThan(strlen($title), mb_strlen($title, 'utf-8'));
     $node = $this->drupalCreateNode(['title' => $title]);
     $this->drupalGet($node->toUrl());
     $result = $this->xpath('//span[contains(@class, "field--name-title")]');

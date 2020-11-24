@@ -155,8 +155,7 @@ class DefaultViewsTest extends ViewTestBase {
         $tokens = ['@name' => $name, '@display_id' => $display_id];
         $this->assertTrue($view->executed, new FormattableMarkup('@name:@display_id has been executed.', $tokens));
 
-        $count = count($view->result);
-        $this->assertTrue($count > 0, new FormattableMarkup('@count results returned', ['@count' => $count]));
+        $this->assertNotEmpty($view->result);
         $view->destroy();
       }
     }

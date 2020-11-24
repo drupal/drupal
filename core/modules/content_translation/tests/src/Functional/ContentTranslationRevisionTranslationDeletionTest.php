@@ -135,7 +135,7 @@ class ContentTranslationRevisionTranslationDeletionTest extends ContentTranslati
     $it_revision = $this->loadRevisionTranslation($entity, 'it');
     $this->assertTrue($it_revision->wasDefaultRevision());
     $this->assertTrue($it_revision->hasTranslation('it'));
-    $this->assertTrue($it_revision->getRevisionId() < $entity->getRevisionId());
+    $this->assertLessThan($entity->getRevisionId(), $it_revision->getRevisionId());
     $this->drupalGet($overview_url);
     $this->assertSession()->linkByHrefNotExists($this->getEditUrl($it_revision)->toString());
     $this->assertSession()->linkByHrefExists($add_translation_href);
@@ -210,7 +210,7 @@ class ContentTranslationRevisionTranslationDeletionTest extends ContentTranslati
     $it_revision = $this->loadRevisionTranslation($entity, 'it');
     $this->assertTrue($it_revision->wasDefaultRevision());
     $this->assertTrue($it_revision->hasTranslation('it'));
-    $this->assertTrue($it_revision->getRevisionId() < $entity->getRevisionId());
+    $this->assertLessThan($entity->getRevisionId(), $it_revision->getRevisionId());
     $this->drupalGet($overview_url);
     $this->assertSession()->linkByHrefNotExists($this->getEditUrl($it_revision)->toString());
     $this->assertSession()->linkByHrefExists($add_translation_href);

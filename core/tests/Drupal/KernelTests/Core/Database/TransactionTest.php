@@ -102,7 +102,7 @@ class TransactionTest extends DatabaseTestBase {
     $txn = $this->connection->startTransaction();
 
     $depth2 = $this->connection->transactionDepth();
-    $this->assertTrue($depth < $depth2, 'Transaction depth has increased with new transaction.');
+    $this->assertGreaterThan($depth, $depth2, 'Transaction depth has increased with new transaction.');
 
     // Insert a single row into the testing table.
     $this->connection->insert('test')

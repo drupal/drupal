@@ -167,7 +167,7 @@ class LocaleJavascriptTranslationTest extends BrowserTestBase {
     $this->assertRaw('core/misc/drupal.js');
     $this->assertRaw($js_filename);
     // Assert translations JS is included before drupal.js.
-    $this->assertTrue(strpos($content, $js_filename) < strpos($content, 'core/misc/drupal.js'), 'Translations are included before Drupal.t.');
+    $this->assertLessThan(strpos($content, 'core/misc/drupal.js'), strpos($content, $js_filename));
   }
 
 }

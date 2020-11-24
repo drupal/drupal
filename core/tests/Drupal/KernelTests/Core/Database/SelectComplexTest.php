@@ -36,9 +36,10 @@ class SelectComplexTest extends DatabaseTestBase {
 
     $num_records = 0;
     $last_priority = 0;
+    // Verify that the results are returned in the correct order.
     foreach ($result as $record) {
       $num_records++;
-      $this->assertTrue($record->$priority_field >= $last_priority, 'Results returned in correct order.');
+      $this->assertGreaterThanOrEqual($last_priority, $record->$priority_field);
       $this->assertNotEqual($record->$name_field, 'Ringo', 'Taskless person not selected.');
       $last_priority = $record->$priority_field;
     }
@@ -62,9 +63,10 @@ class SelectComplexTest extends DatabaseTestBase {
     $num_records = 0;
     $last_name = 0;
 
+    // Verify that the results are returned in the correct order.
     foreach ($result as $record) {
       $num_records++;
-      $this->assertTrue(strcmp($record->$name_field, $last_name) >= 0, 'Results returned in correct order.');
+      $this->assertGreaterThanOrEqual(0, strcmp($record->$name_field, $last_name));
     }
 
     $this->assertEqual($num_records, 8, 'Returned the correct number of rows.');
@@ -84,9 +86,10 @@ class SelectComplexTest extends DatabaseTestBase {
     $num_records = 0;
     $last_count = 0;
     $records = [];
+    // Verify that the results are returned in the correct order.
     foreach ($result as $record) {
       $num_records++;
-      $this->assertTrue($record->$count_field >= $last_count, 'Results returned in correct order.');
+      $this->assertGreaterThanOrEqual($last_count, $record->$count_field);
       $last_count = $record->$count_field;
       $records[$record->$task_field] = $record->$count_field;
     }
@@ -121,10 +124,11 @@ class SelectComplexTest extends DatabaseTestBase {
     $num_records = 0;
     $last_count = 0;
     $records = [];
+    // Verify that the results are returned in the correct order.
     foreach ($result as $record) {
       $num_records++;
-      $this->assertTrue($record->$count_field >= 2, 'Record has the minimum count.');
-      $this->assertTrue($record->$count_field >= $last_count, 'Results returned in correct order.');
+      $this->assertGreaterThanOrEqual(2, $record->$count_field);
+      $this->assertGreaterThanOrEqual($last_count, $record->$count_field);
       $last_count = $record->$count_field;
       $records[$record->$task_field] = $record->$count_field;
     }
@@ -408,7 +412,8 @@ class SelectComplexTest extends DatabaseTestBase {
     $last_priority = 0;
     foreach ($result as $record) {
       $num_records++;
-      $this->assertTrue($record->$priority_field >= $last_priority, 'Results returned in correct order.');
+      // Verify that the results are returned in the correct order.
+      $this->assertGreaterThanOrEqual($last_priority, $record->$priority_field);
       $this->assertNotEqual($record->$name_field, 'Ringo', 'Taskless person not selected.');
       $last_priority = $record->$priority_field;
     }

@@ -123,7 +123,8 @@ class NodeCreationTest extends NodeTestBase {
 
     // Check that the rollback error was logged.
     $records = static::getWatchdogIdsForTestExceptionRollback();
-    $this->assertTrue(count($records) > 0, 'Rollback explanatory error logged to watchdog.');
+    // Verify that the rollback explanatory error was logged.
+    $this->assertNotEmpty($records);
   }
 
   /**

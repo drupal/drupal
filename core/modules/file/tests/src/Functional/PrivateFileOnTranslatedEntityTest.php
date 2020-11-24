@@ -117,7 +117,8 @@ class PrivateFileOnTranslatedEntityTest extends FileFieldTestBase {
     \Drupal::entityTypeManager()->getStorage('node')->resetCache([$default_language_node->id()]);
     $default_language_node = Node::load($default_language_node->id());
     $this->assertTrue($default_language_node->hasTranslation('fr'), 'Node found in database.');
-    $this->assertTrue($last_fid > $last_fid_prior, 'New file got saved.');
+    // Verify that the new file got saved.
+    $this->assertGreaterThan($last_fid_prior, $last_fid);
 
     // Ensure the file attached to the translated node can be downloaded.
     $french_node = $default_language_node->getTranslation('fr');
