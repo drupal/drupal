@@ -56,7 +56,7 @@ class NodeRSSContentTest extends NodeTestBase {
 
     // Check that content added in view modes other than 'rss' doesn't
     // appear in RSS feed.
-    $non_rss_content = t('Extra data that should appear everywhere except the RSS feed for node @nid.', ['@nid' => $node->id()]);
+    $non_rss_content = 'Extra data that should appear everywhere except the RSS feed for node ' . $node->id() . '.';
     $this->assertNoText($non_rss_content, 'Node content not designed for RSS does not appear in RSS feed.');
 
     // Check that extra RSS elements and namespaces are added to RSS feed.
