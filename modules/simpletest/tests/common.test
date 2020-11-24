@@ -2051,6 +2051,32 @@ class DrupalRenderTestCase extends DrupalWebTestCase {
 
     // The elements should appear in output in the same order as the array.
     $this->assertTrue(strpos($output, $second) < strpos($output, $first), 'Elements were not sorted.');
+
+    // The order of children with same weight should be preserved.
+    $element_mixed_weight = array(
+      'child5' => array('#weight' => 10),
+      'child3' => array('#weight' => -10),
+      'child1' => array(),
+      'child4' => array('#weight' => 10),
+      'child2' => array(),
+      'child6' => array('#weight' => 10),
+      'child9' => array(),
+      'child8' => array('#weight' => 10),
+      'child7' => array(),
+    );
+
+    $expected = array(
+      'child3',
+      'child1',
+      'child2',
+      'child9',
+      'child7',
+      'child5',
+      'child4',
+      'child6',
+      'child8',
+      );
+    $this->assertEqual($expected, element_children($element_mixed_weight, TRUE), 'Order of elements with the same weight is preserved.');
   }
 
   /**
