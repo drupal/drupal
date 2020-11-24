@@ -138,7 +138,7 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
       if ($this->processMultivalueBaseFieldHandler($handler, $handler_type, $key, $display_id, $view)) {
         $changed = TRUE;
       }
-      if ($this->processSortIdentifierUpdateHandler($handler, $handler_type)) {
+      if ($this->processSortFieldIdentifierUpdateHandler($handler, $handler_type)) {
         $changed = TRUE;
       }
       return $changed;
@@ -481,7 +481,7 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
   }
 
   /**
-   * Updates the sort handlers by adding default sort identifiers.
+   * Updates the sort handlers by adding default sort field identifiers.
    *
    * @param \Drupal\views\ViewEntityInterface $view
    *   The View to update.
@@ -489,9 +489,9 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
    * @return bool
    *   Whether the view was updated.
    */
-  public function needsSortIdentifierUpdate(ViewEntityInterface $view): bool {
+  public function needsSortFieldIdentifierUpdate(ViewEntityInterface $view): bool {
     return $this->processDisplayHandlers($view, TRUE, function (array &$handler, string $handler_type): bool {
-      return $this->processSortIdentifierUpdateHandler($handler, $handler_type);
+      return $this->processSortFieldIdentifierUpdateHandler($handler, $handler_type);
     });
   }
 
@@ -506,9 +506,9 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
    * @return bool
    *   Whether the handler was updated.
    */
-  protected function processSortIdentifierUpdateHandler(array &$handler, string $handler_type): bool {
-    if ($handler_type === 'sort' && !isset($handler['expose']['identifier'])) {
-      $handler['expose']['identifier'] = $handler['id'];
+  protected function processSortFieldIdentifierUpdateHandler(array &$handler, string $handler_type): bool {
+    if ($handler_type === 'sort' && !isset($handler['expose']['field_identifier'])) {
+      $handler['expose']['field_identifier'] = $handler['id'];
       return TRUE;
     }
     return FALSE;

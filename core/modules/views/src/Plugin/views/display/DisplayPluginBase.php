@@ -2559,13 +2559,6 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
    */
   public function isIdentifierUnique($id, $identifier) {
     foreach (ViewExecutable::getHandlerTypes() as $type => $info) {
-      if ($type === 'sort') {
-        // The exposed sort identifier is the value of 'sort_by' query string
-        // parameter and cannot collide with $identifier as the later is used as
-        // query string parameter key.
-        continue;
-      }
-
       foreach ($this->getHandlers($type) as $key => $handler) {
         if ($handler->canExpose() && $handler->isExposed()) {
           if ($handler->isAGroup()) {

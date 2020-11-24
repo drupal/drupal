@@ -162,7 +162,7 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
         if (!$sort->isExposed()) {
           $sort->query();
         }
-        elseif (!empty($sort->options['expose']['identifier']) && $sort->options['expose']['identifier'] === $sort_by) {
+        elseif (!empty($sort->options['expose']['field_identifier']) && $sort->options['expose']['field_identifier'] === $sort_by) {
           if (isset($exposed_data['sort_order']) && in_array($exposed_data['sort_order'], ['ASC', 'DESC'], TRUE)) {
             $sort->options['order'] = $exposed_data['sort_order'];
           }
@@ -205,9 +205,9 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
     $exposed_sorts = [];
     $exposed_sorts_options = [];
     foreach ($this->view->sort as $id => $handler) {
-      if ($handler->canExpose() && $handler->isExposed() && !empty($handler->options['expose']['identifier'])) {
-        $exposed_sorts[$handler->options['expose']['identifier']] = $id;
-        $exposed_sorts_options[$handler->options['expose']['identifier']] = $handler->options['expose']['label'];
+      if ($handler->canExpose() && $handler->isExposed() && !empty($handler->options['expose']['field_identifier'])) {
+        $exposed_sorts[$handler->options['expose']['field_identifier']] = $id;
+        $exposed_sorts_options[$handler->options['expose']['field_identifier']] = $handler->options['expose']['label'];
       }
     }
 

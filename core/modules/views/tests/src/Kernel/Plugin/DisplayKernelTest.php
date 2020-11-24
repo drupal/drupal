@@ -132,7 +132,7 @@ class DisplayKernelTest extends ViewsKernelTestBase {
         'order' => 'asc',
         'expose' => [
           'label' => 'Id',
-          'identifier' => 'name',
+          'field_identifier' => 'name',
         ],
         'exposed' => TRUE,
       ],
@@ -165,7 +165,7 @@ class DisplayKernelTest extends ViewsKernelTestBase {
 
     // Check that an exposed filter is able to use the same identifier as an
     // exposed sort.
-    $sorts['name']['expose']['identifier'] = 'id';
+    $sorts['name']['expose']['field_identifier'] = 'id';
     $view->display_handler->handlers = [];
     $view->display_handler->setOption('sorts', $sorts);
     $this->assertTrue($view->display_handler->isIdentifierUnique('id', 'id'));

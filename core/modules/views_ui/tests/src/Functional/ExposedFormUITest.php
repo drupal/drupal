@@ -105,7 +105,7 @@ class ExposedFormUITest extends UITestBase {
     $this->drupalGet('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/sort/created');
     $this->helperButtonHasLabel('edit-options-expose-button-button', 'Expose sort');
     $this->assertSession()->fieldNotExists('edit-options-expose-label');
-    $this->assertSession()->fieldNotExists('Sort identifier');
+    $this->assertSession()->fieldNotExists('Sort field identifier');
 
     // Un-expose the filter.
     $this->drupalGet('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/filter/type');
@@ -124,7 +124,7 @@ class ExposedFormUITest extends UITestBase {
     // Check the label of the expose button.
     $this->helperButtonHasLabel('edit-options-expose-button-button', 'Hide sort');
     $this->assertSession()->fieldValueEquals('edit-options-expose-label', 'Authored on');
-    $this->assertSession()->fieldValueEquals('Sort identifier', 'created');
+    $this->assertSession()->fieldValueEquals('Sort field identifier', 'created');
 
     // Test adding a new exposed sort criteria.
     $view_id = $this->randomView()['id'];
@@ -137,23 +137,23 @@ class ExposedFormUITest extends UITestBase {
     $this->submitForm([], 'Expose sort');
     $this->assertSession()->fieldValueEquals('options[order]', 'DESC');
     $this->assertSession()->fieldValueEquals('options[expose][label]', 'Authored on');
-    $this->assertSession()->fieldValueEquals('Sort identifier', 'created');
+    $this->assertSession()->fieldValueEquals('Sort field identifier', 'created');
 
     // Change the label and try with an empty identifier.
     $edit = [
       'options[expose][label]' => $this->randomString(),
-      'options[expose][identifier]' => '',
+      'options[expose][field_identifier]' => '',
     ];
     $this->submitForm($edit, 'Apply');
-    $this->assertSession()->pageTextContains('Sort identifier field is required.');
+    $this->assertSession()->pageTextContains('Sort field identifier field is required.');
 
     // Try with an invalid identifier.
-    $edit['options[expose][identifier]'] = 'abc&! ###08.';
+    $edit['options[expose][field_identifier]'] = 'abc&! ###08.';
     $this->submitForm($edit, 'Apply');
     $this->assertSession()->pageTextContains('This identifier has illegal characters.');
 
     // Use a valid identifier.
-    $edit['options[expose][identifier]'] = $this->randomMachineName() . '_-~.';
+    $edit['options[expose][field_identifier]'] = $this->randomMachineName() . '_-~.';
     $this->submitForm($edit, 'Apply');
     $this->submitForm([], 'Save');
 
@@ -162,7 +162,7 @@ class ExposedFormUITest extends UITestBase {
     $this->assertTrue($display['display_options']['sorts']['created']['exposed']);
     $this->assertSame([
       'label' => $edit['options[expose][label]'],
-      'identifier' => $edit['options[expose][identifier]'],
+      'field_identifier' => $edit['options[expose][field_identifier]'],
     ], $display['display_options']['sorts']['created']['expose']);
     $this->assertSame('DESC', $display['display_options']['sorts']['created']['order']);
 
@@ -170,7 +170,7 @@ class ExposedFormUITest extends UITestBase {
     $this->drupalGet("admin/structure/views/nojs/handler/{$view_id}/default/sort/created_1");
     $this->submitForm([], 'Expose sort');
     $this->submitForm([
-      'options[expose][identifier]' => $edit['options[expose][identifier]'],
+      'options[expose][field_identifier]' => $edit['options[expose][field_identifier]'],
     ], 'Apply');
     $this->assertSession()->pageTextContains('This identifier is already used by Content: Authored on sort handler.');
   }

@@ -206,7 +206,7 @@ display:
           exposed: false
           expose:
             label: ''
-            identifier: created
+            field_identifier: created
           plugin_id: date
           entity_type: comment
           entity_field: created
@@ -221,7 +221,7 @@ display:
           exposed: false
           expose:
             label: ''
-            identifier: cid
+            field_identifier: cid
           plugin_id: field
           entity_type: comment
           entity_field: cid

@@ -340,8 +340,8 @@ class ExposedFormTest extends ViewTestBase {
     $sorts = $view->display_handler->getOption('sorts');
     // Change the label to something with special characters.
     $sorts['id']['expose']['label'] = $expected_label = "<script>alert('unsafe&dangerous');</script>";
-    // Use a custom identifier.
-    $sorts['id']['expose']['identifier'] = $identifier = $this->randomMachineName() . '-_.~';
+    // Use a custom sort field identifier.
+    $sorts['id']['expose']['field_identifier'] = $field_identifier = $this->randomMachineName() . '-_.~';
     $view->display_handler->setOption('sorts', $sorts);
     $view->save();
 
@@ -352,7 +352,7 @@ class ExposedFormTest extends ViewTestBase {
     // Check option existence by option label.
     $this->assertSession()->optionExists('Sort by', $expected_label);
     // Check option existence by option value.
-    $this->assertSession()->optionExists('Sort by', $identifier);
+    $this->assertSession()->optionExists('Sort by', $field_identifier);
     $escape_1 = Html::escape($expected_label);
     $escape_2 = Html::escape($escape_1);
     // Make sure we see the single-escaped string in the raw output.
@@ -362,12 +362,12 @@ class ExposedFormTest extends ViewTestBase {
     // And not the raw label, either.
     $this->assertNoRaw($expected_label);
 
-    // Check that the custom identifier is used in the URL query string.
-    $this->drupalPostForm(NULL, ['sort_order' => 'DESC'], 'Apply');
+    // Check that the custom field identifier is used in the URL query string.
+    $this->submitForm(['sort_order' => 'DESC'], 'Apply');
     $this->assertCacheContexts($contexts);
     $this->assertIds(range(50, 41));
     $url = $this->getSession()->getCurrentUrl();
-    $this->assertStringContainsString('sort_by=' . urlencode($identifier), $url);
+    $this->assertStringContainsString('sort_by=' . urlencode($field_identifier), $url);
   }
 
   /**

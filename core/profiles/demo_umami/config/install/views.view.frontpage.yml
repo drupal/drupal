@@ -229,7 +229,7 @@ display:
           admin_label: ''
           expose:
             label: ''
-            identifier: sticky
+            field_identifier: sticky
           exposed: false
           field: sticky
           group_type: group
@@ -252,7 +252,7 @@ display:
           exposed: false
           expose:
             label: ''
-            identifier: created
+            field_identifier: created
           granularity: second
           entity_type: node
           entity_field: created
@@ -267,7 +267,7 @@ display:
           exposed: false
           expose:
             label: ''
-            identifier: nid
+            field_identifier: nid
           entity_type: node
           entity_field: nid
           plugin_id: standard

@@ -178,7 +178,7 @@ display:
           exposed: false
           expose:
             label: ''
-            identifier: name
+            field_identifier: name
           entity_type: taxonomy_term
           entity_field: name
           plugin_id: standard

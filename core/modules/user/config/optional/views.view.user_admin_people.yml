@@ -846,7 +846,7 @@ display:
           exposed: false
           expose:
             label: ''
-            identifier: created
+            field_identifier: created
           granularity: second
           plugin_id: date
           entity_type: user

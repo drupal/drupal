@@ -418,7 +418,7 @@ display:
           exposed: true
           expose:
             label: 'Newest first'
-            identifier: created
+            field_identifier: created
           granularity: second
           entity_type: media
           entity_field: created
@@ -434,7 +434,7 @@ display:
           exposed: true
           expose:
             label: 'Name (A-Z)'
-            identifier: name
+            field_identifier: name
           entity_type: media
           entity_field: name
           plugin_id: standard
@@ -449,7 +449,7 @@ display:
           exposed: true
           expose:
             label: 'Name (Z-A)'
-            identifier: name_1
+            field_identifier: name_1
           entity_type: media
           entity_field: name
           plugin_id: standard

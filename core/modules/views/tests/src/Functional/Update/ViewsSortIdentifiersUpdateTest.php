@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types = 1);
-
 namespace Drupal\Tests\views\Functional\Update;
 
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
@@ -32,13 +30,13 @@ class ViewsSortIdentifiersUpdateTest extends UpdatePathTestBase {
     $config_factory = \Drupal::configFactory();
     $view = $config_factory->get('views.view.comments_recent');
     $trail = 'display.default.display_options.sorts.created';
-    $this->assertArrayNotHasKey('identifier', $view->get("{$trail}.expose"));
+    $this->assertArrayNotHasKey('field_identifier', $view->get("{$trail}.expose"));
 
     $this->runUpdates();
 
     $view = $config_factory->get('views.view.comments_recent');
     $sort_handler = $view->get($trail);
-    $this->assertSame($sort_handler['id'], $sort_handler['expose']['identifier']);
+    $this->assertSame($sort_handler['id'], $sort_handler['expose']['field_identifier']);
   }
 
 }

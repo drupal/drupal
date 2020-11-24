@@ -845,7 +845,7 @@ display:
           exposed: false
           expose:
             label: ''
-            identifier: created
+            field_identifier: created
           granularity: second
       title: Media
       header: {  }

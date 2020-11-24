@@ -647,7 +647,7 @@ display:
           exposed: false
           expose:
             label: ''
-            identifier: wid
+            field_identifier: wid
           plugin_id: standard
       title: 'Recent log messages'
       header: {  }
