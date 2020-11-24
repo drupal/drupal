@@ -220,7 +220,7 @@ class BlockTest extends BlockTestBase {
 
     // Confirm that the block instance title and markup are not displayed.
     $this->drupalGet('node');
-    $this->assertNoText(t($block['settings[label]']));
+    $this->assertNoText($block['settings[label]']);
     // Check for <div id="block-my-block-instance-name"> if the machine name
     // is my_block_instance_name.
     $xpath = $this->assertSession()->buildXPathQuery('//div[@id=:id]/*', [':id' => 'block-' . str_replace('_', '-', strtolower($block['id']))]);
