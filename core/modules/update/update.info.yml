@@ -3,6 +3,5 @@ type: module
 description: 'Checks for available updates, and can securely install or update modules and themes via a web interface.'
 version: VERSION
 package: Core
-configure: update.settings
 dependencies:
   - drupal:file

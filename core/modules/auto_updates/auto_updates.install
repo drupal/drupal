@@ -1,0 +1,73 @@
+<?php
+
+/**
+ * @file
+ * Contains install and update functions for Automatic Updates.
+ */
+
+use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_requirements().
+ */
+function auto_updates_requirements($phase) {
+  if ($phase !== 'runtime') {
+    return [];
+  }
+
+  /** @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager $checker_manager */
+  $checker_manager = \Drupal::service('auto_updates.readiness_checker_manager');
+  $requirement['title'] = t('Update readiness checks');
+  $readiness_check_url = Url::fromRoute('auto_updates.update_readiness');
+  $last_check_timestamp = $checker_manager->getMostRecentRunTime();
+  if ($last_check_timestamp === NULL) {
+    $requirement['severity'] = REQUIREMENT_WARNING;
+    // @todo Link "automatic updates" to documentation in
+    //    https://www.drupal.org/node/3168405.
+    $requirement['value'] = t('Your site has never checked if it is ready to apply automatic updates.');
+    if ($readiness_check_url->access()) {
+      $requirement['description'] = t('<a href=":link">Run readiness checks</a> now.', [
+        ':link' => $readiness_check_url->toString(),
+      ]);
+    }
+  }
+  elseif (!$checker_manager->hasRunRecently()) {
+    $requirement['severity'] = REQUIREMENT_WARNING;
+    $time_ago = \Drupal::service('date.formatter')->formatTimeDiffSince($last_check_timestamp);
+    // @todo Link "automatic updates" to documentation in
+    //    https://www.drupal.org/node/3168405.
+    $requirement['value'] = t('Your site has not recently checked if it is ready to apply automatic updates.');
+    if ($readiness_check_url->access()) {
+      $requirement['description'] = t('Readiness checks were last run @time ago. <a href=":url">Run readiness checks</a> now.', [
+        '@time' => $time_ago,
+        ':url' => $readiness_check_url->toString(),
+      ]);
+    }
+    else {
+      $requirement['description'] = t('Readiness checks were last run @time ago.', ['@time' => $time_ago]);
+    }
+  }
+  else {
+    $error_results = $checker_manager->getErrors();
+    $warning_results = $checker_manager->getWarnings();
+    $checker_results = array_merge($error_results, $warning_results);
+    if (!empty($checker_results)) {
+      $requirement['severity'] = $error_results ? REQUIREMENT_ERROR : REQUIREMENT_WARNING;
+      $requirement['value'] = new PluralTranslatableMarkup(count($checker_results), '@count check failed:', '@count checks failed:');
+      $requirement['description'] = [
+        '#theme' => 'item_list',
+        '#items' => $checker_results,
+      ];
+    }
+    else {
+      $requirement += [
+        'severity' => REQUIREMENT_OK,
+        // @todo Link "automatic updates" to documentation in
+        //    https://www.drupal.org/node/3168405.
+        'value' => t('Your site is ready for automatic updates.'),
+      ];
+    }
+  }
+  return ['auto_updates_readiness' => $requirement];
+}

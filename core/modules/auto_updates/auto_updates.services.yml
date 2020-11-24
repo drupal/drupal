@@ -1,0 +1,11 @@
+services:
+  auto_updates.disk_space_checker:
+    class: Drupal\auto_updates\ReadinessChecker\DiskSpace
+    arguments: ['%app.root%']
+    tags:
+      - { name: readiness_checker }
+  auto_updates.readiness_checker_manager:
+    class: Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager
+    arguments: ['@keyvalue.expirable', '@config.factory', '@datetime.time']
+    tags:
+      - { name: service_collector, tag: readiness_checker, call: addChecker }
