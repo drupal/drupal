@@ -20,7 +20,7 @@
 %}
 
 {{ title_prefix }}
-{% if title %}
+{% if title|render|striptags|trim %}
   <h1{{ title_attributes.addClass(classes) }}>{{ title }}</h1>
 {% endif %}
 {{ title_suffix }}
