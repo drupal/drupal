@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Dummy module implementing hook_user_flood_control.
+ */
+
+/**
+ * Implements hook_user_flood_control().
+ */
+function user_flood_test_user_flood_control($ip, $username = FALSE) {
+  if (!empty($username)) {
+    watchdog('user_flood_test', 'hook_user_flood_control was passed username %username and IP %ip.', array('%username' => $username, '%ip' => $ip));
+  }
+  else {
+    watchdog('user_flood_test', 'hook_user_flood_control was passed IP %ip.', array('%ip' => $ip));
+  }
+}

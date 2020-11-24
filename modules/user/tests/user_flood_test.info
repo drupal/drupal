@@ -1,0 +1,6 @@
+name = "User module flood control tests"
+description = "Support module for user flood control testing."
+package = Testing
+version = VERSION
+core = 7.x
+hidden = TRUE

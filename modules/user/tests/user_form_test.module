@@ -35,7 +35,7 @@ function user_form_test_current_password($form, &$form_state, $account) {
     '#description' => t('A field that would require a correct password to change.'),
     '#required' => TRUE,
   );
-  
+
   $form['current_pass'] = array(
     '#type' => 'password',
     '#title' => t('Current password'),

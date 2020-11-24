@@ -659,3 +659,17 @@ $conf['file_scan_ignore_directories'] = array(
   'node_modules',
   'bower_components',
 );
+
+/**
+ * Logging of user flood control events.
+ *
+ * Drupal's user module will place a temporary block on a given IP address or
+ * user account if there are excessive failed login attempts. By default these
+ * flood control events will be logged. This can be useful for identifying
+ * brute force login attacks. Set this variable to FALSE to disable logging, for
+ * example if you are using the dblog module and want to avoid database writes.
+ *
+ * @see user_login_final_validate()
+ * @see user_user_flood_control()
+ */
+# $conf['log_user_flood_control'] = FALSE;
