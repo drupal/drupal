@@ -69,7 +69,8 @@ class RendererBubblingTest extends RendererTestBase {
     // Load the element from cache and verify the presence of the #attached
     // JavaScript.
     $element = ['#cache' => ['keys' => ['simpletest', 'renderer', 'children_attached']]];
-    $this->assertTrue(strlen($this->renderer->renderRoot($element)) > 0, 'The element was retrieved from cache.');
+    // Verify that the element was retrieved from the cache.
+    $this->assertNotEmpty($this->renderer->renderRoot($element));
     $this->assertEquals($element['#attached']['library'], $expected_libraries, 'The element, child and subchild #attached libraries are included.');
   }
 

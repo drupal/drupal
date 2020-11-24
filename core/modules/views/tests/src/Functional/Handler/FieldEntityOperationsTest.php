@@ -80,7 +80,7 @@ class FieldEntityOperationsTest extends ViewTestBase {
       foreach ($entity->getTranslationLanguages() as $language) {
         $entity = $entity->getTranslation($language->getId());
         $operations = \Drupal::service('entity_type.manager')->getListBuilder('node')->getOperations($entity);
-        $this->assertTrue(count($operations) > 0, 'There are operations.');
+        $this->assertNotEmpty($operations);
         foreach ($operations as $operation) {
           $expected_destination = Url::fromUri('internal:/test-entity-operations')->toString();
           // Update destination property of the URL as generating it in the

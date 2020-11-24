@@ -116,12 +116,12 @@ SQL;
     $this->assertSession()->assertEscaped($query_string);
 
     // Test that the statistics and query are rendered above the preview.
-    $this->assertTrue(strpos($this->getSession()->getPage()->getContent(), 'views-query-info') < strpos($this->getSession()->getPage()->getContent(), 'view-test-preview'), 'Statistics shown above the preview.');
+    $this->assertLessThan(strpos($this->getSession()->getPage()->getContent(), 'view-test-preview'), strpos($this->getSession()->getPage()->getContent(), 'views-query-info'));
 
     // Test that statistics and query rendered below the preview.
     $settings->set('ui.show.sql_query.where', 'below')->save();
     $this->submitForm($edit = ['view_args' => '100'], 'Update preview');
-    $this->assertTrue(strpos($this->getSession()->getPage()->getContent(), 'view-test-preview') < strpos($this->getSession()->getPage()->getContent(), 'views-query-info'), 'Statistics shown below the preview.');
+    $this->assertLessThan(strpos($this->getSession()->getPage()->getContent(), 'views-query-info'), strpos($this->getSession()->getPage()->getContent(), 'view-test-preview'), 'Statistics shown below the preview.');
 
     // Test that the preview title isn't double escaped.
     $this->drupalPostForm("admin/structure/views/nojs/display/test_preview/default/title", $edit = ['title' => 'Double & escaped'], 'Apply');

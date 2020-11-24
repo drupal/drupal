@@ -190,7 +190,7 @@ abstract class ModuleTestBase extends BrowserTestBase {
    *   A link to associate with the message.
    */
   public function assertLogMessage($type, $message, $variables = [], $severity = RfcLogLevel::NOTICE, $link = '') {
-    $count = Database::getConnection()->select('watchdog', 'w')
+    $this->assertNotEmpty(Database::getConnection()->select('watchdog', 'w')
       ->condition('type', $type)
       ->condition('message', $message)
       ->condition('variables', serialize($variables))
@@ -198,8 +198,8 @@ abstract class ModuleTestBase extends BrowserTestBase {
       ->condition('link', $link)
       ->countQuery()
       ->execute()
-      ->fetchField();
-    $this->assertTrue($count > 0, new FormattableMarkup('watchdog table contains @count rows for @message', ['@count' => $count, '@message' => new FormattableMarkup($message, $variables)]));
+      ->fetchField()
+    );
   }
 
 }

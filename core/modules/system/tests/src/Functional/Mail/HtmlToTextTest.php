@@ -358,8 +358,9 @@ EOT;
       // rather than characters.
       $maximum_line_length = max($maximum_line_length, strlen($line . $eol));
     }
-    $verbose = 'Maximum line length found was ' . $maximum_line_length . ' octets.';
-    $this->assertTrue($maximum_line_length <= 1000, $verbose);
+    // Verify that the maximum line length found was less than or equal to 1000
+    // characters as per RFC 821.
+    $this->assertLessThanOrEqual(1000, $maximum_line_length);
   }
 
   /**

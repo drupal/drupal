@@ -373,7 +373,7 @@ class DisplayTest extends ViewTestBase {
   public function testOutputIsEmpty() {
     $view = Views::getView('test_display_empty');
     $this->executeView($view);
-    $this->assertTrue(count($view->result) > 0, 'Ensure the result of the view is not empty.');
+    $this->assertNotEmpty($view->result);
     $this->assertFalse($view->display_handler->outputIsEmpty(), 'Ensure the view output is marked as not empty.');
     $view->destroy();
 

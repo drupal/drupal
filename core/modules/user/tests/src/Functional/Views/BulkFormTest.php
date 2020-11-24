@@ -44,8 +44,7 @@ class BulkFormTest extends UserTestBase {
     // Create a user which actually can change users.
     $this->drupalLogin($this->drupalCreateUser(['administer users']));
     $this->drupalGet('test-user-bulk-form');
-    $result = $this->cssSelect('#edit-action option');
-    $this->assertTrue(count($result) > 0);
+    $this->assertNotEmpty($this->cssSelect('#edit-action option'));
 
     // Test submitting the page with no selection.
     $edit = [

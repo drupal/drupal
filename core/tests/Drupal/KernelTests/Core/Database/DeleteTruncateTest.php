@@ -58,7 +58,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
    */
   public function testTruncate() {
     $num_records_before = $this->connection->query("SELECT COUNT(*) FROM {test}")->fetchField();
-    $this->assertTrue($num_records_before > 0, 'The table is not empty.');
+    $this->assertNotEmpty($num_records_before);
 
     $this->connection->truncate('test')->execute();
 

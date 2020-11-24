@@ -100,7 +100,8 @@ class SaveUploadFormTest extends FileManagedTestBase {
    */
   public function testNormal() {
     $max_fid_after = (int) \Drupal::entityQueryAggregate('file')->aggregate('fid', 'max')->execute()[0]['fid_max'];
-    $this->assertTrue($max_fid_after > $this->maxFidBefore, 'A new file was created.');
+    // Verify that a new file was created.
+    $this->assertGreaterThan($this->maxFidBefore, $max_fid_after);
     $file1 = File::load($max_fid_after);
     $this->assertInstanceOf(File::class, $file1);
     // MIME type of the uploaded image may be either image/jpeg or image/png.

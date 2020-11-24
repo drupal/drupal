@@ -77,7 +77,7 @@ class CommentBlockTest extends CommentTestBase {
       if ($i > 1) {
         $previous_position = $position;
         $position = strpos($this->getSession()->getPage()->getContent(), $comments[$i]->getSubject());
-        $this->assertTrue($position > $previous_position, new FormattableMarkup('Comment @a appears after comment @b', ['@a' => 10 - $i, '@b' => 11 - $i]));
+        $this->assertGreaterThan($previous_position, $position, sprintf('Comment %d does not appear after comment %d', 10 - $i, 11 - $i));
       }
       $position = strpos($this->getSession()->getPage()->getContent(), $comments[$i]->getSubject());
     }

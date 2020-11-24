@@ -60,7 +60,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
           $edit = [$file_field_name => \Drupal::service('file_system')->realpath($test_file->getFileUri())];
           $this->drupalPostForm($path, $edit, 'Save');
           $last_fid = $this->getLastFileId();
-          $this->assertTrue($last_fid > $last_fid_prior, 'New file got saved.');
+          $this->assertGreaterThan($last_fid_prior, $last_fid, 'New file got saved.');
           $this->assertRaw(t('The file ids are %fids.', ['%fids' => implode(',', [$last_fid])]));
 
           // Submit no new input, but with a default file.
@@ -73,7 +73,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
           $edit = [$file_field_name => \Drupal::service('file_system')->realpath($test_file->getFileUri())];
           $this->submitForm($edit, 'Upload');
           $last_fid = $this->getLastFileId();
-          $this->assertTrue($last_fid > $last_fid_prior, 'New file got uploaded.');
+          $this->assertGreaterThan($last_fid_prior, $last_fid, 'New file got uploaded.');
           $this->submitForm([], 'Save');
           $this->assertRaw(t('The file ids are %fids.', ['%fids' => implode(',', [$last_fid])]));
 

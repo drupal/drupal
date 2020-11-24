@@ -251,11 +251,11 @@ class StandardTest extends BrowserTestBase {
       // The source field should be shown before the vertical tabs.
       $test_source_field = $assert_session->fieldExists($media_type->getSource()->getSourceFieldDefinition($media_type)->getLabel(), $form)->getOuterHtml();
       $vertical_tabs = $assert_session->elementExists('css', '.form-type-vertical-tabs', $form)->getOuterHtml();
-      $this->assertTrue(strpos($form_html, $vertical_tabs) > strpos($form_html, $test_source_field));
+      $this->assertGreaterThan(strpos($form_html, $test_source_field), strpos($form_html, $vertical_tabs));
       // The "Published" checkbox should be the last element.
       $date_field = $assert_session->fieldExists('Date', $form)->getOuterHtml();
       $published_checkbox = $assert_session->fieldExists('Published', $form)->getOuterHtml();
-      $this->assertTrue(strpos($form_html, $published_checkbox) > strpos($form_html, $date_field));
+      $this->assertGreaterThan(strpos($form_html, $date_field), strpos($form_html, $published_checkbox));
       if (is_a($media_type->getSource(), Image::class, TRUE)) {
         // Assert the default entity view display is configured with an image
         // style.

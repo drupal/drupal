@@ -60,7 +60,7 @@ class SearchSimplifyTest extends KernelTestBase {
     }
     foreach ($strings as $key => $string) {
       $simplified = $text_processor->analyze($string);
-      $this->assertTrue(mb_strlen($simplified) >= mb_strlen($string), "Nothing is removed from string $key.");
+      $this->assertGreaterThanOrEqual(mb_strlen($string), mb_strlen($simplified), "Nothing is removed from string $key.");
     }
 
     // Test the low-numbered ASCII control characters separately. They are not

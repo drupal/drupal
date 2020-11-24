@@ -179,9 +179,10 @@ class EntityDisplayModeTest extends BrowserTestBase {
     $start = strpos($page_text, 'view modes');
     $pos = $start;
     $list = ['Full content', 'RSS', 'Search index', 'Search result', 'Teaser'];
+    // Verify that the order of the view modes is correct on the page.
     foreach ($list as $name) {
       $new_pos = strpos($page_text, $name, $start);
-      $this->assertTrue($new_pos > $pos, 'Order of ' . $name . ' is correct on page');
+      $this->assertGreaterThan($pos, $new_pos);
       $pos = $new_pos;
     }
     // Now that we have verified the original display order, we can change the
@@ -202,9 +203,10 @@ class EntityDisplayModeTest extends BrowserTestBase {
     $start = strpos($page_text, 'view modes');
     $pos = $start;
     $list = ['Breezer', 'Full content'];
+    // Verify that the order of the view modes is correct on the page.
     foreach ($list as $name) {
       $new_pos = strpos($page_text, $name, $start);
-      $this->assertTrue($new_pos > $pos, 'Order of ' . $name . ' is correct on page');
+      $this->assertGreaterThan($pos, $new_pos);
       $pos = $new_pos;
     }
   }
