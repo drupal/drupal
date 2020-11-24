@@ -129,34 +129,32 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $value = $config_factory->get('form_test.object')->get('bananas');
     $this->assertSame('green', $value);
 
-    // Test drupalPostForm().
-    $edit = ['bananas' => 'red'];
+    // Test submitForm().
+    $this->drupalGet('form-test/object-builder');
+
     // Submit the form using the button label.
-    $result = $this->drupalPostForm('form-test/object-builder', $edit, 'Save');
-    $this->assertSame($this->getSession()->getPage()->getContent(), $result);
+    $this->submitForm(['bananas' => 'red'], 'Save');
     $value = $config_factory->get('form_test.object')->get('bananas');
     $this->assertSame('red', $value);
 
-    $this->drupalPostForm('form-test/object-builder', [], 'Save');
+    $this->submitForm([], 'Save');
     $value = $config_factory->get('form_test.object')->get('bananas');
     $this->assertSame('', $value);
 
     // Submit the form using the button id.
-    $edit = ['bananas' => 'blue'];
-    $result = $this->drupalPostForm('form-test/object-builder', $edit, 'edit-submit');
-    $this->assertSame($this->getSession()->getPage()->getContent(), $result);
+    $this->submitForm(['bananas' => 'blue'], 'edit-submit');
     $value = $config_factory->get('form_test.object')->get('bananas');
     $this->assertSame('blue', $value);
 
     // Submit the form using the button name.
-    $edit = ['bananas' => 'purple'];
-    $result = $this->drupalPostForm('form-test/object-builder', $edit, 'op');
-    $this->assertSame($this->getSession()->getPage()->getContent(), $result);
+    $this->submitForm(['bananas' => 'purple'], 'op');
     $value = $config_factory->get('form_test.object')->get('bananas');
     $this->assertSame('purple', $value);
 
-    // Test drupalPostForm() with no-html response.
-    $values = Json::decode($this->drupalPostForm('form_test/form-state-values-clean', [], 'Submit'));
+    // Test submitForm() with no-html response.
+    $this->drupalGet('form_test/form-state-values-clean');
+    $this->submitForm([], 'Submit');
+    $values = Json::decode($this->getSession()->getPage()->getContent());
     $this->assertSame(1000, $values['beer']);
 
     // Test submitForm() with form by HTML id.
