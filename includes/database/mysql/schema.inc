@@ -57,6 +57,11 @@ class DatabaseSchema_mysql extends DatabaseSchema {
   protected function buildTableNameCondition($table_name, $operator = '=', $add_prefix = TRUE) {
     $info = $this->connection->getConnectionOptions();
 
+    // Ensure the table name is not surrounded with quotes as that is not
+    // appropriate for schema queries.
+    $quote_char = variable_get('mysql_identifier_quote_character', MYSQL_IDENTIFIER_QUOTE_CHARACTER_DEFAULT);
+    $table_name = str_replace($quote_char, '', $table_name);
+
     $table_info = $this->getPrefixInfo($table_name, $add_prefix);
 
     $condition = new DatabaseCondition('AND');
@@ -494,11 +499,11 @@ class DatabaseSchema_mysql extends DatabaseSchema {
       $condition->condition('column_name', $column);
       $condition->compile($this->connection, $this);
       // Don't use {} around information_schema.columns table.
-      return $this->connection->query("SELECT column_comment FROM information_schema.columns WHERE " . (string) $condition, $condition->arguments())->fetchField();
+      return $this->connection->query("SELECT column_comment AS column_comment FROM information_schema.columns WHERE " . (string) $condition, $condition->arguments())->fetchField();
     }
     $condition->compile($this->connection, $this);
     // Don't use {} around information_schema.tables table.
-    $comment = $this->connection->query("SELECT table_comment FROM information_schema.tables WHERE " . (string) $condition, $condition->arguments())->fetchField();
+    $comment = $this->connection->query("SELECT table_comment AS table_comment FROM information_schema.tables WHERE " . (string) $condition, $condition->arguments())->fetchField();
     // Work-around for MySQL 5.0 bug http://bugs.mysql.com/bug.php?id=11379
     return preg_replace('/; InnoDB free:.*$/', '', $comment);
   }

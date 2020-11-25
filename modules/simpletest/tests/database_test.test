@@ -163,6 +163,12 @@ class DatabaseTestCase extends DrupalWebTestCase {
         'priority' => 3,
       ))
       ->execute();
+
+    db_insert('virtual')
+      ->fields(array(
+        'function' => 'Function value 1',
+      ))
+      ->execute();
   }
 }
 
@@ -3457,7 +3463,6 @@ class DatabaseQueryTestCase extends DatabaseTestCase {
       ->fetchField();
     $this->assertFalse($result, 'SQL injection attempt did not result in a row being inserted in the database table.');
   }
-
 }
 
 /**
@@ -4239,6 +4244,134 @@ class ConnectionUnitTest extends DrupalUnitTestCase {
 
     // Verify that we are back to the original connection count.
     $this->assertNoConnection($id);
+  }
+}
+
+  /**
+   * Test reserved keyword handling (introduced for MySQL 8+)
+   */
+class DatabaseReservedKeywordTestCase extends DatabaseTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Reserved Keywords',
+      'description' => 'Test handling of reserved keywords.',
+      'group' => 'Database',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('database_test');
+  }
+
+  public function testTableNameQuoting() {
+    // Test db_query with {table} pattern.
+    $record = db_query('SELECT * FROM {system} LIMIT 1')->fetchObject();
+    $this->assertTrue(isset($record->filename), 'Successfully queried the {system} table.');
+
+    $connection = Database::getConnection()->getConnectionOptions();
+    if ($connection['driver'] === 'sqlite') {
+      // In SQLite simpletest's prefixed db tables exist in their own schema
+      // (e.g. simpletest124904.system), so we cannot test the schema.{table}
+      // syntax here as the table name will have the schema name prepended to it
+      // when prefixes are processed.
+      $this->assert(TRUE, 'Skipping schema.{system} test for SQLite.');
+    }
+    else {
+      $database = $connection['database'];
+      // Test db_query with schema.{table} pattern
+      db_query('SELECT * FROM ' . $database . '.{system} LIMIT 1')->fetchObject();
+      $this->assertTrue(isset($record->filename), 'Successfully queried the schema.{system} table.');
+    }
+  }
+
+  public function testSelectReservedWordTableCount() {
+    $rows = db_select('virtual')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    $this->assertEqual($rows, 1, 'Successful count query on a table with a reserved name.');
+  }
+
+  public function testSelectReservedWordTableSpecificField() {
+    $record = db_select('virtual')
+      ->fields('virtual', array('function'))
+      ->execute()
+      ->fetchAssoc();
+    $this->assertEqual($record['function'], 'Function value 1', 'Successfully read a field from a table with a name and column which are reserved words.');
+  }
+
+  public function testSelectReservedWordTableAllFields() {
+    $record = db_select('virtual')
+      ->fields('virtual')
+      ->execute()
+      ->fetchAssoc();
+    $this->assertEqual($record['function'], 'Function value 1', 'Successful all_fields query from a table with a name and column which are reserved words.');
+  }
+
+  public function testSelectReservedWordAliasCount() {
+    $rows = db_select('test', 'character')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    $this->assertEqual($rows, 4, 'Successful count query using an alias which is a reserved word.');
+  }
+
+  public function testSelectReservedWordAliasSpecificFields() {
+    $record = db_select('test', 'high_priority')
+      ->fields('high_priority', array('name'))
+      ->condition('age', 27)
+      ->execute()->fetchAssoc();
+    $this->assertEqual($record['name'], 'George', 'Successful query using an alias which is a reserved word.');
+  }
+
+  public function testSelectReservedWordAliasAllFields() {
+    $record = db_select('test', 'high_priority')
+      ->fields('high_priority')
+      ->condition('age', 27)
+      ->execute()->fetchAssoc();
+    $this->assertEqual($record['name'], 'George', 'Successful all_fields query using an alias which is a reserved word.');
+  }
+
+  public function testInsertReservedWordTable() {
+    $num_records_before = db_query('SELECT COUNT(*) FROM {virtual}')->fetchField();
+    db_insert('virtual')
+      ->fields(array(
+        'function' => 'Inserted function',
+      ))
+      ->execute();
+    $num_records_after = db_query('SELECT COUNT(*) FROM {virtual}')->fetchField();
+    $this->assertIdentical($num_records_before + 1, (int) $num_records_after, 'Successful insert into a table with a name and column which are reserved words.');
+  }
+
+  public function testDeleteReservedWordTable() {
+    $delete = db_delete('virtual')
+      ->condition('function', 'Function value 1');
+    $num_deleted = $delete->execute();
+    $this->assertEqual($num_deleted, 1, "Deleted 1 record from a table with a name and column which are reserved words..");
+  }
+
+  function testTruncateReservedWordTable() {
+    db_truncate('virtual')->execute();
+    $num_records_after = db_query("SELECT COUNT(*) FROM {virtual}")->fetchField();
+    $this->assertEqual(0, $num_records_after, 'Truncated a table with a reserved name.');
+  }
+
+  function testUpdateReservedWordTable() {
+    $num_updated = db_update('virtual')
+      ->fields(array('function' => 'Updated function'))
+      ->execute();
+    $this->assertIdentical($num_updated, 1, 'Updated 1 record in a table with a name and column which are reserved words.');
+  }
+
+  function testMergeReservedWordTable() {
+    $key = db_query('SELECT id FROM {virtual} LIMIT 1')->fetchField();
+    $num_records_before = db_query('SELECT COUNT(*) FROM {virtual}')->fetchField();
+    db_merge('virtual')
+      ->key(array('id' => $key))
+      ->fields(array('function' => 'Merged function'))
+      ->execute();
+    $num_records_after = db_query('SELECT COUNT(*) FROM {virtual}')->fetchField();
+    $this->assertIdentical($num_records_before, $num_records_after, 'Successful merge query on a table with a name and column which are reserved words.');
   }
 
 }

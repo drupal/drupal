@@ -48,6 +48,10 @@ class InsertQuery_mysql extends InsertQuery {
     // Default fields are always placed first for consistency.
     $insert_fields = array_merge($this->defaultFields, $this->insertFields);
 
+    if (method_exists($this->connection, 'escapeFields')) {
+      $insert_fields = $this->connection->escapeFields($insert_fields);
+    }
+
     // If we're selecting from a SelectQuery, finish building the query and
     // pass it back, as any remaining options are irrelevant.
     if (!empty($this->fromQuery)) {
@@ -88,6 +92,20 @@ class InsertQuery_mysql extends InsertQuery {
 }
 
 class TruncateQuery_mysql extends TruncateQuery { }
+
+class UpdateQuery_mysql extends UpdateQuery {
+  public function __toString() {
+    if (method_exists($this->connection, 'escapeField')) {
+      $escapedFields = array();
+      foreach ($this->fields as $field => $data) {
+        $field = $this->connection->escapeField($field);
+        $escapedFields[$field] = $data;
+      }
+      $this->fields = $escapedFields;
+    }
+    return parent::__toString();
+  }
+}
 
 /**
  * @} End of "addtogroup database".
