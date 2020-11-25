@@ -81,6 +81,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $this->drupalLogin($this->reportViewerUser);
     $this->drupalGet('admin/reports/status');
     $this->assertReadinessReportMatches('Your site has not recently checked if it is ready to apply automatic updates. Readiness checks were last run %s ago.');
+    $assert->linkNotExists('Run readiness checks');
 
     // Confirm a user with the permission to run readiness checks does have a
     // link to run the checks when the checks need to be run again.
