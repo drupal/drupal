@@ -1,6 +1,0 @@
-
-auto_updates.status:
-  title: 'Automatic updates status'
-  route_name: auto_updates.status
-  description: "Get a status report on your site's readiness for automatic updates."
-  parent: system.admin_reports
