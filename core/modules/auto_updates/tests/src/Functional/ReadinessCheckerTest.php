@@ -87,8 +87,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
     // link to run the checks when the checks need to be run again.
     $this->drupalLogin($this->checkerRunnerUser);
     $this->drupalGet('admin/reports/status');
-    $this->assertReadinessReportMatches('Your site has not recently checked if it is ready to apply automatic updates.'
-      . ' Readiness checks were last run %s ago. Run readiness checks now.');
+    $this->assertReadinessReportMatches('Your site has not recently checked if it is ready to apply automatic updates. Readiness checks were last run %s ago. Run readiness checks now.');
     TestChecker::setTestMessages(['OMG 🚒. Your server is on 🔥!']);
 
     // Run the readiness checks.
