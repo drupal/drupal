@@ -691,3 +691,13 @@ $conf['file_scan_ignore_directories'] = array(
  * @see user_user_flood_control()
  */
 # $conf['log_user_flood_control'] = FALSE;
+
+/**
+ * Opt out of variable_initialize() locking optimization.
+ *
+ * After lengthy discussion in https://www.drupal.org/node/973436 a change was
+ * made in variable_initialize() in order to avoid excessive waiting under
+ * certain conditions. Set this variable to TRUE in order to opt out of this
+ * optimization and revert to the original behaviour.
+ */
+# $conf['variable_initialize_wait_for_lock'] = FALSE;

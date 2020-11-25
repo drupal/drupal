@@ -1189,19 +1189,21 @@ function variable_initialize($conf = array()) {
     $variables = $cached->data;
   }
   else {
-    // Cache miss. Avoid a stampede.
+    // Cache miss. Avoid a stampede by acquiring a lock. If the lock fails to
+    // acquire, optionally just continue with uncached processing.
     $name = 'variable_init';
-    if (!lock_acquire($name, 1)) {
-      // Another request is building the variable cache.
-      // Wait, then re-run this function.
+    $lock_acquired = lock_acquire($name, 1);
+    if (!$lock_acquired && variable_get('variable_initialize_wait_for_lock', FALSE)) {
       lock_wait($name);
       return variable_initialize($conf);
     }
     else {
-      // Proceed with variable rebuild.
+      // Load the variables from the table.
       $variables = array_map('unserialize', db_query('SELECT name, value FROM {variable}')->fetchAllKeyed());
-      cache_set('variables', $variables, 'cache_bootstrap');
-      lock_release($name);
+      if ($lock_acquired) {
+        cache_set('variables', $variables, 'cache_bootstrap');
+        lock_release($name);
+      }
     }
   }
 
