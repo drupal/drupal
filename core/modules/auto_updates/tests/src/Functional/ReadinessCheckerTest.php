@@ -145,6 +145,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
     // Confirm that new checker message is not displayed because the checker was
     // not run again.
     $this->assertReadinessReportMatches('1 check failed: 😿Oh no! A hacker now owns your files!');
+    $assert->pageTextNotContains('Security has been compromised. "pass123" was a bad password!');
 
     // Confirm the new message is displayed after running the checkers manually.
     // @todo Now that we no longer have the form there is no way to run the
