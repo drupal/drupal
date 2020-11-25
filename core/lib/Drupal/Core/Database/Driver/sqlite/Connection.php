@@ -428,7 +428,11 @@ class Connection extends DatabaseConnection {
     if (!($options['allow_square_brackets'] ?? FALSE)) {
       $query = $this->quoteIdentifiers($query);
     }
-    return new Statement($this->connection, $this, $query, $options['pdo'] ?? []);
+    // @todo in Drupal 10, this should be always set, remove this check.
+    if (!isset($options['return'])) {
+      $options['return'] = Database::RETURN_STATEMENT;
+    }
+    return new Statement($this->connection, $this, $query, $options['pdo'] ?? [], $options['return']);
   }
 
   public function nextId($existing_id = 0) {
