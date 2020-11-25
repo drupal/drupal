@@ -20,7 +20,7 @@ class TestTime extends Time {
   }
 
   /**
-   * Sets a fake time from offset that will be used in the test.
+   * Sets a fake time from an offset that will be used in the test.
    *
    * @param string $offset
    *   A date/time offset string as used by \DateTime::modify.

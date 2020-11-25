@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\auto_updates\Kernel\ReadinessChecker;
 
+use Drupal\auto_updates_test\ReadinessChecker\TestChecker;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -10,8 +11,6 @@ use Drupal\KernelTests\KernelTestBase;
  * @group auto_updates
  */
 class ReadinessCheckerManagerTest extends KernelTestBase {
-
-  use TestCheckerTrait;
 
   /**
    * {@inheritdoc}
@@ -37,7 +36,7 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
    * @dataProvider providerCheckerMessages
    */
   public function testCheckerMessages(array $error_messages, array $warning_messages): void {
-    $this->setTestMessages($error_messages, $warning_messages);
+    TestChecker::setTestMessages($error_messages, $warning_messages);
     $manager = $this->container->get('auto_updates.readiness_checker_manager');
     $this->assertSame($warning_messages, $manager->getWarnings());
     $this->assertSame($error_messages, $manager->getErrors());
@@ -74,13 +73,13 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
    * Test that the option $refresh parameter works.
    */
   public function testMessageRefresh():void {
-    $this->setTestMessages(['error1'], ['warning1']);
+    TestChecker::setTestMessages(['error1'], ['warning1']);
     $manager = $this->container->get('auto_updates.readiness_checker_manager');
     $this->assertSame(['warning1'], $manager->getWarnings());
     $this->assertSame(['error1'], $manager->getErrors());
     // The readiness checkers will not be invoked in the next calls so changing
     // the test messages will not have an effect.
-    $this->setTestMessages(['error2'], ['warning2']);
+    TestChecker::setTestMessages(['error2'], ['warning2']);
     $this->assertSame(['warning1'], $manager->getWarnings());
     $this->assertSame(['error1'], $manager->getErrors());
     // Calling get warnings with the optional $refresh parameter will return the

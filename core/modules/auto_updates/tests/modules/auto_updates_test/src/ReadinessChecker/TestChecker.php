@@ -3,6 +3,7 @@
 namespace Drupal\auto_updates_test\ReadinessChecker;
 
 use Drupal\auto_updates\ReadinessChecker\ReadinessCheckerInterface;
+use Drupal\Core\State\StateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
@@ -13,9 +14,21 @@ class TestChecker implements ReadinessCheckerInterface {
   use StringTranslationTrait;
 
   /**
-   * The state key for setting and getting checker message.
+   * The state service.
+   *
+   * @var \Drupal\Core\State\StateInterface
    */
-  const STATE_KEY = 'auto_updates_test.check_error';
+  protected $state;
+
+  /**
+   * Creates a TestChecker object.
+   *
+   * @param \Drupal\Core\State\StateInterface $state
+   *   The state service.
+   */
+  public function __construct(StateInterface $state) {
+    $this->state = $state;
+  }
 
   /**
    * Gets the test messages set in state.
@@ -25,28 +38,44 @@ class TestChecker implements ReadinessCheckerInterface {
    *
    * @see \Drupal\Tests\auto_updates\Kernel\ReadinessChecker\TestCheckerTrait::setTestMessages()
    */
-  private static function getMessages() {
-    return \Drupal::state()->get(
-        static::STATE_KEY,
-        []
-      ) + [
-        'errors' => [],
-        'warnings' => [],
-      ];
+  protected function getMessages() {
+    $defaults = ['errors' => [], 'warnings' => []];
+    return $this->state->get('auto_updates_test.check_error', []) + $defaults;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getErrors(): array {
-    return static::getMessages()['errors'];
+    return $this->getMessages()['errors'];
   }
 
   /**
    * {@inheritdoc}
    */
   public function getWarnings(): array {
-    return static::getMessages()['warnings'];
+    return $this->getMessages()['warnings'];
+  }
+
+  /**
+   * Sets messages for the this readiness checker.
+   *
+   * This is a static method to enable setting the expected messages before the
+   * test module is enabled.
+   *
+   * @param string[] $errors
+   *   The error messages.
+   * @param string[] $warnings
+   *   The warning messages.
+   */
+  public static function setTestMessages(array $errors = [], array $warnings = []): void {
+    \Drupal::state()->set(
+      'auto_updates_test.check_error',
+      [
+        'errors' => $errors,
+        'warnings' => $warnings,
+      ]
+    );
   }
 
 }

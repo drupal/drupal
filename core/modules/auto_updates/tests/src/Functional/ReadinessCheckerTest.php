@@ -3,7 +3,7 @@
 namespace Drupal\Tests\auto_updates\Functional;
 
 use Drupal\auto_updates_test\Datetime\TestTime;
-use Drupal\Tests\auto_updates\Kernel\ReadinessChecker\TestCheckerTrait;
+use Drupal\auto_updates_test\ReadinessChecker\TestChecker;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -12,8 +12,6 @@ use Drupal\Tests\BrowserTestBase;
  * @group auto_updates
  */
 class ReadinessCheckerTest extends BrowserTestBase {
-
-  use TestCheckerTrait;
 
   /**
    * {@inheritdoc}
@@ -33,6 +31,13 @@ class ReadinessCheckerTest extends BrowserTestBase {
    * @var \Drupal\user\Entity\User
    */
   protected $checkerRunnerUser;
+
+  /**
+   * The test checker.
+   *
+   * @var \Drupal\auto_updates_test\ReadinessChecker\TestChecker
+   */
+  protected $testChecker;
 
   /**
    * {@inheritdoc}
@@ -83,7 +88,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/status');
     $this->assertReadinessReportMatches('Your site has not recently checked if it is ready to apply automatic updates.'
       . ' Readiness checks were last run %s ago. Run readiness checks now.');
-    $this->setTestMessages(['OMG 🚒. Your server is on 🔥!']);
+    TestChecker::setTestMessages(['OMG 🚒. Your server is on 🔥!']);
 
     // Run the readiness checks.
     $this->clickLink('Run readiness checks');
@@ -106,7 +111,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/status');
     $this->assertReadinessReportMatches('1 check failed: OMG 🚒. Your server is on 🔥!');
 
-    $this->setTestMessages(['OMG 🔌. Some one unplugged the server! How is this site even running?']);
+    TestChecker::setTestMessages(['OMG 🔌. Some one unplugged the server! How is this site even running?']);
     /** @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface $keyValue */
     $keyValue = $this->container->get('keyvalue.expirable')->get('auto_updates');
     $keyValue->delete('readiness_check_results');
@@ -129,14 +134,14 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/status');
     $this->assertReadinessReportMatches('Your site is ready for automatic updates.');
 
-    $this->setTestMessages(['😿Oh no! A hacker now owns your files!']);
+    TestChecker::setTestMessages(['😿Oh no! A hacker now owns your files!']);
     $this->container->get('module_installer')->install(['auto_updates_test']);
     $this->drupalGet('admin/reports/status');
     $this->assertReadinessReportMatches('1 check failed: 😿Oh no! A hacker now owns your files!');
 
     // Confirm that installing a module that does not provide a new checker does
     // not run the checkers on install.
-    $this->setTestMessages(['Security has been compromised. "pass123" was a bad password!']);
+    TestChecker::setTestMessages(['Security has been compromised. "pass123" was a bad password!']);
     $this->container->get('module_installer')->install(['help']);
     $this->drupalGet('admin/reports/status');
     // Confirm that new checker message is not displayed because the checker was
@@ -147,7 +152,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
     // @todo Now that we no longer have the form there is no way to run the
     //  checkers if they have been run recently. Should we add the option on the
     //  status report to run the checks even if they have been run recently.
-   return;
+    return;
 
     $this->drupalGet('admin/reports/status');
     $this->assertReadinessReportMatches('1 check failed: Security has been compromised. "pass123" was a bad password!');
@@ -160,7 +165,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $assert = $this->assertSession();
     $this->drupalLogin($this->checkerRunnerUser);
 
-    $this->setTestMessages(['😲Your site is running on Commodore 64! Not powerful enough to do updates!']);
+    TestChecker::setTestMessages(['😲Your site is running on Commodore 64! Not powerful enough to do updates!']);
     $this->container->get('module_installer')->install(['auto_updates', 'auto_updates_test']);
     $this->drupalGet('admin/reports/status');
     $this->assertReadinessReportMatches('1 check failed: 😲Your site is running on Commodore 64! Not powerful enough to do updates!');
