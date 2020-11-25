@@ -36,6 +36,24 @@ class StatementWrapperLegacyTest extends DatabaseTestBase {
   }
 
   /**
+   * Tests accessing deprecated properties.
+   */
+  public function testGetDeprecatedProperties() {
+    $this->expectDeprecation('$dbh should not be accessed in drupal:9.2.0 and will error in drupal:10.0.0.');
+    $this->assertNotNull($this->statement->dbh);
+    $this->expectDeprecation('$allowRowCount should not be accessed in drupal:9.2.0 and will error in drupal:10.0.0.');
+    $this->assertFalse($this->statement->allowRowCount);
+  }
+
+  /**
+   * Tests writing deprecated properties.
+   */
+  public function testSetDeprecatedProperties() {
+    $this->expectDeprecation('$allowRowCount should not be written in drupal:9.2.0 and will error in drupal:10.0.0.');
+    $this->statement->allowRowCount = TRUE;
+  }
+
+  /**
    * Tests calling a non existing \PDOStatement method.
    */
   public function testMissingMethod() {
