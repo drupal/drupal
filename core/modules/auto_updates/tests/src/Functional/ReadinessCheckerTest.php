@@ -60,9 +60,9 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $assert = $this->assertSession();
     $page = $this->getSession()->getPage();
 
-    // Disable automated_cron before installing auto_updates. This ensures we
-    // are testing that auto_updates runs the checkers when the module itself
-    // is installed and they weren't run on cron.
+    // Ensure automated_cron is disabled before installing auto_updates. This
+    // ensures we are testing that auto_updates runs the checkers when the
+    // module itself is installed and they weren't run on cron.
     $this->container->get('module_installer')->uninstall(['automated_cron']);
     $this->container->get('module_installer')->install(['auto_updates', 'auto_updates_test']);
 
