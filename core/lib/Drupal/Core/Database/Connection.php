@@ -551,10 +551,14 @@ abstract class Connection {
     if (!($options['allow_square_brackets'] ?? FALSE)) {
       $query = $this->quoteIdentifiers($query);
     }
+    // @todo in Drupal 10, this should be always set, remove this check.
+    if (!isset($options['return'])) {
+      $options['return'] = Database::RETURN_STATEMENT;
+    }
     // @todo in Drupal 10, only return the StatementWrapper.
     // @see https://www.drupal.org/node/3177490
     return $this->statementWrapperClass ?
-      new $this->statementWrapperClass($this, $this->connection, $query, $options['pdo'] ?? []) :
+      new $this->statementWrapperClass($this, $this->connection, $query, $options['pdo'] ?? [], $options['return']) :
       $this->connection->prepare($query, $options['pdo'] ?? []);
   }
 
@@ -834,7 +838,6 @@ abstract class Connection {
           return $stmt;
 
         case Database::RETURN_AFFECTED:
-          $stmt->allowRowCount = TRUE;
           return $stmt->rowCount();
 
         case Database::RETURN_INSERT_ID:

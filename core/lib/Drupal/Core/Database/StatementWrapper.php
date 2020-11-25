@@ -14,7 +14,7 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
    *
    * @var \Drupal\Core\Database\Connection
    */
-  public $dbh;
+  protected $connection;
 
   /**
    * The client database Statement object.
@@ -30,7 +30,7 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
    *
    * @var bool
    */
-  public $allowRowCount = FALSE;
+  protected $rowCountEnabled = FALSE;
 
   /**
    * Constructs a StatementWrapper object.
@@ -43,10 +43,15 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
    *   The SQL query string.
    * @param array $options
    *   Array of query options.
+   * @param int $return_type
+   *   The return type.
    */
-  public function __construct(Connection $connection, $client_connection, string $query, array $options) {
-    $this->dbh = $connection;
+  public function __construct(Connection $connection, $client_connection, string $query, array $options, int $return_type = Database::RETURN_STATEMENT) {
+    $this->connection = $connection;
     $this->clientStatement = $client_connection->prepare($query, $options);
+    if ($return_type === Database::RETURN_AFFECTED) {
+      $this->rowCountEnabled = TRUE;
+    }
     $this->setFetchMode(\PDO::FETCH_OBJ);
   }
 
@@ -62,6 +67,29 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
     if ($name === 'queryString') {
       @trigger_error("StatementWrapper::\${$name} should not be accessed in drupal:9.1.0 and will error in drupal:10.0.0. Access the client-level statement object via ::getClientStatement(). See https://www.drupal.org/node/3177488", E_USER_DEPRECATED);
       return $this->getClientStatement()->queryString;
+    }
+    if ($name === 'dbh') {
+      @trigger_error("StatementWrapper::\${$name} should not be accessed in drupal:9.2.0 and will error in drupal:10.0.0. TODO. See https://www.drupal.org/node/TODO", E_USER_DEPRECATED);
+      return $this->connection;
+    }
+    if ($name === 'allowRowCount') {
+      @trigger_error("StatementWrapper::\${$name} should not be accessed in drupal:9.2.0 and will error in drupal:10.0.0. TODO. See https://www.drupal.org/node/TODO", E_USER_DEPRECATED);
+      return $this->rowCountEnabled;
+    }
+  }
+
+  /**
+   * Implements the magic __set() method.
+   *
+   * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Access the
+   *   client-level statement object via ::getClientStatement().
+   *
+   * @see https://www.drupal.org/node/3177488
+   */
+  public function __set($name, $value) {
+    if ($name === 'allowRowCount') {
+      @trigger_error("StatementWrapper::\${$name} should not be written in drupal:9.2.0 and will error in drupal:10.0.0. TODO. See https://www.drupal.org/node/TODO", E_USER_DEPRECATED);
+      $this->rowCountEnabled = $value;
     }
   }
 
@@ -94,6 +122,17 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
   }
 
   /**
+   * Returns the target connection this statement is associated with.
+   *
+   * @return string|null
+   *   The target connection string of this statement, or NULL if no target is
+   *   set.
+   */
+  public function getConnectionTarget(): ?string {
+    return $this->connection->getTarget();
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function execute($args = [], $options = []) {
@@ -108,7 +147,7 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
       }
     }
 
-    $logger = $this->dbh->getLogger();
+    $logger = $this->connection->getLogger();
     if (!empty($logger)) {
       $query_start = microtime(TRUE);
     }
@@ -202,7 +241,7 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
    */
   public function rowCount() {
     // SELECT query should not use the method.
-    if ($this->allowRowCount) {
+    if ($this->rowCountEnabled) {
       return $this->clientStatement->rowCount();
     }
     else {

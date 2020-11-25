@@ -20,7 +20,48 @@ class StatementEmpty implements \Iterator, StatementInterface {
    *
    * @var bool
    */
-  public $allowRowCount = FALSE;
+  protected $rowCountEnabled = FALSE;
+
+  /**
+   * Implements the magic __get() method.
+   *
+   * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Access the
+   *   client-level statement object via ::getClientStatement().
+   *
+   * @see https://www.drupal.org/node/3177488
+   */
+  public function __get($name) {
+    if ($name === 'allowRowCount') {
+      @trigger_error("StatementEmpty::allowRowCount should not be accessed in drupal:9.2.0 and will error in drupal:10.0.0. TODO. See https://www.drupal.org/node/TODO", E_USER_DEPRECATED);
+      return $this->rowCountEnabled;
+    }
+  }
+
+  /**
+   * Implements the magic __set() method.
+   *
+   * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Access the
+   *   client-level statement object via ::getClientStatement().
+   *
+   * @see https://www.drupal.org/node/3177488
+   */
+  public function __set($name, $value) {
+    if ($name === 'allowRowCount') {
+      @trigger_error("StatementEmpty::allowRowCount should not be written in drupal:9.2.0 and will error in drupal:10.0.0. TODO. See https://www.drupal.org/node/TODO", E_USER_DEPRECATED);
+      $this->rowCountEnabled = $value;
+    }
+  }
+
+  /**
+   * Returns the target connection this statement is associated with.
+   *
+   * @return string|null
+   *   The target connection string of this statement, or NULL if no target is
+   *   set.
+   */
+  public function getConnectionTarget(): ?string {
+    return NULL;
+  }
 
   /**
    * {@inheritdoc}
@@ -40,7 +81,7 @@ class StatementEmpty implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function rowCount() {
-    if ($this->allowRowCount) {
+    if ($this->rowCountEnabled) {
       return 0;
     }
     throw new RowCountException();
