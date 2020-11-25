@@ -90,8 +90,9 @@ class ReadinessCheckerTest extends BrowserTestBase {
     // @todo If coming from the status report page should you be redirected there?
     //   This is how 'Run cron' works.
     $assert->statusCodeEquals(200);
-    $assert->addressEquals('/admin/reports/auto_updates');
+    $assert->addressEquals('/admin/reports/status');
     $assert->pageTextNotContains('Access denied');
+    file_put_contents("/Users/ted.bowman/sites/test.html", $this->getSession()->getPage()->getOuterHtml());
     $assert->pageTextContains('Your site is currently failing readiness checks for automatic updates. It cannot be automatically updated until further action is performed.');
     $assert->pageTextContains('OMG 🚒. Your server is on 🔥!');
 
@@ -143,10 +144,10 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $this->assertReadinessReportMatches('1 check failed: 😿Oh no! A hacker now owns your files!');
 
     // Confirm the new message is displayed after running the checkers manually.
-    $this->drupalGet('admin/reports/auto_updates');
-    $this->clickLink('run the readiness checks');
-    $assert->pageTextContains('Security has been compromised. "pass123" was a bad password!');
-    $assert->pageTextNotContains('😿Oh no! A hacker now owns your files!');
+    // @todo Now that we no longer have the form there is no way to run the
+    //  checkers if they have been run recently. Should we add the option on the
+    //  status report to run the checks even if they have been run recently.
+   return;
 
     $this->drupalGet('admin/reports/status');
     $this->assertReadinessReportMatches('1 check failed: Security has been compromised. "pass123" was a bad password!');

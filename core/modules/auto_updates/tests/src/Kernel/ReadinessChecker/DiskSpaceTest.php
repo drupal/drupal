@@ -44,9 +44,8 @@ class DiskSpaceTest extends KernelTestBase {
     // Web root and vendor path are invalid.
     $disk_space = new DiskSpace("if_there_was_ever_a_folder_with_this_path_this_test_would_fail");
     $messages = $disk_space->getErrors();
-    $this->assertCount(2, $messages);
-    $this->assertEquals('The web root could not be located.', (string) $messages[0]);
-    $this->assertStringMatchesFormat('Vendor folder "if_there_was_ever_a_folder_with_this_path_this_test_would_fail/vendor" is not a valid directory. Alternate vendor folder locations are not currently supported.', (string) $messages[1]);
+    $this->assertCount(1, $messages);
+    $this->assertEquals('Free disk space cannot be determined because the web root and vendor directories could not be located.', (string) $messages[0]);
   }
 
 }

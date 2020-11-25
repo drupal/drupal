@@ -19,7 +19,7 @@ function auto_updates_requirements($phase) {
   /** @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager $checker_manager */
   $checker_manager = \Drupal::service('auto_updates.readiness_checker_manager');
   $requirement['title'] = t('Update readiness checks');
-  $readiness_check_url = Url::fromRoute('auto_updates.update_readiness');
+  $readiness_check_url = Url::fromRoute('auto_updates.status_update_readiness');
   $last_check_timestamp = $checker_manager->getMostRecentRunTime();
   if ($last_check_timestamp === NULL) {
     $requirement['severity'] = REQUIREMENT_WARNING;

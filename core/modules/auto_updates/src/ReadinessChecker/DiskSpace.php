@@ -25,9 +25,11 @@ class DiskSpace extends FileSystemBase {
    *   Thrown if the call to disk_free_space() fails.
    */
   protected static function getFreeSpace(string $path) {
-    if (!disk_free_space($path)) {
+    $free_space = disk_free_space($path);
+    if (!$free_space) {
       throw new \RuntimeException('disk_free_space() failed.');
     }
+    return $free_space;
   }
 
   /**

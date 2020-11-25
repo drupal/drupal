@@ -48,10 +48,14 @@ class ReadinessCheckerController extends ControllerBase {
   /**
    * Run the readiness checkers.
    *
+   * @param bool $on_status_report
+   *   (optional) Whether the current request to run the readiness checkers is
+   *   from the status report page.
+   *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
-   *   A redirect to the automatic updates settings page.
+   *   A redirect to the status report page.
    */
-  public function run() {
+  public function run($on_status_report = FALSE) {
     if (!$this->checkerManager->getErrors(TRUE) && !$this->checkerManager->getWarnings()) {
       // @todo Link "automatic updates" to documentation in
       //   https://www.drupal.org/node/3168405.
@@ -59,7 +63,24 @@ class ReadinessCheckerController extends ControllerBase {
       // that site is ready. If there are messages the page will display them.
       $this->messenger()->addStatus($this->t('No issues found. Your site is ready for automatic updates'));
     }
+    elseif ($on_status_report) {
+      $this->messenger()->addWarning('Your site is currently failing readiness checks for automatic updates. It cannot be automatically updated until further action is performed.');
+    }
+    // Set a redirect to the status report page. Any other page that provides a
+    // link to this controller should include 'destination' in the query string
+    // to ensure this redirect is overridden.
+    // @see \Drupal\Core\EventSubscriber\RedirectResponseSubscriber::checkRedirectUrl()
     return $this->redirect('system.status');
+  }
+
+  /**
+   * Run the readiness checkers on the status report page.
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *   A redirect to the status report page.
+   */
+  public function runOnStatusReport() {
+    return $this->run(TRUE);
   }
 
 }
