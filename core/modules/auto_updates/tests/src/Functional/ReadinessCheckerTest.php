@@ -72,7 +72,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
 
     // Confirm a user without the permission to run readiness checks does not
     // have a link to run the checks when the checks need to be run again.
-    $this->setFakeTime('+2 days');
+    TestTime::setFakeTimeByOffset('+2 days');
     $this->drupalLogin($this->reportViewerUser);
     $this->drupalGet('admin/reports/status');
     $this->assertReadinessReportMatches('Your site has not recently checked if it is ready to apply automatic updates. Readiness checks were last run %s ago.');
@@ -168,17 +168,6 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $this->container->get('module_installer')->uninstall(['auto_updates_test']);
     $this->drupalGet('admin/reports/status');
     $assert->pageTextNotContains('1 check failed: 😲Your site is running on Commodore 64! Not powerful enough to do updates!');
-  }
-
-  /**
-   * Sets a fake time that will be used in the test.
-   *
-   * @param string $offset
-   *   A date/time offset string.
-   */
-  private function setFakeTime(string $offset): void {
-    $fake_delay = (new \DateTime())->modify($offset)->format(TestTime::TIME_FORMAT);
-    $this->container->get('state')->set(TestTime::STATE_KEY, $fake_delay);
   }
 
   /**

@@ -10,23 +10,24 @@ use Drupal\Component\Datetime\Time;
 class TestTime extends Time {
 
   /**
-   * The time format to for setting the test time.
-   */
-  const TIME_FORMAT = 'U';
-
-  /**
-   * The state key for setting and getting the test time.
-   */
-  const STATE_KEY = 'auto_updates_test.mock_date_time';
-
-  /**
    * {@inheritdoc}
    */
   public function getRequestTime() {
-    if ($faked_date = \Drupal::state()->get(TestTime::STATE_KEY)) {
-      return \DateTime::createFromFormat(self::TIME_FORMAT, $faked_date)->getTimestamp();
+    if ($faked_date = \Drupal::state()->get('auto_updates_test.fake_date_time')) {
+      return \DateTime::createFromFormat('U', $faked_date)->getTimestamp();
     }
     return parent::getRequestTime();
+  }
+
+  /**
+   * Sets a fake time from offset that will be used in the test.
+   *
+   * @param string $offset
+   *   A date/time offset string as used by \DateTime::modify.
+   */
+  public static function setFakeTimeByOffset(string $offset): void {
+    $fake_time = (new \DateTime())->modify($offset)->format('U');
+    \Drupal::state()->set('auto_updates_test.fake_date_time', $fake_time);
   }
 
 }
