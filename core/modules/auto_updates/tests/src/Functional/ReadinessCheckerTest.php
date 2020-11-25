@@ -95,7 +95,6 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $assert->statusCodeEquals(200);
     $assert->addressEquals('/admin/reports/status');
     $assert->pageTextNotContains('Access denied');
-    file_put_contents("/Users/ted.bowman/sites/test.html", $this->getSession()->getPage()->getOuterHtml());
     $assert->pageTextContains('Your site is currently failing readiness checks for automatic updates. It cannot be automatically updated until further action is performed.');
     $assert->pageTextContains('OMG 🚒. Your server is on 🔥!');
 
