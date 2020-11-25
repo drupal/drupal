@@ -37,7 +37,6 @@
 .primary-nav__menu-link {
   flex-grow: 1;
   text-decoration: none;
-  letter-spacing: -1px;
   color: #0d1214;
   font-size: 28px;
   font-weight: bold;
@@ -247,6 +246,7 @@
 .primary-nav__menu-link--level-1 {
   position: relative;
   display: flex;
+  letter-spacing: -1px;
 }
 
 /*
