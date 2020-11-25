@@ -150,10 +150,8 @@ class ReadinessCheckerTest extends BrowserTestBase {
     // @todo Now that we no longer have the form there is no way to run the
     //  checkers if they have been run recently. Should we add the option on the
     //  status report to run the checks even if they have been run recently.
-    return;
-
-    $this->drupalGet('admin/reports/status');
-    $this->assertReadinessReportMatches('1 check failed: Security has been compromised. "pass123" was a bad password!');
+    // $this->drupalGet('admin/reports/status');
+    // $this->assertReadinessReportMatches('1 check failed: Security has been compromised. "pass123" was a bad password!');
   }
 
   /**
