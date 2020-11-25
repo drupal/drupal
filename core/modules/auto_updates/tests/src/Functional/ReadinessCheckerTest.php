@@ -26,7 +26,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
   protected $reportViewerUser;
 
   /**
-   * A user how can view the status report and run readiness checkers.
+   * A user who can view the status report and run readiness checkers.
    *
    * @var \Drupal\user\Entity\User
    */
