@@ -92,8 +92,6 @@ class ReadinessCheckerTest extends BrowserTestBase {
 
     // Run the readiness checks.
     $this->clickLink('Run readiness checks');
-    // @todo If coming from the status report page should you be redirected there?
-    //   This is how 'Run cron' works.
     $assert->statusCodeEquals(200);
     $assert->addressEquals('/admin/reports/status');
     $assert->pageTextNotContains('Access denied');
