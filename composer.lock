@@ -183,10 +183,6 @@
                 "zend",
                 "zikula"
             ],
-            "support": {
-                "issues": "https://github.com/composer/installers/issues",
-                "source": "https://github.com/composer/installers/tree/v1.9.0"
-            },
             "funding": [
                 {
                     "url": "https://packagist.com",
@@ -671,7 +667,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "00a84fa61ee921f106f7912c3ca0393a2c328e68"
+                "reference": "92e350403e9d31b0189f5834fdb410e8b6e7ecf1"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -697,7 +693,7 @@
                 "laminas/laminas-diactoros": "^1.8",
                 "laminas/laminas-feed": "^2.12",
                 "masterminds/html5": "^2.1",
-                "pear/archive_tar": "^1.4.9",
+                "pear/archive_tar": "^1.4.11",
                 "php": ">=7.0.8",
                 "psr/log": "^1.0",
                 "stack/builder": "^1.0",
@@ -1565,6 +1561,12 @@
                 "laminas",
                 "zf"
             ],
+            "funding": [
+                {
+                    "url": "https://funding.communitybridge.org/projects/laminas-project",
+                    "type": "community_bridge"
+                }
+            ],
             "time": "2020-05-20T16:45:56+00:00"
         },
         {
@@ -1679,16 +1681,16 @@
         },
         {
             "name": "pear/archive_tar",
-            "version": "1.4.9",
+            "version": "1.4.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pear/Archive_Tar.git",
-                "reference": "c5b00053770e1d72128252c62c2c1a12c26639f0"
+                "reference": "17d355cb7d3c4ff08e5729f29cd7660145208d9d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pear/Archive_Tar/zipball/c5b00053770e1d72128252c62c2c1a12c26639f0",
-                "reference": "c5b00053770e1d72128252c62c2c1a12c26639f0",
+                "url": "https://api.github.com/repos/pear/Archive_Tar/zipball/17d355cb7d3c4ff08e5729f29cd7660145208d9d",
+                "reference": "17d355cb7d3c4ff08e5729f29cd7660145208d9d",
                 "shasum": ""
             },
             "require": {
@@ -1741,7 +1743,7 @@
                 "archive",
                 "tar"
             ],
-            "time": "2019-12-04T10:17:28+00:00"
+            "time": "2020-11-19T22:10:24+00:00"
         },
         {
             "name": "pear/console_getopt",
@@ -3233,6 +3235,20 @@
                 "portable",
                 "shim"
             ],
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-05-12T16:47:27+00:00"
         },
         {
@@ -4271,6 +4287,16 @@
                 "ssl",
                 "tls"
             ],
+            "funding": [
+                {
+                    "url": "https://packagist.com",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/composer/composer",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-04-08T08:27:21+00:00"
         },
         {
@@ -4315,6 +4341,9 @@
                 "ext-zip": "Enabling the zip extension allows you to unzip archives",
                 "ext-zlib": "Allow gzip compression of HTTP requests"
             },
+            "bin": [
+                "bin/composer"
+            ],
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -6264,6 +6293,16 @@
                 "linter",
                 "parser",
                 "validator"
+            ],
+            "funding": [
+                {
+                    "url": "https://github.com/Seldaek",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/seld/jsonlint",
+                    "type": "tidelift"
+                }
             ],
             "time": "2020-04-30T19:05:18+00:00"
         },
