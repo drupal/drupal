@@ -649,11 +649,11 @@
         },
         {
             "name": "drupal/core",
-            "version": "8.8.x-dev",
+            "version": "8.8.12",
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "67994f5a1eb5a32289d12dd53de872db02998046"
+                "reference": "6d6617c79b60da9fc641d55c651732fc5cc98cf5"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -677,7 +677,7 @@
                 "ext-xml": "*",
                 "guzzlehttp/guzzle": "^6.3",
                 "masterminds/html5": "^2.1",
-                "pear/archive_tar": "^1.4.9",
+                "pear/archive_tar": "^1.4.11",
                 "php": ">=7.0.8",
                 "stack/builder": "^1.0",
                 "symfony-cmf/routing": "^1.4",
@@ -882,7 +882,7 @@
         },
         {
             "name": "drupal/core-project-message",
-            "version": "8.8.x-dev",
+            "version": "8.8.12",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/ProjectMessage",
@@ -915,7 +915,7 @@
         },
         {
             "name": "drupal/core-vendor-hardening",
-            "version": "8.8.x-dev",
+            "version": "8.8.12",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/VendorHardening",
@@ -6402,11 +6402,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "drupal/core": 20,
-        "drupal/core-project-message": 20,
-        "drupal/core-vendor-hardening": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": [],
