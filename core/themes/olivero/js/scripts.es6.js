@@ -8,7 +8,6 @@
   Drupal.olivero = {};
 
   function isDesktopNav() {
-    // @todo, I'm not sure we even need the .mobile-buttons container anymore.
     const navButtons = document.querySelector('.mobile-buttons');
     return (
       window.getComputedStyle(navButtons).getPropertyValue('display') === 'none'
