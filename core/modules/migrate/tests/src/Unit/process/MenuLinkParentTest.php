@@ -88,7 +88,7 @@ class MenuLinkParentTest extends MigrateProcessTestCase {
    * @dataProvider providerTransformException
    */
   public function testTransformException(array $source_value) {
-    [$parent_id, $menu_name, $parent_link_path] = $source_value;
+    [$parent_id, $menu_name] = $source_value;
     $this->migrateLookup->lookup(NULL, [1])->willReturn([]);
     $plugin = new MenuLinkParent([], 'map', [], $this->migrateLookup->reveal(), $this->menuLinkManager->reveal(), $this->menuLinkStorage->reveal(), $this->migration->reveal());
     $this->expectException(MigrateSkipRowException::class);
@@ -106,7 +106,7 @@ class MenuLinkParentTest extends MigrateProcessTestCase {
         'source_value' => [1, 'admin', 'http://drupal.org'],
       ],
       'parent link path/menu name not passed' => [
-        'source_value' => [1, NULL, 'http://drupal.org'],
+        'source_value' => [1, NULL, NULL],
       ],
       'parent link is an internal URI that does not exist' => [
         'source_value' => [1, NULL, 'admin/structure'],
