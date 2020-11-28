@@ -554,7 +554,7 @@ abstract class Connection {
     // @todo in Drupal 10, only return the StatementWrapper.
     // @see https://www.drupal.org/node/3177490
     return $this->statementWrapperClass ?
-      new $this->statementWrapperClass($this, $this->connection, $query, $options['pdo'] ?? [], $options['return']) :
+      new $this->statementWrapperClass($this, $this->connection, $query, $options['pdo'] ?? [], $options['return'] ?? Database::RETURN_STATEMENT) :
       $this->connection->prepare($query, $options['pdo'] ?? []);
   }
 
