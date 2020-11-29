@@ -117,7 +117,7 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
    * {@inheritdoc}
    */
   public function getConnectionTarget(): string {
-    return $this->connection->getTarget() ?? '';
+    return $this->connection->getTarget();
   }
 
   /**
