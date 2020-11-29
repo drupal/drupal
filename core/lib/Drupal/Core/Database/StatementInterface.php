@@ -21,6 +21,14 @@ namespace Drupal\Core\Database;
 interface StatementInterface extends \Traversable {
 
   /**
+   * Returns the target connection this statement is associated with.
+   *
+   * @return string
+   *   The target connection string of this statement.
+   */
+  public function getConnectionTarget(): string;
+
+  /**
    * Executes a prepared statement
    *
    * @param $args

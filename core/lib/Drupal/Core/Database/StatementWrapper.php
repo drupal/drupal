@@ -114,14 +114,10 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
   }
 
   /**
-   * Returns the target connection this statement is associated with.
-   *
-   * @return string|null
-   *   The target connection string of this statement, or NULL if no target is
-   *   set.
+   * {@inheritdoc}
    */
-  public function getConnectionTarget(): ?string {
-    return $this->connection->getTarget();
+  public function getConnectionTarget(): string {
+    return $this->connection->getTarget() ?? '';
   }
 
   /**
