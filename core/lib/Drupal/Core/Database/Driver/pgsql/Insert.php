@@ -3,6 +3,8 @@
 namespace Drupal\Core\Database\Driver\pgsql;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\DatabaseExceptionWrapper;
+use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Database\Query\Insert as QueryInsert;
 
 // cSpell:ignore nextval setval
@@ -84,18 +86,10 @@ class Insert extends QueryInsert {
       }
     }
 
-    // PostgreSQL requires the table name to be specified explicitly
-    // when requesting the last insert ID, so we pass that in via
-    // the options array.
-    $options = $this->queryOptions;
-
-    if (!empty($table_information->sequences)) {
-      $options['sequence_name'] = $table_information->sequences[0];
-    }
-    // If there are no sequences then we can't get a last insert id.
-    elseif ($options['return'] == Database::RETURN_INSERT_ID) {
-      $options['return'] = Database::RETURN_NULL;
-    }
+    // PostgreSQL requires the table name to be specified explicitly when
+    // requesting the last insert ID. If there are no sequences, then we can't
+    // get a last insert id.
+    $sequence_name = $table_information->sequences[0] ?? NULL;
 
     // Create a savepoint so we can rollback a failed query. This is so we can
     // mimic MySQL and SQLite transactions which don't fail if a single query
@@ -103,14 +97,31 @@ class Insert extends QueryInsert {
     // example, \Drupal\Core\Cache\DatabaseBackend.
     $this->connection->addSavepoint();
     try {
+      $stmt->execute(NULL, $this->queryOptions);
       // Only use the returned last_insert_id if it is not already set.
-      if (!empty($last_insert_id)) {
-        $this->connection->query($stmt, [], $options);
-      }
-      else {
-        $last_insert_id = $this->connection->query($stmt, [], $options);
+      // PostgreSQL requires the table name to be specified explicitly when
+      // requesting the last insert ID.
+      if (!isset($last_insert_id)) {
+        if ($this->queryOptions['return'] === Database::RETURN_INSERT_ID && $sequence_name !== NULL) {
+          // cspell:ignore currval
+          $last_insert_id = $this->connection->query("SELECT currval('$sequence_name')")->fetchField();
+        }
+        else {
+          $last_insert_id = NULL;
+        }
       }
       $this->connection->releaseSavepoint();
+    }
+    catch (\PDOException $e) {
+      $this->connection->rollbackSavepoint();
+      $message = $e->getMessage() . ": " . $stmt->getQueryString();
+      // Match all SQLSTATE 23xxx errors.
+      if (substr($e->getCode(), -6, -3) == '23') {
+        throw new IntegrityConstraintViolationException($message, $e->getCode(), $e);
+      }
+      else {
+        throw new DatabaseExceptionWrapper($message, 0, $e->getCode());
+      }
     }
     catch (\Exception $e) {
       $this->connection->rollbackSavepoint();

@@ -6,6 +6,7 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Query\Condition;
+use Drupal\Core\Database\StatementWrapper;
 
 /**
  * Tests of the core database system.
@@ -132,6 +133,36 @@ class ConnectionTest extends DatabaseTestBase {
     $foo_connection = Database::getConnection('foo', 'default');
     $this->assertInstanceOf(Connection::class, $foo_connection);
     $this->assertTrue($foo_connection->supportsTransactions());
+  }
+
+  /**
+   * Tests the deprecation of passing a statement object to ::query.
+   *
+   * @group legacy
+   */
+  public function testStatementQueryDeprecation(): void {
+    $this->expectDeprecation('Passing a StatementInterface object as a $query argument to Drupal\Core\Database\Connection::query is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Call the execute method from the StatementInterface object directly instead. See https://www.drupal.org/node/3154439');
+    $db = Database::getConnection();
+    $stmt = $db->prepareStatement('SELECT * FROM {test}', []);
+    $this->assertNotNull($db->query($stmt));
+  }
+
+  /**
+   * Tests the deprecation of passing a PDOStatement object to ::query.
+   *
+   * @group legacy
+   */
+  public function testPDOStatementQueryDeprecation(): void {
+    $db = Database::getConnection();
+    $stmt = $db->prepareStatement('SELECT * FROM {test}', []);
+    if (!$stmt instanceof StatementWrapper) {
+      $this->markTestSkipped("This test only runs for db drivers using StatementWrapper.");
+    }
+    if (!$stmt->getClientStatement() instanceof \PDOStatement) {
+      $this->markTestSkipped("This test only runs for PDO-based db drivers.");
+    }
+    $this->expectDeprecation('Passing a \\PDOStatement object as a $query argument to Drupal\Core\Database\Connection::query is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Call the execute method from the StatementInterface object directly instead. See https://www.drupal.org/node/3154439');
+    $this->assertNotNull($db->query($stmt->getClientStatement()));
   }
 
   /**
