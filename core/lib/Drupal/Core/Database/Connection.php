@@ -558,7 +558,7 @@ abstract class Connection {
     // @todo in Drupal 10, only return the StatementWrapper.
     // @see https://www.drupal.org/node/3177490
     return $this->statementWrapperClass ?
-      new $this->statementWrapperClass($this, $this->connection, $query, $options['pdo'] ?? [], $options['return']) :
+      new $this->statementWrapperClass($this, $this->connection, $query, $options['pdo'] ?? [], $options['return'] ?? Database::RETURN_STATEMENT) :
       $this->connection->prepare($query, $options['pdo'] ?? []);
   }
 
@@ -753,11 +753,12 @@ abstract class Connection {
    * statements.
    *
    * @param string|\Drupal\Core\Database\StatementInterface|\PDOStatement $query
-   *   The query to execute. In most cases this will be a string containing
-   *   an SQL query with placeholders. An already-prepared instance of
-   *   StatementInterface may also be passed in order to allow calling
-   *   code to manually bind variables to a query. If a
-   *   StatementInterface is passed, the $args array will be ignored.
+   *   The query to execute. This is a string containing an SQL query with
+   *   placeholders.
+   *   (deprecated) An already-prepared instance of StatementInterface or of
+   *   \PDOStatement may also be passed in order to allow calling code to
+   *   manually bind variables to a query. In such cases, the content of the
+   *   $args array will be ignored.
    *   It is extremely rare that module code will need to pass a statement
    *   object to this method. It is used primarily for database drivers for
    *   databases that require special LOB field handling.
@@ -796,14 +797,16 @@ abstract class Connection {
     assert(!isset($options['target']), 'Passing "target" option to query() has no effect. See https://www.drupal.org/node/2993033');
 
     try {
-      // We allow either a pre-bound statement object or a literal string.
-      // In either case, we want to end up with an executed statement object,
-      // which we pass to PDOStatement::execute.
+      // We allow either a pre-bound statement object (deprecated) or a literal
+      // string. In either case, we want to end up with an executed statement
+      // object, which we pass to PDOStatement::execute.
       if ($query instanceof StatementInterface) {
+        @trigger_error('Passing a StatementInterface object as a $query argument to ' . __METHOD__ . ' is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Call the execute method from the StatementInterface object directly instead. See https://www.drupal.org/node/3154439', E_USER_DEPRECATED);
         $stmt = $query;
         $stmt->execute(NULL, $options);
       }
       elseif ($query instanceof \PDOStatement) {
+        @trigger_error('Passing a \\PDOStatement object as a $query argument to ' . __METHOD__ . ' is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Call the execute method from the StatementInterface object directly instead. See https://www.drupal.org/node/3154439', E_USER_DEPRECATED);
         $stmt = $query;
         $stmt->execute();
       }
@@ -881,6 +884,8 @@ abstract class Connection {
       // Wrap the exception in another exception, because PHP does not allow
       // overriding Exception::getMessage(). Its message is the extra database
       // debug information.
+      // @todo in Drupal 10, remove checking if $query is a statement object.
+      // @see https://www.drupal.org/node/3154439
       if ($query instanceof StatementInterface) {
         $query_string = $query->getQueryString();
       }

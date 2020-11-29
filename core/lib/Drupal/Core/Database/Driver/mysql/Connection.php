@@ -197,15 +197,8 @@ class Connection extends DatabaseConnection {
       'init_commands' => [],
     ];
 
-    $sql_mode = 'ANSI,STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,ONLY_FULL_GROUP_BY';
-    // NO_AUTO_CREATE_USER is removed in MySQL 8.0.11
-    // https://dev.mysql.com/doc/relnotes/mysql/8.0/en/news-8-0-11.html#mysqld-8-0-11-deprecation-removal
-    $version_server = $pdo->getAttribute(\PDO::ATTR_SERVER_VERSION);
-    if (version_compare($version_server, '8.0.11', '<')) {
-      $sql_mode .= ',NO_AUTO_CREATE_USER';
-    }
     $connection_options['init_commands'] += [
-      'sql_mode' => "SET sql_mode = '$sql_mode'",
+      'sql_mode' => "SET sql_mode = 'ANSI,STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,ONLY_FULL_GROUP_BY'",
     ];
 
     // Execute initial commands.
@@ -297,7 +290,11 @@ class Connection extends DatabaseConnection {
    *   The PDO server version.
    */
   protected function getServerVersion(): string {
-    return $this->connection->getAttribute(\PDO::ATTR_SERVER_VERSION);
+    static $server_version;
+    if (!$server_version) {
+      $server_version = $this->connection->query('SELECT VERSION()')->fetchColumn();
+    }
+    return $server_version;
   }
 
   public function databaseType() {

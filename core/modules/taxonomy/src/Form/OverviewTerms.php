@@ -136,7 +136,7 @@ class OverviewTerms extends FormBase {
     $vocabulary_hierarchy = $this->storageController->getVocabularyHierarchyType($taxonomy_vocabulary->id());
     $parent_fields = FALSE;
 
-    $page = $this->getRequest()->query->get('page') ?: 0;
+    $page = $this->pagerManager->findPage();
     // Number of terms per page.
     $page_increment = $this->config('taxonomy.settings')->get('terms_per_page_admin');
     // Elements shown on this page.
