@@ -137,17 +137,15 @@ class StatementPrefetch implements \Iterator, StatementInterface {
    *   The query string.
    * @param array $driver_options
    *   Driver-specific options.
-   * @param int $return_type
-   *   Flag to indicate a query call.
+   * @param bool $row_count_enabled
+   *   (optional) Enables counting the rows affected. Defaults to TRUE.
    */
-  public function __construct(\PDO $pdo_connection, Connection $connection, $query, array $driver_options = [], int $return_type = Database::RETURN_STATEMENT) {
+  public function __construct(\PDO $pdo_connection, Connection $connection, $query, array $driver_options = [], bool $row_count_enabled = TRUE) {
     $this->pdoConnection = $pdo_connection;
     $this->connection = $connection;
     $this->queryString = $query;
     $this->driverOptions = $driver_options;
-    if ($return_type === Database::RETURN_AFFECTED) {
-      $this->rowCountEnabled = TRUE;
-    }
+    $this->rowCountEnabled = $row_count_enabled;
   }
 
   /**

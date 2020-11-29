@@ -428,7 +428,9 @@ class Connection extends DatabaseConnection {
     if (!($options['allow_square_brackets'] ?? FALSE)) {
       $query = $this->quoteIdentifiers($query);
     }
-    return new Statement($this->connection, $this, $query, $options['pdo'] ?? [], $options['return'] ?? Database::RETURN_STATEMENT);
+    $return = $options['return'] ?? Database::RETURN_STATEMENT;
+    $allow_row_count = $return === Database::RETURN_AFFECTED;
+    return new Statement($this->connection, $this, $query, $options['pdo'] ?? [], $allow_row_count);
   }
 
   public function nextId($existing_id = 0) {

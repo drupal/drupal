@@ -43,15 +43,13 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
    *   The SQL query string.
    * @param array $options
    *   Array of query options.
-   * @param int $return_type
-   *   The return type.
+   * @param bool $row_count_enabled
+   *   (optional) Enables counting the rows affected. Defaults to TRUE.
    */
-  public function __construct(Connection $connection, $client_connection, string $query, array $options, int $return_type = Database::RETURN_STATEMENT) {
+  public function __construct(Connection $connection, $client_connection, string $query, array $options, bool $row_count_enabled = TRUE) {
     $this->connection = $connection;
     $this->clientStatement = $client_connection->prepare($query, $options);
-    if ($return_type === Database::RETURN_AFFECTED) {
-      $this->rowCountEnabled = TRUE;
-    }
+    $this->rowCountEnabled = $row_count_enabled;
     $this->setFetchMode(\PDO::FETCH_OBJ);
   }
 
