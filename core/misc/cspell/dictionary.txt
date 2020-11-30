@@ -310,7 +310,6 @@ contrained
 contribs
 controlgroup
 coord
-copmplete
 corefake
 coretest
 corge
