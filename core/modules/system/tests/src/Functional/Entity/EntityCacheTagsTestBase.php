@@ -426,7 +426,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     // Verify a cache hit, but also the presence of the correct cache tags.
     $this->verifyPageCache($empty_entity_listing_url, 'HIT', $empty_entity_listing_cache_tags);
     // Verify the entity type's list cache contexts are present.
-    $contexts_in_header = $this->drupalGetHeader('X-Drupal-Cache-Contexts');
+    $contexts_in_header = $this->getSession()->getResponseHeader('X-Drupal-Cache-Contexts');
     $this->assertEqual(Cache::mergeContexts($page_cache_contexts, $this->getAdditionalCacheContextsForEntityListing()), empty($contexts_in_header) ? [] : explode(' ', $contexts_in_header));
 
     // Prime the page cache for the listing containing the referenced entity.
@@ -434,7 +434,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     // Verify a cache hit, but also the presence of the correct cache tags.
     $this->verifyPageCache($nonempty_entity_listing_url, 'HIT', $nonempty_entity_listing_cache_tags);
     // Verify the entity type's list cache contexts are present.
-    $contexts_in_header = $this->drupalGetHeader('X-Drupal-Cache-Contexts');
+    $contexts_in_header = $this->getSession()->getResponseHeader('X-Drupal-Cache-Contexts');
     $this->assertEqual(Cache::mergeContexts($page_cache_contexts, $this->getAdditionalCacheContextsForEntityListing()), empty($contexts_in_header) ? [] : explode(' ', $contexts_in_header));
 
     // Verify that after modifying the referenced entity, there is a cache miss

@@ -917,4 +917,15 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->assertNoFieldByName('checkbox_enabled', FALSE);
   }
 
+  /**
+   * Tests legacy drupalGetHeader().
+   *
+   * @group legacy
+   */
+  public function testDrupalGetHeader() {
+    $this->expectDeprecation('BrowserTestBase::drupalGetHeader() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use $this->getSession()->getResponseHeader() instead. See https://www.drupal.org/node/3168383');
+    $this->drupalGet('test-page');
+    $this->drupalGetHeader('Content-Type');
+  }
+
 }
