@@ -66,6 +66,10 @@ function user_pass() {
  * @see user_pass_submit()
  */
 function user_pass_validate($form, &$form_state) {
+  if (isset($form_state['values']['name']) && !is_scalar($form_state['values']['name'])) {
+    form_set_error('name', t('An illegal value has been detected. Please contact the site administrator.'));
+    return;
+  }
   $name = trim($form_state['values']['name']);
   // Try to load by email.
   $users = user_load_multiple(array(), array('mail' => $name, 'status' => '1'));

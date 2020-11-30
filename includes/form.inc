@@ -1361,7 +1361,10 @@ function _form_validate(&$elements, &$form_state, $form_id = NULL) {
     // The following errors are always shown.
     if (isset($elements['#needs_validation'])) {
       // Verify that the value is not longer than #maxlength.
-      if (isset($elements['#maxlength']) && drupal_strlen($elements['#value']) > $elements['#maxlength']) {
+      if (isset($elements['#maxlength']) && (isset($elements['#value']) && !is_scalar($elements['#value']))) {
+        form_error($elements, $t('An illegal value has been detected. Please contact the site administrator.'));
+      }
+      elseif (isset($elements['#maxlength']) && drupal_strlen($elements['#value']) > $elements['#maxlength']) {
         form_error($elements, $t('!name cannot be longer than %max characters but is currently %length characters long.', array('!name' => empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title'], '%max' => $elements['#maxlength'], '%length' => drupal_strlen($elements['#value']))));
       }
 
