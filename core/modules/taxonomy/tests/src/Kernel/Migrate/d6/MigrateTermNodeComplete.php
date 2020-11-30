@@ -64,4 +64,16 @@ class MigrateTermNodeComplete extends MigrateDrupal6TestBase {
     $this->assertSame('3', $node->field_vocabulary_2_i_1_[1]->target_id);
   }
 
+  /**
+   * Tests the Drupal 6 term-node association to Drupal 8 node revisions.
+   */
+  public function testTermNodeRevision() {
+    $this->executeMigrations(['d6_term_node_revision']);
+
+    $node = \Drupal::entityTypeManager()->getStorage('node')->loadRevision(2001);
+    $this->assertCount(2, $node->field_vocabulary_3_i_2_);
+    $this->assertSame('4', $node->field_vocabulary_3_i_2_[0]->target_id);
+    $this->assertSame('5', $node->field_vocabulary_3_i_2_[1]->target_id);
+  }
+
 }
