@@ -701,3 +701,18 @@ $conf['file_scan_ignore_directories'] = array(
  * optimization and revert to the original behaviour.
  */
 # $conf['variable_initialize_wait_for_lock'] = FALSE;
+
+/**
+ * Use site name as display-name in outgoing mail.
+ *
+ * Drupal can use the site name (i.e. the value of the site_name variable) as
+ * the display-name when sending e-mail. For example this would mean the sender
+ * might be "Acme Website" <acme@example.com> as opposed to just the e-mail
+ * address alone. In order to avoid disruption this is not enabled by default
+ * for existing sites. The feature can be enabled by setting this variable to
+ * TRUE.
+ *
+ * @see https://tools.ietf.org/html/rfc2822
+ * @see drupal_mail()
+ */
+$conf['mail_display_name_site_name'] = TRUE;

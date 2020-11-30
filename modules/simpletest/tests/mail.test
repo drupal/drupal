@@ -60,6 +60,81 @@ class MailTestCase extends DrupalWebTestCase implements MailSystemInterface {
   }
 
   /**
+   * Checks for the site name in an auto-generated From: header.
+   */
+  function testFromHeader() {
+    global $language;
+    $default_from = variable_get('site_mail', ini_get('sendmail_from'));
+    $site_name = variable_get('site_name', 'Drupal');
+
+    // Reset the class variable holding a copy of the last sent message.
+    self::$sent_message = NULL;
+    // Send an e-mail with a sender address specified.
+    $from_email = 'someone_else@example.com';
+    $message = drupal_mail('simpletest', 'from_test', 'from_test@example.com', $language, array(), $from_email);
+    // Test that the from e-mail is just the e-mail and not the site name and
+    // default sender e-mail.
+    $this->assertEqual($from_email, self::$sent_message['headers']['From']);
+
+    // Check default behavior is only email in FROM header.
+    self::$sent_message = NULL;
+    // Send an e-mail and check that the From-header contains only default mail address.
+    variable_del('mail_display_name_site_name');
+    $message = drupal_mail('simpletest', 'from_test', 'from_test@example.com', $language);
+    $this->assertEqual($default_from, self::$sent_message['headers']['From']);
+
+    self::$sent_message = NULL;
+    // Send an e-mail and check that the From-header contains the site name.
+    variable_set('mail_display_name_site_name', TRUE);
+    $message = drupal_mail('simpletest', 'from_test', 'from_test@example.com', $language);
+    $this->assertEqual($site_name . ' <' . $default_from . '>', self::$sent_message['headers']['From']);
+  }
+
+  /**
+   * Checks for the site name in an auto-generated From: header.
+   */
+  function testFromHeaderRfc2822Compliant() {
+    global $language;
+    $default_from = variable_get('site_mail', ini_get('sendmail_from'));
+
+    // Enable adding a site name to From.
+    variable_set('mail_display_name_site_name', TRUE);
+
+    $site_names = array(
+      // Simple ASCII characters.
+      'Test site' => 'Test site',
+      // ASCII with html entity.
+      'Test &amp; site' => 'Test & site',
+      // Non-ASCII characters.
+      'Tést site' => '=?UTF-8?B?VMOpc3Qgc2l0ZQ==?=',
+      // Non-ASCII with special characters.
+      'Tést; site' => '=?UTF-8?B?VMOpc3Q7IHNpdGU=?=',
+      // Non-ASCII with html entity.
+      'T&eacute;st; site' => '=?UTF-8?B?VMOpc3Q7IHNpdGU=?=',
+      // ASCII with special characters.
+      'Test; site' => '"Test; site"',
+      // ASCII with special characters as html entity.
+      'Test &lt; site' => '"Test < site"',
+      // ASCII with special characters and '\'.
+      'Test; \ "site"' => '"Test; \\\\ \"site\""',
+      // String already RFC-2822 compliant.
+      '"Test; site"' => '"Test; site"',
+      // String already RFC-2822 compliant.
+      '"Test; \\\\ \"site\""' => '"Test; \\\\ \"site\""',
+    );
+
+    foreach ($site_names as $original_name => $safe_string) {
+      variable_set('site_name', $original_name);
+
+      // Reset the class variable holding a copy of the last sent message.
+      self::$sent_message = NULL;
+      // Send an e-mail and check that the From-header contains is RFC-2822 compliant.
+      drupal_mail('simpletest', 'from_test', 'from_test@example.com', $language);
+      $this->assertEqual($safe_string . ' <' . $default_from . '>', self::$sent_message['headers']['From']);
+    }
+  }
+
+  /**
    * Concatenate and wrap the e-mail body for plain-text mails.
    *
    * @see DefaultMailSystem
