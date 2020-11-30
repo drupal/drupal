@@ -264,6 +264,10 @@ function simpletest_script_init($server_software) {
     // '_' is an environment variable set by the shell. It contains the command that was executed.
     $php = $php_env;
   }
+  elseif (defined('PHP_BINARY') && $php_env = PHP_BINARY) {
+    // 'PHP_BINARY' specifies the PHP binary path during script execution. Available since PHP 5.4.
+    $php = $php_env;
+  }
   elseif ($sudo = getenv('SUDO_COMMAND')) {
     // 'SUDO_COMMAND' is an environment variable set by the sudo program.
     // Extract only the PHP interpreter, not the rest of the command.
