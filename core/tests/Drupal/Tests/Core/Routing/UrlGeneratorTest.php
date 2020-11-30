@@ -430,7 +430,7 @@ class UrlGeneratorTest extends UnitTestCase {
   }
 
   /**
-   * Confirms that explicitly setting the base_url works with generated routes
+   * Confirms that explicitly setting the base_url works with generated routes.
    */
   public function testBaseURLGeneration() {
     $options = ['base_url' => 'http://www.example.com:8888'];

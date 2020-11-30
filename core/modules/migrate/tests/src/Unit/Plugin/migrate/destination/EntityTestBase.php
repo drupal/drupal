@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\migrate\Unit\Plugin\migrate\destination\EntityTestBase
+ * Contains \Drupal\Tests\migrate\Unit\Plugin\migrate\destination\EntityTestBase.
  */
 
 namespace Drupal\Tests\migrate\Unit\Plugin\migrate\destination;

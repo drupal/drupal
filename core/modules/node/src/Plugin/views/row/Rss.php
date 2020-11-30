@@ -36,7 +36,7 @@ class Rss extends RssPluginBase {
   protected $entityTypeId = 'node';
 
   /**
-   * The node storage
+   * The node storage.
    *
    * @var \Drupal\node\NodeStorageInterface
    */

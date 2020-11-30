@@ -448,7 +448,7 @@ class PathPluginBaseTest extends UnitTestCase {
   }
 
   /**
-   * Tests altering routes with parameters and upcasting information
+   * Tests altering routes with parameters and upcasting information.
    */
   public function testAlterRoutesWithParametersAndUpcasting() {
     $collection = new RouteCollection();

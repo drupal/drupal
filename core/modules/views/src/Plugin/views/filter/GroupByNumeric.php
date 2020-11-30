@@ -3,7 +3,7 @@
 namespace Drupal\views\Plugin\views\filter;
 
 /**
- * Simple filter to handle greater than/less than filters
+ * Simple filter to handle greater than/less than filters.
  *
  * @ingroup views_filter_handlers
  *

@@ -159,7 +159,7 @@ class ImageTest extends UnitTestCase {
   }
 
   /**
-   * Tests \Drupal\Core\Image\Image::getFileSize
+   * Tests \Drupal\Core\Image\Image::getFileSize.
    */
   public function testGetFileSize() {
     $this->getTestImage(FALSE);

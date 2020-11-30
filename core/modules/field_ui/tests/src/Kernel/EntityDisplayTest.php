@@ -124,7 +124,7 @@ class EntityDisplayTest extends KernelTestBase {
   }
 
   /**
-   * Test sorting of components by name on basic CRUD operations
+   * Test sorting of components by name on basic CRUD operations.
    */
   public function testEntityDisplayCRUDSort() {
     $display = EntityViewDisplay::create([

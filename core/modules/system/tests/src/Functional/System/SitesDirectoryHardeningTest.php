@@ -108,7 +108,7 @@ class SitesDirectoryHardeningTest extends BrowserTestBase {
   }
 
   /**
-   * Returns the path to settings.php
+   * Returns the path to settings.php.
    *
    * @param string $site_path
    *   The sites subdirectory path.

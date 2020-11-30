@@ -18,7 +18,7 @@ use PHPUnit\Framework\TestCase;
 class MetapackageUpdateTest extends TestCase {
 
   /**
-   * Test data for testUpdated
+   * Test data for testUpdated.
    */
   public function updatedTestData() {
     return [

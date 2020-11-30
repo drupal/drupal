@@ -512,7 +512,7 @@ class UrlHelperTest extends TestCase {
   }
 
   /**
-   * Enhances test urls with schemes
+   * Enhances test urls with schemes.
    *
    * @param array $urls
    *   The list of urls.

@@ -291,7 +291,7 @@ class Fixtures {
   }
 
   /**
-   * Create an isolated cache directory for Composer
+   * Create an isolated cache directory for Composer.
    */
   public function createIsolatedComposerCacheDir() {
     $cacheDir = $this->mkTmpDir('composer-cache');

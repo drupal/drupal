@@ -187,7 +187,7 @@ class TermParentsTest extends BrowserTestBase {
   }
 
   /**
-   * Performs tests that edit terms with a single parent
+   * Performs tests that edit terms with a single parent.
    *
    * @return \Drupal\taxonomy\TermInterface[]
    *   A list of terms created for testing.

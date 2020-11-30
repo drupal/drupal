@@ -28,7 +28,7 @@ class UpdateFetcher implements UpdateFetcherInterface {
   protected $fetchUrl;
 
   /**
-   * The update settings
+   * The update settings.
    *
    * @var \Drupal\Core\Config\Config
    */

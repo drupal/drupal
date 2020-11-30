@@ -557,7 +557,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
   }
 
   /**
-   * Tests \Drupal\views\Plugin\views\field\EntityField::getValue
+   * Tests \Drupal\views\Plugin\views\field\EntityField::getValue.
    */
   public function testGetValueMethod() {
     $bundle = 'test_bundle';

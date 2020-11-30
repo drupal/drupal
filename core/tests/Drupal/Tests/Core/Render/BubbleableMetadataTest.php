@@ -395,7 +395,7 @@ class BubbleableMetadataTest extends UnitTestCase {
   }
 
   /**
-   * Data provider for testMergeAttachmentsFeedMerging
+   * Data provider for testMergeAttachmentsFeedMerging.
    *
    * @return array
    */
@@ -454,7 +454,7 @@ class BubbleableMetadataTest extends UnitTestCase {
   }
 
   /**
-   * Data provider for testMergeAttachmentsHtmlHeadMerging
+   * Data provider for testMergeAttachmentsHtmlHeadMerging.
    *
    * @return array
    */
@@ -527,7 +527,7 @@ class BubbleableMetadataTest extends UnitTestCase {
   }
 
   /**
-   * Data provider for testMergeAttachmentsHtmlHeadLinkMerging
+   * Data provider for testMergeAttachmentsHtmlHeadLinkMerging.
    *
    * @return array
    */
@@ -593,7 +593,7 @@ class BubbleableMetadataTest extends UnitTestCase {
   }
 
   /**
-   * Data provider for testMergeAttachmentsHttpHeaderMerging
+   * Data provider for testMergeAttachmentsHttpHeaderMerging.
    *
    * @return array
    */

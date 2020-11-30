@@ -14,7 +14,7 @@ use Drupal\views\Tests\ViewTestData;
 abstract class BlockContentTestBase extends ViewTestBase {
 
   /**
-   * Admin user
+   * Admin user.
    *
    * @var object
    */

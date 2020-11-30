@@ -49,7 +49,7 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
   protected $logger;
 
   /**
-   * The mail manager
+   * The mail manager.
    *
    * @var \Drupal\Core\Mail\MailManagerInterface
    */

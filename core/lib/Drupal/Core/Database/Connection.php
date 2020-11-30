@@ -1741,7 +1741,7 @@ abstract class Connection {
   abstract public function nextId($existing_id = 0);
 
   /**
-   * Prepares a statement for execution and returns a statement object
+   * Prepares a statement for execution and returns a statement object.
    *
    * Emulated prepared statements do not communicate with the database server so
    * this method does not check the statement.

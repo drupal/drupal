@@ -139,7 +139,7 @@ EOD;
 }
 
 /**
- * A fake autoloader for testing
+ * A fake autoloader for testing.
  */
 class FakeAutoloader {
 

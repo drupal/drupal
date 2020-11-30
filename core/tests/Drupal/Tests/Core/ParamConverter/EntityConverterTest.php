@@ -199,7 +199,7 @@ class EntityConverterTest extends UnitTestCase {
   }
 
   /**
-   * Provides test data for testConvert
+   * Provides test data for testConvert.
    */
   public function providerTestConvert() {
     $data = [];

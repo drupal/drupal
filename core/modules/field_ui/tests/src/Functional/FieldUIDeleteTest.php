@@ -37,7 +37,7 @@ class FieldUIDeleteTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test views to enable
+   * Test views to enable.
    *
    * @var string[]
    */

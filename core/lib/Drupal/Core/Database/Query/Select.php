@@ -79,7 +79,7 @@ class Select extends Query implements SelectInterface {
   protected $having;
 
   /**
-   * Whether or not this query should be DISTINCT
+   * Whether or not this query should be DISTINCT.
    *
    * @var bool
    */
@@ -112,7 +112,7 @@ class Select extends Query implements SelectInterface {
   protected $prepared = FALSE;
 
   /**
-   * The FOR UPDATE status
+   * The FOR UPDATE status.
    *
    * @var bool
    */

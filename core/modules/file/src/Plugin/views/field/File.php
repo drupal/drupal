@@ -38,7 +38,7 @@ class File extends FieldPluginBase {
   }
 
   /**
-   * Provide link to file option
+   * Provide link to file option.
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['link_to_file'] = [

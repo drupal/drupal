@@ -29,7 +29,7 @@ use Drupal\Core\Render\Element;
 class Email extends FormElement {
 
   /**
-   * Defines the max length for an email address
+   * Defines the max length for an email address.
    *
    * The maximum length of an email address is 254 characters. RFC 3696
    * specifies a total length of 320 characters, but mentions that

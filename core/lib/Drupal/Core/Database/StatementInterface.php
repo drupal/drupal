@@ -40,7 +40,7 @@ interface StatementInterface extends \Traversable {
   // protected function __construct(Connection $dbh);
 
   /**
-   * Executes a prepared statement
+   * Executes a prepared statement.
    *
    * @param $args
    *   An array of values with as many elements as there are bound parameters in

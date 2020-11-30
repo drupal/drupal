@@ -100,7 +100,7 @@ class DateHelper {
   }
 
   /**
-   * Constructs a translated array of month name abbreviations
+   * Constructs a translated array of month name abbreviations.
    *
    * @param bool $required
    *   (optional) If FALSE, the returned array will include a blank value.

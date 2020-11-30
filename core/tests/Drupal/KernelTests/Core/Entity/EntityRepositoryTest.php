@@ -294,7 +294,7 @@ class EntityRepositoryTest extends KernelTestBase {
   }
 
   /**
-   * Asserts that the entity has the expected entity type ID
+   * Asserts that the entity has the expected entity type ID.
    *
    * @param object|null $entity
    *   An entity object or NULL.
