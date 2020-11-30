@@ -564,6 +564,7 @@ function locale_language_types_info() {
  * Implements hook_language_negotiation_info().
  */
 function locale_language_negotiation_info() {
+  require_once DRUPAL_ROOT . '/includes/locale.inc';
   $file = 'includes/locale.inc';
   $providers = array();
 
