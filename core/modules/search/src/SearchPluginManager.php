@@ -12,7 +12,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 class SearchPluginManager extends DefaultPluginManager {
 
   /**
-   * Constructs SearchPluginManager
+   * Constructs SearchPluginManager.
    *
    * @param \Traversable $namespaces
    *   An object that implements \Traversable which contains the root paths

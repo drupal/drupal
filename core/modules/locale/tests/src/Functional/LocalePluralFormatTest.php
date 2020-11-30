@@ -158,7 +158,7 @@ class LocalePluralFormatTest extends BrowserTestBase {
   }
 
   /**
-   * Tests plural editing of DateFormatter strings
+   * Tests plural editing of DateFormatter strings.
    */
   public function testPluralEditDateFormatter() {
 

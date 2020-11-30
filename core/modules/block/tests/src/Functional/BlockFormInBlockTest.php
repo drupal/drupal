@@ -65,7 +65,7 @@ class BlockFormInBlockTest extends BrowserTestBase {
   }
 
   /**
-   * Test the actual placeholders
+   * Test the actual placeholders.
    */
   public function testPlaceholders() {
     $this->drupalGet('test-multiple-forms');

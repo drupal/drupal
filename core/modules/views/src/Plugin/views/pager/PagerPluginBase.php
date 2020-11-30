@@ -105,19 +105,19 @@ abstract class PagerPluginBase extends PluginBase {
   }
 
   /**
-   * Get the pager id, if it exists
+   * Get the pager id, if it exists.
    */
   public function getPagerId() {
     return isset($this->options['id']) ? $this->options['id'] : 0;
   }
 
   /**
-   * Provide the default form form for validating options
+   * Provide the default form form for validating options.
    */
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {}
 
   /**
-   * Provide the default form form for submitting options
+   * Provide the default form form for submitting options.
    */
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {}
 
@@ -171,7 +171,7 @@ abstract class PagerPluginBase extends PluginBase {
   }
 
   /**
-   * Modify the query for paging
+   * Modify the query for paging.
    *
    * This is called during the build phase and can directly modify the query.
    */

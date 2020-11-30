@@ -30,17 +30,17 @@ use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
- * Disabled option on forms and settings
+ * Disabled option on forms and settings.
  */
 const DRUPAL_DISABLED = 0;
 
 /**
- * Optional option on forms and settings
+ * Optional option on forms and settings.
  */
 const DRUPAL_OPTIONAL = 1;
 
 /**
- * Required option on forms and settings
+ * Required option on forms and settings.
  */
 const DRUPAL_REQUIRED = 2;
 

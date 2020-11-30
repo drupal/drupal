@@ -493,7 +493,7 @@ class MenuUiTest extends BrowserTestBase {
   }
 
   /**
-   * Ensures that the proper default values are set when adding a menu link
+   * Ensures that the proper default values are set when adding a menu link.
    */
   protected function doMenuLinkFormDefaultsTest() {
     $this->drupalGet("admin/structure/menu/manage/tools/add");

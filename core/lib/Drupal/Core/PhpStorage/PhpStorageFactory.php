@@ -6,7 +6,7 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PublicStream;
 
 /**
- * Creates a php storage object
+ * Creates a php storage object.
  */
 class PhpStorageFactory {
 

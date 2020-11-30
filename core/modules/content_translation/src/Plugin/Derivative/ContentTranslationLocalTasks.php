@@ -16,7 +16,7 @@ class ContentTranslationLocalTasks extends DeriverBase implements ContainerDeriv
   use StringTranslationTrait;
 
   /**
-   * The base plugin ID
+   * The base plugin ID.
    *
    * @var string
    */

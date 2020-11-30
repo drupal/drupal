@@ -54,7 +54,7 @@ class SystemListingTest extends KernelTestBase {
   }
 
   /**
-   * Tests that directories matching file_scan_ignore_directories are ignored
+   * Tests that directories matching file_scan_ignore_directories are ignored.
    */
   public function testFileScanIgnoreDirectory() {
     $listing = new ExtensionDiscovery($this->root, FALSE);

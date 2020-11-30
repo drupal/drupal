@@ -5,7 +5,7 @@ namespace Drupal\KernelTests\Core\Bootstrap;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Tests
+ * Tests.
  *
  * @group Bootstrap
  */

@@ -193,7 +193,7 @@ class ModuleHandlerTest extends KernelTestBase {
   }
 
   /**
-   * Tests that a profile can supply only real dependencies
+   * Tests that a profile can supply only real dependencies.
    */
   public function testProfileAllDependencies() {
     $profile = 'testing_install_profile_all_dependencies';

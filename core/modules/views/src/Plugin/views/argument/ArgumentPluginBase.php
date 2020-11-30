@@ -764,7 +764,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
   }
 
   /**
-   * Default action: empty
+   * Default action: empty.
    *
    * If an argument was expected and was not given, in this case, display
    * the view's empty text
@@ -1034,7 +1034,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
   }
 
   /**
-   * Set the input for this argument
+   * Set the input for this argument.
    *
    * @return TRUE if it successfully validates; FALSE if it does not.
    */

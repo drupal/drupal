@@ -144,7 +144,7 @@ class TwigEnvironment extends Environment {
   }
 
   /**
-   * Get the cache prefixed used by \Drupal\Core\Template\TwigPhpStorageCache
+   * Get the cache prefixed used by \Drupal\Core\Template\TwigPhpStorageCache.
    *
    * @return string
    *   The file cache prefix, or empty string if the cache is disabled.

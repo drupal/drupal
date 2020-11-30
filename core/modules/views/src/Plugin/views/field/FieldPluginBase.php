@@ -1108,7 +1108,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
   }
 
   /**
-   * Provide extra data to the administration form
+   * Provide extra data to the administration form.
    */
   public function adminSummary() {
     return $this->label();

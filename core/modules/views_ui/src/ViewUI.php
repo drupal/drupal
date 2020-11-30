@@ -257,7 +257,7 @@ class ViewUI implements ViewEntityInterface {
   }
 
   /**
-   * Submit handler for cancel button
+   * Submit handler for cancel button.
    */
   public function standardCancel($form, FormStateInterface $form_state) {
     if (!empty($this->changed) && isset($this->form_cache)) {

@@ -97,7 +97,7 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
   }
 
   /**
-   * Add our actual sort criteria
+   * Add our actual sort criteria.
    */
   public function buildSortPost() {
     $query = $this->view->getRequest()->query;

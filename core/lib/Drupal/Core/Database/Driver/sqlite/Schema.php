@@ -17,7 +17,7 @@ use Drupal\Core\Database\Schema as DatabaseSchema;
 class Schema extends DatabaseSchema {
 
   /**
-   * Override DatabaseSchema::$defaultSchema
+   * Override DatabaseSchema::$defaultSchema.
    *
    * @var string
    */

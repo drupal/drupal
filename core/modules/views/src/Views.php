@@ -127,7 +127,7 @@ class Views {
   }
 
   /**
-   * Fetches a list of all base tables available
+   * Fetches a list of all base tables available.
    *
    * @param string $type
    *   Either 'display', 'style' or 'row'.

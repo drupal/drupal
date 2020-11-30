@@ -65,7 +65,7 @@ class ForumManager implements ForumManagerInterface {
   protected $entityTypeManager;
 
   /**
-   * Database connection
+   * Database connection.
    *
    * @var \Drupal\Core\Database\Connection
    */

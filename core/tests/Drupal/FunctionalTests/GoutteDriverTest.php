@@ -7,7 +7,7 @@ use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests legacy support for GoutteDriver
+ * Tests legacy support for GoutteDriver.
  *
  * @group browsertestbase
  */
