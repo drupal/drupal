@@ -731,7 +731,6 @@ httpd
 httpheader
 httpkernel
 httponly
-httpoxy
 huhuu
 hurlant
 hustlin
