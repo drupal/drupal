@@ -51,11 +51,15 @@ a {
 }
 
 img,
-audio,
 video {
   display: block;
   max-width: 100%;
   height: auto;
+}
+
+audio {
+  display: block;
+  max-width: 100%;
 }
 
 h1 {
