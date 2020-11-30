@@ -75,7 +75,7 @@ class TwigExtensionTest extends UnitTestCase {
   }
 
   /**
-   * Tests the escaping
+   * Tests the escaping.
    *
    * @dataProvider providerTestEscaping
    */
@@ -98,7 +98,7 @@ class TwigExtensionTest extends UnitTestCase {
   }
 
   /**
-   * Provides tests data for testEscaping
+   * Provides tests data for testEscaping.
    *
    * @return array
    *   An array of test data each containing of a twig template string and

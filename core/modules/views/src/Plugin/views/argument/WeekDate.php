@@ -15,7 +15,7 @@ class WeekDate extends Date {
   protected $argFormat = 'W';
 
   /**
-   * Provide a link to the next level of the view
+   * Provide a link to the next level of the view.
    */
   public function summaryName($data) {
     $created = $data->{$this->name_alias};

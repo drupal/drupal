@@ -50,7 +50,7 @@ class CommentTypeForm extends EntityForm {
   }
 
   /**
-   * Constructs a CommentTypeFormController
+   * Constructs a CommentTypeFormController.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager service.

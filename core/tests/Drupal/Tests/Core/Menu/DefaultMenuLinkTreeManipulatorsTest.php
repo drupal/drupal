@@ -57,7 +57,7 @@ class DefaultMenuLinkTreeManipulatorsTest extends UnitTestCase {
   protected $originalTree = [];
 
   /**
-   * Array of menu link instances
+   * Array of menu link instances.
    *
    * @var \Drupal\Core\Menu\MenuLinkInterface[]
    */

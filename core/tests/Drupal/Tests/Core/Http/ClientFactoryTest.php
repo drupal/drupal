@@ -53,7 +53,7 @@ class ClientFactoryTest extends UnitTestCase {
   }
 
   /**
-   * Data provider for testCreateFromOptions
+   * Data provider for testCreateFromOptions.
    *
    * @return array
    */

@@ -273,7 +273,7 @@ class AttributeTest extends UnitTestCase {
   }
 
   /**
-   * Provides tests data for testEscaping
+   * Provides tests data for testEscaping.
    *
    * @return array
    *   An array of test data each containing of a twig template string,
@@ -456,7 +456,7 @@ class AttributeTest extends UnitTestCase {
   }
 
   /**
-   * Provides tests data for testHasAttribute
+   * Provides tests data for testHasAttribute.
    *
    * @return array
    *   An array of test data each containing an array of attributes, the name
@@ -482,7 +482,7 @@ class AttributeTest extends UnitTestCase {
   }
 
   /**
-   * Provides tests data for testMerge
+   * Provides tests data for testMerge.
    *
    * @return array
    *   An array of test data each containing an initial Attribute object, an

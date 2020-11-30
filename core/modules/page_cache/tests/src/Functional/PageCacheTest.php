@@ -204,8 +204,8 @@ class PageCacheTest extends BrowserTestBase {
 
     $this->drupalGet('');
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
-    $etag = $this->drupalGetHeader('ETag');
-    $last_modified = $this->drupalGetHeader('Last-Modified');
+    $etag = $this->getSession()->getResponseHeader('ETag');
+    $last_modified = $this->getSession()->getResponseHeader('Last-Modified');
 
     // Ensure a conditional request returns 304 Not Modified.
     $this->drupalGet('', [], ['If-Modified-Since' => $last_modified, 'If-None-Match' => $etag]);

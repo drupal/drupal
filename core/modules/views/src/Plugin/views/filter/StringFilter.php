@@ -199,7 +199,7 @@ class StringFilter extends FilterPluginBase {
   }
 
   /**
-   * Build strings from the operators() for 'select' options
+   * Build strings from the operators() for 'select' options.
    */
   public function operatorOptions($which = 'title') {
     $options = [];
@@ -241,7 +241,7 @@ class StringFilter extends FilterPluginBase {
   }
 
   /**
-   * Provide a simple textfield for equality
+   * Provide a simple textfield for equality.
    */
   protected function valueForm(&$form, FormStateInterface $form_state) {
     // We have to make some choices when creating this as an exposed

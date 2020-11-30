@@ -12,7 +12,7 @@ use Drupal\views\Entity\View;
 use Drupal\views\Views;
 
 /**
- * Tests comment user name field
+ * Tests comment user name field.
  *
  * @group comment
  */

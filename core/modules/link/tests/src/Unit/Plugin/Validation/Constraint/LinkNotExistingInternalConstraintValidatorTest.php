@@ -39,7 +39,7 @@ class LinkNotExistingInternalConstraintValidatorTest extends UnitTestCase {
   }
 
   /**
-   * Data provider for ::testValidate
+   * Data provider for ::testValidate.
    */
   public function providerValidate() {
     $data = [];

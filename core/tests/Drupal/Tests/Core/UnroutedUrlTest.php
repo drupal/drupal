@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 class UnroutedUrlTest extends UnitTestCase {
 
   /**
-   * The URL assembler
+   * The URL assembler.
    *
    * @var \Drupal\Core\Utility\UnroutedUrlAssemblerInterface|\PHPUnit\Framework\MockObject\MockObject
    */

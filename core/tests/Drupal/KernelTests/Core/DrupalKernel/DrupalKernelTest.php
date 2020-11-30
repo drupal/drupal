@@ -193,7 +193,7 @@ class DrupalKernelTest extends KernelTestBase {
   }
 
   /**
-   * Data provider for self::testClassLoaderAutoDetect
+   * Data provider for self::testClassLoaderAutoDetect.
    * @return array
    */
   public function providerClassLoaderAutoDetect() {

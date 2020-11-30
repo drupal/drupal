@@ -7,7 +7,7 @@ use Drupal\Core\Routing\Access\AccessInterface;
 use Symfony\Component\Routing\Route;
 
 /**
- * Defines an access checker similar to DefaultAccessCheck
+ * Defines an access checker similar to DefaultAccessCheck.
  */
 class DefinedTestAccessCheck implements AccessInterface {
 

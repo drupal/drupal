@@ -399,7 +399,7 @@ class ViewsEntitySchemaSubscriber implements EntityTypeListenerInterface, EventS
   }
 
   /**
-   * Updates views if revision support is removed
+   * Updates views if revision support is removed.
    *
    * @param \Drupal\views\Entity\View[] $all_views
    *   All views.

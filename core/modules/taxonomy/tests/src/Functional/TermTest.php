@@ -133,7 +133,7 @@ class TermTest extends TaxonomyTestBase {
   }
 
   /**
-   * Tests that many terms with parents show on each page
+   * Tests that many terms with parents show on each page.
    */
   public function testTaxonomyTermChildTerms() {
     // Set limit to 10 terms per page. Set variable to 9 so 10 terms appear.

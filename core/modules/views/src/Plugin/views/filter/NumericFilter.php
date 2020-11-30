@@ -5,7 +5,7 @@ namespace Drupal\views\Plugin\views\filter;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Simple filter to handle greater than/less than filters
+ * Simple filter to handle greater than/less than filters.
  *
  * @ingroup views_filter_handlers
  *
@@ -169,7 +169,7 @@ class NumericFilter extends FilterPluginBase {
   }
 
   /**
-   * Provide a list of all the numeric operators
+   * Provide a list of all the numeric operators.
    */
   public function operatorOptions($which = 'title') {
     $options = [];
@@ -192,7 +192,7 @@ class NumericFilter extends FilterPluginBase {
   }
 
   /**
-   * Provide a simple textfield for equality
+   * Provide a simple textfield for equality.
    */
   protected function valueForm(&$form, FormStateInterface $form_state) {
     $form['value']['#tree'] = TRUE;
@@ -397,7 +397,7 @@ class NumericFilter extends FilterPluginBase {
   }
 
   /**
-   * Do some minor translation of the exposed input
+   * Do some minor translation of the exposed input.
    */
   public function acceptExposedInput($input) {
     if (empty($this->options['exposed'])) {

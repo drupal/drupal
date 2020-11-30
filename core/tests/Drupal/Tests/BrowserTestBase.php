@@ -674,8 +674,14 @@ abstract class BrowserTestBase extends TestCase {
    *
    * @return string|null
    *   The HTTP header value or NULL if not found.
+   *
+   * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+   *   $this->getSession()->getResponseHeader() instead.
+   *
+   * @see https://www.drupal.org/node/3168383
    */
   protected function drupalGetHeader($name) {
+    @trigger_error('BrowserTestBase::drupalGetHeader() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use $this->getSession()->getResponseHeader() instead. See https://www.drupal.org/node/3168383', E_USER_DEPRECATED);
     return $this->getSession()->getResponseHeader($name);
   }
 

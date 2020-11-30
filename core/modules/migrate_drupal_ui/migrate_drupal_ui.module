@@ -25,9 +25,11 @@ function migrate_drupal_ui_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dt>' . t('Performing the upgrade') . '</dt>';
       $output .= '<dd>' . t('On the <a href=":upgrade">Upgrade</a> page, you are guided through performing the upgrade in several steps.',
           [':upgrade' => Url::fromRoute('migrate_drupal_ui.upgrade')->toString()]) . '</dd>';
-      $output .= '<dd><ol><li>' . t('You need to enter the database credentials of the Drupal site that you want to upgrade. You can also include its files directory in the upgrade.') . '</li>';
+      $output .= '<dd><ol><li>' . t('If an upgrade has been performed on this site, you will be informed.') . '</li>';
+      $output .= '<li>' . t('You need to enter the database credentials of the Drupal site that you want to upgrade. You can also include its files directory in the upgrade. For example local files, /var/www/docroot, or remote files http://www.example.com.') . '</li>';
+      $output .= '<li>' . t('If there is existing content on the site that may be overwritten by this upgrade, you will be informed.') . '</li>';
       $output .= '<li>' . t('The next page provides an overview of the modules that will be upgraded and those that will not be upgraded, before you proceed to perform the upgrade.') . '</li>';
-      $output .= '<li>' . t('Lastly, a message is displayed about the number of upgrade tasks that were successful or failed.') . '</li></ol></dd>';
+      $output .= '<li>' . t('Finally, a message is displayed about the number of upgrade tasks that were successful or failed.') . '</li></ol></dd>';
       $output .= '<dt>' . t('Reviewing the upgrade log') . '</dt>';
       $output .= '<dd>' . t('You can review a <a href=":log">log of upgrade messages</a> by clicking the link in the message provided after the upgrade or by filtering the messages for the type <em>migrate_drupal_ui</em> on the <a href=":messages">Recent log messages</a> page.',
           [':log' => Url::fromRoute('migrate_drupal_ui.log')->toString(), ':messages' => Url::fromRoute('dblog.overview')->toString()]) . '</dd>';

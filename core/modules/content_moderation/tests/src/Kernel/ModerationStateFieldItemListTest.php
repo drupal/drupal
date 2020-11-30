@@ -205,7 +205,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
   }
 
   /**
-   * Data provider for ::testModerationStateChanges
+   * Data provider for ::testModerationStateChanges.
    */
   public function moderationStateChangesTestCases() {
     return [

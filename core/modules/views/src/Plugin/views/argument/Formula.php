@@ -37,7 +37,7 @@ class Formula extends ArgumentPluginBase {
   }
 
   /**
-   * Build the summary query based on a formula
+   * Build the summary query based on a formula.
    */
   protected function summaryQuery() {
     $this->ensureMyTable();
@@ -52,7 +52,7 @@ class Formula extends ArgumentPluginBase {
   }
 
   /**
-   * Build the query based upon the formula
+   * Build the query based upon the formula.
    */
   public function query($group_by = FALSE) {
     $this->ensureMyTable();

@@ -36,7 +36,7 @@ class Sql extends QueryPluginBase {
   protected $tableQueue = [];
 
   /**
-   * Holds an array of tables and counts added so that we can create aliases
+   * Holds an array of tables and counts added so that we can create aliases.
    */
   public $tables = [];
 

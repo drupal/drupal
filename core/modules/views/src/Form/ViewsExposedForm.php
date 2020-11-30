@@ -34,7 +34,7 @@ class ViewsExposedForm extends FormBase {
   protected $currentPathStack;
 
   /**
-   * Constructs a new ViewsExposedForm
+   * Constructs a new ViewsExposedForm.
    *
    * @param \Drupal\views\ExposedFormCache $exposed_form_cache
    *   The exposed form cache.

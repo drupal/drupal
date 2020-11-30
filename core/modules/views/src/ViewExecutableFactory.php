@@ -40,7 +40,7 @@ class ViewExecutableFactory {
   protected $routeProvider;
 
   /**
-   * Constructs a new ViewExecutableFactory
+   * Constructs a new ViewExecutableFactory.
    *
    * @param \Drupal\Core\Session\AccountInterface $user
    *   The current user.

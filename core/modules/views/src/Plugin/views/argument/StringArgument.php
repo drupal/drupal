@@ -141,7 +141,7 @@ class StringArgument extends ArgumentPluginBase {
   }
 
   /**
-   * Build the summary query based on a string
+   * Build the summary query based on a string.
    */
   protected function summaryQuery() {
     if (empty($this->definition['many to one'])) {
@@ -193,7 +193,7 @@ class StringArgument extends ArgumentPluginBase {
   }
 
   /**
-   * Build the query based upon the formula
+   * Build the query based upon the formula.
    */
   public function query($group_by = FALSE) {
     $argument = $this->argument;

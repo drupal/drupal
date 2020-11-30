@@ -19,7 +19,7 @@ abstract class BlockContentTestBase extends BrowserTestBase {
   protected $profile = 'testing';
 
   /**
-   * Admin user
+   * Admin user.
    *
    * @var \Drupal\user\UserInterface
    */

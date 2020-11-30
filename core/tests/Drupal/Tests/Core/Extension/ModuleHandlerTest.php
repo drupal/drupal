@@ -153,7 +153,7 @@ class ModuleHandlerTest extends UnitTestCase {
   }
 
   /**
-   * Confirm we get back a module from the module list
+   * Confirm we get back a module from the module list.
    *
    * @covers ::getModule
    */

@@ -136,12 +136,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
    * Tests a missing dependency on a service.
    */
   public function testMissingDependency() {
-    if (version_compare(PHP_VERSION, '7.1') < 0) {
-      $this->expectedExceptionMessage = 'Argument 1 passed to Drupal\error_service_test\LonelyMonkeyClass::__construct() must be an instance of Drupal\Core\Database\Connection, non';
-    }
-    else {
-      $this->expectedExceptionMessage = 'Too few arguments to function Drupal\error_service_test\LonelyMonkeyClass::__construct(), 0 passed';
-    }
+    $this->expectedExceptionMessage = 'Too few arguments to function Drupal\error_service_test\LonelyMonkeyClass::__construct(), 0 passed';
     $this->drupalGet('broken-service-class');
     $this->assertSession()->statusCodeEquals(500);
 

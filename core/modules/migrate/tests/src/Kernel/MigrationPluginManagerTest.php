@@ -17,7 +17,7 @@ class MigrationPluginManagerTest extends MigrateTestBase {
   protected static $modules = ['migrate', 'migrate_tag_test'];
 
   /**
-   * The migration plugin manager
+   * The migration plugin manager.
    *
    * @var \Drupal\migrate\Plugin\MigrationPluginManager
    */
@@ -50,7 +50,7 @@ class MigrationPluginManagerTest extends MigrateTestBase {
   }
 
   /**
-   * Data provider for testCreateInstancesByTag
+   * Data provider for testCreateInstancesByTag.
    */
   public function providerCreateInstanceByTag() {
     return [

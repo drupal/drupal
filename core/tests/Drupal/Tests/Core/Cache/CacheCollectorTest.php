@@ -260,7 +260,7 @@ class CacheCollectorTest extends UnitTestCase {
   }
 
   /**
-   * Tests updating the cache when a different request
+   * Tests updating the cache when a different request.
    */
   public function testUpdateCacheMerge() {
     $key = $this->randomMachineName();

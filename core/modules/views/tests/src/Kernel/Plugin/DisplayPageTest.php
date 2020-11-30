@@ -73,7 +73,7 @@ class DisplayPageTest extends ViewsKernelTestBase {
   }
 
   /**
-   * Checks that the router items are properly registered
+   * Checks that the router items are properly registered.
    */
   public function testPageRouterItems() {
     $collection = \Drupal::service('views.route_subscriber')->routes();

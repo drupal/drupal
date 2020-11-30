@@ -61,7 +61,7 @@ abstract class QueryBase implements QueryInterface {
   protected $groupBy = [];
 
   /**
-   * Aggregate Conditions
+   * Aggregate Conditions.
    *
    * @var \Drupal\Core\Entity\Query\ConditionAggregateInterface
    */

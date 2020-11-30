@@ -48,7 +48,7 @@ class SystemAuthorizeTest extends BrowserTestBase {
   }
 
   /**
-   * Tests the FileTransfer hooks
+   * Tests the FileTransfer hooks.
    */
   public function testFileTransferHooks() {
     $page_title = $this->randomMachineName(16);

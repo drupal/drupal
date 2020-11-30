@@ -19,7 +19,7 @@ class DisplayCRUDTest extends UITestBase {
   public static $testViews = ['test_display'];
 
   /**
-   * Modules to enable
+   * Modules to enable.
    *
    * @var array
    */

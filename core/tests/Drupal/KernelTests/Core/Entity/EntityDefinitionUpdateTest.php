@@ -307,7 +307,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
   }
 
   /**
-   * Tests creating, updating, and deleting a base field with no label set
+   * Tests creating, updating, and deleting a base field with no label set.
    *
    * See testBaseFieldCreateUpdateDeleteWithoutData() for more details
    */

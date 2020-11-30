@@ -12,7 +12,7 @@ use Drupal\Tests\views\Functional\ViewTestBase;
 class ViewsBulkTest extends ViewTestBase {
 
   /**
-   * An admin user
+   * An admin user.
    *
    * @var \Drupal\user\UserInterface
    */

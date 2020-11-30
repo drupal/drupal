@@ -42,7 +42,7 @@ class Url implements TrustedCallbackInterface {
   protected $urlAssembler;
 
   /**
-   * The access manager
+   * The access manager.
    *
    * @var \Drupal\Core\Access\AccessManagerInterface
    */

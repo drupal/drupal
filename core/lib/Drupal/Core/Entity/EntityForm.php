@@ -304,7 +304,7 @@ class EntityForm extends FormBase implements EntityFormInterface {
   }
 
   /**
-   * Copies top-level form values to entity properties
+   * Copies top-level form values to entity properties.
    *
    * This should not change existing entity properties that are not being edited
    * by this form.

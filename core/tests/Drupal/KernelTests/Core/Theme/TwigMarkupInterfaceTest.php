@@ -99,7 +99,7 @@ class TwigMarkupInterfaceTest extends KernelTestBase {
 }
 
 /**
- * Implements MarkupInterface without implementing \Countable
+ * Implements MarkupInterface without implementing \Countable.
  */
 class SafeMarkupTestMarkup implements MarkupInterface {
   use MarkupTrait;

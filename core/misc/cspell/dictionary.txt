@@ -21,7 +21,6 @@ afterclose
 aftercreate
 afterend
 ahah
-ahughes
 aimez
 ajaxcallback
 ajaxify
@@ -215,7 +214,6 @@ cachetag
 cachetags
 cafr
 cagatio
-cait
 calendarsignup
 callable's
 callables
@@ -312,7 +310,6 @@ contrained
 contribs
 controlgroup
 coord
-copmplete
 corefake
 coretest
 corge
@@ -467,7 +464,6 @@ dropzone
 drup
 drupalci
 drupaldatetime
-drupaldevdays
 drupalget
 drupalimage
 drupalimage's
@@ -598,7 +594,6 @@ firstcolumn
 fixnull
 flexbox
 flexslider
-flic
 flickr
 floatingspace
 foaf
@@ -649,7 +644,6 @@ funic
 furchtbar
 gabilondo
 gato
-gbmb
 getcode
 getfile
 gethttpclient
@@ -698,7 +692,6 @@ hbox
 heartz
 heke
 hellip
-helpfiles
 heroless
 herpderp
 herro
@@ -725,13 +718,11 @@ hrefs
 htaccess
 htkey
 htmlcorrector
-htmls
 htmlto
 httpd
 httpheader
 httpkernel
 httponly
-httpoxy
 huhuu
 hurlant
 hustlin
@@ -950,7 +941,6 @@ minimise
 minipager
 minky
 minusthick
-mirakolous
 missingkey
 missingkeys
 miterlimit
@@ -1111,7 +1101,6 @@ olivero
 olivero's
 omitscript
 omittable
-ondemand
 onecol
 oneplusfourgrid
 onetwo
@@ -1129,7 +1118,6 @@ optionchecker
 ored
 org's
 orgchart
-origdir
 oring
 ossp
 otsikko
@@ -1170,8 +1158,6 @@ performant
 perma
 permissionless
 persistable
-pharextract
-phars
 phpass
 phpcbf
 phpcs
@@ -1179,7 +1165,6 @@ phpdoc
 phpdocumentor
 phpfile
 phplint
-phps
 phpserialize
 phpspec
 phpunit
@@ -1277,7 +1262,6 @@ pulks
 puzzlepiece
 pvde
 pwprompt
-qcait
 queryor
 querystring
 querystrings
@@ -1287,7 +1271,6 @@ quickediting
 quickeditor
 quicklinks
 quickstart
-quicktime
 quinlan
 quux
 quxqux
@@ -1400,7 +1383,6 @@ samename
 sameorigin
 sapere
 sata
-savepath
 savepoints
 sayre
 scaffol
@@ -1408,7 +1390,6 @@ scarlett
 schemaapi
 schemaless
 schemeless
-schipul
 schipulcon
 scorewords
 screenreader
@@ -1429,7 +1410,6 @@ sendmail
 serializer's
 serviceform
 sess
-sessionpath
 settingstray
 sharedspace
 shatner
@@ -1612,7 +1592,6 @@ tempfile
 templating
 tempstore
 tempuser
-tendenci
 tercera
 terok
 testajax
@@ -1697,7 +1676,6 @@ titlealert
 titlebar
 titleslogan
 tlds
-tmpdir
 tmpfs
 tnid
 todos

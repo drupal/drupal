@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains unique_field_constraint_test.module
+ * Contains unique_field_constraint_test.module.
  */
 
 use Drupal\Core\Entity\EntityTypeInterface;
