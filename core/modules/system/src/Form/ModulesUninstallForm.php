@@ -46,15 +46,24 @@ class ModulesUninstallForm extends FormBase {
   protected $moduleExtensionList;
 
   /**
+   * The update registry service.
+   *
+   * @var \Drupal\Core\Update\VersioningUpdateRegistry
+   */
+  protected $updateRegistry;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static(
+    $instance = new static(
       $container->get('module_handler'),
       $container->get('module_installer'),
       $container->get('keyvalue.expirable')->get('modules_uninstall'),
       $container->get('extension.list.module')
     );
+    $instance->updateRegistry = $container->get('update.update_registry');
+    return $instance;
   }
 
   /**
@@ -153,7 +162,7 @@ class ModulesUninstallForm extends FormBase {
       // All modules which depend on this one must be uninstalled first, before
       // we can allow this module to be uninstalled.
       foreach (array_keys($module->required_by) as $dependent) {
-        if (drupal_get_installed_schema_version($dependent) != SCHEMA_UNINSTALLED) {
+        if ($this->updateRegistry->getInstalledVersion($dependent) !== SCHEMA_UNINSTALLED) {
           $form['modules'][$module->getName()]['#required_by'][] = $dependent;
           $form['uninstall'][$module->getName()]['#disabled'] = TRUE;
         }

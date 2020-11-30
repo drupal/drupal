@@ -142,7 +142,9 @@ class UpdateScriptTest extends BrowserTestBase {
     // successfully.
     $this->drupalLogin($this->updateUser);
     $update_script_test_config->set('requirement_type', REQUIREMENT_WARNING)->save();
-    drupal_set_installed_schema_version('update_script_test', drupal_get_installed_schema_version('update_script_test') - 1);
+    /** @var \Drupal\Core\Update\VersioningUpdateRegistry $update_registry */
+    $update_registry = \Drupal::service('update.update_registry');
+    $update_registry->setInstalledVersion('update_script_test', $update_registry->getInstalledVersion('update_script_test') - 1);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->assertText('This is a requirements warning provided by the update_script_test module.');
     $this->clickLink('try again');
@@ -537,12 +539,15 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->assertEqual($initial_maintenance_mode, $final_maintenance_mode, 'Maintenance mode should not have changed after database updates.');
 
     // Reset the static cache to ensure we have the most current setting.
-    $schema_version = drupal_get_installed_schema_version('update_script_test', TRUE);
+    $this->resetAll();
+    /** @var \Drupal\Core\Update\VersioningUpdateRegistry $update_registry */
+    $update_registry = \Drupal::service('update.update_registry');
+    $schema_version = $update_registry->getInstalledVersion('update_script_test');
     $this->assertEqual(8001, $schema_version, 'update_script_test schema version is 8001 after updating.');
 
     // Set the installed schema version to one less than the current update.
-    drupal_set_installed_schema_version('update_script_test', $schema_version - 1);
-    $schema_version = drupal_get_installed_schema_version('update_script_test', TRUE);
+    $update_registry->setInstalledVersion('update_script_test', $schema_version - 1);
+    $schema_version = $update_registry->getInstalledVersion('update_script_test');
     $this->assertEqual(8000, $schema_version, 'update_script_test schema version overridden to 8000.');
 
     // Click through update.php with 'access administration pages' and
@@ -602,12 +607,14 @@ class UpdateScriptTest extends BrowserTestBase {
     $config->save();
 
     // Reset the static cache to ensure we have the most current setting.
-    $schema_version = drupal_get_installed_schema_version('update_script_test', TRUE);
+    /** @var \Drupal\Core\Update\VersioningUpdateRegistry $update_registry */
+    $update_registry = \Drupal::service('update.update_registry');
+    $schema_version = $update_registry->getInstalledVersion('update_script_test');
     $this->assertEqual(8001, $schema_version, 'update_script_test schema version is 8001 after updating.');
 
     // Set the installed schema version to one less than the current update.
-    drupal_set_installed_schema_version('update_script_test', $schema_version - 1);
-    $schema_version = drupal_get_installed_schema_version('update_script_test', TRUE);
+    $update_registry->getInstalledVersion('update_script_test', $schema_version - 1);
+    $schema_version = $update_registry->getInstalledVersion('update_script_test');
     $this->assertEqual(8000, $schema_version, 'update_script_test schema version overridden to 8000.');
 
     // Create admin user.
@@ -671,12 +678,14 @@ class UpdateScriptTest extends BrowserTestBase {
    * Helper function to run updates via the browser.
    */
   protected function runUpdates($maintenance_mode) {
-    $schema_version = drupal_get_installed_schema_version('update_script_test');
+    /** @var \Drupal\Core\Update\VersioningUpdateRegistry $update_registry */
+    $update_registry = \Drupal::service('update.update_registry');
+    $schema_version = $update_registry->getInstalledVersion('update_script_test');
     $this->assertEqual(8001, $schema_version, 'update_script_test is initially installed with schema version 8001.');
 
     // Set the installed schema version to one less than the current update.
-    drupal_set_installed_schema_version('update_script_test', $schema_version - 1);
-    $schema_version = drupal_get_installed_schema_version('update_script_test', TRUE);
+    $update_registry->setInstalledVersion('update_script_test', $schema_version - 1);
+    $schema_version = $update_registry->getInstalledVersion('update_script_test');
     $this->assertEqual(8000, $schema_version, 'update_script_test schema version overridden to 8000.');
 
     // Click through update.php with 'administer software updates' permission.
