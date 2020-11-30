@@ -21,7 +21,7 @@ namespace Drupal\Core\Database;
 interface StatementInterface extends \Traversable {
 
   /**
-   * Executes a prepared statement
+   * Executes a prepared statement.
    *
    * @param $args
    *   An array of values with as many elements as there are bound parameters in
