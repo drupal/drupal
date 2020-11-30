@@ -591,6 +591,19 @@ class FormElementTestCase extends DrupalWebTestCase {
       )));
     }
   }
+
+  /**
+   * Tests Weight form element #default_value behavior.
+   */
+  public function testWeightDefaultValue() {
+    $element = array(
+      '#type' => 'weight',
+      '#delta' => 10,
+      '#default_value' => 15,
+    );
+    $element = form_process_weight($element);
+    $this->assertTrue(isset($element['#options'][$element['#default_value']]), 'Default value exists in #options list');
+  }
 }
 
 /**

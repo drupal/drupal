@@ -4124,8 +4124,16 @@ function form_process_weight($element) {
   $max_elements = variable_get('drupal_weight_select_max', DRUPAL_WEIGHT_SELECT_MAX);
   if ($element['#delta'] <= $max_elements) {
     $element['#type'] = 'select';
+    $weights = array();
     for ($n = (-1 * $element['#delta']); $n <= $element['#delta']; $n++) {
       $weights[$n] = $n;
+    }
+    if (isset($element['#default_value'])) {
+      $default_value = (int) $element['#default_value'];
+      if (!isset($weights[$default_value])) {
+        $weights[$default_value] = $default_value;
+        ksort($weights);
+      }
     }
     $element['#options'] = $weights;
     $element += element_info('select');
