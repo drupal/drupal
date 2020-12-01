@@ -121,7 +121,7 @@
    * Details.
    */
   --details-bg-color: rgba(243, 244, 249, 0.4);
-  --details-border-color: rgba(216, 217, 224, 0.8);
+  --details-border-color: var(--color-lightdiamond);
   --details-summary-shadow-color: var(--color-focus);
   --details-summary-focus-border-size: var(--focus-border-size);
   --details-desktop-wrapper-padding-start: calc(var(--space-m) + var(--space-s) + var(--space-xs));
