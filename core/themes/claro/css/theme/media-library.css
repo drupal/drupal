@@ -147,7 +147,7 @@
 .media-library-menu__link.active {
   z-index: 2; /* The selected menu link should be on a higher level than the white masking line that hides the gray separator. */
   color: #003cc5;
-  border-color: rgba(216, 217, 224, 0.8) transparent;
+  border-color: #dedfe4 transparent;
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -181,12 +181,12 @@
 
 .media-library-menu + .media-library-content {
   z-index: 0;
-  border-left: 1px solid rgba(216, 217, 224, 0.8); /* LTR */
+  border-left: 1px solid #dedfe4; /* LTR */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 [dir="rtl"] .media-library-menu + .media-library-content {
-  border-right: 1px solid rgba(216, 217, 224, 0.8);
+  border-right: 1px solid #dedfe4;
   border-left: 0;
 }
 
@@ -229,7 +229,7 @@
 
 .media-library-add-form__input-wrapper {
   padding: 0.5rem 1.5rem 1.5rem 1.5rem;
-  border: 1px solid rgba(216, 217, 224, 0.8);
+  border: 1px solid #dedfe4;
   border-radius: 2px;
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
