@@ -126,6 +126,54 @@ class FilterCriteriaTest extends WebDriverTestBase {
   }
 
   /**
+   * Tests operator labels.
+   */
+  public function testOperatorLabels() {
+    // Open the "Frontpage" view.
+    $this->drupalGet('admin/structure/views/view/frontpage');
+    $session = $this->getSession();
+    $page = $session->getPage();
+
+    // Open the "Rearrange filter criteria" dialog.
+    $this->openFilterDialog();
+
+    // Get the last filter on the list.
+    $row = $page->findAll('css', '.draggable');
+    $row_count = count($row);
+    $last_row = array_pop($row);
+    $penultimate_row = array_pop($row);
+
+    // Drag the last row before the penultimate row.
+    $drag_handle = $last_row->find('css', '.tabledrag-handle');
+    $drag_handle->dragTo($penultimate_row);
+
+    // Assert there are valid number of visible operator labels.
+    $operator_label = $page->findAll('css', '.views-operator-label');
+    $this->assertEquals($row_count - 1, count($operator_label), 'There are valid number of operator labels after drag.');
+
+    // Get the last filter on the rearranged list.
+    $row = $page->findAll('css', '.draggable');
+    $last_row = array_pop($row);
+    $penultimate_row = array_pop($row);
+
+    // Assert the operator label in the penultimate row is shown.
+    $operator_label = $penultimate_row->find('css', '.views-operator-label');
+    $this->assertTrue($operator_label->isVisible(), 'Operator label in the penultimate row is not visible after drag.');
+
+    // Assert the operator label in the last row is not shown.
+    $operator_label = $last_row->find('css', '.views-operator-label');
+    $this->assertNull($operator_label, 'Operator label in the last row is not visible after drag.');
+
+    // Remove the last filter.
+    $remove_link = $last_row->find('css', '.views-remove-link');
+    $remove_link->click();
+
+    // The current last filter shouldn't have the operator label.
+    $operator_label = $penultimate_row->find('css', '.views-operator-label');
+    $this->assertNull($operator_label, 'The penultimate filter has no operator label after the last filter is removed.');
+  }
+
+  /**
    * Uses the 'And/Or Rearrange' link for filters to open a dialog.
    */
   protected function openFilterDialog() {
