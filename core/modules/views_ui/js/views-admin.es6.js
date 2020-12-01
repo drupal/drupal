@@ -630,38 +630,6 @@
   };
 
   /**
-   * Rearranges the filters.
-   *
-   * @type {Drupal~behavior}
-   *
-   * @prop {Drupal~behaviorAttach} attach
-   *   Attach handlers to make it possible to rearrange the filters in the form
-   *   in question.
-   *   @see Drupal.viewsUi.RearrangeFilterHandler
-   */
-  Drupal.behaviors.viewsUiRearrangeFilter = {
-    attach(context) {
-      // Only act on the rearrange filter form.
-      if (
-        typeof Drupal.tableDrag === 'undefined' ||
-        typeof Drupal.tableDrag['views-rearrange-filters'] === 'undefined'
-      ) {
-        return;
-      }
-      const $context = $(context);
-      const $table = $context
-        .find('#views-rearrange-filters')
-        .once('views-rearrange-filters');
-      const $operator = $context
-        .find('.js-form-item-filter-groups-operator')
-        .once('views-rearrange-filters');
-      if ($table.length) {
-        new Drupal.viewsUi.RearrangeFilterHandler($table, $operator);
-      }
-    },
-  };
-
-  /**
    * Improve the UI of the rearrange filters dialog box.
    *
    * @constructor
@@ -1320,6 +1288,38 @@
           $context.find(`#display-removed-${id}`).prop('checked', true);
           event.preventDefault();
         });
+    },
+  };
+
+  /**
+   * Rearranges the filters.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *   Attach handlers to make it possible to rearrange the filters in the form
+   *   in question.
+   *   @see Drupal.viewsUi.RearrangeFilterHandler
+   */
+  Drupal.behaviors.viewsUiRearrangeFilter = {
+    attach(context) {
+      // Only act on the rearrange filter form.
+      if (
+        typeof Drupal.tableDrag === 'undefined' ||
+        typeof Drupal.tableDrag['views-rearrange-filters'] === 'undefined'
+      ) {
+        return;
+      }
+      const $context = $(context);
+      const $table = $context
+        .find('#views-rearrange-filters')
+        .once('views-rearrange-filters');
+      const $operator = $context
+        .find('.js-form-item-filter-groups-operator')
+        .once('views-rearrange-filters');
+      if ($table.length) {
+        new Drupal.viewsUi.RearrangeFilterHandler($table, $operator);
+      }
     },
   };
 })(jQuery, Drupal, drupalSettings);
