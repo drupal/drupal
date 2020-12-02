@@ -40,7 +40,7 @@
   margin-top: 1rem;
   margin-bottom: 1rem;
   color: #222330;
-  border: 1px solid rgba(216, 217, 224, 0.8);
+  border: 1px solid #dedfe4;
   border-radius: 2px;
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -405,7 +405,7 @@
 .claro-details__wrapper--accordion,
 .claro-details__wrapper--accordion-item,
 .claro-details__wrapper--vertical-tabs-item {
-  border-top: 1px solid rgba(216, 217, 224, 0.8);
+  border-top: 1px solid #dedfe4;
   background-color: rgba(243, 244, 249, 0.4);
 }
 
