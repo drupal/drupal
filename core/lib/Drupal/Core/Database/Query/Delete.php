@@ -32,7 +32,6 @@ class Delete extends Query implements ConditionInterface {
    *   Array of database options.
    */
   public function __construct(Connection $connection, $table, array $options = []) {
-    $options['return'] = Database::RETURN_AFFECTED;
     parent::__construct($connection, $options);
     $this->table = $table;
 
@@ -52,7 +51,23 @@ class Delete extends Query implements ConditionInterface {
       $values = $this->condition->arguments();
     }
 
-    return $this->connection->query((string) $this, $values, $this->queryOptions);
+    try {
+      $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions);
+      $stmt->execute($values, $this->queryOptions);
+    }
+    catch (\PDOException $e) {
+      if ($this->queryOptions['throw_exception']) {
+        $message = $e->getMessage() . ": " . (string) $this . "; ";
+        // Match all SQLSTATE 23xxx errors.
+        if (substr($e->getCode(), -6, -3) == '23') {
+          throw new IntegrityConstraintViolationException($message, $e->getCode(), $e);
+        }
+        throw new DatabaseExceptionWrapper($message, 0, $e);
+      }
+      return NULL;
+    }
+
+    return $stmt->rowCount();
   }
 
   /**

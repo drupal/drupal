@@ -35,7 +35,6 @@ abstract class Upsert extends Query implements \Countable {
    *   (optional) An array of database options.
    */
   public function __construct(Connection $connection, $table, array $options = []) {
-    $options['return'] = Database::RETURN_AFFECTED;
     parent::__construct($connection, $options);
     $this->table = $table;
   }
@@ -103,12 +102,26 @@ abstract class Upsert extends Query implements \Countable {
       }
     }
 
-    $last_insert_id = $this->connection->query((string) $this, $values, $this->queryOptions);
+    try {
+      $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions);
+      $stmt->execute($values, $this->queryOptions);
+    }
+    catch (\PDOException $e) {
+      if ($this->queryOptions['throw_exception']) {
+        $message = $e->getMessage() . ": " . (string) $this . "; ";
+        // Match all SQLSTATE 23xxx errors.
+        if (substr($e->getCode(), -6, -3) == '23') {
+          throw new IntegrityConstraintViolationException($message, $e->getCode(), $e);
+        }
+        throw new DatabaseExceptionWrapper($message, 0, $e);
+      }
+      return NULL;
+    }
 
     // Re-initialize the values array so that we can re-use this query.
     $this->insertValues = [];
 
-    return $last_insert_id;
+    return $stmt->rowCount();
   }
 
 }
