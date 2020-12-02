@@ -441,9 +441,9 @@ class Connection extends DatabaseConnection {
     // wait until this transaction commits. Also, the return value needs to be
     // set to RETURN_AFFECTED as if it were a real update() query otherwise it
     // is not possible to get the row count properly.
-    $affected = $this->query('UPDATE {sequences} SET value = GREATEST(value, :existing_id) + 1', [
-      ':existing_id' => $existing_id,
-    ], ['return' => Database::RETURN_AFFECTED]);
+    $stmt = $this->prepareStatement('UPDATE {sequences} SET value = GREATEST(value, :existing_id) + 1', [], TRUE);
+    $stmt->execute([':existing_id' => $existing_id]);
+    $affected = $stmt->rowCount();
     if (!$affected) {
       $this->query('INSERT INTO {sequences} (value) VALUES (:existing_id + 1)', [
         ':existing_id' => $existing_id,

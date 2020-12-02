@@ -22,11 +22,11 @@ build:
         testgroups: '--all'
         suppress-deprecations: false
         halt-on-fail: false
-#      run_tests.kernel:
-#        types: 'PHPUnit-Kernel'
-#        testgroups: '--all'
-#        suppress-deprecations: false
-#        halt-on-fail: false
+      run_tests.kernel:
+        types: 'PHPUnit-Kernel'
+        testgroups: '--all'
+        suppress-deprecations: false
+        halt-on-fail: false
       run_tests.build:
         # Limit concurrency due to disk space concerns.
         concurrency: 15

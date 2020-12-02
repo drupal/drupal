@@ -18,7 +18,7 @@ class Update extends QueryUpdate {
 
     // Because we filter $fields the same way here and in __toString(), the
     // placeholders will all match up properly.
-    $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions);
+    $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions, TRUE);
 
     // Fetch the list of blobs and sequences used on that table.
     $table_information = $this->connection->schema()->queryTableInformation($this->table);
@@ -71,13 +71,11 @@ class Update extends QueryUpdate {
 
     $options = $this->queryOptions;
     $options['already_prepared'] = TRUE;
-    $options['return'] = Database::RETURN_AFFECTED;
 
     $this->connection->addSavepoint();
     try {
       $stmt->execute(NULL, $options);
       $this->connection->releaseSavepoint();
-      $stmt->allowRowCount = TRUE;
       return $stmt->rowCount();
     }
     catch (\Exception $e) {

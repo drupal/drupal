@@ -3,6 +3,8 @@
 namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\DatabaseExceptionWrapper;
+use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Database\Connection;
 
 /**
@@ -56,7 +58,7 @@ class Delete extends Query implements ConditionInterface {
       $stmt->execute($values, $this->queryOptions);
     }
     catch (\PDOException $e) {
-      if ($this->queryOptions['throw_exception'] ?? FALSE) {
+      if ($this->queryOptions['throw_exception'] ?? TRUE) {
         $message = $e->getMessage() . ": " . (string) $this . "; ";
         // Match all SQLSTATE 23xxx errors.
         if (substr($e->getCode(), -6, -3) == '23') {

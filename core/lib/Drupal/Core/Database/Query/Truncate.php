@@ -3,6 +3,8 @@
 namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\DatabaseExceptionWrapper;
+use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Database\Connection;
 
 /**
@@ -28,7 +30,6 @@ class Truncate extends Query {
    *   Array of database options.
    */
   public function __construct(Connection $connection, $table, array $options = []) {
-    $options['return'] = Database::RETURN_AFFECTED;
     parent::__construct($connection, $options);
     $this->table = $table;
   }
@@ -54,7 +55,18 @@ class Truncate extends Query {
    *   Return value is dependent on the database type.
    */
   public function execute() {
-    return $this->connection->query((string) $this, [], $this->queryOptions);
+    try {
+      $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions, TRUE);
+      $stmt->execute([], $this->queryOptions);
+    }
+    catch (\PDOException $e) {
+      if ($this->queryOptions['throw_exception'] ?? TRUE) {
+        $message = $e->getMessage() . ": " . (string) $this . "; ";
+        throw new DatabaseExceptionWrapper($message, 0, $e);
+      }
+      return NULL;
+    }
+    return $stmt->rowCount();
   }
 
   /**
