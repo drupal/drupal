@@ -34,17 +34,17 @@ build:
         testgroups: '--all'
         suppress-deprecations: false
         halt-on-fail: false
-#      run_tests.functional:
-#        types: 'PHPUnit-Functional'
-#        testgroups: '--all'
-#        suppress-deprecations: false
-#        halt-on-fail: false
-#      run_tests.javascript:
-#        concurrency: 15
-#        types: 'PHPUnit-FunctionalJavascript'
-#        testgroups: '--all'
-#        suppress-deprecations: false
-#        halt-on-fail: false
-#      # Run nightwatch testing.
-#      # @see https://www.drupal.org/project/drupal/issues/2869825
-#      nightwatchjs:
+      run_tests.functional:
+        types: 'PHPUnit-Functional'
+        testgroups: '--all'
+        suppress-deprecations: false
+        halt-on-fail: false
+      run_tests.javascript:
+        concurrency: 15
+        types: 'PHPUnit-FunctionalJavascript'
+        testgroups: '--all'
+        suppress-deprecations: false
+        halt-on-fail: false
+      # Run nightwatch testing.
+      # @see https://www.drupal.org/project/drupal/issues/2869825
+      nightwatchjs:
