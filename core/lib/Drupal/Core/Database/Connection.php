@@ -836,6 +836,7 @@ abstract class Connection {
           return $stmt;
 
         case Database::RETURN_AFFECTED:
+          $stmt->allowRowCount = TRUE;
           return $stmt->rowCount();
 
         case Database::RETURN_INSERT_ID:
