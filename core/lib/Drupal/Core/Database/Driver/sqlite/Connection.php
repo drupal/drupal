@@ -423,13 +423,11 @@ class Connection extends DatabaseConnection {
   /**
    * {@inheritdoc}
    */
-  public function prepareStatement(string $query, array $options): StatementInterface {
+  public function prepareStatement(string $query, array $options, bool $allow_row_count = FALSE): StatementInterface {
     $query = $this->prefixTables($query);
     if (!($options['allow_square_brackets'] ?? FALSE)) {
       $query = $this->quoteIdentifiers($query);
     }
-    $return = $options['return'] ?? Database::RETURN_STATEMENT;
-    $allow_row_count = $return === Database::RETURN_AFFECTED;
     return new Statement($this->connection, $this, $query, $options['pdo'] ?? [], $allow_row_count);
   }
 

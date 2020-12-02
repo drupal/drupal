@@ -56,7 +56,7 @@ class Delete extends Query implements ConditionInterface {
       $stmt->execute($values, $this->queryOptions);
     }
     catch (\PDOException $e) {
-      if ($this->queryOptions['throw_exception']) {
+      if ($this->queryOptions['throw_exception'] ?? FALSE) {
         $message = $e->getMessage() . ": " . (string) $this . "; ";
         // Match all SQLSTATE 23xxx errors.
         if (substr($e->getCode(), -6, -3) == '23') {
