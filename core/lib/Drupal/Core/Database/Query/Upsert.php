@@ -103,7 +103,7 @@ abstract class Upsert extends Query implements \Countable {
     }
 
     try {
-      $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions);
+      $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions, TRUE);
       $stmt->execute($values, $this->queryOptions);
     }
     catch (\PDOException $e) {

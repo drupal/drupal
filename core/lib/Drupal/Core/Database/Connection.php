@@ -542,17 +542,19 @@ abstract class Connection {
    *   An associative array of options to control how the query is run. See
    *   the documentation for self::defaultOptions() for details. The content of
    *   the 'pdo' key will be passed to the prepared statement.
+   * @param bool $allow_row_count
+   *   (optional) A flag indicating if row count is allowed on the statement
+   *   object. Defaults to FALSE.
    *
    * @return \Drupal\Core\Database\StatementInterface
    *   A PDO prepared statement ready for its execute() method.
    */
-  public function prepareStatement(string $query, array $options): StatementInterface {
+  public function prepareStatement(string $query, array $options, bool $allow_row_count = FALSE): StatementInterface {
     $query = $this->prefixTables($query);
     if (!($options['allow_square_brackets'] ?? FALSE)) {
       $query = $this->quoteIdentifiers($query);
     }
     $return = $options['return'] ?? Database::RETURN_STATEMENT;
-    $allow_row_count = $return === Database::RETURN_AFFECTED;
     // @todo in Drupal 10, only return the StatementWrapper.
     // @see https://www.drupal.org/node/3177490
     return $this->statementWrapperClass ?

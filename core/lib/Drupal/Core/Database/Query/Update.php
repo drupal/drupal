@@ -145,7 +145,7 @@ class Update extends Query implements ConditionInterface {
     }
 
     try {
-      $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions);
+      $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions, TRUE);
       $stmt->execute($update_values, $this->queryOptions);
     }
     catch (\PDOException $e) {

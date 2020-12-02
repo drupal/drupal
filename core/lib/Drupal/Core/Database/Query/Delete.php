@@ -52,7 +52,7 @@ class Delete extends Query implements ConditionInterface {
     }
 
     try {
-      $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions);
+      $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions, TRUE);
       $stmt->execute($values, $this->queryOptions);
     }
     catch (\PDOException $e) {
