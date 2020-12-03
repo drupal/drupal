@@ -42,8 +42,11 @@ class DateRangeFieldTest extends DateTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getTestFieldType() {
-    return 'daterange';
+  protected function setUp(): void {
+    parent::setUp();
+
+    // Create a field with settings to validate.
+    $this->createField('daterange', 'daterange_default', 'daterange_default');
   }
 
   /**

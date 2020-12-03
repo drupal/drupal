@@ -33,8 +33,11 @@ class DateTimeFieldTest extends DateTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getTestFieldType() {
-    return 'datetime';
+  protected function setUp(): void {
+    parent::setUp();
+
+    // Create a field with settings to validate.
+    $this->createField('datetime', 'datetime_default', 'datetime_default');
   }
 
   /**
@@ -562,7 +565,7 @@ class DateTimeFieldTest extends DateTestBase {
 
     // Test the widget for validation notifications.
     foreach ($this->datelistDataProvider($field_label) as $data) {
-      list($date_value, $expected) = $data;
+      [$date_value, $expected] = $data;
 
       // Display creation form.
       $this->drupalGet('entity_test/add');
