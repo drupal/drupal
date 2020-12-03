@@ -1,3 +1,6 @@
+Drupal 7.xx, xxxx-xx-xx (development version)
+-----------------------
+
 Drupal 7.77, 2020-12-03
 -----------------------
 - Hotfix for schema.prefixed tables
