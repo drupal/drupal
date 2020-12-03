@@ -79,6 +79,20 @@ abstract class DateTestBase extends BrowserTestBase {
   ];
 
   /**
+   * The field name used throughout the tests.
+   *
+   * @var string
+   */
+  protected string $field_name;
+
+  /**
+   * The field label used throughout the tests.
+   *
+   * @var string
+   */
+  protected string $field_label;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -106,34 +120,38 @@ abstract class DateTestBase extends BrowserTestBase {
    *   The field widget type to create.
    * @param string $formatter_type
    *   The field formatter type to create.
+   *
+   * @todo Probably want type, widget and formatter options as parameters, too.
    */
   protected function createField(string $type, string $widget_type, string $formatter_type) {
-    $field_name = mb_strtolower($this->randomMachineName());
-    $field_label = Unicode::ucfirst(mb_strtolower($this->randomMachineName()));
+    $this->field_name = mb_strtolower($this->randomMachineName());
+    $this->field_label = Unicode::ucfirst(mb_strtolower($this->randomMachineName()));
 
     $this->fieldStorage = FieldStorageConfig::create([
-      'field_name' => $field_name,
+      'field_name' => $this->field_name,
       'entity_type' => 'entity_test',
       'type' => $type,
+      // @todo Make this a parameter.
       'settings' => ['datetime_type' => DateTimeItem::DATETIME_TYPE_DATE],
     ]);
     $this->fieldStorage->save();
     $this->field = FieldConfig::create([
       'field_storage' => $this->fieldStorage,
-      'label' => $field_label,
+      'label' => $this->field_label,
       'bundle' => 'entity_test',
-      'description' => 'Description for ' . $field_label,
+      'description' => 'Description for ' . $this->field_label,
       'required' => TRUE,
     ]);
     $this->field->save();
 
     EntityFormDisplay::load('entity_test.entity_test.default')
-      ->setComponent($field_name, ['type' => $widget_type])
+      ->setComponent($this->field_name, ['type' => $widget_type])
       ->save();
 
     $this->displayOptions = [
       'type' => $formatter_type,
       'label' => 'hidden',
+      // @todo Make this a parameter?
       'settings' => ['format_type' => 'medium'] + $this->defaultSettings,
     ];
     EntityViewDisplay::create([
@@ -141,7 +159,7 @@ abstract class DateTestBase extends BrowserTestBase {
       'bundle' => $this->field->getTargetBundle(),
       'mode' => 'full',
       'status' => TRUE,
-    ])->setComponent($field_name, $this->displayOptions)
+    ])->setComponent($this->field_name, $this->displayOptions)
       ->save();
   }
 
@@ -176,7 +194,7 @@ abstract class DateTestBase extends BrowserTestBase {
    *   The timezone identifier to set.
    */
   protected function setSiteTimezone($timezone) {
-    // Set an explicit site timezone, and disallow per-user timezones.
+    // Set an explicit site time zone, and disallow per-user time zones.
     $this->config('system.date')
       ->set('timezone.user.configurable', 0)
       ->set('timezone.default', $timezone)

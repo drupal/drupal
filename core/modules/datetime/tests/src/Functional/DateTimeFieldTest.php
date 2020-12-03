@@ -44,7 +44,7 @@ class DateTimeFieldTest extends DateTestBase {
    * Tests date field functionality.
    */
   public function testDateField() {
-    $field_name = $this->fieldStorage->getName();
+    $this->field_name;
 
     $display_repository = \Drupal::service('entity_display.repository');
 
@@ -57,12 +57,12 @@ class DateTimeFieldTest extends DateTestBase {
 
       // Display creation form.
       $this->drupalGet('entity_test/add');
-      $this->assertSession()->fieldValueEquals("{$field_name}[0][value][date]", '');
-      $this->assertSession()->elementExists('xpath', '//*[@id="edit-' . $field_name . '-wrapper"]//label[contains(@class,"js-form-required")]');
-      $this->assertSession()->fieldNotExists("{$field_name}[0][value][time]");
+      $this->assertSession()->fieldValueEquals("{$this->field_name}[0][value][date]", '');
+      $this->assertSession()->elementExists('xpath', '//*[@id="edit-' . $this->field_name . '-wrapper"]//label[contains(@class,"js-form-required")]');
+      $this->assertSession()->fieldNotExists("{$this->field_name}[0][value][time]");
       // ARIA described-by.
-      $this->assertSession()->elementExists('xpath', '//input[@aria-describedby="edit-' . $field_name . '-0-value--description"]');
-      $this->assertSession()->elementExists('xpath', '//div[@id="edit-' . $field_name . '-0-value--description"]');
+      $this->assertSession()->elementExists('xpath', '//input[@aria-describedby="edit-' . $this->field_name . '-0-value--description"]');
+      $this->assertSession()->elementExists('xpath', '//div[@id="edit-' . $this->field_name . '-0-value--description"]');
 
       // Build up a date in the UTC timezone. Note that using this will also
       // mimic the user in a different timezone simply entering '2012-12-31' via
@@ -75,7 +75,7 @@ class DateTimeFieldTest extends DateTestBase {
       $time_format = DateFormat::load('html_time')->getPattern();
 
       $edit = [
-        "{$field_name}[0][value][date]" => $date->format($date_format),
+        "{$this->field_name}[0][value][date]" => $date->format($date_format),
       ];
       $this->submitForm($edit, 'Save');
       preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
@@ -87,7 +87,7 @@ class DateTimeFieldTest extends DateTestBase {
       // Verify the date doesn't change if using a timezone that is UTC+12 when
       // the entity is edited through the form.
       $entity = EntityTest::load($id);
-      $this->assertEqual('2012-12-31', $entity->{$field_name}->value);
+      $this->assertEqual('2012-12-31', $entity->{$this->field_name}->value);
       $this->drupalGet('entity_test/manage/' . $id . '/edit');
       $this->submitForm([], 'Save');
       $this->drupalGet('entity_test/manage/' . $id . '/edit');
@@ -95,7 +95,7 @@ class DateTimeFieldTest extends DateTestBase {
       $this->drupalGet('entity_test/manage/' . $id . '/edit');
       $this->submitForm([], 'Save');
       $entity = EntityTest::load($id);
-      $this->assertEqual('2012-12-31', $entity->{$field_name}->value);
+      $this->assertEqual('2012-12-31', $entity->{$this->field_name}->value);
 
       // Reset display options since these get changed below.
       $this->displayOptions = [
@@ -117,7 +117,7 @@ class DateTimeFieldTest extends DateTestBase {
           $this->displayOptions['settings'] = [$setting => $new_value] + $this->defaultSettings;
           $this->container->get('entity_display.repository')
             ->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
-            ->setComponent($field_name, $this->displayOptions)
+            ->setComponent($this->field_name, $this->displayOptions)
             ->save();
 
           $this->renderTestEntity($id);
@@ -147,7 +147,7 @@ class DateTimeFieldTest extends DateTestBase {
       $this->displayOptions['settings'] = $this->defaultSettings;
       $display_repository
         ->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
-        ->setComponent($field_name, $this->displayOptions)
+        ->setComponent($this->field_name, $this->displayOptions)
         ->save();
       $expected = $date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT);
       $output = $this->renderTestEntity($id);
@@ -161,7 +161,7 @@ class DateTimeFieldTest extends DateTestBase {
       $this->displayOptions['settings'] = ['date_format' => 'm/d/Y'] + $this->defaultSettings;
       $display_repository
         ->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
-        ->setComponent($field_name, $this->displayOptions)
+        ->setComponent($this->field_name, $this->displayOptions)
         ->save();
       $expected = $date->format($this->displayOptions['settings']['date_format']);
       $output = $this->renderTestEntity($id);
@@ -174,7 +174,7 @@ class DateTimeFieldTest extends DateTestBase {
       // removed.
       $this->displayOptions['settings']['date_format'] = '\\<\\s\\t\\r\\o\\n\\g\\>m/d/Y\\<\\/\\s\\t\\r\\o\\n\\g\\>\\<\\s\\c\\r\\i\\p\\t\\>\\a\\l\\e\\r\\t\\(\\S\\t\\r\\i\\n\\g\\.\\f\\r\\o\\m\\C\\h\\a\\r\\C\\o\\d\\e\\(\\8\\8\\,\\8\\3\\,\\8\\3\\)\\)\\<\\/\\s\\c\\r\\i\\p\\t\\>';
       $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
-        ->setComponent($field_name, $this->displayOptions)
+        ->setComponent($this->field_name, $this->displayOptions)
         ->save();
       $expected = '<strong>' . $date->format('m/d/Y') . '</strong>alert(String.fromCharCode(88,83,83))';
       $output = $this->renderTestEntity($id);
@@ -190,9 +190,8 @@ class DateTimeFieldTest extends DateTestBase {
       // or user timezone.
       $timestamp = REQUEST_TIME - 87654321;
       $entity = EntityTest::load($id);
-      $field_name = $this->fieldStorage->getName();
       $date = DrupalDateTime::createFromTimestamp($timestamp, 'UTC');
-      $entity->{$field_name}->value = $date->format($date_format);
+      $entity->{$this->field_name}->value = $date->format($date_format);
       $entity->save();
 
       $this->displayOptions['type'] = 'datetime_time_ago';
@@ -202,7 +201,7 @@ class DateTimeFieldTest extends DateTestBase {
         'granularity' => 3,
       ];
       $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
-        ->setComponent($field_name, $this->displayOptions)
+        ->setComponent($this->field_name, $this->displayOptions)
         ->save();
       $expected = new FormattableMarkup($this->displayOptions['settings']['past_format'], [
         '@interval' => $this->dateFormatter->formatTimeDiffSince($timestamp, ['granularity' => $this->displayOptions['settings']['granularity']]),
@@ -220,13 +219,12 @@ class DateTimeFieldTest extends DateTestBase {
       // or user timezone.
       $timestamp = REQUEST_TIME + 87654321;
       $entity = EntityTest::load($id);
-      $field_name = $this->fieldStorage->getName();
       $date = DrupalDateTime::createFromTimestamp($timestamp, 'UTC');
-      $entity->{$field_name}->value = $date->format($date_format);
+      $entity->{$this->field_name}->value = $date->format($date_format);
       $entity->save();
 
       $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
-        ->setComponent($field_name, $this->displayOptions)
+        ->setComponent($this->field_name, $this->displayOptions)
         ->save();
       $expected = new FormattableMarkup($this->displayOptions['settings']['future_format'], [
         '@interval' => $this->dateFormatter->formatTimeDiffUntil($timestamp, ['granularity' => $this->displayOptions['settings']['granularity']]),
@@ -243,19 +241,17 @@ class DateTimeFieldTest extends DateTestBase {
    * Tests date and time field.
    */
   public function testDatetimeField() {
-    $field_name = $this->fieldStorage->getName();
-    $field_label = $this->field->label();
     // Change the field to a datetime field.
     $this->fieldStorage->setSetting('datetime_type', 'datetime');
     $this->fieldStorage->save();
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
-    $this->assertSession()->fieldValueEquals("{$field_name}[0][value][date]", '');
-    $this->assertSession()->fieldValueEquals("{$field_name}[0][value][time]", '');
-    $this->assertSession()->elementTextContains('xpath', '//fieldset[@id="edit-' . $field_name . '-0"]/legend', $field_label);
-    $this->assertSession()->elementExists('xpath', '//fieldset[@aria-describedby="edit-' . $field_name . '-0--description"]');
-    $this->assertSession()->elementExists('xpath', '//div[@id="edit-' . $field_name . '-0--description"]');
+    $this->assertSession()->fieldValueEquals("{$this->field_name}[0][value][date]", '');
+    $this->assertSession()->fieldValueEquals("{$this->field_name}[0][value][time]", '');
+    $this->assertSession()->elementTextContains('xpath', '//fieldset[@id="edit-' . $this->field_name . '-0"]/legend', $this->field_label);
+    $this->assertSession()->elementExists('xpath', '//fieldset[@aria-describedby="edit-' . $this->field_name . '-0--description"]');
+    $this->assertSession()->elementExists('xpath', '//div[@id="edit-' . $this->field_name . '-0--description"]');
 
     // Build up a date in the UTC timezone.
     $value = '2012-12-31 00:00:00';
@@ -269,8 +265,8 @@ class DateTimeFieldTest extends DateTestBase {
     $time_format = DateFormat::load('html_time')->getPattern();
 
     $edit = [
-      "{$field_name}[0][value][date]" => $date->format($date_format),
-      "{$field_name}[0][value][time]" => $date->format($time_format),
+      "{$this->field_name}[0][value][date]" => $date->format($date_format),
+      "{$this->field_name}[0][value][time]" => $date->format($time_format),
     ];
     $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
@@ -291,7 +287,7 @@ class DateTimeFieldTest extends DateTestBase {
         // Update the entity display settings.
         $this->displayOptions['settings'] = [$setting => $new_value] + $this->defaultSettings;
         $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
-          ->setComponent($field_name, $this->displayOptions)
+          ->setComponent($this->field_name, $this->displayOptions)
           ->save();
 
         $this->renderTestEntity($id);
@@ -314,7 +310,7 @@ class DateTimeFieldTest extends DateTestBase {
     $this->displayOptions['settings'] = $this->defaultSettings;
     $display_repository
       ->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
-      ->setComponent($field_name, $this->displayOptions)
+      ->setComponent($this->field_name, $this->displayOptions)
       ->save();
     $expected = $date->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
     $output = $this->renderTestEntity($id);
@@ -324,7 +320,7 @@ class DateTimeFieldTest extends DateTestBase {
     $this->displayOptions['type'] = 'datetime_custom';
     $this->displayOptions['settings'] = ['date_format' => 'm/d/Y g:i:s A'] + $this->defaultSettings;
     $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
-      ->setComponent($field_name, $this->displayOptions)
+      ->setComponent($this->field_name, $this->displayOptions)
       ->save();
     $expected = $date->format($this->displayOptions['settings']['date_format']);
     $output = $this->renderTestEntity($id);
@@ -334,7 +330,7 @@ class DateTimeFieldTest extends DateTestBase {
     $this->displayOptions['type'] = 'datetime_custom';
     $this->displayOptions['settings'] = ['date_format' => 'm/d/Y g:i:s A', 'timezone_override' => 'America/New_York'] + $this->defaultSettings;
     $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
-      ->setComponent($field_name, $this->displayOptions)
+      ->setComponent($this->field_name, $this->displayOptions)
       ->save();
     $expected = $date->format($this->displayOptions['settings']['date_format'], ['timezone' => 'America/New_York']);
     $output = $this->renderTestEntity($id);
@@ -347,9 +343,8 @@ class DateTimeFieldTest extends DateTestBase {
     // or user timezone.
     $timestamp = REQUEST_TIME - 87654321;
     $entity = EntityTest::load($id);
-    $field_name = $this->fieldStorage->getName();
     $date = DrupalDateTime::createFromTimestamp($timestamp, 'UTC');
-    $entity->{$field_name}->value = $date->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
+    $entity->{$this->field_name}->value = $date->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
     $entity->save();
 
     $this->displayOptions['type'] = 'datetime_time_ago';
@@ -359,7 +354,7 @@ class DateTimeFieldTest extends DateTestBase {
       'granularity' => 3,
     ];
     $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
-      ->setComponent($field_name, $this->displayOptions)
+      ->setComponent($this->field_name, $this->displayOptions)
       ->save();
     $expected = new FormattableMarkup($this->displayOptions['settings']['past_format'], [
       '@interval' => $this->dateFormatter->formatTimeDiffSince($timestamp, ['granularity' => $this->displayOptions['settings']['granularity']]),
@@ -374,14 +369,13 @@ class DateTimeFieldTest extends DateTestBase {
     // or user timezone.
     $timestamp = REQUEST_TIME + 87654321;
     $entity = EntityTest::load($id);
-    $field_name = $this->fieldStorage->getName();
     $date = DrupalDateTime::createFromTimestamp($timestamp, 'UTC');
-    $entity->{$field_name}->value = $date->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
+    $entity->{$this->field_name}->value = $date->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
     $entity->save();
 
     $display_repository
       ->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
-      ->setComponent($field_name, $this->displayOptions)
+      ->setComponent($this->field_name, $this->displayOptions)
       ->save();
     $expected = new FormattableMarkup($this->displayOptions['settings']['future_format'], [
       '@interval' => $this->dateFormatter->formatTimeDiffUntil($timestamp, ['granularity' => $this->displayOptions['settings']['granularity']]),
@@ -394,8 +388,7 @@ class DateTimeFieldTest extends DateTestBase {
    * Tests Date List Widget functionality.
    */
   public function testDatelistWidget() {
-    $field_name = $this->fieldStorage->getName();
-    $field_label = $this->field->label();
+    $this->field_label;
 
     // Ensure field is set to a date only field.
     $this->fieldStorage->setSetting('datetime_type', 'date');
@@ -406,7 +399,7 @@ class DateTimeFieldTest extends DateTestBase {
 
     // Change the widget to a datelist widget.
     $display_repository->getFormDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle())
-      ->setComponent($field_name, [
+      ->setComponent($this->field_name, [
         'type' => 'datetime_datelist',
         'settings' => [
           'date_order' => 'YMD',
@@ -417,21 +410,21 @@ class DateTimeFieldTest extends DateTestBase {
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
-    $this->assertSession()->elementTextContains('xpath', '//fieldset[@id="edit-' . $field_name . '-0"]/legend', $field_label);
-    $this->assertSession()->elementExists('xpath', '//fieldset[@aria-describedby="edit-' . $field_name . '-0--description"]');
-    $this->assertSession()->elementExists('xpath', '//div[@id="edit-' . $field_name . '-0--description"]');
+    $this->assertSession()->elementTextContains('xpath', '//fieldset[@id="edit-' . $this->field_name . '-0"]/legend', $this->field_label);
+    $this->assertSession()->elementExists('xpath', '//fieldset[@aria-describedby="edit-' . $this->field_name . '-0--description"]');
+    $this->assertSession()->elementExists('xpath', '//div[@id="edit-' . $this->field_name . '-0--description"]');
 
     // Assert that Hour and Minute Elements do not appear on Date Only
-    $this->assertSession()->elementNotExists('xpath', "//*[@id=\"edit-$field_name-0-value-hour\"]");
-    $this->assertSession()->elementNotExists('xpath', "//*[@id=\"edit-$field_name-0-value-minute\"]");
+    $this->assertSession()->elementNotExists('xpath', "//*[@id=\"edit-$this->field_name-0-value-hour\"]");
+    $this->assertSession()->elementNotExists('xpath', "//*[@id=\"edit-$this->field_name-0-value-minute\"]");
 
     // Go to the form display page to assert that increment option does not appear on Date Only
     $fieldEditUrl = 'entity_test/structure/entity_test/form-display';
     $this->drupalGet($fieldEditUrl);
 
     // Click on the widget settings button to open the widget settings form.
-    $this->submitForm([], $field_name . "_settings_edit");
-    $xpathIncr = "//select[starts-with(@id, \"edit-fields-$field_name-settings-edit-form-settings-increment\")]";
+    $this->submitForm([], $this->field_name . "_settings_edit");
+    $xpathIncr = "//select[starts-with(@id, \"edit-fields-$this->field_name-settings-edit-form-settings-increment\")]";
     $this->assertSession()->elementNotExists('xpath', $xpathIncr);
 
     // Change the field to a datetime field.
@@ -440,7 +433,7 @@ class DateTimeFieldTest extends DateTestBase {
 
     // Change the widget to a datelist widget.
     $display_repository->getFormDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle())
-      ->setComponent($field_name, [
+      ->setComponent($this->field_name, [
         'type' => 'datetime_datelist',
         'settings' => [
           'increment' => 1,
@@ -456,38 +449,38 @@ class DateTimeFieldTest extends DateTestBase {
     $this->drupalGet($fieldEditUrl);
 
     // Click on the widget settings button to open the widget settings form.
-    $this->submitForm([], $field_name . "_settings_edit");
+    $this->submitForm([], $this->field_name . "_settings_edit");
     $this->assertSession()->elementExists('xpath', $xpathIncr);
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
 
     // Year element.
-    $this->assertSession()->elementExists('xpath', "//*[@id=\"edit-$field_name-0-value-year\"]");
-    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-year", '')->isSelected());
-    $this->assertSession()->optionExists("edit-$field_name-0-value-year", 'Year');
+    $this->assertSession()->elementExists('xpath', "//*[@id=\"edit-$this->field_name-0-value-year\"]");
+    $this->assertTrue($this->assertSession()->optionExists("edit-$this->field_name-0-value-year", '')->isSelected());
+    $this->assertSession()->optionExists("edit-$this->field_name-0-value-year", 'Year');
     // Month element.
-    $this->assertSession()->elementExists('xpath', "//*[@id=\"edit-$field_name-0-value-month\"]");
-    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-month", '')->isSelected());
-    $this->assertSession()->optionExists("edit-$field_name-0-value-month", 'Month');
+    $this->assertSession()->elementExists('xpath', "//*[@id=\"edit-$this->field_name-0-value-month\"]");
+    $this->assertTrue($this->assertSession()->optionExists("edit-$this->field_name-0-value-month", '')->isSelected());
+    $this->assertSession()->optionExists("edit-$this->field_name-0-value-month", 'Month');
     // Day element.
-    $this->assertSession()->elementExists('xpath', "//*[@id=\"edit-$field_name-0-value-day\"]");
-    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-day", '')->isSelected());
-    $this->assertSession()->optionExists("edit-$field_name-0-value-day", 'Day');
+    $this->assertSession()->elementExists('xpath', "//*[@id=\"edit-$this->field_name-0-value-day\"]");
+    $this->assertTrue($this->assertSession()->optionExists("edit-$this->field_name-0-value-day", '')->isSelected());
+    $this->assertSession()->optionExists("edit-$this->field_name-0-value-day", 'Day');
     // Hour element.
-    $this->assertSession()->elementExists('xpath', "//*[@id=\"edit-$field_name-0-value-hour\"]");
-    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-hour", '')->isSelected());
-    $this->assertSession()->optionExists("edit-$field_name-0-value-hour", 'Hour');
+    $this->assertSession()->elementExists('xpath', "//*[@id=\"edit-$this->field_name-0-value-hour\"]");
+    $this->assertTrue($this->assertSession()->optionExists("edit-$this->field_name-0-value-hour", '')->isSelected());
+    $this->assertSession()->optionExists("edit-$this->field_name-0-value-hour", 'Hour');
     // Minute element.
-    $this->assertSession()->elementExists('xpath', "//*[@id=\"edit-$field_name-0-value-minute\"]");
-    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-minute", '')->isSelected());
-    $this->assertSession()->optionExists("edit-$field_name-0-value-minute", 'Minute');
+    $this->assertSession()->elementExists('xpath', "//*[@id=\"edit-$this->field_name-0-value-minute\"]");
+    $this->assertTrue($this->assertSession()->optionExists("edit-$this->field_name-0-value-minute", '')->isSelected());
+    $this->assertSession()->optionExists("edit-$this->field_name-0-value-minute", 'Minute');
     // No Second element.
-    $this->assertSession()->elementNotExists('xpath', "//*[@id=\"edit-$field_name-0-value-second\"]");
+    $this->assertSession()->elementNotExists('xpath', "//*[@id=\"edit-$this->field_name-0-value-second\"]");
     // AMPM element.
-    $this->assertSession()->elementExists('xpath', "//*[@id=\"edit-$field_name-0-value-ampm\"]");
-    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-ampm", '')->isSelected());
-    $this->assertSession()->optionExists("edit-$field_name-0-value-ampm", 'AM/PM');
+    $this->assertSession()->elementExists('xpath', "//*[@id=\"edit-$this->field_name-0-value-ampm\"]");
+    $this->assertTrue($this->assertSession()->optionExists("edit-$this->field_name-0-value-ampm", '')->isSelected());
+    $this->assertSession()->optionExists("edit-$this->field_name-0-value-ampm", 'AM/PM');
 
     // Submit a valid date and ensure it is accepted.
     $date_value = ['year' => 2012, 'month' => 12, 'day' => 31, 'hour' => 5, 'minute' => 15];
@@ -496,7 +489,7 @@ class DateTimeFieldTest extends DateTestBase {
     // Add the ampm indicator since we are testing 12 hour time.
     $date_value['ampm'] = 'am';
     foreach ($date_value as $part => $value) {
-      $edit["{$field_name}[0][value][$part]"] = $value;
+      $edit["{$this->field_name}[0][value][$part]"] = $value;
     }
 
     $this->submitForm($edit, 'Save');
@@ -504,16 +497,16 @@ class DateTimeFieldTest extends DateTestBase {
     $id = $match[1];
     $this->assertText('entity_test ' . $id . ' has been created.');
 
-    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-year", '2012')->isSelected());
-    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-month", '12')->isSelected());
-    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-day", '31')->isSelected());
-    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-hour", '5')->isSelected());
-    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-minute", '15')->isSelected());
-    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-ampm", 'am')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$this->field_name-0-value-year", '2012')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$this->field_name-0-value-month", '12')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$this->field_name-0-value-day", '31')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$this->field_name-0-value-hour", '5')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$this->field_name-0-value-minute", '15')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$this->field_name-0-value-ampm", 'am')->isSelected());
 
     // Test the widget using increment other than 1 and 24 hour mode.
     $display_repository->getFormDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle())
-      ->setComponent($field_name, [
+      ->setComponent($this->field_name, [
         'type' => 'datetime_datelist',
         'settings' => [
           'increment' => 15,
@@ -528,15 +521,15 @@ class DateTimeFieldTest extends DateTestBase {
     $this->drupalGet('entity_test/add');
 
     // Other elements are unaffected by the changed settings.
-    $this->assertSession()->elementExists('xpath', "//*[@id=\"edit-$field_name-0-value-hour\"]");
-    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-hour", '')->isSelected());
-    $this->assertSession()->elementNotExists('xpath', "//*[@id=\"edit-$field_name-0-value-ampm\"]");
+    $this->assertSession()->elementExists('xpath', "//*[@id=\"edit-$this->field_name-0-value-hour\"]");
+    $this->assertTrue($this->assertSession()->optionExists("edit-$this->field_name-0-value-hour", '')->isSelected());
+    $this->assertSession()->elementNotExists('xpath', "//*[@id=\"edit-$this->field_name-0-value-ampm\"]");
     // Submit a valid date and ensure it is accepted.
     $date_value = ['year' => 2012, 'month' => 12, 'day' => 31, 'hour' => 17, 'minute' => 15];
 
     $edit = [];
     foreach ($date_value as $part => $value) {
-      $edit["{$field_name}[0][value][$part]"] = $value;
+      $edit["{$this->field_name}[0][value][$part]"] = $value;
     }
 
     $this->submitForm($edit, 'Save');
@@ -544,15 +537,15 @@ class DateTimeFieldTest extends DateTestBase {
     $id = $match[1];
     $this->assertText('entity_test ' . $id . ' has been created.');
 
-    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-year", '2012')->isSelected());
-    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-month", '12')->isSelected());
-    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-day", '31')->isSelected());
-    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-hour", '17')->isSelected());
-    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-minute", '15')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$this->field_name-0-value-year", '2012')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$this->field_name-0-value-month", '12')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$this->field_name-0-value-day", '31')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$this->field_name-0-value-hour", '17')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$this->field_name-0-value-minute", '15')->isSelected());
 
     // Test the widget for partial completion of fields.
     $display_repository->getFormDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle())
-      ->setComponent($field_name, [
+      ->setComponent($this->field_name, [
         'type' => 'datetime_datelist',
         'settings' => [
           'increment' => 1,
@@ -564,7 +557,7 @@ class DateTimeFieldTest extends DateTestBase {
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 
     // Test the widget for validation notifications.
-    foreach ($this->datelistDataProvider($field_label) as $data) {
+    foreach ($this->datelistDataProvider($this->field_label) as $data) {
       [$date_value, $expected] = $data;
 
       // Display creation form.
@@ -573,7 +566,7 @@ class DateTimeFieldTest extends DateTestBase {
       // Submit a partial date and ensure and error message is provided.
       $edit = [];
       foreach ($date_value as $part => $value) {
-        $edit["{$field_name}[0][value][$part]"] = $value;
+        $edit["{$this->field_name}[0][value][$part]"] = $value;
       }
 
       $this->submitForm($edit, 'Save');
@@ -589,7 +582,7 @@ class DateTimeFieldTest extends DateTestBase {
     $date_value = ['year' => 2012, 'month' => '12', 'day' => '31', 'hour' => '0', 'minute' => '0'];
     $edit = [];
     foreach ($date_value as $part => $value) {
-      $edit["{$field_name}[0][value][$part]"] = $value;
+      $edit["{$this->field_name}[0][value][$part]"] = $value;
     }
 
     $this->submitForm($edit, 'Save');
@@ -604,12 +597,12 @@ class DateTimeFieldTest extends DateTestBase {
     $date_value = ['year' => 2012, 'month' => '12', 'day' => '31', 'hour' => '', 'minute' => '0'];
     $edit = [];
     foreach ($date_value as $part => $value) {
-      $edit["{$field_name}[0][value][$part]"] = $value;
+      $edit["{$this->field_name}[0][value][$part]"] = $value;
     }
 
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-minute", '0')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$this->field_name-0-value-minute", '0')->isSelected());
   }
 
   /**
@@ -802,42 +795,42 @@ class DateTimeFieldTest extends DateTestBase {
     // Change the field to a datetime field.
     $this->fieldStorage->setSetting('datetime_type', 'datetime');
     $this->fieldStorage->save();
-    $field_name = $this->fieldStorage->getName();
+    $this->field_name;
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
-    $this->assertSession()->fieldValueEquals("{$field_name}[0][value][date]", '');
-    $this->assertSession()->fieldValueEquals("{$field_name}[0][value][time]", '');
+    $this->assertSession()->fieldValueEquals("{$this->field_name}[0][value][date]", '');
+    $this->assertSession()->fieldValueEquals("{$this->field_name}[0][value][time]", '');
 
     // Submit invalid dates and ensure they is not accepted.
     $date_value = '';
     $edit = [
-      "{$field_name}[0][value][date]" => $date_value,
-      "{$field_name}[0][value][time]" => '12:00:00',
+      "{$this->field_name}[0][value][date]" => $date_value,
+      "{$this->field_name}[0][value][time]" => '12:00:00',
     ];
     $this->submitForm($edit, 'Save');
     $this->assertText('date is invalid', 'Empty date value has been caught.');
 
     $date_value = 'aaaa-12-01';
     $edit = [
-      "{$field_name}[0][value][date]" => $date_value,
-      "{$field_name}[0][value][time]" => '00:00:00',
+      "{$this->field_name}[0][value][date]" => $date_value,
+      "{$this->field_name}[0][value][time]" => '00:00:00',
     ];
     $this->submitForm($edit, 'Save');
     $this->assertText('date is invalid', new FormattableMarkup('Invalid year value %date has been caught.', ['%date' => $date_value]));
 
     $date_value = '2012-75-01';
     $edit = [
-      "{$field_name}[0][value][date]" => $date_value,
-      "{$field_name}[0][value][time]" => '00:00:00',
+      "{$this->field_name}[0][value][date]" => $date_value,
+      "{$this->field_name}[0][value][time]" => '00:00:00',
     ];
     $this->submitForm($edit, 'Save');
     $this->assertText('date is invalid', new FormattableMarkup('Invalid month value %date has been caught.', ['%date' => $date_value]));
 
     $date_value = '2012-12-99';
     $edit = [
-      "{$field_name}[0][value][date]" => $date_value,
-      "{$field_name}[0][value][time]" => '00:00:00',
+      "{$this->field_name}[0][value][date]" => $date_value,
+      "{$this->field_name}[0][value][time]" => '00:00:00',
     ];
     $this->submitForm($edit, 'Save');
     $this->assertText('date is invalid', new FormattableMarkup('Invalid day value %date has been caught.', ['%date' => $date_value]));
@@ -845,8 +838,8 @@ class DateTimeFieldTest extends DateTestBase {
     $date_value = '2012-12-01';
     $time_value = '';
     $edit = [
-      "{$field_name}[0][value][date]" => $date_value,
-      "{$field_name}[0][value][time]" => $time_value,
+      "{$this->field_name}[0][value][date]" => $date_value,
+      "{$this->field_name}[0][value][time]" => $time_value,
     ];
     $this->submitForm($edit, 'Save');
     $this->assertText('date is invalid', 'Empty time value has been caught.');
@@ -854,8 +847,8 @@ class DateTimeFieldTest extends DateTestBase {
     $date_value = '2012-12-01';
     $time_value = '49:00:00';
     $edit = [
-      "{$field_name}[0][value][date]" => $date_value,
-      "{$field_name}[0][value][time]" => $time_value,
+      "{$this->field_name}[0][value][date]" => $date_value,
+      "{$this->field_name}[0][value][time]" => $time_value,
     ];
     $this->submitForm($edit, 'Save');
     $this->assertText('date is invalid', new FormattableMarkup('Invalid hour value %time has been caught.', ['%time' => $time_value]));
@@ -863,8 +856,8 @@ class DateTimeFieldTest extends DateTestBase {
     $date_value = '2012-12-01';
     $time_value = '12:99:00';
     $edit = [
-      "{$field_name}[0][value][date]" => $date_value,
-      "{$field_name}[0][value][time]" => $time_value,
+      "{$this->field_name}[0][value][date]" => $date_value,
+      "{$this->field_name}[0][value][time]" => $time_value,
     ];
     $this->submitForm($edit, 'Save');
     $this->assertText('date is invalid', new FormattableMarkup('Invalid minute value %time has been caught.', ['%time' => $time_value]));
@@ -872,8 +865,8 @@ class DateTimeFieldTest extends DateTestBase {
     $date_value = '2012-12-01';
     $time_value = '12:15:99';
     $edit = [
-      "{$field_name}[0][value][date]" => $date_value,
-      "{$field_name}[0][value][time]" => $time_value,
+      "{$this->field_name}[0][value][date]" => $date_value,
+      "{$this->field_name}[0][value][time]" => $time_value,
     ];
     $this->submitForm($edit, 'Save');
     $this->assertText('date is invalid', new FormattableMarkup('Invalid second value %time has been caught.', ['%time' => $time_value]));
