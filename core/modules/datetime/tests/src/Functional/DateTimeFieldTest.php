@@ -39,7 +39,7 @@ class DateTimeFieldTest extends DateTestBase {
     parent::setUp();
 
     // Create a field with settings to validate.
-    $this->createField('datetime', 'datetime_default', 'datetime_default');
+    $this->createField('datetime', [], 'datetime_default', [], 'datetime_default', []);
   }
 
   /**

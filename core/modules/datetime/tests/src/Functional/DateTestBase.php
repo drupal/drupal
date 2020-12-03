@@ -116,14 +116,20 @@ abstract class DateTestBase extends BrowserTestBase {
    *
    * @param string $type
    *   The field type to create.
+   * @param array $settings
+   *   The field storage settings.
    * @param string $widget_type
    *   The field widget type to create.
+   * @param array $widget_settings
+   *   The field widget settings.
    * @param string $formatter_type
    *   The field formatter type to create.
+   * @param array $formatter_settings
+   *   The field formatter settings.
    *
    * @todo Probably want type, widget and formatter options as parameters, too.
    */
-  protected function createField(string $type, string $widget_type, string $formatter_type) {
+  protected function createField(string $type = 'datetime', array $settings = [], string $widget_type = 'datetime_default', array $widget_settings = [], string $formatter_type = 'datetime_default', array $formatter_settings = []) {
     $this->field_name = mb_strtolower($this->randomMachineName());
     $this->field_label = Unicode::ucfirst(mb_strtolower($this->randomMachineName()));
 
@@ -131,8 +137,7 @@ abstract class DateTestBase extends BrowserTestBase {
       'field_name' => $this->field_name,
       'entity_type' => 'entity_test',
       'type' => $type,
-      // @todo Make this a parameter.
-      'settings' => ['datetime_type' => DateTimeItem::DATETIME_TYPE_DATE],
+      'settings' => $settings ?: ['datetime_type' => DateTimeItem::DATETIME_TYPE_DATE],
     ]);
     $this->fieldStorage->save();
 
@@ -145,6 +150,7 @@ abstract class DateTestBase extends BrowserTestBase {
     ]);
     $this->field->save();
 
+    // @todo Add widget settings.
     EntityFormDisplay::load('entity_test.entity_test.default')
       ->setComponent($this->field_name, ['type' => $widget_type])
       ->save();
@@ -152,8 +158,7 @@ abstract class DateTestBase extends BrowserTestBase {
     $this->displayOptions = [
       'type' => $formatter_type,
       'label' => 'hidden',
-      // @todo Make this a parameter?
-      'settings' => ['format_type' => 'medium'] + $this->defaultSettings,
+      'settings' => ($formatter_settings ?: ['format_type' => 'medium']) + $this->defaultSettings,
     ];
     EntityViewDisplay::create([
       'targetEntityType' => $this->field->getTargetEntityTypeId(),
