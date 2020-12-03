@@ -22,6 +22,8 @@ class DateTimeFieldTest extends DateTestBase {
    * The default display settings to use for the formatters.
    *
    * @var array
+   *
+   * @todo Probably want to move into DTB:createField?
    */
   protected $defaultSettings = ['timezone_override' => ''];
 
@@ -44,11 +46,9 @@ class DateTimeFieldTest extends DateTestBase {
    * Tests date field functionality.
    */
   public function testDateField() {
-    $this->field_name;
-
     $display_repository = \Drupal::service('entity_display.repository');
 
-    // Loop through defined timezones to test that date-only fields work at the
+    // Loop through defined time zones to test that date-only fields work at the
     // extremes.
     foreach (static::$timezones as $timezone) {
 
@@ -64,8 +64,8 @@ class DateTimeFieldTest extends DateTestBase {
       $this->assertSession()->elementExists('xpath', '//input[@aria-describedby="edit-' . $this->field_name . '-0-value--description"]');
       $this->assertSession()->elementExists('xpath', '//div[@id="edit-' . $this->field_name . '-0-value--description"]');
 
-      // Build up a date in the UTC timezone. Note that using this will also
-      // mimic the user in a different timezone simply entering '2012-12-31' via
+      // Build up a date in the UTC time zone. Note that using this will also
+      // mimic the user in a different time zone simply entering '2012-12-31' via
       // the UI.
       $value = '2012-12-31 00:00:00';
       $date = new DrupalDateTime($value, DateTimeItemInterface::STORAGE_TIMEZONE);
@@ -84,7 +84,7 @@ class DateTimeFieldTest extends DateTestBase {
       $this->assertRaw($date->format($date_format));
       $this->assertNoRaw($date->format($time_format));
 
-      // Verify the date doesn't change if using a timezone that is UTC+12 when
+      // Verify the date doesn't change if using a time zone that is UTC+12 when
       // the entity is edited through the form.
       $entity = EntityTest::load($id);
       $this->assertEqual('2012-12-31', $entity->{$this->field_name}->value);
@@ -97,6 +97,7 @@ class DateTimeFieldTest extends DateTestBase {
       $entity = EntityTest::load($id);
       $this->assertEqual('2012-12-31', $entity->{$this->field_name}->value);
 
+      // @todo Split/move. This loop/switch logic was never needed.
       // Reset display options since these get changed below.
       $this->displayOptions = [
         'type' => 'datetime_default',
@@ -142,6 +143,7 @@ class DateTimeFieldTest extends DateTestBase {
         }
       }
 
+      // @todo Split/move to new method?
       // Verify that the plain formatter works.
       $this->displayOptions['type'] = 'datetime_plain';
       $this->displayOptions['settings'] = $this->defaultSettings;
@@ -156,6 +158,7 @@ class DateTimeFieldTest extends DateTestBase {
         '%timezone' => $timezone,
       ]));
 
+      // @todo Split/move to new method?
       // Verify that the 'datetime_custom' formatter works.
       $this->displayOptions['type'] = 'datetime_custom';
       $this->displayOptions['settings'] = ['date_format' => 'm/d/Y'] + $this->defaultSettings;
@@ -170,6 +173,7 @@ class DateTimeFieldTest extends DateTestBase {
         '%timezone' => $timezone,
       ]));
 
+      // @todo Split/move to new method.
       // Test that allowed markup in custom format is preserved and XSS is
       // removed.
       $this->displayOptions['settings']['date_format'] = '\\<\\s\\t\\r\\o\\n\\g\\>m/d/Y\\<\\/\\s\\t\\r\\o\\n\\g\\>\\<\\s\\c\\r\\i\\p\\t\\>\\a\\l\\e\\r\\t\\(\\S\\t\\r\\i\\n\\g\\.\\f\\r\\o\\m\\C\\h\\a\\r\\C\\o\\d\\e\\(\\8\\8\\,\\8\\3\\,\\8\\3\\)\\)\\<\\/\\s\\c\\r\\i\\p\\t\\>';
@@ -183,11 +187,12 @@ class DateTimeFieldTest extends DateTestBase {
         '%timezone' => $timezone,
       ]));
 
+      // @todo Split/move to new method. Possible to new class like in DRFT.
       // Verify that the 'datetime_time_ago' formatter works for intervals in the
       // past.  First update the test entity so that the date difference always
       // has the same interval.  Since the database always stores UTC, and the
       // interval will use this, force the test date to use UTC and not the local
-      // or user timezone.
+      // or user time zone.
       $timestamp = REQUEST_TIME - 87654321;
       $entity = EntityTest::load($id);
       $date = DrupalDateTime::createFromTimestamp($timestamp, 'UTC');
@@ -216,7 +221,7 @@ class DateTimeFieldTest extends DateTestBase {
       // future.  First update the test entity so that the date difference always
       // has the same interval.  Since the database always stores UTC, and the
       // interval will use this, force the test date to use UTC and not the local
-      // or user timezone.
+      // or user time zone.
       $timestamp = REQUEST_TIME + 87654321;
       $entity = EntityTest::load($id);
       $date = DrupalDateTime::createFromTimestamp($timestamp, 'UTC');
@@ -241,6 +246,7 @@ class DateTimeFieldTest extends DateTestBase {
    * Tests date and time field.
    */
   public function testDatetimeField() {
+    // @todo Create new field? This makes no sense b/c we just did the setup?
     // Change the field to a datetime field.
     $this->fieldStorage->setSetting('datetime_type', 'datetime');
     $this->fieldStorage->save();
@@ -253,11 +259,11 @@ class DateTimeFieldTest extends DateTestBase {
     $this->assertSession()->elementExists('xpath', '//fieldset[@aria-describedby="edit-' . $this->field_name . '-0--description"]');
     $this->assertSession()->elementExists('xpath', '//div[@id="edit-' . $this->field_name . '-0--description"]');
 
-    // Build up a date in the UTC timezone.
+    // Build up a date in the UTC time zone.
     $value = '2012-12-31 00:00:00';
     $date = new DrupalDateTime($value, 'UTC');
 
-    // Update the timezone to the system default.
+    // Update the time zone to the system default.
     $date->setTimezone(timezone_open(date_default_timezone_get()));
 
     // Submit a valid date and ensure it is accepted.
@@ -278,6 +284,7 @@ class DateTimeFieldTest extends DateTestBase {
     /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
     $display_repository = \Drupal::service('entity_display.repository');
 
+    // @todo This logic is overkill, like with above.
     // Verify that the date is output according to the formatter settings.
     $options = [
       'format_type' => ['short', 'medium', 'long'],
@@ -305,6 +312,7 @@ class DateTimeFieldTest extends DateTestBase {
       }
     }
 
+    // @todo Split/move to new method.
     // Verify that the plain formatter works.
     $this->displayOptions['type'] = 'datetime_plain';
     $this->displayOptions['settings'] = $this->defaultSettings;
@@ -316,6 +324,7 @@ class DateTimeFieldTest extends DateTestBase {
     $output = $this->renderTestEntity($id);
     $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using plain format displayed as %expected.', ['%expected' => $expected]));
 
+    // @todo Split/move to new method.
     // Verify that the 'datetime_custom' formatter works.
     $this->displayOptions['type'] = 'datetime_custom';
     $this->displayOptions['settings'] = ['date_format' => 'm/d/Y g:i:s A'] + $this->defaultSettings;
@@ -326,6 +335,8 @@ class DateTimeFieldTest extends DateTestBase {
     $output = $this->renderTestEntity($id);
     $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using datetime_custom format displayed as %expected.', ['%expected' => $expected]));
 
+    // @todo Split/move to new method.
+    // @todo TIME ZONE STUFF
     // Verify that the 'timezone_override' setting works.
     $this->displayOptions['type'] = 'datetime_custom';
     $this->displayOptions['settings'] = ['date_format' => 'm/d/Y g:i:s A', 'timezone_override' => 'America/New_York'] + $this->defaultSettings;
@@ -336,11 +347,12 @@ class DateTimeFieldTest extends DateTestBase {
     $output = $this->renderTestEntity($id);
     $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using datetime_custom format displayed as %expected.', ['%expected' => $expected]));
 
+    // @todo Split/move to new method, possibly to new class.
     // Verify that the 'datetime_time_ago' formatter works for intervals in the
     // past.  First update the test entity so that the date difference always
     // has the same interval.  Since the database always stores UTC, and the
     // interval will use this, force the test date to use UTC and not the local
-    // or user timezone.
+    // or user time zone.
     $timestamp = REQUEST_TIME - 87654321;
     $entity = EntityTest::load($id);
     $date = DrupalDateTime::createFromTimestamp($timestamp, 'UTC');
@@ -362,11 +374,12 @@ class DateTimeFieldTest extends DateTestBase {
     $output = $this->renderTestEntity($id);
     $this->assertStringContainsString((string) $expected, $output, new FormattableMarkup('Formatted date field using datetime_time_ago format displayed as %expected.', ['%expected' => $expected]));
 
+    // @todo Split/move to new method, possibly in the new class
     // Verify that the 'datetime_time_ago' formatter works for intervals in the
     // future.  First update the test entity so that the date difference always
     // has the same interval.  Since the database always stores UTC, and the
     // interval will use this, force the test date to use UTC and not the local
-    // or user timezone.
+    // or user time zone.
     $timestamp = REQUEST_TIME + 87654321;
     $entity = EntityTest::load($id);
     $date = DrupalDateTime::createFromTimestamp($timestamp, 'UTC');
@@ -666,6 +679,7 @@ class DateTimeFieldTest extends DateTestBase {
    * Test default value functionality.
    */
   public function testDefaultValue() {
+    // @todo Don't get why we are using a whole new content type here?
     // Create a test content type.
     $this->drupalCreateContentType(['type' => 'date_content']);
 
@@ -685,7 +699,7 @@ class DateTimeFieldTest extends DateTestBase {
     ]);
     $field->save();
 
-    // Loop through defined timezones to test that date-only defaults work at
+    // Loop through defined time zones to test that date-only defaults work at
     // the extremes.
     foreach (static::$timezones as $timezone) {
 
@@ -790,12 +804,14 @@ class DateTimeFieldTest extends DateTestBase {
 
   /**
    * Test that invalid values are caught and marked as invalid.
+   *
+   * @todo Prob want to use a provider.
    */
   public function testInvalidField() {
+    // @todo This this is not needed since we are fresh from setUp?
     // Change the field to a datetime field.
     $this->fieldStorage->setSetting('datetime_type', 'datetime');
     $this->fieldStorage->save();
-    $this->field_name;
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
@@ -876,6 +892,7 @@ class DateTimeFieldTest extends DateTestBase {
    * Tests that 'Date' field storage setting form is disabled if field has data.
    */
   public function testDateStorageSettings() {
+    // @todo Don't get why a new content type is needed here.
     // Create a test content type.
     $this->drupalCreateContentType(['type' => 'date_content']);
 

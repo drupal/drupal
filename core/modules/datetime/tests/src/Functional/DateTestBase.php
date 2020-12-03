@@ -57,7 +57,7 @@ abstract class DateTestBase extends BrowserTestBase {
   protected $dateFormatter;
 
   /**
-   * An array of timezone extremes to test.
+   * An array of time zone extremes to test.
    *
    * @var string[]
    */
@@ -112,7 +112,7 @@ abstract class DateTestBase extends BrowserTestBase {
   }
 
   /**
-   * Creates a date test field.
+   * Creates a test date field.
    *
    * @param string $type
    *   The field type to create.
@@ -135,6 +135,7 @@ abstract class DateTestBase extends BrowserTestBase {
       'settings' => ['datetime_type' => DateTimeItem::DATETIME_TYPE_DATE],
     ]);
     $this->fieldStorage->save();
+
     $this->field = FieldConfig::create([
       'field_storage' => $this->fieldStorage,
       'label' => $this->field_label,
@@ -191,7 +192,7 @@ abstract class DateTestBase extends BrowserTestBase {
    * Sets the site timezone to a given timezone.
    *
    * @param string $timezone
-   *   The timezone identifier to set.
+   *   The IANA time zone identifier to set.
    */
   protected function setSiteTimezone($timezone) {
     // Set an explicit site time zone, and disallow per-user time zones.
