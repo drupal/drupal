@@ -438,9 +438,7 @@ class Connection extends DatabaseConnection {
     // override nextId. However, this is unlikely as we deal with short strings
     // and integers and no known databases require special handling for those
     // simple cases. If another transaction wants to write the same row, it will
-    // wait until this transaction commits. Also, the return value needs to be
-    // set to RETURN_AFFECTED as if it were a real update() query otherwise it
-    // is not possible to get the row count properly.
+    // wait until this transaction commits.
     $stmt = $this->prepareStatement('UPDATE {sequences} SET value = GREATEST(value, :existing_id) + 1', [], TRUE);
     $stmt->execute([':existing_id' => $existing_id]);
     $affected = $stmt->rowCount();
