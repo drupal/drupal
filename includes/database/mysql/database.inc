@@ -392,8 +392,11 @@ class DatabaseConnection_mysql extends DatabaseConnection {
       if (substr($prefixSearch, 0, 1) === '{') {
         // If the prefix already contains one or more quotes remove them.
         // This can happen when - for example - DrupalUnitTestCase sets up a
-        // "temporary prefixed database".
-        $this->prefixReplace[$i] = $quote_char . str_replace($quote_char, '', $this->prefixReplace[$i]);
+        // "temporary prefixed database". Also if there's a dot in the prefix,
+        // wrap it in quotes to cater for schema names in prefixes.
+        $search = array($quote_char, '.');
+        $replace = array('', $quote_char . '.' . $quote_char);
+        $this->prefixReplace[$i] = $quote_char . str_replace($search, $replace, $this->prefixReplace[$i]);
       }
       if (substr($prefixSearch, -1) === '}') {
         $this->prefixReplace[$i] .= $quote_char;
