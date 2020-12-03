@@ -138,9 +138,9 @@ class StatementPrefetch implements \Iterator, StatementInterface {
    * @param array $driver_options
    *   Driver-specific options.
    * @param bool $row_count_enabled
-   *   (optional) Enables counting the rows affected. Defaults to TRUE.
+   *   (optional) Enables counting the rows affected. Defaults to FALSE.
    */
-  public function __construct(\PDO $pdo_connection, Connection $connection, $query, array $driver_options = [], bool $row_count_enabled = TRUE) {
+  public function __construct(\PDO $pdo_connection, Connection $connection, $query, array $driver_options = [], bool $row_count_enabled = FALSE) {
     $this->pdoConnection = $pdo_connection;
     $this->connection = $connection;
     $this->queryString = $query;

@@ -44,9 +44,9 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
    * @param array $options
    *   Array of query options.
    * @param bool $row_count_enabled
-   *   (optional) Enables counting the rows affected. Defaults to TRUE.
+   *   (optional) Enables counting the rows affected. Defaults to FALSE.
    */
-  public function __construct(Connection $connection, $client_connection, string $query, array $options, bool $row_count_enabled = TRUE) {
+  public function __construct(Connection $connection, $client_connection, string $query, array $options, bool $row_count_enabled = FALSE) {
     $this->connection = $connection;
     $this->clientStatement = $client_connection->prepare($query, $options);
     $this->rowCountEnabled = $row_count_enabled;
