@@ -29,7 +29,7 @@ class StatementEmpty implements \Iterator, StatementInterface {
    */
   public function __get($name) {
     if ($name === 'allowRowCount') {
-      @trigger_error("StatementEmpty::\$allowRowCount should not be accessed in drupal:9.2.0 and will error in drupal:10.0.0. Use \$this->rowCountEnabled instead. See https://www.drupal.org/node/TODO", E_USER_DEPRECATED);
+      @trigger_error("StatementEmpty::\$allowRowCount should not be accessed in drupal:9.2.0 and will error in drupal:10.0.0. Use \$this->rowCountEnabled instead. See https://www.drupal.org/node/3186368", E_USER_DEPRECATED);
       return $this->rowCountEnabled;
     }
   }
@@ -41,7 +41,7 @@ class StatementEmpty implements \Iterator, StatementInterface {
    */
   public function __set($name, $value) {
     if ($name === 'allowRowCount') {
-      @trigger_error("StatementEmpty::\$allowRowCount should not be written in drupal:9.2.0 and will error in drupal:10.0.0. Enable row counting by passing the appropriate argument to the constructor instead. See https://www.drupal.org/node/TODO", E_USER_DEPRECATED);
+      @trigger_error("StatementEmpty::\$allowRowCount should not be written in drupal:9.2.0 and will error in drupal:10.0.0. Enable row counting by passing the appropriate argument to the constructor instead. See https://www.drupal.org/node/3186368", E_USER_DEPRECATED);
       $this->rowCountEnabled = $value;
     }
   }
