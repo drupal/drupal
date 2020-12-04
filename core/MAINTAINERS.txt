@@ -541,7 +541,6 @@ participate in mentoring.
 - Lucas Hedding 'heddn' https://www.drupal.org/u/heddn
 - Tara King 'sparklingrobots' https://www.drupal.org/u/sparklingrobots
 - Rachel Lawson 'rachel_norfolk' https://www.drupal.org/u/rachel_norfolk
-- Valery Lourie 'valthebald' https://www.drupal.org/u/valthebald
 - Elli Ludwigson 'ekl1773' https://www.drupal.org/u/ekl1773
 - Jess Myrbo 'xjm' https://www.drupal.org/u/xjm
 - Matthew Radcliffe 'mradcliffe' https://www.drupal.org/u/mradcliffe
