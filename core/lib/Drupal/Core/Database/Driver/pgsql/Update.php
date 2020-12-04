@@ -69,12 +69,9 @@ class Update extends QueryUpdate {
       }
     }
 
-    $options = $this->queryOptions;
-    $options['already_prepared'] = TRUE;
-
     $this->connection->addSavepoint();
     try {
-      $stmt->execute(NULL, $options);
+      $stmt->execute(NULL, $this->queryOptions);
       $this->connection->releaseSavepoint();
       return $stmt->rowCount();
     }

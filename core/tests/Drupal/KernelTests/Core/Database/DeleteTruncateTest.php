@@ -2,6 +2,8 @@
 
 namespace Drupal\KernelTests\Core\Database;
 
+use Drupal\Core\Database\DatabaseExceptionWrapper;
+
 /**
  * Tests delete and truncate queries.
  *
@@ -147,6 +149,14 @@ class DeleteTruncateTest extends DatabaseTestBase {
 
     $num_records_after = $this->connection->query('SELECT COUNT(*) FROM {select}')->fetchField();
     $this->assertEquals($num_records_before, $num_records_after + $num_deleted, 'Deletion adds up.');
+  }
+
+  /**
+   * Truncating a not existing table throws a DatabaseExceptionWrapper.
+   */
+  public function testTruncateNonExistingTable() {
+    $this->expectException(DatabaseExceptionWrapper::class);
+    $this->connection->truncate('a-table-that-does-not-exist')->execute();
   }
 
 }
