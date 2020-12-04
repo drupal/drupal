@@ -6,6 +6,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
+use PHPUnit\Util\Test;
 
 /**
  * Base class for tests of Migrate source plugins.
@@ -77,7 +78,10 @@ abstract class MigrateSourceTestBase extends KernelTestBase {
    * @return string
    */
   protected function getPluginClass() {
-    $annotations = $this->getAnnotations();
+    $annotations = Test::parseTestMethodAnnotations(
+      static::class,
+      $this->getName()
+    );
 
     if (isset($annotations['class']['covers'])) {
       return $annotations['class']['covers'][0];
