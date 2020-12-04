@@ -87,4 +87,19 @@ class UpsertTest extends DatabaseTestBase {
     $this->assertEquals('Update value 2', $record->update);
   }
 
+  /**
+   * Upserting a not existing table throws a DatabaseExceptionWrapper.
+   */
+  public function testUpsertNonExistingTable() {
+    $this->expectException(DatabaseExceptionWrapper::class);
+    $upsert = $this->connection->upsert('a-table-that-does-not-exist')
+      ->key('id')
+      ->fields(['id', 'update']);
+    $upsert->values([
+      'id' => 1,
+      'update' => 'Update value 1 updated',
+    ]);
+    $upsert->execute();
+  }
+
 }

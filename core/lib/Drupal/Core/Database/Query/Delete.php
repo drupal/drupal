@@ -2,9 +2,7 @@
 
 namespace Drupal\Core\Database\Query;
 
-use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
-use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Database\Connection;
 
 /**
@@ -60,10 +58,6 @@ class Delete extends Query implements ConditionInterface {
     catch (\PDOException $e) {
       if ($this->queryOptions['throw_exception'] ?? TRUE) {
         $message = $e->getMessage() . ": " . (string) $this . "; ";
-        // Match all SQLSTATE 23xxx errors.
-        if (substr($e->getCode(), -6, -3) == '23') {
-          throw new IntegrityConstraintViolationException($message, $e->getCode(), $e);
-        }
         throw new DatabaseExceptionWrapper($message, 0, $e);
       }
       return NULL;
