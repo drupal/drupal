@@ -21,7 +21,7 @@ classList:
     gpl-compatible: true
   js:
     assets/vendor/classList/classList.min.js: { weight: -21, browsers: { IE: 'lte IE 9', '!IE': false }, minified: true }
-  deprecated: The "%library_id%" asset library is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the the native browser implementation instead. See https://www.drupal.org/node/3089511
+  deprecated: The "%library_id%" asset library is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the native browser implementation instead. See https://www.drupal.org/node/3089511
 
 ckeditor:
   remote: https://github.com/ckeditor/ckeditor-dev

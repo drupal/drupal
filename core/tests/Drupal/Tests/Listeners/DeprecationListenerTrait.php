@@ -142,7 +142,7 @@ trait DeprecationListenerTrait {
       'The "core/html5shiv" asset library is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. See https://www.drupal.org/node/3086383',
       'The "core/matchmedia" asset library is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. See https://www.drupal.org/node/3086653',
       'The "core/matchmedia.addListener" asset library is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. See https://www.drupal.org/node/3086653',
-      'The "core/classList" asset library is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the the native browser implementation instead. See https://www.drupal.org/node/3089511',
+      'The "core/classList" asset library is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. Use the native browser implementation instead. See https://www.drupal.org/node/3089511',
       'The "core/jquery.ui.datepicker" asset library is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. See https://www.drupal.org/node/3081864',
       'The "locale/drupal.locale.datepicker" asset library is deprecated in drupal:8.8.0 and is removed from drupal:9.0.0. See https://www.drupal.org/node/3081864',
       'The "https://www.drupal.org/link-relations/create" string as a RestResource plugin annotation URI path key is deprecated in Drupal 8.4.0, now a valid link relation type name must be specified, so "create" must be specified instead before Drupal 9.0.0. See https://www.drupal.org/node/2737401.',
