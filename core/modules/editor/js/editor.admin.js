@@ -32,8 +32,7 @@
           for (var t = 0; t < requiredTags.length; t++) {
             universe[requiredTags[t]] = {
               tag: false,
-              touchedByAllowedPropertyRule: false,
-              touchedBytouchedByForbiddenPropertyRule: false
+              touchedByAllowedPropertyRule: false
             };
           }
 

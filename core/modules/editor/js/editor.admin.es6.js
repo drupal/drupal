@@ -173,8 +173,6 @@
               // property rule. i.e. will become true if >=1 filter rule has >=1
               // allowed property rule.
               touchedByAllowedPropertyRule: false,
-              // Analogous, but for forbidden property rule.
-              touchedBytouchedByForbiddenPropertyRule: false,
             };
           }
 
