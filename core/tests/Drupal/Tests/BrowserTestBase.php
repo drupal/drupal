@@ -22,8 +22,6 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\TestTools\Comparator\MarkupInterfaceComparator;
 use GuzzleHttp\Cookie\CookieJar;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 
@@ -334,47 +332,6 @@ abstract class BrowserTestBase extends TestCase {
    */
   protected function getMinkDriverArgs() {
     return getenv('MINK_DRIVER_ARGS');
-  }
-
-  /**
-   * Provides a Guzzle middleware handler to log every response received.
-   *
-   * @return callable
-   *   The callable handler that will do the logging.
-   */
-  protected function getResponseLogHandler() {
-    return function (callable $handler) {
-      return function (RequestInterface $request, array $options) use ($handler) {
-        return $handler($request, $options)
-          ->then(function (ResponseInterface $response) use ($request) {
-            if ($this->htmlOutputEnabled) {
-
-              $caller = $this->getTestMethodCaller();
-              $html_output = 'Called from ' . $caller['function'] . ' line ' . $caller['line'];
-              $html_output .= '<hr />' . $request->getMethod() . ' request to: ' . $request->getUri();
-
-              // Get the response body as a string. Any errors are silenced as
-              // tests should not fail if there is a problem. On PHP 7.4
-              // \Drupal\Tests\migrate\Functional\process\DownloadFunctionalTest
-              // fails without the usage of a silence operator.
-              $body = @(string) $response->getBody();
-              // On redirect responses (status code starting with '3') we need
-              // to remove the meta tag that would do a browser refresh. We
-              // don't want to redirect developers away when they look at the
-              // debug output file in their browser.
-              $status_code = (string) $response->getStatusCode();
-              if ($status_code[0] === '3') {
-                $body = preg_replace('#<meta http-equiv="refresh" content=.+/>#', '', $body, 1);
-              }
-              $html_output .= '<hr />' . $body;
-              $html_output .= $this->formatHtmlOutputHeaders($response->getHeaders());
-
-              $this->htmlOutput($html_output);
-            }
-            return $response;
-          });
-      };
-    };
   }
 
   /**
