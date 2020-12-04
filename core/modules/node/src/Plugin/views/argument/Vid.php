@@ -5,6 +5,7 @@ namespace Drupal\node\Plugin\views\argument;
 use Drupal\Core\Database\Connection;
 use Drupal\views\Plugin\views\argument\NumericArgument;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\node\NodeStorageInterface;
 
 /**
  * Argument handler to accept a node revision id.
@@ -36,27 +37,15 @@ class Vid extends NumericArgument {
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
+   * @param \Drupal\Core\Database\Connection $database
+   *   Database Service Object.
    * @param \Drupal\node\NodeStorageInterface $node_storage
    *   The node storage.
-   * @param \Drupal\Core\Database\Connection|null $database
-   *   Database Service Object.
-   *
-   * @todo Remove deprecation layer and add argument type to $node_storage.
-   *    https://www.drupal.org/project/drupal/issues/3178818
    */
-  // @codingStandardsIgnoreLine
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, $node_storage, $database = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, Connection $database, NodeStorageInterface $node_storage) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
-    if ($node_storage instanceof Connection) {
-      // Reorder the constructor parameters for BC.
-      $node_storage = func_get_arg(4);
-      $database = func_get_arg(3);
-      @trigger_error('Calling ' . __METHOD__ . '() with the $database parameter is deprecated in drupal:9.2.0 and will be removed in drupal:10.0.0. See https://www.drupal.org/node/3178412', E_USER_DEPRECATED);
-      if ($database) {
-        $this->database = $database;
-      }
-    }
+    $this->database = $database;
     $this->nodeStorage = $node_storage;
   }
 
@@ -68,6 +57,7 @@ class Vid extends NumericArgument {
       $configuration,
       $plugin_id,
       $plugin_definition,
+      $container->get('database'),
       $container->get('entity_type.manager')->getStorage('node')
     );
   }
@@ -78,13 +68,17 @@ class Vid extends NumericArgument {
   public function titleQuery() {
     $titles = [];
 
-    $results = $this->nodeStorage->getAggregateQuery()
-      ->allRevisions()
-      ->groupBy('title')
-      ->execute();
+    $results = $this->database->query('SELECT nr.vid, nr.nid, npr.title FROM {node_revision} nr WHERE nr.vid IN ( :vids[] )', [':vids[]' => $this->value])->fetchAllAssoc('vid', PDO::FETCH_ASSOC);
+    $nids = [];
+    foreach ($results as $result) {
+      $nids[] = $result['nid'];
+    }
+
+    $nodes = $this->nodeStorage->loadMultiple(array_unique($nids));
 
     foreach ($results as $result) {
-      $titles[] = $result['title'];
+      $nodes[$result['nid']]->set('title', $result['title']);
+      $titles[] = $nodes[$result['nid']]->label();
     }
 
     return $titles;
