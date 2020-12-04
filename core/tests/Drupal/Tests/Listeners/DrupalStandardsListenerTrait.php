@@ -6,6 +6,7 @@ use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\TestSuite;
 use PHPUnit\Util\ErrorHandler;
+use PHPUnit\Util\Test;
 
 /**
  * Listens for PHPUnit tests and fails those with invalid coverage annotations.
@@ -60,7 +61,10 @@ trait DrupalStandardsListenerTrait {
       return;
     }
     // Gather our annotations.
-    $annotations = $test->getAnnotations();
+    $annotations = Test::parseTestMethodAnnotations(
+      static::class,
+      $test->getName()
+    );
     // Glean the @coversDefaultClass annotation.
     $default_class = '';
     $valid_default_class = FALSE;
