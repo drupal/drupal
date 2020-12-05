@@ -168,11 +168,9 @@ class UserPasswordForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $langcode = $this->languageManager->getCurrentLanguage()->getId();
-
     $account = $form_state->getValue('account');
     // Mail one time login URL and instructions using current language.
-    $mail = _user_mail_notify('password_reset', $account, $langcode);
+    $mail = _user_mail_notify('password_reset', $account);
     if (!empty($mail)) {
       $this->logger('user')->notice('Password reset instructions mailed to %name at %email.', ['%name' => $account->getAccountName(), '%email' => $account->getEmail()]);
       $this->messenger()->addStatus($this->t('Further instructions have been sent to your email address.'));
