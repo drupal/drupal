@@ -117,7 +117,7 @@ class MigrateUpgradeImportBatch {
       if ($definition['source']['plugin'] === 'd7_file_private') {
         $configuration['source']['constants']['source_base_path'] = rtrim($config['source_private_file_path'], '/') . '/';
       }
-      $configuration['source']['constants']['source_base_path'] = rtrim($config['source_base_path'], '/') . '/';
+      $configuration['source']['constants']['source_base_path'] = rtrim($config['source_base_path'], '/');
     }
 
     /** @var \Drupal\migrate\Plugin\Migration $migration */
