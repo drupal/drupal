@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Database\Driver\pgsql;
 
+use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Query\Upsert as QueryUpsert;
 
 // cSpell:ignore nextval setval
@@ -82,6 +83,14 @@ class Upsert extends QueryUpsert {
     try {
       $stmt->execute(NULL, $options);
       $this->connection->releaseSavepoint();
+    }
+    catch (\PDOException $e) {
+      $this->connection->rollbackSavepoint();
+      if ($this->queryOptions['throw_exception'] ?? TRUE) {
+        $message = $e->getMessage() . ": " . (string) $this . "; ";
+        throw new DatabaseExceptionWrapper($message, 0, $e);
+      }
+      return NULL;
     }
     catch (\Exception $e) {
       $this->connection->rollbackSavepoint();

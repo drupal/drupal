@@ -4,7 +4,6 @@ namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
-use Drupal\Core\Database\IntegrityConstraintViolationException;
 
 /**
  * General class for an abstracted "Upsert" (UPDATE or INSERT) query operation.
@@ -110,10 +109,6 @@ abstract class Upsert extends Query implements \Countable {
     catch (\PDOException $e) {
       if ($this->queryOptions['throw_exception'] ?? TRUE) {
         $message = $e->getMessage() . ": " . (string) $this . "; ";
-        // Match all SQLSTATE 23xxx errors.
-        if (substr($e->getCode(), -6, -3) == '23') {
-          throw new IntegrityConstraintViolationException($message, $e->getCode(), $e);
-        }
         throw new DatabaseExceptionWrapper($message, 0, $e);
       }
       return NULL;

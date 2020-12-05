@@ -154,7 +154,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
   /**
    * Deleting from a not existing table throws a DatabaseExceptionWrapper.
    */
-  public function testDeleteFromNonExistingTable() {
+  public function testDeleteFromNonExistingTable(): void {
     $this->expectException(DatabaseExceptionWrapper::class);
     $this->connection->delete('a-table-that-does-not-exist')->execute();
   }
@@ -162,7 +162,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
   /**
    * Truncating a not existing table throws a DatabaseExceptionWrapper.
    */
-  public function testTruncateNonExistingTable() {
+  public function testTruncateNonExistingTable(): void {
     $this->expectException(DatabaseExceptionWrapper::class);
     $this->connection->truncate('a-table-that-does-not-exist')->execute();
   }

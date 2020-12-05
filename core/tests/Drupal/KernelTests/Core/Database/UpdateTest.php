@@ -149,7 +149,7 @@ class UpdateTest extends DatabaseTestBase {
   /**
    * Updating a not existing table throws a DatabaseExceptionWrapper.
    */
-  public function testUpdateNonExistingTable() {
+  public function testUpdateNonExistingTable(): void {
     $this->expectException(DatabaseExceptionWrapper::class);
     $this->connection->update('a-table-that-does-not-exist')
       ->fields([
@@ -162,7 +162,7 @@ class UpdateTest extends DatabaseTestBase {
   /**
    * Updating a serial field throws a IntegrityConstraintViolationException.
    */
-  public function testUpdateValueInSerial() {
+  public function testUpdateValueInSerial(): void {
     $this->expectException(IntegrityConstraintViolationException::class);
     $this->connection->update('test')
       ->fields(['id' => 2])
