@@ -6,6 +6,7 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Test\AssertMailTrait;
 use Drupal\Core\Url;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\User;
 
@@ -28,11 +29,18 @@ class UserPasswordResetTest extends BrowserTestBase {
   protected $account;
 
   /**
+   * Language manager object.
+   *
+   * @var \Drupal\language\LanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
    * Modules to enable.
    *
    * @var array
    */
-  protected static $modules = ['block'];
+  protected static $modules = ['block', 'language'];
 
   /**
    * {@inheritdoc}
@@ -203,6 +211,79 @@ class UserPasswordResetTest extends BrowserTestBase {
     $blocked_account->delete();
     $this->drupalGet("user/reset/" . $blocked_account->id() . "/$timestamp/" . user_pass_rehash($blocked_account, $timestamp) . '/login');
     $this->assertSession()->statusCodeEquals(403);
+  }
+
+  /**
+   * Tests password reset functionality when user has set preferred language.
+   *
+   * @dataProvider languagePrefixTestProvider
+   */
+  public function testUserPasswordResetPreferredLanguage($setPreferredLangcode, $activeLangcode, $prefix, $visitingUrl, $expectedResetUrl, $unexpectedResetUrl) {
+    // Set two new languages.
+    ConfigurableLanguage::createFromLangcode('fr')->save();
+    ConfigurableLanguage::createFromLangcode('zh-hant')->save();
+
+    $this->languageManager = \Drupal::languageManager();
+
+    // Set language prefixes.
+    $config = $this->config('language.negotiation');
+    $config->set('url.prefixes', ['en' => '', 'fr' => 'fr', 'zh-hant' => 'zh'])->save();
+    $this->rebuildContainer();
+
+    $this->account->preferred_langcode = $setPreferredLangcode;
+    $this->account->save();
+    $this->assertSame($setPreferredLangcode, $this->account->getPreferredLangcode(FALSE));
+
+    // Test Default langcode is different from active langcode when visiting different.
+    if ($setPreferredLangcode !== 'en') {
+      $this->drupalGet($prefix . '/user/password');
+      $this->assertSame($activeLangcode, $this->getSession()->getResponseHeader('Content-language'));
+      $this->assertSame('en', $this->languageManager->getDefaultLanguage()->getId());
+    }
+
+    // Test password reset with language prefixes.
+    $this->drupalGet($visitingUrl);
+    $edit = ['name' => $this->account->getAccountName()];
+    $this->submitForm($edit, t('Submit'));
+    $this->assertValidPasswordReset($edit['name']);
+
+    $resetURL = $this->getResetURL();
+    $this->assertStringContainsString($expectedResetUrl, $resetURL);
+    $this->assertStringNotContainsString($unexpectedResetUrl, $resetURL);
+  }
+
+  /**
+   * Data provider for testUserPasswordResetPreferredLanguage().
+   *
+   * @return array
+   */
+  public function languagePrefixTestProvider() {
+    return [
+      'Test language prefix set as \'\', visiting default with preferred language as en' => [
+        'setPreferredLangcode' => 'en',
+        'activeLangcode' => 'en',
+        'prefix' => '',
+        'visitingUrl' => 'user/password',
+        'expectedResetUrl' => 'user/reset',
+        'unexpectedResetUrl' => 'en/user/reset',
+      ],
+      'Test language prefix set as fr, visiting zh with preferred language as fr' => [
+        'setPreferredLangcode' => 'fr',
+        'activeLangcode' => 'fr',
+        'prefix' => 'fr',
+        'visitingUrl' => 'zh/user/password',
+        'expectedResetUrl' => 'fr/user/reset',
+        'unexpectedResetUrl' => 'zh/user/reset',
+      ],
+      'Test language prefix set as zh, visiting zh with preferred language as \'\'' => [
+        'setPreferredLangcode' => '',
+        'activeLangcode' => 'zh-hant',
+        'prefix' => 'zh',
+        'visitingUrl' => 'zh/user/password',
+        'expectedResetUrl' => 'user/reset',
+        'unexpectedResetUrl' => 'zh/user/reset',
+      ],
+    ];
   }
 
   /**
