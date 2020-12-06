@@ -110,7 +110,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
 
     // Test if the link to translate actually goes to the translate page.
     $this->drupalGet($translate_link);
-    $this->assertRaw('<th>' . t('Language') . '</th>');
+    $this->assertSession()->responseContains('<th>Language</th>');
   }
 
   /**
@@ -157,7 +157,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
 
     // Test if the link to translate actually goes to the translate page.
     $this->drupalGet($translate_link);
-    $this->assertRaw('<th>' . t('Language') . '</th>');
+    $this->assertSession()->responseContains('<th>Language</th>');
   }
 
   /**
@@ -182,7 +182,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
 
     // Test if the link to translate actually goes to the translate page.
     $this->drupalGet($translate_link);
-    $this->assertRaw('<th>' . t('Language') . '</th>');
+    $this->assertSession()->responseContains('<th>Language</th>');
   }
 
   /**
@@ -207,7 +207,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
 
     // Test if the link to translate actually goes to the translate page.
     $this->drupalGet($translate_link);
-    $this->assertRaw('<th>' . t('Language') . '</th>');
+    $this->assertSession()->responseContains('<th>Language</th>');
   }
 
   /**
@@ -231,7 +231,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
 
     // Test if the link to translate actually goes to the translate page.
     $this->drupalGet($translate_link);
-    $this->assertRaw('<th>' . t('Language') . '</th>');
+    $this->assertSession()->responseContains('<th>Language</th>');
   }
 
   /**
@@ -254,7 +254,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
 
     // Test if the link to translate actually goes to the translate page.
     $this->drupalGet($translate_link);
-    $this->assertRaw('<th>' . t('Language') . '</th>');
+    $this->assertSession()->responseContains('<th>Language</th>');
   }
 
   /**
@@ -278,7 +278,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
 
     // Test if the link to translate actually goes to the translate page.
     $this->drupalGet($translate_link);
-    $this->assertRaw('<th>' . t('Language') . '</th>');
+    $this->assertSession()->responseContains('<th>Language</th>');
   }
 
   /**
@@ -302,7 +302,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
 
     // Test if the link to translate actually goes to the translate page.
     $this->drupalGet($translate_link);
-    $this->assertRaw('<th>' . t('Language') . '</th>');
+    $this->assertSession()->responseContains('<th>Language</th>');
   }
 
   /**
@@ -323,7 +323,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
 
     // Test if the link to translate actually goes to the translate page.
     $this->drupalGet($translate_link);
-    $this->assertRaw('<th>' . t('Language') . '</th>');
+    $this->assertSession()->responseContains('<th>Language</th>');
   }
 
   /**
@@ -343,7 +343,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
 
     // Test if the link to translate actually goes to the translate page.
     $this->drupalGet($translate_link);
-    $this->assertRaw('<th>' . t('Language') . '</th>');
+    $this->assertSession()->responseContains('<th>Language</th>');
   }
 
   /**
@@ -359,7 +359,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
 
     // Test if the link to translate actually goes to the translate page.
     $this->drupalGet($translate_link);
-    $this->assertRaw('<th>' . t('Language') . '</th>');
+    $this->assertSession()->responseContains('<th>Language</th>');
   }
 
   /**
@@ -383,7 +383,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
 
     // Test if the link to translate actually goes to the translate page.
     $this->drupalGet($translate_link);
-    $this->assertRaw('<th>' . t('Language') . '</th>');
+    $this->assertSession()->responseContains('<th>Language</th>');
   }
 
   /**
@@ -435,7 +435,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
 
       // Test if the link to translate actually goes to the translate page.
       $this->drupalGet($translate_link);
-      $this->assertRaw('<th>' . t('Language') . '</th>');
+      $this->assertSession()->responseContains('<th>Language</th>');
     }
   }
 
@@ -452,7 +452,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
 
     // Test if the link to translate actually goes to the translate page.
     $this->drupalGet($translate_link);
-    $this->assertRaw('<th>' . t('Language') . '</th>');
+    $this->assertSession()->responseContains('<th>Language</th>');
   }
 
   /**
@@ -471,7 +471,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
 
     // Test if the link to translate actually goes to the translate page.
     $this->drupalGet($translate_link);
-    $this->assertRaw('<th>' . t('Language') . '</th>');
+    $this->assertSession()->responseContains('<th>Language</th>');
   }
 
   /**

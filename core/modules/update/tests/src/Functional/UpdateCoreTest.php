@@ -748,11 +748,7 @@ class UpdateCoreTest extends UpdateTestBase {
 
     // Make sure duplicate messages don't appear on Update status pages.
     $this->drupalGet('admin/reports/status');
-    // We're expecting "There is a security update..." inside the status report
-    // itself, but the message from
-    // \Drupal\Core\Messenger\MessengerInterface::addStatus() appears as an li
-    // so we can prefix with that and search for the raw HTML.
-    $this->assertNoRaw('<li>' . t('There is a security update available for your version of Drupal.'));
+    $this->assertSession()->pageTextContainsOnce('There is a security update available for your version of Drupal.');
 
     $this->drupalGet('admin/reports/updates');
     $this->assertNoText('There is a security update available for your version of Drupal.');

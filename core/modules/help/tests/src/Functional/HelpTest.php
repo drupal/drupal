@@ -76,12 +76,12 @@ class HelpTest extends BrowserTestBase {
     $this->assertRaw(t('For more information, refer to the help listed on this page or to the <a href=":docs">online documentation</a> and <a href=":support">support</a> pages at <a href=":drupal">drupal.org</a>.', [':docs' => 'https://www.drupal.org/documentation', ':support' => 'https://www.drupal.org/support', ':drupal' => 'https://www.drupal.org']));
 
     // Verify that hook_help() section title and description appear.
-    $this->assertRaw('<h2>' . t('Module overviews') . '</h2>');
-    $this->assertRaw('<p>' . t('Module overviews are provided by modules. Overviews available for your installed modules:') . '</p>');
+    $this->assertSession()->responseContains('<h2>Module overviews</h2>');
+    $this->assertSession()->responseContains('<p>Module overviews are provided by modules. Overviews available for your installed modules:</p>');
 
     // Verify that an empty section is handled correctly.
-    $this->assertRaw('<h2>' . t('Empty section') . '</h2>');
-    $this->assertRaw('<p>' . t('This description should appear.') . '</p>');
+    $this->assertSession()->responseContains('<h2>Empty section</h2>');
+    $this->assertSession()->responseContains('<p>This description should appear.</p>');
     $this->assertText('There is currently nothing in this section.');
 
     // Make sure links are properly added for modules implementing hook_help().

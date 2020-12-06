@@ -124,8 +124,7 @@ class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
     $this->drupalGet('admin/reports/translations');
     $this->assertText('Updates for: Drupal core', 'Translations found');
     $this->assertText('Drupal core (' . $this->container->get('date.formatter')->format(REQUEST_TIME, 'html_date') . ')', 'Core translation update');
-    $update_button = $this->xpath('//input[@type="submit"][@value="' . t('Update translations') . '"]');
-    $this->assertNotEmpty($update_button, 'Update translations button');
+    $this->assertSession()->buttonExists('Update translations');
   }
 
 }

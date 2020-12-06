@@ -336,11 +336,11 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
     // Rebuild the form.
     $form = $form_builder->getForm($this);
 
-    $expected = t('- Restricted access -') . ' (' . $this->referencedEntities[0]->id() . ')';
-    $this->assertEqual($form['single_access']['#value'], $expected);
+    $expected = '- Restricted access - (' . $this->referencedEntities[0]->id() . ')';
+    $this->assertEquals($expected, $form['single_access']['#value']);
 
-    $expected .= ', ' . t('- Restricted access -') . ' (' . $this->referencedEntities[1]->id() . ')';
-    $this->assertEqual($form['tags_access']['#value'], $expected);
+    $expected .= ', - Restricted access - (' . $this->referencedEntities[1]->id() . ')';
+    $this->assertEquals($expected, $form['tags_access']['#value']);
   }
 
   /**

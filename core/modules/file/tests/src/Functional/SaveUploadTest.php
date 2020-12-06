@@ -187,8 +187,7 @@ class SaveUploadTest extends FileManagedTestBase {
 
     $this->drupalPostForm('file-test/upload', $edit, 'Submit');
     $this->assertSession()->statusCodeEquals(200);
-    $message = t('Only files with the following extensions are allowed:') . ' <em class="placeholder">' . $extensions . '</em>';
-    $this->assertRaw($message);
+    $this->assertSession()->responseContains('Only files with the following extensions are allowed: <em class="placeholder">' . $extensions . '</em>');
     $this->assertRaw(t('Epic upload FAIL!'));
 
     // Check that the correct hooks were called.
@@ -243,8 +242,7 @@ class SaveUploadTest extends FileManagedTestBase {
     ];
     $this->drupalPostForm('file-test/upload', $edit, 'Submit');
     $this->assertSession()->statusCodeEquals(200);
-    $message = t('For security reasons, your upload has been renamed to') . ' <em class="placeholder">' . $this->phpfile->filename . '_.txt' . '</em>';
-    $this->assertRaw($message);
+    $this->assertSession()->responseContains('For security reasons, your upload has been renamed to <em class="placeholder">' . $this->phpfile->filename . '_.txt' . '</em>');
     $this->assertSession()->pageTextContains('File name is php-2.php_.txt.');
     $this->assertRaw(t('File MIME type is text/plain.'));
     $this->assertRaw(t('You WIN!'));
@@ -268,8 +266,7 @@ class SaveUploadTest extends FileManagedTestBase {
 
     $this->drupalPostForm('file-test/upload', $edit, 'Submit');
     $this->assertSession()->statusCodeEquals(200);
-    $message = t('For security reasons, your upload has been renamed to') . ' <em class="placeholder">' . $this->phpfile->filename . '_.txt' . '</em>';
-    $this->assertRaw($message);
+    $this->assertSession()->responseContains('For security reasons, your upload has been renamed to <em class="placeholder">' . $this->phpfile->filename . '_.txt' . '</em>');
     $this->assertSession()->pageTextContains('File name is php-2.php_.txt.');
     $this->assertRaw(t('File MIME type is text/plain.'));
     $this->assertRaw(t('You WIN!'));
@@ -300,8 +297,7 @@ class SaveUploadTest extends FileManagedTestBase {
     $edit['extensions'] = 'foo';
     $this->drupalPostForm('file-test/upload', $edit, 'Submit');
     $this->assertSession()->statusCodeEquals(200);
-    $message = t('Only files with the following extensions are allowed:') . ' <em class="placeholder">' . $edit['extensions'] . '</em>';
-    $this->assertRaw($message);
+    $this->assertSession()->responseContains('Only files with the following extensions are allowed: <em class="placeholder">' . $edit['extensions'] . '</em>');
     $this->assertRaw(t('Epic upload FAIL!'));
 
     // Check that the correct hooks were called.
@@ -316,8 +312,7 @@ class SaveUploadTest extends FileManagedTestBase {
     $config->set('allow_insecure_uploads', 0)->save();
     $this->drupalPostForm('file-test/upload', $edit, 'Submit');
     $this->assertSession()->statusCodeEquals(200);
-    $message = t('Only files with the following extensions are allowed:') . ' <em class="placeholder">' . $edit['extensions'] . '</em>';
-    $this->assertRaw($message);
+    $this->assertSession()->responseContains('Only files with the following extensions are allowed: <em class="placeholder">' . $edit['extensions'] . '</em>');
     $this->assertRaw(t('Epic upload FAIL!'));
 
     // Check that the correct hooks were called.
