@@ -45,4 +45,26 @@ class StatementTest extends DatabaseTestBase {
     $this->assertSame('31', $this->connection->query('SELECT age FROM {test} WHERE name = :name', [':name' => 'Curly'])->fetchField());
   }
 
+  /**
+   * Tests accessing deprecated properties.
+   *
+   * @group legacy
+   */
+  public function testGetDeprecatedProperties(): void {
+    $this->expectDeprecation('%s$dbh should not be accessed in drupal:9.2.0 and will error in drupal:10.0.0.%s');
+    $this->assertNotNull($this->statement->dbh);
+    $this->expectDeprecation('%s$allowRowCount should not be accessed in drupal:9.2.0 and will error in drupal:10.0.0.%s');
+    $this->assertFalse($this->statement->allowRowCount);
+  }
+
+  /**
+   * Tests writing deprecated properties.
+   *
+   * @group legacy
+   */
+  public function testSetDeprecatedProperties(): void {
+    $this->expectDeprecation('%s$allowRowCount should not be written in drupal:9.2.0 and will error in drupal:10.0.0.%s');
+    $this->statement->allowRowCount = TRUE;
+  }
+
 }
