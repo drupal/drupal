@@ -73,17 +73,15 @@ class FileStorageTest extends ConfigStorageTestBase {
   }
 
   /**
-   * Test UnsupportedDataTypeConfigException displays path of
-   * erroneous file during read.
+   * Tests UnsupportedDataTypeConfigException.
    */
-  public function testReadUnsupportedDataTypeConfigException() {
-    file_put_contents($this->storage->getFilePath('core.extension'), PHP_EOL . 'foo : [bar}', FILE_APPEND);
-    try {
-      $config_parsed = $this->storage->read('core.extension');
-    }
-    catch (UnsupportedDataTypeConfigException $e) {
-      $this->assertStringContainsString($this->storage->getFilePath('core.extension'), $e->getMessage(), 'Erroneous file path is displayed.');
-    }
+  public function testUnsupportedDataTypeConfigException() {
+    $name = 'core.extension';
+    $path = $this->storage->getFilePath($name);
+    $this->expectException(UnsupportedDataTypeConfigException::class);
+    $this->expectExceptionMessageMatches("@Invalid data type in config $name, found in file $path: @");
+    file_put_contents($path, PHP_EOL . 'foo : @bar', FILE_APPEND);
+    $this->storage->read($name);
   }
 
 }
