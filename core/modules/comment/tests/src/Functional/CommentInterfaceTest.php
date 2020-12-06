@@ -109,7 +109,7 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->drupalGet('comment/' . $comment->id() . '/edit');
     $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->getSubject(), ['name' => $random_name]);
     $this->drupalGet('node/' . $this->node->id());
-    $this->assertText($random_name . ' (' . t('not verified') . ')', 'Comment author successfully changed to an unverified user.');
+    $this->assertSession()->pageTextContains($random_name . ' (not verified)');
 
     // Test changing the comment author to a verified user.
     $this->drupalGet('comment/' . $comment->id() . '/edit');

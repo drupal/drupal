@@ -166,8 +166,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
 
     $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, 'Submit');
     $this->assertSession()->statusCodeEquals(200);
-    $message = t('Only files with the following extensions are allowed:') . ' <em class="placeholder">' . $extensions . '</em>';
-    $this->assertRaw($message);
+    $this->assertSession()->responseContains('Only files with the following extensions are allowed: <em class="placeholder">' . $extensions . '</em>');
     $this->assertRaw(t('Epic upload FAIL!'));
 
     // Check that the correct hooks were called.
@@ -228,8 +227,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
 
     $this->drupalPostForm('file-test/save_upload_from_form_test', $edit, 'Submit');
     $this->assertSession()->statusCodeEquals(200);
-    $message = t('For security reasons, your upload has been renamed to') . ' <em class="placeholder">' . $this->phpfile->filename . '_.txt' . '</em>';
-    $this->assertRaw($message);
+    $this->assertSession()->responseContains('For security reasons, your upload has been renamed to <em class="placeholder">' . $this->phpfile->filename . '_.txt' . '</em>');
     $this->assertRaw(t('File MIME type is text/plain.'));
     $this->assertRaw(t('You WIN!'));
 
@@ -522,7 +520,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     $this->assertRaw(t('Epic upload FAIL!'));
 
     // Search for combined error message followed by a formatted list of messages.
-    $this->assertRaw(t('One or more files could not be uploaded.') . '<div class="item-list">');
+    $this->assertSession()->responseContains('One or more files could not be uploaded.<div class="item-list">');
   }
 
   /**

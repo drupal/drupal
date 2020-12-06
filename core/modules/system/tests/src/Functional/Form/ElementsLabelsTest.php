@@ -90,10 +90,8 @@ class ElementsLabelsTest extends BrowserTestBase {
     $this->assertTrue(isset($elements[0]), 'Properly places the #suffix element before the form item.');
 
     // Check title attribute for radios and checkboxes.
-    $elements = $this->xpath('//div[@id="edit-form-checkboxes-title-attribute"]');
-    $this->assertEqual($elements[0]->getAttribute('title'), 'Checkboxes test' . ' (' . t('Required') . ')', 'Title attribute found.');
-    $elements = $this->xpath('//div[@id="edit-form-radios-title-attribute"]');
-    $this->assertEqual($elements[0]->getAttribute('title'), 'Radios test' . ' (' . t('Required') . ')', 'Title attribute found.');
+    $this->assertSession()->elementAttributeContains('css', '#edit-form-checkboxes-title-attribute', 'title', 'Checkboxes test (Required)');
+    $this->assertSession()->elementAttributeContains('css', '#edit-form-radios-title-attribute', 'title', 'Radios test (Required)');
 
     $elements = $this->xpath('//fieldset[@id="edit-form-checkboxes-title-invisible--wrapper"]/legend/span[contains(@class, "visually-hidden")]');
     $this->assertTrue(!empty($elements), "Title/Label not displayed when 'visually-hidden' attribute is set in checkboxes.");

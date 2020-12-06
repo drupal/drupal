@@ -274,7 +274,6 @@ class ManageDisplayTest extends BrowserTestBase {
       ->getViewBuilder('node')
       ->view($clone, $view_mode);
     $output = (string) \Drupal::service('renderer')->renderRoot($element);
-    $this->verbose(t('Rendered node - view mode: @view_mode', ['@view_mode' => $view_mode]) . '<hr />' . $output);
 
     if ($not_exists) {
       $this->assertStringNotContainsString((string) $text, $output, $message);
