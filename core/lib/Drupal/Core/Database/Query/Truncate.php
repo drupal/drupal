@@ -58,11 +58,8 @@ class Truncate extends Query {
       $stmt->execute([], $this->queryOptions);
     }
     catch (\PDOException $e) {
-      if ($this->queryOptions['throw_exception'] ?? TRUE) {
-        $message = $e->getMessage() . ": " . (string) $this . "; ";
-        throw new DatabaseExceptionWrapper($message, 0, $e);
-      }
-      return NULL;
+      $message = $e->getMessage() . ": " . (string) $this . "; ";
+      throw new DatabaseExceptionWrapper($message, 0, $e);
     }
     return $stmt->rowCount();
   }

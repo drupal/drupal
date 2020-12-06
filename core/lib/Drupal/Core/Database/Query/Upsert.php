@@ -107,11 +107,8 @@ abstract class Upsert extends Query implements \Countable {
       $stmt->execute($values, $this->queryOptions);
     }
     catch (\PDOException $e) {
-      if ($this->queryOptions['throw_exception'] ?? TRUE) {
-        $message = $e->getMessage() . ": " . (string) $this . "; ";
-        throw new DatabaseExceptionWrapper($message, 0, $e);
-      }
-      return NULL;
+      $message = $e->getMessage() . ": " . (string) $this . "; ";
+      throw new DatabaseExceptionWrapper($message, 0, $e);
     }
 
     // Re-initialize the values array so that we can re-use this query.

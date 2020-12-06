@@ -150,15 +150,12 @@ class Update extends Query implements ConditionInterface {
       $stmt->execute($update_values, $this->queryOptions);
     }
     catch (\PDOException $e) {
-      if ($this->queryOptions['throw_exception'] ?? TRUE) {
-        $message = $e->getMessage() . ": " . (string) $this . "; ";
-        // Match all SQLSTATE 23xxx errors.
-        if (substr($e->getCode(), -6, -3) == '23') {
-          throw new IntegrityConstraintViolationException($message, $e->getCode(), $e);
-        }
-        throw new DatabaseExceptionWrapper($message, 0, $e);
+      $message = $e->getMessage() . ": " . (string) $this . "; ";
+      // Match all SQLSTATE 23xxx errors.
+      if (substr($e->getCode(), -6, -3) == '23') {
+        throw new IntegrityConstraintViolationException($message, $e->getCode(), $e);
       }
-      return NULL;
+      throw new DatabaseExceptionWrapper($message, 0, $e);
     }
 
     return $stmt->rowCount();

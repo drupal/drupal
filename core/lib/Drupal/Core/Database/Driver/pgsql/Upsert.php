@@ -86,11 +86,8 @@ class Upsert extends QueryUpsert {
     }
     catch (\PDOException $e) {
       $this->connection->rollbackSavepoint();
-      if ($this->queryOptions['throw_exception'] ?? TRUE) {
-        $message = $e->getMessage() . ": " . (string) $this . "; ";
-        throw new DatabaseExceptionWrapper($message, 0, $e);
-      }
-      return NULL;
+      $message = $e->getMessage() . ": " . (string) $this . "; ";
+      throw new DatabaseExceptionWrapper($message, 0, $e);
     }
     catch (\Exception $e) {
       $this->connection->rollbackSavepoint();
