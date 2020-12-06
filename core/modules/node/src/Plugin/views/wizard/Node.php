@@ -298,16 +298,19 @@ class Node extends WizardPluginBase {
         $tag_field_name = key($tag_fields);
       }
       // Add the autocomplete textfield to the wizard.
-      $target_bundles = $tag_fields[$tag_field_name]->getSetting('handler_settings')['target_bundles'];
       $form['displays']['show']['tagged_with'] = [
         '#type' => 'entity_autocomplete',
         '#title' => $this->t('tagged with'),
         '#target_type' => 'taxonomy_term',
-        '#selection_settings' => ['target_bundles' => $target_bundles],
         '#tags' => TRUE,
         '#size' => 30,
         '#maxlength' => 1024,
       ];
+      $target_bundles = $tag_fields[$tag_field_name]->getSetting('handler_settings')['target_bundles'] ?? FALSE;
+      if (!$target_bundles) {
+        $target_bundles = array_keys($this->bundleInfoService->getBundleInfo('taxonomy_term'));
+      }
+      $form['displays']['show']['tagged_with']['#selection_settings']['target_bundles'] = $target_bundles;
     }
   }
 
