@@ -827,15 +827,15 @@ class UpdateCoreTest extends UpdateTestBase {
     $this->drupalLogin($admin_user);
 
     $this->drupalGet('admin/modules');
-    $this->clickLink(t('Install new module'));
+    $this->clickLink(t('Add new module'));
     $this->assertSession()->addressEquals('admin/modules/install');
 
     $this->drupalGet('admin/appearance');
-    $this->clickLink(t('Install new theme'));
+    $this->clickLink(t('Add new theme'));
     $this->assertSession()->addressEquals('admin/theme/install');
 
     $this->drupalGet('admin/reports/updates');
-    $this->clickLink(t('Install new module or theme'));
+    $this->clickLink(t('Add new module or theme'));
     $this->assertSession()->addressEquals('admin/reports/updates/install');
   }
 

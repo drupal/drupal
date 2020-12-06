@@ -57,7 +57,7 @@ class UpdateUploadTest extends UpdateTestBase {
       'files[project_upload]' => $invalidArchiveFile->uri,
     ];
     // This also checks that the correct archive extensions are allowed.
-    $this->drupalPostForm('admin/modules/install', $edit, 'Install');
+    $this->drupalPostForm('admin/modules/install', $edit, 'Continue');
     $extensions = \Drupal::service('plugin.manager.archiver')->getExtensions();
     $this->assertSession()->pageTextContains(t('Only files with the following extensions are allowed: @archive_extensions.', ['@archive_extensions' => $extensions]));
     $this->assertSession()->addressEquals('admin/modules/install');
@@ -69,8 +69,8 @@ class UpdateUploadTest extends UpdateTestBase {
     $edit = [
       'files[project_upload]' => $validArchiveFile,
     ];
-    $this->drupalPostForm('admin/modules/install', $edit, 'Install');
-    $this->assertText('AAA Update test is already installed.', 'Existing module was extracted and not reinstalled.');
+    $this->drupalPostForm('admin/modules/install', $edit, 'Continue');
+    $this->assertText('AAA Update test is already present.');
     $this->assertSession()->addressEquals('admin/modules/install');
 
     // Ensure that a new module can be extracted and installed.
@@ -82,24 +82,24 @@ class UpdateUploadTest extends UpdateTestBase {
     $edit = [
       'files[project_upload]' => $validArchiveFile,
     ];
-    $this->drupalPostForm('admin/modules/install', $edit, 'Install');
+    $this->drupalPostForm('admin/modules/install', $edit, 'Continue');
     // Check that submitting the form takes the user to authorize.php.
     $this->assertSession()->addressEquals('core/authorize.php');
     $this->assertSession()->titleEquals('Update manager | Drupal');
     // Check for a success message on the page, and check that the installed
     // module now exists in the expected place in the filesystem.
-    $this->assertRaw(t('Installed %project_name successfully', ['%project_name' => 'update_test_new_module']));
+    $this->assertRaw(t('Added / updated %project_name successfully', ['%project_name' => 'update_test_new_module']));
     $this->assertFileExists($installedInfoFilePath);
     // Ensure the links are relative to the site root and not
     // core/authorize.php.
-    $this->assertSession()->linkExists('Install another module');
+    $this->assertSession()->linkExists('Add another module');
     $this->assertSession()->linkByHrefExists(Url::fromRoute('update.module_install')->toString());
     $this->assertSession()->linkExists('Enable newly added modules');
     $this->assertSession()->linkByHrefExists(Url::fromRoute('system.modules_list')->toString());
     $this->assertSession()->linkExists('Administration pages');
     $this->assertSession()->linkByHrefExists(Url::fromRoute('system.admin')->toString());
-    // Ensure we can reach the "Install another module" link.
-    $this->clickLink(t('Install another module'));
+    // Ensure we can reach the "Add another module" link.
+    $this->clickLink(t('Add another module'));
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->addressEquals('admin/modules/install');
 
@@ -133,7 +133,7 @@ class UpdateUploadTest extends UpdateTestBase {
     $this->drupalPostForm('admin/reports/updates/update', ['projects[update_test_new_module]' => TRUE], 'Download these updates');
     $this->submitForm(['maintenance_mode' => FALSE], 'Continue');
     $this->assertText('Update was completed successfully.');
-    $this->assertRaw(t('Installed %project_name successfully', ['%project_name' => 'update_test_new_module']));
+    $this->assertRaw(t('Added / updated %project_name successfully', ['%project_name' => 'update_test_new_module']));
 
     // Parse the info file again to check that the module has been updated to
     // 8.x-1.1.
