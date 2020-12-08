@@ -100,6 +100,13 @@ function olivero_preprocess_node(&$variables) {
   if (!empty($variables['date']) && !empty($variables['display_submitted']) && $variables['display_submitted'] === TRUE) {
     $variables['date'] = \Drupal::service('date.formatter')->format($variables['node']->getCreatedTime(), 'olivero_medium');
   }
+
+  // Pass layout variable to template if content type is article in full view
+  // mode. This is then used in the template to create a BEM style CSS class to
+  // control the layout.
+  if ($variables['node']->bundle() === 'article' && $variables['view_mode'] === 'full') {
+    $variables['layout'] = 'content-narrow';
+  }
 }
 
 /**
