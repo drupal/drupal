@@ -331,17 +331,24 @@ class BrowserTestBaseTest extends BrowserTestBase {
   }
 
   /**
+   * Tests legacy assertFieldsByValue().
+   *
+   * @group legacy
+   */
+  public function testAssertFieldsByValue() {
+    $this->expectDeprecation('AssertLegacyTrait::assertFieldsByValue() is deprecated in drupal:8.3.0 and is removed from drupal:10.0.0. Use iteration over the fields yourself instead and directly check the values in the test. See https://www.drupal.org/node/3129738');
+    $this->drupalGet('test-field-xpath');
+    $this->assertFieldsByValue($this->xpath("//h1[@class = 'page-title']"), NULL);
+  }
+
+  /**
    * Tests legacy field asserts which use xpath directly.
    */
   public function testXpathAsserts() {
     $this->drupalGet('test-field-xpath');
-    $this->assertFieldsByValue($this->xpath("//h1[@class = 'page-title']"), NULL);
-    $this->assertFieldsByValue($this->xpath('//table/tbody/tr[2]/td[1]'), 'one');
     $this->assertSession()->elementTextContains('xpath', '//table/tbody/tr[2]/td[1]', 'one');
 
-    $this->assertFieldsByValue($this->xpath("//input[@id = 'edit-name']"), 'Test name');
     $this->assertSession()->fieldValueEquals('edit-name', 'Test name');
-    $this->assertFieldsByValue($this->xpath("//select[@id = 'edit-options']"), '2');
     $this->assertSession()->fieldValueEquals('edit-options', '2');
 
     $this->assertSession()->elementNotExists('xpath', '//notexisting');
@@ -361,14 +368,6 @@ class BrowserTestBaseTest extends BrowserTestBase {
       $this->fail('The "edit-name" field was not found.');
     }
     catch (ExpectationException $e) {
-      // Expected exception; just continue testing.
-    }
-
-    try {
-      $this->assertFieldsByValue($this->xpath("//input[@id = 'edit-name']"), 'not the value');
-      $this->fail('The "edit-name" field is found with the value "not the value".');
-    }
-    catch (ExpectationFailedException $e) {
       // Expected exception; just continue testing.
     }
   }
@@ -511,7 +510,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
     }
 
     // Test that text areas can contain new lines.
-    $this->assertFieldsByValue($this->xpath("//textarea[@id = 'edit-test-textarea-with-newline']"), "Test text with\nnewline");
+    $this->assertSession()->fieldValueEquals('edit-test-textarea-with-newline', "Test text with\nnewline");
   }
 
   /**

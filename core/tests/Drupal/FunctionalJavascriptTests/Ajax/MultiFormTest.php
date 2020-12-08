@@ -84,7 +84,7 @@ class MultiFormTest extends WebDriverTestBase {
     $this->assertCount(2, $fields);
     foreach ($fields as $field) {
       $this->assertCount(1, $field->findAll('xpath', '.' . $field_items_xpath_suffix), 'Found the correct number of field items on the initial page.');
-      $this->assertFieldsByValue($field->find('xpath', '.' . $button_xpath_suffix), NULL, 'Found the "add more" button on the initial page.');
+      $this->assertNotNull($field->find('xpath', '.' . $button_xpath_suffix), 'Found the "add more" button on the initial page.');
     }
 
     $this->assertSession()->pageContainsNoDuplicateId();
@@ -106,7 +106,7 @@ class MultiFormTest extends WebDriverTestBase {
         $page_updated = $session->getPage();
         $field = $page_updated->findAll('xpath', '.' . $field_xpath);
         $this->assertCount($i + 2, $field[0]->find('xpath', '.' . $field_items_xpath_suffix), 'Found the correct number of field items after an AJAX submission.');
-        $this->assertFieldsByValue($field[0]->find('xpath', '.' . $button_xpath_suffix), NULL, 'Found the "add more" button after an AJAX submission.');
+        $this->assertNotNull($field[0]->find('xpath', '.' . $button_xpath_suffix), 'Found the "add more" button after an AJAX submission.');
         $this->assertSession()->pageContainsNoDuplicateId();
       }
     }
