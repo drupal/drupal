@@ -32,13 +32,13 @@ class FieldUITest extends UITestBase {
     // Ensure the field is not marked as hidden on the first run.
     $this->drupalGet('admin/structure/views/view/test_view/edit');
     $this->assertText('Views test: Name');
-    $this->assertNoText('Views test: Name [' . t('hidden') . ']');
+    $this->assertSession()->pageTextNotContains('Views test: Name [hidden]');
 
     // Hides the field and check whether the hidden label is appended.
     $edit_handler_url = 'admin/structure/views/nojs/handler/test_view/default/field/name';
     $this->drupalPostForm($edit_handler_url, ['options[exclude]' => TRUE], 'Apply');
 
-    $this->assertText('Views test: Name [' . t('hidden') . ']');
+    $this->assertSession()->pageTextContains('Views test: Name [hidden]');
 
     // Ensure that the expected tokens appear in the UI.
     $edit_handler_url = 'admin/structure/views/nojs/handler/test_view/default/field/age';

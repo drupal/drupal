@@ -306,6 +306,21 @@ class LayoutBuilderTest extends WebDriverTestBase {
     $assert_session->pageTextContains('Default');
     $assert_session->linkExists('Add block');
 
+    // Ensure validation error is displayed for ConfigureSectionForm.
+    $assert_session->linkExists('Add section');
+    $this->clickLink('Add section');
+    $assert_session->waitForElementVisible('named', ['link', 'Layout plugin (with settings)']);
+    $this->clickLink('Layout plugin (with settings)');
+    $this->assertOffCanvasFormAfterWait('layout_builder_configure_section');
+    $page->fillField('layout_settings[setting_1]', 'Test Validation Error Message');
+    $page->pressButton('Add section');
+    $assert_session->waitForElement('css', '.messages--error');
+    $assert_session->pageTextContains('Validation Error Message');
+    $page->fillField('layout_settings[setting_1]', 'Setting 1 Value');
+    $page->pressButton('Add section');
+    $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
+    $assert_session->pageTextContains('Setting 1 Value');
+
     // Configure the existing section.
     $assert_session->linkExists('Configure Section 1');
     $this->clickLink('Configure Section 1');

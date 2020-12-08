@@ -365,13 +365,13 @@ class ThemeTest extends BrowserTestBase {
 
     // Test the default theme on the secondary links (blocks admin page).
     $this->drupalGet('admin/structure/block');
-    $this->assertText('Bartik(' . t('active tab') . ')', 'Default local task on blocks admin page is the default theme.');
+    $this->assertSession()->pageTextContains('Bartik(active tab)');
     // Switch back to Stark and test again to test that the menu cache is cleared.
     $this->drupalGet('admin/appearance');
     // Stark is the first 'Set as default' link.
     $this->clickLink(t('Set as default'));
     $this->drupalGet('admin/structure/block');
-    $this->assertText('Stark(' . t('active tab') . ')', 'Default local task on blocks admin page has changed.');
+    $this->assertSession()->pageTextContains('Stark(active tab)');
   }
 
   /**

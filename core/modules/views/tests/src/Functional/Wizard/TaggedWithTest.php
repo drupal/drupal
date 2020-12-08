@@ -4,6 +4,7 @@ namespace Drupal\Tests\views\Functional\Wizard;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
 
@@ -231,6 +232,43 @@ class TaggedWithTest extends WizardTestBase {
     $view['show[type]'] = $this->nodeTypeWithoutTags->id();
     $this->submitForm($view, 'Update "of type" choice (2)');
     $this->assertSession()->fieldExists("show[tagged_with]");
+  }
+
+  /**
+   * Tests that "tagged with" works with views entity reference.
+   */
+  public function testTaggedWithByViewReference() {
+    Term::create(['name' => 'term1', 'vid' => 'views_testing_tags']);
+    $tags_xpath = '//input[@name="show[tagged_with]"]';
+
+    // If we add an instance of the tagging field to the second node type, the
+    // "tagged with" form element should now appear for it too.
+    FieldConfig::create([
+      'field_name' => $this->tagFieldName,
+      'entity_type' => 'node',
+      'bundle' => $this->nodeTypeWithoutTags->id(),
+      'settings' => [
+        'handler' => 'views',
+        'handler_settings' => [],
+      ],
+    ])->save();
+    \Drupal::service('entity_display.repository')
+      ->getFormDisplay('node', $this->nodeTypeWithoutTags->id())
+      ->setComponent($this->tagFieldName, [
+        'type' => 'entity_reference_autocomplete_tags',
+      ])
+      ->save();
+
+    $view['show[type]'] = $this->nodeTypeWithTags->id();
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm($view, 'Update "of type" choice');
+    $this->assertNotEmpty($this->xpath($tags_xpath));
+    $view['show[type]'] = $this->nodeTypeWithoutTags->id();
+    $this->submitForm($view, 'Update "of type" choice (2)');
+    $this->assertNotEmpty($this->xpath($tags_xpath));
+    $this->submitForm(['show[tagged_with]' => 'term1'], 'Save and edit');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->getSession()->getPage()->hasContent('Has taxonomy term (= term1)');
   }
 
 }

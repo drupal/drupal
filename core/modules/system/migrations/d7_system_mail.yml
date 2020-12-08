@@ -5,7 +5,7 @@ migration_tags:
   - Configuration
 source:
   plugin: variable
-  variables:
+  variables_no_row_if_missing:
     - mail_system
   source_module: system
 process:

@@ -436,7 +436,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
    *   Name of the button to hit.
    */
   protected function getFormSubmitAction(EntityInterface $entity, $langcode) {
-    return t('Save') . $this->getFormSubmitSuffix($entity, $langcode);
+    return 'Save' . $this->getFormSubmitSuffix($entity, $langcode);
   }
 
   /**
