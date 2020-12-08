@@ -31,8 +31,8 @@ regions:
   content_above: Content Above
   content: Content
   sidebar: 'Sidebar'
-  content_below: 'Content Below (Flex Layout)'
-  footer_top: 'Footer Top (Flex Layout)'
+  content_below: 'Content Below'
+  footer_top: 'Footer Top'
   footer_bottom: 'Footer Bottom'
 libraries-override:
   system/base:
