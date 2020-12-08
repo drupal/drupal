@@ -89,8 +89,7 @@ class DistributionProfileTranslationQueryTest extends InstallerTestBase {
   protected function setUpSettings() {
     // The language should have been automatically detected, all following
     // screens should be translated already.
-    $elements = $this->xpath('//input[@type="submit"]/@value');
-    $this->assertEqual(current($elements)->getText(), 'Save and continue de');
+    $this->assertSession()->buttonExists('Save and continue de');
     $this->translations['Save and continue'] = 'Save and continue de';
 
     // Check the language direction.

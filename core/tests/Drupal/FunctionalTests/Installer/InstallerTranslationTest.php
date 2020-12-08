@@ -36,8 +36,7 @@ class InstallerTranslationTest extends InstallerTestBase {
 
     // After selecting a different language than English, all following screens
     // should be translated already.
-    $elements = $this->xpath('//input[@type="submit"]/@value');
-    $this->assertEqual(current($elements)->getText(), 'Save and continue de');
+    $this->assertSession()->buttonExists('Save and continue de');
     $this->translations['Save and continue'] = 'Save and continue de';
 
     // Check the language direction.
