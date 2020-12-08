@@ -10,7 +10,6 @@ use Drupal\Tests\UnitTestCase;
  *
  * @coversDefaultClass \Drupal\Core\Database\Driver\mysql\Connection
  * @group Database
- * @runTestsInSeparateProcesses
  */
 class ConnectionTest extends UnitTestCase {
 
