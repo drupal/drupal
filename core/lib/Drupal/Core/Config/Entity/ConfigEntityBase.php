@@ -248,7 +248,7 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
     $id_key = $entity_type->getKey('id');
     $property_names = $entity_type->getPropertiesToExport($this->id());
     if (empty($property_names)) {
-      throw new SchemaIncompleteException(sprintf("Entity type '%s' is missing 'config_export' definition in its annotation", get_class($entity_type)));
+      throw new SchemaIncompleteException(sprintf("Entity type '%s' is missing 'config_export' definition in its annotation", $entity_type->getClass()));
     }
     foreach ($property_names as $property_name => $export_name) {
       // Special handling for IDs so that computed compound IDs work.
