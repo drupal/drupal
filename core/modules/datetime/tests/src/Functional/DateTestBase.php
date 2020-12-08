@@ -126,8 +126,6 @@ abstract class DateTestBase extends BrowserTestBase {
    *   The field formatter type to create.
    * @param array $formatter_settings
    *   The field formatter settings.
-   *
-   * @todo Probably want type, widget and formatter options as parameters, too.
    */
   protected function createField(string $type = 'datetime', array $settings = [], string $widget_type = 'datetime_default', array $widget_settings = [], string $formatter_type = 'datetime_default', array $formatter_settings = []) {
     $this->field_name = mb_strtolower($this->randomMachineName());
@@ -150,9 +148,8 @@ abstract class DateTestBase extends BrowserTestBase {
     ]);
     $this->field->save();
 
-    // @todo Add widget settings.
     EntityFormDisplay::load('entity_test.entity_test.default')
-      ->setComponent($this->field_name, ['type' => $widget_type])
+      ->setComponent($this->field_name, ['type' => $widget_type, 'settings' => $widget_settings])
       ->save();
 
     $this->displayOptions = [
