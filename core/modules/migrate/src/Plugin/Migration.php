@@ -459,8 +459,8 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   /**
    * Gets the migration plugin manager.
    *
-   * @return \Drupal\migrate\Plugin\MigratePluginManager
-   *   The plugin manager.
+   * @return \Drupal\migrate\Plugin\MigrationPluginManagerInterface
+   *   The migration plugin manager.
    */
   protected function getMigrationPluginManager() {
     return $this->migrationPluginManager;
