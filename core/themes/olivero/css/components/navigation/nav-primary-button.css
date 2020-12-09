@@ -29,13 +29,13 @@
 .primary-nav__button-toggle {
   position: relative;
   overflow: hidden;
-  width: 36px;
-  height: 36px;
+  width: 2.25rem;
+  height: 2.25rem;
   margin-top: 2px; /* Visually align button with menu link text. */
   padding-top: 0;
   padding-bottom: 0;
   cursor: pointer;
-  text-indent: -999px;
+  text-indent: -62.4375rem;
   border: 0;
   background: transparent;
   -webkit-appearance: none
@@ -47,8 +47,8 @@
     top: 50%;
     left: 50%;
     /* stylelint-enable csstools/use-logical */
-    width: 16px;
-    height: 16px;
+    width: 1rem;
+    height: 1rem;
     transition: background-color 0.2s;
     transform: translate(-50%, -50%);
     border-radius: 2px
@@ -61,7 +61,7 @@
       top: 50%;
       left: 50%;
       /* stylelint-enable csstools/use-logical */
-      width: 18px;
+      width: 1.125rem;
       height: 0;
       content: "";
       transform: translate(-50%, -50%);
@@ -89,18 +89,18 @@
     pointer-events: none;
   }
 
-@media (min-width: 1200px) {
+@media (min-width: 75rem) {
     [dir="ltr"] body:not(.is-always-mobile-nav) .primary-nav__button-toggle {
-      margin-right: -36px
+      margin-right: -2.25rem
   }
     [dir="rtl"] body:not(.is-always-mobile-nav) .primary-nav__button-toggle {
-      margin-left: -36px
+      margin-left: -2.25rem
   }
     body:not(.is-always-mobile-nav) .primary-nav__button-toggle {
       flex-shrink: 0;
       -ms-grid-row-align: stretch;
       align-self: stretch;
-      width: 44px;
+      width: 2.75rem;
       height: auto;
       margin-top: 0
     }
@@ -129,11 +129,11 @@
       }
 
       [dir="ltr"] body:not(.is-always-mobile-nav) .primary-nav__button-toggle .icon--menu-toggle {
-        left: 3px
+        left: 0.1875rem
   }
 
       [dir="rtl"] body:not(.is-always-mobile-nav) .primary-nav__button-toggle .icon--menu-toggle {
-        right: 3px
+        right: 0.1875rem
   }
 
       body:not(.is-always-mobile-nav) .primary-nav__button-toggle .icon--menu-toggle {
@@ -147,10 +147,10 @@
         body:not(.is-always-mobile-nav) .primary-nav__button-toggle .icon--menu-toggle:after {
           /* stylelint-disable csstools/use-logical */
           top: calc(50% - 2px);
-          left: 3px;
+          left: 0.1875rem;
           /* stylelint-enable csstools/use-logical */
-          width: 8px;
-          height: 8px;
+          width: 0.5rem;
+          height: 0.5rem;
           content: "";
           transform: translateY(-50%) rotate(45deg);
           opacity: 0.8;

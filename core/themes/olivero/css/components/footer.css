@@ -31,15 +31,15 @@
   }
 
 [dir="ltr"] .site-footer .menu ul {
-      margin-left: 18px
+      margin-left: 1.125rem
 }
 
 [dir="rtl"] .site-footer .menu ul {
-      margin-right: 18px
+      margin-right: 1.125rem
 }
 
 .site-footer .menu li {
-      margin-bottom: 9px;
+      margin-bottom: 0.5625rem;
     }
 
 .site-footer a {
@@ -51,7 +51,7 @@
       text-decoration: none;
     }
 
-@media (min-width: 1200px) {
+@media (min-width: 75rem) {
   [dir="ltr"] body:not(.is-always-mobile-nav) .site-footer {
     border-left: solid 90px #000
   }

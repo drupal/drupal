@@ -151,7 +151,7 @@ _:-ms-fullscreen,
  * Improve form element usability on narrow devices.
  */
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 37.5rem) {
   /* Number, date and time are skipped here */
   .form-element {
     float: none;

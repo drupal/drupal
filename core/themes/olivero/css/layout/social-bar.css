@@ -11,38 +11,38 @@
  .
  */
 
-@media (min-width: 1200px) {
+@media (min-width: 75rem) {
 
 .social-bar {
     flex-shrink: 0;
-    width: 90px;
+    width: 5.625rem;
     background-color: #f7f9fa
 }
   }
 
 [dir="ltr"] .social-bar__inner {
-  padding-left: 18px
+  padding-left: 1.125rem
 }
 
 [dir="rtl"] .social-bar__inner {
-  padding-right: 18px
+  padding-right: 1.125rem
 }
 
 [dir="ltr"] .social-bar__inner {
-  padding-right: 18px
+  padding-right: 1.125rem
 }
 
 [dir="rtl"] .social-bar__inner {
-  padding-left: 18px
+  padding-left: 1.125rem
 }
 
 .social-bar__inner {
   position: relative;
-  padding-top: 9px;
-  padding-bottom: 9px
+  padding-top: 0.5625rem;
+  padding-bottom: 0.5625rem
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 75rem) {
 
 [dir="ltr"] .social-bar__inner {
     padding-left: 0
@@ -62,9 +62,9 @@
 
 .social-bar__inner {
     position: relative;
-    width: 90px;
-    padding-top: 90px;
-    padding-bottom: 90px
+    width: 5.625rem;
+    padding-top: 5.625rem;
+    padding-bottom: 5.625rem
 }
 
     [dir="ltr"] .social-bar__inner.js-fixed {
@@ -77,16 +77,16 @@
 
     .social-bar__inner.js-fixed {
       position: fixed;
-      top: 108px;
-      height: calc(100vh - 108px);
+      top: 6.75rem;
+      height: calc(100vh - 6.75rem);
     }
   }
 
 .rotate > * {
-    margin-bottom: 36px
+    margin-bottom: 2.25rem
   }
 
-@media (min-width: 1200px) {
+@media (min-width: 75rem) {
 
 .rotate > * {
       display: flex;
@@ -95,15 +95,15 @@
   }
 
       [dir="ltr"] .rotate > *:not(:first-child) {
-        margin-right: 36px
+        margin-right: 2.25rem
 }
 
       [dir="rtl"] .rotate > *:not(:first-child) {
-        margin-left: 36px
+        margin-left: 2.25rem
 }
     }
 
-@media (min-width: 1200px) {
+@media (min-width: 75rem) {
 
 [dir="ltr"] .rotate .contextual {
       left: 100%;
@@ -129,7 +129,7 @@
 }
     }
 
-@media (min-width: 1200px) {
+@media (min-width: 75rem) {
 
 [dir="ltr"] .rotate {
     left: 50%
@@ -157,7 +157,7 @@
     }
   }
 
-@media (min-width: 1200px) {
+@media (min-width: 75rem) {
     [dir="rtl"] .rotate {
       transform: rotate(90deg) translateX(100%);
       transform-origin: right

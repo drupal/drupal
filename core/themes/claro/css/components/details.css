@@ -564,10 +564,10 @@
     left: -1px;
   }
   .collapse-processed > .claro-details__summary .details-title::after {
-    top: -5px;
-    right: -5px;
-    bottom: -5px;
-    left: -5px;
+    top: -0.3125rem;
+    right: -0.3125rem;
+    bottom: -0.3125rem;
+    left: -0.3125rem;
     border: 2px dotted;
   }
 }

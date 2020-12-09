@@ -54,7 +54,7 @@
 .field-plugin-settings-edit {
   width: 1rem;
   margin: 0;
-  padding: 1px 8px;
+  padding: 1px 0.5rem;
 }
 
 .field-plugin-settings-edit-wrapper .ajax-progress--throbber {

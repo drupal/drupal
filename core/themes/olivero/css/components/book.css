@@ -45,9 +45,9 @@
 .book-pager {
   display: flex;
   flex-wrap: wrap;
-  margin-top: 0 18px;
+  margin-top: 0 1.125rem;
   padding-top: 0;
-  padding-bottom: 18px;
+  padding-bottom: 1.125rem;
   list-style: none;
   border-bottom: solid 1px #0d77b5
 }
@@ -56,7 +56,7 @@
     text-decoration: none;
     color: #0d77b5;
     font-family: "Lora", "georgia", serif;
-    font-size: 18px;
+    font-size: 1.125rem;
     font-weight: 600;
   }
 
@@ -64,21 +64,21 @@
   display: inline-block
 }
 
-@media (min-width: 500px) {
+@media (min-width: 31.25rem) {
 
 .book-pager__item {
     flex: 0 0 33.33%
 }
   }
 
-@media (min-width: 500px) {
+@media (min-width: 31.25rem) {
 
 .book-pager__item--center {
     text-align: center
 }
   }
 
-@media (min-width: 500px) {
+@media (min-width: 31.25rem) {
 
 [dir="ltr"] .book-pager__item--next {
     margin-left: auto
@@ -120,8 +120,8 @@
 
 .book-pager__link--previous:before {
     display: block;
-    width: 9px;
-    height: 9px;
+    width: 0.5625rem;
+    height: 0.5625rem;
     content: "";
     transform: rotate(-45deg);
     border-top: solid 3px currentColor;
@@ -145,8 +145,8 @@
 
 .book-pager__link--next:after {
     display: block;
-    width: 9px;
-    height: 9px;
+    width: 0.5625rem;
+    height: 0.5625rem;
     content: "";
     transform: rotate(135deg);
     border-top: solid 3px currentColor;
@@ -185,8 +185,8 @@
 }
 
 .book-navigation .menu {
-    margin-top: 36px;
-    margin-bottom: 36px;
+    margin-top: 2.25rem;
+    margin-bottom: 2.25rem;
     padding-top: 0;
     padding-bottom: 0;
     list-style: none

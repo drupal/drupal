@@ -12,13 +12,13 @@
 
 .secondary-nav__wrapper {
   display: flex;
-  margin-top: 36px;
-  margin-bottom: 36px;
+  margin-top: 2.25rem;
+  margin-bottom: 2.25rem;
 }
 
 .secondary-nav {
   letter-spacing: 0.02em;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 600
 }
 
@@ -73,22 +73,22 @@
       /* @todo should this be scoped to desktop nav? */
       width: -webkit-max-content;
       width: max-content;
-      max-width: 200px
+      max-width: 12.5rem
     }
 
 [dir="ltr"] .secondary-nav ul.menu li:not(:last-child) {
-        margin-right: 27px;
+        margin-right: 1.6875rem;
 }
 
 [dir="rtl"] .secondary-nav ul.menu li:not(:last-child) {
-        margin-left: 27px;
+        margin-left: 1.6875rem;
 }
 
 .secondary-nav ul.menu a:not(.button--primary) {
       position: relative;
       display: inline-flex;
       align-items: center;
-      height: 36px;
+      height: 2.25rem;
       text-decoration: none;
       color: inherit
     }
@@ -103,7 +103,7 @@
         height: 0;
         content: "";
         transition: opacity 0.2s, transform 0.2s;
-        transform: translateY(5px);
+        transform: translateY(0.3125rem);
         opacity: 0;
         /* Intentionally not using CSS logical properties. */
         border-top: solid 2px currentColor;
@@ -114,7 +114,7 @@
           opacity: 0.8;
         }
 
-@media (min-width: 1200px) {
+@media (min-width: 75rem) {
     body:not(.is-always-mobile-nav) .secondary-nav__wrapper {
       justify-content: flex-end;
       margin: 0
@@ -126,19 +126,19 @@
       }
 
     [dir="ltr"] body:not(.is-always-mobile-nav) .secondary-nav {
-      margin-left: 18px;
+      margin-left: 1.125rem;
   }
 
     [dir="rtl"] body:not(.is-always-mobile-nav) .secondary-nav {
-      margin-right: 18px;
+      margin-right: 1.125rem;
   }
 
     [dir="ltr"] body:not(.is-always-mobile-nav) .secondary-nav {
-      padding-left: 36px;
+      padding-left: 2.25rem;
   }
 
     [dir="rtl"] body:not(.is-always-mobile-nav) .secondary-nav {
-      padding-right: 36px;
+      padding-right: 2.25rem;
   }
 
     body:not(.is-always-mobile-nav) .secondary-nav {
@@ -158,17 +158,17 @@
         position: absolute;
         top: 50%;
         width: 2px;
-        height: 36px;
+        height: 2.25rem;
         content: "";
         transform: translateY(-50%);
         background-color: #d7e1e8;
       }
 
       [dir="ltr"] body:not(.is-always-mobile-nav) .secondary-nav ul.menu li:not(:last-child) {
-        margin-right: 36px;
+        margin-right: 2.25rem;
   }
 
       [dir="rtl"] body:not(.is-always-mobile-nav) .secondary-nav ul.menu li:not(:last-child) {
-        margin-left: 36px;
+        margin-left: 2.25rem;
   }
   }

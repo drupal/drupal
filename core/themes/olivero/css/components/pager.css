@@ -50,18 +50,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 45px;
-  height: 45px;
+  width: 2.8125rem;
+  height: 2.8125rem;
   cursor: default;
   color: #6e7172;
   background-color: #fff
 }
 
-@media (min-width: 500px) {
+@media (min-width: 31.25rem) {
 
 .pager__item {
-    width: 54px;
-    height: 54px
+    width: 3.375rem;
+    height: 3.375rem
 }
   }
 

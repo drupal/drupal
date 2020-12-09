@@ -5365,6 +5365,13 @@ postcss-pseudo-class-any-link@^6.0.0:
     postcss "^7.0.2"
     postcss-selector-parser "^5.0.0-rc.3"
 
+postcss-pxtorem@^5.1.1:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/postcss-pxtorem/-/postcss-pxtorem-5.1.1.tgz#198a68c10f9ad2d42370ef66299d7b3168f8cffa"
+  integrity sha512-uvgIujL/pn0GbZ+rczESD2orHsbXrrCqi+q9wJO8PCk3ZGCoVVtu5hZTbtk+tbZHZP5UkTfCvqOrTZs9Ncqfsg==
+  dependencies:
+    postcss "^7.0.27"
+
 postcss-replace-overflow-wrap@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/postcss-replace-overflow-wrap/-/postcss-replace-overflow-wrap-3.0.0.tgz#61b360ffdaedca84c7c918d2b0f0d0ea559ab01c"

@@ -25,7 +25,7 @@
 [type="url"],[dir="ltr"] 
 [type="week"],[dir="ltr"] 
 textarea {
-  padding-left: 24px
+  padding-left: 1.5rem
 }
 
 [dir="rtl"] [type="color"],[dir="rtl"] 
@@ -43,7 +43,7 @@ textarea {
 [type="url"],[dir="rtl"] 
 [type="week"],[dir="rtl"] 
 textarea {
-  padding-right: 24px
+  padding-right: 1.5rem
 }
 
 [dir="ltr"] [type="color"],[dir="ltr"] 
@@ -61,7 +61,7 @@ textarea {
 [type="url"],[dir="ltr"] 
 [type="week"],[dir="ltr"] 
 textarea {
-  padding-right: 20px
+  padding-right: 1.25rem
 }
 
 [dir="rtl"] [type="color"],[dir="rtl"] 
@@ -79,7 +79,7 @@ textarea {
 [type="url"],[dir="rtl"] 
 [type="week"],[dir="rtl"] 
 textarea {
-  padding-left: 20px
+  padding-left: 1.25rem
 }
 
 [type="color"],
@@ -98,9 +98,9 @@ textarea {
 [type="week"],
 textarea {
   max-width: 100%;
-  min-height: 54px;
-  padding-top: 13px;
-  padding-bottom: 13px;
+  min-height: 3.375rem;
+  padding-top: 0.8125rem;
+  padding-bottom: 0.8125rem;
   color: #313637;
   border-width: 2px 0;
   border-style: solid;
@@ -110,10 +110,10 @@ textarea {
   border-bottom-right-radius: 2px; /* LTR */
   border-bottom-left-radius: 0; /* LTR */
   outline: 1px solid transparent;
-  background: linear-gradient(to right, #7e96a7 6px, transparent 6px, transparent 100%) #f7f9fa; /* LTR */
+  background: linear-gradient(to right, #7e96a7 0.375rem, transparent 0.375rem, transparent 100%) #f7f9fa; /* LTR */
   font-family: inherit;
-  font-size: 16px;
-  line-height: 24px;
+  font-size: 1rem;
+  line-height: 1.5rem;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none
@@ -123,7 +123,7 @@ textarea {
     border-color: #7e96a7;
     outline: 6px dashed transparent;
     background: /* LTR */
-      linear-gradient(to right, #7e96a7 6px, transparent 6px, transparent 100%),
+      linear-gradient(to right, #7e96a7 0.375rem, transparent 0.375rem, transparent 100%),
       linear-gradient(to left, #7e96a7 2px, transparent 2px, transparent 100%) #f7f9fa;
     box-shadow: 0 0 0 2px #fff, 0 0 0 4px #53b0eb, 0 0 36px rgba(83, 176, 235, 0.25)
   }
@@ -138,7 +138,7 @@ textarea {
 [type="color"]:hover, [type="date"]:hover, [type="datetime-local"]:hover, [type="email"]:hover, [type="file"]:hover, [type="month"]:hover, [type="number"]:hover, [type="password"]:hover, [type="search"]:hover, [type="tel"]:hover, [type="text"]:hover, [type="time"]:hover, [type="url"]:hover, [type="week"]:hover, textarea:hover {
     border-color: #53b0eb;
     background: /* LTR */
-      linear-gradient(to right, #53b0eb 6px, transparent 6px, transparent 100%),
+      linear-gradient(to right, #53b0eb 0.375rem, transparent 0.375rem, transparent 100%),
       linear-gradient(to left, #53b0eb 2px, transparent 2px, transparent 100%) #f7f9fa;
   }
 
@@ -149,13 +149,13 @@ textarea {
 [type="color"][disabled], [type="date"][disabled], [type="datetime-local"][disabled], [type="email"][disabled], [type="file"][disabled], [type="month"][disabled], [type="number"][disabled], [type="password"][disabled], [type="search"][disabled], [type="tel"][disabled], [type="text"][disabled], [type="time"][disabled], [type="url"][disabled], [type="week"][disabled], textarea[disabled] {
     color: #7e96a7;
     border-color: transparent;
-    background: linear-gradient(to right, #d7e1e8 6px, transparent 6px, transparent 100%) #f7f9fa; /* LTR */
+    background: linear-gradient(to right, #d7e1e8 0.375rem, transparent 0.375rem, transparent 100%) #f7f9fa; /* LTR */
   }
 
 [type="color"].error, [type="date"].error, [type="datetime-local"].error, [type="email"].error, [type="file"].error, [type="month"].error, [type="number"].error, [type="password"].error, [type="search"].error, [type="tel"].error, [type="text"].error, [type="time"].error, [type="url"].error, [type="week"].error, textarea.error {
     border-color: #e33f1e;
     background: /* LTR */
-      linear-gradient(to right, #e33f1e 6px, transparent 6px, transparent 100%),
+      linear-gradient(to right, #e33f1e 0.375rem, transparent 0.375rem, transparent 100%),
       linear-gradient(to left, #e33f1e 2px, transparent 2px, transparent 100%) #f7f9fa
   }
 
@@ -164,25 +164,25 @@ textarea {
     }
 
 [dir="ltr"] [type="color"].form-element--small,[dir="ltr"]  [type="date"].form-element--small,[dir="ltr"]  [type="datetime-local"].form-element--small,[dir="ltr"]  [type="email"].form-element--small,[dir="ltr"]  [type="file"].form-element--small,[dir="ltr"]  [type="month"].form-element--small,[dir="ltr"]  [type="number"].form-element--small,[dir="ltr"]  [type="password"].form-element--small,[dir="ltr"]  [type="search"].form-element--small,[dir="ltr"]  [type="tel"].form-element--small,[dir="ltr"]  [type="text"].form-element--small,[dir="ltr"]  [type="time"].form-element--small,[dir="ltr"]  [type="url"].form-element--small,[dir="ltr"]  [type="week"].form-element--small,[dir="ltr"]  textarea.form-element--small {
-    padding-left: 19.5px
+    padding-left: 1.21875rem
 }
 
 [dir="rtl"] [type="color"].form-element--small,[dir="rtl"]  [type="date"].form-element--small,[dir="rtl"]  [type="datetime-local"].form-element--small,[dir="rtl"]  [type="email"].form-element--small,[dir="rtl"]  [type="file"].form-element--small,[dir="rtl"]  [type="month"].form-element--small,[dir="rtl"]  [type="number"].form-element--small,[dir="rtl"]  [type="password"].form-element--small,[dir="rtl"]  [type="search"].form-element--small,[dir="rtl"]  [type="tel"].form-element--small,[dir="rtl"]  [type="text"].form-element--small,[dir="rtl"]  [type="time"].form-element--small,[dir="rtl"]  [type="url"].form-element--small,[dir="rtl"]  [type="week"].form-element--small,[dir="rtl"]  textarea.form-element--small {
-    padding-right: 19.5px
+    padding-right: 1.21875rem
 }
 
 [dir="ltr"] [type="color"].form-element--small,[dir="ltr"]  [type="date"].form-element--small,[dir="ltr"]  [type="datetime-local"].form-element--small,[dir="ltr"]  [type="email"].form-element--small,[dir="ltr"]  [type="file"].form-element--small,[dir="ltr"]  [type="month"].form-element--small,[dir="ltr"]  [type="number"].form-element--small,[dir="ltr"]  [type="password"].form-element--small,[dir="ltr"]  [type="search"].form-element--small,[dir="ltr"]  [type="tel"].form-element--small,[dir="ltr"]  [type="text"].form-element--small,[dir="ltr"]  [type="time"].form-element--small,[dir="ltr"]  [type="url"].form-element--small,[dir="ltr"]  [type="week"].form-element--small,[dir="ltr"]  textarea.form-element--small {
-    padding-right: 15.5px
+    padding-right: 0.96875rem
 }
 
 [dir="rtl"] [type="color"].form-element--small,[dir="rtl"]  [type="date"].form-element--small,[dir="rtl"]  [type="datetime-local"].form-element--small,[dir="rtl"]  [type="email"].form-element--small,[dir="rtl"]  [type="file"].form-element--small,[dir="rtl"]  [type="month"].form-element--small,[dir="rtl"]  [type="number"].form-element--small,[dir="rtl"]  [type="password"].form-element--small,[dir="rtl"]  [type="search"].form-element--small,[dir="rtl"]  [type="tel"].form-element--small,[dir="rtl"]  [type="text"].form-element--small,[dir="rtl"]  [type="time"].form-element--small,[dir="rtl"]  [type="url"].form-element--small,[dir="rtl"]  [type="week"].form-element--small,[dir="rtl"]  textarea.form-element--small {
-    padding-left: 15.5px
+    padding-left: 0.96875rem
 }
 
 [type="color"].form-element--small, [type="date"].form-element--small, [type="datetime-local"].form-element--small, [type="email"].form-element--small, [type="file"].form-element--small, [type="month"].form-element--small, [type="number"].form-element--small, [type="password"].form-element--small, [type="search"].form-element--small, [type="tel"].form-element--small, [type="text"].form-element--small, [type="time"].form-element--small, [type="url"].form-element--small, [type="week"].form-element--small, textarea.form-element--small {
-    min-height: 45px;
-    padding-top: 8.5px;
-    padding-bottom: 8.5px;
+    min-height: 2.8125rem;
+    padding-top: 0.53125rem;
+    padding-bottom: 0.53125rem;
   }
 
 [type="date"] {
@@ -229,27 +229,27 @@ textarea {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 2px;
-    background: linear-gradient(to left, #7e96a7 6px, transparent 6px, transparent 100%) #f7f9fa
+    background: linear-gradient(to left, #7e96a7 0.375rem, transparent 0.375rem, transparent 100%) #f7f9fa
   }
 
 [dir="rtl"] [type="color"]:focus, [dir="rtl"] [type="date"]:focus, [dir="rtl"] [type="datetime-local"]:focus, [dir="rtl"] [type="email"]:focus, [dir="rtl"] [type="file"]:focus, [dir="rtl"] [type="month"]:focus, [dir="rtl"] [type="number"]:focus, [dir="rtl"] [type="password"]:focus, [dir="rtl"] [type="search"]:focus, [dir="rtl"] [type="tel"]:focus, [dir="rtl"] [type="text"]:focus, [dir="rtl"] [type="time"]:focus, [dir="rtl"] [type="url"]:focus, [dir="rtl"] [type="week"]:focus, [dir="rtl"] textarea:focus {
       background:
-        linear-gradient(to left, #7e96a7 6px, transparent 6px, transparent 100%),
+        linear-gradient(to left, #7e96a7 0.375rem, transparent 0.375rem, transparent 100%),
         linear-gradient(to right, #7e96a7 2px, transparent 2px, transparent 100%) #f7f9fa;
     }
 
 [dir="rtl"] [type="color"]:hover, [dir="rtl"] [type="date"]:hover, [dir="rtl"] [type="datetime-local"]:hover, [dir="rtl"] [type="email"]:hover, [dir="rtl"] [type="file"]:hover, [dir="rtl"] [type="month"]:hover, [dir="rtl"] [type="number"]:hover, [dir="rtl"] [type="password"]:hover, [dir="rtl"] [type="search"]:hover, [dir="rtl"] [type="tel"]:hover, [dir="rtl"] [type="text"]:hover, [dir="rtl"] [type="time"]:hover, [dir="rtl"] [type="url"]:hover, [dir="rtl"] [type="week"]:hover, [dir="rtl"] textarea:hover {
       background:
-        linear-gradient(to left, #53b0eb 6px, transparent 6px, transparent 100%),
+        linear-gradient(to left, #53b0eb 0.375rem, transparent 0.375rem, transparent 100%),
         linear-gradient(to right, #53b0eb 2px, transparent 2px, transparent 100%) #f7f9fa;
     }
 
 [dir="rtl"] [type="color"][disabled], [dir="rtl"] [type="date"][disabled], [dir="rtl"] [type="datetime-local"][disabled], [dir="rtl"] [type="email"][disabled], [dir="rtl"] [type="file"][disabled], [dir="rtl"] [type="month"][disabled], [dir="rtl"] [type="number"][disabled], [dir="rtl"] [type="password"][disabled], [dir="rtl"] [type="search"][disabled], [dir="rtl"] [type="tel"][disabled], [dir="rtl"] [type="text"][disabled], [dir="rtl"] [type="time"][disabled], [dir="rtl"] [type="url"][disabled], [dir="rtl"] [type="week"][disabled], [dir="rtl"] textarea[disabled] {
-      background: linear-gradient(to left, #d7e1e8 6px, transparent 6px, transparent 100%) #f7f9fa;
+      background: linear-gradient(to left, #d7e1e8 0.375rem, transparent 0.375rem, transparent 100%) #f7f9fa;
     }
 
 [dir="rtl"] [type="color"].error, [dir="rtl"] [type="date"].error, [dir="rtl"] [type="datetime-local"].error, [dir="rtl"] [type="email"].error, [dir="rtl"] [type="file"].error, [dir="rtl"] [type="month"].error, [dir="rtl"] [type="number"].error, [dir="rtl"] [type="password"].error, [dir="rtl"] [type="search"].error, [dir="rtl"] [type="tel"].error, [dir="rtl"] [type="text"].error, [dir="rtl"] [type="time"].error, [dir="rtl"] [type="url"].error, [dir="rtl"] [type="week"].error, [dir="rtl"] textarea.error {
       background:
-        linear-gradient(to left, #e33f1e 6px, transparent 6px, transparent 100%),
+        linear-gradient(to left, #e33f1e 0.375rem, transparent 0.375rem, transparent 100%),
         linear-gradient(to right, #e33f1e 2px, transparent 2px, transparent 100%) #f7f9fa;
     }

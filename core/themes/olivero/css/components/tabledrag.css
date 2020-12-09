@@ -11,11 +11,11 @@
  */
 
 a.tabledrag-handle .handle {
-  width: 36px;
-  height: 36px;
+  width: 2.25rem;
+  height: 2.25rem;
 }
 
 .touchevents a.tabledrag-handle .handle {
-  height: 36px;
+  height: 2.25rem;
   background-position: 40% 10px;
 }

@@ -27,11 +27,11 @@
 }
 
 .page-node-type-article .field--name-field-image {
-    margin-top: 9px;
-    margin-bottom: 36px
+    margin-top: 0.5625rem;
+    margin-bottom: 2.25rem
   }
 
-@media (min-width: 700px) {
+@media (min-width: 43.75rem) {
 
 [dir="ltr"] .page-node-type-article .field--name-field-image {
       margin-left: -7.14286vw
@@ -42,13 +42,13 @@
     }
 
 .page-node-type-article .field--name-field-image {
-      width: calc(100vw - 36px);
-      margin-top: 36px;
-      margin-bottom: 72px
+      width: calc(100vw - 2.25rem);
+      margin-top: 2.25rem;
+      margin-bottom: 4.5rem
   }
     }
 
-@media (min-width: 1000px) {
+@media (min-width: 62.5rem) {
 
 [dir="ltr"] .page-node-type-article .field--name-field-image {
       margin-left: calc(-7.14286vw - -1.07143px)
@@ -59,37 +59,37 @@
     }
 
 .page-node-type-article .field--name-field-image {
-      width: calc(85.71429vw - 48.85714px)
+      width: calc(85.71429vw - 3.05357rem)
   }
     }
 
-@media (min-width: 1200px) {
+@media (min-width: 75rem) {
 
 [dir="ltr"] .page-node-type-article .field--name-field-image {
-      margin-left: calc(-7.14286vw - -10.07143px)
+      margin-left: calc(-7.14286vw - -0.62946rem)
     }
 
 [dir="rtl"] .page-node-type-article .field--name-field-image {
-      margin-right: calc(-7.14286vw - -10.07143px)
+      margin-right: calc(-7.14286vw - -0.62946rem)
     }
 
 .page-node-type-article .field--name-field-image {
-      width: calc(85.71429vw - 156.85714px)
+      width: calc(85.71429vw - 9.80357rem)
   }
     }
 
-@media (min-width: 1440px) {
+@media (min-width: 90rem) {
 
 [dir="ltr"] .page-node-type-article .field--name-field-image {
-      margin-left: -93.85714px
+      margin-left: -5.86607rem
     }
 
 [dir="rtl"] .page-node-type-article .field--name-field-image {
-      margin-right: -93.85714px
+      margin-right: -5.86607rem
     }
 
 .page-node-type-article .field--name-field-image {
-      width: 1090.28571px
+      width: 68.14286rem
   }
     }
 
@@ -98,31 +98,31 @@
   /* Ensure that image doesn't overlap sidebar. */
 }
 
-@media (min-width: 1000px) {
+@media (min-width: 62.5rem) {
 
 .page-node-type-article .sidebar-grid .field--name-field-image {
-      width: calc(64.28571vw - 45.64286px)
+      width: calc(64.28571vw - 2.85268rem)
   }
     }
 
-@media (min-width: 1200px) {
+@media (min-width: 75rem) {
 
 .page-node-type-article .sidebar-grid .field--name-field-image {
-      width: calc(64.28571vw - 126.64286px)
+      width: calc(64.28571vw - 7.91518rem)
   }
     }
 
-@media (min-width: 1300px) {
+@media (min-width: 81.25rem) {
 
 .page-node-type-article .sidebar-grid .field--name-field-image {
-      width: calc(71.42857vw - 136.71429px)
+      width: calc(71.42857vw - 8.54464rem)
   }
     }
 
-@media (min-width: 1440px) {
+@media (min-width: 90rem) {
 
 .page-node-type-article .sidebar-grid .field--name-field-image {
-      width: 902.57143px
+      width: 56.41071rem
   }
     }
 
