@@ -30,29 +30,29 @@
 }
 
 .dropbutton-action {
-  font-size: 14px;
-  line-height: 18px
+  font-size: 0.875rem;
+  line-height: 1.125rem
 }
 
 [dir="ltr"] .dropbutton-action a {
-    padding-left: 18px;
+    padding-left: 1.125rem;
 }
 
 [dir="rtl"] .dropbutton-action a {
-    padding-right: 18px;
+    padding-right: 1.125rem;
 }
 
 [dir="ltr"] .dropbutton-action a {
-    padding-right: 18px;
+    padding-right: 1.125rem;
 }
 
 [dir="rtl"] .dropbutton-action a {
-    padding-left: 18px;
+    padding-left: 1.125rem;
 }
 
 .dropbutton-action a {
-    padding-top: 4.5px;
-    padding-bottom: 4.5px;
+    padding-top: 0.28125rem;
+    padding-bottom: 0.28125rem;
     text-decoration: none;
     color: #fff;
     border-top-left-radius: 2px; /* LTR */

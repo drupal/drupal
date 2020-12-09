@@ -27,33 +27,33 @@
 }
 
 .messages-list {
-  margin-top: 18px;
-  margin-bottom: 18px;
+  margin-top: 1.125rem;
+  margin-bottom: 1.125rem;
   padding-top: 0;
   padding-bottom: 0;
   list-style: none;
 }
 
 [dir="ltr"] .messages {
-  padding-left: 27px;
+  padding-left: 1.6875rem;
 }
 
 [dir="rtl"] .messages {
-  padding-right: 27px;
+  padding-right: 1.6875rem;
 }
 
 [dir="ltr"] .messages {
-  padding-right: 27px;
+  padding-right: 1.6875rem;
 }
 
 [dir="rtl"] .messages {
-  padding-left: 27px;
+  padding-left: 1.6875rem;
 }
 
 .messages {
-  min-height: 68px;
-  padding-top: 18px;
-  padding-bottom: 18px;
+  min-height: 4.25rem;
+  padding-top: 1.125rem;
+  padding-bottom: 1.125rem;
   color: #fff;
   outline: solid 1px transparent;
   background-color: #0d1214
@@ -113,11 +113,11 @@
 }
 
 .messages:not(.hidden) ~ .messages {
-  margin-top: 18px;
+  margin-top: 1.125rem;
 }
 
 .messages__item + .messages__item {
-  margin-top: 9px;
+  margin-top: 0.5625rem;
 }
 
 .messages__container {
@@ -125,11 +125,11 @@
 }
 
 [dir="ltr"] .messages__header {
-  margin-right: 18px;
+  margin-right: 1.125rem;
 }
 
 [dir="rtl"] .messages__header {
-  margin-left: 18px;
+  margin-left: 1.125rem;
 }
 
 .messages__header {
@@ -147,20 +147,20 @@
 .messages__content {
   overflow: auto; /* Ensure large code blocks can be scrolled to. */
   flex: 1;
-  padding-top: 3px;
+  padding-top: 0.1875rem;
 }
 
 [dir="ltr"] .messages__button {
-  margin-left: 18px;
+  margin-left: 1.125rem;
 }
 
 [dir="rtl"] .messages__button {
-  margin-right: 18px;
+  margin-right: 1.125rem;
 }
 
 .messages__button {
   flex-shrink: 0;
-  padding-top: 3px;
+  padding-top: 0.1875rem;
 }
 
 [dir="ltr"] .messages__close {
@@ -181,8 +181,8 @@
 
 .messages__close {
   position: relative;
-  width: 25px;
-  height: 25px;
+  width: 1.5625rem;
+  height: 1.5625rem;
   padding-top: 0;
   padding-bottom: 0;
   cursor: pointer;
@@ -203,7 +203,7 @@
     left: 50%;
     /* stylelint-enable csstools/use-logical */
     display: block;
-    width: 33px;
+    width: 2.0625rem;
     height: 2px;
     content: "";
     background-color: #7e96a7;
@@ -264,5 +264,5 @@
 }
 
 .js-form-managed-file .messages {
-  margin-bottom: 18px;
+  margin-bottom: 1.125rem;
 }

@@ -22,7 +22,7 @@
   vertical-align: top;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 37.5rem) {
   /* Leave editor's select auto-scaled. */
   .form-element.form-element--editor-format {
     width: auto;

@@ -15,10 +15,10 @@
 .skip-link {
   z-index: 50;
   left: 50%;
-  padding: 1px 10px 2px;
+  padding: 1px 0.625rem 2px;
   transform: translateX(-50%);
   color: #fff;
-  border-radius: 0 0 10px 10px;
+  border-radius: 0 0 0.625rem 0.625rem;
   background: #444;
   font-size: 0.94em;
 }

@@ -12,13 +12,13 @@
 
 .node--view-mode-teaser {
   position: relative; /* Anchor after pseudo-element. */
-  margin-bottom: 27px
+  margin-bottom: 1.6875rem
 }
 
 .node--view-mode-teaser:after {
     position: absolute;
     bottom: 0;
-    width: 54px;
+    width: 3.375rem;
     height: 0;
     content: "";
     /* Intentionally not using CSS logical properties. */
@@ -26,7 +26,7 @@
   }
 
 .node--view-mode-teaser .node__meta {
-    margin-bottom: 18px
+    margin-bottom: 1.125rem
   }
 
 .node--view-mode-teaser .node__meta a {
@@ -38,10 +38,10 @@
     display: flex;
     align-items: center;
     margin: 0;
-    margin-bottom: 18px
+    margin-bottom: 1.125rem
   }
 
-@media (min-width: 1000px) {
+@media (min-width: 62.5rem) {
 
 .node--view-mode-teaser .node__top-wrapper {
       position: relative; /* Anchor the image */
@@ -50,11 +50,11 @@
     }
 
 [dir="ltr"] .node--view-mode-teaser .field--name-field-image {
-    margin-right: 18px
+    margin-right: 1.125rem
 }
 
 [dir="rtl"] .node--view-mode-teaser .field--name-field-image {
-    margin-left: 18px
+    margin-left: 1.125rem
 }
 
 .node--view-mode-teaser .field--name-field-image {
@@ -63,38 +63,38 @@
   }
 
 .node--view-mode-teaser .field--name-field-image img {
-      width: 63px;
-      height: 63px;
+      width: 3.9375rem;
+      height: 3.9375rem;
       -o-object-fit: cover;
       object-fit: cover;
       border-radius: 50%
     }
 
-@media (min-width: 1000px) {
+@media (min-width: 62.5rem) {
 
 .node--view-mode-teaser .field--name-field-image img {
-        width: calc(7.14286vw - 37.07143px);
-        height: calc(7.14286vw - 37.07143px)
+        width: calc(7.14286vw - 2.31696rem);
+        height: calc(7.14286vw - 2.31696rem)
     }
       }
 
-@media (min-width: 1200px) {
+@media (min-width: 75rem) {
 
 .node--view-mode-teaser .field--name-field-image img {
-        width: calc(7.14286vw - 46.07143px);
-        height: calc(7.14286vw - 46.07143px)
+        width: calc(7.14286vw - 2.87946rem);
+        height: calc(7.14286vw - 2.87946rem)
     }
       }
 
-@media (min-width: 1440px) {
+@media (min-width: 90rem) {
 
 .node--view-mode-teaser .field--name-field-image img {
-        width: 57.85714px;
-        height: 57.85714px
+        width: 3.61607rem;
+        height: 3.61607rem
     }
       }
 
-@media (min-width: 1000px) {
+@media (min-width: 62.5rem) {
 
 [dir="ltr"] .node--view-mode-teaser .field--name-field-image {
       left: calc(-7.14286vw - -1.07143px)
@@ -111,41 +111,41 @@
   }
     }
 
-@media (min-width: 1200px) {
+@media (min-width: 75rem) {
 
 [dir="ltr"] .node--view-mode-teaser .field--name-field-image {
-      left: calc(-7.14286vw - -10.07143px)
+      left: calc(-7.14286vw - -0.62946rem)
   }
 
 [dir="rtl"] .node--view-mode-teaser .field--name-field-image {
-      right: calc(-7.14286vw - -10.07143px)
+      right: calc(-7.14286vw - -0.62946rem)
   }
     }
 
-@media (min-width: 1440px) {
+@media (min-width: 90rem) {
 
 [dir="ltr"] .node--view-mode-teaser .field--name-field-image {
-      left: -93.85714px
+      left: -5.86607rem
   }
 
 [dir="rtl"] .node--view-mode-teaser .field--name-field-image {
-      right: -93.85714px
+      right: -5.86607rem
   }
     }
 
 .node--view-mode-teaser .node__title {
     margin: 0;
     color: #0d1214;
-    font-size: 24px;
-    line-height: 27px
+    font-size: 1.5rem;
+    line-height: 1.6875rem
   }
 
-@media (min-width: 1000px) {
+@media (min-width: 62.5rem) {
 
 .node--view-mode-teaser .node__title {
-      margin-bottom: 18px;
-      font-size: 36px;
-      line-height: 54px
+      margin-bottom: 1.125rem;
+      font-size: 2.25rem;
+      line-height: 3.375rem
   }
     }
 
@@ -182,24 +182,24 @@
 }
 
 .node--view-mode-teaser .field--tag-ref {
-    margin-top: 18px;
+    margin-top: 1.125rem;
     margin-bottom: 0;
     padding-top: 0;
     padding-bottom: 0;
     background-color: transparent
   }
 
-@media (min-width: 1000px) {
+@media (min-width: 62.5rem) {
 
 .node--view-mode-teaser .field--tag-ref {
-      margin-top: 36px
+      margin-top: 2.25rem
   }
     }
 
-@media (min-width: 1000px) {
+@media (min-width: 62.5rem) {
 
 .node--view-mode-teaser {
-    margin-bottom: 54px
+    margin-bottom: 3.375rem
 }
   }
 

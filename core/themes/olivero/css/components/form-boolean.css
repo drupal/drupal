@@ -13,15 +13,15 @@
 input[type="checkbox"],
 input[type="radio"] {
   display: inline-block;
-  width: 27px;
-  height: 27px;
+  width: 1.6875rem;
+  height: 1.6875rem;
   vertical-align: text-bottom;
   border: 2px solid #7e96a7;
   border-radius: 2px;
   background-color: #f7f9fa;
   background-repeat: no-repeat;
   background-position: 50% 50%;
-  background-size: 18px 18px;
+  background-size: 1.125rem 1.125rem;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none
@@ -71,15 +71,15 @@ input[type="radio"] {
 
 input[type="radio"]:checked {
     background-image: url("data:image/svg+xml,%3Csvg width='17' height='17' viewBox='0 0 17 17' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='8.5' cy='8.5' r='8.5' fill='%232494DB'/%3E%3C/svg%3E%0A");
-    background-size: 17px 17px;
+    background-size: 1.0625rem 1.0625rem;
   }
 
 [dir="ltr"] .form-type-boolean {
-  margin-left: 36px
+  margin-left: 2.25rem
 }
 
 [dir="rtl"] .form-type-boolean {
-  margin-right: 36px
+  margin-right: 2.25rem
 }
 
 .form-type-boolean {
@@ -98,18 +98,18 @@ input[type="radio"]:checked {
 
 [dir="ltr"] .form-type-boolean input[type="checkbox"],[dir="ltr"] 
   .form-type-boolean input[type="radio"] {
-    margin-left: -36px
+    margin-left: -2.25rem
 }
 
 [dir="rtl"] .form-type-boolean input[type="checkbox"],[dir="rtl"] 
   .form-type-boolean input[type="radio"] {
-    margin-right: -36px
+    margin-right: -2.25rem
 }
 
 .form-type-boolean input[type="checkbox"],
   .form-type-boolean input[type="radio"] {
     position: relative;
-    top: 9px;
+    top: 0.5625rem;
     transform: translateY(-50%);
   }
 
@@ -132,23 +132,23 @@ input[type="radio"]:checked {
 
 [dir="ltr"] .form-type-boolean .form-item__description,[dir="ltr"] 
   .form-type-boolean .form-item--error-message {
-    margin-left: -36px
+    margin-left: -2.25rem
 }
 
 [dir="rtl"] .form-type-boolean .form-item__description,[dir="rtl"] 
   .form-type-boolean .form-item--error-message {
-    margin-right: -36px
+    margin-right: -2.25rem
 }
 
 .form-boolean-group .form-type-boolean {
-  margin-top: 18px;
-  margin-bottom: 18px;
+  margin-top: 1.125rem;
+  margin-bottom: 1.125rem;
 }
 
 [dir="ltr"] .container-inline .form-boolean-group .form-type-boolean:not(:last-child) {
-  margin-right: 18px
+  margin-right: 1.125rem
 }
 
 [dir="rtl"] .container-inline .form-boolean-group .form-type-boolean:not(:last-child) {
-  margin-left: 18px
+  margin-left: 1.125rem
 }

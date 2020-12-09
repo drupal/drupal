@@ -38,7 +38,7 @@
   padding-bottom: 0;
   list-style: none
 }
-@media (min-width: 700px) {
+@media (min-width: 43.75rem) {
 .tabs {
     flex-direction: row;
     flex-wrap: wrap
@@ -52,7 +52,7 @@
 .tabs__tab.is-active {
     display: flex;
   }
-@media (min-width: 700px) {
+@media (min-width: 43.75rem) {
 .tabs__tab {
     display: flex;
     margin: 0;
@@ -66,28 +66,28 @@ html:not(.js) .tabs__tab,
 .tabs--secondary .tabs__tab {
   display: block
 }
-@media (min-width: 700px) {
+@media (min-width: 43.75rem) {
 .tabs--secondary .tabs__tab {
     display: flex
 }
   }
 [dir="ltr"] .tabs__link {
-  padding-left: 27px
+  padding-left: 1.6875rem
 }
 [dir="rtl"] .tabs__link {
-  padding-right: 27px
+  padding-right: 1.6875rem
 }
 [dir="ltr"] .tabs__link {
-  padding-right: 27px
+  padding-right: 1.6875rem
 }
 [dir="rtl"] .tabs__link {
-  padding-left: 27px
+  padding-left: 1.6875rem
 }
 .tabs__link {
   display: flex;
   flex-grow: 1;
   align-items: center;
-  height: 54px;
+  height: 3.375rem;
   padding-top: 0;
   padding-bottom: 0;
   transition: background-color 0.2s;
@@ -96,12 +96,12 @@ html:not(.js) .tabs__tab,
   color: #6e7172;
   border: 1px solid #e7edf1;
   background-color: #f7f9fa;
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 .tabs--secondary .tabs__link {
   text-transform: none
 }
-@media (min-width: 700px) {
+@media (min-width: 43.75rem) {
 .tabs--secondary .tabs__link {
     border-top-color: transparent;
     border-right-color: transparent;
@@ -141,7 +141,7 @@ html:not(.js) .tabs__tab,
     height: calc(100% + 2px);
     content: "";
   }
-@media (min-width: 700px) {
+@media (min-width: 43.75rem) {
     [dir="ltr"] .tabs__link.is-active:after {
       left: 0
   }
@@ -176,7 +176,7 @@ html:not(.js) .tabs__tab,
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 54px;
+  width: 3.375rem;
   margin-top: 0;
   margin-bottom: 0;
   cursor: pointer;
@@ -191,7 +191,7 @@ html:not(.js) .tabs__tab,
     border-color: #2494db;
     outline: none;
   }
-@media (min-width: 700px) {
+@media (min-width: 43.75rem) {
 .tabs__trigger {
     display: none
 }
@@ -202,8 +202,8 @@ html:not(.js) .tabs__trigger {
 .tabs__trigger-icon {
   position: relative;
   display: block;
-  width: 18px;
-  height: 10px;
+  width: 1.125rem;
+  height: 0.625rem;
   margin-top: -2px
 }
 [dir="ltr"] .tabs__trigger-icon > span {

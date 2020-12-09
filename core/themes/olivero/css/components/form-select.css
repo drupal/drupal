@@ -11,24 +11,24 @@
  */
 
 [dir="ltr"] select {
-  padding-left: 24px
+  padding-left: 1.5rem
 }
 
 [dir="rtl"] select {
-  padding-right: 24px
+  padding-right: 1.5rem
 }
 
 [dir="ltr"] select {
-  padding-right: 72px
+  padding-right: 4.5rem
 }
 
 [dir="rtl"] select {
-  padding-left: 72px
+  padding-left: 4.5rem
 }
 
 select {
   max-width: 100%;
-  height: 54px;
+  height: 3.375rem;
   padding-top: 0;
   padding-bottom: 0;
   color: #313637;
@@ -60,8 +60,8 @@ select {
     right 0 top -2px,
     left -48px top -2px;
   font-family: inherit;
-  font-size: 16px;
-  line-height: 50px;
+  font-size: 1rem;
+  line-height: 3.125rem;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none
@@ -111,19 +111,19 @@ select.error {
   }
 
 [dir="ltr"] select[multiple] {
-    padding-left: 9px
+    padding-left: 0.5625rem
 }
 
 [dir="rtl"] select[multiple] {
-    padding-right: 9px
+    padding-right: 0.5625rem
 }
 
 [dir="ltr"] select[multiple] {
-    padding-right: 9px
+    padding-right: 0.5625rem
 }
 
 [dir="rtl"] select[multiple] {
-    padding-left: 9px
+    padding-left: 0.5625rem
 }
 
 [dir="ltr"] select[multiple] {
@@ -144,8 +144,8 @@ select.error {
 
 select[multiple] {
     height: auto;
-    padding-top: 9px;
-    padding-bottom: 9px;
+    padding-top: 0.5625rem;
+    padding-bottom: 0.5625rem;
     border-top: 0;
     border-bottom: 0;
     background-image: none;
@@ -155,24 +155,24 @@ select[multiple] {
   }
 
 [dir="ltr"] select[multiple] option {
-      padding-left: 9px
+      padding-left: 0.5625rem
 }
 
 [dir="rtl"] select[multiple] option {
-      padding-right: 9px
+      padding-right: 0.5625rem
 }
 
 [dir="ltr"] select[multiple] option {
-      padding-right: 9px
+      padding-right: 0.5625rem
 }
 
 [dir="rtl"] select[multiple] option {
-      padding-left: 9px
+      padding-left: 0.5625rem
 }
 
 select[multiple] option {
-      padding-top: 9px;
-      padding-bottom: 9px;
+      padding-top: 0.5625rem;
+      padding-bottom: 0.5625rem;
     }
 
 select[multiple]:focus {
@@ -224,19 +224,19 @@ select[multiple].error:focus {
       }
 
 [dir="ltr"] select.form-element--small {
-    padding-left: 19.5px;
-    padding-right: 58.5px
+    padding-left: 1.21875rem;
+    padding-right: 3.65625rem
 }
 
 [dir="rtl"] select.form-element--small {
-    padding-right: 19.5px;
-    padding-left: 58.5px
+    padding-right: 1.21875rem;
+    padding-left: 3.65625rem
 }
 
 select.form-element--small {
-    height: 45px;
+    height: 2.8125rem;
     background-position: right 13.5px center, right -10px top -2px, left -48px top -2px; /* LTR */
-    line-height: 41px;
+    line-height: 2.5625rem;
   }
 
 select {

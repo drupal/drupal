@@ -14,25 +14,25 @@
 .cke_editable {
   color: #313637;
   font-family: "Lora", "georgia", serif;
-  line-height: 27px
+  line-height: 1.6875rem
 }
 
 .text-content h2, .cke_editable h2 {
-    margin-top: 36px;
-    margin-bottom: 27px;
+    margin-top: 2.25rem;
+    margin-bottom: 1.6875rem;
     letter-spacing: 0.12em;
     color: #000;
-    font-size: 16px;
-    line-height: 27px
+    font-size: 1rem;
+    line-height: 1.6875rem
   }
 
-@media (min-width: 700px) {
+@media (min-width: 43.75rem) {
 
 .text-content h2, .cke_editable h2 {
-      margin-top: 54px;
-      margin-bottom: 36px;
+      margin-top: 3.375rem;
+      margin-bottom: 2.25rem;
       letter-spacing: 0.09em;
-      font-size: 21px
+      font-size: 1.3125rem
   }
     }
 
@@ -81,8 +81,8 @@
     }
 
 .text-content p, .cke_editable p {
-    margin-top: 18px;
-    margin-bottom: 18px
+    margin-top: 1.125rem;
+    margin-bottom: 1.125rem
   }
 
 .text-content p:first-child, .cke_editable p:first-child {
@@ -93,11 +93,11 @@
       margin-bottom: 0;
     }
 
-@media (min-width: 700px) {
+@media (min-width: 43.75rem) {
 
 .text-content p, .cke_editable p {
-      margin-top: 36px;
-      margin-bottom: 36px
+      margin-top: 2.25rem;
+      margin-bottom: 2.25rem
   }
     }
 
@@ -106,26 +106,26 @@
   }
 
 [dir="ltr"] .text-content pre code,[dir="ltr"]  .cke_editable pre code {
-    padding-left: 18px
+    padding-left: 1.125rem
 }
 
 [dir="rtl"] .text-content pre code,[dir="rtl"]  .cke_editable pre code {
-    padding-right: 18px
+    padding-right: 1.125rem
 }
 
 [dir="ltr"] .text-content pre code,[dir="ltr"]  .cke_editable pre code {
-    padding-right: 18px
+    padding-right: 1.125rem
 }
 
 [dir="rtl"] .text-content pre code,[dir="rtl"]  .cke_editable pre code {
-    padding-left: 18px
+    padding-left: 1.125rem
 }
 
 .text-content pre code, .cke_editable pre code {
     display: block;
     overflow: auto;
-    padding-top: 18px;
-    padding-bottom: 18px;
+    padding-top: 1.125rem;
+    padding-bottom: 1.125rem;
     color: #6e7172;
   }
 
@@ -146,21 +146,21 @@
 }
 
 [dir="ltr"] .text-content blockquote,[dir="ltr"]  .cke_editable blockquote {
-    padding-left: 36px
+    padding-left: 2.25rem
 }
 
 [dir="rtl"] .text-content blockquote,[dir="rtl"]  .cke_editable blockquote {
-    padding-right: 36px
+    padding-right: 2.25rem
 }
 
 .text-content blockquote, .cke_editable blockquote {
     position: relative;
-    margin-top: 36px;
-    margin-bottom: 36px;
+    margin-top: 2.25rem;
+    margin-bottom: 2.25rem;
     letter-spacing: -0.01em;
     font-family: "Lora", "georgia", serif;
-    font-size: 21px;
-    line-height: 36px
+    font-size: 1.3125rem;
+    line-height: 2.25rem
   }
 
 [dir="ltr"] .text-content blockquote:before,[dir="ltr"]  .cke_editable blockquote:before {
@@ -176,7 +176,7 @@
       top: 0;
       content: "“";
       color: #53b0eb;
-      font-size: 54px;
+      font-size: 3.375rem;
     }
 
 [dir="ltr"] .text-content blockquote:after,[dir="ltr"]  .cke_editable blockquote:after {
@@ -188,44 +188,44 @@
 }
 
 [dir="ltr"] .text-content blockquote:after,[dir="ltr"]  .cke_editable blockquote:after {
-      margin-left: 4px
+      margin-left: 0.25rem
 }
 
 [dir="rtl"] .text-content blockquote:after,[dir="rtl"]  .cke_editable blockquote:after {
-      margin-right: 4px
+      margin-right: 0.25rem
 }
 
 .text-content blockquote:after, .cke_editable blockquote:after {
       position: absolute;
       bottom: 0;
-      width: 9px;
-      height: calc(100% - 30px);
+      width: 0.5625rem;
+      height: calc(100% - 1.875rem);
       content: "";
       background: #f7f9fa;
     }
 
-@media (min-width: 700px) {
+@media (min-width: 43.75rem) {
 
 .text-content blockquote, .cke_editable blockquote {
-      font-size: 32px;
-      line-height: 54px
+      font-size: 2rem;
+      line-height: 3.375rem
   }
     }
 
-@media (min-width: 1000px) {
+@media (min-width: 62.5rem) {
 
 .text-content blockquote, .cke_editable blockquote {
-      font-size: 40px;
-      line-height: 63px
+      font-size: 2.5rem;
+      line-height: 3.9375rem
   }
     }
 
-@media (min-width: 700px) {
+@media (min-width: 43.75rem) {
 
 .text-content,
 .cke_editable {
-    font-size: 18px;
-    line-height: 36px
+    font-size: 1.125rem;
+    line-height: 2.25rem
 }
   }
 

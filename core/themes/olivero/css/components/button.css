@@ -19,36 +19,36 @@
 }
 
 [dir="ltr"] .button {
-  margin-right: 18px
+  margin-right: 1.125rem
 }
 
 [dir="rtl"] .button {
-  margin-left: 18px
+  margin-left: 1.125rem
 }
 
 [dir="ltr"] .button {
-  padding-left: 27px
+  padding-left: 1.6875rem
 }
 
 [dir="rtl"] .button {
-  padding-right: 27px
+  padding-right: 1.6875rem
 }
 
 [dir="ltr"] .button {
-  padding-right: 27px
+  padding-right: 1.6875rem
 }
 
 [dir="rtl"] .button {
-  padding-left: 27px
+  padding-left: 1.6875rem
 }
 
 .button {
   display: inline-block;
-  height: 54px;
-  margin-top: 18px;
-  margin-bottom: 18px;
-  padding-top: 18px;
-  padding-bottom: 18px;
+  height: 3.375rem;
+  margin-top: 1.125rem;
+  margin-bottom: 1.125rem;
+  padding-top: 1.125rem;
+  padding-bottom: 1.125rem;
   cursor: pointer;
   text-align: center;
   text-decoration: none;
@@ -57,9 +57,9 @@
   border-radius: 2px;
   background-color: #fff;
   font-family: inherit;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 700;
-  line-height: 18px;
+  line-height: 1.125rem;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -103,19 +103,19 @@
 @supports (display: inline-flex) {
 
 [dir="ltr"] .button {
-    padding-left: 27px
+    padding-left: 1.6875rem
   }
 
 [dir="rtl"] .button {
-    padding-right: 27px
+    padding-right: 1.6875rem
   }
 
 [dir="ltr"] .button {
-    padding-right: 27px
+    padding-right: 1.6875rem
   }
 
 [dir="rtl"] .button {
-    padding-left: 27px
+    padding-left: 1.6875rem
   }
 
 .button {
@@ -125,7 +125,7 @@
     /* Top padding accounts for font not being vertically centered within line-height. */
     padding-top: 1px;
     padding-bottom: 0;
-    line-height: 18px
+    line-height: 1.125rem
 }
   }
 
@@ -153,25 +153,25 @@
 }
 
 [dir="ltr"] .button--small {
-  padding-left: 27px
+  padding-left: 1.6875rem
 }
 
 [dir="rtl"] .button--small {
-  padding-right: 27px
+  padding-right: 1.6875rem
 }
 
 [dir="ltr"] .button--small {
-  padding-right: 27px
+  padding-right: 1.6875rem
 }
 
 [dir="rtl"] .button--small {
-  padding-left: 27px
+  padding-left: 1.6875rem
 }
 
 .button--small {
-  height: 45px;
-  padding-top: 13.5px;
-  padding-bottom: 13.5px;
+  height: 2.8125rem;
+  padding-top: 0.84375rem;
+  padding-bottom: 0.84375rem;
 }
 
 .button--primary {

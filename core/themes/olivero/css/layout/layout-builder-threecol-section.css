@@ -17,10 +17,10 @@
 
 .layout--threecol-section > .layout__region {
     flex: 1 0 100%;
-    margin-bottom: 18px
+    margin-bottom: 1.125rem
   }
 
-@media (min-width: 1000px) {
+@media (min-width: 62.5rem) {
 
 .layout--threecol-section > .layout__region {
       flex-grow: 0;
@@ -29,53 +29,53 @@
   }
     }
 
-@media (min-width: 1000px) {
+@media (min-width: 62.5rem) {
     [dir="ltr"] .layout--threecol-section > .layout__region--first {
-      margin-right: 18px
+      margin-right: 1.125rem
   }
     [dir="rtl"] .layout--threecol-section > .layout__region--first {
-      margin-left: 18px
+      margin-left: 1.125rem
   }
 
     .layout--threecol-section > .layout__region--second {
-      margin-left: 18px;
-      margin-right: 18px;
+      margin-left: 1.125rem;
+      margin-right: 1.125rem;
     }
 
     [dir="ltr"] .layout--threecol-section > .layout__region--third {
-      margin-left: 18px
+      margin-left: 1.125rem
   }
 
     [dir="rtl"] .layout--threecol-section > .layout__region--third {
-      margin-right: 18px
+      margin-right: 1.125rem
   }
     .layout--threecol-section--25-50-25 > .layout__region--first,
     .layout--threecol-section--25-50-25 > .layout__region--third {
-      flex-basis: calc(25% - 18px);
+      flex-basis: calc(25% - 1.125rem);
     }
 
     .layout--threecol-section--25-50-25 > .layout__region--second {
-      flex-basis: calc(50% - 36px);
+      flex-basis: calc(50% - 2.25rem);
     }
     .layout--threecol-section--25-25-50 > .layout__region--first,
     .layout--threecol-section--25-25-50 > .layout__region--second {
-      flex-basis: calc(25% - 18px);
+      flex-basis: calc(25% - 1.125rem);
     }
 
     .layout--threecol-section--25-25-50 > .layout__region--third {
-      flex-basis: calc(50% - 36px);
+      flex-basis: calc(50% - 2.25rem);
     }
     .layout--threecol-section--50-25-25 > .layout__region--first {
-      flex-basis: calc(50% - 36px);
+      flex-basis: calc(50% - 2.25rem);
     }
 
     .layout--threecol-section--50-25-25 > .layout__region--second,
     .layout--threecol-section--50-25-25 > .layout__region--third {
-      flex-basis: calc(25% - 18px);
+      flex-basis: calc(25% - 1.125rem);
     }
     .layout--threecol-section--33-34-33 > .layout__region--first,
     .layout--threecol-section--33-34-33 > .layout__region--second,
     .layout--threecol-section--33-34-33 > .layout__region--third {
-      flex-basis: calc(33.33% - 23.976px);
+      flex-basis: calc(33.33% - 1.4985rem);
     }
 }

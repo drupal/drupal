@@ -11,24 +11,24 @@
 /** cspell:ignore acke */
 [dir="ltr"] .cke_dialog td,[dir="ltr"] 
   .cke_dialog th {
-    padding-left: 4.5px;
+    padding-left: 0.28125rem;
 }
 [dir="rtl"] .cke_dialog td,[dir="rtl"] 
   .cke_dialog th {
-    padding-right: 4.5px;
+    padding-right: 0.28125rem;
 }
 [dir="ltr"] .cke_dialog td,[dir="ltr"] 
   .cke_dialog th {
-    padding-right: 4.5px;
+    padding-right: 0.28125rem;
 }
 [dir="rtl"] .cke_dialog td,[dir="rtl"] 
   .cke_dialog th {
-    padding-left: 4.5px;
+    padding-left: 0.28125rem;
 }
 .cke_dialog td,
   .cke_dialog th {
-    padding-top: 4.5px;
-    padding-bottom: 4.5px;
+    padding-top: 0.28125rem;
+    padding-bottom: 0.28125rem;
   }
 [dir="ltr"] .cke_dialog .cke_dialog_ui_hbox_last {
     padding-left: 0;
@@ -49,7 +49,7 @@
 .cke_dialog .cke_dialog_contents_body .cke_dialog_ui_text,
   .cke_dialog .cke_dialog_contents_body .cke_dialog_ui_select,
   .cke_dialog .cke_dialog_contents_body .cke_dialog_ui_hbox_last > a.cke_dialog_ui_button {
-    margin-top: 9px;
+    margin-top: 0.5625rem;
   }
 .cke_dialog .cke_dialog_body label + .cke_dialog_ui_labeled_content {
     width: 100% !important; /* Override inline width. */
@@ -58,32 +58,32 @@
   .cke_dialog input.cke_dialog_ui_input_password,[dir="ltr"] 
   .cke_dialog input.cke_dialog_ui_input_tel,[dir="ltr"] 
   .cke_dialog textarea.cke_dialog_ui_input_textarea {
-    padding-left: 24px;
+    padding-left: 1.5rem;
 }
 [dir="rtl"] .cke_dialog input.cke_dialog_ui_input_text,[dir="rtl"] 
   .cke_dialog input.cke_dialog_ui_input_password,[dir="rtl"] 
   .cke_dialog input.cke_dialog_ui_input_tel,[dir="rtl"] 
   .cke_dialog textarea.cke_dialog_ui_input_textarea {
-    padding-right: 24px;
+    padding-right: 1.5rem;
 }
 [dir="ltr"] .cke_dialog input.cke_dialog_ui_input_text,[dir="ltr"] 
   .cke_dialog input.cke_dialog_ui_input_password,[dir="ltr"] 
   .cke_dialog input.cke_dialog_ui_input_tel,[dir="ltr"] 
   .cke_dialog textarea.cke_dialog_ui_input_textarea {
-    padding-right: 20px;
+    padding-right: 1.25rem;
 }
 [dir="rtl"] .cke_dialog input.cke_dialog_ui_input_text,[dir="rtl"] 
   .cke_dialog input.cke_dialog_ui_input_password,[dir="rtl"] 
   .cke_dialog input.cke_dialog_ui_input_tel,[dir="rtl"] 
   .cke_dialog textarea.cke_dialog_ui_input_textarea {
-    padding-left: 20px;
+    padding-left: 1.25rem;
 }
 .cke_dialog input.cke_dialog_ui_input_text,
   .cke_dialog input.cke_dialog_ui_input_password,
   .cke_dialog input.cke_dialog_ui_input_tel,
   .cke_dialog textarea.cke_dialog_ui_input_textarea {
-    padding-top: 13px;
-    padding-bottom: 13px;
+    padding-top: 0.8125rem;
+    padding-bottom: 0.8125rem;
     color: #313637;
     border-width: 2px 0
   }
@@ -111,24 +111,24 @@
 }
 [dir="ltr"] .cke_dialog .cke_dialog_ui_input_select select,[dir="ltr"] 
     .cke_dialog .cke_dialog_ui_input_select .cke_dialog_ui_input_select {
-      padding-left: 19.5px;
+      padding-left: 1.21875rem;
 }
 [dir="rtl"] .cke_dialog .cke_dialog_ui_input_select select,[dir="rtl"] 
     .cke_dialog .cke_dialog_ui_input_select .cke_dialog_ui_input_select {
-      padding-right: 19.5px;
+      padding-right: 1.21875rem;
 }
 [dir="ltr"] .cke_dialog .cke_dialog_ui_input_select select,[dir="ltr"] 
     .cke_dialog .cke_dialog_ui_input_select .cke_dialog_ui_input_select {
-      padding-right: 58.5px;
+      padding-right: 3.65625rem;
 }
 [dir="rtl"] .cke_dialog .cke_dialog_ui_input_select select,[dir="rtl"] 
     .cke_dialog .cke_dialog_ui_input_select .cke_dialog_ui_input_select {
-      padding-left: 58.5px;
+      padding-left: 3.65625rem;
 }
 .cke_dialog .cke_dialog_ui_input_select select,
     .cke_dialog .cke_dialog_ui_input_select .cke_dialog_ui_input_select {
       width: 100% !important;
-      height: 45px;
+      height: 2.8125rem;
       margin-top: 0;
       margin-bottom: 0;
       padding-top: 0;
@@ -144,7 +144,7 @@
       border-bottom-left-radius: 0; /* LTR */
       outline: 1px solid transparent;
       background-color: #f7f9fa;
-      line-height: 45px
+      line-height: 2.8125rem
     }
 .cke_dialog .cke_dialog_ui_input_select select:hover,
       .cke_dialog .cke_dialog_ui_input_select select:focus,
@@ -166,30 +166,30 @@
     margin-right: 0;
 }
 [dir="ltr"] .cke_dialog .cke_dialog_footer_buttons {
-    margin-right: 9px;
+    margin-right: 0.5625rem;
 }
 [dir="rtl"] .cke_dialog .cke_dialog_footer_buttons {
-    margin-left: 9px;
+    margin-left: 0.5625rem;
 }
 .cke_dialog .cke_dialog_footer_buttons {
-    margin-top: 9px;
-    margin-bottom: 9px
+    margin-top: 0.5625rem;
+    margin-bottom: 0.5625rem
   }
 [dir="ltr"] .cke_dialog .cke_dialog_footer_buttons .cke_dialog_ui_hbox_last {
-      padding-left: 4.5px;
+      padding-left: 0.28125rem;
 }
 [dir="rtl"] .cke_dialog .cke_dialog_footer_buttons .cke_dialog_ui_hbox_last {
-      padding-right: 4.5px;
+      padding-right: 0.28125rem;
 }
 [dir="ltr"] .cke_dialog .cke_dialog_footer_buttons .cke_dialog_ui_hbox_last {
-      padding-right: 4.5px;
+      padding-right: 0.28125rem;
 }
 [dir="rtl"] .cke_dialog .cke_dialog_footer_buttons .cke_dialog_ui_hbox_last {
-      padding-left: 4.5px;
+      padding-left: 0.28125rem;
 }
 .cke_dialog .cke_dialog_footer_buttons .cke_dialog_ui_hbox_last {
-      padding-top: 4.5px;
-      padding-bottom: 4.5px;
+      padding-top: 0.28125rem;
+      padding-bottom: 0.28125rem;
     }
 [dir="ltr"] .cke_dialog .cke_dialog_footer_buttons a,[dir="ltr"] 
     .cke_dialog .cke_dialog_footer_buttons .acke_dialog_ui_button {
@@ -201,17 +201,17 @@
 }
 [dir="ltr"] .cke_dialog .cke_dialog_footer_buttons a,[dir="ltr"] 
     .cke_dialog .cke_dialog_footer_buttons .acke_dialog_ui_button {
-      margin-right: 4.5px;
+      margin-right: 0.28125rem;
 }
 [dir="rtl"] .cke_dialog .cke_dialog_footer_buttons a,[dir="rtl"] 
     .cke_dialog .cke_dialog_footer_buttons .acke_dialog_ui_button {
-      margin-left: 4.5px;
+      margin-left: 0.28125rem;
 }
 .cke_dialog .cke_dialog_footer_buttons a,
     .cke_dialog .cke_dialog_footer_buttons .acke_dialog_ui_button {
       display: inline-block;
-      margin-top: 4.5px;
-      margin-bottom: 4.5px;
+      margin-top: 0.28125rem;
+      margin-bottom: 0.28125rem;
       cursor: pointer;
       text-align: center;
       text-decoration: none;
@@ -220,9 +220,9 @@
       border-radius: 2px;
       background-color: #fff;
       font-family: inherit;
-      font-size: 14px;
+      font-size: 0.875rem;
       font-weight: 700;
-      line-height: 18px;
+      line-height: 1.125rem;
       -webkit-appearance: none;
       -moz-appearance: none;
       appearance: none;

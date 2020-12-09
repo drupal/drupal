@@ -17,7 +17,7 @@
   grid-template-rows: 1fr;
   -ms-grid-columns: (minmax(0, 1fr))[6];
   grid-template-columns: repeat(6, minmax(0, 1fr));
-  grid-column-gap: 18px
+  grid-column-gap: 1.125rem
 
   /* .grid-full classes nested 3 or more deep go full width. */
 }
@@ -26,12 +26,12 @@
     display: block;
   }
 
-@media (min-width: 700px) {
+@media (min-width: 43.75rem) {
 
 .grid-full {
     -ms-grid-columns: (minmax(0, 1fr))[14];
     grid-template-columns: repeat(14, minmax(0, 1fr));
-    grid-column-gap: 36px
+    grid-column-gap: 2.25rem
 }
   }
 
@@ -41,7 +41,7 @@
     - Element that's inheriting the layout--content-narrow styles from its parent region.
 */
 
-@media (min-width: 700px) {
+@media (min-width: 43.75rem) {
 
 .layout--content-narrow .grid-full,
 .layout--pass--content-narrow > * .grid-full {
@@ -50,7 +50,7 @@
 }
   }
 
-@media (min-width: 1000px) {
+@media (min-width: 62.5rem) {
 
 .layout--content-narrow .grid-full,
 .layout--pass--content-narrow > * .grid-full {
@@ -65,7 +65,7 @@
     - Element that's inheriting the layout--content-medium styles from its parent region.
 */
 
-@media (min-width: 700px) {
+@media (min-width: 43.75rem) {
 
 .layout--content-medium .grid-full,
 .layout--pass--content-medium > * .grid-full {
@@ -74,7 +74,7 @@
 }
   }
 
-@media (min-width: 1000px) {
+@media (min-width: 62.5rem) {
 
 .layout--content-medium .grid-full,
 .layout--pass--content-medium > * .grid-full {

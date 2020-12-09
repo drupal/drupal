@@ -41,8 +41,8 @@
   align-items: center;
   -ms-grid-row-align: center;
   align-self: center;
-  width: 36px;
-  height: 36px;
+  width: 2.25rem;
+  height: 2.25rem;
   padding-top: 0;
   padding-bottom: 0;
   cursor: pointer;
@@ -51,14 +51,14 @@
   -webkit-appearance: none
 }
 
-@media (min-width: 500px) {
+@media (min-width: 31.25rem) {
 
 [dir="ltr"] .mobile-nav-button {
-    padding-left: 18px
+    padding-left: 1.125rem
   }
 
 [dir="rtl"] .mobile-nav-button {
-    padding-right: 18px
+    padding-right: 1.125rem
   }
 
 .mobile-nav-button {
@@ -79,14 +79,14 @@
   word-wrap: normal
 }
 
-@media (min-width: 500px) {
+@media (min-width: 31.25rem) {
 
 [dir="ltr"] .mobile-nav-button__label {
-    margin-right: 12px
+    margin-right: 0.75rem
   }
 
 [dir="rtl"] .mobile-nav-button__label {
-    margin-left: 12px
+    margin-left: 0.75rem
   }
 
 .mobile-nav-button__label {
@@ -96,7 +96,7 @@
     width: auto;
     height: auto;
     letter-spacing: 0.05em;
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: 600
 }
   }
@@ -104,8 +104,8 @@
 .mobile-nav-button__icon {
   position: relative;
   display: block;
-  width: 36px;
-  height: 3px;
+  width: 2.25rem;
+  height: 0.1875rem;
   background-color: #2494db
 }
 
@@ -119,9 +119,9 @@
 
 .mobile-nav-button__icon:before {
     position: absolute;
-    top: -8px;
+    top: -0.5rem;
     width: 100%;
-    height: 3px;
+    height: 0.1875rem;
     content: "";
     transition: all 0.2s;
     background-color: #2494db;
@@ -138,9 +138,9 @@
 .mobile-nav-button__icon:after {
     position: absolute;
     top: auto;
-    bottom: -8px;
+    bottom: -0.5rem;
     width: 100%;
-    height: 3px;
+    height: 0.1875rem;
     content: "";
     transition: all 0.2s;
     background-color: #2494db;

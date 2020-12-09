@@ -76,8 +76,8 @@
 .form-boolean {
   display: inline-block;
   box-sizing: border-box;
-  width: 18px;
-  height: 18px;
+  width: 1.125rem;
+  height: 1.125rem;
   vertical-align: text-bottom;
   border: 1px solid #8e929c;
   border-radius: 2px;
@@ -91,9 +91,9 @@
 }
 
 .form-boolean--type-radio {
-  width: 19px;
-  height: 19px;
-  border-radius: 19px;
+  width: 1.1875rem;
+  height: 1.1875rem;
+  border-radius: 1.1875rem;
 }
 
 .form-boolean:active,

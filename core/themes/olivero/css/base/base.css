@@ -26,7 +26,7 @@ html {
   font-size: 100%;
   font-weight: normal;
   font-style: normal;
-  line-height: 27px;
+  line-height: 1.6875rem;
 }
 
 body {
@@ -68,42 +68,42 @@ audio {
 }
 
 h1 {
-  margin-top: 18px;
-  margin-bottom: 18px;
+  margin-top: 1.125rem;
+  margin-bottom: 1.125rem;
   letter-spacing: -0.01em;
   color: #0d1214;
-  font-size: 24px;
+  font-size: 1.5rem;
   font-weight: bold;
-  line-height: 27px
+  line-height: 1.6875rem
 }
 
-@media (min-width: 700px) {
+@media (min-width: 43.75rem) {
 
 h1 {
-    margin-top: 36px;
-    margin-bottom: 36px;
-    font-size: 60px;
-    line-height: 72px
+    margin-top: 2.25rem;
+    margin-bottom: 2.25rem;
+    font-size: 3.75rem;
+    line-height: 4.5rem
 }
   }
 
 h2 {
-  margin-top: 18px;
-  margin-bottom: 18px;
+  margin-top: 1.125rem;
+  margin-bottom: 1.125rem;
   letter-spacing: -0.01em;
   color: #0d1214;
-  font-size: 24px;
+  font-size: 1.5rem;
   font-weight: bold;
-  line-height: 27px
+  line-height: 1.6875rem
 }
 
-@media (min-width: 700px) {
+@media (min-width: 43.75rem) {
 
 h2 {
-    margin-top: 36px;
-    margin-bottom: 36px;
-    font-size: 36px;
-    line-height: 54px
+    margin-top: 2.25rem;
+    margin-bottom: 2.25rem;
+    font-size: 2.25rem;
+    line-height: 3.375rem
 }
   }
 

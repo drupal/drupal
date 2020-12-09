@@ -17,13 +17,13 @@
 
 .layout--fourcol-section > .layout__region {
     flex: 1 0 100%;
-    margin-bottom: 18px
+    margin-bottom: 1.125rem
   }
 
-@media (min-width: 700px) {
+@media (min-width: 43.75rem) {
 
 .layout--fourcol-section > .layout__region {
-      flex-basis: calc(50% - 18px);
+      flex-basis: calc(50% - 1.125rem);
       flex-grow: 0;
       flex-shrink: 0;
       margin-bottom: 0
@@ -35,30 +35,30 @@
   /* Two column layout. */
 }
 
-@media (min-width: 700px) {
+@media (min-width: 43.75rem) {
     .layout--fourcol-section > .layout__region--first,
     .layout--fourcol-section > .layout__region--second {
-      margin-bottom: 36px;
+      margin-bottom: 2.25rem;
     }
 
     [dir="ltr"] .layout--fourcol-section > .layout__region--first,[dir="ltr"] 
     .layout--fourcol-section > .layout__region--third {
-      margin-right: 18px
+      margin-right: 1.125rem
   }
 
     [dir="rtl"] .layout--fourcol-section > .layout__region--first,[dir="rtl"] 
     .layout--fourcol-section > .layout__region--third {
-      margin-left: 18px
+      margin-left: 1.125rem
   }
 
     [dir="ltr"] .layout--fourcol-section > .layout__region--second,[dir="ltr"] 
     .layout--fourcol-section > .layout__region--fourth {
-      margin-left: 18px
+      margin-left: 1.125rem
   }
 
     [dir="rtl"] .layout--fourcol-section > .layout__region--second,[dir="rtl"] 
     .layout--fourcol-section > .layout__region--fourth {
-      margin-right: 18px
+      margin-right: 1.125rem
   }
   }
 
@@ -67,9 +67,9 @@
   /* Four column layout. */
 }
 
-@media (min-width: 1000px) {
+@media (min-width: 62.5rem) {
     .layout--fourcol-section > .layout__region {
-      flex-basis: calc(25% - 27px);
+      flex-basis: calc(25% - 1.6875rem);
     }
 
     .layout--fourcol-section > .layout__region--first,
@@ -78,24 +78,24 @@
     }
 
     [dir="ltr"] .layout--fourcol-section > .layout__region--first {
-      margin-right: 18px
+      margin-right: 1.125rem
   }
 
     [dir="rtl"] .layout--fourcol-section > .layout__region--first {
-      margin-left: 18px
+      margin-left: 1.125rem
   }
 
     .layout--fourcol-section > .layout__region--second,
     .layout--fourcol-section > .layout__region--third {
-      margin-left: 18px;
-      margin-right: 18px;
+      margin-left: 1.125rem;
+      margin-right: 1.125rem;
     }
 
     [dir="ltr"] .layout--fourcol-section > .layout__region--fourth {
-      margin-left: 18px
+      margin-left: 1.125rem
   }
 
     [dir="rtl"] .layout--fourcol-section > .layout__region--fourth {
-      margin-right: 18px
+      margin-right: 1.125rem
   }
   }

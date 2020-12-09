@@ -16,18 +16,18 @@
 }
 
 [dir="ltr"] .field--tags__label {
-  margin-right: 22.5px;
+  margin-right: 1.40625rem;
 }
 
 [dir="rtl"] .field--tags__label {
-  margin-left: 22.5px;
+  margin-left: 1.40625rem;
 }
 
 .field--tags__label {
   margin: 0;
   letter-spacing: 0.02em;
   color: #6e7172;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 600;
   line-height: 2
 }
@@ -58,19 +58,19 @@
 }
 
 [dir="ltr"] .field--tags__items {
-  margin-left: -4.5px;
+  margin-left: -0.28125rem;
 }
 
 [dir="rtl"] .field--tags__items {
-  margin-right: -4.5px;
+  margin-right: -0.28125rem;
 }
 
 [dir="ltr"] .field--tags__items {
-  margin-right: -4.5px;
+  margin-right: -0.28125rem;
 }
 
 [dir="rtl"] .field--tags__items {
-  margin-left: -4.5px;
+  margin-left: -0.28125rem;
 }
 
 [dir="ltr"] .field--tags__items {
@@ -92,38 +92,38 @@
 .field--tags__items {
   display: flex;
   flex-wrap: wrap;
-  margin-top: -4.5px;
-  margin-bottom: -4.5px;
+  margin-top: -0.28125rem;
+  margin-bottom: -0.28125rem;
   padding-top: 0;
   padding-bottom: 0;
   list-style: none;
 }
 
 [dir="ltr"] .field--tags__item {
-  margin-left: 4.5px;
+  margin-left: 0.28125rem;
 }
 
 [dir="rtl"] .field--tags__item {
-  margin-right: 4.5px;
+  margin-right: 0.28125rem;
 }
 
 [dir="ltr"] .field--tags__item {
-  margin-right: 4.5px;
+  margin-right: 0.28125rem;
 }
 
 [dir="rtl"] .field--tags__item {
-  margin-left: 4.5px;
+  margin-left: 0.28125rem;
 }
 
 .field--tags__item {
   display: flex;
-  margin-top: 4.5px;
-  margin-bottom: 4.5px;
+  margin-top: 0.28125rem;
+  margin-bottom: 0.28125rem;
 }
 
 .field--tags__item:nth-last-child(n+2):after {
   content: ",";
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 1.5;
 }
 
@@ -134,31 +134,31 @@
   text-decoration: none;
   letter-spacing: 0.02em;
   color: #0d77b5;
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 700;
   line-height: 1.5;
 }
 
 [dir="ltr"] .node--view-mode-full .field--tags {
-    padding-left: 36px;
+    padding-left: 2.25rem;
 }
 
 [dir="rtl"] .node--view-mode-full .field--tags {
-    padding-right: 36px;
+    padding-right: 2.25rem;
 }
 
 [dir="ltr"] .node--view-mode-full .field--tags {
-    padding-right: 36px;
+    padding-right: 2.25rem;
 }
 
 [dir="rtl"] .node--view-mode-full .field--tags {
-    padding-left: 36px;
+    padding-left: 2.25rem;
 }
 
 .node--view-mode-full .field--tags {
-    margin-top: 72px;
-    margin-bottom: 72px;
-    padding-top: 27px;
-    padding-bottom: 27px;
+    margin-top: 4.5rem;
+    margin-bottom: 4.5rem;
+    padding-top: 1.6875rem;
+    padding-bottom: 1.6875rem;
     background-color: #f7f9fa;
   }

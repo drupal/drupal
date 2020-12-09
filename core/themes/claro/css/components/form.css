@@ -138,7 +138,7 @@ tr .form-item,
 
 /* Add some spacing so that the focus ring and suffix don't overlap. */
 
-@media screen and (min-width: 601px) {
+@media screen and (min-width: 37.5625rem) {
   .form-item__suffix {
     margin-left: 0.5rem; /* LTR */
   }
@@ -233,7 +233,7 @@ tr .form-item,
  * @legacy
  */
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 37.5rem) {
   .password-strength {
     width: 100%;
   }

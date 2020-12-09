@@ -14,14 +14,14 @@
 
 .joyride-tip-guide {
   color: #fff;
-  border-radius: 5px;
+  border-radius: 0.3125rem;
   background: #000;
   background: rgba(0, 0, 0, 0.8);
 }
 
 /* Mobile */
 
-@media only screen and (max-width: 767px) {
+@media only screen and (max-width: 47.9375rem) {
   .joyride-tip-guide {
     border-radius: 0;
   }

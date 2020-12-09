@@ -10,7 +10,7 @@
  * Vertical Tabs.
  */
 
-@media (min-width: 1000px) {
+@media (min-width: 62.5rem) {
 
 .vertical-tabs {
     display: flex
@@ -43,7 +43,7 @@
   border-color: #e7edf1
 }
 
-@media (min-width: 1000px) {
+@media (min-width: 62.5rem) {
 
 .vertical-tabs__menu {
     width: 15rem;
@@ -55,7 +55,7 @@
   margin-top: -1px
 }
 
-@media (min-width: 1000px) {
+@media (min-width: 62.5rem) {
 
 .vertical-tabs__panes {
     width: calc(100% - 15rem);
@@ -63,7 +63,7 @@
 }
   }
 
-@media (min-width: 1000px) {
+@media (min-width: 62.5rem) {
 
 .vertical-tabs__pane {
     min-height: 100%
@@ -85,25 +85,25 @@
 }
 
 [dir="ltr"] .vertical-tabs__menu-item a {
-  padding-left: 13.5px
+  padding-left: 0.84375rem
 }
 
 [dir="rtl"] .vertical-tabs__menu-item a {
-  padding-right: 13.5px
+  padding-right: 0.84375rem
 }
 
 [dir="ltr"] .vertical-tabs__menu-item a {
-  padding-right: 13.5px
+  padding-right: 0.84375rem
 }
 
 [dir="rtl"] .vertical-tabs__menu-item a {
-  padding-left: 13.5px
+  padding-left: 0.84375rem
 }
 
 .vertical-tabs__menu-item a {
   display: block;
-  padding-top: 9px;
-  padding-bottom: 9px;
+  padding-top: 0.5625rem;
+  padding-bottom: 0.5625rem;
   text-decoration: none;
   background-color: #e7edf1
 }
@@ -118,7 +118,7 @@
   background-color: #fff
 }
 
-@media (min-width: 1000px) {
+@media (min-width: 62.5rem) {
 
 [dir="ltr"] .vertical-tabs__menu-item.is-selected {
     margin-right: -1px
@@ -143,6 +143,6 @@
 
 .vertical-tabs__menu-item-summary {
   display: block;
-  font-size: 14px;
-  line-height: 18px;
+  font-size: 0.875rem;
+  line-height: 1.125rem;
 }
