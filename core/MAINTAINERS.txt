@@ -38,6 +38,10 @@ Release managers
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
 - Jess Myrbo 'xjm' https://www.drupal.org/u/xjm
 
+Core JavaScript packages
+ - (provisional) Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
+ - (provisional) Sally Young 'justafish' https://www.drupal.org/u/justafish
+
 Committer team facilitators
 - Pamela Barone 'pameeela' https://www.drupal.org/u/pameeela
 
