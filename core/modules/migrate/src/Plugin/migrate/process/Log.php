@@ -31,29 +31,30 @@ class Log extends ProcessPluginBase {
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
+    $is_object = is_object($value);
     if (is_null($value) || is_bool($value)) {
       $export = var_export($value, TRUE);
     }
     elseif (is_float($value)) {
       $export = sprintf('%f', $value);
     }
-    elseif (method_exists($value, 'toString')) {
+    elseif ($is_object && method_exists($value, 'toString')) {
       $export = print_r($value->toString(), TRUE);
     }
-    elseif (method_exists($value, 'toArray')) {
+    elseif ($is_object && method_exists($value, 'toArray')) {
       $export = print_r($value->toArray(), TRUE);
     }
     elseif (is_string($value) || is_numeric($value) || is_array($value)) {
       $export = print_r($value, TRUE);
     }
-    elseif (method_exists($value, '__toString')) {
+    elseif ($is_object && method_exists($value, '__toString')) {
       $export = print_r((string) $value, TRUE);
     }
     else {
       $export = NULL;
     }
 
-    $class_name = $export !== NULL && is_object($value)
+    $class_name = $export !== NULL && $is_object
       ? $class_name = get_class($value) . ":\n"
       : '';
 
