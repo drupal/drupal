@@ -1030,8 +1030,10 @@ function user_role_revoke_permissions($rid, array $permissions = []) {
  *   The user object of the account being notified. Must contain at
  *   least the fields 'uid', 'name', and 'mail'.
  * @param string $langcode
- *   (optional) Language code to use for the notification, overriding account
- *   language.
+ *   (deprecated) (optional) Language code to use for the notification,
+ *   overriding account language. Specifying the notification language using
+ *   the $langcode parameter is deprecated in drupal:9.2.0 and is removed from
+ *   drupal:10.0.0. Omit the parameter. See https://www.drupal.org/node/3187082
  *
  * @return array
  *   An array containing various information about the message.
@@ -1040,6 +1042,10 @@ function user_role_revoke_permissions($rid, array $permissions = []) {
  * @see user_mail_tokens()
  */
 function _user_mail_notify($op, AccountInterface $account, $langcode = NULL) {
+  if ($langcode) {
+    @trigger_error('Specifying the notification language using the $langcode parameter is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Omit the parameter. See https://www.drupal.org/node/3187082', E_USER_DEPRECATED);
+  }
+
   if (\Drupal::config('user.settings')->get('notify.' . $op)) {
     $params['account'] = $account;
     $langcode = $langcode ? $langcode : $account->getPreferredLangcode();

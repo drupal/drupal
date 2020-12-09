@@ -94,4 +94,15 @@ class UserMailNotifyTest extends EntityKernelTestBase {
     $this->assertEmpty($this->getMails());
   }
 
+  /**
+   * Tests the deprecated $langcode argument to _user_mail_notify().
+   *
+   * @group legacy
+   */
+  public function testUserMailNotifyLangcodeDeprecation() {
+    $account = $this->createUser();
+    $this->expectDeprecation('Specifying the notification language using the $langcode parameter is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Omit the parameter. See https://www.drupal.org/node/3187082');
+    _user_mail_notify('password_reset', $account, $account->getPreferredLangcode());
+  }
+
 }
