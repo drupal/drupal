@@ -2,6 +2,7 @@
 
 namespace Drupal\auto_updates\ReadinessChecker;
 
+use Composer\Autoload\ClassLoader;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
@@ -19,6 +20,13 @@ abstract class FileSystemBase implements ReadinessCheckerInterface {
    * @var string
    */
   protected $rootPath;
+
+  /**
+   * The path of the vendor folder.
+   *
+   * @var string|null
+   */
+  protected $vendorDir = NULL;
 
   /**
    * FileSystemBase constructor.
@@ -67,9 +75,11 @@ abstract class FileSystemBase implements ReadinessCheckerInterface {
    *   The vendor file path.
    */
   protected function getVendorPath(): string {
-    // @todo Support finding the 'vendor' directory dynamically in
-    // https://www.drupal.org/node/3166435.
-    return $this->getRootPath() . DIRECTORY_SEPARATOR . 'vendor';
+    if ($this->vendorDir === NULL) {
+      $class_loader_reflection = new \ReflectionClass(ClassLoader::class);
+      this->vendorDir = dirname($class_loader_reflection->getFileName(), 2);
+    }
+    return $this->vendorDir;
   }
 
   /**
