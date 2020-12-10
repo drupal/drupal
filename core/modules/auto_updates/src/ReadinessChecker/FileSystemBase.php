@@ -57,7 +57,7 @@ abstract class FileSystemBase implements ReadinessCheckerInterface {
    * @return bool
    *   TRUE if a valid root path can be determined, otherwise false.
    */
-  protected function hasValidVendorPatch() {
+  protected function hasValidVendorPath() {
     return file_exists($this->getVendorPath() . DIRECTORY_SEPARATOR . 'autoload.php');
   }
 

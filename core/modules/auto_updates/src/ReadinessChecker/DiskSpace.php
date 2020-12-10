@@ -44,14 +44,14 @@ class DiskSpace extends FileSystemBase {
    */
   public function getErrors(): array {
     $has_valid_root = $this->hasValidRootPath();
-    $has_valid_vendor = $this->hasValidVendorPatch();
+    $has_valid_vendor = $this->hasValidVendorPath();
     if (!$has_valid_root && !$has_valid_vendor) {
       return [$this->t('Free disk space cannot be determined because the web root and vendor directories could not be located.')];
     }
     elseif (!$has_valid_root) {
       return [$this->t('Free disk space cannot be determined because the web root directory could not be located.')];
     }
-    if (!$this->hasValidVendorPatch()) {
+    if (!$this->hasValidVendorPath()) {
       return [$this->t('Free disk space cannot be determined because the vendor directory could not be located.')];
     }
     $messages = [];
