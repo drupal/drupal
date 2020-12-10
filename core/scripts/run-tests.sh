@@ -276,11 +276,13 @@ All arguments are long options.
 
   --class     Run tests identified by specific class names, instead of group names.
               A specific test method can be added, for example,
-              'Drupal\book\Tests\BookTest::testBookExport'.
+              'Drupal\book\Tests\BookTest::testBookExport'. This argument must
+              be last on the command line.
 
   --file      Run tests identified by specific file names, instead of group names.
               Specify the path and the extension
-              (i.e. 'core/modules/user/user.test').
+              (i.e. 'core/modules/user/user.test'). This argument must be last
+              on the command line.
 
   --types
 
