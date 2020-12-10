@@ -34,28 +34,37 @@ libraries-override:
     css:
       component:
         misc/vertical-tabs.css: false
-  core/jquery.ui:
+  core/drupal.autocomplete:
     css:
       theme:
         assets/vendor/jquery.ui/themes/base/theme.css: false
-  core/jquery.ui.dialog:
+  core/drupal.tabbingmanager:
+    css:
+      theme:
+        assets/vendor/jquery.ui/themes/base/theme.css: false
+  core/drupal.dialog:
     css:
       component:
         assets/vendor/jquery.ui/themes/base/dialog.css: false
+      theme:
+        assets/vendor/jquery.ui/themes/base/theme.css: false
 
 libraries-extend:
   core/ckeditor:
     - seven/ckeditor-dialog
+  core/drupal.autocomplete:
+    - seven/seven.jquery.ui
   core/drupal.dialog:
     - seven/seven.drupal.dialog
+    - seven/seven.jquery.ui
   core/drupal.dropbutton:
     - seven/classy.dropbutton
   core/drupal.progress:
     - seven/classy.progress
+  core/drupal.tabbingmanager:
+    - seven/seven.jquery.ui
   core/drupal.vertical-tabs:
     - seven/vertical-tabs
-  core/jquery.ui:
-    - seven/seven.jquery.ui
   file/drupal.file:
     - seven/classy.file
   filter/drupal.filter.admin:

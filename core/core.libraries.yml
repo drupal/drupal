@@ -88,12 +88,44 @@ drupal.autocomplete:
   version: VERSION
   js:
     misc/autocomplete.js: { weight: -1 }
+    # The remaining JavaScript assets previously came from core/jquery.ui, a
+    # deprecated library.
+    # All weights are based on on the requirements defined within each file.
+    # @todo replace with solution in https://drupal.org/node/3076171
+    assets/vendor/jquery.ui/ui/widgets/autocomplete-min.js: { weight: -11.7, minified: true }
+    assets/vendor/jquery.ui/ui/labels-min.js: { weight: -11.7, minified: true }
+    assets/vendor/jquery.ui/ui/widgets/menu-min.js: { weight: -11.7, minified: true }
+    assets/vendor/jquery.ui/ui/tabbable-min.js: { weight: -11.7, minified: true }
+    assets/vendor/jquery.ui/ui/data-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/disable-selection-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/escape-selector-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/focusable-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/form-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/ie-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/jquery-1-7-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/keycode-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/plugin-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/position-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/safe-active-element-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/safe-blur-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/scroll-parent-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/unique-id-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/widget-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/version-min.js: { weight: -11.9, minified: true }
+  # All CSS assets previously came from core/jquery.ui, a deprecated library.
+  # @todo replace with solution found in https://drupal.org/node/3076171
+  css:
+    component:
+      assets/vendor/jquery.ui/themes/base/autocomplete.css: { weight: -11.7 }
+      assets/vendor/jquery.ui/themes/base/menu.css: { weight: -11.7 }
+      assets/vendor/jquery.ui/themes/base/core.css: { weight: -11.8 }
+    theme:
+      assets/vendor/jquery.ui/themes/base/theme.css: { weight: -11.8 }
   dependencies:
     - core/jquery
     - core/drupal
     - core/drupalSettings
     - core/drupal.ajax
-    - core/jquery.ui.autocomplete
 
 drupal.array.find:
   version: VERSION
@@ -155,13 +187,54 @@ drupal.dialog:
     misc/dialog/dialog.js: {}
     misc/dialog/dialog.position.js: {}
     misc/dialog/dialog.jquery-ui.js: {}
+    # The remaining JavaScript assets previously came from core/jquery.ui, a
+    # deprecated library.
+    # All weights are based on on the requirements defined within each file.
+    # @todo replace with solution in https://drupal.org/node/2158943
+    assets/vendor/jquery.ui/ui/widgets/dialog-min.js: { weight: -11.4, minified: true }
+    assets/vendor/jquery.ui/ui/widgets/button-min.js: { weight: -11.5, minified: true }
+    assets/vendor/jquery.ui/ui/widgets/checkboxradio-min.js: { weight: -11.6, minified: true }
+    assets/vendor/jquery.ui/ui/widgets/draggable-min.js: { weight: -11.6, minified: true }
+    assets/vendor/jquery.ui/ui/widgets/resizable-min.js: { weight: -11.6, minified: true }
+    assets/vendor/jquery.ui/ui/widgets/controlgroup-min.js: { weight: -11.7, minified: true }
+    assets/vendor/jquery.ui/ui/form-reset-mixin-min.js: { weight: -11.7, minified: true }
+    assets/vendor/jquery.ui/ui/labels-min.js: { weight: -11.7, minified: true }
+    assets/vendor/jquery.ui/ui/widgets/mouse-min.js: { weight: -11.7, minified: true }
+    assets/vendor/jquery.ui/ui/tabbable-min.js: { weight: -11.7, minified: true }
+    assets/vendor/jquery.ui/ui/data-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/disable-selection-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/form-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/jquery-1-7-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/scroll-parent-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/unique-id-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/escape-selector-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/focusable-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/ie-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/keycode-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/plugin-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/position-min.js: { weight: -11.8,  minified: true }
+    assets/vendor/jquery.ui/ui/safe-active-element-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/safe-blur-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/widget-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/version-min.js: { weight: -11.9, minified: true }
+  # All CSS assets previously came from core/jquery.ui, a deprecated library.
+  # @todo replace with solution found in https://drupal.org/node/2158943
+  css:
+    component:
+      assets/vendor/jquery.ui/themes/base/dialog.css: { weight: -11.4 }
+      assets/vendor/jquery.ui/themes/base/button.css: { weight: -11.5 }
+      assets/vendor/jquery.ui/themes/base/checkboxradio.css: { weight: -11.6 }
+      assets/vendor/jquery.ui/themes/base/resizable.css: { weight: -11.6 }
+      assets/vendor/jquery.ui/themes/base/controlgroup.css: { weight: -11.7 }
+      assets/vendor/jquery.ui/themes/base/core.css: { weight: -11.8 }
+    theme:
+      assets/vendor/jquery.ui/themes/base/theme.css: { weight: -11.8 }
   dependencies:
     - core/jquery
     - core/drupal
     - core/drupalSettings
     - core/drupal.debounce
     - core/drupal.displace
-    - core/jquery.ui.dialog
 
 drupal.dialog.ajax:
   version: VERSION
@@ -265,10 +338,36 @@ drupal.tabbingmanager:
   version: VERSION
   js:
     misc/tabbingmanager.js: {}
+    # The remaining JavaScript assets previously came from core/jquery.ui, a
+    # deprecated library. These assets are used to provide the :tabbable pseudo
+    # selector to core's JavaScript. It should be possible to remove them once
+    # :tabbable is provided via a non-jQuery UI based library.
+    # All weights are based on on the requirements defined within each file.
+    # @todo replace with solution found in https://drupal.org/node/3113649
+    assets/vendor/jquery.ui/ui/labels-min.js: { weight: -11.7, minified: true }
+    assets/vendor/jquery.ui/ui/tabbable-min.js: { weight: -11.7, minified: true }
+    assets/vendor/jquery.ui/ui/disable-selection-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/form-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/escape-selector-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/focusable-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/ie-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/jquery-1-7-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/keycode-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/plugin-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/safe-active-element-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/safe-blur-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/scroll-parent-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/unique-id-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/version-min.js: { weight: -11.9, minified: true }
+  # All CSS assets previously came from core/jquery.ui, a deprecated library.
+  # @todo replace with solution found in https://drupal.org/node/3113649
+  css:
+    component:
+      assets/vendor/jquery.ui/themes/base/core.css: { weight: -11.8 }
+    theme:
+      assets/vendor/jquery.ui/themes/base/theme.css: { weight: -11.8 }
   dependencies:
     - core/jquery
-    # Supplies the ':tabbable' pseudo selector.
-    - core/jquery.ui
     - core/drupal
 
 drupal.tabledrag:
@@ -428,82 +527,105 @@ jquery.ui:
     url: https://raw.githubusercontent.com/jquery/jquery-ui/1.12.1/LICENSE.txt
     gpl-compatible: true
   js:
-    assets/vendor/jquery.ui/ui/data-min.js: { weight: -11, minified: true }
-    assets/vendor/jquery.ui/ui/disable-selection-min.js: { weight: -11, minified: true }
-    assets/vendor/jquery.ui/ui/form-min.js: { weight: -11, minified: true }
-    assets/vendor/jquery.ui/ui/labels-min.js: { weight: -11, minified: true }
-    assets/vendor/jquery.ui/ui/jquery-1-7-min.js: { weight: -11, minified: true }
-    assets/vendor/jquery.ui/ui/scroll-parent-min.js: { weight: -11, minified: true }
-    assets/vendor/jquery.ui/ui/tabbable-min.js: { weight: -11, minified: true }
-    assets/vendor/jquery.ui/ui/unique-id-min.js: { weight: -11, minified: true }
-    assets/vendor/jquery.ui/ui/version-min.js: { weight: -11, minified: true }
-    assets/vendor/jquery.ui/ui/escape-selector-min.js: { weight: -11, minified: true }
-    assets/vendor/jquery.ui/ui/focusable-min.js: { weight: -11, minified: true }
-    assets/vendor/jquery.ui/ui/ie-min.js: { weight: -11, minified: true }
-    assets/vendor/jquery.ui/ui/keycode-min.js: { weight: -11, minified: true }
-    assets/vendor/jquery.ui/ui/plugin-min.js: { weight: -11, minified: true }
-    assets/vendor/jquery.ui/ui/safe-active-element-min.js: { weight: -11, minified: true }
-    assets/vendor/jquery.ui/ui/safe-blur-min.js: { weight: -11, minified: true }
+    assets/vendor/jquery.ui/ui/labels-min.js: { weight: -11.7, minified: true }
+    assets/vendor/jquery.ui/ui/tabbable-min.js: { weight: -11.7, minified: true }
+    assets/vendor/jquery.ui/ui/data-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/disable-selection-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/escape-selector-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/focusable-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/form-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/ie-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/jquery-1-7-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/keycode-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/plugin-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/safe-active-element-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/safe-blur-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/scroll-parent-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/unique-id-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/version-min.js: { weight: -11.9, minified: true }
   css:
     component:
-      assets/vendor/jquery.ui/themes/base/core.css: {}
+      assets/vendor/jquery.ui/themes/base/core.css: { weight: -11.8 }
     theme:
-      assets/vendor/jquery.ui/themes/base/theme.css: {}
+      assets/vendor/jquery.ui/themes/base/theme.css: { weight: -11.8 }
   dependencies:
     - core/jquery
+  deprecated: &jquery_ui_unused_deprecated The "%library_id%" asset library is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. See https://www.drupal.org/node/3067969
 
 jquery.ui.autocomplete:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/widgets/autocomplete-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/widgets/autocomplete-min.js: { weight: -11.7, minified: true }
   css:
     component:
-      assets/vendor/jquery.ui/themes/base/autocomplete.css: {}
+      assets/vendor/jquery.ui/themes/base/autocomplete.css: { weight: -11.7 }
   dependencies:
     - core/jquery.ui
     - core/jquery.ui.widget
     - core/jquery.ui.position
     - core/jquery.ui.menu
+  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.button:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/widgets/checkboxradio-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/widgets/controlgroup-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/widgets/button-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/widgets/button-min.js: { weight: -11.5, minified: true }
+    assets/vendor/jquery.ui/ui/widgets/checkboxradio-min.js: { weight: -11.6, minified: true }
+    assets/vendor/jquery.ui/ui/widgets/controlgroup-min.js: { weight: -11.7, minified: true }
   css:
     component:
-      assets/vendor/jquery.ui/themes/base/checkboxradio.css: {}
-      assets/vendor/jquery.ui/themes/base/controlgroup.css: {}
-      assets/vendor/jquery.ui/themes/base/button.css: {}
+      assets/vendor/jquery.ui/themes/base/button.css: { weight: -11.5 }
+      assets/vendor/jquery.ui/themes/base/checkboxradio.css: { weight: -11.6 }
+      assets/vendor/jquery.ui/themes/base/controlgroup.css: { weight: -11.7 }
   dependencies:
     - core/jquery.ui
     - core/jquery.ui.widget
+  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.dialog:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/form-reset-mixin-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/widgets/checkboxradio-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/widgets/controlgroup-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/widgets/button-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/widgets/dialog-min.js: { minified: true }
+    # All weights are based on on the requirements defined within each file.
+    assets/vendor/jquery.ui/ui/widgets/dialog-min.js: { weight: -11.4, minified: true }
+    assets/vendor/jquery.ui/ui/widgets/button-min.js: { weight: -11.5, minified: true }
+    assets/vendor/jquery.ui/ui/widgets/checkboxradio-min.js: { weight: -11.6, minified: true }
+    assets/vendor/jquery.ui/ui/widgets/draggable-min.js: { weight: -11.6, minified: true }
+    assets/vendor/jquery.ui/ui/widgets/resizable-min.js: { weight: -11.6, minified: true }
+    assets/vendor/jquery.ui/ui/widgets/controlgroup-min.js: { weight: -11.7, minified: true }
+    assets/vendor/jquery.ui/ui/form-reset-mixin-min.js: { weight: -11.7, minified: true }
+    assets/vendor/jquery.ui/ui/labels-min.js: { weight: -11.7, minified: true }
+    assets/vendor/jquery.ui/ui/widgets/mouse-min.js: { weight: -11.7, minified: true }
+    assets/vendor/jquery.ui/ui/tabbable-min.js: { weight: -11.7, minified: true }
+    assets/vendor/jquery.ui/ui/data-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/disable-selection-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/escape-selector-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/focusable-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/form-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/ie-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/jquery-1-7-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/keycode-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/plugin-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/position-min.js: { weight: -11.8,  minified: true }
+    assets/vendor/jquery.ui/ui/safe-active-element-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/safe-blur-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/scroll-parent-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/unique-id-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/widget-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/version-min.js: { weight: -11.9, minified: true }
   css:
     component:
-      assets/vendor/jquery.ui/themes/base/checkboxradio.css: {}
-      assets/vendor/jquery.ui/themes/base/controlgroup.css: {}
-      assets/vendor/jquery.ui/themes/base/button.css: {}
-      assets/vendor/jquery.ui/themes/base/dialog.css: {}
-  dependencies:
-    - core/jquery.ui
-    - core/jquery.ui.widget
-    - core/jquery.ui.draggable
-    - core/jquery.ui.mouse
-    - core/jquery.ui.position
-    - core/jquery.ui.resizable
+      assets/vendor/jquery.ui/themes/base/dialog.css: { weight: -11.4 }
+      assets/vendor/jquery.ui/themes/base/button.css: { weight: -11.5 }
+      assets/vendor/jquery.ui/themes/base/checkboxradio.css: { weight: -11.6 }
+      assets/vendor/jquery.ui/themes/base/resizable.css: { weight: -11.6 }
+      assets/vendor/jquery.ui/themes/base/controlgroup.css: { weight: -11.7 }
+      assets/vendor/jquery.ui/themes/base/core.css: { weight: -11.8 }
+    theme:
+      assets/vendor/jquery.ui/themes/base/theme.css: { weight: -11.8 }
+  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.draggable:
   version: *jquery_ui_version
@@ -514,57 +636,63 @@ jquery.ui.draggable:
     - core/jquery.ui
     - core/jquery.ui.mouse
     - core/jquery.ui.widget
+  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.menu:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/widgets/menu-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/widgets/menu-min.js: { weight: -11.7, minified: true }
   css:
     component:
-      assets/vendor/jquery.ui/themes/base/menu.css: {}
+      assets/vendor/jquery.ui/themes/base/menu.css: { weight: -11.7 }
   dependencies:
     - core/jquery.ui
     - core/jquery.ui.position
     - core/jquery.ui.widget
+  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.mouse:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/ie-min.js: { minified: true }
-    assets/vendor/jquery.ui/ui/widgets/mouse-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/widgets/mouse-min.js: { weight: -11.7, minified: true }
+    assets/vendor/jquery.ui/ui/ie-min.js: { weight: -11.8, minified: true }
   dependencies:
     - core/jquery.ui.widget
+  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.position:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/position-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/position-min.js: { weight: -11.8, minified: true }
   dependencies:
     - core/jquery.ui
+  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.resizable:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/widgets/resizable-min.js: { minified: true }
+    assets/vendor/jquery.ui/ui/widgets/resizable-min.js: { weight: -11.6, minified: true }
   css:
     component:
-      assets/vendor/jquery.ui/themes/base/resizable.css: {}
+      assets/vendor/jquery.ui/themes/base/resizable.css: { weight: -11.6 }
   dependencies:
     - core/jquery.ui
     - core/jquery.ui.widget
     - core/jquery.ui.mouse
+  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.widget:
   version: *jquery_ui_version
   license: *jquery_ui_license
   js:
-    assets/vendor/jquery.ui/ui/widget-min.js: { weight: -10, minified: true }
+    assets/vendor/jquery.ui/ui/widget-min.js: { weight: -11.8, minified: true }
   dependencies:
     - core/jquery.ui
+  deprecated: *jquery_ui_unused_deprecated
 
 modernizr:
   # Block the page from being loaded until Modernizr is initialized.
