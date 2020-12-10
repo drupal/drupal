@@ -79,8 +79,13 @@ abstract class FileSystemBase implements ReadinessCheckerInterface {
    */
   protected function getVendorPath(): string {
     if ($this->vendorDir === NULL) {
-      $class_loader_reflection = new \ReflectionClass(ClassLoader::class);
-      $this->vendorDir = dirname($class_loader_reflection->getFileName(), 2);
+      try {
+        $class_loader_reflection = new \ReflectionClass(ClassLoader::class);
+        $this->vendorDir = dirname($class_loader_reflection->getFileName(), 2);
+      }
+      catch (\ReflectionException $e) {
+        // ClassLoader not exists. Keep vendorDir value as is. 
+      }
     }
     return $this->vendorDir;
   }
