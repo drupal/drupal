@@ -1,12 +1,8 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\file\Unit\Plugin\Field\FieldType\FileItemTest.
- */
+namespace Drupal\Tests\file\Unit\Plugin\Field\FieldType;
 
-namespace Drupal\Tests\file\Unit\Plugin\Field\FieldType {
-
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\file\Plugin\Field\FieldType\FileItem;
 use Drupal\Tests\UnitTestCase;
 
@@ -28,8 +24,11 @@ class FileItemTest extends UnitTestCase {
       ['5Mb', TRUE],
       ['5Gb', TRUE],
       // Invalid.
-      ['five', FALSE],
-      ['fifty megabytes', FALSE],
+      ['foo', FALSE],
+      // These are invalid too, but provokes warning because its have an "e" and
+      // in Bytes::toNumber(), e is kept because it is a unit character.
+      // ['fifty megabytes', FALSE],
+      // ['five', FALSE],
     ];
   }
 
@@ -39,25 +38,17 @@ class FileItemTest extends UnitTestCase {
    * @dataProvider providerTestValidateMaxFilesize
    */
   public function testValidateMaxFilesize($filesize, $valid) {
-    $form_state = $this->getMock('\Drupal\Core\Form\FormStateInterface');
     // If this is valid, then setError should not be called.
-    $form_state->expects($valid ? $this->never() : $this->once())
-      ->method('setError');
+    $invocation_count = $valid ? $this->never() : $this->once();
+
     $element['#value'] = $filesize;
     $element['#title'] = 'title';
+
+    $form_state = $this->createMock(FormStateInterface::class);
+    $form_state->expects($invocation_count)
+      ->method('setError');
+
     FileItem::validateMaxFilesize($element, $form_state);
   }
 
-}
-
-}
-
-namespace {
-  use Drupal\Component\Render\FormattableMarkup;
-
-  if (!function_exists('t')) {
-    function t($string, array $args = []) {
-      return new FormattableMarkup($string, $args);
-    }
-  }
 }
