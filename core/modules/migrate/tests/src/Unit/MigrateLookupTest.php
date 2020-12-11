@@ -53,6 +53,7 @@ class MigrateLookupTest extends MigrateTestCase {
     $migration_plugin_manager = $this->prophesize(MigrationPluginManagerInterface::class);
     $migration_plugin_manager->createInstances('bad_plugin')->willReturn([]);
     $this->expectException(PluginNotFoundException::class);
+    $this->expectExceptionMessage("Plugin ID 'bad_plugin' was not found.");
     $lookup = new MigrateLookup($migration_plugin_manager->reveal());
     $lookup->lookup('bad_plugin', [1]);
   }
