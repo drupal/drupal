@@ -1,7 +1,0 @@
-jqueryui_library_asset_test_page:
-  path: '/jqueryui_library_assets_test/{library}'
-  defaults:
-    _controller: '\Drupal\jqueryui_library_assets_test\Controller\JqueryUiTestAssetsController::build'
-    _title: 'Test jQuery UI asset loading order'
-  requirements:
-    _access: 'TRUE'

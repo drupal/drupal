@@ -147,7 +147,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
     $this->assertAssetInLibrary('public://my_css/vertical-tabs.css', 'core', 'drupal.vertical-tabs', 'css');
 
     // Assert a protocol-relative URI.
-    $this->assertAssetInLibrary('//my-server/my_theme/js/overridden.js', 'core', 'drupal.displace', 'js');
+    $this->assertAssetInLibrary('//my-server/my_theme/css/jquery_ui.css', 'core', 'jquery.ui', 'css');
 
     // Assert an absolute URI.
     $this->assertAssetInLibrary('http://example.com/my_theme/css/farbtastic.css', 'core', 'jquery.farbtastic', 'css');
