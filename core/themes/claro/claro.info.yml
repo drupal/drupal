@@ -59,15 +59,22 @@ libraries-override:
     js:
       misc/vertical-tabs.js: js/vertical-tabs.js
 
-  core/jquery.ui:
+  core/drupal.autocomplete:
     css:
       theme:
         assets/vendor/jquery.ui/themes/base/theme.css: false
 
-  core/jquery.ui.dialog:
+  core/drupal.tabbingmanager:
+    css:
+      theme:
+        assets/vendor/jquery.ui/themes/base/theme.css: false
+
+  core/drupal.dialog:
     css:
       component:
         assets/vendor/jquery.ui/themes/base/dialog.css: false
+      theme:
+        assets/vendor/jquery.ui/themes/base/theme.css: false
 
   user/drupal.user:
     css:
@@ -118,6 +125,7 @@ libraries-extend:
     - claro/details-focus
   core/drupal.dialog:
     - claro/claro.drupal.dialog
+    - claro/claro.jquery.ui
   core/drupal.dropbutton:
     - claro/dropbutton
   core/drupal.checkbox:
@@ -126,10 +134,10 @@ libraries-extend:
     - claro/messages
   core/drupal.progress:
     - claro/progress
+  core/drupal.tabbingmanager:
+    - claro/claro.jquery.ui
   core/drupal.vertical-tabs:
     - claro/vertical-tabs
-  core/jquery.ui:
-    - claro/claro.jquery.ui
   file/drupal.file:
     - claro/file
   filter/drupal.filter.admin:
@@ -140,6 +148,7 @@ libraries-extend:
     - claro/system.admin
   core/drupal.autocomplete:
     - claro/autocomplete
+    - claro/claro.jquery.ui
   tour/tour-styling:
     - claro/tour-styling
   shortcut/drupal.shortcut:
