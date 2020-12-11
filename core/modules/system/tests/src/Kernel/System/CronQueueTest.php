@@ -182,4 +182,23 @@ class CronQueueTest extends KernelTestBase {
     $this->assertEquals(0, $queue->numberOfItems());
   }
 
+  /**
+   * Tests that database queue implementation complies with interfaces specs.
+   */
+  public function testDatabaseQueueReturnTypes(): void {
+    /** @var \Drupal\Core\Queue\DatabaseQueue $queue */
+    $queue = $this->container
+      ->get('queue')
+      ->get('cron_queue_test_database_delay_exception');
+    static::assertInstanceOf(DatabaseQueue::class, $queue);
+
+    $queue->createItem(12);
+    $item = $queue->claimItem();
+    static::assertTrue($queue->delayItem($item, 1));
+    static::assertTrue($queue->releaseItem($item));
+    $queue->deleteItem($item);
+    static::assertFalse($queue->delayItem($item, 1));
+    static::assertFalse($queue->releaseItem($item));
+  }
+
 }
