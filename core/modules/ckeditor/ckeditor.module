@@ -34,7 +34,14 @@ function ckeditor_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dt>' . t('Accessibility features') . '</dt>';
       $output .= '<dd>' . t('The built in WYSIWYG editor (CKEditor) comes with a number of <a href=":features">accessibility features</a>. CKEditor comes with built in <a href=":shortcuts">keyboard shortcuts</a>, which can be beneficial for both power users and keyboard only users.', [':features' => 'http://docs.ckeditor.com/#!/guide/dev_a11y', ':shortcuts' => 'http://docs.ckeditor.com/#!/guide/dev_shortcuts']) . '</dd>';
       $output .= '<dt>' . t('Generating accessible content') . '</dt>';
-      $output .= '<dd>' . t('HTML tables can be created with both table headers as well as caption/summary elements. Alt text is required by default on images added through CKEditor (note that this can be overridden). Semantic HTML5 figure/figcaption are available to add captions to images.') . '</dd>';
+      $output .= '<dd>';
+      $output .= '<ul>';
+      $output .= '<li>' . t('HTML tables can be created with table headers and caption/summary elements.') . '</li>';
+      $output .= '<li>' . t('Alt text is required by default on images added through CKEditor (note that this can be overridden).') . '</li>';
+      $output .= '<li>' . t('Semantic HTML5 figure/figcaption are available to add captions to images.') . '</li>';
+      $output .= '<li>' . t('To support multilingual page content, CKEditor can be configured to include a language button in the toolbar.') . '</li>';
+      $output .= '</ul>';
+      $output .= '</dd>';
       $output .= '</dl>';
       return $output;
   }
