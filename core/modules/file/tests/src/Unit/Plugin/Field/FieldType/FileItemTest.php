@@ -53,11 +53,11 @@ class FileItemTest extends UnitTestCase {
 }
 
 namespace {
-  use Drupal\Component\Utility\String;
+  use Drupal\Component\Render\FormattableMarkup;
 
   if (!function_exists('t')) {
     function t($string, array $args = []) {
-      return String::format($string, $args);
+      return new FormattableMarkup($string, $args);
     }
   }
 }
