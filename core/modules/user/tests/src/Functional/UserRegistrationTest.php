@@ -5,6 +5,7 @@ namespace Drupal\Tests\user\Functional;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Test\AssertMailTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\BrowserTestBase;
@@ -16,6 +17,10 @@ use Drupal\user\UserInterface;
  * @group user
  */
 class UserRegistrationTest extends BrowserTestBase {
+
+  use AssertMailTrait {
+    getMails as drupalGetMails;
+  }
 
   /**
    * Modules to enable.
@@ -48,13 +53,22 @@ class UserRegistrationTest extends BrowserTestBase {
     $this->drupalPostForm('user/register', $edit, 'Create new account');
     $this->assertText('A welcome message with further instructions has been sent to your email address.');
 
-    /** @var EntityStorageInterface $storage */
+    /** @var \Drupal\Core\Entity\EntityStorageInterface $storage */
     $storage = $this->container->get('entity_type.manager')->getStorage('user');
     $accounts = $storage->loadByProperties(['name' => $name, 'mail' => $mail]);
     $new_user = reset($accounts);
     $this->assertTrue($new_user->isActive(), 'New account is active after registration.');
-    $resetURL = user_pass_reset_url($new_user);
-    $this->drupalGet($resetURL);
+
+    // Assume the most recent email is the registration email. Check it
+    // contains a "reset password" url containing uid/timestamp/hash. Further
+    // tests of behavior of that URL are in UserPasswordResetTest, except for
+    // the title displaying "Set" instead of "Reset" for a new user.
+    $_emails = $this->drupalGetMails();
+    $email = end($_emails);
+    $urls = [];
+    preg_match('#.+user/reset/\d+/\d+/.+#', $email['body'], $urls);
+    $this->assertNotEmpty($urls[0]);
+    $this->drupalGet($urls[0]);
     $this->assertSession()->titleEquals('Set password | Drupal');
 
     // Allow registration by site visitors, but require administrator approval.

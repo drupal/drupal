@@ -197,7 +197,7 @@ class UserController extends ControllerBase {
     // Time out, in seconds, until login URL expires.
     $timeout = $this->config('user.settings')->get('password_reset_timeout');
 
-    $expiration_date = $user->getLastLoginTime() ? $this->dateFormatter->format($timestamp + $timeout) : NULL;
+    $expiration_date = $this->dateFormatter->format($timestamp + $timeout);
     return $this->formBuilder()->getForm(UserPasswordResetForm::class, $user, $expiration_date, $timestamp, $hash);
   }
 
