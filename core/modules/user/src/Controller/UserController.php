@@ -234,8 +234,8 @@ class UserController extends ControllerBase {
 
     // Time out, in seconds, until login URL expires.
     $timeout = $this->config('user.settings')->get('password_reset_timeout');
-    // No time out for first time login.
-    if ($user->getLastLoginTime() && $current - $timestamp > $timeout) {
+    // Enforce a time out for all logins.
+    if ($current - $timestamp > $timeout) {
       $this->messenger()->addError($this->t('You have tried to use a one-time login link that has expired. Please request a new one using the form below.'));
       return $this->redirect('user.pass');
     }
