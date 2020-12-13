@@ -54,7 +54,7 @@ class Rebuilder {
     // This is executed based on old/previously known information, which is
     // sufficient, since new extensions cannot have any primed caches yet.
     \Drupal::moduleHandler()->invokeAll('cache_flush');
-    self::binsDeleteAll();
+    self::deleteAllCacheBins();
 
     // Flush asset file caches.
     \Drupal::service('asset.css.collection_optimizer')->deleteAll();
@@ -122,7 +122,7 @@ class Rebuilder {
   /**
    * Collects all bins and deletes all cache items in the each bin.
    */
-  public static function binsDeleteAll() {
+  public static function deleteAllCacheBins(): void {
     foreach (Cache::getBins() as $bin) {
       $bin->deleteAll();
     }

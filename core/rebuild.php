@@ -72,7 +72,7 @@ if (Settings::get('rebuild_access', FALSE) ||
     $request->setSession($kernel->getContainer()->get('session'));
   }
 
-  Rebuilder::binsDeleteAll();
+  Rebuilder::deleteAllCacheBins();
 
   // Disable recording of cached pages.
   \Drupal::service('page_cache_kill_switch')->trigger();
