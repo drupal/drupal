@@ -176,7 +176,7 @@ class UserPasswordForm extends FormBase {
       $this->messenger()->addStatus($this->t('Further instructions have been sent to your email address.'));
     }
 
-    $form_state->setRedirect('user.page');
+    $form_state->setRedirect('<front>');
   }
 
 }
