@@ -4,6 +4,8 @@ namespace Drupal\Tests\user\Kernel;
 
 use Drupal\Core\Test\AssertMailTrait;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
+use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\locale\Locale;
 
 /**
  * Tests _user_mail_notify() use of user.settings.notify.*.
@@ -11,6 +13,16 @@ use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
  * @group user
  */
 class UserMailNotifyTest extends EntityKernelTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  protected static $modules = [
+    'locale',
+    'language',
+  ];
 
   use AssertMailTrait {
     getMails as drupalGetMails;
@@ -92,6 +104,81 @@ class UserMailNotifyTest extends EntityKernelTestBase {
     $return = _user_mail_notify($op, $this->createUser());
     $this->assertNull($return);
     $this->assertEmpty($this->getMails());
+  }
+
+  /**
+   * Tests recovery email content and token langcode is aligned.
+   */
+  public function testUserRecoveryMailLanguage() {
+
+    // Install locale schema.
+    $this->installSchema('locale', [
+      'locales_source',
+      'locales_target',
+      'locales_location',
+    ]);
+
+    // Add new language for translation purpose.
+    ConfigurableLanguage::createFromLangcode('zh-hant')->save();
+    ConfigurableLanguage::createFromLangcode('fr')->save();
+
+    // Install configs.
+    $this->installConfig(['language', 'locale', 'user']);
+
+    locale_system_set_config_langcodes();
+    $langcodes = array_keys(\Drupal::languageManager()->getLanguages());
+    $names = Locale::config()->getComponentNames();
+    Locale::config()->updateConfigTranslations($names, $langcodes);
+
+    $this->config('user.settings')->set('notify.password_reset', TRUE)->save();
+
+    // Set language prefix.
+    $config = $this->config('language.negotiation');
+    $config->set('url.prefixes', ['en' => 'en', 'zh-hant' => 'zh', 'fr' => 'fr'])->save();
+
+    // Reset services to apply change.
+    \Drupal::service('kernel')->rebuildContainer();
+
+    // Update zh-hant password_reset config with custom translation.
+    $configLanguageOverride = $this->container->get('language_manager')->getLanguageConfigOverride('zh-hant', 'user.mail');
+    $configLanguageOverride->set('password_reset.subject', 'hant subject [user:display-name]')->save();
+    $configLanguageOverride->set('password_reset.body', 'hant body [user:display-name] and token link [user:one-time-login-url]')->save();
+
+    // Update fr password_reset config with custom translation.
+    $configLanguageOverride = $this->container->get('language_manager')->getLanguageConfigOverride('fr', 'user.mail');
+    $configLanguageOverride->set('password_reset.subject', 'fr subject [user:display-name]')->save();
+    $configLanguageOverride->set('password_reset.body', 'fr body [user:display-name] and token link [user:one-time-login-url]')->save();
+
+    // Current language is 'en'.
+    $currentLanguage = $this->container->get('language_manager')->getCurrentLanguage()->getId();
+    $this->assertSame('en', $currentLanguage);
+
+    // Set preferred_langcode to 'zh-hant'.
+    $user = $this->createUser();
+    $user->set('preferred_langcode', 'zh-hant')->save();
+    $preferredLangcode = $user->getPreferredLangcode();
+    $this->assertSame('zh-hant', $preferredLangcode);
+
+    // Recovery email should respect user preferred langcode by default if
+    // langcode not set.
+    $params['account'] = $user;
+    $default_email = \Drupal::service('plugin.manager.mail')->mail('user', 'password_reset', $user->getEmail(), $preferredLangcode, $params);
+    $this->assertTrue($default_email['result']);
+
+    // Assert for zh.
+    $this->assertMailString('subject', 'hant subject', 1);
+    $this->assertMailString('body', 'hant body', 1);
+    $this->assertMailString('body', 'zh/user/reset', 1);
+
+    // Recovery email should be fr when langcode specified.
+    $french_email = \Drupal::service('plugin.manager.mail')->mail('user', 'password_reset', $user->getEmail(), 'fr', $params);
+    $this->assertTrue($french_email['result']);
+
+    // Assert for fr.
+    $this->assertMailString('subject', 'fr subject', 1);
+    $this->assertMailString('body', 'fr body', 1);
+    $this->assertMailString('body', 'fr/user/reset', 1);
+
   }
 
 }
