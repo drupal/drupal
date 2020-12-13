@@ -28,7 +28,7 @@ class ClearTest extends CacheTestBase {
   /**
    * Tests \Drupal\Core\Cache\Rebuilder::rebuildAll().
    */
-  public function testrebuildAll() {
+  public function testRebuildAll() {
     // Create cache entries for each flushed cache bin.
     $bins = Cache::getBins();
     $this->assertNotEmpty($bins, 'Cache::getBins() returned bins to flush.');
