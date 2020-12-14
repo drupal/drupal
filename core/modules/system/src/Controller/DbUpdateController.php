@@ -119,6 +119,7 @@ class DbUpdateController extends ControllerBase {
     $this->bareHtmlPageRenderer = $bare_html_page_renderer;
     $this->postUpdateRegistry = $post_update_registry;
     if ($query_string === NULL) {
+      @trigger_error('$query_string is added since drupal:9.2.0 and required from drupal:10.0.0');
       $query_string = \Drupal::service('cache.query_string');
     }
     $this->queryString = $query_string;

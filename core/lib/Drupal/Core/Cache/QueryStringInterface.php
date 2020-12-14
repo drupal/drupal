@@ -16,11 +16,11 @@ interface QueryStringInterface {
    * @param string|null $value
    *   Set expected query string value if provided.
    */
-  public function reset($value = NULL);
+  public function reset(string $value = NULL): void;
 
   /**
    * Get query string added to all CSS and JavaScript files.
    */
-  public function get();
+  public function get(): string;
 
 }

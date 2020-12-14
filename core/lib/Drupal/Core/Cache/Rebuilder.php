@@ -49,7 +49,7 @@ class Rebuilder {
    * @see hook_cache_flush()
    * @see hook_rebuild()
    */
-  public static function rebuildAll() {
+  public static function rebuildAll(): void {
     // Flush all persistent caches.
     // This is executed based on old/previously known information, which is
     // sufficient, since new extensions cannot have any primed caches yet.
