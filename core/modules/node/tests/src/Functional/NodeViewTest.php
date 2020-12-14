@@ -43,31 +43,10 @@ class NodeViewTest extends NodeTestBase {
 
     // Link relations are present regardless of access for authenticated users.
     $result = $this->xpath('//link[@rel = "version-history"]');
-    $this->assertEqual($result[0]->getAttribute('href'), $node->toUrl('version-history')->setAbsolute()->toString());
+    $this->assertEmpty($result);
 
     $result = $this->xpath('//link[@rel = "edit-form"]');
-    $this->assertEqual($result[0]->getAttribute('href'), $node->toUrl('edit-form')->setAbsolute()->toString());
-
-    // Give anonymous users access to edit the node. Do this through the UI to
-    // ensure caches are handled properly.
-    $this->drupalLogin($this->rootUser);
-    $edit = [
-      'anonymous[edit own ' . $node->bundle() . ' content]' => TRUE,
-    ];
-    $this->drupalPostForm('admin/people/permissions', $edit, 'Save permissions');
-    $this->drupalLogout();
-
-    // Anonymous user's should now see the edit-form link but not the
-    // version-history link.
-    $this->drupalGet($node->toUrl());
-    $result = $this->xpath('//link[@rel = "canonical"]');
-    $this->assertEqual($result[0]->getAttribute('href'), $node->toUrl()->setAbsolute()->toString());
-
-    $result = $this->xpath('//link[@rel = "version-history"]');
-    $this->assertEmpty($result, 'Version history not present for anonymous users without access.');
-
-    $result = $this->xpath('//link[@rel = "edit-form"]');
-    $this->assertEqual($result[0]->getAttribute('href'), $node->toUrl('edit-form')->setAbsolute()->toString());
+    $this->assertEmpty($result);
   }
 
   /**
@@ -79,7 +58,6 @@ class NodeViewTest extends NodeTestBase {
     $expected = [
       '<' . Html::escape($node->toUrl('canonical')->setAbsolute()->toString()) . '>; rel="canonical"',
       '<' . Html::escape($node->toUrl('canonical')->setAbsolute()->toString(), ['alias' => TRUE]) . '>; rel="shortlink"',
-      '<' . Html::escape($node->toUrl('revision')->setAbsolute()->toString()) . '>; rel="revision"',
     ];
 
     $this->drupalGet($node->toUrl());
