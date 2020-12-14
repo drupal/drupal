@@ -8,19 +8,11 @@ source:
   plugin: d7_variable_translation
   variables:
     - site_name
-    - site_mail
     - site_slogan
-    - site_frontpage
-    - site_403
-    - site_404
 process:
   langcode: language
   name: site_name
-  mail: site_mail
   slogan: site_slogan
-  'page/front': site_frontpage
-  'page/403': site_403
-  'page/404': site_404
 destination:
   plugin: config
   config_name: system.site
