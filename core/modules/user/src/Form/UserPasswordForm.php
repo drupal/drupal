@@ -137,7 +137,7 @@ class UserPasswordForm extends FormBase {
       $form['name']['#value'] = $user->getEmail();
       $form['mail'] = [
         '#prefix' => '<p>',
-        '#markup' => $this->t('Password reset instructions will be mailed to %email. You must log out to use the password reset link in the email.', ['%email' => $user->getEmail()]),
+        '#markup' => $this->t('Password reset instructions will be mailed to %email.', ['%email' => $user->getEmail()]),
         '#suffix' => '</p>',
       ];
     }
