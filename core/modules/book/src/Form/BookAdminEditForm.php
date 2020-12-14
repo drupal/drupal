@@ -5,6 +5,7 @@ namespace Drupal\book\Form;
 use Drupal\book\BookManager;
 use Drupal\book\BookManagerInterface;
 use Drupal\Component\Utility\Crypt;
+use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -35,16 +36,30 @@ class BookAdminEditForm extends FormBase {
   protected $bookManager;
 
   /**
+   * The entity repository service.
+   *
+   * @var \Drupal\Core\Entity\EntityRepositoryInterface
+   */
+  protected $entityRepository;
+
+  /**
    * Constructs a new BookAdminEditForm.
    *
    * @param \Drupal\Core\Entity\EntityStorageInterface $node_storage
    *   The custom block storage.
    * @param \Drupal\book\BookManagerInterface $book_manager
    *   The book manager.
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface|null $entity_repository
+   *   The entity repository service.
    */
-  public function __construct(EntityStorageInterface $node_storage, BookManagerInterface $book_manager) {
+  public function __construct(EntityStorageInterface $node_storage, BookManagerInterface $book_manager, EntityRepositoryInterface $entity_repository = NULL) {
     $this->nodeStorage = $node_storage;
     $this->bookManager = $book_manager;
+    if (!$entity_repository) {
+      @trigger_error('The entity.repository service must be passed to ' . __NAMESPACE__ . '\BookAdminEditForm::__construct(). It was added in drupal:9.2.0 and will be required before drupal:10.0.0.', E_USER_DEPRECATED);
+      $entity_repository = \Drupal::service('entity.repository');
+    }
+    $this->entityRepository = $entity_repository;
   }
 
   /**
@@ -54,7 +69,8 @@ class BookAdminEditForm extends FormBase {
     $entity_type_manager = $container->get('entity_type.manager');
     return new static(
       $entity_type_manager->getStorage('node'),
-      $container->get('book.manager')
+      $container->get('book.manager'),
+      $container->get('entity.repository')
     );
   }
 
@@ -116,6 +132,7 @@ class BookAdminEditForm extends FormBase {
           // Update the title if changed.
           if ($row['title']['#default_value'] != $values['title']) {
             $node = $this->nodeStorage->load($values['nid']);
+            $node = $this->entityRepository->getTranslationFromContext($node);
             $node->revision_log = $this->t('Title changed from %original to %current.', ['%original' => $node->label(), '%current' => $values['title']]);
             $node->title = $values['title'];
             $node->book['link_title'] = $values['title'];
