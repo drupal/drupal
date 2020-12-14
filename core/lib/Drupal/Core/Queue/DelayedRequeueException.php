@@ -29,9 +29,16 @@ class DelayedRequeueException extends \RuntimeException {
    * Constructs a DelayedRequeueException.
    *
    * @param int $delay
-   *   The desired delay interval for this item.
+   *   The desired delay interval for this item (in seconds).
+   * @param string $message
+   *   The error message.
+   * @param int $code
+   *   The error code.
+   * @param \Throwable|null $previous
+   *   The previous throwable used for the exception chaining.
    */
-  public function __construct(int $delay = 0) {
+  public function __construct(int $delay = 0, string $message = '', int $code = 0, \Throwable $previous = NULL) {
+    parent::__construct($message, $code, $previous);
     if ($delay > 0) {
       $this->delay = $delay;
     }
