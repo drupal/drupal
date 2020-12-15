@@ -68,8 +68,8 @@ class BookBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       $entity_repository = \Drupal::service('entity.repository');
     }
     if (!$language_manager) {
-      @trigger_error('The language.manager service must be passed to ' . __NAMESPACE__ . '\BookBreadcrumbBuilder::__construct(). It was added in drupal:9.2.0 and will be required before drupal:10.0.0.', E_USER_DEPRECATED);
-      $language_manager = \Drupal::service('language.manager');
+      @trigger_error('The language_manager service must be passed to ' . __NAMESPACE__ . '\BookBreadcrumbBuilder::__construct(). It was added in drupal:9.2.0 and will be required before drupal:10.0.0.', E_USER_DEPRECATED);
+      $language_manager = \Drupal::service('language_manager');
     }
     $this->entityRepository = $entity_repository;
     $this->languageManager = $language_manager;
