@@ -44,7 +44,9 @@ class MenuLinkTranslation extends MenuLink {
    * {@inheritdoc}
    */
   public function prepareRow(Row $row) {
-    parent::prepareRow($row);
+    if (!parent::prepareRow($row)) {
+      return FALSE;
+    }
 
     // Put the language on the row as 'language'.
     $row->setSourceProperty('language', $row->getSourceProperty('lt_language'));

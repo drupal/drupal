@@ -55,7 +55,9 @@ class MenuLinkTranslation extends MenuLink {
    * {@inheritdoc}
    */
   public function prepareRow(Row $row) {
-    parent::prepareRow($row);
+    if (!parent::prepareRow($row)) {
+      return FALSE;
+    }
 
     // Save the translation for this property.
     $property_in_row = $row->getSourceProperty('property');

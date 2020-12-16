@@ -50,7 +50,9 @@ class TermLocalizedTranslation extends Term {
    * {@inheritdoc}
    */
   public function prepareRow(Row $row) {
-    parent::prepareRow($row);
+    if (!parent::prepareRow($row)) {
+      return FALSE;
+    }
 
     // Override language with ltlanguage.
     $language = $row->getSourceProperty('ltlanguage');
