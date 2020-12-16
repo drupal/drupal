@@ -603,7 +603,7 @@ function _filter_url_parse_email_links($match) {
 }
 
 /**
- * Makes links out of domain names starting with "www."
+ * Makes links out of domain names starting with "www.".
  *
  * Callback for preg_replace_callback() within _filter_url().
  */
@@ -658,7 +658,7 @@ function _filter_url_escape_comments($match, $escape = NULL) {
 }
 
 /**
- * Shortens long URLs to http://www.example.com/long/url…
+ * Shortens a long URL to a given length ending with an ellipsis.
  */
 function _filter_url_trim($text, $length = NULL) {
   static $_length;

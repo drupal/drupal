@@ -65,7 +65,10 @@ trait WorkspaceTestTrait {
   }
 
   /**
-   * Creates the following workspace hierarchy:
+   * Creates a test workspace hierarchy.
+   *
+   * The full hierarchy including the default workspaces 'live' and 'stage' is:
+   *
    * live
    * - stage
    *   - dev

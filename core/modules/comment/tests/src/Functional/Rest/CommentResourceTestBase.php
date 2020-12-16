@@ -334,7 +334,7 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
   }
 
   /**
-   * Tests POSTing a comment with and without 'skip comment approval'
+   * Tests POSTing a comment with and without 'skip comment approval'.
    */
   public function testPostSkipCommentApproval() {
     $this->initAuthentication();

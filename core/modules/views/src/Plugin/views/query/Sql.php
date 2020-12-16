@@ -1558,7 +1558,7 @@ class Sql extends QueryPluginBase {
 
   /**
    * Loads all entities contained in the passed-in $results.
-   *.
+   *
    * If the entity belongs to the base table, then it gets stored in
    * $result->_entity. Otherwise, it gets stored in
    * $result->_relationship_entities[$relationship_id];

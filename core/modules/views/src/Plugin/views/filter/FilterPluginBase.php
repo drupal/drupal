@@ -307,7 +307,8 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
 
   /**
    * Provide a list of options for the default operator form.
-   * Should be overridden by classes that don't override operatorForm
+   *
+   * Should be overridden by classes that don't override operatorForm.
    */
   public function operatorOptions() {
     return [];
@@ -320,6 +321,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
 
   /**
    * Perform any necessary changes to the form values prior to storage.
+   *
    * There is no need for this function to actually store the data.
    */
   public function operatorSubmit($form, FormStateInterface $form_state) {}
@@ -354,6 +356,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
 
   /**
    * Perform any necessary changes to the form values prior to storage.
+   *
    * There is no need for this function to actually store the data.
    */
   protected function valueSubmit($form, FormStateInterface $form_state) {}
@@ -984,7 +987,8 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
 
   /**
    * Build the form to let users create the group of exposed filters.
-   * This form is displayed when users click on button 'Build group'
+   *
+   * This form is displayed when users click on button 'Build group'.
    */
   protected function buildExposedFiltersGroupForm(&$form, FormStateInterface $form_state) {
     if (empty($this->options['exposed']) || empty($this->options['is_grouped'])) {

@@ -97,7 +97,7 @@ class Test {
   }
 
   /**
-   * Sets an HTTP header,
+   * Sets an HTTP header.
    *
    * @param string $name
    *   The header name.

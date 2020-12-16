@@ -23,7 +23,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * {inheritdoc}
+   * {@inheritdoc}
    */
   protected $defaultCacheContexts = [
     'languages:language_interface',

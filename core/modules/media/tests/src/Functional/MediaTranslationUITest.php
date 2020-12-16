@@ -20,7 +20,7 @@ class MediaTranslationUITest extends ContentTranslationUITestBase {
   protected $defaultTheme = 'classy';
 
   /**
-   * {inheritdoc}
+   * {@inheritdoc}
    */
   protected $defaultCacheContexts = [
     'languages:language_interface',
@@ -33,7 +33,7 @@ class MediaTranslationUITest extends ContentTranslationUITestBase {
   ];
 
   /**
-   * {inheritdoc}
+   * {@inheritdoc}
    */
   protected static $modules = [
     'language',

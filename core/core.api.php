@@ -2036,7 +2036,7 @@ function hook_mail_alter(&$message) {
 }
 
 /**
- * Prepares a message based on parameters;
+ * Prepares a message based on parameters.
  *
  * This hook is called from MailManagerInterface->mail(). Note that hook_mail(),
  * unlike hook_mail_alter(), is only called on the $module argument to

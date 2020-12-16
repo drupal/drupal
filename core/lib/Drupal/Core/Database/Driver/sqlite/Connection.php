@@ -47,17 +47,20 @@ class Connection extends DatabaseConnection {
   ];
 
   /**
-   * All databases attached to the current database. This is used to allow
-   * prefixes to be safely handled without locking the table
+   * All databases attached to the current database.
+   *
+   * This is used to allow prefixes to be safely handled without locking the
+   * table.
    *
    * @var array
    */
   protected $attachedDatabases = [];
 
   /**
-   * Whether or not a table has been dropped this request: the destructor will
-   * only try to get rid of unnecessary databases if there is potential of them
-   * being empty.
+   * Whether or not a table has been dropped this request.
+   *
+   * The destructor will only try to get rid of unnecessary databases if there
+   * is potential of them being empty.
    *
    * This variable is set to public because Schema needs to
    * access it. However, it should not be manually set.

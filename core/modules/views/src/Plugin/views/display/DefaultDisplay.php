@@ -25,8 +25,7 @@ class DefaultDisplay extends DisplayPluginBase {
   protected $usesAttachments = TRUE;
 
   /**
-   * Determine if this display is the 'default' display which contains
-   * fallback settings
+   * Determine if this display is the default which contains fallback settings.
    */
   public function isDefaultDisplay() {
     return TRUE;

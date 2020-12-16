@@ -62,7 +62,7 @@ class StateFormatterTest extends KernelTestBase {
   }
 
   /**
-   * Test cases for ::
+   * Test cases for testStateFieldFormatter().
    */
   public function formatterTestCases() {
     return [
