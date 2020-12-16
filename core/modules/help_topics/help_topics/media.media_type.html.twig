@@ -1,0 +1,25 @@
+---
+label: 'Adding a new media type'
+related:
+  - core.media
+  - field_ui.add_field
+  - field_ui.reference_field
+---
+{% set structure = render_var(url('help.help_topic', {'id': 'core.content_structure'})) %}
+{% set overview = render_var(url('help.help_topic', {'id': 'core.media'})) %}
+{% set media = render_var(url('entity.media_type.collection')) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Add a new media type that can be referenced in Media reference fields; media types are a content entity type. See the <a href="{{ overview }}">Managing media</a> topic for an overview of media items and media types, and the <a href="{{ structure }}">Managing content structure</a> topic for more information on content entities and fields.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Structure</em> &gt; <a href="{{ media }}"><em>Media types</em></a>.{% endtrans %}</li>
+  <li>{% trans %}If there is not already a media type for the type of media you want to use on your site, click <em>Add media type</em>.{% endtrans %}</li>
+  <li>{% trans %}Enter a <em>Name</em> and <em>Description</em> for your media type, and select the <em>Media source</em>.{% endtrans %}</li>
+  <li>{% trans %}For most media sources, there is additional information that will need to be stored with your media item, in a field on your media type. Under <em>Media source configuration</em>, select an existing field to re-use to store this information, or select <em> - Create -</em> to create a new field.{% endtrans %}</li>
+  <li>{% trans %}Note the types of metadata in the <em>Field mapping</em> section that can be mapped to fields on your media type.{% endtrans %}</li>
+  <li>{% trans %}Click <em>Save</em>.{% endtrans %}</li>
+  <li>{% trans %}Optionally, add additional fields for the metadata noted above or for other information that you want to store to your media type by clicking on <em>Manage fields</em> (see related topic below).{% endtrans %}</li>
+  <li>{% trans %}If you have added metadata fields, click <em>Edit</em>. Under <em>Field mapping</em>, select the fields you added for each piece of metadata information.{% endtrans %}</li>
+  <li>{% trans %}Click <em>Save</em>.{% endtrans %}</li>
+  <li>{% trans %}You can now use this media type by adding a Media reference field to any content entity sub-type. See related topic below.{% endtrans %}</li>
+</ol>
