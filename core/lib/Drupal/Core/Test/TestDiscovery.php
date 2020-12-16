@@ -136,6 +136,7 @@ class TestDiscovery {
    *   An array of tests keyed by the group name. If a test is annotated to
    *   belong to multiple groups, it will appear under all group keys it belongs
    *   to.
+   *
    * @code
    *     $groups['block'] => array(
    *       'Drupal\Tests\block\Functional\BlockTest' => array(

@@ -47,7 +47,8 @@
   <rule ref="Drupal.Commenting.DocComment">
     <!-- Sniff for these errors: SpacingAfterTagGroup, WrongEnd, SpacingBetween,
       ContentAfterOpen, SpacingBeforeShort, TagValueIndent, ShortStartSpace,
-      SpacingAfter, LongNotCapital, ShortFullStop -->
+      SpacingAfter, LongNotCapital, ShortFullStop, TagGroupSpacing, Empty,
+      TagsNotGrouped -->
     <!-- ParamNotFirst still not decided for PHPUnit-based tests.
       @see https://www.drupal.org/node/2253915 -->
     <exclude name="Drupal.Commenting.DocComment.ParamNotFirst"/>

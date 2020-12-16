@@ -475,6 +475,7 @@ class PoHeader {
    *   Number of the plural string to be used for the given plural value.
    *
    * @see parseArithmetic()
+   *
    * @throws \Exception
    */
   protected function evaluatePlural($element_stack, $n) {
