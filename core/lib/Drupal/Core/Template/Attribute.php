@@ -32,8 +32,11 @@ use Drupal\Component\Utility\NestedArray;
  * template, use the "without" filter to prevent attributes that have already
  * been printed from being printed again. For example:
  * @code
- *  <cat class="{{ attributes.class }} my-custom-class"{{ attributes|without('class') }}>
- *  {# Produces <cat class="cat black-cat white-cat black-white-cat my-custom-class" id="socks"> #}
+ * <cat class="{{ attributes.class }} my-custom-class"{{ attributes|without('class') }}>
+ * @endcode
+ * Produces:
+ * @code
+ * <cat class="cat black-cat white-cat black-white-cat my-custom-class" id="socks">
  * @endcode
  *
  * The attribute keys and values are automatically escaped for output with
