@@ -1,0 +1,5 @@
+name: 'Migrate module prepareRow tests'
+type: module
+description: 'Support module for source plugin prepareRow testing.'
+package: Testing
+version: VERSION

@@ -16,7 +16,7 @@ abstract class MigrateSourceTestBase extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['migrate'];
+  protected static $modules = ['migrate', 'migrate_skip_all_rows_test'];
 
   /**
    * The mocked migration.
@@ -146,6 +146,7 @@ abstract class MigrateSourceTestBase extends KernelTestBase {
    */
   public function testSource(array $source_data, array $expected_data, $expected_count = NULL, array $configuration = [], $high_water = NULL) {
     $plugin = $this->getPlugin($configuration);
+    $clone_plugin = clone $plugin;
 
     // All source plugins must define IDs.
     $this->assertNotEmpty($plugin->getIds());
@@ -194,6 +195,12 @@ abstract class MigrateSourceTestBase extends KernelTestBase {
     // foreach loop was entered if the expected count is greater than 0.
     if ($expected_count > 0) {
       $this->assertGreaterThan(0, $i);
+
+      // Test that we can skip all rows.
+      \Drupal::state()->set('migrate_skip_all_rows_test_migrate_prepare_row', TRUE);
+      foreach ($clone_plugin as $row) {
+        $this->fail('Row not skipped');
+      }
     }
   }
 

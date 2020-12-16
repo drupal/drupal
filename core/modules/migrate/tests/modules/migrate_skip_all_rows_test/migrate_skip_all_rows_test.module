@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ * Test module for testing the migration source plugin prepareRow() exception
+ * handling.
+ */
+
+use Drupal\migrate\Plugin\MigrationInterface;
+use Drupal\migrate\MigrateSkipRowException;
+use Drupal\migrate\Plugin\MigrateSourceInterface;
+use Drupal\migrate\Row;
+
+/**
+ * Implements hook_migrate_prepare_row().
+ */
+function migrate_skip_all_rows_test_migrate_prepare_row(Row $row, MigrateSourceInterface $source, MigrationInterface $migration) {
+  if (\Drupal::state()->get('migrate_skip_all_rows_test_migrate_prepare_row')) {
+    throw new MigrateSkipRowException();
+  }
+}
