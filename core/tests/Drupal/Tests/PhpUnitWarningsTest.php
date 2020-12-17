@@ -113,7 +113,7 @@ class PhpUnitWarningsTest extends UnitTestCase {
     if (RunnerVersion::getMajor() > 8) {
       $this->markTestSkipped("In PHPUnit 9+, expectExceptionMessageRegExp() is removed.");
     }
-    $this->expectDeprecation('expectExceptionMessageRegExp() is deprecated in PHPUnit 8 and will be removed in PHPUnit 9.');
+    $this->expectDeprecation('expectExceptionMessageRegExp() is deprecated in PHPUnit 8 and will be removed in PHPUnit 9. Use expectExceptionMessageMatches() instead.');
     $this->expectException(\Exception::class);
     $this->expectExceptionMessageRegExp('/An exception .*/');
     throw new \Exception('An exception has been triggered');
