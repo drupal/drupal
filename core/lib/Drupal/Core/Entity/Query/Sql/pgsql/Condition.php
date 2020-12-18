@@ -18,18 +18,17 @@ class Condition extends BaseCondition {
       $condition['where'] = 'LOWER(' . $sql_query->escapeField($condition['real_field']) . ') ' . $condition['operator'] . ' (';
       $condition['where_args'] = [];
 
-      $n = 1;
       // Only use the array values in case an associative array is passed as an
       // argument following similar pattern in
       // \Drupal\Core\Database\Connection::expandArguments().
-      foreach ($condition['value'] as $value) {
-        $condition['where'] .= 'LOWER(:value' . $n . '),';
-        $condition['where_args'][':value' . $n] = $value;
-        $n++;
+      $where_prefix = str_replace('.', '_', $condition['real_field']);
+      foreach ($condition['value'] as $key => $value) {
+        $where_id = $where_prefix . $key;
+        $condition['where'] .= 'LOWER(:' . $where_id . '),';
+        $condition['where_args'][':' . $where_id] = $value;
       }
       $condition['where'] = trim($condition['where'], ',');
       $condition['where'] .= ')';
-      return;
     }
     parent::translateCondition($condition, $sql_query, $case_sensitive);
   }
