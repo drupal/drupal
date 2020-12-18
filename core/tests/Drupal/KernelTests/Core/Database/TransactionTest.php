@@ -76,7 +76,7 @@ class TransactionTest extends DatabaseTestBase {
       // Roll back the transaction, if requested.
       // This rollback should propagate to the last savepoint.
       $txn->rollBack();
-      $this->assertTrue(($this->connection->transactionDepth() == $depth), 'Transaction has rolled back to the last savepoint after calling rollBack().');
+      $this->assertSame($depth, $this->connection->transactionDepth(), 'Transaction has rolled back to the last savepoint after calling rollBack().');
     }
   }
 
@@ -134,7 +134,7 @@ class TransactionTest extends DatabaseTestBase {
       // Roll back the transaction, if requested.
       // This rollback should propagate to the last savepoint.
       $txn->rollBack();
-      $this->assertTrue(($this->connection->transactionDepth() == $depth), 'Transaction has rolled back to the last savepoint after calling rollBack().');
+      $this->assertSame($depth, $this->connection->transactionDepth(), 'Transaction has rolled back to the last savepoint after calling rollBack().');
     }
   }
 

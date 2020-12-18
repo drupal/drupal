@@ -79,7 +79,7 @@ class SessionTest extends BrowserTestBase {
     $matches = [];
     preg_match('/\s*session_id:(.*)\n/', $this->getSession()->getPage()->getContent(), $matches);
     $this->assertTrue(!empty($matches[1]), 'Found session ID after logging in.');
-    $this->assertTrue($matches[1] != $original_session, 'Session ID changed after login.');
+    $this->assertNotSame($original_session, $matches[1], 'Session ID changed after login.');
   }
 
   /**

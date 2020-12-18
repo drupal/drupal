@@ -79,9 +79,9 @@ class JsonTest extends TestCase {
   public function testEncodingStartEnd() {
     $json = Json::encode($this->string);
     // The first and last characters should be ", and no others.
-    $this->assertTrue($json[0] == '"', 'A JSON encoded string begins with ".');
-    $this->assertTrue($json[strlen($json) - 1] == '"', 'A JSON encoded string ends with ".');
-    $this->assertTrue(substr_count($json, '"') == 2, 'A JSON encoded string contains exactly two ".');
+    $this->assertStringStartsWith('"', $json, 'A JSON encoded string begins with ".');
+    $this->assertStringEndsWith('"', $json, 'A JSON encoded string ends with ".');
+    $this->assertSame(2, substr_count($json, '"'), 'A JSON encoded string contains exactly two ".');
   }
 
   /**

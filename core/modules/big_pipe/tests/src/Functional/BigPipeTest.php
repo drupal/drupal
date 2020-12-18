@@ -311,7 +311,7 @@ class BigPipeTest extends BrowserTestBase {
     $this->assertNoRaw('The count is 2.');
     $this->assertNoRaw('The count is 3.');
     $raw_content = $this->getSession()->getPage()->getContent();
-    $this->assertTrue(substr_count($raw_content, $expected_placeholder_replacement) == 1, 'Only one placeholder replacement was found for the duplicate #lazy_builder arrays.');
+    $this->assertSame(1, substr_count($raw_content, $expected_placeholder_replacement), 'Only one placeholder replacement was found for the duplicate #lazy_builder arrays.');
 
     // By calling performMetaRefresh() here, we simulate JavaScript being
     // disabled, because as far as the BigPipe module is concerned, it is

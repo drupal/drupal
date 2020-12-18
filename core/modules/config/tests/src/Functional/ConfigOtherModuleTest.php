@@ -107,11 +107,11 @@ class ConfigOtherModuleTest extends BrowserTestBase {
    */
   public function testUninstall() {
     $this->installModule('views');
-    $this->assertTrue($this->getStorage('view')->load('frontpage') === NULL, 'After installing Views, frontpage view which is dependant on the Node and Views modules does not exist.');
+    $this->assertNull($this->getStorage('view')->load('frontpage'), 'After installing Views, frontpage view which is dependant on the Node and Views modules does not exist.');
     $this->installModule('node');
-    $this->assertTrue($this->getStorage('view')->load('frontpage') !== NULL, 'After installing Node, frontpage view which is dependant on the Node and Views modules exists.');
+    $this->assertNotNull($this->getStorage('view')->load('frontpage'), 'After installing Node, frontpage view which is dependant on the Node and Views modules exists.');
     $this->uninstallModule('node');
-    $this->assertTrue($this->getStorage('view')->load('frontpage') === NULL, 'After uninstalling Node, frontpage view which is dependant on the Node and Views modules does not exist.');
+    $this->assertNull($this->getStorage('view')->load('frontpage'), 'After uninstalling Node, frontpage view which is dependant on the Node and Views modules does not exist.');
   }
 
   /**

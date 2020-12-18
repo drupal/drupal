@@ -113,7 +113,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
     $this->drupalPostForm('user/' . $this->adminUser->id() . '/shortcuts', ['set' => $new_set->id()], 'Change set');
     $this->assertSession()->statusCodeEquals(200);
     $current_set = shortcut_current_displayed_set($this->adminUser);
-    $this->assertTrue($new_set->id() == $current_set->id(), 'Successfully switched own shortcut set.');
+    $this->assertSame($current_set->id(), $new_set->id(), 'Successfully switched own shortcut set.');
   }
 
   /**
@@ -124,7 +124,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
 
     \Drupal::entityTypeManager()->getStorage('shortcut_set')->assignUser($new_set, $this->shortcutUser);
     $current_set = shortcut_current_displayed_set($this->shortcutUser);
-    $this->assertTrue($new_set->id() == $current_set->id(), "Successfully switched another user's shortcut set.");
+    $this->assertSame($current_set->id(), $new_set->id(), "Successfully switched another user's shortcut set.");
   }
 
   /**
@@ -166,7 +166,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
     $this->clickLink(t('Edit shortcut set'));
     $this->submitForm(['label' => $new_label], 'Save');
     $set = ShortcutSet::load($set->id());
-    $this->assertTrue($set->label() == $new_label, 'Shortcut set has been successfully renamed.');
+    $this->assertSame($new_label, $set->label(), 'Shortcut set has been successfully renamed.');
   }
 
   /**
@@ -180,7 +180,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
     $shortcut_set_storage->unassignUser($this->shortcutUser);
     $current_set = shortcut_current_displayed_set($this->shortcutUser);
     $default_set = shortcut_default_set($this->shortcutUser);
-    $this->assertTrue($current_set->id() == $default_set->id(), "Successfully unassigned another user's shortcut set.");
+    $this->assertSame($default_set->id(), $current_set->id(), "Successfully unassigned another user's shortcut set.");
   }
 
   /**

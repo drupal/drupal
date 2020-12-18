@@ -104,7 +104,7 @@ class ReadOnlyStorageTest extends UnitTestCase {
     }
 
     // Assert that the memory storage has not been altered.
-    $this->assertTrue($backup == $this->memory);
+    $this->assertEquals($backup, $this->memory);
   }
 
   /**

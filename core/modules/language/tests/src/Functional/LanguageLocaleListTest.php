@@ -78,7 +78,7 @@ class LanguageLocaleListTest extends BrowserTestBase {
     natcasesort($options_ordered);
 
     // Check the language list displayed is ordered.
-    $this->assertTrue($options === $options_ordered, 'Language list is ordered.');
+    $this->assertSame($options, $options_ordered, 'Language list is ordered.');
   }
 
 }

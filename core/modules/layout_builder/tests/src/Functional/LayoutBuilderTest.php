@@ -897,10 +897,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     // Extra fields display under "Content fields".
     $this->drupalGet("admin/structure/types/manage/bundle_with_section_field/display/default/layout");
     $this->clickLink('Add block');
-    $page = $this->getSession()->getPage();
-    $content_fields_category = $page->find('xpath', '//details/summary[contains(text(),"Content fields")]/parent::details');
-    $extra_field = strpos($content_fields_category->getText(), 'Extra label');
-    $this->assertTrue($extra_field !== FALSE);
+    $assert_session->elementTextContains('xpath', '//details/summary[contains(text(),"Content fields")]/parent::details', 'Extra label');
 
     $this->drupalGet('node');
     $assert_session->linkExists('Read more');
@@ -912,6 +909,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     // View the layout and add the extra field that is not visible by default.
     $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default/layout');
     $assert_session->pageTextNotContains('Extra Field 2');
+    $page = $this->getSession()->getPage();
     $page->clickLink('Add block');
     $page->clickLink('Extra Field 2');
     $page->pressButton('Add block');

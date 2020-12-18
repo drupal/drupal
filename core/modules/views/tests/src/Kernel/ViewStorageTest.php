@@ -85,7 +85,7 @@ class ViewStorageTest extends ViewsKernelTestBase {
     // expected properties.
     $this->assertInstanceOf(View::class, $view);
     foreach ($this->configProperties as $property) {
-      $this->assertTrue($view->get($property) !== NULL, new FormattableMarkup('Property: @property loaded onto View.', ['@property' => $property]));
+      $this->assertNotNull($view->get($property), new FormattableMarkup('Property: @property loaded onto View.', ['@property' => $property]));
     }
 
     // Check the displays have been loaded correctly from config display data.
@@ -137,7 +137,7 @@ class ViewStorageTest extends ViewsKernelTestBase {
 
     // Test all properties except displays.
     foreach ($properties as $property) {
-      $this->assertTrue($created->get($property) !== NULL, new FormattableMarkup('Property: @property created on View.', ['@property' => $property]));
+      $this->assertNotNull($created->get($property), new FormattableMarkup('Property: @property created on View.', ['@property' => $property]));
       $this->assertIdentical($values[$property], $created->get($property), new FormattableMarkup('Property value: @property matches configuration value.', ['@property' => $property]));
     }
 

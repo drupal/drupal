@@ -387,15 +387,15 @@ class CKEditorTest extends KernelTestBase {
     $langcodes = $this->ckeditor->getLangcodes();
 
     // Language codes transformed with browser mappings.
-    $this->assertTrue($langcodes['pt-pt'] == 'pt', '"pt" properly resolved');
-    $this->assertTrue($langcodes['zh-hans'] == 'zh-cn', '"zh-hans" properly resolved');
+    $this->assertSame('pt', $langcodes['pt-pt'], '"pt" properly resolved');
+    $this->assertSame('zh-cn', $langcodes['zh-hans'], '"zh-hans" properly resolved');
 
     // Language code both in Drupal and CKEditor.
-    $this->assertTrue($langcodes['gl'] == 'gl', '"gl" properly resolved');
+    $this->assertSame('gl', $langcodes['gl'], '"gl" properly resolved');
 
     // Language codes only in CKEditor.
-    $this->assertTrue($langcodes['en-au'] == 'en-au', '"en-au" properly resolved');
-    $this->assertTrue($langcodes['sr-latn'] == 'sr-latn', '"sr-latn" properly resolved');
+    $this->assertSame('en-au', $langcodes['en-au'], '"en-au" properly resolved');
+    $this->assertSame('sr-latn', $langcodes['sr-latn'], '"sr-latn" properly resolved');
 
     // No locale module, so even though languages are enabled, CKEditor should
     // still be in English.

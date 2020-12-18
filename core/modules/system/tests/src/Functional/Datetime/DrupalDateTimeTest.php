@@ -67,12 +67,12 @@ class DrupalDateTimeTest extends BrowserTestBase {
     // end up using the system timezone.
     $date = new DrupalDateTime($date_string);
     $timezone = $date->getTimezone()->getName();
-    $this->assertTrue($timezone == $system_timezone, 'DrupalDateTime uses the system timezone when there is no site timezone.');
+    $this->assertSame($system_timezone, $timezone, 'DrupalDateTime uses the system timezone when there is no site timezone.');
 
     // Create a date object with a specified timezone.
     $date = new DrupalDateTime($date_string, 'America/Yellowknife');
     $timezone = $date->getTimezone()->getName();
-    $this->assertTrue($timezone == 'America/Yellowknife', 'DrupalDateTime uses the specified timezone if provided.');
+    $this->assertSame('America/Yellowknife', $timezone, 'DrupalDateTime uses the specified timezone if provided.');
 
     // Set a site timezone.
     $this->config('system.date')->set('timezone.default', 'Europe/Warsaw')->save();
@@ -81,7 +81,7 @@ class DrupalDateTimeTest extends BrowserTestBase {
     // end up using the site timezone.
     $date = new DrupalDateTime($date_string);
     $timezone = $date->getTimezone()->getName();
-    $this->assertTrue($timezone == 'Europe/Warsaw', 'DrupalDateTime uses the site timezone if provided.');
+    $this->assertSame('Europe/Warsaw', $timezone, 'DrupalDateTime uses the site timezone if provided.');
 
     // Create user.
     $this->config('system.date')->set('timezone.user.configurable', 1)->save();
@@ -100,7 +100,7 @@ class DrupalDateTimeTest extends BrowserTestBase {
     // end up using the user timezone.
     $date = new DrupalDateTime($date_string);
     $timezone = $date->getTimezone()->getName();
-    $this->assertTrue($timezone == 'Asia/Manila', 'DrupalDateTime uses the user timezone, if configurable timezones are used and it is set.');
+    $this->assertSame('Asia/Manila', $timezone, 'DrupalDateTime uses the user timezone, if configurable timezones are used and it is set.');
   }
 
   /**

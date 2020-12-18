@@ -240,9 +240,9 @@ class FieldCrudTest extends FieldKernelTestBase {
 
     // Read the field back.
     $field = FieldConfig::load('entity_test.' . $this->fieldDefinition['bundle'] . '.' . $this->fieldDefinition['field_name']);
-    $this->assertTrue($this->fieldDefinition['field_name'] == $field->getName(), 'The field was properly read.');
-    $this->assertTrue($this->fieldDefinition['entity_type'] == $field->getTargetEntityTypeId(), 'The field was properly read.');
-    $this->assertTrue($this->fieldDefinition['bundle'] == $field->getTargetBundle(), 'The field was properly read.');
+    $this->assertSame($this->fieldDefinition['field_name'], $field->getName(), 'The field was properly read.');
+    $this->assertSame($this->fieldDefinition['entity_type'], $field->getTargetEntityTypeId(), 'The field was properly read.');
+    $this->assertSame($this->fieldDefinition['bundle'], $field->getTargetBundle(), 'The field was properly read.');
   }
 
   /**

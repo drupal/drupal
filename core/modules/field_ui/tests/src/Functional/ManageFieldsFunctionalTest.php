@@ -396,11 +396,11 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
   public function assertFieldSettings($bundle, $field_name, $string = 'dummy test string', $entity_type = 'node') {
     // Assert field storage settings.
     $field_storage = FieldStorageConfig::loadByName($entity_type, $field_name);
-    $this->assertTrue($field_storage->getSetting('test_field_storage_setting') == $string, 'Field storage settings were found.');
+    $this->assertSame($string, $field_storage->getSetting('test_field_storage_setting'), 'Field storage settings were found.');
 
     // Assert field settings.
     $field = FieldConfig::loadByName($entity_type, $bundle, $field_name);
-    $this->assertTrue($field->getSetting('test_field_setting') == $string, 'Field settings were found.');
+    $this->assertSame($string, $field->getSetting('test_field_setting'), 'Field settings were found.');
   }
 
   /**

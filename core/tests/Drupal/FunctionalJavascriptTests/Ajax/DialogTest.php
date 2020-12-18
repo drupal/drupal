@@ -153,7 +153,7 @@ class DialogTest extends WebDriverTestBase {
     $hidden_button_text = [];
     foreach ($hidden_buttons as $button) {
       $styles = $button->getAttribute('style');
-      $this->assertTrue((stripos($styles, 'display: none;') !== FALSE));
+      $this->assertStringContainsStringIgnoringCase('display: none;', $styles);
       $hidden_button_text[] = $button->getAttribute('value');
     }
 

@@ -326,7 +326,7 @@ class PagerTest extends BrowserTestBase {
     if (!isset($message)) {
       $message = "Class .$class found.";
     }
-    $this->assertTrue($element->hasClass($class) !== FALSE, $message);
+    $this->assertTrue($element->hasClass($class), $message);
   }
 
   /**
@@ -343,7 +343,7 @@ class PagerTest extends BrowserTestBase {
     if (!isset($message)) {
       $message = "Class .$class not found.";
     }
-    $this->assertTrue($element->hasClass($class) === FALSE, $message);
+    $this->assertFalse($element->hasClass($class), $message);
   }
 
 }

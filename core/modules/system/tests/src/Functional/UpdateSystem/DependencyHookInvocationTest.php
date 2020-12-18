@@ -38,9 +38,9 @@ class DependencyHookInvocationTest extends BrowserTestBase {
    */
   public function testHookUpdateDependencies() {
     $update_dependencies = update_retrieve_dependencies();
-    $this->assertTrue($update_dependencies['update_test_0'][8001]['update_test_1'] == 8001, 'An update function that has a dependency on two separate modules has the first dependency recorded correctly.');
-    $this->assertTrue($update_dependencies['update_test_0'][8001]['update_test_2'] == 8002, 'An update function that has a dependency on two separate modules has the second dependency recorded correctly.');
-    $this->assertTrue($update_dependencies['update_test_0'][8002]['update_test_1'] == 8003, 'An update function that depends on more than one update from the same module only has the dependency on the higher-numbered update function recorded.');
+    $this->assertSame(8001, $update_dependencies['update_test_0'][8001]['update_test_1'], 'An update function that has a dependency on two separate modules has the first dependency recorded correctly.');
+    $this->assertSame(8002, $update_dependencies['update_test_0'][8001]['update_test_2'], 'An update function that has a dependency on two separate modules has the second dependency recorded correctly.');
+    $this->assertSame(8003, $update_dependencies['update_test_0'][8002]['update_test_1'], 'An update function that depends on more than one update from the same module only has the dependency on the higher-numbered update function recorded.');
   }
 
 }

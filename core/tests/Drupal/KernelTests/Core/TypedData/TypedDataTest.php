@@ -68,10 +68,10 @@ class TypedDataTest extends KernelTestBase {
     // Boolean type.
     $typed_data = $this->createTypedData(['type' => 'boolean'], TRUE);
     $this->assertInstanceOf(BooleanInterface::class, $typed_data);
-    $this->assertTrue($typed_data->getValue() === TRUE, 'Boolean value was fetched.');
+    $this->assertTrue($typed_data->getValue(), 'Boolean value was fetched.');
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue(FALSE);
-    $this->assertTrue($typed_data->getValue() === FALSE, 'Boolean value was changed.');
+    $this->assertFalse($typed_data->getValue(), 'Boolean value was changed.');
     $this->assertEqual($typed_data->validate()->count(), 0);
     $this->assertIsString($typed_data->getString());
     $typed_data->setValue(NULL);
@@ -84,11 +84,11 @@ class TypedDataTest extends KernelTestBase {
     $value = $this->randomString();
     $typed_data = $this->createTypedData(['type' => 'string'], $value);
     $this->assertInstanceOf(StringInterface::class, $typed_data);
-    $this->assertTrue($typed_data->getValue() === $value, 'String value was fetched.');
+    $this->assertSame($value, $typed_data->getValue(), 'String value was fetched.');
     $this->assertEqual($typed_data->validate()->count(), 0);
     $new_value = $this->randomString();
     $typed_data->setValue($new_value);
-    $this->assertTrue($typed_data->getValue() === $new_value, 'String value was changed.');
+    $this->assertSame($new_value, $typed_data->getValue(), 'String value was changed.');
     $this->assertEqual($typed_data->validate()->count(), 0);
     // Funky test.
     $this->assertIsString($typed_data->getString());
@@ -102,11 +102,11 @@ class TypedDataTest extends KernelTestBase {
     $value = rand();
     $typed_data = $this->createTypedData(['type' => 'integer'], $value);
     $this->assertInstanceOf(IntegerInterface::class, $typed_data);
-    $this->assertTrue($typed_data->getValue() === $value, 'Integer value was fetched.');
+    $this->assertSame($value, $typed_data->getValue(), 'Integer value was fetched.');
     $this->assertEqual($typed_data->validate()->count(), 0);
     $new_value = rand();
     $typed_data->setValue($new_value);
-    $this->assertTrue($typed_data->getValue() === $new_value, 'Integer value was changed.');
+    $this->assertSame($new_value, $typed_data->getValue(), 'Integer value was changed.');
     $this->assertIsString($typed_data->getString());
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue(NULL);
@@ -119,11 +119,11 @@ class TypedDataTest extends KernelTestBase {
     $value = 123.45;
     $typed_data = $this->createTypedData(['type' => 'float'], $value);
     $this->assertInstanceOf(FloatInterface::class, $typed_data);
-    $this->assertTrue($typed_data->getValue() === $value, 'Float value was fetched.');
+    $this->assertSame($value, $typed_data->getValue(), 'Float value was fetched.');
     $this->assertEqual($typed_data->validate()->count(), 0);
     $new_value = 678.90;
     $typed_data->setValue($new_value);
-    $this->assertTrue($typed_data->getValue() === $new_value, 'Float value was changed.');
+    $this->assertSame($new_value, $typed_data->getValue(), 'Float value was changed.');
     $this->assertIsString($typed_data->getString());
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue(NULL);
@@ -136,15 +136,15 @@ class TypedDataTest extends KernelTestBase {
     $value = '2014-01-01T20:00:00+00:00';
     $typed_data = $this->createTypedData(['type' => 'datetime_iso8601'], $value);
     $this->assertInstanceOf(DateTimeInterface::class, $typed_data);
-    $this->assertTrue($typed_data->getValue() == $value, 'Date value was fetched.');
+    $this->assertSame($value, $typed_data->getValue());
     $this->assertEqual($typed_data->getValue(), $typed_data->getDateTime()->format('c'), 'Value representation of a date is ISO 8601');
     $this->assertSame('+00:00', $typed_data->getDateTime()->getTimezone()->getName());
     $this->assertEqual($typed_data->validate()->count(), 0);
     $new_value = '2014-01-02T20:00:00+00:00';
     $typed_data->setValue($new_value);
-    $this->assertTrue($typed_data->getDateTime()->format('c') === $new_value, 'Date value was changed and set by an ISO8601 date.');
+    $this->assertSame($new_value, $typed_data->getDateTime()->format('c'), 'Date value was changed and set by an ISO8601 date.');
     $this->assertEqual($typed_data->validate()->count(), 0);
-    $this->assertTrue($typed_data->getDateTime()->format('Y-m-d') == '2014-01-02', 'Date value was changed and set by date string.');
+    $this->assertSame('2014-01-02', $typed_data->getDateTime()->format('Y-m-d'), 'Date value was changed and set by date string.');
     $this->assertSame('+00:00', $typed_data->getDateTime()->getTimezone()->getName());
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue(NULL);
@@ -166,7 +166,7 @@ class TypedDataTest extends KernelTestBase {
     $value = '2014-01-01T20:00';
     $typed_data = $this->createTypedData(['type' => 'datetime_iso8601'], $value);
     $this->assertInstanceOf(DateTimeInterface::class, $typed_data);
-    $this->assertTrue($typed_data->getValue() == $value, 'Date value was fetched.');
+    $this->assertSame($value, $typed_data->getValue(), 'Date value was fetched.');
     // @todo Uncomment this assertion in https://www.drupal.org/project/drupal/issues/2716891.
     // $this->assertEqual($typed_data->getValue(), $typed_data->getDateTime()->format('c'), 'Value representation of a date is ISO 8601');
     $this->assertSame('UTC', $typed_data->getDateTime()->getTimezone()->getName());
@@ -176,7 +176,7 @@ class TypedDataTest extends KernelTestBase {
     // @todo Uncomment this assertion in https://www.drupal.org/project/drupal/issues/2716891.
     // $this->assertTrue($typed_data->getDateTime()->format('c') === $new_value, 'Date value was changed and set by an ISO8601 date.');
     $this->assertEqual($typed_data->validate()->count(), 0);
-    $this->assertTrue($typed_data->getDateTime()->format('Y-m-d') == '2014-01-02', 'Date value was changed and set by date string.');
+    $this->assertSame('2014-01-02', $typed_data->getDateTime()->format('Y-m-d'), 'Date value was changed and set by date string.');
     $this->assertSame('UTC', $typed_data->getDateTime()->getTimezone()->getName());
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue(NULL);
@@ -202,11 +202,11 @@ class TypedDataTest extends KernelTestBase {
     $value = REQUEST_TIME;
     $typed_data = $this->createTypedData(['type' => 'timestamp'], $value);
     $this->assertInstanceOf(DateTimeInterface::class, $typed_data);
-    $this->assertTrue($typed_data->getValue() == $value, 'Timestamp value was fetched.');
+    $this->assertSame($typed_data->getValue(), $value, 'Timestamp value was fetched.');
     $this->assertEqual($typed_data->validate()->count(), 0);
     $new_value = REQUEST_TIME + 1;
     $typed_data->setValue($new_value);
-    $this->assertTrue($typed_data->getValue() === $new_value, 'Timestamp value was changed and set.');
+    $this->assertSame($typed_data->getValue(), $new_value, 'Timestamp value was changed and set.');
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue(NULL);
     $this->assertNull($typed_data->getDateTime(), 'Timestamp wrapper is null-able.');
@@ -272,10 +272,10 @@ class TypedDataTest extends KernelTestBase {
     $uri = 'http://example.com/foo/';
     $typed_data = $this->createTypedData(['type' => 'uri'], $uri);
     $this->assertInstanceOf(UriInterface::class, $typed_data);
-    $this->assertTrue($typed_data->getValue() === $uri, 'URI value was fetched.');
+    $this->assertSame($uri, $typed_data->getValue(), 'URI value was fetched.');
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue($uri . 'bar.txt');
-    $this->assertTrue($typed_data->getValue() === $uri . 'bar.txt', 'URI value was changed.');
+    $this->assertSame($uri . 'bar.txt', $typed_data->getValue(), 'URI value was changed.');
     $this->assertIsString($typed_data->getString());
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue(NULL);
@@ -385,8 +385,8 @@ class TypedDataTest extends KernelTestBase {
     // Test isEmpty and cloning.
     $this->assertFalse($typed_data->isEmpty());
     $clone = clone $typed_data;
-    $this->assertTrue($typed_data->getValue() === $clone->getValue());
-    $this->assertTrue($typed_data[0] !== $clone[0]);
+    $this->assertSame($typed_data->getValue(), $clone->getValue());
+    $this->assertNotSame($typed_data[0], $clone[0]);
     $clone->setValue([]);
     $this->assertTrue($clone->isEmpty());
 
@@ -530,8 +530,8 @@ class TypedDataTest extends KernelTestBase {
     // Test isEmpty and cloning.
     $this->assertFalse($typed_data->isEmpty());
     $clone = clone $typed_data;
-    $this->assertTrue($typed_data->getValue() === $clone->getValue());
-    $this->assertTrue($typed_data->get('one') !== $clone->get('one'));
+    $this->assertSame($typed_data->getValue(), $clone->getValue());
+    $this->assertNotSame($typed_data->get('one'), $clone->get('one'));
     $clone->setValue([]);
     $this->assertTrue($clone->isEmpty());
 

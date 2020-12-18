@@ -157,12 +157,12 @@ class NodeRevisionsAllTest extends NodeTestBase {
       ]));
     $node_storage->resetCache([$node->id()]);
     $reverted_node = $node_storage->load($node->id());
-    $this->assertTrue(($nodes[1]->body->value == $reverted_node->body->value), 'Node reverted correctly.');
+    $this->assertSame($nodes[1]->body->value, $reverted_node->body->value, 'Node reverted correctly.');
 
     // Confirm the revision author is the user performing the revert.
-    $this->assertTrue($reverted_node->getRevisionUserId() == $this->loggedInUser->id(), 'Node revision author is user performing revert.');
+    $this->assertSame($this->loggedInUser->id(), $reverted_node->getRevisionUserId(), 'Node revision author is user performing revert.');
     // And that its not the revision author.
-    $this->assertTrue($reverted_node->getRevisionUserId() != $this->revisionUser->id(), 'Node revision author is not original revision author.');
+    $this->assertNotSame($this->revisionUser->id(), $reverted_node->getRevisionUserId(), 'Node revision author is not original revision author.');
 
     // Confirm that this is not the current version.
     $node = node_revision_load($node->getRevisionId());

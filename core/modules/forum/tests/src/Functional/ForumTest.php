@@ -462,7 +462,7 @@ class ForumTest extends BrowserTestBase {
     $tid = $term->id();
     $parent_tid = $taxonomy_term_storage->loadParents($tid);
     $parent_tid = empty($parent_tid) ? 0 : array_shift($parent_tid)->id();
-    $this->assertTrue($parent == $parent_tid, 'The ' . $type . ' is linked to its container');
+    $this->assertSame($parent, $parent_tid, 'The ' . $type . ' is linked to its container');
 
     $forum = $taxonomy_term_storage->load($tid);
     $this->assertEqual(($type == 'forum container'), (bool) $forum->forum_container->value);
@@ -590,7 +590,7 @@ class ForumTest extends BrowserTestBase {
 
     // Retrieve node object, ensure that the topic was created and in the proper forum.
     $node = $this->drupalGetNodeByTitle($title);
-    $this->assertTrue($node != NULL, new FormattableMarkup('Node @title was loaded', ['@title' => $title]));
+    $this->assertNotNull($node, new FormattableMarkup('Node @title was loaded', ['@title' => $title]));
     $this->assertEqual($node->taxonomy_forums->target_id, $tid, 'Saved forum topic was in the expected forum');
 
     // View forum topic.
@@ -672,7 +672,7 @@ class ForumTest extends BrowserTestBase {
         ->condition('vid', $node->getRevisionId())
         ->execute()
         ->fetchField();
-      $this->assertTrue($forum_tid == $this->rootForum['tid'], 'The forum topic is linked to a different forum');
+      $this->assertSame($this->rootForum['tid'], $forum_tid, 'The forum topic is linked to a different forum');
 
       // Delete forum node.
       $this->drupalPostForm('node/' . $node->id() . '/delete', [], 'Delete');

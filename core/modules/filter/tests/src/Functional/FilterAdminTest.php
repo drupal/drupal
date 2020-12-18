@@ -202,7 +202,7 @@ class FilterAdminTest extends BrowserTestBase {
     $plain = 'plain_text';
 
     // Check that the fallback format exists and cannot be disabled.
-    $this->assertTrue($plain == filter_fallback_format(), 'The fallback format is set to plain text.');
+    $this->assertSame($plain, filter_fallback_format(), 'The fallback format is set to plain text.');
     $this->drupalGet('admin/config/content/formats');
     $this->assertNoRaw('admin/config/content/formats/manage/' . $plain . '/disable');
     $this->drupalGet('admin/config/content/formats/manage/' . $plain . '/disable');

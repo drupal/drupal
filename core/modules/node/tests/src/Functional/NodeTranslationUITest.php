@@ -349,7 +349,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
           $num_match_found++;
         }
       }
-      $this->assertTrue($num_match_found == 1, 'There is 1 Read more link, ' . $expected_href . ', for the ' . $langcode . ' translation of a node on the frontpage. (Found ' . $num_match_found . '.)');
+      $this->assertSame(1, $num_match_found, 'There is 1 Read more link, ' . $expected_href . ', for the ' . $langcode . ' translation of a node on the frontpage. (Found ' . $num_match_found . '.)');
     }
 
     // Check the frontpage for 'Add new comment' links that include the
@@ -371,7 +371,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
           $num_match_found++;
         }
       }
-      $this->assertTrue($num_match_found == 1, 'There is 1 Add new comment link, ' . $expected_href . ', for the ' . $langcode . ' translation of a node on the frontpage. (Found ' . $num_match_found . '.)');
+      $this->assertSame(1, $num_match_found, 'There is 1 Add new comment link, ' . $expected_href . ', for the ' . $langcode . ' translation of a node on the frontpage. (Found ' . $num_match_found . '.)');
     }
 
     // Test that the node page displays the correct translations.
