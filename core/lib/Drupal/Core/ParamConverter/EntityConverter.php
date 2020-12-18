@@ -37,6 +37,23 @@ use Symfony\Component\Routing\Route;
  *         type: entity:{entity_type}
  * @endcode
  *
+ * The conversion can be limited to certain entity bundles by specifying a
+ * parameter 'bundle' definition property as an array:
+ * @code
+ * example.route:
+ *   path: foo/{example}
+ *   options:
+ *     parameters:
+ *       example:
+ *         type: entity:node
+ *         bundle:
+ *           - article
+ *           - news
+ * @endcode
+ * In the above example, only node entities of types 'article' and 'news' are
+ * converted. For a node of a different type, such as 'page', the route will
+ * return 404 'Not found'.
+ *
  * If your route needs to support pending revisions, you can specify the
  * "load_latest_revision" parameter. This will ensure that the latest revision
  * is returned, even if it is not the default one:
@@ -124,6 +141,10 @@ class EntityConverter implements ParamConverterInterface {
       unset($contexts[$context_id]);
     }
     $entity = $this->entityRepository->getCanonical($entity_type_id, $value, $contexts);
+
+    if (!empty($definition['bundle']) && !in_array($entity->bundle(), $definition['bundle'], TRUE)) {
+      return NULL;
+    }
 
     return $entity;
   }
