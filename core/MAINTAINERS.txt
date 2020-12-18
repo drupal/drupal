@@ -515,6 +515,10 @@ Admin UI & JavaScript Modernisation Initiative
 - Cristina Chumillas 'ckrina' https://www.drupal.org/u/ckrina
 - Sally Young 'justafish' https://www.drupal.org/u/justafish
 
+Decoupled Menus Initiative
+- Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
+- Gabe Sullice 'gabesullice' https://www.drupal.org/u/gabesullice
+
 Layout Initiative
 - Tim Plunkett 'tim.plunkett' https://www.drupal.org/u/tim.plunkett
 - Emilie Nouveau 'DyanneNova' https://www.drupal.org/u/dyannenova
