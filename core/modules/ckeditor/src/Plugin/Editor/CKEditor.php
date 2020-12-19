@@ -103,7 +103,6 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
     $this->moduleHandler = $module_handler;
     $this->languageManager = $language_manager;
     $this->renderer = $renderer;
-    @trigger_error('$state parameter is deprecated since drupal:9.2.0 and removed from drupal:10.0.0', \E_USER_DEPRECATED);
     $this->state = $state;
     if ($query_string === NULL) {
       @trigger_error('$query_string parameter is added since drupal:9.2.0 and is required from drupal:10.0.0.', \E_USER_DEPRECATED);
