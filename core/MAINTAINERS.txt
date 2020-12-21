@@ -548,5 +548,6 @@ participate in mentoring.
 - Jess Myrbo 'xjm' https://www.drupal.org/u/xjm
 - Matthew Radcliffe 'mradcliffe' https://www.drupal.org/u/mradcliffe
 - (provisional) Chris Darke 'chrisdarke' https://www.drupal.org/u/chrisdarke
+- (provisional) AmyJune Hineline 'volkswagenchick' https://www.drupal.org/u/volkswagenchick
 
 Provisional membership: None at this time.
