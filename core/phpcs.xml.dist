@@ -36,6 +36,7 @@
   <rule ref="Drupal.Classes.FullyQualifiedNamespace"/>
   <rule ref="Drupal.Classes.InterfaceName"/>
   <rule ref="Drupal.Classes.UnusedUseStatement"/>
+  <rule ref="Drupal.Classes.UseGlobalClass"/>
   <rule ref="Drupal.Classes.UseLeadingBackslash"/>
   <rule ref="Drupal.CSS.ClassDefinitionNameSpacing"/>
   <rule ref="Drupal.CSS.ColourDefinition"/>

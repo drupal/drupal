@@ -2,8 +2,6 @@
 
 namespace Drupal\Component\Assertion;
 
-use Traversable;
-
 /**
  * Generic inspections for the assert() statement.
  *
@@ -30,7 +28,7 @@ class Inspector {
    *   TRUE if $traversable can be traversed with foreach.
    */
   public static function assertTraversable($traversable) {
-    return is_array($traversable) || $traversable instanceof Traversable;
+    return is_array($traversable) || $traversable instanceof \Traversable;
   }
 
   /**
