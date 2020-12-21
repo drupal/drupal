@@ -8,7 +8,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\ClientInterface;
 
 /**
@@ -122,7 +122,7 @@ class OpmlFeedAdd extends FormBase {
         $response = $this->httpClient->get($form_state->getValue('remote'));
         $data = (string) $response->getBody();
       }
-      catch (RequestException $e) {
+      catch (TransferException $e) {
         $this->logger('aggregator')->warning('Failed to download OPML file due to "%error".', ['%error' => $e->getMessage()]);
         $this->messenger()->addStatus($this->t('Failed to download OPML file due to "%error".', ['%error' => $e->getMessage()]));
         return;

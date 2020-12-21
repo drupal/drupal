@@ -26,7 +26,7 @@ use Drupal\Core\Queue\QueueGarbageCollectionInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\Core\Url;
-use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\TransferException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
@@ -1175,7 +1175,7 @@ function system_retrieve_file($url, $destination = NULL, $managed = FALSE, $repl
       ->getBody();
     $local = $managed ? file_save_data($data, $path, $replace) : $file_system->saveData($data, $path, $replace);
   }
-  catch (RequestException $exception) {
+  catch (TransferException $exception) {
     \Drupal::messenger()->addError(t('Failed to fetch file due to error "%error"', ['%error' => $exception->getMessage()]));
     return FALSE;
   }
