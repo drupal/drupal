@@ -250,6 +250,14 @@ class Tables implements TablesInterface {
             $key++;
           }
         }
+        // If there are no additional specifiers but the field has a main
+        // property, use that to look up the column name.
+        elseif ($field_storage && $column) {
+          $columns = $field_storage->getColumns();
+          if (isset($columns[$column])) {
+            $sql_column = $table_mapping->getFieldColumnName($field_storage, $column);
+          }
+        }
 
         $table = $this->ensureEntityTable($index_prefix, $sql_column, $type, $langcode, $base_table, $entity_id_field, $entity_tables);
       }

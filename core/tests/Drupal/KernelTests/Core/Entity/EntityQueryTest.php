@@ -975,7 +975,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       'name' => $this->randomMachineName(),
       'vid' => 'tags',
       'description' => [
-        'value' => $this->randomString(),
+        'value' => 'description1',
         'format' => 'format1',
       ],
     ]);
@@ -985,20 +985,37 @@ class EntityQueryTest extends EntityKernelTestBase {
       'name' => $this->randomMachineName(),
       'vid' => 'tags',
       'description' => [
-        'value' => $this->randomString(),
+        'value' => 'description2',
         'format' => 'format2',
       ],
     ]);
     $term2->save();
+
+    // Test that the properties can be queried directly.
+    $ids = $this->container->get('entity_type.manager')
+      ->getStorage('taxonomy_term')
+      ->getQuery()
+      ->condition('description.value', 'description1')
+      ->execute();
+    $this->assertCount(1, $ids);
+    $this->assertEquals($term1->id(), reset($ids));
 
     $ids = $this->container->get('entity_type.manager')
       ->getStorage('taxonomy_term')
       ->getQuery()
       ->condition('description.format', 'format1')
       ->execute();
-
     $this->assertCount(1, $ids);
-    $this->assertEqual($term1->id(), reset($ids));
+    $this->assertEquals($term1->id(), reset($ids));
+
+    // Test that the main property is queried if no property is specified.
+    $ids = $this->container->get('entity_type.manager')
+      ->getStorage('taxonomy_term')
+      ->getQuery()
+      ->condition('description', 'description1')
+      ->execute();
+    $this->assertCount(1, $ids);
+    $this->assertEquals($term1->id(), reset($ids));
   }
 
   /**
