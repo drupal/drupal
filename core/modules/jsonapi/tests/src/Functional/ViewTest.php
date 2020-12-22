@@ -90,7 +90,7 @@ class ViewTest extends ResourceTestBase {
             'default' => [
               'display_plugin' => 'default',
               'id' => 'default',
-              'display_title' => 'Master',
+              'display_title' => 'Default',
               'position' => 0,
               'display_options' => [
                 'display_extenders' => [],

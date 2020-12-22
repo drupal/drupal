@@ -26,7 +26,7 @@ display:
           field: id
           plugin_id: numeric
     display_plugin: default
-    display_title: Master
+    display_title: Default
     id: default
     position: 0
   page_1:

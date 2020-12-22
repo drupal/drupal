@@ -34,8 +34,8 @@ class DisplayCRUDTest extends UITestBase {
    * Tests adding a display.
    */
   public function testAddDisplay() {
-    // Show the master display.
-    $this->config('views.settings')->set('ui.show.master_display', TRUE)->save();
+    // Show the default display.
+    $this->config('views.settings')->set('ui.show.default_display', TRUE)->save();
 
     $settings['page[create]'] = FALSE;
     $view = $this->randomView($settings);
@@ -47,7 +47,7 @@ class DisplayCRUDTest extends UITestBase {
     $this->submitForm([], 'Add Page');
     $this->assertSession()->linkByHrefExists($path_prefix . '/page_1', 0, 'Make sure after adding a display the new display appears in the UI');
 
-    $this->assertSession()->linkNotExists('Master*', 'Make sure the master display is not marked as changed.');
+    $this->assertSession()->linkNotExists('Default*', 'Make sure the default display is not marked as changed.');
     $this->assertSession()->linkExists('Page*', 0, 'Make sure the added display is marked as changed.');
 
     $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_1/path", ['path' => 'test/path'], 'Apply');

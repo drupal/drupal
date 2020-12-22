@@ -456,7 +456,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     $display['deleted'] = TRUE;
     $validate_deleted = $view->validate();
 
-    $this->assertNotIdentical($validate, $validate_deleted, 'Master display has not been validated.');
+    $this->assertNotSame($validate, $validate_deleted);
   }
 
   /**

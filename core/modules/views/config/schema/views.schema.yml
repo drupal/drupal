@@ -30,9 +30,9 @@ views.settings:
             advanced_column:
               type: boolean
               label: 'Always show advanced display settings'
-            master_display:
+            default_display:
               type: boolean
-              label: 'Always show the master (default) display'
+              label: 'Always show the default display'
             performance_statistics:
               type: boolean
               label: 'Show performance statistics'

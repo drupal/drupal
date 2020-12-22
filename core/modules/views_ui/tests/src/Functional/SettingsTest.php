@@ -45,9 +45,9 @@ class SettingsTest extends UITestBase {
     $this->drupalPostForm('admin/structure/views/settings', [], 'Save configuration');
     $this->assertText('The configuration options have been saved.');
 
-    // Configure to always show the master display.
+    // Configure to always show the default display.
     $edit = [
-      'ui_show_master_display' => TRUE,
+      'ui_show_default_display' => TRUE,
     ];
     $this->drupalPostForm('admin/structure/views/settings', $edit, 'Save configuration');
 
@@ -60,23 +60,23 @@ class SettingsTest extends UITestBase {
     $view['page[path]'] = $this->randomMachineName(16);
     $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
 
-    // Configure to not always show the master display.
-    // If you have a view without a page or block the master display should be
+    // Configure to not always show the default display.
+    // If you have a view without a page or block the default display should be
     // still shown.
     $edit = [
-      'ui_show_master_display' => FALSE,
+      'ui_show_default_display' => FALSE,
     ];
     $this->drupalPostForm('admin/structure/views/settings', $edit, 'Save configuration');
 
     $view['page[create]'] = FALSE;
     $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
 
-    // Create a view with an additional display, so master should be hidden.
+    // Create a view with an additional display, so default should be hidden.
     $view['page[create]'] = TRUE;
     $view['id'] = strtolower($this->randomMachineName());
     $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
 
-    $this->assertSession()->linkNotExists('Master');
+    $this->assertSession()->linkNotExists('Default');
 
     // Configure to always show the advanced settings.
     // @todo It doesn't seem to be a way to test this as this works just on js.

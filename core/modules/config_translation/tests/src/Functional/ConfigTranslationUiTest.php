@@ -596,8 +596,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
     $description = 'All content promoted to the front page.';
     $human_readable_name = 'Frontpage';
-    $display_settings_master = 'Master';
-    $display_options_master = '(Empty)';
+    $display_settings_default = 'Default';
+    $display_options_default = '(Empty)';
     $translation_base_url = 'admin/structure/views/view/frontpage/translate';
 
     $this->drupalGet($translation_base_url);
@@ -614,8 +614,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $edit = [
       'translation[config_names][views.view.frontpage][description]' => $description . " FR",
       'translation[config_names][views.view.frontpage][label]' => $human_readable_name . " FR",
-      'translation[config_names][views.view.frontpage][display][default][display_title]' => $display_settings_master . " FR",
-      'translation[config_names][views.view.frontpage][display][default][display_options][title]' => $display_options_master . " FR",
+      'translation[config_names][views.view.frontpage][display][default][display_title]' => $display_settings_default . " FR",
+      'translation[config_names][views.view.frontpage][display][default][display_options][title]' => $display_options_default . " FR",
     ];
     $this->drupalPostForm("$translation_base_url/fr/add", $edit, 'Save translation');
     $this->assertRaw(t('Successfully saved @language translation.', ['@language' => 'French']));
@@ -629,8 +629,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $this->drupalGet("$translation_base_url/fr/edit");
     $this->assertSession()->fieldValueEquals('translation[config_names][views.view.frontpage][description]', $description . " FR");
     $this->assertSession()->fieldValueEquals('translation[config_names][views.view.frontpage][label]', $human_readable_name . " FR");
-    $this->assertSession()->fieldValueEquals('translation[config_names][views.view.frontpage][display][default][display_title]', $display_settings_master . " FR");
-    $this->assertSession()->fieldValueEquals('translation[config_names][views.view.frontpage][display][default][display_options][title]', $display_options_master . " FR");
+    $this->assertSession()->fieldValueEquals('translation[config_names][views.view.frontpage][display][default][display_title]', $display_settings_default . " FR");
+    $this->assertSession()->fieldValueEquals('translation[config_names][views.view.frontpage][display][default][display_options][title]', $display_options_default . " FR");
   }
 
   /**

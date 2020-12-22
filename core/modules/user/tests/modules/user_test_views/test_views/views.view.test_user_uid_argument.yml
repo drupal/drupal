@@ -32,6 +32,6 @@ display:
           entity_type: user
           entity_field: uid
     display_plugin: default
-    display_title: Master
+    display_title: Default
     id: default
     position: 0

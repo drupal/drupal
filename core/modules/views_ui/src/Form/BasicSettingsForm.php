@@ -78,10 +78,10 @@ class BasicSettingsForm extends ConfigFormBase {
     // so this will make it easier to change if we do.
     $form['basic'] = [];
 
-    $form['basic']['ui_show_master_display'] = [
+    $form['basic']['ui_show_default_display'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Always show the master (default) display'),
-      '#default_value' => $config->get('ui.show.master_display'),
+      '#title' => $this->t('Always show the default display'),
+      '#default_value' => $config->get('ui.show.default_display'),
     ];
 
     $form['basic']['ui_show_advanced_column'] = [
@@ -173,7 +173,7 @@ class BasicSettingsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('views.settings')
-      ->set('ui.show.master_display', $form_state->getValue('ui_show_master_display'))
+      ->set('ui.show.default_display', $form_state->getValue('ui_show_default_display'))
       ->set('ui.show.advanced_column', $form_state->getValue('ui_show_advanced_column'))
       ->set('ui.show.display_embed', $form_state->getValue('ui_show_display_embed'))
       ->set('ui.exposed_filter_any_label', $form_state->getValue('ui_exposed_filter_any_label'))

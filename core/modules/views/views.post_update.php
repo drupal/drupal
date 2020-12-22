@@ -51,3 +51,13 @@ function views_post_update_field_names_for_multivalue_fields(&$sandbox = NULL) {
 function views_post_update_configuration_entity_relationships() {
   // Empty update to clear Views data.
 }
+
+/**
+ * Rename the setting for showing the default display to 'default_display'.
+ */
+function views_post_update_rename_default_display_setting() {
+  $config = \Drupal::configFactory()->getEditable('views.settings');
+  $config->set('ui.show.default_display', $config->get('ui.show.master_display'));
+  $config->clear('ui.show.master_display');
+  $config->save();
+}

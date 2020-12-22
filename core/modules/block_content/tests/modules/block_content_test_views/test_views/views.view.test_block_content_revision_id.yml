@@ -61,6 +61,6 @@ display:
           entity_type: block_content
           entity_field: revision_id
     display_plugin: default
-    display_title: Master
+    display_title: Default
     id: default
     position: 0

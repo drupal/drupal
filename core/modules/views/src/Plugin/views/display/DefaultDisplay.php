@@ -9,7 +9,7 @@ namespace Drupal\views\Plugin\views\display;
  *
  * @ViewsDisplay(
  *   id = "default",
- *   title = @Translation("Master"),
+ *   title = @Translation("Default"),
  *   help = @Translation("Default settings for this view."),
  *   theme = "views_view",
  *   no_ui = TRUE

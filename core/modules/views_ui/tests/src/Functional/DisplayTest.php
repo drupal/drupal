@@ -72,7 +72,7 @@ class DisplayTest extends UITestBase {
 
     $view = Views::getView($view['id']);
     $displays = $view->storage->get('display');
-    $this->assertEqual($displays['default']['position'], 0, 'Make sure the master display comes first.');
+    $this->assertEqual($displays['default']['position'], 0, 'Make sure the default display comes first.');
     $this->assertEqual($displays['block_1']['position'], 1, 'Make sure the block display comes before the page display.');
     $this->assertEqual($displays['page_1']['position'], 2, 'Make sure the page display comes after the block display.');
 
@@ -163,14 +163,14 @@ class DisplayTest extends UITestBase {
 
     // Test the default radio option on the link display form.
     $this->drupalPostForm($link_display_path, ['link_display' => 'page_1'], 'Apply');
-    // The form redirects to the master display.
+    // The form redirects to the default display.
     $this->drupalGet($path);
 
     $result = $this->xpath("//a[contains(@href, :path)]", [':path' => $link_display_path]);
     $this->assertEqual($result[0]->getHtml(), 'Page', 'Make sure that the link option summary shows the right linked display.');
 
     $this->drupalPostForm($link_display_path, ['link_display' => 'custom_url', 'link_url' => 'a-custom-url'], 'Apply');
-    // The form redirects to the master display.
+    // The form redirects to the default display.
     $this->drupalGet($path);
 
     $this->assertSession()->linkExists('Custom URL', 0, 'The link option has custom URL as summary.');
@@ -209,7 +209,7 @@ class DisplayTest extends UITestBase {
     $xss_markup = '"><script>alert(123)</script>';
     $view = $this->randomView();
     $view = View::load($view['id']);
-    \Drupal::configFactory()->getEditable('views.settings')->set('ui.show.master_display', TRUE)->save();
+    \Drupal::configFactory()->getEditable('views.settings')->set('ui.show.default_display', TRUE)->save();
 
     foreach ([$xss_markup, '&quot;><script>alert(123)</script>'] as $input) {
       $display =& $view->getDisplay('page_1');
@@ -277,15 +277,15 @@ class DisplayTest extends UITestBase {
     $this->drupalGet('admin/structure/views/nojs/handler/test_display/page_1/field/title');
     $this->assertNoText('All displays');
 
-    // Test that the override option is shown when display master is on.
-    \Drupal::configFactory()->getEditable('views.settings')->set('ui.show.master_display', TRUE)->save();
+    // Test that the override option is shown when default display is on.
+    \Drupal::configFactory()->getEditable('views.settings')->set('ui.show.default_display', TRUE)->save();
     $this->drupalGet('admin/structure/views/nojs/handler/test_display/page_1/field/title');
     $this->assertText('All displays');
 
     // Test that the override option is shown if the current display is
     // overridden so that the option to revert is available.
     $this->submitForm(['override[dropdown]' => 'page_1'], 'Apply');
-    \Drupal::configFactory()->getEditable('views.settings')->set('ui.show.master_display', FALSE)->save();
+    \Drupal::configFactory()->getEditable('views.settings')->set('ui.show.default_display', FALSE)->save();
     $this->drupalGet('admin/structure/views/nojs/handler/test_display/page_1/field/title');
     $this->assertText('Revert to default');
   }

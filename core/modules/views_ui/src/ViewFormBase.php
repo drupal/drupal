@@ -141,7 +141,7 @@ abstract class ViewFormBase extends EntityForm {
    */
   public function isDefaultDisplayShown(ViewUI $view) {
     // Always show the default display for advanced users who prefer that mode.
-    $advanced_mode = \Drupal::config('views.settings')->get('ui.show.master_display');
+    $advanced_mode = \Drupal::config('views.settings')->get('ui.show.default_display');
     // For other users, show the default display only if there are no others, and
     // hide it if there's at least one "real" display.
     $additional_displays = (count($view->getExecutable()->displayHandlers) == 1);
@@ -156,7 +156,7 @@ abstract class ViewFormBase extends EntityForm {
    */
   public function getDisplayLabel(ViewUI $view, $display_id, $check_changed = TRUE) {
     $display = $view->get('display');
-    $title = $display_id == 'default' ? $this->t('Master') : $display[$display_id]['display_title'];
+    $title = $display_id == 'default' ? $this->t('Default') : $display[$display_id]['display_title'];
     $title = views_ui_truncate($title, 25);
 
     if ($check_changed && !empty($view->changed_display[$display_id])) {
