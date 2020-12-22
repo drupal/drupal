@@ -585,6 +585,83 @@ class NodeTest extends MigrateSqlSourceTestBase {
     ];
     $tests[2]['expected_data'] = $tests[1]['expected_data'];
 
+    // Tests retrieval of only the page content type.
+    $tests[3]['source_data'] = $tests[0]['source_data'];
+
+    // The expected results.
+    $tests[3]['expected_data'] = [
+      [
+        'nid' => 1,
+        'vid' => 1,
+        'type' => 'page',
+        'language' => 'en',
+        'title' => 'node title 1',
+        'node_uid' => 1,
+        'revision_uid' => 2,
+        'status' => 1,
+        'created' => 1279051598,
+        'changed' => 1279051598,
+        'comment' => 2,
+        'promote' => 1,
+        'sticky' => 0,
+        'tnid' => 1,
+        'translate' => 0,
+        'log' => '',
+        'timestamp' => 1279051598,
+        'body' => [
+          [
+            'value' => 'Foobaz',
+            'summary' => '',
+            'format' => 'filtered_html',
+          ],
+        ],
+      ],
+      [
+        'nid' => 2,
+        'vid' => 2,
+        'type' => 'page',
+        'language' => 'en',
+        'title' => 'node title 2',
+        'node_uid' => 1,
+        'revision_uid' => 2,
+        'status' => 1,
+        'created' => 1279290908,
+        'changed' => 1279308993,
+        'comment' => 0,
+        'promote' => 1,
+        'sticky' => 0,
+        'tnid' => 2,
+        'translate' => 0,
+        'log' => '',
+        'timestamp' => 1279308993,
+        'body' => [
+          [
+            'value' => 'body 2',
+            'summary' => '',
+            'format' => 'filtered_html',
+          ],
+        ],
+      ],
+    ];
+
+    $tests[3]['expected_count'] = NULL;
+    $tests[3]['configuration'] = [
+      'node_type' => 'page',
+    ];
+
+    // Tests retrieval of article and page content types.
+    $tests[4] = $tests[3];
+    $tests[4]['configuration'] = [
+      'node_type' => ['article', 'page'],
+    ];
+    $tests[4]['expected_data'] = $tests[0]['expected_data'];
+
+    // Test retrieval of article and page content types when configuration
+    // key 'node_type' is not set.
+    $tests[5] = $tests[0];
+    unset($tests[5]['configuration']);
+    $tests[5]['expected_data'] = $tests[0]['expected_data'];
+
     return $tests;
   }
 

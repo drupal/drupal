@@ -14,10 +14,35 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Drupal 7 node source from database.
  *
+ * Available configuration keys:
+ * - node_type: The node_types to get from the source - can be a string or
+ *   an array. If not declared then nodes of all types will be retrieved.
+ *
+ * Examples:
+ *
+ * @code
+ * source:
+ *   plugin: d7_node
+ *   node_type: page
+ * @endcode
+ *
+ * In this example nodes type page are retrieved from the source database.
+ *
+ * @code
+ * source:
+ *   plugin: d7_node
+ *   node_type: [page, test]
+ * @endcode
+ *
+ * In this example nodes of type page and test are retrieved from the source
+ * database.
+ *
  * @MigrateSource(
  *   id = "d7_node",
  *   source_module = "node"
  * )
+ *
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  */
 class Node extends FieldableEntity {
   /**
@@ -93,7 +118,7 @@ class Node extends FieldableEntity {
     $this->handleTranslations($query);
 
     if (isset($this->configuration['node_type'])) {
-      $query->condition('n.type', $this->configuration['node_type']);
+      $query->condition('n.type', (array) $this->configuration['node_type'], 'IN');
     }
 
     return $query;
