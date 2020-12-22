@@ -169,9 +169,6 @@ class DefaultMenuLinkTreeManipulators {
    *   The menu link tree to manipulate.
    * @param array $node_links
    *   Stores references to menu link elements to effectively set access.
-   *
-   * @return \Drupal\Core\Menu\MenuLinkTreeElement[]
-   *   The manipulated menu link tree.
    */
   protected function collectNodeLinks(array &$tree, array &$node_links) {
     foreach ($tree as $key => &$element) {
