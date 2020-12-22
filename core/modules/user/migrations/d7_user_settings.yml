@@ -1,0 +1,30 @@
+id: d7_user_settings
+label: User configuration
+migration_tags:
+  - Drupal 7
+  - Configuration
+source:
+  plugin: variable
+  variables:
+    - user_mail_status_blocked_notify
+    - user_mail_status_activated_notify
+    - user_email_verification
+    - user_register
+    - anonymous
+  source_module: user
+process:
+  'notify/status_blocked': user_mail_status_blocked_notify
+  'notify/status_activated': user_mail_status_activated_notify
+  verify_mail: user_email_verification
+  register:
+    plugin: static_map
+    source: user_register
+    default_value: visitors_admin_approval
+    map:
+      2: visitors_admin_approval
+      1: visitors
+      0: admin_only
+  anonymous: anonymous
+destination:
+  plugin: config
+  config_name: user.settings
