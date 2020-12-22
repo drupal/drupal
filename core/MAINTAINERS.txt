@@ -518,11 +518,6 @@ Layout Initiative
 Media Initiative
 - Janez Urevc 'slashrsm' https://www.drupal.org/u/slashrsm
 
-PHPUnit Initiative
-- Daniel Wehner 'dawehner' https://www.drupal.org/u/dawehner
-- (provisional) Michiel Nugter 'michielnugter' https://www.drupal.org/u/michielnugter
-- (provisional) Len Swaneveld 'Lendude' https://www.drupal.org/u/lendude
-
 Workflow Initiative
 - Dick Olsson 'dixon_' https://www.drupal.org/u/dixon_
 
