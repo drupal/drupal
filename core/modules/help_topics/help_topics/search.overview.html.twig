@@ -9,7 +9,7 @@ related:
 {% set user_topic = render_var(url('help.help_topic', {'id': 'user.overview'})) %}
 <h2>{% trans %}What are search pages?{% endtrans %}</h2>
 <p>{% trans %}The core Search module organizes site search into <em>pages</em>. Each page allows users to search a particular type of content with a particular configuration. The configuration includes specifying a URL that starts with <em>search</em>, a name for the page, and additional options for some search page types.{% endtrans %}</p>
-<p>{% trans %}When users visit the main <a href={{ search_url }}>Search page</a>, they will see the configured search pages that they have access to. Each search page has a search form on it, and the page will display search results after the user enters keywords into the form and clicks the search button.{% endtrans %}</p>
+<p>{% trans %}When users visit the main <a href="{{ search_url }}">Search page</a>, they will see the configured search pages that they have access to. Each search page has a search form on it, and the page will display search results after the user enters keywords into the form and clicks the search button.{% endtrans %}</p>
 <h2>{% trans %}What modules provide site search?{% endtrans %}</h2>
 <p>{% trans %}The core Search module provides the ability to configure search pages; search page types are provided by both core and contributed modules. The core modules that provide search page types are:{% endtrans %}</p>
 <ul>
