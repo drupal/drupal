@@ -4,6 +4,7 @@ namespace Drupal\Tests\node\Kernel\Views;
 
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\node\Plugin\views\argument\Vid;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
@@ -52,6 +53,19 @@ class ArgumentNodeRevisionIdTest extends ViewsKernelTestBase {
     $view_nid = Views::getView('test_node_revision_id_argument');
     $this->executeView($view_nid, [$node->getRevisionId()]);
     $this->assertIdenticalResultset($view_nid, [['title' => 'test2']]);
+  }
+
+  /**
+   * Tests the Vid argument deprecation.
+   *
+   * @group legacy
+   */
+  public function testVidDeprecatedParameter() {
+    $this->expectDeprecation('Passing the database service to Drupal\node\Plugin\views\argument\Vid::__construct() is deprecated in drupal:9.2.0 and will be removed before drupal:10.0.0. See https://www.drupal.org/node/3178412');
+    $database = $this->container->get('database');
+    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $vid = new Vid([], 'test_plugin', [], $database, $node_storage);
+    $this->assertNotNull($vid);
   }
 
 }
