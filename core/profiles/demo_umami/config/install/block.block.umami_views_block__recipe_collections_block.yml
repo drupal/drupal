@@ -7,7 +7,7 @@ dependencies:
     - views
   theme:
     - umami
-id: views_block__recipe_collections_block
+id: umami_views_block__recipe_collections_block
 theme: umami
 region: content_bottom
 weight: 0

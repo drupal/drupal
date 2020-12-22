@@ -8,7 +8,7 @@ dependencies:
     - views
   theme:
     - umami
-id: views_block__promoted_items_block_1
+id: umami_views_block__promoted_items_block_1
 theme: umami
 region: banner_top
 weight: -6

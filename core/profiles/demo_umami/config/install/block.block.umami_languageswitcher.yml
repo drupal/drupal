@@ -5,7 +5,7 @@ dependencies:
     - language
   theme:
     - umami
-id: languageswitcher
+id: umami_languageswitcher
 theme: umami
 region: pre_header
 weight: 0

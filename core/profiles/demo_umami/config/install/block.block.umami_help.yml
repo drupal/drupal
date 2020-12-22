@@ -5,7 +5,7 @@ dependencies:
     - help
   theme:
     - umami
-id: help
+id: umami_help
 theme: umami
 region: highlighted
 weight: 0

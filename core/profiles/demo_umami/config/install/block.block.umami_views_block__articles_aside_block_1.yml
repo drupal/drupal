@@ -8,7 +8,7 @@ dependencies:
     - views
   theme:
     - umami
-id: views_block__articles_aside_block_1
+id: umami_views_block__articles_aside_block_1
 theme: umami
 region: sidebar
 weight: -7
