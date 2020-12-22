@@ -5,10 +5,16 @@ dependencies:
     - field.field.node.article.body
     - field.field.node.article.field_media_image
     - field.field.node.article.field_tags
+    - field.field.node.article.layout_builder__layout
     - node.type.article
   module:
+    - layout_builder
     - text
     - user
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
 id: node.article.default
 targetEntityType: node
 bundle: article
@@ -46,3 +52,4 @@ content:
 hidden:
   content_moderation_control: true
   langcode: true
+  layout_builder__layout: true

@@ -3,10 +3,16 @@ status: true
 dependencies:
   config:
     - field.field.node.page.body
+    - field.field.node.page.layout_builder__layout
     - node.type.page
   module:
+    - layout_builder
     - text
     - user
+third_party_settings:
+  layout_builder:
+    allow_custom: false
+    enabled: false
 id: node.page.default
 targetEntityType: node
 bundle: page
@@ -31,3 +37,4 @@ content:
     third_party_settings: {  }
 hidden:
   langcode: true
+  layout_builder__layout: true

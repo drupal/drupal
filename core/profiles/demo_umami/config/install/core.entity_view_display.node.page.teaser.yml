@@ -4,6 +4,7 @@ dependencies:
   config:
     - core.entity_view_mode.node.teaser
     - field.field.node.page.body
+    - field.field.node.page.layout_builder__layout
     - node.type.page
   module:
     - text
@@ -27,3 +28,4 @@ content:
 hidden:
   content_moderation_control: true
   langcode: true
+  layout_builder__layout: true
