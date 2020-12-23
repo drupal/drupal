@@ -16,7 +16,7 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\TypedData\DataReferenceTargetDefinition;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\Exception\PreconditionFailedHttpException;
 
 /**
@@ -72,7 +72,7 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
   /**
    * The event dispatcher.
    *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
    */
   protected $eventDispatcher;
 
@@ -102,7 +102,7 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
    *   The entity field manager.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache backend.
-   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $dispatcher
    *   The event dispatcher.
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_bundle_info, EntityFieldManagerInterface $entity_field_manager, CacheBackendInterface $cache, EventDispatcherInterface $dispatcher) {

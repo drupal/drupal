@@ -4,7 +4,7 @@ namespace Drupal\Component\EventDispatcher;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\Event;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Contracts\EventDispatcher\Event as ContractsEvent;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as ContractsEventDispatcherInterface;
@@ -113,7 +113,7 @@ class ContainerAwareEventDispatcher implements EventDispatcherInterface {
       }
     }
     elseif (\is_string($event) && (NULL === $event_name || $event_name instanceof ContractsEvent || $event_name instanceof Event)) {
-      @trigger_error('Calling the Symfony\Component\EventDispatcher\EventDispatcherInterface::dispatch() method with a string event name as the first argument is deprecated in drupal:9.1.0, an Event object will be required instead in drupal:10.0.0. See https://www.drupal.org/node/3154407', E_USER_DEPRECATED);
+      @trigger_error('Calling the Symfony\Contracts\EventDispatcher\EventDispatcherInterface::dispatch() method with a string event name as the first argument is deprecated in drupal:9.1.0, an Event object will be required instead in drupal:10.0.0. See https://www.drupal.org/node/3154407', E_USER_DEPRECATED);
       $swap = $event;
       $event = $event_name ?? new Event();
       $event_name = $swap;

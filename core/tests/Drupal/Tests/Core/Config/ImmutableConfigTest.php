@@ -22,7 +22,7 @@ class ImmutableConfigTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
     $storage = $this->createMock('Drupal\Core\Config\StorageInterface');
-    $event_dispatcher = $this->createMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
+    $event_dispatcher = $this->createMock('Symfony\Contracts\EventDispatcher\EventDispatcherInterface');
     $typed_config = $this->createMock('Drupal\Core\Config\TypedConfigManagerInterface');
     $this->config = new ImmutableConfig('test', $storage, $event_dispatcher, $typed_config);
   }
