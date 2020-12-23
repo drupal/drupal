@@ -5,6 +5,7 @@ namespace Drupal\auto_updates_test\ReadinessChecker;
 use Drupal\auto_updates\ReadinessChecker\ReadinessCheckerInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * A test readiness checker.
@@ -78,4 +79,11 @@ class TestChecker implements ReadinessCheckerInterface {
     );
   }
 
+  public function getErrorsSummary(): ?TranslatableMarkup {
+    return NULL;// TODO: Implement getErrorsSummary() method.
+  }
+
+  public function getWarningsSummary(): ?TranslatableMarkup {
+    return null;// TODO: Implement getWarningsSummary() method.
+  }
 }

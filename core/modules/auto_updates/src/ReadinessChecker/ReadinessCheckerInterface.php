@@ -2,10 +2,16 @@
 
 namespace Drupal\auto_updates\ReadinessChecker;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
 /**
  * Defines an interface for readiness checker services.
  */
 interface ReadinessCheckerInterface {
+
+  public function getErrorsSummary():?TranslatableMarkup;
+
+  public function getWarningsSummary():?TranslatableMarkup;
 
   /**
    * Gets the warnings.

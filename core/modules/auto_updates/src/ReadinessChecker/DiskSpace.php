@@ -2,6 +2,8 @@
 
 namespace Drupal\auto_updates\ReadinessChecker;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
 /**
  * A readiness checker that ensures there is enough disk space for updates.
  */
@@ -83,4 +85,11 @@ class DiskSpace extends FileSystemBase {
     return $messages;
   }
 
+  public function getErrorsSummary():?TranslatableMarkup {
+    return null;// TODO: Implement getErrorsSummary() method.
+  }
+
+  public function getWarningsSummary():?TranslatableMarkup {
+    return null;// TODO: Implement getWarningsSummary() method.
+  }
 }

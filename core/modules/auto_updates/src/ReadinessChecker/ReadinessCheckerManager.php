@@ -90,7 +90,7 @@ class ReadinessCheckerManager {
    *   (optional) Whether to refresh the results, defaults FALSE. If FALSE then
    *   cached results will be returned if available.
    *
-   * @return string[][]
+   * @return \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[]
    *   A nested array of readiness check messages. The top level array is keyed
    *   by category and the next level array is an array of translatable strings
    *   for the category.
@@ -104,28 +104,27 @@ class ReadinessCheckerManager {
 
       // If the checkers have not changed return the results.
       if ($results && $results['checkers'] === $this->getCurrentCheckerIds()) {
-        return $results['messages'];
+        return $results['results'];
       }
       $this->keyValueExpirable->delete('readiness_check_results');
     }
 
     $sorted_checkers = $this->getSortedCheckers();
-    $messages_by_category = ['errors' => [], 'warnings' => []];
+    $results = [];
     foreach ($sorted_checkers as $checker) {
-      $messages_by_category['errors'] = array_merge($messages_by_category['errors'], $checker->getErrors());
-      $messages_by_category['warnings'] = array_merge($messages_by_category['warnings'], $checker->getWarnings());
+      $results[] = ReadinessCheckerResult::createFromReadinessChecker($checker);
     }
 
     $this->keyValueExpirable->setWithExpire(
       'readiness_check_results',
       [
-        'messages' => $messages_by_category,
+        'results' => $results,
         'checkers' => $this->getCurrentCheckerIds(),
       ],
       3600
     );
     $this->keyValueExpirable->set('readiness_check_timestamp', $this->time->getRequestTime());
-    return $messages_by_category;
+    return $results;
   }
 
   /**
@@ -187,7 +186,13 @@ class ReadinessCheckerManager {
    *   The error messages.
    */
   public function getErrors(bool $refresh = FALSE) {
-    return $this->run($refresh)['errors'];
+    $results = $this->run($refresh);
+    $messages = [];
+    foreach ($results as $result) {
+      $messages = array_merge($messages, $result->getErrorMessages());
+
+    }
+    return $messages;
   }
 
   /**
@@ -200,7 +205,13 @@ class ReadinessCheckerManager {
    *   The warning messages.
    */
   public function getWarnings(bool $refresh = FALSE) {
-    return $this->run($refresh)['warnings'];
+    $results = $this->run($refresh);
+    $messages = [];
+    foreach ($results as $result) {
+      $messages = array_merge($messages, $result->getWarningMessages());
+
+    }
+    return $messages;
   }
 
 }
