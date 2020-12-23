@@ -2378,7 +2378,11 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       // A dedicated table only contain rows for actual field values, and no
       // rows for entities where the field is empty. Thus, we can safely
       // enforce 'not null' on the columns for the field's required properties.
-      $data_schema['fields'][$real_name]['not null'] = $properties[$column_name]->isRequired();
+      // Fields can have dynamic properties, so we need to make sure that the
+      // property is statically defined.
+      if (isset($properties[$column_name])) {
+        $data_schema['fields'][$real_name]['not null'] = $properties[$column_name]->isRequired();
+      }
     }
 
     // Add indexes.
