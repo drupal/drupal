@@ -50,8 +50,8 @@ class BigPipeTest extends BrowserTestBase {
     parent::setUp();
 
     // Ignore the <meta> refresh that big_pipe.module sets. It causes a redirect
-    // to a page that sets another cookie, which causes WebTestBase to lose the
-    // session cookie. To avoid this problem, tests should first call
+    // to a page that sets another cookie, which causes BrowserTestBase to lose
+    // the session cookie. To avoid this problem, tests should first call
     // drupalGet() and then call checkForMetaRefresh() manually, and then reset
     // $this->maximumMetaRefreshCount and $this->metaRefreshCount.
     // @see doMetaRefresh()

@@ -9,7 +9,7 @@ use Drupal\node\Entity\Node;
 /**
  * Tests request logging for cached and uncached pages.
  *
- * We subclass WebTestBase rather than StatisticsTestBase, because we
+ * We subclass BrowserTestBase rather than StatisticsTestBase, because we
  * want to test requests from an anonymous user.
  *
  * @group statistics

@@ -37,8 +37,6 @@ class TestHttpClientMiddleware {
             foreach ($headers as $header_name => $header_values) {
               if (preg_match('/^X-Drupal-Assertion-[0-9]+$/', $header_name, $matches)) {
                 foreach ($header_values as $header_value) {
-                  // Call \Drupal\simpletest\WebTestBase::error() with the parameters from
-                  // the header.
                   $parameters = unserialize(urldecode($header_value));
                   if (count($parameters) === 3) {
                     if ($parameters[1] === 'User deprecated function') {
