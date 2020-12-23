@@ -4,15 +4,13 @@
 build:
   assessment:
     validate_codebase:
-      phplint:
-      eslint:
-        # A test must pass eslinting standards check in order to continue processing.
-        halt-on-fail: false
-      phpcs:
-        # phpcs will use core's specified version of Coder.
-        sniff-all-files: false
-        halt-on-fail: false
+      # Core's code quality is checked by container_command.commit_checks.
     testing:
+      # Run code quality checks.
+      container_command.commit-checks:
+        commands:
+          - "core/scripts/dev/commit-code-check.sh --drupalci"
+        halt-on-fail: true
       # run_tests task is executed several times in order of performance speeds.
       # halt-on-fail can be set on the run_tests tasks in order to fail fast.
       # suppress-deprecations is false in order to be alerted to usages of
