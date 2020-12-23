@@ -211,7 +211,6 @@ trait FunctionalTestSetupTrait {
    *
    * @see \Drupal\Core\Test\FunctionalTestSetupTrait::rebuildAll()
    * @see \Drupal\Tests\BrowserTestBase::installDrupal()
-   * @see \Drupal\simpletest\WebTestBase::setUp()
    */
   protected function resetAll() {
     // Clear all database and static caches and rebuild data structures.

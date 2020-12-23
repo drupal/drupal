@@ -25,13 +25,13 @@ class ViewsThemeIntegrationTest extends ViewTestBase {
 
 
   /**
-   * Used by WebTestBase::setUp()
+   * {@inheritdoc}
    *
    * We need theme_test for testing against test_basetheme and test_subtheme.
    *
    * @var array
    *
-   * @see \Drupal\simpletest\WebTestBase::setUp()
+   * {@inheritdoc}
    */
   protected static $modules = ['views', 'theme_test'];
 
