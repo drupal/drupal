@@ -18,7 +18,7 @@
 
 .header__left {
   position: relative;
-  z-index: 2;
+  z-index: 102;
   display: flex;
   align-items: flex-end;
   align-self: stretch;
@@ -43,7 +43,7 @@
   body:not(.is-always-mobile-nav) {
     & .site-header__fixable.js-fixed {
       position: fixed;
-      z-index: 2; /* Appear above body content that is position: relative */
+      z-index: 102; /* Appear above body content that is position: relative */
       inset-block-start: calc(-1 * var(--sp4));
       max-width: var(--max-bg-color);
     }

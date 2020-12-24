@@ -85,7 +85,7 @@ body:not(.is-always-mobile-nav) {
 
     & .primary-nav__menu--level-2 {
       position: absolute;
-      z-index: 5; /* Appear above search container. */
+      z-index: 105; /* Appear above search container. */
       /* stylelint-disable csstools/use-logical */
       top: calc(100% - (0.5 * var(--sp)));
       left: 50%;

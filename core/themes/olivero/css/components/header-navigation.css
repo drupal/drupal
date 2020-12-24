@@ -36,7 +36,7 @@
 
 .header-nav {
   position: fixed;
-  z-index: 5; /* appear above overlay */
+  z-index: 105; /* appear above overlay */
   top: 0;
   visibility: hidden;
   overflow: auto;
