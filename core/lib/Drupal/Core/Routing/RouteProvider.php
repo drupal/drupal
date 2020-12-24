@@ -504,6 +504,8 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
     // based on the domain.
     $this->addExtraCacheKeyPart('language', $this->getCurrentLanguageCacheIdPart());
 
+    $this->addExtraCacheKeyPart('query_parameters', $this->getQueryParametersCacheIdPart($request));
+
     // Sort the cache key parts by their provider in order to have predictable
     // cache keys.
     ksort($this->extraCacheKeyParts);
@@ -512,7 +514,28 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
       $key_parts[] = '[' . $provider . ']=' . $key_part;
     }
 
-    return 'route:' . implode(':', $key_parts) . ':' . $request->getPathInfo() . ':' . $request->getQueryString();
+    return 'route:' . implode(':', $key_parts) . ':' . $request->getPathInfo();
+  }
+
+  /**
+   * Returns the query parameters identifier for the route collection cache.
+   *
+   * The query parameters on the request may be altered programmatically, e.g.
+   * while serving private files or in subrequests. As such, we must vary on
+   * both the query string from the client and the parameter bag after incoming
+   * route processors have modified the request object.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *
+   * @return string
+   */
+  protected function getQueryParametersCacheIdPart(Request $request) {
+    $requestQueryParams = [];
+    foreach ($request->query->keys() as $key) {
+      $val = $request->query->get($key);
+      $requestQueryParams[] = $key . '=' . (is_string($val) ? $val : json_encode($val));
+    }
+    return implode(':', array_filter([$request->getQueryString(), implode('&', $requestQueryParams)]));
   }
 
   /**
