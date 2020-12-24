@@ -36,7 +36,7 @@
 
 .mobile-nav-button {
   position: relative;
-  z-index: 10; /* appear above mobile nav */
+  z-index: 110; /* Appear above mobile nav. */
   display: flex;
   align-items: center;
   -ms-grid-row-align: center;
@@ -67,7 +67,7 @@
 }
   }
 
-/* Text that says "menu" */
+/* Text that says "menu". */
 
 .mobile-nav-button__label {
   position: absolute;

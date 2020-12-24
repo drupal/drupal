@@ -80,8 +80,6 @@ html:not(.js) .tabs__tab,
 }
 
 .tabs__link:focus {
-  position: relative;
-  z-index: 1;
   border-color: var(--color--blue-50);
   outline: none;
 }

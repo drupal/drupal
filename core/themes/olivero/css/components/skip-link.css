@@ -29,7 +29,6 @@
 }
 
 .skip-link {
-  z-index: 1; /* Appear above header */
   display: block;
   width: 100%;
   max-width: 98.125rem;
