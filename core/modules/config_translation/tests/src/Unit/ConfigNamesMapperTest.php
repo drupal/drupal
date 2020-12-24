@@ -91,7 +91,7 @@ class ConfigNamesMapperTest extends UnitTestCase {
   /**
    * The mocked event dispatcher.
    *
-   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $eventDispatcher;
 
@@ -129,7 +129,7 @@ class ConfigNamesMapperTest extends UnitTestCase {
 
     $this->languageManager = $this->createMock('Drupal\Core\Language\LanguageManagerInterface');
 
-    $this->eventDispatcher = $this->createMock('Symfony\Contracts\EventDispatcher\EventDispatcherInterface');
+    $this->eventDispatcher = $this->createMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
 
     $this->configNamesMapper = new TestConfigNamesMapper(
       'system.site_information_settings',

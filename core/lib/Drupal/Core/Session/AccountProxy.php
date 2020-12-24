@@ -3,7 +3,7 @@
 namespace Drupal\Core\Session;
 
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * A proxied implementation of AccountInterface.
@@ -37,14 +37,14 @@ class AccountProxy implements AccountProxyInterface {
   /**
    * Event dispatcher.
    *
-   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
    */
   protected $eventDispatcher;
 
   /**
    * AccountProxy constructor.
    *
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $eventDispatcher
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher
    *   Event dispatcher.
    */
   public function __construct(EventDispatcherInterface $eventDispatcher) {

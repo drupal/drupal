@@ -19,7 +19,7 @@ use Drupal\migrate\Event\MigrateEvents;
 use Drupal\migrate\Event\MigrateMapSaveEvent;
 use Drupal\migrate\Event\MigrateMapDeleteEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Defines the sql based ID map implementation.
@@ -39,7 +39,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   /**
    * An event dispatcher instance to use for map events.
    *
-   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
    */
   protected $eventDispatcher;
 
@@ -154,7 +154,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    *   The configuration for the plugin.
    * @param \Drupal\migrate\Plugin\MigrationInterface $migration
    *   The migration to do.
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EventDispatcherInterface $event_dispatcher) {

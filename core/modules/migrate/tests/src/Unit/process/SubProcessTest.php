@@ -8,7 +8,7 @@ use Drupal\migrate\Plugin\migrate\process\Get;
 use Drupal\migrate\Plugin\migrate\process\SubProcess;
 use Drupal\migrate\Row;
 use Drupal\Tests\migrate\Unit\MigrateTestCase;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Tests the sub_process process plugin.

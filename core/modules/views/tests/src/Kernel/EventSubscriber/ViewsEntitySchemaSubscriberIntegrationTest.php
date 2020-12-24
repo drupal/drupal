@@ -43,7 +43,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
   /**
    * The event dispatcher.
    *
-   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
    */
   protected $eventDispatcher;
 

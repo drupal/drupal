@@ -7,7 +7,7 @@ use Drupal\Core\Session\AccountProxy;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
 use Symfony\Contracts\EventDispatcher\Event;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @coversDefaultClass \Drupal\Core\Session\AccountProxy

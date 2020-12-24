@@ -6,7 +6,7 @@ use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\layout_builder\Element\LayoutBuilder;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Tests the deprecation notices of the layout builder element.

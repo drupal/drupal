@@ -5,7 +5,7 @@ namespace Drupal\user;
 use Drupal\user\Event\UserEvents;
 use Drupal\user\Event\UserFloodEvent;
 use Drupal\Core\Flood\FloodInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -25,7 +25,7 @@ class UserFloodControl implements UserFloodControlInterface {
   /**
    * Event dispatcher.
    *
-   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
    */
   protected $eventDispatcher;
 
@@ -41,7 +41,7 @@ class UserFloodControl implements UserFloodControlInterface {
    *
    * @param \Drupal\Core\Flood\FloodInterface $flood
    *   The flood service.
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher service.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack used to retrieve the current request.

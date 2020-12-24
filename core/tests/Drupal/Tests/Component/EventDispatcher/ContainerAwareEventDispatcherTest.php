@@ -151,7 +151,7 @@ class ContainerAwareEventDispatcherTest extends TestCase {
    * @group legacy
    */
   public function testDispatchArgumentOrderDeprecation() {
-    $this->expectDeprecation('Calling the Symfony\Contracts\EventDispatcher\EventDispatcherInterface::dispatch() method with a string event name as the first argument is deprecated in drupal:9.1.0, an Event object will be required instead in drupal:10.0.0. See https://www.drupal.org/node/3154407');
+    $this->expectDeprecation('Calling the Symfony\Component\EventDispatcher\EventDispatcherInterface::dispatch() method with a string event name as the first argument is deprecated in drupal:9.1.0, an Event object will be required instead in drupal:10.0.0. See https://www.drupal.org/node/3154407');
     $container = new ContainerBuilder();
     $dispatcher = new ContainerAwareEventDispatcher($container, []);
     $dispatcher->dispatch('foo');
