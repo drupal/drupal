@@ -14,7 +14,7 @@ use Drupal\Tests\UnitTestCase;
 class FileItemTest extends UnitTestCase {
 
   /**
-   * Data provider for ::testValidateMaxFilesize
+   * Data provider for ::testValidateMaxFilesize.
    */
   public function providerTestValidateMaxFilesize() {
     return [
