@@ -257,8 +257,13 @@ class FileItem extends EntityReferenceItem {
    * fieldSettingsForm().
    */
   public static function validateMaxFilesize($element, FormStateInterface $form_state) {
-    if (!empty($element['#value']) && !Bytes::toNumber($element['#value'])) {
-      $form_state->setError($element, t('The "@name" option must contain a valid value. You may either leave the text field empty or enter a string like "512" (bytes), "80 KB" (kilobytes) or "50 MB" (megabytes).', ['@name' => $element['#title']]));
+    if (!empty($element['#value'])) {
+      // Remove the non-numeric characters from the value.
+      $size = preg_replace('/[^0-9\.]/', '', $element['#value']);
+      // No numeric character provided or non-unit character present.
+      if (empty($size) || !Bytes::toNumber($element['#value'])) {
+        $form_state->setError($element, t('The "@name" option must contain a valid value. You may either leave the text field empty or enter a string like "512" (bytes), "80 KB" (kilobytes) or "50 MB" (megabytes).', ['@name' => $element['#title']]));
+      }
     }
   }
 

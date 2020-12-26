@@ -25,10 +25,8 @@ class FileItemTest extends UnitTestCase {
       ['5Gb', TRUE],
       // Invalid.
       ['foo', FALSE],
-      // These are invalid too, but provokes warning because its have an "e" and
-      // in Bytes::toNumber(), e is kept because it is a unit character.
-      // ['fifty megabytes', FALSE],
-      // ['five', FALSE],
+      ['fifty megabytes', FALSE],
+      ['five', FALSE],
     ];
   }
 
