@@ -27,7 +27,6 @@ Framework managers
   Backend
   - Alex Bronstein 'effulgentsia' https://www.drupal.org/u/effulgentsia
   - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
-  - Francesco Placella 'plach' https://www.drupal.org/u/plach
   - Alex Pott 'alexpott' https://www.drupal.org/u/alexpott
   - Lee Rowlands 'larowlan' https://www.drupal.org/u/larowlan
 
@@ -151,7 +150,7 @@ Content Moderation
 - Sam Becker 'Sam152' https://www.drupal.org/u/sam152
 
 Content Translation
-- Francesco Placella 'plach' https://www.drupal.org/u/plach
+- ?
 
 Contextual
 - ?
@@ -200,7 +199,6 @@ Entity API
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
 - Hristo Chonov 'hchonov' https://www.drupal.org/u/hchonov
 - Sascha Grossenbacher 'Berdir' https://www.drupal.org/u/berdir
-- Francesco Placella 'plach' https://www.drupal.org/u/plach
 - Tobias Zimmermann 'tstoeckler' https://www.drupal.org/u/tstoeckler
 
 Extension API
@@ -261,7 +259,6 @@ JSON:API
 - Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
 
 Language
-- Francesco Placella 'plach' https://www.drupal.org/u/plach
 - Daniel F. Kudwien 'sun' https://www.drupal.org/u/sun
 
 Layout Builder
