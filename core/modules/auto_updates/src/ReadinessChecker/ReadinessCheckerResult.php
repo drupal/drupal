@@ -86,6 +86,10 @@ class ReadinessCheckerResult {
     return $this->warningMessages;
   }
 
+  public function isEmpty() {
+    return !($this->getErrorMessages() || $this->getWarningMessages());
+  }
+
 
 
 }

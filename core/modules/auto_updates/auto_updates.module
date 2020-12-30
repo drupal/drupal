@@ -39,6 +39,7 @@ function auto_updates_page_top(array &$page_top) {
         ':url' => Url::fromRoute('auto_updates.update_readiness')->setOption('query', ['destination' => $current_path->getPath()])->toString(),
       ]));
     }
+    return;
     $results = $checker_manager->getErrors();
     if ($results) {
       // @todo Link "automatic updates" to documentation in
@@ -66,7 +67,7 @@ function auto_updates_page_top(array &$page_top) {
 function auto_updates_cron() {
   /** @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager $checker_manager */
   $checker_manager = \Drupal::service('auto_updates.readiness_checker_manager');
-  $checker_manager->getErrors();
+  $checker_manager->getResults();
 }
 
 /**
@@ -79,5 +80,5 @@ function auto_updates_modules_installed() {
   // readiness checker services.
   /** @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager $checker_manager */
   $checker_manager = \Drupal::service('auto_updates.readiness_checker_manager');
-  $checker_manager->getErrors();
+  $checker_manager->getResults();
 }

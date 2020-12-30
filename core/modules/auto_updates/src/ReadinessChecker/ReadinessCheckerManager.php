@@ -112,7 +112,10 @@ class ReadinessCheckerManager {
     $sorted_checkers = $this->getSortedCheckers();
     $results = [];
     foreach ($sorted_checkers as $checker) {
-      $results[] = ReadinessCheckerResult::createFromReadinessChecker($checker);
+      $result = ReadinessCheckerResult::createFromReadinessChecker($checker);
+      if (!$result->isEmpty()) {
+        $results[] = $result;
+      }
     }
 
     $this->keyValueExpirable->setWithExpire(
@@ -177,41 +180,12 @@ class ReadinessCheckerManager {
   }
 
   /**
-   * Get error messages.
-   *
    * @param bool $refresh
-   *   Whether to refresh the results.
    *
-   * @return string[]
-   *   The error messages.
+   * @return \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[]
    */
-  public function getErrors(bool $refresh = FALSE) {
-    $results = $this->run($refresh);
-    $messages = [];
-    foreach ($results as $result) {
-      $messages = array_merge($messages, $result->getErrorMessages());
-
-    }
-    return $messages;
-  }
-
-  /**
-   * Get warning messages.
-   *
-   * @param bool $refresh
-   *   Whether to refresh the results.
-   *
-   * @return string[]
-   *   The warning messages.
-   */
-  public function getWarnings(bool $refresh = FALSE) {
-    $results = $this->run($refresh);
-    $messages = [];
-    foreach ($results as $result) {
-      $messages = array_merge($messages, $result->getWarningMessages());
-
-    }
-    return $messages;
+  public function getResults(bool $refresh = FALSE) {
+    return $this->run($refresh);
   }
 
 }

@@ -5,6 +5,7 @@
  * Contains install and update functions for Automatic Updates.
  */
 
+use Drupal\auto_updates\ReadinessChecker\ReadinessRequirement;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Core\Url;
 
@@ -16,6 +17,8 @@ function auto_updates_requirements($phase) {
     return [];
   }
 
+  $requirementObject = new ReadinessRequirement(\Drupal::service('auto_updates.readiness_checker_manager'));
+  return ['auto_updates_readiness' => $requirementObject->getRequirement()];
   /** @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager $checker_manager */
   $checker_manager = \Drupal::service('auto_updates.readiness_checker_manager');
   $requirement['title'] = t('Update readiness checks');

@@ -100,13 +100,13 @@ class ReadinessCheckerTest extends BrowserTestBase {
 
     // Confirm the error is displayed on the status report page.
     $this->drupalGet('admin/reports/status');
-    $this->assertReadinessReportMatches('1 check failed: OMG 🚒. Your server is on 🔥!');
+    $this->assertReadinessReportMatches('OMG 🚒. Your server is on 🔥!');
     // @todo Should we always show when the checks were last run and a link to
     //   run when there is an error?
     // Confirm a user without permission to run the checks sees the same error.
     $this->drupalLogin($this->reportViewerUser);
     $this->drupalGet('admin/reports/status');
-    $this->assertReadinessReportMatches('1 check failed: OMG 🚒. Your server is on 🔥!');
+    $this->assertReadinessReportMatches('OMG 🚒. Your server is on 🔥!');
 
     TestChecker::setTestMessages(['OMG 🔌. Some one unplugged the server! How is this site even running?']);
     /** @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface $keyValue */
@@ -114,7 +114,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $keyValue->delete('readiness_check_results');
     // Confirm a new message is displayed if the stored messages are deleted.
     $this->drupalGet('admin/reports/status');
-    $this->assertReadinessReportMatches('1 check failed: OMG 🔌. Some one unplugged the server! How is this site even running?');
+    $this->assertReadinessReportMatches('OMG 🔌. Some one unplugged the server! How is this site even running?');
   }
 
   /**
@@ -134,7 +134,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
     TestChecker::setTestMessages(['😿Oh no! A hacker now owns your files!']);
     $this->container->get('module_installer')->install(['auto_updates_test']);
     $this->drupalGet('admin/reports/status');
-    $this->assertReadinessReportMatches('1 check failed: 😿Oh no! A hacker now owns your files!');
+    $this->assertReadinessReportMatches('😿Oh no! A hacker now owns your files!');
 
     // Confirm that installing a module that does not provide a new checker does
     // not run the checkers on install.
@@ -143,7 +143,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/status');
     // Confirm that new checker message is not displayed because the checker was
     // not run again.
-    $this->assertReadinessReportMatches('1 check failed: 😿Oh no! A hacker now owns your files!');
+    $this->assertReadinessReportMatches('😿Oh no! A hacker now owns your files!');
     $assert->pageTextNotContains('Security has been compromised. "pass123" was a bad password!');
 
     // Confirm the new message is displayed after running the checkers manually.
@@ -164,11 +164,11 @@ class ReadinessCheckerTest extends BrowserTestBase {
     TestChecker::setTestMessages(['😲Your site is running on Commodore 64! Not powerful enough to do updates!']);
     $this->container->get('module_installer')->install(['auto_updates', 'auto_updates_test']);
     $this->drupalGet('admin/reports/status');
-    $this->assertReadinessReportMatches('1 check failed: 😲Your site is running on Commodore 64! Not powerful enough to do updates!');
+    $this->assertReadinessReportMatches('😲Your site is running on Commodore 64! Not powerful enough to do updates!');
 
     $this->container->get('module_installer')->uninstall(['auto_updates_test']);
     $this->drupalGet('admin/reports/status');
-    $assert->pageTextNotContains('1 check failed: 😲Your site is running on Commodore 64! Not powerful enough to do updates!');
+    $assert->pageTextNotContains('😲Your site is running on Commodore 64! Not powerful enough to do updates!');
   }
 
   /**

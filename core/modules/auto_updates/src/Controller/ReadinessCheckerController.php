@@ -56,7 +56,7 @@ class ReadinessCheckerController extends ControllerBase {
    *   A redirect to the status report page.
    */
   public function run($on_status_report = FALSE) {
-    if (!$this->checkerManager->getErrors(TRUE) && !$this->checkerManager->getWarnings()) {
+    if (!$this->checkerManager->getResults(TRUE)) {
       // @todo Link "automatic updates" to documentation in
       //   https://www.drupal.org/node/3168405.
       // If there are no messages from the readiness checkers display a message
