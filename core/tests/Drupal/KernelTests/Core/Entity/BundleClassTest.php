@@ -70,7 +70,7 @@ class BundleClassTest extends EntityKernelTestBase {
     $entity_class = $this->storage->getEntityClass('bundle_class');
     $this->assertEquals(EntityTestBundleClass::class, $entity_class);
 
-    // Verify that getEntityClass with an unexisting bundle returns the entity
+    // Verify that getEntityClass with a non-existing bundle returns the entity
     // class.
     $entity_class = $this->storage->getEntityClass('custom');
     $this->assertEquals(EntityTest::class, $entity_class);
