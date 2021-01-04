@@ -230,4 +230,16 @@ interface EntityStorageInterface {
    */
   public function getEntityType();
 
+  /**
+   * Retrieves the class name used to create the entity.
+   *
+   * @param string|null $bundle
+   *   (optional) A specific entity type bundle identifier. Can be omitted in
+   *   the case of entity types without bundles, like User.
+   *
+   * @return string
+   *   The class name.
+   */
+  public function getEntityClass($bundle = NULL);
+
 }

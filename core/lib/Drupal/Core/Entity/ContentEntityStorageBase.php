@@ -5,6 +5,8 @@ namespace Drupal\Core\Entity;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
+use Drupal\Core\Entity\Exception\AmbiguousBundleClassException;
+use Drupal\Core\Entity\Exception\BundleClassInheritanceException;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -14,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Base class for content entity storage handlers.
  */
-abstract class ContentEntityStorageBase extends EntityStorageBase implements ContentEntityStorageInterface, DynamicallyFieldableEntityStorageInterface {
+abstract class ContentEntityStorageBase extends EntityStorageBase implements ContentEntityStorageInterface, DynamicallyFieldableEntityStorageInterface, BundleEntityStorageInterface {
 
   /**
    * The entity bundle key.
@@ -76,6 +78,34 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
   /**
    * {@inheritdoc}
    */
+  public function create(array $values = []) {
+    // In some cases the entity bundle may be provided by the ::preCreate()
+    // method in the entity class. If a bundle is truly required an exception
+    // will be thrown in ::doCreate() so there's no need to throw one here.
+    $bundle = $this->getBundleFromValues($values, FALSE);
+    $entity_class = $this->getEntityClass($bundle);
+    $entity_class::preCreate($this, $values);
+
+    // Assign a new UUID if there is none yet.
+    if ($this->uuidKey && $this->uuidService && !isset($values[$this->uuidKey])) {
+      $values[$this->uuidKey] = $this->uuidService->generate();
+    }
+
+    $entity = $this->doCreate($values);
+    $entity->enforceIsNew();
+
+    $entity->postCreate($this);
+
+    // Modules might need to add or change the data initially held by the new
+    // entity object, for instance to fill-in default values.
+    $this->invokeHook('create', $entity);
+
+    return $entity;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
       $entity_type,
@@ -90,34 +120,105 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    * {@inheritdoc}
    */
   protected function doCreate(array $values) {
-    // We have to determine the bundle first.
-    $bundle = FALSE;
-    if ($this->bundleKey) {
-      if (!isset($values[$this->bundleKey])) {
-        throw new EntityStorageException('Missing bundle for entity type ' . $this->entityTypeId);
-      }
-
-      // Normalize the bundle value. This is an optimized version of
-      // \Drupal\Core\Field\FieldInputValueNormalizerTrait::normalizeValue()
-      // because we just need the scalar value.
-      $bundle_value = $values[$this->bundleKey];
-      if (!is_array($bundle_value)) {
-        // The bundle value is a scalar, use it as-is.
-        $bundle = $bundle_value;
-      }
-      elseif (is_numeric(array_keys($bundle_value)[0])) {
-        // The bundle value is a field item list array, keyed by delta.
-        $bundle = reset($bundle_value[0]);
-      }
-      else {
-        // The bundle value is a field item array, keyed by the field's main
-        // property name.
-        $bundle = reset($bundle_value);
-      }
-    }
-    $entity = new $this->entityClass([], $this->entityTypeId, $bundle);
+    $bundle = $this->getBundleFromValues($values);
+    $entity_class = $this->getEntityClass($bundle);
+    $entity = new $entity_class([], $this->entityTypeId, $bundle);
     $this->initFieldValues($entity, $values);
     return $entity;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getBundleFromClass($class_name) {
+    $class_bundles = array_filter($this->entityTypeBundleInfo->getBundleInfo($this->entityTypeId), function ($bundle_info) use ($class_name) {
+      return !empty($bundle_info['class']) && $bundle_info['class'] === $class_name;
+    });
+
+    if (empty($class_bundles)) {
+      return NULL;
+    }
+
+    if (count($class_bundles) > 1) {
+      throw new AmbiguousBundleClassException($class_name);
+    }
+
+    reset($class_bundles);
+    return key($class_bundles);
+  }
+
+  /**
+   * Retrieves the bundle from an array of values.
+   *
+   * @param array $values
+   *   An array of values to set, keyed by property name.
+   * @param bool $throw_exception
+   *   Flag indicating whether to throw an exception if corresponding bundle
+   *   cannot be found and is expected.
+   *
+   * @return string|null
+   *   The bundle or NULL if not set.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   *   When a corresponding bundle cannot be found and is expected.
+   */
+  protected function getBundleFromValues(array $values, $throw_exception = TRUE) {
+    $bundle = NULL;
+    if ($this->bundleKey) {
+      if (isset($values[$this->bundleKey])) {
+        // Normalize the bundle value. This is an optimized version of
+        // \Drupal\Core\Field\FieldInputValueNormalizerTrait::normalizeValue()
+        // because we just need the scalar value.
+        $bundle_value = $values[$this->bundleKey];
+        if (!is_array($bundle_value)) {
+          // The bundle value is a scalar, use it as-is.
+          $bundle = $bundle_value;
+        }
+        elseif (is_numeric(array_keys($bundle_value)[0])) {
+          // The bundle value is a field item list array, keyed by delta.
+          $bundle = reset($bundle_value[0]);
+        }
+        else {
+          // The bundle value is a field item array, keyed by the field's main
+          // property name.
+          $bundle = reset($bundle_value);
+        }
+      }
+      elseif ($throw_exception) {
+        throw new EntityStorageException('Missing bundle for entity type ' . $this->entityTypeId);
+      }
+    }
+    return $bundle;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getBundleKey() {
+    return $this->bundleKey;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getEntityClass($bundle = NULL) {
+    $entity_class = parent::getEntityClass();
+
+    if (!empty($bundle)) {
+      // Return the bundle class if it has been defined for this bundle.
+      $bundle_info = $this->entityTypeBundleInfo->getBundleInfo($this->entityTypeId);
+      $bundle_class = $bundle_info[$bundle]['class'] ?? NULL;
+
+      // Bundle classes should extend the main entity class.
+      if ($bundle_class) {
+        if (!is_subclass_of($bundle_class, $entity_class)) {
+          throw new BundleClassInheritanceException($bundle_class, $entity_class);
+        }
+        return $bundle_class;
+      }
+    }
+
+    return $entity_class;
   }
 
   /**
