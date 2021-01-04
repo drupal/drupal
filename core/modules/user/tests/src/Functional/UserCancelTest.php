@@ -476,6 +476,11 @@ class UserCancelTest extends BrowserTestBase {
     $user_storage->resetCache([$account->id()]);
     $this->assertNull($user_storage->load($account->id()), 'User is not found in the database.');
 
+    // Confirm there's only one session in the database. The user will be logged
+    // out and their session migrated.
+    // @see _user_cancel_session_regenerate()
+    $this->assertSame(1, (int) \Drupal::database()->select('sessions', 's')->countQuery()->execute()->fetchField());
+
     // Confirm that user's content has been deleted.
     $node_storage->resetCache([$node->id()]);
     $this->assertNull($node_storage->load($node->id()), 'Node of the user has been deleted.');

@@ -9,6 +9,8 @@ parameters:
     gc_divisor: 100
     gc_maxlifetime: 200000
     cookie_lifetime: 2000000
+    sid_length: 48
+    sid_bits_per_character: 6
   twig.config:
     debug: false
     auto_reload: null
@@ -1727,7 +1729,7 @@ services:
       - { name: backend_overridable }
   tempstore.shared:
     class: Drupal\Core\TempStore\SharedTempStoreFactory
-    arguments: ['@keyvalue.expirable', '@lock', '@request_stack', '%tempstore.expire%']
+    arguments: ['@keyvalue.expirable', '@lock', '@request_stack', '@current_user', '%tempstore.expire%']
     tags:
       - { name: backend_overridable }
   pager.manager:

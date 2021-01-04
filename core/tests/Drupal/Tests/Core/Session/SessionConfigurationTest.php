@@ -246,4 +246,33 @@ class SessionConfigurationTest extends UnitTestCase {
     }, $data);
   }
 
+  /**
+   * Tests constructor's default settings.
+   *
+   * @covers ::__construct
+   *
+   * @dataProvider providerTestConstructorDefaultSettings
+   */
+  public function testConstructorDefaultSettings(array $options, int $expected_sid_length, int $expected_sid_bits_per_character) {
+    $config = $this->createSessionConfiguration($options);
+    $options = $config->getOptions(Request::createFromGlobals());
+    $this->assertSame($expected_sid_length, $options['sid_length']);
+    $this->assertSame($expected_sid_bits_per_character, $options['sid_bits_per_character']);
+  }
+
+  /**
+   * Data provider for the constructor test.
+   *
+   * @returns array
+   *   Test data
+   */
+  public function providerTestConstructorDefaultSettings() {
+    return [
+      [[], 48, 6],
+      [['sid_length' => 100], 100, 6],
+      [['sid_bits_per_character' => 5], 48, 5],
+      [['sid_length' => 100, 'sid_bits_per_character' => 5], 100, 5],
+    ];
+  }
+
 }

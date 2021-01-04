@@ -2,8 +2,10 @@
 
 namespace Drupal\Core\TempStore;
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
 use Drupal\Core\Lock\LockBackendInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -33,6 +35,13 @@ class SharedTempStoreFactory {
   protected $requestStack;
 
   /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountProxyInterface
+   */
+  protected $currentUser;
+
+  /**
    * The time to live for items in seconds.
    *
    * @var int
@@ -48,13 +57,25 @@ class SharedTempStoreFactory {
    *   The lock object used for this data.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack.
+   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   *   The current user.
    * @param int $expire
    *   The time to live for items, in seconds.
    */
-  public function __construct(KeyValueExpirableFactoryInterface $storage_factory, LockBackendInterface $lock_backend, RequestStack $request_stack, $expire = 604800) {
+  public function __construct(KeyValueExpirableFactoryInterface $storage_factory, LockBackendInterface $lock_backend, RequestStack $request_stack, $current_user = NULL, $expire = 604800) {
     $this->storageFactory = $storage_factory;
     $this->lockBackend = $lock_backend;
     $this->requestStack = $request_stack;
+    if (!$current_user instanceof AccountProxyInterface) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $current_user argument is deprecated in drupal:9.2.0 and will be required in drupal:10.0.0. See https://www.drupal.org/node/3006268', E_USER_DEPRECATED);
+      if (is_int($current_user)) {
+        // If the $current_user argument is numeric then this object has been
+        // instantiated with the old constructor signature.
+        $expire = $current_user;
+      }
+      $current_user = \Drupal::currentUser();
+    }
+    $this->currentUser = $current_user;
     $this->expire = $expire;
   }
 
@@ -76,12 +97,20 @@ class SharedTempStoreFactory {
     // Use the currently authenticated user ID or the active user ID unless
     // the owner is overridden.
     if (!isset($owner)) {
-      $owner = \Drupal::currentUser()->id() ?: session_id();
+      $owner = $this->currentUser->id();
+      if ($this->currentUser->isAnonymous()) {
+        $owner = Crypt::randomBytesBase64();
+        if ($this->requestStack->getCurrentRequest()->hasSession()) {
+          // Store a random identifier for anonymous users if the session is
+          // available.
+          $owner = $this->requestStack->getCurrentRequest()->getSession()->get('core.tempstore.shared.owner', $owner);
+        }
+      }
     }
 
     // Store the data for this collection in the database.
     $storage = $this->storageFactory->get("tempstore.shared.$collection");
-    return new SharedTempStore($storage, $this->lockBackend, $owner, $this->requestStack, $this->expire);
+    return new SharedTempStore($storage, $this->lockBackend, $owner, $this->requestStack, $this->currentUser, $this->expire);
   }
 
 }

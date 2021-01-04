@@ -79,6 +79,11 @@ class UserEditTest extends BrowserTestBase {
     $this->drupalPostForm("user/" . $user1->id() . "/edit", $edit, 'Save');
     $this->assertRaw(t("The changes have been saved."));
 
+    // Confirm there's only one session in the database as the existing session
+    // has been migrated when the password is changed.
+    // @see \Drupal\user\Entity\User::postSave()
+    $this->assertSame(1, (int) \Drupal::database()->select('sessions', 's')->countQuery()->execute()->fetchField());
+
     // Make sure the changed timestamp is updated.
     $this->assertEqual($user1->getChangedTime(), REQUEST_TIME, 'Changing a user sets "changed" timestamp.');
 
