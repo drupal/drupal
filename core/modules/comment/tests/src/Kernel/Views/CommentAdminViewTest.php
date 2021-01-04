@@ -54,6 +54,11 @@ class CommentAdminViewTest extends ViewsKernelTestBase {
     // Create the anonymous role.
     $this->installConfig(['user']);
 
+    // Create user 1 so that the user created later in the test has a different
+    // user ID.
+    // @todo Remove in https://www.drupal.org/node/540008.
+    User::create(['uid' => 1, 'name' => 'user1'])->save();
+
     // Enable another language.
     ConfigurableLanguage::createFromLangcode('ur')->save();
     // Rebuild the container to update the default language container variable.
@@ -72,7 +77,7 @@ class CommentAdminViewTest extends ViewsKernelTestBase {
     // Created admin role.
     $admin_role = Role::create([
       'id' => 'admin',
-      'permissions' => ['administer comments'],
+      'permissions' => ['administer comments', 'skip comment approval'],
     ]);
     $admin_role->save();
     // Create the admin user.

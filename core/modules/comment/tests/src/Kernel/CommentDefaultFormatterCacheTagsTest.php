@@ -34,6 +34,14 @@ class CommentDefaultFormatterCacheTagsTest extends EntityKernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    // Create user 1 so that the user created later in the test has a different
+    // user ID.
+    // @todo Remove in https://www.drupal.org/node/540008.
+    $this->createUser(['uid' => 1, 'name' => 'user1'])->save();
+
+    $this->container->get('module_handler')->loadInclude('comment', 'install');
+    comment_install();
+
     $session = new Session();
 
     $request = Request::create('/');
@@ -48,7 +56,7 @@ class CommentDefaultFormatterCacheTagsTest extends EntityKernelTestBase {
     // user does not have access to the 'administer comments' permission, to
     // ensure only published comments are visible to the end user.
     $current_user = $this->container->get('current_user');
-    $current_user->setAccount($this->createUser([], ['access comments']));
+    $current_user->setAccount($this->createUser([], ['access comments', 'post comments']));
 
     // Install tables and config needed to render comments.
     $this->installSchema('comment', ['comment_entity_statistics']);
@@ -125,7 +133,7 @@ class CommentDefaultFormatterCacheTagsTest extends EntityKernelTestBase {
       'comment:' . $comment->id(),
       'config:filter.format.plain_text',
       'user_view',
-      'user:2',
+      'user:' . $user->id(),
       'config:core.entity_form_display.comment.comment.default',
       'config:field.field.comment.comment.comment_body',
       'config:field.field.entity_test.entity_test.comment',
