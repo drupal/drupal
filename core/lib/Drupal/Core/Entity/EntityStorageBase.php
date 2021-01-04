@@ -422,13 +422,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
       return;
     }
 
-    // Ensure that the entities are keyed by ID.
-    $keyed_entities = [];
-    foreach ($entities as $entity) {
-      $keyed_entities[$entity->id()] = $entity;
-    }
-
-    $entity_classes = $this->getEntityClasses($keyed_entities);
+    $entity_classes = $this->getEntityClasses($entities);
 
     // Allow code to run before deleting.
     foreach ($entity_classes as $entity_class => &$items) {
@@ -630,18 +624,18 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    * @param \Drupal\Core\Entity\EntityInterface[] $entities
    *   The array of entities to index.
    *
-   * @return array
+   * @return \Drupal\Core\Entity\EntityInterface[][]
    *   An array of the passed-in entities, indexed by their class name and ID.
    */
   protected function getEntityClasses(array $entities) {
     $entity_classes = [];
 
-    foreach ($entities as $id => $entity) {
+    foreach ($entities as $entity) {
       $entity_class = get_class($entity);
       if (!isset($entity_classes[$entity_class])) {
         $entity_classes[$entity_class] = [];
       }
-      $entity_classes[$entity_class][$id] = $entity;
+      $entity_classes[$entity_class][$entity->id()] = $entity;
     }
 
     return $entity_classes;
