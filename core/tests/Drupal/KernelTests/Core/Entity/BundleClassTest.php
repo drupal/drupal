@@ -17,7 +17,7 @@ class BundleClassTest extends EntityKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['entity_test_bundle_class'];
+  protected static $modules = ['entity_test_bundle_class'];
 
   /**
    * The entity storage.
