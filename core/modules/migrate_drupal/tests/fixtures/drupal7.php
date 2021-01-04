@@ -58609,10 +58609,6 @@ $connection->insert('variable')
   'value' => 's:13:"The Site Name";',
 ))
 ->values(array(
-  'name' => 'site_offline_message',
-  'value' => 's:42:"This is a custom maintenance mode message.";',
-))
-->values(array(
   'name' => 'site_slogan',
   'value' => 's:10:"The Slogan";',
 ))
