@@ -52,6 +52,13 @@ interface LanguageInterface {
   const LANGCODE_SITE_DEFAULT = 'site_default';
 
   /**
+   * A regex for validating language codes according to W3C specifications.
+   *
+   * @see https://www.w3.org/International/articles/language-tags/
+   */
+  const VALID_LANGCODE_REGEX = '[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*';
+
+  /**
    * The language state when referring to configurable languages.
    */
   const STATE_CONFIGURABLE = 1;
