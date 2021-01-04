@@ -1,0 +1,4 @@
+# This file exists to prove that
+# \Drupal\Core\StringTranslation\Translator\FileTranslation::findTranslationFiles()
+# does not find it. See
+# \Drupal\KernelTests\Core\Installer\InstallerLanguageTest::testInstallerTranslationFiles()
