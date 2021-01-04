@@ -1002,8 +1002,8 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     $route_names = [];
     foreach (array_keys($tree) as $id) {
       $definitions[$id] = $this->definitions[$id];
-      if (!empty($definition['route_name'])) {
-        $route_names[$definition['route_name']] = $definition['route_name'];
+      if (!empty($definitions[$id]['route_name'])) {
+        $route_names[$definitions[$id]['route_name']] = $definitions[$id]['route_name'];
       }
       if ($tree[$id]['subtree']) {
         $route_names += $this->doCollectRoutesAndDefinitions($tree[$id]['subtree'], $definitions);
