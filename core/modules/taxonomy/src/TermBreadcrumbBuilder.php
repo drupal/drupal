@@ -31,13 +31,6 @@ class TermBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   protected $entityTypeManager;
 
   /**
-   * The taxonomy storage.
-   *
-   * @var \Drupal\taxonomy\TermStorageInterface
-   */
-  protected $termStorage;
-
-  /**
    * Constructs the TermBreadcrumbBuilder.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -47,7 +40,6 @@ class TermBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityRepositoryInterface $entity_repository) {
     $this->entityTypeManager = $entity_type_manager;
-    $this->termStorage = $entity_type_manager->getStorage('taxonomy_term');
     $this->entityRepository = $entity_repository;
   }
 
@@ -73,7 +65,7 @@ class TermBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     // @todo This overrides any other possible breadcrumb and is a pure
     //   hard-coded presumption. Make this behavior configurable per
     //   vocabulary or term.
-    $parents = $this->termStorage->loadAllParents($term->id());
+    $parents = $this->entityTypeManager->getStorage('taxonomy_term')->loadAllParents($term->id());
     // Remove current term being accessed.
     array_shift($parents);
     foreach (array_reverse($parents) as $term) {
