@@ -276,7 +276,7 @@ for FILE in $FILES; do
       cd "$TOP_LEVEL/core"
       # Check the coding standards.
       if [[ -f ".eslintrc.passing.json" ]]; then
-        node ./node_modules/eslint/bin/eslint.js --quiet --config=.eslintrc.passing.json "$TOP_LEVEL/$FILE" | indent
+        node ./node_modules/eslint/bin/eslint.js --quiet --config=.eslintrc.passing.json "$TOP_LEVEL/$FILE"
         CORRECTJS=$?
         if [ "$CORRECTJS" -ne "0" ]; then
           # No need to write any output the node command will do this for us.
