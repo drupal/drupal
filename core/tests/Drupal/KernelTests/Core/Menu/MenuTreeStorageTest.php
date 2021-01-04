@@ -226,11 +226,11 @@ class MenuTreeStorageTest extends KernelTestBase {
    * Tests the loadTreeData method.
    */
   public function testLoadTree() {
-    $this->addMenuLink('test1', '');
-    $this->addMenuLink('test2', 'test1');
-    $this->addMenuLink('test3', 'test2');
-    $this->addMenuLink('test4');
-    $this->addMenuLink('test5', 'test4');
+    $this->addMenuLink('test1', '', 'test1');
+    $this->addMenuLink('test2', 'test1', 'test2');
+    $this->addMenuLink('test3', 'test2', 'test3');
+    $this->addMenuLink('test4', '', 'test4');
+    $this->addMenuLink('test5', 'test4', NULL);
 
     $data = $this->treeStorage->loadTreeData('tools', new MenuTreeParameters());
     $tree = $data['tree'];
@@ -239,6 +239,13 @@ class MenuTreeStorageTest extends KernelTestBase {
     $this->assertCount(0, $tree['test1']['subtree']['test2']['subtree']['test3']['subtree']);
     $this->assertCount(1, $tree['test4']['subtree']);
     $this->assertCount(0, $tree['test4']['subtree']['test5']['subtree']);
+
+    // Ensure that route names element exists.
+    $this->assertNotEmpty($data['route_names']);
+
+    // Ensure that the actual route names are set.
+    $this->assertContains('test1', $data['route_names']);
+    $this->assertNotContains('test5', $data['route_names']);
 
     $parameters = new MenuTreeParameters();
     $parameters->setActiveTrail(['test4', 'test5']);
