@@ -45,6 +45,7 @@ class WorkspacesUninstallTest extends BrowserTestBase {
     $this->assertFalse(\Drupal::database()->schema()->fieldExists('node_revision', 'workspace'));
 
     // Verify that the revision metadata key has been removed.
+    $this->rebuildContainer();
     $entity_type = \Drupal::entityDefinitionUpdateManager()->getEntityType('node');
     $revision_metadata_keys = $entity_type->get('revision_metadata_keys');
     $this->assertArrayNotHasKey('workspace', $revision_metadata_keys);

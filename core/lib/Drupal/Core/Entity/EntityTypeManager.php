@@ -66,13 +66,6 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
   protected $entityLastInstalledSchemaRepository;
 
   /**
-   * A list of entity type definitions that are active for the current request.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeInterface[]
-   */
-  protected $activeDefinitions;
-
-  /**
    * Constructs a new Entity plugin manager.
    *
    * @param \Traversable $namespaces
@@ -162,11 +155,8 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
    * @internal
    */
   public function getActiveDefinition($entity_type_id) {
-    if (!isset($this->activeDefinitions[$entity_type_id])) {
-      $this->activeDefinitions[$entity_type_id] = $this->entityLastInstalledSchemaRepository->getLastInstalledDefinition($entity_type_id);
-    }
-
-    return $this->activeDefinitions[$entity_type_id] ?: $this->getDefinition($entity_type_id);
+    $definition = $this->entityLastInstalledSchemaRepository->getLastInstalledDefinition($entity_type_id);
+    return $definition ?: $this->getDefinition($entity_type_id);
   }
 
   /**
@@ -174,7 +164,6 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
    */
   public function clearCachedDefinitions() {
     parent::clearCachedDefinitions();
-    $this->activeDefinitions = [];
     $this->handlers = [];
   }
 
@@ -184,7 +173,6 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
   public function useCaches($use_caches = FALSE) {
     parent::useCaches($use_caches);
     if (!$use_caches) {
-      $this->activeDefinitions = [];
       $this->handlers = [];
       $this->container->get('entity.memory_cache')->reset();
     }

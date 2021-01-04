@@ -582,7 +582,7 @@ services:
     arguments: ['@entity_type.manager', '@module_handler', '@cache.discovery', '@language_manager']
   entity_field.manager:
     class: Drupal\Core\Entity\EntityFieldManager
-    arguments: ['@entity_type.manager', '@entity_type.bundle.info', '@entity_display.repository', '@typed_data_manager', '@language_manager', '@keyvalue', '@module_handler', '@cache.discovery']
+    arguments: ['@entity_type.manager', '@entity_type.bundle.info', '@entity_display.repository', '@typed_data_manager', '@language_manager', '@keyvalue', '@module_handler', '@cache.discovery', '@entity.last_installed_schema.repository']
   entity_type.listener:
     class: Drupal\Core\Entity\EntityTypeListener
     arguments: ['@entity_type.manager', '@entity_field.manager', '@event_dispatcher', '@entity.last_installed_schema.repository']
@@ -599,7 +599,7 @@ services:
     arguments: ['@entity_type.manager', '@entity.last_installed_schema.repository', '@entity_field.manager', '@entity_type.listener', '@field_storage_definition.listener']
   entity.last_installed_schema.repository:
     class: Drupal\Core\Entity\EntityLastInstalledSchemaRepository
-    arguments: ['@keyvalue']
+    arguments: ['@keyvalue', '@cache.discovery']
   entity_field.deleted_fields_repository:
     class: Drupal\Core\Field\DeletedFieldsRepository
     arguments: ['@state']
