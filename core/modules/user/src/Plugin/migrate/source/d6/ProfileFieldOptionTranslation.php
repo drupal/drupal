@@ -24,8 +24,8 @@ class ProfileFieldOptionTranslation extends ProfileField {
       ->fields('lt', ['translation', 'language'])
       ->condition('i18n.type', 'field')
       ->condition('property', 'options');
-    $query->leftjoin('i18n_strings', 'i18n', 'pf.name = i18n.objectid');
-    $query->innerJoin('locales_target', 'lt', 'lt.lid = i18n.lid');
+    $query->leftjoin('i18n_strings', 'i18n', '[pf].[name] = [i18n].[objectid]');
+    $query->innerJoin('locales_target', 'lt', '[lt].[lid] = [i18n].[lid]');
 
     return $query;
   }

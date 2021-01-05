@@ -237,7 +237,7 @@ class SessionTest extends BrowserTestBase {
     $connection = Database::getConnection();
 
     $query = $connection->select('users_field_data', 'u');
-    $query->innerJoin('sessions', 's', 'u.uid = s.uid');
+    $query->innerJoin('sessions', 's', '[u].[uid] = [s].[uid]');
     $query->fields('u', ['access'])
       ->fields('s', ['timestamp'])
       ->condition('u.uid', $user->id());

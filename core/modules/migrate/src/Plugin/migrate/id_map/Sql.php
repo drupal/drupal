@@ -713,7 +713,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    */
   public function getMessages(array $source_id_values = [], $level = NULL) {
     $query = $this->getDatabase()->select($this->messageTableName(), 'msg');
-    $condition = sprintf('msg.%s = map.%s', $this::SOURCE_IDS_HASH, $this::SOURCE_IDS_HASH);
+    $condition = sprintf('[msg].[%s] = [map].[%s]', $this::SOURCE_IDS_HASH, $this::SOURCE_IDS_HASH);
     $query->addJoin('LEFT', $this->mapTableName(), 'map', $condition);
     // Explicitly define the fields we want. The order will be preserved: source
     // IDs, destination IDs (if possible), and then the rest.

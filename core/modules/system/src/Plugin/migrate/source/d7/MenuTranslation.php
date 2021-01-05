@@ -42,8 +42,8 @@ class MenuTranslation extends Menu {
       ->isNotNull('lt.lid');
 
     $query->addField('m', 'language', 'm_language');
-    $query->leftJoin('i18n_string', 'i18n', 'i18n.objectid = m.menu_name');
-    $query->leftJoin('locales_target', 'lt', 'lt.lid = i18n.lid');
+    $query->leftJoin('i18n_string', 'i18n', '[i18n].[objectid] = [m].[menu_name]');
+    $query->leftJoin('locales_target', 'lt', '[lt].[lid] = [i18n].[lid]');
 
     return $query;
   }

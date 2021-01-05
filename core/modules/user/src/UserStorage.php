@@ -21,7 +21,7 @@ class UserStorage extends SqlContentEntityStorage implements UserStorageInterfac
     // The anonymous user account is saved with the fixed user ID of 0.
     // Therefore we need to check for NULL explicitly.
     if ($entity->id() === NULL) {
-      $entity->uid->value = $this->database->nextId($this->database->query('SELECT MAX(uid) FROM {' . $this->getBaseTable() . '}')->fetchField());
+      $entity->uid->value = $this->database->nextId($this->database->query('SELECT MAX([uid]) FROM {' . $this->getBaseTable() . '}')->fetchField());
       $entity->enforceIsNew();
     }
     return parent::doSaveFieldItems($entity, $names);

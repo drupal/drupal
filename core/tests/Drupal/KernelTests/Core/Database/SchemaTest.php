@@ -759,7 +759,7 @@ class SchemaTest extends KernelTestBase {
       $count = $this->connection
         ->select($table_name)
         ->fields($table_name, ['serial_column'])
-        ->where($table_name . '.' . $field_spec['initial_from_field'] . ' <> ' . $table_name . '.' . $field_name)
+        ->where("[$table_name].[{$field_spec['initial_from_field']}] <> [$table_name].[$field_name]")
         ->countQuery()
         ->execute()
         ->fetchField();

@@ -555,7 +555,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       $query->expression($expression[0], $expression[1], $expression[2]);
     }
 
-    $query->expression('depth', 'depth + :depth', [':depth' => $shift]);
+    $query->expression('depth', '[depth] + :depth', [':depth' => $shift]);
     $query->condition('menu_name', $original['menu_name']);
 
     for ($i = 1; $i <= $this->maxDepth() && $original["p$i"]; $i++) {

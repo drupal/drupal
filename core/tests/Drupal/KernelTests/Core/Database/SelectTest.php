@@ -126,7 +126,7 @@ class SelectTest extends DatabaseTestBase {
   public function testSimpleSelectExpression() {
     $query = $this->connection->select('test');
     $name_field = $query->addField('test', 'name');
-    $age_field = $query->addExpression("age*2", 'double_age');
+    $age_field = $query->addExpression("[age]*2", 'double_age');
     $query->condition('age', 27);
     $result = $query->execute();
 
@@ -146,8 +146,8 @@ class SelectTest extends DatabaseTestBase {
   public function testSimpleSelectExpressionMultiple() {
     $query = $this->connection->select('test');
     $name_field = $query->addField('test', 'name');
-    $age_double_field = $query->addExpression("age*2");
-    $age_triple_field = $query->addExpression("age*3");
+    $age_double_field = $query->addExpression("[age]*2");
+    $age_triple_field = $query->addExpression("[age]*3");
     $query->condition('age', 27);
     $result = $query->execute();
 

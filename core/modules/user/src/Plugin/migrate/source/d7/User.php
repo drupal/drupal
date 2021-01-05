@@ -95,7 +95,7 @@ class User extends FieldableEntity {
     if ($this->getDatabase()->schema()->tableExists('profile_value')) {
       $query = $this->select('profile_value', 'pv')
         ->fields('pv', ['fid', 'value']);
-      $query->leftJoin('profile_field', 'pf', 'pf.fid=pv.fid');
+      $query->leftJoin('profile_field', 'pf', '[pf].[fid] = [pv].[fid]');
       $query->fields('pf', ['name', 'type']);
       $query->condition('uid', $row->getSourceProperty('uid'));
       $results = $query->execute();

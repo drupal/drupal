@@ -258,7 +258,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     // Retrieve the source string of the first string available in the
     // {locales_source} table and translate it.
     $query = Database::getConnection()->select('locales_source', 's');
-    $query->addJoin('INNER', 'locales_location', 'l', 's.lid = l.lid');
+    $query->addJoin('INNER', 'locales_location', 'l', '[s].[lid] = [l].[lid]');
     $source = $query->fields('s', ['source'])
       ->condition('l.type', 'javascript')
       ->range(0, 1)

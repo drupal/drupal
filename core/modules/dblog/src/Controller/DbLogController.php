@@ -173,7 +173,7 @@ class DbLogController extends ControllerBase {
       'variables',
       'link',
     ]);
-    $query->leftJoin('users_field_data', 'ufd', 'w.uid = ufd.uid');
+    $query->leftJoin('users_field_data', 'ufd', '[w].[uid] = [ufd].[uid]');
 
     if (!empty($filter['where'])) {
       $query->where($filter['where'], $filter['args']);
@@ -248,7 +248,7 @@ class DbLogController extends ControllerBase {
    *   If no event found for the given ID.
    */
   public function eventDetails($event_id) {
-    $dblog = $this->database->query('SELECT w.*, u.uid FROM {watchdog} w LEFT JOIN {users} u ON u.uid = w.uid WHERE w.wid = :id', [':id' => $event_id])->fetchObject();
+    $dblog = $this->database->query('SELECT [w].*, [u].[uid] FROM {watchdog} [w] LEFT JOIN {users} [u] ON [u].[uid] = [w].[uid] WHERE [w].[wid] = :id', [':id' => $event_id])->fetchObject();
 
     if (empty($dblog)) {
       throw new NotFoundHttpException();
@@ -423,13 +423,13 @@ class DbLogController extends ControllerBase {
     ];
 
     $count_query = $this->database->select('watchdog');
-    $count_query->addExpression('COUNT(DISTINCT(message))');
+    $count_query->addExpression('COUNT(DISTINCT([message]))');
     $count_query->condition('type', $type);
 
     $query = $this->database->select('watchdog', 'w')
       ->extend('\Drupal\Core\Database\Query\PagerSelectExtender')
       ->extend('\Drupal\Core\Database\Query\TableSortExtender');
-    $query->addExpression('COUNT(wid)', 'count');
+    $query->addExpression('COUNT([wid])', 'count');
     $query = $query
       ->fields('w', ['message', 'variables'])
       ->condition('w.type', $type)

@@ -84,7 +84,7 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
       ->condition('field_name', $comment->getFieldName())
       ->condition('entity_type', $comment->getCommentedEntityTypeId())
       ->condition('default_langcode', 1);
-    $query->addExpression('MAX(thread)', 'thread');
+    $query->addExpression('MAX([thread])', 'thread');
     return $query->execute()
       ->fetchField();
   }
@@ -99,7 +99,7 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
       ->condition('entity_type', $comment->getCommentedEntityTypeId())
       ->condition('thread', $comment->getParentComment()->getThread() . '.%', 'LIKE')
       ->condition('default_langcode', 1);
-    $query->addExpression('MAX(thread)', 'thread');
+    $query->addExpression('MAX([thread])', 'thread');
     return $query->execute()
       ->fetchField();
   }
@@ -112,7 +112,7 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
     // This is the 0-based display ordinal.
     $data_table = $this->getDataTable();
     $query = $this->database->select($data_table, 'c1');
-    $query->innerJoin($data_table, 'c2', 'c2.entity_id = c1.entity_id AND c2.entity_type = c1.entity_type AND c2.field_name = c1.field_name');
+    $query->innerJoin($data_table, 'c2', '[c2].[entity_id] = [c1].[entity_id] AND [c2].[entity_type] = [c1].[entity_type] AND [c2].[field_name] = [c1].[field_name]');
     $query->addExpression('COUNT(*)', 'count');
     $query->condition('c2.cid', $comment->id());
     if (!$this->currentUser->hasPermission('administer comments')) {
@@ -129,7 +129,7 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
       // For threaded comments, the c.thread column is used for ordering. We can
       // use the sorting code for comparison, but must remove the trailing
       // slash.
-      $query->where('SUBSTRING(c1.thread, 1, (LENGTH(c1.thread) - 1)) < SUBSTRING(c2.thread, 1, (LENGTH(c2.thread) - 1))');
+      $query->where('SUBSTRING([c1].[thread], 1, (LENGTH([c1].[thread]) - 1)) < SUBSTRING([c2].[thread], 1, (LENGTH([c2].[thread]) - 1))');
     }
 
     $query->condition('c1.default_langcode', 1);
@@ -173,7 +173,7 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
 
       // 2. Find the first thread.
       $first_thread_query = $this->database->select($unread_threads_query, 'thread');
-      $first_thread_query->addExpression('SUBSTRING(thread, 1, (LENGTH(thread) - 1))', 'torder');
+      $first_thread_query->addExpression('SUBSTRING([thread], 1, (LENGTH([thread]) - 1))', 'torder');
       $first_thread = $first_thread_query
         ->fields('thread', ['thread'])
         ->orderBy('torder')
@@ -185,12 +185,12 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
       $first_thread = substr($first_thread, 0, -1);
 
       // Find the number of the first comment of the first unread thread.
-      $count = $this->database->query('SELECT COUNT(*) FROM {' . $data_table . '} WHERE entity_id = :entity_id
-                        AND entity_type = :entity_type
-                        AND field_name = :field_name
-                        AND status = :status
-                        AND SUBSTRING(thread, 1, (LENGTH(thread) - 1)) < :thread
-                        AND default_langcode = 1', [
+      $count = $this->database->query('SELECT COUNT(*) FROM {' . $data_table . '} WHERE [entity_id] = :entity_id
+                        AND [entity_type] = :entity_type
+                        AND [field_name] = :field_name
+                        AND [status] = :status
+                        AND SUBSTRING([thread], 1, (LENGTH([thread]) - 1)) < :thread
+                        AND [default_langcode] = 1', [
         ':status' => CommentInterface::PUBLISHED,
         ':entity_id' => $entity->id(),
         ':field_name' => $field_name,
@@ -321,7 +321,7 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
       // See comment above. Analysis reveals that this doesn't cost too
       // much. It scales much much better than having the whole comment
       // structure.
-      $query->addExpression('SUBSTRING(c.thread, 1, (LENGTH(c.thread) - 1))', 'torder');
+      $query->addExpression('SUBSTRING([c].[thread], 1, (LENGTH([c].[thread]) - 1))', 'torder');
       $query->orderBy('torder', 'ASC');
     }
 

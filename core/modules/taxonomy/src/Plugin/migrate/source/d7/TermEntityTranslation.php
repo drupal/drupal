@@ -32,8 +32,8 @@ class TermEntityTranslation extends FieldableEntity {
       ->condition('et.entity_type', 'taxonomy_term')
       ->condition('et.source', '', '<>');
 
-    $query->innerJoin('taxonomy_term_data', 'td', 'td.tid = et.entity_id');
-    $query->innerJoin('taxonomy_vocabulary', 'tv', 'td.vid = tv.vid');
+    $query->innerJoin('taxonomy_term_data', 'td', '[td].[tid] = [et].[entity_id]');
+    $query->innerJoin('taxonomy_vocabulary', 'tv', '[td].[vid] = [tv].[vid]');
 
     if (isset($this->configuration['bundle'])) {
       $query->condition('tv.machine_name', (array) $this->configuration['bundle'], 'IN');

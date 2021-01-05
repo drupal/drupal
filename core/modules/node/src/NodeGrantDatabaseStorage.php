@@ -189,7 +189,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
 
         $field = 'nid';
         // Now handle entities.
-        $subquery->where("$nalias.$field = na.nid");
+        $subquery->where("[$nalias].[$field] = [na].[nid]");
 
         $query->exists($subquery);
       }

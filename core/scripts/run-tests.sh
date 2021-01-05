@@ -1495,7 +1495,7 @@ function simpletest_script_load_messages_by_test_id($test_ids) {
   foreach ($test_id_chunks as $test_id_chunk) {
     try {
       $result_chunk = Database::getConnection('default', 'test-runner')
-        ->query("SELECT * FROM {simpletest} WHERE test_id IN ( :test_ids[] ) ORDER BY test_class, message_id", [
+        ->query("SELECT * FROM {simpletest} WHERE [test_id] IN ( :test_ids[] ) ORDER BY [test_class], [message_id]", [
           ':test_ids[]' => $test_id_chunk,
         ])->fetchAll();
     }

@@ -122,7 +122,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
       ->fields('t', ['name'])
       ->orderBy('name')
       ->groupBy('name')
-      ->having('MAX(age) > :count', [':count' => 26])
+      ->having('MAX([age]) > :count', [':count' => 26])
       ->limit(5);
 
     $ages = $query

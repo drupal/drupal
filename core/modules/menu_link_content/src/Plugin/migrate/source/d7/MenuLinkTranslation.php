@@ -26,13 +26,13 @@ class MenuLinkTranslation extends MenuLink {
 
     // Add in the property, which is either title or description. Cast the mlid
     // to text so PostgreSQL can make the join.
-    $query->leftJoin('i18n_string', 'i18n', 'CAST(ml.mlid AS CHAR(255)) = i18n.objectid');
+    $query->leftJoin('i18n_string', 'i18n', 'CAST([ml].[mlid] AS CHAR(255)) = [i18n].[objectid]');
     $query->fields('i18n', ['lid', 'objectid', 'property', 'textgroup'])
       ->condition('i18n.textgroup', 'menu')
       ->condition('i18n.type', 'item');
 
     // Add in the translation for the property.
-    $query->innerJoin('locales_target', 'lt', 'i18n.lid = lt.lid');
+    $query->innerJoin('locales_target', 'lt', '[i18n].[lid] = [lt].[lid]');
     $query->addField('lt', 'language', 'lt_language');
     $query->fields('lt', ['translation']);
     $query->isNotNull('lt.language');

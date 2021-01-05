@@ -157,7 +157,7 @@ class InsertTest extends DatabaseTestBase {
     // The query builder will always append expressions after fields.
     // Add the expression first to test that the insert fields are correctly
     // re-ordered.
-    $query->addExpression('tp.age', 'age');
+    $query->addExpression('[tp].[age]', 'age');
     $query
       ->fields('tp', ['name', 'job'])
       ->condition('tp.name', 'Meredith');

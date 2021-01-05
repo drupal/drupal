@@ -142,7 +142,7 @@ class NodeRevisionDeleteForm extends ConfirmFormBase {
       'entity.node.canonical',
       ['node' => $this->revision->id()]
     );
-    if ($this->connection->query('SELECT COUNT(DISTINCT vid) FROM {node_field_revision} WHERE nid = :nid', [':nid' => $this->revision->id()])->fetchField() > 1) {
+    if ($this->connection->query('SELECT COUNT(DISTINCT [vid]) FROM {node_field_revision} WHERE [nid] = :nid', [':nid' => $this->revision->id()])->fetchField() > 1) {
       $form_state->setRedirect(
         'entity.node.version_history',
         ['node' => $this->revision->id()]

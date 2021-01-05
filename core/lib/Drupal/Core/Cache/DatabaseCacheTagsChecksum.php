@@ -37,7 +37,7 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
       foreach ($tags as $tag) {
         $this->connection->merge('cachetags')
           ->insertFields(['invalidations' => 1])
-          ->expression('invalidations', 'invalidations + 1')
+          ->expression('invalidations', '[invalidations] + 1')
           ->key('tag', $tag)
           ->execute();
       }

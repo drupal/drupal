@@ -56,7 +56,7 @@ class AlterTest extends DatabaseTestBase {
     $tid_field = $query->addField('test_task', 'tid');
     $pid_field = $query->addField('test_task', 'pid');
     $task_field = $query->addField('test_task', 'task');
-    $people_alias = $query->join('test', 'people', "test_task.pid = people.id");
+    $people_alias = $query->join('test', 'people', "[test_task].[pid] = [people].[id]");
     $name_field = $query->addField($people_alias, 'name', 'name');
     $query->condition('test_task.tid', '1');
     $query->orderBy($tid_field);
@@ -94,7 +94,7 @@ class AlterTest extends DatabaseTestBase {
   public function testAlterExpression() {
     $query = $this->connection->select('test');
     $name_field = $query->addField('test', 'name');
-    $age_field = $query->addExpression("age*2", 'double_age');
+    $age_field = $query->addExpression("[age]*2", 'double_age');
     $query->condition('age', 27);
     $query->addTag('database_test_alter_change_expressions');
     $result = $query->execute();
@@ -133,13 +133,13 @@ class AlterTest extends DatabaseTestBase {
     $subquery->addField('p', 'id');
     // Pick out George.
     $subquery->condition('age', 27);
-    $subquery->addExpression("age*2", 'double_age');
+    $subquery->addExpression("[age]*2", 'double_age');
     // This query alter should change it to age * 3.
     $subquery->addTag('database_test_alter_change_expressions');
 
     // Create a main query and join to sub-query.
     $query = $this->connection->select('test_task', 'tt');
-    $query->join($subquery, 'pq', 'pq.id = tt.pid');
+    $query->join($subquery, 'pq', '[pq].[id] = [tt].[pid]');
     $age_field = $query->addField('pq', 'double_age');
     $name_field = $query->addField('pq', 'name');
 

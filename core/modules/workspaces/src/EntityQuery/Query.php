@@ -31,8 +31,8 @@ class Query extends BaseQuery {
       // relationship, and, as a consequence, the revision ID field is no longer
       // a simple SQL field but an expression.
       $this->sqlFields = [];
-      $this->sqlQuery->addExpression("COALESCE(workspace_association.target_entity_revision_id, base_table.$revision_field)", $revision_field);
-      $this->sqlQuery->addExpression("base_table.$id_field", $id_field);
+      $this->sqlQuery->addExpression("COALESCE([workspace_association].[target_entity_revision_id], [base_table].[$revision_field])", $revision_field);
+      $this->sqlQuery->addExpression("[base_table].[$id_field]", $id_field);
 
       $this->sqlGroupBy['workspace_association.target_entity_revision_id'] = 'workspace_association.target_entity_revision_id';
       $this->sqlGroupBy["base_table.$id_field"] = "base_table.$id_field";

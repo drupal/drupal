@@ -27,8 +27,8 @@ class CommentEntityTranslation extends FieldableEntity {
       ->condition('et.entity_type', 'comment')
       ->condition('et.source', '', '<>');
 
-    $query->innerJoin('comment', 'c', 'c.cid = et.entity_id');
-    $query->innerJoin('node', 'n', 'n.nid = c.nid');
+    $query->innerJoin('comment', 'c', '[c].[cid] = [et].[entity_id]');
+    $query->innerJoin('node', 'n', '[n].[nid] = [c].[nid]');
 
     $query->addField('n', 'type', 'node_type');
 

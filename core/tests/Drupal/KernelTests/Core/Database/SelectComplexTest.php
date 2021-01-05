@@ -26,7 +26,7 @@ class SelectComplexTest extends DatabaseTestBase {
    */
   public function testDefaultJoin() {
     $query = $this->connection->select('test_task', 't');
-    $people_alias = $query->join('test', 'p', 't.pid = p.id');
+    $people_alias = $query->join('test', 'p', '[t].[pid] = [p].[id]');
     $name_field = $query->addField($people_alias, 'name', 'name');
     $query->addField('t', 'task', 'task');
     $priority_field = $query->addField('t', 'priority', 'priority');
@@ -52,7 +52,7 @@ class SelectComplexTest extends DatabaseTestBase {
    */
   public function testLeftOuterJoin() {
     $query = $this->connection->select('test', 'p');
-    $people_alias = $query->leftJoin('test_task', 't', 't.pid = p.id');
+    $people_alias = $query->leftJoin('test_task', 't', '[t].[pid] = [p].[id]');
     $name_field = $query->addField('p', 'name', 'name');
     $query->addField($people_alias, 'task', 'task');
     $query->addField($people_alias, 'priority', 'priority');
@@ -77,7 +77,7 @@ class SelectComplexTest extends DatabaseTestBase {
    */
   public function testGroupBy() {
     $query = $this->connection->select('test_task', 't');
-    $count_field = $query->addExpression('COUNT(task)', 'num');
+    $count_field = $query->addExpression('COUNT([task])', 'num');
     $task_field = $query->addField('t', 'task');
     $query->orderBy($count_field);
     $query->groupBy($task_field);
@@ -114,11 +114,11 @@ class SelectComplexTest extends DatabaseTestBase {
    */
   public function testGroupByAndHaving() {
     $query = $this->connection->select('test_task', 't');
-    $count_field = $query->addExpression('COUNT(task)', 'num');
+    $count_field = $query->addExpression('COUNT([task])', 'num');
     $task_field = $query->addField('t', 'task');
     $query->orderBy($count_field);
     $query->groupBy($task_field);
-    $query->having('COUNT(task) >= 2');
+    $query->having('COUNT([task]) >= 2');
     $result = $query->execute();
 
     $num_records = 0;
@@ -212,9 +212,9 @@ class SelectComplexTest extends DatabaseTestBase {
     $query = $this->connection->select('test')
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
       ->groupBy('age')
-      ->having('age + 1 > 0');
+      ->having('[age] + 1 > 0');
     $query->addField('test', 'age');
-    $query->addExpression('age + 1');
+    $query->addExpression('[age] + 1');
     $count = count($query->execute()->fetchCol());
     $this->assertEqual($count, 4, 'Counted the correct number of records.');
   }
@@ -263,7 +263,7 @@ class SelectComplexTest extends DatabaseTestBase {
     $this->assertEqual(4, $query->countQuery()->execute()->fetchField(), 'Count Query removed fields');
 
     $query = $this->connection->select('test');
-    $query->addExpression('fail');
+    $query->addExpression('[fail]');
     $this->assertEqual(4, $query->countQuery()->execute()->fetchField(), 'Count Query removed expressions');
   }
 
@@ -296,7 +296,7 @@ class SelectComplexTest extends DatabaseTestBase {
     // reason.
     $query = $this->connection->select('test_task');
     $query->addField('test_task', 'pid', 'pid_alias');
-    $query->addExpression('COUNT(test_task.task)', 'count');
+    $query->addExpression('COUNT([test_task].[task])', 'count');
     $query->groupBy('pid_alias');
     $query->orderBy('pid_alias', 'asc');
 
@@ -327,10 +327,10 @@ class SelectComplexTest extends DatabaseTestBase {
    */
   public function testJoinTwice() {
     $query = $this->connection->select('test')->fields('test');
-    $alias = $query->join('test', 'test', 'test.job = %alias.job');
+    $alias = $query->join('test', 'test', '[test].[job] = [%alias].[job]');
     $query->addField($alias, 'name', 'other_name');
     $query->addField($alias, 'job', 'other_job');
-    $query->where("$alias.name <> test.name");
+    $query->where("[$alias].[name] <> [test].[name]");
     $crowded_job = $query->execute()->fetch();
     $this->assertEqual($crowded_job->job, $crowded_job->other_job, 'Correctly joined same table twice.');
     $this->assertNotEqual($crowded_job->name, $crowded_job->other_name, 'Correctly joined same table twice.');
@@ -348,21 +348,21 @@ class SelectComplexTest extends DatabaseTestBase {
     ]);
 
     $query = Database::getConnection('replica')->select('test_task', 'tt');
-    $query->addExpression('tt.pid + 1', 'abc');
+    $query->addExpression('[tt].[pid] + 1', 'abc');
     $query->condition('priority', 1, '>');
     $query->condition('priority', 100, '<');
 
     $subquery = $this->connection->select('test', 'tp');
-    $subquery->join('test_one_blob', 'tpb', 'tp.id = tpb.id');
-    $subquery->join('node', 'n', 'tp.id = n.nid');
+    $subquery->join('test_one_blob', 'tpb', '[tp].[id] = [tpb].[id]');
+    $subquery->join('node', 'n', '[tp].[id] = [n].[nid]');
     $subquery->addTag('node_access');
     $subquery->addMetaData('account', $account);
     $subquery->addField('tp', 'id');
     $subquery->condition('age', 5, '>');
     $subquery->condition('age', 500, '<');
 
-    $query->leftJoin($subquery, 'sq', 'tt.pid = sq.id');
-    $query->join('test_one_blob', 'tb3', 'tt.pid = tb3.id');
+    $query->leftJoin($subquery, 'sq', '[tt].[pid] = [sq].[id]');
+    $query->join('test_one_blob', 'tb3', '[tt].[pid] = [tb3].[id]');
 
     // Construct the query string.
     // This is the same sequence that SelectQuery::execute() goes through.
@@ -399,7 +399,7 @@ class SelectComplexTest extends DatabaseTestBase {
   public function testJoinConditionObject() {
     // Same test as testDefaultJoin, but with a Condition object.
     $query = $this->connection->select('test_task', 't');
-    $join_cond = ($this->connection->condition('AND'))->where('t.pid = p.id');
+    $join_cond = ($this->connection->condition('AND'))->where('[t].[pid] = [p].[id]');
     $people_alias = $query->join('test', 'p', $join_cond);
     $name_field = $query->addField($people_alias, 'name', 'name');
     $query->addField('t', 'task', 'task');

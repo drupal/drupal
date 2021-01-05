@@ -209,7 +209,7 @@ trait MigrationConfigurationTrait {
     if ($connection->schema()->tableExists('system')) {
       try {
         $version_string = $connection
-          ->query('SELECT schema_version FROM {system} WHERE name = :module', [':module' => 'system'])
+          ->query('SELECT [schema_version] FROM {system} WHERE [name] = :module', [':module' => 'system'])
           ->fetchField();
         if ($version_string && $version_string[0] == '1') {
           if ((int) $version_string >= 1000) {
@@ -229,7 +229,7 @@ trait MigrationConfigurationTrait {
     elseif ($connection->schema()->tableExists('key_value')) {
       try {
         $result = $connection
-          ->query("SELECT value FROM {key_value} WHERE collection = :system_schema  and name = :module", [
+          ->query("SELECT [value] FROM {key_value} WHERE [collection] = :system_schema AND [name] = :module", [
             ':system_schema' => 'system.schema',
             ':module' => 'system',
           ])

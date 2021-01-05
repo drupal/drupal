@@ -17,8 +17,8 @@ class FieldOptionTranslation extends Field {
    */
   public function query() {
     $query = parent::query();
-    $query->leftJoin('i18n_string', 'i18n', 'i18n.type = fc.field_name');
-    $query->innerJoin('locales_target', 'lt', 'lt.lid = i18n.lid');
+    $query->leftJoin('i18n_string', 'i18n', '[i18n].[type] = [fc].[field_name]');
+    $query->innerJoin('locales_target', 'lt', '[lt].[lid] = [i18n].[lid]');
     $query->condition('i18n.textgroup', 'field')
       ->condition('objectid', '#allowed_values');
     // Add all i18n and locales_target fields.

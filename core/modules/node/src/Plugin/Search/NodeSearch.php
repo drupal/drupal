@@ -263,7 +263,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       ->select('search_index', 'i')
       ->extend('Drupal\search\SearchQuery')
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender');
-    $query->join('node_field_data', 'n', 'n.nid = i.sid AND n.langcode = i.langcode');
+    $query->join('node_field_data', 'n', '[n].[nid] = [i].[sid] AND [n].[langcode] = [i].[langcode]');
     $query->condition('n.status', 1)
       ->addTag('node_access')
       ->searchExpression($keys, $this->getPluginId());
@@ -462,12 +462,12 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
 
     $query = $this->databaseReplica->select('node', 'n');
     $query->addField('n', 'nid');
-    $query->leftJoin('search_dataset', 'sd', 'sd.sid = n.nid AND sd.type = :type', [':type' => $this->getPluginId()]);
-    $query->addExpression('CASE MAX(sd.reindex) WHEN NULL THEN 0 ELSE 1 END', 'ex');
-    $query->addExpression('MAX(sd.reindex)', 'ex2');
+    $query->leftJoin('search_dataset', 'sd', '[sd].[sid] = [n].[nid] AND [sd].[type] = :type', [':type' => $this->getPluginId()]);
+    $query->addExpression('CASE MAX([sd].[reindex]) WHEN NULL THEN 0 ELSE 1 END', 'ex');
+    $query->addExpression('MAX([sd].[reindex])', 'ex2');
     $query->condition(
         $query->orConditionGroup()
-          ->where('sd.sid IS NULL')
+          ->where('[sd].[sid] IS NULL')
           ->condition('sd.reindex', 0, '<>')
       );
     $query->orderBy('ex', 'DESC')
@@ -558,7 +558,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
    */
   public function indexStatus() {
     $total = $this->database->query('SELECT COUNT(*) FROM {node}')->fetchField();
-    $remaining = $this->database->query("SELECT COUNT(DISTINCT n.nid) FROM {node} n LEFT JOIN {search_dataset} sd ON sd.sid = n.nid AND sd.type = :type WHERE sd.sid IS NULL OR sd.reindex <> 0", [':type' => $this->getPluginId()])->fetchField();
+    $remaining = $this->database->query("SELECT COUNT(DISTINCT [n].[nid]) FROM {node} [n] LEFT JOIN {search_dataset} [sd] ON [sd].[sid] = [n].[nid] AND [sd].[type] = :type WHERE [sd].[sid] IS NULL OR [sd].[reindex] <> 0", [':type' => $this->getPluginId()])->fetchField();
 
     return ['remaining' => $remaining, 'total' => $total];
   }

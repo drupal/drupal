@@ -24,7 +24,7 @@ class UserUid extends FilterPluginBase {
 
     $entity_id = $this->definition['entity_id'];
     $entity_type = $this->definition['entity_type'];
-    $subselect->where("c.entity_id = $this->tableAlias.$entity_id");
+    $subselect->where("[c].[entity_id] = [$this->tableAlias].[$entity_id]");
     $subselect->condition('c.entity_type', $entity_type);
 
     $condition = ($this->view->query->getConnection()->condition('OR'))

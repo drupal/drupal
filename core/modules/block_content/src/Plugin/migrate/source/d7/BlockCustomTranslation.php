@@ -44,11 +44,11 @@ class BlockCustomTranslation extends DrupalSqlBase {
 
     // Add in the property, which is either title or body. Cast the bid to text
     // so PostgreSQL can make the join.
-    $query->leftJoin(static::I18N_STRING_TABLE, 'i18n', 'i18n.objectid = CAST(b.bid AS CHAR(255))');
+    $query->leftJoin(static::I18N_STRING_TABLE, 'i18n', '[i18n].[objectid] = CAST([b].[bid] AS CHAR(255))');
     $query->condition('i18n.type', 'block');
 
     // Add in the translation for the property.
-    $query->innerJoin('locales_target', 'lt', 'lt.lid = i18n.lid');
+    $query->innerJoin('locales_target', 'lt', '[lt].[lid] = [i18n].[lid]');
     return $query;
   }
 

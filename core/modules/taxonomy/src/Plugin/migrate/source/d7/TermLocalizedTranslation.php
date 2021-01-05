@@ -34,13 +34,13 @@ class TermLocalizedTranslation extends Term {
 
     // Add in the property, which is either name or description.
     // Cast td.tid as char for PostgreSQL compatibility.
-    $query->leftJoin('i18n_string', 'i18n', 'CAST(td.tid AS CHAR(255)) = i18n.objectid');
+    $query->leftJoin('i18n_string', 'i18n', 'CAST([td].[tid] AS CHAR(255)) = [i18n].[objectid]');
     $query->condition('i18n.type', 'term');
     $query->addField('i18n', 'lid');
     $query->addField('i18n', 'property');
 
     // Add in the translation for the property.
-    $query->innerJoin('locales_target', 'lt', 'i18n.lid = lt.lid');
+    $query->innerJoin('locales_target', 'lt', '[i18n].[lid] = [lt].[lid]');
     $query->addField('lt', 'language', 'lt.language');
     $query->addField('lt', 'translation');
     return $query;

@@ -48,7 +48,7 @@ class DatabaseTestController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    */
   public function dbQueryTemporary() {
-    $table_name = $this->connection->queryTemporary('SELECT age FROM {test}', []);
+    $table_name = $this->connection->queryTemporary('SELECT [age] FROM {test}', []);
     return new JsonResponse([
       'table_name' => $table_name,
       'row_count' => $this->connection->select($table_name)->countQuery()->execute()->fetchField(),

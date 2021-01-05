@@ -27,7 +27,7 @@ class BlockTranslation extends Block {
     $query = $this->select('i18n_blocks', 'i18n')
       ->fields('i18n')
       ->fields('b', ['bid', 'module', 'delta', 'theme', 'title']);
-    $query->innerJoin($this->blockTable, 'b', ('b.module = i18n.module AND b.delta = i18n.delta'));
+    $query->innerJoin($this->blockTable, 'b', ('[b].[module] = [i18n].[module] AND [b].[delta] = [i18n].[delta]'));
     return $query;
   }
 

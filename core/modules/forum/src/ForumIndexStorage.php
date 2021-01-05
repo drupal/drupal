@@ -32,7 +32,7 @@ class ForumIndexStorage implements ForumIndexStorageInterface {
    * {@inheritdoc}
    */
   public function getOriginalTermId(NodeInterface $node) {
-    return $this->database->queryRange("SELECT f.tid FROM {forum} f INNER JOIN {node} n ON f.vid = n.vid WHERE n.nid = :nid ORDER BY f.vid DESC", 0, 1, [':nid' => $node->id()])->fetchField();
+    return $this->database->queryRange("SELECT [f].[tid] FROM {forum} [f] INNER JOIN {node} [n] ON [f].[vid] = [n].[vid] WHERE [n].[nid] = :nid ORDER BY [f].[vid] DESC", 0, 1, [':nid' => $node->id()])->fetchField();
   }
 
   /**
@@ -92,14 +92,14 @@ class ForumIndexStorage implements ForumIndexStorageInterface {
    */
   public function updateIndex(NodeInterface $node) {
     $nid = $node->id();
-    $count = $this->database->query("SELECT COUNT(cid) FROM {comment_field_data} c INNER JOIN {forum_index} i ON c.entity_id = i.nid WHERE c.entity_id = :nid AND c.field_name = 'comment_forum' AND c.entity_type = 'node' AND c.status = :status AND c.default_langcode = 1", [
+    $count = $this->database->query("SELECT COUNT([cid]) FROM {comment_field_data} [c] INNER JOIN {forum_index} [i] ON [c].[entity_id] = [i].[nid] WHERE [c].[entity_id] = :nid AND [c].[field_name] = 'comment_forum' AND [c].[entity_type] = 'node' AND [c].[status] = :status AND [c].[default_langcode] = 1", [
       ':nid' => $nid,
       ':status' => CommentInterface::PUBLISHED,
     ])->fetchField();
 
     if ($count > 0) {
       // Comments exist.
-      $last_reply = $this->database->queryRange("SELECT cid, name, created, uid FROM {comment_field_data} WHERE entity_id = :nid AND field_name = 'comment_forum' AND entity_type = 'node' AND status = :status AND default_langcode = 1 ORDER BY cid DESC", 0, 1, [
+      $last_reply = $this->database->queryRange("SELECT [cid], [name], [created], [uid] FROM {comment_field_data} WHERE [entity_id] = :nid AND [field_name] = 'comment_forum' AND [entity_type] = 'node' AND [status] = :status AND [default_langcode] = 1 ORDER BY [cid] DESC", 0, 1, [
         ':nid' => $nid,
         ':status' => CommentInterface::PUBLISHED,
       ])->fetchObject();

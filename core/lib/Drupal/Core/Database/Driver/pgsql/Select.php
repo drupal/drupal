@@ -31,7 +31,7 @@ class Select extends QuerySelect {
    *
    * @code
    *   $query = \Drupal::database()->select('example', 'e');
-   *   $query->join('example_revision', 'er', 'e.vid = er.vid');
+   *   $query->join('example_revision', 'er', '[e].[vid] = [er].[vid]');
    *   $query
    *     ->distinct()
    *     ->fields('e')

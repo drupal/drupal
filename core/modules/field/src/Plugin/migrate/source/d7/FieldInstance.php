@@ -26,7 +26,7 @@ class FieldInstance extends DrupalSqlBase {
       ->condition('fc.storage_active', 1)
       ->condition('fc.deleted', 0)
       ->condition('fci.deleted', 0);
-    $query->join('field_config', 'fc', 'fci.field_id = fc.id');
+    $query->join('field_config', 'fc', '[fci].[field_id] = [fc].[id]');
 
     // Optionally filter by entity type and bundle.
     if (isset($this->configuration['entity_type'])) {

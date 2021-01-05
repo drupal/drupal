@@ -78,7 +78,7 @@ class Node extends FieldableEntity {
   /**
    * The join options between the node and the node_revisions table.
    */
-  const JOIN = 'n.vid = nr.vid';
+  const JOIN = '[n].[vid] = [nr].[vid]';
 
   /**
    * {@inheritdoc}
@@ -112,7 +112,7 @@ class Node extends FieldableEntity {
     // If the content_translation module is enabled, get the source langcode
     // to fill the content_translation_source field.
     if ($this->moduleHandler->moduleExists('content_translation')) {
-      $query->leftJoin('node', 'nt', 'n.tnid = nt.nid');
+      $query->leftJoin('node', 'nt', '[n].[tnid] = [nt].[nid]');
       $query->addField('nt', 'language', 'source_langcode');
     }
     $this->handleTranslations($query);
@@ -214,11 +214,11 @@ class Node extends FieldableEntity {
     // Check whether or not we want translations.
     if (empty($this->configuration['translations'])) {
       // No translations: Yield untranslated nodes, or default translations.
-      $query->where('n.tnid = 0 OR n.tnid = n.nid');
+      $query->where('[n].[tnid] = 0 OR [n].[tnid] = [n].[nid]');
     }
     else {
       // Translations: Yield only non-default translations.
-      $query->where('n.tnid <> 0 AND n.tnid <> n.nid');
+      $query->where('[n].[tnid] <> 0 AND [n].[tnid] <> [n].[nid]');
     }
   }
 

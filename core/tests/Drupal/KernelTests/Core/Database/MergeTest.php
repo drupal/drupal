@@ -129,7 +129,7 @@ class MergeTest extends DatabaseTestBase {
       ->key('job', 'Speaker')
       ->fields(['name' => 'Tiffany'])
       ->insertFields(['age' => 31])
-      ->expression('age', 'age + :age', [':age' => 4])
+      ->expression('age', '[age] + :age', [':age' => 4])
       ->execute();
 
     $num_records_after = $this->connection->query('SELECT COUNT(*) FROM {test_people}')->fetchField();

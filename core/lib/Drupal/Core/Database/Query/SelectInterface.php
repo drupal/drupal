@@ -379,7 +379,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *
    *   Example:
    *   @code
-   *   $query->addExpression('SUBSTRING(thread, 1, (LENGTH(thread) - 1))', 'order_field');
+   *   $query->addExpression('SUBSTRING([thread], 1, (LENGTH([thread]) - 1))', 'order_field');
    *   $query->orderBy('order_field', 'ASC');
    *   @endcode
    * @param $direction

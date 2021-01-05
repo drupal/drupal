@@ -17,7 +17,7 @@ function database_test_query_alter(AlterableInterface $query) {
   }
 
   if ($query->hasTag('database_test_alter_add_join')) {
-    $people_alias = $query->join('test', 'people', "test_task.pid = %alias.id");
+    $people_alias = $query->join('test', 'people', "[test_task].[pid] = [%alias].[id]");
     $query->addField($people_alias, 'name', 'name');
     $query->condition($people_alias . '.id', 2);
   }
@@ -34,7 +34,7 @@ function database_test_query_alter(AlterableInterface $query) {
 
   if ($query->hasTag('database_test_alter_change_expressions')) {
     $expressions =& $query->getExpressions();
-    $expressions['double_age']['expression'] = 'age*3';
+    $expressions['double_age']['expression'] = '[age]*3';
   }
 }
 
