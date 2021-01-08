@@ -93,6 +93,9 @@
         props.body.classList.remove('js-overlay-active');
         props.body.classList.remove('js-fixed');
       }
+
+      // Ensure that all sub-navigation menus close when the browser is resized.
+      Drupal.olivero.closeAllSubNav();
     });
   }
 
