@@ -2,7 +2,10 @@
  * @file
  * This file is used to create a 2 column grid layout.
  */
-
+.grid--2 .view-content {
+  margin-right: -14px;
+  margin-left: -14px;
+}
 .grid--2 .views-row {
   margin-bottom: 28px;
   padding: 0 14px;
@@ -15,7 +18,6 @@
   .grid--2 .view-content {
     display: flex;
     flex-wrap: wrap;
-    margin: 0;
   }
   .grid--2 .views-row {
     display: flex;
@@ -24,13 +26,5 @@
     flex-shrink: 0;
     margin: 0 14px 28px;
     padding: 0;
-  }
-}
-
-/* 77em == the max width of .container + 1em either side */
-@media screen and (min-width: 77em) {
-  .grid--2 .view-content {
-    margin-right: -14px;
-    margin-left: -14px;
   }
 }

@@ -13,20 +13,3 @@
 .layout-builder__message--overrides .messages__content {
   background-image: url("../../../../../../../misc/icons/73b355/location.svg");
 }
-
-.layout-builder-form,
-.layout-builder-discard-changes,
-.layout-builder-revert-overrides {
-  margin-right: 1rem;
-  margin-left: 1rem;
-}
-
-/* Large */
-@media screen and (min-width: 77rem) { /* 1200px + 2rem */
-  .layout-builder-form,
-  .layout-builder-discard-changes,
-  .layout-builder-revert-overrides {
-    margin-right: 0;
-    margin-left: 0;
-  }
-}
