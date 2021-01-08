@@ -25,7 +25,9 @@ class RemoveSectionForm extends LayoutRebuildConfirmFormBase {
    */
   public function getQuestion() {
     $configuration = $this->sectionStorage->getSection($this->delta)->getLayoutSettings();
-    if ($configuration['label']) {
+    // Layouts may choose to use a class that might not have a label
+    // configuration.
+    if (!empty($configuration['label'])) {
       return $this->t('Are you sure you want to remove @section?', ['@section' => $configuration['label']]);
     }
     return $this->t('Are you sure you want to remove section @section?', ['@section' => $this->delta + 1]);
