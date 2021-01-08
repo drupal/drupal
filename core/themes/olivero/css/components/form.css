@@ -131,6 +131,7 @@ tr .form-item,
 .form-item__description {
   margin-top: 0.5625rem;
   margin-bottom: 0.5625rem;
+  max-width: 60ch;
   font-size: 0.875rem;
   line-height: 1.125rem;
 }

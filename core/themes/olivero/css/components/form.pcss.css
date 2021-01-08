@@ -99,6 +99,7 @@ tr .form-item,
  */
 .form-item__description {
   margin-block: var(--sp0-5);
+  max-width: 60ch;
   font-size: var(--font-size-s);
   line-height: var(--line-height-s);
 }
