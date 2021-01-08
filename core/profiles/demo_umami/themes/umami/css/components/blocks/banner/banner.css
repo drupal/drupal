@@ -8,7 +8,7 @@
 }
 
 .block-type-banner-block .summary {
-  margin: 1em;
+  margin: 1rem 4%;
 }
 
 .block-type-banner-block .field--name-field-title {
@@ -48,7 +48,7 @@
   outline-offset: 2px;
   background-color: #fcece7;
 }
-
+/* Medium */
 @media screen and (min-width: 48rem) { /* 768px */
   .block-type-banner-block {
     background-color: #464646;
@@ -65,7 +65,7 @@
     height: 0; /* Required for flexbox vertical centering in IE11. Min-height will take precedence. */
     min-height: 54vw;
     margin: 0 auto;
-    padding: 0 1em;
+    padding: 0 4%;
   }
 
   .block-type-banner-block .summary {
@@ -91,7 +91,7 @@
     word-wrap: normal;
   }
 }
-
+/* Large */
 @media screen and (min-width: 60rem) { /* 960px */
   .block-type-banner-block .summary {
     flex: 0 0 41%;
@@ -100,10 +100,9 @@
     min-height: 43vw;
   }
 }
-
-/* 77em == the max width of .container + 1em either side */
-@media screen and (min-width: 77rem) {
-  .block-type-banner-block .summary {
-    margin-left: -1em;
+/* Extra large + side margins */
+@media screen and (min-width: 80rem) { /* 1200px (large) + 80px (side margins) = 1280px */
+  .block-type-banner-block .block-inner {
+    padding: 0;
   }
 }
