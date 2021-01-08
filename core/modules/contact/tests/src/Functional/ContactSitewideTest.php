@@ -408,6 +408,18 @@ class ContactSitewideTest extends BrowserTestBase {
     $this->assertEquals(1, substr_count($page_text, t('Message')));
     $this->assertSession()->responseContains('class="field field--name-message field--type-string-long field--label-hidden field__item">');
     $this->assertSession()->pageTextContains($edit['message[0][value]']);
+
+    // Set the preview field to 'hidden' in the view mode and check that the
+    // field is hidden.
+    $edit = [
+      'fields[preview][region]' => 'hidden',
+    ];
+    $this->drupalPostForm('admin/structure/contact/manage/' . $contact_form . '/form-display', $edit, 'Save');
+    $this->assertSession()->fieldExists('fields[preview][region]');
+
+    // Check that the field preview is not displayed in the form.
+    $this->drupalGet('contact/' . $contact_form);
+    $this->assertSession()->responseNotContains('Preview');
   }
 
   /**
