@@ -595,8 +595,8 @@ function hook_field_views_data_alter(array &$data, \Drupal\field\FieldStorageCon
  * data. This allows a field type to add data that concerns its fields in
  * other tables, which would not yet be defined at the point when
  * hook_field_views_data() and hook_field_views_data_alter() are invoked. For
- * example, entityreference adds reverse relationships on the tables for the
- * entities which are referenced by entityreference fields.
+ * example, entity_reference adds reverse relationships on the tables for the
+ * entities which are referenced by entity_reference fields.
  *
  * (Note: this is weirdly named so as not to conflict with
  * hook_field_views_data_alter().)

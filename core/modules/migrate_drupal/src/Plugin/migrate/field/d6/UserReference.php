@@ -5,8 +5,6 @@ namespace Drupal\migrate_drupal\Plugin\migrate\field\d6;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate_drupal\Plugin\migrate\field\ReferenceBase;
 
-// cspell:ignore userreference
-
 /**
  * MigrateField Plugin for Drupal 6 user reference fields.
  *
