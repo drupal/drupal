@@ -321,7 +321,7 @@ class ViewStorageTest extends ViewsKernelTestBase {
     $this->assertInstanceOf(View::class, $copy);
 
     // Check that the original view and the copy have different UUIDs.
-    $this->assertNotIdentical($view->storage->uuid(), $copy->uuid(), 'The copied view has a new UUID.');
+    $this->assertNotSame($view->storage->uuid(), $copy->uuid(), 'The copied view has a new UUID.');
 
     // Check the 'name' (ID) is using the View objects default value (NULL) as it
     // gets unset.

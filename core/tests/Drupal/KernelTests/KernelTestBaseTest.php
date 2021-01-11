@@ -339,6 +339,16 @@ class KernelTestBaseTest extends KernelTestBase {
   }
 
   /**
+   * Tests the deprecation of AssertLegacyTrait::assertNotIdentical.
+   *
+   * @group legacy
+    */
+  public function testAssertNotIdentical() {
+    $this->expectDeprecation('AssertLegacyTrait::assertNotIdentical() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertNotSame() instead. See https://www.drupal.org/node/3129738');
+    $this->assertNotIdentical('foo', 'bar');
+  }
+
+  /**
    * Tests the deprecation of ::installSchema with the tables key_value(_expire).
    *
    * @group legacy

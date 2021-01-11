@@ -78,7 +78,7 @@ trait ViewResultAssertionTrait {
    *   (optional) The message to display with the assertion.
    *
    * @return bool
-   *   TRUE if the assertion succeeded, or FALSE otherwise.
+   *   TRUE if the assertion succeeded.
    */
   protected function assertIdenticalResultsetHelper($view, $expected_result, $column_map, $assert_method, $message = NULL) {
     // Convert $view->result to an array of arrays.
@@ -144,7 +144,17 @@ trait ViewResultAssertionTrait {
         '@expected' => var_export($expected_result, TRUE),
       ]);
     }
-    return $this->$assert_method($result, $expected_result, $message);
+
+    switch ($assert_method) {
+      case 'assertIdentical':
+        $this->assertSame($expected_result, $result, $message);
+        return TRUE;
+
+      case 'assertNotIdentical':
+        $this->assertNotSame($expected_result, $result, $message);
+        return TRUE;
+
+    }
   }
 
 }

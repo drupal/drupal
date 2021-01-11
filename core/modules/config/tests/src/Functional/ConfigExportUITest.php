@@ -85,7 +85,7 @@ class ConfigExportUITest extends BrowserTestBase {
     $archiver->extract($temp_directory, ['system.maintenance.yml']);
     $file_contents = file_get_contents($temp_directory . '/' . 'system.maintenance.yml');
     $exported = Yaml::decode($file_contents);
-    $this->assertNotIdentical($exported['message'], 'Foo');
+    $this->assertNotSame('Foo', $exported['message']);
 
     // Check the single export form doesn't have "form-required" elements.
     $this->drupalGet('admin/config/development/configuration/single/export');

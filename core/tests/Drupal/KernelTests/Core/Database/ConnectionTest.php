@@ -30,7 +30,7 @@ class ConnectionTest extends DatabaseTestBase {
 
     $this->assertNotNull($db1, 'default connection is a real connection object.');
     $this->assertNotNull($db2, 'replica connection is a real connection object.');
-    $this->assertNotIdentical($db1, $db2, 'Each target refers to a different connection.');
+    $this->assertNotSame($db1, $db2, 'Each target refers to a different connection.');
 
     // Try to open those targets another time, that should return the same objects.
     $db1b = Database::getConnection('default', 'default');
@@ -79,7 +79,7 @@ class ConnectionTest extends DatabaseTestBase {
     $db2 = Database::getConnection('default', 'default');
 
     // Opening a connection after closing it should yield an object different than the original.
-    $this->assertNotIdentical($db1, $db2, 'Opening the default connection after it is closed returns a new object.');
+    $this->assertNotSame($db1, $db2, 'Opening the default connection after it is closed returns a new object.');
   }
 
   /**

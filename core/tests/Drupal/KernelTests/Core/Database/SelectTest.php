@@ -546,7 +546,7 @@ class SelectTest extends DatabaseTestBase {
     $query = $this->connection->select('test', 't');
     $alias1 = $query->addField('t', 'name', 'the_alias');
     $alias2 = $query->addField('t', 'age', 'the_alias');
-    $this->assertNotIdentical($alias1, $alias2, 'Duplicate aliases are renamed.');
+    $this->assertNotSame($alias1, $alias2, 'Duplicate aliases are renamed.');
   }
 
   /**

@@ -102,8 +102,8 @@ class ConfigEntityStaticCacheTest extends KernelTestBase {
     // Load override free to ensure that loading the config entity again does
     // not return the overridden value.
     $entity_no_override = $storage->loadOverrideFree($this->entityId);
-    $this->assertNotIdentical($entity_no_override->label, 'Overridden label');
-    $this->assertNotIdentical($entity_override->_loadStamp, $entity_no_override->_loadStamp);
+    $this->assertNotSame('Overridden label', $entity_no_override->label);
+    $this->assertNotSame($entity_override->_loadStamp, $entity_no_override->_loadStamp);
 
     // Reload the entity and ensure the cache is used.
     $this->assertIdentical($storage->loadOverrideFree($this->entityId)->_loadStamp, $entity_no_override->_loadStamp);

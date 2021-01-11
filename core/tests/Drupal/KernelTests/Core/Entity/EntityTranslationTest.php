@@ -364,7 +364,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     $name_translated = $langcode . '_' . $this->randomMachineName();
     $translation = $entity->addTranslation($langcode);
     $this->assertTrue($translation->isNewTranslation(), 'Newly added translations are marked as new.');
-    $this->assertNotIdentical($entity, $translation, 'The entity and the translation object differ from one another.');
+    $this->assertNotSame($entity, $translation, 'The entity and the translation object differ from one another.');
     $this->assertTrue($entity->hasTranslation($langcode), 'The new translation exists.');
     $this->assertEqual($translation->language()->getId(), $langcode, 'The translation language matches the specified one.');
     $this->assertEqual($translation->{$langcode_key}->value, $langcode, 'The translation field language value matches the specified one.');
@@ -531,7 +531,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     $entity->getTranslation($langcode);
     $cloned = clone $entity;
     $translation = $cloned->getTranslation($langcode);
-    $this->assertNotIdentical($entity, $translation->getUntranslated(), 'A cloned entity object has no reference to the original one.');
+    $this->assertNotSame($entity, $translation->getUntranslated(), 'A cloned entity object has no reference to the original one.');
     $entity->removeTranslation($langcode);
     $this->assertFalse($entity->hasTranslation($langcode));
     $this->assertTrue($cloned->hasTranslation($langcode));

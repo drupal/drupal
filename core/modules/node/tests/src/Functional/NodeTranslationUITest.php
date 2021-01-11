@@ -521,7 +521,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $original_revision_url = $original_revision->toUrl('revision')->toString();
 
     // Should be different from regular node URL.
-    $this->assertNotIdentical($original_revision_url, $original_revision->toUrl()->toString());
+    $this->assertNotSame($original_revision_url, $original_revision->toUrl()->toString());
     $this->drupalGet($original_revision_url);
     $this->assertSession()->statusCodeEquals(200);
 
@@ -533,8 +533,8 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $url_fr = $original_revision->getTranslation('fr')->toUrl('revision')->toString();
 
     // Should have different URL from English.
-    $this->assertNotIdentical($url_fr, $original_revision->toUrl()->toString());
-    $this->assertNotIdentical($url_fr, $original_revision_url);
+    $this->assertNotSame($url_fr, $original_revision->toUrl()->toString());
+    $this->assertNotSame($url_fr, $original_revision_url);
     $this->drupalGet($url_fr);
     $this->assertSession()->statusCodeEquals(200);
 
