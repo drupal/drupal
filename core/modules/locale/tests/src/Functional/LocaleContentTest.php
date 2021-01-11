@@ -98,7 +98,7 @@ class LocaleContentTest extends BrowserTestBase {
 
     // Set the content type to use multilingual support.
     $this->drupalGet("admin/structure/types/manage/{$type2->id()}");
-    $this->assertText('Language settings', 'Multilingual support widget present on content type configuration form.');
+    $this->assertText('Language settings');
     $edit = [
       'language_configuration[language_alterable]' => TRUE,
     ];
@@ -118,7 +118,7 @@ class LocaleContentTest extends BrowserTestBase {
     // Verify language select list is present.
     $this->assertSession()->fieldExists('langcode[0][value]');
     // Ensure language appears.
-    $this->assertText($name, 'Language present.');
+    $this->assertText($name);
 
     // Create a node.
     $node_title = $this->randomMachineName();

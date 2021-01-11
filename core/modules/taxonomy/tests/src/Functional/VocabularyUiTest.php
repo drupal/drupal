@@ -51,8 +51,8 @@ class VocabularyUiTest extends TaxonomyTestBase {
 
     // Edit the vocabulary.
     $this->drupalGet('admin/structure/taxonomy');
-    $this->assertText($edit['name'], 'Vocabulary name found in the vocabulary overview listing.');
-    $this->assertText($edit['description'], 'Vocabulary description found in the vocabulary overview listing.');
+    $this->assertText($edit['name']);
+    $this->assertText($edit['description']);
     $this->assertSession()->linkByHrefExists(Url::fromRoute('entity.taxonomy_term.add_form', ['taxonomy_vocabulary' => $edit['vid']])->toString());
     $this->clickLink(t('Edit vocabulary'));
     $edit = [];
@@ -60,8 +60,8 @@ class VocabularyUiTest extends TaxonomyTestBase {
     $edit['description'] = $this->randomMachineName();
     $this->submitForm($edit, 'Save');
     $this->drupalGet('admin/structure/taxonomy');
-    $this->assertText($edit['name'], 'Vocabulary name found in the vocabulary overview listing.');
-    $this->assertText($edit['description'], 'Vocabulary description found in the vocabulary overview listing.');
+    $this->assertText($edit['name']);
+    $this->assertText($edit['description']);
 
     // Try to submit a vocabulary with a duplicate machine name.
     $edit['vid'] = $vid;
@@ -140,7 +140,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
       'vid' => $vid,
     ];
     $this->drupalPostForm('admin/structure/taxonomy/add', $edit, 'Save');
-    $this->assertText('Created new vocabulary', 'New vocabulary was created.');
+    $this->assertText('Created new vocabulary');
 
     // Check the created vocabulary.
     $this->container->get('entity_type.manager')->getStorage('taxonomy_vocabulary')->resetCache();
@@ -151,7 +151,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
     $this->drupalGet('admin/structure/taxonomy/manage/' . $vocabulary->id());
     $this->clickLink(t('Delete'));
     $this->assertRaw(t('Are you sure you want to delete the vocabulary %name?', ['%name' => $vocabulary->label()]));
-    $this->assertText('Deleting a vocabulary will delete all the terms in it. This action cannot be undone.', '[confirm deletion] Inform that all terms will be deleted.');
+    $this->assertText('Deleting a vocabulary will delete all the terms in it. This action cannot be undone.');
 
     // Confirm deletion.
     $this->submitForm([], 'Delete');

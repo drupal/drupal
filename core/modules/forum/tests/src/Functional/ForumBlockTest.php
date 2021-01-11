@@ -78,7 +78,7 @@ class ForumBlockTest extends BrowserTestBase {
         $this->assertSession()->linkExists($topics[$index], 0, new FormattableMarkup('Forum topic @topic found in the "New forum topics" block.', ['@topic' => $topics[$index]]));
       }
       else {
-        $this->assertNoText($topics[$index], new FormattableMarkup('Forum topic @topic not found in the "New forum topics" block.', ['@topic' => $topics[$index]]));
+        $this->assertNoText($topics[$index]);
       }
     }
   }
@@ -124,7 +124,7 @@ class ForumBlockTest extends BrowserTestBase {
         $this->assertSession()->linkExists($topics[$index], 0, new FormattableMarkup('Forum topic @topic found in the "Active forum topics" block.', ['@topic' => $topics[$index]]));
       }
       else {
-        $this->assertNoText($topics[$index], new FormattableMarkup('Forum topic @topic not found in the "Active forum topics" block.', ['@topic' => $topics[$index]]));
+        $this->assertNoText($topics[$index]);
       }
     }
 
@@ -141,7 +141,7 @@ class ForumBlockTest extends BrowserTestBase {
         $this->assertSession()->linkExists($topics[$index], 0, 'Forum topic found in the "Active forum topics" block.');
       }
       else {
-        $this->assertNoText($topics[$index], 'Forum topic not found in the "Active forum topics" block.');
+        $this->assertNoText($topics[$index]);
       }
     }
   }

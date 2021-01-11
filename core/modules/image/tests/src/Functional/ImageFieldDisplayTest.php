@@ -262,9 +262,9 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->assertSession()->fieldValueEquals('settings[min_resolution][y]', '10');
 
     $this->drupalGet('node/add/article');
-    $this->assertText('50 KB limit.', 'Image widget max file size is displayed on article form.');
-    $this->assertText('Allowed types: ' . $test_image_extension . '.', 'Image widget allowed file types displayed on article form.');
-    $this->assertText('Images must be larger than 10x10 pixels. Images larger than 100x100 pixels will be resized.', 'Image widget allowed resolution displayed on article form.');
+    $this->assertText('50 KB limit.');
+    $this->assertText('Allowed types: ' . $test_image_extension . '.');
+    $this->assertText('Images must be larger than 10x10 pixels. Images larger than 100x100 pixels will be resized.');
 
     // We have to create the article first and then edit it because the alt
     // and title fields do not display until the image has been attached.

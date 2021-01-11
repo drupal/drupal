@@ -165,7 +165,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $this->assertRaw(
       t('%label is used by 1 custom block on your site. You can not remove this block type until you have removed all of the %label blocks.', ['%label' => $type->label()])
     );
-    $this->assertNoText('This action cannot be undone.', 'The block type deletion confirmation form is not available.');
+    $this->assertNoText('This action cannot be undone.');
 
     // Delete the block.
     $block->delete();
@@ -174,7 +174,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $this->assertRaw(
       t('Are you sure you want to delete the custom block type %type?', ['%type' => $type->id()])
     );
-    $this->assertText('This action cannot be undone.', 'The custom block type deletion confirmation form is available.');
+    $this->assertText('This action cannot be undone.');
   }
 
   /**
