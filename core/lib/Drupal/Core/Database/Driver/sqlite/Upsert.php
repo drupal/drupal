@@ -6,6 +6,8 @@ use Drupal\Core\Database\Query\Upsert as QueryUpsert;
 
 /**
  * SQLite implementation of \Drupal\Core\Database\Query\Upsert.
+ *
+ * @see https://www.sqlite.org/lang_UPSERT.html
  */
 class Upsert extends QueryUpsert {
 
@@ -22,10 +24,22 @@ class Upsert extends QueryUpsert {
       return $this->connection->escapeField($field);
     }, $insert_fields);
 
-    $query = $comments . 'INSERT OR REPLACE INTO {' . $this->table . '} (' . implode(', ', $insert_fields) . ') VALUES ';
+    $query = $comments . 'INSERT INTO {' . $this->table . '} (' . implode(', ', $insert_fields) . ') VALUES ';
 
     $values = $this->getInsertPlaceholderFragment($this->insertValues, $this->defaultFields);
     $query .= implode(', ', $values);
+
+    // Updating the unique / primary key is not necessary.
+    unset($insert_fields[$this->key]);
+
+    $update = [];
+    foreach ($insert_fields as $field) {
+      // The "excluded." prefix causes the field to refer to the value for field
+      // that would have been inserted had there been no conflict.
+      $update[] = "$field = EXCLUDED.$field";
+    }
+
+    $query .= ' ON CONFLICT (' . $this->connection->escapeField($this->key) . ') DO UPDATE SET ' . implode(', ', $update);
 
     return $query;
   }
