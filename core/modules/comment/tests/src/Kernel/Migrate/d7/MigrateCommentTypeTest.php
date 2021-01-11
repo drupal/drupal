@@ -64,6 +64,7 @@ class MigrateCommentTypeTest extends MigrateDrupal7TestBase {
     $this->assertEntity('comment_forum', 'Forum topic comment');
     $this->assertEntity('comment_node_page', 'Basic page comment');
     $this->assertEntity('comment_node_test_content_type', 'Test content type comment');
+    $this->assertEntity('comment_node_a_thirty_two_char', 'Test long name comment');
   }
 
 }

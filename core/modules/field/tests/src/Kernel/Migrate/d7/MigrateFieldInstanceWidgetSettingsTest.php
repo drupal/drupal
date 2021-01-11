@@ -136,6 +136,9 @@ class MigrateFieldInstanceWidgetSettingsTest extends MigrateDrupal7TestBase {
     $this->assertComponent('comment.comment_node_test_content_type.default', 'comment_body', 'text_textarea', 0);
     $this->assertComponent('comment.comment_node_test_content_type.default', 'field_integer', 'number', 2);
 
+    $this->assertEntity('comment.comment_node_a_thirty_two_char.default', 'comment', 'comment_node_a_thirty_two_char');
+    $this->assertComponent('comment.comment_node_a_thirty_two_char.default', 'comment_body', 'text_textarea', 0);
+
     $this->assertEntity('taxonomy_term.test_vocabulary.default', 'taxonomy_term', 'test_vocabulary');
     $this->assertComponent('comment.comment_node_test_content_type.default', 'field_integer', 'number', 2);
   }

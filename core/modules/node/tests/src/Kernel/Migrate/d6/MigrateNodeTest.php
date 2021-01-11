@@ -47,7 +47,7 @@ class MigrateNodeTest extends MigrateNodeTestBase {
     // Confirm there are only classic node migration map tables. This shows
     // that only the classic migration ran.
     $results = $this->nodeMigrateMapTableCount('6');
-    $this->assertSame(13, $results['node']);
+    $this->assertSame(14, $results['node']);
     $this->assertSame(0, $results['node_complete']);
     $node = Node::load(1);
     $this->assertIdentical('1', $node->id(), 'Node 1 loaded.');

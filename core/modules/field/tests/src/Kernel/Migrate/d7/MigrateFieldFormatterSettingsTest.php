@@ -106,6 +106,9 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
     $this->assertComponent('comment.comment_node_test_content_type.default', 'comment_body', 'text_default', 'hidden', 0);
     $this->assertComponent('comment.comment_node_test_content_type.default', 'field_integer', 'number_integer', 'above', 1);
 
+    $this->assertEntity('comment.comment_node_a_thirty_two_char.default');
+    $this->assertComponent('comment.comment_node_a_thirty_two_char.default', 'comment_body', 'text_default', 'hidden', 0);
+
     $this->assertEntity('node.article.default');
     $this->assertComponent('node.article.default', 'body', 'text_default', 'hidden', 0);
     $this->assertComponent('node.article.default', 'field_tags', 'entity_reference_label', 'above', 10);

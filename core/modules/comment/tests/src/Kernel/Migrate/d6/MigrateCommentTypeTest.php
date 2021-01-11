@@ -58,6 +58,7 @@ class MigrateCommentTypeTest extends MigrateDrupal6TestBase {
     $this->assertEntity('comment_node_test_page', 'Migrate test page comment');
     $this->assertEntity('comment_node_test_planet', 'Migrate test planet comment');
     $this->assertEntity('comment_node_test_story', 'Migrate test story comment');
+    $this->assertEntity('comment_node_a_thirty_two_char', 'Test long name comment');
   }
 
 }

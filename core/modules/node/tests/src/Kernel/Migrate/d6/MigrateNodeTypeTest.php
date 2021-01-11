@@ -86,6 +86,10 @@ class MigrateNodeTypeTest extends MigrateDrupal6TestBase {
     $this->assertSame($expected_available_menus, $node_type_event->getThirdPartySetting('menu_ui', 'available_menus'));
     $expected_parent = 'navigation:';
     $this->assertSame($expected_parent, $node_type_event->getThirdPartySetting('menu_ui', 'parent'));
+
+    // Test the 32 character type name exists.
+    $node_type = NodeType::load('a_thirty_two_character_type_name');
+    $this->assertSame('a_thirty_two_character_type_name', $node_type->id());
   }
 
 }

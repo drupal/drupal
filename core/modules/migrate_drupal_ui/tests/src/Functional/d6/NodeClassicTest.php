@@ -106,7 +106,7 @@ class NodeClassicTest extends MigrateUpgradeExecuteTestBase {
     // Confirm there are only classic node migration map tables. This shows
     // that only the classic migration will run.
     $results = $this->nodeMigrateMapTableCount('6');
-    $this->assertSame(13, $results['node']);
+    $this->assertSame(14, $results['node']);
     $this->assertSame(0, $results['node_complete']);
   }
 
