@@ -239,7 +239,7 @@ class Block extends DisplayPluginBase {
           'items_per_page' => $this->t('Items per page'),
         ];
 
-        $allow = array_filter($this->getOption('allow'));
+        $allow = array_keys(array_filter($this->getOption('allow')));
         $form['allow'] = [
           '#type' => 'checkboxes',
           '#default_value' => $allow,
