@@ -146,6 +146,15 @@ class MigrationPluginListTest extends KernelTestBase {
     }
     Database::addConnectionInfo('migrate', 'default', $connection_info['default']);
 
+    // Make sure source plugins can be serialized.
+    foreach ($migration_plugins as $migration_plugin) {
+      $source_plugin = $migration_plugin->getSourcePlugin();
+      if ($source_plugin instanceof SqlBase) {
+        $source_plugin->getDatabase();
+      }
+      $this->assertNotEmpty(serialize($source_plugin));
+    }
+
     $migration_plugins = $this->container->get('plugin.manager.migration')->getDefinitions();
     // All the plugins provided by core depend on migrate_drupal.
     $this->assertNotEmpty($migration_plugins);
