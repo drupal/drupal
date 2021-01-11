@@ -15,13 +15,15 @@ class MigrateFieldWidgetSettingsTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['menu_ui'];
+  protected static $modules = ['comment', 'menu_ui'];
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->installConfig(['comment']);
+    $this->executeMigration('d6_comment_type');
     $this->migrateFields();
   }
 
@@ -124,6 +126,11 @@ class MigrateFieldWidgetSettingsTest extends MigrateDrupal6TestBase {
       ->getComponent('field_commander');
     $this->assertIsArray($component);
     $this->assertSame('options_select', $component['type']);
+
+    $component = $display_repository->getFormDisplay('comment', 'comment_node_a_thirty_two_char', 'default')
+      ->getComponent('comment_body');
+    $this->assertIsArray($component);
+    $this->assertSame('text_textarea', $component['type']);
   }
 
 }

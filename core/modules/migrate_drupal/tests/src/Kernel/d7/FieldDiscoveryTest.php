@@ -80,6 +80,7 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
       'et' => 'comment_node_et',
       'forum' => 'comment_forum',
       'test_content_type' => 'comment_node_test_content_type',
+      'a_thirty_two_character_type_name' => 'a_thirty_two_character_type_name',
     ];
     foreach ($node_types as $node_type => $comment_type) {
       NodeType::create([
@@ -97,6 +98,7 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
     Vocabulary::create(['vid' => 'test_vocabulary'])->save();
     $this->executeMigrations([
       'd7_field',
+      'd7_comment_type',
       'd7_taxonomy_vocabulary',
       'd7_field_instance',
     ]);
@@ -283,8 +285,8 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
     $this->assertArrayHasKey('test_vocabulary', $actual_fields['taxonomy_term']);
     $this->assertArrayHasKey('user', $actual_fields['user']);
     $this->assertArrayHasKey('test_content_type', $actual_fields['node']);
-    $this->assertCount(7, $actual_fields['node']);
-    $this->assertCount(7, $actual_fields['comment']);
+    $this->assertCount(8, $actual_fields['node']);
+    $this->assertCount(8, $actual_fields['comment']);
     $this->assertCount(22, $actual_fields['node']['test_content_type']);
     foreach ($actual_fields as $entity_type_id => $bundles) {
       foreach ($bundles as $bundle => $fields) {

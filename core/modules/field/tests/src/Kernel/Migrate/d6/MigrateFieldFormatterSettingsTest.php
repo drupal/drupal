@@ -15,13 +15,15 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['menu_ui', 'node'];
+  protected static $modules = ['comment', 'menu_ui', 'node'];
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->installConfig(['comment']);
+    $this->executeMigration('d6_comment_type');
     $this->migrateFields();
   }
 
@@ -225,6 +227,11 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
     $this->assertSame('entity_reference_label', $component['type']);
     // The default user reference formatter links to the referenced user.
     $this->assertTrue($component['settings']['link']);
+
+    $display = EntityViewDisplay::load('comment.comment_node_a_thirty_two_char.default');
+    $component = $display->getComponent('comment_body');
+    $this->assertIsArray($component);
+    $this->assertSame('text_default', $component['type']);
   }
 
 }

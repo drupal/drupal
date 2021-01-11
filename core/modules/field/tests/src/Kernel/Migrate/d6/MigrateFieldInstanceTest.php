@@ -17,13 +17,15 @@ class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['menu_ui', 'node'];
+  protected static $modules = ['comment', 'menu_ui', 'node'];
 
   /**
    * Tests migration of file variables to file.settings.yml.
    */
   public function testFieldInstanceMigration() {
     $this->migrateFields();
+    $this->installConfig(['comment']);
+    $this->executeMigration('d6_comment_type');
 
     $entity = Node::create(['type' => 'story']);
     // Test a text field.
@@ -166,6 +168,10 @@ class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
     $field = FieldConfig::load('node.employee.field_sync');
     $this->assertInstanceOf(FieldConfig::class, $field);
     $this->assertFalse($field->isTranslatable());
+
+    // Test a comment with a long name.
+    $field = FieldConfig::load('comment.comment_node_a_thirty_two_char.comment_body');
+    $this->assertInstanceOf(FieldConfig::class, $field);
   }
 
   /**

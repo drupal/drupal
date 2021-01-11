@@ -80,6 +80,9 @@ class MigrateNodeTypeTest extends MigrateDrupal7TestBase {
     $this->assertEntity('book', 'Book page', '<em>Books</em> have a built-in hierarchical navigation. Use for handbooks or tutorials.', '', TRUE, TRUE, $expected_available_menus, $expected_parent, "Body");
     $this->assertEntity('forum', 'Forum topic', 'A <em>forum topic</em> starts a new discussion thread within a forum.', 'No name-calling, no flame wars. Be nice.', TRUE, FALSE, $expected_available_menus, $expected_parent, 'Body');
     $this->assertEntity('page', 'Basic page', "Use <em>basic pages</em> for your static content, such as an 'About us' page.", 'Help text for basic pages', FALSE, FALSE, $expected_available_menus, $expected_parent, "Body");
+    // Test the 32 character type name exists.
+    $this->assertEntity('a_thirty_two_character_type_name', 'Test long name', '', '', TRUE, FALSE, NULL, NULL, "Body");
+
     // This node type does not carry a body field.
     $expected_available_menus = [
       'main-menu',

@@ -31,11 +31,17 @@ process:
   # that might already exist before this migration is run. See
   # d7_comment_type.yml or more information.
   bundle:
-    plugin: static_map
-    source: bundle
-    bypass: true
-    map:
-      comment_node_forum: comment_forum
+    -
+      plugin: migration_lookup
+      migration: d7_field_instance
+      source:
+        - entity_type
+        - bundle
+        - field_name
+    -
+      plugin: extract
+      index:
+        - 1
   view_mode:
     -
       plugin: migration_lookup
