@@ -35,7 +35,7 @@ class BulkFormTest extends BrowserTestBase {
     // First, test an empty bulk form with the default style plugin to make sure
     // the empty region is rendered correctly.
     $this->drupalGet('test_bulk_form_empty');
-    $this->assertText('This view is empty.', 'Empty text found on empty bulk form.');
+    $this->assertText('This view is empty.');
 
     $nodes = [];
     for ($i = 0; $i < 10; $i++) {

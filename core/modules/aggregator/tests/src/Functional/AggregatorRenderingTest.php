@@ -56,7 +56,7 @@ class AggregatorRenderingTest extends AggregatorTestBase {
 
     // Confirm that the block is now being displayed on pages.
     $this->drupalGet('test-page');
-    $this->assertText($block->label(), 'Feed block is displayed on the page.');
+    $this->assertText($block->label());
 
     // Confirm items appear as links.
     $items = $this->container->get('entity_type.manager')->getStorage('aggregator_item')->loadByFeed($feed->id(), 1);
@@ -80,7 +80,7 @@ class AggregatorRenderingTest extends AggregatorTestBase {
     $block->save();
     // Check that the block is no longer displayed.
     $this->drupalGet('test-page');
-    $this->assertNoText($block->label(), 'Feed block is not displayed on the page when number of items is set to 0.');
+    $this->assertNoText($block->label());
   }
 
   /**

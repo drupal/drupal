@@ -139,7 +139,7 @@ class DbLogTest extends BrowserTestBase {
     $this->assertRaw($context['request_uri']);
 
     // Verify severity.
-    $this->assertText('Notice', 'The severity was properly displayed on the detail page.');
+    $this->assertText('Notice');
   }
 
   /**
@@ -219,10 +219,10 @@ class DbLogTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/dblog/event/' . $wid);
 
     // Verify table headers are present, even though the referrer is missing.
-    $this->assertText('Referrer', 'Referrer header is present on the detail page.');
+    $this->assertText('Referrer');
 
     // Verify severity.
-    $this->assertText('Notice', 'The severity is properly displayed on the detail page.');
+    $this->assertText('Notice');
 
     // Test log event page with incorrect location.
     $request_uri = '/some/incorrect/url';
@@ -235,10 +235,10 @@ class DbLogTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/dblog/event/' . $wid);
 
     // Verify table headers are present.
-    $this->assertText('Location', 'Location header is present on the detail page.');
+    $this->assertText('Location');
 
     // Verify severity.
-    $this->assertText('Notice', 'The severity is properly displayed on the detail page.');
+    $this->assertText('Notice');
 
     // Verify location is available as plain text.
     $this->assertEquals($request_uri, $this->cssSelect('table.dblog-event > tbody > tr:nth-child(4) > td')[0]->getHtml());
@@ -300,34 +300,34 @@ class DbLogTest extends BrowserTestBase {
     $this->drupalGet('admin/help/dblog');
     $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
-      $this->assertText('Database Logging', 'DBLog help was displayed');
+      $this->assertText('Database Logging');
     }
 
     // View the database log report page.
     $this->drupalGet('admin/reports/dblog');
     $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
-      $this->assertText('Recent log messages', 'DBLog report was displayed');
+      $this->assertText('Recent log messages');
     }
 
     $this->drupalGet('admin/reports/dblog/confirm');
     $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
-      $this->assertText('Are you sure you want to delete the recent logs?', 'DBLog clear logs form was displayed');
+      $this->assertText('Are you sure you want to delete the recent logs?');
     }
 
     // View the database log page-not-found report page.
     $this->drupalGet('admin/reports/page-not-found');
     $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
-      $this->assertText("Top 'page not found' errors", 'DBLog page-not-found report was displayed');
+      $this->assertText("Top 'page not found' errors");
     }
 
     // View the database log access-denied report page.
     $this->drupalGet('admin/reports/access-denied');
     $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
-      $this->assertText("Top 'access denied' errors", 'DBLog access-denied report was displayed');
+      $this->assertText("Top 'access denied' errors");
     }
 
     // View the database log event page.
@@ -337,7 +337,7 @@ class DbLogTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/dblog/event/' . $wid);
     $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
-      $this->assertText('Details', 'DBLog event node was displayed');
+      $this->assertText('Details');
     }
   }
 
@@ -382,7 +382,7 @@ class DbLogTest extends BrowserTestBase {
   public function verifySort($sort = 'asc', $order = 'Date') {
     $this->drupalGet('admin/reports/dblog', ['query' => ['sort' => $sort, 'order' => $order]]);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('Recent log messages', 'DBLog report was displayed correctly and sorting went fine.');
+    $this->assertText('Recent log messages');
   }
 
   /**
@@ -482,7 +482,7 @@ class DbLogTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/page-not-found');
     $this->assertSession()->statusCodeEquals(200);
     // Check that full-length URL displayed.
-    $this->assertText($not_found_url, 'DBLog event was recorded: [page not found]');
+    $this->assertText($not_found_url);
   }
 
   /**
@@ -539,13 +539,13 @@ class DbLogTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/access-denied');
     $this->assertSession()->statusCodeEquals(200);
     // Verify that the 'access denied' event was recorded.
-    $this->assertText('admin/reports/dblog', 'DBLog event was recorded: [access denied]');
+    $this->assertText('admin/reports/dblog');
 
     // View the database log page-not-found report page.
     $this->drupalGet('admin/reports/page-not-found');
     $this->assertSession()->statusCodeEquals(200);
     // Verify that the 'page not found' event was recorded.
-    $this->assertText('node/' . $node->id(), 'DBLog event was recorded: [page not found]');
+    $this->assertText('node/' . $node->id());
   }
 
   /**
@@ -696,13 +696,13 @@ class DbLogTest extends BrowserTestBase {
 
     $this->drupalGet('admin/reports/dblog', ['query' => ['order' => 'Type']]);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('Operations', 'Operations text found');
+    $this->assertText('Operations');
 
     // Clear all logs and make sure the confirmation message is found.
     $this->clearLogsEntries();
     // Confirm that the logs should be cleared.
     $this->submitForm([], 'Confirm');
-    $this->assertText('Database log cleared.', 'Confirmation message found');
+    $this->assertText('Database log cleared.');
   }
 
   /**

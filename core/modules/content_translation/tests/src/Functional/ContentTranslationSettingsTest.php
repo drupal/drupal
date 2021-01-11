@@ -285,7 +285,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
     $path = 'admin/structure/types/manage/article/fields/node.article.field_article_text';
     $this->drupalGet($path);
     $this->assertSession()->fieldDisabled('edit-translatable');
-    $this->assertText('To configure translation for this field, enable language support for this type.', 'No translatable setting for field.');
+    $this->assertText('To configure translation for this field, enable language support for this type.');
 
     // Tests that field has translatable setting if bundle is translatable.
     // Note: this field is not translatable when enable bundle translatability.
@@ -299,7 +299,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
     $this->drupalGet($path);
     $this->assertSession()->fieldEnabled('edit-translatable');
     $this->assertSession()->checkboxChecked('edit-translatable');
-    $this->assertNoText('To enable translation of this field, enable language support for this type.', 'Translatable setting for field available.');
+    $this->assertNoText('To enable translation of this field, enable language support for this type.');
   }
 
   /**

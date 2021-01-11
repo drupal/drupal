@@ -47,7 +47,7 @@ class TwigExtensionTest extends BrowserTestBase {
       ->save();
 
     $this->drupalGet('twig-extension-test/filter');
-    $this->assertText('Every plant is not a mineral.', 'Success: String filtered.');
+    $this->assertText('Every plant is not a mineral.');
     // Test safe_join filter.
     $this->assertRaw('&lt;em&gt;will be escaped&lt;/em&gt;<br/><em>will be markup</em><br/><strong>will be rendered</strong>');
   }
@@ -61,9 +61,9 @@ class TwigExtensionTest extends BrowserTestBase {
       ->save();
 
     $this->drupalGet('twig-extension-test/function');
-    $this->assertText('THE QUICK BROWN BOX JUMPS OVER THE LAZY DOG 123.', 'Success: Text converted to uppercase.');
-    $this->assertText('the quick brown box jumps over the lazy dog 123.', 'Success: Text converted to lowercase.');
-    $this->assertNoText('The Quick Brown Fox Jumps Over The Lazy Dog 123.', 'Success: No text left behind.');
+    $this->assertText('THE QUICK BROWN BOX JUMPS OVER THE LAZY DOG 123.');
+    $this->assertText('the quick brown box jumps over the lazy dog 123.');
+    $this->assertNoText('The Quick Brown Fox Jumps Over The Lazy Dog 123.');
   }
 
   /**

@@ -48,7 +48,7 @@ class PageNotFoundTest extends BrowserTestBase {
   public function testPageNotFound() {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet($this->randomMachineName(10));
-    $this->assertText('Page not found', 'Found the default 404 page');
+    $this->assertText('Page not found');
 
     // Set a custom 404 page without a starting slash.
     $edit = [
@@ -64,7 +64,7 @@ class PageNotFoundTest extends BrowserTestBase {
     $this->drupalPostForm('admin/config/system/site-information', $edit, 'Save configuration');
 
     $this->drupalGet($this->randomMachineName(10));
-    $this->assertText($this->adminUser->getAccountName(), 'Found the custom 404 page');
+    $this->assertText($this->adminUser->getAccountName());
   }
 
   /**

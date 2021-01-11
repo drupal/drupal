@@ -171,7 +171,7 @@ class ForumTest extends BrowserTestBase {
     $this->drupalLogin($this->webUser);
     // Verify that this user is shown a message that they may not post content.
     $this->drupalGet('forum/' . $this->forum['tid']);
-    $this->assertText('You are not allowed to post new content in the forum', "Authenticated user without permission to post forum content is shown message in local tasks to that effect.");
+    $this->assertText('You are not allowed to post new content in the forum');
 
     // Log in, and do basic tests for a user with permission to edit any forum
     // content.
@@ -440,9 +440,7 @@ class ForumTest extends BrowserTestBase {
     $this->drupalPostForm('admin/structure/forum/add/' . $type, $edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
     $type = ($type == 'container') ? 'forum container' : 'forum';
-    $this->assertText('Created new ' . $type . ' ' . $name . '.',
-      new FormattableMarkup('@type was created', ['@type' => ucfirst($type)])
-    );
+    $this->assertText('Created new ' . $type . ' ' . $name . '.');
 
     // Verify that the creation message contains a link to a term.
     $this->assertSession()->elementExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "term/")]');
@@ -576,12 +574,12 @@ class ForumTest extends BrowserTestBase {
 
     $type = t('Forum topic');
     if ($container) {
-      $this->assertNoText("$type $title has been created.", 'Forum topic was not created');
+      $this->assertNoText("$type $title has been created.");
       $this->assertRaw(t('The item %title is a forum container, not a forum.', ['%title' => $forum['name']]));
       return;
     }
     else {
-      $this->assertText($type . ' ' . $title . ' has been created.', 'Forum topic was created');
+      $this->assertText($type . ' ' . $title . ' has been created.');
       $this->assertNoRaw(t('The item %title is a forum container, not a forum.', ['%title' => $forum['name']]));
 
       // Verify that the creation message contains a link to a node.
@@ -619,7 +617,7 @@ class ForumTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals($response2);
     if ($response2 == 200) {
       $this->assertSession()->titleEquals('Forum | Drupal');
-      $this->assertText('Forum', 'Forum help node was displayed');
+      $this->assertText('Forum');
     }
 
     // View forum container page.
@@ -661,7 +659,7 @@ class ForumTest extends BrowserTestBase {
       $edit['taxonomy_forums'] = $this->rootForum['tid'];
       $edit['shadow'] = TRUE;
       $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
-      $this->assertText('Forum topic ' . $edit['title[0][value]'] . ' has been updated.', 'Forum node was edited');
+      $this->assertText('Forum topic ' . $edit['title[0][value]'] . ' has been updated.');
 
       // Verify topic was moved to a different forum.
       $forum_tid = $this->container

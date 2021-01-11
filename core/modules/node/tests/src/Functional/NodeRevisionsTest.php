@@ -154,12 +154,12 @@ class NodeRevisionsTest extends NodeTestBase {
 
     // Confirm the correct revision text appears on "view revisions" page.
     $this->drupalGet("node/" . $node->id() . "/revisions/" . $node->getRevisionId() . "/view");
-    $this->assertText($node->body->value, 'Correct text displays for version.');
+    $this->assertText($node->body->value);
 
     // Confirm the correct log message appears on "revisions overview" page.
     $this->drupalGet("node/" . $node->id() . "/revisions");
     foreach ($logs as $revision_log) {
-      $this->assertText($revision_log, 'Revision log message found.');
+      $this->assertText($revision_log);
     }
     // Original author, and editor names should appear on revisions overview.
     $web_user = $nodes[0]->revision_uid->entity;
@@ -231,12 +231,13 @@ class NodeRevisionsTest extends NodeTestBase {
     $new_node_revision->isDefaultRevision = FALSE;
     $new_node_revision->save();
 
+    // Verify that revision body text is not present on default version of node.
     $this->drupalGet('node/' . $node->id());
-    $this->assertNoText($new_body, 'Revision body text is not present on default version of node.');
+    $this->assertNoText($new_body);
 
     // Verify that the new body text is present on the revision.
     $this->drupalGet("node/" . $node->id() . "/revisions/" . $new_node_revision->getRevisionId() . "/view");
-    $this->assertText($new_body, 'Revision body text is present when loading specific revision.');
+    $this->assertText($new_body);
 
     // Verify that the non-default revision vid is greater than the default
     // revision vid.
@@ -339,7 +340,7 @@ class NodeRevisionsTest extends NodeTestBase {
 
     $node->save();
     $this->drupalGet('node/' . $node->id());
-    $this->assertText($new_title, 'New node title appears on the page.');
+    $this->assertText($new_title);
     $node_storage->resetCache([$node->id()]);
     $node_revision = $node_storage->load($node->id());
     $this->assertEqual($node_revision->revision_log->value, $revision_log, 'After an existing node revision is re-saved without a log message, the original log message is preserved.');
@@ -358,7 +359,7 @@ class NodeRevisionsTest extends NodeTestBase {
 
     $node->save();
     $this->drupalGet('node/' . $node->id());
-    $this->assertText($new_title, 'New node title appears on the page.');
+    $this->assertText($new_title);
     $node_storage->resetCache([$node->id()]);
     $node_revision = $node_storage->load($node->id());
     $this->assertTrue(empty($node_revision->revision_log->value), 'After a new node revision is saved with an empty log message, the log message for the node is empty.');

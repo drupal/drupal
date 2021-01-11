@@ -126,7 +126,7 @@ class ErrorHandlerTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(500);
     // We cannot use assertErrorMessage() since the exact error reported
     // varies from database to database. Check that the SQL string is displayed.
-    $this->assertText($error_pdo_exception['%type'], new FormattableMarkup('Found %type in error page.', $error_pdo_exception));
+    $this->assertText($error_pdo_exception['%type']);
     // Assert statement improved since static queries adds table alias in the
     // error message.
     $this->assertSession()->pageTextContains($error_pdo_exception['@message']);

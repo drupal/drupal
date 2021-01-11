@@ -66,7 +66,7 @@ class FilterSecurityTest extends BrowserTestBase {
     $body_raw = $node->body->value;
     $format_id = $node->body->format;
     $this->drupalGet('node/' . $node->id());
-    $this->assertText($body_raw, 'Node body found.');
+    $this->assertText($body_raw);
 
     // Enable the filter_test_replace filter.
     $edit = [
@@ -76,15 +76,15 @@ class FilterSecurityTest extends BrowserTestBase {
 
     // Verify that filter_test_replace filter replaced the content.
     $this->drupalGet('node/' . $node->id());
-    $this->assertNoText($body_raw, 'Node body not found.');
-    $this->assertText('Filter: Testing filter', 'Testing filter output found.');
+    $this->assertNoText($body_raw);
+    $this->assertText('Filter: Testing filter');
 
     // Disable the text format entirely.
     $this->drupalPostForm('admin/config/content/formats/manage/' . $format_id . '/disable', [], 'Disable');
 
     // Verify that the content is empty, because the text format does not exist.
     $this->drupalGet('node/' . $node->id());
-    $this->assertNoText($body_raw, 'Node body not found.');
+    $this->assertNoText($body_raw);
   }
 
   /**

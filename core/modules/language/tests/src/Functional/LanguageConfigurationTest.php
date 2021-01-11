@@ -101,7 +101,7 @@ class LanguageConfigurationTest extends BrowserTestBase {
       'prefix[fr]' => '',
     ];
     $this->submitForm($edit, 'Save configuration');
-    $this->assertNoText('The prefix may only be left blank for the selected detection fallback language.', 'The path prefix can be removed for the default language');
+    $this->assertNoText('The prefix may only be left blank for the selected detection fallback language.');
 
     // Change default negotiation language.
     $this->config('language.negotiation')->set('selected_langcode', 'fr')->save();
@@ -118,7 +118,7 @@ class LanguageConfigurationTest extends BrowserTestBase {
       'prefix[en]' => 'foo/bar',
     ];
     $this->submitForm($edit, 'Save configuration');
-    $this->assertText('The prefix may not contain a slash.', 'English prefix cannot be changed to contain a slash.');
+    $this->assertText('The prefix may not contain a slash.');
 
     // Remove English language and add a new Language to check if langcode of
     // Language entity is 'en'.

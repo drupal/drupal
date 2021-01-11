@@ -172,9 +172,9 @@ abstract class CommentTestBase extends BrowserTestBase {
     if ($contact !== TRUE) {
       // If true then attempting to find error message.
       if ($subject) {
-        $this->assertText($subject, 'Comment subject posted.');
+        $this->assertText($subject);
       }
-      $this->assertText($comment, 'Comment body posted.');
+      $this->assertText($comment);
       // Check the comment ID was extracted.
       $this->assertArrayHasKey(1, $match);
     }
@@ -228,7 +228,7 @@ abstract class CommentTestBase extends BrowserTestBase {
    */
   public function deleteComment(CommentInterface $comment) {
     $this->drupalPostForm('comment/' . $comment->id() . '/delete', [], 'Delete');
-    $this->assertText('The comment and all its replies have been deleted.', 'Comment deleted.');
+    $this->assertText('The comment and all its replies have been deleted.');
   }
 
   /**
@@ -368,7 +368,7 @@ abstract class CommentTestBase extends BrowserTestBase {
       $this->assertRaw(\Drupal::translation()->formatPlural(1, 'Deleted 1 comment.', 'Deleted @count comments.'));
     }
     else {
-      $this->assertText('The update has been performed.', new FormattableMarkup('Operation "@operation" was performed on comment.', ['@operation' => $operation]));
+      $this->assertText('The update has been performed.');
     }
   }
 

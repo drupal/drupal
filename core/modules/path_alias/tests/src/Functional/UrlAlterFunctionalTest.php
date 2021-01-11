@@ -71,7 +71,7 @@ class UrlAlterFunctionalTest extends BrowserTestBase {
     // Test that 'forum' is altered to 'community' correctly, both at the root
     // level and for a specific existing forum.
     $this->drupalGet('community');
-    $this->assertText('General discussion', 'The community path gets resolved correctly');
+    $this->assertText('General discussion');
     $this->assertUrlOutboundAlter('/forum', '/community');
     $forum_vid = $this->config('forum.settings')->get('vocabulary');
     $term_name = $this->randomMachineName();
@@ -81,7 +81,7 @@ class UrlAlterFunctionalTest extends BrowserTestBase {
     ]);
     $term->save();
     $this->drupalGet("community/" . $term->id());
-    $this->assertText($term_name, 'The community/{tid} path gets resolved correctly');
+    $this->assertText($term_name);
     $this->assertUrlOutboundAlter("/forum/" . $term->id(), "/community/" . $term->id());
 
     // Test outbound query string altering.

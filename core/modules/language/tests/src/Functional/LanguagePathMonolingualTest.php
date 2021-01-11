@@ -76,7 +76,7 @@ class LanguagePathMonolingualTest extends BrowserTestBase {
     // Verify that links in this page can be followed and work.
     $this->clickLink(t('Languages'));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('Add language', 'Page contains the add language text');
+    $this->assertText('Add language');
   }
 
 }

@@ -245,7 +245,7 @@ class OptionsWidgetsTest extends FieldTestBase {
       'card_2[2]' => TRUE,
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('this field cannot hold more than 2 values', 'Validation error was displayed.');
+    $this->assertText('this field cannot hold more than 2 values');
 
     // Submit form: uncheck all options.
     $edit = [
@@ -425,7 +425,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     // Submit form: select the three options while the field accepts only 2.
     $edit = ['card_2[]' => [0 => 0, 1 => 1, 2 => 2]];
     $this->submitForm($edit, 'Save');
-    $this->assertText('this field cannot hold more than 2 values', 'Validation error was displayed.');
+    $this->assertText('this field cannot hold more than 2 values');
 
     // Submit form: uncheck all options.
     $edit = ['card_2[]' => []];

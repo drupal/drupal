@@ -135,13 +135,13 @@ class NodeRevisionsAllTest extends NodeTestBase {
 
     // Confirm the correct revision text appears on "view revisions" page.
     $this->drupalGet("node/" . $node->id() . "/revisions/" . $node->getRevisionId() . "/view");
-    $this->assertText($node->body->value, 'Correct text displays for version.');
+    $this->assertText($node->body->value);
 
     // Confirm the correct revision log message appears on the "revisions
     // overview" page.
     $this->drupalGet("node/" . $node->id() . "/revisions");
     foreach ($logs as $revision_log) {
-      $this->assertText($revision_log, 'Revision log message found.');
+      $this->assertText($revision_log);
     }
 
     // Confirm that this is the current revision.
@@ -170,8 +170,8 @@ class NodeRevisionsAllTest extends NodeTestBase {
 
     // Confirm that the node can still be updated.
     $this->drupalPostForm("node/" . $reverted_node->id() . "/edit", ['body[0][value]' => 'We are Drupal.'], 'Save');
-    $this->assertText('Basic page ' . $reverted_node->getTitle() . ' has been updated.', 'Node was successfully saved after reverting a revision.');
-    $this->assertText('We are Drupal.', 'Node was correctly updated after reverting a revision.');
+    $this->assertText('Basic page ' . $reverted_node->getTitle() . ' has been updated.');
+    $this->assertText('We are Drupal.');
 
     // Confirm revisions delete properly.
     $this->drupalPostForm("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionId() . "/delete", [], 'Delete');

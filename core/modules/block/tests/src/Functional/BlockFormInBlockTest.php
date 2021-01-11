@@ -43,7 +43,7 @@ class BlockFormInBlockTest extends BrowserTestBase {
     // Go to "test-page" and test if the block is enabled.
     $this->drupalGet('test-page');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('Your .com email address.', 'form found');
+    $this->assertText('Your .com email address.');
 
     // Make sure that we're currently still on /test-page after submitting the
     // form.
@@ -54,7 +54,7 @@ class BlockFormInBlockTest extends BrowserTestBase {
     // Go to a different page and see if the block is enabled there as well.
     $this->drupalGet('test-render-title');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('Your .com email address.', 'form found');
+    $this->assertText('Your .com email address.');
 
     // Make sure that submitting the form didn't redirect us to the first page
     // we submitted the form from after submitting the form from
@@ -71,7 +71,7 @@ class BlockFormInBlockTest extends BrowserTestBase {
     $this->drupalGet('test-multiple-forms');
 
     $placeholder = 'form_action_' . Crypt::hashBase64('Drupal\Core\Form\FormBuilder::prepareForm');
-    $this->assertText('Form action: ' . $placeholder, 'placeholder found.');
+    $this->assertText('Form action: ' . $placeholder);
   }
 
 }
