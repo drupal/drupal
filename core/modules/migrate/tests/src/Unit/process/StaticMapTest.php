@@ -91,4 +91,24 @@ class StaticMapTest extends MigrateProcessTestCase {
     $this->plugin->transform(['bar'], $this->migrateExecutable, $this->row, 'destination_property');
   }
 
+  /**
+   * Tests when the source is NULL.
+   */
+  public function testWithNullSourceNotInMap() {
+    $this->expectException(MigrateSkipRowException::class);
+    $this->expectExceptionMessage("No static mapping found for 'NULL' and no default value provided for destination 'destination_property'");
+    $this->plugin->transform(NULL, $this->migrateExecutable, $this->row, 'destination_property');
+  }
+
+  /**
+   * Tests when the source is invalid but there's a default.
+   */
+  public function testWithNullSource() {
+    $configuration['map']['foo']['bar'] = 'baz';
+    $configuration['map'][NULL] = 'mapped NULL';
+    $this->plugin = new StaticMap($configuration, 'map', []);
+    $value = $this->plugin->transform(NULL, $this->migrateExecutable, $this->row, 'destination_property');
+    $this->assertSame('mapped NULL', $value);
+  }
+
 }
