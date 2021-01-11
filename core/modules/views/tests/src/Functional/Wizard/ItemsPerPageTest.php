@@ -55,6 +55,26 @@ class ItemsPerPageTest extends WizardTestBase {
     $view['block[title]'] = $this->randomMachineName(16);
     $view['block[items_per_page]'] = 3;
     $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
+
+    // Uncheck items per page in block settings.
+    $this->drupalGet($this->getSession()->getCurrentUrl() . '/edit/block_1');
+    $this->clickLink('Items per page');
+    $this->assertSession()->checkboxChecked('allow[items_per_page]');
+    $this->getSession()->getPage()->uncheckField('allow[items_per_page]');
+    $this->getSession()->getPage()->pressButton('Apply');
+    $this->getSession()->getPage()->pressButton('Save');
+
+    // Check items per page in block settings.
+    $this->drupalGet('admin/structure/views/nojs/display/' . $view['id'] . '/block_1/allow');
+    $this->assertSession()->checkboxNotChecked('allow[items_per_page]');
+    $this->getSession()->getPage()->checkField('allow[items_per_page]');
+    $this->getSession()->getPage()->pressButton('Apply');
+    $this->getSession()->getPage()->pressButton('Save');
+
+    // Ensure that items per page checkbox remains checked.
+    $this->clickLink('Items per page');
+    $this->assertSession()->checkboxChecked('allow[items_per_page]');
+
     $this->drupalGet($view['page[path]']);
     $this->assertSession()->statusCodeEquals(200);
 
