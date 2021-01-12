@@ -97,10 +97,10 @@ class UserRoleAdminTest extends BrowserTestBase {
     // interface.
     $this->drupalGet('admin/people/roles/manage/' . RoleInterface::ANONYMOUS_ID);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertNoText('Delete role');
+    $this->assertNoText('Delete role', 'Delete button for the anonymous role is not present.');
     $this->drupalGet('admin/people/roles/manage/' . RoleInterface::AUTHENTICATED_ID);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertNoText('Delete role');
+    $this->assertNoText('Delete role', 'Delete button for the authenticated role is not present.');
   }
 
   /**
@@ -122,7 +122,7 @@ class UserRoleAdminTest extends BrowserTestBase {
       $weight--;
     }
     $this->drupalPostForm('admin/people/roles', $edit, 'Save');
-    $this->assertText('The role settings have been updated.');
+    $this->assertText('The role settings have been updated.', 'The role settings form submitted successfully.');
 
     // Load up the user roles with the new weights.
     $roles = user_roles();

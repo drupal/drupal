@@ -141,7 +141,7 @@ trait BookTestTrait {
 
     // Check printer friendly version.
     $this->drupalGet('book/export/html/' . $node->id());
-    $this->assertText($node->label());
+    $this->assertText($node->label(), 'Printer friendly title found.');
     $this->assertRaw($node->body->processed);
 
     $number++;

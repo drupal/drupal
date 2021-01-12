@@ -97,10 +97,8 @@ class BlockContentRevisionsTest extends BlockContentTestBase {
     $loaded->body = $this->randomMachineName(8);
     $loaded->save();
 
-    // Confirm that revision body text is not present on default version of
-    // block.
     $this->drupalGet('block/' . $loaded->id());
-    $this->assertNoText($loaded->body->value);
+    $this->assertNoText($loaded->body->value, 'Revision body text is not present on default version of block.');
 
     // Verify that the non-default revision id is greater than the default
     // revision id.

@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\locale\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Url;
 use Drupal\Core\Database\Database;
 use Drupal\Core\File\FileSystemInterface;
@@ -146,7 +147,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
       'files[file]' => $name,
     ], 'Import');
     $this->assertSession()->addressEquals(Url::fromRoute('locale.translate_import'));
-    $this->assertText('File to import not found.');
+    $this->assertText('File to import not found.', 'File to import not found message.');
 
     // Try importing a .po file with overriding strings, and ensure existing
     // strings are kept.
@@ -163,7 +164,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
       'translation' => 'translated',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
-    $this->assertText('No strings available.');
+    $this->assertText('No strings available.', 'String not overwritten by imported string.');
 
     // This import should not have changed number of plural forms.
     $locale_plurals = \Drupal::service('locale.plural.formula')->getNumberOfPlurals('fr');
@@ -185,7 +186,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
       'translation' => 'translated',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
-    $this->assertNoText('No strings available.');
+    $this->assertNoText('No strings available.', 'String overwritten by imported string.');
     // This import should have changed number of plural forms.
     $locale_plurals = \Drupal::service('locale.plural.formula')->reset()->getNumberOfPlurals('fr');
     $this->assertEqual(3, $locale_plurals, 'Plural numbers changed.');
@@ -225,7 +226,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
       'translation' => 'translated',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
-    $this->assertText('No strings available.');
+    $this->assertText('No strings available.', 'Customized string not overwritten by imported string.');
 
     // Try importing a .po file with overriding strings, and ensure existing
     // customized strings are overwritten.
@@ -244,7 +245,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
       'translation' => 'translated',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
-    $this->assertNoText('No strings available.');
+    $this->assertNoText('No strings available.', 'Customized string overwritten by imported string.');
 
   }
 
@@ -290,9 +291,8 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
       'langcode' => $langcode,
       'translation' => 'untranslated',
     ];
-    // Check that search finds the string as untranslated.
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
-    $this->assertText($str);
+    $this->assertText($str, 'Search found the string as untranslated.');
   }
 
   /**
@@ -348,7 +348,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
         'translation' => 'all',
       ];
       $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
-      $this->assertText($config_string[1]);
+      $this->assertText($config_string[1], new FormattableMarkup('Translation of @string found.', ['@string' => $config_string[0]]));
     }
 
     // Test that translations got recorded in the config system.

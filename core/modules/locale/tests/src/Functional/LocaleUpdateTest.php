@@ -128,11 +128,11 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Check the status on the Available translation status page.
     $this->assertRaw('<label for="edit-langcodes-de" class="visually-hidden">Update German</label>');
-    $this->assertText('Updates for: Contributed module one, Contributed module two, Custom module one, Locale test');
+    $this->assertText('Updates for: Contributed module one, Contributed module two, Custom module one, Locale test', 'Updates found');
     /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
     $date_formatter = $this->container->get('date.formatter');
-    $this->assertText('Contributed module one (' . $date_formatter->format($this->timestampNew, 'html_date') . ')');
-    $this->assertText('Contributed module two (' . $date_formatter->format($this->timestampNew, 'html_date') . ')');
+    $this->assertText('Contributed module one (' . $date_formatter->format($this->timestampNew, 'html_date') . ')', 'Updates for Contrib module one');
+    $this->assertText('Contributed module two (' . $date_formatter->format($this->timestampNew, 'html_date') . ')', 'Updates for Contrib module two');
 
     // Execute the translation update.
     $this->drupalPostForm('admin/reports/translations', [], 'Update translations');
@@ -426,8 +426,8 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Ensure the translation file is automatically imported when the language
     // was added.
-    $this->assertText('One translation file imported.');
-    $this->assertText('One translation string was skipped because of disallowed or malformed HTML');
+    $this->assertText('One translation file imported.', 'Language file automatically imported.');
+    $this->assertText('One translation string was skipped because of disallowed or malformed HTML', 'Language file automatically imported.');
 
     // Ensure the strings were successfully imported.
     $search = [
@@ -436,7 +436,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
       'translation' => 'translated',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
-    $this->assertNoText('No strings available.');
+    $this->assertNoText('No strings available.', 'String successfully imported.');
 
     // Ensure the multiline string was imported.
     $search = [
@@ -445,7 +445,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
       'translation' => 'all',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
-    $this->assertText('Multiline translation string to make sure that import works with it.');
+    $this->assertText('Multiline translation string to make sure that import works with it.', 'String successfully imported.');
 
     // Ensure 'Allowed HTML source string' was imported but the translation for
     // 'Another allowed HTML source string' was not because it contains invalid
@@ -456,8 +456,8 @@ class LocaleUpdateTest extends LocaleUpdateBase {
       'translation' => 'all',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
-    $this->assertText('Allowed HTML source string');
-    $this->assertNoText('Another allowed HTML source string');
+    $this->assertText('Allowed HTML source string', 'String successfully imported.');
+    $this->assertNoText('Another allowed HTML source string', 'String with disallowed translation not imported.');
   }
 
 }

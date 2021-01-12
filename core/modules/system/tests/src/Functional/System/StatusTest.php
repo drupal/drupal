@@ -50,8 +50,8 @@ class StatusTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/status');
     $this->assertSession()->statusCodeEquals(200);
 
-    // Verify that the PHP version is shown on the page.
-    $this->assertText(phpversion());
+    $phpversion = phpversion();
+    $this->assertText($phpversion, 'Php version is shown on the page.');
 
     if (function_exists('phpinfo')) {
       $this->assertSession()->linkByHrefExists(Url::fromRoute('system.php')->toString());

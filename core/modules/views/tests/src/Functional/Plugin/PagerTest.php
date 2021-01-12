@@ -128,7 +128,7 @@ class PagerTest extends ViewTestBase {
     ];
     $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/pager', $edit, 'Apply');
     $this->drupalGet('admin/structure/views/view/test_view/edit');
-    $this->assertText('Mini');
+    $this->assertText('Mini', 'Changed pager plugin, should change some text');
 
     // Test behavior described in
     //   https://www.drupal.org/node/652712#comment-2354400.
@@ -165,15 +165,15 @@ class PagerTest extends ViewTestBase {
     ];
     $this->drupalPostForm('admin/structure/views/nojs/display/test_store_pager_settings/page_1/pager', $edit, 'Apply');
     $this->drupalGet('admin/structure/views/view/test_store_pager_settings/edit/page_1');
-    $this->assertText('Mini');
+    $this->assertText('Mini', 'Changed pager plugin, should change some text');
 
     $edit = [
       'pager_options[items_per_page]' => 10,
     ];
     $this->drupalPostForm('admin/structure/views/nojs/display/test_store_pager_settings/default/pager_options', $edit, 'Apply');
-    $this->assertText('10 items');
+    $this->assertText('10 items', 'The default value has been changed.');
     $this->drupalGet('admin/structure/views/view/test_store_pager_settings/edit/page_1');
-    $this->assertText('20 items');
+    $this->assertText('20 items', 'The original value remains unchanged.');
 
     // Test that the override element is only displayed on pager plugin selection form.
     $this->drupalGet('admin/structure/views/nojs/display/test_store_pager_settings/page_1/pager');

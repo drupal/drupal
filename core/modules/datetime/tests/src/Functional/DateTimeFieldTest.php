@@ -813,36 +813,32 @@ class DateTimeFieldTest extends DateTestBase {
       "{$field_name}[0][value][time]" => '12:00:00',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid');
+    $this->assertText('date is invalid', 'Empty date value has been caught.');
 
-    // Invalid year value.
     $date_value = 'aaaa-12-01';
     $edit = [
       "{$field_name}[0][value][date]" => $date_value,
       "{$field_name}[0][value][time]" => '00:00:00',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid');
+    $this->assertText('date is invalid', new FormattableMarkup('Invalid year value %date has been caught.', ['%date' => $date_value]));
 
-    // Invalid month value.
     $date_value = '2012-75-01';
     $edit = [
       "{$field_name}[0][value][date]" => $date_value,
       "{$field_name}[0][value][time]" => '00:00:00',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid');
+    $this->assertText('date is invalid', new FormattableMarkup('Invalid month value %date has been caught.', ['%date' => $date_value]));
 
-    // Invalid day value.
     $date_value = '2012-12-99';
     $edit = [
       "{$field_name}[0][value][date]" => $date_value,
       "{$field_name}[0][value][time]" => '00:00:00',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid');
+    $this->assertText('date is invalid', new FormattableMarkup('Invalid day value %date has been caught.', ['%date' => $date_value]));
 
-    // Invalid time value.
     $date_value = '2012-12-01';
     $time_value = '';
     $edit = [
@@ -850,9 +846,8 @@ class DateTimeFieldTest extends DateTestBase {
       "{$field_name}[0][value][time]" => $time_value,
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid');
+    $this->assertText('date is invalid', 'Empty time value has been caught.');
 
-    // Invalid hour value.
     $date_value = '2012-12-01';
     $time_value = '49:00:00';
     $edit = [
@@ -860,9 +855,8 @@ class DateTimeFieldTest extends DateTestBase {
       "{$field_name}[0][value][time]" => $time_value,
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid');
+    $this->assertText('date is invalid', new FormattableMarkup('Invalid hour value %time has been caught.', ['%time' => $time_value]));
 
-    // Invalid minutes value.
     $date_value = '2012-12-01';
     $time_value = '12:99:00';
     $edit = [
@@ -870,9 +864,8 @@ class DateTimeFieldTest extends DateTestBase {
       "{$field_name}[0][value][time]" => $time_value,
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid');
+    $this->assertText('date is invalid', new FormattableMarkup('Invalid minute value %time has been caught.', ['%time' => $time_value]));
 
-    // Invalid seconds value.
     $date_value = '2012-12-01';
     $time_value = '12:15:99';
     $edit = [
@@ -880,7 +873,7 @@ class DateTimeFieldTest extends DateTestBase {
       "{$field_name}[0][value][time]" => $time_value,
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid');
+    $this->assertText('date is invalid', new FormattableMarkup('Invalid second value %time has been caught.', ['%time' => $time_value]));
   }
 
   /**

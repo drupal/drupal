@@ -76,7 +76,7 @@ class LocalePathTest extends BrowserTestBase {
     // Check that the "xx" front page is readily available because path prefix
     // negotiation is pre-configured.
     $this->drupalGet($prefix);
-    $this->assertText('Welcome to Drupal');
+    $this->assertText('Welcome to Drupal', 'The "xx" front page is readily available.');
 
     // Create a node.
     $node = $this->drupalCreateNode(['type' => 'page']);
@@ -102,11 +102,11 @@ class LocalePathTest extends BrowserTestBase {
 
     // Confirm English language path alias works.
     $this->drupalGet($english_path);
-    $this->assertText($node->label());
+    $this->assertText($node->label(), 'English alias works.');
 
     // Confirm custom language path alias works.
     $this->drupalGet($prefix . '/' . $custom_language_path);
-    $this->assertText($node->label());
+    $this->assertText($node->label(), 'Custom language alias works.');
 
     // Create a custom path.
     $custom_path = $this->randomMachineName(8);
@@ -141,11 +141,11 @@ class LocalePathTest extends BrowserTestBase {
 
     // Confirm that the custom path leads to the first node.
     $this->drupalGet($custom_path);
-    $this->assertText($first_node->label());
+    $this->assertText($first_node->label(), 'Custom alias returns first node.');
 
     // Confirm that the custom path with prefix leads to the second node.
     $this->drupalGet($prefix . '/' . $custom_path);
-    $this->assertText($second_node->label());
+    $this->assertText($second_node->label(), 'Custom alias with prefix returns second node.');
 
   }
 

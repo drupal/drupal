@@ -107,7 +107,7 @@ class BooleanFieldTest extends BrowserTestBase {
     // Display creation form.
     $this->drupalGet('entity_test/add');
     $this->assertSession()->fieldValueEquals("{$field_name}[value]", '');
-    $this->assertText($this->field->label());
+    $this->assertText($this->field->label(), 'Uses field label by default.');
     $this->assertNoRaw($on);
 
     // Submit and ensure it is accepted.
@@ -157,7 +157,10 @@ class BooleanFieldTest extends BrowserTestBase {
     // Click on the widget settings button to open the widget settings form.
     $this->submitForm([], $field_name . "_settings_edit");
 
-    $this->assertText('Use field label instead of the "On" label as the label.');
+    $this->assertText(
+      'Use field label instead of the "On" label as the label.',
+      t('Display setting checkbox available.')
+    );
 
     // Enable setting.
     $edit = ['fields[' . $field_name . '][settings_edit_form][settings][display_label]' => 1];
@@ -167,10 +170,13 @@ class BooleanFieldTest extends BrowserTestBase {
     // Go again to the form display page and check if the setting
     // is stored and has the expected effect.
     $this->drupalGet($fieldEditUrl);
-    $this->assertText('Use field label: Yes');
+    $this->assertText('Use field label: Yes', 'Checking the display settings checkbox updated the value.');
 
     $this->submitForm([], $field_name . "_settings_edit");
-    $this->assertText('Use field label instead of the "On" label as the label.');
+    $this->assertText(
+      'Use field label instead of the "On" label as the label.',
+      t('Display setting checkbox is available')
+    );
     $this->getSession()->getPage()->hasCheckedField('fields[' . $field_name . '][settings_edit_form][settings][display_label]');
 
     // Test the boolean field settings.

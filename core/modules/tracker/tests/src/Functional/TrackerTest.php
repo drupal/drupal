@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\tracker\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Cache\Cache;
@@ -88,8 +89,8 @@ class TrackerTest extends BrowserTestBase {
     ]);
 
     $this->drupalGet('activity');
-    $this->assertNoText($unpublished->label());
-    $this->assertText($published->label());
+    $this->assertNoText($unpublished->label(), 'Unpublished node does not show up in the tracker listing.');
+    $this->assertText($published->label(), 'Published node shows up in the tracker listing.');
     $this->assertSession()->linkExists('My recent content', 0, 'User tab shows up on the global tracker page.');
 
     // Assert cache contexts, specifically the pager and node access contexts.
@@ -121,7 +122,7 @@ class TrackerTest extends BrowserTestBase {
     // Delete a node and ensure it no longer appears on the tracker.
     $published->delete();
     $this->drupalGet('activity');
-    $this->assertNoText($published->label());
+    $this->assertNoText($published->label(), 'Deleted node does not show up in the tracker listing.');
 
     // Test proper display of time on activity page when comments are disabled.
     // Disable comments.
@@ -135,8 +136,8 @@ class TrackerTest extends BrowserTestBase {
     ]);
 
     $this->drupalGet('activity');
-    $this->assertText($node->label());
-    $this->assertText(\Drupal::service('date.formatter')->formatTimeDiffSince($node->getChangedTime()));
+    $this->assertText($node->label(), 'Published node shows up in the tracker listing.');
+    $this->assertText(\Drupal::service('date.formatter')->formatTimeDiffSince($node->getChangedTime()), 'The changed time was displayed on the tracker listing.');
   }
 
   /**
@@ -172,10 +173,10 @@ class TrackerTest extends BrowserTestBase {
     $this->drupalPostForm('comment/reply/node/' . $other_published_my_comment->id() . '/comment', $comment, 'Save');
 
     $this->drupalGet('user/' . $this->user->id() . '/activity');
-    $this->assertNoText($unpublished->label());
-    $this->assertText($my_published->label());
-    $this->assertNoText($other_published_no_comment->label());
-    $this->assertText($other_published_my_comment->label());
+    $this->assertNoText($unpublished->label(), "Unpublished nodes do not show up in the user's tracker listing.");
+    $this->assertText($my_published->label(), "Published nodes show up in the user's tracker listing.");
+    $this->assertNoText($other_published_no_comment->label(), "Another user's nodes do not show up in the user's tracker listing.");
+    $this->assertText($other_published_my_comment->label(), "Nodes that the user has commented on appear in the user's tracker listing.");
 
     // Assert cache contexts.
     $this->assertCacheContexts(['languages:language_interface', 'route', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'url.query_args.pagers:0', 'user', 'user.node_grants:view']);
@@ -210,7 +211,7 @@ class TrackerTest extends BrowserTestBase {
     $this->assertSession()->linkExists($my_published->label());
     $this->assertSession()->linkNotExists($unpublished->label());
     // Verify that title and tab title have been set correctly.
-    $this->assertText('Activity');
+    $this->assertText('Activity', 'The user activity tab has the name "Activity".');
     $this->assertSession()->titleEquals($this->user->getAccountName() . ' | Drupal');
 
     // Verify that unpublished comments are removed from the tracker.
@@ -222,7 +223,7 @@ class TrackerTest extends BrowserTestBase {
     $this->drupalLogin($admin_user);
     $this->drupalPostForm('comment/1/edit', ['status' => CommentInterface::NOT_PUBLISHED], 'Save');
     $this->drupalGet('user/' . $this->user->id() . '/activity');
-    $this->assertNoText($other_published_my_comment->label());
+    $this->assertNoText($other_published_my_comment->label(), 'Unpublished comments are not counted on the tracker listing.');
 
     // Test escaping of title on user's tracker tab.
     \Drupal::service('module_installer')->install(['user_hooks_test']);
@@ -405,7 +406,7 @@ class TrackerTest extends BrowserTestBase {
 
     // Assert that all node titles are displayed.
     foreach ($nodes as $i => $node) {
-      $this->assertText($node->label());
+      $this->assertText($node->label(), new FormattableMarkup('Node @i is displayed on the tracker listing pages.', ['@i' => $i]));
     }
 
     // Fetch the site-wide tracker.
@@ -413,7 +414,7 @@ class TrackerTest extends BrowserTestBase {
 
     // Assert that all node titles are displayed.
     foreach ($nodes as $i => $node) {
-      $this->assertText($node->label());
+      $this->assertText($node->label(), new FormattableMarkup('Node @i is displayed on the tracker listing pages.', ['@i' => $i]));
     }
   }
 
@@ -435,7 +436,7 @@ class TrackerTest extends BrowserTestBase {
 
     // Assert that the node is displayed.
     $this->drupalGet('activity');
-    $this->assertText($node->label());
+    $this->assertText($node->label(), 'A node is displayed on the tracker listing pages.');
 
     // Unpublish the node and ensure that it's no longer displayed.
     $edit = [
@@ -445,7 +446,7 @@ class TrackerTest extends BrowserTestBase {
     $this->drupalPostForm('admin/content', $edit, 'Apply to selected items');
 
     $this->drupalGet('activity');
-    $this->assertText('No content available.');
+    $this->assertText('No content available.', 'A node is displayed on the tracker listing pages.');
   }
 
   /**

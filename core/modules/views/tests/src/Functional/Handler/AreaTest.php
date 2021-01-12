@@ -223,7 +223,7 @@ class AreaTest extends ViewTestBase {
     $view->storage->enable()->save();
 
     $this->drupalGet('node');
-    $this->assertText('Overridden title');
+    $this->assertText('Overridden title', 'Overridden title found.');
   }
 
 }

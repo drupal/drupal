@@ -215,7 +215,7 @@ class MenuRouterTest extends BrowserTestBase {
     $this->drupalGet('test-page');
     $this->assertText($offline_message);
     $this->drupalGet('menu_login_callback');
-    $this->assertText('This is TestControllers::testLogin.');
+    $this->assertText('This is TestControllers::testLogin.', 'Maintenance mode can be bypassed using an event subscriber.');
 
     $this->container->get('state')->set('system.maintenance_mode', FALSE);
   }
@@ -268,7 +268,7 @@ class MenuRouterTest extends BrowserTestBase {
    */
   protected function doTestThemeCallbackAdministrative() {
     $this->drupalGet('menu-test/theme-callback/use-admin-theme');
-    $this->assertText('Active theme: seven. Actual theme: seven.');
+    $this->assertText('Active theme: seven. Actual theme: seven.', 'The administrative theme can be correctly set in a theme negotiation.');
     $this->assertRaw('seven/css/base/elements.css');
   }
 
@@ -288,7 +288,7 @@ class MenuRouterTest extends BrowserTestBase {
     $admin_user = $this->drupalCreateUser(['access site in maintenance mode']);
     $this->drupalLogin($admin_user);
     $this->drupalGet('menu-test/theme-callback/use-admin-theme');
-    $this->assertText('Active theme: seven. Actual theme: seven.');
+    $this->assertText('Active theme: seven. Actual theme: seven.', 'The theme negotiation system is correctly triggered for an administrator when the site is in maintenance mode.');
     // Check that the administrative theme's CSS appears on the page.
     $this->assertRaw('seven/css/base/elements.css');
 
@@ -301,7 +301,7 @@ class MenuRouterTest extends BrowserTestBase {
   protected function doTestThemeCallbackOptionalTheme() {
     // Request a theme that is not installed.
     $this->drupalGet('menu-test/theme-callback/use-test-theme');
-    $this->assertText('Active theme: bartik. Actual theme: bartik.');
+    $this->assertText('Active theme: bartik. Actual theme: bartik.', 'The theme negotiation system falls back on the default theme when a theme that is not installed is requested.');
     // Check that the default theme's CSS appears on the page.
     $this->assertRaw('bartik/css/base/elements.css');
 
@@ -311,7 +311,7 @@ class MenuRouterTest extends BrowserTestBase {
     $theme_installer->install(['test_theme']);
 
     $this->drupalGet('menu-test/theme-callback/use-test-theme');
-    $this->assertText('Active theme: test_theme. Actual theme: test_theme.');
+    $this->assertText('Active theme: test_theme. Actual theme: test_theme.', 'The theme negotiation system uses an optional theme once it has been installed.');
     // Check that the optional theme's CSS appears on the page.
     $this->assertRaw('test_theme/kitten.css');
 
@@ -323,7 +323,7 @@ class MenuRouterTest extends BrowserTestBase {
    */
   protected function doTestThemeCallbackFakeTheme() {
     $this->drupalGet('menu-test/theme-callback/use-fake-theme');
-    $this->assertText('Active theme: bartik. Actual theme: bartik.');
+    $this->assertText('Active theme: bartik. Actual theme: bartik.', 'The theme negotiation system falls back on the default theme when a theme that does not exist is requested.');
     // Check that the default theme's CSS appears on the page.
     $this->assertRaw('bartik/css/base/elements.css');
   }
@@ -333,7 +333,7 @@ class MenuRouterTest extends BrowserTestBase {
    */
   protected function doTestThemeCallbackNoThemeRequested() {
     $this->drupalGet('menu-test/theme-callback/no-theme-requested');
-    $this->assertText('Active theme: bartik. Actual theme: bartik.');
+    $this->assertText('Active theme: bartik. Actual theme: bartik.', 'The theme negotiation system falls back on the default theme when no theme is requested.');
     // Check that the default theme's CSS appears on the page.
     $this->assertRaw('bartik/css/base/elements.css');
   }

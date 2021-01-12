@@ -130,7 +130,7 @@ class ContactSitewideTest extends BrowserTestBase {
     // Delete old forms to ensure that new forms are used.
     $this->deleteContactForms();
     $this->drupalGet('admin/structure/contact');
-    $this->assertText('Personal');
+    $this->assertText('Personal', 'Personal form was not deleted');
     $this->assertSession()->linkByHrefNotExists('admin/structure/contact/manage/feedback');
 
     // Ensure that the contact form won't be shown without forms.

@@ -39,9 +39,9 @@ class PreviewTest extends UITestBase {
 
     // Test that area text and exposed filters are present and rendered.
     $this->assertSession()->fieldExists('id');
-    $this->assertText('Test header text');
-    $this->assertText('Test footer text');
-    $this->assertText('Test empty text');
+    $this->assertText('Test header text', 'Rendered header text found');
+    $this->assertText('Test footer text', 'Rendered footer text found.');
+    $this->assertText('Test empty text', 'Rendered empty text found.');
   }
 
   /**
@@ -70,9 +70,9 @@ class PreviewTest extends UITestBase {
 
     // Test that area text and exposed filters are present and rendered.
     $this->assertSession()->fieldExists('id');
-    $this->assertText('Test header text');
-    $this->assertText('Test footer text');
-    $this->assertText('Test empty text');
+    $this->assertText('Test header text', 'Rendered header text found');
+    $this->assertText('Test footer text', 'Rendered footer text found.');
+    $this->assertText('Test empty text', 'Rendered empty text found.');
 
     // Test feed preview.
     $view = [];
@@ -160,7 +160,7 @@ SQL;
 
     $this->submitForm($edit = [], 'Update preview');
 
-    $this->assertText('Unable to preview due to validation errors.');
+    $this->assertText('Unable to preview due to validation errors.', 'Preview error text found.');
   }
 
 }

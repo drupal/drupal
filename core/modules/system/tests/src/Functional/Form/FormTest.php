@@ -891,7 +891,7 @@ class FormTest extends BrowserTestBase {
     // an input forgery.
     // @see \Drupal\form_test\Form\FormTestInputForgeryForm::postRender
     $this->submitForm(['checkboxes[one]' => TRUE, 'checkboxes[two]' => TRUE], 'Submit');
-    $this->assertText('An illegal choice has been detected.');
+    $this->assertText('An illegal choice has been detected.', 'Input forgery was detected.');
   }
 
   /**

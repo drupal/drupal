@@ -128,7 +128,7 @@ class SiteMaintenanceTest extends BrowserTestBase {
 
     // Verify that custom site offline message is not displayed on user/password.
     $this->drupalGet('user/password');
-    $this->assertText('Username or email address');
+    $this->assertText('Username or email address', 'Anonymous users can access user/password');
 
     // Submit password reset form.
     $edit = [

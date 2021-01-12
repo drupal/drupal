@@ -40,7 +40,7 @@ class DependencyTest extends ModuleTestBase {
     $edit = [];
     $edit['modules[content_translation][enable]'] = 'content_translation';
     $this->drupalPostForm('admin/modules', $edit, 'Install');
-    $this->assertText('Some required modules must be enabled');
+    $this->assertText('Some required modules must be enabled', 'Dependency required.');
 
     $this->assertModules(['content_translation', 'language'], FALSE);
 
@@ -48,7 +48,7 @@ class DependencyTest extends ModuleTestBase {
     $this->assertTableCount('language', FALSE);
 
     $this->submitForm([], 'Continue');
-    $this->assertText('2 modules have been enabled: Content Translation, Language.');
+    $this->assertText('2 modules have been enabled: Content Translation, Language.', 'Modules status has been updated.');
     $this->assertModules(['content_translation', 'language'], TRUE);
 
     // Assert that the language YAML files were created.
@@ -145,7 +145,7 @@ class DependencyTest extends ModuleTestBase {
     $this->drupalPostForm('admin/modules', $edit, 'Install');
 
     // Makes sure the modules were NOT installed.
-    $this->assertText('Requirements 1 Test failed requirements');
+    $this->assertText('Requirements 1 Test failed requirements', 'Modules status has been updated.');
     $this->assertModules(['requirements1_test'], FALSE);
     $this->assertModules(['requirements2_test'], FALSE);
 
@@ -218,13 +218,13 @@ class DependencyTest extends ModuleTestBase {
     $edit = ['uninstall[forum]' => 'forum'];
     $this->drupalPostForm('admin/modules/uninstall', $edit, 'Uninstall');
     $this->submitForm([], 'Uninstall');
-    $this->assertText('The selected modules have been uninstalled.');
+    $this->assertText('The selected modules have been uninstalled.', 'Modules status has been updated.');
 
     // Uninstall comment module.
     $edit = ['uninstall[comment]' => 'comment'];
     $this->drupalPostForm('admin/modules/uninstall', $edit, 'Uninstall');
     $this->submitForm([], 'Uninstall');
-    $this->assertText('The selected modules have been uninstalled.');
+    $this->assertText('The selected modules have been uninstalled.', 'Modules status has been updated.');
   }
 
 }

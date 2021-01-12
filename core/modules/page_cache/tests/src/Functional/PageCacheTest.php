@@ -480,7 +480,7 @@ class PageCacheTest extends BrowserTestBase {
 
     $this->drupalGet('page_cache_form_test_immutability');
 
-    $this->assertText("Immutable: TRUE");
+    $this->assertText("Immutable: TRUE", "Form is immutable.");
 
     // The immutable flag is set unconditionally by system_form_alter(), set
     // a flag to tell page_cache_form_test_module_implements_alter() to disable
@@ -491,7 +491,7 @@ class PageCacheTest extends BrowserTestBase {
 
     $this->drupalGet('page_cache_form_test_immutability');
 
-    $this->assertText("Immutable: FALSE");
+    $this->assertText("Immutable: FALSE", "Form is not immutable,");
   }
 
   /**

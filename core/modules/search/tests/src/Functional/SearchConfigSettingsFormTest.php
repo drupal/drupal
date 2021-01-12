@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\search\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\search\Entity\SearchPage;
@@ -99,14 +100,14 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
 
     // Test that the form saves with the default values.
     $this->drupalPostForm('admin/config/search/pages', [], 'Save configuration');
-    $this->assertText('The configuration options have been saved.');
+    $this->assertText('The configuration options have been saved.', 'Form saves with the default values.');
 
     // Test that the form does not save with an invalid word length.
     $edit = [
       'minimum_word_size' => $this->randomMachineName(3),
     ];
     $this->drupalPostForm('admin/config/search/pages', $edit, 'Save configuration');
-    $this->assertNoText('The configuration options have been saved.');
+    $this->assertNoText('The configuration options have been saved.', 'Form does not save with an invalid word length.');
 
     // Test logging setting. It should be off by default.
     $text = $this->randomMachineName(5);
@@ -182,14 +183,14 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
       $info = $plugin_info[$entity_id];
       $this->drupalGet('search/' . $entity->getPath(), ['query' => ['keys' => $info['keys']]]);
       $this->assertSession()->statusCodeEquals(200);
-      $this->assertNoText('no results');
-      $this->assertText($info['text']);
+      $this->assertNoText('no results', $entity->label() . ' search found results');
+      $this->assertText($info['text'], 'Correct search text found');
 
       // Verify that other plugin search tab labels are not visible.
       foreach ($plugins as $other) {
         if ($other != $entity_id) {
           $label = $entities[$other]->label();
-          $this->assertNoText($label);
+          $this->assertNoText($label, $label . ' search tab is not shown');
         }
       }
 
@@ -228,7 +229,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
       $this->drupalGet($item['path'], $item['options']);
       foreach ($plugins as $entity_id) {
         $label = $entities[$entity_id]->label();
-        $this->assertText($label);
+        $this->assertText($label, new FormattableMarkup('%label search tab is shown', ['%label' => $label]));
       }
     }
   }

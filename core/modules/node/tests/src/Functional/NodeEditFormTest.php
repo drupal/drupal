@@ -97,8 +97,8 @@ class NodeEditFormTest extends NodeTestBase {
     $this->submitForm($edit, 'Save');
 
     // Check that the title and body fields are displayed with the updated values.
-    $this->assertText($edit[$title_key]);
-    $this->assertText($edit[$body_key]);
+    $this->assertText($edit[$title_key], 'Title displayed.');
+    $this->assertText($edit[$body_key], 'Body displayed.');
 
     // Log in as a second administrator user.
     $second_web_user = $this->drupalCreateUser([

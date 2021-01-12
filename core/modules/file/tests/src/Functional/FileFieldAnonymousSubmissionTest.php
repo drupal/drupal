@@ -50,7 +50,7 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
     $t_args = ['@type' => $bundle_label, '%title' => $node_title];
-    $this->assertText(strip_tags(t('@type %title has been created.', $t_args)));
+    $this->assertText(strip_tags(t('@type %title has been created.', $t_args)), 'The node was created.');
     $matches = [];
     if (preg_match('@node/(\d+)$@', $this->getUrl(), $matches)) {
       $nid = end($matches);
@@ -86,7 +86,7 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
     $t_args = ['@type' => $bundle_label, '%title' => $node_title];
-    $this->assertText(strip_tags(t('@type %title has been created.', $t_args)));
+    $this->assertText(strip_tags(t('@type %title has been created.', $t_args)), 'The node was created.');
     $matches = [];
     if (preg_match('@node/(\d+)$@', $this->getUrl(), $matches)) {
       $nid = end($matches);
@@ -148,7 +148,7 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
     $this->submitForm($edit, $label);
     $this->assertSession()->statusCodeEquals(200);
     $t_args = ['@type' => $bundle_label, '%title' => $node_title];
-    $this->assertNoText(strip_tags(t('@type %title has been created.', $t_args)));
+    $this->assertNoText(strip_tags(t('@type %title has been created.', $t_args)), 'The node was created.');
     $this->assertText('Title field is required.');
 
     // Submit the form again but this time with the missing title field. This
@@ -160,7 +160,7 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
 
     // Confirm the final submission actually worked.
     $t_args = ['@type' => $bundle_label, '%title' => $node_title];
-    $this->assertText(strip_tags(t('@type %title has been created.', $t_args)));
+    $this->assertText(strip_tags(t('@type %title has been created.', $t_args)), 'The node was created.');
     $matches = [];
     if (preg_match('@node/(\d+)$@', $this->getUrl(), $matches)) {
       $nid = end($matches);

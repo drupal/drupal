@@ -94,22 +94,21 @@ class StatisticsAdminTest extends BrowserTestBase {
     // "1 view" will actually be shown when the node is hit the second time).
     $this->drupalGet('node/' . $this->testNode->id());
     $this->client->post($stats_path, ['form_params' => $post]);
-    $this->assertText('1 view');
+    $this->assertText('1 view', 'Node is viewed once.');
 
     $this->drupalGet('node/' . $this->testNode->id());
     $this->client->post($stats_path, ['form_params' => $post]);
-    $this->assertText('2 views');
+    $this->assertText('2 views', 'Node is viewed 2 times.');
 
     // Increase the max age to test that nodes are no longer immediately
     // updated, visit the node once more to populate the cache.
     $this->config('statistics.settings')->set('display_max_age', 3600)->save();
     $this->drupalGet('node/' . $this->testNode->id());
-    $this->assertText('3 views');
+    $this->assertText('3 views', 'Node is viewed 3 times.');
 
     $this->client->post($stats_path, ['form_params' => $post]);
     $this->drupalGet('node/' . $this->testNode->id());
-    // Verify that views counter was not updated.
-    $this->assertText('3 views');
+    $this->assertText('3 views', 'Views counter was not updated.');
   }
 
   /**
@@ -162,7 +161,7 @@ class StatisticsAdminTest extends BrowserTestBase {
     $this->client->post($stats_path, ['form_params' => $post]);
     $this->drupalGet('node/' . $this->testNode->id());
     $this->client->post($stats_path, ['form_params' => $post]);
-    $this->assertText('1 view');
+    $this->assertText('1 view', 'Node is viewed once.');
 
     // statistics_cron() will subtract
     // statistics.settings:accesslog.max_lifetime config from REQUEST_TIME in
@@ -171,9 +170,8 @@ class StatisticsAdminTest extends BrowserTestBase {
     sleep(2);
     $this->cronRun();
 
-    // Verify that no hit URL is found.
     $this->drupalGet('admin/reports/pages');
-    $this->assertNoText('node/' . $this->testNode->id());
+    $this->assertNoText('node/' . $this->testNode->id(), 'No hit URL found.');
 
     $result = Database::getConnection()->select('node_counter', 'nc')
       ->fields('nc', ['daycount'])

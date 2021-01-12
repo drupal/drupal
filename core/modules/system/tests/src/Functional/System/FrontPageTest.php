@@ -61,12 +61,11 @@ class FrontPageTest extends BrowserTestBase {
     $this->drupalGet('');
     $this->assertSession()->titleEquals('Home | Drupal');
 
-    // Check that path is the front page.
-    $this->assertText('On front page.');
+    $this->assertText('On front page.', 'Path is the front page.');
     $this->drupalGet('node');
-    $this->assertText('On front page.');
+    $this->assertText('On front page.', 'Path is the front page.');
     $this->drupalGet($this->nodePath);
-    $this->assertNoText('On front page.');
+    $this->assertNoText('On front page.', 'Path is not the front page.');
 
     // Change the front page to an invalid path.
     $edit = ['site_frontpage' => '/kittens'];
@@ -81,15 +80,14 @@ class FrontPageTest extends BrowserTestBase {
     // Change the front page to a valid path.
     $edit['site_frontpage'] = '/' . $this->nodePath;
     $this->drupalPostForm('admin/config/system/site-information', $edit, 'Save configuration');
-    // Check that the front page path has been saved.
-    $this->assertText(t('The configuration options have been saved.'));
-    // Check that path is the front page.
+    $this->assertText('The configuration options have been saved.', 'The front page path has been saved.');
+
     $this->drupalGet('');
-    $this->assertText('On front page.');
+    $this->assertText('On front page.', 'Path is the front page.');
     $this->drupalGet('node');
-    $this->assertNoText('On front page.');
+    $this->assertNoText('On front page.', 'Path is not the front page.');
     $this->drupalGet($this->nodePath);
-    $this->assertText('On front page.');
+    $this->assertText('On front page.', 'Path is the front page.');
   }
 
 }

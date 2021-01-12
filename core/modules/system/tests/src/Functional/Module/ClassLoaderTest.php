@@ -42,7 +42,7 @@ class ClassLoaderTest extends BrowserTestBase {
     for ($i = 0; $i < 2; $i++) {
       $this->drupalGet('module-test/class-loading');
       $this->assertSession()->statusCodeEquals(200);
-      $this->assertText($this->expected);
+      $this->assertText($this->expected, 'Autoloader loads classes from an enabled module.');
     }
   }
 
@@ -59,7 +59,7 @@ class ClassLoaderTest extends BrowserTestBase {
     for ($i = 0; $i < 2; $i++) {
       $this->drupalGet('module-test/class-loading');
       $this->assertSession()->statusCodeEquals(200);
-      $this->assertNoText($this->expected);
+      $this->assertNoText($this->expected, 'Autoloader does not load classes from a disabled module.');
     }
   }
 
@@ -79,7 +79,7 @@ class ClassLoaderTest extends BrowserTestBase {
     for ($i = 0; $i < 2; $i++) {
       $this->drupalGet('module-test/class-loading');
       $this->assertSession()->statusCodeEquals(200);
-      $this->assertNoText($this->expected);
+      $this->assertNoText($this->expected, 'Autoloader does not load classes from a disabled module.');
     }
   }
 

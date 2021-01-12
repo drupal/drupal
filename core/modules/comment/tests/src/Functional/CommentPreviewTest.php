@@ -68,8 +68,8 @@ class CommentPreviewTest extends CommentTestBase {
 
     // Check that the preview is displaying the title and body.
     $this->assertSession()->titleEquals('Preview comment | Drupal');
-    $this->assertText($edit['subject[0][value]']);
-    $this->assertText($edit['comment_body[0][value]']);
+    $this->assertText($edit['subject[0][value]'], 'Subject displayed.');
+    $this->assertText($edit['comment_body[0][value]'], 'Comment displayed.');
 
     // Check that the title and body fields are displayed with the correct values.
     $this->assertSession()->fieldValueEquals('subject[0][value]', $edit['subject[0][value]']);
@@ -102,8 +102,8 @@ class CommentPreviewTest extends CommentTestBase {
 
     // Check that the preview is displaying the title and body.
     $this->assertSession()->titleEquals('Preview comment | Drupal');
-    $this->assertText($edit['subject[0][value]']);
-    $this->assertText($edit['comment_body[0][value]']);
+    $this->assertText($edit['subject[0][value]'], 'Subject displayed.');
+    $this->assertText($edit['comment_body[0][value]'], 'Comment displayed.');
 
     // Check that the title and body fields are displayed with the correct values.
     $this->assertSession()->fieldValueEquals('subject[0][value]', $edit['subject[0][value]']);
@@ -156,10 +156,10 @@ class CommentPreviewTest extends CommentTestBase {
 
     // Check that the preview is displaying the subject, comment, author and date correctly.
     $this->assertSession()->titleEquals('Preview comment | Drupal');
-    $this->assertText($edit['subject[0][value]']);
-    $this->assertText($edit['comment_body[0][value]']);
-    $this->assertText($web_user->getAccountName());
-    $this->assertText($expected_text_date);
+    $this->assertText($edit['subject[0][value]'], 'Subject displayed.');
+    $this->assertText($edit['comment_body[0][value]'], 'Comment displayed.');
+    $this->assertText($web_user->getAccountName(), 'Author displayed.');
+    $this->assertText($expected_text_date, 'Date displayed.');
 
     // Check that the subject, comment, author and date fields are displayed with the correct values.
     $this->assertSession()->fieldValueEquals('subject[0][value]', $edit['subject[0][value]']);
@@ -170,7 +170,7 @@ class CommentPreviewTest extends CommentTestBase {
 
     // Check that saving a comment produces a success message.
     $this->drupalPostForm('comment/' . $comment->id() . '/edit', $edit, 'Save');
-    $this->assertText('Your comment has been posted.');
+    $this->assertText('Your comment has been posted.', 'Comment posted.');
 
     // Check that the comment fields are correct after loading the saved comment.
     $this->drupalGet('comment/' . $comment->id() . '/edit');

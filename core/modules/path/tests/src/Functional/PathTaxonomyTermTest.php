@@ -64,7 +64,7 @@ class PathTaxonomyTermTest extends PathTestBase {
 
     // Confirm that the alias works.
     $this->drupalGet($edit['path[0][alias]']);
-    $this->assertText($description);
+    $this->assertText($description, 'Term can be accessed on URL alias.');
 
     // Confirm the 'canonical' and 'shortlink' URLs.
     $elements = $this->xpath("//link[contains(@rel, 'canonical') and contains(@href, '" . $edit['path[0][alias]'] . "')]");
@@ -79,11 +79,11 @@ class PathTaxonomyTermTest extends PathTestBase {
 
     // Confirm that the changed alias works.
     $this->drupalGet(trim($edit2['path[0][alias]'], '/'));
-    $this->assertText($description);
+    $this->assertText($description, 'Term can be accessed on changed URL alias.');
 
     // Confirm that the old alias no longer works.
     $this->drupalGet(trim($edit['path[0][alias]'], '/'));
-    $this->assertNoText($description);
+    $this->assertNoText($description, 'Old URL alias has been removed after altering.');
     $this->assertSession()->statusCodeEquals(404);
 
     // Remove the term's URL alias.
@@ -93,7 +93,7 @@ class PathTaxonomyTermTest extends PathTestBase {
 
     // Confirm that the alias no longer works.
     $this->drupalGet(trim($edit2['path[0][alias]'], '/'));
-    $this->assertNoText($description);
+    $this->assertNoText($description, 'Old URL alias has been removed after altering.');
     $this->assertSession()->statusCodeEquals(404);
   }
 

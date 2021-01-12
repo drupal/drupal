@@ -108,16 +108,16 @@ class UserCreateTest extends BrowserTestBase {
       $this->drupalPostForm('admin/people/create', $edit, 'Create new account');
 
       if ($notify) {
-        $this->assertText('A welcome message with further instructions has been emailed to the new user ' . $edit['name'] . '.');
+        $this->assertText('A welcome message with further instructions has been emailed to the new user ' . $edit['name'] . '.', 'User created');
         $this->assertCount(1, $this->drupalGetMails(), 'Notification email sent');
       }
       else {
-        $this->assertText('Created a new user account for ' . $edit['name'] . '. No email has been sent.');
+        $this->assertText('Created a new user account for ' . $edit['name'] . '. No email has been sent.', 'User created');
         $this->assertCount(0, $this->drupalGetMails(), 'Notification email not sent');
       }
 
       $this->drupalGet('admin/people');
-      $this->assertText($edit['name']);
+      $this->assertText($edit['name'], 'User found in list of users');
       $user = user_load_by_name($name);
       $this->assertTrue($user->isActive(), 'User is not blocked');
     }

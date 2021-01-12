@@ -235,7 +235,7 @@ class MenuUiTest extends BrowserTestBase {
     // Verify that the confirmation message is displayed.
     $this->assertRaw(t('Menu %label has been added.', ['%label' => $label]));
     $this->drupalGet('admin/structure/menu');
-    $this->assertText($label);
+    $this->assertText($label, 'Menu created');
 
     // Confirm that the custom menu block is available.
     $this->drupalGet('admin/structure/block/list/' . $this->config('system.theme')->get('default'));
@@ -584,7 +584,7 @@ class MenuUiTest extends BrowserTestBase {
     $this->drupalLogout();
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/structure/menu/manage/' . $item->getMenuName());
-    $this->assertNoText($item->getTitle());
+    $this->assertNoText($item->getTitle(), "Menu link pointing to unpublished node is only visible to users with 'bypass node access' permission");
     // The cache contexts associated with the (in)accessible menu links are
     // bubbled. See DefaultMenuLinkTreeManipulators::menuLinkCheckAccess().
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Contexts', 'user.permissions');
@@ -774,7 +774,7 @@ class MenuUiTest extends BrowserTestBase {
     $this->assertText('The menu link has been saved.');
     // Verify menu link.
     $this->drupalGet('admin/structure/menu/manage/' . $item->getMenuName());
-    $this->assertText($title);
+    $this->assertText($title, 'Menu link was edited');
   }
 
   /**
@@ -813,7 +813,7 @@ class MenuUiTest extends BrowserTestBase {
 
     // Verify deletion.
     $this->drupalGet('');
-    $this->assertNoText($title);
+    $this->assertNoText($title, 'Menu link was deleted');
   }
 
   /**
@@ -827,12 +827,12 @@ class MenuUiTest extends BrowserTestBase {
 
     // Verify menu link is absent.
     $this->drupalGet('');
-    $this->assertNoText($item->getTitle());
+    $this->assertNoText($item->getTitle(), 'Menu link was not displayed');
     $this->enableMenuLink($item);
 
     // Verify menu link is displayed.
     $this->drupalGet('');
-    $this->assertText($item->getTitle());
+    $this->assertText($item->getTitle(), 'Menu link was displayed');
   }
 
   /**

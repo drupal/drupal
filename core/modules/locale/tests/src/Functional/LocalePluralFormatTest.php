@@ -178,7 +178,7 @@ class LocalePluralFormatTest extends BrowserTestBase {
     $this->drupalGet('user');
 
     // Member for time should be translated.
-    $this->assertText("seconde");
+    $this->assertText("seconde", "'Member for' text is translated.");
 
     $path = 'admin/config/regional/translate/';
     $search = [
@@ -225,7 +225,7 @@ class LocalePluralFormatTest extends BrowserTestBase {
     // second or minute.
     $this->adminUser->set('created', time() - 2)->save();
     $this->drupalGet('user');
-    $this->assertText("secondes updated");
+    $this->assertText("secondes updated", "'Member for' text is translated.");
   }
 
   /**

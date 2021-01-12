@@ -61,23 +61,23 @@ class SearchAdvancedSearchFormTest extends BrowserTestBase {
 
     // Search for the dummy title with a GET query.
     $this->drupalGet('search/node', ['query' => ['keys' => $dummy_title]]);
-    $this->assertNoText($this->node->label());
+    $this->assertNoText($this->node->label(), 'Basic page node is not found with dummy title.');
 
     // Search for the title of the node with a GET query.
     $this->drupalGet('search/node', ['query' => ['keys' => $this->node->label()]]);
-    $this->assertText($this->node->label());
+    $this->assertText($this->node->label(), 'Basic page node is found with GET query.');
 
     // Search for the title of the node with a POST query.
     $edit = ['or' => $this->node->label()];
     $this->drupalPostForm('search/node', $edit, 'edit-submit--2');
-    $this->assertText($this->node->label());
+    $this->assertText($this->node->label(), 'Basic page node is found with POST query.');
 
     // Search by node type.
     $this->drupalPostForm('search/node', array_merge($edit, ['type[page]' => 'page']), 'edit-submit--2');
-    $this->assertText($this->node->label());
+    $this->assertText($this->node->label(), 'Basic page node is found with POST query and type:page.');
 
     $this->drupalPostForm('search/node', array_merge($edit, ['type[article]' => 'article']), 'edit-submit--2');
-    $this->assertText('search yielded no results');
+    $this->assertText('search yielded no results', 'Article node is not found with POST query and type:article.');
   }
 
   /**

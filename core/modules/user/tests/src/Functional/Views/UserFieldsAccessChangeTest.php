@@ -70,7 +70,7 @@ class UserFieldsAccessChangeTest extends UserTestBase {
 
     // No access, so no link.
     $this->drupalGet('test_user_fields_access');
-    $this->assertText($test_user->getAccountName());
+    $this->assertText($test_user->getAccountName(), 'Found user in view');
     $result = $this->xpath($xpath);
     $this->assertCount(0, $result, 'User is not a link');
 

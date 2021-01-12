@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\book\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Cache\Cache;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\RoleInterface;
@@ -240,7 +241,7 @@ class BookTest extends BrowserTestBase {
 
     // Make sure each part of the book is there.
     foreach ($nodes as $node) {
-      $this->assertText($node->label());
+      $this->assertText($node->label(), 'Node title found in printer friendly version.');
       $this->assertRaw($node->body->processed);
     }
 
@@ -284,17 +285,14 @@ class BookTest extends BrowserTestBase {
     $edit = [];
     $edit[RoleInterface::ANONYMOUS_ID . '[node test view]'] = TRUE;
     $this->drupalPostForm('admin/people/permissions/' . RoleInterface::ANONYMOUS_ID, $edit, 'Save permissions');
-    $this->assertText('The changes have been saved.');
+    $this->assertText('The changes have been saved.', "Permission 'node test view' successfully assigned to anonymous users.");
 
     // Test correct display of the block.
     $nodes = $this->createBook();
     $this->drupalGet('<front>');
-    // Book navigation block.
-    $this->assertText($block->label());
-    // Link to book root.
-    $this->assertText($this->book->label());
-    // No links to individual book pages.
-    $this->assertNoText($nodes[0]->label());
+    $this->assertText($block->label(), 'Book navigation block is displayed.');
+    $this->assertText($this->book->label(), new FormattableMarkup('Link to book root (@title) is displayed.', ['@title' => $nodes[0]->label()]));
+    $this->assertNoText($nodes[0]->label(), 'No links to individual book pages are displayed.');
 
     // Ensure that an unpublished node does not appear in the navigation for a
     // user without access. By unpublishing a parent page, child pages should
@@ -385,7 +383,7 @@ class BookTest extends BrowserTestBase {
     $edit = [];
     $edit[RoleInterface::ANONYMOUS_ID . '[node test view]'] = TRUE;
     $this->drupalPostForm('admin/people/permissions/' . RoleInterface::ANONYMOUS_ID, $edit, 'Save permissions');
-    $this->assertText('The changes have been saved.');
+    $this->assertText('The changes have been saved.', "Permission 'node test view' successfully assigned to anonymous users.");
 
     // Create a book.
     $this->createBook();
@@ -393,16 +391,16 @@ class BookTest extends BrowserTestBase {
     // Test correct display of the block to registered users.
     $this->drupalLogin($this->webUser);
     $this->drupalGet('node/' . $this->book->id());
-    $this->assertText($block->label());
+    $this->assertText($block->label(), 'Book navigation block is displayed to registered users.');
     $this->drupalLogout();
 
     // Test correct display of the block to anonymous users.
     $this->drupalGet('node/' . $this->book->id());
-    $this->assertText($block->label());
+    $this->assertText($block->label(), 'Book navigation block is displayed to anonymous users.');
 
     // Test the 'book pages' block_mode setting.
     $this->drupalGet('<front>');
-    $this->assertNoText($block->label());
+    $this->assertNoText($block->label(), 'Book navigation block is not shown on non-book pages.');
   }
 
   /**
@@ -546,7 +544,8 @@ class BookTest extends BrowserTestBase {
 
     // Load the book page and assert the created book title is displayed.
     $this->drupalGet('book');
-    $this->assertText($this->book->label());
+
+    $this->assertText($this->book->label(), 'The book title is displayed on the book listing page.');
 
     // Unpublish the top book page and confirm that the created book title is
     // not displayed for anonymous.
@@ -597,7 +596,7 @@ class BookTest extends BrowserTestBase {
     // Load the book page and assert the created book title is displayed.
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/structure/book');
-    $this->assertText($this->book->label());
+    $this->assertText($this->book->label(), 'The book title is displayed on the administrative book listing page.');
   }
 
   /**
@@ -611,7 +610,7 @@ class BookTest extends BrowserTestBase {
     // Load the book page list and assert the created book title is displayed
     // and action links are shown on list items.
     $this->drupalGet('admin/structure/book/' . $this->book->id());
-    $this->assertText($this->book->label());
+    $this->assertText($this->book->label(), 'The book title is displayed on the administrative book listing page.');
 
     $elements = $this->xpath('//table//ul[@class="dropbutton"]/li/a');
     $this->assertEqual($elements[0]->getText(), 'View', 'View link is found from the list.');
@@ -697,9 +696,7 @@ class BookTest extends BrowserTestBase {
 
     // Test node page.
     $this->drupalGet('node/' . $this->book->id());
-    // Unpublished book with "Show block only on book pages" book navigation
-    // settings.
-    $this->assertText($this->book->label());
+    $this->assertText($this->book->label(), 'Unpublished book with "Show block only on book pages" book navigation settings.');
   }
 
   /**

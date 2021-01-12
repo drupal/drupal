@@ -287,8 +287,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     // Reset locale cache.
     $this->container->get('string_translation')->reset();
     $this->assertRaw('"edit-languages-' . $langcode . '-weight"');
-    // Verify that the test language was added.
-    $this->assertText($name);
+    $this->assertText($name, 'Test language added.');
 
     // Have the adminUser request a page in the new language.
     $this->drupalGet($langcode . '/test-page');
@@ -312,8 +311,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
     $this->assertNoText('No strings available');
-    // Verify that search found the string as untranslated.
-    $this->assertText($name);
+    $this->assertText($name, 'Search found the string as untranslated.');
 
     // Assume this is the only result.
     // Translate the string to a random string.
@@ -323,7 +321,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
       $lid => $translation,
     ];
     $this->drupalPostForm('admin/config/regional/translate', $edit, 'Save translations');
-    $this->assertText('The strings have been saved.');
+    $this->assertText('The strings have been saved.', 'The strings have been saved.');
     // Verify that the user is redirected to the correct page.
     $this->assertSession()->addressEquals(Url::fromRoute('locale.translate_page'));
     $this->drupalLogout();

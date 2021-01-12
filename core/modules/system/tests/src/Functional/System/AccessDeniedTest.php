@@ -51,7 +51,7 @@ class AccessDeniedTest extends BrowserTestBase {
 
   public function testAccessDenied() {
     $this->drupalGet('admin');
-    $this->assertText('Access denied');
+    $this->assertText('Access denied', 'Found the default 403 page');
     $this->assertSession()->statusCodeEquals(403);
 
     // Ensure that users without permission are denied access and have the
@@ -85,8 +85,8 @@ class AccessDeniedTest extends BrowserTestBase {
     // Log out and check that the user login block is shown on custom 403 pages.
     $this->drupalLogout();
     $this->drupalGet('admin');
-    $this->assertText($this->adminUser->getAccountName());
-    $this->assertText('Username');
+    $this->assertText($this->adminUser->getAccountName(), 'Found the custom 403 page');
+    $this->assertText('Username', 'Blocks are shown on the custom 403 page');
 
     // Log back in and remove the custom 403 page.
     $this->drupalLogin($this->adminUser);
@@ -98,9 +98,9 @@ class AccessDeniedTest extends BrowserTestBase {
     // Logout and check that the user login block is shown on default 403 pages.
     $this->drupalLogout();
     $this->drupalGet('admin');
-    $this->assertText('Access denied');
+    $this->assertText('Access denied', 'Found the default 403 page');
     $this->assertSession()->statusCodeEquals(403);
-    $this->assertText('Username');
+    $this->assertText('Username', 'Blocks are shown on the default 403 page');
 
     // Log back in, set the custom 403 page to /user/login and remove the block
     $this->drupalLogin($this->adminUser);

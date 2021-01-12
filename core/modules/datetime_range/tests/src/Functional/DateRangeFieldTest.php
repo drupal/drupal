@@ -1191,9 +1191,8 @@ class DateRangeFieldTest extends DateTestBase {
       "{$field_name}[0][end_value][time]" => '12:00:00',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid');
+    $this->assertText('date is invalid', 'Empty start date value has been caught.');
 
-    // Invalid year value.
     $date_value = 'aaaa-12-01';
     $edit = [
       "{$field_name}[0][value][date]" => $date_value,
@@ -1202,9 +1201,8 @@ class DateRangeFieldTest extends DateTestBase {
       "{$field_name}[0][end_value][time]" => '12:00:00',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid');
+    $this->assertText('date is invalid', 'Invalid start year value ' . $date_value . ' has been caught.');
 
-    // Invalid month value.
     $date_value = '2012-75-01';
     $edit = [
       "{$field_name}[0][value][date]" => $date_value,
@@ -1213,9 +1211,8 @@ class DateRangeFieldTest extends DateTestBase {
       "{$field_name}[0][end_value][time]" => '12:00:00',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid');
+    $this->assertText('date is invalid', 'Invalid start month value ' . $date_value . ' has been caught.');
 
-    // Invalid day value.
     $date_value = '2012-12-99';
     $edit = [
       "{$field_name}[0][value][date]" => $date_value,
@@ -1224,7 +1221,7 @@ class DateRangeFieldTest extends DateTestBase {
       "{$field_name}[0][end_value][time]" => '12:00:00',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid');
+    $this->assertText('date is invalid', 'Invalid start day value ' . $date_value . ' has been caught.');
 
     // Submit invalid start times and ensure they is not accepted.
     $time_value = '';
@@ -1235,9 +1232,8 @@ class DateRangeFieldTest extends DateTestBase {
       "{$field_name}[0][end_value][time]" => '12:00:00',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid');
+    $this->assertText('date is invalid', 'Empty start time value has been caught.');
 
-    // Invalid hour value.
     $time_value = '49:00:00';
     $edit = [
       "{$field_name}[0][value][date]" => '2012-12-01',
@@ -1246,9 +1242,8 @@ class DateRangeFieldTest extends DateTestBase {
       "{$field_name}[0][end_value][time]" => '12:00:00',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid');
+    $this->assertText('date is invalid', 'Invalid start hour value ' . $time_value . ' has been caught.');
 
-    // Invalid minutes value.
     $time_value = '12:99:00';
     $edit = [
       "{$field_name}[0][value][date]" => '2012-12-01',
@@ -1257,9 +1252,8 @@ class DateRangeFieldTest extends DateTestBase {
       "{$field_name}[0][end_value][time]" => '12:00:00',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid');
+    $this->assertText('date is invalid', 'Invalid start minute value ' . $time_value . ' has been caught.');
 
-    // Invalid seconds value.
     $time_value = '12:15:99';
     $edit = [
       "{$field_name}[0][value][date]" => '2012-12-01',
@@ -1268,7 +1262,7 @@ class DateRangeFieldTest extends DateTestBase {
       "{$field_name}[0][end_value][time]" => '12:00:00',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid');
+    $this->assertText('date is invalid', 'Invalid start second value ' . $time_value . ' has been caught.');
 
     // Submit invalid end dates and ensure they is not accepted.
     $date_value = '';
@@ -1279,9 +1273,8 @@ class DateRangeFieldTest extends DateTestBase {
       "{$field_name}[0][end_value][time]" => '12:00:00',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid');
+    $this->assertText('date is invalid', 'Empty end date value has been caught.');
 
-    // Invalid year value.
     $date_value = 'aaaa-12-01';
     $edit = [
       "{$field_name}[0][value][date]" => '2012-12-01',
@@ -1290,9 +1283,8 @@ class DateRangeFieldTest extends DateTestBase {
       "{$field_name}[0][end_value][time]" => '00:00:00',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid');
+    $this->assertText('date is invalid', 'Invalid end year value ' . $date_value . ' has been caught.');
 
-    // Invalid month value.
     $date_value = '2012-75-01';
     $edit = [
       "{$field_name}[0][value][date]" => '2012-12-01',
@@ -1301,9 +1293,8 @@ class DateRangeFieldTest extends DateTestBase {
       "{$field_name}[0][end_value][time]" => '00:00:00',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid');
+    $this->assertText('date is invalid', 'Invalid end month value ' . $date_value . ' has been caught.');
 
-    // Invalid day value.
     $date_value = '2012-12-99';
     $edit = [
       "{$field_name}[0][value][date]" => '2012-12-01',
@@ -1312,7 +1303,7 @@ class DateRangeFieldTest extends DateTestBase {
       "{$field_name}[0][end_value][time]" => '00:00:00',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid');
+    $this->assertText('date is invalid', 'Invalid end day value ' . $date_value . ' has been caught.');
 
     // Submit invalid start times and ensure they is not accepted.
     $time_value = '';
@@ -1323,9 +1314,8 @@ class DateRangeFieldTest extends DateTestBase {
       "{$field_name}[0][end_value][time]" => $time_value,
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid');
+    $this->assertText('date is invalid', 'Empty end time value has been caught.');
 
-    // Invalid hour value.
     $time_value = '49:00:00';
     $edit = [
       "{$field_name}[0][value][date]" => '2012-12-01',
@@ -1334,9 +1324,8 @@ class DateRangeFieldTest extends DateTestBase {
       "{$field_name}[0][end_value][time]" => $time_value,
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid');
+    $this->assertText('date is invalid', 'Invalid end hour value ' . $time_value . ' has been caught.');
 
-    // Invalid minutes value.
     $time_value = '12:99:00';
     $edit = [
       "{$field_name}[0][value][date]" => '2012-12-01',
@@ -1345,9 +1334,8 @@ class DateRangeFieldTest extends DateTestBase {
       "{$field_name}[0][end_value][time]" => $time_value,
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid');
+    $this->assertText('date is invalid', 'Invalid end minute value ' . $time_value . ' has been caught.');
 
-    // Invalid seconds value.
     $time_value = '12:15:99';
     $edit = [
       "{$field_name}[0][value][date]" => '2012-12-01',
@@ -1356,9 +1344,8 @@ class DateRangeFieldTest extends DateTestBase {
       "{$field_name}[0][end_value][time]" => $time_value,
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid');
+    $this->assertText('date is invalid', 'Invalid end second value ' . $time_value . ' has been caught.');
 
-    // End date before start date.
     $edit = [
       "{$field_name}[0][value][date]" => '2012-12-01',
       "{$field_name}[0][value][time]" => '12:00:00',
@@ -1366,9 +1353,8 @@ class DateRangeFieldTest extends DateTestBase {
       "{$field_name}[0][end_value][time]" => '12:00:00',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('The ' . $field_label . ' end date cannot be before the start date');
+    $this->assertText('The ' . $field_label . ' end date cannot be before the start date', 'End date before start date has been caught.');
 
-    // End date before start date.
     $edit = [
       "{$field_name}[0][value][date]" => '2012-12-01',
       "{$field_name}[0][value][time]" => '12:00:00',
@@ -1376,7 +1362,7 @@ class DateRangeFieldTest extends DateTestBase {
       "{$field_name}[0][end_value][time]" => '11:00:00',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('The ' . $field_label . ' end date cannot be before the start date');
+    $this->assertText('The ' . $field_label . ' end date cannot be before the start date', 'End time before start time has been caught.');
   }
 
   /**

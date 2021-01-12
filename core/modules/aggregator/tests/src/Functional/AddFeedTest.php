@@ -36,8 +36,7 @@ class AddFeedTest extends AggregatorTestBase {
     // Check feed source.
     $this->drupalGet('aggregator/sources/' . $feed->id());
     $this->assertSession()->statusCodeEquals(200);
-    // Verify that the feed label is present in the page title.
-    $this->assertText($feed->label());
+    $this->assertText($feed->label(), 'Page title');
     $this->assertRaw($feed->getWebsiteUrl());
 
     // Try to add a duplicate.
@@ -93,8 +92,7 @@ class AddFeedTest extends AggregatorTestBase {
     // Check feed source.
     $this->drupalGet('aggregator/sources/' . $feed->id());
     $this->assertSession()->statusCodeEquals(200);
-    // Verify that the feed label is present in the page title.
-    $this->assertText($feed->label());
+    $this->assertText($feed->label(), 'Page title');
 
     // Delete feeds.
     $this->deleteFeed($feed);

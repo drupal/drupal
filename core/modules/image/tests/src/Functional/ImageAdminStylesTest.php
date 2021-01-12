@@ -348,7 +348,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       'label' => $new_style_label,
     ];
     $this->drupalPostForm($style_path . $style_name, $edit, 'Save');
-    $this->assertText('Changes to the style have been saved.');
+    $this->assertText('Changes to the style have been saved.', new FormattableMarkup('Style %name was renamed to %new_name.', ['%name' => $style_name, '%new_name' => $new_style_name]));
     $this->drupalGet('node/' . $nid);
 
     // Reload the image style using the new name.

@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\Session;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\Database;
 use Drupal\Tests\BrowserTestBase;
 
@@ -71,7 +72,7 @@ class SessionTest extends BrowserTestBase {
     ];
     $this->drupalPostForm('user/login', $edit, 'Log in');
     $this->drupalGet('user');
-    $pass = $this->assertText($user->getAccountName());
+    $pass = $this->assertText($user->getAccountName(), new FormattableMarkup('Found name: %name', ['%name' => $user->getAccountName()]), 'User login');
     $this->_logged_in = $pass;
 
     $this->drupalGet('session-test/id');
@@ -92,25 +93,19 @@ class SessionTest extends BrowserTestBase {
     $this->drupalLogin($user);
 
     $value_1 = $this->randomMachineName();
-    // Verify that the session value is stored.
     $this->drupalGet('session-test/set/' . $value_1);
-    $this->assertText($value_1);
-    // Verify that the session correctly returned the stored data for an
-    // authenticated user.
+    $this->assertText($value_1, 'The session value was stored.', 'Session');
     $this->drupalGet('session-test/get');
-    $this->assertText($value_1);
+    $this->assertText($value_1, 'Session correctly returned the stored data for an authenticated user.', 'Session');
 
     // Attempt to write over val_1. If drupal_save_session(FALSE) is working.
     // properly, val_1 will still be set.
     $value_2 = $this->randomMachineName();
-    // Verify that the session value is correctly passed to
-    // session-test/no-set.
     $this->drupalGet('session-test/no-set/' . $value_2);
     $session = $this->getSession();
-    $this->assertText($value_2);
-    // Verify that the session data is not saved for drupal_save_session(FALSE).
+    $this->assertText($value_2, 'The session value was correctly passed to session-test/no-set.', 'Session');
     $this->drupalGet('session-test/get');
-    $this->assertText($value_1);
+    $this->assertText($value_1, 'Session data is not saved for drupal_save_session(FALSE).', 'Session');
 
     // Switch browser cookie to anonymous user, then back to user 1.
     $session_cookie_name = $this->getSessionName();
@@ -120,44 +115,35 @@ class SessionTest extends BrowserTestBase {
     // Session restart always resets all the cookies by design, so we need to
     // add the old session cookie again.
     $session->setCookie($session_cookie_name, $session_cookie_value);
-    // Verify that the session data persists through browser close.
     $this->drupalGet('session-test/get');
-    $this->assertText($value_1);
+    $this->assertText($value_1, 'Session data persists through browser close.', 'Session');
     $this->mink->setDefaultSessionName('default');
 
     // Logout the user and make sure the stored value no longer persists.
     $this->drupalLogout();
     $this->sessionReset();
-    // Verify that after logout, previous user's session data is not available.
     $this->drupalGet('session-test/get');
-    $this->assertNoText($value_1);
+    $this->assertNoText($value_1, "After logout, previous user's session data is not available.", 'Session');
 
     // Now try to store some data as an anonymous user.
     $value_3 = $this->randomMachineName();
-    // Verify that session data is stored for anonymous user.
     $this->drupalGet('session-test/set/' . $value_3);
-    $this->assertText($value_3);
-    // Verify that session correctly returns the stored data for an anonymous
-    // user.
+    $this->assertText($value_3, 'Session data stored for anonymous user.', 'Session');
     $this->drupalGet('session-test/get');
-    $this->assertText($value_3);
+    $this->assertText($value_3, 'Session correctly returned the stored data for an anonymous user.', 'Session');
 
     // Try to store data when drupal_save_session(FALSE).
     $value_4 = $this->randomMachineName();
-    // Verify that the session value is correctly passed to session-test/no-set.
     $this->drupalGet('session-test/no-set/' . $value_4);
-    $this->assertText($value_4);
-    // Verify that the session data is not saved for drupal_save_session(FALSE).
+    $this->assertText($value_4, 'The session value was correctly passed to session-test/no-set.', 'Session');
     $this->drupalGet('session-test/get');
-    $this->assertText($value_3);
+    $this->assertText($value_3, 'Session data is not saved for drupal_save_session(FALSE).', 'Session');
 
     // Login, the data should persist.
     $this->drupalLogin($user);
     $this->sessionReset($user->id());
-    // Verify that the session persists for an authenticated user after
-    // logging out and then back in.
     $this->drupalGet('session-test/get');
-    $this->assertNoText($value_1);
+    $this->assertNoText($value_1, 'Session has persisted for an authenticated user after logging out and then back in.', 'Session');
 
     // Change session and create another user.
     $user2 = $this->drupalCreateUser([]);
@@ -174,7 +160,7 @@ class SessionTest extends BrowserTestBase {
     $this->drupalLogin($user);
     // Test property added to session object form hook_user_login().
     $this->drupalGet('session-test/get-from-session-object');
-    $this->assertText('foobar');
+    $this->assertText('foobar', 'Session data is saved in Session() object.', 'Session');
   }
 
   /**
@@ -216,7 +202,7 @@ class SessionTest extends BrowserTestBase {
     $this->assertSessionEmpty(FALSE);
     // Verify that caching was bypassed.
     $this->assertSession()->responseHeaderDoesNotExist('X-Drupal-Cache');
-    $this->assertText('This is a dummy message.');
+    $this->assertText('This is a dummy message.', 'Message was displayed.');
     // Verify that session cookie was deleted.
     $this->assertSession()->responseHeaderMatches('Set-Cookie', '/SESS\w+=deleted/');
 
@@ -225,7 +211,7 @@ class SessionTest extends BrowserTestBase {
     $this->assertSessionCookie(FALSE);
     // @todo Reinstate when REQUEST and RESPONSE events fire for cached pages.
     // $this->assertSessionEmpty(TRUE);
-    $this->assertNoText('This is a dummy message.');
+    $this->assertNoText('This is a dummy message.', 'Message was not cached.');
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
     $this->assertSession()->responseHeaderDoesNotExist('Set-Cookie');
 
@@ -239,7 +225,7 @@ class SessionTest extends BrowserTestBase {
     $this->assertSessionCookie(FALSE);
     // @todo Reinstate when REQUEST and RESPONSE events fire for cached pages.
     // $this->assertSessionEmpty(TRUE);
-    $this->assertNoText('This is a dummy message.');
+    $this->assertNoText('This is a dummy message.', 'The message was not saved.');
   }
 
   /**

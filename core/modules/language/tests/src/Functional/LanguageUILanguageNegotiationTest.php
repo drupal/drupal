@@ -409,7 +409,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
     }
     $this->container->get('language_manager')->reset();
     $this->drupalGet($test['path'], $test['path_options'], $test['http_header']);
-    $this->assertText($test['expect']);
+    $this->assertText($test['expect'], $test['message']);
     $this->assertText('Language negotiation method: ' . $test['expected_method_id']);
 
     // Get the private file and ensure it is a 200. It is important to
@@ -499,7 +499,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
       'domain[en]' => '',
     ];
     $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, 'Save configuration');
-    $this->assertText('The domain may not be left blank for English');
+    $this->assertText('The domain may not be left blank for English', 'The form does not allow blank domains.');
     $this->rebuildContainer();
 
     // Change the domain for the Italian language.
@@ -509,7 +509,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
       'domain[it]' => 'it.example.com',
     ];
     $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, 'Save configuration');
-    $this->assertText('The configuration options have been saved');
+    $this->assertText('The configuration options have been saved', 'Domain configuration is saved.');
     $this->rebuildContainer();
 
     // Try to use an invalid domain.

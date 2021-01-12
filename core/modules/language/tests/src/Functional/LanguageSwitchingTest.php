@@ -85,7 +85,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
   protected function doTestLanguageBlockAuthenticated($block_label) {
     // Assert that the language switching block is displayed on the frontpage.
     $this->drupalGet('');
-    $this->assertText($block_label);
+    $this->assertText($block_label, 'Language switcher block found.');
 
     // Assert that each list item and anchor element has the appropriate data-
     // attributes.
@@ -139,7 +139,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
     // Assert that the language switching block is displayed on the frontpage
     // and ensure that the active class is added when query params are present.
     $this->drupalGet('', ['query' => ['foo' => 'bar']]);
-    $this->assertText($block_label);
+    $this->assertText($block_label, 'Language switcher block found.');
 
     // Assert that only the current language is marked as active.
     $language_switchers = $this->xpath('//div[@id=:id]/ul/li', [':id' => 'block-test-language-block']);
@@ -203,7 +203,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
       'domain[en]' => '',
     ];
     $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, 'Save configuration');
-    $this->assertText('The domain may not be left blank for English');
+    $this->assertText('The domain may not be left blank for English', 'The form does not allow blank domains.');
 
     // Change the domain for the Italian language.
     $edit = [
@@ -212,7 +212,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
       'domain[it]' => 'it.example.com',
     ];
     $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, 'Save configuration');
-    $this->assertText('The configuration options have been saved');
+    $this->assertText('The configuration options have been saved', 'Domain configuration is saved.');
 
     // Enable the language switcher block.
     $this->drupalPlaceBlock('language_block:' . LanguageInterface::TYPE_INTERFACE, ['id' => 'test_language_block']);
