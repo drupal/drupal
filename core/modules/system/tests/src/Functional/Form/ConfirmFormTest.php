@@ -30,7 +30,7 @@ class ConfirmFormTest extends BrowserTestBase {
     $this->drupalGet('form-test/confirm-form');
     $site_name = $this->config('system.site')->get('name');
     $this->assertSession()->titleEquals("ConfirmFormTestForm::getQuestion(). | $site_name");
-    $this->assertText('ConfirmFormTestForm::getDescription().', 'The description was used.');
+    $this->assertText('ConfirmFormTestForm::getDescription().');
     $this->assertSession()->buttonExists('ConfirmFormTestForm::getConfirmText().');
 
     // Test cancelling the form.

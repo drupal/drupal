@@ -48,7 +48,7 @@ class LanguageListTest extends BrowserTestBase {
       'predefined_langcode' => 'fr',
     ];
     $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
-    $this->assertText('French', 'Language added successfully.');
+    $this->assertText('French');
     $this->assertSession()->addressEquals(Url::fromRoute('entity.configurable_language.collection'));
 
     // Get the weight of the last language and check that the weight is one unit
@@ -71,7 +71,7 @@ class LanguageListTest extends BrowserTestBase {
     $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add custom language');
     $this->assertSession()->addressEquals(Url::fromRoute('entity.configurable_language.collection'));
     $this->assertRaw('"edit-languages-' . $langcode . '-weight"');
-    $this->assertText($name, 'Test language added.');
+    $this->assertText($name);
 
     $language = \Drupal::service('language_manager')->getLanguage($langcode);
     $english = \Drupal::service('language_manager')->getLanguage('en');
@@ -115,7 +115,7 @@ class LanguageListTest extends BrowserTestBase {
     // Ensure 'delete' link works.
     $this->drupalGet('admin/config/regional/language');
     $this->clickLink(t('Delete'));
-    $this->assertText('Are you sure you want to delete the language', '"Delete" link is correct.');
+    $this->assertText('Are you sure you want to delete the language');
     // Delete a language.
     $this->drupalGet('admin/config/regional/language/delete/' . $langcode);
     // First test the 'cancel' link.
@@ -159,7 +159,7 @@ class LanguageListTest extends BrowserTestBase {
     ];
     $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add custom language');
     $this->assertSession()->addressEquals(Url::fromRoute('entity.configurable_language.collection'));
-    $this->assertText($name, 'Name found.');
+    $this->assertText($name);
 
     // Check if we can change the default language.
     $path = 'admin/config/regional/language';

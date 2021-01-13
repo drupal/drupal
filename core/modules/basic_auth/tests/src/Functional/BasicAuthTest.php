@@ -48,7 +48,7 @@ class BasicAuthTest extends BrowserTestBase {
 
     // Ensure we can log in with valid authentication details.
     $this->basicAuthGet($url, $account->getAccountName(), $account->pass_raw);
-    $this->assertText($account->getAccountName(), 'Account name is displayed.');
+    $this->assertText($account->getAccountName());
     $this->assertSession()->statusCodeEquals(200);
     $this->mink->resetSessions();
     $this->assertSession()->responseHeaderDoesNotExist('X-Drupal-Cache');
@@ -57,7 +57,7 @@ class BasicAuthTest extends BrowserTestBase {
 
     // Ensure that invalid authentication details give access denied.
     $this->basicAuthGet($url, $account->getAccountName(), $this->randomMachineName());
-    $this->assertNoText($account->getAccountName(), 'Bad basic auth credentials do not authenticate the user.');
+    $this->assertNoText($account->getAccountName());
     $this->assertSession()->statusCodeEquals(403);
     $this->mink->resetSessions();
 
@@ -164,7 +164,7 @@ class BasicAuthTest extends BrowserTestBase {
     $url = Url::fromRoute('router_test.11');
 
     $this->basicAuthGet($url, $account->getAccountName(), $account->pass_raw);
-    $this->assertText($account->getAccountName(), 'Account name is displayed.');
+    $this->assertText($account->getAccountName());
     $this->assertSession()->statusCodeEquals(200);
   }
 
@@ -175,27 +175,31 @@ class BasicAuthTest extends BrowserTestBase {
     $account = $this->drupalCreateUser();
     $url = Url::fromRoute('router_test.11');
 
-    // Case when no credentials are passed.
+    // Case when no credentials are passed, a user friendly access
+    // unauthorized message is displayed.
     $this->drupalGet($url);
     $this->assertSession()->statusCodeEquals(401);
-    $this->assertNoText('Exception', "No raw exception is displayed on the page.");
-    $this->assertText('Please log in to access this page.', "A user friendly access unauthorized message is displayed.");
+    $this->assertNoText('Exception');
+    $this->assertText('Please log in to access this page.');
 
-    // Case when empty credentials are passed.
+    // Case when empty credentials are passed, a user friendly access denied
+    // message is displayed.
     $this->basicAuthGet($url, NULL, NULL);
     $this->assertSession()->statusCodeEquals(403);
-    $this->assertText('Access denied', "A user friendly access denied message is displayed");
+    $this->assertText('Access denied');
 
-    // Case when wrong credentials are passed.
+    // Case when wrong credentials are passed, a user friendly access denied
+    // message is displayed.
     $this->basicAuthGet($url, $account->getAccountName(), $this->randomMachineName());
     $this->assertSession()->statusCodeEquals(403);
-    $this->assertText('Access denied', "A user friendly access denied message is displayed");
+    $this->assertText('Access denied');
 
-    // Case when correct credentials but hasn't access to the route.
+    // Case when correct credentials but hasn't access to the route, an user
+    // friendly access denied message is displayed.
     $url = Url::fromRoute('router_test.15');
     $this->basicAuthGet($url, $account->getAccountName(), $account->pass_raw);
     $this->assertSession()->statusCodeEquals(403);
-    $this->assertText('Access denied', "A user friendly access denied message is displayed");
+    $this->assertText('Access denied');
   }
 
   /**

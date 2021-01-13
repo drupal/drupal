@@ -56,7 +56,7 @@ class DisplayPathTest extends UITestBase {
 
     // Add a new page display and check the appearing text.
     $this->submitForm([], 'Add Page');
-    $this->assertText('No path is set', 'The right text appears if no path was set.');
+    $this->assertText('No path is set');
     $this->assertSession()->linkNotExists('View page', 'No view page link found on the page.');
 
     // Save a path and make sure the summary appears as expected.
@@ -66,7 +66,7 @@ class DisplayPathTest extends UITestBase {
     $random_path = str_replace(':', '', $random_path);
 
     $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/path', ['path' => $random_path], 'Apply');
-    $this->assertText('/' . $random_path, 'The custom path appears in the summary.');
+    $this->assertText('/' . $random_path);
     $display_link_text = t('View @display', ['@display' => 'Page']);
     $this->assertSession()->linkExists($display_link_text, 0, 'view page link found on the page.');
     $this->clickLink($display_link_text);

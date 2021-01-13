@@ -58,7 +58,7 @@ class PageTest extends BrowserTestBase {
     // Run initial step only first.
     $this->maximumMetaRefreshCount = 0;
     $this->drupalGet('batch-test/test-title');
-    $this->assertText('Batch Test', 'The test is in the html output.');
+    $this->assertText('Batch Test');
 
     // Leave the batch process running.
     $this->maximumMetaRefreshCount = NULL;
@@ -66,7 +66,7 @@ class PageTest extends BrowserTestBase {
 
     // The stack should contain the title shown on the progress page.
     $this->assertEqual(batch_test_stack(), ['Batch Test'], 'The batch title is shown on the batch page.');
-    $this->assertText('Redirection successful.', 'Redirection after batch execution is correct.');
+    $this->assertText('Redirection successful.');
   }
 
   /**

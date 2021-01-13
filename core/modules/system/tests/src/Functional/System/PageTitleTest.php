@@ -62,11 +62,12 @@ class PageTitleTest extends BrowserTestBase {
     // Create the node with HTML in the title.
     $this->drupalPostForm('node/add/page', $edit, 'Save');
 
+    // Make sure tags in the node title are converted.
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->assertNotNull($node, 'Node created and found in database');
-    $this->assertText(Html::escape($edit['title[0][value]']), 'Check to make sure tags in the node title are converted.');
+    $this->assertText(Html::escape($edit['title[0][value]']));
     $this->drupalGet("node/" . $node->id());
-    $this->assertText(Html::escape($edit['title[0][value]']), 'Check to make sure tags in the node title are converted.');
+    $this->assertText(Html::escape($edit['title[0][value]']));
   }
 
   /**

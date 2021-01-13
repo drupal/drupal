@@ -306,6 +306,30 @@ class BrowserTestBaseTest extends BrowserTestBase {
   }
 
   /**
+   * Tests deprecated assertText.
+   *
+   * @group legacy
+   */
+  public function testAssertText() {
+    $this->expectDeprecation('Calling AssertLegacyTrait::assertText() with more than one argument is deprecated in drupal:8.2.0 and the method is removed from drupal:10.0.0. Use $this->assertSession()->responseContains() or $this->assertSession()->pageTextContains() instead. See https://www.drupal.org/node/3129738');
+    $this->drupalGet('test-encoded');
+    $dangerous = 'Bad html <script>alert(123);</script>';
+    $this->assertText(Html::escape($dangerous), 'Sanitized text should be present.');
+  }
+
+  /**
+   * Tests deprecated assertNoText.
+   *
+   * @group legacy
+   */
+  public function testAssertNoText() {
+    $this->expectDeprecation('Calling AssertLegacyTrait::assertNoText() with more than one argument is deprecated in drupal:8.2.0 and the method is removed from drupal:10.0.0. Use $this->assertSession()->responseNotContains() or $this->assertSession()->pageTextNotContains() instead. See https://www.drupal.org/node/3129738');
+    $this->drupalGet('test-encoded');
+    $dangerous = 'Bad html <script>alert(123);</script>';
+    $this->assertNoText($dangerous, 'Dangerous text should not be present.');
+  }
+
+  /**
    * Tests legacy getRawContent().
    *
    * @group legacy

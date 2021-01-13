@@ -43,7 +43,7 @@ class ConditionFormTest extends BrowserTestBase {
     // @see \Drupal\condition_test\FormController::submitForm()
     $this->assertText('Bundle: page');
     $this->assertText('Bundle: article');
-    $this->assertText('Executed successfully.', 'The form configured condition executed properly.');
+    $this->assertText('Executed successfully.');
   }
 
 }

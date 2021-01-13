@@ -160,18 +160,18 @@ class SearchCommentTest extends BrowserTestBase {
     $this->drupalPostForm('search/node', $edit, 'Search');
     $node_storage->resetCache([$node->id()]);
     $node2 = $node_storage->load($node->id());
-    $this->assertText($node2->label(), 'Node found in search results.');
-    $this->assertText($edit_comment['subject[0][value]'], 'Comment subject found in search results.');
+    $this->assertText($node2->label());
+    $this->assertText($edit_comment['subject[0][value]']);
 
     // Search for the comment body.
     $edit = [
       'keys' => "'" . $comment_body . "'",
     ];
     $this->submitForm($edit, 'Search');
-    $this->assertText($node2->label(), 'Node found in search results.');
+    $this->assertText($node2->label());
 
     // Verify that comment is rendered using proper format.
-    $this->assertText($comment_body, 'Comment body text found in search results.');
+    $this->assertText($comment_body);
     // Verify that HTML in comment body is not hidden.
     $this->assertNoRaw(t('n/a'));
     $this->assertSession()->assertNoEscaped($edit_comment['comment_body[0][value]']);
@@ -361,7 +361,7 @@ class SearchCommentTest extends BrowserTestBase {
     // Search for the node title. Should be found, and 'Add new comment' should
     // not be part of the search snippet.
     $this->drupalPostForm('search/node', ['keys' => 'short'], 'Search');
-    $this->assertText($node->label(), 'Search for keyword worked');
+    $this->assertText($node->label());
     $this->assertNoText('Add new comment');
   }
 

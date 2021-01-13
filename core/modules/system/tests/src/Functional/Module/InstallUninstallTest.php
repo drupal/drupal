@@ -73,7 +73,7 @@ class InstallUninstallTest extends ModuleTestBase {
     $edit = [];
     $edit["modules[help][enable]"] = TRUE;
     $this->drupalPostForm('admin/modules', $edit, 'Install');
-    $this->assertText('has been enabled', 'Modules status has been updated.');
+    $this->assertText('has been enabled');
     $this->assertText('hook_modules_installed fired for help');
     $this->assertModuleSuccessfullyInstalled('help');
 
@@ -222,7 +222,7 @@ class InstallUninstallTest extends ModuleTestBase {
       $this->assertText('Are you sure you wish to enable experimental modules?');
       $this->submitForm([], 'Continue');
     }
-    $this->assertText(count($all_modules) . ' modules have been enabled: ', 'Modules status has been updated.');
+    $this->assertText(count($all_modules) . ' modules have been enabled: ');
   }
 
   /**
@@ -262,7 +262,7 @@ class InstallUninstallTest extends ModuleTestBase {
     $edit['uninstall[' . $module . ']'] = TRUE;
     $this->drupalPostForm('admin/modules/uninstall', $edit, 'Uninstall');
     $this->submitForm([], 'Uninstall');
-    $this->assertText('The selected modules have been uninstalled.', 'Modules status has been updated.');
+    $this->assertText('The selected modules have been uninstalled.');
     $this->assertModules([$module], FALSE);
 
     // Check that the appropriate hook was fired and the appropriate log
@@ -352,7 +352,7 @@ class InstallUninstallTest extends ModuleTestBase {
   protected function assertHelp($module, $name) {
     $this->drupalGet('admin/help/' . $module);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText($name . ' module', "'$name module' is on the help page for $module");
+    $this->assertText($name . ' module');
     $this->assertSession()->linkExists('online documentation for the ' . $name . ' module', 0, "Correct online documentation link is in the help page for $module");
   }
 

@@ -46,7 +46,9 @@ class ShortcutSetsTest extends ShortcutTestBase {
     $new_set = $this->container->get('entity_type.manager')->getStorage('shortcut_set')->load($edit['id']);
     $this->assertIdentical($new_set->id(), $edit['id'], 'Successfully created a shortcut set.');
     $this->drupalGet('user/' . $this->adminUser->id() . '/shortcuts');
-    $this->assertText($new_set->label(), 'Generated shortcut set was listed as a choice on the user account page.');
+    // Verify that generated shortcut set was listed as a choice on the user
+    // account page.
+    $this->assertText($new_set->label());
   }
 
   /**
@@ -211,7 +213,9 @@ class ShortcutSetsTest extends ShortcutTestBase {
     $sets = ShortcutSet::loadMultiple();
     $this->assertTrue(isset($sets[$random_name]), 'Successfully created a shortcut set with a defined set name.');
     $this->drupalGet('user/' . $this->adminUser->id() . '/shortcuts');
-    $this->assertText($new_set->label(), 'Generated shortcut set was listed as a choice on the user account page.');
+    // Verify that generated shortcut set was listed as a choice on the user
+    // account page.
+    $this->assertText($new_set->label());
   }
 
 }

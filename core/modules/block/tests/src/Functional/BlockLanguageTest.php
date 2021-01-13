@@ -44,7 +44,9 @@ class BlockLanguageTest extends BrowserTestBase {
       'predefined_langcode' => 'fr',
     ];
     $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
-    $this->assertText('French', 'Language added successfully.');
+
+    // Verify that language was added successfully.
+    $this->assertText('French');
   }
 
   /**
@@ -75,11 +77,11 @@ class BlockLanguageTest extends BrowserTestBase {
 
     // Check that a page has a block.
     $this->drupalGet('en');
-    $this->assertText('Powered by Drupal', 'The body of the custom block appears on the page.');
+    $this->assertText('Powered by Drupal');
 
     // Check that a page doesn't has a block for the current language anymore.
     $this->drupalGet('fr');
-    $this->assertNoText('Powered by Drupal', 'The body of the custom block does not appear on the page.');
+    $this->assertNoText('Powered by Drupal');
   }
 
   /**
@@ -154,9 +156,9 @@ class BlockLanguageTest extends BrowserTestBase {
 
     // Interface negotiation depends on request arguments.
     $this->drupalGet('node', ['query' => ['language' => 'en']]);
-    $this->assertNoText('Powered by Drupal', 'The body of the block does not appear on the page.');
+    $this->assertNoText('Powered by Drupal');
     $this->drupalGet('node', ['query' => ['language' => 'fr']]);
-    $this->assertText('Powered by Drupal', 'The body of the block appears on the page.');
+    $this->assertText('Powered by Drupal');
 
     // Log in again in order to clear the interface language stored in the
     // session.
@@ -166,9 +168,9 @@ class BlockLanguageTest extends BrowserTestBase {
     // Content language does not depend on session/request arguments.
     // It will fall back on English (site default) and not display the block.
     $this->drupalGet('en');
-    $this->assertNoText('Powered by Drupal', 'The body of the block does not appear on the page.');
+    $this->assertNoText('Powered by Drupal');
     $this->drupalGet('fr');
-    $this->assertNoText('Powered by Drupal', 'The body of the block does not appear on the page.');
+    $this->assertNoText('Powered by Drupal');
 
     // Change visibility to now depend on content language for this block.
     $edit = [
@@ -179,15 +181,15 @@ class BlockLanguageTest extends BrowserTestBase {
     // Content language negotiation does not depend on request arguments.
     // It will fall back on English (site default) and not display the block.
     $this->drupalGet('node', ['query' => ['language' => 'en']]);
-    $this->assertNoText('Powered by Drupal', 'The body of the block does not appear on the page.');
+    $this->assertNoText('Powered by Drupal');
     $this->drupalGet('node', ['query' => ['language' => 'fr']]);
-    $this->assertNoText('Powered by Drupal', 'The body of the block does not appear on the page.');
+    $this->assertNoText('Powered by Drupal');
 
     // Content language negotiation depends on path prefix.
     $this->drupalGet('en');
-    $this->assertNoText('Powered by Drupal', 'The body of the block does not appear on the page.');
+    $this->assertNoText('Powered by Drupal');
     $this->drupalGet('fr');
-    $this->assertText('Powered by Drupal', 'The body of the block appears on the page.');
+    $this->assertText('Powered by Drupal');
   }
 
 }

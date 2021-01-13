@@ -146,13 +146,16 @@ class FileListingTest extends FileFieldTestBase {
       $usage = $file_usage->listUsage($file);
       $this->drupalGet('admin/content/files/usage/' . $file->id());
       $this->assertSession()->statusCodeEquals(200);
-      $this->assertText($node->getTitle(), 'Node title found on usage page.');
-      $this->assertText('node', 'Registering entity type found on usage page.');
-      $this->assertText('file', 'Registering module found on usage page.');
+      $this->assertText($node->getTitle());
+      // Verify that registering entity type is found on usage page.
+      $this->assertText('node');
+      // Verify that registering module is found on usage page.
+      $this->assertText('file');
       foreach ($usage as $module) {
         foreach ($module as $entity_type) {
           foreach ($entity_type as $entity) {
-            $this->assertText($entity, 'Usage count found on usage page.');
+            // Verify that usage count is found on usage page.
+            $this->assertText($entity);
           }
         }
       }
@@ -204,7 +207,7 @@ class FileListingTest extends FileFieldTestBase {
     $this->assertSession()->statusCodeEquals(200);
     // Entity name should be displayed, but not linked if Entity::toUrl
     // throws an exception
-    $this->assertText($entity_name, 'Entity name is added to file usage listing.');
+    $this->assertText($entity_name);
     $this->assertSession()->linkNotExists($entity_name, 'Linked entity name not added to file usage listing.');
     $this->assertSession()->linkExists($node->getTitle());
   }

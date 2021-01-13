@@ -188,7 +188,7 @@ class ManageDisplayTest extends BrowserTestBase {
    */
   public function testSingleViewMode() {
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary . '/display');
-    $this->assertNoText('Use custom display settings for the following view modes', 'Custom display settings fieldset found.');
+    $this->assertNoText('Use custom display settings for the following view modes');
 
     // This may not trigger a notice when 'view_modes_custom' isn't available.
     $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary . '/overview/display', [], 'Save');
