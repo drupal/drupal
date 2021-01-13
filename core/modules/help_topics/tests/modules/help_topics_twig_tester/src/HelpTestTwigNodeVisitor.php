@@ -13,17 +13,13 @@ use Twig\NodeVisitor\AbstractNodeVisitor;
 
 /**
  * Defines a Twig node visitor for testing help topics.
-<<<<<<< 071b42e1ea21830eee33997671b2850ce844f52e
  *
  * See static::setStateValue() for information on the types of processing
  * this class can do.
-=======
->>>>>>> Non-working initial patch from the issue
  */
 class HelpTestTwigNodeVisitor extends AbstractNodeVisitor {
 
   /**
-<<<<<<< 071b42e1ea21830eee33997671b2850ce844f52e
    * Delimiter placed around single translated chunks.
    */
   public const DELIMITER = 'Not Likely To Be Inside A Template';
@@ -34,8 +30,6 @@ class HelpTestTwigNodeVisitor extends AbstractNodeVisitor {
   protected const STATE_NAME = 'help_test_twig_node_visitor';
 
   /**
-=======
->>>>>>> Non-working initial patch from the issue
    * {@inheritdoc}
    */
   protected function doEnterNode(Node $node, Environment $env) {
@@ -46,11 +40,7 @@ class HelpTestTwigNodeVisitor extends AbstractNodeVisitor {
    * {@inheritdoc}
    */
   protected function doLeaveNode(Node $node, Environment $env) {
-<<<<<<< 071b42e1ea21830eee33997671b2850ce844f52e
     $processing = static::getState();
-=======
-    $processing = help_topics_twig_tester_get_values();
->>>>>>> Non-working initial patch from the issue
     if (!$processing['type']) {
       return $node;
     }
@@ -63,7 +53,6 @@ class HelpTestTwigNodeVisitor extends AbstractNodeVisitor {
     }
 
     if ($node instanceof TwigNodeTrans) {
-<<<<<<< 071b42e1ea21830eee33997671b2850ce844f52e
       // Count the number of translated chunks.
       $this_chunk = $processing['chunk_count'] + 1;
       static::setStateValue('chunk_count', $this_chunk);
@@ -71,13 +60,10 @@ class HelpTestTwigNodeVisitor extends AbstractNodeVisitor {
         static::setStateValue('max_chunk', $this_chunk);
       }
 
-=======
->>>>>>> Non-working initial patch from the issue
       if ($processing['type'] == 'remove_translated') {
         // Remove all translated text.
         return NULL;
       }
-<<<<<<< 071b42e1ea21830eee33997671b2850ce844f52e
       elseif ($processing['type'] == 'replace_translated') {
         // Replace with a dummy string.
         $node = new TextNode('dummy', 0);
@@ -91,25 +77,6 @@ class HelpTestTwigNodeVisitor extends AbstractNodeVisitor {
         else {
           return NULL;
         }
-=======
-      else if ($processing['type'] == 'replace_translated') {
-        // Replace with a dummy string.
-        $node = new TextNode(['data' => 'dummy']);
-      }
-      else if ($processing['type'] == 'translated_chunk') {
-        // Return the text only if it's the next chunk we're supposed to return.
-        $this_chunk = $processing['chunk_count'] + 1;
-        help_topics_twig_tester_set_value('chunk_count', $this_chunk);
-        if ($this_chunk > $processing['max_chunk']) {
-          help_topics_twig_tester_set_value('max_chunk', $this_chunk);
-        }
-
-        if ($this_chunk == $processing['return_chunk']) {
-          return $node->getNode('body');
-        }
-
-        return NULL;
->>>>>>> Non-working initial patch from the issue
       }
     }
 
@@ -119,19 +86,11 @@ class HelpTestTwigNodeVisitor extends AbstractNodeVisitor {
       $text = $node->getAttribute('data');
       $text = strip_tags($text);
       $text = preg_replace('|\s+|', '', $text);
-<<<<<<< 071b42e1ea21830eee33997671b2850ce844f52e
       return new TextNode($text, 0);
     }
 
     return $node;
   }
-=======
-      return new TextNode(['data' => $text]);
-    }
-
-    return $node;
- }
->>>>>>> Non-working initial patch from the issue
 
   /**
    * {@inheritdoc}
@@ -140,7 +99,6 @@ class HelpTestTwigNodeVisitor extends AbstractNodeVisitor {
     return -100;
   }
 
-<<<<<<< 071b42e1ea21830eee33997671b2850ce844f52e
   /**
    * Extracts the text from a translated text object.
    *
@@ -219,6 +177,4 @@ class HelpTestTwigNodeVisitor extends AbstractNodeVisitor {
     $state->set(static::STATE_NAME, $values);
   }
 
-=======
->>>>>>> Non-working initial patch from the issue
 }
