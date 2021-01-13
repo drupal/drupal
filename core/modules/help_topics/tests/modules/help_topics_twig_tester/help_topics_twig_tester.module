@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * @file Provides a Twig extension for testing help topic syntax.
+ */
+
+/**
+ * Returns information on special processing.
+ *
+ * @return array
+ *   Last saved information.
+ */
+function help_topics_twig_tester_get_values() {
+  return \Drupal::state()->get('help_topics_twig_tester', ['type' => 0]);
+}
+
+/**
+ * Set one value in the processing array, leaving the rest the same.
+ *
+ * @param string $key
+ *   Key to set.
+ * @param $value
+ *   Value to set it to.
+ */
+function help_topics_twig_tester_set_value(string $key, $value) {
+  $state = \Drupal::state();
+  $processing = $state->get('help_topics_twig_tester', ['type' => 0]);
+  $processing[$key] = $value;
+  $state->set('help_topics_twig_tester', $processing);
+}
