@@ -50,6 +50,7 @@ class ContactSitewideTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->drupalPlaceBlock('system_breadcrumb_block');
+    $this->drupalPlaceBlock('local_tasks_block');
     $this->drupalPlaceBlock('local_actions_block');
     $this->drupalPlaceBlock('page_title_block');
   }
@@ -290,6 +291,9 @@ class ContactSitewideTest extends BrowserTestBase {
     $this->clickLink(t('Edit'));
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->fieldValueEquals('label', $label);
+
+    // Verify contact "View" tab exists.
+    $this->assertSession()->linkExists('View');
 
     // Test field UI and field integration.
     $this->drupalGet('admin/structure/contact');
