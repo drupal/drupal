@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @file Provides a Twig extension for testing help topic syntax.
+ * @file
+ * Provides a Twig extension for testing help topic syntax.
  */
 
 /**
