@@ -26,7 +26,7 @@ interface EntityStorageInterface {
   const FIELD_LOAD_REVISION = 'FIELD_LOAD_REVISION';
 
   /**
-   * Resets the internal, static entity cache.
+   * Resets the internal entity cache.
    *
    * @param $ids
    *   (optional) If specified, the cache is reset for the entities with the
