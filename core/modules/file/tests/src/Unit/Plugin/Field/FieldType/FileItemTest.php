@@ -21,8 +21,11 @@ class FileItemTest extends UnitTestCase {
       // Valid.
       [5, TRUE],
       ['5M', TRUE],
+      ['5 M', TRUE],
       ['5Mb', TRUE],
+      ['5 Mb', TRUE],
       ['5Gb', TRUE],
+      ['5 Gb', TRUE],
       // Invalid.
       ['foo', FALSE],
       ['fifty megabytes', FALSE],
