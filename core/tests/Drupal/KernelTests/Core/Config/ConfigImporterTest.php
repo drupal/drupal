@@ -140,7 +140,7 @@ class ConfigImporterTest extends KernelTestBase {
     $this->assertFalse($storage->read($dynamic_name));
 
     $config = $this->config($dynamic_name);
-    $this->assertIdentical($config->get('id'), NULL);
+    $this->assertNull($config->get('id'));
 
     // Verify that appropriate module API hooks have been invoked.
     $this->assertTrue(isset($GLOBALS['hook_config_test']['load']));

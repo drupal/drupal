@@ -35,7 +35,7 @@ class MigrateSystemSiteTranslationTest extends MigrateDrupal6TestBase {
     $this->assertIdentical('/fr-user', $config_translation->get('page.403'));
     $this->assertIdentical('/fr-page-not-found', $config_translation->get('page.404'));
     $this->assertIdentical('/node', $config_translation->get('page.front'));
-    $this->assertIdentical(NULL, $config_translation->get('admin_compact_mode'));
+    $this->assertNull($config_translation->get('admin_compact_mode'));
 
     $config_translation = \Drupal::service('language_manager')->getLanguageConfigOverride('zu', 'system.site');
     $this->assertIdentical('zu - site_name', $config_translation->get('name'));
@@ -44,7 +44,7 @@ class MigrateSystemSiteTranslationTest extends MigrateDrupal6TestBase {
     $this->assertIdentical('/zu-user', $config_translation->get('page.403'));
     $this->assertIdentical('/zu-page-not-found', $config_translation->get('page.404'));
     $this->assertIdentical('/node', $config_translation->get('page.front'));
-    $this->assertIdentical(NULL, $config_translation->get('admin_compact_mode'));
+    $this->assertNull($config_translation->get('admin_compact_mode'));
   }
 
 }

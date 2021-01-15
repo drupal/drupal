@@ -61,7 +61,7 @@ class MigrateNodeTypeTest extends MigrateDrupal6TestBase {
 
     // Test we don't have a body field.
     $field = FieldConfig::loadByName('node', 'test_story', 'body');
-    $this->assertIdentical(NULL, $field, 'No body field found');
+    $this->assertNull($field, 'No body field found');
 
     // Test default menus.
     $expected_available_menus = ['navigation'];

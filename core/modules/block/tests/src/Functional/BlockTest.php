@@ -509,7 +509,7 @@ class BlockTest extends BlockTestBase {
     $theme_installer->uninstall(['seven']);
 
     // Ensure that the block configuration does not exist anymore.
-    $this->assertIdentical(NULL, Block::load($block->id()));
+    $this->assertNull(Block::load($block->id()));
   }
 
   /**
