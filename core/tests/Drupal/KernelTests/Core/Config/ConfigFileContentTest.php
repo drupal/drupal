@@ -123,7 +123,7 @@ class ConfigFileContentTest extends KernelTestBase {
     $this->assertTrue($config->get($true_key), "Boolean TRUE value returned the TRUE.");
 
     // Read null value.
-    $this->assertIdentical($config->get('null'), NULL);
+    $this->assertNull($config->get('null'));
 
     // Read false that had been nested in an array value.
     $this->assertFalse($config->get($casting_array_false_value_key), "Nested boolean FALSE value returned FALSE.");

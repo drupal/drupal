@@ -42,7 +42,7 @@ class MigrateUserContactSettingsTest extends MigrateDrupal6TestBase {
 
     $uid = 15;
     $setting = $user_data->get($module, $uid, $key);
-    $this->assertIdentical(NULL, $setting);
+    $this->assertNull($setting);
   }
 
 }

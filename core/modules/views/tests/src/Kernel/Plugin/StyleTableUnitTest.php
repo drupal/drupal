@@ -64,8 +64,8 @@ class StyleTableUnitTest extends PluginKernelTestBase {
     $style_plugin = $view->style_plugin;
     $style_plugin->options['default'] = '';
     $style_plugin->buildSortPost();
-    $this->assertIdentical($style_plugin->order, NULL, 'No sort order was set, when no order was specified and no default column was selected.');
-    $this->assertIdentical($style_plugin->active, NULL, 'No sort field was set, when no order was specified and no default column was selected.');
+    $this->assertNull($style_plugin->order, 'No sort order was set, when no order was specified and no default column was selected.');
+    $this->assertNull($style_plugin->active, 'No sort field was set, when no order was specified and no default column was selected.');
     $view->destroy();
 
     // Setup a valid default + column specific default sort order.
@@ -97,7 +97,7 @@ class StyleTableUnitTest extends PluginKernelTestBase {
     $request->query->set('order', $random_name);
     $style_plugin->buildSortPost();
     $this->assertIdentical($style_plugin->order, 'asc', 'No sort order was set, when invalid sort order was specified.');
-    $this->assertIdentical($style_plugin->active, NULL, 'No sort field was set, when invalid sort order was specified.');
+    $this->assertNull($style_plugin->active, 'No sort field was set, when invalid sort order was specified.');
     $view->destroy();
 
     // Use an existing field, and sort both ascending and descending.

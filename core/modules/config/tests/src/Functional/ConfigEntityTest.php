@@ -43,22 +43,22 @@ class ConfigEntityTest extends BrowserTestBase {
     // Verify default properties on a newly created empty entity.
     $storage = \Drupal::entityTypeManager()->getStorage('config_test');
     $empty = $storage->create();
-    $this->assertIdentical($empty->label, NULL);
-    $this->assertIdentical($empty->style, NULL);
+    $this->assertNull($empty->label);
+    $this->assertNull($empty->style);
     $this->assertIdentical($empty->language()->getId(), $default_langcode);
 
     // Verify ConfigEntity properties/methods on the newly created empty entity.
     $this->assertTrue($empty->isNew());
-    $this->assertIdentical($empty->getOriginalId(), NULL);
+    $this->assertNull($empty->getOriginalId());
     $this->assertIdentical($empty->bundle(), 'config_test');
-    $this->assertIdentical($empty->id(), NULL);
+    $this->assertNull($empty->id());
     $this->assertTrue(Uuid::isValid($empty->uuid()));
-    $this->assertIdentical($empty->label(), NULL);
+    $this->assertNull($empty->label());
 
-    $this->assertIdentical($empty->get('id'), NULL);
+    $this->assertNull($empty->get('id'));
     $this->assertTrue(Uuid::isValid($empty->get('uuid')));
-    $this->assertIdentical($empty->get('label'), NULL);
-    $this->assertIdentical($empty->get('style'), NULL);
+    $this->assertNull($empty->get('label'));
+    $this->assertNull($empty->get('style'));
     $this->assertIdentical($empty->language()->getId(), $default_langcode);
 
     // Verify Entity properties/methods on the newly created empty entity.
