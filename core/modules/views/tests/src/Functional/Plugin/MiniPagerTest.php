@@ -132,7 +132,7 @@ class MiniPagerTest extends ViewTestBase {
 
     $view = Views::getView('test_mini_pager');
     $this->executeView($view);
-    $this->assertIdentical($view->get_total_rows, NULL, 'The query was not forced to calculate the total number of results.');
+    $this->assertNull($view->get_total_rows, 'The query was not forced to calculate the total number of results.');
     $this->assertIdentical($view->total_rows, 1, 'The pager calculated the total number of rows.');
 
     // Remove the last node as well and ensure that no "Page 1" is shown.

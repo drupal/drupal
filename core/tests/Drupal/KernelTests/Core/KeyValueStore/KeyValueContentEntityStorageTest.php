@@ -42,17 +42,17 @@ class KeyValueContentEntityStorageTest extends KernelTestBase {
 
     // Verify default properties on a newly created empty entity.
     $empty = EntityTestLabel::create();
-    $this->assertIdentical($empty->id->value, NULL);
-    $this->assertIdentical($empty->name->value, NULL);
+    $this->assertNull($empty->id->value);
+    $this->assertNull($empty->name->value);
     $this->assertNotEmpty($empty->uuid->value);
     $this->assertIdentical($empty->langcode->value, $default_langcode);
 
     // Verify ConfigEntity properties/methods on the newly created empty entity.
     $this->assertTrue($empty->isNew());
     $this->assertIdentical($empty->bundle(), 'entity_test_label');
-    $this->assertIdentical($empty->id(), NULL);
+    $this->assertNull($empty->id());
     $this->assertNotEmpty($empty->uuid());
-    $this->assertIdentical($empty->label(), NULL);
+    $this->assertNull($empty->label());
 
     // Verify Entity properties/methods on the newly created empty entity.
     $this->assertIdentical($empty->getEntityTypeId(), 'entity_test_label');

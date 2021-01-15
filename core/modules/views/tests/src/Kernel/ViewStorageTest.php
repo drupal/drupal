@@ -325,7 +325,7 @@ class ViewStorageTest extends ViewsKernelTestBase {
 
     // Check the 'name' (ID) is using the View objects default value (NULL) as it
     // gets unset.
-    $this->assertIdentical($copy->id(), NULL, 'The ID has been reset.');
+    $this->assertNull($copy->id(), 'The ID has been reset.');
 
     // Check the other properties.
     // @todo Create a reusable property on the base test class for these?
