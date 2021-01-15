@@ -625,6 +625,8 @@ jquery.ui.dialog:
       assets/vendor/jquery.ui/themes/base/core.css: { weight: -11.8 }
     theme:
       assets/vendor/jquery.ui/themes/base/theme.css: { weight: -11.8 }
+  dependencies:
+    - core/jquery
   deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.draggable:
