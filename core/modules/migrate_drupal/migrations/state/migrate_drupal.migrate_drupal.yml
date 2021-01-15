@@ -28,11 +28,6 @@ finished:
     fieldgroup: core
     filefield_meta: core
     help: core
-    # i18n modules require content_translation.
-    i18ncontent: content_translation
-    i18npoll: content_translation
-    i18nstrings: content_translation
-    i18nsync: content_translation
     imageapi: core
     imageapi_gd: core
     imageapi_imagemagick: core
