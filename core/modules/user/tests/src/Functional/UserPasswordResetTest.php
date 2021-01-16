@@ -9,6 +9,7 @@ use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
 
 /**
  * Ensure that password reset methods work as expected.
@@ -87,11 +88,29 @@ class UserPasswordResetTest extends BrowserTestBase {
     $this->drupalGet(Url::fromRoute('user.reset.form', ['uid' => $this->account->id()]));
     $this->assertSession()->statusCodeEquals(403);
 
+    // Try to reset the password for a completely invalid username.
+    $this->drupalGet('user/password');
+    $long_name = $this->randomMachineName(UserInterface::USERNAME_MAX_LENGTH + 10);
+    $edit = ['name' => $long_name];
+    $this->submitForm($edit, 'Submit');
+    $this->assertCount(0, $this->drupalGetMails(['id' => 'user_password_reset']), 'No e-mail was sent when requesting a password for an invalid user name.');
+    $this->assertSession()->pageTextContains("The username or email address is invalid.");
+
     // Try to reset the password for an invalid account.
     $this->drupalGet('user/password');
-    $edit = ['name' => $this->randomMachineName()];
+    $random_name = $this->randomMachineName();
+    $edit = ['name' => $random_name];
     $this->submitForm($edit, 'Submit');
-    $this->assertNoValidPasswordReset($edit['name']);
+    $this->assertNoValidPasswordReset($random_name);
+
+    // Try to reset the password for a valid email address longer than
+    // UserInterface::USERNAME_MAX_LENGTH (invalid username, valid email).
+    // This should pass validation and print the generic message.
+    $this->drupalGet('user/password');
+    $long_name = $this->randomMachineName(UserInterface::USERNAME_MAX_LENGTH) . '@example.com';
+    $edit = ['name' => $long_name];
+    $this->submitForm($edit, 'Submit');
+    $this->assertNoValidPasswordReset($long_name);
 
     // Reset the password by username via the password reset page.
     $this->drupalGet('user/password');
@@ -175,7 +194,6 @@ class UserPasswordResetTest extends BrowserTestBase {
     $before = count($this->drupalGetMails(['id' => 'user_password_reset']));
     $edit = ['name' => $blocked_account->getAccountName()];
     $this->submitForm($edit, 'Submit');
-    $this->assertRaw(t('%name is blocked or has not been activated yet.', ['%name' => $blocked_account->getAccountName()]));
     $this->assertCount($before, $this->drupalGetMails(['id' => 'user_password_reset']), 'No email was sent when requesting password reset for a blocked account');
 
     // Verify a password reset link is invalidated when the user's email address changes.
@@ -379,18 +397,25 @@ class UserPasswordResetTest extends BrowserTestBase {
 
     $edit = ['name' => $this->account->getAccountName()];
 
+    // Count email messages before to compare with after.
+    $before = count($this->drupalGetMails(['id' => 'user_password_reset']));
+
     // Try 3 requests that should not trigger flood control.
     for ($i = 0; $i < 3; $i++) {
       $this->drupalGet('user/password');
       $this->submitForm($edit, 'Submit');
       $this->assertValidPasswordReset($edit['name']);
-      $this->assertNoPasswordUserFlood();
     }
+
+    // Ensure 3 emails were sent.
+    $this->assertCount($before + 3, $this->drupalGetMails(['id' => 'user_password_reset']), '3 emails sent without triggering flood control.');
 
     // The next request should trigger flood control.
     $this->drupalGet('user/password');
     $this->submitForm($edit, 'Submit');
-    $this->assertPasswordUserFlood();
+
+    // Ensure no further emails were sent.
+    $this->assertCount($before + 3, $this->drupalGetMails(['id' => 'user_password_reset']), 'No further email was sent after triggering flood control.');
   }
 
   /**
@@ -404,10 +429,11 @@ class UserPasswordResetTest extends BrowserTestBase {
     // Try 3 requests that should not trigger flood control.
     for ($i = 0; $i < 3; $i++) {
       $this->drupalGet('user/password');
-      $edit = ['name' => $this->randomMachineName()];
+      $random_name = $this->randomMachineName();
+      $edit = ['name' => $random_name];
       $this->submitForm($edit, 'Submit');
       // Because we're testing with a random name, the password reset will not be valid.
-      $this->assertNoValidPasswordReset($edit['name']);
+      $this->assertNoValidPasswordReset($random_name);
       $this->assertNoPasswordIpFlood();
     }
 
@@ -428,13 +454,18 @@ class UserPasswordResetTest extends BrowserTestBase {
 
     $edit = ['name' => $this->account->getAccountName()];
 
+    // Count email messages before to compare with after.
+    $before = count($this->drupalGetMails(['id' => 'user_password_reset']));
+
     // Try 3 requests that should not trigger flood control.
     for ($i = 0; $i < 3; $i++) {
       $this->drupalGet('user/password');
       $this->submitForm($edit, 'Submit');
       $this->assertValidPasswordReset($edit['name']);
-      $this->assertNoPasswordUserFlood();
     }
+
+    // Ensure 3 emails were sent.
+    $this->assertCount($before + 3, $this->drupalGetMails(['id' => 'user_password_reset']), '3 emails sent without triggering flood control.');
 
     // Use the last password reset URL which was generated.
     $reset_url = $this->getResetURL();
@@ -448,15 +479,16 @@ class UserPasswordResetTest extends BrowserTestBase {
     $this->drupalGet('user/password');
     $this->submitForm($edit, 'Submit');
     $this->assertValidPasswordReset($edit['name']);
-    $this->assertNoPasswordUserFlood();
+
+    // Ensure another email was sent.
+    $this->assertCount($before + 4, $this->drupalGetMails(['id' => 'user_password_reset']), 'Another email was sent after clearing flood control.');
   }
 
   /**
    * Helper function to make assertions about a valid password reset.
    */
   public function assertValidPasswordReset($name) {
-    // Make sure the error text is not displayed and email sent.
-    $this->assertNoText("Sorry, $name is not recognized as a username or an e-mail address.");
+    $this->assertSession()->pageTextContains("If $name is a valid account, an email will be sent with instructions to reset your password.");
     $this->assertMail('to', $this->account->getEmail(), 'Password e-mail sent to user.');
     $subject = t('Replacement login information for @username at @site', ['@username' => $this->account->getAccountName(), '@site' => \Drupal::config('system.site')->get('name')]);
     $this->assertMail('subject', $subject, 'Password reset e-mail subject is correct.');
@@ -464,25 +496,14 @@ class UserPasswordResetTest extends BrowserTestBase {
 
   /**
    * Helper function to make assertions about an invalid password reset.
+   *
+   * @param string $name
    */
   public function assertNoValidPasswordReset($name) {
-    // Make sure the error text is displayed and no email sent.
-    $this->assertText($name . ' is not recognized as a username or an email address.');
+    // This message is the same as the valid reset for privacy reasons.
+    $this->assertSession()->pageTextContains("If $name is a valid account, an email will be sent with instructions to reset your password.");
+    // The difference is that no email is sent.
     $this->assertCount(0, $this->drupalGetMails(['id' => 'user_password_reset']), 'No e-mail was sent when requesting a password for an invalid account.');
-  }
-
-  /**
-   * Makes assertions about a password reset triggering user flood control.
-   */
-  public function assertPasswordUserFlood() {
-    $this->assertText('Too many password recovery requests for this account. It is temporarily blocked. Try again later or contact the site administrator.');
-  }
-
-  /**
-   * Makes assertions about a password reset not triggering user flood control.
-   */
-  public function assertNoPasswordUserFlood() {
-    $this->assertNoText('Too many password recovery requests for this account. It is temporarily blocked. Try again later or contact the site administrator.');
   }
 
   /**
