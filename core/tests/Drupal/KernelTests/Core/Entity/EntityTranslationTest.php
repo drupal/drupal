@@ -522,7 +522,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     $this->assertEqual($entity->name->value, $name, 'No stale reference for the translation object corresponding to the original language.');
     $translation2 = $entity->getTranslation($langcode);
     $translation2->name->value .= $this->randomMachineName();
-    $this->assertNotEqual($translation->name->value, $translation2->name->value, 'No stale reference for the actual translation object.');
+    $this->assertNotEquals($translation->name->value, $translation2->name->value, 'No stale reference for the actual translation object.');
     $this->assertEqual($entity, $translation2->getUntranslated(), 'No stale reference in the actual translation object.');
 
     // Verify that deep-cloning is still available when we are not instantiating

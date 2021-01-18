@@ -55,7 +55,7 @@ class FormStoragePageCacheTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save');
     $this->assertText('No old build id');
     $build_id_first_validation = $this->getFormBuildId();
-    $this->assertNotEqual($build_id_initial, $build_id_first_validation, 'Build id changes when form validation fails');
+    $this->assertNotEquals($build_id_initial, $build_id_first_validation, 'Build id changes when form validation fails');
 
     // Trigger validation error by again submitting an empty title.
     $edit = ['title' => ''];
@@ -76,8 +76,8 @@ class FormStoragePageCacheTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save');
     $this->assertText('No old build id');
     $build_id_from_cache_first_validation = $this->getFormBuildId();
-    $this->assertNotEqual($build_id_initial, $build_id_from_cache_first_validation, 'Build id changes when form validation fails');
-    $this->assertNotEqual($build_id_first_validation, $build_id_from_cache_first_validation, 'Build id from first user is not reused');
+    $this->assertNotEquals($build_id_initial, $build_id_from_cache_first_validation, 'Build id changes when form validation fails');
+    $this->assertNotEquals($build_id_first_validation, $build_id_from_cache_first_validation, 'Build id from first user is not reused');
 
     // Trigger validation error by again submitting an empty title.
     $edit = ['title' => ''];
@@ -106,14 +106,14 @@ class FormStoragePageCacheTest extends BrowserTestBase {
     $this->assertNoText('No old build id');
     $this->assertNoText($build_id_initial);
     $build_id_first_rebuild = $this->getFormBuildId();
-    $this->assertNotEqual($build_id_initial, $build_id_first_rebuild, 'Build id changes on first rebuild.');
+    $this->assertNotEquals($build_id_initial, $build_id_first_rebuild, 'Build id changes on first rebuild.');
 
     // Trigger subsequent rebuild, should regenerate the build id again.
     $edit = ['title' => 'something'];
     $this->submitForm($edit, 'Rebuild');
     $this->assertText($build_id_first_rebuild);
     $build_id_second_rebuild = $this->getFormBuildId();
-    $this->assertNotEqual($build_id_first_rebuild, $build_id_second_rebuild, 'Build id changes on second rebuild.');
+    $this->assertNotEquals($build_id_first_rebuild, $build_id_second_rebuild, 'Build id changes on second rebuild.');
   }
 
 }

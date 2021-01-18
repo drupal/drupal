@@ -849,7 +849,7 @@ trait AssertContentTrait {
         '@unexpected' => var_export($title, TRUE),
       ]);
     }
-    return $this->assertNotEqual($actual, $title, $message, $group);
+    return $this->assertNotEquals($title, $actual, $message, $group);
   }
 
   /**

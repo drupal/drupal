@@ -177,7 +177,7 @@ class TwigEnvironmentTest extends KernelTestBase {
     $new_extension_filename = $cache->generateKey($template_path, $class);
     \Drupal::getContainer()->set('twig', NULL);
 
-    $this->assertNotEqual($new_extension_filename, $original_filename);
+    $this->assertNotEquals($original_filename, $new_extension_filename);
   }
 
   /**

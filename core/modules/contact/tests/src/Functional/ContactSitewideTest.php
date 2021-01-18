@@ -199,7 +199,7 @@ class ContactSitewideTest extends BrowserTestBase {
     $this->assertEqual($config['label'], $label);
     $this->assertEqual($config['recipients'], [$recipients[0], $recipients[1]]);
     $this->assertEqual($config['reply'], $reply);
-    $this->assertNotEqual($id, $this->config('contact.settings')->get('default_form'));
+    $this->assertNotEquals($this->config('contact.settings')->get('default_form'), $id);
     $this->assertText('Contact form ' . $label . ' has been updated.');
     // Ensure the label is displayed on the contact page for this form.
     $this->drupalGet('contact/' . $id);

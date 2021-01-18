@@ -177,7 +177,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     // in it.
     if ($extra_slash) {
       $modified_uri = str_replace('://', ':///', $original_uri);
-      $this->assertNotEqual($original_uri, $modified_uri, 'An extra slash was added to the generated file URI.');
+      $this->assertNotEquals($original_uri, $modified_uri, 'An extra slash was added to the generated file URI.');
       $generate_url = $this->style->buildUrl($modified_uri, $clean_url);
     }
     if (!$clean_url) {

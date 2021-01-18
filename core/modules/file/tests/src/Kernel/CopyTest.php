@@ -58,7 +58,7 @@ class CopyTest extends FileManagedUnitTestBase {
     // Check the return status and that the contents changed.
     $this->assertNotFalse($result, 'File copied successfully.');
     $this->assertEqual($contents, file_get_contents($result->getFileUri()), 'Contents of file were copied correctly.');
-    $this->assertNotEqual($result->getFileUri(), $source->getFileUri(), 'Returned file path has changed from the original.');
+    $this->assertNotEquals($source->getFileUri(), $result->getFileUri(), 'Returned file path has changed from the original.');
 
     // Check that the correct hooks were called.
     $this->assertFileHooksCalled(['copy', 'insert']);

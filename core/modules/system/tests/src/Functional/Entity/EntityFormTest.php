@@ -93,7 +93,7 @@ class EntityFormTest extends BrowserTestBase {
     $this->assertNull($entity, new FormattableMarkup('%entity_type: The entity has been modified.', ['%entity_type' => $entity_type]));
     $entity = $this->loadEntityByName($entity_type, $name2);
     $this->assertNotNull($entity, new FormattableMarkup('%entity_type: Modified entity found in the database.', ['%entity_type' => $entity_type]));
-    $this->assertNotEqual($entity->name->value, $name1, new FormattableMarkup('%entity_type: The entity name has been modified.', ['%entity_type' => $entity_type]));
+    $this->assertNotEquals($name1, $entity->name->value, new FormattableMarkup('%entity_type: The entity name has been modified.', ['%entity_type' => $entity_type]));
 
     $this->drupalGet($entity_type . '/manage/' . $entity->id() . '/edit');
     $this->clickLink(t('Delete'));

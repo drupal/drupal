@@ -340,7 +340,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     // Assert that the old admin menu subtrees hash and the new admin menu
     // subtrees hash are different.
     $this->assertNotEmpty($new_subtree_hash, 'A valid hash value for the admin menu subtrees was created.');
-    $this->assertNotEqual($original_subtree_hash, $new_subtree_hash, 'The user-specific subtree menu hash has been updated.');
+    $this->assertNotEquals($original_subtree_hash, $new_subtree_hash, 'The user-specific subtree menu hash has been updated.');
   }
 
   /**
@@ -379,7 +379,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     // Assert that the old admin menu subtree hash and the new admin menu
     // subtree hash are different.
     $this->assertNotEmpty($new_subtree_hash, 'A valid hash value for the admin menu subtrees was created.');
-    $this->assertNotEqual($this->hash, $new_subtree_hash, 'The user-specific subtree menu hash has been updated.');
+    $this->assertNotEquals($this->hash, $new_subtree_hash, 'The user-specific subtree menu hash has been updated.');
   }
 
   /**
@@ -442,7 +442,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     // Assert that the old admin menu subtree hash and the new admin menu
     // subtree hash are different.
     $this->assertNotEmpty($new_subtree_hash, 'A valid hash value for the admin menu subtrees was created.');
-    $this->assertNotEqual($this->hash, $new_subtree_hash, 'The user-specific subtree menu hash has been updated.');
+    $this->assertNotEquals($this->hash, $new_subtree_hash, 'The user-specific subtree menu hash has been updated.');
 
     // Save the new subtree hash as the original.
     $this->hash = $new_subtree_hash;
