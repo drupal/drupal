@@ -164,7 +164,7 @@ class DirectoryTest extends FileTestBase {
     $path = $file_system->getDestinationFilename($destination, FileSystemInterface::EXISTS_REPLACE);
     $this->assertEqual($path, $destination, 'Existing filepath destination remains the same with FileSystemInterface::EXISTS_REPLACE.', 'File');
     $path = $file_system->getDestinationFilename($destination, FileSystemInterface::EXISTS_RENAME);
-    $this->assertNotEqual($path, $destination, 'A new filepath destination is created when filepath destination already exists with FileSystemInterface::EXISTS_RENAME.', 'File');
+    $this->assertNotEquals($destination, $path, 'A new filepath destination is created when filepath destination already exists with FileSystemInterface::EXISTS_RENAME.');
     $path = $file_system->getDestinationFilename($destination, FileSystemInterface::EXISTS_ERROR);
     $this->assertEqual($path, FALSE, 'An error is returned when filepath destination already exists with FileSystemInterface::EXISTS_ERROR.', 'File');
 

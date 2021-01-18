@@ -40,7 +40,7 @@ class FormatterPluginManagerTest extends FieldKernelTestBase {
     $instance = $formatter_plugin_manager->getInstance($formatter_options);
 
     // Instance should be default widget.
-    $this->assertNotEqual($instance->getPluginId(), 'field_test_applicable');
+    $this->assertNotSame('field_test_applicable', $instance->getPluginId());
     $this->assertEqual($instance->getPluginId(), 'field_test_default');
   }
 

@@ -127,7 +127,7 @@ class AccessRoleTest extends AccessTestBase {
     $this->assertContains('user.roles', $build['#cache']['contexts']);
     $this->assertEqual(['config:views.view.test_access_role'], $build['#cache']['tags']);
     $this->assertEqual(Cache::PERMANENT, $build['#cache']['max-age']);
-    $this->assertNotEqual($result, '');
+    $this->assertNotSame('', $result);
 
     // Then without access.
     $build = DisplayPluginBase::buildBasicRenderable('test_access_role', 'default');

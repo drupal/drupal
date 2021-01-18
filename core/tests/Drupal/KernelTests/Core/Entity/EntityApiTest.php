@@ -218,7 +218,7 @@ class EntityApiTest extends EntityKernelTestBase {
       $entity->save();
     }
     catch (EntityStorageException $e) {
-      $this->assertNotEqual($e->getCode(), 1, 'Entity presave EntityStorageException caught.');
+      $this->assertNotEquals(1, $e->getCode(), 'Entity presave EntityStorageException caught.');
     }
 
     $entity = EntityTest::create(['name' => 'test3']);
@@ -239,7 +239,7 @@ class EntityApiTest extends EntityKernelTestBase {
       $entity->delete();
     }
     catch (EntityStorageException $e) {
-      $this->assertNotEqual($e->getCode(), 2, 'Entity predelete EntityStorageException thrown.');
+      $this->assertNotEquals(2, $e->getCode(), 'Entity predelete EntityStorageException thrown.');
     }
   }
 

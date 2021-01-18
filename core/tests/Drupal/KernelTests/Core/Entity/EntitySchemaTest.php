@@ -347,7 +347,7 @@ class EntitySchemaTest extends EntityKernelTestBase {
     }
 
     // Ensure that there are storage definitions from the entity_test module.
-    $this->assertNotEqual($entity_type_id_count, 0, 'There are storage definitions provided by the entity_test module in the schema.');
+    $this->assertNotEquals(0, $entity_type_id_count, 'There are storage definitions provided by the entity_test module in the schema.');
 
     // Uninstall the entity_test module.
     $this->container->get('module_installer')->uninstall(['entity_test']);

@@ -94,7 +94,7 @@ class KeyValueContentEntityStorageTest extends KernelTestBase {
     ]);
     $this->assertIdentical($entity_test->id->value, $expected['id']);
     $this->assertNotEmpty($entity_test->uuid->value);
-    $this->assertNotEqual($entity_test->uuid->value, $empty->uuid->value);
+    $this->assertNotEquals($empty->uuid->value, $entity_test->uuid->value);
     $this->assertIdentical($entity_test->name->value, $expected['name']);
     $this->assertIdentical($entity_test->langcode->value, $default_langcode);
 

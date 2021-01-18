@@ -96,7 +96,7 @@ class LanguageUrlRewritingTest extends BrowserTestBase {
     // we can always check the prefixed URL.
     $prefixes = $this->config('language.negotiation')->get('url.prefixes');
     $stored_prefix = isset($prefixes[$language->getId()]) ? $prefixes[$language->getId()] : $this->randomMachineName();
-    $this->assertNotEqual($stored_prefix, $prefix, $message);
+    $this->assertNotEquals($prefix, $stored_prefix, $message);
     $prefix = $stored_prefix;
 
     $this->drupalGet("$prefix/$path");

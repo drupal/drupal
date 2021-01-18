@@ -265,7 +265,7 @@ class SessionTest extends BrowserTestBase {
     $this->drupalGet('session-test/set/foo');
     $times2 = $query->execute()->fetchObject();
     $this->assertEqual($times2->access, $times1->access, 'Users table was not updated.');
-    $this->assertNotEqual($times2->timestamp, $times1->timestamp, 'Sessions table was updated.');
+    $this->assertNotEquals($times1->timestamp, $times2->timestamp, 'Sessions table was updated.');
 
     // Write the same value again, i.e. do not modify the session.
     sleep(1);
@@ -289,8 +289,8 @@ class SessionTest extends BrowserTestBase {
     $this->writeSettings($settings);
     $this->drupalGet('');
     $times5 = $query->execute()->fetchObject();
-    $this->assertNotEqual($times5->access, $times4->access, 'Users table was updated.');
-    $this->assertNotEqual($times5->timestamp, $times4->timestamp, 'Sessions table was updated.');
+    $this->assertNotEquals($times4->access, $times5->access, 'Users table was updated.');
+    $this->assertNotEquals($times4->timestamp, $times5->timestamp, 'Sessions table was updated.');
   }
 
   /**

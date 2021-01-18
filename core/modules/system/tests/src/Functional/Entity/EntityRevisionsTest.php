@@ -147,8 +147,8 @@ class EntityRevisionsTest extends BrowserTestBase {
       // Check that the fields and properties contain new content.
       // Verify that the revision ID changed.
       $this->assertGreaterThan($legacy_revision_id, $entity->revision_id->value);
-      $this->assertNotEqual($entity->name->value, $legacy_name, new FormattableMarkup('%entity_type: Name changed.', ['%entity_type' => $entity_type]));
-      $this->assertNotEqual($entity->translatable_test_field->value, $legacy_text, new FormattableMarkup('%entity_type: Text changed.', ['%entity_type' => $entity_type]));
+      $this->assertNotEquals($legacy_name, $entity->name->value, new FormattableMarkup('%entity_type: Name changed.', ['%entity_type' => $entity_type]));
+      $this->assertNotEquals($legacy_text, $entity->translatable_test_field->value, new FormattableMarkup('%entity_type: Text changed.', ['%entity_type' => $entity_type]));
     }
 
     $revisions = $storage->loadMultipleRevisions($revision_ids);

@@ -51,7 +51,7 @@ class WidgetPluginManagerTest extends FieldKernelTestBase {
     $instance = $widget_plugin_manager->getInstance($widget_options);
 
     // Instance should be default widget.
-    $this->assertNotEqual($instance->getPluginId(), 'test_field_widget_multiple');
+    $this->assertNotSame('test_field_widget_multiple', $instance->getPluginId());
     $this->assertEqual($instance->getPluginId(), 'test_field_widget');
   }
 

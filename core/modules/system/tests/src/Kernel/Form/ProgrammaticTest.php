@@ -113,7 +113,7 @@ class ProgrammaticTest extends KernelTestBase {
     $form_state->setProgrammedBypassAccessCheck(FALSE);
     \Drupal::formBuilder()->submitForm('\Drupal\form_test\Form\FormTestProgrammaticForm', $form_state);
     $values = $form_state->get('programmatic_form_submit');
-    $this->assertNotEqual($values['field_restricted'], 'dummy value', 'The value for the restricted field is not stored.');
+    $this->assertNotSame('dummy value', $values['field_restricted'], 'The value for the restricted field is not stored.');
 
   }
 

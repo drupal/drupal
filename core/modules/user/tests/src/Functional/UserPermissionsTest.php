@@ -78,7 +78,7 @@ class UserPermissionsTest extends BrowserTestBase {
     $this->assertTrue($account->hasPermission('administer users'), 'User now has "administer users" permission.');
     $current_permissions_hash = $permissions_hash_generator->generate($account);
     $this->assertIdentical($current_permissions_hash, $permissions_hash_generator->generate($this->loggedInUser));
-    $this->assertNotEqual($previous_permissions_hash, $current_permissions_hash, 'Permissions hash has changed.');
+    $this->assertNotEquals($previous_permissions_hash, $current_permissions_hash, 'Permissions hash has changed.');
     $previous_permissions_hash = $current_permissions_hash;
 
     // Remove a permission.
@@ -91,7 +91,7 @@ class UserPermissionsTest extends BrowserTestBase {
     $this->assertFalse($account->hasPermission('access user profiles'), 'User no longer has "access user profiles" permission.');
     $current_permissions_hash = $permissions_hash_generator->generate($account);
     $this->assertIdentical($current_permissions_hash, $permissions_hash_generator->generate($this->loggedInUser));
-    $this->assertNotEqual($previous_permissions_hash, $current_permissions_hash, 'Permissions hash has changed.');
+    $this->assertNotEquals($previous_permissions_hash, $current_permissions_hash, 'Permissions hash has changed.');
 
     // Ensure that the admin role doesn't have any checkboxes.
     $this->drupalGet('admin/people/permissions');
@@ -173,7 +173,7 @@ class UserPermissionsTest extends BrowserTestBase {
 
     // Verify the permissions hash has changed.
     $current_permissions_hash = $permissions_hash_generator->generate($account);
-    $this->assertNotEqual($previous_permissions_hash, $current_permissions_hash, 'Permissions hash has changed.');
+    $this->assertNotEquals($previous_permissions_hash, $current_permissions_hash, 'Permissions hash has changed.');
   }
 
   /**

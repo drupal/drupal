@@ -138,7 +138,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
       $this->assertEqual($metadata_target_translation->getAuthor()->id(), $this->translator->id(),
         new FormattableMarkup('Author of the target translation @langcode correctly stored for translatable owner field.', ['@langcode' => $langcode]));
 
-      $this->assertNotEqual($metadata_target_translation->getAuthor()->id(), $metadata_source_translation->getAuthor()->id(),
+      $this->assertNotEquals($metadata_target_translation->getAuthor()->id(), $metadata_source_translation->getAuthor()->id(),
         new FormattableMarkup('Author of the target translation @target different from the author of the source translation @source for translatable owner field.',
           ['@target' => $langcode, '@source' => $default_langcode]));
     }
@@ -624,7 +624,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
 
       $storage->resetCache([$this->entityId]);
       $entity = $storage->load($this->entityId);
-      $this->assertNotEqual($changed_timestamp, $entity->getChangedTime(), 'The entity\'s changed time was updated after form save without changes.');
+      $this->assertNotEquals($changed_timestamp, $entity->getChangedTime(), 'The entity\'s changed time was updated after form save without changes.');
     }
   }
 

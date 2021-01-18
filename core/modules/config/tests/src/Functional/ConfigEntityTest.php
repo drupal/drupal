@@ -100,7 +100,7 @@ class ConfigEntityTest extends BrowserTestBase {
       'label' => $this->randomString(),
       'style' => $this->randomMachineName(),
     ]);
-    $this->assertNotEqual($config_test->uuid(), $empty->uuid());
+    $this->assertNotEquals($empty->uuid(), $config_test->uuid());
     $this->assertIdentical($config_test->label, $expected['label']);
     $this->assertIdentical($config_test->style, $expected['style']);
     $this->assertIdentical($config_test->language()->getId(), $default_langcode);

@@ -67,9 +67,9 @@ class LocaleStringIsSafeTest extends KernelTestBase {
       $rendered_original_string = \Drupal::theme()->render('locale_test_tokenized', ['content' => $original_string]);
       // Twig assumes that strings are unsafe so it escapes them, and so the
       // original and the rendered version should be different.
-      $this->assertNotEqual(
-        $rendered_original_string,
+      $this->assertNotEquals(
         $original_string . "\n",
+        $rendered_original_string,
         'Security test ' . $i . ' before translation'
       );
 

@@ -90,7 +90,7 @@ class NodeAccessRecordsTest extends NodeAccessTestBase {
       $grants = node_test_node_grants($web_user, $op);
       $altered_grants = $grants;
       \Drupal::moduleHandler()->alter('node_grants', $altered_grants, $web_user, $op);
-      $this->assertNotEqual($grants, $altered_grants, new FormattableMarkup('Altered the %op grant for a user.', ['%op' => $op]));
+      $this->assertNotEquals($grants, $altered_grants, new FormattableMarkup('Altered the %op grant for a user.', ['%op' => $op]));
     }
 
     // Check that core does not grant access to an unpublished node when an

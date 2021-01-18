@@ -61,7 +61,7 @@ class TransformedConfigExportImportUITest extends BrowserTestBase {
     $originalSlogan = $this->config('system.site')->get('slogan');
     $this->assertEmpty($originalSlogan);
     $newSlogan = $this->randomMachineName(16);
-    $this->assertNotEqual($newSlogan, $originalSlogan);
+    $this->assertNotEquals($originalSlogan, $newSlogan);
     $this->config('system.site')
       ->set('slogan', $newSlogan)
       ->save();

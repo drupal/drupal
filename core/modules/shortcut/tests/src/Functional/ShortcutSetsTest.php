@@ -140,7 +140,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
     ];
     $this->drupalPostForm('user/' . $this->adminUser->id() . '/shortcuts', $edit, 'Change set');
     $current_set = shortcut_current_displayed_set($this->adminUser);
-    $this->assertNotEqual($current_set->id(), $this->set->id(), 'A shortcut set can be switched to at the same time as it is created.');
+    $this->assertNotEquals($this->set->id(), $current_set->id(), 'A shortcut set can be switched to at the same time as it is created.');
     $this->assertEqual($current_set->label(), $edit['label'], 'The new set is correctly assigned to the user.');
   }
 

@@ -333,7 +333,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $this->assertFileExists($comment_file->getFileUri());
     // Test authenticated file download.
     $url = $comment_file->createFileUrl();
-    $this->assertNotEqual($url, NULL, 'Confirmed that the URL is valid');
+    $this->assertNotNull($url, 'Confirmed that the URL is valid');
     $this->drupalGet($comment_file->createFileUrl());
     $this->assertSession()->statusCodeEquals(200);
 

@@ -251,7 +251,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->container->get('lock.persistent')->release($config_importer::LOCK_NAME);
 
     // Verify site name has not changed.
-    $this->assertNotEqual($new_site_name, $this->config('system.site')->get('name'));
+    $this->assertNotEquals($this->config('system.site')->get('name'), $new_site_name);
   }
 
   /**
@@ -370,7 +370,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->assertText('Config import validate error 2.');
 
     // Verify site name has not changed.
-    $this->assertNotEqual($new_site_name, $this->config('system.site')->get('name'));
+    $this->assertNotEquals($this->config('system.site')->get('name'), $new_site_name);
   }
 
   public function testConfigUninstallConfigException() {
