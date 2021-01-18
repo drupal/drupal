@@ -13,6 +13,7 @@ use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
 use Drupal\Tests\TestFileCreationTrait;
+use Drupal\user\RoleInterface;
 
 /**
  * Tests the node entity preview functionality.
@@ -498,6 +499,29 @@ class PagePreviewTest extends NodeTestBase {
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit2, 'Preview');
     $this->assertSession()->addressEquals(Url::fromRoute('entity.node.preview', ['node_preview' => $node->uuid(), 'view_mode_id' => 'full']));
     $this->assertText($edit2[$title_key]);
+  }
+
+  /**
+   * Tests node preview with dynamic_page_cache and anonymous users.
+   */
+  public function testPagePreviewCache() {
+    \Drupal::service('module_installer')->uninstall(['node_test']);
+    $this->drupalLogout();
+    $title_key = 'title[0][value]';
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['create page content', 'access content']);
+    $edit = [
+      $title_key => $this->randomMachineName(8),
+    ];
+    $this->drupalGet('/node/add/page');
+    $this->submitForm($edit, 'Preview');
+    $this->assertSession()->pageTextContains($edit[$title_key]);
+    $this->clickLink(t('Back to content editing'));
+
+    $edit = [
+      $title_key => $this->randomMachineName(8),
+    ];
+    $this->submitForm($edit, 'Preview');
+    $this->assertSession()->pageTextContains($edit[$title_key]);
   }
 
 }
