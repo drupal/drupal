@@ -430,7 +430,7 @@ class NodeRevisionsTest extends NodeTestBase {
     $this->assertGreaterThan($translation_revision_id, $node->getRevisionId());
     $this->assertEqual($node->label(), $default_translation_title);
     $this->assertEqual($node->getTranslation('it')->label(), $translated_title);
-    $this->assertNotEqual($node->untranslatable_string_field->value, $untranslatable_string);
+    $this->assertNotEquals($untranslatable_string, $node->untranslatable_string_field->value);
 
     $latest_revision_id = $translation->getRevisionId();
 

@@ -371,7 +371,7 @@ EOT;
   public function testRemoveTrailingWhitespace() {
     $text = "Hi there! \nHerp Derp";
     $mail_lines = explode("\n", MailFormatHelper::wrapMail($text));
-    $this->assertNotEqual(" ", substr($mail_lines[0], -1), 'Trailing whitespace removed.');
+    $this->assertNotEquals(" ", substr($mail_lines[0], -1), 'Trailing whitespace removed.');
   }
 
   /**

@@ -54,9 +54,9 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
     $matches = [];
     if (preg_match('@node/(\d+)$@', $this->getUrl(), $matches)) {
       $nid = end($matches);
-      $this->assertNotEqual($nid, 0, 'The node ID was extracted from the URL.');
+      $this->assertNotEquals(0, $nid, 'The node ID was extracted from the URL.');
       $node = Node::load($nid);
-      $this->assertNotEqual($node, NULL, 'The node was loaded successfully.');
+      $this->assertNotNull($node, 'The node was loaded successfully.');
     }
   }
 
@@ -90,9 +90,9 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
     $matches = [];
     if (preg_match('@node/(\d+)$@', $this->getUrl(), $matches)) {
       $nid = end($matches);
-      $this->assertNotEqual($nid, 0, 'The node ID was extracted from the URL.');
+      $this->assertNotEquals(0, $nid, 'The node ID was extracted from the URL.');
       $node = Node::load($nid);
-      $this->assertNotEqual($node, NULL, 'The node was loaded successfully.');
+      $this->assertNotNull($node, 'The node was loaded successfully.');
       $this->assertFileExists(File::load($node->field_image->target_id)->getFileUri());
     }
   }
@@ -164,9 +164,9 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
     $matches = [];
     if (preg_match('@node/(\d+)$@', $this->getUrl(), $matches)) {
       $nid = end($matches);
-      $this->assertNotEqual($nid, 0, 'The node ID was extracted from the URL.');
+      $this->assertNotEquals(0, $nid, 'The node ID was extracted from the URL.');
       $node = Node::load($nid);
-      $this->assertNotEqual($node, NULL, 'The node was loaded successfully.');
+      $this->assertNotNull($node, 'The node was loaded successfully.');
       $this->assertFileExists(File::load($node->field_image->target_id)->getFileUri());
     }
   }

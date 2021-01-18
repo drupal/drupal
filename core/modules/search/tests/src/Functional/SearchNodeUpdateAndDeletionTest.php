@@ -106,7 +106,7 @@ class SearchNodeUpdateAndDeletionTest extends BrowserTestBase {
       ->condition('word', 'dragons')
       ->execute()
       ->fetchField();
-    $this->assertNotEqual($search_index_dataset, FALSE, t('Node info found on the search_index'));
+    $this->assertNotFalse($search_index_dataset, t('Node info found on the search_index'));
 
     // Delete the node.
     $node->delete();

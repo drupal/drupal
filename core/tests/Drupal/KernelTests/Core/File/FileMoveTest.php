@@ -39,7 +39,7 @@ class FileMoveTest extends FileTestBase {
     $this->assertNotFalse(file_put_contents($desired_filepath, ' '), 'Created a file so a rename will have to happen.');
     $newer_filepath = $file_system->move($new_filepath, $desired_filepath, FileSystemInterface::EXISTS_RENAME);
     $this->assertNotFalse($newer_filepath, 'Move was successful.');
-    $this->assertNotEqual($newer_filepath, $desired_filepath, 'Returned expected filepath.');
+    $this->assertNotEquals($desired_filepath, $newer_filepath, 'Returned expected filepath.');
     $this->assertFileExists($newer_filepath);
     $this->assertFileNotExists($new_filepath);
     $this->assertFilePermissions($newer_filepath, Settings::get('file_chmod_file', FileSystem::CHMOD_FILE));

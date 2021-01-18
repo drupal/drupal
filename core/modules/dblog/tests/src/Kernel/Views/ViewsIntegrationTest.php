@@ -71,7 +71,7 @@ class ViewsIntegrationTest extends ViewsKernelTestBase {
       if ($index == 2) {
         // Make sure that unsafe link differs from the rendered link, so we know
         // that some filtering actually happened.
-        $this->assertNotEqual($link_field, $entry['variables']['link']);
+        $this->assertNotEquals($entry['variables']['link'], $link_field);
       }
       $this->assertEqual($link_field, Xss::filterAdmin($entry['variables']['link']));
     }

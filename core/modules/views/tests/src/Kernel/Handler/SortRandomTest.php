@@ -133,7 +133,7 @@ class SortRandomTest extends ViewsKernelTestBase {
     $result2 = $renderer->renderPlain($build);
 
     // Ensure that the random ordering works and don't produce the same result.
-    $this->assertNotEqual($result, $result2);
+    $this->assertNotEquals($result, $result2);
   }
 
 }

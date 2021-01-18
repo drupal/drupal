@@ -40,7 +40,7 @@ class SelectComplexTest extends DatabaseTestBase {
     foreach ($result as $record) {
       $num_records++;
       $this->assertGreaterThanOrEqual($last_priority, $record->$priority_field);
-      $this->assertNotEqual($record->$name_field, 'Ringo', 'Taskless person not selected.');
+      $this->assertNotSame('Ringo', $record->$name_field, 'Taskless person not selected.');
       $last_priority = $record->$priority_field;
     }
 
@@ -333,7 +333,7 @@ class SelectComplexTest extends DatabaseTestBase {
     $query->where("$alias.name <> test.name");
     $crowded_job = $query->execute()->fetch();
     $this->assertEqual($crowded_job->job, $crowded_job->other_job, 'Correctly joined same table twice.');
-    $this->assertNotEqual($crowded_job->name, $crowded_job->other_name, 'Correctly joined same table twice.');
+    $this->assertNotEquals($crowded_job->other_name, $crowded_job->name, 'Correctly joined same table twice.');
   }
 
   /**
@@ -414,7 +414,7 @@ class SelectComplexTest extends DatabaseTestBase {
       $num_records++;
       // Verify that the results are returned in the correct order.
       $this->assertGreaterThanOrEqual($last_priority, $record->$priority_field);
-      $this->assertNotEqual($record->$name_field, 'Ringo', 'Taskless person not selected.');
+      $this->assertNotSame('Ringo', $record->$name_field, 'Taskless person not selected.');
       $last_priority = $record->$priority_field;
     }
 

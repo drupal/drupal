@@ -352,7 +352,7 @@ class StyleSerializerTest extends ViewTestBase {
     $this->assertNotEmpty($render_cache->get($original));
 
     // Ensure that the XML output is different from the JSON one.
-    $this->assertNotEqual($result1, $result_xml);
+    $this->assertNotEquals($result1, $result_xml);
 
     // Ensure that the cached page works.
     $result2 = Json::decode($this->drupalGet('test/serialize/entity', ['query' => ['_format' => 'json']]));
@@ -368,7 +368,7 @@ class StyleSerializerTest extends ViewTestBase {
     $result3 = Json::decode($this->drupalGet('test/serialize/entity', ['query' => ['_format' => 'json']]));
     $this->addRequestWithFormat('json');
     $this->assertSession()->responseHeaderEquals('content-type', 'application/json');
-    $this->assertNotEqual($result3, $result2);
+    $this->assertNotEquals($result2, $result3);
 
     // Add the new entity cache tag and remove the first one, because we just
     // show 10 items in total.

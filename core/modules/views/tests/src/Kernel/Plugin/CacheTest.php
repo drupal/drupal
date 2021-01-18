@@ -166,7 +166,7 @@ class CacheTest extends ViewsKernelTestBase {
 
     // Get the cache item.
     $cid2 = $view->display_handler->getPlugin('cache')->generateResultsKey();
-    $this->assertNotEqual($cid1, $cid2, "Results keys are different.");
+    $this->assertNotEquals($cid1, $cid2, "Results keys are different.");
 
     // Build the expected result.
     $dataset = [['name' => 'Ringo']];

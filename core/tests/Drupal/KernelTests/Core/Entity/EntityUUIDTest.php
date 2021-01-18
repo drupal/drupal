@@ -58,7 +58,7 @@ class EntityUUIDTest extends EntityKernelTestBase {
     $this->assertNotEmpty($uuid);
 
     // Verify that the new UUID is different.
-    $this->assertNotEqual($custom_entity->uuid(), $uuid);
+    $this->assertNotEquals($custom_entity->uuid(), $uuid);
 
     // Verify that the UUID is retained upon saving.
     $entity->save();
@@ -84,20 +84,20 @@ class EntityUUIDTest extends EntityKernelTestBase {
         case 'uuid':
           $this->assertNotNull($entity_duplicate->uuid());
           $this->assertNotNull($entity->uuid());
-          $this->assertNotEqual($entity_duplicate->uuid(), $entity->uuid());
+          $this->assertNotEquals($entity->uuid(), $entity_duplicate->uuid());
           break;
 
         case 'id':
           $this->assertNull($entity_duplicate->id());
           $this->assertNotNull($entity->id());
-          $this->assertNotEqual($entity_duplicate->id(), $entity->id());
+          $this->assertNotEquals($entity->id(), $entity_duplicate->id());
           break;
 
         case 'revision_id':
           $this->assertNull($entity_duplicate->getRevisionId());
           $this->assertNotNull($entity->getRevisionId());
-          $this->assertNotEqual($entity_duplicate->getRevisionId(), $entity->getRevisionId());
-          $this->assertNotEqual($entity_duplicate->{$property}->getValue(), $entity->{$property}->getValue());
+          $this->assertNotEquals($entity->getRevisionId(), $entity_duplicate->getRevisionId());
+          $this->assertNotEquals($entity->{$property}->getValue(), $entity_duplicate->{$property}->getValue());
           break;
 
         default:
@@ -105,7 +105,7 @@ class EntityUUIDTest extends EntityKernelTestBase {
       }
     }
     $entity_duplicate->save();
-    $this->assertNotEqual($entity->id(), $entity_duplicate->id());
+    $this->assertNotEquals($entity_duplicate->id(), $entity->id());
   }
 
 }
