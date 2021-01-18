@@ -128,9 +128,9 @@ function path_entity_translation_create(ContentEntityInterface $translation) {
 }
 
 /**
- * Implements hook_field_widget_form_alter().
+ * Implements hook_field_widget_single_element_form_alter().
  */
-function path_field_widget_form_alter(&$element, FormStateInterface $form_state, $context) {
+function path_field_widget_single_element_form_alter(&$element, FormStateInterface $form_state, $context) {
   $field_definition = $context['items']->getFieldDefinition();
   $field_name = $field_definition->getName();
   $entity_type = $field_definition->getTargetEntityTypeId();

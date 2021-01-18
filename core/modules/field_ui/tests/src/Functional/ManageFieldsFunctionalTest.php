@@ -733,10 +733,10 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     ];
     $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.field_image', $edit, 'Save settings');
 
-    // Check that hook_field_widget_form_alter() does believe this is the
-    // default value form.
+    // Check that hook_field_widget_single_element_form_alter() does believe
+    // this is the default value form.
     $this->drupalGet('admin/structure/types/manage/article/fields/node.article.field_tags');
-    $this->assertText('From hook_field_widget_form_alter(): Default form is true.');
+    $this->assertText('From hook_field_widget_single_element_form_alter(): Default form is true.');
 
     $edit = [
       'description' => '<em>Test with a non upload field.',

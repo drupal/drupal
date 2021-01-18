@@ -222,9 +222,10 @@ function media_form_field_ui_field_storage_add_form_alter(&$form, FormStateInter
 }
 
 /**
- * Implements hook_field_widget_multivalue_form_alter().
+ * Implements hook_field_widget_complete_form_alter().
  */
-function media_field_widget_multivalue_form_alter(array &$elements, FormStateInterface $form_state, array $context) {
+function media_field_widget_complete_form_alter(array &$field_widget_complete_form, FormStateInterface $form_state, array $context) {
+  $elements = &$field_widget_complete_form['widget'];
   // Do not alter the default settings form.
   if ($context['default']) {
     return;
@@ -506,9 +507,9 @@ function media_filter_format_edit_form_validate($form, FormStateInterface $form_
 }
 
 /**
- * Implements hook_field_widget_form_alter().
+ * Implements hook_field_widget_single_element_form_alter().
  */
-function media_field_widget_form_alter(&$element, FormStateInterface $form_state, $context) {
+function media_field_widget_single_element_form_alter(&$element, FormStateInterface $form_state, $context) {
   // Add an attribute so that "drupalmedia" CKEditor plugin can pass the host
   // entity's language to EditorMediaDialog, allowing it to present entities
   // in the same language.

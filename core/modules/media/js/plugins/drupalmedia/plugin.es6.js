@@ -174,7 +174,7 @@
               }
             });
           }
-          // @see media_field_widget_form_alter()
+          // @see media_field_widget_single_element_form_alter()
           const hostEntityLangcode = document
             .getElementById(editor.name)
             .getAttribute('data-media-embed-host-entity-langcode');
