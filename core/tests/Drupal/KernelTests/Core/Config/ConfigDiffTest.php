@@ -166,11 +166,11 @@ class ConfigDiffTest extends KernelTestBase {
             $this->assertEqual($edit->type, $type, "The $field item in the diff is a $type");
             // If an original value was given, assert that it matches.
             if (isset($orig)) {
-              $this->assertIdentical($edit->orig, $orig, "The original value for key '$field' is correct.");
+              $this->assertIdentical($orig, $edit->orig, "The original value for key '{$field}' is correct.");
             }
             // If a closing value was given, assert that it matches.
             if (isset($closing)) {
-              $this->assertIdentical($edit->closing, $closing, "The closing value for key '$field' is correct.");
+              $this->assertIdentical($closing, $edit->closing, "The closing value for key '{$field}' is correct.");
             }
             // Break out of the search entirely.
             break 2;

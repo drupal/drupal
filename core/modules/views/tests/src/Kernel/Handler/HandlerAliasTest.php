@@ -61,11 +61,11 @@ class HandlerAliasTest extends ViewsKernelTestBase {
     $filter = $view->filter['test_filter'];
 
     // Check the definition values are present.
-    $this->assertIdentical($filter->definition['real table'], 'views_test_data');
-    $this->assertIdentical($filter->definition['real field'], 'name');
+    $this->assertIdentical('views_test_data', $filter->definition['real table']);
+    $this->assertIdentical('name', $filter->definition['real field']);
 
-    $this->assertIdentical($filter->table, 'views_test_data');
-    $this->assertIdentical($filter->realField, 'name');
+    $this->assertIdentical('views_test_data', $filter->table);
+    $this->assertIdentical('name', $filter->realField);
 
     // Test an existing user uid field.
     $view = Views::getView('test_alias');
@@ -74,11 +74,11 @@ class HandlerAliasTest extends ViewsKernelTestBase {
 
     $filter = $view->filter['uid_raw'];
 
-    $this->assertIdentical($filter->definition['real field'], 'uid');
+    $this->assertIdentical('uid', $filter->definition['real field']);
 
-    $this->assertIdentical($filter->field, 'uid_raw');
-    $this->assertIdentical($filter->table, 'users_field_data');
-    $this->assertIdentical($filter->realField, 'uid');
+    $this->assertIdentical('uid_raw', $filter->field);
+    $this->assertIdentical('users_field_data', $filter->table);
+    $this->assertIdentical('uid', $filter->realField);
   }
 
 }

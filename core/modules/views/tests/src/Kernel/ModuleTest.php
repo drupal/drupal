@@ -210,16 +210,16 @@ class ModuleTest extends ViewsKernelTestBase {
       $expected[$id] = $definition['title'];
     }
     asort($expected);
-    $this->assertIdentical(array_keys($plugins), array_keys($expected));
+    $this->assertIdentical(array_keys($expected), array_keys($plugins));
 
     // Test using the 'test' style plugin type only returns the test_style and
     // mapping_test plugins.
     $plugins = Views::fetchPluginNames('style', 'test');
-    $this->assertIdentical(array_keys($plugins), ['mapping_test', 'test_style', 'test_template_style']);
+    $this->assertIdentical(['mapping_test', 'test_style', 'test_template_style'], array_keys($plugins));
 
     // Test a non existent style plugin type returns no plugins.
     $plugins = Views::fetchPluginNames('style', $this->randomString());
-    $this->assertIdentical($plugins, []);
+    $this->assertIdentical([], $plugins);
   }
 
   /**

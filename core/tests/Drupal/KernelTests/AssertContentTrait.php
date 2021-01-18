@@ -894,7 +894,7 @@ trait AssertContentTrait {
       $message = '%callback rendered correctly.';
     }
     $message = new FormattableMarkup($message, ['%callback' => 'theme_' . $callback . '()']);
-    return $this->assertIdentical($output, $expected, $message, $group);
+    return $this->assertIdentical($expected, $output, $message, $group);
   }
 
   /**

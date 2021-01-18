@@ -77,8 +77,8 @@ EOD;
     $this->assertRaw(t('Are you sure you want to create a new %name @type?', ['%name' => 'first', '@type' => 'test configuration']));
     $this->submitForm([], 'Confirm');
     $entity = $storage->load('first');
-    $this->assertIdentical($entity->label(), 'First');
-    $this->assertIdentical($entity->id(), 'first');
+    $this->assertIdentical('First', $entity->label());
+    $this->assertIdentical('first', $entity->id());
     $this->assertTrue($entity->status());
     $this->assertRaw(t('The configuration was imported successfully.'));
 
@@ -117,10 +117,10 @@ EOD;
     $this->submitForm([], 'Confirm');
     $entity = $storage->load('second');
     $this->assertRaw(t('The configuration was imported successfully.'));
-    $this->assertIdentical($entity->label(), 'Second');
-    $this->assertIdentical($entity->id(), 'second');
+    $this->assertIdentical('Second', $entity->label());
+    $this->assertIdentical('second', $entity->id());
     $this->assertFalse($entity->status());
-    $this->assertIdentical($entity->uuid(), $second_uuid);
+    $this->assertIdentical($second_uuid, $entity->uuid());
 
     // Perform an update.
     $import = <<<EOD
@@ -140,7 +140,7 @@ EOD;
     $this->submitForm([], 'Confirm');
     $entity = $storage->load('second');
     $this->assertRaw(t('The configuration was imported successfully.'));
-    $this->assertIdentical($entity->label(), 'Second updated');
+    $this->assertIdentical('Second updated', $entity->label());
 
     // Try to perform an update which adds missing dependencies.
     $import = <<<EOD

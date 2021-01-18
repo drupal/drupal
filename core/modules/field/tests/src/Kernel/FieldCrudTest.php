@@ -89,7 +89,7 @@ class FieldCrudTest extends FieldKernelTestBase {
     // Check that default values are set.
     $this->assertEqual($config['required'], FALSE, 'Required defaults to false.');
     $this->assertIdentical($config['label'], $this->fieldDefinition['field_name'], 'Label defaults to field name.');
-    $this->assertIdentical($config['description'], '', 'Description defaults to empty string.');
+    $this->assertIdentical('', $config['description'], 'Description defaults to empty string.');
 
     // Check that default settings are set.
     $this->assertEqual($config['settings'], $field_type_manager->getDefaultFieldSettings($this->fieldStorageDefinition['type']), 'Default field settings have been written.');

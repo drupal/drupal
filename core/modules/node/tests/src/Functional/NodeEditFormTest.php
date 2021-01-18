@@ -170,7 +170,7 @@ class NodeEditFormTest extends NodeTestBase {
 
     // Check that the node was authored by the currently logged in user.
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
-    $this->assertIdentical($node->getOwnerId(), $this->adminUser->id(), 'Node authored by admin user.');
+    $this->assertIdentical($this->adminUser->id(), $node->getOwnerId(), 'Node authored by admin user.');
 
     $this->checkVariousAuthoredByValues($node, 'uid[0][target_id]');
 
@@ -291,7 +291,7 @@ class NodeEditFormTest extends NodeTestBase {
     $this->submitForm($edit, 'Save');
     $this->nodeStorage->resetCache([$node->id()]);
     $node = $this->nodeStorage->load($node->id());
-    $this->assertIdentical($node->getOwnerId(), $this->webUser->id(), 'Node authored by normal user.');
+    $this->assertIdentical($this->webUser->id(), $node->getOwnerId(), 'Node authored by normal user.');
   }
 
 }

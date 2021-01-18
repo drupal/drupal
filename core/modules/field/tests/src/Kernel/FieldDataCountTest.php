@@ -65,7 +65,7 @@ class FieldDataCountTest extends FieldKernelTestBase {
     ])->save();
 
     $this->assertFalse($field_storage->hasdata(), 'There are no entities with field data.');
-    $this->assertIdentical($this->storage->countFieldData($field_storage), 0, 'There are 0 entities with field data.');
+    $this->assertIdentical(0, $this->storage->countFieldData($field_storage), 'There are 0 entities with field data.');
 
     // Create 1 entity without the field.
     $entity = EntityTest::create();
@@ -73,7 +73,7 @@ class FieldDataCountTest extends FieldKernelTestBase {
     $entity->save();
 
     $this->assertFalse($field_storage->hasdata(), 'There are no entities with field data.');
-    $this->assertIdentical($this->storage->countFieldData($field_storage), 0, 'There are 0 entities with field data.');
+    $this->assertIdentical(0, $this->storage->countFieldData($field_storage), 'There are 0 entities with field data.');
 
     // Create 12 entities to ensure that the purging works as expected.
     for ($i = 0; $i < 12; $i++) {
@@ -118,7 +118,7 @@ class FieldDataCountTest extends FieldKernelTestBase {
     $cardinality = $this->fieldTestData->field_storage_2->getCardinality();
 
     $this->assertFalse($this->fieldTestData->field_storage_2->hasData(), 'There are no entities with field data.');
-    $this->assertIdentical($this->storageRev->countFieldData($this->fieldTestData->field_storage_2), 0, 'There are 0 entities with field data.');
+    $this->assertIdentical(0, $this->storageRev->countFieldData($this->fieldTestData->field_storage_2), 'There are 0 entities with field data.');
 
     // Create 1 entity with the field.
     $entity = clone($entity_init);
@@ -129,7 +129,7 @@ class FieldDataCountTest extends FieldKernelTestBase {
     $first_revision = $entity->getRevisionId();
 
     $this->assertTrue($this->fieldTestData->field_storage_2->hasData(), 'There are entities with field data.');
-    $this->assertIdentical($this->storageRev->countFieldData($this->fieldTestData->field_storage_2), 1, 'There is 1 entity with field data.');
+    $this->assertIdentical(1, $this->storageRev->countFieldData($this->fieldTestData->field_storage_2), 'There is 1 entity with field data.');
 
     $entity->{$this->fieldTestData->field_name_2} = [];
     $entity->setNewRevision();

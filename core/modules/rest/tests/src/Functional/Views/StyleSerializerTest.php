@@ -153,7 +153,7 @@ class StyleSerializerTest extends ViewTestBase {
       $expected[] = $expected_row;
     }
 
-    $this->assertIdentical($actual_json, json_encode($expected), 'The expected JSON output was found.');
+    $this->assertIdentical(json_encode($expected), $actual_json, 'The expected JSON output was found.');
 
     // Test that the rendered output and the preview output are the same.
     $view->destroy();
@@ -161,7 +161,7 @@ class StyleSerializerTest extends ViewTestBase {
     // Mock the request content type by setting it on the display handler.
     $view->display_handler->setContentType('json');
     $output = $view->preview();
-    $this->assertIdentical($actual_json, (string) $this->renderer->renderRoot($output), 'The expected JSON preview output was found.');
+    $this->assertIdentical((string) $this->renderer->renderRoot($output), $actual_json, 'The expected JSON preview output was found.');
 
     // Test a 403 callback.
     $this->drupalGet('test/serialize/denied', ['query' => ['_format' => 'json']]);
@@ -184,7 +184,7 @@ class StyleSerializerTest extends ViewTestBase {
 
     $actual_json = $this->drupalGet('test/serialize/entity', ['query' => ['_format' => 'json']]);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertIdentical($actual_json, $expected, 'The expected JSON output was found.');
+    $this->assertIdentical($expected, $actual_json, 'The expected JSON output was found.');
     $expected_cache_tags = $view->getCacheTags();
     $expected_cache_tags[] = 'entity_test_list';
     /** @var \Drupal\Core\Entity\EntityInterface $entity */
@@ -196,7 +196,7 @@ class StyleSerializerTest extends ViewTestBase {
 
     $expected = $serializer->serialize($entities, 'hal_json');
     $actual_json = $this->drupalGet('test/serialize/entity', ['query' => ['_format' => 'hal_json']]);
-    $this->assertIdentical($actual_json, $expected, 'The expected HAL output was found.');
+    $this->assertIdentical($expected, $actual_json, 'The expected HAL output was found.');
     $this->assertCacheTags($expected_cache_tags);
 
     // Change the format to xml.
@@ -231,7 +231,7 @@ class StyleSerializerTest extends ViewTestBase {
     $view->save();
     $expected = $serializer->serialize($entities, 'json');
     $actual_json = $this->drupalGet('test/serialize/entity', ['query' => ['_format' => 'json']]);
-    $this->assertIdentical($actual_json, $expected, 'The expected JSON output was found.');
+    $this->assertIdentical($expected, $actual_json, 'The expected JSON output was found.');
     $expected = $serializer->serialize($entities, 'xml');
     $actual_xml = $this->drupalGet('test/serialize/entity', ['query' => ['_format' => 'xml']]);
     $this->assertSame(trim($expected), $actual_xml);
@@ -551,8 +551,8 @@ class StyleSerializerTest extends ViewTestBase {
 
     // Just test the raw 'created' value against each row.
     foreach (Json::decode($this->drupalGet('test/serialize/field', ['query' => ['_format' => 'json']])) as $index => $values) {
-      $this->assertIdentical($values['created'], $view->result[$index]->views_test_data_created, 'Expected raw created value found.');
-      $this->assertIdentical($values['name'], $view->result[$index]->views_test_data_name, 'Expected raw name value found.');
+      $this->assertIdentical($view->result[$index]->views_test_data_created, $values['created'], 'Expected raw created value found.');
+      $this->assertIdentical($view->result[$index]->views_test_data_name, $values['name'], 'Expected raw name value found.');
     }
 
     // Test result with an excluded field.
@@ -687,7 +687,7 @@ class StyleSerializerTest extends ViewTestBase {
 
     // Test the raw 'created' value against each row.
     foreach (Json::decode($this->drupalGet('test/serialize/node-field', ['query' => ['_format' => 'json']])) as $index => $values) {
-      $this->assertIdentical($values['title'], $view->result[$index]->_entity->title->value, 'Expected raw title value found.');
+      $this->assertIdentical($view->result[$index]->_entity->title->value, $values['title'], 'Expected raw title value found.');
     }
 
     // Test that multiple raw body fields are shown.
@@ -872,7 +872,7 @@ class StyleSerializerTest extends ViewTestBase {
 
     // Check that the names are correct.
     $expected = ['mul-l1-l2', 'mul-l1-orig', 'mul-l2-l1', 'mul-l2-orig', 'mul-none'];
-    $this->assertIdentical($names, $expected, 'The translated content was found in the JSON.');
+    $this->assertIdentical($expected, $names, 'The translated content was found in the JSON.');
   }
 
 }

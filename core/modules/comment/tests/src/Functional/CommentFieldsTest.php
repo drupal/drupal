@@ -137,8 +137,8 @@ class CommentFieldsTest extends CommentTestBase {
     $this->drupalGet('node');
 
     $link_info = $this->getDrupalSettings()['comment']['newCommentsLinks']['node']['comment2']['2'];
-    $this->assertIdentical($link_info['new_comment_count'], 1);
-    $this->assertIdentical($link_info['first_new_comment_link'], $node->toUrl('canonical', ['fragment' => 'new'])->toString());
+    $this->assertIdentical(1, $link_info['new_comment_count']);
+    $this->assertIdentical($node->toUrl('canonical', ['fragment' => 'new'])->toString(), $link_info['first_new_comment_link']);
   }
 
   /**

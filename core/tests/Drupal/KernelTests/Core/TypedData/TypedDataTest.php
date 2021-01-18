@@ -225,7 +225,7 @@ class TypedDataTest extends KernelTestBase {
     $value = 'PT20S';
     $typed_data = $this->createTypedData(['type' => 'duration_iso8601'], $value);
     $this->assertInstanceOf(DurationInterface::class, $typed_data);
-    $this->assertIdentical($typed_data->getValue(), $value, 'DurationIso8601 value was fetched.');
+    $this->assertIdentical($value, $typed_data->getValue(), 'DurationIso8601 value was fetched.');
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue('P40D');
     $this->assertEqual($typed_data->getDuration()->d, 40, 'DurationIso8601 value was changed and set by duration string.');
@@ -249,7 +249,7 @@ class TypedDataTest extends KernelTestBase {
     $value = 20;
     $typed_data = $this->createTypedData(['type' => 'timespan'], $value);
     $this->assertInstanceOf(DurationInterface::class, $typed_data);
-    $this->assertIdentical($typed_data->getValue(), $value, 'Time span value was fetched.');
+    $this->assertIdentical($value, $typed_data->getValue(), 'Time span value was fetched.');
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue(60 * 60 * 4);
     $this->assertEqual($typed_data->getDuration()->s, 14400, 'Time span was changed');
@@ -300,10 +300,10 @@ class TypedDataTest extends KernelTestBase {
     $value = $this->randomString();
     $typed_data = $this->createTypedData(['type' => 'email'], $value);
     $this->assertInstanceOf(StringInterface::class, $typed_data);
-    $this->assertIdentical($typed_data->getValue(), $value, 'Email value was fetched.');
+    $this->assertIdentical($value, $typed_data->getValue(), 'Email value was fetched.');
     $new_value = 'test@example.com';
     $typed_data->setValue($new_value);
-    $this->assertIdentical($typed_data->getValue(), $new_value, 'Email value was changed.');
+    $this->assertIdentical($new_value, $typed_data->getValue(), 'Email value was changed.');
     $this->assertIsString($typed_data->getString());
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue(NULL);
@@ -336,10 +336,10 @@ class TypedDataTest extends KernelTestBase {
     // Any type.
     $value = ['foo'];
     $typed_data = $this->createTypedData(['type' => 'any'], $value);
-    $this->assertIdentical($typed_data->getValue(), $value, 'Any value was fetched.');
+    $this->assertIdentical($value, $typed_data->getValue(), 'Any value was fetched.');
     $new_value = 'test@example.com';
     $typed_data->setValue($new_value);
-    $this->assertIdentical($typed_data->getValue(), $new_value, 'Any value was changed.');
+    $this->assertIdentical($new_value, $typed_data->getValue(), 'Any value was changed.');
     $this->assertIsString($typed_data->getString());
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue(NULL);
@@ -393,8 +393,8 @@ class TypedDataTest extends KernelTestBase {
     // Make sure that resetting the value using NULL results in an empty array.
     $clone->setValue([]);
     $typed_data->setValue(NULL);
-    $this->assertIdentical($typed_data->getValue(), []);
-    $this->assertIdentical($clone->getValue(), []);
+    $this->assertIdentical([], $typed_data->getValue());
+    $this->assertIdentical([], $clone->getValue());
 
     // Test dealing with NULL items.
     $typed_data[] = NULL;
@@ -515,7 +515,7 @@ class TypedDataTest extends KernelTestBase {
 
     $properties = $typed_data->getProperties();
     $this->assertEqual(array_keys($properties), array_keys($value));
-    $this->assertIdentical($properties['one'], $typed_data->get('one'), 'Properties are identical.');
+    $this->assertIdentical($typed_data->get('one'), $properties['one'], 'Properties are identical.');
 
     // Test setting a not defined property. It shouldn't show up in the
     // properties, but be kept in the values.
@@ -589,7 +589,7 @@ class TypedDataTest extends KernelTestBase {
     $message = t('This value should be %limit or more.', ['%limit' => 5]);
     $this->assertEqual($violations[0]->getMessage(), $message, 'Translated violation message retrieved.');
     $this->assertEqual($violations[0]->getPropertyPath(), '');
-    $this->assertIdentical($violations[0]->getRoot(), $integer, 'Root object returned.');
+    $this->assertIdentical($integer, $violations[0]->getRoot(), 'Root object returned.');
 
     // Test translating violation messages when pluralization is used.
     $definition = DataDefinition::create('string')
@@ -668,7 +668,7 @@ class TypedDataTest extends KernelTestBase {
     $this->assertEqual($violations->count(), 1);
 
     $this->assertEqual($violations[0]->getInvalidValue(), 'string');
-    $this->assertIdentical($violations[0]->getPropertyPath(), '0.value');
+    $this->assertIdentical('0.value', $violations[0]->getPropertyPath());
   }
 
 }

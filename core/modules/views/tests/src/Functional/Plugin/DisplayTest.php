@@ -97,7 +97,7 @@ class DisplayTest extends ViewTestBase {
     $this->assertInstanceOf(DisplayTestPlugin::class, $view->display_handler);
 
     // Check the test option.
-    $this->assertIdentical($view->display_handler->getOption('test_option'), '');
+    $this->assertIdentical('', $view->display_handler->getOption('test_option'));
 
     $style = $view->display_handler->getOption('style');
     $style['type'] = 'test_style';

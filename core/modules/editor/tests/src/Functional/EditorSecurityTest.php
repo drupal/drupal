@@ -420,7 +420,7 @@ class EditorSecurityTest extends BrowserTestBase {
         $this->assertEquals(200, $response->getStatusCode());
 
         $json = Json::decode($response->getBody());
-        $this->assertIdentical($json, $expected_filtered_value, 'The value was correctly filtered for XSS attack vectors.');
+        $this->assertIdentical($expected_filtered_value, $json, 'The value was correctly filtered for XSS attack vectors.');
       }
     }
   }
