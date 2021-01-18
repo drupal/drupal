@@ -4,8 +4,15 @@ namespace Drupal\Tests;
 
 use Drupal\Component\Render\MarkupInterface;
 
+@trigger_error(__NAMESPACE__ . '\AssertHelperTrait is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3123638', E_USER_DEPRECATED);
+
 /**
  * Provides helper methods for assertions.
+ *
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3123638
  */
 trait AssertHelperTrait {
 
@@ -18,13 +25,13 @@ trait AssertHelperTrait {
    * @return mixed
    *   The input value, with MarkupInterface objects casted to string.
    *
-   * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. There is no
+   * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no
    *   replacement, just use assertEquals in tests.
    *
    * @see https://www.drupal.org/node/3123638
    */
   protected static function castSafeStrings($value) {
-    @trigger_error('AssertHelperTrait::castSafeStrings() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. There is no replacement; assertEquals() will automatically cast MarkupInterface to strings when needed. See https://www.drupal.org/node/3123638', E_USER_DEPRECATED);
+    @trigger_error('AssertHelperTrait::castSafeStrings() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no replacement; assertEquals() will automatically cast MarkupInterface to strings when needed. See https://www.drupal.org/node/3123638', E_USER_DEPRECATED);
     if ($value instanceof MarkupInterface) {
       $value = (string) $value;
     }
