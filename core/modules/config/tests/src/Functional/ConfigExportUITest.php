@@ -78,10 +78,10 @@ class ConfigExportUITest extends BrowserTestBase {
     }
     // Assert that the downloaded archive file contents are the same as the test
     // site active store.
-    $this->assertIdentical($archive_contents, $config_files);
+    $this->assertIdentical($config_files, $archive_contents);
 
     // Ensure the test configuration override is in effect but was not exported.
-    $this->assertIdentical(\Drupal::config('system.maintenance')->get('message'), 'Foo');
+    $this->assertIdentical('Foo', \Drupal::config('system.maintenance')->get('message'));
     $archiver->extract($temp_directory, ['system.maintenance.yml']);
     $file_contents = file_get_contents($temp_directory . '/' . 'system.maintenance.yml');
     $exported = Yaml::decode($file_contents);

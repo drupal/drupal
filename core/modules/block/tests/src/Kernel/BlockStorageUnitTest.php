@@ -100,7 +100,7 @@ class BlockStorageUnitTest extends KernelTestBase {
       'visibility' => [],
     ];
 
-    $this->assertIdentical($actual_properties, $expected_properties);
+    $this->assertIdentical($expected_properties, $actual_properties);
 
     $this->assertInstanceOf(TestHtmlBlock::class, $entity->getPlugin());
   }

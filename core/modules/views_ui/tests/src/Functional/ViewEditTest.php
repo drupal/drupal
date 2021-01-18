@@ -66,7 +66,7 @@ class ViewEditTest extends UITestBase {
     $view = \Drupal::entityTypeManager()->getStorage('view')->load('test_view');
     $displays = $view->get('display');
     $this->assertTrue(!empty($displays['test_1']), 'Display data found for new display ID key.');
-    $this->assertIdentical($displays['test_1']['id'], 'test_1', 'New display ID matches the display ID key.');
+    $this->assertIdentical('test_1', $displays['test_1']['id'], 'New display ID matches the display ID key.');
     $this->assertArrayNotHasKey('attachment_1', $displays);
 
     // Set to the same machine name and save the View.

@@ -93,7 +93,7 @@ class FieldImportDeleteUninstallTest extends FieldKernelTestBase {
     $sync->delete('field.field.entity_test.entity_test.field_test');
 
     $steps = $this->configImporter()->initialize();
-    $this->assertIdentical($steps[0], ['\Drupal\field\ConfigImporterFieldPurger', 'process'], 'The additional process configuration synchronization step has been added.');
+    $this->assertIdentical(['\\Drupal\\field\\ConfigImporterFieldPurger', 'process'], $steps[0], 'The additional process configuration synchronization step has been added.');
 
     // This will purge all the data, delete the field and uninstall the
     // Telephone module.
@@ -154,7 +154,7 @@ class FieldImportDeleteUninstallTest extends FieldKernelTestBase {
     $this->assertTrue(isset($deleted_storages[$field_storage_uuid]), 'Field has been deleted and needs purging before configuration synchronization.');
 
     $steps = $this->configImporter()->initialize();
-    $this->assertIdentical($steps[0], ['\Drupal\field\ConfigImporterFieldPurger', 'process'], 'The additional process configuration synchronization step has been added.');
+    $this->assertIdentical(['\\Drupal\\field\\ConfigImporterFieldPurger', 'process'], $steps[0], 'The additional process configuration synchronization step has been added.');
 
     // This will purge all the data, delete the field and uninstall the
     // Telephone module.

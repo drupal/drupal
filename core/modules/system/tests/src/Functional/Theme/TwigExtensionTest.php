@@ -76,8 +76,8 @@ class TwigExtensionTest extends BrowserTestBase {
     $extension = \Drupal::service('twig.extension');
     /** @var \Drupal\Core\Template\TwigEnvironment $twig */
     $twig = \Drupal::service('twig');
-    $this->assertIdentical($extension->escapeFilter($twig, 0), 0, 'TwigExtension::escapeFilter() returns zero correctly when provided as an integer.');
-    $this->assertIdentical($extension->escapeFilter($twig, 0.0), 0, 'TwigExtension::escapeFilter() returns zero correctly when provided as a double.');
+    $this->assertIdentical(0, $extension->escapeFilter($twig, 0), 'TwigExtension::escapeFilter() returns zero correctly when provided as an integer.');
+    $this->assertIdentical(0, $extension->escapeFilter($twig, 0.0), 'TwigExtension::escapeFilter() returns zero correctly when provided as a double.');
   }
 
   /**
@@ -88,8 +88,8 @@ class TwigExtensionTest extends BrowserTestBase {
   public function testsRenderZeroValue() {
     /** @var \Drupal\Core\Template\TwigExtension $extension */
     $extension = \Drupal::service('twig.extension');
-    $this->assertIdentical($extension->renderVar(0), 0, 'TwigExtension::renderVar() renders zero correctly when provided as an integer.');
-    $this->assertIdentical($extension->renderVar(0.0), 0, 'TwigExtension::renderVar() renders zero correctly when provided as a double.');
+    $this->assertIdentical(0, $extension->renderVar(0), 'TwigExtension::renderVar() renders zero correctly when provided as an integer.');
+    $this->assertIdentical(0, $extension->renderVar(0.0), 'TwigExtension::renderVar() renders zero correctly when provided as a double.');
   }
 
 }

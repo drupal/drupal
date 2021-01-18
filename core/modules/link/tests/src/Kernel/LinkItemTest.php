@@ -136,7 +136,7 @@ class LinkItemTest extends FieldKernelTestBase {
     $entity->field_test = ['uri' => 'internal:/node/add'];
     $this->assertEqual($entity->field_test->uri, 'internal:/node/add');
     $this->assertNull($entity->field_test->title);
-    $this->assertIdentical($entity->field_test->options, []);
+    $this->assertIdentical([], $entity->field_test->options);
 
     // Check that if we set uri and options then the default values are properly
     // initialized.
@@ -153,7 +153,7 @@ class LinkItemTest extends FieldKernelTestBase {
     $entity->field_test = 'internal:/node/add';
     $this->assertEqual($entity->field_test->uri, 'internal:/node/add');
     $this->assertNull($entity->field_test->title);
-    $this->assertIdentical($entity->field_test->options, []);
+    $this->assertIdentical([], $entity->field_test->options);
 
     // Check that setting options to NULL does not trigger an error when
     // calling getUrl();

@@ -139,12 +139,12 @@ class LocalePluralFormatTest extends BrowserTestBase {
     foreach ($plural_tests as $langcode => $tests) {
       foreach ($tests as $count => $expected_plural_index) {
         // Assert that the we get the right plural index.
-        $this->assertIdentical(locale_get_plural($count, $langcode), $expected_plural_index, 'Computed plural index for ' . $langcode . ' for count ' . $count . ' is ' . $expected_plural_index);
+        $this->assertIdentical($expected_plural_index, locale_get_plural($count, $langcode), 'Computed plural index for ' . $langcode . ' for count ' . $count . ' is ' . $expected_plural_index);
         // Assert that the we get the right translation for that. Change the
         // expected index as per the logic for translation lookups.
         $expected_plural_index = ($count == 1) ? 0 : $expected_plural_index;
         $expected_plural_string = str_replace('@count', $count, $plural_strings[$langcode][$expected_plural_index]);
-        $this->assertIdentical(\Drupal::translation()->formatPlural($count, '1 hour', '@count hours', [], ['langcode' => $langcode])->render(), $expected_plural_string, 'Plural translation of 1 hours / @count hours for count ' . $count . ' in ' . $langcode . ' is ' . $expected_plural_string);
+        $this->assertIdentical($expected_plural_string, \Drupal::translation()->formatPlural($count, '1 hour', '@count hours', [], ['langcode' => $langcode])->render(), 'Plural translation of 1 hours / @count hours for count ' . $count . ' in ' . $langcode . ' is ' . $expected_plural_string);
         // DO NOT use translation to pass translated strings into
         // PluralTranslatableMarkup::createFromTranslatedString() this way. It
         // is designed to be used with *already* translated text like settings
@@ -152,7 +152,7 @@ class LocalePluralFormatTest extends BrowserTestBase {
         // the expected result data in that format.
         $translated_string = \Drupal::translation()->translate('1 hour' . PoItem::DELIMITER . '@count hours', [], ['langcode' => $langcode]);
         $plural = PluralTranslatableMarkup::createFromTranslatedString($count, $translated_string, [], ['langcode' => $langcode]);
-        $this->assertIdentical($plural->render(), $expected_plural_string);
+        $this->assertIdentical($expected_plural_string, $plural->render());
       }
     }
   }

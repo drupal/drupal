@@ -64,7 +64,7 @@ class TokenReplaceTest extends ViewsKernelTestBase {
     foreach ($expected as $token => $expected_output) {
       $bubbleable_metadata = new BubbleableMetadata();
       $output = $token_handler->replace($token, ['view' => $view], [], $bubbleable_metadata);
-      $this->assertIdentical($output, $expected_output, new FormattableMarkup('Token %token replaced correctly.', ['%token' => $token]));
+      $this->assertIdentical($expected_output, $output, new FormattableMarkup('Token %token replaced correctly.', ['%token' => $token]));
       $this->assertEqual($bubbleable_metadata, $metadata_tests[$token]);
     }
   }
@@ -121,7 +121,7 @@ class TokenReplaceTest extends ViewsKernelTestBase {
 
     foreach ($expected as $token => $expected_output) {
       $output = $token_handler->replace($token, ['view' => $view]);
-      $this->assertIdentical($output, $expected_output, new FormattableMarkup('Token %token replaced correctly.', ['%token' => $token]));
+      $this->assertIdentical($expected_output, $output, new FormattableMarkup('Token %token replaced correctly.', ['%token' => $token]));
     }
   }
 
@@ -140,7 +140,7 @@ class TokenReplaceTest extends ViewsKernelTestBase {
 
     foreach ($expected as $token => $expected_output) {
       $output = $token_handler->replace($token, ['view' => $view]);
-      $this->assertIdentical($output, $expected_output, new FormattableMarkup('Token %token replaced correctly.', ['%token' => $token]));
+      $this->assertIdentical($expected_output, $output, new FormattableMarkup('Token %token replaced correctly.', ['%token' => $token]));
     }
   }
 

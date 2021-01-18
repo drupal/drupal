@@ -128,7 +128,7 @@ class DatabaseStorageExpirableTest extends StorageTestBase {
     $this->assertFalse($stores[0]->has('yesterday'));
     $this->assertNull($stores[0]->get('yesterday'));
     $this->assertTrue($stores[0]->has('troubles'));
-    $this->assertIdentical($stores[0]->get('troubles'), 'here to stay');
+    $this->assertIdentical('here to stay', $stores[0]->get('troubles'));
     $this->assertCount(1, $stores[0]->getMultiple(['yesterday', 'troubles']));
 
     // Store items set to expire in the past in various ways.

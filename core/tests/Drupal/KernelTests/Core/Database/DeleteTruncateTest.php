@@ -47,7 +47,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
     $num_deleted = $this->connection->delete('test')
       ->condition('id', 1)
       ->execute();
-    $this->assertIdentical($num_deleted, 1, 'Deleted 1 record.');
+    $this->assertIdentical(1, $num_deleted, 'Deleted 1 record.');
 
     $num_records_after = $this->connection->query('SELECT COUNT(*) FROM {test}')->fetchField();
     $this->assertEqual($num_records_before, $num_records_after + $num_deleted, 'Deletion adds up.');

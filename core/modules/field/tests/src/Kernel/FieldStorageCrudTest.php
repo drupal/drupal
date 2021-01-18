@@ -46,8 +46,8 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
     $this->assertNull($field_storage->getSetting('config_data_from_storage_setting'));
 
     $mem = field_test_memorize();
-    $this->assertIdentical($mem['field_test_field_storage_config_create'][0][0]->getName(), $field_storage_definition['field_name'], 'hook_entity_create() called with correct arguments.');
-    $this->assertIdentical($mem['field_test_field_storage_config_create'][0][0]->getType(), $field_storage_definition['type'], 'hook_entity_create() called with correct arguments.');
+    $this->assertIdentical($field_storage_definition['field_name'], $mem['field_test_field_storage_config_create'][0][0]->getName(), 'hook_entity_create() called with correct arguments.');
+    $this->assertIdentical($field_storage_definition['type'], $mem['field_test_field_storage_config_create'][0][0]->getType(), 'hook_entity_create() called with correct arguments.');
 
     // Read the configuration. Check against raw configuration data rather than
     // the loaded ConfigEntity, to be sure we check that the defaults are

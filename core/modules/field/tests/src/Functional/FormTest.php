@@ -331,7 +331,7 @@ class FormTest extends FieldTestBase {
     $entity = EntityTest::load($id);
     ksort($field_values);
     $field_values = array_values($field_values);
-    $this->assertIdentical($entity->{$field_name}->getValue(), $field_values, 'Field values were saved in the correct order');
+    $this->assertIdentical($field_values, $entity->{$field_name}->getValue(), 'Field values were saved in the correct order');
 
     // Display edit form: check that the expected number of widgets is
     // displayed, with correct values change values, reorder, leave an empty

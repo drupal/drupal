@@ -174,9 +174,9 @@ class TransactionTest extends DatabaseTestBase {
 
       // Because we committed, both of the inserted rows should be present.
       $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'DavidA'])->fetchField();
-      $this->assertIdentical($saved_age, '24', 'Can retrieve DavidA row after commit.');
+      $this->assertIdentical('24', $saved_age, 'Can retrieve DavidA row after commit.');
       $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'DanielA'])->fetchField();
-      $this->assertIdentical($saved_age, '19', 'Can retrieve DanielA row after commit.');
+      $this->assertIdentical('19', $saved_age, 'Can retrieve DanielA row after commit.');
     }
     catch (\Exception $e) {
       $this->fail($e->getMessage());

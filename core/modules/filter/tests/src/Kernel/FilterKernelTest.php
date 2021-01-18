@@ -423,38 +423,38 @@ class FilterKernelTest extends KernelTestBase {
     // HTML filter is not able to secure some tags, these should never be
     // allowed.
     $f = (string) $filter->process('<script />', Language::LANGCODE_NOT_SPECIFIED);
-    $this->assertIdentical($f, '', 'HTML filter should remove script tags.');
+    $this->assertIdentical('', $f, 'HTML filter should remove script tags.');
 
     $f = (string) $filter->process('<iframe />', Language::LANGCODE_NOT_SPECIFIED);
-    $this->assertIdentical($f, '', 'HTML filter should remove iframe tags.');
+    $this->assertIdentical('', $f, 'HTML filter should remove iframe tags.');
 
     $f = (string) $filter->process('<object />', Language::LANGCODE_NOT_SPECIFIED);
-    $this->assertIdentical($f, '', 'HTML filter should remove object tags.');
+    $this->assertIdentical('', $f, 'HTML filter should remove object tags.');
 
     $f = (string) $filter->process('<style />', Language::LANGCODE_NOT_SPECIFIED);
-    $this->assertIdentical($f, '', 'HTML filter should remove style tags.');
+    $this->assertIdentical('', $f, 'HTML filter should remove style tags.');
 
     // Some tags make CSRF attacks easier, let the user take the risk herself.
     $f = (string) $filter->process('<img />', Language::LANGCODE_NOT_SPECIFIED);
-    $this->assertIdentical($f, '', 'HTML filter should remove img tags by default.');
+    $this->assertIdentical('', $f, 'HTML filter should remove img tags by default.');
 
     $f = (string) $filter->process('<input />', Language::LANGCODE_NOT_SPECIFIED);
-    $this->assertIdentical($f, '', 'HTML filter should remove input tags by default.');
+    $this->assertIdentical('', $f, 'HTML filter should remove input tags by default.');
 
     // Filtering content of some attributes is infeasible, these shouldn't be
     // allowed too.
     $f = (string) $filter->process('<p style="display: none;" />', Language::LANGCODE_NOT_SPECIFIED);
     $this->assertNoNormalized($f, 'style', 'HTML filter should remove style attributes.');
-    $this->assertIdentical($f, '<p></p>');
+    $this->assertIdentical('<p></p>', $f);
 
     $f = (string) $filter->process('<p onerror="alert(0);"></p>', Language::LANGCODE_NOT_SPECIFIED);
     $this->assertNoNormalized($f, 'onerror', 'HTML filter should remove on* attributes.');
-    $this->assertIdentical($f, '<p></p>');
+    $this->assertIdentical('<p></p>', $f);
 
     $f = (string) $filter->process('<code onerror>&nbsp;</code>', Language::LANGCODE_NOT_SPECIFIED);
     $this->assertNoNormalized($f, 'onerror', 'HTML filter should remove empty on* attributes.');
     // Note - this string has a decoded &nbsp; character.
-    $this->assertIdentical($f, '<code> </code>');
+    $this->assertIdentical('<code> </code>', $f);
 
     $f = (string) $filter->process('<br>', Language::LANGCODE_NOT_SPECIFIED);
     $this->assertNormalized($f, '<br />', 'HTML filter should allow line breaks.');
@@ -487,13 +487,13 @@ class FilterKernelTest extends KernelTestBase {
       ],
     ]);
     $f = (string) $filter->process('<a kitten="cute" llama="awesome">link</a>', Language::LANGCODE_NOT_SPECIFIED);
-    $this->assertIdentical($f, '<a>link</a>', 'HTML filter removes allowed attributes that do not have an explicitly allowed value.');
+    $this->assertIdentical('<a>link</a>', $f, 'HTML filter removes allowed attributes that do not have an explicitly allowed value.');
     $f = (string) $filter->process('<a kitten="cute" llama="majestical">link</a>', Language::LANGCODE_NOT_SPECIFIED);
-    $this->assertIdentical($f, '<a llama="majestical">link</a>', 'HTML filter keeps explicitly allowed attributes with an attribute value that is also explicitly allowed.');
+    $this->assertIdentical('<a llama="majestical">link</a>', $f, 'HTML filter keeps explicitly allowed attributes with an attribute value that is also explicitly allowed.');
     $f = (string) $filter->process('<a kitten="cute" llama="awesome">link</a>', Language::LANGCODE_NOT_SPECIFIED);
     $this->assertNormalized($f, '<a>link</a>', 'HTML filter removes allowed attributes that have a not explicitly allowed value.');
     $f = (string) $filter->process('<a href="/beautiful-animals" kitten="cute" llama="epic majestical">link</a>', Language::LANGCODE_NOT_SPECIFIED);
-    $this->assertIdentical($f, '<a href="/beautiful-animals" llama="epic majestical">link</a>', 'HTML filter keeps explicitly allowed attributes with an attribute value that is also explicitly allowed.');
+    $this->assertIdentical('<a href="/beautiful-animals" llama="epic majestical">link</a>', $f, 'HTML filter keeps explicitly allowed attributes with an attribute value that is also explicitly allowed.');
   }
 
   /**
@@ -929,7 +929,7 @@ www.example.com with a newline in comments -->
     $input = file_get_contents($path . '/filter.url-input.txt');
     $expected = file_get_contents($path . '/filter.url-output.txt');
     $result = _filter_url($input, $filter);
-    $this->assertIdentical($result, $expected, 'Complex HTML document was correctly processed.');
+    $this->assertIdentical($expected, $result, 'Complex HTML document was correctly processed.');
   }
 
   /**

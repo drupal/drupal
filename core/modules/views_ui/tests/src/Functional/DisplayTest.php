@@ -114,7 +114,7 @@ class DisplayTest extends UITestBase {
 
     // Test the expected views_ui array exists on each definition.
     foreach ($definitions as $definition) {
-      $this->assertIdentical($definition['contextual links']['entity.view.edit_form'], $expected, 'Expected views_ui array found in plugin definition.');
+      $this->assertIdentical($expected, $definition['contextual links']['entity.view.edit_form'], 'Expected views_ui array found in plugin definition.');
     }
   }
 

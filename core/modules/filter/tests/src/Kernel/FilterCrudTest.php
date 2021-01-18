@@ -82,7 +82,7 @@ class FilterCrudTest extends KernelTestBase {
       $this->fail($message);
     }
     catch (\LogicException $e) {
-      $this->assertIdentical($e->getMessage(), "The fallback text format 'plain_text' cannot be disabled.", $message);
+      $this->assertIdentical("The fallback text format 'plain_text' cannot be disabled.", $e->getMessage(), $message);
     }
   }
 

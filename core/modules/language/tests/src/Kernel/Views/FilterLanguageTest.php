@@ -49,7 +49,7 @@ class FilterLanguageTest extends LanguageTestBase {
         'und',
         'zxx',
       ];
-      $this->assertIdentical(array_keys($view->filter['langcode']->getValueOptions()), $expected);
+      $this->assertIdentical($expected, array_keys($view->filter['langcode']->getValueOptions()));
 
       $view->destroy();
     }

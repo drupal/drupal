@@ -37,7 +37,7 @@ class SearchSimplifyTest extends KernelTestBase {
       if ($key % 2) {
         // Even line - should simplify down to a space.
         $simplified = $text_processor->analyze($string);
-        $this->assertIdentical($simplified, ' ', "Line $key is excluded from the index");
+        $this->assertIdentical(' ', $simplified, "Line {$key} is excluded from the index");
       }
       else {
         // Odd line, should be word characters.

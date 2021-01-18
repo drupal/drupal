@@ -39,7 +39,7 @@ class EmailTest extends BrowserTestBase {
     $edit['email_required'] = '  foo.bar@example.com ';
     $this->drupalPostForm('form-test/email', $edit, 'Submit');
     $values = Json::decode($this->getSession()->getPage()->getContent());
-    $this->assertIdentical($values['email'], '');
+    $this->assertIdentical('', $values['email']);
     $this->assertEqual($values['email_required'], 'foo.bar@example.com');
 
     $edit = [];

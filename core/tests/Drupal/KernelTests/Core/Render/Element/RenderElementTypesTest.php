@@ -44,7 +44,7 @@ class RenderElementTypesTest extends KernelTestBase {
     $out .= '</tr></table>';
     $this->verbose($out);
 
-    $this->assertIdentical($actual_html, $expected_html, Html::escape($message));
+    $this->assertIdentical($expected_html, $actual_html, Html::escape($message));
   }
 
   /**

@@ -63,7 +63,7 @@ class ThemeTest extends KernelTestBase {
         $this->assertIdentical((string) $example, $output->__toString());
       }
       elseif (is_string($output)) {
-        $this->assertIdentical($output, '', 'A string will be return when the theme returns an empty string.');
+        $this->assertIdentical('', $output, 'A string will be return when the theme returns an empty string.');
       }
     }
 
@@ -116,13 +116,13 @@ class ThemeTest extends KernelTestBase {
     $base_theme_list = ['test_basetheme' => 'Theme test base theme'];
     $sub_theme_list = ['test_subsubtheme' => 'Theme test subsubtheme', 'test_subtheme' => 'Theme test subtheme'];
 
-    $this->assertIdentical($themes['test_basetheme']->sub_themes, $sub_theme_list, 'Base theme\'s object includes list of subthemes.');
-    $this->assertIdentical($themes['test_subtheme']->base_themes, $base_theme_list, 'Subtheme\'s object includes list of base themes.');
+    $this->assertIdentical($sub_theme_list, $themes['test_basetheme']->sub_themes, 'Base theme\'s object includes list of subthemes.');
+    $this->assertIdentical($base_theme_list, $themes['test_subtheme']->base_themes, 'Subtheme\'s object includes list of base themes.');
     // Check for theme engine in subtheme.
-    $this->assertIdentical($themes['test_subtheme']->engine, 'twig', 'Subtheme\'s object includes the theme engine.');
+    $this->assertIdentical('twig', $themes['test_subtheme']->engine, 'Subtheme\'s object includes the theme engine.');
     // Check for theme engine prefix.
-    $this->assertIdentical($themes['test_basetheme']->prefix, 'twig', 'Base theme\'s object includes the theme engine prefix.');
-    $this->assertIdentical($themes['test_subtheme']->prefix, 'twig', 'Subtheme\'s object includes the theme engine prefix.');
+    $this->assertIdentical('twig', $themes['test_basetheme']->prefix, 'Base theme\'s object includes the theme engine prefix.');
+    $this->assertIdentical('twig', $themes['test_subtheme']->prefix, 'Subtheme\'s object includes the theme engine prefix.');
   }
 
   /**

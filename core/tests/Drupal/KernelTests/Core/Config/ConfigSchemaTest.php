@@ -401,13 +401,13 @@ class ConfigSchemaTest extends KernelTestBase {
     $this->config('config_schema_test.schema_data_types')
       ->setData($untyped_to_typed)
       ->save();
-    $this->assertIdentical($this->config('config_schema_test.schema_data_types')->get(), $typed_values);
+    $this->assertIdentical($typed_values, $this->config('config_schema_test.schema_data_types')->get());
 
     // Save config which does not have a schema that enforces types.
     $this->config('config_schema_test.no_schema_data_types')
       ->setData($untyped_values)
       ->save();
-    $this->assertIdentical($this->config('config_schema_test.no_schema_data_types')->get(), $untyped_values);
+    $this->assertIdentical($untyped_values, $this->config('config_schema_test.no_schema_data_types')->get());
 
     // Ensure that configuration objects with keys marked as ignored are not
     // changed when saved. The 'config_schema_test.ignore' will have been saved
@@ -417,7 +417,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $original_data = $install_storage->read('config_schema_test.ignore');
     $installed_data = $this->config('config_schema_test.ignore')->get();
     unset($installed_data['_core']);
-    $this->assertIdentical($installed_data, $original_data);
+    $this->assertIdentical($original_data, $installed_data);
   }
 
   /**
@@ -623,8 +623,7 @@ class ConfigSchemaTest extends KernelTestBase {
     \Drupal::configFactory()->getEditable('wrapping.config_schema_test.plugin_types')
       ->setData($untyped_values)
       ->save();
-    $this->assertIdentical(\Drupal::config('wrapping.config_schema_test.plugin_types')
-      ->get(), $typed_values);
+    $this->assertIdentical($typed_values, \Drupal::config('wrapping.config_schema_test.plugin_types')->get());
   }
 
   /**
@@ -659,8 +658,7 @@ class ConfigSchemaTest extends KernelTestBase {
     \Drupal::configFactory()->getEditable('wrapping.config_schema_test.double_brackets')
       ->setData($untyped_values)
       ->save();
-    $this->assertIdentical(\Drupal::config('wrapping.config_schema_test.double_brackets')
-      ->get(), $typed_values);
+    $this->assertIdentical($typed_values, \Drupal::config('wrapping.config_schema_test.double_brackets')->get());
 
     $tests = \Drupal::service('config.typed')->get('wrapping.config_schema_test.double_brackets')->get('tests')->getElements();
     $definition = $tests[0]->getDataDefinition()->toArray();
@@ -693,8 +691,7 @@ class ConfigSchemaTest extends KernelTestBase {
     \Drupal::configFactory()->getEditable('wrapping.config_schema_test.double_brackets')
       ->setData($untyped_values)
       ->save();
-    $this->assertIdentical(\Drupal::config('wrapping.config_schema_test.double_brackets')
-      ->get(), $typed_values);
+    $this->assertIdentical($typed_values, \Drupal::config('wrapping.config_schema_test.double_brackets')->get());
 
     $tests = \Drupal::service('config.typed')->get('wrapping.config_schema_test.double_brackets')->get('tests')->getElements();
     $definition = $tests[0]->getDataDefinition()->toArray();

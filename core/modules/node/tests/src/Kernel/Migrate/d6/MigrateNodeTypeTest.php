@@ -57,7 +57,7 @@ class MigrateNodeTypeTest extends MigrateDrupal6TestBase {
     $this->assertTrue($node_type_story->displaySubmitted());
     $this->assertFalse($node_type_story->shouldCreateNewRevision());
     $this->assertIdentical(DRUPAL_OPTIONAL, $node_type_story->getPreviewMode());
-    $this->assertIdentical($id_map->lookupDestinationIds(['test_story']), [['test_story']]);
+    $this->assertIdentical([['test_story']], $id_map->lookupDestinationIds(['test_story']));
 
     // Test we don't have a body field.
     $field = FieldConfig::loadByName('node', 'test_story', 'body');
@@ -76,7 +76,7 @@ class MigrateNodeTypeTest extends MigrateDrupal6TestBase {
     $this->assertTrue($node_type_event->displaySubmitted());
     $this->assertTrue($node_type_event->shouldCreateNewRevision());
     $this->assertIdentical(DRUPAL_OPTIONAL, $node_type_event->getPreviewMode());
-    $this->assertIdentical($id_map->lookupDestinationIds(['test_event']), [['test_event']]);
+    $this->assertIdentical([['test_event']], $id_map->lookupDestinationIds(['test_event']));
 
     // Test we have a body field.
     $field = FieldConfig::loadByName('node', 'test_event', 'body');

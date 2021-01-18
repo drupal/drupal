@@ -74,8 +74,8 @@ class StyleTableUnitTest extends PluginKernelTestBase {
     $style_plugin->options['default'] = 'id';
     $style_plugin->options['info']['id']['default_sort_order'] = 'desc';
     $style_plugin->buildSortPost();
-    $this->assertIdentical($style_plugin->order, 'desc', 'Fallback to the right default sort order.');
-    $this->assertIdentical($style_plugin->active, 'id', 'Fallback to the right default sort field.');
+    $this->assertIdentical('desc', $style_plugin->order, 'Fallback to the right default sort order.');
+    $this->assertIdentical('id', $style_plugin->active, 'Fallback to the right default sort field.');
     $view->destroy();
 
     // Setup a valid default + table default sort order.
@@ -85,8 +85,8 @@ class StyleTableUnitTest extends PluginKernelTestBase {
     $style_plugin->options['info']['id']['default_sort_order'] = NULL;
     $style_plugin->options['order'] = 'asc';
     $style_plugin->buildSortPost();
-    $this->assertIdentical($style_plugin->order, 'asc', 'Fallback to the right default sort order.');
-    $this->assertIdentical($style_plugin->active, 'id', 'Fallback to the right default sort field.');
+    $this->assertIdentical('asc', $style_plugin->order, 'Fallback to the right default sort order.');
+    $this->assertIdentical('id', $style_plugin->active, 'Fallback to the right default sort field.');
     $view->destroy();
 
     // Use an invalid field.
@@ -96,7 +96,7 @@ class StyleTableUnitTest extends PluginKernelTestBase {
     $random_name = $this->randomMachineName();
     $request->query->set('order', $random_name);
     $style_plugin->buildSortPost();
-    $this->assertIdentical($style_plugin->order, 'asc', 'No sort order was set, when invalid sort order was specified.');
+    $this->assertIdentical('asc', $style_plugin->order, 'No sort order was set, when invalid sort order was specified.');
     $this->assertNull($style_plugin->active, 'No sort field was set, when invalid sort order was specified.');
     $view->destroy();
 
@@ -107,8 +107,8 @@ class StyleTableUnitTest extends PluginKernelTestBase {
       $request->query->set('sort', $order);
       $request->query->set('order', 'id');
       $style_plugin->buildSortPost();
-      $this->assertIdentical($style_plugin->order, $order, 'Ensure the right sort order was set.');
-      $this->assertIdentical($style_plugin->active, 'id', 'Ensure the right order was set.');
+      $this->assertIdentical($order, $style_plugin->order, 'Ensure the right sort order was set.');
+      $this->assertIdentical('id', $style_plugin->active, 'Ensure the right order was set.');
       $view->destroy();
     }
 

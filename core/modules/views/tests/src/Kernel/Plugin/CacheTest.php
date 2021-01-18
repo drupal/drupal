@@ -347,7 +347,7 @@ class CacheTest extends ViewsKernelTestBase {
     // items.
     foreach ($cache->data['result'] as $row) {
       $this->assertNull($row->_entity, 'Cached row "_entity" property is NULL');
-      $this->assertIdentical($row->_relationship_entities, [], 'Cached row "_relationship_entities" property is empty');
+      $this->assertIdentical([], $row->_relationship_entities, 'Cached row "_relationship_entities" property is empty');
     }
   }
 

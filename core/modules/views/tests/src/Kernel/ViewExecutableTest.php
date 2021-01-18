@@ -321,7 +321,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
       'views_test_data' => TRUE,
       '#global' => TRUE,
     ];
-    $this->assertIdentical($view->getBaseTables(), $expected);
+    $this->assertIdentical($expected, $view->getBaseTables());
 
     // Test response methods.
     $this->assertInstanceOf(Response::class, $view->getResponse());
@@ -498,10 +498,10 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     $unserialized = unserialize($serialized);
 
     $this->assertInstanceOf(ViewExecutable::class, $unserialized);
-    $this->assertIdentical($view->storage->id(), $unserialized->storage->id(), 'The expected storage entity was loaded on the unserialized view.');
-    $this->assertIdentical($unserialized->current_display, 'page_1', 'The expected display was set on the unserialized view.');
-    $this->assertIdentical($unserialized->args, ['test'], 'The expected argument was set on the unserialized view.');
-    $this->assertIdentical($unserialized->getCurrentPage(), 2, 'The expected current page was set on the unserialized view.');
+    $this->assertIdentical($unserialized->storage->id(), $view->storage->id(), 'The expected storage entity was loaded on the unserialized view.');
+    $this->assertIdentical('page_1', $unserialized->current_display, 'The expected display was set on the unserialized view.');
+    $this->assertIdentical(['test'], $unserialized->args, 'The expected argument was set on the unserialized view.');
+    $this->assertIdentical(2, $unserialized->getCurrentPage(), 'The expected current page was set on the unserialized view.');
 
     // Get the definition of node's nid field, for example. Only get it not from
     // the field manager directly, but from the item data definition. It should
