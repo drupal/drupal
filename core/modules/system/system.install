@@ -1126,6 +1126,24 @@ function system_requirements($phase) {
     }
   }
 
+  // When the database driver is provided by a module, then check that the
+  // providing module is enabled.
+  if ($phase === 'runtime' || $phase === 'update') {
+    $connection = Database::getConnection();
+    $provider = $connection->getProvider();
+    if ($provider !== 'core' && !\Drupal::moduleHandler()->moduleExists($provider)) {
+      $autoload = $connection->getConnectionOptions()['autoload'] ?? '';
+      if (($pos = strpos($autoload, 'src/Driver/Database/')) !== FALSE) {
+        $requirements['database_driver_provided_by_module'] = [
+          'title' => t('Database driver provided by module'),
+          'value' => t('Not enabled'),
+          'description' => t('The current database driver is provided by the module: %module. The module is currently not enabled. You should immediately <a href=":enable">enable</a> the module.', ['%module' => $provider, ':enable' => Url::fromRoute('system.modules_list')->toString()]),
+          'severity' => REQUIREMENT_ERROR,
+        ];
+      }
+    }
+  }
+
   // Check xdebug.max_nesting_level, as some pages will not work if it is too
   // low.
   if (extension_loaded('xdebug')) {

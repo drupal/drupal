@@ -1950,4 +1950,22 @@ abstract class Connection {
     return $db_url;
   }
 
+  /**
+   * Get the module name of the module that is providing the database driver.
+   *
+   * @return string
+   *   The module name of the module that is providing the database driver, or
+   *   "core" when the driver is not provided as part of a module.
+   */
+  public function getProvider(): string {
+    [$first, $second] = explode('\\', $this->connectionOptions['namespace'], 3);
+
+    // The namespace for Drupal modules is Drupal\MODULE_NAME, and the module
+    // name must be all lowercase. Second-level namespaces containing uppercase
+    // letters (e.g., "Core", "Component", "Driver") are not modules.
+    // @see \Drupal\Core\DrupalKernel::getModuleNamespacesPsr4()
+    // @see https://www.drupal.org/docs/8/creating-custom-modules/naming-and-placing-your-drupal-8-module#s-name-your-module
+    return ($first === 'Drupal' && strtolower($second) === $second) ? $second : 'core';
+  }
+
 }

@@ -336,6 +336,20 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
 
     $modules = self::getModulesToEnable(static::class);
 
+    // When a module is providing the database driver, then enable that module.
+    $connection_info = Database::getConnectionInfo();
+    $driver = $connection_info['default']['driver'];
+    $namespace = $connection_info['default']['namespace'] ?? NULL;
+    $autoload = $connection_info['default']['autoload'] ?? NULL;
+    if (strpos($autoload, 'src/Driver/Database/') !== FALSE) {
+      [$first, $second] = explode('\\', $namespace, 3);
+      if ($first === 'Drupal' && strtolower($second) === $second) {
+        // Add the module that provides the database driver to the list of
+        // modules as the first to be enabled.
+        array_unshift($modules, $second);
+      }
+    }
+
     // Bootstrap the kernel. Do not use createFromRequest() to retain Settings.
     $kernel = new DrupalKernel('testing', $this->classLoader, FALSE);
     $kernel->setSitePath($this->siteDirectory);
@@ -357,9 +371,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
 
     // Ensure database tasks have been run.
     require_once __DIR__ . '/../../../includes/install.inc';
-    $connection_info = Database::getConnectionInfo();
-    $driver = $connection_info['default']['driver'];
-    $namespace = $connection_info['default']['namespace'] ?? NULL;
     $errors = db_installer_object($driver, $namespace)->runTasks();
     if (!empty($errors)) {
       $this->fail('Failed to run installer database tasks: ' . implode(', ', $errors));
