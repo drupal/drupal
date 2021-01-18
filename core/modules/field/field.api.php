@@ -184,6 +184,10 @@ function hook_field_widget_info_alter(array &$info) {
  *   - default: A boolean indicating whether the form is being shown as a dummy
  *     form to set default values.
  *
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+ *   hook_field_widget_single_element_form_alter instead.
+ *
+ * @see https://www.drupal.org/node/3180429
  * @see \Drupal\Core\Field\WidgetBaseInterface::form()
  * @see \Drupal\Core\Field\WidgetBase::formSingleElement()
  * @see hook_field_widget_WIDGET_TYPE_form_alter()
@@ -219,6 +223,10 @@ function hook_field_widget_form_alter(&$element, \Drupal\Core\Form\FormStateInte
  *   An associative array. See hook_field_widget_form_alter() for the structure
  *   and content of the array.
  *
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+ *   hook_field_widget_single_element_WIDGET_TYPE_form_alter instead.
+ *
+ * @see https://www.drupal.org/node/3180429
  * @see \Drupal\Core\Field\WidgetBaseInterface::form()
  * @see \Drupal\Core\Field\WidgetBase::formSingleElement()
  * @see hook_field_widget_form_alter()
@@ -229,6 +237,140 @@ function hook_field_widget_WIDGET_TYPE_form_alter(&$element, \Drupal\Core\Form\F
   // hook_field_widget_mymodule_autocomplete_form_alter() will only act on
   // widgets of type 'mymodule_autocomplete'.
   $element['#autocomplete_route_name'] = 'mymodule.autocomplete_route';
+}
+
+/**
+ * Alter forms for field widgets provided by other modules.
+ *
+ * This hook can only modify individual elements within a field widget and
+ * cannot alter the top level (parent element) for multi-value fields. In most
+ * cases, you should use hook_field_widget_complete_form_alter() instead and
+ * loop over the elements.
+ *
+ * @param array $element
+ *   The field widget form element as constructed by
+ *   \Drupal\Core\Field\WidgetBaseInterface::form().
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The current state of the form.
+ * @param array $context
+ *   An associative array containing the following key-value pairs:
+ *   - form: The form structure to which widgets are being attached. This may be
+ *     a full form structure, or a sub-element of a larger form.
+ *   - widget: The widget plugin instance.
+ *   - items: The field values, as a
+ *     \Drupal\Core\Field\FieldItemListInterface object.
+ *   - delta: The order of this item in the array of subelements (0, 1, 2, etc).
+ *   - default: A boolean indicating whether the form is being shown as a dummy
+ *     form to set default values.
+ *
+ * @see \Drupal\Core\Field\WidgetBaseInterface::form()
+ * @see \Drupal\Core\Field\WidgetBase::formSingleElement()
+ * @see hook_field_widget_single_element_WIDGET_TYPE_form_alter()
+ * @see hook_field_widget_complete_form_alter()
+ * @see https://www.drupal.org/node/3180429
+ */
+function hook_field_widget_single_element_form_alter(array &$element, \Drupal\Core\Form\FormStateInterface $form_state, array $context) {
+  // Add a css class to widget form elements for all fields of type my_type.
+  $field_definition = $context['items']->getFieldDefinition();
+  if ($field_definition->getType() == 'my_type') {
+    // Be sure not to overwrite existing attributes.
+    $element['#attributes']['class'][] = 'my-class';
+  }
+}
+
+/**
+ * Alter widget forms for a specific widget provided by another module.
+ *
+ * Modules can implement
+ * hook_field_widget_single_element_WIDGET_TYPE_form_alter() to modify a
+ * specific widget form, rather than using
+ * hook_field_widget_single_element_form_alter() and checking the widget type.
+ *
+ * This hook can only modify individual elements within a field widget and
+ * cannot alter the top level (parent element) for multi-value fields. In most
+ * cases, you should use hook_field_widget_complete_WIDGET_TYPE_form_alter()
+ * instead and loop over the elements.
+ *
+ * @param array $element
+ *   The field widget form element as constructed by
+ *   \Drupal\Core\Field\WidgetBaseInterface::form().
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The current state of the form.
+ * @param array $context
+ *   An associative array. See hook_field_widget_single_element_form_alter()
+ *   for the structure and content of the array.
+ *
+ * @see https://www.drupal.org/node/3180429
+ * @see \Drupal\Core\Field\WidgetBaseInterface::form()
+ * @see \Drupal\Core\Field\WidgetBase::formSingleElement()
+ * @see hook_field_widget_single_element_form_alter()
+ * @see hook_field_widget_complete_WIDGET_TYPE_form_alter()
+ */
+function hook_field_widget_single_element_WIDGET_TYPE_form_alter(array &$element, \Drupal\Core\Form\FormStateInterface $form_state, array $context) {
+  // Code here will only act on widgets of type WIDGET_TYPE.  For example,
+  // hook_field_widget_single_element_mymodule_autocomplete_form_alter() will
+  // only act on widgets of type 'mymodule_autocomplete'.
+  $element['#autocomplete_route_name'] = 'mymodule.autocomplete_route';
+}
+
+/**
+ * Alter the complete form for field widgets provided by other modules.
+ *
+ * @param $field_widget_complete_form
+ *   The field widget form element as constructed by
+ *   \Drupal\Core\Field\WidgetBaseInterface::form().
+ * @param $form_state
+ *   The current state of the form.
+ * @param $context
+ *   An associative array containing the following key-value pairs:
+ *   - form: The form structure to which widgets are being attached. This may be
+ *     a full form structure, or a sub-element of a larger form.
+ *   - widget: The widget plugin instance.
+ *   - items: The field values, as a
+ *     \Drupal\Core\Field\FieldItemListInterface object.
+ *   - delta: The order of this item in the array of subelements (0, 1, 2, etc).
+ *   - default: A boolean indicating whether the form is being shown as a dummy
+ *     form to set default values.
+ *
+ * @see \Drupal\Core\Field\WidgetBaseInterface::form()
+ * @see \Drupal\Core\Field\WidgetBase::form()
+ * @see hook_field_widget_complete_WIDGET_TYPE_form_alter()
+ * @see https://www.drupal.org/node/3180429
+ */
+function hook_field_widget_complete_form_alter(&$field_widget_complete_form, \Drupal\Core\Form\FormStateInterface $form_state, $context) {
+  $field_widget_complete_form['#attributes']['class'][] = 'my-class';
+}
+
+/**
+ * Alter the complete form for a specific widget provided by other modules.
+ *
+ * Modules can implement hook_field_widget_complete_WIDGET_TYPE_form_alter()
+ * to modify a specific widget form, rather than using
+ * hook_field_widget_complete_form_alter() and checking the widget type.
+ *
+ * @param $field_widget_complete_form
+ *   The field widget form element as constructed by
+ *   \Drupal\Core\Field\WidgetBaseInterface::form().
+ * @param $form_state
+ *   The current state of the form.
+ * @param $context
+ *   An associative array containing the following key-value pairs:
+ *   - form: The form structure to which widgets are being attached. This may be
+ *     a full form structure, or a sub-element of a larger form.
+ *   - widget: The widget plugin instance.
+ *   - items: The field values, as a
+ *     \Drupal\Core\Field\FieldItemListInterface object.
+ *   - delta: The order of this item in the array of subelements (0, 1, 2, etc).
+ *   - default: A boolean indicating whether the form is being shown as a dummy
+ *     form to set default values.
+ *
+ * @see \Drupal\Core\Field\WidgetBaseInterface::form()
+ * @see \Drupal\Core\Field\WidgetBase::form()
+ * @see hook_field_widget_complete_form_alter()
+ * @see https://www.drupal.org/node/3180429
+ */
+function hook_field_widget_complete_WIDGET_TYPE_form_alter(&$field_widget_complete_form, \Drupal\Core\Form\FormStateInterface $form_state, $context) {
+  $field_widget_complete_form['#attributes']['class'][] = 'my-class';
 }
 
 /**
@@ -252,6 +394,10 @@ function hook_field_widget_WIDGET_TYPE_form_alter(&$element, \Drupal\Core\Form\F
  *   - default: A boolean indicating whether the form is being shown as a dummy
  *     form to set default values.
  *
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+ *   hook_field_widget_complete_form_alter instead.
+ *
+ * @see https://www.drupal.org/node/3180429
  * @see \Drupal\Core\Field\WidgetBaseInterface::form()
  * @see \Drupal\Core\Field\WidgetBase::formMultipleElements()
  * @see hook_field_widget_multivalue_WIDGET_TYPE_form_alter()
@@ -284,6 +430,10 @@ function hook_field_widget_multivalue_form_alter(array &$elements, \Drupal\Core\
  *   An associative array. See hook_field_widget_multivalue_form_alter() for
  *   the structure and content of the array.
  *
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+ *   hook_field_widget_complete_WIDGET_TYPE_form_alter instead.
+ *
+ * @see https://www.drupal.org/node/3180429
  * @see \Drupal\Core\Field\WidgetBaseInterface::form()
  * @see \Drupal\Core\Field\WidgetBase::formMultipleElements()
  * @see hook_field_widget_multivalue_form_alter()

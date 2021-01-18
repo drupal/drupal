@@ -126,12 +126,12 @@ class FormTest extends FieldTestBase {
     // Verify that no extraneous widget is displayed.
     $this->assertSession()->fieldNotExists("{$field_name}[1][value]");
 
-    // Check that hook_field_widget_form_alter() does not believe this is the
-    // default value form.
-    $this->assertNoText('From hook_field_widget_form_alter(): Default form is true.');
-    // Check that hook_field_widget_form_alter() does not believe this is the
-    // default value form.
-    $this->assertNoText('From hook_field_widget_multivalue_form_alter(): Default form is true.');
+    // Check that hook_field_widget_single_element_form_alter() does not believe
+    // this is the default value form.
+    $this->assertNoText('From hook_field_widget_single_element_form_alter(): Default form is true.');
+    // Check that hook_field_widget_single_element_form_alter() does not believe
+    // this is the default value form.
+    $this->assertNoText('From hook_field_widget_complete_form_alter(): Default form is true.');
 
     // Submit with invalid value (field-level validation).
     $edit = [
@@ -685,31 +685,31 @@ class FormTest extends FieldTestBase {
   }
 
   /**
-   * Tests hook_field_widget_multivalue_form_alter().
+   * Tests hook_field_widget_complete_form_alter().
    */
   public function testFieldFormMultipleWidgetAlter() {
-    $this->widgetAlterTest('hook_field_widget_multivalue_form_alter', 'test_field_widget_multiple');
+    $this->widgetAlterTest('hook_field_widget_complete_form_alter', 'test_field_widget_multiple');
   }
 
   /**
-   * Tests hook_field_widget_multivalue_form_alter() with single value elements.
+   * Tests hook_field_widget_complete_form_alter() with single value elements.
    */
   public function testFieldFormMultipleWidgetAlterSingleValues() {
-    $this->widgetAlterTest('hook_field_widget_multivalue_form_alter', 'test_field_widget_multiple_single_value');
+    $this->widgetAlterTest('hook_field_widget_complete_form_alter', 'test_field_widget_multiple_single_value');
   }
 
   /**
-   * Tests hook_field_widget_multivalue_WIDGET_TYPE_form_alter().
+   * Tests hook_field_widget_complete_WIDGET_TYPE_form_alter().
    */
   public function testFieldFormMultipleWidgetTypeAlter() {
-    $this->widgetAlterTest('hook_field_widget_multivalue_WIDGET_TYPE_form_alter', 'test_field_widget_multiple');
+    $this->widgetAlterTest('hook_field_widget_complete_WIDGET_TYPE_form_alter', 'test_field_widget_multiple');
   }
 
   /**
-   * Tests hook_field_widget_multivalue_WIDGET_TYPE_form_alter() with single value elements.
+   * Tests hook_field_widget_complete_WIDGET_TYPE_form_alter() with single value elements.
    */
   public function testFieldFormMultipleWidgetTypeAlterSingleValues() {
-    $this->widgetAlterTest('hook_field_widget_multivalue_WIDGET_TYPE_form_alter', 'test_field_widget_multiple_single_value');
+    $this->widgetAlterTest('hook_field_widget_complete_WIDGET_TYPE_form_alter', 'test_field_widget_multiple_single_value');
   }
 
   /**
