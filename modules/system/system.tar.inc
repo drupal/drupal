@@ -2178,6 +2178,14 @@ class Archive_Tar
                             }
                         }
                     } elseif ($v_header['typeflag'] == "2") {
+                        if (strpos(realpath(dirname($v_header['link'])), realpath($p_path)) !== 0) {
+                            $this->_error(
+                                'Out-of-path file extraction {'
+                                . $v_header['filename'] . ' --> ' .
+                                $v_header['link'] . '}'
+                            );
+                            return false;
+                        }
                         if (!$p_symlinks) {
                             $this->_warning('Symbolic links are not allowed. '
                                 . 'Unable to extract {'
