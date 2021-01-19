@@ -112,6 +112,12 @@ CKEditor
 - Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
 - Marek 'mlewand' Lewandowski https://www.drupal.org/u/mlewand
 
+Claro
+- Cristina Chumillas 'ckrina' https://www.drupal.org/u/ckrina
+- Sascha Eggenberger 'saschaeggi' https://www.drupal.org/u/saschaeggi
+- Lauri Eskola 'lauriii' https://www.drupal.org/u/lauriii
+- Ben Mullins 'bnjmnm' https://www.drupal.org/u/bnjmnm
+
 Classy
 - David Hernandez 'davidhernandez' https://www.drupal.org/u/davidhernandez
 
