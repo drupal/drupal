@@ -23,7 +23,7 @@
         "laminas/laminas-stdlib": "3.2.1",
         "laminas/laminas-zendframework-bridge": "1.0.4",
         "masterminds/html5": "2.7.0",
-        "pear/archive_tar": "1.4.11",
+        "pear/archive_tar": "1.4.12",
         "pear/console_getopt": "v1.4.3",
         "pear/pear-core-minimal": "v1.10.10",
         "pear/pear_exception": "v1.0.1",
