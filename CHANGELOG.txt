@@ -1,3 +1,8 @@
+Drupal 7.78, 2021-01-19
+-----------------------
+- Fixed security issues:
+   - SA-CORE-2021-001
+
 Drupal 7.77, 2020-12-03
 -----------------------
 - Hotfix for schema.prefixed tables
