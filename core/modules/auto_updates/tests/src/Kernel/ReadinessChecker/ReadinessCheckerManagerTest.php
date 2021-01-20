@@ -37,9 +37,8 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
    */
   public function testCheckerMessages(array $error_messages, array $warning_messages): void {
     TestChecker::setTestMessages($error_messages, $warning_messages);
-    $manager = $this->container->get('auto_updates.readiness_checker_manager');
-    $this->assertSame($warning_messages, $manager->getWarnings());
-    $this->assertSame($error_messages, $manager->getErrors());
+    $this->assertSame($warning_messages, $this->getMessagesFromManager('warnings'));
+    $this->assertSame($error_messages, $this->getMessagesFromManager('errors'));
   }
 
   /**
@@ -74,18 +73,52 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
    */
   public function testMessageRefresh():void {
     TestChecker::setTestMessages(['error1'], ['warning1']);
-    $manager = $this->container->get('auto_updates.readiness_checker_manager');
-    $this->assertSame(['warning1'], $manager->getWarnings());
-    $this->assertSame(['error1'], $manager->getErrors());
+    $this->assertSame(['warning1'], $this->getMessagesFromManager('warnings'));
+    $this->assertSame(['error1'], $this->getMessagesFromManager('errors'));
     // The readiness checkers will not be invoked in the next calls so changing
     // the test messages will not have an effect.
     TestChecker::setTestMessages(['error2'], ['warning2']);
-    $this->assertSame(['warning1'], $manager->getWarnings());
-    $this->assertSame(['error1'], $manager->getErrors());
+    $this->assertSame(['warning1'], $this->getMessagesFromManager('warnings'));
+    $this->assertSame(['error1'], $this->getMessagesFromManager('errors'));
     // Calling get warnings with the optional $refresh parameter will return the
     // new messages.
-    $this->assertSame(['warning2'], $manager->getWarnings(TRUE));
-    $this->assertSame(['error2'], $manager->getErrors(TRUE));
+    $this->assertSame(['warning2'], $this->getMessagesFromManager('warnings', TRUE));
+    $this->assertSame(['error2'], $this->getMessagesFromManager('errors'));
+
+    // Assert that empty results are also cached.
+    TestChecker::setTestMessages([], []);
+    $this->assertSame([], $this->getMessagesFromManager('warnings', TRUE));
+    $this->assertSame([], $this->getMessagesFromManager('errors'));
+    TestChecker::setTestMessages(['error3'], ['warning3']);
+    $this->assertSame([], $this->getMessagesFromManager('warnings'));
+    $this->assertSame([], $this->getMessagesFromManager('errors'));
+    // Calling get warnings with the optional $refresh parameter will return the
+    // new messages.
+    $this->assertSame(['warning3'], $this->getMessagesFromManager('warnings', TRUE));
+    $this->assertSame(['error3'], $this->getMessagesFromManager('errors'));
+  }
+
+  /**
+   * Gets the messages of a particular type from the manager.
+   *
+   * @param $type
+   *   The type of messages to get, either 'warnings' or 'errors'.
+   * @param bool $refresh
+   *   Whether to refresh the results.
+   *
+   * @return string[]
+   *   The messages of the type.
+   * @throws \Exception
+   */
+  protected function getMessagesFromManager($type, bool $refresh = FALSE): array {
+    $this->assertTrue(in_array($type, ['warnings', 'errors']), "Only 'warning' and 'errors' are valid types.");
+    $manager = $this->container->get('auto_updates.readiness_checker_manager');
+    $results = $manager->getResults($refresh);
+    $messages = [];
+    foreach ($results as $result) {
+      $messages = array_merge($messages, $type === 'warnings' ? $result->getWarningMessages() : $result->getErrorMessages());
+    }
+    return $messages;
   }
 
 }

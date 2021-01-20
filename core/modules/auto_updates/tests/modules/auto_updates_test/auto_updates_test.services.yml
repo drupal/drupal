@@ -4,11 +4,6 @@ services:
     tags:
       - { name: readiness_checker, priority: 2 }
     arguments: ['@state']
-  auto_updates_test.checker2:
-    class: Drupal\auto_updates_test\ReadinessChecker\TestChecker2
-    tags:
-      - { name: readiness_checker, priority: 3 }
-    arguments: [ '@state' ]
   datetime.time:
     class: Drupal\auto_updates_test\Datetime\TestTime
     arguments: ['@request_stack']

@@ -9,8 +9,26 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  */
 interface ReadinessCheckerInterface {
 
+  /**
+   * Gets the errors summary message.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|null
+   *   The errors summary if there are any messages, otherwise null
+   *
+   * @todo Should this return a null if there is no summary just 1 single
+   *   message?
+   */
   public function getErrorsSummary():?TranslatableMarkup;
 
+  /**
+   * Gets the warnings summary message.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|null
+   *   The warnings summary if there are any messages, otherwise null
+   *
+   * @todo Should this return a null if there is no summary just 1 single
+   *   message?
+   */
   public function getWarningsSummary():?TranslatableMarkup;
 
   /**

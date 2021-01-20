@@ -39,8 +39,7 @@ function auto_updates_page_top(array &$page_top) {
         ':url' => Url::fromRoute('auto_updates.update_readiness')->setOption('query', ['destination' => $current_path->getPath()])->toString(),
       ]));
     }
-    return;
-    $results = $checker_manager->getErrors();
+    $results = $checker_manager->getResults();
     if ($results) {
       // @todo Link "automatic updates" to documentation in
       //    https://www.drupal.org/node/3168405.

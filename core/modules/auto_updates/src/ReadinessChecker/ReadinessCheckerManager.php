@@ -16,12 +16,12 @@ class ReadinessCheckerManager {
    *
    * The value is equal to 1 day.
    */
-  private const LAST_CHECKED_WARNING = 60 * 60 * 24;
+  protected const LAST_CHECKED_WARNING = 60 * 60 * 24;
 
   /**
    * The key/value storage.
    *
-   * @var \Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface
+   * @var \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface
    */
   protected $keyValueExpirable;
 
@@ -52,15 +52,15 @@ class ReadinessCheckerManager {
   /**
    * ReadinessCheckerManager constructor.
    *
-   * @param \Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface $key_value_expirable
+   * @param \Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface $key_value_expirable_factory
    *   The config factory.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
    */
-  public function __construct(KeyValueExpirableFactoryInterface $key_value_expirable, ConfigFactoryInterface $config_factory, TimeInterface $time) {
-    $this->keyValueExpirable = $key_value_expirable->get('auto_updates');
+  public function __construct(KeyValueExpirableFactoryInterface $key_value_expirable_factory, ConfigFactoryInterface $config_factory, TimeInterface $time) {
+    $this->keyValueExpirable = $key_value_expirable_factory->get('auto_updates');
     $this->configFactory = $config_factory;
     $this->time = $time;
   }
@@ -91,35 +91,32 @@ class ReadinessCheckerManager {
    *   cached results will be returned if available.
    *
    * @return \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[]
-   *   A nested array of readiness check messages. The top level array is keyed
-   *   by category and the next level array is an array of translatable strings
-   *   for the category.
+   *   The result objects for the readiness checkers.
    */
   protected function run(bool $refresh = FALSE): array {
     if ($refresh) {
-      $this->keyValueExpirable->delete('readiness_check_results');
+      $this->keyValueExpirable->delete('readiness_check_last_run');
     }
     else {
-      $results = $this->keyValueExpirable->get('readiness_check_results');
+      $last_run = $this->keyValueExpirable->get('readiness_check_last_run');
 
       // If the checkers have not changed return the results.
-      if ($results && $results['checkers'] === $this->getCurrentCheckerIds()) {
-        return $results['results'];
+      if ($last_run && $last_run['checkers'] === $this->getCurrentCheckerIds()) {
+        return $last_run['results'];
       }
-      $this->keyValueExpirable->delete('readiness_check_results');
     }
 
     $sorted_checkers = $this->getSortedCheckers();
     $results = [];
     foreach ($sorted_checkers as $checker) {
       $result = ReadinessCheckerResult::createFromReadinessChecker($checker);
-      if (!$result->isEmpty()) {
+      if ($result->getErrorMessages() || $result->getWarningMessages()) {
         $results[] = $result;
       }
     }
 
     $this->keyValueExpirable->setWithExpire(
-      'readiness_check_results',
+      'readiness_check_last_run',
       [
         'results' => $results,
         'checkers' => $this->getCurrentCheckerIds(),
@@ -180,11 +177,16 @@ class ReadinessCheckerManager {
   }
 
   /**
+   * Get the readiness checker results.
+   *
    * @param bool $refresh
+   *   (optional) Whether to refresh the results, defaults FALSE. If FALSE then
+   *   cached results will be returned if available.
    *
    * @return \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[]
+   *   The results.
    */
-  public function getResults(bool $refresh = FALSE) {
+  public function getResults(bool $refresh = FALSE): array {
     return $this->run($refresh);
   }
 

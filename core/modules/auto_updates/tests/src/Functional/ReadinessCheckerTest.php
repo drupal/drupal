@@ -111,7 +111,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
     TestChecker::setTestMessages(['OMG 🔌. Some one unplugged the server! How is this site even running?']);
     /** @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface $keyValue */
     $keyValue = $this->container->get('keyvalue.expirable')->get('auto_updates');
-    $keyValue->delete('readiness_check_results');
+    $keyValue->delete('readiness_check_last_run');
     // Confirm a new message is displayed if the stored messages are deleted.
     $this->drupalGet('admin/reports/status');
     $this->assertReadinessReportMatches('OMG 🔌. Some one unplugged the server! How is this site even running?');

@@ -79,11 +79,18 @@ class TestChecker implements ReadinessCheckerInterface {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getErrorsSummary(): ?TranslatableMarkup {
-    return NULL;// TODO: Implement getErrorsSummary() method.
+    return NULL;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getWarningsSummary(): ?TranslatableMarkup {
-    return null;// TODO: Implement getWarningsSummary() method.
+    return NULL;
   }
+
 }
