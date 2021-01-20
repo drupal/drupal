@@ -2,7 +2,6 @@
 
 namespace Drupal\auto_updates\ReadinessChecker;
 
-use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Core\Url;
 
 /**
@@ -21,7 +20,6 @@ final class ReadinessRequirement {
    * @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager
    */
   protected $readinessCheckerManager;
-
 
   /**
    * ReadinessRequirement constructor.
@@ -76,14 +74,14 @@ final class ReadinessRequirement {
         $errors = $this->getSection('errors');
         $warnings = $this->getSection('warnings');
         $requirement['severity'] = $errors ? REQUIREMENT_ERROR : REQUIREMENT_WARNING;
-        //$requirement['value'] = new PluralTranslatableMarkup(count($errors) + count($warnings), '@count check failed:', '@count checks failed:');
+        // $requirement['value'] = new PluralTranslatableMarkup(count($errors) + count($warnings), '@count check failed:', '@count checks failed:');
         $requirement['description'] = [
           'errors' => $errors,
           'warnings' => $warnings,
         ];
       }
       else {
-        $requirement= [
+        $requirement = [
           'severity' => REQUIREMENT_OK,
           // @todo Link "automatic updates" to documentation in
           //    https://www.drupal.org/node/3168405.

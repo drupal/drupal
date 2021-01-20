@@ -86,10 +86,13 @@ class DiskSpace extends FileSystemBase {
   }
 
   public function getErrorsSummary():?TranslatableMarkup {
-    return null;// TODO: Implement getErrorsSummary() method.
+    // TODO: Implement getErrorsSummary() method.
+    return NULL;
   }
 
   public function getWarningsSummary():?TranslatableMarkup {
-    return null;// TODO: Implement getWarningsSummary() method.
+    // TODO: Implement getWarningsSummary() method.
+    return NULL;
   }
+
 }

@@ -108,6 +108,7 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
    *
    * @return string[]
    *   The messages of the type.
+   *
    * @throws \Exception
    */
   protected function getMessagesFromManager($type, bool $refresh = FALSE): array {
