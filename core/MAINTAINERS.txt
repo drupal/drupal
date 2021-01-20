@@ -529,9 +529,6 @@ Layout Initiative
 Media Initiative
 - Janez Urevc 'slashrsm' https://www.drupal.org/u/slashrsm
 
-Workflow Initiative
-- Dick Olsson 'dixon_' https://www.drupal.org/u/dixon_
-
 Provisional membership: None at this time.
 
 
