@@ -370,17 +370,17 @@ class PagerTest extends ViewTestBase {
     $view->setDisplay();
     // On the first round don't initialize the pager.
 
-    $this->assertEqual($view->getItemsPerPage(), NULL, 'If the pager is not initialized and no manual override there is no items per page.');
+    $this->assertNull($view->getItemsPerPage(), 'If the pager is not initialized and no manual override there is no items per page.');
     $rand_number = rand(1, 5);
     $view->setItemsPerPage($rand_number);
     $this->assertEqual($view->getItemsPerPage(), $rand_number, 'Make sure getItemsPerPage uses the settings of setItemsPerPage.');
 
-    $this->assertEqual($view->getOffset(), NULL, 'If the pager is not initialized and no manual override there is no offset.');
+    $this->assertNull($view->getOffset(), 'If the pager is not initialized and no manual override there is no offset.');
     $rand_number = rand(1, 5);
     $view->setOffset($rand_number);
     $this->assertEqual($view->getOffset(), $rand_number, 'Make sure getOffset uses the settings of setOffset.');
 
-    $this->assertEqual($view->getCurrentPage(), NULL, 'If the pager is not initialized and no manual override there is no current page.');
+    $this->assertNull($view->getCurrentPage(), 'If the pager is not initialized and no manual override there is no current page.');
     $rand_number = rand(1, 5);
     $view->setCurrentPage($rand_number);
     $this->assertEqual($view->getCurrentPage(), $rand_number, 'Make sure getCurrentPage uses the settings of set_current_page.');

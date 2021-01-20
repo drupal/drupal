@@ -479,7 +479,7 @@ class EntityFieldTest extends EntityKernelTestBase {
     $this->assertSame($entity_adapter->getRoot(), $entity_adapter, 'Entity is root object.');
     $this->assertEqual($entity_adapter->getPropertyPath(), '');
     $this->assertEqual($entity_adapter->getName(), '');
-    $this->assertEqual($entity_adapter->getParent(), NULL);
+    $this->assertNull($entity_adapter->getParent());
 
     $field = $entity->user_id;
     $this->assertSame($field->getRoot()->getValue(), $entity, 'Entity is root object.');

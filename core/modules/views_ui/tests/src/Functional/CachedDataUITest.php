@@ -29,7 +29,7 @@ class CachedDataUITest extends UITestBase {
 
     $temp_store = $this->container->get('tempstore.shared')->get('views');
     // The view should not be locked.
-    $this->assertEqual($temp_store->getMetadata('test_view'), NULL, 'The view is not locked.');
+    $this->assertNull($temp_store->getMetadata('test_view'), 'The view is not locked.');
 
     $this->drupalGet('admin/structure/views/view/test_view/edit');
     // Make sure we have 'changes' to the view.
@@ -45,7 +45,7 @@ class CachedDataUITest extends UITestBase {
 
     // Cancel the view edit and make sure the cache is deleted.
     $this->submitForm([], 'Cancel');
-    $this->assertEqual($temp_store->getMetadata('test_view'), NULL, 'Shared tempstore data has been removed.');
+    $this->assertNull($temp_store->getMetadata('test_view'), 'Shared tempstore data has been removed.');
     // Test we are redirected to the view listing page.
     $this->assertSession()->addressEquals('admin/structure/views');
 
@@ -73,7 +73,7 @@ class CachedDataUITest extends UITestBase {
     $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/title', [], 'Apply');
     $this->drupalPostForm('admin/structure/views/view/test_view/delete', [], 'Delete');
     // No view tempstore data should be returned for this view after deletion.
-    $this->assertEqual($temp_store->getMetadata('test_view'), NULL, 'View tempstore data has been removed after deletion.');
+    $this->assertNull($temp_store->getMetadata('test_view'), 'View tempstore data has been removed after deletion.');
   }
 
 }

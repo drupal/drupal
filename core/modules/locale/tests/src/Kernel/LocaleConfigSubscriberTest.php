@@ -391,7 +391,7 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
     $config_langcode = $this->configFactory->getEditable($config_name)->get('langcode');
     $override = $this->languageManager->getLanguageConfigOverride($langcode, $config_name);
     $this->assertNotEquals($langcode, $config_langcode);
-    $this->assertEqual($override->isNew(), TRUE);
+    $this->assertTrue($override->isNew());
   }
 
   /**
