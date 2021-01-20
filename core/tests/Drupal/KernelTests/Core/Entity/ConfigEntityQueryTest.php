@@ -710,7 +710,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
 
     // Ensure that a delete clears a key.
     $entity->delete();
-    $this->assertEqual(NULL, $key_value->get('style:blah'));
+    $this->assertNull($key_value->get('style:blah'));
 
     // Ensure that delete only clears one key.
     $entity_id = array_pop($expected);
@@ -718,7 +718,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
     $this->assertEqual($expected, $key_value->get('style:test'));
     $entity_id = array_pop($expected);
     $test_entities[$entity_id]->delete();
-    $this->assertEqual(NULL, $key_value->get('style:test'));
+    $this->assertNull($key_value->get('style:test'));
   }
 
   /**
