@@ -85,13 +85,24 @@ class DiskSpace extends FileSystemBase {
     return $messages;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getErrorsSummary():?TranslatableMarkup {
-    // TODO: Implement getErrorsSummary() method.
-    return NULL;
+    $errors = $this->getErrors();
+    if (empty($errors)) {
+      return NULL;
+    }
+    if (count($errors === 1)) {
+      return array_pop($errors);
+    }
+    return $this->t('There is not enough disk space to perform an automatic update.');
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getWarningsSummary():?TranslatableMarkup {
-    // TODO: Implement getWarningsSummary() method.
     return NULL;
   }
 

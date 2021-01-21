@@ -4,6 +4,8 @@ namespace Drupal\Tests\auto_updates\Functional;
 
 use Drupal\auto_updates_test\Datetime\TestTime;
 use Drupal\auto_updates_test\ReadinessChecker\TestChecker;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -12,6 +14,8 @@ use Drupal\Tests\BrowserTestBase;
  * @group auto_updates
  */
 class ReadinessCheckerTest extends BrowserTestBase {
+
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
@@ -70,25 +74,25 @@ class ReadinessCheckerTest extends BrowserTestBase {
     // regardless of whether the user has permission to run updates.
     $this->drupalLogin($this->reportViewerUser);
     $this->drupalGet('admin/reports/status');
-    $this->assertReadinessReportMatches('Your site is ready for automatic updates.');
+    $this->assertReadinessReportMatches('Your site is ready for automatic updates.', FALSE);
     $this->drupalLogin($this->checkerRunnerUser);
     $this->drupalGet('admin/reports/status');
-    $this->assertReadinessReportMatches('Your site is ready for automatic updates.');
+    $this->assertReadinessReportMatches('Your site is ready for automatic updates.', FALSE);
 
     // Confirm a user without the permission to run readiness checks does not
     // have a link to run the checks when the checks need to be run again.
     TestTime::setFakeTimeByOffset('+2 days');
     $this->drupalLogin($this->reportViewerUser);
     $this->drupalGet('admin/reports/status');
-    $this->assertReadinessReportMatches('Your site has not recently checked if it is ready to apply automatic updates. Readiness checks were last run %s ago.');
+    $this->assertReadinessReportMatches('Your site has not recently checked if it is ready to apply automatic updates. Readiness checks were last run %s ago.', FALSE);
     $assert->linkNotExists('Run readiness checks');
 
     // Confirm a user with the permission to run readiness checks does have a
     // link to run the checks when the checks need to be run again.
     $this->drupalLogin($this->checkerRunnerUser);
     $this->drupalGet('admin/reports/status');
-    $this->assertReadinessReportMatches('Your site has not recently checked if it is ready to apply automatic updates. Readiness checks were last run %s ago. Run readiness checks now.');
-    TestChecker::setTestMessages(['OMG 🚒. Your server is on 🔥!']);
+    $this->assertReadinessReportMatches('Your site has not recently checked if it is ready to apply automatic updates. Readiness checks were last run %s ago. Run readiness checks now.', FALSE);
+    TestChecker::setTestMessages(['OMG 🚒. Your server is on 🔥!'], [], new TranslatableMarkup('Summary: 🔥'));
 
     // Run the readiness checks.
     $this->clickLink('Run readiness checks');
@@ -129,7 +133,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
 
     $this->container->get('module_installer')->install(['auto_updates']);
     $this->drupalGet('admin/reports/status');
-    $this->assertReadinessReportMatches('Your site is ready for automatic updates.');
+    $this->assertReadinessReportMatches('Your site is ready for automatic updates.', FALSE);
 
     TestChecker::setTestMessages(['😿Oh no! A hacker now owns your files!']);
     $this->container->get('module_installer')->install(['auto_updates_test']);
@@ -177,12 +181,22 @@ class ReadinessCheckerTest extends BrowserTestBase {
    * @param string $format
    *   The string to match.
    */
-  private function assertReadinessReportMatches(string $format): void {
+  private function assertReadinessReportMatches(string $format, bool $expect_errors = TRUE): void {
+    $selector = 'details.system-status-report__entry:contains("Update readiness checks")';
     // Prefix the expected format with the item title which does not change.
-    $format = "Update readiness checks $format";
+    if ($expect_errors) {
+      $format = 'Update readiness checks '
+       . 'Your site does not pass some readiness checks for automatic updates. It cannot be automatically updated until further action is performed. '
+       . $format;
+      $selector = "h3#error ~ $selector";
+    }
+    else {
+      $format = "Update readiness checks $format";
+    }
+
     $text = $this->getSession()->getPage()->find(
       'css',
-      'details.system-status-report__entry:contains("Update readiness checks")'
+      $selector,
     )->getText();
     $this->assertStringMatchesFormat($format, $text);
   }

@@ -9,3 +9,6 @@ services:
     arguments: ['@keyvalue.expirable', '@config.factory', '@datetime.time']
     tags:
       - { name: service_collector, tag: readiness_checker, call: addChecker }
+  logger.channel.auto_updates:
+    parent: logger.channel_base
+    arguments: [ 'auto_updates' ]

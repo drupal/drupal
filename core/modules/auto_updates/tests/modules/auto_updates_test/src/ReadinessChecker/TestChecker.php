@@ -34,13 +34,18 @@ class TestChecker implements ReadinessCheckerInterface {
   /**
    * Gets the test messages set in state.
    *
-   * @return string[][]
+   * @return mixed[]
    *   The test messages.
    *
    * @see \Drupal\Tests\auto_updates\Kernel\ReadinessChecker\TestCheckerTrait::setTestMessages()
    */
   protected function getMessages() {
-    $defaults = ['errors' => [], 'warnings' => []];
+    $defaults = [
+      'errors' => [],
+      'warnings' => [],
+      'errors_summary' => NULL,
+      'warnings_summary' => NULL,
+    ];
     return $this->state->get('auto_updates_test.check_error', []) + $defaults;
   }
 
@@ -68,13 +73,19 @@ class TestChecker implements ReadinessCheckerInterface {
    *   The error messages.
    * @param string[] $warnings
    *   The warning messages.
+   * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $errors_summary
+   *   The errors summary.
+   * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $warnings_summary
+   *   The warnings summary.
    */
-  public static function setTestMessages(array $errors = [], array $warnings = []): void {
+  public static function setTestMessages(array $errors = [], array $warnings = [], ?TranslatableMarkup $errors_summary = NULL, ?TranslatableMarkup $warnings_summary = NULL): void {
     \Drupal::state()->set(
       'auto_updates_test.check_error',
       [
         'errors' => $errors,
         'warnings' => $warnings,
+        'errors_summary' => $errors_summary,
+        'warnings_summary' => $warnings_summary,
       ]
     );
   }
@@ -83,14 +94,14 @@ class TestChecker implements ReadinessCheckerInterface {
    * {@inheritdoc}
    */
   public function getErrorsSummary(): ?TranslatableMarkup {
-    return NULL;
+    return $this->getMessages()['errors_summary'];
   }
 
   /**
    * {@inheritdoc}
    */
   public function getWarningsSummary(): ?TranslatableMarkup {
-    return NULL;
+    return $this->getMessages()['warnings_summary'];
   }
 
 }

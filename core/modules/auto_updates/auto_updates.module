@@ -44,17 +44,20 @@ function auto_updates_page_top(array &$page_top) {
       // @todo Link "automatic updates" to documentation in
       //    https://www.drupal.org/node/3168405.
       \Drupal::messenger()->addError(t('Your site is currently failing readiness checks for automatic updates. It cannot be automatically updated until further action is performed.'));
-      foreach ($results as $message) {
-        \Drupal::messenger()->addError($message);
+      foreach ($results as $result) {
+        if ($summary = $result->getErrorsSummary()) {
+          \Drupal::messenger()->addError($summary);
+        }
       }
     }
-    $results = $checker_manager->getWarnings();
     if ($results) {
       // @todo Link "automatic updates" to documentation in
       //    https://www.drupal.org/node/3168405.
       \Drupal::messenger()->addWarning(t('Your site does not pass some readiness checks for automatic updates. Depending on the nature of the failures, it might effect the eligibility for automatic updates.'));
-      foreach ($results as $message) {
-        \Drupal::messenger()->addWarning($message);
+      foreach ($results as $result) {
+        if ($summary = $result->getWarningsSummary()) {
+          \Drupal::messenger()->addWarning($summary);
+        }
       }
     }
   }
