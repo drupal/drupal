@@ -42,7 +42,7 @@ class FilterDefaultConfigTest extends KernelTestBase {
     $this->assertNotEmpty($format->uuid());
 
     // Verify that the loaded format does not contain any roles.
-    $this->assertEqual($format->get('roles'), NULL);
+    $this->assertNull($format->get('roles'));
     // Verify that the defined roles in the default config have been processed.
     $this->assertEqual(array_keys(filter_get_roles_by_format($format)), [
       RoleInterface::ANONYMOUS_ID,

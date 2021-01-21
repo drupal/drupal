@@ -410,7 +410,7 @@ class ToolkitGdTest extends KernelTestBase {
         $this->assertEqual('#ffff00', $image_reloaded->getToolkit()->getTransparentColor(), new FormattableMarkup('Image file %file has the correct transparent color channel set.', ['%file' => $file]));
       }
       else {
-        $this->assertEqual(NULL, $image_reloaded->getToolkit()->getTransparentColor(), new FormattableMarkup('Image file %file has no color channel set.', ['%file' => $file]));
+        $this->assertNull($image_reloaded->getToolkit()->getTransparentColor(), new FormattableMarkup('Image file %file has no color channel set.', ['%file' => $file]));
       }
     }
 

@@ -29,7 +29,7 @@ class ViewElementTest extends ViewsKernelTestBase {
     // Get the render array, #embed must be FALSE since this is the default
     // display.
     $render = $view->buildRenderable();
-    $this->assertEqual($render['#embed'], FALSE);
+    $this->assertFalse($render['#embed']);
     $this->setRawContent($renderer->renderRoot($render));
 
     $xpath = $this->xpath('//div[@class="views-element-container"]');
@@ -79,7 +79,7 @@ class ViewElementTest extends ViewsKernelTestBase {
 
     // Get the render array, #embed must be TRUE since this is an embed display.
     $render = $view->buildRenderable('embed_1');
-    $this->assertEqual($render['#embed'], TRUE);
+    $this->assertTrue($render['#embed']);
     $this->setRawContent($renderer->renderRoot($render));
 
     // Ensure that the render array can be serialized.

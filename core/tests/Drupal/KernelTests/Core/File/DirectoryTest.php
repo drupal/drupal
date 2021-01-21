@@ -166,7 +166,7 @@ class DirectoryTest extends FileTestBase {
     $path = $file_system->getDestinationFilename($destination, FileSystemInterface::EXISTS_RENAME);
     $this->assertNotEquals($destination, $path, 'A new filepath destination is created when filepath destination already exists with FileSystemInterface::EXISTS_RENAME.');
     $path = $file_system->getDestinationFilename($destination, FileSystemInterface::EXISTS_ERROR);
-    $this->assertEqual($path, FALSE, 'An error is returned when filepath destination already exists with FileSystemInterface::EXISTS_ERROR.', 'File');
+    $this->assertFalse($path, 'An error is returned when filepath destination already exists with FileSystemInterface::EXISTS_ERROR.', 'File');
 
     // Invalid UTF-8 causes an exception.
     $this->expectException(FileException::class);
