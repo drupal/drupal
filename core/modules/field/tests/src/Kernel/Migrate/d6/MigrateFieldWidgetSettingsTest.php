@@ -41,31 +41,31 @@ class MigrateFieldWidgetSettingsTest extends MigrateDrupal6TestBase {
     $expected['settings'] = ['size' => 60, 'placeholder' => ''];
     $expected['third_party_settings'] = [];
     $expected['region'] = 'content';
-    $this->assertIdentical($expected, $component, 'Text field settings are correct.');
+    $this->assertSame($expected, $component, 'Text field settings are correct.');
 
     // Integer field.
     $component = $form_display->getComponent('field_test_two');
     $expected['type'] = 'number';
     $expected['weight'] = 1;
     $expected['settings'] = ['placeholder' => ''];
-    $this->assertIdentical($expected, $component);
+    $this->assertSame($expected, $component);
 
     // Float field.
     $component = $form_display->getComponent('field_test_three');
     $expected['weight'] = 2;
-    $this->assertIdentical($expected, $component);
+    $this->assertSame($expected, $component);
 
     // Email field.
     $component = $form_display->getComponent('field_test_email');
     $expected['type'] = 'email_default';
     $expected['weight'] = 6;
     $expected['settings'] = ['placeholder' => '', 'size' => 60];
-    $this->assertIdentical($expected, $component);
+    $this->assertSame($expected, $component);
 
     // Link field.
     $component = $form_display->getComponent('field_test_link');
-    $this->assertIdentical('link_default', $component['type']);
-    $this->assertIdentical(7, $component['weight']);
+    $this->assertSame('link_default', $component['type']);
+    $this->assertSame(7, $component['weight']);
     $this->assertEmpty(array_filter($component['settings']));
 
     // File field.
@@ -73,36 +73,36 @@ class MigrateFieldWidgetSettingsTest extends MigrateDrupal6TestBase {
     $expected['type'] = 'file_generic';
     $expected['weight'] = 8;
     $expected['settings'] = ['progress_indicator' => 'bar'];
-    $this->assertIdentical($expected, $component);
+    $this->assertSame($expected, $component);
 
     // Image field.
     $component = $form_display->getComponent('field_test_imagefield');
     $expected['type'] = 'image_image';
     $expected['weight'] = 9;
     $expected['settings'] = ['progress_indicator' => 'bar', 'preview_image_style' => 'thumbnail'];
-    $this->assertIdentical($expected, $component);
+    $this->assertSame($expected, $component);
 
     // Phone field.
     $component = $form_display->getComponent('field_test_phone');
     $expected['type'] = 'telephone_default';
     $expected['weight'] = 13;
     $expected['settings'] = ['placeholder' => ''];
-    $this->assertIdentical($expected, $component);
+    $this->assertSame($expected, $component);
 
     // Date fields.
     $component = $form_display->getComponent('field_test_date');
     $expected['type'] = 'datetime_default';
     $expected['weight'] = 10;
     $expected['settings'] = [];
-    $this->assertIdentical($expected, $component);
+    $this->assertSame($expected, $component);
 
     $component = $form_display->getComponent('field_test_datestamp');
     $expected['weight'] = 11;
-    $this->assertIdentical($expected, $component);
+    $this->assertSame($expected, $component);
 
     $component = $form_display->getComponent('field_test_datetime');
     $expected['weight'] = 12;
-    $this->assertIdentical($expected, $component);
+    $this->assertSame($expected, $component);
 
     /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
     $display_repository = \Drupal::service('entity_display.repository');

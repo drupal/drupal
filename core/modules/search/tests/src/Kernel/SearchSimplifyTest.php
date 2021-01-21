@@ -37,7 +37,7 @@ class SearchSimplifyTest extends KernelTestBase {
       if ($key % 2) {
         // Even line - should simplify down to a space.
         $simplified = $text_processor->analyze($string);
-        $this->assertIdentical(' ', $simplified, "Line {$key} is excluded from the index");
+        $this->assertSame(' ', $simplified, "Line {$key} is excluded from the index");
       }
       else {
         // Odd line, should be word characters.
@@ -69,7 +69,7 @@ class SearchSimplifyTest extends KernelTestBase {
     for ($i = 0; $i < 32; $i++) {
       $string .= chr($i);
     }
-    $this->assertIdentical(' ', $text_processor->analyze($string), 'Search simplify works for ASCII control characters.');
+    $this->assertSame(' ', $text_processor->analyze($string), 'Search simplify works for ASCII control characters.');
   }
 
   /**

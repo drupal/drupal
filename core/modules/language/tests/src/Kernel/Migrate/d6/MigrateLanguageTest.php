@@ -33,9 +33,9 @@ class MigrateLanguageTest extends MigrateDrupal6TestBase {
     /** @var \Drupal\language\ConfigurableLanguageInterface $language */
     $language = ConfigurableLanguage::load($id);
     $this->assertInstanceOf(ConfigurableLanguageInterface::class, $language);
-    $this->assertIdentical($label, $language->label());
-    $this->assertIdentical($direction, $language->getDirection());
-    $this->assertIdentical(0, $language->getWeight());
+    $this->assertSame($label, $language->label());
+    $this->assertSame($direction, $language->getDirection());
+    $this->assertSame(0, $language->getWeight());
     $this->assertFalse($language->isLocked());
   }
 

@@ -36,16 +36,16 @@ class MigrateUserPictureFileTest extends MigrateDrupal6TestBase {
     $files = File::loadMultiple($file_ids);
     /** @var \Drupal\file\FileInterface $file */
     $file = array_shift($files);
-    $this->assertIdentical('image-test.jpg', $file->getFilename());
-    $this->assertIdentical('public://image-test.jpg', $file->getFileUri());
-    $this->assertIdentical('2', $file->getOwnerId());
-    $this->assertIdentical('1901', $file->getSize());
-    $this->assertIdentical('image/jpeg', $file->getMimeType());
+    $this->assertSame('image-test.jpg', $file->getFilename());
+    $this->assertSame('public://image-test.jpg', $file->getFileUri());
+    $this->assertSame('2', $file->getOwnerId());
+    $this->assertSame('1901', $file->getSize());
+    $this->assertSame('image/jpeg', $file->getMimeType());
 
     $file = array_shift($files);
-    $this->assertIdentical('image-test.png', $file->getFilename());
-    $this->assertIdentical('public://image-test.png', $file->getFileUri());
-    $this->assertIdentical('8', $file->getOwnerId());
+    $this->assertSame('image-test.png', $file->getFilename());
+    $this->assertSame('public://image-test.png', $file->getFileUri());
+    $this->assertSame('8', $file->getOwnerId());
     $this->assertEmpty($files);
   }
 

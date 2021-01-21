@@ -1046,7 +1046,7 @@ class SchemaTest extends KernelTestBase {
         ->condition('serial_column', $id)
         ->execute()
         ->fetchField();
-      $this->assertIdentical($test_data, $field_value);
+      $this->assertSame($test_data, $field_value);
     }
 
     // Check the field was changed.

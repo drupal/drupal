@@ -361,13 +361,13 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
         $expected_values[] = ['value' => $values[$key]['value']];
       }
     }
-    $this->assertIdentical($expected_values, $entity->{$this->fieldTestData->field_name}->getValue(), 'Submit filters empty values');
+    $this->assertSame($expected_values, $entity->{$this->fieldTestData->field_name}->getValue(), 'Submit filters empty values');
     foreach ($weights_2 as $key => $value) {
       if ($key != 1) {
         $expected_values_2[] = ['value' => $values_2[$key]['value']];
       }
     }
-    $this->assertIdentical($expected_values_2, $entity->{$this->fieldTestData->field_name_2}->getValue(), 'Submit filters empty values');
+    $this->assertSame($expected_values_2, $entity->{$this->fieldTestData->field_name_2}->getValue(), 'Submit filters empty values');
 
     // Call EntityFormDisplayInterface::extractFormValues() for a single field (the second field).
     foreach ($display->getComponents() as $name => $options) {
@@ -384,7 +384,7 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
       }
     }
     $this->assertTrue($entity->{$this->fieldTestData->field_name}->isEmpty(), 'The first field is empty in the entity object');
-    $this->assertIdentical($expected_values_2, $entity->{$this->fieldTestData->field_name_2}->getValue(), 'Submit filters empty values');
+    $this->assertSame($expected_values_2, $entity->{$this->fieldTestData->field_name_2}->getValue(), 'Submit filters empty values');
   }
 
 }

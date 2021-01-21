@@ -54,9 +54,9 @@ abstract class MigrateUrlAliasTestBase extends MigrateDrupal7TestBase {
       'alias' => '/term33',
       'langcode' => 'und',
     ]);
-    $this->assertIdentical('/taxonomy/term/4', $path_alias->getPath());
-    $this->assertIdentical('/term33', $path_alias->getAlias());
-    $this->assertIdentical('und', $path_alias->language()->getId());
+    $this->assertSame('/taxonomy/term/4', $path_alias->getPath());
+    $this->assertSame('/term33', $path_alias->getAlias());
+    $this->assertSame('und', $path_alias->language()->getId());
 
     // Alias with no slash.
     $path_alias = $this->loadPathAliasByConditions(['alias' => '/source-noslash']);

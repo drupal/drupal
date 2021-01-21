@@ -65,7 +65,7 @@ class UpdatePostUpdateFailingTest extends BrowserTestBase {
     $this->runUpdates();
 
     // There should be no post update hooks registered as being run.
-    $this->assertIdentical([], \Drupal::state()->get('post_update_test_execution', []));
+    $this->assertSame([], \Drupal::state()->get('post_update_test_execution', []));
 
     $key_value = \Drupal::keyValue('update__post_update');
     $this->assertEqual([], $key_value->get('existing_updates', []));

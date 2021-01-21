@@ -24,13 +24,13 @@ class InsertTest extends DatabaseTestBase {
     ]);
 
     // Check how many records are queued for insertion.
-    $this->assertIdentical(1, $query->count(), 'One record is queued for insertion.');
+    $this->assertSame(1, $query->count(), 'One record is queued for insertion.');
     $query->execute();
 
     $num_records_after = $this->connection->query('SELECT COUNT(*) FROM {test}')->fetchField();
     $this->assertSame($num_records_before + 1, (int) $num_records_after, 'Record inserts correctly.');
     $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Yoko'])->fetchField();
-    $this->assertIdentical('29', $saved_age, 'Can retrieve after inserting.');
+    $this->assertSame('29', $saved_age, 'Can retrieve after inserting.');
   }
 
   /**
@@ -52,24 +52,24 @@ class InsertTest extends DatabaseTestBase {
     ]);
 
     // Check how many records are queued for insertion.
-    $this->assertIdentical(2, $query->count(), 'Two records are queued for insertion.');
+    $this->assertSame(2, $query->count(), 'Two records are queued for insertion.');
 
     // We should be able to say "use the field order".
     // This is not the recommended mechanism for most cases, but it should work.
     $query->values(['Moe', '32']);
 
     // Check how many records are queued for insertion.
-    $this->assertIdentical(3, $query->count(), 'Three records are queued for insertion.');
+    $this->assertSame(3, $query->count(), 'Three records are queued for insertion.');
     $query->execute();
 
     $num_records_after = (int) $this->connection->query('SELECT COUNT(*) FROM {test}')->fetchField();
     $this->assertSame($num_records_before + 3, $num_records_after, 'Record inserts correctly.');
     $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Larry'])->fetchField();
-    $this->assertIdentical('30', $saved_age, 'Can retrieve after inserting.');
+    $this->assertSame('30', $saved_age, 'Can retrieve after inserting.');
     $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Curly'])->fetchField();
-    $this->assertIdentical('31', $saved_age, 'Can retrieve after inserting.');
+    $this->assertSame('31', $saved_age, 'Can retrieve after inserting.');
     $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Moe'])->fetchField();
-    $this->assertIdentical('32', $saved_age, 'Can retrieve after inserting.');
+    $this->assertSame('32', $saved_age, 'Can retrieve after inserting.');
   }
 
   /**
@@ -85,7 +85,7 @@ class InsertTest extends DatabaseTestBase {
       'age' => '30',
     ]);
     // Check how many records are queued for insertion.
-    $this->assertIdentical(1, $query->count(), 'One record is queued for insertion.');
+    $this->assertSame(1, $query->count(), 'One record is queued for insertion.');
     // This should run the insert, but leave the fields intact.
     $query->execute();
 
@@ -95,24 +95,24 @@ class InsertTest extends DatabaseTestBase {
       'name' => 'Curly',
     ]);
     // Check how many records are queued for insertion.
-    $this->assertIdentical(1, $query->count(), 'One record is queued for insertion.');
+    $this->assertSame(1, $query->count(), 'One record is queued for insertion.');
     $query->execute();
 
     // We should be able to say "use the field order".
     $query->values(['Moe', '32']);
 
     // Check how many records are queued for insertion.
-    $this->assertIdentical(1, $query->count(), 'One record is queued for insertion.');
+    $this->assertSame(1, $query->count(), 'One record is queued for insertion.');
     $query->execute();
 
     $num_records_after = $this->connection->query('SELECT COUNT(*) FROM {test}')->fetchField();
     $this->assertSame((int) $num_records_before + 3, (int) $num_records_after, 'Record inserts correctly.');
     $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Larry'])->fetchField();
-    $this->assertIdentical('30', $saved_age, 'Can retrieve after inserting.');
+    $this->assertSame('30', $saved_age, 'Can retrieve after inserting.');
     $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Curly'])->fetchField();
-    $this->assertIdentical('31', $saved_age, 'Can retrieve after inserting.');
+    $this->assertSame('31', $saved_age, 'Can retrieve after inserting.');
     $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Moe'])->fetchField();
-    $this->assertIdentical('32', $saved_age, 'Can retrieve after inserting.');
+    $this->assertSame('32', $saved_age, 'Can retrieve after inserting.');
   }
 
   /**
@@ -128,11 +128,11 @@ class InsertTest extends DatabaseTestBase {
       ->values(['Moe', '32'])
       ->execute();
     $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Larry'])->fetchField();
-    $this->assertIdentical('30', $saved_age, 'Can retrieve after inserting.');
+    $this->assertSame('30', $saved_age, 'Can retrieve after inserting.');
     $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Curly'])->fetchField();
-    $this->assertIdentical('31', $saved_age, 'Can retrieve after inserting.');
+    $this->assertSame('31', $saved_age, 'Can retrieve after inserting.');
     $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Moe'])->fetchField();
-    $this->assertIdentical('32', $saved_age, 'Can retrieve after inserting.');
+    $this->assertSame('32', $saved_age, 'Can retrieve after inserting.');
   }
 
   /**
@@ -146,7 +146,7 @@ class InsertTest extends DatabaseTestBase {
       ])
       ->execute();
 
-    $this->assertIdentical('5', $id, 'Auto-increment ID returned successfully.');
+    $this->assertSame('5', $id, 'Auto-increment ID returned successfully.');
   }
 
   /**
@@ -172,7 +172,7 @@ class InsertTest extends DatabaseTestBase {
       ->execute();
 
     $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Meredith'])->fetchField();
-    $this->assertIdentical('30', $saved_age, 'Can retrieve after inserting.');
+    $this->assertSame('30', $saved_age, 'Can retrieve after inserting.');
   }
 
   /**
@@ -193,7 +193,7 @@ class InsertTest extends DatabaseTestBase {
       ->execute();
 
     $saved_age = $this->connection->query('SELECT [age] FROM {test_people_copy} WHERE [name] = :name', [':name' => 'Meredith'])->fetchField();
-    $this->assertIdentical('30', $saved_age, 'Can retrieve after inserting.');
+    $this->assertSame('30', $saved_age, 'Can retrieve after inserting.');
   }
 
   /**

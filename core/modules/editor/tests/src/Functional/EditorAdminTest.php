@@ -245,8 +245,8 @@ class EditorAdminTest extends BrowserTestBase {
   protected function verifyUnicornEditorConfiguration($format_id, $ponies_too = TRUE) {
     $editor = editor_load($format_id);
     $settings = $editor->getSettings();
-    $this->assertIdentical('unicorn', $editor->getEditor(), 'The text editor is configured correctly.');
-    $this->assertIdentical($ponies_too, $settings['ponies_too'], 'The text editor settings are stored correctly.');
+    $this->assertSame('unicorn', $editor->getEditor(), 'The text editor is configured correctly.');
+    $this->assertSame($ponies_too, $settings['ponies_too'], 'The text editor settings are stored correctly.');
     $this->drupalGet('admin/config/content/formats/manage/' . $format_id);
     $select = $this->xpath('//select[@name="editor[editor]"]');
     $select_is_disabled = $this->xpath('//select[@name="editor[editor]" and @disabled="disabled"]');

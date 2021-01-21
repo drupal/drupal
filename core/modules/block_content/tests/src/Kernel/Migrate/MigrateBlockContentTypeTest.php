@@ -32,7 +32,7 @@ class MigrateBlockContentTypeTest extends MigrateDrupal7TestBase {
     /** @var \Drupal\block_content\BlockContentTypeInterface $entity */
     $entity = BlockContentType::load('basic');
     $this->assertInstanceOf(BlockContentTypeInterface::class, $entity);
-    $this->assertIdentical('Basic', $entity->label());
+    $this->assertSame('Basic', $entity->label());
   }
 
 }

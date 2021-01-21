@@ -217,7 +217,7 @@ class HandlerTest extends ViewTestBase {
 
     foreach ($handler_types as $type) {
       $loaded_order = array_keys($view->display_handler->getOption($type));
-      $this->assertIdentical($original_order[$type], $loaded_order);
+      $this->assertSame($original_order[$type], $loaded_order);
     }
   }
 

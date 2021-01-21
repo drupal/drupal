@@ -42,22 +42,22 @@ class ConfigLanguageOverrideTest extends KernelTestBase {
     // English overrides work.
     \Drupal::languageManager()->setConfigOverrideLanguage(\Drupal::languageManager()->getLanguage('en'));
     $config = \Drupal::config('config_test.system');
-    $this->assertIdentical('en bar', $config->get('foo'));
+    $this->assertSame('en bar', $config->get('foo'));
 
     // Ensure that the raw data is not translated.
     $raw = $config->getRawData();
-    $this->assertIdentical('bar', $raw['foo']);
+    $this->assertSame('bar', $raw['foo']);
 
     ConfigurableLanguage::createFromLangcode('fr')->save();
     ConfigurableLanguage::createFromLangcode('de')->save();
 
     \Drupal::languageManager()->setConfigOverrideLanguage(\Drupal::languageManager()->getLanguage('fr'));
     $config = \Drupal::config('config_test.system');
-    $this->assertIdentical('fr bar', $config->get('foo'));
+    $this->assertSame('fr bar', $config->get('foo'));
 
     \Drupal::languageManager()->setConfigOverrideLanguage(\Drupal::languageManager()->getLanguage('de'));
     $config = \Drupal::config('config_test.system');
-    $this->assertIdentical('de bar', $config->get('foo'));
+    $this->assertSame('de bar', $config->get('foo'));
 
     // Test overrides of completely new configuration objects. In normal runtime
     // this should only happen for configuration entities as we should not be
@@ -68,7 +68,7 @@ class ConfigLanguageOverrideTest extends KernelTestBase {
       ->save();
     $config = \Drupal::config('config_test.new');
     $this->assertTrue($config->isNew(), 'The configuration object config_test.new is new');
-    $this->assertIdentical('override', $config->get('language'));
+    $this->assertSame('override', $config->get('language'));
     $this->assertNull($config->getOriginal('language', FALSE));
 
     // Test how overrides react to base configuration changes. Set up some base
@@ -88,7 +88,7 @@ class ConfigLanguageOverrideTest extends KernelTestBase {
       ->save();
     \Drupal::configFactory()->clearStaticCache();
     $config = \Drupal::config('config_test.foo');
-    $this->assertIdentical(['key' => 'override'], $config->get('value'));
+    $this->assertSame(['key' => 'override'], $config->get('value'));
 
     // Ensure renaming the config will rename the override.
     \Drupal::languageManager()->setConfigOverrideLanguage(\Drupal::languageManager()->getLanguage('en'));

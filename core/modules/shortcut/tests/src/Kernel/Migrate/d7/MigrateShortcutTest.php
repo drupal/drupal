@@ -54,9 +54,9 @@ class MigrateShortcutTest extends MigrateDrupal7TestBase {
     $shortcut = Shortcut::load($id);
     $this->assertInstanceOf(ShortcutInterface::class, $shortcut);
     /** @var \Drupal\shortcut\ShortcutInterface $shortcut */
-    $this->assertIdentical($title, $shortcut->getTitle());
-    $this->assertIdentical($weight, $shortcut->getWeight());
-    $this->assertIdentical($url, $shortcut->getUrl()->toString());
+    $this->assertSame($title, $shortcut->getTitle());
+    $this->assertSame($weight, $shortcut->getWeight());
+    $this->assertSame($url, $shortcut->getUrl()->toString());
   }
 
   /**

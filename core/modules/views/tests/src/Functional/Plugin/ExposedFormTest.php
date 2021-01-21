@@ -374,7 +374,7 @@ class ExposedFormTest extends ViewTestBase {
       $actual_ids[] = (int) $element->getText();
     }
 
-    return $this->assertIdentical($ids, $actual_ids);
+    return $this->assertSame($ids, $actual_ids);
   }
 
   /**

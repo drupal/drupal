@@ -32,9 +32,9 @@ class MigrateSearchSettingsTest extends MigrateDrupal6TestBase {
    */
   public function testSearchSettings() {
     $config = $this->config('search.settings');
-    $this->assertIdentical(3, $config->get('index.minimum_word_size'));
+    $this->assertSame(3, $config->get('index.minimum_word_size'));
     $this->assertTrue($config->get('index.overlap_cjk'));
-    $this->assertIdentical(100, $config->get('index.cron_limit'));
+    $this->assertSame(100, $config->get('index.cron_limit'));
     $this->assertTrue($config->get('logging'));
     $this->assertConfigSchema(\Drupal::service('config.typed'), 'search.settings', $config->get());
   }

@@ -96,7 +96,7 @@ class RelationshipUserImageDataTest extends ViewsKernelTestBase {
         'user',
       ],
     ];
-    $this->assertIdentical($expected, $view->getDependencies());
+    $this->assertSame($expected, $view->getDependencies());
     $this->executeView($view);
     $expected_result = [
       [
