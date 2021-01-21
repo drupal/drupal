@@ -86,7 +86,7 @@ class FieldCounterTest extends ViewTestBase {
       ['counter' => '9'],
       ['counter' => '10'],
     ];
-    $this->assertIdentical(json_encode($expected), $actual_json);
+    $this->assertSame(json_encode($expected), $actual_json);
   }
 
 }

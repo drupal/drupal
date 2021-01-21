@@ -172,7 +172,7 @@ class EditorLoadingTest extends BrowserTestBase {
       ],
     ];
     $this->assertTrue($editor_settings_present, "Text Editor module's JavaScript settings are on the page.");
-    $this->assertIdentical($expected, $settings['editor'], "Text Editor module's JavaScript settings on the page are correct.");
+    $this->assertSame($expected, $settings['editor'], "Text Editor module's JavaScript settings on the page are correct.");
     $this->assertTrue($editor_js_present, 'Text Editor JavaScript is present.');
     $this->assertCount(1, $body, 'A body field exists.');
     $this->assertCount(1, $format_selector, 'A single text format selector exists on the page.');
@@ -210,7 +210,7 @@ class EditorLoadingTest extends BrowserTestBase {
       ],
     ];
     $this->assertTrue($editor_settings_present, "Text Editor module's JavaScript settings are on the page.");
-    $this->assertIdentical($expected, $settings['editor'], "Text Editor module's JavaScript settings on the page are correct.");
+    $this->assertSame($expected, $settings['editor'], "Text Editor module's JavaScript settings on the page are correct.");
     $this->assertTrue($editor_js_present, 'Text Editor JavaScript is present.');
     $this->assertCount(1, $body, 'A body field exists.');
     $this->assertCount(0, $format_selector, 'No text format selector exists on the page.');

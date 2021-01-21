@@ -428,7 +428,7 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
   protected function assertActiveConfig($config_name, $key, $value, $langcode) {
     $config = $this->configFactory->getEditable($config_name);
     $this->assertEqual($config->get('langcode'), $langcode);
-    $this->assertIdentical($value, $config->get($key));
+    $this->assertSame($value, $config->get($key));
   }
 
   /**
@@ -446,7 +446,7 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
       'language' => $langcode,
       'translated' => TRUE,
     ]);
-    $this->assertIdentical([], $strings);
+    $this->assertSame([], $strings);
   }
 
   /**
@@ -474,7 +474,7 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
     $string = reset($strings);
     $this->assertInstanceOf(StringInterface::class, $string);
     /** @var \Drupal\locale\StringInterface $string */
-    $this->assertIdentical($translation, $string->getString());
+    $this->assertSame($translation, $string->getString());
     $this->assertTrue($string->isTranslation());
     $this->assertInstanceOf(TranslationString::class, $string);
     /** @var \Drupal\locale\TranslationString $string */

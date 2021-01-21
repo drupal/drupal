@@ -51,8 +51,8 @@ class SqlQueryTest extends ViewsKernelTestBase {
       $this->assertTrue($query->hasTag('test_tag'));
 
       // Check metadata.
-      $this->assertIdentical('test_metadata', $query->getMetaData('key1'));
-      $this->assertIdentical('test_metadata2', $query->getMetaData('key2'));
+      $this->assertSame('test_metadata', $query->getMetaData('key1'));
+      $this->assertSame('test_metadata2', $query->getMetaData('key2'));
     }
 
     $query_options = $view->display_handler->getOption('query');

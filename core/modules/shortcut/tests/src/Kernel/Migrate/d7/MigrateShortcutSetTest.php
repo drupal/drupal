@@ -60,8 +60,8 @@ class MigrateShortcutSetTest extends MigrateDrupal7TestBase {
     $shortcut_set = ShortcutSet::load($id);
     $this->assertInstanceOf(ShortcutSetInterface::class, $shortcut_set);
     /** @var \Drupal\shortcut\ShortcutSetInterface $shortcut_set */
-    $this->assertIdentical($id, $shortcut_set->id());
-    $this->assertIdentical($label, $shortcut_set->label());
+    $this->assertSame($id, $shortcut_set->id());
+    $this->assertSame($label, $shortcut_set->label());
 
     // Check the number of shortcuts in the set.
     $shortcuts = $shortcut_set->getShortcuts();

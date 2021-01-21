@@ -65,9 +65,9 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
   protected function assertComponent($display_id, $component_id, $type, $label, $weight) {
     $component = EntityViewDisplay::load($display_id)->getComponent($component_id);
     $this->assertIsArray($component);
-    $this->assertIdentical($type, $component['type']);
-    $this->assertIdentical($label, $component['label']);
-    $this->assertIdentical($weight, $component['weight']);
+    $this->assertSame($type, $component['type']);
+    $this->assertSame($label, $component['label']);
+    $this->assertSame($weight, $component['weight']);
   }
 
   /**

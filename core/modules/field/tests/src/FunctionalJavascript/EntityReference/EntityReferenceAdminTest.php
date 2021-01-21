@@ -366,7 +366,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
       sort($options);
       sort($expected_options);
 
-      $this->assertIdentical($expected_options, $options);
+      $this->assertSame($expected_options, $options);
     }
     else {
       $this->fail('Unable to find field ' . $name);

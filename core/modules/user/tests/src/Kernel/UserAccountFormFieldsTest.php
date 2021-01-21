@@ -80,7 +80,7 @@ class UserAccountFormFieldsTest extends KernelTestBase {
 
     // Verify that autocomplete is off on all account fields.
     foreach (['mail', 'name', 'pass'] as $key) {
-      $this->assertIdentical('off', $form['account'][$key]['#attributes']['autocomplete'], "'{$key}' field: 'autocomplete' attribute is 'off'.");
+      $this->assertSame('off', $form['account'][$key]['#attributes']['autocomplete'], "'{$key}' field: 'autocomplete' attribute is 'off'.");
     }
   }
 

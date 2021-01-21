@@ -114,7 +114,7 @@ class ConfigTranslationOverviewTest extends BrowserTestBase {
       // dropbutton.
       foreach ($this->cssSelect('ul.dropbutton') as $i => $dropbutton) {
         $this->assertCount(1, $dropbutton->findAll('xpath', 'li'));
-        $this->assertIdentical('Translate', $dropbutton->getText());
+        $this->assertSame('Translate', $dropbutton->getText());
       }
 
       $entity_type = \Drupal::entityTypeManager()->getDefinition($test_entity->getEntityTypeId());

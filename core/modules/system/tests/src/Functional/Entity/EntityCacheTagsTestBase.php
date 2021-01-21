@@ -666,7 +666,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     $this->assertInstanceOf(\stdClass::class, $cache_entry);
     sort($cache_entry->tags);
     sort($tags);
-    $this->assertIdentical($cache_entry->tags, $tags);
+    $this->assertSame($cache_entry->tags, $tags);
     $is_redirecting_cache_item = isset($cache_entry->data['#cache_redirect']);
     if ($redirected_cid === NULL) {
       $this->assertFalse($is_redirecting_cache_item, 'Render cache entry is not a redirect.');
@@ -688,7 +688,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
         $redirect_cache_metadata['keys'],
         $redirect_cache_metadata['contexts']
       );
-      $this->assertIdentical($redirected_cid, $actual_redirection_cid);
+      $this->assertSame($redirected_cid, $actual_redirection_cid);
       // Finally, verify that the redirected CID exists and has the same cache
       // tags.
       $this->verifyRenderCache($redirected_cid, $tags);

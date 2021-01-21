@@ -229,7 +229,7 @@ class RouterTest extends BrowserTestBase {
     $front_url = Url::fromRoute('<front>', [], ['absolute' => TRUE]);
     // Compare to the site base URL.
     $base_url = Url::fromUri('base:/', ['absolute' => TRUE]);
-    $this->assertIdentical($base_url->toString(), $front_url->toString());
+    $this->assertSame($base_url->toString(), $front_url->toString());
   }
 
   /**

@@ -121,7 +121,7 @@ class ConfigEntityListTest extends BrowserTestBase {
     ]);
     $entity->save();
     $list = $controller->load();
-    $this->assertIdentical(['beta', 'dotted.default', 'alpha', 'omega'], array_keys($list));
+    $this->assertSame(['beta', 'dotted.default', 'alpha', 'omega'], array_keys($list));
 
     // Test that config entities that do not support status, do not have
     // enable/disable operations.
@@ -178,7 +178,7 @@ class ConfigEntityListTest extends BrowserTestBase {
     // Test the contents of each th cell.
     $expected_items = ['Label', 'Machine name', 'Operations'];
     foreach ($elements as $key => $element) {
-      $this->assertIdentical($expected_items[$key], $element->getText());
+      $this->assertSame($expected_items[$key], $element->getText());
     }
 
     // Check the number of table row cells.
@@ -188,8 +188,8 @@ class ConfigEntityListTest extends BrowserTestBase {
     // Check the contents of each row cell. The first cell contains the label,
     // the second contains the machine name, and the third contains the
     // operations list.
-    $this->assertIdentical('Default', $elements[0]->getText());
-    $this->assertIdentical('dotted.default', $elements[1]->getText());
+    $this->assertSame('Default', $elements[0]->getText());
+    $this->assertSame('dotted.default', $elements[1]->getText());
     $this->assertNotEmpty($elements[2]->find('xpath', '//ul'), 'Operations list found.');
 
     // Add a new entity using the operations link.

@@ -341,7 +341,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     $vocabularies[0]->delete();
     $field_config = FieldConfig::load($field_id);
     $this->assertTrue($field_config->getSetting('handler_settings')['auto_create']);
-    $this->assertIdentical($vocabularies[1]->id(), $field_config->getSetting('handler_settings')['auto_create_bundle']);
+    $this->assertSame($vocabularies[1]->id(), $field_config->getSetting('handler_settings')['auto_create_bundle']);
 
     // Delete the bundle set for entity auto-creation. Auto-created settings
     // should be reset (no auto-creation).
@@ -400,7 +400,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
       });
       sort($options);
       sort($expected_options);
-      $this->assertIdentical($expected_options, $options);
+      $this->assertSame($expected_options, $options);
     }
     else {
       $this->fail('Unable to find field ' . $name);

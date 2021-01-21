@@ -32,7 +32,7 @@ class MigrateTaxonomyConfigsTest extends MigrateDrupal6TestBase {
    */
   public function testTaxonomySettings() {
     $config = $this->config('taxonomy.settings');
-    $this->assertIdentical(100, $config->get('terms_per_page_admin'));
+    $this->assertSame(100, $config->get('terms_per_page_admin'));
     $this->assertFalse($config->get('override_selector'));
     $this->assertConfigSchema(\Drupal::service('config.typed'), 'taxonomy.settings', $config->get());
   }

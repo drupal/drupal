@@ -45,17 +45,17 @@ class KeyValueContentEntityStorageTest extends KernelTestBase {
     $this->assertNull($empty->id->value);
     $this->assertNull($empty->name->value);
     $this->assertNotEmpty($empty->uuid->value);
-    $this->assertIdentical($default_langcode, $empty->langcode->value);
+    $this->assertSame($default_langcode, $empty->langcode->value);
 
     // Verify ConfigEntity properties/methods on the newly created empty entity.
     $this->assertTrue($empty->isNew());
-    $this->assertIdentical('entity_test_label', $empty->bundle());
+    $this->assertSame('entity_test_label', $empty->bundle());
     $this->assertNull($empty->id());
     $this->assertNotEmpty($empty->uuid());
     $this->assertNull($empty->label());
 
     // Verify Entity properties/methods on the newly created empty entity.
-    $this->assertIdentical('entity_test_label', $empty->getEntityTypeId());
+    $this->assertSame('entity_test_label', $empty->getEntityTypeId());
     // The URI can only be checked after saving.
     try {
       $empty->toUrl();
@@ -92,18 +92,18 @@ class KeyValueContentEntityStorageTest extends KernelTestBase {
       'id' => $this->randomMachineName(),
       'name' => $this->randomString(),
     ]);
-    $this->assertIdentical($expected['id'], $entity_test->id->value);
+    $this->assertSame($expected['id'], $entity_test->id->value);
     $this->assertNotEmpty($entity_test->uuid->value);
     $this->assertNotEquals($empty->uuid->value, $entity_test->uuid->value);
-    $this->assertIdentical($expected['name'], $entity_test->name->value);
-    $this->assertIdentical($default_langcode, $entity_test->langcode->value);
+    $this->assertSame($expected['name'], $entity_test->name->value);
+    $this->assertSame($default_langcode, $entity_test->langcode->value);
 
     // Verify methods on the newly created entity.
     $this->assertTrue($entity_test->isNew());
-    $this->assertIdentical($expected['id'], $entity_test->id());
+    $this->assertSame($expected['id'], $entity_test->id());
     $this->assertNotEmpty($entity_test->uuid());
     $expected['uuid'] = $entity_test->uuid();
-    $this->assertIdentical($expected['name'], $entity_test->label());
+    $this->assertSame($expected['name'], $entity_test->label());
 
     // Verify that the entity can be saved.
     try {
@@ -117,18 +117,18 @@ class KeyValueContentEntityStorageTest extends KernelTestBase {
     $this->assertTrue($storage->hasData());
 
     // Verify that the correct status is returned and properties did not change.
-    $this->assertIdentical(SAVED_NEW, $status);
-    $this->assertIdentical($expected['id'], $entity_test->id());
-    $this->assertIdentical($expected['uuid'], $entity_test->uuid());
-    $this->assertIdentical($expected['name'], $entity_test->label());
+    $this->assertSame(SAVED_NEW, $status);
+    $this->assertSame($expected['id'], $entity_test->id());
+    $this->assertSame($expected['uuid'], $entity_test->uuid());
+    $this->assertSame($expected['name'], $entity_test->label());
     $this->assertFalse($entity_test->isNew());
 
     // Save again, and verify correct status and properties again.
     $status = $entity_test->save();
-    $this->assertIdentical(SAVED_UPDATED, $status);
-    $this->assertIdentical($expected['id'], $entity_test->id());
-    $this->assertIdentical($expected['uuid'], $entity_test->uuid());
-    $this->assertIdentical($expected['name'], $entity_test->label());
+    $this->assertSame(SAVED_UPDATED, $status);
+    $this->assertSame($expected['id'], $entity_test->id());
+    $this->assertSame($expected['uuid'], $entity_test->uuid());
+    $this->assertSame($expected['name'], $entity_test->label());
     $this->assertFalse($entity_test->isNew());
 
     // Ensure that creating an entity with the same id as an existing one is not
@@ -151,17 +151,17 @@ class KeyValueContentEntityStorageTest extends KernelTestBase {
       $old_id = $ids[$i - 1];
       $new_id = $ids[$i];
       // Before renaming, everything should point to the current ID.
-      $this->assertIdentical($old_id, $entity_test->id());
+      $this->assertSame($old_id, $entity_test->id());
 
       // Rename.
       $entity_test->id = $new_id;
-      $this->assertIdentical($new_id, $entity_test->id());
+      $this->assertSame($new_id, $entity_test->id());
       $status = $entity_test->save();
-      $this->assertIdentical(SAVED_UPDATED, $status);
+      $this->assertSame(SAVED_UPDATED, $status);
       $this->assertFalse($entity_test->isNew());
 
       // Verify that originalID points to new ID directly after renaming.
-      $this->assertIdentical($new_id, $entity_test->id());
+      $this->assertSame($new_id, $entity_test->id());
     }
   }
 

@@ -45,12 +45,12 @@ class ConfigEntityTest extends BrowserTestBase {
     $empty = $storage->create();
     $this->assertNull($empty->label);
     $this->assertNull($empty->style);
-    $this->assertIdentical($default_langcode, $empty->language()->getId());
+    $this->assertSame($default_langcode, $empty->language()->getId());
 
     // Verify ConfigEntity properties/methods on the newly created empty entity.
     $this->assertTrue($empty->isNew());
     $this->assertNull($empty->getOriginalId());
-    $this->assertIdentical('config_test', $empty->bundle());
+    $this->assertSame('config_test', $empty->bundle());
     $this->assertNull($empty->id());
     $this->assertTrue(Uuid::isValid($empty->uuid()));
     $this->assertNull($empty->label());
@@ -59,10 +59,10 @@ class ConfigEntityTest extends BrowserTestBase {
     $this->assertTrue(Uuid::isValid($empty->get('uuid')));
     $this->assertNull($empty->get('label'));
     $this->assertNull($empty->get('style'));
-    $this->assertIdentical($default_langcode, $empty->language()->getId());
+    $this->assertSame($default_langcode, $empty->language()->getId());
 
     // Verify Entity properties/methods on the newly created empty entity.
-    $this->assertIdentical('config_test', $empty->getEntityTypeId());
+    $this->assertSame('config_test', $empty->getEntityTypeId());
     // The URI can only be checked after saving.
     try {
       $empty->toUrl();
@@ -101,17 +101,17 @@ class ConfigEntityTest extends BrowserTestBase {
       'style' => $this->randomMachineName(),
     ]);
     $this->assertNotEquals($empty->uuid(), $config_test->uuid());
-    $this->assertIdentical($expected['label'], $config_test->label);
-    $this->assertIdentical($expected['style'], $config_test->style);
-    $this->assertIdentical($default_langcode, $config_test->language()->getId());
+    $this->assertSame($expected['label'], $config_test->label);
+    $this->assertSame($expected['style'], $config_test->style);
+    $this->assertSame($default_langcode, $config_test->language()->getId());
 
     // Verify methods on the newly created entity.
     $this->assertTrue($config_test->isNew());
-    $this->assertIdentical($expected['id'], $config_test->getOriginalId());
-    $this->assertIdentical($expected['id'], $config_test->id());
+    $this->assertSame($expected['id'], $config_test->getOriginalId());
+    $this->assertSame($expected['id'], $config_test->id());
     $this->assertTrue(Uuid::isValid($config_test->uuid()));
     $expected['uuid'] = $config_test->uuid();
-    $this->assertIdentical($expected['label'], $config_test->label());
+    $this->assertSame($expected['label'], $config_test->label());
 
     // Verify that the entity can be saved.
     try {
@@ -122,24 +122,24 @@ class ConfigEntityTest extends BrowserTestBase {
     }
 
     // The entity path can only be checked after saving.
-    $this->assertIdentical(Url::fromRoute('entity.config_test.edit_form', ['config_test' => $expected['id']])->toString(), $config_test->toUrl()->toString());
+    $this->assertSame(Url::fromRoute('entity.config_test.edit_form', ['config_test' => $expected['id']])->toString(), $config_test->toUrl()->toString());
 
     // Verify that the correct status is returned and properties did not change.
-    $this->assertIdentical(SAVED_NEW, $status);
-    $this->assertIdentical($expected['id'], $config_test->id());
-    $this->assertIdentical($expected['uuid'], $config_test->uuid());
-    $this->assertIdentical($expected['label'], $config_test->label());
+    $this->assertSame(SAVED_NEW, $status);
+    $this->assertSame($expected['id'], $config_test->id());
+    $this->assertSame($expected['uuid'], $config_test->uuid());
+    $this->assertSame($expected['label'], $config_test->label());
     $this->assertFalse($config_test->isNew());
-    $this->assertIdentical($expected['id'], $config_test->getOriginalId());
+    $this->assertSame($expected['id'], $config_test->getOriginalId());
 
     // Save again, and verify correct status and properties again.
     $status = $config_test->save();
-    $this->assertIdentical(SAVED_UPDATED, $status);
-    $this->assertIdentical($expected['id'], $config_test->id());
-    $this->assertIdentical($expected['uuid'], $config_test->uuid());
-    $this->assertIdentical($expected['label'], $config_test->label());
+    $this->assertSame(SAVED_UPDATED, $status);
+    $this->assertSame($expected['id'], $config_test->id());
+    $this->assertSame($expected['uuid'], $config_test->uuid());
+    $this->assertSame($expected['label'], $config_test->label());
     $this->assertFalse($config_test->isNew());
-    $this->assertIdentical($expected['id'], $config_test->getOriginalId());
+    $this->assertSame($expected['id'], $config_test->getOriginalId());
 
     // Verify that a configuration entity can be saved with an ID of the
     // maximum allowed length, but not longer.
@@ -201,19 +201,19 @@ class ConfigEntityTest extends BrowserTestBase {
       $old_id = $ids[$i - 1];
       $new_id = $ids[$i];
       // Before renaming, everything should point to the current ID.
-      $this->assertIdentical($old_id, $config_test->id());
-      $this->assertIdentical($old_id, $config_test->getOriginalId());
+      $this->assertSame($old_id, $config_test->id());
+      $this->assertSame($old_id, $config_test->getOriginalId());
 
       // Rename.
       $config_test->set('id', $new_id);
-      $this->assertIdentical($new_id, $config_test->id());
+      $this->assertSame($new_id, $config_test->id());
       $status = $config_test->save();
-      $this->assertIdentical(SAVED_UPDATED, $status);
+      $this->assertSame(SAVED_UPDATED, $status);
       $this->assertFalse($config_test->isNew());
 
       // Verify that originalID points to new ID directly after renaming.
-      $this->assertIdentical($new_id, $config_test->id());
-      $this->assertIdentical($new_id, $config_test->getOriginalId());
+      $this->assertSame($new_id, $config_test->id());
+      $this->assertSame($new_id, $config_test->getOriginalId());
     }
 
     // Test config entity prepopulation.

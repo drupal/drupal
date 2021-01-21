@@ -48,19 +48,19 @@ class MigrateNodeTypeTest extends MigrateDrupal7TestBase {
     /** @var \Drupal\node\NodeTypeInterface $entity */
     $entity = NodeType::load($id);
     $this->assertInstanceOf(NodeTypeInterface::class, $entity);
-    $this->assertIdentical($label, $entity->label());
-    $this->assertIdentical($description, $entity->getDescription());
+    $this->assertSame($label, $entity->label());
+    $this->assertSame($description, $entity->getDescription());
 
-    $this->assertIdentical($help, $entity->getHelp());
+    $this->assertSame($help, $entity->getHelp());
 
-    $this->assertIdentical($display_submitted, $entity->displaySubmitted(), 'Submission info is displayed');
-    $this->assertIdentical($new_revision, $entity->shouldCreateNewRevision(), 'Is a new revision');
+    $this->assertSame($display_submitted, $entity->displaySubmitted(), 'Submission info is displayed');
+    $this->assertSame($new_revision, $entity->shouldCreateNewRevision(), 'Is a new revision');
 
     if ($body_label) {
       /** @var \Drupal\field\FieldConfigInterface $body */
       $body = FieldConfig::load('node.' . $id . '.body');
       $this->assertInstanceOf(FieldConfigInterface::class, $body);
-      $this->assertIdentical($body_label, $body->label());
+      $this->assertSame($body_label, $body->label());
     }
 
     $this->assertSame($expected_available_menus, $entity->getThirdPartySetting('menu_ui', 'available_menus'));

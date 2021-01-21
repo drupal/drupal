@@ -229,7 +229,7 @@ class EntityFieldTest extends EntityKernelTestBase {
       $this->assertTrue(isset($entity->name), new FormattableMarkup('%entity_type: Name field is set.', ['%entity_type' => $entity_type]));
       $this->assertTrue($entity->name->isEmpty(), new FormattableMarkup('%entity_type: Name field is set.', ['%entity_type' => $entity_type]));
       $this->assertCount(0, $entity->name, new FormattableMarkup('%entity_type: Name field contains no items.', ['%entity_type' => $entity_type]));
-      $this->assertIdentical([], $entity->name->getValue(), new FormattableMarkup('%entity_type: Name field value is an empty array.', ['%entity_type' => $entity_type]));
+      $this->assertSame([], $entity->name->getValue(), new FormattableMarkup('%entity_type: Name field value is an empty array.', ['%entity_type' => $entity_type]));
       $this->assertFalse(isset($entity->name[0]), new FormattableMarkup('%entity_type: Name field item is not set.', ['%entity_type' => $entity_type]));
       $this->assertFalse(isset($entity->name[0]->value), new FormattableMarkup('%entity_type: First name item value is not set.', ['%entity_type' => $entity_type]));
       $this->assertFalse(isset($entity->name->value), new FormattableMarkup('%entity_type: Name value is not set.', ['%entity_type' => $entity_type]));
@@ -347,7 +347,7 @@ class EntityFieldTest extends EntityKernelTestBase {
         'field_test_text' => $text_item,
       ]);
     $this->assertNotNull($entity->user_id->target_id, new FormattableMarkup('%entity_type: User id is not NULL', ['%entity_type' => $entity_type]));
-    $this->assertIdentical(0, $entity->user_id->target_id, new FormattableMarkup('%entity_type: User id has been set to 0', ['%entity_type' => $entity_type]));
+    $this->assertSame(0, $entity->user_id->target_id, new FormattableMarkup('%entity_type: User id has been set to 0', ['%entity_type' => $entity_type]));
 
     // Test setting the ID with the value only.
     $entity = $this->container->get('entity_type.manager')
@@ -358,7 +358,7 @@ class EntityFieldTest extends EntityKernelTestBase {
         'field_test_text' => $text_item,
       ]);
     $this->assertNotNull($entity->user_id->target_id, new FormattableMarkup('%entity_type: User id is not NULL', ['%entity_type' => $entity_type]));
-    $this->assertIdentical(0, $entity->user_id->target_id, new FormattableMarkup('%entity_type: User id has been set to 0', ['%entity_type' => $entity_type]));
+    $this->assertSame(0, $entity->user_id->target_id, new FormattableMarkup('%entity_type: User id has been set to 0', ['%entity_type' => $entity_type]));
   }
 
   /**

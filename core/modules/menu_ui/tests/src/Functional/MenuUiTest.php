@@ -118,7 +118,7 @@ class MenuUiTest extends BrowserTestBase {
     $before_count = $menu_link_manager->countMenuLinks(NULL);
     $menu_link_manager->rebuild();
     $after_count = $menu_link_manager->countMenuLinks(NULL);
-    $this->assertIdentical($before_count, $after_count, 'MenuLinkManager::rebuild() does not add more links');
+    $this->assertSame($before_count, $after_count, 'MenuLinkManager::rebuild() does not add more links');
     // Do standard user tests.
     // Log in the user.
     $this->drupalLogin($this->authenticatedUser);

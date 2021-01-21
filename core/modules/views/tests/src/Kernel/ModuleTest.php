@@ -147,12 +147,12 @@ class ModuleTest extends ViewsKernelTestBase {
 
     // Test Views::getViewsAsOptions().
     // Test the $views_only parameter.
-    $this->assertIdentical(array_keys($all_views), array_keys(Views::getViewsAsOptions(TRUE)), 'Expected option keys for all views were returned.');
+    $this->assertSame(array_keys($all_views), array_keys(Views::getViewsAsOptions(TRUE)), 'Expected option keys for all views were returned.');
     $expected_options = [];
     foreach ($all_views as $id => $view) {
       $expected_options[$id] = $view->label();
     }
-    $this->assertIdentical($expected_options, Views::getViewsAsOptions(TRUE), 'Expected options array was returned.');
+    $this->assertSame($expected_options, Views::getViewsAsOptions(TRUE), 'Expected options array was returned.');
 
     // Test the default.
     $this->assertEquals($this->formatViewOptions($all_views), Views::getViewsAsOptions(), 'Expected options array for all views was returned.');
@@ -164,7 +164,7 @@ class ModuleTest extends ViewsKernelTestBase {
     // Test the sort parameter.
     $all_views_sorted = $all_views;
     ksort($all_views_sorted);
-    $this->assertIdentical(array_keys($all_views_sorted), array_keys(Views::getViewsAsOptions(TRUE, 'all', NULL, FALSE, TRUE)), 'All view id keys returned in expected sort order');
+    $this->assertSame(array_keys($all_views_sorted), array_keys(Views::getViewsAsOptions(TRUE, 'all', NULL, FALSE, TRUE)), 'All view id keys returned in expected sort order');
 
     // Test $exclude_view parameter.
     $this->assertArrayNotHasKey('archive', Views::getViewsAsOptions(TRUE, 'all', 'archive'));
@@ -210,16 +210,16 @@ class ModuleTest extends ViewsKernelTestBase {
       $expected[$id] = $definition['title'];
     }
     asort($expected);
-    $this->assertIdentical(array_keys($expected), array_keys($plugins));
+    $this->assertSame(array_keys($expected), array_keys($plugins));
 
     // Test using the 'test' style plugin type only returns the test_style and
     // mapping_test plugins.
     $plugins = Views::fetchPluginNames('style', 'test');
-    $this->assertIdentical(['mapping_test', 'test_style', 'test_template_style'], array_keys($plugins));
+    $this->assertSame(['mapping_test', 'test_style', 'test_template_style'], array_keys($plugins));
 
     // Test a non existent style plugin type returns no plugins.
     $plugins = Views::fetchPluginNames('style', $this->randomString());
-    $this->assertIdentical([], $plugins);
+    $this->assertSame([], $plugins);
   }
 
   /**

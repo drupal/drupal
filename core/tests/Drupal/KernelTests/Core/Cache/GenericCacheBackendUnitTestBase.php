@@ -329,10 +329,10 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     $this->assertFalse(isset($ret['test19']), "Nonexistent cache id test19 is not set.");
     $this->assertFalse(isset($ret['test21']), "Nonexistent cache id test21 is not set.");
     // Test values.
-    $this->assertIdentical(3, $ret['test2']->data, "Existing cache id test2 has the correct value.");
-    $this->assertIdentical(5, $ret['test3']->data, "Existing cache id test3 has the correct value.");
-    $this->assertIdentical(13, $ret['test6']->data, "Existing cache id test6 has the correct value.");
-    $this->assertIdentical(17, $ret['test7']->data, "Existing cache id test7 has the correct value.");
+    $this->assertSame(3, $ret['test2']->data, "Existing cache id test2 has the correct value.");
+    $this->assertSame(5, $ret['test3']->data, "Existing cache id test3 has the correct value.");
+    $this->assertSame(13, $ret['test6']->data, "Existing cache id test6 has the correct value.");
+    $this->assertSame(17, $ret['test7']->data, "Existing cache id test7 has the correct value.");
     // Test $cids array - ensure it contains cache id's that do not exist.
     $this->assertContains('test19', $cids, "Nonexistent cache id test19 is in cids array.");
     $this->assertContains('test21', $cids, "Nonexistent cache id test21 is in cids array.");
@@ -359,9 +359,9 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     $this->assertFalse(isset($ret['test6']), "Deleted cache id test6 is not set");
     $this->assertFalse(isset($ret['test21']), "Nonexistent cache id test21 is not set");
     // Test values.
-    $this->assertIdentical(3, $ret['test2']->data, "Existing cache id test2 has the correct value.");
-    $this->assertIdentical(17, $ret['test7']->data, "Existing cache id test7 has the correct value.");
-    $this->assertIdentical(57, $ret['test19']->data, "Added cache id test19 has the correct value.");
+    $this->assertSame(3, $ret['test2']->data, "Existing cache id test2 has the correct value.");
+    $this->assertSame(17, $ret['test7']->data, "Existing cache id test7 has the correct value.");
+    $this->assertSame(57, $ret['test19']->data, "Added cache id test19 has the correct value.");
     // Test $cids array - ensure it contains cache id's that do not exist.
     $this->assertContains('test3', $cids, "Deleted cache id test3 is in cids array.");
     $this->assertContains('test6', $cids, "Deleted cache id test6 is in cids array.");

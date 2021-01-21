@@ -186,7 +186,7 @@ class DependencyTest extends ModuleTestBase {
 
     // Check the actual order which is saved by module_test_modules_enabled().
     $module_order = \Drupal::state()->get('module_test.install_order', []);
-    $this->assertIdentical($expected_order, $module_order);
+    $this->assertSame($expected_order, $module_order);
   }
 
   /**

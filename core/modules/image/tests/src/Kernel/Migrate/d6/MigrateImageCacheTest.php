@@ -51,8 +51,8 @@ class MigrateImageCacheTest extends MigrateDrupal6TestBase {
     $style = ImageStyle::load('big_blue_cheese');
 
     // Check basic Style info.
-    $this->assertIdentical('big_blue_cheese', $style->get('name'), 'ImageStyle name set correctly');
-    $this->assertIdentical('big_blue_cheese', $style->get('label'), 'ImageStyle label set correctly');
+    $this->assertSame('big_blue_cheese', $style->get('name'), 'ImageStyle name set correctly');
+    $this->assertSame('big_blue_cheese', $style->get('label'), 'ImageStyle label set correctly');
 
     // Test effects.
     $effects = $style->getEffects();

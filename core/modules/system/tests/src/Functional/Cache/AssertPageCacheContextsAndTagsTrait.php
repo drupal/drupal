@@ -111,7 +111,7 @@ trait AssertPageCacheContextsAndTagsTrait {
     $expected_tags = array_unique($expected_tags);
     sort($expected_tags);
     sort($actual_tags);
-    $this->assertIdentical($expected_tags, $actual_tags);
+    $this->assertSame($expected_tags, $actual_tags);
   }
 
   /**
@@ -141,7 +141,7 @@ trait AssertPageCacheContextsAndTagsTrait {
     $actual_contexts = $this->getCacheHeaderValues('X-Drupal-Cache-Contexts');
     sort($expected_contexts);
     sort($actual_contexts);
-    $this->assertIdentical($expected_contexts, $actual_contexts, $message);
+    $this->assertSame($expected_contexts, $actual_contexts, $message ?? '');
     return $actual_contexts === $expected_contexts;
   }
 

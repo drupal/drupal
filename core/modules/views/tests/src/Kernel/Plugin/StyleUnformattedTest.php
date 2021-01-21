@@ -36,7 +36,7 @@ class StyleUnformattedTest extends StyleTestBase {
       $class = (string) $attributes['class'][0];
       $this->assertStringContainsString('views-row', $class, 'Make sure that the views row class is set right.');
     }
-    $this->assertIdentical($count, $count_result);
+    $this->assertSame($count, $count_result);
   }
 
 }

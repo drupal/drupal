@@ -76,7 +76,7 @@ class PageCacheTest extends BrowserTestBase {
       'rendered',
       'system_test_cache_tags_page',
     ];
-    $this->assertIdentical($expected_tags, $cache_entry->tags);
+    $this->assertSame($expected_tags, $cache_entry->tags);
 
     Cache::invalidateTags($tags);
     $this->drupalGet($path);
@@ -111,7 +111,7 @@ class PageCacheTest extends BrowserTestBase {
       'rendered',
       'system_test_cache_tags_page',
     ];
-    $this->assertIdentical($expected_tags, $cache_entry->tags);
+    $this->assertSame($expected_tags, $cache_entry->tags);
 
     Cache::invalidateTags($tags);
     $this->drupalGet($path);

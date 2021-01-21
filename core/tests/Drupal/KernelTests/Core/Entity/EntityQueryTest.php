@@ -319,7 +319,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     // This matches both the original and new current revisions, multiple
     // revisions are returned for some entities.
     $assert = [16 => '4', 17 => '5', 18 => '6', 19 => '7', 8 => '8', 9 => '9', 10 => '10', 11 => '11', 20 => '12', 21 => '13', 22 => '14', 23 => '15'];
-    $this->assertIdentical($assert, $results);
+    $this->assertSame($assert, $results);
     $results = $this->storage
       ->getQuery()
       ->condition("$greetings.value", 'siema', 'STARTS_WITH')
@@ -327,7 +327,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->execute();
     // Now we only get the ones that originally were siema, entity id 8 and
     // above.
-    $this->assertIdentical(array_slice($assert, 4, 8, TRUE), $results);
+    $this->assertSame(array_slice($assert, 4, 8, TRUE), $results);
     $results = $this->storage
       ->getQuery()
       ->condition("$greetings.value", 'a', 'ENDS_WITH')
@@ -335,7 +335,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->execute();
     // It is very important that we do not get the ones which only have
     // xsiemax despite originally they were merhaba, ie. ended with a.
-    $this->assertIdentical(array_slice($assert, 4, 8, TRUE), $results);
+    $this->assertSame(array_slice($assert, 4, 8, TRUE), $results);
     $results = $this->storage
       ->getQuery()
       ->condition("$greetings.value", 'a', 'ENDS_WITH')
@@ -345,7 +345,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->execute();
     // Now we get everything.
     $assert = [4 => '4', 5 => '5', 6 => '6', 7 => '7', 8 => '8', 9 => '9', 10 => '10', 11 => '11', 12 => '12', 20 => '12', 13 => '13', 21 => '13', 14 => '14', 22 => '14', 15 => '15', 23 => '15'];
-    $this->assertIdentical($assert, $results);
+    $this->assertSame($assert, $results);
 
     // Check that a query on the latest revisions without any condition returns
     // the correct results.
@@ -694,7 +694,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     foreach ($expected as $binary) {
       $assert[$binary] = strval($binary);
     }
-    $this->assertIdentical($assert, $this->queryResults);
+    $this->assertSame($assert, $this->queryResults);
   }
 
   protected function assertRevisionResult($keys, $expected) {
@@ -702,7 +702,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     foreach ($expected as $key => $binary) {
       $assert[$keys[$key]] = strval($binary);
     }
-    $this->assertIdentical($assert, $this->queryResults);
+    $this->assertSame($assert, $this->queryResults);
     return $assert;
   }
 

@@ -133,7 +133,7 @@ class UserRoleAdminTest extends BrowserTestBase {
       $rids[] = $role->id();
     }
     // The order of the roles should be reversed.
-    $this->assertIdentical(array_reverse($saved_rids), $rids);
+    $this->assertSame(array_reverse($saved_rids), $rids);
   }
 
 }

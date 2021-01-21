@@ -125,7 +125,7 @@ class CommentNewIndicatorTest extends CommentTestBase {
         'first_new_comment_link' => $this->node->toUrl('canonical', ['fragment' => 'new'])->toString(),
       ],
     ];
-    $this->assertIdentical($expected, $json);
+    $this->assertSame($expected, $json);
 
     // Failing to specify node IDs for the endpoint should return a 404.
     $response = $this->renderNewCommentsNodeLinks([]);

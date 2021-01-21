@@ -76,7 +76,7 @@ class BlockContentListTest extends BlockContentTestBase {
     // Check the contents of each row cell. The first cell contains the label,
     // the second contains the machine name, and the third contains the
     // operations list.
-    $this->assertIdentical($label, $elements[0]->getText());
+    $this->assertSame($label, $elements[0]->getText());
 
     // Edit the entity using the operations link.
     $blocks = $this->container

@@ -28,28 +28,28 @@ class ConfigEventsTest extends KernelTestBase {
 
     $config = new Config($name, \Drupal::service('config.storage'), \Drupal::service('event_dispatcher'), \Drupal::service('config.typed'));
     $config->set('key', 'initial');
-    $this->assertIdentical([], \Drupal::state()->get('config_events_test.event', []), 'No events fired by creating a new configuration object');
+    $this->assertSame([], \Drupal::state()->get('config_events_test.event', []), 'No events fired by creating a new configuration object');
     $config->save();
 
     $event = \Drupal::state()->get('config_events_test.event', []);
-    $this->assertIdentical(ConfigEvents::SAVE, $event['event_name']);
-    $this->assertIdentical(['key' => 'initial'], $event['current_config_data']);
-    $this->assertIdentical(['key' => 'initial'], $event['raw_config_data']);
-    $this->assertIdentical([], $event['original_config_data']);
+    $this->assertSame(ConfigEvents::SAVE, $event['event_name']);
+    $this->assertSame(['key' => 'initial'], $event['current_config_data']);
+    $this->assertSame(['key' => 'initial'], $event['raw_config_data']);
+    $this->assertSame([], $event['original_config_data']);
 
     $config->set('key', 'updated')->save();
     $event = \Drupal::state()->get('config_events_test.event', []);
-    $this->assertIdentical(ConfigEvents::SAVE, $event['event_name']);
-    $this->assertIdentical(['key' => 'updated'], $event['current_config_data']);
-    $this->assertIdentical(['key' => 'updated'], $event['raw_config_data']);
-    $this->assertIdentical(['key' => 'initial'], $event['original_config_data']);
+    $this->assertSame(ConfigEvents::SAVE, $event['event_name']);
+    $this->assertSame(['key' => 'updated'], $event['current_config_data']);
+    $this->assertSame(['key' => 'updated'], $event['raw_config_data']);
+    $this->assertSame(['key' => 'initial'], $event['original_config_data']);
 
     $config->delete();
     $event = \Drupal::state()->get('config_events_test.event', []);
-    $this->assertIdentical(ConfigEvents::DELETE, $event['event_name']);
-    $this->assertIdentical([], $event['current_config_data']);
-    $this->assertIdentical([], $event['raw_config_data']);
-    $this->assertIdentical(['key' => 'updated'], $event['original_config_data']);
+    $this->assertSame(ConfigEvents::DELETE, $event['event_name']);
+    $this->assertSame([], $event['current_config_data']);
+    $this->assertSame([], $event['raw_config_data']);
+    $this->assertSame(['key' => 'updated'], $event['original_config_data']);
   }
 
   /**
@@ -64,18 +64,18 @@ class ConfigEventsTest extends KernelTestBase {
     $config = $this->config($name);
     $config->set('key', 'initial')->save();
     $event = \Drupal::state()->get('config_events_test.event', []);
-    $this->assertIdentical(ConfigEvents::SAVE, $event['event_name']);
-    $this->assertIdentical(['key' => 'initial'], $event['current_config_data']);
+    $this->assertSame(ConfigEvents::SAVE, $event['event_name']);
+    $this->assertSame(['key' => 'initial'], $event['current_config_data']);
 
     // Override applies when getting runtime config.
     $this->assertEqual($GLOBALS['config'][$name], \Drupal::config($name)->get());
 
     \Drupal::configFactory()->rename($name, $new_name);
     $event = \Drupal::state()->get('config_events_test.event', []);
-    $this->assertIdentical(ConfigEvents::RENAME, $event['event_name']);
-    $this->assertIdentical(['key' => 'new overridden'], $event['current_config_data']);
-    $this->assertIdentical(['key' => 'initial'], $event['raw_config_data']);
-    $this->assertIdentical(['key' => 'new overridden'], $event['original_config_data']);
+    $this->assertSame(ConfigEvents::RENAME, $event['event_name']);
+    $this->assertSame(['key' => 'new overridden'], $event['current_config_data']);
+    $this->assertSame(['key' => 'initial'], $event['raw_config_data']);
+    $this->assertSame(['key' => 'new overridden'], $event['original_config_data']);
   }
 
 }

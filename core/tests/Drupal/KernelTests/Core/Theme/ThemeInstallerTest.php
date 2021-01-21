@@ -66,7 +66,7 @@ class ThemeInstallerTest extends KernelTestBase {
 
     $this->themeInstaller()->install([$name]);
 
-    $this->assertIdentical(0, $this->extensionConfig()->get("theme.{$name}"));
+    $this->assertSame(0, $this->extensionConfig()->get("theme.{$name}"));
 
     $themes = $this->themeHandler()->listInfo();
     $this->assertTrue(isset($themes[$name]));

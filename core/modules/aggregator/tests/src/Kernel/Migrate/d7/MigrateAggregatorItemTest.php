@@ -42,16 +42,16 @@ class MigrateAggregatorItemTest extends MigrateDrupal7TestBase {
     foreach ($items as $original) {
       /** @var \Drupal\aggregator\ItemInterface $item */
       $item = Item::load($original->iid);
-      $this->assertIdentical($original->fid, $item->getFeedId());
-      $this->assertIdentical($original->title, $item->label());
+      $this->assertSame($original->fid, $item->getFeedId());
+      $this->assertSame($original->title, $item->label());
       // If $original->author is an empty string, getAuthor() returns NULL so
       // we need to use assertEqual() here.
       $this->assertEqual($original->author, $item->getAuthor());
-      $this->assertIdentical($original->description, $item->getDescription());
-      $this->assertIdentical($original->link, $item->getLink());
-      $this->assertIdentical($original->timestamp, $item->getPostedTime());
-      $this->assertIdentical('en', $item->language()->getId());
-      $this->assertIdentical($original->guid, $item->getGuid());
+      $this->assertSame($original->description, $item->getDescription());
+      $this->assertSame($original->link, $item->getLink());
+      $this->assertSame($original->timestamp, $item->getPostedTime());
+      $this->assertSame('en', $item->language()->getId());
+      $this->assertSame($original->guid, $item->getGuid());
     }
   }
 

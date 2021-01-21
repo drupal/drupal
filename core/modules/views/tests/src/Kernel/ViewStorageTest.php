@@ -101,7 +101,7 @@ class ViewStorageTest extends ViewsKernelTestBase {
       // exists.
       $original_options = $data['display'][$key];
       foreach ($original_options as $orig_key => $value) {
-        $this->assertIdentical($display[$orig_key], $value, new FormattableMarkup('@key is identical to saved data', ['@key' => $key]));
+        $this->assertSame($display[$orig_key], $value, new FormattableMarkup('@key is identical to saved data', ['@key' => $key]));
       }
     }
 
@@ -138,13 +138,13 @@ class ViewStorageTest extends ViewsKernelTestBase {
     // Test all properties except displays.
     foreach ($properties as $property) {
       $this->assertNotNull($created->get($property), new FormattableMarkup('Property: @property created on View.', ['@property' => $property]));
-      $this->assertIdentical($values[$property], $created->get($property), new FormattableMarkup('Property value: @property matches configuration value.', ['@property' => $property]));
+      $this->assertSame($values[$property], $created->get($property), new FormattableMarkup('Property value: @property matches configuration value.', ['@property' => $property]));
     }
 
     // Check the UUID of the loaded View.
     $created->save();
     $created_loaded = View::load('test_view_storage_new');
-    $this->assertIdentical($created->uuid(), $created_loaded->uuid(), 'The created UUID has been saved correctly.');
+    $this->assertSame($created->uuid(), $created_loaded->uuid(), 'The created UUID has been saved correctly.');
   }
 
   /**
@@ -338,7 +338,7 @@ class ViewStorageTest extends ViewsKernelTestBase {
     ];
 
     foreach ($config_properties as $property) {
-      $this->assertIdentical($view->storage->get($property), $copy->get($property), new FormattableMarkup('@property property is identical.', ['@property' => $property]));
+      $this->assertSame($view->storage->get($property), $copy->get($property), new FormattableMarkup('@property property is identical.', ['@property' => $property]));
     }
 
     // Check the displays are the same.

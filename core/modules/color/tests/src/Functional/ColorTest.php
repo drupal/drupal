@@ -192,7 +192,7 @@ class ColorTest extends BrowserTestBase {
 
     // Ensure that the overridden logo is present in Bartik, which is colorable.
     $this->drupalGet('admin/appearance/settings/bartik');
-    $this->assertIdentical($GLOBALS['base_path'] . 'core/misc/druplicon.png', $this->getDrupalSettings()['color']['logo']);
+    $this->assertSame($GLOBALS['base_path'] . 'core/misc/druplicon.png', $this->getDrupalSettings()['color']['logo']);
   }
 
   /**

@@ -149,7 +149,7 @@ class ModuleHandlerTest extends KernelTestBase {
 
     // Finally, verify that the modules were enabled in the correct order.
     $enable_order = \Drupal::state()->get('module_test.install_order', []);
-    $this->assertIdentical(['help', 'config', 'color'], $enable_order);
+    $this->assertSame(['help', 'config', 'color'], $enable_order);
   }
 
   /**

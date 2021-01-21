@@ -174,7 +174,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
             $check_field_name = $field_name;
           }
 
-          $this->assertIdentical($check_field_name . '_' . $key . '_remove_button', $button->getAttribute('name'));
+          $this->assertSame($check_field_name . '_' . $key . '_remove_button', $button->getAttribute('name'));
         }
 
         // "Click" the remove button (emulating either a nojs or js submission).

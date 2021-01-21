@@ -60,10 +60,10 @@ class ThemeTest extends KernelTestBase {
       $output = \Drupal::theme()->render('theme_test_foo', ['foo' => $example]);
       $this->assertTrue($output instanceof MarkupInterface || is_string($output), new FormattableMarkup('\Drupal::theme() returns an object that implements MarkupInterface or a string for data type @type.', ['@type' => $type]));
       if ($output instanceof MarkupInterface) {
-        $this->assertIdentical((string) $example, $output->__toString());
+        $this->assertSame((string) $example, $output->__toString());
       }
       elseif (is_string($output)) {
-        $this->assertIdentical('', $output, 'A string will be return when the theme returns an empty string.');
+        $this->assertSame('', $output, 'A string will be return when the theme returns an empty string.');
       }
     }
 
@@ -109,20 +109,20 @@ class ThemeTest extends KernelTestBase {
     $themes = $theme_handler->listInfo();
 
     // Check if ThemeHandlerInterface::listInfo() retrieves enabled themes.
-    $this->assertIdentical(1, $themes['test_theme']->status, 'Installed theme detected');
+    $this->assertSame(1, $themes['test_theme']->status, 'Installed theme detected');
 
     // Check if ThemeHandlerInterface::listInfo() returns disabled themes.
     // Check for base theme and subtheme lists.
     $base_theme_list = ['test_basetheme' => 'Theme test base theme'];
     $sub_theme_list = ['test_subsubtheme' => 'Theme test subsubtheme', 'test_subtheme' => 'Theme test subtheme'];
 
-    $this->assertIdentical($sub_theme_list, $themes['test_basetheme']->sub_themes, 'Base theme\'s object includes list of subthemes.');
-    $this->assertIdentical($base_theme_list, $themes['test_subtheme']->base_themes, 'Subtheme\'s object includes list of base themes.');
+    $this->assertSame($sub_theme_list, $themes['test_basetheme']->sub_themes, 'Base theme\'s object includes list of subthemes.');
+    $this->assertSame($base_theme_list, $themes['test_subtheme']->base_themes, 'Subtheme\'s object includes list of base themes.');
     // Check for theme engine in subtheme.
-    $this->assertIdentical('twig', $themes['test_subtheme']->engine, 'Subtheme\'s object includes the theme engine.');
+    $this->assertSame('twig', $themes['test_subtheme']->engine, 'Subtheme\'s object includes the theme engine.');
     // Check for theme engine prefix.
-    $this->assertIdentical('twig', $themes['test_basetheme']->prefix, 'Base theme\'s object includes the theme engine prefix.');
-    $this->assertIdentical('twig', $themes['test_subtheme']->prefix, 'Subtheme\'s object includes the theme engine prefix.');
+    $this->assertSame('twig', $themes['test_basetheme']->prefix, 'Base theme\'s object includes the theme engine prefix.');
+    $this->assertSame('twig', $themes['test_subtheme']->prefix, 'Subtheme\'s object includes the theme engine prefix.');
   }
 
   /**

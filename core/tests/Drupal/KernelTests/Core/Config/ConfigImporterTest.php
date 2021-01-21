@@ -73,7 +73,7 @@ class ConfigImporterTest extends KernelTestBase {
 
     // Verify the default configuration values exist.
     $config = $this->config($dynamic_name);
-    $this->assertIdentical('dotted.default', $config->get('id'));
+    $this->assertSame('dotted.default', $config->get('id'));
 
     // Verify that a bare $this->config() does not involve module APIs.
     $this->assertFalse(isset($GLOBALS['hook_config_test']));
@@ -128,7 +128,7 @@ class ConfigImporterTest extends KernelTestBase {
 
     // Verify the default configuration values exist.
     $config = $this->config($dynamic_name);
-    $this->assertIdentical('dotted.default', $config->get('id'));
+    $this->assertSame('dotted.default', $config->get('id'));
 
     // Delete the file from the sync directory.
     $sync->delete($dynamic_name);
@@ -189,7 +189,7 @@ class ConfigImporterTest extends KernelTestBase {
 
     // Verify the values appeared.
     $config = $this->config($dynamic_name);
-    $this->assertIdentical($original_dynamic_data['label'], $config->get('label'));
+    $this->assertSame($original_dynamic_data['label'], $config->get('label'));
 
     // Verify that appropriate module API hooks have been invoked.
     $this->assertFalse(isset($GLOBALS['hook_config_test']['load']));
@@ -500,9 +500,9 @@ class ConfigImporterTest extends KernelTestBase {
 
     // Verify the active configuration still returns the default values.
     $config = $this->config($name);
-    $this->assertIdentical('bar', $config->get('foo'));
+    $this->assertSame('bar', $config->get('foo'));
     $config = $this->config($dynamic_name);
-    $this->assertIdentical('Default', $config->get('label'));
+    $this->assertSame('Default', $config->get('label'));
 
     // Import.
     $this->configImporter->reset()->import();
@@ -510,13 +510,13 @@ class ConfigImporterTest extends KernelTestBase {
     // Verify the values were updated.
     \Drupal::configFactory()->reset($name);
     $config = $this->config($name);
-    $this->assertIdentical('beer', $config->get('foo'));
+    $this->assertSame('beer', $config->get('foo'));
     $config = $this->config($dynamic_name);
-    $this->assertIdentical('Updated', $config->get('label'));
+    $this->assertSame('Updated', $config->get('label'));
 
     // Verify that the original file content is still the same.
-    $this->assertIdentical($original_name_data, $sync->read($name));
-    $this->assertIdentical($original_dynamic_data, $sync->read($dynamic_name));
+    $this->assertSame($original_name_data, $sync->read($name));
+    $this->assertSame($original_dynamic_data, $sync->read($dynamic_name));
 
     // Verify that appropriate module API hooks have been invoked.
     $this->assertTrue(isset($GLOBALS['hook_config_test']['load']));
