@@ -3,6 +3,9 @@
 namespace Drupal\Tests\system\Functional\Entity;
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\Core\Entity\Entity\EntityFormMode;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 
@@ -55,6 +58,39 @@ class EntityFormTest extends BrowserTestBase {
     foreach (entity_test_entity_types(ENTITY_TEST_TYPES_MULTILINGUAL) as $entity_type) {
       $this->doTestMultilingualFormCRUD($entity_type);
     }
+  }
+
+  /**
+   * Tests hook_entity_form_mode_alter().
+   *
+   * @see entity_test_entity_form_mode_alter()
+   */
+  public function testEntityFormModeAlter() {
+    // Create compact entity display.
+    EntityFormMode::create(['id' => 'entity_test.compact', 'targetEntityType' => 'entity_test'])->save();
+    EntityFormDisplay::create([
+      'targetEntityType' => 'entity_test',
+      'bundle' => 'entity_test',
+      'mode' => 'compact',
+      'status' => TRUE,
+    ])->removeComponent('field_test_text')->save();
+
+    // The field should be available on default form mode.
+    $entity1 = EntityTest::create([
+      'name' => $this->randomString(),
+    ]);
+    $entity1->save();
+    $this->drupalGet($entity1->toUrl('edit-form'));
+    $this->assertSession()->elementExists('css', 'input[name="field_test_text[0][value]"]');
+
+    // The field should be hidden on compact form mode.
+    // See: entity_test_entity_form_mode_alter().
+    $entity2 = EntityTest::create([
+      'name' => 'compact_form_mode',
+    ]);
+    $entity2->save();
+    $this->drupalGet($entity2->toUrl('edit-form'));
+    $this->assertSession()->elementNotExists('css', 'input[name="field_test_text[0][value]"]');
   }
 
   /**
