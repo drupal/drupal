@@ -124,14 +124,16 @@ class ReadinessCheckerTest extends BrowserTestBase {
     TestChecker::setTestMessages(
       ['OMG 🔌. Some one unplugged the server! How is this site even running?'],
       ['It looks like it going to rain and your server is outside.'],
-      $this->t('Errors summary not displayed because only 1 error message'),
-      $this->t('Warnings summary not displayed because only 1 warning message.')
+      'Errors summary not displayed because only 1 error message',
+      'Warnings summary not displayed because only 1 warning message.'
     );
     /** @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface $keyValue */
     $keyValue = $this->container->get('keyvalue.expirable')->get('auto_updates');
     $keyValue->delete('readiness_check_last_run');
     // Confirm a new message is displayed if the stored messages are deleted.
     $this->drupalGet('admin/reports/status');
+    // Confirm that on the status page if there is only 1 warning or error the
+    // the summaries will not be displayed.
     $this->assertReadinessReportMatches('OMG 🔌. Some one unplugged the server! How is this site even running?', 'error', static::ERRORS_MESSAGE);
     $this->assertReadinessReportMatches('It looks like it going to rain and your server is outside.', 'warning', static::WARNINGS_MESSAGE);
     $assert->pageTextNotContains('Errors summary not displayed because only 1 error message');
@@ -139,9 +141,11 @@ class ReadinessCheckerTest extends BrowserTestBase {
 
     $this->drupalGet('admin/structure');
     $assert->pageTextContainsOnce(static::ERRORS_MESSAGE);
+    // Confirm on admin pages that a single error will be displayed instead of a
+    // summary.
     $assert->pageTextContainsOnce('OMG 🔌. Some one unplugged the server! How is this site even running?');
     $assert->pageTextNotContains('Errors summary not displayed because only 1 error message');
-    // Warnings are displayed on admin pages if there are any errors.
+    // Warnings are not displayed on admin pages if there are any errors.
     $assert->pageTextNotContains('It looks like it going to rain and your server is outside.');
     $assert->pageTextNotContains('Warnings summary not displayed because only 1 warning message.');
 
@@ -162,11 +166,14 @@ class ReadinessCheckerTest extends BrowserTestBase {
       $errors_summary,
       $warnings_summary,
     );
-    // Confirm a new message is displayed if the stored messages are deleted.
     $this->drupalGet('admin/reports/status');
+    // Confirm that both messages and summaries will be displayed on status
+    // report when there multiple messages.
     $this->assertReadinessReportMatches("$errors_summary " . implode('', $error_messages), 'error', static::ERRORS_MESSAGE);
     $this->assertReadinessReportMatches("$warnings_summary " . implode('', $warning_messages), 'warning', static::WARNINGS_MESSAGE);
     $this->drupalGet('admin/structure');
+    // Confirm on admin pages only the error summary will be displayed if there
+    // is more than 1 error.
     $assert->pageTextNotContains($error_messages[0]);
     $assert->pageTextNotContains($error_messages[1]);
     $assert->pageTextContainsOnce($errors_summary);
@@ -188,15 +195,18 @@ class ReadinessCheckerTest extends BrowserTestBase {
       NULL,
       $warnings_summary,
     );
-    // Confirm a new message is displayed if the stored messages are deleted.
     $this->drupalGet('admin/reports/status');
     $assert->pageTextContainsOnce('Update readiness checks');
+    // Confirm that warnings will display on the status report if there are no
+    // errors.
     $this->assertReadinessReportMatches("$warnings_summary " . implode('', $warning_messages), 'warning', static::WARNINGS_MESSAGE);
     $this->drupalGet('admin/structure');
+    // Confirm that the warnings summary is displayed on admin pages if there
+    // are no errors.
     $assert->pageTextNotContains(static::ERRORS_MESSAGE);
-    // Warnings are displayed on admin pages if there are any errors.
     $assert->pageTextNotContains($warning_messages[0]);
     $assert->pageTextNotContains($warning_messages[1]);
+    $assert->pageTextContainsOnce(static::WARNINGS_MESSAGE);
     $assert->pageTextContainsOnce($warnings_summary);
 
     $keyValue->delete('readiness_check_last_run');
@@ -208,13 +218,14 @@ class ReadinessCheckerTest extends BrowserTestBase {
       NULL,
       $warnings_summary,
     );
-    // Confirm a new message is displayed if the stored messages are deleted.
     $this->drupalGet('admin/reports/status');
     $assert->pageTextContainsOnce('Update readiness checks');
     $this->assertReadinessReportMatches($warning_message, 'warning', static::WARNINGS_MESSAGE);
     $this->drupalGet('admin/structure');
     $assert->pageTextNotContains(static::ERRORS_MESSAGE);
-    // Warnings are displayed on admin pages if there are any errors.
+    // Confirm that a single warning is displayed and not the summary on admin
+    // pages if there is only 1 warning and there are no errors.
+    $assert->pageTextContainsOnce(static::WARNINGS_MESSAGE);
     $assert->pageTextContainsOnce($warning_message);
     $assert->pageTextNotContains($warnings_summary);
   }
