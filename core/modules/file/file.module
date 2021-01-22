@@ -25,6 +25,8 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Template\Attribute;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
+// cspell:ignore btxt
+
 /**
  * The regex pattern used when checking for insecure file types.
  */
@@ -1000,10 +1002,11 @@ function _file_save_upload_single(\SplFileInfo $file_info, $form_field_name, $va
     // rename filename.php.foo and filename.php to filename.php_.foo_.txt and
     // filename.php_.txt, respectively).
     if (preg_match(FILE_INSECURE_EXTENSION_REGEX, $file->getFilename())) {
-      // If the file will be rejected anyway due to a disallowed extension, it
-      // should not be renamed; rather, we'll let file_validate_extensions()
-      // reject it below.
-      if (!isset($validators['file_validate_extensions']) || empty(file_validate_extensions($file, $extensions))) {
+      // If there is no file extension validation at all, or .txt is considered
+      // a valid extension and the file would otherwise pass validation, rename
+      // it. If the file will be rejected due to extension validation, it should
+      // not be renamed; rather, let file_validate_extensions() reject it below.
+      if (!isset($validators['file_validate_extensions']) || (preg_match('/\btxt\b/', $extensions) && empty(file_validate_extensions($file, $extensions)))) {
         $file->setMimeType('text/plain');
         $filename = $file->getFilename();
         if (substr($filename, -4) != '.txt') {
@@ -1012,11 +1015,6 @@ function _file_save_upload_single(\SplFileInfo $file_info, $form_field_name, $va
         }
         $file->setFilename(file_munge_filename($filename, $extensions));
         \Drupal::messenger()->addStatus(t('For security reasons, your upload has been renamed to %filename.', ['%filename' => $file->getFilename()]));
-        // The .txt extension may not be in the allowed list of extensions. We
-        // have to add it here or else the file upload will fail.
-        if (!empty($validators['file_validate_extensions'][0])) {
-          $validators['file_validate_extensions'][0] .= ' txt';
-        }
       }
     }
   }

@@ -225,13 +225,24 @@ class FileItem extends EntityReferenceItem {
   public static function validateExtensions($element, FormStateInterface $form_state) {
     if (!empty($element['#value'])) {
       $extensions = preg_replace('/([, ]+\.?)/', ' ', trim(strtolower($element['#value'])));
-      $extensions = array_filter(explode(' ', $extensions));
-      $extensions = implode(' ', array_unique($extensions));
+      $extension_array = array_unique(array_filter(explode(' ', $extensions)));
+      $extensions = implode(' ', $extension_array);
       if (!preg_match('/^([a-z0-9]+([.][a-z0-9])* ?)+$/', $extensions)) {
         $form_state->setError($element, t('The list of allowed extensions is not valid, be sure to exclude leading dots and to separate extensions with a comma or space.'));
       }
       else {
         $form_state->setValueForElement($element, $extensions);
+      }
+
+      // If insecure uploads are not allowed and txt is not in the list of
+      // allowed extensions, ensure that no insecure extensions are allowed.
+      if (!in_array('txt', $extension_array, TRUE) && !\Drupal::config('system.file')->get('allow_insecure_uploads')) {
+        foreach ($extension_array as $extension) {
+          if (preg_match(FILE_INSECURE_EXTENSION_REGEX, 'test.' . $extension)) {
+            $form_state->setError($element, t('Add %txt_extension to the list of allowed extensions to securely upload files with a %extension extension. The %txt_extension extension will then be added automatically.', ['%extension' => $extension, '%txt_extension' => 'txt']));
+            break;
+          }
+        }
       }
     }
   }

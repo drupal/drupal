@@ -27,6 +27,8 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 
+// cspell:ignore btxt
+
 /**
  * Reads data from an upload stream and creates a corresponding file entity.
  *
@@ -403,24 +405,24 @@ class TemporaryJsonapiFileFieldUploader {
         // If the file will be rejected anyway due to a disallowed extension, it
         // should not be renamed; rather, we'll let file_validate_extensions()
         // reject it below.
-        $passes_validation = FALSE;
         if (!empty($validators['file_validate_extensions'][0])) {
           $file = File::create([]);
           $file->setFilename($filename);
           $passes_validation = empty(file_validate_extensions($file, $validators['file_validate_extensions'][0]));
+          // Only allow upload and rename to .txt if .txt files are allowed.
+          $passes_validation = $passes_validation && preg_match('/\btxt\b/', $validators['file_validate_extensions'][0]);
         }
-        if (empty($validators['file_validate_extensions'][0]) || $passes_validation) {
+        else {
+          // All file extensions are allowed.
+          $passes_validation = TRUE;
+        }
+
+        if ($passes_validation) {
           if (substr($filename, -4) != '.txt') {
             // The destination filename will also later be used to create the URI.
             $filename .= '.txt';
           }
           $filename = file_munge_filename($filename, $validators['file_validate_extensions'][0] ?? '');
-
-          // The .txt extension may not be in the allowed list of extensions. We
-          // have to add it here or else the file upload will fail.
-          if (!empty($validators['file_validate_extensions'][0])) {
-            $validators['file_validate_extensions'][0] .= ' txt';
-          }
         }
       }
     }
