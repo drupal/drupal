@@ -190,7 +190,6 @@ class ReadinessCheckerTest extends BrowserTestBase {
     );
     // Confirm a new message is displayed if the stored messages are deleted.
     $this->drupalGet('admin/reports/status');
-    file_put_contents("/Users/ted.bowman/sites/test.html", $this->getSession()->getPage()->getOuterHtml());
     $assert->pageTextContainsOnce('Update readiness checks');
     $this->assertReadinessReportMatches("$warnings_summary " . implode('', $warning_messages), 'warning', static::WARNINGS_MESSAGE);
     $this->drupalGet('admin/structure');
@@ -211,7 +210,6 @@ class ReadinessCheckerTest extends BrowserTestBase {
     );
     // Confirm a new message is displayed if the stored messages are deleted.
     $this->drupalGet('admin/reports/status');
-    file_put_contents("/Users/ted.bowman/sites/test.html", $this->getSession()->getPage()->getOuterHtml());
     $assert->pageTextContainsOnce('Update readiness checks');
     $this->assertReadinessReportMatches($warning_message, 'warning', static::WARNINGS_MESSAGE);
     $this->drupalGet('admin/structure');
