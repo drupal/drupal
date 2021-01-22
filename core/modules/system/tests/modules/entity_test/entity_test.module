@@ -429,6 +429,15 @@ function entity_test_entity_field_access_alter(array &$grants, array $context) {
 }
 
 /**
+ * Implements hook_entity_form_mode_alter().
+ */
+function entity_test_entity_form_mode_alter(&$form_mode, EntityInterface $entity) {
+  if ($entity->getEntityTypeId() === 'entity_test' && $entity->get('name')->value === 'compact_form_mode') {
+    $form_mode = 'compact';
+  }
+}
+
+/**
  * Implements hook_entity_form_display_alter().
  */
 function entity_test_entity_form_display_alter(EntityFormDisplay $form_display, $context) {

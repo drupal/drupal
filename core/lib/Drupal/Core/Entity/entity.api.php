@@ -1821,6 +1821,23 @@ function hook_ENTITY_TYPE_prepare_form(\Drupal\Core\Entity\EntityInterface $enti
 }
 
 /**
+ * Change the form mode used to build an entity form.
+ *
+ * @param string $form_mode
+ *   The form_mode that is to be used to build the entity form.
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity for which the form is being built.
+ *
+ * @ingroup entity_crud
+ */
+function hook_entity_form_mode_alter(&$form_mode, Drupal\Core\Entity\EntityInterface $entity) {
+  // Change the form mode for users with Administrator role.
+  if ($entity->getEntityTypeId() == 'user' && $entity->hasRole('administrator')) {
+    $form_mode = 'my_custom_form_mode';
+  }
+}
+
+/**
  * Alter the settings used for displaying an entity form.
  *
  * @param \Drupal\Core\Entity\Display\EntityFormDisplayInterface $form_display
