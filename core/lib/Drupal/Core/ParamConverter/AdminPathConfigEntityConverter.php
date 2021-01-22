@@ -63,7 +63,9 @@ class AdminPathConfigEntityConverter extends EntityConverter {
    */
   public function convert($value, $definition, $name, array $defaults) {
     $entity_type_id = $this->getEntityTypeFromDefaults($definition, $name, $defaults);
-
+    if (!$this->entityTypeManager->hasDefinition($entity_type_id)) {
+      return NULL;
+    }
     // If the entity type is dynamic, confirm it to be a config entity. Static
     // entity types will have performed this check in self::applies().
     if (strpos($definition['type'], 'entity:{') === 0) {
