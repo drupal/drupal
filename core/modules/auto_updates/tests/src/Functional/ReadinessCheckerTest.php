@@ -114,7 +114,6 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $assert->pageTextNotContains('Access denied');
     $this->assertReadinessReportMatches('OMG 🚒. Your server is on 🔥!', 'error', static::ERRORS_MESSAGE);
 
-
     // @todo Should we always show when the checks were last run and a link to
     //   run when there is an error?
     // Confirm a user without permission to run the checks sees the same error.
@@ -176,7 +175,6 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $assert->pageTextNotContains($warning_messages[0]);
     $assert->pageTextNotContains($warning_messages[1]);
     $assert->pageTextNotContains($warnings_summary);
-
 
     $keyValue->delete('readiness_check_last_run');
     $warning_messages = [
