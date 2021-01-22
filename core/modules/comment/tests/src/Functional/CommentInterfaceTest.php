@@ -53,6 +53,10 @@ class CommentInterfaceTest extends CommentTestBase {
     $comment = $this->postComment($this->node, $comment_text);
     $this->assertTrue($this->commentExists($comment), 'Comment found.');
 
+    // Test that using an invalid entity-type does not raise an error.
+    $this->drupalGet('comment/reply/yeah-this-is-not-an-entity-type/' . $this->node->id() . '/comment/' . $comment->id());
+    $this->assertSession()->statusCodeEquals(404);
+
     // Test the comment field title is displayed when there's comments.
     $this->drupalGet($this->node->toUrl());
     $this->assertSession()->responseMatches('@<h2[^>]*>Comments</h2>@');
