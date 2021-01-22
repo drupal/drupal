@@ -66,10 +66,10 @@ class NodeTypeForm extends BundleEntityFormBase {
     }
 
     $form['name'] = [
-      '#title' => t('Name'),
+      '#title' => $this->t('Name'),
       '#type' => 'textfield',
       '#default_value' => $type->label(),
-      '#description' => t('The human-readable name of this content type. This text will be displayed as part of the list on the <em>Add content</em> page. This name must be unique.'),
+      '#description' => $this->t('The human-readable name of this content type. This text will be displayed as part of the list on the <em>Add content</em> page. This name must be unique.'),
       '#required' => TRUE,
       '#size' => 30,
     ];
@@ -83,16 +83,16 @@ class NodeTypeForm extends BundleEntityFormBase {
         'exists' => ['Drupal\node\Entity\NodeType', 'load'],
         'source' => ['name'],
       ],
-      '#description' => t('A unique machine-readable name for this content type. It must only contain lowercase letters, numbers, and underscores. This name will be used for constructing the URL of the %node-add page.', [
-        '%node-add' => t('Add content'),
+      '#description' => $this->t('A unique machine-readable name for this content type. It must only contain lowercase letters, numbers, and underscores. This name will be used for constructing the URL of the %node-add page.', [
+        '%node-add' => $this->t('Add content'),
       ]),
     ];
 
     $form['description'] = [
-      '#title' => t('Description'),
+      '#title' => $this->t('Description'),
       '#type' => 'textarea',
       '#default_value' => $type->getDescription(),
-      '#description' => t('This text will be displayed on the <em>Add new content</em> page.'),
+      '#description' => $this->t('This text will be displayed on the <em>Add new content</em> page.'),
     ];
 
     $form['additional_settings'] = [
@@ -104,35 +104,35 @@ class NodeTypeForm extends BundleEntityFormBase {
 
     $form['submission'] = [
       '#type' => 'details',
-      '#title' => t('Submission form settings'),
+      '#title' => $this->t('Submission form settings'),
       '#group' => 'additional_settings',
       '#open' => TRUE,
     ];
     $form['submission']['title_label'] = [
-      '#title' => t('Title field label'),
+      '#title' => $this->t('Title field label'),
       '#type' => 'textfield',
       '#default_value' => $fields['title']->getLabel(),
       '#required' => TRUE,
     ];
     $form['submission']['preview_mode'] = [
       '#type' => 'radios',
-      '#title' => t('Preview before submitting'),
+      '#title' => $this->t('Preview before submitting'),
       '#default_value' => $type->getPreviewMode(),
       '#options' => [
-        DRUPAL_DISABLED => t('Disabled'),
-        DRUPAL_OPTIONAL => t('Optional'),
-        DRUPAL_REQUIRED => t('Required'),
+        DRUPAL_DISABLED => $this->t('Disabled'),
+        DRUPAL_OPTIONAL => $this->t('Optional'),
+        DRUPAL_REQUIRED => $this->t('Required'),
       ],
     ];
     $form['submission']['help'] = [
       '#type' => 'textarea',
-      '#title' => t('Explanation or submission guidelines'),
+      '#title' => $this->t('Explanation or submission guidelines'),
       '#default_value' => $type->getHelp(),
-      '#description' => t('This text will be displayed at the top of the page when creating or editing content of this type.'),
+      '#description' => $this->t('This text will be displayed at the top of the page when creating or editing content of this type.'),
     ];
     $form['workflow'] = [
       '#type' => 'details',
-      '#title' => t('Publishing options'),
+      '#title' => $this->t('Publishing options'),
       '#group' => 'additional_settings',
     ];
     $workflow_options = [
@@ -146,20 +146,20 @@ class NodeTypeForm extends BundleEntityFormBase {
     $workflow_options = array_combine($keys, $keys);
     $form['workflow']['options'] = [
       '#type' => 'checkboxes',
-      '#title' => t('Default options'),
+      '#title' => $this->t('Default options'),
       '#default_value' => $workflow_options,
       '#options' => [
-        'status' => t('Published'),
-        'promote' => t('Promoted to front page'),
-        'sticky' => t('Sticky at top of lists'),
-        'revision' => t('Create new revision'),
+        'status' => $this->t('Published'),
+        'promote' => $this->t('Promoted to front page'),
+        'sticky' => $this->t('Sticky at top of lists'),
+        'revision' => $this->t('Create new revision'),
       ],
-      '#description' => t('Users with sufficient access rights will be able to override these options.'),
+      '#description' => $this->t('Users with sufficient access rights will be able to override these options.'),
     ];
     if ($this->moduleHandler->moduleExists('language')) {
       $form['language'] = [
         '#type' => 'details',
-        '#title' => t('Language settings'),
+        '#title' => $this->t('Language settings'),
         '#group' => 'additional_settings',
       ];
 
@@ -175,14 +175,14 @@ class NodeTypeForm extends BundleEntityFormBase {
     }
     $form['display'] = [
       '#type' => 'details',
-      '#title' => t('Display settings'),
+      '#title' => $this->t('Display settings'),
       '#group' => 'additional_settings',
     ];
     $form['display']['display_submitted'] = [
       '#type' => 'checkbox',
-      '#title' => t('Display author and date information'),
+      '#title' => $this->t('Display author and date information'),
       '#default_value' => $type->displaySubmitted(),
-      '#description' => t('Author username and publish date will be displayed.'),
+      '#description' => $this->t('Author username and publish date will be displayed.'),
     ];
 
     return $this->protectBundleIdElement($form);
@@ -193,7 +193,7 @@ class NodeTypeForm extends BundleEntityFormBase {
    */
   protected function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
-    $actions['submit']['#value'] = t('Save content type');
+    $actions['submit']['#value'] = $this->t('Save content type');
     return $actions;
   }
 

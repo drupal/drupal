@@ -75,7 +75,7 @@ class CommentTypeForm extends EntityForm {
 
     $form['label'] = [
       '#type' => 'textfield',
-      '#title' => t('Label'),
+      '#title' => $this->t('Label'),
       '#maxlength' => 255,
       '#default_value' => $comment_type->label(),
       '#required' => TRUE,
@@ -93,8 +93,8 @@ class CommentTypeForm extends EntityForm {
     $form['description'] = [
       '#type' => 'textarea',
       '#default_value' => $comment_type->getDescription(),
-      '#description' => t('Describe this comment type. The text will be displayed on the <em>Comment types</em> administration overview page.'),
-      '#title' => t('Description'),
+      '#description' => $this->t('Describe this comment type. The text will be displayed on the <em>Comment types</em> administration overview page.'),
+      '#title' => $this->t('Description'),
     ];
 
     if ($comment_type->isNew()) {
@@ -109,23 +109,23 @@ class CommentTypeForm extends EntityForm {
       $form['target_entity_type_id'] = [
         '#type' => 'select',
         '#default_value' => $comment_type->getTargetEntityTypeId(),
-        '#title' => t('Target entity type'),
+        '#title' => $this->t('Target entity type'),
         '#options' => $options,
-        '#description' => t('The target entity type can not be changed after the comment type has been created.'),
+        '#description' => $this->t('The target entity type can not be changed after the comment type has been created.'),
       ];
     }
     else {
       $form['target_entity_type_id_display'] = [
         '#type' => 'item',
         '#markup' => $this->entityTypeManager->getDefinition($comment_type->getTargetEntityTypeId())->getLabel(),
-        '#title' => t('Target entity type'),
+        '#title' => $this->t('Target entity type'),
       ];
     }
 
     if ($this->moduleHandler->moduleExists('content_translation')) {
       $form['language'] = [
         '#type' => 'details',
-        '#title' => t('Language settings'),
+        '#title' => $this->t('Language settings'),
         '#group' => 'additional_settings',
       ];
 
@@ -145,7 +145,7 @@ class CommentTypeForm extends EntityForm {
     $form['actions'] = ['#type' => 'actions'];
     $form['actions']['submit'] = [
       '#type' => 'submit',
-      '#value' => t('Save'),
+      '#value' => $this->t('Save'),
     ];
 
     return $form;
@@ -160,12 +160,12 @@ class CommentTypeForm extends EntityForm {
 
     $edit_link = $this->entity->toLink($this->t('Edit'), 'edit-form')->toString();
     if ($status == SAVED_UPDATED) {
-      $this->messenger()->addStatus(t('Comment type %label has been updated.', ['%label' => $comment_type->label()]));
+      $this->messenger()->addStatus($this->t('Comment type %label has been updated.', ['%label' => $comment_type->label()]));
       $this->logger->notice('Comment type %label has been updated.', ['%label' => $comment_type->label(), 'link' => $edit_link]);
     }
     else {
       $this->commentManager->addBodyField($comment_type->id());
-      $this->messenger()->addStatus(t('Comment type %label has been added.', ['%label' => $comment_type->label()]));
+      $this->messenger()->addStatus($this->t('Comment type %label has been added.', ['%label' => $comment_type->label()]));
       $this->logger->notice('Comment type %label has been added.', ['%label' => $comment_type->label(), 'link' => $edit_link]);
     }
 

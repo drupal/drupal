@@ -43,7 +43,7 @@ class DateFormatDeleteForm extends EntityDeleteForm {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return t('Are you sure you want to delete the format %name : %format?', [
+    return $this->t('Are you sure you want to delete the format %name : %format?', [
       '%name' => $this->entity->label(),
       '%format' => $this->dateFormatter->format(REQUEST_TIME, $this->entity->id()),
     ]);

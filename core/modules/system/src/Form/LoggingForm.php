@@ -33,15 +33,15 @@ class LoggingForm extends ConfigFormBase {
     $config = $this->config('system.logging');
     $form['error_level'] = [
       '#type' => 'radios',
-      '#title' => t('Error messages to display'),
+      '#title' => $this->t('Error messages to display'),
       '#default_value' => $config->get('error_level'),
       '#options' => [
-        ERROR_REPORTING_HIDE => t('None'),
-        ERROR_REPORTING_DISPLAY_SOME => t('Errors and warnings'),
-        ERROR_REPORTING_DISPLAY_ALL => t('All messages'),
-        ERROR_REPORTING_DISPLAY_VERBOSE => t('All messages, with backtrace information'),
+        ERROR_REPORTING_HIDE => $this->t('None'),
+        ERROR_REPORTING_DISPLAY_SOME => $this->t('Errors and warnings'),
+        ERROR_REPORTING_DISPLAY_ALL => $this->t('All messages'),
+        ERROR_REPORTING_DISPLAY_VERBOSE => $this->t('All messages, with backtrace information'),
       ],
-      '#description' => t('It is recommended that sites running on production environments do not display any errors.'),
+      '#description' => $this->t('It is recommended that sites running on production environments do not display any errors.'),
     ];
 
     return parent::buildForm($form, $form_state);
