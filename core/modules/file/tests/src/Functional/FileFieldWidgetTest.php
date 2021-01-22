@@ -471,6 +471,39 @@ class FileFieldWidgetTest extends FileFieldTestBase {
   }
 
   /**
+   * Tests configuring file field's allowed file extensions setting.
+   */
+  public function testFileExtensionsSetting() {
+    // Grant the admin user required permissions.
+    user_role_grant_permissions($this->adminUser->roles[0]->target_id, ['administer node fields']);
+
+    $type_name = 'article';
+    $field_name = strtolower($this->randomMachineName());
+    $this->createFileField($field_name, 'node', $type_name);
+    $field = FieldConfig::loadByName('node', $type_name, $field_name);
+    $field_id = $field->id();
+
+    // By default allowing .php files without .txt is not permitted.
+    $this->drupalGet("admin/structure/types/manage/$type_name/fields/$field_id");
+    $edit = ['settings[file_extensions]' => 'jpg php'];
+    $this->submitForm($edit, 'Save settings');
+    $this->assertSession()->pageTextContains('Add txt to the list of allowed extensions to securely upload files with a php extension. The txt extension will then be added automatically.');
+
+    // Test allowing .php and .txt.
+    $edit = ['settings[file_extensions]' => 'jpg php txt'];
+    $this->submitForm($edit, 'Save settings');
+    $this->assertSession()->pageTextContains('Saved ' . $field_name . ' configuration.');
+
+    // If the system is configured to allow insecure uploads, .txt is not
+    // required when allowing .php.
+    $this->config('system.file')->set('allow_insecure_uploads', TRUE)->save();
+    $this->drupalGet("admin/structure/types/manage/$type_name/fields/$field_id");
+    $edit = ['settings[file_extensions]' => 'jpg php'];
+    $this->submitForm($edit, 'Save settings');
+    $this->assertSession()->pageTextContains('Saved ' . $field_name . ' configuration.');
+  }
+
+  /**
    * Helper for testing exploiting the temporary file removal using fid.
    *
    * @param \Drupal\user\UserInterface $victim_user
