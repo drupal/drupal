@@ -240,6 +240,7 @@ class ReviewForm extends MigrateUpgradeFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $config['source_base_path'] = $this->store->get('source_base_path');
+    $config['source_private_file_path'] = $this->store->get('source_private_file_path');
     $batch = [
       'title' => $this->t('Running upgrade'),
       'progress_message' => '',
