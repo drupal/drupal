@@ -64,7 +64,7 @@ class ReadinessCheckerController extends ControllerBase {
       $this->messenger()->addStatus($this->t('No issues found. Your site is ready for automatic updates'));
     }
     elseif ($on_status_report) {
-      $this->messenger()->addWarning('Your site is currently failing readiness checks for automatic updates. It cannot be automatically updated until further action is performed.');
+      $this->messenger()->addWarning('Your site does not pass some readiness checks for automatic updates. It cannot be automatically updated until further action is performed.');
     }
     // Set a redirect to the status report page. Any other page that provides a
     // link to this controller should include 'destination' in the query string

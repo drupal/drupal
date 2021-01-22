@@ -40,23 +40,32 @@ function auto_updates_page_top(array &$page_top) {
       ]));
     }
     $results = $checker_manager->getResults();
-    if ($results) {
-      // @todo Link "automatic updates" to documentation in
-      //    https://www.drupal.org/node/3168405.
-      \Drupal::messenger()->addError(t('Your site is currently failing readiness checks for automatic updates. It cannot be automatically updated until further action is performed.'));
-      foreach ($results as $result) {
-        if ($summary = $result->getErrorsSummary()) {
-          \Drupal::messenger()->addError($summary);
+    $has_errors = FALSE;
+    foreach ($results as $result) {
+      if ($errors = $result->getErrorMessages()) {
+        if (!$has_errors) {
+          // @todo Link "automatic updates" to documentation in
+          //    https://www.drupal.org/node/3168405.
+          \Drupal::messenger()->addError(t('Your site does not pass some readiness checks for automatic updates. It cannot be automatically updated until further action is performed.'));
+          $has_errors = TRUE;
         }
+        $message = count($errors) === 1 ? array_pop($errors) : $result->getErrorsSummary();
+        \Drupal::messenger()->addError($message);
       }
     }
-    if ($results) {
-      // @todo Link "automatic updates" to documentation in
-      //    https://www.drupal.org/node/3168405.
-      \Drupal::messenger()->addWarning(t('Your site does not pass some readiness checks for automatic updates. Depending on the nature of the failures, it might effect the eligibility for automatic updates.'));
+    // Only display warning summaries if no errors were displayed.
+    if (!$has_errors) {
+      $has_warnings = FALSE;
       foreach ($results as $result) {
-        if ($summary = $result->getWarningsSummary()) {
-          \Drupal::messenger()->addWarning($summary);
+        if ($warnings = $result->getWarningMessages()) {
+          if (!$has_warnings) {
+            // @todo Link "automatic updates" to documentation in
+            //    https://www.drupal.org/node/3168405.
+            \Drupal::messenger()->addWarning(t('Your site does not pass some readiness checks for automatic updates. Depending on the nature of the failures, it might effect the eligibility for automatic updates.'));
+            $has_warnings = TRUE;
+          }
+          $message = count($warnings) === 1 ? array_pop($warnings) : $result->getWarningsSummary();
+          \Drupal::messenger()->addWarning($message);
         }
       }
     }

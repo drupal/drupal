@@ -152,19 +152,21 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
       else {
         throw new \UnexpectedValueException('Unknown severity type: ' . $severity);
       }
-      if (count($checker_messages) === 1) {
-        $severity_messages[] = ['#markup' => array_pop($checker_messages)];
-      }
-      else {
-        $severity_messages[] = [
-          '#type' => 'details',
-          '#title' => $summary,
-          '#open' => FALSE,
-          'messages' => [
-            '#theme' => 'item_list',
-            '#items' => $checker_messages,
-          ],
-        ];
+      if ($checker_messages) {
+        if (count($checker_messages) === 1) {
+          $severity_messages[] = ['#markup' => array_pop($checker_messages)];
+        }
+        else {
+          $severity_messages[] = [
+            '#type' => 'details',
+            '#title' => $summary,
+            '#open' => FALSE,
+            'messages' => [
+              '#theme' => 'item_list',
+              '#items' => $checker_messages,
+            ],
+          ];
+        }
       }
     }
     if ($severity_messages) {

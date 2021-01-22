@@ -73,19 +73,19 @@ class TestChecker implements ReadinessCheckerInterface {
    *   The error messages.
    * @param string[] $warnings
    *   The warning messages.
-   * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $errors_summary
+   * @param string|null $errors_summary
    *   The errors summary.
-   * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $warnings_summary
+   * @param string|null $warnings_summary
    *   The warnings summary.
    */
-  public static function setTestMessages(array $errors = [], array $warnings = [], ?TranslatableMarkup $errors_summary = NULL, ?TranslatableMarkup $warnings_summary = NULL): void {
+  public static function setTestMessages(array $errors = [], array $warnings = [], ?string $errors_summary = NULL, ?string $warnings_summary = NULL): void {
     \Drupal::state()->set(
       'auto_updates_test.check_error',
       [
         'errors' => $errors,
         'warnings' => $warnings,
-        'errors_summary' => $errors_summary,
-        'warnings_summary' => $warnings_summary,
+        'errors_summary' => $errors_summary ? new TranslatableMarkup($errors_summary) : NULL,
+        'warnings_summary' => $warnings_summary ? new TranslatableMarkup($warnings_summary) : NULL,
       ]
     );
   }
