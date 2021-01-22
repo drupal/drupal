@@ -92,8 +92,8 @@ class BasicSettingsForm extends ConfigFormBase {
 
     $form['basic']['ui_show_display_embed'] = [
       '#type' => 'checkbox',
-      '#title' => t('Allow embedded displays'),
-      '#description' => t('Embedded displays can be used in code via views_embed_view().'),
+      '#title' => $this->t('Allow embedded displays'),
+      '#description' => $this->t('Embedded displays can be used in code via views_embed_view().'),
       '#default_value' => $config->get('ui.show.display_embed'),
     ];
 
@@ -144,7 +144,7 @@ class BasicSettingsForm extends ConfigFormBase {
           ':input[name="ui_show_sql_query_enabled"]' => ['checked' => TRUE],
         ],
       ],
-      '#title' => t('Show SQL query'),
+      '#title' => $this->t('Show SQL query'),
       '#options' => [
         'above' => $this->t('Above the preview'),
         'below' => $this->t('Below the preview'),

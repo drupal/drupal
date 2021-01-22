@@ -32,14 +32,14 @@ class RssFeedsForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['feed_view_mode'] = [
       '#type' => 'select',
-      '#title' => t('Feed content'),
+      '#title' => $this->t('Feed content'),
       '#default_value' => $this->config('system.rss')->get('items.view_mode'),
       '#options' => [
-        'title' => t('Titles only'),
-        'teaser' => t('Titles plus teaser'),
-        'fulltext' => t('Full text'),
+        'title' => $this->t('Titles only'),
+        'teaser' => $this->t('Titles plus teaser'),
+        'fulltext' => $this->t('Full text'),
       ],
-      '#description' => t('Global setting for the default display of content items in each feed.'),
+      '#description' => $this->t('Global setting for the default display of content items in each feed.'),
     ];
 
     return parent::buildForm($form, $form_state);

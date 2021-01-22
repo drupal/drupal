@@ -71,13 +71,13 @@ class RegionalForm extends ConfigFormBase {
 
     $form['locale'] = [
       '#type' => 'details',
-      '#title' => t('Locale'),
+      '#title' => $this->t('Locale'),
       '#open' => TRUE,
     ];
 
     $form['locale']['site_default_country'] = [
       '#type' => 'select',
-      '#title' => t('Default country'),
+      '#title' => $this->t('Default country'),
       '#empty_value' => '',
       '#default_value' => $system_date->get('country.default'),
       '#options' => $countries,
@@ -86,20 +86,20 @@ class RegionalForm extends ConfigFormBase {
 
     $form['locale']['date_first_day'] = [
       '#type' => 'select',
-      '#title' => t('First day of week'),
+      '#title' => $this->t('First day of week'),
       '#default_value' => $system_date->get('first_day'),
-      '#options' => [0 => t('Sunday'), 1 => t('Monday'), 2 => t('Tuesday'), 3 => t('Wednesday'), 4 => t('Thursday'), 5 => t('Friday'), 6 => t('Saturday')],
+      '#options' => [0 => $this->t('Sunday'), 1 => $this->t('Monday'), 2 => $this->t('Tuesday'), 3 => $this->t('Wednesday'), 4 => $this->t('Thursday'), 5 => $this->t('Friday'), 6 => $this->t('Saturday')],
     ];
 
     $form['timezone'] = [
       '#type' => 'details',
-      '#title' => t('Time zones'),
+      '#title' => $this->t('Time zones'),
       '#open' => TRUE,
     ];
 
     $form['timezone']['date_default_timezone'] = [
       '#type' => 'select',
-      '#title' => t('Default time zone'),
+      '#title' => $this->t('Default time zone'),
       '#default_value' => $system_date->get('timezone.default') ?: date_default_timezone_get(),
       '#options' => $zones,
     ];

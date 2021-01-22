@@ -106,32 +106,32 @@ class PerformanceForm extends ConfigFormBase {
 
     $form['clear_cache'] = [
       '#type' => 'details',
-      '#title' => t('Clear cache'),
+      '#title' => $this->t('Clear cache'),
       '#open' => TRUE,
     ];
 
     $form['clear_cache']['clear'] = [
       '#type' => 'submit',
-      '#value' => t('Clear all caches'),
+      '#value' => $this->t('Clear all caches'),
       '#submit' => ['::submitCacheClear'],
     ];
 
     $form['caching'] = [
       '#type' => 'details',
-      '#title' => t('Caching'),
+      '#title' => $this->t('Caching'),
       '#open' => TRUE,
     ];
     // Identical options to the ones for block caching.
     // @see \Drupal\Core\Block\BlockBase::buildConfigurationForm()
     $period = [0, 60, 180, 300, 600, 900, 1800, 2700, 3600, 10800, 21600, 32400, 43200, 86400];
     $period = array_map([$this->dateFormatter, 'formatInterval'], array_combine($period, $period));
-    $period[0] = '<' . t('no caching') . '>';
+    $period[0] = '<' . $this->t('no caching') . '>';
     $form['caching']['page_cache_maximum_age'] = [
       '#type' => 'select',
-      '#title' => t('Browser and proxy cache maximum age'),
+      '#title' => $this->t('Browser and proxy cache maximum age'),
       '#default_value' => $config->get('cache.page.max_age'),
       '#options' => $period,
-      '#description' => t('This is used as the value for max-age in Cache-Control headers.'),
+      '#description' => $this->t('This is used as the value for max-age in Cache-Control headers.'),
     ];
     $form['caching']['internal_page_cache'] = [
       '#markup' => $this->t('Drupal provides an <a href=":module_enable">Internal Page Cache module</a> that is recommended for small to medium-sized websites.', [':module_enable' => Url::fromRoute('system.modules_list')->toString()]),
@@ -143,25 +143,25 @@ class PerformanceForm extends ConfigFormBase {
     $disabled = !$is_writable;
     $disabled_message = '';
     if (!$is_writable) {
-      $disabled_message = ' ' . t('<strong class="error">Set up the <a href=":file-system">public files directory</a> to make these optimizations available.</strong>', [':file-system' => Url::fromRoute('system.file_system_settings')->toString()]);
+      $disabled_message = ' ' . $this->t('<strong class="error">Set up the <a href=":file-system">public files directory</a> to make these optimizations available.</strong>', [':file-system' => Url::fromRoute('system.file_system_settings')->toString()]);
     }
 
     $form['bandwidth_optimization'] = [
       '#type' => 'details',
-      '#title' => t('Bandwidth optimization'),
+      '#title' => $this->t('Bandwidth optimization'),
       '#open' => TRUE,
-      '#description' => t('External resources can be optimized automatically, which can reduce both the size and number of requests made to your website.') . $disabled_message,
+      '#description' => $this->t('External resources can be optimized automatically, which can reduce both the size and number of requests made to your website.') . $disabled_message,
     ];
 
     $form['bandwidth_optimization']['preprocess_css'] = [
       '#type' => 'checkbox',
-      '#title' => t('Aggregate CSS files'),
+      '#title' => $this->t('Aggregate CSS files'),
       '#default_value' => $config->get('css.preprocess'),
       '#disabled' => $disabled,
     ];
     $form['bandwidth_optimization']['preprocess_js'] = [
       '#type' => 'checkbox',
-      '#title' => t('Aggregate JavaScript files'),
+      '#title' => $this->t('Aggregate JavaScript files'),
       '#default_value' => $config->get('js.preprocess'),
       '#disabled' => $disabled,
     ];

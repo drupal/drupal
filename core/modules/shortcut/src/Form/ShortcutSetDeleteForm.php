@@ -64,7 +64,7 @@ class ShortcutSetDeleteForm extends EntityDeleteForm {
     // Also, if a module implements hook_shortcut_default_set(), it's possible
     // that this set is being used as a default set. Add a message about that too.
     if ($this->moduleHandler->getImplementations('shortcut_default_set')) {
-      $info .= '<p>' . t('If you have chosen this shortcut set as the default for some or all users, they may also be affected by deleting it.') . '</p>';
+      $info .= '<p>' . $this->t('If you have chosen this shortcut set as the default for some or all users, they may also be affected by deleting it.') . '</p>';
     }
 
     $form['info'] = [

@@ -116,13 +116,13 @@ class Rearrange extends ViewsFormBase {
         '#type' => 'textfield',
         '#default_value' => ++$count,
         '#attributes' => ['class' => ['weight']],
-        '#title' => t('Weight for @title', ['@title' => $name]),
+        '#title' => $this->t('Weight for @title', ['@title' => $name]),
         '#title_display' => 'invisible',
       ];
 
       $form['fields'][$id]['removed'] = [
         '#type' => 'checkbox',
-        '#title' => t('Remove @title', ['@title' => $name]),
+        '#title' => $this->t('Remove @title', ['@title' => $name]),
         '#title_display' => 'invisible',
         '#id' => 'views-removed-' . $id,
         '#attributes' => ['class' => ['views-remove-checkbox']],
