@@ -2,6 +2,7 @@
 
 namespace Drupal\auto_updates\ReadinessChecker;
 
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -9,7 +10,7 @@ use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class for generating the readiness checkers requirement.
+ * Class for generating the readiness checkers' output for hook_requirements.
  *
  * @see update_requirements()
  *
@@ -29,16 +30,26 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
   protected $readinessCheckerManager;
 
   /**
+   * The date formatter service.
+   *
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
+   */
+  protected $dateFormatter;
+
+  /**
    * ReadinessRequirement constructor.
    *
    * @param \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager $readinessCheckerManager
    *   The readiness checker manager service.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $translation
    *   The translation service.
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   *   The date formatter service.
    */
-  public function __construct(ReadinessCheckerManager $readinessCheckerManager, TranslationInterface $translation) {
+  public function __construct(ReadinessCheckerManager $readinessCheckerManager, TranslationInterface $translation, DateFormatterInterface $date_formatter) {
     $this->readinessCheckerManager = $readinessCheckerManager;
     $this->setStringTranslation($translation);
+    $this->dateFormatter = $date_formatter;
   }
 
   /**
@@ -47,21 +58,18 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('auto_updates.readiness_checker_manager'),
-      $container->get('string_translation')
+      $container->get('string_translation'),
+      $container->get('date.formatter')
     );
   }
 
   /**
-   * Gets the security coverage requirement, if any.
+   * Gets requirements arrays to as specified in hook_requirements.
    *
    * @return array
-   *   Requirements array as specified by hook_requirements(), or an empty array
-   *   if no requirements can be determined.
+   *   Requirements arrays as specified by hook_requirements().
    */
   public function getRequirements() {
-    /** @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager $this->readinessCheckerManager */
-    $this->readinessCheckerManager = \Drupal::service('auto_updates.readiness_checker_manager');
-
     $readiness_check_url = Url::fromRoute('auto_updates.status_update_readiness');
 
     $last_check_timestamp = $this->readinessCheckerManager->getMostRecentRunTime();
@@ -81,7 +89,7 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
     elseif (!$this->readinessCheckerManager->hasRunRecently()) {
       $requirement['title'] = $this->t('Update readiness checks');
       $requirement['severity'] = REQUIREMENT_WARNING;
-      $time_ago = \Drupal::service('date.formatter')->formatTimeDiffSince($last_check_timestamp);
+      $time_ago = $this->dateFormatter->formatTimeDiffSince($last_check_timestamp);
       // @todo Link "automatic updates" to documentation in
       //   https://www.drupal.org/node/3168405.
       $requirement['value'] = $this->t('Your site has not recently checked if it is ready to apply automatic updates.');
