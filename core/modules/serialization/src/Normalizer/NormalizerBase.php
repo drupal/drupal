@@ -48,8 +48,8 @@ abstract class NormalizerBase implements SerializerAwareInterface, CacheableNorm
    * Implements \Symfony\Component\Serializer\Normalizer\DenormalizerInterface::supportsDenormalization()
    *
    * This class doesn't implement DenormalizerInterface, but most of its child
-   * classes do, so this method is implemented at this level to reduce code
-   * duplication.
+   * classes do. Therefore, this method is implemented at this level to reduce
+   * code duplication.
    */
   public function supportsDenormalization($data, $type, $format = NULL) {
     // If the format is not supported return now.
