@@ -48,8 +48,8 @@ abstract class StorageTestBase extends KernelTestBase {
   public function testCRUD() {
     $stores = $this->createStorage();
     // Verify that each store returns its own collection name.
-    $this->assertIdentical($stores[0]->getCollectionName(), $this->collections[0]);
-    $this->assertIdentical($stores[1]->getCollectionName(), $this->collections[1]);
+    $this->assertIdentical($this->collections[0], $stores[0]->getCollectionName());
+    $this->assertIdentical($this->collections[1], $stores[1]->getCollectionName());
 
     // Verify that an item can be stored.
     $stores[0]->set('foo', $this->objects[0]);
@@ -132,7 +132,7 @@ abstract class StorageTestBase extends KernelTestBase {
     $this->assertNull($stores[0]->get('foo'));
 
     // Verify that a non-existing key with a default returns the default.
-    $this->assertIdentical($stores[0]->get('foo', 'bar'), 'bar');
+    $this->assertIdentical('bar', $stores[0]->get('foo', 'bar'));
 
     // Verify that a FALSE value can be stored.
     $stores[0]->set('foo', FALSE);
@@ -146,7 +146,7 @@ abstract class StorageTestBase extends KernelTestBase {
     $stores[0]->set('bar', 'baz');
     $values = $stores[0]->getMultiple(['foo', 'bar']);
     $this->assertFalse(isset($values['foo']), "Key 'foo' not found.");
-    $this->assertIdentical($values['bar'], 'baz');
+    $this->assertIdentical('baz', $values['bar']);
   }
 
   /**
@@ -183,9 +183,9 @@ abstract class StorageTestBase extends KernelTestBase {
     $store = $stores[0];
 
     $store->set('old', 'thing');
-    $this->assertIdentical($store->get('old'), 'thing');
+    $this->assertIdentical('thing', $store->get('old'));
     $store->rename('old', 'new');
-    $this->assertIdentical($store->get('new'), 'thing');
+    $this->assertIdentical('thing', $store->get('new'));
     $this->assertNull($store->get('old'));
   }
 

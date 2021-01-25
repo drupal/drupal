@@ -46,7 +46,7 @@ class EntityUUIDTest extends EntityKernelTestBase {
         'name' => $this->randomMachineName(),
         'uuid' => $uuid,
       ]);
-    $this->assertIdentical($custom_entity->uuid(), $uuid);
+    $this->assertIdentical($uuid, $custom_entity->uuid());
     // Save this entity, so we have more than one later.
     $custom_entity->save();
 
@@ -62,7 +62,7 @@ class EntityUUIDTest extends EntityKernelTestBase {
 
     // Verify that the UUID is retained upon saving.
     $entity->save();
-    $this->assertIdentical($entity->uuid(), $uuid);
+    $this->assertIdentical($uuid, $entity->uuid());
 
     // Verify that the UUID is retained upon loading.
     /** @var \Drupal\Core\Entity\EntityStorageInterface $storage */
@@ -70,11 +70,11 @@ class EntityUUIDTest extends EntityKernelTestBase {
       ->getStorage($entity_type);
     $storage->resetCache([$entity->id()]);
     $entity_loaded = $storage->load($entity->id());
-    $this->assertIdentical($entity_loaded->uuid(), $uuid);
+    $this->assertIdentical($uuid, $entity_loaded->uuid());
 
     // Verify that \Drupal::service('entity.repository')->loadEntityByUuid() loads the same entity.
     $entity_loaded_by_uuid = \Drupal::service('entity.repository')->loadEntityByUuid($entity_type, $uuid, TRUE);
-    $this->assertIdentical($entity_loaded_by_uuid->uuid(), $uuid);
+    $this->assertIdentical($uuid, $entity_loaded_by_uuid->uuid());
     $this->assertEqual($entity_loaded_by_uuid->id(), $entity_loaded->id());
 
     // Creating a duplicate needs to result in a new UUID.

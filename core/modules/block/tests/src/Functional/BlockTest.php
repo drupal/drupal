@@ -403,7 +403,7 @@ class BlockTest extends BlockTestBase {
     ];
     sort($expected_cache_tags);
     $keys = \Drupal::service('cache_contexts_manager')->convertTokensToKeys(['languages:language_interface', 'theme', 'user.permissions'])->getKeys();
-    $this->assertIdentical($cache_entry->tags, $expected_cache_tags);
+    $this->assertIdentical($expected_cache_tags, $cache_entry->tags);
     $cache_entry = \Drupal::cache('render')->get('entity_view:block:powered:' . implode(':', $keys));
     $expected_cache_tags = [
       'block_view',
@@ -411,7 +411,7 @@ class BlockTest extends BlockTestBase {
       'rendered',
     ];
     sort($expected_cache_tags);
-    $this->assertIdentical($cache_entry->tags, $expected_cache_tags);
+    $this->assertIdentical($expected_cache_tags, $cache_entry->tags);
 
     // The "Powered by Drupal" block is modified; verify a cache miss.
     $block->setRegion('content');
@@ -453,7 +453,7 @@ class BlockTest extends BlockTestBase {
     sort($expected_cache_tags);
     $keys = \Drupal::service('cache_contexts_manager')->convertTokensToKeys(['languages:language_interface', 'theme', 'user.permissions'])->getKeys();
     $cache_entry = \Drupal::cache('render')->get('entity_view:block:powered:' . implode(':', $keys));
-    $this->assertIdentical($cache_entry->tags, $expected_cache_tags);
+    $this->assertIdentical($expected_cache_tags, $cache_entry->tags);
     $expected_cache_tags = [
       'block_view',
       'config:block.block.powered-2',
@@ -462,7 +462,7 @@ class BlockTest extends BlockTestBase {
     sort($expected_cache_tags);
     $keys = \Drupal::service('cache_contexts_manager')->convertTokensToKeys(['languages:language_interface', 'theme', 'user.permissions'])->getKeys();
     $cache_entry = \Drupal::cache('render')->get('entity_view:block:powered-2:' . implode(':', $keys));
-    $this->assertIdentical($cache_entry->tags, $expected_cache_tags);
+    $this->assertIdentical($expected_cache_tags, $cache_entry->tags);
 
     // Now we should have a cache hit again.
     $this->drupalGet('<front>');

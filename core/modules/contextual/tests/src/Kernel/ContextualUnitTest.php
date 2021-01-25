@@ -115,7 +115,7 @@ class ContextualUnitTest extends KernelTestBase {
   public function testContextualLinksToId() {
     $tests = $this->_contextual_links_id_testcases();
     foreach ($tests as $test) {
-      $this->assertIdentical(_contextual_links_to_id($test['links']), $test['id']);
+      $this->assertIdentical($test['id'], _contextual_links_to_id($test['links']));
     }
   }
 
@@ -125,7 +125,7 @@ class ContextualUnitTest extends KernelTestBase {
   public function testContextualIdToLinks() {
     $tests = $this->_contextual_links_id_testcases();
     foreach ($tests as $test) {
-      $this->assertIdentical(_contextual_id_to_links($test['id']), $test['links']);
+      $this->assertIdentical($test['links'], _contextual_id_to_links($test['id']));
     }
   }
 

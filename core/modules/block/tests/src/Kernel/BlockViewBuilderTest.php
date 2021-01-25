@@ -188,14 +188,14 @@ class BlockViewBuilderTest extends KernelTestBase {
     // Establish baseline.
     $build = $this->getBlockRenderArray();
     $this->setRawContent((string) $this->renderer->renderRoot($build));
-    $this->assertIdentical(trim((string) $this->cssSelect('div')[0]), 'Llamas > unicorns!');
+    $this->assertIdentical('Llamas > unicorns!', trim((string) $this->cssSelect('div')[0]));
 
     // Enable the block view alter hook that adds a foo=bar attribute.
     \Drupal::state()->set('block_test_view_alter_suffix', TRUE);
     Cache::invalidateTags($this->block->getCacheTagsToInvalidate());
     $build = $this->getBlockRenderArray();
     $this->setRawContent((string) $this->renderer->renderRoot($build));
-    $this->assertIdentical(trim((string) $this->cssSelect('[foo=bar]')[0]), 'Llamas > unicorns!');
+    $this->assertIdentical('Llamas > unicorns!', trim((string) $this->cssSelect('[foo=bar]')[0]));
     \Drupal::state()->set('block_test_view_alter_suffix', FALSE);
 
     \Drupal::state()->set('block_test.content', NULL);
@@ -206,7 +206,7 @@ class BlockViewBuilderTest extends KernelTestBase {
     \Drupal::state()->set('block_test_view_alter_append_pre_render_prefix', TRUE);
     $build = $this->getBlockRenderArray();
     $this->assertFalse(isset($build['#prefix']), 'The appended #pre_render callback has not yet run before rendering.');
-    $this->assertIdentical((string) $this->renderer->renderRoot($build), 'Hiya!<br>');
+    $this->assertIdentical('Hiya!<br>', (string) $this->renderer->renderRoot($build));
     // Check that a cached block without content is altered.
     $this->assertArrayHasKey('#prefix', $build);
     $this->assertSame('Hiya!<br>', $build['#prefix']);

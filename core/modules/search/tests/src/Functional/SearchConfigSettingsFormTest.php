@@ -239,9 +239,9 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
   public function testDefaultSearchPageOrdering() {
     $this->drupalGet('search');
     $elements = $this->xpath('//*[contains(@class, :class)]//a', [':class' => 'tabs primary']);
-    $this->assertIdentical($elements[0]->getAttribute('href'), Url::fromRoute('search.view_node_search')->toString());
-    $this->assertIdentical($elements[1]->getAttribute('href'), Url::fromRoute('search.view_dummy_search_type')->toString());
-    $this->assertIdentical($elements[2]->getAttribute('href'), Url::fromRoute('search.view_user_search')->toString());
+    $this->assertIdentical(Url::fromRoute('search.view_node_search')->toString(), $elements[0]->getAttribute('href'));
+    $this->assertIdentical(Url::fromRoute('search.view_dummy_search_type')->toString(), $elements[1]->getAttribute('href'));
+    $this->assertIdentical(Url::fromRoute('search.view_user_search')->toString(), $elements[2]->getAttribute('href'));
   }
 
   /**
@@ -294,8 +294,8 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
     // Ensure both search pages have their tabs displayed.
     $this->drupalGet('search');
     $elements = $this->xpath('//*[contains(@class, :class)]//a', [':class' => 'tabs primary']);
-    $this->assertIdentical($elements[0]->getAttribute('href'), Url::fromRoute('search.view_' . $first_id)->toString());
-    $this->assertIdentical($elements[1]->getAttribute('href'), Url::fromRoute('search.view_' . $second_id)->toString());
+    $this->assertIdentical(Url::fromRoute('search.view_' . $first_id)->toString(), $elements[0]->getAttribute('href'));
+    $this->assertIdentical(Url::fromRoute('search.view_' . $second_id)->toString(), $elements[1]->getAttribute('href'));
 
     // Switch the weight of the search pages and check the order of the tabs.
     $edit = [
@@ -305,8 +305,8 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
     $this->drupalPostForm('admin/config/search/pages', $edit, 'Save configuration');
     $this->drupalGet('search');
     $elements = $this->xpath('//*[contains(@class, :class)]//a', [':class' => 'tabs primary']);
-    $this->assertIdentical($elements[0]->getAttribute('href'), Url::fromRoute('search.view_' . $second_id)->toString());
-    $this->assertIdentical($elements[1]->getAttribute('href'), Url::fromRoute('search.view_' . $first_id)->toString());
+    $this->assertIdentical(Url::fromRoute('search.view_' . $second_id)->toString(), $elements[0]->getAttribute('href'));
+    $this->assertIdentical(Url::fromRoute('search.view_' . $first_id)->toString(), $elements[1]->getAttribute('href'));
 
     // Check the initial state of the search pages.
     $this->drupalGet('admin/config/search/pages');
@@ -407,7 +407,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
   protected function assertDefaultSearch($expected, $message = '', $group = 'Other') {
     /** @var $search_page_repository \Drupal\search\SearchPageRepositoryInterface */
     $search_page_repository = \Drupal::service('search.search_page_repository');
-    $this->assertIdentical($search_page_repository->getDefaultSearchPage(), $expected, $message, $group);
+    $this->assertIdentical($expected, $search_page_repository->getDefaultSearchPage(), $message, $group);
   }
 
   /**

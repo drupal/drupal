@@ -94,7 +94,7 @@ class MigrateMessageTest extends KernelTestBase implements MigrateMessageInterfa
     $executable = new MigrateExecutable($this->migration, $this);
     $executable->import();
     $this->assertCount(1, $this->messages);
-    $this->assertIdentical(reset($this->messages), "source_message: 'a message' is not an array");
+    $this->assertIdentical("source_message: 'a message' is not an array", reset($this->messages));
   }
 
   /**

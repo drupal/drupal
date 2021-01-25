@@ -120,13 +120,13 @@ class StatisticsLoggingTest extends BrowserTestBase {
     $this->drupalGet($path);
     $settings = $this->getDrupalSettings();
     $this->assertSession()->responseMatches($expected_library);
-    $this->assertIdentical($this->node->id(), $settings['statistics']['data']['nid'], 'Found statistics settings on node page.');
+    $this->assertIdentical($settings['statistics']['data']['nid'], $this->node->id(), 'Found statistics settings on node page.');
 
     // Verify the same when loading the site in a non-default language.
     $this->drupalGet($this->language['langcode'] . '/' . $path);
     $settings = $this->getDrupalSettings();
     $this->assertSession()->responseMatches($expected_library);
-    $this->assertIdentical($this->node->id(), $settings['statistics']['data']['nid'], 'Found statistics settings on valid node page in a non-default language.');
+    $this->assertIdentical($settings['statistics']['data']['nid'], $this->node->id(), 'Found statistics settings on valid node page in a non-default language.');
 
     // Manually call statistics.php to simulate ajax data collection behavior.
     global $base_root;

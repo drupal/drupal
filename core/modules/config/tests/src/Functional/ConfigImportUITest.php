@@ -171,7 +171,7 @@ class ConfigImportUITest extends BrowserTestBase {
     // used during configuration import and, additionally, that after installing
     // a module, that configuration is not synced twice.
     $interval_values = \Drupal::state()->get('ConfigImportUITest.automated_cron.settings.interval', []);
-    $this->assertIdentical($interval_values, [10000]);
+    $this->assertIdentical([10000], $interval_values);
 
     $core_extension = $this->config('core.extension')->get();
     unset($core_extension['module']['automated_cron']);
@@ -224,7 +224,7 @@ class ConfigImportUITest extends BrowserTestBase {
     // Verify that the automated_cron.settings configuration object was only
     // deleted once during the import process.
     $delete_called = \Drupal::state()->get('ConfigImportUITest.automated_cron.settings.delete', 0);
-    $this->assertIdentical($delete_called, 1, "The automated_cron.settings configuration was deleted once during configuration import.");
+    $this->assertIdentical(1, $delete_called, "The automated_cron.settings configuration was deleted once during configuration import.");
   }
 
   /**

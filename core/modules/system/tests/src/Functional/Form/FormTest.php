@@ -472,11 +472,7 @@ class FormTest extends BrowserTestBase {
       'multiple_no_default_required' => ['three' => 'three'],
     ];
     foreach ($expected as $key => $value) {
-      $this->assertIdentical($values[$key], $value, new FormattableMarkup('@name: @actual is equal to @expected.', [
-        '@name' => $key,
-        '@actual' => var_export($values[$key], TRUE),
-        '@expected' => var_export($value, TRUE),
-      ]));
+      $this->assertIdentical($value, $values[$key], new FormattableMarkup('@name: @actual is equal to @expected.', ['@name' => $key, '@actual' => var_export($values[$key], TRUE), '@expected' => var_export($value, TRUE)]));
     }
   }
 
