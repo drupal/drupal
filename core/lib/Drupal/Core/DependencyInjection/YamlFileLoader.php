@@ -120,7 +120,9 @@ class YamlFileLoader
             list($provider, ) = explode('.', $basename, 2);
         }
         foreach ($content['services'] as $id => $service) {
-            $service['tags'][] = ['name' => '_provider', 'provider' => $provider];
+            if (is_array($service)) {
+              $service['tags'][] = ['name' => '_provider', 'provider' => $provider];
+            }
             $this->parseDefinition($id, $service, $file);
         }
     }
