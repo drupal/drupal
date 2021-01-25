@@ -4,6 +4,8 @@ namespace Drupal\database_test\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Query\PagerSelectExtender;
+use Drupal\Core\Database\Query\TableSortExtender;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -71,7 +73,7 @@ class DatabaseTestController extends ControllerBase {
 
     // This should result in 2 pages of results.
     $query = $query
-      ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+      ->extend(PagerSelectExtender::class)
       ->limit($limit);
 
     $names = $query->execute()->fetchCol();
@@ -97,7 +99,7 @@ class DatabaseTestController extends ControllerBase {
 
     // This should result in 4 pages of results.
     $query = $query
-      ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+      ->extend(PagerSelectExtender::class)
       ->limit($limit);
 
     $names = $query->execute()->fetchCol();
@@ -128,7 +130,7 @@ class DatabaseTestController extends ControllerBase {
       ->fields('t', ['tid', 'pid', 'task', 'priority']);
 
     $query = $query
-      ->extend('Drupal\Core\Database\Query\TableSortExtender')
+      ->extend(TableSortExtender::class)
       ->orderByHeader($header);
 
     // We need all the results at once to check the sort.
@@ -160,7 +162,7 @@ class DatabaseTestController extends ControllerBase {
       ->fields('t', ['tid', 'pid', 'task', 'priority']);
 
     $query = $query
-      ->extend('Drupal\Core\Database\Query\TableSortExtender')
+      ->extend(TableSortExtender::class)
       ->orderByHeader($header)
       ->orderBy('priority');
 

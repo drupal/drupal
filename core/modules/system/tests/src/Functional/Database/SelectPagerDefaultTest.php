@@ -4,6 +4,7 @@ namespace Drupal\Tests\system\Functional\Database;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\Query\PagerSelectExtender;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -94,7 +95,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
   public function testInnerPagerQuery() {
     $connection = Database::getConnection();
     $query = $connection->select('test', 't')
-      ->extend('Drupal\Core\Database\Query\PagerSelectExtender');
+      ->extend(PagerSelectExtender::class);
     $query
       ->fields('t', ['age'])
       ->orderBy('age')
@@ -117,7 +118,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
    */
   public function testHavingPagerQuery() {
     $query = Database::getConnection()->select('test', 't')
-      ->extend('Drupal\Core\Database\Query\PagerSelectExtender');
+      ->extend(PagerSelectExtender::class);
     $query
       ->fields('t', ['name'])
       ->orderBy('name')
@@ -144,7 +145,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
 
     $connection = Database::getConnection();
     $name = $connection->select('test', 't')
-      ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+      ->extend(PagerSelectExtender::class)
       ->element(2)
       ->fields('t', ['name'])
       ->orderBy('age')
@@ -156,7 +157,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
     // Setting an element smaller than the previous one
     // should not overwrite the pager $maxElement with a smaller value.
     $name = $connection->select('test', 't')
-      ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+      ->extend(PagerSelectExtender::class)
       ->element(1)
       ->fields('t', ['name'])
       ->orderBy('age')
@@ -166,7 +167,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
     $this->assertEqual($name, 'George', 'Pager query #2 with a specified element ID returned the correct results.');
 
     $name = $connection->select('test', 't')
-      ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+      ->extend(PagerSelectExtender::class)
       ->fields('t', ['name'])
       ->orderBy('age')
       ->limit(1)

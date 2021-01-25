@@ -3,6 +3,7 @@
 namespace Drupal\Tests\Core\Database;
 
 use Composer\Autoload\ClassLoader;
+use Drupal\Core\Database\Query\SelectExtender;
 use Drupal\Tests\Core\Database\Stub\StubConnection;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
 use Drupal\Tests\UnitTestCase;
@@ -128,7 +129,7 @@ class SelectTest extends UnitTestCase {
     $this->assertEquals($expected, get_class($select));
 
     // Get an instance of the class \Drupal\Core\Database\Query\SelectExtender.
-    $select_extender = $connection->select('test')->extend('Drupal\Core\Database\Query\SelectExtender');
+    $select_extender = $connection->select('test')->extend(SelectExtender::class);
     $this->assertEquals('Drupal\Core\Database\Query\SelectExtender', get_class($select_extender));
 
     // Tests the method \Drupal\Core\Database\Query\SelectExtender::extend().

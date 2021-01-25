@@ -3,6 +3,7 @@
 namespace Drupal\locale;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Query\PagerSelectExtender;
 
 /**
  * Defines a class to store localized strings in the database.
@@ -442,7 +443,7 @@ class StringDatabaseStorage implements StringStorageInterface {
     }
 
     if (!empty($options['pager limit'])) {
-      $query = $query->extend('Drupal\Core\Database\Query\PagerSelectExtender')->limit($options['pager limit']);
+      $query = $query->extend(PagerSelectExtender::class)->limit($options['pager limit']);
     }
 
     return $query;

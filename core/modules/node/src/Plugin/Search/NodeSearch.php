@@ -7,6 +7,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Query\PagerSelectExtender;
 use Drupal\Core\Database\Query\SelectExtender;
 use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -22,7 +23,7 @@ use Drupal\node\NodeInterface;
 use Drupal\search\Plugin\ConfigurableSearchPluginBase;
 use Drupal\search\Plugin\SearchIndexingInterface;
 use Drupal\search\SearchIndexInterface;
-use Drupal\Search\SearchQuery;
+use Drupal\search\SearchQuery;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -261,8 +262,8 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
     // Build matching conditions.
     $query = $this->databaseReplica
       ->select('search_index', 'i')
-      ->extend('Drupal\search\SearchQuery')
-      ->extend('Drupal\Core\Database\Query\PagerSelectExtender');
+      ->extend(SearchQuery::class)
+      ->extend(PagerSelectExtender::class);
     $query->join('node_field_data', 'n', '[n].[nid] = [i].[sid] AND [n].[langcode] = [i].[langcode]');
     $query->condition('n.status', 1)
       ->addTag('node_access')

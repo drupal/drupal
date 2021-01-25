@@ -9,6 +9,8 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Query\PagerSelectExtender;
+use Drupal\Core\Database\Query\TableSortExtender;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
@@ -161,8 +163,8 @@ class DbLogController extends ControllerBase {
     ];
 
     $query = $this->database->select('watchdog', 'w')
-      ->extend('\Drupal\Core\Database\Query\PagerSelectExtender')
-      ->extend('\Drupal\Core\Database\Query\TableSortExtender');
+      ->extend(PagerSelectExtender::class)
+      ->extend(TableSortExtender::class);
     $query->fields('w', [
       'wid',
       'uid',
@@ -427,8 +429,8 @@ class DbLogController extends ControllerBase {
     $count_query->condition('type', $type);
 
     $query = $this->database->select('watchdog', 'w')
-      ->extend('\Drupal\Core\Database\Query\PagerSelectExtender')
-      ->extend('\Drupal\Core\Database\Query\TableSortExtender');
+      ->extend(PagerSelectExtender::class)
+      ->extend(TableSortExtender::class);
     $query->addExpression('COUNT([wid])', 'count');
     $query = $query
       ->fields('w', ['message', 'variables'])
