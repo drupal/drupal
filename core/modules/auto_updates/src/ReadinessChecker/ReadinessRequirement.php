@@ -6,7 +6,6 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Url;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -30,25 +29,15 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
   protected $readinessCheckerManager;
 
   /**
-   * A logger instance.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
-
-  /**
    * ReadinessRequirement constructor.
    *
    * @param \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager $readinessCheckerManager
    *   The readiness checker manager service.
-   * @param \Psr\Log\LoggerInterface $logger
-   *   A logger instance.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $translation
    *   The translation service.
    */
-  public function __construct(ReadinessCheckerManager $readinessCheckerManager, LoggerInterface $logger, TranslationInterface $translation) {
+  public function __construct(ReadinessCheckerManager $readinessCheckerManager, TranslationInterface $translation) {
     $this->readinessCheckerManager = $readinessCheckerManager;
-    $this->logger = $logger;
     $this->setStringTranslation($translation);
   }
 
@@ -58,7 +47,6 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('auto_updates.readiness_checker_manager'),
-      $container->get('logger.channel.auto_updates'),
       $container->get('string_translation')
     );
   }
