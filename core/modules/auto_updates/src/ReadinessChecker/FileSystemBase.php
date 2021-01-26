@@ -33,12 +33,9 @@ abstract class FileSystemBase implements ReadinessCheckerInterface {
    *
    * @param string $app_root
    *   The app root.
-   * @param string|null $vendor_dir
-   *   The vendor directory path.
    */
-  public function __construct(string $app_root, ?string $vendor_dir = NULL) {
+  public function __construct(string $app_root) {
     $this->rootPath = $app_root;
-    $this->vendorDir = $vendor_dir;
   }
 
   /**

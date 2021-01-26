@@ -42,7 +42,7 @@ class DiskSpaceTest extends KernelTestBase {
     $this->assertStringMatchesFormat('Vendor filesystem "%s" has insufficient space. There must be at least %s megabytes free.', (string) $messages[1]);
 
     // Web root and vendor path are invalid.
-    $disk_space = new DiskSpace("if_there_was_ever_a_folder_with_this_path_this_test_would_fail", "this_path_as_well");
+    $disk_space = new TestDiskSpaceInvalidVendor('if_there_was_ever_a_folder_with_this_path_this_test_would_fail');
     $messages = $disk_space->getErrors();
     $this->assertCount(1, $messages);
     $this->assertEquals('Free disk space cannot be determined because the web root and vendor directories could not be located.', (string) $messages[0]);
@@ -73,5 +73,16 @@ class TestDiskSpaceNonSameDisk extends TestDiskSpace {
   protected function areSameLogicalDisk(string $root, string $vendor): bool {
     return FALSE;
   }
+
+}
+/**
+ * A test checker that overrides TestDiskSpace to fake an invalid vendor path.
+ */
+class TestDiskSpaceInvalidVendor extends TestDiskSpace {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $vendorDir = 'if_there_was_ever_a_folder_with_this_path_this_test_would_fail';
 
 }
