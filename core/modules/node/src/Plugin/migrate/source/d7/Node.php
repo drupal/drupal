@@ -26,7 +26,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   node_type: page
  * @endcode
  *
- * In this example nodes type page are retrieved from the source database.
+ * In this example nodes of type page are retrieved from the source database.
  *
  * @code
  * source:
@@ -37,12 +37,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * In this example nodes of type page and test are retrieved from the source
  * database.
  *
+ * For additional configuration keys, refer to the parent classes:
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
  * @MigrateSource(
  *   id = "d7_node",
  *   source_module = "node"
  * )
- *
- * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  */
 class Node extends FieldableEntity {
   /**
