@@ -27,13 +27,13 @@ class MigrateAggregatorSettingsTest extends MigrateDrupal7TestBase {
    */
   public function testMigration() {
     $config = \Drupal::config('aggregator.settings')->get();
-    $this->assertIdentical('aggregator', $config['fetcher']);
-    $this->assertIdentical('aggregator', $config['parser']);
-    $this->assertIdentical(['aggregator'], $config['processors']);
-    $this->assertIdentical('<p> <div> <a>', $config['items']['allowed_html']);
-    $this->assertIdentical(500, $config['items']['teaser_length']);
-    $this->assertIdentical(86400, $config['items']['expire']);
-    $this->assertIdentical(6, $config['source']['list_max']);
+    $this->assertSame('aggregator', $config['fetcher']);
+    $this->assertSame('aggregator', $config['parser']);
+    $this->assertSame(['aggregator'], $config['processors']);
+    $this->assertSame('<p> <div> <a>', $config['items']['allowed_html']);
+    $this->assertSame(500, $config['items']['teaser_length']);
+    $this->assertSame(86400, $config['items']['expire']);
+    $this->assertSame(6, $config['source']['list_max']);
   }
 
 }

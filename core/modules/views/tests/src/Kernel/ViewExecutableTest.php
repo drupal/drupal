@@ -163,22 +163,22 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     $display_plugin = $view->getDisplay();
     $this->assertInstanceOf(DefaultDisplay::class, $display_plugin);
     $this->assertInstanceOf(DefaultDisplay::class, $view->display_handler);
-    $this->assertIdentical($display_plugin, $view->getDisplay(), 'The same display plugin instance was returned.');
+    $this->assertSame($display_plugin, $view->getDisplay(), 'The same display plugin instance was returned.');
 
     $style_plugin = $view->getStyle();
     $this->assertInstanceOf(DefaultStyle::class, $style_plugin);
     $this->assertInstanceOf(DefaultStyle::class, $view->style_plugin);
-    $this->assertIdentical($style_plugin, $view->getStyle(), 'The same style plugin instance was returned.');
+    $this->assertSame($style_plugin, $view->getStyle(), 'The same style plugin instance was returned.');
 
     $pager_plugin = $view->getPager();
     $this->assertInstanceOf(PagerPluginBase::class, $pager_plugin);
     $this->assertInstanceOf(PagerPluginBase::class, $view->pager);
-    $this->assertIdentical($pager_plugin, $view->getPager(), 'The same pager plugin instance was returned.');
+    $this->assertSame($pager_plugin, $view->getPager(), 'The same pager plugin instance was returned.');
 
     $query_plugin = $view->getQuery();
     $this->assertInstanceOf(QueryPluginBase::class, $query_plugin);
     $this->assertInstanceOf(QueryPluginBase::class, $view->query);
-    $this->assertIdentical($query_plugin, $view->getQuery(), 'The same query plugin instance was returned.');
+    $this->assertSame($query_plugin, $view->getQuery(), 'The same query plugin instance was returned.');
   }
 
   /**
@@ -321,13 +321,13 @@ class ViewExecutableTest extends ViewsKernelTestBase {
       'views_test_data' => TRUE,
       '#global' => TRUE,
     ];
-    $this->assertIdentical($expected, $view->getBaseTables());
+    $this->assertSame($expected, $view->getBaseTables());
 
     // Test response methods.
     $this->assertInstanceOf(Response::class, $view->getResponse());
     $new_response = new Response();
     $view->setResponse($new_response);
-    $this->assertIdentical(spl_object_hash($view->getResponse()), spl_object_hash($new_response), 'New response object correctly set.');
+    $this->assertSame(spl_object_hash($view->getResponse()), spl_object_hash($new_response), 'New response object correctly set.');
 
     // Test the getPath() method.
     $path = $this->randomMachineName();
@@ -375,7 +375,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     );
 
     foreach ($defaults as $property => $default) {
-      $this->assertIdentical($this->getProtectedProperty($view, $property), $default);
+      $this->assertSame($this->getProtectedProperty($view, $property), $default);
     }
   }
 
@@ -475,7 +475,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
       return $carry;
     });
     // Assert that there were 9 total errors across 3 displays.
-    $this->assertIdentical(9, $total_error_count);
+    $this->assertSame(9, $total_error_count);
     $this->assertCount(3, $errors);
   }
 
@@ -498,10 +498,10 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     $unserialized = unserialize($serialized);
 
     $this->assertInstanceOf(ViewExecutable::class, $unserialized);
-    $this->assertIdentical($unserialized->storage->id(), $view->storage->id(), 'The expected storage entity was loaded on the unserialized view.');
-    $this->assertIdentical('page_1', $unserialized->current_display, 'The expected display was set on the unserialized view.');
-    $this->assertIdentical(['test'], $unserialized->args, 'The expected argument was set on the unserialized view.');
-    $this->assertIdentical(2, $unserialized->getCurrentPage(), 'The expected current page was set on the unserialized view.');
+    $this->assertSame($unserialized->storage->id(), $view->storage->id(), 'The expected storage entity was loaded on the unserialized view.');
+    $this->assertSame('page_1', $unserialized->current_display, 'The expected display was set on the unserialized view.');
+    $this->assertSame(['test'], $unserialized->args, 'The expected argument was set on the unserialized view.');
+    $this->assertSame(2, $unserialized->getCurrentPage(), 'The expected current page was set on the unserialized view.');
 
     // Get the definition of node's nid field, for example. Only get it not from
     // the field manager directly, but from the item data definition. It should

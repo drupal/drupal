@@ -31,9 +31,9 @@ class MigrateUserPictureEntityFormDisplayTest extends MigrateDrupal7TestBase {
    */
   public function testEntityFormDisplaySettings() {
     $component = EntityFormDisplay::load('user.user.default')->getComponent('user_picture');
-    $this->assertIdentical('image_image', $component['type']);
-    $this->assertIdentical('throbber', $component['settings']['progress_indicator']);
-    $this->assertIdentical('thumbnail', $component['settings']['preview_image_style']);
+    $this->assertSame('image_image', $component['type']);
+    $this->assertSame('throbber', $component['settings']['progress_indicator']);
+    $this->assertSame('thumbnail', $component['settings']['preview_image_style']);
   }
 
 }

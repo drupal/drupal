@@ -182,17 +182,17 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     foreach ($operation_links as $link) {
       switch ($link->getAttribute('title')) {
         case 'Edit field settings.':
-          $this->assertIdentical($url, $link->getAttribute('href'));
+          $this->assertSame($url, $link->getAttribute('href'));
           $number_of_links_found++;
           break;
 
         case 'Edit storage settings.':
-          $this->assertIdentical("$url/storage", $link->getAttribute('href'));
+          $this->assertSame("$url/storage", $link->getAttribute('href'));
           $number_of_links_found++;
           break;
 
         case 'Delete field.':
-          $this->assertIdentical("$url/delete", $link->getAttribute('href'));
+          $this->assertSame("$url/delete", $link->getAttribute('href'));
           $number_of_links_found++;
           break;
       }

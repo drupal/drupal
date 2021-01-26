@@ -326,7 +326,7 @@ class OptionsFieldUITest extends FieldTestBase {
     }
     else {
       $field_storage = FieldStorageConfig::loadByName('node', $this->fieldName);
-      $this->assertIdentical($field_storage->getSetting('allowed_values'), $result, $message);
+      $this->assertSame($field_storage->getSetting('allowed_values'), $result, $message);
     }
   }
 

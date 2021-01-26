@@ -87,7 +87,7 @@ class TermTest extends TaxonomyTestBase {
   public function testParentHandlerSettings() {
     $vocabulary_fields = \Drupal::service('entity_field.manager')->getFieldDefinitions('taxonomy_term', $this->vocabulary->id());
     $parent_target_bundles = $vocabulary_fields['parent']->getSetting('handler_settings')['target_bundles'];
-    $this->assertIdentical([$this->vocabulary->id() => $this->vocabulary->id()], $parent_target_bundles);
+    $this->assertSame([$this->vocabulary->id() => $this->vocabulary->id()], $parent_target_bundles);
   }
 
   /**
@@ -606,16 +606,16 @@ class TermTest extends TaxonomyTestBase {
     $this->drupalGet('taxonomy/term/' . $term->id() . '/edit');
     $breadcrumbs = $this->getSession()->getPage()->findAll('css', 'nav.breadcrumb ol li a');
     $this->assertCount(2, $breadcrumbs, 'The breadcrumbs are present on the page.');
-    $this->assertIdentical('Home', $breadcrumbs[0]->getText(), 'First breadcrumb text is Home');
-    $this->assertIdentical($term->label(), $breadcrumbs[1]->getText(), 'Second breadcrumb text is term name on term edit page.');
+    $this->assertSame('Home', $breadcrumbs[0]->getText(), 'First breadcrumb text is Home');
+    $this->assertSame($term->label(), $breadcrumbs[1]->getText(), 'Second breadcrumb text is term name on term edit page.');
     $this->assertSession()->assertEscaped($breadcrumbs[1]->getText());
 
     // Check the breadcrumb on the term delete page.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/delete');
     $breadcrumbs = $this->getSession()->getPage()->findAll('css', 'nav.breadcrumb ol li a');
     $this->assertCount(2, $breadcrumbs, 'The breadcrumbs are present on the page.');
-    $this->assertIdentical('Home', $breadcrumbs[0]->getText(), 'First breadcrumb text is Home');
-    $this->assertIdentical($term->label(), $breadcrumbs[1]->getText(), 'Second breadcrumb text is term name on term delete page.');
+    $this->assertSame('Home', $breadcrumbs[0]->getText(), 'First breadcrumb text is Home');
+    $this->assertSame($term->label(), $breadcrumbs[1]->getText(), 'Second breadcrumb text is term name on term delete page.');
     $this->assertSession()->assertEscaped($breadcrumbs[1]->getText());
   }
 

@@ -105,7 +105,7 @@ class ConnectionTest extends DatabaseTestBase {
 
     // Get a fresh copy of the default connection options.
     $connectionOptions = $db->getConnectionOptions();
-    $this->assertIdentical($connectionOptions2, $connectionOptions, 'The default and replica connection options are identical.');
+    $this->assertSame($connectionOptions2, $connectionOptions, 'The default and replica connection options are identical.');
 
     // Set up a new connection with different connection info.
     $test = $connection_info['default'];

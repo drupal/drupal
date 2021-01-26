@@ -39,7 +39,7 @@ class ConfigEntityNormalizeTest extends KernelTestBase {
     $config_entity->save();
 
     $config = $this->config('config_test.dynamic.system');
-    $this->assertIdentical($config_entity->toArray(), $config->getRawData(), 'Stored config entity is equivalent to config schema.');
+    $this->assertSame($config_entity->toArray(), $config->getRawData(), 'Stored config entity is equivalent to config schema.');
   }
 
 }

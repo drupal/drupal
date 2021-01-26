@@ -66,7 +66,7 @@ class UserPermissionsTest extends BrowserTestBase {
     $rid = $this->rid;
     $account = $this->adminUser;
     $previous_permissions_hash = $permissions_hash_generator->generate($account);
-    $this->assertIdentical($previous_permissions_hash, $permissions_hash_generator->generate($this->loggedInUser));
+    $this->assertSame($previous_permissions_hash, $permissions_hash_generator->generate($this->loggedInUser));
 
     // Add a permission.
     $this->assertFalse($account->hasPermission('administer users'), 'User does not have "administer users" permission.');
@@ -77,7 +77,7 @@ class UserPermissionsTest extends BrowserTestBase {
     $storage->resetCache();
     $this->assertTrue($account->hasPermission('administer users'), 'User now has "administer users" permission.');
     $current_permissions_hash = $permissions_hash_generator->generate($account);
-    $this->assertIdentical($current_permissions_hash, $permissions_hash_generator->generate($this->loggedInUser));
+    $this->assertSame($current_permissions_hash, $permissions_hash_generator->generate($this->loggedInUser));
     $this->assertNotEquals($previous_permissions_hash, $current_permissions_hash, 'Permissions hash has changed.');
     $previous_permissions_hash = $current_permissions_hash;
 
@@ -90,7 +90,7 @@ class UserPermissionsTest extends BrowserTestBase {
     $storage->resetCache();
     $this->assertFalse($account->hasPermission('access user profiles'), 'User no longer has "access user profiles" permission.');
     $current_permissions_hash = $permissions_hash_generator->generate($account);
-    $this->assertIdentical($current_permissions_hash, $permissions_hash_generator->generate($this->loggedInUser));
+    $this->assertSame($current_permissions_hash, $permissions_hash_generator->generate($this->loggedInUser));
     $this->assertNotEquals($previous_permissions_hash, $current_permissions_hash, 'Permissions hash has changed.');
 
     // Ensure that the admin role doesn't have any checkboxes.

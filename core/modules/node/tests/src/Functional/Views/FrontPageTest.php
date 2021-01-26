@@ -77,7 +77,7 @@ class FrontPageTest extends ViewTestBase {
         'user',
       ],
     ];
-    $this->assertIdentical($expected, $view->getDependencies());
+    $this->assertSame($expected, $view->getDependencies());
 
     $view->setDisplay('page_1');
     $this->executeView($view);

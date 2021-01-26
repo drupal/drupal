@@ -72,7 +72,7 @@ class MenuLinkContentDeriverTest extends KernelTestBase {
     $this->assertEqual('route_name_2', $tree_element->link->getRouteName());
     $title = $tree_element->link->getTitle();
     $this->assertNotInstanceOf(TranslatableMarkup::class, $title);
-    $this->assertIdentical('<script>alert("Welcome to the discovered jungle!")</script>', $title);
+    $this->assertSame('<script>alert("Welcome to the discovered jungle!")</script>', $title);
 
     // Create a hierarchy.
     \Drupal::state()->set('menu_link_content_dynamic_route.routes', [

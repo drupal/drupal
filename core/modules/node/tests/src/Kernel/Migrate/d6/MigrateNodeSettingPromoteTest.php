@@ -26,7 +26,7 @@ class MigrateNodeSettingPromoteTest extends MigrateDrupal6TestBase {
    * Tests migration of the promote checkbox's settings.
    */
   public function testMigration() {
-    $this->assertIdentical('Promoted to front page', BaseFieldOverride::load('node.article.promote')->label());
+    $this->assertSame('Promoted to front page', BaseFieldOverride::load('node.article.promote')->label());
   }
 
 }

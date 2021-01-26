@@ -119,7 +119,7 @@ class NodeEditFormTest extends NodeTestBase {
     $this->assertNotIdentical($node->getRevisionId(), $revised_node->getRevisionId(), 'A new revision has been created.');
     // Ensure that the node author is preserved when it was not changed in the
     // edit form.
-    $this->assertIdentical($node->getOwnerId(), $revised_node->getOwnerId(), 'The node author has been preserved.');
+    $this->assertSame($node->getOwnerId(), $revised_node->getOwnerId(), 'The node author has been preserved.');
     // Ensure that the revision authors are different since the revisions were
     // made by different users.
     $first_node_version = node_revision_load($node->getRevisionId());
@@ -170,7 +170,7 @@ class NodeEditFormTest extends NodeTestBase {
 
     // Check that the node was authored by the currently logged in user.
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
-    $this->assertIdentical($this->adminUser->id(), $node->getOwnerId(), 'Node authored by admin user.');
+    $this->assertSame($this->adminUser->id(), $node->getOwnerId(), 'Node authored by admin user.');
 
     $this->checkVariousAuthoredByValues($node, 'uid[0][target_id]');
 
@@ -198,7 +198,7 @@ class NodeEditFormTest extends NodeTestBase {
     $this->drupalPostForm('node/' . $node->id() . '/edit', [], 'Save');
     $this->nodeStorage->resetCache([$node->id()]);
     $node = $this->nodeStorage->load($node->id());
-    $this->assertIdentical($this->webUser->id(), $node->getOwner()->id());
+    $this->assertSame($this->webUser->id(), $node->getOwner()->id());
 
     $this->checkVariousAuthoredByValues($node, 'uid[target_id]');
 
@@ -210,7 +210,7 @@ class NodeEditFormTest extends NodeTestBase {
     $this->drupalPostForm('node/' . $node->id() . '/edit', [], 'Save');
     $this->nodeStorage->resetCache([$node->id()]);
     $node = $this->nodeStorage->load($node->id());
-    $this->assertIdentical($this->webUser->id(), $node->getOwner()->id());
+    $this->assertSame($this->webUser->id(), $node->getOwner()->id());
   }
 
   /**
@@ -291,7 +291,7 @@ class NodeEditFormTest extends NodeTestBase {
     $this->submitForm($edit, 'Save');
     $this->nodeStorage->resetCache([$node->id()]);
     $node = $this->nodeStorage->load($node->id());
-    $this->assertIdentical($this->webUser->id(), $node->getOwnerId(), 'Node authored by normal user.');
+    $this->assertSame($this->webUser->id(), $node->getOwnerId(), 'Node authored by normal user.');
   }
 
 }

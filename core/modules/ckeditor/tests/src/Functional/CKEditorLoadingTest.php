@@ -168,11 +168,11 @@ class CKEditorLoadingTest extends BrowserTestBase {
     // comparing the setting sent with the page with the current query string.
     $settings = $this->getDrupalSettings();
     $expected = $settings['ckeditor']['timestamp'];
-    $this->assertIdentical($expected, \Drupal::state()->get('system.css_js_query_string'), "CKEditor scripts cache-busting string is correct before flushing all caches.");
+    $this->assertSame($expected, \Drupal::state()->get('system.css_js_query_string'), "CKEditor scripts cache-busting string is correct before flushing all caches.");
     // Flush all caches then make sure that $settings['ckeditor']['timestamp']
     // still matches.
     drupal_flush_all_caches();
-    $this->assertIdentical($expected, \Drupal::state()->get('system.css_js_query_string'), "CKEditor scripts cache-busting string is correct after flushing all caches.");
+    $this->assertSame($expected, \Drupal::state()->get('system.css_js_query_string'), "CKEditor scripts cache-busting string is correct after flushing all caches.");
   }
 
   /**
@@ -226,7 +226,7 @@ class CKEditorLoadingTest extends BrowserTestBase {
     $expected = [
       'https://fonts.googleapis.com/css?family=Open+Sans',
     ];
-    $this->assertIdentical($expected, _ckeditor_theme_css('test_ckeditor_stylesheets_external'));
+    $this->assertSame($expected, _ckeditor_theme_css('test_ckeditor_stylesheets_external'));
 
     // Case 2: Install theme which has an external protocol-relative CSS URL.
     $theme_installer->install(['test_ckeditor_stylesheets_protocol_relative']);
@@ -234,7 +234,7 @@ class CKEditorLoadingTest extends BrowserTestBase {
     $expected = [
       '//fonts.googleapis.com/css?family=Open+Sans',
     ];
-    $this->assertIdentical($expected, _ckeditor_theme_css('test_ckeditor_stylesheets_protocol_relative'));
+    $this->assertSame($expected, _ckeditor_theme_css('test_ckeditor_stylesheets_protocol_relative'));
 
     // Case 3: Install theme which has a relative CSS URL.
     $theme_installer->install(['test_ckeditor_stylesheets_relative']);
@@ -242,7 +242,7 @@ class CKEditorLoadingTest extends BrowserTestBase {
     $expected = [
       'core/modules/system/tests/themes/test_ckeditor_stylesheets_relative/css/yokotsoko.css',
     ];
-    $this->assertIdentical($expected, _ckeditor_theme_css('test_ckeditor_stylesheets_relative'));
+    $this->assertSame($expected, _ckeditor_theme_css('test_ckeditor_stylesheets_relative'));
 
     // Case 4: Install theme which has a Drupal root CSS URL.
     $theme_installer->install(['test_ckeditor_stylesheets_drupal_root']);
@@ -250,7 +250,7 @@ class CKEditorLoadingTest extends BrowserTestBase {
     $expected = [
       'core/modules/system/tests/themes/test_ckeditor_stylesheets_drupal_root/css/yokotsoko.css',
     ];
-    $this->assertIdentical($expected, _ckeditor_theme_css('test_ckeditor_stylesheets_drupal_root'));
+    $this->assertSame($expected, _ckeditor_theme_css('test_ckeditor_stylesheets_drupal_root'));
   }
 
   protected function getThingsToCheck() {

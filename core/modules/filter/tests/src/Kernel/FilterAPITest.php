@@ -102,7 +102,7 @@ class FilterAPITest extends EntityKernelTestBase {
   public function testFilterFormatAPI() {
     // Test on filtered_html.
     $filtered_html_format = FilterFormat::load('filtered_html');
-    $this->assertIdentical(
+    $this->assertSame(
       $filtered_html_format->getHtmlRestrictions(),
       [
         'allowed' => [
@@ -115,7 +115,7 @@ class FilterAPITest extends EntityKernelTestBase {
       ],
       'FilterFormatInterface::getHtmlRestrictions() works as expected for the filtered_html format.'
     );
-    $this->assertIdentical(
+    $this->assertSame(
       $filtered_html_format->getFilterTypes(),
       [FilterInterface::TYPE_HTML_RESTRICTOR, FilterInterface::TYPE_MARKUP_LANGUAGE],
       'FilterFormatInterface::getFilterTypes() works as expected for the filtered_html format.'
@@ -123,13 +123,13 @@ class FilterAPITest extends EntityKernelTestBase {
 
     // Test on full_html.
     $full_html_format = FilterFormat::load('full_html');
-    $this->assertIdentical(
+    $this->assertSame(
       $full_html_format->getHtmlRestrictions(),
       // Every tag is allowed.
       FALSE,
       'FilterFormatInterface::getHtmlRestrictions() works as expected for the full_html format.'
     );
-    $this->assertIdentical(
+    $this->assertSame(
       $full_html_format->getFilterTypes(),
       [],
       'FilterFormatInterface::getFilterTypes() works as expected for the full_html format.'
@@ -150,13 +150,13 @@ class FilterAPITest extends EntityKernelTestBase {
       ],
     ]);
     $stupid_filtered_html_format->save();
-    $this->assertIdentical(
+    $this->assertSame(
       $stupid_filtered_html_format->getHtmlRestrictions(),
       // No tag is allowed.
       ['allowed' => []],
       'FilterFormatInterface::getHtmlRestrictions() works as expected for the stupid_filtered_html format.'
     );
-    $this->assertIdentical(
+    $this->assertSame(
       $stupid_filtered_html_format->getFilterTypes(),
       [FilterInterface::TYPE_HTML_RESTRICTOR],
       'FilterFormatInterface::getFilterTypes() works as expected for the stupid_filtered_html format.'
@@ -190,7 +190,7 @@ class FilterAPITest extends EntityKernelTestBase {
       ],
     ]);
     $very_restricted_html_format->save();
-    $this->assertIdentical(
+    $this->assertSame(
       $very_restricted_html_format->getHtmlRestrictions(),
       [
         'allowed' => [
@@ -202,7 +202,7 @@ class FilterAPITest extends EntityKernelTestBase {
       ],
       'FilterFormatInterface::getHtmlRestrictions() works as expected for the very_restricted_html format.'
     );
-    $this->assertIdentical(
+    $this->assertSame(
       $very_restricted_html_format->getFilterTypes(),
       [FilterInterface::TYPE_HTML_RESTRICTOR],
       'FilterFormatInterface::getFilterTypes() works as expected for the very_restricted_html format.'
@@ -224,7 +224,7 @@ class FilterAPITest extends EntityKernelTestBase {
       ],
     ]);
     $nonsensical_restricted_html->save();
-    $this->assertIdentical(
+    $this->assertSame(
       $nonsensical_restricted_html->getHtmlRestrictions(),
       [
         'allowed' => [
@@ -237,7 +237,7 @@ class FilterAPITest extends EntityKernelTestBase {
       ],
       'FilterFormatInterface::getHtmlRestrictions() works as expected for the nonsensical_restricted_html format.'
     );
-    $this->assertIdentical(
+    $this->assertSame(
       $very_restricted_html_format->getFilterTypes(),
       [FilterInterface::TYPE_HTML_RESTRICTOR],
       'FilterFormatInterface::getFilterTypes() works as expected for the very_restricted_html format.'

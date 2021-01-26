@@ -89,7 +89,7 @@ class BreakpointDiscoveryTest extends KernelTestBase {
     }
 
     // Test that the order is as expected.
-    $this->assertIdentical(array_keys($expected_breakpoints), array_keys($breakpoints));
+    $this->assertSame(array_keys($expected_breakpoints), array_keys($breakpoints));
   }
 
   /**

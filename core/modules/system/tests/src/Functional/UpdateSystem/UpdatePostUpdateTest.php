@@ -105,7 +105,7 @@ class UpdatePostUpdateTest extends BrowserTestBase {
       'update_test_postupdate_post_update_test_batch-2',
       'update_test_postupdate_post_update_test_batch-3',
     ];
-    $this->assertIdentical($updates, \Drupal::state()->get('post_update_test_execution', []));
+    $this->assertSame($updates, \Drupal::state()->get('post_update_test_execution', []));
 
     // Test post_update key value stores contains a list of the update functions
     // that have run.

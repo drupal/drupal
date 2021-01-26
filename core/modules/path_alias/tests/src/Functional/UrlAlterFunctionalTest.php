@@ -86,7 +86,7 @@ class UrlAlterFunctionalTest extends BrowserTestBase {
 
     // Test outbound query string altering.
     $url = Url::fromRoute('user.login');
-    $this->assertIdentical(\Drupal::request()->getBaseUrl() . '/user/login?foo=bar', $url->toString());
+    $this->assertSame(\Drupal::request()->getBaseUrl() . '/user/login?foo=bar', $url->toString());
   }
 
   /**
@@ -103,7 +103,7 @@ class UrlAlterFunctionalTest extends BrowserTestBase {
   protected function assertUrlOutboundAlter($original, $final) {
     // Test outbound altering.
     $result = $this->container->get('path_processor_manager')->processOutbound($original);
-    return $this->assertIdentical($final, $result, new FormattableMarkup('Altered outbound URL %original, expected %final, and got %result.', ['%original' => $original, '%final' => $final, '%result' => $result]));
+    return $this->assertSame($final, $result, new FormattableMarkup('Altered outbound URL %original, expected %final, and got %result.', ['%original' => $original, '%final' => $final, '%result' => $result]));
   }
 
   /**
@@ -120,7 +120,7 @@ class UrlAlterFunctionalTest extends BrowserTestBase {
   protected function assertUrlInboundAlter($original, $final) {
     // Test inbound altering.
     $result = $this->container->get('path_alias.manager')->getPathByAlias($original);
-    return $this->assertIdentical($final, $result, new FormattableMarkup('Altered inbound URL %original, expected %final, and got %result.', ['%original' => $original, '%final' => $final, '%result' => $result]));
+    return $this->assertSame($final, $result, new FormattableMarkup('Altered inbound URL %original, expected %final, and got %result.', ['%original' => $original, '%final' => $final, '%result' => $result]));
   }
 
 }

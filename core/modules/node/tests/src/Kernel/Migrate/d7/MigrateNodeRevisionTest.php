@@ -102,7 +102,7 @@ class MigrateNodeRevisionTest extends MigrateDrupal7TestBase {
     $this->assertSame($title, $revision->getTitle());
     $this->assertSame($langcode, $revision->language()->getId());
     $this->assertSame($log, $revision->revision_log->value);
-    $this->assertIdentical($timestamp, $revision->getRevisionCreationTime());
+    $this->assertSame($timestamp, $revision->getRevisionCreationTime());
   }
 
   /**

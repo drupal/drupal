@@ -46,9 +46,9 @@ class FormatDateTest extends BrowserTestBase {
     $date_formatter = $this->container->get('date.formatter');
 
     $timestamp = strtotime('2007-03-10T00:00:00+00:00');
-    $this->assertIdentical($date_formatter->format($timestamp, 'example_style', '', 'America/Los_Angeles'), '9 Mar 07');
-    $this->assertIdentical($date_formatter->format($timestamp, 'example_style_uppercase', '', 'America/Los_Angeles'), '9 Mar 2007');
-    $this->assertIdentical($date_formatter->format($timestamp, 'undefined_style'), $date_formatter->format($timestamp, 'fallback'), 'Test DateFormatterInterface::format() defaulting to `fallback` when $type not found.');
+    $this->assertSame($date_formatter->format($timestamp, 'example_style', '', 'America/Los_Angeles'), '9 Mar 07');
+    $this->assertSame($date_formatter->format($timestamp, 'example_style_uppercase', '', 'America/Los_Angeles'), '9 Mar 2007');
+    $this->assertSame($date_formatter->format($timestamp, 'undefined_style'), $date_formatter->format($timestamp, 'fallback'), 'Test DateFormatterInterface::format() defaulting to `fallback` when $type not found.');
   }
 
 }
