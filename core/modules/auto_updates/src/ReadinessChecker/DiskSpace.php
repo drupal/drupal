@@ -2,8 +2,6 @@
 
 namespace Drupal\auto_updates\ReadinessChecker;
 
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-
 /**
  * A readiness checker that ensures there is enough disk space for updates.
  */
@@ -35,16 +33,12 @@ class DiskSpace extends FileSystemBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Gets the errors if any.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup[]
+   *   The error messages.
    */
-  public function getWarnings(): array {
-    return [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getErrors(): array {
+  protected function getErrors():array {
     $has_valid_root = $this->hasValidRootPath();
     $has_valid_vendor = $this->hasValidVendorPath();
     if (!$has_valid_root && !$has_valid_vendor) {
@@ -88,22 +82,21 @@ class DiskSpace extends FileSystemBase {
   /**
    * {@inheritdoc}
    */
-  public function getErrorsSummary():?TranslatableMarkup {
+  public function getResult(): ReadinessCheckerResult {
     $errors = $this->getErrors();
     if (empty($errors)) {
-      return NULL;
+      $summary = NULL;
     }
-    if (count($errors === 1)) {
-      return array_pop($errors);
+    elseif (count($errors) === 1) {
+      $summary = $errors[0];
     }
-    return $this->t('There is not enough disk space to perform an automatic update.');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getWarningsSummary():?TranslatableMarkup {
-    return NULL;
+    else {
+      $summary = $this->t('There is not enough disk space to perform an automatic update.');
+    }
+    return new ReadinessCheckerResult(
+      $summary,
+      $errors
+    );
   }
 
 }

@@ -49,28 +49,11 @@ class ReadinessCheckerResult {
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup[] $warning_messages
    *   The warning messages.
    */
-  private function __construct(?TranslatableMarkup $errors_summary, array $error_messages, ?TranslatableMarkup $warnings_summary, array $warning_messages) {
+  public function __construct(?TranslatableMarkup $errors_summary, array $error_messages, ?TranslatableMarkup $warnings_summary = NULL, array $warning_messages = []) {
     $this->errorsSummary = $errors_summary;
     $this->warningsSummary = $warnings_summary;
     $this->errorMessages = $error_messages;
     $this->warningMessages = $warning_messages;
-  }
-
-  /**
-   * Creates ReadinessCheckerResult object from an readiness checker service.
-   *
-   * @param \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerInterface $readinessChecker
-   *   The readiness checker.
-   *
-   * @return static
-   */
-  public static function createFromReadinessChecker(ReadinessCheckerInterface $readinessChecker) {
-    return new static(
-      $readinessChecker->getErrorsSummary(),
-      $readinessChecker->getErrors(),
-      $readinessChecker->getWarningsSummary(),
-      $readinessChecker->getWarnings()
-    );
   }
 
   /**

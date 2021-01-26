@@ -3,6 +3,7 @@
 namespace Drupal\auto_updates_test\ReadinessChecker;
 
 use Drupal\auto_updates\ReadinessChecker\ReadinessCheckerInterface;
+use Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -32,38 +33,6 @@ class TestChecker implements ReadinessCheckerInterface {
   }
 
   /**
-   * Gets the test messages set in state.
-   *
-   * @return mixed[]
-   *   The test messages.
-   *
-   * @see \Drupal\Tests\auto_updates\Kernel\ReadinessChecker\TestCheckerTrait::setTestMessages()
-   */
-  protected function getMessages() {
-    $defaults = [
-      'errors' => [],
-      'warnings' => [],
-      'errors_summary' => NULL,
-      'warnings_summary' => NULL,
-    ];
-    return $this->state->get('auto_updates_test.check_error', []) + $defaults;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getErrors(): array {
-    return $this->getMessages()['errors'];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getWarnings(): array {
-    return $this->getMessages()['warnings'];
-  }
-
-  /**
    * Sets messages for the this readiness checker.
    *
    * This is a static method to enable setting the expected messages before the
@@ -81,27 +50,20 @@ class TestChecker implements ReadinessCheckerInterface {
   public static function setTestMessages(array $errors = [], array $warnings = [], ?string $errors_summary = NULL, ?string $warnings_summary = NULL): void {
     \Drupal::state()->set(
       'auto_updates_test.check_error',
-      [
-        'errors' => $errors,
-        'warnings' => $warnings,
-        'errors_summary' => $errors_summary ? new TranslatableMarkup($errors_summary) : NULL,
-        'warnings_summary' => $warnings_summary ? new TranslatableMarkup($warnings_summary) : NULL,
-      ]
+      new ReadinessCheckerResult(
+        $errors_summary ? new TranslatableMarkup($errors_summary) : NULL,
+        $errors,
+        $warnings_summary ? new TranslatableMarkup($warnings_summary) : NULL,
+        $warnings
+      )
     );
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getErrorsSummary(): ?TranslatableMarkup {
-    return $this->getMessages()['errors_summary'];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getWarningsSummary(): ?TranslatableMarkup {
-    return $this->getMessages()['warnings_summary'];
+  public function getResult():ReadinessCheckerResult {
+    return $this->state->get('auto_updates_test.check_error', new ReadinessCheckerResult(NULL, [], NULL, []));
   }
 
 }

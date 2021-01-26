@@ -109,7 +109,7 @@ class ReadinessCheckerManager {
     $sorted_checkers = $this->getSortedCheckers();
     $results = [];
     foreach ($sorted_checkers as $checker) {
-      $result = ReadinessCheckerResult::createFromReadinessChecker($checker);
+      $result = $checker->getResult();
       if ($result->getErrorMessages() || $result->getWarningMessages()) {
         $results[] = $result;
       }
