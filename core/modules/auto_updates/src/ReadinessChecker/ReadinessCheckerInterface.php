@@ -10,9 +10,9 @@ interface ReadinessCheckerInterface {
   /**
    * Gets the result of the checker.
    *
-   * @return \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult
-   *   The checker result object.
+   * @return \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult|null
+   *   The checker result object or NULL if there now warnings or errors.
    */
-  public function getResult():ReadinessCheckerResult;
+  public function getResult():?ReadinessCheckerResult;
 
 }

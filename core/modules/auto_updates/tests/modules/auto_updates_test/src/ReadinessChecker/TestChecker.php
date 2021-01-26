@@ -62,8 +62,8 @@ class TestChecker implements ReadinessCheckerInterface {
   /**
    * {@inheritdoc}
    */
-  public function getResult():ReadinessCheckerResult {
-    return $this->state->get('auto_updates_test.check_error', new ReadinessCheckerResult(NULL, [], NULL, []));
+  public function getResult():?ReadinessCheckerResult {
+    return $this->state->get('auto_updates_test.check_error', NULL);
   }
 
 }

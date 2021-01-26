@@ -82,10 +82,10 @@ class DiskSpace extends FileSystemBase {
   /**
    * {@inheritdoc}
    */
-  public function getResult(): ReadinessCheckerResult {
+  public function getResult():?ReadinessCheckerResult {
     $errors = $this->getErrors();
     if (empty($errors)) {
-      $summary = NULL;
+      return NULL;
     }
     elseif (count($errors) === 1) {
       $summary = $errors[0];
