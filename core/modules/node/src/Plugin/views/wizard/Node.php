@@ -279,7 +279,7 @@ class Node extends WizardPluginBase {
         $widget = $display->getComponent($field_name);
         // We define "tag-like" taxonomy fields as ones that use the
         // "Autocomplete (Tags style)" widget.
-        if ($widget['type'] == 'entity_reference_autocomplete_tags') {
+        if (!empty($widget) && $widget['type'] == 'entity_reference_autocomplete_tags') {
           $tag_fields[$field_name] = $field;
         }
       }

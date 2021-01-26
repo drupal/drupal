@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\node\Functional\Views;
+namespace Drupal\Tests\node\Functional\Views\Wizard;
 
 use Drupal\Tests\views\Functional\Wizard\WizardTestBase;
 use Drupal\views\Views;
