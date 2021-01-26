@@ -94,6 +94,7 @@ class DiskSpace extends FileSystemBase {
       $summary = $this->t('There is not enough disk space to perform an automatic update.');
     }
     return new ReadinessCheckerResult(
+      $this,
       $summary,
       $errors
     );

@@ -38,8 +38,17 @@ class ReadinessCheckerResult {
   protected $warningMessages;
 
   /**
+   * The ID of the check that produces the result.
+   *
+   * @var string
+   */
+  protected $checkerId;
+
+  /**
    * Creates a ReadinessCheckerResult object.
    *
+   * @param \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerInterface $readiness_checker
+   *   The readiness checker that produced this result.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $errors_summary
    *   The errors summary.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup[] $error_messages
@@ -49,7 +58,8 @@ class ReadinessCheckerResult {
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup[] $warning_messages
    *   The warning messages.
    */
-  public function __construct(?TranslatableMarkup $errors_summary, array $error_messages, ?TranslatableMarkup $warnings_summary = NULL, array $warning_messages = []) {
+  public function __construct(ReadinessCheckerInterface $readiness_checker, ?TranslatableMarkup $errors_summary, array $error_messages, ?TranslatableMarkup $warnings_summary = NULL, array $warning_messages = []) {
+    $this->checkerId = $readiness_checker->_serviceId;
     $this->errorsSummary = $errors_summary;
     $this->warningsSummary = $warnings_summary;
     $this->errorMessages = $error_messages;
@@ -94,6 +104,16 @@ class ReadinessCheckerResult {
    */
   public function getWarningMessages():array {
     return $this->warningMessages;
+  }
+
+  /**
+   * Get the readiness checker id that produces the result.
+   *
+   * @return string
+   *   The readiness checker id.
+   */
+  public function getCheckerId():string {
+    return $this->checkerId;
   }
 
 }

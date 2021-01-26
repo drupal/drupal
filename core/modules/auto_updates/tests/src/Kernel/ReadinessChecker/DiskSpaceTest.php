@@ -24,24 +24,34 @@ class DiskSpaceTest extends KernelTestBase {
    */
   public function testDiskSpace():void {
     // No disk space issues.
-    $result = (new DiskSpace($this->container->getParameter('app.root')))->getResult();
+    $checker = new DiskSpace($this->container->getParameter('app.root'));
+    // Readiness checkers are services and will always have the public property
+    // '_serviceId'.
+    $checker->_serviceId = 'auto_updates.disk_space_checker';
+    $result = $checker->getResult();
     $this->assertNull($result);
 
     // Out of space.
-    $result = (new TestDiskSpace($this->container->getParameter('app.root')))->getResult();
+    $checker = new TestDiskSpace($this->container->getParameter('app.root'));
+    $checker->_serviceId = 'auto_updates.disk_space_checker';
+    $result = $checker->getResult();
     $messages = $result->getErrorMessages();
     $this->assertCount(1, $messages);
     $this->assertStringMatchesFormat('Logical disk "%s" has insufficient space. There must be at least %s megabytes free.', (string) $messages[0]);
 
     // Out of space not the same logical disk.
-    $result = (new TestDiskSpaceNonSameDisk($this->container->getParameter('app.root')))->getResult();
+    $checker = new TestDiskSpaceNonSameDisk($this->container->getParameter('app.root'));
+    $checker->_serviceId = 'auto_updates.disk_space_checker';
+    $result = $checker->getResult();
     $messages = $result->getErrorMessages();
     $this->assertCount(2, $messages);
     $this->assertStringMatchesFormat('Drupal root filesystem "%s" has insufficient space. There must be at least %s megabytes free.', (string) $messages[0]);
     $this->assertStringMatchesFormat('Vendor filesystem "%s" has insufficient space. There must be at least %s megabytes free.', (string) $messages[1]);
 
     // Web root and vendor path are invalid.
-    $result = (new TestDiskSpaceInvalidVendor('if_there_was_ever_a_folder_with_this_path_this_test_would_fail'))->getResult();
+    $checker = new TestDiskSpaceInvalidVendor('if_there_was_ever_a_folder_with_this_path_this_test_would_fail');
+    $checker->_serviceId = 'auto_updates.disk_space_checker';
+    $result = $checker->getResult();
     $messages = $result->getErrorMessages();
     $this->assertCount(1, $messages);
     $this->assertEquals('Free disk space cannot be determined because the web root and vendor directories could not be located.', (string) $messages[0]);

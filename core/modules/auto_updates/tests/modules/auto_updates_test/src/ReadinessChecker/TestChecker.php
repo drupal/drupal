@@ -49,13 +49,13 @@ class TestChecker implements ReadinessCheckerInterface {
    */
   public static function setTestMessages(array $errors = [], array $warnings = [], ?string $errors_summary = NULL, ?string $warnings_summary = NULL): void {
     \Drupal::state()->set(
-      'auto_updates_test.check_error',
-      new ReadinessCheckerResult(
-        $errors_summary ? new TranslatableMarkup($errors_summary) : NULL,
-        $errors,
-        $warnings_summary ? new TranslatableMarkup($warnings_summary) : NULL,
-        $warnings
-      )
+      'auto_updates_test.checker_results',
+      [
+        'errors_summary' => $errors_summary ? new TranslatableMarkup($errors_summary) : NULL,
+        'errors' => $errors,
+        'warnings_summary' => $warnings_summary ? new TranslatableMarkup($warnings_summary) : NULL,
+        'warnings' => $warnings,
+      ]
     );
   }
 
@@ -63,7 +63,16 @@ class TestChecker implements ReadinessCheckerInterface {
    * {@inheritdoc}
    */
   public function getResult():?ReadinessCheckerResult {
-    return $this->state->get('auto_updates_test.check_error', NULL);
+    if ($checker_results = $this->state->get('auto_updates_test.checker_results', NULL)) {
+      return new ReadinessCheckerResult(
+        $this,
+        $checker_results['errors_summary'],
+        $checker_results['errors'],
+        $checker_results['warnings_summary'],
+        $checker_results['warnings'],
+      );
+    }
+    return NULL;
   }
 
 }

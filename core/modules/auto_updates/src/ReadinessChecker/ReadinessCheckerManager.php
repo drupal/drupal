@@ -110,7 +110,7 @@ class ReadinessCheckerManager {
     $results = [];
     foreach ($sorted_checkers as $checker) {
       if ($result = $checker->getResult()) {
-        $results[] = $result;
+        $results[$result->getCheckerId()] = $result;
       }
     }
 
