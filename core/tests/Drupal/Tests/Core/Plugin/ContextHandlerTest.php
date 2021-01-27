@@ -21,6 +21,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\ContextHandler;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
+use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\TypedDataManager;
 use Drupal\Core\Validation\ConstraintManager;
 use Drupal\Tests\UnitTestCase;
@@ -111,6 +112,40 @@ class ContextHandlerTest extends UnitTestCase {
       ->method('getContextDefinition')
       ->will($this->returnValue($context_definition_specific));
 
+    $requirement_with_default = new ContextDefinition('string');
+    $requirement_with_default->setConstraints(['NotBlank' => []]);
+    $requirement_with_default->setDefaultValue('default');
+
+    $requirement_without_default = new ContextDefinition('string');
+    $requirement_without_default->setConstraints(['NotBlank' => []]);
+
+    $sample_string_data = $this->createMock('Drupal\Core\TypedData\TypedDataInterface');
+    $sample_string_data->expects($this->atLeastOnce())
+      ->method('getDataDefinition')
+      ->will($this->returnValue(DataDefinition::create('string')));
+    $sample_string_data->expects($this->atLeastOnce())
+      ->method('getValue')
+      ->will($this->returnValue('sample_value'));
+
+    $context_blank = $this->createMock('Drupal\Core\Plugin\Context\ContextInterface');
+    $context_blank->expects($this->atLeastOnce())
+      ->method('getContextDefinition')
+      ->will($this->returnValue(new ContextDefinition('string')));
+    $context_blank->expects($this->atLeastOnce())
+      ->method('hasContextValue')
+      ->will($this->returnValue(FALSE));
+
+    $context_with_value = $this->createMock('Drupal\Core\Plugin\Context\ContextInterface');
+    $context_with_value->expects($this->atLeastOnce())
+      ->method('getContextData')
+      ->will($this->returnValue($sample_string_data));
+    $context_with_value->expects($this->atLeastOnce())
+      ->method('getContextDefinition')
+      ->will($this->returnValue(new ContextDefinition('string')));
+    $context_with_value->expects($this->atLeastOnce())
+      ->method('hasContextValue')
+      ->will($this->returnValue(TRUE));
+
     $data = [];
     $data[] = [[], [], TRUE];
     $data[] = [[], [$requirement_any], FALSE];
@@ -120,6 +155,12 @@ class ContextHandlerTest extends UnitTestCase {
     $data[] = [[$context_constraint_mismatch], [$requirement_specific], FALSE];
     $data[] = [[$context_datatype_mismatch], [$requirement_specific], FALSE];
     $data[] = [[$context_specific], [$requirement_specific], TRUE];
+    $data[] = [[$context_blank], [$requirement_specific], TRUE];
+    $data[] = [[$context_blank], [$requirement_without_default], FALSE];
+    $data[] = [[$context_blank], [$requirement_with_default], TRUE];
+    $data[] = [[$context_with_value], [$requirement_specific], FALSE];
+    $data[] = [[$context_with_value], [$requirement_without_default], TRUE];
+    $data[] = [[$context_with_value], [$requirement_with_default], TRUE];
 
     return $data;
   }
