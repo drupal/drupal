@@ -189,7 +189,7 @@ class FieldDateTest extends ViewsKernelTestBase {
         '%actual' => $view_result,
       ];
       $message = t('Value %value in %format matches %actual', $t_args);
-      $this->assertEqual($view_result, $result, $message);
+      $this->assertEqual($result, $view_result, $message);
     }
   }
 

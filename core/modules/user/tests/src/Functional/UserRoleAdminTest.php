@@ -69,7 +69,7 @@ class UserRoleAdminTest extends BrowserTestBase {
     $this->assertIsObject($role);
 
     // Check that the role was created in site default language.
-    $this->assertEqual($role->language()->getId(), $default_langcode);
+    $this->assertEqual($default_langcode, $role->language()->getId());
 
     // Try adding a duplicate role.
     $this->drupalPostForm('admin/people/roles/add', $edit, 'Save');
@@ -82,7 +82,7 @@ class UserRoleAdminTest extends BrowserTestBase {
     $this->assertRaw(t('Role %label has been updated.', ['%label' => $role_name]));
     \Drupal::entityTypeManager()->getStorage('user_role')->resetCache([$role->id()]);
     $new_role = Role::load($role->id());
-    $this->assertEqual($new_role->label(), $role_name, 'The role name has been successfully changed.');
+    $this->assertEqual($role_name, $new_role->label(), 'The role name has been successfully changed.');
 
     // Test deleting a role.
     $this->drupalGet("admin/people/roles/manage/{$role->id()}");

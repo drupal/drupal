@@ -107,7 +107,7 @@ abstract class StorageTestBase extends KernelTestBase {
 
     // Verify that all items in the other collection are different.
     $result = $stores[1]->getAll();
-    $this->assertEqual($result, ['foo' => $this->objects[5]]);
+    $this->assertEqual(['foo' => $this->objects[5]], $result);
 
     // Verify that multiple items can be deleted.
     $stores[0]->deleteMultiple(array_keys($values));

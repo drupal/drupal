@@ -415,7 +415,7 @@ class AttachedAssetsTest extends KernelTestBase {
     /** @var \Drupal\Core\Asset\LibraryDiscoveryInterface $library_discovery */
     $library_discovery = \Drupal::service('library.discovery');
     $library = $library_discovery->getLibraryByName('core', 'jquery.farbtastic');
-    $this->assertEqual($library['version'], '0.0', 'Registered libraries were altered.');
+    $this->assertEqual('0.0', $library['version'], 'Registered libraries were altered.');
 
     // common_test_library_info_alter() also added a dependency on jQuery Form.
     $build['#attached']['library'][] = 'core/jquery.farbtastic';
@@ -455,7 +455,7 @@ class AttachedAssetsTest extends KernelTestBase {
     /** @var \Drupal\Core\Asset\LibraryDiscoveryInterface $library_discovery */
     $library_discovery = \Drupal::service('library.discovery');
     $farbtastic = $library_discovery->getLibraryByName('common_test', 'jquery.farbtastic');
-    $this->assertEqual($farbtastic['version'], '0.1', 'Alternative libraries can be added to the page.');
+    $this->assertEqual('0.1', $farbtastic['version'], 'Alternative libraries can be added to the page.');
   }
 
   /**

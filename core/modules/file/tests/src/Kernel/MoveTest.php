@@ -74,7 +74,7 @@ class MoveTest extends FileManagedUnitTestBase {
 
     // Compare the source and results.
     $loaded_source = File::load($source->id());
-    $this->assertEqual($loaded_source->id(), $result->id(), "Returned file's id matches the source.");
+    $this->assertEqual($result->id(), $loaded_source->id(), "Returned file's id matches the source.");
     $this->assertNotEquals($source->getFileUri(), $loaded_source->getFileUri(), 'Returned file path has changed from the original.');
   }
 

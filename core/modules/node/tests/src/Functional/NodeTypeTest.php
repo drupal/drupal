@@ -42,7 +42,7 @@ class NodeTypeTest extends NodeTestBase {
     $this->assertTrue(isset($node_types['article']), 'Node type article is available.');
     $this->assertTrue(isset($node_types['page']), 'Node type basic page is available.');
 
-    $this->assertEqual($node_types['article']->label(), $node_names['article'], 'Correct node type base has been returned.');
+    $this->assertEqual($node_names['article'], $node_types['article']->label(), 'Correct node type base has been returned.');
 
     $article = NodeType::load('article');
     $this->assertEqual($node_types['article'], $article, 'Correct node type has been returned.');
@@ -109,7 +109,7 @@ class NodeTypeTest extends NodeTestBase {
     $this->drupalLogin($web_user);
 
     $field = FieldConfig::loadByName('node', 'page', 'body');
-    $this->assertEqual($field->getLabel(), 'Body', 'Body field was found.');
+    $this->assertEqual('Body', $field->getLabel(), 'Body field was found.');
 
     // Verify that title and body fields are displayed.
     $this->drupalGet('node/add/page');
@@ -149,7 +149,7 @@ class NodeTypeTest extends NodeTestBase {
     /** @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface $bundle_info */
     $bundle_info = \Drupal::service('entity_type.bundle.info');
     $node_bundles = $bundle_info->getBundleInfo('node');
-    $this->assertEqual($node_bundles['page']['label'], 'NewBar', 'Node type bundle cache is updated');
+    $this->assertEqual('NewBar', $node_bundles['page']['label'], 'Node type bundle cache is updated');
 
     // Remove the body field.
     $this->drupalPostForm('admin/structure/types/manage/page/fields/node.page.body/delete', [], 'Delete');

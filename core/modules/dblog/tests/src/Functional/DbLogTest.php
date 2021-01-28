@@ -351,7 +351,7 @@ class DbLogTest extends BrowserTestBase {
     $wid = $query->execute()->fetchField();
     $this->drupalGet('admin/reports/dblog/event/' . $wid);
     $xpath = '//nav[@class="breadcrumb"]/ol/li[last()]/a';
-    $this->assertEqual(current($this->xpath($xpath))->getText(), 'Recent log messages', 'DBLogs link displayed at breadcrumb in event page.');
+    $this->assertEqual('Recent log messages', current($this->xpath($xpath))->getText(), 'DBLogs link displayed at breadcrumb in event page.');
   }
 
   /**
@@ -628,7 +628,7 @@ class DbLogTest extends BrowserTestBase {
     $this->submitForm([], 'Confirm');
     // Count the rows in watchdog that previously related to the deleted user.
     $count = $connection->select('watchdog')->countQuery()->execute()->fetchField();
-    $this->assertEqual($count, 0, new FormattableMarkup('DBLog contains :count records after a clear.', [':count' => $count]));
+    $this->assertEqual(0, $count, new FormattableMarkup('DBLog contains :count records after a clear.', [':count' => $count]));
   }
 
   /**
@@ -665,7 +665,7 @@ class DbLogTest extends BrowserTestBase {
     // Confirm that all the entries are displayed.
     $count = $this->getTypeCount($types);
     foreach ($types as $key => $type) {
-      $this->assertEqual($count[$key], $type['count'], 'Count matched');
+      $this->assertEqual($type['count'], $count[$key], 'Count matched');
     }
 
     // Filter by each type and confirm that entries with various severities are
@@ -682,7 +682,7 @@ class DbLogTest extends BrowserTestBase {
       }
 
       $count = $this->getTypeCount($types);
-      $this->assertEqual(array_sum($count), $type_count, 'Count matched');
+      $this->assertEqual($type_count, array_sum($count), 'Count matched');
     }
 
     // Set the filter to match each of the two filter-type attributes and
@@ -691,7 +691,7 @@ class DbLogTest extends BrowserTestBase {
       $this->filterLogsEntries($type['type'], $type['severity']);
 
       $count = $this->getTypeCount($types);
-      $this->assertEqual(array_sum($count), $type['count'], 'Count matched');
+      $this->assertEqual($type['count'], array_sum($count), 'Count matched');
     }
 
     $this->drupalGet('admin/reports/dblog', ['query' => ['order' => 'Type']]);

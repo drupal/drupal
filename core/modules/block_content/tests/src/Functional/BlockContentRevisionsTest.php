@@ -76,9 +76,7 @@ class BlockContentRevisionsTest extends BlockContentTestBase {
         ->getStorage('block_content')
         ->loadRevision($revision_id);
       // Verify revision log is the same.
-      $this->assertEqual($loaded->getRevisionLogMessage(), $logs[$delta], new FormattableMarkup('Correct log message found for revision @revision', [
-        '@revision' => $loaded->getRevisionId(),
-      ]));
+      $this->assertEqual($logs[$delta], $loaded->getRevisionLogMessage(), new FormattableMarkup('Correct log message found for revision @revision', ['@revision' => $loaded->getRevisionId()]));
       if ($delta > 0) {
         $this->assertInstanceOf(UserInterface::class, $loaded->getRevisionUser());
         $this->assertIsNumeric($loaded->getRevisionUserId());

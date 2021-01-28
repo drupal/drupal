@@ -387,15 +387,15 @@ class ShortcutLinksTest extends ShortcutTestBase {
     ]));
     $this->drupalGet(Url::fromRoute('<front>'));
     $shortcuts = $this->cssSelect('#toolbar-item-shortcuts-tray .toolbar-menu a');
-    $this->assertEqual($shortcuts[0]->getText(), 'Add content');
-    $this->assertEqual($shortcuts[1]->getText(), 'All content');
+    $this->assertEqual('Add content', $shortcuts[0]->getText());
+    $this->assertEqual('All content', $shortcuts[1]->getText());
     foreach ($this->set->getShortcuts() as $shortcut) {
       $shortcut->setWeight($shortcut->getWeight() * -1)->save();
     }
     $this->drupalGet(Url::fromRoute('<front>'));
     $shortcuts = $this->cssSelect('#toolbar-item-shortcuts-tray .toolbar-menu a');
-    $this->assertEqual($shortcuts[0]->getText(), 'All content');
-    $this->assertEqual($shortcuts[1]->getText(), 'Add content');
+    $this->assertEqual('All content', $shortcuts[0]->getText());
+    $this->assertEqual('Add content', $shortcuts[1]->getText());
   }
 
   /**

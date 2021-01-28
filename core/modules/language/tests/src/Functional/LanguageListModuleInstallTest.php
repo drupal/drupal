@@ -39,7 +39,7 @@ class LanguageListModuleInstallTest extends BrowserTestBase {
     $edit['modules[language][enable]'] = 'language';
     $this->drupalPostForm('admin/modules', $edit, 'Install');
 
-    $this->assertEqual(\Drupal::state()->get('language_test.language_count_preinstall', 0), 1, 'Using LanguageManager::getLanguages() returns 1 language during Language installation.');
+    $this->assertEqual(1, \Drupal::state()->get('language_test.language_count_preinstall', 0), 'Using LanguageManager::getLanguages() returns 1 language during Language installation.');
 
     // Get updated module list by rebuilding container.
     $this->rebuildContainer();

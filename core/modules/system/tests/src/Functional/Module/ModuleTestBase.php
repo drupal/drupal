@@ -165,7 +165,7 @@ abstract class ModuleTestBase extends BrowserTestBase {
       else {
         $message = 'Module "@module" is not enabled.';
       }
-      $this->assertEqual($this->container->get('module_handler')->moduleExists($module), $enabled, new FormattableMarkup($message, ['@module' => $module]));
+      $this->assertEqual($enabled, $this->container->get('module_handler')->moduleExists($module), new FormattableMarkup($message, ['@module' => $module]));
     }
   }
 

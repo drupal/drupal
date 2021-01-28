@@ -71,7 +71,7 @@ class DisplayTest extends ViewTestBase {
       'display_title' => 'Display test',
       'position' => 1,
     ];
-    $this->assertEqual($displays['display_test_1'], $options);
+    $this->assertEqual($options, $displays['display_test_1']);
 
     // Add another one to ensure that position is counted up.
     $view->storage->addDisplay('display_test');
@@ -83,7 +83,7 @@ class DisplayTest extends ViewTestBase {
       'display_title' => 'Display test 2',
       'position' => 2,
     ];
-    $this->assertEqual($displays['display_test_2'], $options);
+    $this->assertEqual($options, $displays['display_test_2']);
 
     // Move the second display before the first one in order to test custom
     // sorting.
@@ -126,8 +126,8 @@ class DisplayTest extends ViewTestBase {
     $this->assertText('Display test settings');
     // Ensure that the order is as expected.
     $result = $this->xpath('//ul[@id="views-display-menu-tabs"]/li/a/child::text()');
-    $this->assertEqual($result[0]->getText(), 'Display test 2');
-    $this->assertEqual($result[1]->getText(), 'Display test');
+    $this->assertEqual('Display test 2', $result[0]->getText());
+    $this->assertEqual('Display test', $result[1]->getText());
 
     $this->clickLink('Test option title');
 
@@ -166,10 +166,10 @@ class DisplayTest extends ViewTestBase {
 
     // Both the feed_1 and the feed_2 display are attached to the page display.
     $view->setDisplay('page_1');
-    $this->assertEqual($view->display_handler->getAttachedDisplays(), ['feed_1', 'feed_2']);
+    $this->assertEqual(['feed_1', 'feed_2'], $view->display_handler->getAttachedDisplays());
 
     $view->setDisplay('feed_1');
-    $this->assertEqual($view->display_handler->getAttachedDisplays(), []);
+    $this->assertEqual([], $view->display_handler->getAttachedDisplays());
   }
 
   /**
@@ -187,7 +187,7 @@ class DisplayTest extends ViewTestBase {
     $view->setDisplay('default');
     $errors = $view->validate();
     $this->assertTrue(!empty($errors), 'More link validation has some errors.');
-    $this->assertEqual($errors['default'][0], 'Display "Default" uses a "more" link but there are no displays it can link to. You need to specify a custom URL.', 'More link validation has the right error.');
+    $this->assertEqual('Display "Default" uses a "more" link but there are no displays it can link to. You need to specify a custom URL.', $errors['default'][0], 'More link validation has the right error.');
 
     // Confirm that the view does not validate when the page display does not exist.
     $view = Views::getView('test_view');
@@ -195,7 +195,7 @@ class DisplayTest extends ViewTestBase {
     $view->display_handler->setOption('use_more', 1);
     $errors = $view->validate();
     $this->assertTrue(!empty($errors), 'More link validation has some errors.');
-    $this->assertEqual($errors['default'][0], 'Display "Default" uses a "more" link but there are no displays it can link to. You need to specify a custom URL.', 'More link validation has the right error.');
+    $this->assertEqual('Display "Default" uses a "more" link but there are no displays it can link to. You need to specify a custom URL.', $errors['default'][0], 'More link validation has the right error.');
   }
 
   /**
@@ -363,8 +363,8 @@ class DisplayTest extends ViewTestBase {
     $errors = $view->validate();
     // Check that the error messages are shown.
     $this->assertCount(2, $errors['default'], 'Error messages found for required relationship');
-    $this->assertEqual($errors['default'][0], t('The %handler_type %handler uses a relationship that has been removed.', ['%handler_type' => 'field', '%handler' => 'User: Last login']));
-    $this->assertEqual($errors['default'][1], t('The %handler_type %handler uses a relationship that has been removed.', ['%handler_type' => 'field', '%handler' => 'User: Created']));
+    $this->assertEqual(t('The %handler_type %handler uses a relationship that has been removed.', ['%handler_type' => 'field', '%handler' => 'User: Last login']), $errors['default'][0]);
+    $this->assertEqual(t('The %handler_type %handler uses a relationship that has been removed.', ['%handler_type' => 'field', '%handler' => 'User: Created']), $errors['default'][1]);
   }
 
   /**

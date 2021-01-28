@@ -64,19 +64,19 @@ class EntityBundleFieldTest extends EntityKernelTestBase {
 
     // Ensure that the field exists in the field map.
     $field_map = \Drupal::service('entity_field.manager')->getFieldMap();
-    $this->assertEqual($field_map['entity_test_update']['custom_bundle_field'], ['type' => 'string', 'bundles' => ['custom' => 'custom']]);
+    $this->assertEqual(['type' => 'string', 'bundles' => ['custom' => 'custom']], $field_map['entity_test_update']['custom_bundle_field']);
 
     $entity->custom_bundle_field->value = 'swanky';
     $entity->save();
     $storage->resetCache();
     $entity = $storage->load($entity->id());
-    $this->assertEqual($entity->custom_bundle_field->value, 'swanky', 'Entity was saved correctly');
+    $this->assertEqual('swanky', $entity->custom_bundle_field->value, 'Entity was saved correctly');
 
     $entity->custom_bundle_field->value = 'cozy';
     $entity->save();
     $storage->resetCache();
     $entity = $storage->load($entity->id());
-    $this->assertEqual($entity->custom_bundle_field->value, 'cozy', 'Entity was updated correctly.');
+    $this->assertEqual('cozy', $entity->custom_bundle_field->value, 'Entity was updated correctly.');
 
     $entity->delete();
     /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */

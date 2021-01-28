@@ -21,7 +21,7 @@ class InsertDefaultsTest extends DatabaseTestBase {
     $schema = drupal_get_module_schema('database_test', 'test');
 
     $job = $this->connection->query('SELECT [job] FROM {test} WHERE [id] = :id', [':id' => $id])->fetchField();
-    $this->assertEqual($job, $schema['fields']['job']['default'], 'Default field value is set.');
+    $this->assertEqual($schema['fields']['job']['default'], $job, 'Default field value is set.');
   }
 
   /**
@@ -55,7 +55,7 @@ class InsertDefaultsTest extends DatabaseTestBase {
     $schema = drupal_get_module_schema('database_test', 'test');
 
     $job = $this->connection->query('SELECT [job] FROM {test} WHERE [id] = :id', [':id' => $id])->fetchField();
-    $this->assertEqual($job, $schema['fields']['job']['default'], 'Default field value is set.');
+    $this->assertEqual($schema['fields']['job']['default'], $job, 'Default field value is set.');
   }
 
 }

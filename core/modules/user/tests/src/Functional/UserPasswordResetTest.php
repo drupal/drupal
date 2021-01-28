@@ -547,7 +547,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     $user1 = User::load($user1->id());
     $user2 = User::load($user2->id());
 
-    $this->assertEqual($user1->getPassword(), $user2->getPassword(), 'Both users have the same password hash.');
+    $this->assertEqual($user2->getPassword(), $user1->getPassword(), 'Both users have the same password hash.');
 
     // The password reset URL must not be valid for the second user when only
     // the user ID is changed in the URL.

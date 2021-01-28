@@ -19,11 +19,11 @@ class DerivativeTest extends PluginTestBase {
    */
   public function testDerivativeDecorator() {
     // Ensure that getDefinitions() returns the expected definitions.
-    $this->assertEqual($this->mockBlockManager->getDefinitions(), $this->mockBlockExpectedDefinitions);
+    $this->assertEqual($this->mockBlockExpectedDefinitions, $this->mockBlockManager->getDefinitions());
 
     // Ensure that getDefinition() returns the expected definition.
     foreach ($this->mockBlockExpectedDefinitions as $id => $definition) {
-      $this->assertEqual($this->mockBlockManager->getDefinition($id), $definition);
+      $this->assertEqual($definition, $this->mockBlockManager->getDefinition($id));
     }
 
     // Ensure that NULL is returned as the definition of a non-existing base

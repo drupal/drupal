@@ -60,7 +60,7 @@ class FieldKernelTest extends ViewsKernelTestBase {
     $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($view) {
       return $view->field['job']->theme($view->result[0]);
     });
-    $this->assertEqual($output, $random_text, 'Make sure the render method rendered the manual set value.');
+    $this->assertEqual($random_text, $output, 'Make sure the render method rendered the manual set value.');
   }
 
   /**
@@ -78,17 +78,17 @@ class FieldKernelTest extends ViewsKernelTestBase {
     $view->build();
 
     // Make sure the field aliases have the expected value.
-    $this->assertEqual($id_field->aliases['job'], 'views_test_data_job');
-    $this->assertEqual($id_field->aliases['created_test'], 'views_test_data_created');
+    $this->assertEqual('views_test_data_job', $id_field->aliases['job']);
+    $this->assertEqual('views_test_data_created', $id_field->aliases['created_test']);
 
     $this->executeView($view);
     // Tests the getValue method with and without a field aliases.
     foreach ($this->dataSet() as $key => $row) {
       $id = $key + 1;
       $result = $view->result[$key];
-      $this->assertEqual($id_field->getValue($result), $id);
-      $this->assertEqual($id_field->getValue($result, 'job'), $row['job']);
-      $this->assertEqual($id_field->getValue($result, 'created_test'), $row['created']);
+      $this->assertEqual($id, $id_field->getValue($result));
+      $this->assertEqual($row['job'], $id_field->getValue($result, 'job'));
+      $this->assertEqual($row['created'], $id_field->getValue($result, 'created_test'));
     }
   }
 
@@ -299,26 +299,17 @@ class FieldKernelTest extends ViewsKernelTestBase {
       $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($name_field_0, $row) {
         return $name_field_0->advancedRender($row);
       });
-      $this->assertEqual($output, $expected_output_0, new FormattableMarkup('Test token replacement: "@token" gave "@output"', [
-        '@token' => $name_field_0->options['alter']['text'],
-        '@output' => $output,
-      ]));
+      $this->assertEqual($expected_output_0, $output, new FormattableMarkup('Test token replacement: "@token" gave "@output"', ['@token' => $name_field_0->options['alter']['text'], '@output' => $output]));
 
       $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($name_field_1, $row) {
         return $name_field_1->advancedRender($row);
       });
-      $this->assertEqual($output, $expected_output_1, new FormattableMarkup('Test token replacement: "@token" gave "@output"', [
-        '@token' => $name_field_1->options['alter']['text'],
-        '@output' => $output,
-      ]));
+      $this->assertEqual($expected_output_1, $output, new FormattableMarkup('Test token replacement: "@token" gave "@output"', ['@token' => $name_field_1->options['alter']['text'], '@output' => $output]));
 
       $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($name_field_2, $row) {
         return $name_field_2->advancedRender($row);
       });
-      $this->assertEqual($output, $expected_output_2, new FormattableMarkup('Test token replacement: "@token" gave "@output"', [
-        '@token' => $name_field_2->options['alter']['text'],
-        '@output' => $output,
-      ]));
+      $this->assertEqual($expected_output_2, $output, new FormattableMarkup('Test token replacement: "@token" gave "@output"', ['@token' => $name_field_2->options['alter']['text'], '@output' => $output]));
     }
 
     $job_field = $view->field['job'];
@@ -344,11 +335,7 @@ class FieldKernelTest extends ViewsKernelTestBase {
     $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($job_field, $row) {
       return $job_field->advancedRender($row);
     });
-    $this->assertEqual($output, $old_token, new FormattableMarkup('Make sure the old token style (@token => @value) is not changed in the output (@output)', [
-      '@value' => $random_text,
-      '@output' => $output,
-      '@token' => $job_field->options['alter']['text'],
-    ]));
+    $this->assertEqual($old_token, $output, new FormattableMarkup('Make sure the old token style (@token => @value) is not changed in the output (@output)', ['@value' => $random_text, '@output' => $output, '@token' => $job_field->options['alter']['text']]));
 
     // Verify HTML tags are allowed in rewrite templates while token
     // replacements are escaped.
@@ -358,7 +345,7 @@ class FieldKernelTest extends ViewsKernelTestBase {
     $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($job_field, $row) {
       return $job_field->advancedRender($row);
     });
-    $this->assertEqual($output, '<h1>&lt;span&gt;' . $random_text . '&lt;/span&gt;</h1>', 'Valid tags are allowed in rewrite templates and token replacements.');
+    $this->assertEqual('<h1>&lt;span&gt;' . $random_text . '&lt;/span&gt;</h1>', $output, 'Valid tags are allowed in rewrite templates and token replacements.');
 
     // Verify <script> tags are correctly removed from rewritten text.
     $rewrite_template = '<script>alert("malicious");</script>';
@@ -377,10 +364,7 @@ class FieldKernelTest extends ViewsKernelTestBase {
     $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($job_field, $row) {
       return $job_field->advancedRender($row);
     });
-    $this->assertEqual($output, $random_text, new FormattableMarkup('Make sure a script tag in the template (@template) is removed, leaving only the replaced token in the output (@output)', [
-      '@output' => $output,
-      '@template' => $rewrite_template,
-    ]));
+    $this->assertEqual($random_text, $output, new FormattableMarkup('Make sure a script tag in the template (@template) is removed, leaving only the replaced token in the output (@output)', ['@output' => $output, '@template' => $rewrite_template]));
   }
 
   /**
@@ -830,7 +814,7 @@ class FieldKernelTest extends ViewsKernelTestBase {
 
     foreach ($text as $key => $line) {
       $result_text = FieldPluginBase::trimText($alter, $line);
-      $this->assertEqual($result_text, $expect[$key]);
+      $this->assertEqual($expect[$key], $result_text);
     }
 
     // Test also word_boundary
@@ -848,7 +832,7 @@ class FieldKernelTest extends ViewsKernelTestBase {
 
     foreach ($text as $key => $line) {
       $result_text = FieldPluginBase::trimText($alter, $line);
-      $this->assertEqual($result_text, $expect[$key]);
+      $this->assertEqual($expect[$key], $result_text);
     }
     // cSpell:enable
   }

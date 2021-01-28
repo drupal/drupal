@@ -39,8 +39,8 @@ class ViewAjaxTest extends ViewTestBase {
     $this->assertTrue(isset($drupal_settings['views']['ajax_path']), 'The Ajax callback path is set in drupalSettings.');
     $this->assertCount(1, $drupal_settings['views']['ajaxViews']);
     $view_entry = array_keys($drupal_settings['views']['ajaxViews'])[0];
-    $this->assertEqual($drupal_settings['views']['ajaxViews'][$view_entry]['view_name'], 'test_ajax_view', 'The view\'s ajaxViews array entry has the correct \'view_name\' key.');
-    $this->assertEqual($drupal_settings['views']['ajaxViews'][$view_entry]['view_display_id'], 'page_1', 'The view\'s ajaxViews array entry has the correct \'view_display_id\' key.');
+    $this->assertEqual('test_ajax_view', $drupal_settings['views']['ajaxViews'][$view_entry]['view_name'], 'The view\'s ajaxViews array entry has the correct \'view_name\' key.');
+    $this->assertEqual('page_1', $drupal_settings['views']['ajaxViews'][$view_entry]['view_display_id'], 'The view\'s ajaxViews array entry has the correct \'view_display_id\' key.');
   }
 
   /**

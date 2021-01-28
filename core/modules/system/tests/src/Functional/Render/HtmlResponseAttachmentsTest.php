@@ -66,7 +66,7 @@ class HtmlResponseAttachmentsTest extends BrowserTestBase {
       '</foo?bar=&lt;baz&gt;&amp;baz=false>; rel="alternate"',
       '</foo/bar>; hreflang="nl"; rel="alternate"',
     ];
-    $this->assertEqual($this->getSession()->getResponseHeaders()['Link'], $expected_link_headers);
+    $this->assertEqual($expected_link_headers, $this->getSession()->getResponseHeaders()['Link']);
   }
 
   /**
@@ -142,7 +142,7 @@ class HtmlResponseAttachmentsTest extends BrowserTestBase {
       $this->fail('Unable to find the head meta.');
     }
     else {
-      $this->assertEqual($test_meta->getAttribute('test-attribute'), 'testvalue');
+      $this->assertEqual('testvalue', $test_meta->getAttribute('test-attribute'));
     }
   }
 

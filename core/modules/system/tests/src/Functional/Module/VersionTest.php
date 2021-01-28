@@ -54,7 +54,7 @@ class VersionTest extends ModuleTestBase {
     for ($i = 0; $i < $n; $i++) {
       $this->drupalGet('admin/modules');
       $checkbox = $this->xpath('//input[@id="edit-modules-module-test-enable"]');
-      $this->assertEqual(!empty($checkbox[0]->getAttribute('disabled')), $i % 2, $dependencies[$i]);
+      $this->assertEqual($i % 2, !empty($checkbox[0]->getAttribute('disabled')), $dependencies[$i]);
     }
   }
 

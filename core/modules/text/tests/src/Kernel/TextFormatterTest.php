@@ -91,8 +91,8 @@ class TextFormatterTest extends EntityKernelTestBase {
       // Verify the text field formatter's render array.
       $build = $entity->get('formatted_text')->view(['type' => $formatter]);
       \Drupal::service('renderer')->renderRoot($build[0]);
-      $this->assertEqual($build[0]['#markup'], "<p>Hello, world!</p>\n");
-      $this->assertEqual($build[0]['#cache']['tags'], FilterFormat::load('my_text_format')->getCacheTags(), new FormattableMarkup('The @formatter formatter has the expected cache tags when formatting a formatted text field.', ['@formatter' => $formatter]));
+      $this->assertEqual("<p>Hello, world!</p>\n", $build[0]['#markup']);
+      $this->assertEqual(FilterFormat::load('my_text_format')->getCacheTags(), $build[0]['#cache']['tags'], new FormattableMarkup('The @formatter formatter has the expected cache tags when formatting a formatted text field.', ['@formatter' => $formatter]));
     }
   }
 

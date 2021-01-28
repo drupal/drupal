@@ -63,16 +63,11 @@ class NodeRevisionWizardTest extends WizardTestBase {
     $view = Views::getView($view['id']);
     $view->initHandlers();
 
-    $this->assertEqual($view->getBaseTables(), [
-        'node_field_revision' => TRUE,
-        '#global' => TRUE,
-        'node_field_data' => TRUE,
-      ]
-    );
+    $this->assertEqual(['node_field_revision' => TRUE, '#global' => TRUE, 'node_field_data' => TRUE], $view->getBaseTables());
 
     // Check for the default filters.
-    $this->assertEqual($view->filter['status']->table, 'node_field_revision');
-    $this->assertEqual($view->filter['status']->field, 'status');
+    $this->assertEqual('node_field_revision', $view->filter['status']->table);
+    $this->assertEqual('status', $view->filter['status']->field);
     $this->assertEquals('1', $view->filter['status']->value);
     $this->assertEquals('node_field_data', $view->filter['type']->table);
 
@@ -98,15 +93,11 @@ class NodeRevisionWizardTest extends WizardTestBase {
     $view = Views::getView($view['id']);
     $view->initHandlers();
 
-    $this->assertEqual($view->getBaseTables(), [
-        'node_field_revision' => TRUE,
-        '#global' => TRUE,
-      ]
-    );
+    $this->assertEqual(['node_field_revision' => TRUE, '#global' => TRUE], $view->getBaseTables());
 
     // Check for the default filters.
-    $this->assertEqual($view->filter['status']->table, 'node_field_revision');
-    $this->assertEqual($view->filter['status']->field, 'status');
+    $this->assertEqual('node_field_revision', $view->filter['status']->table);
+    $this->assertEqual('status', $view->filter['status']->field);
     $this->assertEquals('1', $view->filter['status']->value);
     $this->assertArrayNotHasKey('type', $view->filter);
 

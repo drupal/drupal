@@ -88,7 +88,7 @@ class FieldWebTest extends ViewTestBase {
     $this->assertSession()->linkByHrefExists($href);
     // Check that the output has the expected order (asc).
     $ids = $this->clickSortLoadIdsFromOutput();
-    $this->assertEqual($ids, range(1, 5));
+    $this->assertEqual(range(1, 5), $ids);
     // Check that the rel attribute has the correct value.
     $result = $this->xpath('//a[@href="' . $href . '"]');
     $this->assertEquals('nofollow', $result[0]->getAttribute('rel'));
@@ -96,7 +96,7 @@ class FieldWebTest extends ViewTestBase {
     $this->clickLink(t('ID Sort descending'));
     // Check that the output has the expected order (desc).
     $ids = $this->clickSortLoadIdsFromOutput();
-    $this->assertEqual($ids, range(5, 1, -1));
+    $this->assertEqual(range(5, 1, -1), $ids);
   }
 
   /**
@@ -498,7 +498,7 @@ class FieldWebTest extends ViewTestBase {
       'marquee',
     ];
 
-    $this->assertEqual(array_keys($element_types), $expected_elements);
+    $this->assertEqual($expected_elements, array_keys($element_types));
   }
 
   /**

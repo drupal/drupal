@@ -229,10 +229,10 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     foreach ($this->langcodes as $langcode) {
       $translation = $entity->getTranslation($langcode);
       $metadata = $this->manager->getTranslationMetadata($translation);
-      $this->assertEqual($metadata->getAuthor()->id(), $values[$langcode]['uid'], 'Translation author correctly stored.');
-      $this->assertEqual($metadata->getCreatedTime(), $values[$langcode]['created'], 'Translation date correctly stored.');
-      $this->assertEqual($translation->isSticky(), $values[$langcode]['sticky'], 'Sticky of Translation correctly stored.');
-      $this->assertEqual($translation->isPromoted(), $values[$langcode]['promote'], 'Promoted of Translation correctly stored.');
+      $this->assertEqual($values[$langcode]['uid'], $metadata->getAuthor()->id(), 'Translation author correctly stored.');
+      $this->assertEqual($values[$langcode]['created'], $metadata->getCreatedTime(), 'Translation date correctly stored.');
+      $this->assertEqual($values[$langcode]['sticky'], $translation->isSticky(), 'Sticky of Translation correctly stored.');
+      $this->assertEqual($values[$langcode]['promote'], $translation->isPromoted(), 'Promoted of Translation correctly stored.');
     }
   }
 

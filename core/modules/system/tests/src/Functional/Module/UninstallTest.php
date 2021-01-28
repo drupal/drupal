@@ -119,7 +119,7 @@ class UninstallTest extends BrowserTestBase {
     // cleared during the uninstall.
     \Drupal::cache()->set('uninstall_test', 'test_uninstall_page', Cache::PERMANENT);
     $cached = \Drupal::cache()->get('uninstall_test');
-    $this->assertEqual($cached->data, 'test_uninstall_page', new FormattableMarkup('Cache entry found: @bin', ['@bin' => $cached->data]));
+    $this->assertEqual('test_uninstall_page', $cached->data, new FormattableMarkup('Cache entry found: @bin', ['@bin' => $cached->data]));
 
     $this->submitForm([], 'Uninstall');
     $this->assertText('The selected modules have been uninstalled.');

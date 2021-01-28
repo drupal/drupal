@@ -335,7 +335,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     /** @var \Drupal\field\Entity\FieldConfig $field_config */
     $field_config = FieldConfig::load($field_id);
     // Expect that the target bundle has been saved in the backend.
-    $this->assertEqual($field_config->getSetting('handler_settings')['auto_create_bundle'], $vocabularies[1]->id());
+    $this->assertEqual($vocabularies[1]->id(), $field_config->getSetting('handler_settings')['auto_create_bundle']);
 
     // Delete the other bundle. Field config should not be affected.
     $vocabularies[0]->delete();

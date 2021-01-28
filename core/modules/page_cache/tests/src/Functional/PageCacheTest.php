@@ -560,15 +560,15 @@ class PageCacheTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderEquals('Foo', 'bar');
     $this->assertEqual('The following header was set: <em class="placeholder">Foo</em>: <em class="placeholder">bar</em>', $response_body);
     $response = $client->request('HEAD', $url_a);
-    $this->assertEqual($response->getHeaderLine('X-Drupal-Cache'), 'HIT', 'Page was cached.');
-    $this->assertEqual($response->getHeaderLine('Foo'), 'bar', 'Custom header was sent.');
+    $this->assertEqual('HIT', $response->getHeaderLine('X-Drupal-Cache'), 'Page was cached.');
+    $this->assertEqual('bar', $response->getHeaderLine('Foo'), 'Custom header was sent.');
     $this->assertEqual('', $response->getBody()->getContents());
 
     // HEAD, then GET.
     $url_b = $this->buildUrl('system-test/set-header', ['query' => ['name' => 'Foo', 'value' => 'baz']]);
     $response = $client->request('HEAD', $url_b);
-    $this->assertEqual($response->getHeaderLine('X-Drupal-Cache'), 'MISS', 'Page was not cached.');
-    $this->assertEqual($response->getHeaderLine('Foo'), 'baz', 'Custom header was sent.');
+    $this->assertEqual('MISS', $response->getHeaderLine('X-Drupal-Cache'), 'Page was not cached.');
+    $this->assertEqual('baz', $response->getHeaderLine('Foo'), 'Custom header was sent.');
     $this->assertEqual('', $response->getBody()->getContents());
     $response_body = $this->drupalGet($url_b);
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');

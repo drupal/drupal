@@ -385,7 +385,7 @@ class TermTest extends TaxonomyTestBase {
     $value = $this->randomMachineName();
     $term->setDescription($value);
     $term->save();
-    $this->assertEqual($term->description->processed, "<p>$value</p>\n");
+    $this->assertEqual("<p>{$value}</p>\n", $term->description->processed);
 
     // Check that the term feed page is working.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/feed');
@@ -449,9 +449,9 @@ class TermTest extends TaxonomyTestBase {
 
     $taxonomy_storage->resetCache();
     $terms = $taxonomy_storage->loadTree($this->vocabulary->id());
-    $this->assertEqual($terms[0]->tid, $term2->id(), 'Term 2 was moved above term 1.');
-    $this->assertEqual($terms[1]->parents, [$term2->id()], 'Term 3 was made a child of term 2.');
-    $this->assertEqual($terms[2]->tid, $term1->id(), 'Term 1 was moved below term 2.');
+    $this->assertEqual($term2->id(), $terms[0]->tid, 'Term 2 was moved above term 1.');
+    $this->assertEqual([$term2->id()], $terms[1]->parents, 'Term 3 was made a child of term 2.');
+    $this->assertEqual($term1->id(), $terms[2]->tid, 'Term 1 was moved below term 2.');
 
     $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview', [], 'Reset to alphabetical');
     // Submit confirmation form.
@@ -461,10 +461,10 @@ class TermTest extends TaxonomyTestBase {
 
     $taxonomy_storage->resetCache();
     $terms = $taxonomy_storage->loadTree($this->vocabulary->id(), 0, NULL, TRUE);
-    $this->assertEqual($terms[0]->id(), $term1->id(), 'Term 1 was moved to back above term 2.');
-    $this->assertEqual($terms[1]->id(), $term2->id(), 'Term 2 was moved to back below term 1.');
-    $this->assertEqual($terms[2]->id(), $term3->id(), 'Term 3 is still below term 2.');
-    $this->assertEqual($terms[2]->parents, [$term2->id()], 'Term 3 is still a child of term 2.');
+    $this->assertEqual($term1->id(), $terms[0]->id(), 'Term 1 was moved to back above term 2.');
+    $this->assertEqual($term2->id(), $terms[1]->id(), 'Term 2 was moved to back below term 1.');
+    $this->assertEqual($term3->id(), $terms[2]->id(), 'Term 3 is still below term 2.');
+    $this->assertEqual([$term2->id()], $terms[2]->parents, 'Term 3 is still a child of term 2.');
   }
 
   /**

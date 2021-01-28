@@ -358,7 +358,7 @@ class StyleSerializerTest extends ViewTestBase {
     $result2 = Json::decode($this->drupalGet('test/serialize/entity', ['query' => ['_format' => 'json']]));
     $this->addRequestWithFormat('json');
     $this->assertSession()->responseHeaderEquals('content-type', 'application/json');
-    $this->assertEqual($result2, $result1);
+    $this->assertEqual($result1, $result2);
     $this->assertCacheContexts($cache_contexts);
     $this->assertCacheTags($cache_tags);
     $this->assertNotEmpty($render_cache->get($original));
@@ -632,7 +632,7 @@ class StyleSerializerTest extends ViewTestBase {
     $this->executeView($view);
     $build = $view->preview();
     $rendered_xml = $build['#plain_text'];
-    $this->assertEqual($rendered_xml, $expected, 'Ensure we preview xml when we change the request format.');
+    $this->assertEqual($expected, $rendered_xml, 'Ensure we preview xml when we change the request format.');
   }
 
   /**
@@ -657,8 +657,8 @@ class StyleSerializerTest extends ViewTestBase {
     $node = $this->drupalCreateNode();
 
     $result = Json::decode($this->drupalGet('test/serialize/node-field', ['query' => ['_format' => 'json']]));
-    $this->assertEqual($result[0]['nid'], $node->id());
-    $this->assertEqual($result[0]['body'], $node->body->processed);
+    $this->assertEqual($node->id(), $result[0]['nid']);
+    $this->assertEqual($node->body->processed, $result[0]['body']);
 
     // Make sure that serialized fields are not exposed to XSS.
     $node = $this->drupalCreateNode();
@@ -668,7 +668,7 @@ class StyleSerializerTest extends ViewTestBase {
     ];
     $node->save();
     $result = Json::decode($this->drupalGet('test/serialize/node-field', ['query' => ['_format' => 'json']]));
-    $this->assertEqual($result[1]['nid'], $node->id());
+    $this->assertEqual($node->id(), $result[1]['nid']);
     $this->assertStringNotContainsString("<script", $this->getSession()->getPage()->getContent(), "No script tag is present in the raw page contents.");
 
     $this->drupalLogin($this->adminUser);
@@ -812,7 +812,7 @@ class StyleSerializerTest extends ViewTestBase {
       ],
     ];
 
-    $this->assertEqual($result, $expected, 'Querying a view with no exposed filter returns all nodes.');
+    $this->assertEqual($expected, $result, 'Querying a view with no exposed filter returns all nodes.');
 
     // Test that title starts with 'Node 11' query finds 2 of the 3 nodes.
     $result = Json::decode($this->drupalGet('test/serialize/node-exposed-filter', ['query' => ['_format' => 'json', 'title' => 'Node 11']]));
@@ -837,7 +837,7 @@ class StyleSerializerTest extends ViewTestBase {
       'url',
     ];
 
-    $this->assertEqual($result, $expected, 'Querying a view with a starts with exposed filter on the title returns nodes whose title starts with value provided.');
+    $this->assertEqual($expected, $result, 'Querying a view with a starts with exposed filter on the title returns nodes whose title starts with value provided.');
     $this->assertCacheContexts($cache_contexts);
   }
 

@@ -530,7 +530,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
     $italian_url = Url::fromRoute('system.admin', [], ['language' => $languages['it']])->toString();
     $url_scheme = \Drupal::request()->isSecure() ? 'https://' : 'http://';
     $correct_link = $url_scheme . $link;
-    $this->assertEqual($italian_url, $correct_link, new FormattableMarkup('The right URL (@url) in accordance with the chosen language', ['@url' => $italian_url]));
+    $this->assertEqual($correct_link, $italian_url, new FormattableMarkup('The right URL (@url) in accordance with the chosen language', ['@url' => $italian_url]));
 
     // Test HTTPS via options.
     $italian_url = Url::fromRoute('system.admin', [], ['https' => TRUE, 'language' => $languages['it']])->toString();

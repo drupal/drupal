@@ -228,7 +228,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
       ':hreflang' => 'en',
     ]);
     $english_url = $generator->generateFromRoute('entity.user.canonical', ['user' => 2], ['language' => $languages['en']]);
-    $this->assertEqual($english_url, $english_link->getAttribute('href'));
+    $this->assertEqual($english_link->getAttribute('href'), $english_url);
 
     // Verify the Italian URL is correct
     list($italian_link) = $this->xpath('//div[@id=:id]/ul/li/a[@hreflang=:hreflang]', [
@@ -236,7 +236,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
       ':hreflang' => 'it',
     ]);
     $italian_url = $generator->generateFromRoute('entity.user.canonical', ['user' => 2], ['language' => $languages['it']]);
-    $this->assertEqual($italian_url, $italian_link->getAttribute('href'));
+    $this->assertEqual($italian_link->getAttribute('href'), $italian_url);
   }
 
   /**

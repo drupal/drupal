@@ -83,7 +83,7 @@ abstract class FileManagedTestBase extends BrowserTestBase {
         $message = new FormattableMarkup('hook_file_@name was expected to be called %expected times but was called %actual times.', ['@name' => $hook, '%expected' => $expected_count, '%actual' => $actual_count]);
       }
     }
-    $this->assertEqual($actual_count, $expected_count, $message);
+    $this->assertEqual($expected_count, $actual_count, $message);
   }
 
   /**

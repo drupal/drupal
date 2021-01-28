@@ -81,11 +81,11 @@ class MultipleDistributionsProfileTest extends InstallerTestBase {
     $this->assertText($this->rootUser->getAccountName());
 
     // Confirm that Drupal recognizes this distribution as the current profile.
-    $this->assertEqual(\Drupal::installProfile(), 'distribution_one');
-    $this->assertEqual($this->config('core.extension')->get('profile'), 'distribution_one', 'The install profile has been written to core.extension configuration.');
+    $this->assertEqual('distribution_one', \Drupal::installProfile());
+    $this->assertEqual('distribution_one', $this->config('core.extension')->get('profile'), 'The install profile has been written to core.extension configuration.');
 
     $this->rebuildContainer();
-    $this->assertEqual(\Drupal::installProfile(), 'distribution_one');
+    $this->assertEqual('distribution_one', \Drupal::installProfile());
   }
 
 }

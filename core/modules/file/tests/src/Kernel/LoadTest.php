@@ -47,11 +47,11 @@ class LoadTest extends FileManagedUnitTestBase {
     $by_fid_file = File::load($file->id());
     $this->assertFileHookCalled('load');
     $this->assertIsObject($by_fid_file);
-    $this->assertEqual($by_fid_file->id(), $file->id(), 'Loading by fid got the same fid.', 'File');
-    $this->assertEqual($by_fid_file->getFileUri(), $file->getFileUri(), 'Loading by fid got the correct filepath.', 'File');
-    $this->assertEqual($by_fid_file->getFilename(), $file->getFilename(), 'Loading by fid got the correct filename.', 'File');
-    $this->assertEqual($by_fid_file->getMimeType(), $file->getMimeType(), 'Loading by fid got the correct MIME type.', 'File');
-    $this->assertEqual($by_fid_file->isPermanent(), $file->isPermanent(), 'Loading by fid got the correct status.', 'File');
+    $this->assertEqual($file->id(), $by_fid_file->id(), 'Loading by fid got the same fid.', 'File');
+    $this->assertEqual($file->getFileUri(), $by_fid_file->getFileUri(), 'Loading by fid got the correct filepath.', 'File');
+    $this->assertEqual($file->getFilename(), $by_fid_file->getFilename(), 'Loading by fid got the correct filename.', 'File');
+    $this->assertEqual($file->getMimeType(), $by_fid_file->getMimeType(), 'Loading by fid got the correct MIME type.', 'File');
+    $this->assertEqual($file->isPermanent(), $by_fid_file->isPermanent(), 'Loading by fid got the correct status.', 'File');
     $this->assertTrue($by_fid_file->file_test['loaded'], 'file_test_file_load() was able to modify the file during load.');
   }
 
@@ -69,7 +69,7 @@ class LoadTest extends FileManagedUnitTestBase {
     $this->assertCount(1, $by_path_files, '\Drupal::entityTypeManager()->getStorage(\'file\')->loadByProperties() returned an array of the correct size.');
     $by_path_file = reset($by_path_files);
     $this->assertTrue($by_path_file->file_test['loaded'], 'file_test_file_load() was able to modify the file during load.');
-    $this->assertEqual($by_path_file->id(), $file->id(), 'Loading by filepath got the correct fid.', 'File');
+    $this->assertEqual($file->id(), $by_path_file->id(), 'Loading by filepath got the correct fid.', 'File');
 
     // Load by fid.
     file_test_reset();
@@ -78,7 +78,7 @@ class LoadTest extends FileManagedUnitTestBase {
     $this->assertCount(1, $by_fid_files, '\Drupal\file\Entity\File::loadMultiple() returned an array of the correct size.');
     $by_fid_file = reset($by_fid_files);
     $this->assertTrue($by_fid_file->file_test['loaded'], 'file_test_file_load() was able to modify the file during load.');
-    $this->assertEqual($by_fid_file->getFileUri(), $file->getFileUri(), 'Loading by fid got the correct filepath.', 'File');
+    $this->assertEqual($file->getFileUri(), $by_fid_file->getFileUri(), 'Loading by fid got the correct filepath.', 'File');
   }
 
   /**
@@ -93,7 +93,7 @@ class LoadTest extends FileManagedUnitTestBase {
     $by_uuid_file = \Drupal::service('entity.repository')->loadEntityByUuid('file', $file->uuid());
     $this->assertFileHookCalled('load');
     $this->assertInstanceOf(FileInterface::class, $by_uuid_file);
-    $this->assertEqual($by_uuid_file->id(), $file->id(), 'Loading by UUID got the same fid.', 'File');
+    $this->assertEqual($file->id(), $by_uuid_file->id(), 'Loading by UUID got the same fid.', 'File');
     $this->assertTrue($by_uuid_file->file_test['loaded'], 'file_test_file_load() was able to modify the file during load.');
   }
 

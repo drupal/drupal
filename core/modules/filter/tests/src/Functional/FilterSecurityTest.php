@@ -93,8 +93,8 @@ class FilterSecurityTest extends BrowserTestBase {
   public function testSkipSecurityFilters() {
     $text = "Text with some disallowed tags: <script />, <p><object>unicorn</object></p>, <i><table></i>.";
     $expected_filtered_text = "Text with some disallowed tags: , <p>unicorn</p>, .";
-    $this->assertEqual(check_markup($text, 'filtered_html', '', []), $expected_filtered_text, 'Expected filter result.');
-    $this->assertEqual(check_markup($text, 'filtered_html', '', [FilterInterface::TYPE_HTML_RESTRICTOR]), $expected_filtered_text, 'Expected filter result, even when trying to disable filters of the FilterInterface::TYPE_HTML_RESTRICTOR type.');
+    $this->assertEqual($expected_filtered_text, check_markup($text, 'filtered_html', '', []), 'Expected filter result.');
+    $this->assertEqual($expected_filtered_text, check_markup($text, 'filtered_html', '', [FilterInterface::TYPE_HTML_RESTRICTOR]), 'Expected filter result, even when trying to disable filters of the FilterInterface::TYPE_HTML_RESTRICTOR type.');
   }
 
 }

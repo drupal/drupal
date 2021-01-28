@@ -199,7 +199,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
       $this->drupalPostForm('node', $terms, 'Search');
       $current = $this->getURL();
       $expected = Url::fromRoute('search.view_' . $entity->id(), [], ['query' => ['keys' => $info['keys']], 'absolute' => TRUE])->toString();
-      $this->assertEqual($current, $expected, 'Block redirected to right search page');
+      $this->assertEqual($expected, $current, 'Block redirected to right search page');
 
       // Try an invalid search path, which should 404.
       $this->drupalGet('search/not_a_plugin_path');

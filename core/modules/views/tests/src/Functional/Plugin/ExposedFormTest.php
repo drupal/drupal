@@ -147,7 +147,7 @@ class ExposedFormTest extends ViewTestBase {
       'default' => ['This identifier has illegal characters.'],
       'page_1' => ['This identifier has illegal characters.'],
     ];
-    $this->assertEqual($errors, $expected);
+    $this->assertEqual($expected, $errors);
   }
 
   /**

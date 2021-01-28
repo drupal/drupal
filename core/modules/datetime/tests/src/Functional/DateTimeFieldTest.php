@@ -711,10 +711,7 @@ class DateTimeFieldTest extends DateTestBase {
       // Check if default_date has been stored successfully.
       $config_entity = $this->config('field.field.node.date_content.' . $field_name)
         ->get();
-      $this->assertEqual($config_entity['default_value'][0], [
-        'default_date_type' => 'now',
-        'default_date' => 'now',
-      ], 'Default value has been stored successfully');
+      $this->assertEqual(['default_date_type' => 'now', 'default_date' => 'now'], $config_entity['default_value'][0], 'Default value has been stored successfully');
 
       // Clear field cache in order to avoid stale cache values.
       \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
@@ -722,8 +719,7 @@ class DateTimeFieldTest extends DateTestBase {
       // Create a new node to check that datetime field default value is today.
       $new_node = Node::create(['type' => 'date_content']);
       $expected_date = new DrupalDateTime('now', date_default_timezone_get());
-      $this->assertEqual($new_node->get($field_name)
-        ->offsetGet(0)->value, $expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT));
+      $this->assertEqual($expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT), $new_node->get($field_name)->offsetGet(0)->value);
 
       // Set an invalid relative default_value to test validation.
       $field_edit = [
@@ -750,10 +746,7 @@ class DateTimeFieldTest extends DateTestBase {
       // Check if default_date has been stored successfully.
       $config_entity = $this->config('field.field.node.date_content.' . $field_name)
         ->get();
-      $this->assertEqual($config_entity['default_value'][0], [
-        'default_date_type' => 'relative',
-        'default_date' => '+90 days',
-      ], 'Default value has been stored successfully');
+      $this->assertEqual(['default_date_type' => 'relative', 'default_date' => '+90 days'], $config_entity['default_value'][0], 'Default value has been stored successfully');
 
       // Clear field cache in order to avoid stale cache values.
       \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
@@ -762,8 +755,7 @@ class DateTimeFieldTest extends DateTestBase {
       // days.
       $new_node = Node::create(['type' => 'date_content']);
       $expected_date = new DrupalDateTime('+90 days', date_default_timezone_get());
-      $this->assertEqual($new_node->get($field_name)
-        ->offsetGet(0)->value, $expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT));
+      $this->assertEqual($expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT), $new_node->get($field_name)->offsetGet(0)->value);
 
       // Remove default value.
       $field_edit = [

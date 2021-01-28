@@ -103,7 +103,7 @@ class CronRunTest extends BrowserTestBase {
     // The common_test_cron_helper module sets the 'common_test_cron' variable.
     $this->cronRun();
     $result = \Drupal::state()->get('common_test.cron');
-    $this->assertEqual($result, 'success', 'Cron correctly handles exceptions thrown during hook_cron() invocations.');
+    $this->assertEqual('success', $result, 'Cron correctly handles exceptions thrown during hook_cron() invocations.');
   }
 
   /**

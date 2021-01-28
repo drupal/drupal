@@ -125,7 +125,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
         t('The %field_name field needs to be installed.', ['%field_name' => 'Default revision']),
       ],
     ];
-    $this->assertEqual($this->entityDefinitionUpdateManager->getChangeSummary(), $expected, 'EntityDefinitionUpdateManager reports the expected change summary.');
+    $this->assertEqual($expected, $this->entityDefinitionUpdateManager->getChangeSummary(), 'EntityDefinitionUpdateManager reports the expected change summary.');
 
     // Run the update and ensure the revision table is created.
     $this->updateEntityTypeToRevisionable(TRUE);
@@ -867,7 +867,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
         t('The %entity_type entity type needs to be updated.', ['%entity_type' => $this->entityTypeManager->getDefinition('entity_test_update')->getLabel()]),
       ],
     ];
-    $this->assertEqual($this->entityDefinitionUpdateManager->getChangeSummary(), $expected, 'EntityDefinitionUpdateManager reports the expected change summary.');
+    $this->assertEqual($expected, $this->entityDefinitionUpdateManager->getChangeSummary(), 'EntityDefinitionUpdateManager reports the expected change summary.');
 
     // Run the update and ensure the new index is created.
     $entity_type = \Drupal::entityTypeManager()->getDefinition('entity_test_update');
@@ -884,7 +884,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
         t('The %entity_type entity type needs to be updated.', ['%entity_type' => $this->entityTypeManager->getDefinition('entity_test_update')->getLabel()]),
       ],
     ];
-    $this->assertEqual($this->entityDefinitionUpdateManager->getChangeSummary(), $expected, 'EntityDefinitionUpdateManager reports the expected change summary.');
+    $this->assertEqual($expected, $this->entityDefinitionUpdateManager->getChangeSummary(), 'EntityDefinitionUpdateManager reports the expected change summary.');
 
     // Run the update and ensure the index is deleted.
     $entity_type = \Drupal::entityTypeManager()->getDefinition('entity_test_update');

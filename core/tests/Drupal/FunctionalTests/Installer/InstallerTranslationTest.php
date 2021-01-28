@@ -41,7 +41,7 @@ class InstallerTranslationTest extends InstallerTestBase {
 
     // Check the language direction.
     $direction = current($this->xpath('/@dir'))->getText();
-    $this->assertEqual($direction, 'ltr');
+    $this->assertEqual('ltr', $direction);
   }
 
   /**
@@ -92,11 +92,11 @@ class InstallerTranslationTest extends InstallerTestBase {
     $this->rebuildContainer();
     /** @var \Drupal\user\Entity\User $account */
     $account = User::load(0);
-    $this->assertEqual($account->language()->getId(), 'en', 'Anonymous user is English.');
+    $this->assertEqual('en', $account->language()->getId(), 'Anonymous user is English.');
     $account = User::load(1);
-    $this->assertEqual($account->language()->getId(), 'en', 'Administrator user is English.');
+    $this->assertEqual('en', $account->language()->getId(), 'Administrator user is English.');
     $account = $this->drupalCreateUser();
-    $this->assertEqual($account->language()->getId(), 'de', 'New user is German.');
+    $this->assertEqual('de', $account->language()->getId(), 'New user is German.');
 
     // Ensure that we can enable basic_auth on a non-english site.
     $this->drupalPostForm('admin/modules', ['modules[basic_auth][enable]' => TRUE], 'Install');
@@ -127,8 +127,8 @@ class InstallerTranslationTest extends InstallerTestBase {
     $config = \Drupal::config('user.settings');
     $override_de = $language_manager->getLanguageConfigOverride('de', 'user.settings');
     $override_en = $language_manager->getLanguageConfigOverride('en', 'user.settings');
-    $this->assertEqual($config->get('anonymous'), 'Anonymous de');
-    $this->assertEqual($config->get('langcode'), 'de');
+    $this->assertEqual('Anonymous de', $config->get('anonymous'));
+    $this->assertEqual('de', $config->get('langcode'));
     $this->assertTrue($override_de->isNew());
     $this->assertTrue($override_en->isNew());
 
@@ -137,7 +137,7 @@ class InstallerTranslationTest extends InstallerTestBase {
     $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
     $override_en = $language_manager->getLanguageConfigOverride('en', 'user.settings');
     $this->assertFalse($override_en->isNew());
-    $this->assertEqual($override_en->get('anonymous'), 'Anonymous');
+    $this->assertEqual('Anonymous', $override_en->get('anonymous'));
   }
 
   /**

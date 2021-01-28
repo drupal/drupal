@@ -98,7 +98,7 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
     foreach ($tests as $test) {
       foreach ($test['arguments'] as $arguments) {
         $result = call_user_func_array([$handler, 'getReferenceableEntities'], $arguments);
-        $this->assertEqual($result, $test['result'], new FormattableMarkup('Valid result set returned by @handler.', ['@handler' => $handler_name]));
+        $this->assertEqual($test['result'], $result, new FormattableMarkup('Valid result set returned by @handler.', ['@handler' => $handler_name]));
 
         $result = call_user_func_array([$handler, 'countReferenceableEntities'], $arguments);
         if (!empty($test['result'])) {
@@ -109,7 +109,7 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
           $count = 0;
         }
 
-        $this->assertEqual($result, $count, new FormattableMarkup('Valid count returned by @handler.', ['@handler' => $handler_name]));
+        $this->assertEqual($count, $result, new FormattableMarkup('Valid count returned by @handler.', ['@handler' => $handler_name]));
       }
     }
   }
