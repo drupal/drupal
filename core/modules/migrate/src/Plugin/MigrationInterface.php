@@ -255,8 +255,6 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
    *
    * @return $this
    *   The migration entity.
-   *
-   * @see Drupal\migrate_drupal\Plugin\migrate\load\LoadEntity::processLinkField()
    */
   public function mergeProcessOfProperty($property, array $process_of_property);
 
