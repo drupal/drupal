@@ -162,7 +162,7 @@ class DialogTest extends WebDriverTestBase {
     $moved_to_buttonpane_buttons = $this->getSession()->getPage()->findAll('css', '.ui-dialog-buttonpane button');
     $this->assertCount(2, $moved_to_buttonpane_buttons);
     foreach ($moved_to_buttonpane_buttons as $key => $button) {
-      $this->assertEqual($button->getText(), $hidden_button_text[$key]);
+      $this->assertEqual($hidden_button_text[$key], $button->getText());
     }
 
     // Reset: close the form.

@@ -68,7 +68,7 @@ class MatcherDumperTest extends KernelTestBase {
     $collection_routes = $collection->all();
 
     foreach ($dumper_routes as $name => $route) {
-      $this->assertEqual($route->getPath(), $collection_routes[$name]->getPath(), 'Routes match');
+      $this->assertEqual($collection_routes[$name]->getPath(), $route->getPath(), 'Routes match');
     }
   }
 
@@ -126,10 +126,12 @@ class MatcherDumperTest extends KernelTestBase {
 
     $loaded_route = unserialize($record->route);
 
-    $this->assertEqual($record->name, 'test_route', 'Dumped route has correct name.');
-    $this->assertEqual($record->path, '/test/{my}/path', 'Dumped route has correct pattern.');
-    $this->assertEqual($record->pattern_outline, '/test/%/path', 'Dumped route has correct pattern outline.');
-    $this->assertEqual($record->fit, 5 /* 101 in binary */, 'Dumped route has correct fit.');
+    $this->assertEqual('test_route', $record->name, 'Dumped route has correct name.');
+    $this->assertEqual('/test/{my}/path', $record->path, 'Dumped route has correct pattern.');
+    $this->assertEqual('/test/%/path', $record->pattern_outline, 'Dumped route has correct pattern outline.');
+    // Verify that the dumped route has the correct fit. Note that 5 decimal
+    // equals 101 binary.
+    $this->assertEqual(5, $record->fit, 'Dumped route has correct fit.');
     $this->assertInstanceOf(Route::class, $loaded_route);
   }
 
@@ -159,7 +161,7 @@ class MatcherDumperTest extends KernelTestBase {
       bindec('111'),
       bindec('101'),
     ];
-    $this->assertEqual($this->state->get('routing.menu_masks.test_routes'), $expected);
+    $this->assertEqual($expected, $this->state->get('routing.menu_masks.test_routes'));
   }
 
 }

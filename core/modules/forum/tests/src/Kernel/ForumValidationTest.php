@@ -52,7 +52,7 @@ class ForumValidationTest extends EntityKernelTestBase {
 
     $violations = $forum_post->validate();
     $this->assertCount(1, $violations);
-    $this->assertEqual($violations[0]->getMessage(), 'This value should not be null.');
+    $this->assertEqual('This value should not be null.', $violations[0]->getMessage());
 
     // Add the forum term.
     $forum_post->set('taxonomy_forums', $forum);
@@ -63,9 +63,7 @@ class ForumValidationTest extends EntityKernelTestBase {
     $forum_post->set('taxonomy_forums', $container);
     $violations = $forum_post->validate();
     $this->assertCount(1, $violations);
-    $this->assertEqual($violations[0]->getMessage(), t('The item %forum is a forum container, not a forum. Select one of the forums below instead.', [
-      '%forum' => $container->label(),
-    ]));
+    $this->assertEqual(t('The item %forum is a forum container, not a forum. Select one of the forums below instead.', ['%forum' => $container->label()]), $violations[0]->getMessage());
   }
 
 }

@@ -119,7 +119,7 @@ class ImportOpmlTest extends AggregatorTestBase {
     $this->assertRaw(t('A feed named %title already exists.', ['%title' => $feeds[1]['title[0][value]']]));
 
     $after = $count_query->execute();
-    $this->assertEqual($after, 2, 'Verifying that two distinct feeds were added.');
+    $this->assertEqual(2, $after, 'Verifying that two distinct feeds were added.');
 
     $feed_entities = Feed::loadMultiple();
     $refresh = TRUE;

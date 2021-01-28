@@ -401,8 +401,8 @@ class ForumTest extends BrowserTestBase {
     $current_vocabulary = Vocabulary::load($vid);
 
     // Make sure we actually edited the vocabulary properly.
-    $this->assertEqual($current_vocabulary->label(), $edit['name'], 'The name was updated');
-    $this->assertEqual($current_vocabulary->getDescription(), $edit['description'], 'The description was updated');
+    $this->assertEqual($edit['name'], $current_vocabulary->label(), 'The name was updated');
+    $this->assertEqual($edit['description'], $current_vocabulary->getDescription(), 'The description was updated');
 
     // Restore the original vocabulary's name and description.
     $current_vocabulary->set('name', $original_vocabulary->label());
@@ -410,7 +410,7 @@ class ForumTest extends BrowserTestBase {
     $current_vocabulary->save();
     // Reload vocabulary to make sure changes are saved.
     $current_vocabulary = Vocabulary::load($vid);
-    $this->assertEqual($current_vocabulary->label(), $original_vocabulary->label(), 'The original vocabulary settings were restored');
+    $this->assertEqual($original_vocabulary->label(), $current_vocabulary->label(), 'The original vocabulary settings were restored');
   }
 
   /**
@@ -589,7 +589,7 @@ class ForumTest extends BrowserTestBase {
     // Retrieve node object, ensure that the topic was created and in the proper forum.
     $node = $this->drupalGetNodeByTitle($title);
     $this->assertNotNull($node, new FormattableMarkup('Node @title was loaded', ['@title' => $title]));
-    $this->assertEqual($node->taxonomy_forums->target_id, $tid, 'Saved forum topic was in the expected forum');
+    $this->assertEqual($tid, $node->taxonomy_forums->target_id, 'Saved forum topic was in the expected forum');
 
     // View forum topic.
     $this->drupalGet('node/' . $node->id());

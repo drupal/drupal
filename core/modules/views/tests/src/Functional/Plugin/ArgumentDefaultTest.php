@@ -70,18 +70,18 @@ class ArgumentDefaultTest extends ViewTestBase {
     $this->assertInstanceOf(ArgumentDefaultTestPlugin::class, $plugin);
 
     // Check that the value of the default argument is as expected.
-    $this->assertEqual($view->argument[$id]->getDefaultArgument(), 'John', 'The correct argument default value is returned.');
+    $this->assertEqual('John', $view->argument[$id]->getDefaultArgument(), 'The correct argument default value is returned.');
     // Don't pass in a value for the default argument and make sure the query
     // just returns John.
     $this->executeView($view);
-    $this->assertEqual($view->argument[$id]->getValue(), 'John', 'The correct argument value is used.');
+    $this->assertEqual('John', $view->argument[$id]->getValue(), 'The correct argument value is used.');
     $expected_result = [['name' => 'John']];
     $this->assertIdenticalResultset($view, $expected_result, ['views_test_data_name' => 'name']);
 
     // Pass in value as argument to be sure that not the default value is used.
     $view->destroy();
     $this->executeView($view, ['George']);
-    $this->assertEqual($view->argument[$id]->getValue(), 'George', 'The correct argument value is used.');
+    $this->assertEqual('George', $view->argument[$id]->getValue(), 'The correct argument value is used.');
     $expected_result = [['name' => 'George']];
     $this->assertIdenticalResultset($view, $expected_result, ['views_test_data_name' => 'name']);
   }
@@ -125,13 +125,13 @@ class ArgumentDefaultTest extends ViewTestBase {
     $view->display_handler->overrideOption('arguments', $options);
     $view->initHandlers();
 
-    $this->assertEqual($view->argument['null']->getDefaultArgument(), $random, 'Fixed argument should be used by default.');
+    $this->assertEqual($random, $view->argument['null']->getDefaultArgument(), 'Fixed argument should be used by default.');
 
     // Make sure that a normal argument provided is used
     $random_string = $this->randomMachineName();
     $view->executeDisplay('default', [$random_string]);
 
-    $this->assertEqual($view->args[0], $random_string, 'Provided argument should be used.');
+    $this->assertEqual($random_string, $view->args[0], 'Provided argument should be used.');
   }
 
   /**
@@ -184,13 +184,13 @@ class ArgumentDefaultTest extends ViewTestBase {
     // Check the query parameter default argument fallback value.
     $view->setRequest($request);
     $view->initHandlers();
-    $this->assertEqual($view->argument['type']->getDefaultArgument(), 'all');
+    $this->assertEqual('all', $view->argument['type']->getDefaultArgument());
 
     // Check the query parameter default argument with a value.
     $request->query->add(['the_node_type' => 'page']);
     $view->setRequest($request);
     $view->initHandlers();
-    $this->assertEqual($view->argument['type']->getDefaultArgument(), 'page');
+    $this->assertEqual('page', $view->argument['type']->getDefaultArgument());
   }
 
 }

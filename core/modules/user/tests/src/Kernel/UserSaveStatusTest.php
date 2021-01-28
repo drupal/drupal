@@ -37,12 +37,12 @@ class UserSaveStatusTest extends KernelTestBase {
 
     // Test SAVED_NEW.
     $return = $user->save();
-    $this->assertEqual($return, SAVED_NEW, "User was saved with SAVED_NEW status.");
+    $this->assertEqual(SAVED_NEW, $return, "User was saved with SAVED_NEW status.");
 
     // Test SAVED_UPDATED.
     $user->name = $this->randomMachineName();
     $return = $user->save();
-    $this->assertEqual($return, SAVED_UPDATED, "User was saved with SAVED_UPDATED status.");
+    $this->assertEqual(SAVED_UPDATED, $return, "User was saved with SAVED_UPDATED status.");
   }
 
 }

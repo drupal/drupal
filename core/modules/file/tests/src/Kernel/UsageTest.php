@@ -47,8 +47,8 @@ class UsageTest extends FileManagedUnitTestBase {
     $this->assertCount(2, $usage['testing'], 'Returned the correct number of items.');
     $this->assertTrue(isset($usage['testing']['foo'][1]), 'Returned the correct id.');
     $this->assertTrue(isset($usage['testing']['bar'][2]), 'Returned the correct id.');
-    $this->assertEqual($usage['testing']['foo'][1], 1, 'Returned the correct count.');
-    $this->assertEqual($usage['testing']['bar'][2], 2, 'Returned the correct count.');
+    $this->assertEqual(1, $usage['testing']['foo'][1], 'Returned the correct count.');
+    $this->assertEqual(2, $usage['testing']['bar'][2], 'Returned the correct count.');
   }
 
   /**
@@ -69,12 +69,12 @@ class UsageTest extends FileManagedUnitTestBase {
       ->execute()
       ->fetchAllAssoc('id');
     $this->assertCount(2, $usage, 'Created two records');
-    $this->assertEqual($usage[1]->module, 'testing', 'Correct module');
-    $this->assertEqual($usage[2]->module, 'testing', 'Correct module');
-    $this->assertEqual($usage[1]->type, 'foo', 'Correct type');
-    $this->assertEqual($usage[2]->type, 'bar', 'Correct type');
-    $this->assertEqual($usage[1]->count, 1, 'Correct count');
-    $this->assertEqual($usage[2]->count, 2, 'Correct count');
+    $this->assertEqual('testing', $usage[1]->module, 'Correct module');
+    $this->assertEqual('testing', $usage[2]->module, 'Correct module');
+    $this->assertEqual('foo', $usage[1]->type, 'Correct type');
+    $this->assertEqual('bar', $usage[2]->type, 'Correct type');
+    $this->assertEqual(1, $usage[1]->count, 'Correct count');
+    $this->assertEqual(2, $usage[2]->count, 'Correct count');
   }
 
   /**

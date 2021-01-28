@@ -151,7 +151,7 @@ class FormTest extends FieldTestBase {
     $id = $match[1];
     $this->assertText('entity_test ' . $id . ' has been created.');
     $entity = EntityTest::load($id);
-    $this->assertEqual($entity->{$field_name}->value, $value, 'Field value was saved');
+    $this->assertEqual($value, $entity->{$field_name}->value, 'Field value was saved');
 
     // Display edit form.
     $this->drupalGet('entity_test/manage/' . $id . '/edit');
@@ -169,7 +169,7 @@ class FormTest extends FieldTestBase {
     $this->assertText('entity_test ' . $id . ' has been updated.');
     $this->container->get('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);
     $entity = EntityTest::load($id);
-    $this->assertEqual($entity->{$field_name}->value, $value, 'Field value was updated');
+    $this->assertEqual($value, $entity->{$field_name}->value, 'Field value was updated');
 
     // Empty the field.
     $value = '';
@@ -243,7 +243,7 @@ class FormTest extends FieldTestBase {
     $id = $match[1];
     $this->assertText('entity_test ' . $id . ' has been created.');
     $entity = EntityTest::load($id);
-    $this->assertEqual($entity->{$field_name}->value, $value, 'Field value was saved');
+    $this->assertEqual($value, $entity->{$field_name}->value, 'Field value was saved');
 
     // Edit with missing required value.
     $value = '';
@@ -550,8 +550,8 @@ class FormTest extends FieldTestBase {
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($entity_type);
     $entity = $storage->load($id);
-    $this->assertEqual($entity->$field_name_no_access->value, 99, 'Default value was saved for the field with no edit access.');
-    $this->assertEqual($entity->$field_name->value, 1, 'Entered value vas saved for the field with edit access.');
+    $this->assertEqual(99, $entity->{$field_name_no_access}->value, 'Default value was saved for the field with no edit access.');
+    $this->assertEqual(1, $entity->{$field_name}->value, 'Entered value vas saved for the field with edit access.');
 
     // Create a new revision.
     $edit = [
@@ -563,15 +563,15 @@ class FormTest extends FieldTestBase {
     // Check that the new revision has the expected values.
     $storage->resetCache([$id]);
     $entity = $storage->load($id);
-    $this->assertEqual($entity->$field_name_no_access->value, 99, 'New revision has the expected value for the field with no edit access.');
-    $this->assertEqual($entity->$field_name->value, 2, 'New revision has the expected value for the field with edit access.');
+    $this->assertEqual(99, $entity->{$field_name_no_access}->value, 'New revision has the expected value for the field with no edit access.');
+    $this->assertEqual(2, $entity->{$field_name}->value, 'New revision has the expected value for the field with edit access.');
 
     // Check that the revision is also saved in the revisions table.
     $entity = $this->container->get('entity_type.manager')
       ->getStorage($entity_type)
       ->loadRevision($entity->getRevisionId());
-    $this->assertEqual($entity->$field_name_no_access->value, 99, 'New revision has the expected value for the field with no edit access.');
-    $this->assertEqual($entity->$field_name->value, 2, 'New revision has the expected value for the field with edit access.');
+    $this->assertEqual(99, $entity->{$field_name_no_access}->value, 'New revision has the expected value for the field with no edit access.');
+    $this->assertEqual(2, $entity->{$field_name}->value, 'New revision has the expected value for the field with edit access.');
   }
 
   /**
@@ -606,7 +606,7 @@ class FormTest extends FieldTestBase {
       ->getStorage($entity_type);
 
     $entity = $storage->load($id);
-    $this->assertEqual($entity->{$field_name}->value, 99, 'Default value was saved');
+    $this->assertEqual(99, $entity->{$field_name}->value, 'Default value was saved');
 
     // Update the field to remove the default value, and switch to the default
     // widget.
@@ -630,7 +630,7 @@ class FormTest extends FieldTestBase {
     $this->assertText('entity_test_rev ' . $id . ' has been updated.');
     $storage->resetCache([$id]);
     $entity = $storage->load($id);
-    $this->assertEqual($entity->{$field_name}->value, $value, 'Field value was updated');
+    $this->assertEqual($value, $entity->{$field_name}->value, 'Field value was updated');
 
     // Set the field back to hidden.
     \Drupal::service('entity_display.repository')
@@ -645,7 +645,7 @@ class FormTest extends FieldTestBase {
     // Check that the expected value has been carried over to the new revision.
     $storage->resetCache([$id]);
     $entity = $storage->load($id);
-    $this->assertEqual($entity->{$field_name}->value, $value, 'New revision has the expected value for the field with the Hidden widget');
+    $this->assertEqual($value, $entity->{$field_name}->value, 'New revision has the expected value for the field with the Hidden widget');
   }
 
   /**

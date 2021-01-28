@@ -210,7 +210,7 @@ class BlockTest extends BlockTestBase {
     // Check to see if the block was created by checking its configuration.
     $instance = Block::load($block['id']);
 
-    $this->assertEqual($instance->label(), $block['settings[label]'], 'Stored block title found.');
+    $this->assertEqual($block['settings[label]'], $instance->label(), 'Stored block title found.');
 
     // Check whether the block can be moved to all available regions.
     foreach ($this->regions as $region) {
@@ -444,7 +444,7 @@ class BlockTest extends BlockTestBase {
       'rendered',
     ];
     sort($expected_cache_tags);
-    $this->assertEqual($cache_entry->tags, $expected_cache_tags);
+    $this->assertEqual($expected_cache_tags, $cache_entry->tags);
     $expected_cache_tags = [
       'block_view',
       'config:block.block.powered',
@@ -550,17 +550,12 @@ class BlockTest extends BlockTestBase {
 
     $block->save();
 
-    $this->assertEqual($block->getVisibility()['user_role']['roles'], [
-      $role1->id() => $role1->id(),
-      $role2->id() => $role2->id(),
-    ]);
+    $this->assertEqual([$role1->id() => $role1->id(), $role2->id() => $role2->id()], $block->getVisibility()['user_role']['roles']);
 
     $role1->delete();
 
     $block = Block::load($block->id());
-    $this->assertEqual($block->getVisibility()['user_role']['roles'], [
-      $role2->id() => $role2->id(),
-    ]);
+    $this->assertEqual([$role2->id() => $role2->id()], $block->getVisibility()['user_role']['roles']);
   }
 
 }

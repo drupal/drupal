@@ -246,11 +246,11 @@ class HalLinkManagerTest extends KernelTestBase {
     $link_manager = \Drupal::service('hal.link_manager');
     $link_manager->setLinkDomain('http://example.com/');
     $link = $link_manager->getTypeUri('node', 'page', $serialization_context);
-    $this->assertEqual($link, 'http://example.com/rest/type/node/page');
-    $this->assertEqual(new CacheableMetadata(), $serialization_context[CacheableNormalizerInterface::SERIALIZATION_CONTEXT_CACHEABILITY]);
+    $this->assertEqual('http://example.com/rest/type/node/page', $link);
+    $this->assertEqual($serialization_context[CacheableNormalizerInterface::SERIALIZATION_CONTEXT_CACHEABILITY], new CacheableMetadata());
     $link = $link_manager->getRelationUri('node', 'page', 'field_ref', $serialization_context);
-    $this->assertEqual($link, 'http://example.com/rest/relation/node/page/field_ref');
-    $this->assertEqual(new CacheableMetadata(), $serialization_context[CacheableNormalizerInterface::SERIALIZATION_CONTEXT_CACHEABILITY]);
+    $this->assertEqual('http://example.com/rest/relation/node/page/field_ref', $link);
+    $this->assertEqual($serialization_context[CacheableNormalizerInterface::SERIALIZATION_CONTEXT_CACHEABILITY], new CacheableMetadata());
   }
 
 }

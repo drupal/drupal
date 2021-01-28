@@ -37,7 +37,7 @@ class NextIdTest extends DatabaseTestBase {
     // expect $second > $first.
     $this->assertEqual($first + 1, $second, 'The second call from a sequence provides a number increased by one.');
     $result = $this->connection->nextId(1000);
-    $this->assertEqual($result, 1001, 'Sequence provides a larger number than the existing ID.');
+    $this->assertEqual(1001, $result, 'Sequence provides a larger number than the existing ID.');
   }
 
   /**

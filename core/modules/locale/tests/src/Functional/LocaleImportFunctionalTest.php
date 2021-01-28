@@ -373,7 +373,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
 
     // Check that the 'Anonymous' string is translated.
     $config = \Drupal::languageManager()->getLanguageConfigOverride($langcode, 'user.settings');
-    $this->assertEqual($config->get('anonymous'), 'Anonymous German');
+    $this->assertEqual('Anonymous German', $config->get('anonymous'));
   }
 
   /**
@@ -385,7 +385,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
 
     // Get the language.entity.de label and check it's been translated.
     $override = \Drupal::languageManager()->getLanguageConfigOverride('de', 'language.entity.de');
-    $this->assertEqual($override->get('label'), 'Deutsch');
+    $this->assertEqual('Deutsch', $override->get('label'));
   }
 
   /**

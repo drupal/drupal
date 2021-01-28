@@ -44,20 +44,20 @@ class FieldUITest extends UITestBase {
     $edit_handler_url = 'admin/structure/views/nojs/handler/test_view/default/field/age';
     $this->drupalGet($edit_handler_url);
     $result = $this->xpath('//details[@id="edit-options-alter-help"]/div[@class="details-wrapper"]/div[@class="item-list"]/ul/li');
-    $this->assertEqual($result[0]->getHtml(), '{{ age }} == Age');
+    $this->assertEqual('{{ age }} == Age', $result[0]->getHtml());
 
     $edit_handler_url = 'admin/structure/views/nojs/handler/test_view/default/field/id';
     $this->drupalGet($edit_handler_url);
     $result = $this->xpath('//details[@id="edit-options-alter-help"]/div[@class="details-wrapper"]/div[@class="item-list"]/ul/li');
-    $this->assertEqual(trim($result[0]->getHtml()), '{{ age }} == Age');
-    $this->assertEqual(trim($result[1]->getHtml()), '{{ id }} == ID');
+    $this->assertEqual('{{ age }} == Age', trim($result[0]->getHtml()));
+    $this->assertEqual('{{ id }} == ID', trim($result[1]->getHtml()));
 
     $edit_handler_url = 'admin/structure/views/nojs/handler/test_view/default/field/name';
     $this->drupalGet($edit_handler_url);
     $result = $this->xpath('//details[@id="edit-options-alter-help"]/div[@class="details-wrapper"]/div[@class="item-list"]/ul/li');
-    $this->assertEqual(trim($result[0]->getHtml()), '{{ age }} == Age');
-    $this->assertEqual(trim($result[1]->getHtml()), '{{ id }} == ID');
-    $this->assertEqual(trim($result[2]->getHtml()), '{{ name }} == Name');
+    $this->assertEqual('{{ age }} == Age', trim($result[0]->getHtml()));
+    $this->assertEqual('{{ id }} == ID', trim($result[1]->getHtml()));
+    $this->assertEqual('{{ name }} == Name', trim($result[2]->getHtml()));
 
     $result = $this->xpath('//details[@id="edit-options-more"]');
     $this->assertEmpty($result, "Container 'more' is empty and should not be displayed.");
@@ -77,7 +77,7 @@ class FieldUITest extends UITestBase {
     $edit_handler_url = '/admin/structure/views/ajax/handler-group/test_view/default/field/name';
     $this->drupalGet($edit_handler_url);
     $data = Json::decode($this->getSession()->getPage()->getContent());
-    $this->assertEqual($data[3]['dialogOptions']['title'], 'Configure aggregation settings for field Views test: Name');
+    $this->assertEqual('Configure aggregation settings for field Views test: Name', $data[3]['dialogOptions']['title']);
   }
 
   /**
@@ -99,7 +99,7 @@ class FieldUITest extends UITestBase {
 
     $view = Views::getView($view['id']);
     $view->initHandlers();
-    $this->assertEqual($view->field['title']->options['label'], '', 'The field label for normal styles are empty.');
+    $this->assertEqual('', $view->field['title']->options['label'], 'The field label for normal styles are empty.');
   }
 
 }

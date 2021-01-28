@@ -30,8 +30,8 @@ class StackKernelIntegrationTest extends KernelTestBase {
     $http_kernel = \Drupal::service('http_kernel');
     $http_kernel->handle($request, HttpKernelInterface::MASTER_REQUEST, FALSE);
 
-    $this->assertEqual($request->attributes->get('_hello'), 'world');
-    $this->assertEqual($request->attributes->get('_previous_optional_argument'), 'test_argument');
+    $this->assertEqual('world', $request->attributes->get('_hello'));
+    $this->assertEqual('test_argument', $request->attributes->get('_previous_optional_argument'));
   }
 
   /**

@@ -264,7 +264,7 @@ class DisplayBlockTest extends ViewTestBase {
     $this->drupalGet('');
 
     $result = $this->xpath('//div[contains(@class, "region-sidebar-first")]/div[contains(@class, "block-views")]/h2');
-    $this->assertEqual($result[0]->getText(), 'Custom title');
+    $this->assertEqual('Custom title', $result[0]->getText());
 
     // Don't override the title anymore.
     $plugin = $block->getPlugin();
@@ -273,7 +273,7 @@ class DisplayBlockTest extends ViewTestBase {
 
     $this->drupalGet('');
     $result = $this->xpath('//div[contains(@class, "region-sidebar-first")]/div[contains(@class, "block-views")]/h2');
-    $this->assertEqual($result[0]->getText(), 'test_view_block');
+    $this->assertEqual('test_view_block', $result[0]->getText());
 
     // Hide the title.
     $block->getPlugin()->setConfigurationValue('label_display', FALSE);

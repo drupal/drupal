@@ -440,7 +440,7 @@ class CKEditorTest extends KernelTestBase {
     // Test that we now get the expected language.
     $editor = Editor::load('filtered_html');
     $settings = $this->ckeditor->getJSSettings($editor);
-    $this->assertEqual($settings['language'], $langcode);
+    $this->assertEqual($langcode, $settings['language']);
   }
 
   protected function getDefaultInternalConfig() {

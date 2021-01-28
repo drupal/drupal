@@ -24,12 +24,12 @@ class AccountSwitcherTest extends KernelTestBase {
 
     // Verify that the active user has changed, and that session saving is
     // disabled.
-    $this->assertEqual($user->id(), 2, 'Switched to user 2.');
+    $this->assertEqual(2, $user->id(), 'Switched to user 2.');
     $this->assertFalse($session_handler->isSessionWritable(), 'Session saving is disabled.');
 
     // Perform a second (nested) user account switch.
     $switcher->switchTo(new UserSession(['uid' => 3]));
-    $this->assertEqual($user->id(), 3, 'Switched to user 3.');
+    $this->assertEqual(3, $user->id(), 'Switched to user 3.');
 
     // Revert to the user session that was active between the first and second
     // switch.
@@ -37,7 +37,7 @@ class AccountSwitcherTest extends KernelTestBase {
 
     // Since we are still in the account from the first switch, session handling
     // still needs to be disabled.
-    $this->assertEqual($user->id(), 2, 'Reverted to user 2.');
+    $this->assertEqual(2, $user->id(), 'Reverted to user 2.');
     $this->assertFalse($session_handler->isSessionWritable(), 'Session saving still disabled.');
 
     // Revert to the original account which was active before the first switch.
@@ -45,8 +45,8 @@ class AccountSwitcherTest extends KernelTestBase {
 
     // Assert that the original account is active again, and that session saving
     // has been re-enabled.
-    $this->assertEqual($user->id(), $original_user->id(), 'Original user correctly restored.');
-    $this->assertEqual($session_handler->isSessionWritable(), $original_session_saving, 'Original session saving correctly restored.');
+    $this->assertEqual($original_user->id(), $user->id(), 'Original user correctly restored.');
+    $this->assertEqual($original_session_saving, $session_handler->isSessionWritable(), 'Original session saving correctly restored.');
 
     // Verify that AccountSwitcherInterface::switchBack() will throw
     // an exception if there are no accounts left in the stack.

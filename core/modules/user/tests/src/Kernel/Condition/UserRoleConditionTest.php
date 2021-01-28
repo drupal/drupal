@@ -112,19 +112,19 @@ class UserRoleConditionTest extends KernelTestBase {
     $this->assertFalse($condition->execute(), 'Anonymous users fail role checks for authenticated.');
     // Check for the proper summary.
     // Summaries require an extra space due to negate handling in summary().
-    $this->assertEqual($condition->summary(), 'The user is a member of Authenticated user');
+    $this->assertEqual('The user is a member of Authenticated user', $condition->summary());
 
     // Set the user role to anonymous.
     $condition->setConfig('roles', [RoleInterface::ANONYMOUS_ID => RoleInterface::ANONYMOUS_ID]);
     $this->assertTrue($condition->execute(), 'Anonymous users pass role checks for anonymous.');
     // Check for the proper summary.
-    $this->assertEqual($condition->summary(), 'The user is a member of Anonymous user');
+    $this->assertEqual('The user is a member of Anonymous user', $condition->summary());
 
     // Set the user role to check anonymous or authenticated.
     $condition->setConfig('roles', [RoleInterface::ANONYMOUS_ID => RoleInterface::ANONYMOUS_ID, RoleInterface::AUTHENTICATED_ID => RoleInterface::AUTHENTICATED_ID]);
     $this->assertTrue($condition->execute(), 'Anonymous users pass role checks for anonymous or authenticated.');
     // Check for the proper summary.
-    $this->assertEqual($condition->summary(), 'The user is a member of Anonymous user, Authenticated user');
+    $this->assertEqual('The user is a member of Anonymous user, Authenticated user', $condition->summary());
 
     // Set the context to the authenticated user and check that they also pass
     // against anonymous or authenticated roles.
@@ -137,17 +137,17 @@ class UserRoleConditionTest extends KernelTestBase {
 
     // Check the negated summary.
     $condition->setConfig('negate', TRUE);
-    $this->assertEqual($condition->summary(), 'The user is not a member of Authenticated user');
+    $this->assertEqual('The user is not a member of Authenticated user', $condition->summary());
 
     // Check the complex negated summary.
     $condition->setConfig('roles', [RoleInterface::ANONYMOUS_ID => RoleInterface::ANONYMOUS_ID, RoleInterface::AUTHENTICATED_ID => RoleInterface::AUTHENTICATED_ID]);
-    $this->assertEqual($condition->summary(), 'The user is not a member of Anonymous user, Authenticated user');
+    $this->assertEqual('The user is not a member of Anonymous user, Authenticated user', $condition->summary());
 
     // Check a custom role.
     $condition->setConfig('roles', [$this->role->id() => $this->role->id()]);
     $condition->setConfig('negate', FALSE);
     $this->assertTrue($condition->execute(), 'Authenticated user is a member of the custom role.');
-    $this->assertEqual($condition->summary(), new FormattableMarkup('The user is a member of @roles', ['@roles' => $this->role->label()]));
+    $this->assertEqual(new FormattableMarkup('The user is a member of @roles', ['@roles' => $this->role->label()]), $condition->summary());
   }
 
   /**

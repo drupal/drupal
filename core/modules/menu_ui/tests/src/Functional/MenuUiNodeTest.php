@@ -102,7 +102,7 @@ class MenuUiNodeTest extends BrowserTestBase {
     ];
     $this->submitForm($edit, 'Save');
     $node = $this->drupalGetNodeByTitle($node_title);
-    $this->assertEqual($node->getTitle(), $edit['title[0][value]']);
+    $this->assertEqual($edit['title[0][value]'], $node->getTitle());
 
     // Test that we cannot set a menu item from a menu that is not set as
     // available.

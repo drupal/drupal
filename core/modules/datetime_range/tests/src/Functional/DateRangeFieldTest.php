@@ -1033,12 +1033,7 @@ class DateRangeFieldTest extends DateTestBase {
 
     // Check if default_date has been stored successfully.
     $config_entity = $this->config('field.field.node.date_content.' . $field_name)->get();
-    $this->assertEqual($config_entity['default_value'][0], [
-      'default_date_type' => 'now',
-      'default_date' => 'now',
-      'default_end_date_type' => 'now',
-      'default_end_date' => 'now',
-    ], 'Default value has been stored successfully');
+    $this->assertEqual(['default_date_type' => 'now', 'default_date' => 'now', 'default_end_date_type' => 'now', 'default_end_date' => 'now'], $config_entity['default_value'][0], 'Default value has been stored successfully');
 
     // Clear field cache in order to avoid stale cache values.
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
@@ -1046,8 +1041,8 @@ class DateRangeFieldTest extends DateTestBase {
     // Create a new node to check that datetime field default value is today.
     $new_node = Node::create(['type' => 'date_content']);
     $expected_date = new DrupalDateTime('now', DateTimeItemInterface::STORAGE_TIMEZONE);
-    $this->assertEqual($new_node->get($field_name)->offsetGet(0)->value, $expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT));
-    $this->assertEqual($new_node->get($field_name)->offsetGet(0)->end_value, $expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT));
+    $this->assertEqual($expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT), $new_node->get($field_name)->offsetGet(0)->value);
+    $this->assertEqual($expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT), $new_node->get($field_name)->offsetGet(0)->end_value);
 
     // Set an invalid relative default_value to test validation.
     $field_edit = [
@@ -1088,12 +1083,7 @@ class DateRangeFieldTest extends DateTestBase {
 
     // Check if default_date has been stored successfully.
     $config_entity = $this->config('field.field.node.date_content.' . $field_name)->get();
-    $this->assertEqual($config_entity['default_value'][0], [
-      'default_date_type' => 'relative',
-      'default_date' => '+45 days',
-      'default_end_date_type' => 'relative',
-      'default_end_date' => '+90 days',
-    ], 'Default value has been stored successfully');
+    $this->assertEqual(['default_date_type' => 'relative', 'default_date' => '+45 days', 'default_end_date_type' => 'relative', 'default_end_date' => '+90 days'], $config_entity['default_value'][0], 'Default value has been stored successfully');
 
     // Clear field cache in order to avoid stale cache values.
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
@@ -1102,8 +1092,8 @@ class DateRangeFieldTest extends DateTestBase {
     $new_node = Node::create(['type' => 'date_content']);
     $expected_start_date = new DrupalDateTime('+45 days', DateTimeItemInterface::STORAGE_TIMEZONE);
     $expected_end_date = new DrupalDateTime('+90 days', DateTimeItemInterface::STORAGE_TIMEZONE);
-    $this->assertEqual($new_node->get($field_name)->offsetGet(0)->value, $expected_start_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT));
-    $this->assertEqual($new_node->get($field_name)->offsetGet(0)->end_value, $expected_end_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT));
+    $this->assertEqual($expected_start_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT), $new_node->get($field_name)->offsetGet(0)->value);
+    $this->assertEqual($expected_end_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT), $new_node->get($field_name)->offsetGet(0)->end_value);
 
     // Remove default value.
     $field_edit = [

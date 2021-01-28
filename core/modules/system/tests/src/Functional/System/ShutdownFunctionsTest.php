@@ -47,8 +47,8 @@ class ShutdownFunctionsTest extends BrowserTestBase {
       // We need to wait to ensure that the shutdown functions have fired.
       sleep(1);
     }
-    $this->assertEqual(\Drupal::state()->get('_system_test_first_shutdown_function'), [$arg1, $arg2]);
-    $this->assertEqual(\Drupal::state()->get('_system_test_second_shutdown_function'), [$arg1, $arg2]);
+    $this->assertEqual([$arg1, $arg2], \Drupal::state()->get('_system_test_first_shutdown_function'));
+    $this->assertEqual([$arg1, $arg2], \Drupal::state()->get('_system_test_second_shutdown_function'));
 
     if (!$server_using_fastcgi) {
       // Make sure exceptions displayed through

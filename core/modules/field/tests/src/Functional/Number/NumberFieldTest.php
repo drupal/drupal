@@ -186,7 +186,7 @@ class NumberFieldTest extends BrowserTestBase {
       'indexes' => [],
       'foreign keys' => [],
     ];
-    $this->assertEqual($storage->getSchema(), $expected);
+    $this->assertEqual($expected, $storage->getSchema());
 
     // Display creation form.
     $this->drupalGet('entity_test/add');

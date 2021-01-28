@@ -87,7 +87,7 @@ class LanguageSelectorTranslatableTest extends BrowserTestBase {
     $elements = $this->xpath('//select[@id=:id]//option[@value=:option]', [':id' => 'edit-settings-user-user-settings-language-langcode', ':option' => 'en']);
 
     // Check that the language text is translated.
-    $this->assertEqual($elements[0]->getText(), $name_translation, 'Checking the option string English is translated to Spanish.');
+    $this->assertEqual($name_translation, $elements[0]->getText(), 'Checking the option string English is translated to Spanish.');
   }
 
 }

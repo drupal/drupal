@@ -117,9 +117,9 @@ class MigrateMessageTest extends KernelTestBase implements MigrateMessageInterfa
     $count = 0;
     foreach ($this->migration->getIdMap()->getMessages() as $message) {
       ++$count;
-      $this->assertEqual($message, $expected_message);
+      $this->assertEqual($expected_message, $message);
     }
-    $this->assertEqual($count, 1);
+    $this->assertEqual(1, $count);
   }
 
   /**

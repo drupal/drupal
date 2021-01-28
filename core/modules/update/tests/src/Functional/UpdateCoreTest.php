@@ -778,19 +778,19 @@ class UpdateCoreTest extends UpdateTestBase {
       'name' => 'bbb_update_test',
     ];
     $queue = \Drupal::queue('update_fetch_tasks');
-    $this->assertEqual($queue->numberOfItems(), 0, 'Queue is empty');
+    $this->assertEqual(0, $queue->numberOfItems(), 'Queue is empty');
     update_create_fetch_task($projecta);
-    $this->assertEqual($queue->numberOfItems(), 1, 'Queue contains one item');
+    $this->assertEqual(1, $queue->numberOfItems(), 'Queue contains one item');
     update_create_fetch_task($projectb);
-    $this->assertEqual($queue->numberOfItems(), 2, 'Queue contains two items');
+    $this->assertEqual(2, $queue->numberOfItems(), 'Queue contains two items');
     // Try to add a project again.
     update_create_fetch_task($projecta);
-    $this->assertEqual($queue->numberOfItems(), 2, 'Queue still contains two items');
+    $this->assertEqual(2, $queue->numberOfItems(), 'Queue still contains two items');
 
     // Clear storage and try again.
     update_storage_clear();
     update_create_fetch_task($projecta);
-    $this->assertEqual($queue->numberOfItems(), 2, 'Queue contains two items');
+    $this->assertEqual(2, $queue->numberOfItems(), 'Queue contains two items');
   }
 
   /**

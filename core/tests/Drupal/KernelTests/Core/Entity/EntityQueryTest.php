@@ -582,7 +582,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->condition($this->figures . '.shape', 'triangle');
 
     // We added 2 conditions so count should be 2.
-    $this->assertEqual($and_condition_group->count(), 2);
+    $this->assertEqual(2, $and_condition_group->count());
 
     // Add an OR condition group with 2 conditions in it.
     $or_condition_group = $query->orConditionGroup()
@@ -590,7 +590,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->condition($this->figures . '.shape', 'triangle');
 
     // We added 2 conditions so count should be 2.
-    $this->assertEqual($or_condition_group->count(), 2);
+    $this->assertEqual(2, $or_condition_group->count());
   }
 
   /**
@@ -740,7 +740,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->execute();
 
     global $efq_test_metadata;
-    $this->assertEqual($efq_test_metadata, 'bar', 'Tag and metadata propagated to the SQL query object.');
+    $this->assertEqual('bar', $efq_test_metadata, 'Tag and metadata propagated to the SQL query object.');
   }
 
   /**
@@ -1055,14 +1055,14 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->condition('id', [14], 'IN')
       ->condition("$this->figures.color", $current_values[0]['color'])
       ->execute();
-    $this->assertEqual($result, [14 => '14']);
+    $this->assertEqual([14 => '14'], $result);
     $result = $this->storage
       ->getQuery()
       ->condition('id', [14], 'IN')
       ->condition("$this->figures.color", 'red')
       ->allRevisions()
       ->execute();
-    $this->assertEqual($result, [16 => '14']);
+    $this->assertEqual([16 => '14'], $result);
 
     // Add another pending revision on the same entity and repeat the checks.
     $entity->setNewRevision(TRUE);

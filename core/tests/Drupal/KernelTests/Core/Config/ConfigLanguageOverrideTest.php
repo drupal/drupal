@@ -94,20 +94,20 @@ class ConfigLanguageOverrideTest extends KernelTestBase {
     \Drupal::languageManager()->setConfigOverrideLanguage(\Drupal::languageManager()->getLanguage('en'));
     \Drupal::configFactory()->rename('config_test.foo', 'config_test.bar');
     $config = \Drupal::config('config_test.bar');
-    $this->assertEqual($config->get('value'), ['key' => 'original']);
+    $this->assertEqual(['key' => 'original'], $config->get('value'));
     $override = \Drupal::languageManager()->getLanguageConfigOverride('de', 'config_test.foo');
     $this->assertTrue($override->isNew());
     $this->assertNull($override->get('value'));
     $override = \Drupal::languageManager()->getLanguageConfigOverride('de', 'config_test.bar');
     $this->assertFalse($override->isNew());
-    $this->assertEqual($override->get('value'), ['key' => 'override']);
+    $this->assertEqual(['key' => 'override'], $override->get('value'));
     $override = \Drupal::languageManager()->getLanguageConfigOverride('fr', 'config_test.bar');
     $this->assertFalse($override->isNew());
-    $this->assertEqual($override->get('value'), ['key' => 'override']);
+    $this->assertEqual(['key' => 'override'], $override->get('value'));
 
     // Ensure changing data in the config will update the overrides.
     $config = \Drupal::configFactory()->getEditable('config_test.bar')->clear('value.key')->save();
-    $this->assertEqual($config->get('value'), []);
+    $this->assertEqual([], $config->get('value'));
     $override = \Drupal::languageManager()->getLanguageConfigOverride('de', 'config_test.bar');
     $this->assertFalse($override->isNew());
     $this->assertNull($override->get('value'));

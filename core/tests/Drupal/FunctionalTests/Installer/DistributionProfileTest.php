@@ -77,8 +77,8 @@ class DistributionProfileTest extends InstallerTestBase {
     $this->assertText($this->rootUser->getAccountName());
 
     // Confirm that Drupal recognizes this distribution as the current profile.
-    $this->assertEqual(\Drupal::installProfile(), 'my_distro');
-    $this->assertEqual($this->config('core.extension')->get('profile'), 'my_distro', 'The install profile has been written to core.extension configuration.');
+    $this->assertEqual('my_distro', \Drupal::installProfile());
+    $this->assertEqual('my_distro', $this->config('core.extension')->get('profile'), 'The install profile has been written to core.extension configuration.');
   }
 
 }

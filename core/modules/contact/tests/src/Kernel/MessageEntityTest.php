@@ -38,9 +38,9 @@ class MessageEntityTest extends EntityKernelTestBase {
     $message = $message_storage->create(['contact_form' => 'feedback']);
 
     // Check for empty values first.
-    $this->assertEqual($message->getMessage(), '');
-    $this->assertEqual($message->getSenderName(), '');
-    $this->assertEqual($message->getSenderMail(), '');
+    $this->assertEqual('', $message->getMessage());
+    $this->assertEqual('', $message->getSenderName());
+    $this->assertEqual('', $message->getSenderMail());
     $this->assertFalse($message->copySender());
 
     // Check for default values.
@@ -53,9 +53,9 @@ class MessageEntityTest extends EntityKernelTestBase {
     $message->setSenderMail('sender_mail');
     $message->setCopySender(TRUE);
 
-    $this->assertEqual($message->getMessage(), 'welcome_message');
-    $this->assertEqual($message->getSenderName(), 'sender_name');
-    $this->assertEqual($message->getSenderMail(), 'sender_mail');
+    $this->assertEqual('welcome_message', $message->getMessage());
+    $this->assertEqual('sender_name', $message->getSenderName());
+    $this->assertEqual('sender_mail', $message->getSenderMail());
     $this->assertTrue($message->copySender());
 
     $no_access_user = $this->createUser(['uid' => 2]);

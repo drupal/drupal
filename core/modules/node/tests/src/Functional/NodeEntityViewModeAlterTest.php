@@ -55,7 +55,7 @@ class NodeEntityViewModeAlterTest extends NodeTestBase {
 
     // Test that the correct build mode has been set.
     $build = $this->buildEntityView($node);
-    $this->assertEqual($build['#view_mode'], 'teaser', 'The view mode has correctly been set to teaser.');
+    $this->assertEqual('teaser', $build['#view_mode'], 'The view mode has correctly been set to teaser.');
   }
 
 }

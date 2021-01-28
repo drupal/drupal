@@ -32,7 +32,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
       ->condition('pid', $subquery, 'IN');
 
     $num_deleted = $delete->execute();
-    $this->assertEqual($num_deleted, 1, 'Deleted 1 record.');
+    $this->assertEqual(1, $num_deleted, 'Deleted 1 record.');
 
     $num_records_after = $this->connection->query('SELECT COUNT(*) FROM {test_task}')->fetchField();
     $this->assertEqual($num_records_before, $num_records_after + $num_deleted, 'Deletion adds up.');

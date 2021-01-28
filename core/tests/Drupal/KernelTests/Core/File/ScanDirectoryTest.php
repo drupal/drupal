@@ -57,16 +57,16 @@ class ScanDirectoryTest extends FileTestBase {
     // Check the first file.
     $file = reset($all_files);
     $this->assertEqual(key($all_files), $file->uri, 'Correct array key was used for the first returned file.');
-    $this->assertEqual($file->uri, $this->path . '/javascript-1.txt', 'First file name was set correctly.');
-    $this->assertEqual($file->filename, 'javascript-1.txt', 'First basename was set correctly');
-    $this->assertEqual($file->name, 'javascript-1', 'First name was set correctly.');
+    $this->assertEqual($this->path . '/javascript-1.txt', $file->uri, 'First file name was set correctly.');
+    $this->assertEqual('javascript-1.txt', $file->filename, 'First basename was set correctly');
+    $this->assertEqual('javascript-1', $file->name, 'First name was set correctly.');
 
     // Check the second file.
     $file = next($all_files);
     $this->assertEqual(key($all_files), $file->uri, 'Correct array key was used for the second returned file.');
-    $this->assertEqual($file->uri, $this->path . '/javascript-2.script', 'Second file name was set correctly.');
-    $this->assertEqual($file->filename, 'javascript-2.script', 'Second basename was set correctly');
-    $this->assertEqual($file->name, 'javascript-2', 'Second name was set correctly.');
+    $this->assertEqual($this->path . '/javascript-2.script', $file->uri, 'Second file name was set correctly.');
+    $this->assertEqual('javascript-2.script', $file->filename, 'Second basename was set correctly');
+    $this->assertEqual('javascript-2', $file->name, 'Second name was set correctly.');
   }
 
   /**
