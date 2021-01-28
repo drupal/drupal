@@ -61,3 +61,10 @@ function views_post_update_rename_default_display_setting() {
   $config->clear('ui.show.master_display');
   $config->save();
 }
+
+/**
+ * Clear caches due to removal of sorting for global custom text field.
+ */
+function views_post_update_remove_sorting_global_text_field() {
+  // Empty post-update hook.
+}
