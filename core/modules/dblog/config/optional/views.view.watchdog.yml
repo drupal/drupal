@@ -83,8 +83,6 @@ display:
             link: link
           info:
             nothing:
-              sortable: false
-              default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false

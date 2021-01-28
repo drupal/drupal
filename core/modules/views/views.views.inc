@@ -46,6 +46,7 @@ function views_views_data() {
     'help' => t('Provide custom text or link.'),
     'field' => [
       'id' => 'custom',
+      'click sortable' => FALSE,
     ],
   ];
 
