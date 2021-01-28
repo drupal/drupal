@@ -51,3 +51,10 @@ function views_post_update_field_names_for_multivalue_fields(&$sandbox = NULL) {
 function views_post_update_configuration_entity_relationships() {
   // Empty update to clear Views data.
 }
+
+/**
+ * Clear caches due to removal of sorting for global custom text field.
+ */
+function views_post_update_remove_sorting_global_text_field() {
+  // Empty post-update hook.
+}
