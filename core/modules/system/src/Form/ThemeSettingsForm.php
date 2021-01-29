@@ -315,7 +315,7 @@ class ThemeSettingsForm extends ConfigFormBase {
           $local_file = $this->themeManager->getActiveTheme()->getPath() . '/' . $default;
         }
 
-        $element['#description'] = t('Enter a path to an image. Drupal will look for the file relative to the Drupal root or the public file system. Explicitly using <code>public://</code> before the path will only look in the public file system. Examples: <code>@local-file</code> or <code>@explicit-file</code>', [
+        $element['#description'] = $this->t('Examples: <code>@implicit-public-file</code> (for a file in the public filesystem), <code>@explicit-file</code>, or <code>@local-file</code>.', [
           '@implicit-public-file' => isset($friendly_path) ? $friendly_path : $default,
           '@explicit-file' => StreamWrapperManager::getScheme($original_path) !== FALSE ? $original_path : 'public://' . $default,
           '@local-file' => $local_file,
