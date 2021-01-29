@@ -58,7 +58,7 @@ class ViewsEscapingTest extends ViewTestBase {
     $this->config('system.theme')
       ->set('default', 'views_test_theme')
       ->save();
-    $this->assertEqual($this->config('system.theme')->get('default'), 'views_test_theme');
+    $this->assertEqual('views_test_theme', $this->config('system.theme')->get('default'));
 
     $this->drupalGet('test_page_display_200');
 

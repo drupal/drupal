@@ -68,14 +68,14 @@ class ContactStorageTest extends ContactSitewideTest {
     $messages = Message::loadMultiple();
     /** @var \Drupal\contact\Entity\Message $message */
     $message = reset($messages);
-    $this->assertEqual($message->getContactForm()->id(), $id);
+    $this->assertEqual($id, $message->getContactForm()->id());
     $this->assertTrue($message->getContactForm()->getThirdPartySetting('contact_storage_test', 'send_a_pony', FALSE));
-    $this->assertEqual($message->getSenderName(), $name);
-    $this->assertEqual($message->getSubject(), $subject);
-    $this->assertEqual($message->getSenderMail(), $mail);
+    $this->assertEqual($name, $message->getSenderName());
+    $this->assertEqual($subject, $message->getSubject());
+    $this->assertEqual($mail, $message->getSenderMail());
 
     $config = $this->config("contact.form.$id");
-    $this->assertEqual($config->get('id'), $id);
+    $this->assertEqual($id, $config->get('id'));
   }
 
 }

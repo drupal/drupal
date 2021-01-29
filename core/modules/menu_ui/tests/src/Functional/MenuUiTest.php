@@ -997,8 +997,8 @@ class MenuUiTest extends BrowserTestBase {
     ], 'Save block');
     $block = Block::load($block_id);
     $settings = $block->getPlugin()->getConfiguration();
-    $this->assertEqual($settings['depth'], 3);
-    $this->assertEqual($settings['level'], 2);
+    $this->assertEqual(3, $settings['depth']);
+    $this->assertEqual(2, $settings['level']);
     // Reset settings.
     $block->getPlugin()->setConfigurationValue('depth', 0);
     $block->getPlugin()->setConfigurationValue('level', 1);

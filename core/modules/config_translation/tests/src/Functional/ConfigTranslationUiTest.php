@@ -402,7 +402,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     foreach ($captured_emails as $email) {
       if ($email['id'] == 'contact_page_autoreply') {
         // Trim because we get an added newline for the body.
-        $this->assertEqual(trim($email['body']), 'Thank you for your mail - ' . $email['langcode']);
+        $this->assertEqual('Thank you for your mail - ' . $email['langcode'], trim($email['body']));
       }
     }
 
@@ -501,7 +501,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       // Formatting the date 8 / 27 / 1985 @ 13:37 EST with pattern D should
       // display "Tue".
       $formatted_date = $this->container->get('date.formatter')->format(494015820, $id, NULL, 'America/New_York', 'fr');
-      $this->assertEqual($formatted_date, 'Tue', 'Got the right formatted date using the date format translation pattern.');
+      $this->assertEqual('Tue', $formatted_date, 'Got the right formatted date using the date format translation pattern.');
     }
   }
 
@@ -1157,9 +1157,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $textarea = reset($textarea);
     $this->assertInstanceOf(NodeElement::class, $textarea);
     $expected = 'This field has been disabled because you do not have sufficient permissions to edit it.';
-    $this->assertEqual($textarea->getText(), $expected, new FormattableMarkup('Disabled textarea @id hides text in an inaccessible text format.', [
-      '@id' => $id,
-    ]));
+    $this->assertEqual($expected, $textarea->getText(), new FormattableMarkup('Disabled textarea @id hides text in an inaccessible text format.', ['@id' => $id]));
     // Make sure the text format select is not shown.
     $select_id = str_replace('value', 'format--2', $id);
     $xpath = $this->assertSession()->buildXPathQuery('//select[@id=:id]', [':id' => $select_id]);

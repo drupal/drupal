@@ -80,7 +80,7 @@ class UserEditTest extends BrowserTestBase {
     $this->assertRaw(t("The changes have been saved."));
 
     // Make sure the changed timestamp is updated.
-    $this->assertEqual($user1->getChangedTime(), REQUEST_TIME, 'Changing a user sets "changed" timestamp.');
+    $this->assertEqual(REQUEST_TIME, $user1->getChangedTime(), 'Changing a user sets "changed" timestamp.');
 
     // Make sure the user can log in with their new password.
     $this->drupalLogout();

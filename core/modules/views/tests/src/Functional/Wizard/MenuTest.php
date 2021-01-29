@@ -49,7 +49,7 @@ class MenuTest extends WizardTestBase {
     /** @var \Drupal\Core\Menu\MenuLinkInterface $link */
     $link = $menu_link_manager->createInstance('views_view:views.' . $view['id'] . '.page_1');
     $url = $link->getUrlObject();
-    $this->assertEqual($url->getRouteName(), 'view.' . $view['id'] . '.page_1', new FormattableMarkup('Found a link to %path in the main menu', ['%path' => $view['page[path]']]));
+    $this->assertEqual('view.' . $view['id'] . '.page_1', $url->getRouteName(), new FormattableMarkup('Found a link to %path in the main menu', ['%path' => $view['page[path]']]));
     $metadata = $link->getMetaData();
     $this->assertEqual(['view_id' => $view['id'], 'display_id' => 'page_1'], $metadata);
   }

@@ -183,7 +183,7 @@ class ContactSitewideTest extends BrowserTestBase {
     // Check that the form was created in site default language.
     $langcode = $this->config('contact.form.' . $id)->get('langcode');
     $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
-    $this->assertEqual($langcode, $default_langcode);
+    $this->assertEqual($default_langcode, $langcode);
 
     // Make sure the newly created form is included in the list of forms.
     $this->assertSession()->pageTextMatchesCount(2, '/' . $label . '/');
@@ -195,9 +195,9 @@ class ContactSitewideTest extends BrowserTestBase {
     // Test update contact form.
     $this->updateContactForm($id, $label = $this->randomMachineName(16), implode(',', [$recipients[0], $recipients[1]]), $reply = $this->randomMachineName(30), FALSE, 'Your message has been sent.', '/user');
     $config = $this->config('contact.form.' . $id)->get();
-    $this->assertEqual($config['label'], $label);
-    $this->assertEqual($config['recipients'], [$recipients[0], $recipients[1]]);
-    $this->assertEqual($config['reply'], $reply);
+    $this->assertEqual($label, $config['label']);
+    $this->assertEqual([$recipients[0], $recipients[1]], $config['recipients']);
+    $this->assertEqual($reply, $config['reply']);
     $this->assertNotEquals($this->config('contact.settings')->get('default_form'), $id);
     $this->assertText('Contact form ' . $label . ' has been updated.');
     // Ensure the label is displayed on the contact page for this form.
@@ -336,7 +336,7 @@ class ContactSitewideTest extends BrowserTestBase {
     $this->submitForm($edit, 'Send message');
     $mails = $this->getMails();
     $mail = array_pop($mails);
-    $this->assertEqual($mail['subject'], t('[@label] @subject', ['@label' => $label, '@subject' => $edit['subject[0][value]']]));
+    $this->assertEqual(t('[@label] @subject', ['@label' => $label, '@subject' => $edit['subject[0][value]']]), $mail['subject']);
     $this->assertStringContainsString($field_label, $mail['body']);
     $this->assertStringContainsString($edit[$field_name . '[0][value]'], $mail['body']);
 
@@ -455,7 +455,7 @@ class ContactSitewideTest extends BrowserTestBase {
     // We are testing the auto-reply, so there should be one email going to the sender.
     $captured_emails = $this->getMails(['id' => 'contact_page_autoreply', 'to' => $email]);
     $this->assertCount(1, $captured_emails);
-    $this->assertEqual(trim($captured_emails[0]['body']), trim(MailFormatHelper::htmlToText($foo_autoreply)));
+    $this->assertEqual(trim(MailFormatHelper::htmlToText($foo_autoreply)), trim($captured_emails[0]['body']));
 
     // Test the auto-reply for form 'bar'.
     $email = $this->randomMachineName(32) . '@example.com';
@@ -464,7 +464,7 @@ class ContactSitewideTest extends BrowserTestBase {
     // Auto-reply for form 'bar' should result in one auto-reply email to the sender.
     $captured_emails = $this->getMails(['id' => 'contact_page_autoreply', 'to' => $email]);
     $this->assertCount(1, $captured_emails);
-    $this->assertEqual(trim($captured_emails[0]['body']), trim(MailFormatHelper::htmlToText($bar_autoreply)));
+    $this->assertEqual(trim(MailFormatHelper::htmlToText($bar_autoreply)), trim($captured_emails[0]['body']));
 
     // Verify that no auto-reply is sent when the auto-reply field is left blank.
     $email = $this->randomMachineName(32) . '@example.com';

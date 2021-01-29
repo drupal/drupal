@@ -62,10 +62,10 @@ class FilterDefaultFormatTest extends BrowserTestBase {
     // the user has access to.
     $actual = filter_default_format($first_user);
     $expected = $first_format->id();
-    $this->assertEqual($actual, $expected, "First user's default format $actual is the expected lowest weighted format $expected that the user has access to.");
+    $this->assertEqual($expected, $actual, "First user's default format {$actual} is the expected lowest weighted format {$expected} that the user has access to.");
     $actual = filter_default_format($second_user);
     $expected = $second_format->id();
-    $this->assertEqual($actual, $expected, "Second user's default format $actual is the expected lowest weighted format $expected that the user has access to, and different to the first user's.");
+    $this->assertEqual($expected, $actual, "Second user's default format {$actual} is the expected lowest weighted format {$expected} that the user has access to, and different to the first user's.");
 
     // Reorder the two formats, and check that both users now have the same
     // default.

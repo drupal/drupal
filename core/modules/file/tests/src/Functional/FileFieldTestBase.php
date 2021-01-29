@@ -218,7 +218,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
     $this->container->get('entity_type.manager')->getStorage('file')->resetCache();
     $db_file = File::load($file->id());
     $message = isset($message) ? $message : new FormattableMarkup('File %file exists in database at the correct path.', ['%file' => $file->getFileUri()]);
-    $this->assertEqual($db_file->getFileUri(), $file->getFileUri(), $message);
+    $this->assertEqual($file->getFileUri(), $db_file->getFileUri(), $message);
   }
 
   /**

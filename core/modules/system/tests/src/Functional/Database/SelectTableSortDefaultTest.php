@@ -39,8 +39,8 @@ class SelectTableSortDefaultTest extends DatabaseTestBase {
       $first = array_shift($data->tasks);
       $last = array_pop($data->tasks);
 
-      $this->assertEqual($first->task, $sort['first'], 'Items appear in the correct order.');
-      $this->assertEqual($last->task, $sort['last'], 'Items appear in the correct order.');
+      $this->assertEqual($sort['first'], $first->task, 'Items appear in the correct order.');
+      $this->assertEqual($sort['last'], $last->task, 'Items appear in the correct order.');
     }
   }
 
@@ -67,8 +67,8 @@ class SelectTableSortDefaultTest extends DatabaseTestBase {
       $first = array_shift($data->tasks);
       $last = array_pop($data->tasks);
 
-      $this->assertEqual($first->task, $sort['first'], new FormattableMarkup('Items appear in the correct order sorting by @field @sort.', ['@field' => $sort['field'], '@sort' => $sort['sort']]));
-      $this->assertEqual($last->task, $sort['last'], new FormattableMarkup('Items appear in the correct order sorting by @field @sort.', ['@field' => $sort['field'], '@sort' => $sort['sort']]));
+      $this->assertEqual($sort['first'], $first->task, new FormattableMarkup('Items appear in the correct order sorting by @field @sort.', ['@field' => $sort['field'], '@sort' => $sort['sort']]));
+      $this->assertEqual($sort['last'], $last->task, new FormattableMarkup('Items appear in the correct order sorting by @field @sort.', ['@field' => $sort['field'], '@sort' => $sort['sort']]));
     }
   }
 

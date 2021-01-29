@@ -35,7 +35,7 @@ class TableSortExtenderTest extends KernelTestBase {
     \Drupal::getContainer()->get('request_stack')->push($request);
     $ts = TableSort::getContextFromRequest($headers, $request);
     $this->verbose(strtr('$ts: <pre>!ts</pre>', ['!ts' => Html::escape(var_export($ts, TRUE))]));
-    $this->assertEqual($ts, $expected_ts, 'Simple table headers sorted correctly.');
+    $this->assertEqual($expected_ts, $ts, 'Simple table headers sorted correctly.');
 
     // Test with simple table headers plus $_GET parameters that should _not_
     // override the default.
@@ -48,7 +48,7 @@ class TableSortExtenderTest extends KernelTestBase {
     \Drupal::getContainer()->get('request_stack')->push($request);
     $ts = TableSort::getContextFromRequest($headers, $request);
     $this->verbose(strtr('$ts: <pre>!ts</pre>', ['!ts' => Html::escape(var_export($ts, TRUE))]));
-    $this->assertEqual($ts, $expected_ts, 'Simple table headers plus non-overriding $_GET parameters sorted correctly.');
+    $this->assertEqual($expected_ts, $ts, 'Simple table headers plus non-overriding $_GET parameters sorted correctly.');
 
     // Test with simple table headers plus $_GET parameters that _should_
     // override the default.
@@ -64,7 +64,7 @@ class TableSortExtenderTest extends KernelTestBase {
     $expected_ts['query'] = ['alpha' => 'beta'];
     $ts = TableSort::getContextFromRequest($headers, $request);
     $this->verbose(strtr('$ts: <pre>!ts</pre>', ['!ts' => Html::escape(var_export($ts, TRUE))]));
-    $this->assertEqual($ts, $expected_ts, 'Simple table headers plus $_GET parameters sorted correctly.');
+    $this->assertEqual($expected_ts, $ts, 'Simple table headers plus $_GET parameters sorted correctly.');
 
     // Test complex table headers.
 
@@ -96,7 +96,7 @@ class TableSortExtenderTest extends KernelTestBase {
       'query' => [],
     ];
     $this->verbose(strtr('$ts: <pre>!ts</pre>', ['!ts' => Html::escape(var_export($ts, TRUE))]));
-    $this->assertEqual($ts, $expected_ts, 'Complex table headers sorted correctly.');
+    $this->assertEqual($expected_ts, $ts, 'Complex table headers sorted correctly.');
 
     // Test complex table headers plus $_GET parameters that should _not_
     // override the default.
@@ -115,7 +115,7 @@ class TableSortExtenderTest extends KernelTestBase {
       'query' => [],
     ];
     $this->verbose(strtr('$ts: <pre>!ts</pre>', ['!ts' => Html::escape(var_export($ts, TRUE))]));
-    $this->assertEqual($ts, $expected_ts, 'Complex table headers plus non-overriding $_GET parameters sorted correctly.');
+    $this->assertEqual($expected_ts, $ts, 'Complex table headers plus non-overriding $_GET parameters sorted correctly.');
 
     // Test complex table headers plus $_GET parameters that _should_
     // override the default.

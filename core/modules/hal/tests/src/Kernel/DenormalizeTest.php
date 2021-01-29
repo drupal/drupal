@@ -27,7 +27,7 @@ class DenormalizeTest extends NormalizerTestBase {
       ],
     ];
     $denormalized = $this->serializer->denormalize($data_with_valid_type, $this->entityClass, $this->format);
-    $this->assertEqual(get_class($denormalized), $this->entityClass, 'Request with valid type results in creation of correct bundle.');
+    $this->assertEqual($this->entityClass, get_class($denormalized), 'Request with valid type results in creation of correct bundle.');
 
     // Multiple types.
     $data_with_multiple_types = [
@@ -43,7 +43,7 @@ class DenormalizeTest extends NormalizerTestBase {
       ],
     ];
     $denormalized = $this->serializer->denormalize($data_with_multiple_types, $this->entityClass, $this->format);
-    $this->assertEqual(get_class($denormalized), $this->entityClass, 'Request with multiple types results in creation of correct bundle.');
+    $this->assertEqual($this->entityClass, get_class($denormalized), 'Request with multiple types results in creation of correct bundle.');
 
     // Invalid type.
     $data_with_invalid_type = [
@@ -123,8 +123,8 @@ class DenormalizeTest extends NormalizerTestBase {
       ],
     ];
     $entity = $this->serializer->denormalize($data, $this->entityClass, $this->format);
-    $this->assertEqual($entity->field_test_text->count(), 1);
-    $this->assertEqual($entity->field_test_text->value, 'Llama');
+    $this->assertEqual(1, $entity->field_test_text->count());
+    $this->assertEqual('Llama', $entity->field_test_text->value);
 
     // Denormalize data that contains an empty entry for the field, and check
     // that the field is empty in the resulting entity.
@@ -137,7 +137,7 @@ class DenormalizeTest extends NormalizerTestBase {
       'field_test_text' => [],
     ];
     $entity = $this->serializer->denormalize($data, get_class($entity), $this->format, ['target_instance' => $entity]);
-    $this->assertEqual($entity->field_test_text->count(), 0);
+    $this->assertEqual(0, $entity->field_test_text->count());
   }
 
   /**

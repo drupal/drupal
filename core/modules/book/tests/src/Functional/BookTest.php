@@ -479,11 +479,11 @@ class BookTest extends BrowserTestBase {
     $this->drupalPostForm('node/' . $empty_book->id() . '/outline', $edit, 'Add to book outline');
     $node = \Drupal::entityTypeManager()->getStorage('node')->load($empty_book->id());
     // Test the book array.
-    $this->assertEqual($node->book['nid'], $empty_book->id());
-    $this->assertEqual($node->book['bid'], $empty_book->id());
-    $this->assertEqual($node->book['depth'], 1);
-    $this->assertEqual($node->book['p1'], $empty_book->id());
-    $this->assertEqual($node->book['pid'], '0');
+    $this->assertEqual($empty_book->id(), $node->book['nid']);
+    $this->assertEqual($empty_book->id(), $node->book['bid']);
+    $this->assertEqual(1, $node->book['depth']);
+    $this->assertEqual($empty_book->id(), $node->book['p1']);
+    $this->assertEqual('0', $node->book['pid']);
 
     // Create new book.
     $this->drupalLogin($this->bookAuthor);
@@ -503,11 +503,11 @@ class BookTest extends BrowserTestBase {
     $node = \Drupal::entityTypeManager()->getStorage('node')->load($node->id());
 
     // Test the book array.
-    $this->assertEqual($node->book['nid'], $node->id());
-    $this->assertEqual($node->book['bid'], $node->id());
-    $this->assertEqual($node->book['depth'], 1);
-    $this->assertEqual($node->book['p1'], $node->id());
-    $this->assertEqual($node->book['pid'], '0');
+    $this->assertEqual($node->id(), $node->book['nid']);
+    $this->assertEqual($node->id(), $node->book['bid']);
+    $this->assertEqual(1, $node->book['depth']);
+    $this->assertEqual($node->id(), $node->book['p1']);
+    $this->assertEqual('0', $node->book['pid']);
 
     // Test the form itself.
     $this->drupalGet('node/' . $node->id() . '/edit');
@@ -614,7 +614,7 @@ class BookTest extends BrowserTestBase {
     $this->assertText($this->book->label());
 
     $elements = $this->xpath('//table//ul[@class="dropbutton"]/li/a');
-    $this->assertEqual($elements[0]->getText(), 'View', 'View link is found from the list.');
+    $this->assertEqual('View', $elements[0]->getText(), 'View link is found from the list.');
     $this->assertEquals(count($nodes), count($elements), 'All the book pages are displayed on the book outline page.');
 
     // Unpublish a book in the hierarchy.
@@ -660,7 +660,7 @@ class BookTest extends BrowserTestBase {
     $this->drupalLogin($this->webUserWithoutNodeAccess);
     $book_node = $node_storage->load($this->book->id());
     $this->assertTrue(!empty($book_node->book));
-    $this->assertEqual($book_node->book['bid'], $this->book->id());
+    $this->assertEqual($this->book->id(), $book_node->book['bid']);
 
     // Reset the internal cache to retrigger the hook_node_load() call.
     $node_storage->resetCache();
@@ -668,7 +668,7 @@ class BookTest extends BrowserTestBase {
     $this->drupalLogin($this->webUser);
     $book_node = $node_storage->load($this->book->id());
     $this->assertTrue(!empty($book_node->book));
-    $this->assertEqual($book_node->book['bid'], $this->book->id());
+    $this->assertEqual($this->book->id(), $book_node->book['bid']);
   }
 
   /**

@@ -105,7 +105,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     $file1 = File::load($max_fid_after);
     $this->assertInstanceOf(File::class, $file1);
     // MIME type of the uploaded image may be either image/jpeg or image/png.
-    $this->assertEqual(substr($file1->getMimeType(), 0, 5), 'image', 'A MIME type was set.');
+    $this->assertEqual('image', substr($file1->getMimeType(), 0, 5), 'A MIME type was set.');
 
     // Reset the hook counters to get rid of the 'load' we just called.
     file_test_reset();
@@ -126,7 +126,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     $file2 = File::load($max_fid_after);
     $this->assertInstanceOf(File::class, $file2);
     // MIME type of the uploaded image may be either image/jpeg or image/png.
-    $this->assertEqual(substr($file2->getMimeType(), 0, 5), 'image', 'A MIME type was set.');
+    $this->assertEqual('image', substr($file2->getMimeType(), 0, 5), 'A MIME type was set.');
 
     // Load both files using File::loadMultiple().
     $files = File::loadMultiple([$file1->id(), $file2->id()]);

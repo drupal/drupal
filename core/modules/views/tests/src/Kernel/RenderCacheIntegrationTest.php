@@ -159,9 +159,9 @@ class RenderCacheIntegrationTest extends ViewsKernelTestBase {
 
       $result = $this->cssSelect('div.views-row');
       $count = count($result);
-      $this->assertEqual($count, 1);
+      $this->assertEqual(1, $count);
 
-      $this->assertEqual((string) $result[0]->div->span, (string) $entity->id());
+      $this->assertEqual((string) $entity->id(), (string) $result[0]->div->span);
     };
 
     // Execute the view once with a static renderable and one with a full

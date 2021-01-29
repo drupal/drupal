@@ -43,7 +43,7 @@ class DisplayExtenderUITest extends UITestBase {
     $view = Views::getView($view->storage->id());
     $view->initDisplay();
     $display_extender_options = $view->display_handler->getOption('display_extenders');
-    $this->assertEqual($display_extender_options['display_extender_test']['test_extender_test_option'], $random_text, 'Make sure that the display extender option got saved.');
+    $this->assertEqual($random_text, $display_extender_options['display_extender_test']['test_extender_test_option'], 'Make sure that the display extender option got saved.');
   }
 
 }

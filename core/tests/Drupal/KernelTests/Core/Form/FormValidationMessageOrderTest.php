@@ -84,10 +84,10 @@ class FormValidationMessageOrderTest extends KernelTestBase implements FormInter
     \Drupal::messenger()->deleteAll();
     $this->assertTrue(isset($messages['error']));
     $error_messages = $messages['error'];
-    $this->assertEqual($error_messages[0], 'Three field is required.');
-    $this->assertEqual($error_messages[1], 'Four field is required.');
-    $this->assertEqual($error_messages[2], 'Two field is required.');
-    $this->assertEqual($error_messages[3], 'One field is required.');
+    $this->assertEqual('Three field is required.', $error_messages[0]);
+    $this->assertEqual('Four field is required.', $error_messages[1]);
+    $this->assertEqual('Two field is required.', $error_messages[2]);
+    $this->assertEqual('One field is required.', $error_messages[3]);
   }
 
 }

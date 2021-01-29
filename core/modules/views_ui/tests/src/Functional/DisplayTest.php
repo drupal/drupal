@@ -61,7 +61,7 @@ class DisplayTest extends UITestBase {
 
     // Ensure the view displays are in the expected order in configuration.
     $expected_display_order = ['default', 'block_1', 'page_1'];
-    $this->assertEqual(array_keys(Views::getView($view['id'])->storage->get('display')), $expected_display_order, 'The correct display names are present.');
+    $this->assertEqual($expected_display_order, array_keys(Views::getView($view['id'])->storage->get('display')), 'The correct display names are present.');
     // Put the block display in front of the page display.
     $edit = [
       'displays[page_1][weight]' => 2,
@@ -72,12 +72,12 @@ class DisplayTest extends UITestBase {
 
     $view = Views::getView($view['id']);
     $displays = $view->storage->get('display');
-    $this->assertEqual($displays['default']['position'], 0, 'Make sure the master display comes first.');
-    $this->assertEqual($displays['block_1']['position'], 1, 'Make sure the block display comes before the page display.');
-    $this->assertEqual($displays['page_1']['position'], 2, 'Make sure the page display comes after the block display.');
+    $this->assertEqual(0, $displays['default']['position'], 'Make sure the default display comes first.');
+    $this->assertEqual(1, $displays['block_1']['position'], 'Make sure the block display comes before the page display.');
+    $this->assertEqual(2, $displays['page_1']['position'], 'Make sure the page display comes after the block display.');
 
     // Ensure the view displays are in the expected order in configuration.
-    $this->assertEqual(array_keys($view->storage->get('display')), $expected_display_order, 'The correct display names are present.');
+    $this->assertEqual($expected_display_order, array_keys($view->storage->get('display')), 'The correct display names are present.');
   }
 
   /**
@@ -141,7 +141,7 @@ class DisplayTest extends UITestBase {
     // Assert that the expected text is found in each area category.
     foreach ($areas as $type) {
       $element = $this->xpath('//div[contains(@class, :class)]/div', [':class' => $type]);
-      $this->assertEqual($element[0]->getHtml(), new FormattableMarkup('The selected display type does not use @type plugins', ['@type' => $type]));
+      $this->assertEqual(new FormattableMarkup('The selected display type does not use @type plugins', ['@type' => $type]), $element[0]->getHtml());
     }
   }
 
@@ -156,7 +156,7 @@ class DisplayTest extends UITestBase {
     // Test the link text displays 'None' and not 'Block 1'
     $this->drupalGet($path);
     $result = $this->xpath("//a[contains(@href, :path)]", [':path' => $link_display_path]);
-    $this->assertEqual($result[0]->getHtml(), t('None'), 'Make sure that the link option summary shows "None" by default.');
+    $this->assertEqual(t('None'), $result[0]->getHtml(), 'Make sure that the link option summary shows "None" by default.');
 
     $this->drupalGet($link_display_path);
     $this->assertSession()->checkboxChecked('edit-link-display-0');
@@ -167,7 +167,7 @@ class DisplayTest extends UITestBase {
     $this->drupalGet($path);
 
     $result = $this->xpath("//a[contains(@href, :path)]", [':path' => $link_display_path]);
-    $this->assertEqual($result[0]->getHtml(), 'Page', 'Make sure that the link option summary shows the right linked display.');
+    $this->assertEqual('Page', $result[0]->getHtml(), 'Make sure that the link option summary shows the right linked display.');
 
     $this->drupalPostForm($link_display_path, ['link_display' => 'custom_url', 'link_url' => 'a-custom-url'], 'Apply');
     // The form redirects to the master display.

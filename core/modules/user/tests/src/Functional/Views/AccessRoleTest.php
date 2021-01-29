@@ -139,7 +139,7 @@ class AccessRoleTest extends AccessTestBase {
     // $this->assertContains('user.roles', $build['#cache']['contexts']);
     // $this->assertEqual([], $build['#cache']['tags']);
     $this->assertEqual(Cache::PERMANENT, $build['#cache']['max-age']);
-    $this->assertEqual($result, '');
+    $this->assertEqual('', $result);
   }
 
 }

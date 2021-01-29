@@ -75,7 +75,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
     // Test the contents of each th cell.
     $expected_items = [t('Name'), t('Weight'), t('Operations')];
     foreach ($elements as $key => $element) {
-      $this->assertEqual($element->getText(), $expected_items[$key]);
+      $this->assertEqual($expected_items[$key], $element->getText());
     }
 
     // Look for test shortcuts in the table.
@@ -141,7 +141,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
     $this->drupalPostForm('user/' . $this->adminUser->id() . '/shortcuts', $edit, 'Change set');
     $current_set = shortcut_current_displayed_set($this->adminUser);
     $this->assertNotEquals($this->set->id(), $current_set->id(), 'A shortcut set can be switched to at the same time as it is created.');
-    $this->assertEqual($current_set->label(), $edit['label'], 'The new set is correctly assigned to the user.');
+    $this->assertEqual($edit['label'], $current_set->label(), 'The new set is correctly assigned to the user.');
   }
 
   /**
@@ -152,7 +152,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
     $this->drupalPostForm('user/' . $this->adminUser->id() . '/shortcuts', $edit, 'Change set');
     $this->assertText('The new set label is required.');
     $current_set = shortcut_current_displayed_set($this->adminUser);
-    $this->assertEqual($current_set->id(), $this->set->id(), 'Attempting to switch to a new shortcut set without providing a set name does not succeed.');
+    $this->assertEqual($this->set->id(), $current_set->id(), 'Attempting to switch to a new shortcut set without providing a set name does not succeed.');
     $field = $this->assertSession()->fieldExists('label');
     $this->assertTrue($field->hasClass('error'));
   }

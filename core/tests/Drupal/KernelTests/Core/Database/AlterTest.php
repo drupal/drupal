@@ -40,12 +40,12 @@ class AlterTest extends DatabaseTestBase {
 
     $this->assertCount(2, $records, 'Returned the correct number of rows.');
 
-    $this->assertEqual($records[0]->name, 'George', 'Correct data retrieved.');
-    $this->assertEqual($records[0]->$tid_field, 4, 'Correct data retrieved.');
-    $this->assertEqual($records[0]->$task_field, 'sing', 'Correct data retrieved.');
-    $this->assertEqual($records[1]->name, 'George', 'Correct data retrieved.');
-    $this->assertEqual($records[1]->$tid_field, 5, 'Correct data retrieved.');
-    $this->assertEqual($records[1]->$task_field, 'sleep', 'Correct data retrieved.');
+    $this->assertEqual('George', $records[0]->name, 'Correct data retrieved.');
+    $this->assertEqual(4, $records[0]->{$tid_field}, 'Correct data retrieved.');
+    $this->assertEqual('sing', $records[0]->{$task_field}, 'Correct data retrieved.');
+    $this->assertEqual('George', $records[1]->name, 'Correct data retrieved.');
+    $this->assertEqual(5, $records[1]->{$tid_field}, 'Correct data retrieved.');
+    $this->assertEqual('sleep', $records[1]->{$task_field}, 'Correct data retrieved.');
   }
 
   /**
@@ -67,10 +67,10 @@ class AlterTest extends DatabaseTestBase {
     $records = $result->fetchAll();
 
     $this->assertCount(1, $records, 'Returned the correct number of rows.');
-    $this->assertEqual($records[0]->$name_field, 'John', 'Correct data retrieved.');
-    $this->assertEqual($records[0]->$tid_field, 2, 'Correct data retrieved.');
-    $this->assertEqual($records[0]->$pid_field, 1, 'Correct data retrieved.');
-    $this->assertEqual($records[0]->$task_field, 'sleep', 'Correct data retrieved.');
+    $this->assertEqual('John', $records[0]->{$name_field}, 'Correct data retrieved.');
+    $this->assertEqual(2, $records[0]->{$tid_field}, 'Correct data retrieved.');
+    $this->assertEqual(1, $records[0]->{$pid_field}, 'Correct data retrieved.');
+    $this->assertEqual('sleep', $records[0]->{$task_field}, 'Correct data retrieved.');
   }
 
   /**
@@ -84,7 +84,7 @@ class AlterTest extends DatabaseTestBase {
     $query->addTag('database_test_alter_change_fields');
 
     $record = $query->execute()->fetch();
-    $this->assertEqual($record->$name_field, 'George', 'Correct data retrieved.');
+    $this->assertEqual('George', $record->{$name_field}, 'Correct data retrieved.');
     $this->assertFalse(isset($record->$age_field), 'Age field not found, as intended.');
   }
 
@@ -102,8 +102,8 @@ class AlterTest extends DatabaseTestBase {
     // Ensure that we got the right record.
     $record = $result->fetch();
 
-    $this->assertEqual($record->$name_field, 'George', 'Fetched name is correct.');
-    $this->assertEqual($record->$age_field, 27 * 3, 'Fetched age expression is correct.');
+    $this->assertEqual('George', $record->{$name_field}, 'Fetched name is correct.');
+    $this->assertEqual(27 * 3, $record->{$age_field}, 'Fetched age expression is correct.');
   }
 
   /**
@@ -120,7 +120,7 @@ class AlterTest extends DatabaseTestBase {
 
     $num_records = count($query->execute()->fetchAll());
 
-    $this->assertEqual($num_records, 4, 'Returned the correct number of rows.');
+    $this->assertEqual(4, $num_records, 'Returned the correct number of rows.');
   }
 
   /**
@@ -144,8 +144,8 @@ class AlterTest extends DatabaseTestBase {
     $name_field = $query->addField('pq', 'name');
 
     $record = $query->execute()->fetch();
-    $this->assertEqual($record->$name_field, 'George', 'Fetched name is correct.');
-    $this->assertEqual($record->$age_field, 27 * 3, 'Fetched age expression is correct.');
+    $this->assertEqual('George', $record->{$name_field}, 'Fetched name is correct.');
+    $this->assertEqual(27 * 3, $record->{$age_field}, 'Fetched age expression is correct.');
   }
 
 }

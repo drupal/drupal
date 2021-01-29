@@ -34,9 +34,9 @@ class InstallerNonDefaultDatabaseDriverTest extends InstallerTestBase {
 
     // Assert that we are using the database drivers from the driver_test module.
     $elements = $this->xpath('//label[@for="edit-driver-drivertestmysql"]');
-    $this->assertEqual(current($elements)->getText(), 'MySQL by the driver_test module');
+    $this->assertEqual('MySQL by the driver_test module', current($elements)->getText());
     $elements = $this->xpath('//label[@for="edit-driver-drivertestpgsql"]');
-    $this->assertEqual(current($elements)->getText(), 'PostgreSQL by the driver_test module');
+    $this->assertEqual('PostgreSQL by the driver_test module', current($elements)->getText());
 
     $settings = $this->parameters['forms']['install_settings_form'];
 

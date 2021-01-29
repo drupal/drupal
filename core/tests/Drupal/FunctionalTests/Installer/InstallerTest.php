@@ -34,7 +34,7 @@ class InstallerTest extends InstallerTestBase {
 
     // Ensure that the timezone is correct for sites under test after installing
     // interactively.
-    $this->assertEqual($this->config('system.date')->get('timezone.default'), 'Australia/Sydney');
+    $this->assertEqual('Australia/Sydney', $this->config('system.date')->get('timezone.default'));
 
     // Ensure the profile has a weight of 1000.
     $module_extension_list = \Drupal::service('extension.list.module');
@@ -87,9 +87,9 @@ class InstallerTest extends InstallerTestBase {
     // Assert that we use the by core supported database drivers by default and
     // not the ones from the driver_test module.
     $elements = $this->xpath('//label[@for="edit-driver-mysql"]');
-    $this->assertEqual(current($elements)->getText(), 'MySQL, MariaDB, Percona Server, or equivalent');
+    $this->assertEqual('MySQL, MariaDB, Percona Server, or equivalent', current($elements)->getText());
     $elements = $this->xpath('//label[@for="edit-driver-pgsql"]');
-    $this->assertEqual(current($elements)->getText(), 'PostgreSQL');
+    $this->assertEqual('PostgreSQL', current($elements)->getText());
 
     parent::setUpSettings();
   }

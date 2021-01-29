@@ -64,11 +64,11 @@ class WizardPluginBaseKernelTest extends ViewsKernelTestBase {
     $this->wizard->validateView($form, $form_state);
     $view = $this->wizard->createView($form, $form_state);
     $this->assertInstanceOf(ViewUI::class, $view);
-    $this->assertEqual($view->get('id'), $random_id);
-    $this->assertEqual($view->get('label'), $random_label);
-    $this->assertEqual($view->get('description'), $random_description);
-    $this->assertEqual($view->get('base_table'), 'views_test_data');
-    $this->assertEqual($view->get('langcode'), 'it');
+    $this->assertEqual($random_id, $view->get('id'));
+    $this->assertEqual($random_label, $view->get('label'));
+    $this->assertEqual($random_description, $view->get('description'));
+    $this->assertEqual('views_test_data', $view->get('base_table'));
+    $this->assertEqual('it', $view->get('langcode'));
   }
 
 }

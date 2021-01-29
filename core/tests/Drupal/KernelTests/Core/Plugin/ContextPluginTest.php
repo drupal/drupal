@@ -48,7 +48,7 @@ class ContextPluginTest extends KernelTestBase {
       $this->fail('The user context should not yet be set.');
     }
     catch (ContextException $e) {
-      $this->assertEqual($e->getMessage(), 'The not_exists context is not a valid context.');
+      $this->assertEqual('The not_exists context is not a valid context.', $e->getMessage());
     }
 
     // Test the getContextDefinitions() method.
@@ -79,7 +79,7 @@ class ContextPluginTest extends KernelTestBase {
     $user = User::create(['name' => $name]);
     $plugin->setContextValue('user', $user);
 
-    $this->assertEqual($plugin->getContextValue('user')->getAccountName(), $user->getAccountName());
+    $this->assertEqual($user->getAccountName(), $plugin->getContextValue('user')->getAccountName());
     $this->assertEqual($user->label(), $plugin->getTitle());
 
     // Test Optional context handling.
@@ -98,13 +98,13 @@ class ContextPluginTest extends KernelTestBase {
     $complex_plugin->setContextValue('node', $node);
     $context_wrappers = $complex_plugin->getContexts();
     // Make sure what came out of the wrappers is good.
-    $this->assertEqual($context_wrappers['user']->getContextValue()->label(), $user->label());
-    $this->assertEqual($context_wrappers['node']->getContextValue()->label(), $node->label());
+    $this->assertEqual($user->label(), $context_wrappers['user']->getContextValue()->label());
+    $this->assertEqual($node->label(), $context_wrappers['node']->getContextValue()->label());
 
     // Make sure what comes out of the context values is good.
     $contexts = $complex_plugin->getContextValues();
-    $this->assertEqual($contexts['user']->label(), $user->label());
-    $this->assertEqual($contexts['node']->label(), $node->label());
+    $this->assertEqual($user->label(), $contexts['user']->label());
+    $this->assertEqual($node->label(), $contexts['node']->label());
 
     // Test the title method for the complex context plugin.
     $this->assertEqual($user->label() . ' -- ' . $node->label(), $complex_plugin->getTitle());

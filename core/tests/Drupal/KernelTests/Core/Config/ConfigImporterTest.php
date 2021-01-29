@@ -108,7 +108,7 @@ class ConfigImporterTest extends KernelTestBase {
 
       $actual_error_log = $this->configImporter->getErrors();
       $expected_error_log = ['Site UUID in source storage does not match the target storage.'];
-      $this->assertEqual($actual_error_log, $expected_error_log);
+      $this->assertEqual($expected_error_log, $actual_error_log);
 
       $expected = static::FAIL_MESSAGE . PHP_EOL . 'Site UUID in source storage does not match the target storage.';
       $this->assertEquals($expected, $actual_message);
@@ -242,17 +242,17 @@ class ConfigImporterTest extends KernelTestBase {
 
     $entity_storage = \Drupal::entityTypeManager()->getStorage('config_test');
     $primary = $entity_storage->load('primary');
-    $this->assertEqual($primary->id(), 'primary');
-    $this->assertEqual($primary->uuid(), $values_primary['uuid']);
-    $this->assertEqual($primary->label(), $values_primary['label']);
+    $this->assertEqual('primary', $primary->id());
+    $this->assertEqual($values_primary['uuid'], $primary->uuid());
+    $this->assertEqual($values_primary['label'], $primary->label());
     $secondary = $entity_storage->load('secondary');
-    $this->assertEqual($secondary->id(), 'secondary');
-    $this->assertEqual($secondary->uuid(), $values_secondary['uuid']);
-    $this->assertEqual($secondary->label(), $values_secondary['label']);
+    $this->assertEqual('secondary', $secondary->id());
+    $this->assertEqual($values_secondary['uuid'], $secondary->uuid());
+    $this->assertEqual($values_secondary['label'], $secondary->label());
 
     $logs = $this->configImporter->getErrors();
     $this->assertCount(1, $logs);
-    $this->assertEqual($logs[0], new FormattableMarkup('Deleted and replaced configuration entity "@name"', ['@name' => $name_secondary]));
+    $this->assertEqual(new FormattableMarkup('Deleted and replaced configuration entity "@name"', ['@name' => $name_secondary]), $logs[0]);
   }
 
   /**
@@ -288,17 +288,17 @@ class ConfigImporterTest extends KernelTestBase {
 
     $entity_storage = \Drupal::entityTypeManager()->getStorage('config_test');
     $primary = $entity_storage->load('primary');
-    $this->assertEqual($primary->id(), 'primary');
-    $this->assertEqual($primary->uuid(), $values_primary['uuid']);
-    $this->assertEqual($primary->label(), $values_primary['label']);
+    $this->assertEqual('primary', $primary->id());
+    $this->assertEqual($values_primary['uuid'], $primary->uuid());
+    $this->assertEqual($values_primary['label'], $primary->label());
     $secondary = $entity_storage->load('secondary');
-    $this->assertEqual($secondary->id(), 'secondary');
-    $this->assertEqual($secondary->uuid(), $values_secondary['uuid']);
-    $this->assertEqual($secondary->label(), $values_secondary['label']);
+    $this->assertEqual('secondary', $secondary->id());
+    $this->assertEqual($values_secondary['uuid'], $secondary->uuid());
+    $this->assertEqual($values_secondary['label'], $secondary->label());
 
     $logs = $this->configImporter->getErrors();
     $this->assertCount(1, $logs);
-    $this->assertEqual($logs[0], Html::escape("Unexpected error during import with operation create for $name_primary: 'config_test' entity with ID 'secondary' already exists."));
+    $this->assertEqual(Html::escape("Unexpected error during import with operation create for {$name_primary}: 'config_test' entity with ID 'secondary' already exists."), $logs[0]);
   }
 
   /**
@@ -365,22 +365,22 @@ class ConfigImporterTest extends KernelTestBase {
 
     $entity_storage = \Drupal::entityTypeManager()->getStorage('config_test');
     $deleter = $entity_storage->load('deleter');
-    $this->assertEqual($deleter->id(), 'deleter');
-    $this->assertEqual($deleter->uuid(), $values_deleter['uuid']);
-    $this->assertEqual($deleter->label(), $values_deleter['label']);
+    $this->assertEqual('deleter', $deleter->id());
+    $this->assertEqual($values_deleter['uuid'], $deleter->uuid());
+    $this->assertEqual($values_deleter['label'], $deleter->label());
 
     // The deletee was deleted in
     // \Drupal\config_test\Entity\ConfigTest::postSave().
     $this->assertNull($entity_storage->load('deletee'));
 
     $other = $entity_storage->load('other');
-    $this->assertEqual($other->id(), 'other');
-    $this->assertEqual($other->uuid(), $values_other['uuid']);
-    $this->assertEqual($other->label(), $values_other['label']);
+    $this->assertEqual('other', $other->id());
+    $this->assertEqual($values_other['uuid'], $other->uuid());
+    $this->assertEqual($values_other['label'], $other->label());
 
     $logs = $this->configImporter->getErrors();
     $this->assertCount(1, $logs);
-    $this->assertEqual($logs[0], new FormattableMarkup('Update target "@name" is missing.', ['@name' => $name_deletee]));
+    $this->assertEqual(new FormattableMarkup('Update target "@name" is missing.', ['@name' => $name_deletee]), $logs[0]);
   }
 
   /**

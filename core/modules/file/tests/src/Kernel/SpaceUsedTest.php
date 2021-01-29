@@ -57,21 +57,21 @@ class SpaceUsedTest extends FileManagedUnitTestBase {
   public function testFileSpaceUsed() {
     $file = $this->container->get('entity_type.manager')->getStorage('file');
     // Test different users with default status.
-    $this->assertEqual($file->spaceUsed(2), 70);
-    $this->assertEqual($file->spaceUsed(3), 300);
-    $this->assertEqual($file->spaceUsed(), 370);
+    $this->assertEqual(70, $file->spaceUsed(2));
+    $this->assertEqual(300, $file->spaceUsed(3));
+    $this->assertEqual(370, $file->spaceUsed());
 
     // Test the status fields
-    $this->assertEqual($file->spaceUsed(NULL, 0), 4);
-    $this->assertEqual($file->spaceUsed(NULL, FILE_STATUS_PERMANENT), 370);
+    $this->assertEqual(4, $file->spaceUsed(NULL, 0));
+    $this->assertEqual(370, $file->spaceUsed(NULL, FILE_STATUS_PERMANENT));
 
     // Test both the user and status.
-    $this->assertEqual($file->spaceUsed(1, 0), 0);
-    $this->assertEqual($file->spaceUsed(1, FILE_STATUS_PERMANENT), 0);
-    $this->assertEqual($file->spaceUsed(2, 0), 1);
-    $this->assertEqual($file->spaceUsed(2, FILE_STATUS_PERMANENT), 70);
-    $this->assertEqual($file->spaceUsed(3, 0), 3);
-    $this->assertEqual($file->spaceUsed(3, FILE_STATUS_PERMANENT), 300);
+    $this->assertEqual(0, $file->spaceUsed(1, 0));
+    $this->assertEqual(0, $file->spaceUsed(1, FILE_STATUS_PERMANENT));
+    $this->assertEqual(1, $file->spaceUsed(2, 0));
+    $this->assertEqual(70, $file->spaceUsed(2, FILE_STATUS_PERMANENT));
+    $this->assertEqual(3, $file->spaceUsed(3, 0));
+    $this->assertEqual(300, $file->spaceUsed(3, FILE_STATUS_PERMANENT));
   }
 
 }

@@ -59,8 +59,8 @@ class RowUITest extends UITestBase {
     $view = Views::getView($view_name);
     $view->initDisplay();
     $row = $view->display_handler->getOption('row');
-    $this->assertEqual($row['type'], 'test_row', 'Make sure that the test_row got saved as used row plugin.');
-    $this->assertEqual($row['options']['test_option'], $random_name, 'Make sure that the custom settings field got saved as expected.');
+    $this->assertEqual('test_row', $row['type'], 'Make sure that the test_row got saved as used row plugin.');
+    $this->assertEqual($random_name, $row['options']['test_option'], 'Make sure that the custom settings field got saved as expected.');
 
     $this->drupalPostForm($row_plugin_url, ['row[type]' => 'fields'], 'Apply');
     $this->drupalGet($row_plugin_url);

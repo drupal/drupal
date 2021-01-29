@@ -82,7 +82,7 @@ class FileItemTest extends FieldKernelTestBase {
     // 'default:file'.
     $field_definition = FieldConfig::load('entity_test.entity_test.file_test');
     $handler_id = $field_definition->getSetting('handler');
-    $this->assertEqual($handler_id, 'default:file');
+    $this->assertEqual('default:file', $handler_id);
 
     // Create a test entity with the
     $entity = EntityTest::create();
@@ -95,12 +95,12 @@ class FileItemTest extends FieldKernelTestBase {
     $entity = EntityTest::load($entity->id());
     $this->assertInstanceOf(FieldItemListInterface::class, $entity->file_test);
     $this->assertInstanceOf(FieldItemInterface::class, $entity->file_test[0]);
-    $this->assertEqual($entity->file_test->target_id, $this->file->id());
-    $this->assertEqual($entity->file_test->display, 1);
-    $this->assertEqual($entity->file_test->description, $description);
-    $this->assertEqual($entity->file_test->entity->getFileUri(), $this->file->getFileUri());
-    $this->assertEqual($entity->file_test->entity->id(), $this->file->id());
-    $this->assertEqual($entity->file_test->entity->uuid(), $this->file->uuid());
+    $this->assertEqual($this->file->id(), $entity->file_test->target_id);
+    $this->assertEqual(1, $entity->file_test->display);
+    $this->assertEqual($description, $entity->file_test->description);
+    $this->assertEqual($this->file->getFileUri(), $entity->file_test->entity->getFileUri());
+    $this->assertEqual($this->file->id(), $entity->file_test->entity->id());
+    $this->assertEqual($this->file->uuid(), $entity->file_test->entity->uuid());
 
     // Make sure the computed files reflects updates to the file.
     file_put_contents('public://example-2.txt', $this->randomMachineName());
@@ -151,7 +151,7 @@ class FileItemTest extends FieldKernelTestBase {
       ->view($entity, 'default');
     \Drupal::service('renderer')->renderRoot($output);
     $this->assertTrue(!empty($entity->file_test->entity));
-    $this->assertEqual($entity->file_test->entity->getFileUri(), $uri);
+    $this->assertEqual($uri, $entity->file_test->entity->getFileUri());
   }
 
 }

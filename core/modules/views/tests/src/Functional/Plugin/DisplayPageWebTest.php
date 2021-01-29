@@ -61,13 +61,13 @@ class DisplayPageWebTest extends ViewTestBase {
     $this->assertCacheContexts(['languages:language_interface', 'route', 'theme', 'url']);
     $result = $this->xpath('//span[@class="field-content"]');
     $this->assertCount(1, $result, 'Ensure that just the filtered entry was returned.');
-    $this->assertEqual($result[0]->getText(), 1, 'The passed ID was returned.');
+    $this->assertEqual(1, $result[0]->getText(), 'The passed ID was returned.');
 
     $this->drupalGet('test_route_with_suffix/1/suffix');
     $this->assertSession()->statusCodeEquals(200);
     $result = $this->xpath('//span[@class="field-content"]');
     $this->assertCount(1, $result, 'Ensure that just the filtered entry was returned.');
-    $this->assertEqual($result[0]->getText(), 1, 'The passed ID was returned.');
+    $this->assertEqual(1, $result[0]->getText(), 'The passed ID was returned.');
 
     $this->drupalGet('test_route_with_suffix_and_argument/1/suffix/2');
     $this->assertSession()->statusCodeEquals(200);
@@ -78,13 +78,13 @@ class DisplayPageWebTest extends ViewTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $result = $this->xpath('//span[@class="field-content"]');
     $this->assertCount(1, $result, 'Ensure that just the filtered entry was returned.');
-    $this->assertEqual($result[0]->getText(), 1, 'The passed ID was returned.');
+    $this->assertEqual(1, $result[0]->getText(), 'The passed ID was returned.');
 
     $this->drupalGet('test_route_with_long_argument/1');
     $this->assertSession()->statusCodeEquals(200);
     $result = $this->xpath('//span[@class="field-content"]');
     $this->assertCount(1, $result, 'Ensure that just the filtered entry was returned.');
-    $this->assertEqual($result[0]->getText(), 1, 'The passed ID was returned.');
+    $this->assertEqual(1, $result[0]->getText(), 'The passed ID was returned.');
   }
 
   /**
@@ -98,7 +98,7 @@ class DisplayPageWebTest extends ViewTestBase {
       ':ul_class' => 'tabs primary',
       ':a_class' => 'is-active',
     ]);
-    $this->assertEqual($element[0]->getText(), t('Test default tab'));
+    $this->assertEqual(t('Test default tab'), $element[0]->getText());
     $this->assertSession()->titleEquals('Test default page | Drupal');
 
     $this->drupalGet('test_page_display_menu/default');
@@ -110,7 +110,7 @@ class DisplayPageWebTest extends ViewTestBase {
       ':ul_class' => 'tabs primary',
       ':a_class' => 'is-active',
     ]);
-    $this->assertEqual($element[0]->getText(), t('Test local tab'));
+    $this->assertEqual(t('Test local tab'), $element[0]->getText());
     $this->assertSession()->titleEquals('Test local page | Drupal');
 
     // Check an ordinary menu link.
@@ -120,7 +120,7 @@ class DisplayPageWebTest extends ViewTestBase {
     $this->drupalGet('<front>');
 
     $menu_link = $this->cssSelect('nav.block-menu ul.menu a');
-    $this->assertEqual($menu_link[0]->getText(), 'Test menu link');
+    $this->assertEqual('Test menu link', $menu_link[0]->getText());
 
     // Update the menu link.
     $this->drupalPostForm("admin/structure/menu/link/views_view:views.test_page_display_menu.page_3/edit", [
@@ -129,7 +129,7 @@ class DisplayPageWebTest extends ViewTestBase {
 
     $this->drupalGet('<front>');
     $menu_link = $this->cssSelect('nav.block-menu ul.menu a');
-    $this->assertEqual($menu_link[0]->getText(), 'New title');
+    $this->assertEqual('New title', $menu_link[0]->getText());
   }
 
   /**

@@ -43,19 +43,19 @@ class NodeValidationTest extends EntityKernelTestBase {
     $node->set('title', $this->randomString(256));
     $violations = $node->validate();
     $this->assertCount(1, $violations, 'Violation found when title is too long.');
-    $this->assertEqual($violations[0]->getPropertyPath(), 'title.0.value');
-    $this->assertEqual($violations[0]->getMessage(), '<em class="placeholder">Title</em>: may not be longer than 255 characters.');
+    $this->assertEqual('title.0.value', $violations[0]->getPropertyPath());
+    $this->assertEqual('<em class="placeholder">Title</em>: may not be longer than 255 characters.', $violations[0]->getMessage());
 
     $node->set('title', NULL);
     $violations = $node->validate();
     $this->assertCount(1, $violations, 'Violation found when title is not set.');
-    $this->assertEqual($violations[0]->getPropertyPath(), 'title');
-    $this->assertEqual($violations[0]->getMessage(), 'This value should not be null.');
+    $this->assertEqual('title', $violations[0]->getPropertyPath());
+    $this->assertEqual('This value should not be null.', $violations[0]->getMessage());
 
     $node->set('title', '');
     $violations = $node->validate();
     $this->assertCount(1, $violations, 'Violation found when title is set to an empty string.');
-    $this->assertEqual($violations[0]->getPropertyPath(), 'title');
+    $this->assertEqual('title', $violations[0]->getPropertyPath());
 
     // Make the title valid again.
     $node->set('title', $this->randomString());
@@ -65,8 +65,8 @@ class NodeValidationTest extends EntityKernelTestBase {
     $node->set('changed', 433918800);
     $violations = $node->validate();
     $this->assertCount(1, $violations, 'Violation found when changed date is before the last changed date.');
-    $this->assertEqual($violations[0]->getPropertyPath(), '');
-    $this->assertEqual($violations[0]->getMessage(), 'The content has either been modified by another user, or you have already submitted modifications. As a result, your changes cannot be saved.');
+    $this->assertEqual('', $violations[0]->getPropertyPath());
+    $this->assertEqual('The content has either been modified by another user, or you have already submitted modifications. As a result, your changes cannot be saved.', $violations[0]->getMessage());
   }
 
 }

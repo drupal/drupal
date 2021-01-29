@@ -47,8 +47,8 @@ class TemporaryQueryTest extends DatabaseTestBase {
     $table_name_test = $connection->queryTemporary('SELECT name FROM {test}', []);
     $table_name_task = $connection->queryTemporary('SELECT pid FROM {test_task}', []);
 
-    $this->assertEqual($this->countTableRows($table_name_test), $this->countTableRows('test'), 'A temporary table was created successfully in this request.');
-    $this->assertEqual($this->countTableRows($table_name_task), $this->countTableRows('test_task'), 'A second temporary table was created successfully in this request.');
+    $this->assertEqual($this->countTableRows('test'), $this->countTableRows($table_name_test), 'A temporary table was created successfully in this request.');
+    $this->assertEqual($this->countTableRows('test_task'), $this->countTableRows($table_name_task), 'A second temporary table was created successfully in this request.');
 
     // Check that leading whitespace and comments do not cause problems
     // in the modified query.
@@ -57,7 +57,7 @@ class TemporaryQueryTest extends DatabaseTestBase {
       SELECT name FROM {test}
     ";
     $table_name_test = $connection->queryTemporary($sql, []);
-    $this->assertEqual($this->countTableRows($table_name_test), $this->countTableRows('test'), 'Leading white space and comments do not interfere with temporary table creation.');
+    $this->assertEqual($this->countTableRows('test'), $this->countTableRows($table_name_test), 'Leading white space and comments do not interfere with temporary table creation.');
   }
 
 }

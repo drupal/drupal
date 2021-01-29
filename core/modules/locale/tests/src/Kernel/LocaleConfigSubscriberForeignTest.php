@@ -47,7 +47,7 @@ class LocaleConfigSubscriberForeignTest extends LocaleConfigSubscriberTest {
   public function testDefaultConfigLanguage() {
     $this->assertEqual('hu', $this->configFactory->getEditable('locale_test.no_translation')->get('langcode'));
     $this->assertEqual('hu', $this->configFactory->getEditable('locale_test.translation')->get('langcode'));
-    $this->assertEqual($this->configFactory->getEditable('locale_test.translation')->get('test'), 'Hungarian test');
+    $this->assertEqual('Hungarian test', $this->configFactory->getEditable('locale_test.translation')->get('test'));
   }
 
   /**
@@ -114,7 +114,7 @@ class LocaleConfigSubscriberForeignTest extends LocaleConfigSubscriberTest {
     $config_name = 'locale_test.translation';
     $this->deleteLocaleTranslationData($config_name, 'test', 'English test', 'hu');
     // Deleting the locale translation should not change active config.
-    $this->assertEqual($this->configFactory->getEditable($config_name)->get('test'), 'Hungarian test');
+    $this->assertEqual('Hungarian test', $this->configFactory->getEditable($config_name)->get('test'));
   }
 
   /**

@@ -283,7 +283,7 @@ class CommentAdminTest extends CommentTestBase {
     $this->assertText('Urdu');
     $this->submitForm([], 'Delete');
     $after_count = $count_query->execute();
-    $this->assertEqual($after_count, $before_count, 'No comment or translation found.');
+    $this->assertEqual($before_count, $after_count, 'No comment or translation found.');
   }
 
 }

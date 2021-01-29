@@ -66,7 +66,7 @@ class FeedProcessorPluginTest extends AggregatorTestBase {
     // Reload the feed to get new values.
     $feed = Feed::load($feed_id);
     // Make sure its refresh rate doubled.
-    $this->assertEqual($feed->getRefreshRate(), 3600);
+    $this->assertEqual(3600, $feed->getRefreshRate());
   }
 
 }

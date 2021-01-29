@@ -51,7 +51,7 @@ class FileNormalizeTest extends NormalizerTestBase {
     ];
 
     $normalized = $this->serializer->normalize($file, $this->format);
-    $this->assertEqual($normalized['uri'], $expected_array['uri'], 'URI is normalized.');
+    $this->assertEqual($expected_array['uri'], $normalized['uri'], 'URI is normalized.');
 
   }
 

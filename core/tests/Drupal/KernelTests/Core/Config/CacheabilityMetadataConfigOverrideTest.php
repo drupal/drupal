@@ -69,7 +69,7 @@ class CacheabilityMetadataConfigOverrideTest extends KernelTestBase {
     $block = $entity_type_manager->getStorage('block')->load('call_to_action');
 
     // Check that our call to action message is appealing to filibusters.
-    $this->assertEqual($block->label(), 'Draw yer cutlasses!');
+    $this->assertEqual('Draw yer cutlasses!', $block->label());
 
     // Check that the cacheability metadata is correct.
     $this->assertEqual(['pirate_day'], $block->getCacheContexts());
