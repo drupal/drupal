@@ -8,6 +8,7 @@ use Composer\Installer\PackageEvent;
 use Composer\Installer\PackageEvents;
 use Composer\IO\IOInterface;
 use Composer\Package\BasePackage;
+use Composer\Package\PackageInterface;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
@@ -48,7 +49,7 @@ class VendorHardeningPlugin implements PluginInterface, EventSubscriberInterface
   protected $config;
 
   /**
-   * List of projects already cleaned
+   * List of projects already cleaned.
    *
    * @var string[]
    */
@@ -109,7 +110,7 @@ class VendorHardeningPlugin implements PluginInterface, EventSubscriberInterface
    *   The Composer event.
    */
   public function onPostCmd(Event $event) {
-    $this->cleanAllPackages($this->composer->getConfig()->get('vendor-dir'));
+    $this->cleanAllPackages();
   }
 
   /**
@@ -140,10 +141,7 @@ class VendorHardeningPlugin implements PluginInterface, EventSubscriberInterface
    * @param \Composer\Installer\PackageEvent $event
    */
   public function onPostPackageInstall(PackageEvent $event) {
-    /** @var \Composer\Package\CompletePackage $package */
-    $package = $event->getOperation()->getPackage();
-    $package_name = $package->getName();
-    $this->cleanPackage($this->composer->getConfig()->get('vendor-dir'), $package_name);
+    $this->cleanPackage($event->getOperation()->getPackage());
   }
 
   /**
@@ -152,10 +150,7 @@ class VendorHardeningPlugin implements PluginInterface, EventSubscriberInterface
    * @param \Composer\Installer\PackageEvent $event
    */
   public function onPostPackageUpdate(PackageEvent $event) {
-    /** @var \Composer\Package\CompletePackage $package */
-    $package = $event->getOperation()->getTargetPackage();
-    $package_name = $package->getName();
-    $this->cleanPackage($this->composer->getConfig()->get('vendor-dir'), $package_name);
+    $this->cleanPackage($event->getOperation()->getTargetPackage());
   }
 
   /**
@@ -255,14 +250,25 @@ class VendorHardeningPlugin implements PluginInterface, EventSubscriberInterface
   }
 
   /**
+   * Gets the installed path for a package.
+   *
+   * @param \Composer\Package\PackageInterface $package
+   *   The package.
+   *
+   * @return string
+   *   Path to the install path for the package, relative to the project. This
+   *   accounts for changes made by composer/installers, if any.
+   */
+  protected function getInstallPathForPackage(PackageInterface $package) {
+    return $this->composer->getInstallationManager()->getInstallPath($package);
+  }
+
+  /**
    * Clean all configured packages.
    *
    * This applies in the context of a post-command event.
-   *
-   * @param string $vendor_dir
-   *   Path to vendor directory
    */
-  public function cleanAllPackages($vendor_dir) {
+  public function cleanAllPackages() {
     // Get a list of all the packages available after the update or install
     // command.
     $installed_packages = [];
@@ -271,20 +277,22 @@ class VendorHardeningPlugin implements PluginInterface, EventSubscriberInterface
       $installed_packages[strtolower($package->getName())] = $package;
     }
 
+    $all_cleanup_paths = $this->config->getAllCleanupPaths();
+
     // Get all the packages that we should clean up but haven't already.
-    $cleanup_packages = array_diff_key($this->config->getAllCleanupPaths(), $this->packagesAlreadyCleaned);
+    $cleanup_paths = array_diff_key($all_cleanup_paths, $this->packagesAlreadyCleaned);
 
     // Get all the packages that are installed that we should clean up.
-    $packages_to_be_cleaned = array_intersect_key($cleanup_packages, $installed_packages);
+    $packages_to_be_cleaned = array_intersect_key($cleanup_paths, $installed_packages);
 
     if (!$packages_to_be_cleaned) {
-      $this->io->writeError('<info>Vendor directory already clean.</info>');
+      $this->io->writeError('<info>Packages already clean.</info>');
       return;
     }
-    $this->io->writeError('<info>Cleaning vendor directory.</info>');
+    $this->io->writeError('<info>Cleaning installed packages.</info>');
 
-    foreach ($packages_to_be_cleaned as $package_name => $paths_for_package) {
-      $this->cleanPathsForPackage($vendor_dir, $package_name, $paths_for_package);
+    foreach ($packages_to_be_cleaned as $package_name => $paths) {
+      $this->cleanPathsForPackage($installed_packages[$package_name], $all_cleanup_paths[$package_name]);
     }
   }
 
@@ -293,14 +301,12 @@ class VendorHardeningPlugin implements PluginInterface, EventSubscriberInterface
    *
    * This applies in the context of a package post-install or post-update event.
    *
-   * @param string $vendor_dir
-   *   Path to vendor directory
-   * @param string $package_name
-   *   Name of the package to clean
+   * @param \Composer\Package\PackageInterface $package
+   *   The package to clean.
    */
-  public function cleanPackage($vendor_dir, $package_name) {
+  public function cleanPackage(PackageInterface $package) {
     // Normalize package names to lower case.
-    $package_name = strtolower($package_name);
+    $package_name = strtolower($package->getName());
     if (isset($this->packagesAlreadyCleaned[$package_name])) {
       $this->io->writeError(sprintf('%s<info>%s</info> already cleaned.', str_repeat(' ', 4), $package_name), TRUE, IOInterface::VERY_VERBOSE);
       return;
@@ -309,26 +315,25 @@ class VendorHardeningPlugin implements PluginInterface, EventSubscriberInterface
     $paths_for_package = $this->config->getPathsForPackage($package_name);
     if ($paths_for_package) {
       $this->io->writeError(sprintf('%sCleaning: <info>%s</info>', str_repeat(' ', 4), $package_name));
-      $this->cleanPathsForPackage($vendor_dir, $package_name, $paths_for_package);
+      $this->cleanPathsForPackage($package, $paths_for_package);
     }
   }
 
   /**
    * Clean the installed directories for a named package.
    *
-   * @param string $vendor_dir
-   *   Path to vendor directory.
-   * @param string $package_name
-   *   Name of package to sanitize.
+   * @param \Composer\Package\PackageInterface $package
+   *   The package to clean.
    * @param string $paths_for_package
    *   List of directories in $package_name to remove
    */
-  protected function cleanPathsForPackage($vendor_dir, $package_name, $paths_for_package) {
+  protected function cleanPathsForPackage(PackageInterface $package, $paths_for_package) {
     // Whatever happens here, this package counts as cleaned so that we don't
     // process it more than once.
+    $package_name = strtolower($package->getName());
     $this->packagesAlreadyCleaned[$package_name] = TRUE;
 
-    $package_dir = $vendor_dir . '/' . $package_name;
+    $package_dir = $this->getInstallPathForPackage($package);
     if (!is_dir($package_dir)) {
       return;
     }
