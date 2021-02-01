@@ -197,9 +197,9 @@ class ThemeTest extends BrowserTestBase {
       $this->drupalGet('');
       $elements = $this->xpath('//header//a[@rel=:rel]/img', [
         ':rel' => 'home',
-      ]
-    );
-    $this->assertEquals(file_url_transform_relative(file_create_url($uploaded_filename)), $elements[0]->getAttribute('src'));
+      ]);
+      $this->assertEquals($elements[0]->getAttribute('src'), file_url_transform_relative(file_create_url($uploaded_filename)));
+    }
 
     $this->container->get('theme_installer')->install(['bartik']);
 
