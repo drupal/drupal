@@ -150,8 +150,11 @@ class YamlFileLoader
         }
 
         if (isset($service['alias'])) {
-            $public = !array_key_exists('public', $service) || (bool) $service['public'];
-            $alias = $this->container->setAlias($id, new Alias($service['alias'], $public));
+            $alias = $this->container->setAlias($id, new Alias($service['alias']));
+
+            if (array_key_exists('public', $service)) {
+                $alias->setPublic($service['public']);
+            }
 
             if (array_key_exists('deprecated', $service)) {
                 $alias->setDeprecated(true, $service['deprecated']);
@@ -184,6 +187,9 @@ class YamlFileLoader
 
         if (isset($service['public'])) {
             $definition->setPublic($service['public']);
+        }
+        else {
+            $definition->setPublic(true);
         }
 
         if (isset($service['abstract'])) {

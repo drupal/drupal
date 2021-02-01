@@ -51,7 +51,10 @@ class TestServiceProvider implements ServiceProviderInterface, ServiceModifierIn
     $definition = $container->getDefinition($id);
     $definition->clearTag('needs_destruction');
     $container->setDefinition("simpletest.$route_provider_service_name", $definition);
-    $container->setDefinition($id, new Definition(RouteProvider::class));
+
+    $route_provider_definition = new Definition(RouteProvider::class);
+    $route_provider_definition->setPublic(TRUE);
+    $container->setDefinition($id, $route_provider_definition);
   }
 
 }
