@@ -20,6 +20,7 @@ class UpdateServiceProvider implements ServiceProviderInterface, ServiceModifier
   public function register(ContainerBuilder $container) {
     $definition = new Definition('Drupal\Core\Cache\NullBackend', ['null']);
     $definition->setDeprecated(TRUE, 'The "%service_id%\" service is deprecated. While updating Drupal all caches use \Drupal\Core\Update\UpdateBackend. See https://www.drupal.org/node/3066407');
+    $definition->setPublic(TRUE);
     $container->setDefinition('cache.null', $definition);
 
     // Decorate the cache factory in order to use
