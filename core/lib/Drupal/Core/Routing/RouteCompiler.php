@@ -12,11 +12,6 @@ use Symfony\Component\Routing\RouteCompiler as SymfonyRouteCompiler;
 class RouteCompiler extends SymfonyRouteCompiler implements RouteCompilerInterface {
 
   /**
-   * Utility constant to use for regular expressions against the path.
-   */
-  const REGEX_DELIMITER = '#';
-
-  /**
    * Compiles the current route instance.
    *
    * Because so much of the parent class is private, we need to call the parent
