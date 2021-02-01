@@ -166,7 +166,7 @@ class FileItem extends EntityReferenceItem {
       '#type' => 'textfield',
       '#title' => t('Allowed file extensions'),
       '#default_value' => $extensions,
-      '#description' => t('Separate extensions with a space or comma and do not include the leading dot.'),
+      '#description' => $this->t("Separate extensions with a comma or space. Each extension can contain alphanumeric characters, '.', and '_', and should start and end with an alphanumeric character."),
       '#element_validate' => [[static::class, 'validateExtensions']],
       '#weight' => 1,
       '#maxlength' => 256,
@@ -227,8 +227,8 @@ class FileItem extends EntityReferenceItem {
       $extensions = preg_replace('/([, ]+\.?)/', ' ', trim(strtolower($element['#value'])));
       $extension_array = array_unique(array_filter(explode(' ', $extensions)));
       $extensions = implode(' ', $extension_array);
-      if (!preg_match('/^([a-z0-9]+([.][a-z0-9])* ?)+$/', $extensions)) {
-        $form_state->setError($element, t('The list of allowed extensions is not valid, be sure to exclude leading dots and to separate extensions with a comma or space.'));
+      if (!preg_match('/^([a-z0-9]+([._][a-z0-9])* ?)+$/', $extensions)) {
+        $form_state->setError($element, t("The list of allowed extensions is not valid. Allowed characters are a-z, 0-9, '.', and '_'. The first and last characters cannot be '.' or '_', and these two characters cannot appear next to each other. Separate extensions with a comma or space."));
       }
       else {
         $form_state->setValueForElement($element, $extensions);
