@@ -140,6 +140,14 @@ class MigrationProvidersExistTest extends MigrateDrupalTestBase {
         'source_module' => 'entityreference',
         'destination_module' => 'core',
       ],
+      'node_reference' => [
+        'source_module' => 'node_reference',
+        'destination_module' => 'core',
+      ],
+      'user_reference' => [
+        'source_module' => 'user_reference',
+        'destination_module' => 'core',
+      ],
     ];
     $this->enableAllModules();
 

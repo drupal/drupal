@@ -143,6 +143,12 @@ class MigrateFieldTest extends MigrateDrupal7TestBase {
     $field = FieldStorageConfig::load('node.field_date_with_end_time');
     $this->assertNull($field->getSetting('datetime_type'));
 
+    // Assert node and user reference fields.
+    $field = FieldStorageConfig::load('node.field_node_reference');
+    $this->assertEquals('node', $field->getSetting('target_type'));
+    $field = FieldStorageConfig::load('node.field_user_reference');
+    $this->assertEquals('user', $field->getSetting('target_type'));
+
     // Test the migration of text fields with different text processing.
     // All text and text_long field bases that have only plain text instances
     // should be migrated to string and string_long fields.
