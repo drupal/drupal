@@ -4542,6 +4542,36 @@ $connection->insert('field_config')
   'translatable' => '1',
   'deleted' => '0',
 ))
+->values(array(
+  'id' => '56',
+  'field_name' => 'field_node_reference',
+  'type' => 'node_reference',
+  'module' => 'node_reference',
+  'active' => '1',
+  'storage_type' => 'field_sql_storage',
+  'storage_module' => 'field_sql_storage',
+  'storage_active' => '1',
+  'locked' => '0',
+  'data' => 'a:7:{s:12:"translatable";i:0;s:12:"entity_types";a:0:{}s:8:"settings";a:3:{s:19:"referenceable_types";a:6:{s:7:"article";s:7:"article";s:4:"page";i:0;s:4:"blog";i:0;s:4:"book";i:0;s:5:"forum";i:0;s:17:"test_content_type";i:0;}s:4:"view";a:3:{s:9:"view_name";s:0:"";s:12:"display_name";s:0:"";s:4:"args";a:0:{}}s:23:"entity_translation_sync";b:0;}s:7:"storage";a:5:{s:4:"type";s:17:"field_sql_storage";s:8:"settings";a:0:{}s:6:"module";s:17:"field_sql_storage";s:6:"active";s:1:"1";s:7:"details";a:1:{s:3:"sql";a:2:{s:18:"FIELD_LOAD_CURRENT";a:1:{s:31:"field_data_field_node_reference";a:1:{s:3:"nid";s:24:"field_node_reference_nid";}}s:19:"FIELD_LOAD_REVISION";a:1:{s:35:"field_revision_field_node_reference";a:1:{s:3:"nid";s:24:"field_node_reference_nid";}}}}}s:12:"foreign keys";a:1:{s:3:"nid";a:2:{s:5:"table";s:4:"node";s:7:"columns";a:1:{s:3:"nid";s:3:"nid";}}}s:7:"indexes";a:1:{s:3:"nid";a:1:{i:0;s:3:"nid";}}s:2:"id";s:2:"50";}',
+  'cardinality' => '1',
+  'translatable' => '0',
+  'deleted' => '0',
+))
+->values(array(
+  'id' => '57',
+  'field_name' => 'field_user_reference',
+  'type' => 'user_reference',
+  'module' => 'user_reference',
+  'active' => '1',
+  'storage_type' => 'field_sql_storage',
+  'storage_module' => 'field_sql_storage',
+  'storage_active' => '1',
+  'locked' => '0',
+  'data' => 'a:7:{s:12:"translatable";i:0;s:12:"entity_types";a:0:{}s:8:"settings";a:4:{s:19:"referenceable_roles";a:2:{i:2;s:1:"2";i:3;i:0;}s:20:"referenceable_status";a:2:{i:1;s:1:"1";i:0;i:0;}s:4:"view";a:3:{s:9:"view_name";s:0:"";s:12:"display_name";s:0:"";s:4:"args";a:0:{}}s:23:"entity_translation_sync";b:0;}s:7:"storage";a:5:{s:4:"type";s:17:"field_sql_storage";s:8:"settings";a:0:{}s:6:"module";s:17:"field_sql_storage";s:6:"active";s:1:"1";s:7:"details";a:1:{s:3:"sql";a:2:{s:18:"FIELD_LOAD_CURRENT";a:1:{s:31:"field_data_field_user_reference";a:1:{s:3:"uid";s:24:"field_user_reference_uid";}}s:19:"FIELD_LOAD_REVISION";a:1:{s:35:"field_revision_field_user_reference";a:1:{s:3:"uid";s:24:"field_user_reference_uid";}}}}}s:12:"foreign keys";a:1:{s:3:"uid";a:2:{s:5:"table";s:5:"users";s:7:"columns";a:1:{s:3:"uid";s:3:"uid";}}}s:7:"indexes";a:1:{s:3:"uid";a:1:{i:0;s:3:"uid";}}s:2:"id";s:2:"51";}',
+  'cardinality' => '1',
+  'translatable' => '0',
+  'deleted' => '0',
+))
 ->execute();
 $connection->schema()->createTable('field_config_instance', array(
   'fields' => array(
@@ -5355,6 +5385,24 @@ $connection->insert('field_config_instance')
   'entity_type' => 'node',
   'bundle' => 'a_thirty_two_character_type_name',
   'data' => 'a:6:{s:5:"label";s:4:"Body";s:6:"widget";a:4:{s:4:"type";s:26:"text_textarea_with_summary";s:8:"settings";a:2:{s:4:"rows";i:20;s:12:"summary_rows";i:5;}s:6:"weight";i:-4;s:6:"module";s:4:"text";}s:8:"settings";a:3:{s:15:"display_summary";b:1;s:15:"text_processing";i:1;s:18:"user_register_form";b:0;}s:7:"display";a:2:{s:7:"default";a:5:{s:5:"label";s:6:"hidden";s:4:"type";s:12:"text_default";s:8:"settings";a:0:{}s:6:"module";s:4:"text";s:6:"weight";i:0;}s:6:"teaser";a:5:{s:5:"label";s:6:"hidden";s:4:"type";s:23:"text_summary_or_trimmed";s:8:"settings";a:1:{s:11:"trim_length";i:600;}s:6:"module";s:4:"text";s:6:"weight";i:0;}}s:8:"required";b:0;s:11:"description";s:0:"";}',
+  'deleted' => '0',
+))
+->values(array(
+  'id' => '88',
+  'field_id' => '56',
+  'field_name' => 'field_node_reference',
+  'entity_type' => 'node',
+  'bundle' => 'article',
+  'data' => 'a:7:{s:5:"label";s:14:"Node Reference";s:6:"widget";a:5:{s:6:"weight";s:2:"25";s:4:"type";s:27:"node_reference_autocomplete";s:6:"module";s:14:"node_reference";s:6:"active";i:1;s:8:"settings";a:3:{s:18:"autocomplete_match";s:8:"contains";s:4:"size";s:2:"60";s:17:"autocomplete_path";s:27:"node_reference/autocomplete";}}s:8:"settings";a:2:{s:18:"user_register_form";b:0;s:23:"entity_translation_sync";b:0;}s:7:"display";a:1:{s:7:"default";a:5:{s:5:"label";s:5:"above";s:4:"type";s:22:"node_reference_default";s:8:"settings";a:0:{}s:6:"module";s:14:"node_reference";s:6:"weight";i:25;}}s:8:"required";i:0;s:11:"description";s:0:"";s:13:"default_value";N;}',
+  'deleted' => '0',
+))
+->values(array(
+  'id' => '89',
+  'field_id' => '57',
+  'field_name' => 'field_user_reference',
+  'entity_type' => 'node',
+  'bundle' => 'article',
+  'data' => 'a:7:{s:5:"label";s:14:"User Reference";s:6:"widget";a:5:{s:6:"weight";s:2:"26";s:4:"type";s:27:"user_reference_autocomplete";s:6:"module";s:14:"user_reference";s:6:"active";i:1;s:8:"settings";a:3:{s:18:"autocomplete_match";s:8:"contains";s:4:"size";s:2:"60";s:17:"autocomplete_path";s:27:"user_reference/autocomplete";}}s:8:"settings";a:2:{s:18:"user_register_form";b:0;s:23:"entity_translation_sync";b:0;}s:7:"display";a:1:{s:7:"default";a:5:{s:5:"label";s:5:"above";s:4:"type";s:22:"user_reference_default";s:8:"settings";a:0:{}s:6:"module";s:14:"user_reference";s:6:"weight";i:26;}}s:8:"required";i:0;s:11:"description";s:0:"";s:13:"default_value";N;}',
   'deleted' => '0',
 ))
 ->execute();
@@ -7652,6 +7700,112 @@ $connection->insert('field_data_field_node_entityreference')
   'language' => 'und',
   'delta' => '0',
   'field_node_entityreference_target_id' => '2',
+))
+->execute();
+$connection->schema()->createTable('field_data_field_node_reference', array(
+  'fields' => array(
+    'entity_type' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'bundle' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'deleted' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'tiny',
+      'default' => '0',
+    ),
+    'entity_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'revision_id' => array(
+      'type' => 'int',
+      'not null' => FALSE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'language' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '32',
+      'default' => '',
+    ),
+    'delta' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'field_node_reference_nid' => array(
+      'type' => 'int',
+      'not null' => FALSE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+  ),
+  'primary key' => array(
+    'entity_type',
+    'entity_id',
+    'deleted',
+    'delta',
+    'language',
+  ),
+  'indexes' => array(
+    'entity_type' => array(
+      'entity_type',
+    ),
+    'bundle' => array(
+      'bundle',
+    ),
+    'deleted' => array(
+      'deleted',
+    ),
+    'entity_id' => array(
+      'entity_id',
+    ),
+    'revision_id' => array(
+      'revision_id',
+    ),
+    'language' => array(
+      'language',
+    ),
+    'field_node_reference_nid' => array(
+      'field_node_reference_nid',
+    ),
+  ),
+  'mysql_character_set' => 'utf8',
+));
+
+$connection->insert('field_data_field_node_reference')
+->fields(array(
+  'entity_type',
+  'bundle',
+  'deleted',
+  'entity_id',
+  'revision_id',
+  'language',
+  'delta',
+  'field_node_reference_nid',
+))
+->values(array(
+  'entity_type' => 'node',
+  'bundle' => 'article',
+  'deleted' => '0',
+  'entity_id' => '2',
+  'revision_id' => '2',
+  'language' => 'und',
+  'delta' => '0',
+  'field_node_reference_nid' => '5',
 ))
 ->execute();
 $connection->schema()->createTable('field_data_field_phone', array(
@@ -10284,6 +10438,112 @@ $connection->insert('field_data_field_user_entityreference')
   'language' => 'und',
   'delta' => '0',
   'field_user_entityreference_target_id' => '2',
+))
+->execute();
+$connection->schema()->createTable('field_data_field_user_reference', array(
+  'fields' => array(
+    'entity_type' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'bundle' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'deleted' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'tiny',
+      'default' => '0',
+    ),
+    'entity_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'revision_id' => array(
+      'type' => 'int',
+      'not null' => FALSE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'language' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '32',
+      'default' => '',
+    ),
+    'delta' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'field_user_reference_uid' => array(
+      'type' => 'int',
+      'not null' => FALSE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+  ),
+  'primary key' => array(
+    'entity_type',
+    'entity_id',
+    'deleted',
+    'delta',
+    'language',
+  ),
+  'indexes' => array(
+    'entity_type' => array(
+      'entity_type',
+    ),
+    'bundle' => array(
+      'bundle',
+    ),
+    'deleted' => array(
+      'deleted',
+    ),
+    'entity_id' => array(
+      'entity_id',
+    ),
+    'revision_id' => array(
+      'revision_id',
+    ),
+    'language' => array(
+      'language',
+    ),
+    'field_user_reference_uid' => array(
+      'field_user_reference_uid',
+    ),
+  ),
+  'mysql_character_set' => 'utf8',
+));
+
+$connection->insert('field_data_field_user_reference')
+->fields(array(
+  'entity_type',
+  'bundle',
+  'deleted',
+  'entity_id',
+  'revision_id',
+  'language',
+  'delta',
+  'field_user_reference_uid',
+))
+->values(array(
+  'entity_type' => 'node',
+  'bundle' => 'article',
+  'deleted' => '0',
+  'entity_id' => '2',
+  'revision_id' => '2',
+  'language' => 'und',
+  'delta' => '0',
+  'field_user_reference_uid' => '3',
 ))
 ->execute();
 $connection->schema()->createTable('field_data_field_vocab_fixed', array(
@@ -13586,6 +13846,113 @@ $connection->insert('field_revision_field_node_entityreference')
   'field_node_entityreference_target_id' => '2',
 ))
 ->execute();
+$connection->schema()->createTable('field_revision_field_node_reference', array(
+  'fields' => array(
+    'entity_type' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'bundle' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'deleted' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'tiny',
+      'default' => '0',
+    ),
+    'entity_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'revision_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'language' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '32',
+      'default' => '',
+    ),
+    'delta' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'field_node_reference_nid' => array(
+      'type' => 'int',
+      'not null' => FALSE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+  ),
+  'primary key' => array(
+    'entity_type',
+    'entity_id',
+    'revision_id',
+    'deleted',
+    'delta',
+    'language',
+  ),
+  'indexes' => array(
+    'entity_type' => array(
+      'entity_type',
+    ),
+    'bundle' => array(
+      'bundle',
+    ),
+    'deleted' => array(
+      'deleted',
+    ),
+    'entity_id' => array(
+      'entity_id',
+    ),
+    'revision_id' => array(
+      'revision_id',
+    ),
+    'language' => array(
+      'language',
+    ),
+    'field_node_reference_nid' => array(
+      'field_node_reference_nid',
+    ),
+  ),
+  'mysql_character_set' => 'utf8',
+));
+
+$connection->insert('field_revision_field_node_reference')
+->fields(array(
+  'entity_type',
+  'bundle',
+  'deleted',
+  'entity_id',
+  'revision_id',
+  'language',
+  'delta',
+  'field_node_reference_nid',
+))
+->values(array(
+  'entity_type' => 'node',
+  'bundle' => 'article',
+  'deleted' => '0',
+  'entity_id' => '2',
+  'revision_id' => '2',
+  'language' => 'und',
+  'delta' => '0',
+  'field_node_reference_nid' => '5',
+))
+->execute();
 $connection->schema()->createTable('field_revision_field_phone', array(
   'fields' => array(
     'entity_type' => array(
@@ -16277,7 +16644,113 @@ $connection->schema()->createTable('field_revision_field_user_entityreference', 
   ),
   'mysql_character_set' => 'utf8',
 ));
+$connection->schema()->createTable('field_revision_field_user_reference', array(
+  'fields' => array(
+    'entity_type' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'bundle' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'deleted' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'tiny',
+      'default' => '0',
+    ),
+    'entity_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'revision_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'language' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '32',
+      'default' => '',
+    ),
+    'delta' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'field_user_reference_uid' => array(
+      'type' => 'int',
+      'not null' => FALSE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+  ),
+  'primary key' => array(
+    'entity_type',
+    'entity_id',
+    'revision_id',
+    'deleted',
+    'delta',
+    'language',
+  ),
+  'indexes' => array(
+    'entity_type' => array(
+      'entity_type',
+    ),
+    'bundle' => array(
+      'bundle',
+    ),
+    'deleted' => array(
+      'deleted',
+    ),
+    'entity_id' => array(
+      'entity_id',
+    ),
+    'revision_id' => array(
+      'revision_id',
+    ),
+    'language' => array(
+      'language',
+    ),
+    'field_user_reference_uid' => array(
+      'field_user_reference_uid',
+    ),
+  ),
+  'mysql_character_set' => 'utf8',
+));
 
+$connection->insert('field_revision_field_user_reference')
+->fields(array(
+  'entity_type',
+  'bundle',
+  'deleted',
+  'entity_id',
+  'revision_id',
+  'language',
+  'delta',
+  'field_user_reference_uid',
+))
+->values(array(
+  'entity_type' => 'node',
+  'bundle' => 'article',
+  'deleted' => '0',
+  'entity_id' => '2',
+  'revision_id' => '2',
+  'language' => 'und',
+  'delta' => '0',
+  'field_user_reference_uid' => '3',
+))
+->execute();
 $connection->schema()->createTable('field_revision_field_vocab_fixed', array(
   'fields' => array(
     'entity_type' => array(
@@ -42723,6 +43196,31 @@ $connection->insert('menu_router')
   'include_file' => 'modules/node/node.pages.inc',
 ))
 ->values(array(
+  'path' => 'node_reference/autocomplete/%/%/%',
+  'load_functions' => 'a:3:{i:2;N;i:3;N;i:4;N;}',
+  'to_arg_functions' => '',
+  'access_callback' => 'reference_autocomplete_access',
+  'access_arguments' => 'a:3:{i:0;i:2;i:1;i:3;i:2;i:4;}',
+  'page_callback' => 'node_reference_autocomplete',
+  'page_arguments' => 'a:3:{i:0;i:2;i:1;i:3;i:2;i:4;}',
+  'delivery_callback' => '',
+  'fit' => '24',
+  'number_parts' => '5',
+  'context' => '0',
+  'tab_parent' => '',
+  'tab_root' => 'node_reference/autocomplete/%/%/%',
+  'title' => '',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'theme_callback' => '',
+  'theme_arguments' => 'a:0:{}',
+  'type' => '0',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'include_file' => '',
+))
+->values(array(
   'path' => 'rss.xml',
   'load_functions' => '',
   'to_arg_functions' => '',
@@ -43696,6 +44194,31 @@ $connection->insert('menu_router')
   'position' => '',
   'weight' => '0',
   'include_file' => 'modules/user/user.pages.inc',
+))
+->values(array(
+  'path' => 'user_reference/autocomplete/%/%/%',
+  'load_functions' => 'a:3:{i:2;N;i:3;N;i:4;N;}',
+  'to_arg_functions' => '',
+  'access_callback' => 'reference_autocomplete_access',
+  'access_arguments' => 'a:3:{i:0;i:2;i:1;i:3;i:2;i:4;}',
+  'page_callback' => 'user_reference_autocomplete',
+  'page_arguments' => 'a:3:{i:0;i:2;i:1;i:3;i:2;i:4;}',
+  'delivery_callback' => '',
+  'fit' => '24',
+  'number_parts' => '5',
+  'context' => '0',
+  'tab_parent' => '',
+  'tab_root' => 'user_reference/autocomplete/%/%/%',
+  'title' => '',
+  'title_callback' => 't',
+  'title_arguments' => '',
+  'theme_callback' => '',
+  'theme_arguments' => 'a:0:{}',
+  'type' => '0',
+  'description' => '',
+  'position' => '',
+  'weight' => '0',
+  'include_file' => '',
 ))
 ->execute();
 $connection->schema()->createTable('node', array(
@@ -56284,6 +56807,50 @@ $connection->insert('system')
   'schema_version' => '0',
   'weight' => '0',
   'info' => 'a:14:{s:4:"name";s:5:"Phone";s:11:"description";s:80:"The phone module allows administrators to define a field type for phone numbers.";s:7:"package";s:6:"Fields";s:12:"dependencies";a:1:{i:0;s:5:"field";}s:5:"files";a:30:{i:0;s:17:"phone.migrate.inc";i:1;s:19:"tests/phone.au.test";i:2;s:19:"tests/phone.be.test";i:3;s:19:"tests/phone.br.test";i:4;s:19:"tests/phone.ca.test";i:5;s:19:"tests/phone.ch.test";i:6;s:19:"tests/phone.cl.test";i:7;s:19:"tests/phone.cn.test";i:8;s:19:"tests/phone.cr.test";i:9;s:19:"tests/phone.cs.test";i:10;s:19:"tests/phone.eg.test";i:11;s:19:"tests/phone.es.test";i:12;s:19:"tests/phone.fr.test";i:13;s:19:"tests/phone.hu.test";i:14;s:19:"tests/phone.il.test";i:15;s:20:"tests/phone.int.test";i:16;s:19:"tests/phone.it.test";i:17;s:19:"tests/phone.jo.test";i:18;s:19:"tests/phone.nl.test";i:19;s:19:"tests/phone.nz.test";i:20;s:19:"tests/phone.pa.test";i:21;s:19:"tests/phone.ph.test";i:22;s:19:"tests/phone.pk.test";i:23;s:19:"tests/phone.pl.test";i:24;s:19:"tests/phone.ru.test";i:25;s:19:"tests/phone.se.test";i:26;s:19:"tests/phone.sg.test";i:27;s:19:"tests/phone.ua.test";i:28;s:19:"tests/phone.uk.test";i:29;s:19:"tests/phone.za.test";}s:4:"core";s:3:"7.x";s:7:"version";s:13:"7.x-1.0-beta1";s:7:"project";s:5:"phone";s:9:"datestamp";s:10:"1389732224";s:5:"mtime";i:1535762879;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;s:8:"required";b:1;s:11:"explanation";s:73:"Field type(s) in use - see <a href="/admin/reports/fields">Field list</a>";}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/references/node_reference/node_reference.module',
+  'name' => 'node_reference',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '1',
+  'bootstrap' => '0',
+  'schema_version' => '7000',
+  'weight' => '0',
+  'info' => 'a:12:{s:4:"name";s:14:"Node Reference";s:11:"description";s:59:"Defines a field type for referencing one node from another.";s:7:"package";s:6:"Fields";s:4:"core";s:3:"7.x";s:12:"dependencies";a:3:{i:0;s:5:"field";i:1;s:10:"references";i:2;s:7:"options";}s:5:"files";a:1:{i:0;s:19:"node_reference.test";}s:7:"version";s:7:"7.x-2.2";s:7:"project";s:10:"references";s:9:"datestamp";s:10:"1492534745";s:5:"mtime";i:1492534745;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/references/references.module',
+  'name' => 'references',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '1',
+  'bootstrap' => '0',
+  'schema_version' => '0',
+  'weight' => '0',
+  'info' => 'a:12:{s:4:"name";s:10:"References";s:11:"description";s:67:"Defines common base features for the various reference field types.";s:7:"package";s:6:"Fields";s:4:"core";s:3:"7.x";s:12:"dependencies";a:2:{i:0;s:5:"field";i:1;s:7:"options";}s:5:"files";a:5:{i:0;s:41:"views/references_handler_relationship.inc";i:1;s:37:"views/references_handler_argument.inc";i:2;s:35:"views/references_plugin_display.inc";i:3;s:33:"views/references_plugin_style.inc";i:4;s:38:"views/references_plugin_row_fields.inc";}s:7:"version";s:7:"7.x-2.2";s:7:"project";s:10:"references";s:9:"datestamp";s:10:"1492534745";s:5:"mtime";i:1492534745;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/references/references_uuid/references_uuid.module',
+  'name' => 'references_uuid',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '0',
+  'bootstrap' => '0',
+  'schema_version' => '-1',
+  'weight' => '0',
+  'info' => 'a:12:{s:4:"name";s:15:"References UUID";s:4:"core";s:3:"7.x";s:7:"package";s:6:"Fields";s:12:"dependencies";a:2:{i:0;s:10:"references";i:1;s:4:"uuid";}s:7:"version";s:7:"7.x-2.2";s:7:"project";s:10:"references";s:9:"datestamp";s:10:"1492534745";s:5:"mtime";i:1492534745;s:11:"description";s:0:"";s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/references/user_reference/user_reference.module',
+  'name' => 'user_reference',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '1',
+  'bootstrap' => '0',
+  'schema_version' => '0',
+  'weight' => '0',
+  'info' => 'a:12:{s:4:"name";s:14:"User Reference";s:11:"description";s:56:"Defines a field type for referencing a user from a node.";s:7:"package";s:6:"Fields";s:4:"core";s:3:"7.x";s:12:"dependencies";a:3:{i:0;s:5:"field";i:1;s:10:"references";i:2;s:7:"options";}s:7:"version";s:7:"7.x-2.2";s:7:"project";s:10:"references";s:9:"datestamp";s:10:"1492534745";s:5:"mtime";i:1492534745;s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/picture/flexslider_picture/flexslider_picture.module',

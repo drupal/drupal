@@ -180,6 +180,17 @@ class FieldInstance extends DrupalSqlBase {
       }
     }
 
+    // Get the user roles for user reference fields.
+    if ($row->getSourceProperty('type') == 'user_reference') {
+      $data = unserialize($field_definition['data']);
+      if (!empty($data['settings']['referenceable_roles'])) {
+        $rid = $data['settings']['referenceable_roles'];
+        $query = $this->select('role', 'r')->fields('r')
+          ->condition('rid', $rid, 'IN');
+        $results = $query->execute()->fetchAll();
+        $row->setSourceProperty('roles', $results);
+      }
+    }
     return parent::prepareRow($row);
   }
 
