@@ -6,23 +6,6 @@
  */
 
 /**
- * Implements hook_requirements().
- */
-function aggregator_requirements($phase) {
-  $has_curl = function_exists('curl_init');
-  $requirements = [];
-  $requirements['curl'] = [
-    'title' => t('cURL'),
-    'value' => $has_curl ? t('Enabled') : t('Not found'),
-  ];
-  if (!$has_curl) {
-    $requirements['curl']['severity'] = REQUIREMENT_ERROR;
-    $requirements['curl']['description'] = t('The Aggregator module requires the <a href="https://secure.php.net/manual/en/curl.setup.php">PHP cURL library</a>. For more information, see the <a href="https://www.drupal.org/docs/system-requirements/php-requirements#curl">online information on installing the PHP cURL extension</a>.');
-  }
-  return $requirements;
-}
-
-/**
  * Implements hook_update_last_removed().
  */
 function aggregator_update_last_removed() {
