@@ -183,6 +183,11 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
     if (!drupal_valid_test_ua()) {
       return;
     }
+    // The test middleware is not required for kernel tests as there is no child
+    // site. DRUPAL_TEST_IN_CHILD_SITE is not defined in this case.
+    if (!defined('DRUPAL_TEST_IN_CHILD_SITE')) {
+      return;
+    }
     // Add the HTTP request middleware to Guzzle.
     $container
       ->register('test.http_client.middleware', 'Drupal\Core\Test\HttpClientMiddleware\TestHttpClientMiddleware')
