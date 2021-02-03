@@ -141,7 +141,7 @@ abstract class StorableConfigBase extends ConfigBase {
    *
    * @param string $key
    *   A string that maps to a key within the configuration data.
-   * @param string $value
+   * @param mixed $value
    *   Value to associate with the key.
    *
    * @return null
@@ -166,7 +166,7 @@ abstract class StorableConfigBase extends ConfigBase {
    *
    * @param string $key
    *   A string that maps to a key within the configuration data.
-   * @param string $value
+   * @param mixed $value
    *   Value to associate with the key.
    *
    * @return mixed
