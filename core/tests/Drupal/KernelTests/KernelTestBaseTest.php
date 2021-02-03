@@ -4,6 +4,7 @@ namespace Drupal\KernelTests;
 
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Core\Database\Database;
+use GuzzleHttp\Exception\GuzzleException;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\visitor\vfsStreamStructureVisitor;
 use PHPUnit\Framework\SkippedTestError;
@@ -162,6 +163,21 @@ class KernelTestBaseTest extends KernelTestBase {
   public function testSubsequentContainerIsolation() {
     $this->enableModules(['system', 'user']);
     $this->assertNull($this->installConfig('user'));
+  }
+
+  /**
+   * Tests that an outbound HTTP request can be performed inside of a test.
+   */
+  public function testOutboundHttpRequest() {
+    // The middleware test.http_client.middleware calls drupal_generate_test_ua
+    // which checks the DRUPAL_TEST_IN_CHILD_SITE constant, that is not defined
+    // in Kernel tests.
+    try {
+      $this->container->get('http_client')->get('http://example.com');
+    }
+    catch (GuzzleException $e) {
+      // Ignore any HTTP errors.
+    }
   }
 
   /**
