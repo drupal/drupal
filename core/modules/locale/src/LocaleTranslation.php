@@ -4,6 +4,7 @@ namespace Drupal\locale;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\DestructableInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -18,6 +19,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * database caching.
  */
 class LocaleTranslation implements TranslatorInterface, DestructableInterface {
+
+  use DependencySerializationTrait;
 
   /**
    * Storage for strings.
