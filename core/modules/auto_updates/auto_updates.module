@@ -89,7 +89,7 @@ function auto_updates_cron() {
  * Implements hook_modules_installed().
  */
 function auto_updates_modules_installed() {
-  // Run the readiness checkers when any modules are installed in case they have
+  // Run the readiness checkers when any modules are installed in case they
   // provide readiness checker services. Because ReadinessCheckerManager caches
   // the results it will not rerun checkers if the modules don't provide new
   // readiness checker services.
