@@ -100,14 +100,4 @@ class ReadinessCheckerController extends ControllerBase {
     return $this->redirect('system.status');
   }
 
-  /**
-   * Run the readiness checkers on the status report page.
-   *
-   * @return \Symfony\Component\HttpFoundation\RedirectResponse
-   *   A redirect to the status report page.
-   */
-  public function runAndDisplayWarning() {
-    return $this->run(TRUE);
-  }
-
 }
