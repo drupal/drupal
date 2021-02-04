@@ -38,7 +38,7 @@ class DiskSpace extends FileSystemBase {
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup[]
    *   The error messages.
    */
-  protected function getErrors():array {
+  protected function getErrors(): array {
     $has_valid_root = $this->hasValidRootPath();
     $has_valid_vendor = $this->hasValidVendorPath();
     if (!$has_valid_root && !$has_valid_vendor) {
@@ -82,7 +82,7 @@ class DiskSpace extends FileSystemBase {
   /**
    * {@inheritdoc}
    */
-  public function getResult():?ReadinessCheckerResult {
+  public function getResult(): ?ReadinessCheckerResult {
     $errors = $this->getErrors();
     if (empty($errors)) {
       return NULL;

@@ -135,7 +135,7 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
    *   Requirements array as specified by hook_requirements(), or NULL
    *   if no requirements can be determined.
    */
-  private function createRequirementForSeverity(int $severity):?array {
+  private function createRequirementForSeverity(int $severity): ?array {
     $severity_messages = [];
     foreach ($this->readinessCheckerManager->getResults() as $result) {
       if ($severity === REQUIREMENT_ERROR) {

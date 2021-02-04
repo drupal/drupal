@@ -72,7 +72,7 @@ class ReadinessCheckerResult {
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup|null
    *   The summary.
    */
-  public function getErrorsSummary():?TranslatableMarkup {
+  public function getErrorsSummary(): ?TranslatableMarkup {
     return $this->errorsSummary;
   }
 
@@ -82,7 +82,7 @@ class ReadinessCheckerResult {
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup|null
    *   The summary.
    */
-  public function getWarningsSummary():?TranslatableMarkup {
+  public function getWarningsSummary(): ?TranslatableMarkup {
     return $this->warningsSummary;
   }
 
@@ -92,7 +92,7 @@ class ReadinessCheckerResult {
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup[]
    *   The error messages.
    */
-  public function getErrorMessages():array {
+  public function getErrorMessages(): array {
     return $this->errorMessages;
   }
 
@@ -102,7 +102,7 @@ class ReadinessCheckerResult {
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup[]
    *   The warning messages.
    */
-  public function getWarningMessages():array {
+  public function getWarningMessages(): array {
     return $this->warningMessages;
   }
 
