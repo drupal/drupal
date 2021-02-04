@@ -134,7 +134,6 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $this->drupalLogin($this->checkerRunnerUser);
     TestChecker::setTestMessages(['OMG! Your server is on 💧!'], [], new TranslatableMarkup('Summary: 💧'));
     $this->drupalGet('admin/structure');
-    file_put_contents("/Users/ted.bowman/sites/test.html", $this->getSession()->getPage()->getOuterHtml());
     $assert->pageTextContainsOnce('Your site has not recently run an update readiness check. Run readiness checks now.');
     $this->clickLink('Run readiness checks now.');
     $assert->addressEquals('admin/structure');
