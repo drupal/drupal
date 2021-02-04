@@ -25,7 +25,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
   /**
    * Expected message for readiness checkers returning warning messages.
    */
-  const WARNINGS_MESSAGE = 'Your site does not pass some readiness checks for automatic updates. Depending on the nature of the failures, it might effect the eligibility for automatic updates.';
+  const WARNINGS_MESSAGE = 'Your site does not pass some readiness checks for automatic updates. Depending on the nature of the failures, it might affect the eligibility for automatic updates.';
 
   /**
    * {@inheritdoc}

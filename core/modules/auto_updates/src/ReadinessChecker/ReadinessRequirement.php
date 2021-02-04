@@ -172,7 +172,7 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
         'description' => $severity_messages,
       ];
       $requirement['value'] = $severity === REQUIREMENT_WARNING ?
-        $this->t('Your site does not pass some readiness checks for automatic updates. Depending on the nature of the failures, it might effect the eligibility for automatic updates.') :
+        $this->t('Your site does not pass some readiness checks for automatic updates. Depending on the nature of the failures, it might affect the eligibility for automatic updates.') :
         $this->t('Your site does not pass some readiness checks for automatic updates. It cannot be automatically updated until further action is performed.');
       return $requirement;
     }
