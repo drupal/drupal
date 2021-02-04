@@ -108,7 +108,7 @@ abstract class FileSystemBase implements ReadinessCheckerInterface {
    * @return bool
    *   TRUE if they are on the same file system, FALSE otherwise.
    *
-   * @throws \Exception
+   * @throws \RuntimeException
    *   Thrown if the an error is found trying get the directory information.
    */
   protected function areSameLogicalDisk(string $root, string $vendor): bool {
