@@ -64,7 +64,7 @@ function auto_updates_page_top(array &$page_top) {
             if (!$has_warnings) {
               // @todo Link "automatic updates" to documentation in
               //    https://www.drupal.org/node/3168405.
-              \Drupal::messenger()->addWarning(t('Your site does not pass some readiness checks for automatic updates. Depending on the nature of the failures, it might effect the eligibility for automatic updates.'));
+              \Drupal::messenger()->addWarning(t('Your site does not pass some readiness checks for automatic updates. Depending on the nature of the failures, it might affect the eligibility for automatic updates.'));
               $has_warnings = TRUE;
             }
             $message = count($warnings) === 1 ? array_pop($warnings) : $result->getWarningsSummary();
