@@ -29,13 +29,23 @@ abstract class FileSystemBase implements ReadinessCheckerInterface {
   protected $vendorDir = NULL;
 
   /**
+   * The class loader service.
+   *
+   * @var \Composer\Autoload\ClassLoader
+   */
+  protected $classLoader;
+
+  /**
    * FileSystemBase constructor.
    *
    * @param string $app_root
    *   The app root.
+   * @param \Composer\Autoload\ClassLoader $class_loader
+   *   The class loader service.
    */
-  public function __construct(string $app_root) {
+  public function __construct(string $app_root, ClassLoader $class_loader) {
     $this->rootPath = $app_root;
+    $this->classLoader = $class_loader;
   }
 
   /**
@@ -77,7 +87,7 @@ abstract class FileSystemBase implements ReadinessCheckerInterface {
   protected function getVendorPath(): string {
     if ($this->vendorDir === NULL) {
       try {
-        $class_loader_reflection = new \ReflectionClass(ClassLoader::class);
+        $class_loader_reflection = new \ReflectionClass(get_class($this->classLoader));
         $this->vendorDir = dirname($class_loader_reflection->getFileName(), 2);
       }
       catch (\ReflectionException $e) {

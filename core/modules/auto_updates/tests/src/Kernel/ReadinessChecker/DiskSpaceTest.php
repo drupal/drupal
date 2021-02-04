@@ -23,8 +23,11 @@ class DiskSpaceTest extends KernelTestBase {
    * Tests the functionality of disk space readiness checks.
    */
   public function testDiskSpace():void {
+    /** @var \Composer\Autoload\ClassLoader  $class_loader */
+    $class_loader = $this->container->get('class_loader');
+    $app_root = $this->container->getParameter('app.root');
     // No disk space issues.
-    $checker = new DiskSpace($this->container->getParameter('app.root'));
+    $checker = new DiskSpace($app_root, $class_loader);
     // Readiness checkers are services and will always have the public property
     // '_serviceId'.
     $checker->_serviceId = 'auto_updates.disk_space_checker';
@@ -32,7 +35,7 @@ class DiskSpaceTest extends KernelTestBase {
     $this->assertNull($result);
 
     // Out of space.
-    $checker = new TestDiskSpace($this->container->getParameter('app.root'));
+    $checker = new TestDiskSpace($app_root, $class_loader);
     $checker->_serviceId = 'auto_updates.disk_space_checker';
     $result = $checker->getResult();
     $messages = $result->getErrorMessages();
@@ -40,7 +43,7 @@ class DiskSpaceTest extends KernelTestBase {
     $this->assertStringMatchesFormat('Logical disk "%s" has insufficient space. There must be at least %s megabytes free.', (string) $messages[0]);
 
     // Out of space not the same logical disk.
-    $checker = new TestDiskSpaceNonSameDisk($this->container->getParameter('app.root'));
+    $checker = new TestDiskSpaceNonSameDisk($app_root, $class_loader);
     $checker->_serviceId = 'auto_updates.disk_space_checker';
     $result = $checker->getResult();
     $messages = $result->getErrorMessages();
@@ -49,7 +52,7 @@ class DiskSpaceTest extends KernelTestBase {
     $this->assertStringMatchesFormat('Vendor filesystem "%s" has insufficient space. There must be at least %s megabytes free.', (string) $messages[1]);
 
     // Web root and vendor path are invalid.
-    $checker = new TestDiskSpaceInvalidVendor('if_there_was_ever_a_folder_with_this_path_this_test_would_fail');
+    $checker = new TestDiskSpaceInvalidVendor('if_there_was_ever_a_folder_with_this_path_this_test_would_fail', $class_loader);
     $checker->_serviceId = 'auto_updates.disk_space_checker';
     $result = $checker->getResult();
     $messages = $result->getErrorMessages();

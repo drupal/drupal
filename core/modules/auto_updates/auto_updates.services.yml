@@ -1,7 +1,7 @@
 services:
   auto_updates.disk_space_checker:
     class: Drupal\auto_updates\ReadinessChecker\DiskSpace
-    arguments: ['%app.root%']
+    arguments: ['%app.root%', '@class_loader']
     tags:
       - { name: auto_updates.readiness_checker }
   auto_updates.readiness_checker_manager:
