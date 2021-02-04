@@ -5,15 +5,12 @@ namespace Drupal\auto_updates_test\ReadinessChecker;
 use Drupal\auto_updates\ReadinessChecker\ReadinessCheckerInterface;
 use Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult;
 use Drupal\Core\State\StateInterface;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * A test readiness checker.
  */
 class TestChecker implements ReadinessCheckerInterface {
-
-  use StringTranslationTrait;
 
   /**
    * The state service.
