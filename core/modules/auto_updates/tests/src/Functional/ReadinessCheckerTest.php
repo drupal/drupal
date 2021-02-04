@@ -74,7 +74,6 @@ class ReadinessCheckerTest extends BrowserTestBase {
    */
   public function testReadinessChecksStatusReport():void {
     $assert = $this->assertSession();
-    $page = $this->getSession()->getPage();
 
     // Ensure automated_cron is disabled before installing auto_updates. This
     // ensures we are testing that auto_updates runs the checkers when the
@@ -98,6 +97,11 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/status');
     $this->assertReadinessReportMatches('Your site has not recently checked if it is ready to apply automatic updates. Readiness checks were last run %s ago.', 'warning', FALSE);
     $assert->linkNotExists('Run readiness checks');
+    // A user without the permission to run the checkers will not see a message
+    // on other pages if the checkers need to be run again.
+    $this->drupalGet('admin/structure');
+    $assert->pageTextNotContains('Your site has not recently run an update readiness check.');
+    $assert->linkNotExists('Run readiness checks now.');
 
     // Confirm a user with the permission to run readiness checks does have a
     // link to run the checks when the checks need to be run again.
@@ -111,7 +115,6 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $assert->statusCodeEquals(200);
     // Confirm redirect back to status report page.
     $assert->addressEquals('/admin/reports/status');
-    $assert->pageTextNotContains('Access denied');
     $this->assertReadinessReportMatches('OMG 🚒. Your server is on 🔥!', 'error', static::ERRORS_MESSAGE);
 
     // @todo Should we always show when the checks were last run and a link to
@@ -120,6 +123,18 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $this->drupalLogin($this->reportViewerUser);
     $this->drupalGet('admin/reports/status');
     $this->assertReadinessReportMatches('OMG 🚒. Your server is on 🔥!', 'error', static::ERRORS_MESSAGE);
+
+    // Confirm that a user with the correct permission can also run the checkers
+    // on another admin page.
+    TestTime::setFakeTimeByOffset('+4 days');
+    $this->drupalLogin($this->checkerRunnerUser);
+    TestChecker::setTestMessages(['OMG! Your server is on 💧!'], [], new TranslatableMarkup('Summary: 💧'));
+    $this->drupalGet('admin/structure');
+    file_put_contents("/Users/ted.bowman/sites/test.html", $this->getSession()->getPage()->getOuterHtml());
+    $assert->pageTextContainsOnce('Your site has not recently run an update readiness check. Run readiness checks now.');
+    $this->clickLink('Run readiness checks now.');
+    $assert->addressEquals('admin/structure');
+    $assert->pageTextContainsOnce('OMG! Your server is on 💧!', 'error');
 
     TestChecker::setTestMessages(
       ['OMG 🔌. Some one unplugged the server! How is this site even running?'],

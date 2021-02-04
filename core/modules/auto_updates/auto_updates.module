@@ -33,39 +33,43 @@ function auto_updates_page_top(array &$page_top) {
     /** @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager $checker_manager */
     $checker_manager = \Drupal::service('auto_updates.readiness_checker_manager');
     if (!$checker_manager->hasRunRecently()) {
-      /** @var \Drupal\Core\Path\CurrentPathStack $current_path */
-      $current_path = \Drupal::service('path.current');
-      \Drupal::messenger()->addError(t('Your site has not recently run an update readiness check. <a href=":url">Run readiness checks now.</a>', [
-        ':url' => Url::fromRoute('auto_updates.update_readiness')->setOption('query', ['destination' => $current_path->getPath()])->toString(),
-      ]));
-    }
-    $results = $checker_manager->getResults();
-    $has_errors = FALSE;
-    foreach ($results as $result) {
-      if ($errors = $result->getErrorMessages()) {
-        if (!$has_errors) {
-          // @todo Link "automatic updates" to documentation in
-          //    https://www.drupal.org/node/3168405.
-          \Drupal::messenger()->addError(t('Your site does not pass some readiness checks for automatic updates. It cannot be automatically updated until further action is performed.'));
-          $has_errors = TRUE;
-        }
-        $message = count($errors) === 1 ? array_pop($errors) : $result->getErrorsSummary();
-        \Drupal::messenger()->addError($message);
+      if (\Drupal::currentUser()->hasPermission('administer software updates')) {
+        /** @var \Drupal\Core\Path\CurrentPathStack $current_path */
+        $current_path = \Drupal::service('path.current');
+        \Drupal::messenger()->addError(t('Your site has not recently run an update readiness check. <a href=":url">Run readiness checks now.</a>', [
+          ':url' => Url::fromRoute('auto_updates.update_readiness')->setOption('query', ['destination' => $current_path->getPath()])->toString(),
+        ]));
       }
     }
-    // Only display warning summaries if no errors were displayed.
-    if (!$has_errors) {
-      $has_warnings = FALSE;
+    else {
+      $results = $checker_manager->getResults();
+      $has_errors = FALSE;
       foreach ($results as $result) {
-        if ($warnings = $result->getWarningMessages()) {
-          if (!$has_warnings) {
+        if ($errors = $result->getErrorMessages()) {
+          if (!$has_errors) {
             // @todo Link "automatic updates" to documentation in
             //    https://www.drupal.org/node/3168405.
-            \Drupal::messenger()->addWarning(t('Your site does not pass some readiness checks for automatic updates. Depending on the nature of the failures, it might effect the eligibility for automatic updates.'));
-            $has_warnings = TRUE;
+            \Drupal::messenger()->addError(t('Your site does not pass some readiness checks for automatic updates. It cannot be automatically updated until further action is performed.'));
+            $has_errors = TRUE;
           }
-          $message = count($warnings) === 1 ? array_pop($warnings) : $result->getWarningsSummary();
-          \Drupal::messenger()->addWarning($message);
+          $message = count($errors) === 1 ? array_pop($errors) : $result->getErrorsSummary();
+          \Drupal::messenger()->addError($message);
+        }
+      }
+      // Only display warning summaries if no errors were displayed.
+      if (!$has_errors) {
+        $has_warnings = FALSE;
+        foreach ($results as $result) {
+          if ($warnings = $result->getWarningMessages()) {
+            if (!$has_warnings) {
+              // @todo Link "automatic updates" to documentation in
+              //    https://www.drupal.org/node/3168405.
+              \Drupal::messenger()->addWarning(t('Your site does not pass some readiness checks for automatic updates. Depending on the nature of the failures, it might effect the eligibility for automatic updates.'));
+              $has_warnings = TRUE;
+            }
+            $message = count($warnings) === 1 ? array_pop($warnings) : $result->getWarningsSummary();
+            \Drupal::messenger()->addWarning($message);
+          }
         }
       }
     }
