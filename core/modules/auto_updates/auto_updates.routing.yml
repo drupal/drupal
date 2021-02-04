@@ -1,7 +1,7 @@
-auto_updates.status_update_readiness:
+auto_updates.update_readiness_warning:
   path: '/admin/reports/auto_updates/readiness'
   defaults:
-    _controller: '\Drupal\auto_updates\Controller\ReadinessCheckerController::runOnStatusReport'
+    _controller: '\Drupal\auto_updates\Controller\ReadinessCheckerController::runAndDisplayWarning'
     _title: 'Update readiness checking'
   requirements:
     _permission: 'administer software updates'

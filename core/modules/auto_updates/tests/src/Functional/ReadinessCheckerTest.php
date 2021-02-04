@@ -115,6 +115,10 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $assert->statusCodeEquals(200);
     // Confirm redirect back to status report page.
     $assert->addressEquals('/admin/reports/status');
+    // Assert that when the runners are run manually the message that updates
+    // will not be performed because of errors is displayed on the top of the
+    // page in message.
+    $assert->pageTextMatchesCount(2, '/' . preg_quote(static::ERRORS_MESSAGE) . '/');
     $this->assertReadinessReportMatches('OMG 🚒. Your server is on 🔥!', 'error', static::ERRORS_MESSAGE);
 
     // @todo Should we always show when the checks were last run and a link to
