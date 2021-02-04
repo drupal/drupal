@@ -488,8 +488,6 @@ Usability
 - Roy Scholten 'yoroy' https://www.drupal.org/u/yoroy
 - Bojhan Somers 'Bojhan' https://www.drupal.org/u/bojhan
 
-Provisional membership: None at this time.
-
 
 Security team
 -------------
@@ -527,8 +525,6 @@ Media Initiative
 Workflow Initiative
 - Dick Olsson 'dixon_' https://www.drupal.org/u/dixon_
 
-Provisional membership: None at this time.
-
 
 Core mentoring coordinators
 ---------------------------
@@ -551,5 +547,3 @@ participate in mentoring.
 - (provisional) Chris Darke 'chrisdarke' https://www.drupal.org/u/chrisdarke
 - (provisional) Brian Gilbert 'realityloop' https://www.drupal.org/u/realityloop
 - (provisional) AmyJune Hineline 'volkswagenchick' https://www.drupal.org/u/volkswagenchick
-
-Provisional membership: None at this time.
