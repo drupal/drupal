@@ -50,7 +50,7 @@ Subsystem maintainers
 The Drupal Core subsystem maintainers oversee the development of Drupal
 subsystems. See https://www.drupal.org/contribute/core-maintainers for more
 information on their responsibilities, and to find out how to become a subsystem
-maintainer. Current subsystem maintainers for Drupal 8:
+maintainer. Current subsystem maintainers:
 
 Actions
 - ?
@@ -510,7 +510,7 @@ Initiative coordinators
 The Drupal Core Initiative coordinators oversee approved projects that
 re-architect or otherwise improve large areas of Drupal core. See
 https://www.drupal.org/community-initiatives/drupal-core for more information on
-their responsibilities. The initiative coordinators for Drupal 8 are:
+their responsibilities. The initiative coordinators are:
 
 Decoupled Menus Initiative
 - Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
