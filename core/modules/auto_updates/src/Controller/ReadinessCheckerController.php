@@ -51,7 +51,7 @@ class ReadinessCheckerController extends ControllerBase {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
+  public static function create(ContainerInterface $container): self {
     return new static(
       $container->get('auto_updates.readiness_checker_manager'),
       $container->get('string_translation'),

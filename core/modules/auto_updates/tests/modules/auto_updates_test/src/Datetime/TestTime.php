@@ -12,7 +12,7 @@ class TestTime extends Time {
   /**
    * {@inheritdoc}
    */
-  public function getRequestTime() {
+  public function getRequestTime(): int {
     if ($faked_date = \Drupal::state()->get('auto_updates_test.fake_date_time')) {
       return \DateTime::createFromFormat('U', $faked_date)->getTimestamp();
     }

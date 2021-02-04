@@ -5,6 +5,7 @@ namespace Drupal\auto_updates\ReadinessChecker;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Url;
 use Drupal\system\SystemManager;
@@ -70,7 +71,7 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
    * @return array
    *   Requirements arrays as specified by hook_requirements().
    */
-  public function getRequirements() {
+  public function getRequirements(): array {
     $readiness_check_url = Url::fromRoute('auto_updates.update_readiness_warning');
 
     $last_check_timestamp = $this->readinessCheckerManager->getMostRecentRunTime();
@@ -187,7 +188,7 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup
    *   The message.
    */
-  public function getMessageForSeverity(int $severity) {
+  public function getMessageForSeverity(int $severity): TranslatableMarkup {
     return $severity === SystemManager::REQUIREMENT_WARNING ?
       $this->t('Your site does not pass some readiness checks for automatic updates. Depending on the nature of the failures, it might affect the eligibility for automatic updates.') :
       $this->t('Your site does not pass some readiness checks for automatic updates. It cannot be automatically updated until further action is performed.');
