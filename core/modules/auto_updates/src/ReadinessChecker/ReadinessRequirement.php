@@ -72,7 +72,7 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
    *   Requirements arrays as specified by hook_requirements().
    */
   public function getRequirements(): array {
-    $readiness_check_url = Url::fromRoute('auto_updates.update_readiness_warning');
+    $readiness_check_url = Url::fromRoute('auto_updates.update_readiness', ['display_message_on_fails' => TRUE]);
 
     $last_check_timestamp = $this->readinessCheckerManager->getMostRecentRunTime();
     if ($last_check_timestamp === NULL) {
