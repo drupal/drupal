@@ -10,7 +10,7 @@ https://www.drupal.org/core/maintainers/past
 Core committers
 ---------------
 
-The Drupal Core committers oversee the development of Drupal as a whole. The
+The Drupal core committers oversee the development of Drupal as a whole. The
 core committers for Drupal are (in alphabetical order):
 
 BDFL
@@ -44,7 +44,7 @@ Committer team facilitators
 Subsystem maintainers
 ---------------------
 
-The Drupal Core subsystem maintainers oversee the development of Drupal
+The Drupal core subsystem maintainers oversee the development of Drupal
 subsystems. See https://www.drupal.org/contribute/core-maintainers for more
 information on their responsibilities, and to find out how to become a subsystem
 maintainer. Current subsystem maintainers:
@@ -506,7 +506,7 @@ The security team lead is:
 Initiative coordinators
 -----------------------
 
-The Drupal Core Initiative coordinators oversee approved projects that
+The Drupal core initiative coordinators oversee approved projects that
 re-architect or otherwise improve large areas of Drupal core. See
 https://www.drupal.org/community-initiatives/drupal-core for more information on
 their responsibilities. The initiative coordinators are:
@@ -529,7 +529,7 @@ Workflow Initiative
 Core mentoring coordinators
 ---------------------------
 
-The Drupal Core mentors inspire, enable, and encourage new core contributors.
+The Drupal core mentors inspire, enable, and encourage new core contributors.
 See https://www.drupal.org/core-mentoring for more information about mentoring.
 
 Mentoring coordinators recruit and coach other mentors. They work on contributor
