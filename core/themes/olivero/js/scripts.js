@@ -14,7 +14,7 @@
   }
 
   Drupal.olivero.isDesktopNav = isDesktopNav;
-  var wideNavButton = document.querySelector('.nav-primary__button');
+  var wideNavButton = document.querySelector('.wide-nav-expand');
   var siteHeaderFixable = document.querySelector('.site-header__fixable');
 
   function wideNavIsOpen() {

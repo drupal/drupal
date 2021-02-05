@@ -1,11 +1,10 @@
 /**
  * @file
- * Main Header.
+ * Site header.
  */
 
 @import "../base/variables.pcss.css";
 
-/* Header */
 .site-header {
   position: relative;
 
@@ -16,7 +15,7 @@
   }
 }
 
-.header__left {
+.site-header__initial {
   position: relative;
   z-index: 102;
   display: flex;
