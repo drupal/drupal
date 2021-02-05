@@ -137,7 +137,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $assert->pageTextContainsOnce('Your site has not recently run an update readiness check. Run readiness checks now.');
     $this->clickLink('Run readiness checks now.');
     $assert->addressEquals('admin/structure');
-    $assert->pageTextContainsOnce('OMG! Your server is on 💧!', 'error');
+    $assert->pageTextContainsOnce('OMG! Your server is on 💧!');
 
     TestChecker::setTestMessages(
       ['OMG 🔌. Some one unplugged the server! How is this site even running?'],
