@@ -12,7 +12,6 @@ use Drupal\KernelTests\KernelTestBase;
  * @group auto_updates
  */
 class DiskSpaceTest extends KernelTestBase {
-  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
