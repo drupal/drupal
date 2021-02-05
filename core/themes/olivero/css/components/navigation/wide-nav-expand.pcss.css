@@ -1,11 +1,11 @@
 /**
  * @file
- * Nav Button Wide.
+ * Button which expands the navigation at wide viewport widths.
  */
 
 @import "../../base/variables.pcss.css";
 
-.nav-primary__button {
+.wide-nav-expand {
   display: none;
 
   @media (--nav) {
@@ -28,19 +28,19 @@
   }
 }
 
-body:not(.is-always-mobile-nav) .js-fixed .nav-primary__button {
+body:not(.is-always-mobile-nav) .js-fixed .wide-nav-expand {
   @media (--nav) {
     visibility: visible;
   }
 }
 
-body.is-always-mobile-nav .nav-primary__button {
+body.is-always-mobile-nav .wide-nav-expand {
   @media (--nav) {
     visibility: hidden;
   }
 }
 
-.nav-primary__icon {
+.wide-nav-expand__icon {
   position: relative;
   width: var(--sp2);
   height: 21px;
@@ -87,11 +87,11 @@ body.is-always-mobile-nav .nav-primary__button {
   }
 }
 
-.js-fixed .nav-primary__icon {
+.js-fixed .wide-nav-expand__icon {
   opacity: 1;
 }
 
-[aria-expanded="true"] .nav-primary__icon {
+[aria-expanded="true"] .wide-nav-expand__icon {
   & > span:nth-child(1) {
     inset-block-start: 9px;
     transform: rotate(-45deg);

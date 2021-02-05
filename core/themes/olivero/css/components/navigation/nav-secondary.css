@@ -7,14 +7,8 @@
 
 /**
  * @file
- * Nav Secondary.
+ * Secondary navigation styling.
  */
-
-.secondary-nav__wrapper {
-  display: flex;
-  margin-top: 2.25rem;
-  margin-bottom: 2.25rem;
-}
 
 .secondary-nav {
   letter-spacing: 0.02em;
@@ -23,35 +17,35 @@
 }
 
 [dir="ltr"] .secondary-nav ul.menu {
-    margin-left: 0;
+    margin-left: 0
 }
 
 [dir="rtl"] .secondary-nav ul.menu {
-    margin-right: 0;
+    margin-right: 0
 }
 
 [dir="ltr"] .secondary-nav ul.menu {
-    margin-right: 0;
+    margin-right: 0
 }
 
 [dir="rtl"] .secondary-nav ul.menu {
-    margin-left: 0;
+    margin-left: 0
 }
 
 [dir="ltr"] .secondary-nav ul.menu {
-    padding-left: 0;
+    padding-left: 0
 }
 
 [dir="rtl"] .secondary-nav ul.menu {
-    padding-right: 0;
+    padding-right: 0
 }
 
 [dir="ltr"] .secondary-nav ul.menu {
-    padding-right: 0;
+    padding-right: 0
 }
 
 [dir="rtl"] .secondary-nav ul.menu {
-    padding-left: 0;
+    padding-left: 0
 }
 
 .secondary-nav ul.menu {
@@ -77,11 +71,11 @@
     }
 
 [dir="ltr"] .secondary-nav ul.menu li:not(:last-child) {
-        margin-right: 1.6875rem;
+        margin-right: 1.6875rem
 }
 
 [dir="rtl"] .secondary-nav ul.menu li:not(:last-child) {
-        margin-left: 1.6875rem;
+        margin-left: 1.6875rem
 }
 
 .secondary-nav ul.menu a:not(.button--primary) {
@@ -115,43 +109,29 @@
         }
 
 @media (min-width: 75rem) {
-    body:not(.is-always-mobile-nav) .secondary-nav__wrapper {
-      justify-content: flex-end;
-      margin: 0
-
-      /* If the secondary nav is the first item within the header, it does not need left separator. */
-    }
-      body:not(.is-always-mobile-nav) .secondary-nav__wrapper:first-child .secondary-nav:before {
-        content: none;
-      }
-
     [dir="ltr"] body:not(.is-always-mobile-nav) .secondary-nav {
-      margin-left: 1.125rem;
+      margin-left: 1.125rem
   }
-
     [dir="rtl"] body:not(.is-always-mobile-nav) .secondary-nav {
-      margin-right: 1.125rem;
+      margin-right: 1.125rem
   }
-
     [dir="ltr"] body:not(.is-always-mobile-nav) .secondary-nav {
-      padding-left: 2.25rem;
+      padding-left: 2.25rem
   }
-
     [dir="rtl"] body:not(.is-always-mobile-nav) .secondary-nav {
-      padding-right: 2.25rem;
+      padding-right: 2.25rem
   }
-
     body:not(.is-always-mobile-nav) .secondary-nav {
       position: relative;
       display: flex
     }
 
       [dir="ltr"] body:not(.is-always-mobile-nav) .secondary-nav:before {
-        left: 0;
+        left: 0
   }
 
       [dir="rtl"] body:not(.is-always-mobile-nav) .secondary-nav:before {
-        right: 0;
+        right: 0
   }
 
       body:not(.is-always-mobile-nav) .secondary-nav:before {
@@ -165,10 +145,10 @@
       }
 
       [dir="ltr"] body:not(.is-always-mobile-nav) .secondary-nav ul.menu li:not(:last-child) {
-        margin-right: 2.25rem;
+        margin-right: 2.25rem
   }
 
       [dir="rtl"] body:not(.is-always-mobile-nav) .secondary-nav ul.menu li:not(:last-child) {
-        margin-left: 2.25rem;
+        margin-left: 2.25rem
   }
   }

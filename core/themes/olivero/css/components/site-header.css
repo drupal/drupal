@@ -7,10 +7,8 @@
 
 /**
  * @file
- * Main Header.
+ * Site header.
  */
-
-/* Header */
 
 .site-header {
   position: relative
@@ -25,7 +23,7 @@
 }
   }
 
-.header__left {
+.site-header__initial {
   position: relative;
   z-index: 102;
   display: flex;
