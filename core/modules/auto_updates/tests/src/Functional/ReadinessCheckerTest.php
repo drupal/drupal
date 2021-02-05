@@ -97,11 +97,6 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/status');
     $this->assertReadinessReportMatches('Your site has not recently checked if it is ready to apply automatic updates. Readiness checks were last run %s ago.', 'warning', FALSE);
     $assert->linkNotExists('Run readiness checks');
-    // A user without the permission to run the checkers will not see a message
-    // on other pages if the checkers need to be run again.
-    $this->drupalGet('admin/structure');
-    $assert->pageTextNotContains('Your site has not recently run an update readiness check.');
-    $assert->linkNotExists('Run readiness checks now.');
 
     // Confirm a user with the permission to run readiness checks does have a
     // link to run the checks when the checks need to be run again.
@@ -128,17 +123,6 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/status');
     $this->assertReadinessReportMatches('OMG 🚒. Your server is on 🔥!', 'error', static::ERRORS_MESSAGE);
 
-    // Confirm that a user with the correct permission can also run the checkers
-    // on another admin page.
-    TestTime::setFakeTimeByOffset('+4 days');
-    $this->drupalLogin($this->checkerRunnerUser);
-    TestChecker::setTestMessages(['OMG! Your server is on 💧!'], [], new TranslatableMarkup('Summary: 💧'));
-    $this->drupalGet('admin/structure');
-    $assert->pageTextContainsOnce('Your site has not recently run an update readiness check. Run readiness checks now.');
-    $this->clickLink('Run readiness checks now.');
-    $assert->addressEquals('admin/structure');
-    $assert->pageTextContainsOnce('OMG! Your server is on 💧!');
-
     TestChecker::setTestMessages(
       ['OMG 🔌. Some one unplugged the server! How is this site even running?'],
       ['It looks like it going to rain and your server is outside.'],
@@ -157,6 +141,113 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $assert->pageTextNotContains('Errors summary not displayed because only 1 error message');
     $assert->pageTextNotContains('Warnings summary not displayed because only 1 warning message.');
 
+    $keyValue->delete('readiness_check_last_run');
+    $error_messages = [
+      '😬Your server is in a cloud, a literal cloud!☁️.',
+      '😂PHP only has 32k memory.',
+    ];
+    $warning_messages = [
+      'Your server is a smart fridge. Will this work?',
+      'Your server case is duct tape!',
+    ];
+    $errors_summary = 'Errors summary displayed because more than 1 error message';
+    $warnings_summary = 'Warnings summary displayed because more than 1 warning message.';
+    TestChecker::setTestMessages(
+      $error_messages,
+      $warning_messages,
+      $errors_summary,
+      $warnings_summary,
+    );
+    $this->drupalGet('admin/reports/status');
+    // Confirm that both messages and summaries will be displayed on status
+    // report when there multiple messages.
+    $this->assertReadinessReportMatches("$errors_summary " . implode('', $error_messages), 'error', static::ERRORS_MESSAGE);
+    $this->assertReadinessReportMatches("$warnings_summary " . implode('', $warning_messages), 'warning', static::WARNINGS_MESSAGE);
+
+    $keyValue->delete('readiness_check_last_run');
+    $warning_messages = [
+      'The universe could collapse in on itself in the next second, in which case automatic updates will not run.',
+      'An asteroid could hit your server farm, which would also stop automatic updates from running.',
+    ];
+    $warnings_summary = 'Warnings summary displayed because more than 1 warning message.';
+    TestChecker::setTestMessages(
+      [],
+      $warning_messages,
+      NULL,
+      $warnings_summary,
+    );
+    $this->drupalGet('admin/reports/status');
+    $assert->pageTextContainsOnce('Update readiness checks');
+    // Confirm that warnings will display on the status report if there are no
+    // errors.
+    $this->assertReadinessReportMatches("$warnings_summary " . implode('', $warning_messages), 'warning', static::WARNINGS_MESSAGE);
+
+    $keyValue->delete('readiness_check_last_run');
+    $warning_message = 'This is your one and only warning. You have been warned.';
+    $warnings_summary = 'No need for this summary with only 1 warning.';
+    TestChecker::setTestMessages(
+      [],
+      [$warning_message],
+      NULL,
+      $warnings_summary,
+    );
+    $this->drupalGet('admin/reports/status');
+    $assert->pageTextContainsOnce('Update readiness checks');
+    $this->assertReadinessReportMatches($warning_message, 'warning', static::WARNINGS_MESSAGE);
+  }
+
+  /**
+   * Tests readiness checkers results on admin pages..
+   */
+  public function testReadinessChecksAdminPages():void {
+    $assert = $this->assertSession();
+    $messages_section_selector = '[data-drupal-messages]';
+
+    // Ensure automated_cron is disabled before installing auto_updates. This
+    // ensures we are testing that auto_updates runs the checkers when the
+    // module itself is installed and they weren't run on cron.
+    $this->assertFalse($this->container->get('module_handler')->moduleExists('automated_cron'));
+    $this->container->get('module_installer')->install(['auto_updates', 'auto_updates_test']);
+
+    // If site is ready for updates no message will be displayed on admin pages.
+    $this->drupalLogin($this->reportViewerUser);
+    $this->drupalGet('admin/reports/status');
+    $this->assertReadinessReportMatches('Your site is ready for automatic updates.', 'checked', FALSE);
+    $this->drupalGet('admin/structure');
+    $assert->elementNotExists('css', $messages_section_selector);
+
+
+    // Confirm a user without the permission to run readiness checks does not
+    // have a link to run the checks when the checks need to be run again.
+    TestChecker::setTestMessages(['OMG! Your server is on 💧!'], [], new TranslatableMarkup('Summary: 💧'));
+    TestTime::setFakeTimeByOffset('+2 days');
+    // A user without the permission to run the checkers will not see a message
+    // on other pages if the checkers need to be run again.
+    $this->drupalGet('admin/structure');
+    $assert->elementNotExists('css', $messages_section_selector);
+
+
+    // Confirm that a user with the correct permission can also run the checkers
+    // on another admin page.
+    $this->drupalLogin($this->checkerRunnerUser);
+    $this->drupalGet('admin/structure');
+    $assert->elementExists('css', $messages_section_selector);
+    $assert->pageTextContainsOnce('Your site has not recently run an update readiness check. Run readiness checks now.');
+    $this->clickLink('Run readiness checks now.');
+    $assert->addressEquals('admin/structure');
+    file_put_contents("/Users/ted.bowman/sites/test.html", $this->getSession()->getPage()->getOuterHtml());
+    $assert->pageTextContainsOnce('OMG! Your server is on 💧!');
+
+    TestChecker::setTestMessages(
+      ['OMG 🔌. Some one unplugged the server! How is this site even running?'],
+      ['It looks like it going to rain and your server is outside.'],
+      'Errors summary not displayed because only 1 error message',
+      'Warnings summary not displayed because only 1 warning message.'
+    );
+    /** @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface $keyValue */
+    $keyValue = $this->container->get('keyvalue.expirable')->get('auto_updates');
+    $keyValue->delete('readiness_check_last_run');
+    // Confirm a new message is displayed if the stored messages are deleted.
     $this->drupalGet('admin/structure');
     $assert->pageTextContainsOnce(static::ERRORS_MESSAGE);
     // Confirm on admin pages that a single error will be displayed instead of a
@@ -184,11 +275,6 @@ class ReadinessCheckerTest extends BrowserTestBase {
       $errors_summary,
       $warnings_summary,
     );
-    $this->drupalGet('admin/reports/status');
-    // Confirm that both messages and summaries will be displayed on status
-    // report when there multiple messages.
-    $this->assertReadinessReportMatches("$errors_summary " . implode('', $error_messages), 'error', static::ERRORS_MESSAGE);
-    $this->assertReadinessReportMatches("$warnings_summary " . implode('', $warning_messages), 'warning', static::WARNINGS_MESSAGE);
     $this->drupalGet('admin/structure');
     // Confirm on admin pages only the error summary will be displayed if there
     // is more than 1 error.
@@ -213,11 +299,6 @@ class ReadinessCheckerTest extends BrowserTestBase {
       NULL,
       $warnings_summary,
     );
-    $this->drupalGet('admin/reports/status');
-    $assert->pageTextContainsOnce('Update readiness checks');
-    // Confirm that warnings will display on the status report if there are no
-    // errors.
-    $this->assertReadinessReportMatches("$warnings_summary " . implode('', $warning_messages), 'warning', static::WARNINGS_MESSAGE);
     $this->drupalGet('admin/structure');
     // Confirm that the warnings summary is displayed on admin pages if there
     // are no errors.
@@ -236,9 +317,6 @@ class ReadinessCheckerTest extends BrowserTestBase {
       NULL,
       $warnings_summary,
     );
-    $this->drupalGet('admin/reports/status');
-    $assert->pageTextContainsOnce('Update readiness checks');
-    $this->assertReadinessReportMatches($warning_message, 'warning', static::WARNINGS_MESSAGE);
     $this->drupalGet('admin/structure');
     $assert->pageTextNotContains(static::ERRORS_MESSAGE);
     // Confirm that a single warning is displayed and not the summary on admin
