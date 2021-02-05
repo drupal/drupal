@@ -3,7 +3,6 @@
 namespace Drupal\Tests\auto_updates\Kernel\ReadinessChecker;
 
 use Drupal\auto_updates\ReadinessChecker\DiskSpace;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
