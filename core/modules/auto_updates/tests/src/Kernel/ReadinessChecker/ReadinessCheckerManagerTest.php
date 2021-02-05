@@ -51,15 +51,15 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
     return [
       'warnings_only' => [
         'errors' => [],
-        'warnings' => ['A warning is bad but will not stop an update'],
+        'warnings' => ['A warning is bad but will NOT stop an update'],
       ],
       'errors_only' => [
-        'errors' => ['A error is very bad and will not stop an update'],
+        'errors' => ['A error is very bad and WILL stop an update'],
         'warnings' => [],
       ],
       'both' => [
-        'errors' => ['A error is very bad and will not stop an update'],
-        'warnings' => ['A warning is bad but will not stop an update'],
+        'errors' => ['A error is very bad and WILL stop an update'],
+        'warnings' => ['A warning is bad but will NOT stop an update'],
       ],
       'neither' => [
         'errors' => [],
