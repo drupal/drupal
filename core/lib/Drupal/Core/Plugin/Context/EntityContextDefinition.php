@@ -23,7 +23,15 @@ class EntityContextDefinition extends ContextDefinition {
     if (strpos($data_type, 'entity:') !== 0) {
       $data_type = "entity:$data_type";
     }
-    parent::__construct($data_type, $label, $required, $multiple, $description, $default_value);
+
+    // Since it's impossible to create an entity using annotations, it doesn't
+    // make sense for entity context definitions to have a default value;
+    // hard-code the parameter value when calling the parent constructor.
+    parent::__construct($data_type, $label, $required, $multiple, $description, NULL);
+
+    // In development environments, this assertion should cause an exception to
+    // inform developers that default values will be discarded in production.
+    assert($default_value === NULL, 'EntityContextDefinition cannot have a default value');
   }
 
   /**
@@ -111,6 +119,21 @@ class EntityContextDefinition extends ContextDefinition {
    */
   public static function fromEntity(EntityInterface $entity) {
     return static::fromEntityType($entity->getEntityType());
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * Entity context definitions cannot have a default value. Since the original
+   * API for this method does not accommodate throwing an exception, calling
+   * this method won't exhibit any side effects in production.
+   *
+   * In development environments, an assertion should cause an exception to
+   * inform developers that default values will be discarded in production.
+   */
+  public function setDefaultValue($default_value) {
+    assert($default_value === NULL, 'EntityContextDefinition cannot have a default value');
+    return $this;
   }
 
 }
