@@ -8,9 +8,11 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
 use Drupal\Core\Layout\LayoutInterface;
+use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Plugin\PluginFormFactoryInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Plugin\PluginWithFormsInterface;
+use Drupal\layout_builder\Context\LayoutBuilderContextTrait;
 use Drupal\layout_builder\Controller\LayoutRebuildTrait;
 use Drupal\layout_builder\LayoutBuilderHighlightTrait;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
@@ -27,6 +29,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ConfigureSectionForm extends FormBase {
 
   use AjaxFormHelperTrait;
+  use LayoutBuilderContextTrait;
   use LayoutBuilderHighlightTrait;
   use LayoutRebuildTrait;
 
@@ -119,8 +122,12 @@ class ConfigureSectionForm extends FormBase {
     else {
       $section = new Section($plugin_id);
     }
+    // Passing available contexts to the layout plugin here could result in an
+    // exception since the layout may not have a context mapping for a required
+    // context slot on creation.
     $this->layout = $section->getLayout();
 
+    $form_state->setTemporaryValue('gathered_contexts', $this->getAvailableContexts($this->sectionStorage));
     $form['#tree'] = TRUE;
     $form['layout_settings'] = [];
     $subform_state = SubformState::createForSubform($form['layout_settings'], $form, $form_state);
@@ -166,6 +173,11 @@ class ConfigureSectionForm extends FormBase {
     // Call the plugin submit handler.
     $subform_state = SubformState::createForSubform($form['layout_settings'], $form, $form_state);
     $this->getPluginForm($this->layout)->submitConfigurationForm($form['layout_settings'], $subform_state);
+
+    // If this layout is context-aware, set the context mapping.
+    if ($this->layout instanceof ContextAwarePluginInterface) {
+      $this->layout->setContextMapping($subform_state->getValue('context_mapping', []));
+    }
 
     $plugin_id = $this->layout->getPluginId();
     $configuration = $this->layout->getConfiguration();

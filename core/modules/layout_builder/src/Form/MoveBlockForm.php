@@ -5,6 +5,7 @@ namespace Drupal\layout_builder\Form;
 use Drupal\Core\Ajax\AjaxFormHelperTrait;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\layout_builder\Context\LayoutBuilderContextTrait;
 use Drupal\layout_builder\Controller\LayoutRebuildTrait;
 use Drupal\layout_builder\LayoutBuilderHighlightTrait;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
@@ -20,6 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class MoveBlockForm extends FormBase {
 
   use AjaxFormHelperTrait;
+  use LayoutBuilderContextTrait;
   use LayoutBuilderHighlightTrait;
   use LayoutRebuildTrait;
 
@@ -119,9 +121,10 @@ class MoveBlockForm extends FormBase {
     $form['#attributes']['data-layout-builder-target-highlight-id'] = $this->blockUpdateHighlightId($uuid);
 
     $sections = $section_storage->getSections();
+    $contexts = $this->getAvailableContexts($section_storage);
     $region_options = [];
     foreach ($sections as $section_delta => $section) {
-      $layout = $section->getLayout();
+      $layout = $section->getLayout($contexts);
       $layout_definition = $layout->getPluginDefinition();
       if (!($section_label = $section->getLayoutSettings()['label'])) {
         $section_label = $this->t('Section: @delta', ['@delta' => $section_delta + 1])->render();
