@@ -8,8 +8,8 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 /**
  * Base class for file system checkers.
  *
- * Readiness checkers that require knowing the web root and/or vendor
- * directories to perform their checks should extend this class.
+ * Readiness checkers that need the paths of the web root and vendor directories
+ * to perform their checks should extend this class.
  */
 abstract class FileSystemBase implements ReadinessCheckerInterface {
   use StringTranslationTrait;
