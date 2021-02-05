@@ -101,7 +101,7 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
   /**
    * Gets the messages of a particular type from the manager.
    *
-   * @param $type
+   * @param string $type
    *   The type of messages to get, either 'warnings' or 'errors'.
    * @param bool $refresh
    *   Whether to refresh the results.
@@ -111,7 +111,7 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
    *
    * @throws \Exception
    */
-  protected function getMessagesFromManager($type, bool $refresh = FALSE): array {
+  protected function getMessagesFromManager(string $type, bool $refresh = FALSE): array {
     $this->assertTrue(in_array($type, ['warnings', 'errors']), "Only 'warning' and 'errors' are valid types.");
     $manager = $this->container->get('auto_updates.readiness_checker_manager');
     $results = $manager->getResults($refresh);
