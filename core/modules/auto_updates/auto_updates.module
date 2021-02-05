@@ -34,10 +34,8 @@ function auto_updates_page_top(array &$page_top) {
     $checker_manager = \Drupal::service('auto_updates.readiness_checker_manager');
     if (!$checker_manager->hasRunRecently()) {
       if (\Drupal::currentUser()->hasPermission('administer software updates')) {
-        /** @var \Drupal\Core\Path\CurrentPathStack $current_path */
-        $current_path = \Drupal::service('path.current');
         \Drupal::messenger()->addError(t('Your site has not recently run an update readiness check. <a href=":url">Run readiness checks now.</a>', [
-          ':url' => Url::fromRoute('auto_updates.update_readiness')->setOption('query', ['destination' => $current_path->getPath()])->toString(),
+          ':url' => Url::fromRoute('auto_updates.update_readiness')->setOption('query', \Drupal::destination()->getAsArray())->toString(),
         ]));
       }
     }
