@@ -53,7 +53,7 @@ class ReadinessCheckerManager {
    * ReadinessCheckerManager constructor.
    *
    * @param \Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface $key_value_expirable_factory
-   *   The config factory.
+   *   The key/value expirable factory.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    * @param \Drupal\Component\Datetime\TimeInterface $time
@@ -87,8 +87,8 @@ class ReadinessCheckerManager {
    * Get the readiness checker results.
    *
    * @param bool $refresh
-   *   (optional) Whether to refresh the results, defaults FALSE. If FALSE then
-   *   cached results will be returned if available.
+   *   (optional) Whether to refresh the results, defaults to FALSE. If FALSE
+   *   then cached results will be returned if available.
    *
    * @return \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[]
    *   The result objects for the readiness checkers.
@@ -152,7 +152,7 @@ class ReadinessCheckerManager {
   }
 
   /**
-   * Gets the current checker service Ids.
+   * Gets the current checker service IDs.
    *
    * @return string
    *   A concatenated list of checker service IDs delimited by '::'.

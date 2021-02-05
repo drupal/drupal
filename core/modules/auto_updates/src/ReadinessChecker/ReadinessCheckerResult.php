@@ -110,9 +110,9 @@ class ReadinessCheckerResult {
    * Get the readiness checker ID that produces the result.
    *
    * @return string
-   *   The readiness checker id.
+   *   The readiness checker ID.
    */
-  public function getCheckerId():string {
+  public function getCheckerId(): string {
     return $this->checkerId;
   }
 

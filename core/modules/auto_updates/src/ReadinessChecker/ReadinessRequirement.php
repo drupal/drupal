@@ -148,7 +148,7 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
         $checker_messages = $result->getWarningMessages();
       }
       else {
-        throw new \UnexpectedValueException('Unknown severity type: ' . $severity);
+        throw new \InvalidArgumentException('Unknown severity type: ' . $severity);
       }
       if ($checker_messages) {
         if (count($checker_messages) === 1) {
