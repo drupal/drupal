@@ -1046,6 +1046,39 @@ class LayoutBuilderTest extends BrowserTestBase {
   }
 
   /**
+   * Tests that layouts can be context-aware.
+   */
+  public function testContextAwareLayouts() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $account = $this->drupalCreateUser([
+      'configure any layout',
+      'administer node display',
+    ]);
+    $this->drupalLogin($account);
+
+    $this->drupalPostForm('admin/structure/types/manage/bundle_with_section_field/display/default', ['layout[enabled]' => TRUE], 'Save');
+    $page->clickLink('Manage layout');
+    $page->clickLink('Add section');
+    $page->clickLink('Layout Builder Test: Context Aware');
+    $page->pressButton('Add section');
+    // See \Drupal\layout_builder_test\Plugin\Layout\TestContextAwareLayout::build().
+    $assert_session->elementExists('css', '.user--' . $account->getAccountName());
+    $page->clickLink('Configure Section 1');
+    $page->fillField('layout_settings[label]', 'My section');
+    $page->pressButton('Update');
+    $assert_session->linkExists('Configure My section');
+    $page->clickLink('Add block');
+    $page->clickLink('Powered by Drupal');
+    $page->pressButton('Add block');
+    $page->pressButton('Save layout');
+    $this->drupalGet('node/1');
+    // See \Drupal\layout_builder_test\Plugin\Layout\TestContextAwareLayout::build().
+    $assert_session->elementExists('css', '.user--' . $account->getAccountName());
+  }
+
+  /**
    * Tests that sections can provide custom attributes.
    */
   public function testCustomSectionAttributes() {

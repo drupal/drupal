@@ -2,6 +2,10 @@
 
 namespace Drupal\Tests\layout_builder\Unit;
 
+use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Layout\LayoutInterface;
+use Drupal\Core\Layout\LayoutPluginManagerInterface;
+use Drupal\Core\Plugin\Context\ContextHandlerInterface;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionComponent;
 use Drupal\Tests\UnitTestCase;
@@ -360,6 +364,42 @@ class SectionTest extends UnitTestCase {
     $this->assertSame(['bad_judgement', 'hunt_and_peck'], $this->section->getThirdPartyProviders());
     $this->section->unsetThirdPartySetting('hunt_and_peck', 'delay');
     $this->assertSame(['bad_judgement'], $this->section->getThirdPartyProviders());
+  }
+
+  /**
+   * @covers ::getLayout
+   * @dataProvider providerTestGetLayout
+   */
+  public function testGetLayout(array $contexts, bool $should_context_apply) {
+    $layout = $this->prophesize(LayoutInterface::class);
+    $layout_plugin_manager = $this->prophesize(LayoutPluginManagerInterface::class);
+    $layout_plugin_manager->createInstance('layout_onecol', [])->willReturn($layout->reveal());
+
+    $context_handler = $this->prophesize(ContextHandlerInterface::class);
+    if ($should_context_apply) {
+      $context_handler->applyContextMapping($layout->reveal(), $contexts)->shouldBeCalled();
+    }
+    else {
+      $context_handler->applyContextMapping($layout->reveal(), $contexts)->shouldNotBeCalled();
+    }
+
+    $container = new ContainerBuilder();
+    $container->set('plugin.manager.core.layout', $layout_plugin_manager->reveal());
+    $container->set('context.handler', $context_handler->reveal());
+    \Drupal::setContainer($container);
+
+    $output = $this->section->getLayout($contexts);
+    $this->assertSame($layout->reveal(), $output);
+  }
+
+  /**
+   * Provides test data for ::testGetLayout().
+   */
+  public function providerTestGetLayout() {
+    $data = [];
+    $data['contexts'] = [['foo' => 'bar'], TRUE];
+    $data['no contexts'] = [[], FALSE];
+    return $data;
   }
 
 }
