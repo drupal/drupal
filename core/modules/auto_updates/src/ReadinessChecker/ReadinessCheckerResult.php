@@ -58,7 +58,7 @@ class ReadinessCheckerResult {
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup[] $warning_messages
    *   The warning messages.
    */
-  public function __construct(ReadinessCheckerInterface $readiness_checker, ?TranslatableMarkup $errors_summary, array $error_messages, ?TranslatableMarkup $warnings_summary = NULL, array $warning_messages = []) {
+  public function __construct(ReadinessCheckerInterface $readiness_checker, ?TranslatableMarkup $errors_summary, array $error_messages, ?TranslatableMarkup $warnings_summary, array $warning_messages) {
     $this->checkerId = $readiness_checker->_serviceId;
     $this->errorsSummary = $errors_summary;
     $this->warningsSummary = $warnings_summary;
