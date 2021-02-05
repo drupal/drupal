@@ -152,69 +152,69 @@
     border-top: solid 3px currentColor;
   }
 
-[dir="ltr"] .book-navigation .menu {
-    margin-left: 0
+[dir="ltr"] .book-navigation__menu {
+  margin-left: 0
 }
 
-[dir="rtl"] .book-navigation .menu {
-    margin-right: 0
+[dir="rtl"] .book-navigation__menu {
+  margin-right: 0
 }
 
-[dir="ltr"] .book-navigation .menu {
-    margin-right: 0
+[dir="ltr"] .book-navigation__menu {
+  margin-right: 0
 }
 
-[dir="rtl"] .book-navigation .menu {
-    margin-left: 0
+[dir="rtl"] .book-navigation__menu {
+  margin-left: 0
 }
 
-[dir="ltr"] .book-navigation .menu {
-    padding-left: 0
+[dir="ltr"] .book-navigation__menu {
+  padding-left: 0
 }
 
-[dir="rtl"] .book-navigation .menu {
-    padding-right: 0
+[dir="rtl"] .book-navigation__menu {
+  padding-right: 0
 }
 
-[dir="ltr"] .book-navigation .menu {
-    padding-right: 0
+[dir="ltr"] .book-navigation__menu {
+  padding-right: 0
 }
 
-[dir="rtl"] .book-navigation .menu {
-    padding-left: 0
+[dir="rtl"] .book-navigation__menu {
+  padding-left: 0
 }
 
-.book-navigation .menu {
-    margin-top: 2.25rem;
-    margin-bottom: 2.25rem;
-    padding-top: 0;
-    padding-bottom: 0;
-    list-style: none
-  }
-
-[dir="ltr"] .book-navigation .menu li {
-      padding-left: 0
+.book-navigation__menu {
+  margin-top: 2.25rem;
+  margin-bottom: 2.25rem;
+  padding-top: 0;
+  padding-bottom: 0;
+  list-style: none;
 }
 
-[dir="rtl"] .book-navigation .menu li {
-      padding-right: 0
+[dir="ltr"] .book-navigation__item {
+  padding-left: 0
 }
 
-[dir="ltr"] .book-navigation .menu li {
-      padding-right: 0
+[dir="rtl"] .book-navigation__item {
+  padding-right: 0
 }
 
-[dir="rtl"] .book-navigation .menu li {
-      padding-left: 0
+[dir="ltr"] .book-navigation__item {
+  padding-right: 0
 }
 
-.book-navigation .menu li {
-      margin-top: 0;
-      margin-bottom: 0;
-      padding-top: 0;
-      padding-bottom: 0;
-      list-style: none;
-    }
+[dir="rtl"] .book-navigation__item {
+  padding-left: 0
+}
+
+.book-navigation__item {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  list-style: none;
+}
 
 [dir="rtl"] .book-pager__link--previous:before {
     transform: rotate(45deg);
