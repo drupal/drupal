@@ -61,8 +61,10 @@ class ContextHandler implements ContextHandlerInterface {
    */
   public function checkRequirements(array $contexts, array $requirements) {
     foreach ($requirements as $requirement) {
-      if ($requirement->isRequired() && $requirement->getDefaultValue() === NULL && !$this->getMatchingContexts($contexts, $requirement)) {
-        return FALSE;
+      if ($requirement->isRequired() && !$this->getMatchingContexts($contexts, $requirement)) {
+        if ($requirement->getDefaultValue() === NULL || !$requirement->isSatisfiedBy(new Context($requirement))) {
+          return FALSE;
+        }
       }
     }
     return TRUE;
