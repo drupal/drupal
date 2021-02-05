@@ -21,28 +21,23 @@ class DiskSpaceTest extends KernelTestBase {
    * Tests the functionality of disk space readiness checks.
    */
   public function testDiskSpace():void {
-    /** @var \Composer\Autoload\ClassLoader  $class_loader */
-    $class_loader = $this->container->get('class_loader');
-    $app_root = $this->container->getParameter('app.root');
     // No disk space issues.
-    $checker = new DiskSpace($app_root, $class_loader);
-    // Readiness checkers are services and will always have the public property
-    // '_serviceId'.
-    $checker->_serviceId = 'auto_updates.disk_space_checker';
+    $checker = $this->container->get('auto_updates.disk_space_checker');
     $result = $checker->getResult();
     $this->assertNull($result);
 
     // Out of space.
-    $checker = new TestDiskSpace($app_root, $class_loader);
-    $checker->_serviceId = 'auto_updates.disk_space_checker';
+    /** @var \Composer\Autoload\ClassLoader  $class_loader */
+    $class_loader = $this->container->get('class_loader');
+    $app_root = $this->container->getParameter('app.root');
+    $checker = $this->replaceCheckerService(new TestDiskSpace($app_root, $class_loader));
     $result = $checker->getResult();
     $messages = $result->getErrorMessages();
     $this->assertCount(1, $messages);
     $this->assertStringMatchesFormat('Logical disk "%s" has insufficient space. There must be at least %s megabytes free.', (string) $messages[0]);
 
     // Out of space not the same logical disk.
-    $checker = new TestDiskSpaceNonSameDisk($app_root, $class_loader);
-    $checker->_serviceId = 'auto_updates.disk_space_checker';
+    $checker = $this->replaceCheckerService(new TestDiskSpaceNonSameDisk($app_root, $class_loader));
     $result = $checker->getResult();
     $messages = $result->getErrorMessages();
     $this->assertCount(2, $messages);
@@ -50,12 +45,29 @@ class DiskSpaceTest extends KernelTestBase {
     $this->assertStringMatchesFormat('Vendor filesystem "%s" has insufficient space. There must be at least %s megabytes free.', (string) $messages[1]);
 
     // Web root and vendor path are invalid.
-    $checker = new TestDiskSpaceInvalidVendor('if_there_was_ever_a_folder_with_this_path_this_test_would_fail', $class_loader);
-    $checker->_serviceId = 'auto_updates.disk_space_checker';
+    $checker = $this->replaceCheckerService(new TestDiskSpaceInvalidVendor('if_there_was_ever_a_folder_with_this_path_this_test_would_fail', $class_loader));
     $result = $checker->getResult();
     $messages = $result->getErrorMessages();
     $this->assertCount(1, $messages);
     $this->assertEquals('Free disk space cannot be determined because the web root and vendor directories could not be located.', (string) $messages[0]);
+  }
+
+  /**
+   * Replaces the disk space checker service in the container.
+   *
+   * The checker must be set in the container because the '_serviceId' property
+   * must be set on the object for
+   * \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager to work.
+   *
+   * @param \Drupal\auto_updates\ReadinessChecker\DiskSpace $disk_space_checker
+   *   The disk space checker service to set in the container.
+   *
+   * @return \Drupal\auto_updates\ReadinessChecker\DiskSpace
+   *   The new disk space checker returned from the container.
+   */
+  protected function replaceCheckerService(DiskSpace $disk_space_checker) {
+    $this->container->set('auto_updates.disk_space_checker', $disk_space_checker);
+    return $this->container->get('auto_updates.disk_space_checker');
   }
 
 }
