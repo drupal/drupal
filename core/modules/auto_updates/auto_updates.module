@@ -6,7 +6,6 @@
  */
 
 use Drupal\auto_updates\ReadinessChecker\ReadinessCheckerMessages;
-use Drupal\Core\Url;
 
 /**
  * Implements hook_page_top().

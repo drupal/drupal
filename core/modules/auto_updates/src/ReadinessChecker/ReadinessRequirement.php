@@ -22,14 +22,6 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
 
   use StringTranslationTrait;
   use ReadinessCheckerTrait;
-
-  /**
-   * The readiness checker manager service.
-   *
-   * @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager
-   */
-  protected $readinessCheckerManager;
-
   /**
    * The date formatter service.
    *
@@ -137,7 +129,7 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
    */
   private function createRequirementForSeverity(int $severity): ?array {
     $severity_messages = [];
-    foreach ($this->readinessCheckerManager->getResults() as $result) {
+    foreach ($this->getResultsWithMessagesForSeverity($severity) as $result) {
       if ($severity === REQUIREMENT_ERROR) {
         $summary = $result->getErrorsSummary();
         $checker_messages = $result->getErrorMessages();
@@ -149,21 +141,19 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
       else {
         throw new \InvalidArgumentException('Unknown severity type: ' . $severity);
       }
-      if ($checker_messages) {
-        if (count($checker_messages) === 1) {
-          $severity_messages[] = ['#markup' => array_pop($checker_messages)];
-        }
-        else {
-          $severity_messages[] = [
-            '#type' => 'details',
-            '#title' => $summary,
-            '#open' => FALSE,
-            'messages' => [
-              '#theme' => 'item_list',
-              '#items' => $checker_messages,
-            ],
-          ];
-        }
+      if (count($checker_messages) === 1) {
+        $severity_messages[] = ['#markup' => array_pop($checker_messages)];
+      }
+      else {
+        $severity_messages[] = [
+          '#type' => 'details',
+          '#title' => $summary,
+          '#open' => FALSE,
+          'messages' => [
+            '#theme' => 'item_list',
+            '#items' => $checker_messages,
+          ],
+        ];
       }
     }
     if ($severity_messages) {
@@ -172,7 +162,7 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
         'severity' => $severity,
         'description' => $severity_messages,
       ];
-      $requirement['value'] = $this->getMessageForSeverity($severity);
+      $requirement['value'] = $this->getFailureMessageForSeverity($severity);
       return $requirement;
     }
     return NULL;

@@ -3,6 +3,7 @@
 namespace Drupal\auto_updates\Controller;
 
 use Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager;
+use Drupal\auto_updates\ReadinessChecker\ReadinessCheckerTrait;
 use Drupal\auto_updates\ReadinessChecker\ReadinessRequirement;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -18,19 +19,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 class ReadinessCheckerController extends ControllerBase {
 
-  /**
-   * The readiness checker manager.
-   *
-   * @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager
-   */
-  protected $checkerManager;
-
-  /**
-   * A readiness checker requirement object.
-   *
-   * @var \Drupal\auto_updates\ReadinessChecker\ReadinessRequirement
-   */
-  protected $readinessRequirement;
+  use ReadinessCheckerTrait;
 
   /**
    * ReadinessCheckerController constructor.
@@ -43,9 +32,8 @@ class ReadinessCheckerController extends ControllerBase {
    *   A readiness requirement object.
    */
   public function __construct(ReadinessCheckerManager $checker_manager, TranslationInterface $string_translation, ReadinessRequirement $readiness_requirement) {
-    $this->checkerManager = $checker_manager;
+    $this->readinessCheckerManager = $checker_manager;
     $this->setStringTranslation($string_translation);
-    $this->readinessRequirement = $readiness_requirement;
   }
 
   /**
@@ -70,7 +58,7 @@ class ReadinessCheckerController extends ControllerBase {
    *   A redirect to the status report page.
    */
   public function run(bool $display_message_on_fails = FALSE): RedirectResponse {
-    $results = $this->checkerManager->getResults(TRUE);
+    $results = $this->readinessCheckerManager->getResults(TRUE);
     if (!$results) {
       // @todo Link "automatic updates" to documentation in
       //   https://www.drupal.org/node/3168405.
@@ -86,7 +74,7 @@ class ReadinessCheckerController extends ControllerBase {
           break;
         }
       }
-      $message = $this->readinessRequirement->getMessageForSeverity($severity);
+      $message = $this->getFailureMessageForSeverity($severity);
       if ($severity === SystemManager::REQUIREMENT_ERROR) {
         $this->messenger()->addError($message);
       }
