@@ -5,10 +5,8 @@ namespace Drupal\auto_updates\ReadinessChecker;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Url;
-use Drupal\system\SystemManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -23,6 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 final class ReadinessRequirement implements ContainerInjectionInterface {
 
   use StringTranslationTrait;
+  use ReadinessCheckerTrait;
 
   /**
    * The readiness checker manager service.
@@ -177,21 +176,6 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
       return $requirement;
     }
     return NULL;
-  }
-
-  /**
-   * Gets a message readiness checkers not pass passed on severity.
-   *
-   * @param int $severity
-   *   The severity.
-   *
-   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
-   *   The message.
-   */
-  public function getMessageForSeverity(int $severity): TranslatableMarkup {
-    return $severity === SystemManager::REQUIREMENT_WARNING ?
-      $this->t('Your site does not pass some readiness checks for automatic updates. Depending on the nature of the failures, it might affect the eligibility for automatic updates.') :
-      $this->t('Your site does not pass some readiness checks for automatic updates. It cannot be automatically updated until further action is performed.');
   }
 
 }
