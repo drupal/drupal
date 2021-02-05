@@ -73,14 +73,14 @@ class DiskSpaceTest extends KernelTestBase {
 }
 
 /**
- * Test checker with the free disk space minimum set to a very high number.
+ * Test checker with the free disk space minimum set to a 1000 terabytes.
  */
 class TestDiskSpace extends DiskSpace {
 
   /**
    * {@inheritdoc}
    */
-  const MINIMUM_DISK_SPACE = 99999999999999999999999999999999999999999999999999;
+  const MINIMUM_DISK_SPACE = 1000000000000000;
 
 }
 
