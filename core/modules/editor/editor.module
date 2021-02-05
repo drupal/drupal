@@ -18,6 +18,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\filter\Plugin\FilterInterface;
+use Drupal\text\Plugin\Field\FieldType\TextItemBase;
 
 /**
  * Implements hook_help().
@@ -587,6 +588,9 @@ function _editor_get_file_uuids_by_field(EntityInterface $entity) {
 /**
  * Determines the formatted text fields on an entity.
  *
+ * A field type is considered to provide formatted text if its class is a
+ * subclass of Drupal\text\Plugin\Field\FieldType\TextItemBase.
+ *
  * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
  *   An entity whose fields to analyze.
  *
@@ -600,8 +604,12 @@ function _editor_get_formatted_text_fields(FieldableEntityInterface $entity) {
   }
 
   // Only return formatted text fields.
-  return array_keys(array_filter($field_definitions, function (FieldDefinitionInterface $definition) {
-    return in_array($definition->getType(), ['text', 'text_long', 'text_with_summary'], TRUE);
+  // @todo: improve as part of https://www.drupal.org/node/2732429
+  $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
+  return array_keys(array_filter($field_definitions, function (FieldDefinitionInterface $definition) use ($field_type_manager) {
+    $type = $definition->getType();
+    $plugin_class = $field_type_manager->getPluginClass($type);
+    return is_subclass_of($plugin_class, TextItemBase::class);
   }));
 }
 
