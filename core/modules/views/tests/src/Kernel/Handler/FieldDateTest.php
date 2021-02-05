@@ -75,7 +75,7 @@ class FieldDateTest extends ViewsKernelTestBase {
         'table' => 'views_test_data',
         'field' => 'created',
         'relationship' => 'none',
-        // ISO 8601 format, see http://php.net/manual/function.date.php
+        // ISO 8601 format, see https://www.php.net/manual/datetime.format.php
         'custom_date_format' => 'c',
       ],
       'destroyed' => [
