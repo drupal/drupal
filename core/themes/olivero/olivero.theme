@@ -584,3 +584,12 @@ function olivero_preprocess_search_result(&$variables) {
     $variables['info_date'] = \Drupal::service('date.formatter')->format($variables['result']['node']->getCreatedTime(), 'olivero_medium');
   }
 }
+
+/**
+ * Implements hook_preprocess_links__comment().
+ */
+function olivero_preprocess_links__comment(&$variables) {
+  foreach ($variables['links'] as &$link) {
+    $link['link']['#options']['attributes']['class'][] = 'comment__links-link';
+  }
+}
