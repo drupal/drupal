@@ -84,7 +84,7 @@ class ReadinessCheckerManager {
   }
 
   /**
-   * Runs readiness checks.
+   * Get the readiness checker results.
    *
    * @param bool $refresh
    *   (optional) Whether to refresh the results, defaults FALSE. If FALSE then
@@ -93,7 +93,7 @@ class ReadinessCheckerManager {
    * @return \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[]
    *   The result objects for the readiness checkers.
    */
-  protected function run(bool $refresh = FALSE): array {
+  public function getResults(bool $refresh = FALSE): array {
     if ($refresh) {
       $this->keyValueExpirable->delete('readiness_check_last_run');
     }
@@ -173,20 +173,6 @@ class ReadinessCheckerManager {
    */
   public function hasRunRecently(): bool {
     return $this->time->getRequestTime() <= $this->getMostRecentRunTime() + self::LAST_CHECKED_WARNING;
-  }
-
-  /**
-   * Get the readiness checker results.
-   *
-   * @param bool $refresh
-   *   (optional) Whether to refresh the results, defaults FALSE. If FALSE then
-   *   cached results will be returned if available.
-   *
-   * @return \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[]
-   *   The results.
-   */
-  public function getResults(bool $refresh = FALSE): array {
-    return $this->run($refresh);
   }
 
 }
