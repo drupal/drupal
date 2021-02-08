@@ -10,6 +10,25 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 /**
  * Gets Drupal variable_store source from database.
  *
+ * Available configuration keys:
+ * - variables: (required) The list of variable translations to retrieve from
+ *   the source database. All translations are retrieved in a single row.
+ *
+ * Example:
+ *
+ * @code
+ * plugin: d7_variable_translation
+ * variables:
+ *   - site_name
+ *   - site_slogan
+ * @endcode
+ * In this example the translations for site_name and site_slogan variables are
+ * retrieved from the source database.
+ *
+ * For additional configuration keys, refer to the parent classes:
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
  * @MigrateSource(
  *   id = "d7_variable_translation",
  *   source_module = "i18n_variable",
