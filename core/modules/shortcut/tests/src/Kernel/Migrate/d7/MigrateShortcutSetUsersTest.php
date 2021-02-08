@@ -35,7 +35,6 @@ class MigrateShortcutSetUsersTest extends MigrateDrupal7TestBase {
     $this->migrateUsers(FALSE);
     $this->executeMigration('d7_shortcut_set');
     $this->executeMigration('d7_menu');
-    $this->executeMigration('d7_menu_links');
     $this->executeMigration('d7_shortcut');
     $this->executeMigration('d7_shortcut_set_users');
   }
