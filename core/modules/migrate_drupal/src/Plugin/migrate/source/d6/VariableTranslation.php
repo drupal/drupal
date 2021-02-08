@@ -11,6 +11,24 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 /**
  * Drupal i18n_variable source from database.
  *
+ * Available configuration keys:
+ * - variables: (required) The list of variable translations to retrieve from
+ *   the source database. All translations are retrieved in a single row.
+ *
+ * Examples:
+ *
+ * @code
+ * plugin: d6_variable_translation
+ * variables:
+ *   - site_offline_message
+ * @endcode
+ * In this example the translations for site_offline_message variable are
+ * retrieved from the source database.
+ *
+ * For additional configuration keys, refer to the parent classes:
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
  * @MigrateSource(
  *   id = "d6_variable_translation",
  *   source_module = "i18n",
