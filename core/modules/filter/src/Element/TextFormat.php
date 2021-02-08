@@ -165,6 +165,11 @@ class TextFormat extends RenderElement {
       }
     }
 
+    // If the value element has #states set, copy it to the format element.
+    if (isset($element['value']['#states'])) {
+      $element['format']['#states'] = $element['value']['#states'];
+    }
+
     // Prepare text format guidelines.
     $element['format']['guidelines'] = [
       '#type' => 'container',
