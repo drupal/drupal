@@ -250,12 +250,7 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     $node = $node->getTranslation('is');
     $this->assertSame($value, $node->field_text_plain->value);
 
-  }
-
-  /**
-   * Test node entity translations migration from Drupal 7 to 8.
-   */
-  public function testNodeEntityTranslations() {
+    // Test node entity translations migration from Drupal 7 to 8.
     $manager = $this->container->get('content_translation.manager');
 
     // Get the node and its translations.
