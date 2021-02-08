@@ -7,6 +7,7 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Url;
+use Drupal\system\SystemManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -68,7 +69,7 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
     $last_check_timestamp = $this->readinessCheckerManager->getMostRecentRunTime();
     if ($last_check_timestamp === NULL) {
       $requirement['title'] = $this->t('Update readiness checks');
-      $requirement['severity'] = REQUIREMENT_WARNING;
+      $requirement['severity'] = SystemManager::REQUIREMENT_WARNING;
       // @todo Link "automatic updates" to documentation in
       //   https://www.drupal.org/node/3168405.
       $requirement['value'] = $this->t('Your site has never checked if it is ready to apply automatic updates.');
@@ -81,7 +82,7 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
     }
     elseif (!$this->readinessCheckerManager->hasRunRecently()) {
       $requirement['title'] = $this->t('Update readiness checks');
-      $requirement['severity'] = REQUIREMENT_WARNING;
+      $requirement['severity'] = SystemManager::REQUIREMENT_WARNING;
       $time_ago = $this->dateFormatter->formatTimeDiffSince($last_check_timestamp);
       // @todo Link "automatic updates" to documentation in
       //   https://www.drupal.org/node/3168405.
@@ -99,7 +100,7 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
     }
     else {
       $requirements = [];
-      foreach ([REQUIREMENT_WARNING => 'warnings', REQUIREMENT_ERROR => 'errors'] as $severity => $severity_type) {
+      foreach ([SystemManager::REQUIREMENT_WARNING => 'warnings', SystemManager::REQUIREMENT_ERROR => 'errors'] as $severity => $severity_type) {
         if ($requirement = $this->createRequirementForSeverity($severity)) {
           $requirements["auto_updates_readiness_$severity_type"] = $requirement;
         }
@@ -107,7 +108,7 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
       if (empty($requirements)) {
         $requirements['auto_updates_readiness'] = [
           'title' => $this->t('Update readiness checks'),
-          'severity' => REQUIREMENT_OK,
+          'severity' => SystemManager::REQUIREMENT_OK,
           // @todo Link "automatic updates" to documentation in
           //   https://www.drupal.org/node/3168405.
           'value' => $this->t('Your site is ready for automatic updates.'),
@@ -130,11 +131,11 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
   private function createRequirementForSeverity(int $severity): ?array {
     $severity_messages = [];
     foreach ($this->getResultsWithMessagesForSeverity($severity) as $result) {
-      if ($severity === REQUIREMENT_ERROR) {
+      if ($severity === SystemManager::REQUIREMENT_ERROR) {
         $summary = $result->getErrorsSummary();
         $checker_messages = $result->getErrorMessages();
       }
-      elseif ($severity === REQUIREMENT_WARNING) {
+      elseif ($severity === SystemManager::REQUIREMENT_WARNING) {
         $summary = $result->getWarningsSummary();
         $checker_messages = $result->getWarningMessages();
       }
