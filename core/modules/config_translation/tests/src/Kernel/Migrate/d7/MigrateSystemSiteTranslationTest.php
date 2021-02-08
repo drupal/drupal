@@ -24,6 +24,7 @@ class MigrateSystemSiteTranslationTest extends MigrateDrupal7TestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->executeMigration('system_site');
     $this->executeMigration('d7_system_site_translation');
   }
 
