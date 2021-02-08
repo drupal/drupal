@@ -16,15 +16,7 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['auto_updates', 'auto_updates_test'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-    $this->installConfig(['auto_updates']);
-  }
+  protected static $modules = ['auto_updates_test'];
 
   /**
    * Tests checker messages.
@@ -38,6 +30,8 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
    */
   public function testCheckerMessages(array $error_messages, array $warning_messages): void {
     $this->setTestMessages($error_messages, $warning_messages);
+    $this->enableModules(['auto_updates']);
+    $this->installConfig(['auto_updates']);
     $this->assertSame($warning_messages, $this->getMessagesFromManager('warnings'));
     $this->assertSame($error_messages, $this->getMessagesFromManager('errors'));
   }
@@ -70,10 +64,26 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
   }
 
   /**
+   * Tests that the manager is run after the auto_updates module is installed.
+   */
+  public function testRunOnInstall():void {
+    $key_value = $this->container->get('keyvalue.expirable')->get('auto_updates');
+    $this->assertEmpty($key_value->get('readiness_check_last_run'));
+    $this->setTestMessages(['error1'], ['warning1']);
+    $this->container->get('module_installer')->install(['auto_updates']);
+    /** @var \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface $key_value */
+    $last_run = $key_value->get('readiness_check_last_run');
+    $this->assertNotEmpty($last_run);
+    $this->assertCount(1, $last_run['results']);
+  }
+
+  /**
    * Test that the option $refresh parameter works.
    */
   public function testMessageRefresh():void {
     $this->setTestMessages(['error1'], ['warning1']);
+    $this->enableModules(['auto_updates']);
+    $this->installConfig(['auto_updates']);
     $this->assertSame(['warning1'], $this->getMessagesFromManager('warnings'));
     $this->assertSame(['error1'], $this->getMessagesFromManager('errors'));
     // The readiness checkers will not be invoked in the next calls so changing
