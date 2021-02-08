@@ -59,12 +59,8 @@ class MigrateUserConfigsTranslationTest extends MigrateDrupal6TestBase {
     $config = \Drupal::service('language_manager')->getLanguageConfigOverride('zu', 'user.mail');
     $this->assertSame('zu - An administrator created an account for you at [site:name]', $config->get('register_admin_created.subject'));
     $this->assertSame("zu - [user:name],\r\n\r\nA site administrator at [site:name] has created an account for you. You may now log in to [site:login-url] using the following username and password:\r\n\r\nusername: [user:name]\r\npassword: \r\n\r\nYou may also log in by clicking on this link or copying and pasting it in your browser:\r\n\r\n[user:one-time-login-url]\r\n\r\nThis is a one-time login, so it can be used only once.\r\n\r\nAfter logging in, you will be redirected to [user:edit-url] so you can change your password.\r\n\r\n\r\n--  [site:name] team", $config->get('register_admin_created.body'));
-  }
 
-  /**
-   * Tests migration of i18n user variables to user.settings.yml.
-   */
-  public function testUserSettings() {
+    // Tests migration of i18n user variables to user.settings.yml.
     $config = \Drupal::service('language_manager')->getLanguageConfigOverride('fr', 'user.settings');
     $this->assertSame(1, $config->get('notify.status_blocked'));
     $this->assertSame(0, $config->get('notify.status_activated'));
