@@ -68,7 +68,7 @@ class StatementEmpty implements \Iterator, StatementInterface {
   /**
    * {@inheritdoc}
    */
-  public function fetchObject() {
+  public function fetchObject(string $class_name = NULL, array $constructor_arguments = NULL) {
     return NULL;
   }
 
