@@ -77,3 +77,6 @@ destination:
   plugin: config
   config_name: user.mail
   translations: true
+migration_dependencies:
+  required:
+    - d7_user_mail
