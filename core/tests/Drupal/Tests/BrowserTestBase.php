@@ -20,10 +20,12 @@ use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\Tests\Traits\PhpUnitWarnings;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\TestTools\Comparator\MarkupInterfaceComparator;
+use Drupal\TestTools\TestVarDumper;
 use GuzzleHttp\Cookie\CookieJar;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\CssSelector\CssSelectorConverter;
+use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * Provides a test case for functional Drupal tests.
@@ -35,6 +37,11 @@ use Symfony\Component\CssSelector\CssSelectorConverter;
  * Tests extending this base class should only translate text when testing
  * translation functionality. For example, avoid wrapping test text with t()
  * or TranslatableMarkup().
+ *
+ * Using Symfony's dump() function in functional test test code will produce
+ * output on the command line; using dump() in site code will produce output in
+ * the requested web page, which can then be inspected in the HTML output from
+ * the test.
  *
  * @ingroup testing
  */
@@ -213,6 +220,14 @@ abstract class BrowserTestBase extends TestCase {
    * @var \Symfony\Component\DependencyInjection\ContainerInterface
    */
   protected $originalContainer;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function setUpBeforeClass() {
+    parent::setUpBeforeClass();
+    VarDumper::setHandler(TestVarDumper::class . '::cliHandler');
+  }
 
   /**
    * Initializes Mink sessions.
