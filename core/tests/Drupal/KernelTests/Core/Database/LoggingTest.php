@@ -20,6 +20,7 @@ class LoggingTest extends DatabaseTestBase {
   public function testEnableLogging() {
     Database::startLog('testing');
 
+    $start = microtime(TRUE);
     $this->connection->query('SELECT [name] FROM {test} WHERE [age] > :age', [':age' => 25])->fetchCol();
     $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Ringo'])->fetchCol();
 
@@ -32,6 +33,8 @@ class LoggingTest extends DatabaseTestBase {
 
     foreach ($queries as $query) {
       $this->assertEqual(__FUNCTION__, $query['caller']['function'], 'Correct function in query log.');
+      $this->assertIsFloat($query['start']);
+      $this->assertGreaterThanOrEqual($start, $query['start']);
     }
   }
 
