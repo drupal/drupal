@@ -5,7 +5,7 @@ namespace Drupal\auto_updates\ReadinessChecker;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
- * A value object for readiness checker results.
+ * A value object to contain the results of a readiness check.
  */
 class ReadinessCheckerResult {
 
