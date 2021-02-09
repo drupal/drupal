@@ -161,7 +161,6 @@ class CommentAdminViewTest extends ViewsKernelTestBase {
     $executable = Views::getView('comment');
     $build = $executable->preview($display_id);
     $this->setRawContent($renderer->renderRoot($build));
-    $this->verbose($this->getRawContent());
 
     // Assert the exposed filters on the admin page.
     $this->assertField('subject');
@@ -178,7 +177,6 @@ class CommentAdminViewTest extends ViewsKernelTestBase {
     $executable->setExposedInput(['subject' => 'Anonymous']);
     $build = $executable->preview($display_id);
     $this->setRawContent($renderer->renderRoot($build));
-    $this->verbose($this->getRawContent());
 
     $elements = $this->cssSelect('input[type="checkbox"]');
     $this->assertCount(1, $elements, 'Only anonymous comment is visible.');
@@ -189,7 +187,6 @@ class CommentAdminViewTest extends ViewsKernelTestBase {
     $executable->setExposedInput(['subject' => 'My comment']);
     $build = $executable->preview($display_id);
     $this->setRawContent($renderer->renderRoot($build));
-    $this->verbose($this->getRawContent());
 
     $elements = $this->cssSelect('input[type="checkbox"]');
     $this->assertCount(1, $elements, 'Only admin comment is visible.');
@@ -201,7 +198,6 @@ class CommentAdminViewTest extends ViewsKernelTestBase {
     $executable->setExposedInput(['author_name' => 'barry']);
     $build = $executable->preview($display_id);
     $this->setRawContent($renderer->renderRoot($build));
-    $this->verbose($this->getRawContent());
 
     $elements = $this->cssSelect('input[type="checkbox"]');
     $this->assertCount(1, $elements, 'Only anonymous comment is visible.');
@@ -213,7 +209,6 @@ class CommentAdminViewTest extends ViewsKernelTestBase {
     $executable->setExposedInput(['author_name' => $this->adminUser->label()]);
     $build = $executable->preview($display_id);
     $this->setRawContent($renderer->renderRoot($build));
-    $this->verbose($this->getRawContent());
 
     $elements = $this->cssSelect('input[type="checkbox"]');
     $this->assertCount(1, $elements, 'Only admin comment is visible.');
@@ -225,7 +220,6 @@ class CommentAdminViewTest extends ViewsKernelTestBase {
     $executable->setExposedInput(['langcode' => '***LANGUAGE_site_default***']);
     $build = $executable->preview($display_id);
     $this->setRawContent($renderer->renderRoot($build));
-    $this->verbose($this->getRawContent());
 
     $elements = $this->cssSelect('input[type="checkbox"]');
     $this->assertCount(2, $elements, 'Both comments are visible.');
@@ -260,7 +254,6 @@ class CommentAdminViewTest extends ViewsKernelTestBase {
     $executable->setExposedInput(['langcode' => 'ur']);
     $build = $executable->preview($display_id);
     $this->setRawContent($renderer->renderRoot($build));
-    $this->verbose($this->getRawContent());
 
     $elements = $this->cssSelect('input[type="checkbox"]');
     $this->assertCount(2, $elements, 'Both comments are visible.');

@@ -113,8 +113,14 @@ trait AssertLegacyTrait {
 
   /**
    * @see \Drupal\simpletest\TestBase::verbose()
+   *
+   * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+   *   dump() instead.
+   *
+   * @see https://www.drupal.org/node/3197514
    */
   protected function verbose($message) {
+    @trigger_error('AssertLegacyTrait::verbose() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use dump() instead. See https://www.drupal.org/node/3197514', E_USER_DEPRECATED);
     if (in_array('--debug', $_SERVER['argv'], TRUE)) {
       // Write directly to STDOUT to not produce unexpected test output.
       // The STDOUT stream does not obey output buffering.

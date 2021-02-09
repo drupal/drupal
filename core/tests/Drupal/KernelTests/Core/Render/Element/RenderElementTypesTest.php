@@ -37,13 +37,6 @@ class RenderElementTypesTest extends KernelTestBase {
    */
   protected function assertElements(array $elements, $expected_html, $message) {
     $actual_html = (string) \Drupal::service('renderer')->renderRoot($elements);
-
-    $out = '<table><tr>';
-    $out .= '<td valign="top"><pre>' . Html::escape($expected_html) . '</pre></td>';
-    $out .= '<td valign="top"><pre>' . Html::escape($actual_html) . '</pre></td>';
-    $out .= '</tr></table>';
-    $this->verbose($out);
-
     $this->assertSame($expected_html, $actual_html, Html::escape($message));
   }
 

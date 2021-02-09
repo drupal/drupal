@@ -841,9 +841,7 @@ class LinkFieldTest extends BrowserTestBase {
       ->getViewDisplay($entity->getEntityTypeId(), $entity->bundle(), $view_mode);
     $content = $display->build($entity);
     $output = \Drupal::service('renderer')->renderRoot($content);
-    $output = (string) $output;
-    $this->verbose($output);
-    return $output;
+    return (string) $output;
   }
 
 }

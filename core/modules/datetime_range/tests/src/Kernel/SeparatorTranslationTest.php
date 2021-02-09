@@ -106,7 +106,6 @@ class SeparatorTranslationTest extends KernelTestBase {
     $display = EntityViewDisplay::collectRenderDisplay($entity, 'default');
     $build = $display->build($entity);
     $output = $this->container->get('renderer')->renderRoot($build);
-    $this->verbose($output);
     $this->assertStringContainsString('UNTRANSLATED', (string) $output);
 
     // Translate the separator.
@@ -123,7 +122,6 @@ class SeparatorTranslationTest extends KernelTestBase {
     $display = EntityViewDisplay::collectRenderDisplay($entity, 'default');
     $build = $display->build($entity);
     $output = $this->container->get('renderer')->renderRoot($build);
-    $this->verbose($output);
     $this->assertStringContainsString('NL_TRANSLATED!', (string) $output);
   }
 

@@ -271,7 +271,6 @@ class ConfigCRUDTest extends KernelTestBase {
     $name = 'config_test.types';
     $config = $this->config($name);
     $original_content = file_get_contents(drupal_get_path('module', 'config_test') . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY . "/$name.yml");
-    $this->verbose('<pre>' . $original_content . "\n" . var_export($storage->read($name), TRUE));
 
     // Verify variable data types are intact.
     $data = [
@@ -297,7 +296,6 @@ class ConfigCRUDTest extends KernelTestBase {
     $this->assertSame($data, $config->get());
     // Assert the data against the file storage.
     $this->assertSame($data, $storage->read($name));
-    $this->verbose('<pre>' . $name . var_export($storage->read($name), TRUE));
 
     // Set data using config::setData().
     $config->setData($data)->save();

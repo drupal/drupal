@@ -3,7 +3,6 @@
 namespace Drupal\Tests\views\Kernel;
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\views\Tests\ViewResultAssertionTrait;
 use Drupal\views\Tests\ViewTestData;
@@ -118,7 +117,7 @@ abstract class ViewsKernelTestBase extends KernelTestBase {
   }
 
   /**
-   * Executes a view with debugging.
+   * Executes a view.
    *
    * @param \Drupal\views\ViewExecutable $view
    *   The view object.
@@ -129,11 +128,6 @@ abstract class ViewsKernelTestBase extends KernelTestBase {
     $view->setDisplay();
     $view->preExecute($args);
     $view->execute();
-    $verbose_message = '<pre>Executed view: ' . ((string) $view->build_info['query']) . '</pre>';
-    if ($view->build_info['query'] instanceof SelectInterface) {
-      $verbose_message .= '<pre>Arguments: ' . print_r($view->build_info['query']->getArguments(), TRUE) . '</pre>';
-    }
-    $this->verbose($verbose_message);
   }
 
   /**
