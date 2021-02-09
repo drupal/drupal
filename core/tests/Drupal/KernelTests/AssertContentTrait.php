@@ -885,11 +885,6 @@ trait AssertContentTrait {
     $output = (string) $renderer->executeInRenderContext(new RenderContext(), function () use ($callback, $variables) {
       return \Drupal::theme()->render($callback, $variables);
     });
-    $this->verbose(
-      '<hr />' . 'Result:' . '<pre>' . Html::escape(var_export($output, TRUE)) . '</pre>'
-      . '<hr />' . 'Expected:' . '<pre>' . Html::escape(var_export($expected, TRUE)) . '</pre>'
-      . '<hr />' . $output
-    );
     if (!$message) {
       $message = '%callback rendered correctly.';
     }

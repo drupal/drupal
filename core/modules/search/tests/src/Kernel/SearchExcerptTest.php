@@ -173,8 +173,6 @@ class SearchExcerptTest extends KernelTestBase {
     $text = str_repeat($lorem3, 20) . ' ' . $lorem1;
     $result = $this->doSearchExcerpt('Lìbêró', $text);
     $this->assertStringContainsString('<strong>libero</strong>', $result, 'Search excerpt works with caps and accents in longer text with whitespace');
-
-    $this->verbose('Elapsed time: ' . (microtime(TRUE) - $start_time));
   }
 
   /**

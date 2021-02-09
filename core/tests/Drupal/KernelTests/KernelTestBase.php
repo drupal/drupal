@@ -5,7 +5,6 @@ namespace Drupal\KernelTests;
 use Drupal\Component\FileCache\ApcuFileCacheBackend;
 use Drupal\Component\FileCache\FileCache;
 use Drupal\Component\FileCache\FileCacheFactory;
-use Drupal\Component\Utility\Html;
 use Drupal\Core\Config\Development\ConfigSchemaChecker;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -901,7 +900,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     // Glean the content from the response object.
     $content = $response->getContent();
     $this->setRawContent($content);
-    $this->verbose('<pre style="white-space: pre-wrap">' . Html::escape($content));
     return $content;
   }
 
