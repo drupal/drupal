@@ -52,7 +52,7 @@ class MigrateExecutableTest extends MigrateTestCase {
     parent::setUp();
     $this->migration = $this->getMigration();
     $this->message = $this->createMock('Drupal\migrate\MigrateMessageInterface');
-    $event_dispatcher = $this->createMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
+    $event_dispatcher = $this->createMock('Symfony\Contracts\EventDispatcher\EventDispatcherInterface');
     $this->executable = new TestMigrateExecutable($this->migration, $this->message, $event_dispatcher);
     $this->executable->setStringTranslation($this->getStringTranslationStub());
   }
