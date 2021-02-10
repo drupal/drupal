@@ -11,6 +11,8 @@ source:
       title: "Sample 2"
       bodyvalue: "This is the body for ID 25"
       bodyformat: "plain_text"
+    - id: 33
+      title: "Sample 3"
   ids:
     id:
       type: integer
