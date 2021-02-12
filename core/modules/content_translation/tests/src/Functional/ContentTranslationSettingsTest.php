@@ -215,11 +215,11 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
       'und',
       'zxx',
     ];
-    $elements = $this->xpath('//select[@id="edit-settings-node-article-settings-language-langcode"]/option');
-    // Compare values inside the option elements with expected values.
-    for ($i = 0; $i < count($elements); $i++) {
-      $this->assertEqual($expected_elements[$i], $elements[$i]->getValue());
-    }
+    $options = $this->assertSession()->selectExists('edit-settings-node-article-settings-language-langcode')->findAll('css', 'option');
+    $options = array_map(function ($item) {
+      return $item->getValue();
+    }, $options);
+    $this->assertSame($expected_elements, $options);
   }
 
   /**

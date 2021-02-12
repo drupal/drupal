@@ -219,7 +219,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->assertSession()->titleEquals("Edit style $style_label | Drupal");
 
     // Check that the available image effects are properly sorted.
-    $option = $this->xpath('//select[@id=:id]//option', [':id' => 'edit-new--2']);
+    $option = $this->assertSession()->selectExists('edit-new--2')->findAll('css', 'option');
     $this->assertEquals('Ajax test', $option[1]->getText(), '"Ajax test" is the first selectable effect.');
 
     // Check that the image was flushed after updating the style.

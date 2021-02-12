@@ -61,13 +61,11 @@ class FieldUITest extends FieldTestBase {
     $this->drupalGet($url);
 
     // Tests the available formatter options.
-    $result = $this->xpath('//select[@id=:id]/option', [':id' => 'edit-options-type']);
+    $options = $this->assertSession()->selectExists('edit-options-type')->findAll('css', 'option');
     $options = array_map(function ($item) {
-      return $item->getAttribute('value');
-    }, $result);
-    // @todo Replace this sort by assertArray once it's in.
-    sort($options, SORT_STRING);
-    $this->assertEqual(['text_default', 'text_trimmed'], $options, 'The text formatters for a simple text field appear as expected.');
+      return $item->getValue();
+    }, $options);
+    $this->assertEqualsCanonicalizing(['text_default', 'text_trimmed'], $options);
 
     $this->submitForm(['options[type]' => 'text_trimmed'], 'Apply');
 
@@ -115,13 +113,11 @@ class FieldUITest extends FieldTestBase {
 
     // Test the click sort column options.
     // Tests the available formatter options.
-    $result = $this->xpath('//select[@id=:id]/option', [':id' => 'edit-options-click-sort-column']);
+    $options = $this->assertSession()->selectExists('edit-options-click-sort-column')->findAll('css', 'option');
     $options = array_map(function ($item) {
-      return (string) $item->getAttribute('value');
-    }, $result);
-    sort($options, SORT_STRING);
-
-    $this->assertEqual(['format', 'value'], $options, 'The expected sort field options were found.');
+      return $item->getValue();
+    }, $options);
+    $this->assertEqualsCanonicalizing(['format', 'value'], $options);
   }
 
   /**

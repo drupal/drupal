@@ -350,27 +350,16 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
    *   An array of expected options.
    */
   protected function assertFieldSelectOptions($name, array $expected_options) {
-    $xpath = $this->assertSession()->buildXPathQuery('//select[@name=:name]', [':name' => $name]);
-    $fields = $this->xpath($xpath);
-    if ($fields) {
-      $field = $fields[0];
-      $options = $field->findAll('xpath', 'option');
-      $optgroups = $field->findAll('xpath', 'optgroup');
-      foreach ($optgroups as $optgroup) {
-        $options = array_merge($options, $optgroup->findAll('xpath', 'option'));
-      }
-      array_walk($options, function (NodeElement &$option) {
-        $option = $option->getAttribute('value');
-      });
-
-      sort($options);
-      sort($expected_options);
-
-      $this->assertSame($expected_options, $options);
+    $field = $this->assertSession()->selectExists($name);
+    $options = $field->findAll('xpath', 'option');
+    $optgroups = $field->findAll('xpath', 'optgroup');
+    foreach ($optgroups as $optgroup) {
+      $options = array_merge($options, $optgroup->findAll('xpath', 'option'));
     }
-    else {
-      $this->fail('Unable to find field ' . $name);
-    }
+    array_walk($options, function (NodeElement &$option) {
+      $option = $option->getAttribute('value');
+    });
+    $this->assertEqualsCanonicalizing($expected_options, $options);
   }
 
 }

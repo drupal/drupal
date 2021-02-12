@@ -345,7 +345,7 @@ class ExposedFormTest extends ViewTestBase {
     $view->save();
 
     $this->drupalGet('test_exposed_form_sort_items_per_page');
-    $options = $this->xpath('//select[@id=:id]/option', [':id' => 'edit-sort-by']);
+    $options = $this->assertSession()->selectExists('edit-sort-by')->findAll('css', 'option');
     $this->assertCount(1, $options);
     $this->assertSession()->optionExists('edit-sort-by', $expected_label);
     $escape_1 = Html::escape($expected_label);

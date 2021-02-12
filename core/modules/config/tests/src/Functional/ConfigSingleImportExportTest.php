@@ -249,13 +249,8 @@ EOD;
     $option_node = $this->assertSession()->optionExists("config_type", 'Simple configuration');
     $this->assertTrue($option_node->isSelected());
     // Spot check several known simple configuration files.
-    $element = $this->xpath('//select[@name="config_name"]')[0];
-    $options = $element->findAll('css', 'option');
-    $expected_options = ['system.site', 'user.settings'];
-    foreach ($options as &$option) {
-      $option = $option->getValue();
-    }
-    $this->assertSame($expected_options, array_intersect($expected_options, $options), 'The expected configuration files are listed.');
+    $this->assertSession()->optionExists('config_name', 'system.site');
+    $this->assertSession()->optionExists('config_name', 'user.settings');
 
     $this->drupalGet('admin/config/development/configuration/single/export/system.simple/system.image');
     $this->assertEquals("toolkit: gd\n_core:\n  default_config_hash: durWHaKeBaq4d9Wpi4RqwADj1OufDepcnJuhVLmKN24\n", $this->xpath('//textarea[@name="export"]')[0]->getValue(), 'The expected system configuration is displayed.');

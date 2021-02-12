@@ -133,7 +133,7 @@ class SearchRankingTest extends BrowserTestBase {
 
     // Check that all rankings are visible and set to 0.
     foreach ($node_ranks as $node_rank) {
-      $this->assertNotEmpty($this->xpath('//select[@id="edit-rankings-' . $node_rank . '-value"]//option[@value="0"]'), 'Select list to prioritize ' . $node_rank . ' for node ranks is visible and set to 0.');
+      $this->assertSession()->optionExists('edit-rankings-' . $node_rank . '-value', '0');
     }
 
     // Test each of the possible rankings.
@@ -143,7 +143,7 @@ class SearchRankingTest extends BrowserTestBase {
       $edit['rankings[' . $node_rank . '][value]'] = 10;
       $this->drupalPostForm('admin/config/search/pages/manage/node_search', $edit, 'Save search page');
       $this->drupalGet('admin/config/search/pages/manage/node_search');
-      $this->assertNotEmpty($this->xpath('//select[@id="edit-rankings-' . $node_rank . '-value"]//option[@value="10"]'), 'Select list to prioritize ' . $node_rank . ' for node ranks is visible and set to 10.');
+      $this->assertSession()->optionExists('edit-rankings-' . $node_rank . '-value', '10');
 
       // Reload the plugin to get the up-to-date values.
       $this->nodeSearch = SearchPage::load('node_search');
@@ -161,7 +161,7 @@ class SearchRankingTest extends BrowserTestBase {
     $this->drupalPostForm('admin/config/search/pages/manage/node_search', $edit, 'Save search page');
     $this->drupalGet('admin/config/search/pages/manage/node_search');
     foreach ($node_ranks as $node_rank) {
-      $this->assertNotEmpty($this->xpath('//select[@id="edit-rankings-' . $node_rank . '-value"]//option[@value="0"]'), 'Select list to prioritize ' . $node_rank . ' for node ranks is visible and set to 0.');
+      $this->assertSession()->optionExists('edit-rankings-' . $node_rank . '-value', '0');
     }
 
     // Try with sticky, then promoted. This is a test for issue
