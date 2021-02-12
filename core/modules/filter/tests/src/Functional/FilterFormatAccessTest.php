@@ -146,20 +146,12 @@ class FilterFormatAccessTest extends BrowserTestBase {
     $this->assertFalse($this->webUser->hasPermission($this->disallowedFormat->getPermissionName()), 'A regular user does not have permission to use the disallowed text format.');
 
     // Make sure that the allowed format appears on the node form and that
-    // the disallowed format does not.
+    // the disallowed format and fallback format do not.
     $this->drupalLogin($this->webUser);
     $this->drupalGet('node/add/page');
-    $elements = $this->xpath('//select[@name=:name]/option', [
-      ':name' => 'body[0][format]',
-      ':option' => $this->allowedFormat->id(),
-    ]);
-    $options = [];
-    foreach ($elements as $element) {
-      $options[$element->getValue()] = $element;
-    }
-    $this->assertTrue(isset($options[$this->allowedFormat->id()]), 'The allowed text format appears as an option when adding a new node.');
-    $this->assertFalse(isset($options[$this->disallowedFormat->id()]), 'The disallowed text format does not appear as an option when adding a new node.');
-    $this->assertFalse(isset($options[filter_fallback_format()]), 'The fallback format does not appear as an option when adding a new node.');
+    $this->assertSession()->optionExists('body[0][format]', $this->allowedFormat->id());
+    $this->assertSession()->optionNotExists('body[0][format]', $this->disallowedFormat->id());
+    $this->assertSession()->optionNotExists('body[0][format]', filter_fallback_format());
 
     // Check regular user access to the filter tips pages.
     $this->drupalGet('filter/tips/' . $this->allowedFormat->id());

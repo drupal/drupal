@@ -180,11 +180,11 @@ class ViewEditTest extends UITestBase {
           'en',
           'hu',
         ];
-        $elements = $this->xpath('//select[@id="edit-rendering-language"]/option');
-        // Compare values inside the option elements with expected values.
-        for ($i = 0; $i < count($elements); $i++) {
-          $this->assertEqual($expected_elements[$i], $elements[$i]->getAttribute('value'));
-        }
+        $elements = $this->assertSession()->selectExists('edit-rendering-language')->findAll('css', 'option');
+        $elements = array_map(function ($element) {
+          return $element->getValue();
+        }, $elements);
+        $this->assertSame($expected_elements, $elements);
 
         // Check that the selected values are respected even we they are not
         // supposed to be listed.
@@ -214,8 +214,7 @@ class ViewEditTest extends UITestBase {
 
         // Check that the previous selection is listed and selected.
         $this->drupalGet($langcode_url);
-        $element = $this->xpath('//select[@id="edit-rendering-language"]/option[@value="***LANGUAGE_language_content***" and @selected="selected"]');
-        $this->assertFalse(empty($element), 'Current selection is not lost');
+        $this->assertTrue($this->assertSession()->optionExists('edit-rendering-language', '***LANGUAGE_language_content***')->isSelected());
 
         // Check the order for the langcode filter.
         $langcode_url = 'admin/structure/views/nojs/handler/' . $view_name . '/' . $display . '/filter/langcode';
