@@ -4,6 +4,7 @@ namespace Drupal\Core;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -806,18 +807,23 @@ class Url implements TrustedCallbackInterface {
    *
    * Determines whether the route is accessible or not.
    *
-   * @param \Drupal\Core\Session\AccountInterface $account
-   *   (optional) Run access checks for this account. Defaults to the current
-   *   user.
+   * @param \Drupal\Core\Session\AccountInterface|null $account
+   *   (optional) Run access checks for this account. NULL for the current user.
+   * @param bool $return_as_object
+   *   (optional) Defaults to FALSE.
    *
-   * @return bool
-   *   Returns TRUE if the user has access to the url, otherwise FALSE.
+   * @return bool|\Drupal\Core\Access\AccessResultInterface
+   *   The access result. Returns a boolean if $return_as_object is FALSE (this
+   *   is the default) and otherwise an AccessResultInterface object.
+   *   When a boolean is returned, the result of AccessInterface::isAllowed() is
+   *   returned, i.e. TRUE means access is explicitly allowed, FALSE means
+   *   access is either explicitly forbidden or "no opinion".
    */
-  public function access(AccountInterface $account = NULL) {
+  public function access(AccountInterface $account = NULL, $return_as_object = FALSE) {
     if ($this->isRouted()) {
-      return $this->accessManager()->checkNamedRoute($this->getRouteName(), $this->getRouteParameters(), $account);
+      return $this->accessManager()->checkNamedRoute($this->getRouteName(), $this->getRouteParameters(), $account, $return_as_object);
     }
-    return TRUE;
+    return $return_as_object ? AccessResult::allowed() : TRUE;
   }
 
   /**

@@ -23,6 +23,7 @@ class ResourceObjectNormalizerCacherTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
+    'system',
     'serialization',
     'jsonapi',
     'user',
@@ -54,6 +55,11 @@ class ResourceObjectNormalizerCacherTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    // Add the entity schemas.
+    $this->installEntitySchema('user');
+    // Add the additional table schemas.
+    $this->installSchema('system', ['sequences']);
+    $this->installSchema('user', ['users_data']);
     $this->resourceTypeRepository = $this->container->get('jsonapi.resource_type.repository');
     $this->serializer = $this->container->get('jsonapi.serializer');
     $this->cacher = $this->container->get('jsonapi.normalization_cacher');
@@ -69,6 +75,7 @@ class ResourceObjectNormalizerCacherTest extends KernelTestBase {
       'name' => $this->randomMachineName(),
       'pass' => $this->randomString(),
     ]);
+    $user->save();
     $resource_type = $this->resourceTypeRepository->get($user->getEntityTypeId(), $user->bundle());
     $resource_object = ResourceObject::createFromEntity($resource_type, $user);
     $cache_tag_to_invalidate = 'link_normalization';

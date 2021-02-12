@@ -3,7 +3,7 @@
 namespace Drupal\jsonapi\Routing;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\jsonapi\Access\RelationshipFieldAccess;
+use Drupal\jsonapi\Access\RelationshipRouteAccessCheck;
 use Drupal\jsonapi\Controller\EntryPoint;
 use Drupal\jsonapi\ParamConverter\ResourceTypeConverter;
 use Drupal\jsonapi\ResourceType\ResourceType;
@@ -316,7 +316,6 @@ class Routes implements ContainerInjectionInterface {
       $relationship_route = new Route("/{$path}/{entity}/relationships/{$relationship_field_name}");
       $relationship_route->addDefaults(['_on_relationship' => TRUE]);
       $relationship_route->addDefaults(['related' => $relationship_field_name]);
-      $relationship_route->setRequirement(RelationshipFieldAccess::ROUTE_REQUIREMENT_KEY, $relationship_field_name);
       $relationship_route->setRequirement('_csrf_request_header_token', 'TRUE');
       $relationship_route_methods = $resource_type->isMutable()
         ? ['GET', 'POST', 'PATCH', 'DELETE']
@@ -329,6 +328,8 @@ class Routes implements ContainerInjectionInterface {
       ];
       foreach ($relationship_route_methods as $method) {
         $method_specific_relationship_route = clone $relationship_route;
+        $field_operation = $method === 'GET' ? 'view' : 'edit';
+        $method_specific_relationship_route->setRequirement(RelationshipRouteAccessCheck::ROUTE_REQUIREMENT_KEY, "$relationship_field_name.$field_operation");
         $method_specific_relationship_route->addDefaults([RouteObjectInterface::CONTROLLER_NAME => static::CONTROLLER_SERVICE_NAME . ":{$relationship_controller_methods[$method]}"]);
         $method_specific_relationship_route->setMethods($method);
         $routes->add(static::getRouteName($resource_type, sprintf("%s.relationship.%s", $relationship_field_name, strtolower($method))), $method_specific_relationship_route);
@@ -342,7 +343,7 @@ class Routes implements ContainerInjectionInterface {
         $related_route->setMethods(['GET']);
         $related_route->addDefaults([RouteObjectInterface::CONTROLLER_NAME => static::CONTROLLER_SERVICE_NAME . ':getRelated']);
         $related_route->addDefaults(['related' => $relationship_field_name]);
-        $related_route->setRequirement(RelationshipFieldAccess::ROUTE_REQUIREMENT_KEY, $relationship_field_name);
+        $related_route->setRequirement(RelationshipRouteAccessCheck::ROUTE_REQUIREMENT_KEY, "$relationship_field_name.view");
         $routes->add(static::getRouteName($resource_type, "$relationship_field_name.related"), $related_route);
       }
     }

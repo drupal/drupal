@@ -70,6 +70,7 @@ services:
       - { name: jsonapi_normalizer }
   serializer.normalizer.link_collection.jsonapi:
     class: Drupal\jsonapi\Normalizer\LinkCollectionNormalizer
+    arguments: ['@current_user']
     tags:
       - { name: jsonapi_normalizer }
   serializer.normalizer.relationship.jsonapi:
@@ -159,11 +160,11 @@ services:
       - [setMediaRevisionAccessCheck, ['@?access_check.media.revision']] # This is only injected when the service is available.
       # This is a temporary measure. JSON:API should not need to be aware of the Content Moderation module.
       - [setLatestRevisionCheck, ['@?access_check.latest_revision']] # This is only injected when the service is available.
-  access_check.jsonapi.relationship_field_access:
-    class: Drupal\jsonapi\Access\RelationshipFieldAccess
+  access_check.jsonapi.relationship_route_access:
+    class: Drupal\jsonapi\Access\RelationshipRouteAccessCheck
     arguments: ['@jsonapi.entity_access_checker']
     tags:
-      - { name: access_check, applies_to: _jsonapi_relationship_field_access, needs_incoming_request: TRUE }
+      - { name: access_check, applies_to: _jsonapi_relationship_route_access }
 
   # Route filters.
   method_filter.jsonapi:
@@ -246,3 +247,13 @@ services:
     class: Drupal\jsonapi\Controller\TemporaryJsonapiFileFieldUploader
     public: false
     arguments: ['@logger.channel.file', '@file_system', '@file.mime_type.guesser', '@token', '@lock', '@config.factory']
+
+  # Deprecated services.
+  access_check.jsonapi.relationship_field_access:
+    # Deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no
+    # replacement. JSON:API's access checkers are not part of its public API.
+    # See https://www.drupal.org/node/3194641.
+    class: Drupal\jsonapi\Access\RelationshipFieldAccess
+    arguments: ['@jsonapi.entity_access_checker']
+    tags:
+      - { name: access_check, applies_to: _jsonapi_relationship_field_access, needs_incoming_request: TRUE }
