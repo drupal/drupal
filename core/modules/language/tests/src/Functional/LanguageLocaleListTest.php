@@ -66,11 +66,10 @@ class LanguageLocaleListTest extends BrowserTestBase {
 
     // Get language list displayed in select list.
     $this->drupalGet('fr/admin/config/regional/language/add');
-    $option_elements = $this->xpath('//select[@id="edit-predefined-langcode/option"]');
-    $options = [];
-    foreach ($option_elements as $option_element) {
-      $options[] = $option_element->getText();
-    }
+    $options = $this->assertSession()->selectExists('edit-predefined-langcode')->findAll('css', 'option');
+    $options = array_map(function ($item) {
+      return $item->getText();
+    }, $options);
     // Remove the 'Custom language...' option form the end.
     array_pop($options);
     // Order language list.

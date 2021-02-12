@@ -66,12 +66,10 @@ class EditorAdminTest extends BrowserTestBase {
     $this->assertLessThan($filters_pos, $editor_pos);
 
     // Verify the <select>.
-    $select = $this->xpath('//select[@name="editor[editor]"]');
-    $select_is_disabled = $this->xpath('//select[@name="editor[editor]" and @disabled="disabled"]');
-    $options = $this->xpath('//select[@name="editor[editor]"]/option');
-    $this->assertCount(1, $select, 'The Text Editor select exists.');
-    $this->assertCount(1, $select_is_disabled, 'The Text Editor select is disabled.');
-    $this->assertCount(1, $options, 'The Text Editor select has only one option.');
+    $select = $this->assertSession()->selectExists('editor[editor]');
+    $this->assertSame('disabled', $select->getAttribute('disabled'));
+    $options = $select->findAll('css', 'option');
+    $this->assertCount(1, $options);
     $this->assertTrue(($options[0]->getText()) === 'None', 'Option 1 in the Text Editor select is "None".');
     $this->assertRaw('This option is disabled because no modules that provide a text editor are currently enabled.');
   }
@@ -211,12 +209,10 @@ class EditorAdminTest extends BrowserTestBase {
    */
   protected function selectUnicornEditor() {
     // Verify the <select> when a text editor is available.
-    $select = $this->xpath('//select[@name="editor[editor]"]');
-    $select_is_disabled = $this->xpath('//select[@name="editor[editor]" and @disabled="disabled"]');
-    $options = $this->xpath('//select[@name="editor[editor]"]/option');
-    $this->assertCount(1, $select, 'The Text Editor select exists.');
-    $this->assertCount(0, $select_is_disabled, 'The Text Editor select is not disabled.');
-    $this->assertCount(2, $options, 'The Text Editor select has two options.');
+    $select = $this->assertSession()->selectExists('editor[editor]');
+    $this->assertFalse($select->hasAttribute('disabled'));
+    $options = $select->findAll('css', 'option');
+    $this->assertCount(2, $options);
     $this->assertTrue(($options[0]->getText()) === 'None', 'Option 1 in the Text Editor select is "None".');
     $this->assertTrue(($options[1]->getText()) === 'Unicorn Editor', 'Option 2 in the Text Editor select is "Unicorn Editor".');
     $this->assertTrue($options[0]->hasAttribute('selected'), 'Option 1 ("None") is selected.');
@@ -248,13 +244,11 @@ class EditorAdminTest extends BrowserTestBase {
     $this->assertSame('unicorn', $editor->getEditor(), 'The text editor is configured correctly.');
     $this->assertSame($ponies_too, $settings['ponies_too'], 'The text editor settings are stored correctly.');
     $this->drupalGet('admin/config/content/formats/manage/' . $format_id);
-    $select = $this->xpath('//select[@name="editor[editor]"]');
-    $select_is_disabled = $this->xpath('//select[@name="editor[editor]" and @disabled="disabled"]');
-    $options = $this->xpath('//select[@name="editor[editor]"]/option');
-    $this->assertCount(1, $select, 'The Text Editor select exists.');
-    $this->assertCount(0, $select_is_disabled, 'The Text Editor select is not disabled.');
-    $this->assertCount(2, $options, 'The Text Editor select has two options.');
-    $this->assertTrue($options[1]->hasAttribute('selected'), 'Option 2 ("Unicorn Editor") is selected.');
+    $select = $this->assertSession()->selectExists('editor[editor]');
+    $this->assertFalse($select->hasAttribute('disabled'));
+    $options = $select->findAll('css', 'option');
+    $this->assertCount(2, $options);
+    $this->assertTrue($options[1]->isSelected(), 'Option 2 ("Unicorn Editor") is selected.');
   }
 
 }

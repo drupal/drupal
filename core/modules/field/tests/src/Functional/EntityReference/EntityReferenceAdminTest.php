@@ -390,21 +390,11 @@ class EntityReferenceAdminTest extends BrowserTestBase {
    *   An array of expected options.
    */
   protected function assertFieldSelectOptions($name, array $expected_options) {
-    $xpath = $this->assertSession()->buildXPathQuery('//select[@name=:name]', [':name' => $name]);
-    $fields = $this->xpath($xpath);
-    if ($fields) {
-      $field = $fields[0];
-      $options = $field->findAll('xpath', 'option');
-      array_walk($options, function (NodeElement &$option) {
-        $option = $option->getValue();
-      });
-      sort($options);
-      sort($expected_options);
-      $this->assertSame($expected_options, $options);
-    }
-    else {
-      $this->fail('Unable to find field ' . $name);
-    }
+    $options = $this->assertSession()->selectExists($name)->findAll('xpath', 'option');
+    array_walk($options, function (NodeElement &$option) {
+      $option = $option->getValue();
+    });
+    $this->assertEqualsCanonicalizing($expected_options, $options);
   }
 
 }
