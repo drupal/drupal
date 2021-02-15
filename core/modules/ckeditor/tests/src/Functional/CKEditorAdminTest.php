@@ -200,8 +200,7 @@ class CKEditorAdminTest extends BrowserTestBase {
     $this->resetAll();
     $this->container->get('plugin.manager.ckeditor.plugin')->clearCachedDefinitions();
     $this->drupalGet('admin/config/content/formats/manage/filtered_html');
-    $ultra_llama_mode_checkbox = $this->xpath('//input[@type="checkbox" and @name="editor[settings][plugins][llama_contextual_and_button][ultra_llama_mode]" and not(@checked)]');
-    $this->assertCount(1, $ultra_llama_mode_checkbox, 'The "Ultra llama mode" checkbox exists and is not checked.');
+    $this->assertSession()->checkboxNotChecked('editor[settings][plugins][llama_contextual_and_button][ultra_llama_mode]');
     $editor = Editor::load('filtered_html');
     $this->assertInstanceOf(Editor::class, $editor);
     $this->assertEqual($expected_settings, $editor->getSettings(), 'The Editor config entity has the correct settings.');
@@ -213,8 +212,7 @@ class CKEditorAdminTest extends BrowserTestBase {
     ];
     $this->submitForm($edit, 'Save configuration');
     $this->drupalGet('admin/config/content/formats/manage/filtered_html');
-    $ultra_llama_mode_checkbox = $this->xpath('//input[@type="checkbox" and @name="editor[settings][plugins][llama_contextual_and_button][ultra_llama_mode]" and @checked="checked"]');
-    $this->assertCount(1, $ultra_llama_mode_checkbox, 'The "Ultra llama mode" checkbox exists and is checked.');
+    $this->assertSession()->checkboxChecked('editor[settings][plugins][llama_contextual_and_button][ultra_llama_mode]');
     $expected_settings['plugins']['llama_contextual_and_button']['ultra_llama_mode'] = TRUE;
     $editor = Editor::load('filtered_html');
     $this->assertInstanceOf(Editor::class, $editor);
