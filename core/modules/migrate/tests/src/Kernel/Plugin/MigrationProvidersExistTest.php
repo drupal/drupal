@@ -100,6 +100,10 @@ class MigrationProvidersExistTest extends MigrateDrupalTestBase {
         'source_module' => 'phone',
         'destination_module' => 'telephone',
       ],
+      'telephone' => [
+        'source_module' => 'telephone',
+        'destination_module' => 'telephone',
+      ],
       'link' => [
         'source_module' => 'link',
         'destination_module' => 'link',

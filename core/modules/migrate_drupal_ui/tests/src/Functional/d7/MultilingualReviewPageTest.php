@@ -122,6 +122,7 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'System',
       'Taxonomy translation',
       'Taxonomy',
+      'Telephone',
       'Term Depth access',
       'Test search node tags',
       'Test search type',
