@@ -8,6 +8,35 @@ use Drupal\migrate_drupal\Plugin\migrate\source\d7\FieldableEntity;
 /**
  * Provides Drupal 7 taxonomy term entity translation source plugin.
  *
+ * Available configuration keys:
+ * - bundle: (optional) The taxonomy vocabulary (machine name) to filter terms
+ *   retrieved from the source - can be a string or an array. If omitted, all
+ *   terms are retrieved.
+ *
+ * Examples:
+ *
+ * @code
+ * source:
+ *   plugin: d7_taxonomy_term
+ *   bundle: tags
+ * @endcode
+ *
+ * In this example terms of 'tags' vocabulary are retrieved from the source
+ * database.
+ *
+ * @code
+ * source:
+ *   plugin: d7_taxonomy_term
+ *   bundle: [tags, forums]
+ * @endcode
+ *
+ * In this example terms of 'tags' and 'forums' vocabularies are retrieved
+ * from the source database.
+ *
+ * For additional configuration keys, refer to the parent classes:
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
  * @MigrateSource(
  *   id = "d7_taxonomy_term_entity_translation",
  *   source_module = "entity_translation"
