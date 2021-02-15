@@ -257,6 +257,10 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
                   'image_nodelink' => 'image',
                   'image_imagelink' => 'image',
                 ],
+                'telephone' => [
+                  'text_plain' => 'string',
+                  'telephone_link' => 'telephone_link',
+                ],
               ],
             ],
           ],
@@ -309,7 +313,7 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
     $this->assertArrayHasKey('test_content_type', $actual_fields['node']);
     $this->assertCount(8, $actual_fields['node']);
     $this->assertCount(8, $actual_fields['comment']);
-    $this->assertCount(22, $actual_fields['node']['test_content_type']);
+    $this->assertCount(23, $actual_fields['node']['test_content_type']);
     foreach ($actual_fields as $entity_type_id => $bundles) {
       foreach ($bundles as $bundle => $fields) {
         foreach ($fields as $field_name => $field_info) {

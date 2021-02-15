@@ -4572,6 +4572,21 @@ $connection->insert('field_config')
   'translatable' => '0',
   'deleted' => '0',
 ))
+->values(array(
+  'id' => '58',
+  'field_name' => 'field_telephone',
+  'type' => 'telephone',
+  'module' => 'telephone',
+  'active' => '1',
+  'storage_type' => 'field_sql_storage',
+  'storage_module' => 'field_sql_storage',
+  'storage_active' => '1',
+  'locked' => '0',
+  'data' => 'a:7:{s:12:"translatable";i:0;s:12:"entity_types";a:0:{}s:8:"settings";a:1:{s:23:"entity_translation_sync";b:0;}s:7:"storage";a:5:{s:4:"type";s:17:"field_sql_storage";s:8:"settings";a:0:{}s:6:"module";s:17:"field_sql_storage";s:6:"active";s:1:"1";s:7:"details";a:1:{s:3:"sql";a:2:{s:18:"FIELD_LOAD_CURRENT";a:1:{s:26:"field_data_field_telephone";a:1:{s:5:"value";s:21:"field_telephone_value";}}s:19:"FIELD_LOAD_REVISION";a:1:{s:30:"field_revision_field_telephone";a:1:{s:5:"value";s:21:"field_telephone_value";}}}}}s:12:"foreign keys";a:0:{}s:7:"indexes";a:0:{}s:2:"id";s:2:"58";}',
+  'cardinality' => '1',
+  'translatable' => '0',
+  'deleted' => '0',
+))
 ->execute();
 $connection->schema()->createTable('field_config_instance', array(
   'fields' => array(
@@ -5403,6 +5418,15 @@ $connection->insert('field_config_instance')
   'entity_type' => 'node',
   'bundle' => 'article',
   'data' => 'a:7:{s:5:"label";s:14:"User Reference";s:6:"widget";a:5:{s:6:"weight";s:2:"26";s:4:"type";s:27:"user_reference_autocomplete";s:6:"module";s:14:"user_reference";s:6:"active";i:1;s:8:"settings";a:3:{s:18:"autocomplete_match";s:8:"contains";s:4:"size";s:2:"60";s:17:"autocomplete_path";s:27:"user_reference/autocomplete";}}s:8:"settings";a:2:{s:18:"user_register_form";b:0;s:23:"entity_translation_sync";b:0;}s:7:"display";a:1:{s:7:"default";a:5:{s:5:"label";s:5:"above";s:4:"type";s:22:"user_reference_default";s:8:"settings";a:0:{}s:6:"module";s:14:"user_reference";s:6:"weight";i:26;}}s:8:"required";i:0;s:11:"description";s:0:"";s:13:"default_value";N;}',
+  'deleted' => '0',
+))
+->values(array(
+  'id' => '90',
+  'field_id' => '58',
+  'field_name' => 'field_telephone',
+  'entity_type' => 'node',
+  'bundle' => 'test_content_type',
+  'data' => 'a:7:{s:5:"label";s:9:"Telephone";s:6:"widget";a:5:{s:6:"weight";s:2:"21";s:4:"type";s:17:"telephone_default";s:6:"module";s:9:"telephone";s:6:"active";i:1;s:8:"settings";a:1:{s:11:"placeholder";s:0:"";}}s:8:"settings";a:2:{s:18:"user_register_form";b:0;s:23:"entity_translation_sync";b:0;}s:7:"display";a:2:{s:7:"default";a:5:{s:5:"label";s:5:"above";s:4:"type";s:14:"telephone_link";s:6:"weight";s:2:"21";s:8:"settings";a:1:{s:5:"title";s:0:"";}s:6:"module";s:9:"telephone";}s:6:"teaser";a:5:{s:5:"label";s:5:"above";s:4:"type";s:10:"text_plain";s:6:"weight";s:1:"0";s:8:"settings";a:0:{}s:6:"module";s:4:"text";}}s:8:"required";i:0;s:11:"description";s:0:"";s:13:"default_value";N;}',
   'deleted' => '0',
 ))
 ->execute();
@@ -8657,6 +8681,108 @@ $connection->insert('field_data_field_tags')
   'field_tags_tid' => '17',
 ))
 ->execute();
+$connection->schema()->createTable('field_data_field_telephone', array(
+  'fields' => array(
+    'entity_type' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'bundle' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'deleted' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'tiny',
+      'default' => '0',
+    ),
+    'entity_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'revision_id' => array(
+      'type' => 'int',
+      'not null' => FALSE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'language' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '32',
+      'default' => '',
+    ),
+    'delta' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'field_telephone_value' => array(
+      'type' => 'varchar',
+      'not null' => FALSE,
+      'length' => '256',
+    ),
+  ),
+  'primary key' => array(
+    'entity_type',
+    'entity_id',
+    'deleted',
+    'delta',
+    'language',
+  ),
+  'indexes' => array(
+    'entity_type' => array(
+      'entity_type',
+    ),
+    'bundle' => array(
+      'bundle',
+    ),
+    'deleted' => array(
+      'deleted',
+    ),
+    'entity_id' => array(
+      'entity_id',
+    ),
+    'revision_id' => array(
+      'revision_id',
+    ),
+    'language' => array(
+      'language',
+    ),
+  ),
+  'mysql_character_set' => 'utf8',
+));
+
+$connection->insert('field_data_field_telephone')
+  ->fields(array(
+    'entity_type',
+    'bundle',
+    'deleted',
+    'entity_id',
+    'revision_id',
+    'language',
+    'delta',
+    'field_telephone_value',
+  ))
+  ->values(array(
+    'entity_type' => 'node',
+    'bundle' => 'test_content_type',
+    'deleted' => '0',
+    'entity_id' => '1',
+    'revision_id' => '1',
+    'language' => 'und',
+    'delta' => '0',
+    'field_telephone_value' => '99-99-99-99',
+  ))
+  ->execute();
 $connection->schema()->createTable('field_data_field_termplain', array(
   'fields' => array(
     'entity_type' => array(
@@ -14959,6 +15085,109 @@ $connection->insert('field_revision_field_tags')
   'field_tags_tid' => '17',
 ))
 ->execute();
+$connection->schema()->createTable('field_revision_field_telephone', array(
+  'fields' => array(
+    'entity_type' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'bundle' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'deleted' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'tiny',
+      'default' => '0',
+    ),
+    'entity_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'revision_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'language' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '32',
+      'default' => '',
+    ),
+    'delta' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'field_telephone_value' => array(
+      'type' => 'varchar',
+      'not null' => FALSE,
+      'length' => '256',
+    ),
+  ),
+  'primary key' => array(
+    'entity_type',
+    'entity_id',
+    'revision_id',
+    'deleted',
+    'delta',
+    'language',
+  ),
+  'indexes' => array(
+    'entity_type' => array(
+      'entity_type',
+    ),
+    'bundle' => array(
+      'bundle',
+    ),
+    'deleted' => array(
+      'deleted',
+    ),
+    'entity_id' => array(
+      'entity_id',
+    ),
+    'revision_id' => array(
+      'revision_id',
+    ),
+    'language' => array(
+      'language',
+    ),
+  ),
+  'mysql_character_set' => 'utf8',
+));
+
+$connection->insert('field_revision_field_telephone')
+  ->fields(array(
+    'entity_type',
+    'bundle',
+    'deleted',
+    'entity_id',
+    'revision_id',
+    'language',
+    'delta',
+    'field_telephone_value',
+  ))
+  ->values(array(
+    'entity_type' => 'node',
+    'bundle' => 'test_content_type',
+    'deleted' => '0',
+    'entity_id' => '1',
+    'revision_id' => '1',
+    'language' => 'und',
+    'delta' => '0',
+    'field_telephone_value' => '99-99-99-99',
+  ))
+  ->execute();
 $connection->schema()->createTable('field_revision_field_term_entityreference', array(
   'fields' => array(
     'entity_type' => array(
@@ -49348,6 +49577,13 @@ $connection->insert('registry')
   'weight' => '0',
 ))
 ->values(array(
+  'name' => 'MigrateTelephoneFieldHandler',
+  'type' => 'class',
+  'filename' => 'sites/all/modules/telephone/telephone.migrate.inc',
+  'module' => 'telephone',
+  'weight' => '0',
+))
+->values(array(
   'name' => 'MigrateTranslationEntityHandler',
   'type' => 'class',
   'filename' => 'sites/all/modules/entity_translation/includes/translation.migrate.inc',
@@ -53233,6 +53469,10 @@ $connection->insert('registry_file')
   'hash' => 'c5491ab663972aa23ae2f917a0fc605a6136f02e1b207d3fc650ed1f251359ee',
 ))
 ->values(array(
+  'filename' => 'sites/all/modules/telephone/telephone.migrate.inc',
+  'hash' => '14561d51028bcf5b9e2f18654c3ba76eda444feb12ea6ac4e88fdbf4c1a35650',
+))
+->values(array(
   'filename' => 'sites/all/modules/views/tests/comment/views_handler_argument_comment_user_uid.test',
   'hash' => 'b8b417ef0e05806a88bd7d5e2f7dcb41339fbf5b66f39311defc9fb65476d561',
 ))
@@ -56873,6 +57113,17 @@ $connection->insert('system')
   'schema_version' => '-1',
   'weight' => '0',
   'info' => 'a:12:{s:4:"name";s:7:"Picture";s:11:"description";s:15:"Picture element";s:4:"core";s:3:"7.x";s:12:"dependencies";a:3:{i:0;s:6:"ctools";i:1;s:5:"image";i:2;s:11:"breakpoints";}s:5:"files";a:1:{i:0;s:27:"includes/PictureMapping.php";}s:9:"configure";s:26:"admin/config/media/picture";s:7:"package";s:7:"Picture";s:11:"stylesheets";a:1:{s:3:"all";a:1:{s:19:"picture_wysiwyg.css";s:45:"sites/all/modules/picture/picture_wysiwyg.css";}}s:5:"mtime";i:1544936288;s:7:"version";N;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/telephone/telephone.module',
+  'name' => 'telephone',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '1',
+  'bootstrap' => '0',
+  'schema_version' => '0',
+  'weight' => '0',
+  'info' => 'a:12:{s:4:"name";s:9:"Telephone";s:11:"description";s:43:"Defines a field type for telephone numbers.";s:7:"package";s:6:"Fields";s:4:"core";s:3:"7.x";s:12:"dependencies";a:1:{i:0;s:5:"field";}s:5:"files";a:1:{i:0;s:21:"telephone.migrate.inc";}s:7:"version";s:14:"7.x-1.0-alpha1";s:7:"project";s:9:"telephone";s:9:"datestamp";s:10:"1389736105";s:5:"mtime";i:1389736105;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/title/tests/title_test.module',
