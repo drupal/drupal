@@ -1060,7 +1060,7 @@ function hook_views_plugins_exposed_form_alter(array &$plugins) {
  */
 function hook_views_plugins_join_alter(array &$plugins) {
   // Print out all join plugin names for debugging purposes.
-  debug($plugins);
+  dump($plugins);
 }
 
 /**
@@ -1092,7 +1092,7 @@ function hook_views_plugins_pager_alter(array &$plugins) {
  */
 function hook_views_plugins_query_alter(array &$plugins) {
   // Print out all query plugin names for debugging purposes.
-  debug($plugins);
+  dump($plugins);
 }
 
 /**

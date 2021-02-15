@@ -952,6 +952,17 @@ class BrowserTestBaseTest extends BrowserTestBase {
   }
 
   /**
+   * Tests legacy debug().
+   *
+   * @group legacy
+   */
+  public function testDebug() {
+    $this->expectDeprecation('debug() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use dump() instead. See https://www.drupal.org/node/3192283');
+    $this->expectError();
+    debug("There's a star man waiting in the sky");
+  }
+
+  /**
    * Tests the dump() function provided by the var-dumper Symfony component.
    */
   public function testVarDump() {
