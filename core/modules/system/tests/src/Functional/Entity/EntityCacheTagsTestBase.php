@@ -670,18 +670,10 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     $is_redirecting_cache_item = isset($cache_entry->data['#cache_redirect']);
     if ($redirected_cid === NULL) {
       $this->assertFalse($is_redirecting_cache_item, 'Render cache entry is not a redirect.');
-      // If this is a redirecting cache item unlike we expected, log it.
-      if ($is_redirecting_cache_item) {
-        debug($cache_entry->data);
-      }
     }
     else {
       // Verify that $cid contains a cache redirect.
       $this->assertTrue($is_redirecting_cache_item, 'Render cache entry is a redirect.');
-      // If this is not a redirecting cache item unlike we expected, log it.
-      if (!$is_redirecting_cache_item) {
-        debug($cache_entry->data);
-      }
       // Verify that the cache redirect points to the expected CID.
       $redirect_cache_metadata = $cache_entry->data['#cache'];
       $actual_redirection_cid = $this->createCacheId(

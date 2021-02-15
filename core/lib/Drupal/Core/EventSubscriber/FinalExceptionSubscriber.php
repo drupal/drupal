@@ -86,7 +86,6 @@ class FinalExceptionSubscriber implements EventSubscriberInterface {
     if ($this->isErrorDisplayable($error)) {
       // If error type is 'User notice' then treat it as debug information
       // instead of an error message.
-      // @see debug()
       if ($error['%type'] == 'User notice') {
         $error['%type'] = 'Debug';
       }
