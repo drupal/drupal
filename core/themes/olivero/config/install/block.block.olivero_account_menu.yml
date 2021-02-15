@@ -1,6 +1,10 @@
 langcode: en
 status: true
 dependencies:
+  config:
+    - system.menu.account
+  module:
+    - system
   theme:
     - olivero
 id: olivero_account_menu
@@ -8,9 +12,9 @@ theme: olivero
 region: secondary_menu
 weight: -4
 provider: null
-plugin: system_menu_block:account
+plugin: 'system_menu_block:account'
 settings:
-  id: system_menu_block:account
+  id: 'system_menu_block:account'
   label: 'User account menu'
   provider: system
   label_display: '0'
