@@ -5,6 +5,7 @@ namespace Drupal\auto_updates\ReadinessChecker;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Url;
 use Drupal\system\SystemManager;
@@ -64,7 +65,7 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
    *   Requirements arrays as specified by hook_requirements().
    */
   public function getRequirements(): array {
-    $readiness_check_url = Url::fromRoute('auto_updates.update_readiness', ['display_message_on_fails' => TRUE]);
+    $run_link = $this->createRunLink();
 
     $last_check_timestamp = $this->readinessCheckerManager->getMostRecentRunTime();
     if ($last_check_timestamp === NULL) {
@@ -73,10 +74,8 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
       // @todo Link "automatic updates" to documentation in
       //   https://www.drupal.org/node/3168405.
       $requirement['value'] = $this->t('Your site has never checked if it is ready to apply automatic updates.');
-      if ($readiness_check_url->access()) {
-        $requirement['description'] = $this->t('<a href=":link">Run readiness checks</a> now.', [
-          ':link' => $readiness_check_url->toString(),
-        ]);
+      if ($run_link) {
+        $requirement['description'] = $run_link;
       }
       return ['auto_updates_readiness' => $requirement];
     }
@@ -87,14 +86,12 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
       // @todo Link "automatic updates" to documentation in
       //   https://www.drupal.org/node/3168405.
       $requirement['value'] = $this->t('Your site has not recently checked if it is ready to apply automatic updates.');
-      if ($readiness_check_url->access()) {
-        $requirement['description'] = $this->t('Readiness checks were last run @time ago. <a href=":url">Run readiness checks</a> now.', [
-          '@time' => $time_ago,
-          ':url' => $readiness_check_url->toString(),
-        ]);
-      }
-      else {
-        $requirement['description'] = $this->t('Readiness checks were last run @time ago.', ['@time' => $time_ago]);
+      $requirement['description']['message']['#markup'] = $this->t('Readiness checks were last run @time ago.', ['@time' => $time_ago]);
+      if ($run_link) {
+        $requirement['description']['run_link'] = [
+          '#type' => 'container',
+          '#markup' => $this->createRunLink(),
+        ];
       }
       return ['auto_updates_readiness' => $requirement];
     }
@@ -113,6 +110,9 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
           //   https://www.drupal.org/node/3168405.
           'value' => $this->t('Your site is ready for automatic updates.'),
         ];
+        if ($run_link) {
+          $requirements['auto_updates_readiness']['description'] = $run_link;
+        }
       }
       return $requirements;
     }
@@ -161,10 +161,34 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
       $requirement = [
         'title' => $this->t('Update readiness checks'),
         'severity' => $severity,
-        'description' => $severity_messages,
+        'description' => [
+          'messages' => $severity_messages,
+          'run_link' => [
+            '#type' => 'container',
+            '#markup' => $this->createRunLink(),
+          ],
+        ],
       ];
       $requirement['value'] = $this->getFailureMessageForSeverity($severity);
       return $requirement;
+    }
+    return NULL;
+  }
+
+  /**
+   * Creates a link to run the readiness checkers.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|null
+   *   If the user has access to run the readiness checker then a link to run
+   *   the checkers, otherwise NULL.
+   */
+  protected function createRunLink(): ?TranslatableMarkup {
+    $readiness_check_url = Url::fromRoute('auto_updates.update_readiness', ['display_message_on_fails' => TRUE]);
+    if ($readiness_check_url->access()) {
+      return $this->t(
+        '<a href=":link">Run readiness checks</a> now.',
+        [':link' => $readiness_check_url->toString()]
+      );
     }
     return NULL;
   }

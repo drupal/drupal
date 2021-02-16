@@ -144,7 +144,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $this->assertReadinessReportMatches('Your site is ready for automatic updates.', 'checked', FALSE);
     $this->drupalLogin($this->checkerRunnerUser);
     $this->drupalGet('admin/reports/status');
-    $this->assertReadinessReportMatches('Your site is ready for automatic updates.', 'checked', FALSE);
+    $this->assertReadinessReportMatches('Your site is ready for automatic updates. Run readiness checks now.', 'checked', FALSE);
 
     // Confirm a user without the permission to run readiness checks does not
     // have a link to run the checks when the checks need to be run again.
@@ -158,7 +158,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
     // link to run the checks when the checks need to be run again.
     $this->drupalLogin($this->checkerRunnerUser);
     $this->drupalGet('admin/reports/status');
-    $this->assertReadinessReportMatches('Your site has not recently checked if it is ready to apply automatic updates. Readiness checks were last run %s ago. Run readiness checks now.', 'warning', FALSE);
+    $this->assertReadinessReportMatches('Your site has not recently checked if it is ready to apply automatic updates. Readiness checks were last run %s ago.Run readiness checks now.', 'warning', FALSE);
     $expected_result = $this->testResults['1 error'];
     TestChecker::setTestResult($expected_result);
 
@@ -171,7 +171,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
     // will not be performed because of errors is displayed on the top of the
     // page in message.
     $assert->pageTextMatchesCount(2, '/' . preg_quote(static::ERRORS_EXPLANATION) . '/');
-    $this->assertReadinessReportMatches($expected_result->getErrorMessages()[0], 'error', static::ERRORS_EXPLANATION);
+    $this->assertReadinessReportMatches($expected_result->getErrorMessages()[0] . 'Run readiness checks now.', 'error', static::ERRORS_EXPLANATION);
 
     // @todo Should we always show when the checks were last run and a link to
     //   run when there is an error?
@@ -329,13 +329,14 @@ class ReadinessCheckerTest extends BrowserTestBase {
 
     $this->container->get('module_installer')->install(['auto_updates']);
     $this->drupalGet('admin/reports/status');
-    $this->assertReadinessReportMatches('Your site is ready for automatic updates.', 'checked');
+    $this->assertReadinessReportMatches('Your site is ready for automatic updates. Run readiness checks now.', 'checked');
 
     $expected_result = $this->testResults['1 error'];
     TestChecker::setTestResult($expected_result);
     $this->container->get('module_installer')->install(['auto_updates_test']);
     $this->drupalGet('admin/reports/status');
-    $this->assertReadinessReportMatches($expected_result->getErrorMessages()[0], 'error', static::ERRORS_EXPLANATION);
+    file_put_contents("/Users/ted.bowman/sites/test.html", $this->getSession()->getPage()->getOuterHtml());
+    $this->assertReadinessReportMatches($expected_result->getErrorMessages()[0] . 'Run readiness checks now.', 'error', static::ERRORS_EXPLANATION);
 
     // Confirm that installing a module that does not provide a new checker does
     // not run the checkers on install.
@@ -345,7 +346,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/status');
     // Confirm that new checker message is not displayed because the checker was
     // not run again.
-    $this->assertReadinessReportMatches($expected_result->getErrorMessages()[0], 'error', static::ERRORS_EXPLANATION);
+    $this->assertReadinessReportMatches($expected_result->getErrorMessages()[0] . 'Run readiness checks now.', 'error', static::ERRORS_EXPLANATION);
     $assert->pageTextNotContains($unexpected_result->getErrorMessages()[0]);
     $assert->pageTextNotContains($unexpected_result->getErrorsSummary());
   }
@@ -361,11 +362,11 @@ class ReadinessCheckerTest extends BrowserTestBase {
     TestChecker::setTestResult($expected_result);
     $this->container->get('module_installer')->install(['auto_updates', 'auto_updates_test']);
     $this->drupalGet('admin/reports/status');
-    $this->assertReadinessReportMatches($expected_result->getErrorMessages()[0], 'error', static::ERRORS_EXPLANATION);
+    $this->assertReadinessReportMatches($expected_result->getErrorMessages()[0] . 'Run readiness checks now.', 'error', static::ERRORS_EXPLANATION);
 
     $this->container->get('module_installer')->uninstall(['auto_updates_test']);
     $this->drupalGet('admin/reports/status');
-    $assert->pageTextNotContains($expected_result->getErrorMessages()[0]);
+    $assert->pageTextNotContains($expected_result->getErrorMessages()[0] . 'Run readiness checks now.');
   }
 
   /**
