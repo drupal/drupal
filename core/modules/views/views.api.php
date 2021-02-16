@@ -110,10 +110,10 @@ function hook_views_analyze(Drupal\views\ViewExecutable $view) {
  *
  * To provide views data for an entity, instead of implementing this hook,
  * create a class implementing \Drupal\views\EntityViewsDataInterface and
- * reference this in the "views" annotation in the entity class. The return
- * value of the getViewsData() method on the interface is the same as this hook,
- * and base class in \Drupal\views\EntityViewsData will take care of adding the
- * basic Views tables and fields for your entity. See the
+ * reference this in the "handlers.views_data" annotation in the entity class.
+ * The return value of the getViewsData() method on the interface is the same as
+ * this hook, and base class in \Drupal\views\EntityViewsData will take care of
+ * adding the basic Views tables and fields for your entity. See the
  * @link entity_api Entity API topic @endlink for more information about
  * entities.
  *
