@@ -34,15 +34,15 @@ class DiskSpaceTest extends KernelTestBase {
     $result = $checker->getResult();
     $messages = $result->getErrorMessages();
     $this->assertCount(1, $messages);
-    $this->assertStringMatchesFormat('Logical disk "%s" has insufficient space. There must be at least %s megabytes free.', (string) $messages[0]);
+    $this->assertStringMatchesFormat('Logical disk "%s" has insufficient space. There must be at least %s MB free.', (string) $messages[0]);
 
     // Out of space not the same logical disk.
     $checker = $this->replaceCheckerService(new TestDiskSpaceNonSameDisk($app_root, $class_loader));
     $result = $checker->getResult();
     $messages = $result->getErrorMessages();
     $this->assertCount(2, $messages);
-    $this->assertStringMatchesFormat('Drupal root filesystem "%s" has insufficient space. There must be at least %s megabytes free.', (string) $messages[0]);
-    $this->assertStringMatchesFormat('Vendor filesystem "%s" has insufficient space. There must be at least %s megabytes free.', (string) $messages[1]);
+    $this->assertStringMatchesFormat('Drupal root filesystem "%s" has insufficient space. There must be at least %s MB free.', (string) $messages[0]);
+    $this->assertStringMatchesFormat('Vendor filesystem "%s" has insufficient space. There must be at least %s MB free.', (string) $messages[1]);
 
     // Web root and vendor path are invalid.
     $checker = $this->replaceCheckerService(new TestDiskSpaceInvalidVendor('if_there_was_ever_a_folder_with_this_path_this_test_would_fail', $class_loader));

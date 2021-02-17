@@ -101,7 +101,7 @@ abstract class FileSystemBase implements ReadinessCheckerInterface {
    *   Vendor file path.
    *
    * @return bool
-   *   TRUE if they are on the same file system, FALSE otherwise.
+   *   TRUE if they are on the same logical disk, FALSE otherwise.
    *
    * @throws \RuntimeException
    *   Thrown if the an error is found trying get the directory information.

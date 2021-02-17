@@ -47,7 +47,7 @@ class DiskSpace extends FileSystemBase {
     elseif (!$has_valid_root) {
       return [$this->t('Free disk space cannot be determined because the web root directory could not be located.')];
     }
-    if (!$has_valid_vendor) {
+    elseif (!$has_valid_vendor) {
       return [$this->t('Free disk space cannot be determined because the vendor directory could not be located.')];
     }
     $messages = [];
@@ -58,20 +58,20 @@ class DiskSpace extends FileSystemBase {
       // If the root and vendor paths are not on the same logical disk check
       // that each have at least half of the minimum required disk space.
       if (static::getFreeSpace($root_path) < (static::MINIMUM_DISK_SPACE / 2)) {
-        $messages[] = $this->t('Drupal root filesystem "@root" has insufficient space. There must be at least @space megabytes free.', [
+        $messages[] = $this->t('Drupal root filesystem "@root" has insufficient space. There must be at least @space MB free.', [
           '@root' => $root_path,
           '@space' => $minimum_megabytes / 2,
         ]);
       }
       if (static::getFreeSpace($vendor_path) < (static::MINIMUM_DISK_SPACE / 2)) {
-        $messages[] = $this->t('Vendor filesystem "@vendor" has insufficient space. There must be at least @space megabytes free.', [
+        $messages[] = $this->t('Vendor filesystem "@vendor" has insufficient space. There must be at least @space MB free.', [
           '@vendor' => $vendor_path,
           '@space' => $minimum_megabytes / 2,
         ]);
       }
     }
     elseif (static::getFreeSpace($root_path) < static::MINIMUM_DISK_SPACE) {
-      $messages[] = $this->t('Logical disk "@root" has insufficient space. There must be at least @space megabytes free.', [
+      $messages[] = $this->t('Logical disk "@root" has insufficient space. There must be at least @space MB free.', [
         '@root' => $root_path,
         '@space' => $minimum_megabytes,
       ]);
@@ -87,12 +87,7 @@ class DiskSpace extends FileSystemBase {
     if (empty($errors)) {
       return NULL;
     }
-    elseif (count($errors) === 1) {
-      $summary = $errors[0];
-    }
-    else {
-      $summary = $this->t('There is not enough disk space to perform an automatic update.');
-    }
+    $summary = count($errors) === 1 ? $errors[0] : $this->t('There is not enough disk space to perform an automatic update.');
     return new ReadinessCheckerResult($this, $summary, $errors, NULL, []);
   }
 
