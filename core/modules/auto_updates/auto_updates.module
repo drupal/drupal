@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Provides hook implementations for Automatic Updates.
+ * Contains hook implementations for Automatic Updates.
  */
 
 use Drupal\auto_updates\ReadinessChecker\ReadinessCheckerMessages;
