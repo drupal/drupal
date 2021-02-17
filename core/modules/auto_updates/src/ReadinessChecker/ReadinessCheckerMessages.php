@@ -49,6 +49,8 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
   protected $currentUser;
 
   /**
+   * The current route.
+   *
    * @var \Drupal\Core\Routing\CurrentRouteMatch
    */
   protected $currentRoute;
@@ -56,7 +58,7 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
   /**
    * ReadinessRequirement constructor.
    *
-   * @param \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager $readinessCheckerManager
+   * @param \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager $readiness_checker_manager
    *   The readiness checker manager service.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger service.
@@ -64,6 +66,10 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
    *   The admin context service.
    * @param \Drupal\Core\Session\AccountProxyInterface $current_user
    *   The current user.
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation
+   *   The translation service.
+   * @param \Drupal\Core\Routing\CurrentRouteMatch $current_route
+   *   The current route.
    */
   public function __construct(ReadinessCheckerManager $readiness_checker_manager, MessengerInterface $messenger, AdminContext $admin_context, AccountProxyInterface $current_user, TranslationInterface $translation, CurrentRouteMatch $current_route) {
     $this->readinessCheckerManager = $readiness_checker_manager;

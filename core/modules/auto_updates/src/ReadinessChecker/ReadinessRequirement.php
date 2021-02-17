@@ -34,7 +34,7 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
   /**
    * ReadinessRequirement constructor.
    *
-   * @param \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager $readinessCheckerManager
+   * @param \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager $readiness_checker_manager
    *   The readiness checker manager service.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $translation
    *   The translation service.
