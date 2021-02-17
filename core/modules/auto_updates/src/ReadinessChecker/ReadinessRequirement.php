@@ -90,7 +90,7 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
       if ($run_link) {
         $requirement['description']['run_link'] = [
           '#type' => 'container',
-          '#markup' => $this->createRunLink(),
+          '#markup' => $run_link,
         ];
       }
       return ['auto_updates_readiness' => $requirement];
