@@ -41,8 +41,8 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter service.
    */
-  public function __construct(ReadinessCheckerManager $readinessCheckerManager, TranslationInterface $translation, DateFormatterInterface $date_formatter) {
-    $this->readinessCheckerManager = $readinessCheckerManager;
+  public function __construct(ReadinessCheckerManager $readiness_checker_manager, TranslationInterface $translation, DateFormatterInterface $date_formatter) {
+    $this->readinessCheckerManager = $readiness_checker_manager;
     $this->setStringTranslation($translation);
     $this->dateFormatter = $date_formatter;
   }
