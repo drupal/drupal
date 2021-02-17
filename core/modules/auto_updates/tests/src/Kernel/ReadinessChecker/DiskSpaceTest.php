@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\auto_updates\Kernel\ReadinessChecker;
 
+use Composer\Autoload\ClassLoader;
 use Drupal\auto_updates\ReadinessChecker\DiskSpace;
 use Drupal\KernelTests\KernelTestBase;
 
@@ -105,6 +106,9 @@ class TestDiskSpaceInvalidVendor extends TestDiskSpace {
   /**
    * {@inheritdoc}
    */
-  protected $vendorDir = 'if_there_was_ever_a_folder_with_this_path_this_test_would_fail';
+  public function __construct(string $app_root, ClassLoader $class_loader) {
+    parent::__construct($app_root, $class_loader);
+    $this->vendorDir = 'if_there_was_ever_a_folder_with_this_path_this_test_would_fail';
+  }
 
 }

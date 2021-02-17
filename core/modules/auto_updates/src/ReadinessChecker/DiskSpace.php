@@ -2,10 +2,29 @@
 
 namespace Drupal\auto_updates\ReadinessChecker;
 
+use Composer\Autoload\ClassLoader;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+
 /**
  * A readiness checker that ensures there is enough disk space for updates.
  */
-class DiskSpace extends FileSystemBase {
+class DiskSpace implements ReadinessCheckerInterface {
+
+  use StringTranslationTrait;
+
+  /**
+   * The root file path.
+   *
+   * @var string
+   */
+  protected $rootPath;
+
+  /**
+   * The path of the vendor folder.
+   *
+   * @var string
+   */
+  protected $vendorDir;
 
   /**
    * Minimum disk space (in bytes) is 1 GB.
@@ -14,6 +33,43 @@ class DiskSpace extends FileSystemBase {
    *   Composer in https://www.drupal.org/node/3166416.
    */
   protected const MINIMUM_DISK_SPACE = 1073741824;
+
+  /**
+   * Constructs a DiskSpace object.
+   *
+   * @param string $app_root
+   *   The app root.
+   * @param \Composer\Autoload\ClassLoader $class_loader
+   *   The class loader service.
+   */
+  public function __construct(string $app_root, ClassLoader $class_loader) {
+    $this->rootPath = $app_root;
+    $class_loader_reflection = new \ReflectionObject($class_loader);
+    $this->vendorDir = dirname($class_loader_reflection->getFileName(), 2);
+  }
+
+  /**
+   * Determines if the root and vendor directories are on the same logical disk.
+   *
+   * @param string $root
+   *   Root file path.
+   * @param string $vendor
+   *   Vendor file path.
+   *
+   * @return bool
+   *   TRUE if they are on the same logical disk, FALSE otherwise.
+   *
+   * @throws \RuntimeException
+   *   Thrown if the an error is found trying get the directory information.
+   */
+  protected function areSameLogicalDisk(string $root, string $vendor): bool {
+    $root_statistics = stat($root);
+    $vendor_statistics = stat($vendor);
+    if ($root_statistics === FALSE || $vendor_statistics === FALSE) {
+      throw new \RuntimeException('Unable to determine if the root and vendor directories are on the same logic disk.');
+    }
+    return $root_statistics['dev'] === $vendor_statistics['dev'];
+  }
 
   /**
    * Gets the free disk space.
@@ -39,8 +95,8 @@ class DiskSpace extends FileSystemBase {
    *   The error messages.
    */
   protected function getErrors(): array {
-    $has_valid_root = $this->hasValidRootPath();
-    $has_valid_vendor = $this->hasValidVendorPath();
+    $has_valid_root = file_exists(implode(DIRECTORY_SEPARATOR, [$this->rootPath, 'core', 'core.api.php']));
+    $has_valid_vendor = file_exists($this->vendorDir . DIRECTORY_SEPARATOR . 'autoload.php');
     if (!$has_valid_root && !$has_valid_vendor) {
       return [$this->t('Free disk space cannot be determined because the web root and vendor directories could not be located.')];
     }
@@ -52,27 +108,25 @@ class DiskSpace extends FileSystemBase {
     }
     $messages = [];
     $minimum_megabytes = static::MINIMUM_DISK_SPACE / 1000000;
-    $root_path = $this->getRootPath();
-    $vendor_path = $this->getVendorPath();
-    if (!$this->areSameLogicalDisk($root_path, $vendor_path)) {
+    if (!$this->areSameLogicalDisk($this->rootPath, $this->vendorDir)) {
       // If the root and vendor paths are not on the same logical disk check
       // that each have at least half of the minimum required disk space.
-      if (static::getFreeSpace($root_path) < (static::MINIMUM_DISK_SPACE / 2)) {
+      if (static::getFreeSpace($this->rootPath) < (static::MINIMUM_DISK_SPACE / 2)) {
         $messages[] = $this->t('Drupal root filesystem "@root" has insufficient space. There must be at least @space MB free.', [
-          '@root' => $root_path,
+          '@root' => $this->rootPath,
           '@space' => $minimum_megabytes / 2,
         ]);
       }
-      if (static::getFreeSpace($vendor_path) < (static::MINIMUM_DISK_SPACE / 2)) {
+      if (static::getFreeSpace($this->vendorDir) < (static::MINIMUM_DISK_SPACE / 2)) {
         $messages[] = $this->t('Vendor filesystem "@vendor" has insufficient space. There must be at least @space MB free.', [
-          '@vendor' => $vendor_path,
+          '@vendor' => $this->vendorDir,
           '@space' => $minimum_megabytes / 2,
         ]);
       }
     }
-    elseif (static::getFreeSpace($root_path) < static::MINIMUM_DISK_SPACE) {
+    elseif (static::getFreeSpace($this->rootPath) < static::MINIMUM_DISK_SPACE) {
       $messages[] = $this->t('Logical disk "@root" has insufficient space. There must be at least @space MB free.', [
-        '@root' => $root_path,
+        '@root' => $this->rootPath,
         '@space' => $minimum_megabytes,
       ]);
     }
