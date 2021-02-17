@@ -66,7 +66,7 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
    *   The current user.
    */
   public function __construct(ReadinessCheckerManager $readiness_checker_manager, MessengerInterface $messenger, AdminContext $admin_context, AccountProxyInterface $current_user, TranslationInterface $translation, CurrentRouteMatch $current_route) {
-      $this->readinessCheckerManager = $readiness_checker_manager;
+    $this->readinessCheckerManager = $readiness_checker_manager;
     $this->messenger = $messenger;
     $this->adminContext = $admin_context;
     $this->currentUser = $current_user;
