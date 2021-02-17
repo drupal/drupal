@@ -116,7 +116,6 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
       }
       else {
         // Only display warning summaries if no errors were displayed.
-        $has_warnings = FALSE;
         $warning_results = $this->getResultsWithMessagesForSeverity(SystemManager::REQUIREMENT_WARNING);
         if ($warning_results) {
           // @todo Link "automatic updates" to documentation in
