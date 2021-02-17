@@ -50,7 +50,7 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container):self {
+  public static function create(ContainerInterface $container): self {
     return new static(
       $container->get('auto_updates.readiness_checker_manager'),
       $container->get('string_translation'),
