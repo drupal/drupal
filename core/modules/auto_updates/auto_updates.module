@@ -12,8 +12,8 @@ use Drupal\auto_updates\ReadinessChecker\ReadinessCheckerMessages;
  */
 function auto_updates_page_top(array &$page_top) {
   /** @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerMessages $readinessMessages */
-  $readinessMessages = \Drupal::classResolver(ReadinessCheckerMessages::class);
-  $readinessMessages->adminPageMessages();
+  $readiness_messages = \Drupal::classResolver(ReadinessCheckerMessages::class);
+  $readiness_messages->adminPageMessages();
 }
 
 /**
