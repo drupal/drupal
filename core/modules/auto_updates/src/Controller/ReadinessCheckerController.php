@@ -22,6 +22,13 @@ class ReadinessCheckerController extends ControllerBase {
   use ReadinessCheckerTrait;
 
   /**
+   * The readiness checker manager.
+   *
+   * @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager
+   */
+  protected $readinessCheckerManager;
+
+  /**
    * ReadinessCheckerController constructor.
    *
    * @param \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager $checker_manager
@@ -67,7 +74,7 @@ class ReadinessCheckerController extends ControllerBase {
       $this->messenger()->addStatus($this->t('No issues found. Your site is ready for automatic updates'));
     }
     elseif ($display_message_on_fails) {
-      $severity = $this->getResultsWithMessagesForSeverity(SystemManager::REQUIREMENT_ERROR) ? SystemManager::REQUIREMENT_ERROR : SystemManager::REQUIREMENT_WARNING;
+      $severity = $this->getResultsBySeverity($results, SystemManager::REQUIREMENT_ERROR) ? SystemManager::REQUIREMENT_ERROR : SystemManager::REQUIREMENT_WARNING;
       $message = $this->getFailureMessageForSeverity($severity);
       if ($severity === SystemManager::REQUIREMENT_ERROR) {
         $this->messenger()->addError($message);

@@ -11,13 +11,6 @@ use Drupal\system\SystemManager;
 trait ReadinessCheckerTrait {
 
   /**
-   * The readiness checker manager.
-   *
-   * @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager
-   */
-  protected $readinessCheckerManager;
-
-  /**
    * Gets a message when readiness checkers not pass passed on severity.
    *
    * @param int $severity
@@ -35,15 +28,17 @@ trait ReadinessCheckerTrait {
   /**
    * Get readiness checker results by severity.
    *
+   * @param \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[] $results
+   *   The results to filter.
    * @param int $severity
    *   The severity.
    *
    * @return \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[]
    *   The readiness checker results by category.
    */
-  protected function getResultsWithMessagesForSeverity(int $severity):array {
+  protected function getResultsBySeverity(array $results, int $severity):array {
     $filtered_results = [];
-    foreach ($this->readinessCheckerManager->getResults() as $result) {
+    foreach ($results as $result) {
       if (($severity === SystemManager::REQUIREMENT_ERROR && $result->getErrorMessages()) || ($severity === SystemManager::REQUIREMENT_WARNING && $result->getWarningMessages())) {
         $filtered_results[] = $result;
       }

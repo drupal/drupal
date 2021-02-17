@@ -28,6 +28,13 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
   use ReadinessCheckerTrait;
 
   /**
+   * The readiness checker manager.
+   *
+   * @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager
+   */
+  protected $readinessCheckerManager;
+
+  /**
    * The messenger service.
    *
    * @var \Drupal\Core\Messenger\MessengerInterface
@@ -110,7 +117,8 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
       }
     }
     else {
-      if ($error_results = $this->getResultsWithMessagesForSeverity(SystemManager::REQUIREMENT_ERROR)) {
+      $results = $this->readinessCheckerManager->getResults();
+      if ($error_results = $this->getResultsBySeverity($results, SystemManager::REQUIREMENT_ERROR)) {
         // @todo Link "automatic updates" to documentation in
         //    https://www.drupal.org/node/3168405.
         $this->messenger->addError($this->getFailureMessageForSeverity(SystemManager::REQUIREMENT_ERROR));
@@ -122,7 +130,7 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
       }
       else {
         // Only display warning summaries if no errors were displayed.
-        $warning_results = $this->getResultsWithMessagesForSeverity(SystemManager::REQUIREMENT_WARNING);
+        $warning_results = $this->getResultsBySeverity($results, SystemManager::REQUIREMENT_WARNING);
         if ($warning_results) {
           // @todo Link "automatic updates" to documentation in
           //    https://www.drupal.org/node/3168405.

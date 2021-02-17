@@ -24,6 +24,14 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
 
   use StringTranslationTrait;
   use ReadinessCheckerTrait;
+
+  /**
+   * The readiness checker manager.
+   *
+   * @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager
+   */
+  protected $readinessCheckerManager;
+
   /**
    * The date formatter service.
    *
@@ -97,12 +105,8 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
     }
     else {
       $requirements = [];
-      foreach ([SystemManager::REQUIREMENT_WARNING => 'warnings', SystemManager::REQUIREMENT_ERROR => 'errors'] as $severity => $severity_type) {
-        if ($requirement = $this->createRequirementForSeverity($severity)) {
-          $requirements["auto_updates_readiness_$severity_type"] = $requirement;
-        }
-      }
-      if (empty($requirements)) {
+      $results = $this->readinessCheckerManager->getResults();
+      if (empty($results)) {
         $requirements['auto_updates_readiness'] = [
           'title' => $this->t('Update readiness checks'),
           'severity' => SystemManager::REQUIREMENT_OK,
@@ -114,6 +118,14 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
           $requirements['auto_updates_readiness']['description'] = $run_link;
         }
       }
+      else {
+        foreach ([SystemManager::REQUIREMENT_WARNING, SystemManager::REQUIREMENT_ERROR] as $severity) {
+          if ($requirement = $this->createRequirementForSeverity($this->getResultsBySeverity($results, $severity), $severity)) {
+            $requirements["auto_updates_readiness_$severity"] = $requirement;
+          }
+        }
+      }
+
       return $requirements;
     }
   }
@@ -121,6 +133,8 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
   /**
    * Creates a requirements section for readiness checker results.
    *
+   * @param \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[] $results
+   *   The results for the severity.
    * @param int $severity
    *   The severity for requirement section.
    *
@@ -128,9 +142,9 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
    *   Requirements array as specified by hook_requirements(), or NULL
    *   if no requirements can be determined.
    */
-  protected function createRequirementForSeverity(int $severity): ?array {
+  protected function createRequirementForSeverity(array $results, int $severity): ?array {
     $severity_messages = [];
-    foreach ($this->getResultsWithMessagesForSeverity($severity) as $result) {
+    foreach ($results as $result) {
       if ($severity === SystemManager::REQUIREMENT_ERROR) {
         $summary = $result->getErrorsSummary();
         $checker_messages = $result->getErrorMessages();
