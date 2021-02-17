@@ -11,4 +11,4 @@ services:
       - { name: service_collector, tag: auto_updates.readiness_checker, call: addChecker }
   logger.channel.auto_updates:
     parent: logger.channel_base
-    arguments: [ 'auto_updates' ]
+    arguments: ['auto_updates']
