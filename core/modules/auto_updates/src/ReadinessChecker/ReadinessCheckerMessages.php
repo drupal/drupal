@@ -65,8 +65,8 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
    * @param \Drupal\Core\Session\AccountProxyInterface $current_user
    *   The current user.
    */
-  public function __construct(ReadinessCheckerManager $readinessCheckerManager, MessengerInterface $messenger, AdminContext $admin_context, AccountProxyInterface $current_user, TranslationInterface $translation, CurrentRouteMatch $current_route) {
-    $this->readinessCheckerManager = $readinessCheckerManager;
+  public function __construct(ReadinessCheckerManager $readiness_checker_manager, MessengerInterface $messenger, AdminContext $admin_context, AccountProxyInterface $current_user, TranslationInterface $translation, CurrentRouteMatch $current_route) {
+      $this->readinessCheckerManager = $readiness_checker_manager;
     $this->messenger = $messenger;
     $this->adminContext = $admin_context;
     $this->currentUser = $current_user;
@@ -77,7 +77,7 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container):self {
+  public static function create(ContainerInterface $container): self {
     return new static(
       $container->get('auto_updates.readiness_checker_manager'),
       $container->get('messenger'),
@@ -91,15 +91,15 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
   /**
    * Displays the checker results messages on admin pages.
    */
-  public function adminPageMessages():void {
+  public function adminPageMessages(): void {
     if (!$this->displayResultsOnCurrentPage()) {
       return;
     }
     if (!$this->readinessCheckerManager->hasRunRecently()) {
-      $checkerUrl = Url::fromRoute('auto_updates.update_readiness')->setOption('query', $this->getDestinationArray());
-      if ($checkerUrl->access()) {
+      $checker_url = Url::fromRoute('auto_updates.update_readiness')->setOption('query', $this->getDestinationArray());
+      if ($checker_url->access()) {
         $this->messenger->addError(t('Your site has not recently run an update readiness check. <a href=":url">Run readiness checks now.</a>', [
-          ':url' => $checkerUrl->toString(),
+          ':url' => $checker_url->toString(),
         ]));
       }
     }
@@ -153,9 +153,7 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
         'update.confirmation_page',
       ];
       // These routes don't need additional nagging.
-      if (!in_array($this->currentRoute->getRouteName(), $disabled_routes, TRUE)) {
-        return TRUE;
-      }
+      return !in_array($this->currentRoute->getRouteName(), $disabled_routes, TRUE);
     }
     return FALSE;
   }
