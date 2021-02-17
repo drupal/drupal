@@ -335,7 +335,6 @@ class ReadinessCheckerTest extends BrowserTestBase {
     TestChecker::setTestResult($expected_result);
     $this->container->get('module_installer')->install(['auto_updates_test']);
     $this->drupalGet('admin/reports/status');
-    file_put_contents("/Users/ted.bowman/sites/test.html", $this->getSession()->getPage()->getOuterHtml());
     $this->assertReadinessReportMatches($expected_result->getErrorMessages()[0] . 'Run readiness checks now.', 'error', static::ERRORS_EXPLANATION);
 
     // Confirm that installing a module that does not provide a new checker does
