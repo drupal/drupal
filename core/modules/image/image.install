@@ -33,9 +33,7 @@ function image_uninstall() {
 }
 
 /**
- * Implements hook_requirements() to check the PHP GD Library.
- *
- * @param $phase
+ * Implements hook_requirements().
  */
 function image_requirements($phase) {
   if ($phase != 'runtime') {

@@ -47,7 +47,7 @@ function common_test_drupal_alter_alter(&$data, &$arg2 = NULL, &$arg3 = NULL) {
 }
 
 /**
- * Implements hook_TYPE_alter() on behalf of Bartik theme.
+ * Implements hook_TYPE_alter().
  *
  * Same as common_test_drupal_alter_alter(), but here, we verify that themes
  * can also alter and come last.
@@ -81,7 +81,7 @@ function bartik_drupal_alter_alter(&$data, &$arg2 = NULL, &$arg3 = NULL) {
 }
 
 /**
- * Implements hook_TYPE_alter() on behalf of block module.
+ * Implements hook_TYPE_alter().
  *
  * This is to verify that
  * \Drupal::moduleHandler()->alter(array(TYPE1, TYPE2), ...) allows

@@ -8,7 +8,7 @@
 use Drupal\Core\Entity\EntityInterface;
 
 /**
- * Implements hook_ENTITY_TYPE_create.
+ * Implements hook_ENTITY_TYPE_create().
  */
 function config_install_dependency_test_config_test_create(EntityInterface $entity) {
   // Add an enforced dependency on this module so that we can test if this is
