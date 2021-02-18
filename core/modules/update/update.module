@@ -390,16 +390,6 @@ function update_fetch_data_finished($success, $results) {
  *
  * Constructs the email notification message when the site is out of date.
  *
- * @param $key
- *   Unique key to indicate what message to build, always 'status_notify'.
- * @param $message
- *   Reference to the message array being built.
- * @param $params
- *   Array of parameters to indicate what kind of text to include in the message
- *   body. This is a keyed array of message type ('core' or 'contrib') as the
- *   keys, and the status reason constant (UpdateManagerInterface::NOT_SECURE,
- *   etc) for the values.
- *
  * @see \Drupal\Core\Mail\MailManagerInterface::mail()
  * @see _update_cron_notify()
  * @see _update_message_text()

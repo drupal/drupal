@@ -11,11 +11,6 @@ use Drupal\views\ViewExecutable;
 /**
  * Implements hook_views_query_alter().
  *
- * @param \Drupal\views\ViewExecutable $view
- *   The view object about to be processed.
- * @param \Drupal\views\Plugin\views\query\QueryPluginBase $query
- *   The query plugin object for the query.
- *
  * @see \Drupal\Tests\content_moderation\Kernel\ViewsModerationStateSortTest::testSortRevisionBaseTable()
  */
 function content_moderation_test_views_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {

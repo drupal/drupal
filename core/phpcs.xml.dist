@@ -75,6 +75,7 @@
     <exclude name="Drupal.Commenting.FunctionComment.ParamMissingDefinition"/>
     <exclude name="Drupal.Commenting.FunctionComment.TypeHintMissing"/>
   </rule>
+  <rule ref="Drupal.Commenting.HookComment"/>
   <rule ref="Drupal.Commenting.GenderNeutralComment" />
   <rule ref="Drupal.Commenting.VariableComment">
     <!-- Sniff for: DuplicateVar, EmptyVar, InlineVariableName -->

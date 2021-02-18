@@ -95,7 +95,7 @@ function module_test_modules_uninstalled($modules) {
 }
 
 /**
- * Implements hook_module_implements_alter()
+ * Implements hook_module_implements_alter().
  *
  * @see module_test_altered_test_hook()
  * @see \Drupal\system\Tests\Module\ModuleImplementsAlterTest::testModuleImplementsAlter()
