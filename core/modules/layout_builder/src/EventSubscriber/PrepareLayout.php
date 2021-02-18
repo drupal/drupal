@@ -14,6 +14,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * An event subscriber to prepare section storage via the
  * \Drupal\layout_builder\Event\PrepareLayoutEvent.
  *
+ * @internal
+ *   Tagged services are internal.
+ *
  * @see \Drupal\layout_builder\Event\PrepareLayoutEvent
  * @see \Drupal\layout_builder\Element\LayoutBuilder::prepareLayout()
  */
@@ -29,23 +32,13 @@ class PrepareLayout implements EventSubscriberInterface {
   protected $layoutTempstoreRepository;
 
   /**
-   * The messenger service.
-   *
-   * @var \Drupal\Core\Messenger\MessengerInterface
-   */
-  protected $messenger;
-
-  /**
    * Constructs a new PrepareLayout.
    *
    * @param \Drupal\layout_builder\LayoutTempstoreRepositoryInterface $layout_tempstore_repository
    *   The tempstore repository.
-   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
-   *   The messenger service.
    */
-  public function __construct(LayoutTempstoreRepositoryInterface $layout_tempstore_repository, MessengerInterface $messenger) {
+  public function __construct(LayoutTempstoreRepositoryInterface $layout_tempstore_repository) {
     $this->layoutTempstoreRepository = $layout_tempstore_repository;
-    $this->messenger = $messenger;
   }
 
   /**
@@ -66,10 +59,7 @@ class PrepareLayout implements EventSubscriberInterface {
     $section_storage = $event->getSectionStorage();
 
     // If the layout has pending changes, add a warning.
-    if ($this->layoutTempstoreRepository->has($section_storage)) {
-      $this->messenger->addWarning($this->t('You have unsaved changes.'));
-    }
-    else {
+    if (!$this->layoutTempstoreRepository->has($section_storage)) {
       // If the layout is an override that has not yet been overridden, copy the
       // sections from the corresponding default.
       if ($section_storage instanceof OverridesSectionStorageInterface && !$section_storage->isOverridden()) {

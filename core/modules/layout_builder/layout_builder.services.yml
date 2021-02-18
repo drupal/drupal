@@ -58,6 +58,6 @@ services:
     arguments: ['@layout_builder.controller.entity_form.inner']
   layout_builder.element.prepare_layout:
     class: Drupal\layout_builder\EventSubscriber\PrepareLayout
-    arguments: ['@layout_builder.tempstore_repository', '@messenger']
+    arguments: ['@layout_builder.tempstore_repository']
     tags:
       - { name: event_subscriber }
