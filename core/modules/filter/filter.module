@@ -801,9 +801,6 @@ function _filter_html_image_secure_process($text) {
  *
  * Formats an image DOM element that has an invalid source.
  *
- * @param DOMElement $image
- *   An IMG node to format, parsed from the filtered text.
- *
  * @see _filter_html_image_secure_process()
  */
 function filter_filter_secure_image_alter(&$image) {
