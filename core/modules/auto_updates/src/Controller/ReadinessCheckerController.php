@@ -3,7 +3,7 @@
 namespace Drupal\auto_updates\Controller;
 
 use Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager;
-use Drupal\auto_updates\ReadinessChecker\ReadinessCheckerTrait;
+use Drupal\auto_updates\ReadinessChecker\ReadinessTrait;
 use Drupal\auto_updates\ReadinessChecker\ReadinessRequirement;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 class ReadinessCheckerController extends ControllerBase {
 
-  use ReadinessCheckerTrait;
+  use ReadinessTrait;
 
   /**
    * The readiness checker manager.

@@ -6,9 +6,9 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\system\SystemManager;
 
 /**
- * Common methods for readiness checkers.
+ * Common methods for working with readiness checkers.
  */
-trait ReadinessCheckerTrait {
+trait ReadinessTrait {
 
   /**
    * Gets a message when readiness checkers not pass passed on severity.

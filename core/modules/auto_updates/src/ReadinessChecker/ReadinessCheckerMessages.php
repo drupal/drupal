@@ -25,7 +25,7 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
 
   use StringTranslationTrait;
   use RedirectDestinationTrait;
-  use ReadinessCheckerTrait;
+  use ReadinessTrait;
 
   /**
    * The readiness checker manager.

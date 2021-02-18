@@ -23,7 +23,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 final class ReadinessRequirement implements ContainerInjectionInterface {
 
   use StringTranslationTrait;
-  use ReadinessCheckerTrait;
+  use ReadinessTrait;
 
   /**
    * The readiness checker manager.
