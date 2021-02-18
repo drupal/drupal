@@ -66,7 +66,7 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
   /**
    * Tests that the manager is run after the auto_updates module is installed.
    */
-  public function testRunOnInstall():void {
+  public function testRunOnInstall(): void {
     $key_value = $this->container->get('keyvalue.expirable')->get('auto_updates');
     $this->assertEmpty($key_value->get('readiness_check_last_run'));
     $this->setTestMessages(['error1'], ['warning1']);
@@ -80,7 +80,7 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
   /**
    * Test that the option $refresh parameter works.
    */
-  public function testMessageRefresh():void {
+  public function testMessageRefresh(): void {
     $this->setTestMessages(['error1'], ['warning1']);
     $this->enableModules(['auto_updates']);
     $this->installConfig(['auto_updates']);

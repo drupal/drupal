@@ -21,7 +21,7 @@ class DiskSpaceTest extends KernelTestBase {
   /**
    * Tests the functionality of disk space readiness checks.
    */
-  public function testDiskSpace():void {
+  public function testDiskSpace(): void {
     // No disk space issues.
     $checker = $this->container->get('auto_updates.disk_space_checker');
     $result = $checker->getResult();
@@ -66,7 +66,7 @@ class DiskSpaceTest extends KernelTestBase {
    * @return \Drupal\auto_updates\ReadinessChecker\DiskSpace
    *   The new disk space checker returned from the container.
    */
-  protected function replaceCheckerService(DiskSpace $disk_space_checker) {
+  protected function replaceCheckerService(DiskSpace $disk_space_checker): DiskSpace {
     $this->container->set('auto_updates.disk_space_checker', $disk_space_checker);
     return $this->container->get('auto_updates.disk_space_checker');
   }

@@ -152,7 +152,7 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
    * @return bool
    *   Whether the messages should be displayed on the current page.
    */
-  protected function displayResultsOnCurrentPage():bool {
+  protected function displayResultsOnCurrentPage(): bool {
     if ($this->adminContext->isAdminRoute() && $this->currentUser->hasPermission('administer site configuration')) {
       $disabled_routes = [
         'update.theme_update',

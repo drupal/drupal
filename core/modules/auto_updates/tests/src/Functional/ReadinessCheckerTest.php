@@ -128,7 +128,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
   /**
    * Tests readiness checkers on status report page.
    */
-  public function testReadinessChecksStatusReport():void {
+  public function testReadinessChecksStatusReport(): void {
     $assert = $this->assertSession();
 
     // Ensure automated_cron is disabled before installing auto_updates. This
@@ -223,7 +223,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
   /**
    * Tests readiness checkers results on admin pages..
    */
-  public function testReadinessChecksAdminPages():void {
+  public function testReadinessChecksAdminPages(): void {
     $assert = $this->assertSession();
     $messages_section_selector = '[data-drupal-messages]';
 
