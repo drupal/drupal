@@ -76,25 +76,25 @@ class ReadinessCheckerTest extends BrowserTestBase {
       'access administration pages',
     ]);
 
-    $testChecker = $this->createMock(TestChecker::class);
-    $testChecker->_serviceId = 'auto_updates_test.checker';
+    $test_checker = $this->createMock(TestChecker::class);
+    $test_checker->_serviceId = 'auto_updates_test.checker';
     // Set test checker results.
     $this->testResults['1 error'] = new ReadinessCheckerResult(
-      $testChecker,
+      $test_checker,
       new TranslatableMarkup('Summary: 🔥'),
       [t('OMG 🚒. Your server is on 🔥!')],
       NULL,
       []
     );
     $this->testResults['1 error 1 warning'] = new ReadinessCheckerResult(
-      $testChecker,
+      $test_checker,
       t('Errors summary not displayed because only 1 error message'),
       [t('OMG 🔌. Some one unplugged the server! How is this site even running?')],
       t('Warnings summary not displayed because only 1 warning message.'),
       [t('It looks like it going to rain and your server is outside.')],
     );
     $this->testResults['2 errors 2 warnings'] = new ReadinessCheckerResult(
-      $testChecker,
+      $test_checker,
       t('Errors summary displayed because more than 1 error message'),
       [
         t('😬Your server is in a cloud, a literal cloud!☁️.'),
@@ -107,7 +107,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
       ]
     );
     $this->testResults['2 warnings'] = new ReadinessCheckerResult(
-      $testChecker,
+      $test_checker,
       NULL,
       [],
       t('Warnings summary displayed because more than 1 warning message.'),
@@ -117,7 +117,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
       ]
     );
     $this->testResults['1 warning'] = new ReadinessCheckerResult(
-      $testChecker,
+      $test_checker,
       NULL,
       [],
       t('No need for this summary with only 1 warning.'),
@@ -182,9 +182,9 @@ class ReadinessCheckerTest extends BrowserTestBase {
 
     $expected_result = $this->testResults['1 error 1 warning'];
     TestChecker::setTestResult($expected_result);
-    /** @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface $keyValue */
-    $keyValue = $this->container->get('keyvalue.expirable')->get('auto_updates');
-    $keyValue->delete('readiness_check_last_run');
+    /** @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface $key_value */
+    $key_value = $this->container->get('keyvalue.expirable')->get('auto_updates');
+    $key_value->delete('readiness_check_last_run');
     // Confirm a new message is displayed if the stored messages are deleted.
     $this->drupalGet('admin/reports/status');
     // Confirm that on the status page if there is only 1 warning or error the
@@ -194,7 +194,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $assert->pageTextNotContains($expected_result->getErrorsSummary());
     $assert->pageTextNotContains($expected_result->getWarningsSummary());
 
-    $keyValue->delete('readiness_check_last_run');
+    $key_value->delete('readiness_check_last_run');
     $expected_result = $this->testResults['2 errors 2 warnings'];
     TestChecker::setTestResult($expected_result);
     $this->drupalGet('admin/reports/status');
@@ -203,7 +203,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $this->assertReadinessReportMatches($expected_result->getErrorsSummary() . ' ' . implode('', $expected_result->getErrorMessages()), 'error', static::ERRORS_EXPLANATION);
     $this->assertReadinessReportMatches($expected_result->getWarningsSummary() . ' ' . implode('', $expected_result->getWarningMessages()), 'warning', static::WARNINGS_EXPLANATION);
 
-    $keyValue->delete('readiness_check_last_run');
+    $key_value->delete('readiness_check_last_run');
     $expected_result = $this->testResults['2 warnings'];
     TestChecker::setTestResult($expected_result);
     $this->drupalGet('admin/reports/status');
@@ -212,7 +212,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
     // errors.
     $this->assertReadinessReportMatches($expected_result->getWarningsSummary() . ' ' . implode('', $expected_result->getWarningMessages()), 'warning', static::WARNINGS_EXPLANATION);
 
-    $keyValue->delete('readiness_check_last_run');
+    $key_value->delete('readiness_check_last_run');
     $expected_result = $this->testResults['1 warning'];
     TestChecker::setTestResult($expected_result);
     $this->drupalGet('admin/reports/status');
@@ -262,9 +262,9 @@ class ReadinessCheckerTest extends BrowserTestBase {
 
     $expected_result = $this->testResults['1 error 1 warning'];
     TestChecker::setTestResult($expected_result);
-    /** @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface $keyValue */
-    $keyValue = $this->container->get('keyvalue.expirable')->get('auto_updates');
-    $keyValue->delete('readiness_check_last_run');
+    /** @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface $key_value */
+    $key_value = $this->container->get('keyvalue.expirable')->get('auto_updates');
+    $key_value->delete('readiness_check_last_run');
     // Confirm a new message is displayed if the stored messages are deleted.
     $this->drupalGet('admin/structure');
     $assert->pageTextContainsOnce(static::ERRORS_EXPLANATION);
@@ -276,7 +276,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $assert->pageTextNotContains($expected_result->getWarningMessages()[0]);
     $assert->pageTextNotContains($expected_result->getWarningsSummary());
 
-    $keyValue->delete('readiness_check_last_run');
+    $key_value->delete('readiness_check_last_run');
     $expected_result = $this->testResults['2 errors 2 warnings'];
     TestChecker::setTestResult($expected_result);
     $this->drupalGet('admin/structure');
@@ -291,7 +291,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $assert->pageTextNotContains($expected_result->getWarningMessages()[1]);
     $assert->pageTextNotContains($expected_result->getWarningsSummary());
 
-    $keyValue->delete('readiness_check_last_run');
+    $key_value->delete('readiness_check_last_run');
     $expected_result = $this->testResults['2 warnings'];
     TestChecker::setTestResult($expected_result);
     $this->drupalGet('admin/structure');
@@ -303,7 +303,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $assert->pageTextContainsOnce(static::WARNINGS_EXPLANATION);
     $assert->pageTextContainsOnce($expected_result->getWarningsSummary());
 
-    $keyValue->delete('readiness_check_last_run');
+    $key_value->delete('readiness_check_last_run');
     $warning_message = 'This is your one and only warning. You have been warned.';
     $warnings_summary = 'No need for this summary with only 1 warning.';
     $expected_result = $this->testResults['1 warning'];
