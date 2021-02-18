@@ -104,6 +104,13 @@ class BlockComponentRenderArray implements EventSubscriberInterface {
 
       $content = $block->build();
 
+      // If this is the Layout Builder UI and the content is a form, remove
+      // #theme_wrappers so the content rendering does not disrupt the creation
+      // of CSRF tokens for the Layout Builder entity form.
+      if (isset($content['#type']) && $content['#type'] === 'form' && $event->inPreview()) {
+        unset($content['#theme_wrappers']);
+      }
+
       // We don't output the block render data if there are no render elements
       // found, but we want to capture the cache metadata from the block
       // regardless.

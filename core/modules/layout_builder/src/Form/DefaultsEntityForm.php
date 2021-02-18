@@ -18,6 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   Form classes are internal.
  */
 class DefaultsEntityForm extends EntityForm {
+  use LayoutBuilderEntityFormTrait;
 
   use PreviewToggleTrait;
 
@@ -76,6 +77,11 @@ class DefaultsEntityForm extends EntityForm {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL) {
+    if ($lock_message = $this->getLockMessage($section_storage)) {
+      return $lock_message;
+    }
+    $this->sectionStorage = $section_storage;
+
     $form['#attributes']['class'][] = 'layout-builder-form';
     $form['layout_builder'] = [
       '#type' => 'layout_builder',
@@ -83,8 +89,12 @@ class DefaultsEntityForm extends EntityForm {
       '#process' => [[static::class, 'layoutBuilderElementGetKeys']],
     ];
     $form['layout_builder_message'] = $this->buildMessage($section_storage->getContextValue('display'));
+    $form['#attributes']['data-drupal-layout-builder-entityform'] = '';
 
-    $this->sectionStorage = $section_storage;
+    // #action must be explicitly set so it is not changed when the form is
+    // rebuilt via ajax.
+    $form['#action'] = $section_storage->getLayoutBuilderUrl()->toString();
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -183,6 +193,12 @@ class DefaultsEntityForm extends EntityForm {
       '#redirect' => 'discard_changes',
     ];
     $actions['preview_toggle'] = $this->buildContentPreviewToggle();
+
+    // Restrict access to actions if the form is locked by another user.
+    $lock = $this->layoutTempstoreRepository->getLock($this->sectionStorage);
+    if ($lock && $lock->getOwnerId() !== $this->currentUser()->id()) {
+      $actions['#access'] = FALSE;
+    }
     return $actions;
   }
 
@@ -198,9 +214,7 @@ class DefaultsEntityForm extends EntityForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     $return = $this->sectionStorage->save();
-    $this->layoutTempstoreRepository->delete($this->sectionStorage);
-    $this->messenger()->addMessage($this->t('The layout has been saved.'));
-    $form_state->setRedirectUrl($this->sectionStorage->getRedirectUrl());
+    $this->layoutEntitySaveTasks($form_state);
     return $return;
   }
 

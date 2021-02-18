@@ -110,14 +110,13 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
     $this->clickLink('Manage layout');
 
     // Add a block with a form, another with a link, and one with an iframe.
-    $this->addBlock('Search form', '#layout-builder .search-block-form');
+    $this->addBlock('Search form', '#layout-builder .block-search');
     $this->addBlock('Block with link', '#link-that-should-be-disabled');
     $this->addBlock('Block with iframe', '#iframe-that-should-be-disabled');
 
     // Ensure the links and forms are disabled using the defaults before the
     // layout is saved.
     $this->assertLinksFormIframeNotInteractive();
-
     $page->pressButton('Save layout');
     $this->clickLink('Manage layout');
 

@@ -271,6 +271,7 @@ class OverridesSectionStorageTest extends UnitTestCase {
             'from_canonical' => ['type' => 'entity:from_canonical'],
           ],
           '_layout_builder' => TRUE,
+          'no_cache' => TRUE,
         ]
       ),
       'layout_builder.overrides.from_canonical.discard_changes' => new Route(
@@ -291,6 +292,7 @@ class OverridesSectionStorageTest extends UnitTestCase {
             'from_canonical' => ['type' => 'entity:from_canonical'],
           ],
           '_layout_builder' => TRUE,
+          'no_cache' => TRUE,
         ]
       ),
       'layout_builder.overrides.from_canonical.revert' => new Route(
@@ -311,6 +313,7 @@ class OverridesSectionStorageTest extends UnitTestCase {
             'from_canonical' => ['type' => 'entity:from_canonical'],
           ],
           '_layout_builder' => TRUE,
+          'no_cache' => TRUE,
         ]
       ),
       'layout_builder.overrides.with_string_id.view' => new Route(
@@ -331,6 +334,7 @@ class OverridesSectionStorageTest extends UnitTestCase {
             'with_string_id' => ['type' => 'entity:with_string_id'],
           ],
           '_layout_builder' => TRUE,
+          'no_cache' => TRUE,
         ]
       ),
       'layout_builder.overrides.with_string_id.discard_changes' => new Route(
@@ -350,6 +354,7 @@ class OverridesSectionStorageTest extends UnitTestCase {
             'with_string_id' => ['type' => 'entity:with_string_id'],
           ],
           '_layout_builder' => TRUE,
+          'no_cache' => TRUE,
         ]
       ),
       'layout_builder.overrides.with_string_id.revert' => new Route(
@@ -369,6 +374,7 @@ class OverridesSectionStorageTest extends UnitTestCase {
             'with_string_id' => ['type' => 'entity:with_string_id'],
           ],
           '_layout_builder' => TRUE,
+          'no_cache' => TRUE,
         ]
       ),
       'layout_builder.overrides.with_integer_id.view' => new Route(
@@ -390,6 +396,7 @@ class OverridesSectionStorageTest extends UnitTestCase {
             'with_integer_id' => ['type' => 'entity:with_integer_id'],
           ],
           '_layout_builder' => TRUE,
+          'no_cache' => TRUE,
         ]
       ),
       'layout_builder.overrides.with_integer_id.discard_changes' => new Route(
@@ -410,6 +417,7 @@ class OverridesSectionStorageTest extends UnitTestCase {
             'with_integer_id' => ['type' => 'entity:with_integer_id'],
           ],
           '_layout_builder' => TRUE,
+          'no_cache' => TRUE,
         ]
       ),
       'layout_builder.overrides.with_integer_id.revert' => new Route(
@@ -430,6 +438,7 @@ class OverridesSectionStorageTest extends UnitTestCase {
             'with_integer_id' => ['type' => 'entity:with_integer_id'],
           ],
           '_layout_builder' => TRUE,
+          'no_cache' => TRUE,
         ]
       ),
     ];

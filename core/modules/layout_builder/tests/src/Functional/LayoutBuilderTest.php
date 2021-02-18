@@ -848,6 +848,128 @@ class LayoutBuilderTest extends BrowserTestBase {
   }
 
   /**
+   * Tests concurrent editing of the layout by two users.
+   */
+  public function testConcurrentEditing() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $user1 = $this->drupalCreateUser([
+      'configure any layout',
+      'administer node display',
+    ]);
+    $user2 = $this->drupalCreateUser([
+      'configure any layout',
+      'administer node display',
+    ]);
+
+    $display_path = 'admin/structure/types/manage/bundle_with_section_field/display/default';
+
+    $this->drupalLogin($user1);
+    $this->drupalPostForm($display_path, ['layout[enabled]' => TRUE], 'Save');
+    $this->drupalPostForm($display_path, ['layout[allow_custom]' => TRUE], 'Save');
+
+    // Test concurrent editing with defaults.
+    $this->drupalGet("$display_path/layout");
+    $assert_session->elementsCount('css', '.layout-builder__section', 1);
+    $assert_session->elementNotExists('css', '.layout--twocol-section');
+    $page->clickLink('Add section');
+    $page->clickLink('Two column');
+    $page->pressButton('Add section');
+    $assert_session->elementsCount('css', '.layout-builder__section', 2);
+    $assert_session->elementExists('css', '.layout--twocol-section');
+    $assert_session->pageTextContains('You have unsaved changes.');
+    $assert_session->buttonExists('Save layout');
+    $assert_session->buttonExists('Discard changes');
+    $this->drupalGet('layout_builder/choose/section/defaults/node.bundle_with_section_field.default/0');
+    $assert_session->statusCodeEquals(200);
+    $this->drupalLogout();
+
+    $this->drupalLogin($user2);
+    $this->drupalGet("$display_path/layout");
+    $assert_session->elementsCount('css', '.layout-builder__section', 0);
+    $assert_session->pageTextContains(sprintf('This layout is being edited by user %s, and is therefore locked from editing by others.', $user1->getDisplayName()));
+    $assert_session->pageTextNotContains('You have unsaved changes.');
+    $assert_session->buttonNotExists('Save layout');
+    $assert_session->buttonNotExists('Discard changes');
+    $this->drupalGet('layout_builder/choose/section/defaults/node.bundle_with_section_field.default/0');
+    $assert_session->statusCodeEquals(403);
+
+    // Confirm the tempstore is storing this layout in progress.
+    $layout_tempstore_before = $this->container->get('tempstore.shared')->get('layout_builder.section_storage.defaults')->getMetadata('node.bundle_with_section_field.default');
+    $this->assertNotNull($layout_tempstore_before);
+
+    $this->drupalGet("$display_path/layout");
+    $page->clickLink('break this lock');
+    $page->pressButton('Confirm');
+
+    // Confirm the tempstore is no longer storing anything for this layout.
+    $layout_tempstore_after = $this->container->get('tempstore.shared')->get('layout_builder.section_storage.defaults')->getMetadata('node.bundle_with_section_field.default');
+    $this->assertNull($layout_tempstore_after);
+
+    $assert_session->pageTextNotContains(sprintf('This layout is being edited by user %s, and is therefore locked from editing by others.', $user1->getDisplayName()));
+    $assert_session->elementsCount('css', '.layout-builder__section', 1);
+    $assert_session->elementNotExists('css', '.layout--twocol-section');
+    $assert_session->pageTextNotContains('You have unsaved changes.');
+    $assert_session->pageTextContains('The changes to the layout have been discarded.');
+    $assert_session->buttonExists('Save layout');
+    $assert_session->buttonExists('Discard changes');
+
+    // Test concurrent editing with overrides.
+    $this->drupalGet('node/1/layout');
+    $assert_session->elementsCount('css', '.layout-builder__section', 1);
+    $assert_session->elementNotExists('css', '.layout--twocol-section');
+    $page->clickLink('Add section');
+    $page->clickLink('Two column');
+    $page->pressButton('Add section');
+    $assert_session->elementsCount('css', '.layout-builder__section', 2);
+    $assert_session->pageTextContains('You have unsaved changes.');
+    $assert_session->buttonExists('Discard changes');
+    $page->pressButton('Save layout');
+    $this->drupalGet('node/1/layout');
+    $page->clickLink('Add section');
+    $page->clickLink('Three column');
+    $page->pressButton('Add section');
+    $assert_session->elementsCount('css', '.layout-builder__section', 3);
+    $assert_session->elementExists('css', '.layout--threecol-section');
+    $assert_session->pageTextContains('You have unsaved changes.');
+
+    $this->drupalGet('layout_builder/configure/section/overrides/node.1/0');
+    $assert_session->statusCodeEquals(200);
+    $this->drupalLogout();
+
+    $this->drupalLogin($user1);
+    $this->drupalGet('node/1/layout');
+    $assert_session->elementsCount('css', '.layout-builder__section', 0);
+    $assert_session->pageTextContains(sprintf('This layout is being edited by user %s, and is therefore locked from editing by others.', $user2->getDisplayName()));
+    $assert_session->pageTextNotContains('You have unsaved changes.');
+    $assert_session->buttonNotExists('Save layout');
+    $assert_session->buttonNotExists('Discard changes');
+    $this->drupalGet('layout_builder/configure/section/overrides/node.1/0');
+    $assert_session->statusCodeEquals(403);
+
+    // Confirm the tempstore is storing this layout in progress.
+    $layout_tempstore_before = $this->container->get('tempstore.shared')->get('layout_builder.section_storage.overrides')->getMetadata('node.1.default.en');
+    $this->assertNotNull($layout_tempstore_before);
+
+    $this->drupalGet('node/1/layout');
+    $page->clickLink('break this lock');
+    $page->pressButton('Confirm');
+
+    // Confirm the tempstore is no longer storing anything for this layout.
+    $layout_tempstore_after = $this->container->get('tempstore.shared')->get('layout_builder.section_storage.overrides')->getMetadata('node.1.default.en');
+    $this->assertNull($layout_tempstore_after);
+
+    $assert_session->pageTextNotContains(sprintf('This layout is being edited by user %s, and is therefore locked from editing by others.', $user1->getDisplayName()));
+    $assert_session->elementsCount('css', '.layout-builder__section', 2);
+    $assert_session->elementNotExists('css', '.layout--threecol-section');
+    $assert_session->pageTextNotContains('You have unsaved changes.');
+    $assert_session->pageTextContains('The changes to the layout have been discarded.');
+    $assert_session->buttonExists('Save layout');
+    $assert_session->buttonExists('Discard changes');
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function testLayoutBuilderChooseBlocksAlter() {

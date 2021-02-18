@@ -23,6 +23,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class OverridesEntityForm extends ContentEntityForm {
 
+  use LayoutBuilderEntityFormTrait;
   use PreviewToggleTrait;
 
   /**
@@ -95,6 +96,10 @@ class OverridesEntityForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL) {
+    if ($lock_message = $this->getLockMessage($section_storage)) {
+      return $lock_message;
+    }
+
     $this->sectionStorage = $section_storage;
     $form = parent::buildForm($form, $form_state);
     $form['#attributes']['class'][] = 'layout-builder-form';
@@ -104,7 +109,12 @@ class OverridesEntityForm extends ContentEntityForm {
     //   https://www.drupal.org/node/2942975 is resolved.
     $form[OverridesSectionStorage::FIELD_NAME]['#access'] = TRUE;
 
+    // #action must be explicitly set so it is not changed when the form is
+    // rebuilt via ajax.
+    $form['#action'] = $section_storage->getLayoutBuilderUrl()->toString();
     $form['layout_builder_message'] = $this->buildMessage($section_storage->getContextValue('entity'), $section_storage);
+    $form['#attributes']['data-drupal-layout-builder-entityform'] = '';
+
     return $form;
   }
 
@@ -177,6 +187,7 @@ class OverridesEntityForm extends ContentEntityForm {
     $return = parent::save($form, $form_state);
 
     $this->layoutTempstoreRepository->delete($this->sectionStorage);
+    $this->messenger()->deleteByType('warning');
     $this->messenger()->addStatus($this->t('The layout override has been saved.'));
     $form_state->setRedirectUrl($this->sectionStorage->getRedirectUrl());
     return $return;
@@ -208,6 +219,12 @@ class OverridesEntityForm extends ContentEntityForm {
       '#redirect' => 'revert',
     ];
     $actions['preview_toggle'] = $this->buildContentPreviewToggle();
+
+    // Restrict access to actions if the form is locked by another user.
+    $lock = $this->layoutTempstoreRepository->getLock($this->sectionStorage);
+    if ($lock && $lock->getOwnerId() !== $this->currentUser()->id()) {
+      $actions['#access'] = FALSE;
+    }
     return $actions;
   }
 

@@ -108,7 +108,6 @@ class ContextualLinksTest extends WebDriverTestBase {
   protected function addBlock($block_name) {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
-
     $assert_session->linkExists('Add block');
     $page->clickLink('Add block');
     $assert_session->assertWaitOnAjaxRequest();
@@ -127,6 +126,7 @@ class ContextualLinksTest extends WebDriverTestBase {
   protected function assertCorrectContextualLinksInUi() {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
+
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.block-views-blocktest-block-view-block-2'));
 
     $layout_builder_specific_contextual_links = $page->findAll('css', '[data-contextual-id*=\'layout_builder_block:\']');

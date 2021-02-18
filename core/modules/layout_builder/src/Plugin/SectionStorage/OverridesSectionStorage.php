@@ -46,7 +46,7 @@ use Symfony\Component\Routing\RouteCollection;
  * @internal
  *   Plugin classes are internal.
  */
-class OverridesSectionStorage extends SectionStorageBase implements ContainerFactoryPluginInterface, OverridesSectionStorageInterface, SectionStorageLocalTaskProviderInterface {
+class OverridesSectionStorage extends SectionStorageBase implements ContainerFactoryPluginInterface, OverridesSectionStorageInterface, SectionStorageLocalTaskProviderInterface, FormEditableSectionStorageInterface {
 
   /**
    * The field name used by this storage.
@@ -229,6 +229,8 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
       $requirements = $collection->get("entity.$entity_type_id.canonical")->getRequirements();
 
       $options = [];
+      $options['no_cache'] = TRUE;
+
       // Ensure that upcasting is run in the correct order.
       $options['parameters']['section_storage'] = [];
       $options['parameters'][$entity_type_id]['type'] = 'entity:' . $entity_type_id;
@@ -401,6 +403,13 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
     // storage has been overridden. Do not use count() as it does not include
     // blank sections.
     return !empty($this->getSections());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getContainingEntity() {
+    return $this->getEntity();
   }
 
 }

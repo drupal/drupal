@@ -41,7 +41,7 @@ use Symfony\Component\Routing\RouteCollection;
  * @internal
  *   Plugin classes are internal.
  */
-class DefaultsSectionStorage extends SectionStorageBase implements ContainerFactoryPluginInterface, DefaultsSectionStorageInterface {
+class DefaultsSectionStorage extends SectionStorageBase implements ContainerFactoryPluginInterface, DefaultsSectionStorageInterface, FormEditableSectionStorageInterface {
 
   /**
    * The entity type manager.
@@ -171,6 +171,7 @@ class DefaultsSectionStorage extends SectionStorageBase implements ContainerFact
 
       $options = $entity_route->getOptions();
       $options['_admin_route'] = FALSE;
+      $options['no_cache'] = TRUE;
 
       $this->buildLayoutRoutes($collection, $this->getPluginDefinition(), $path, $defaults, $requirements, $options, $entity_type_id, 'entity_view_display');
 
@@ -261,7 +262,7 @@ class DefaultsSectionStorage extends SectionStorageBase implements ContainerFact
     }
 
     if (is_string($value) && strpos($value, '.') !== FALSE) {
-      list($entity_type_id, $bundle, $view_mode) = explode('.', $value, 3);
+      [$entity_type_id, $bundle, $view_mode] = explode('.', $value, 3);
     }
     elseif (!empty($defaults['entity_type_id']) && !empty($defaults['bundle']) && !empty($defaults['view_mode_name'])) {
       $entity_type_id = $defaults['entity_type_id'];
@@ -389,6 +390,13 @@ class DefaultsSectionStorage extends SectionStorageBase implements ContainerFact
   public function isApplicable(RefinableCacheableDependencyInterface $cacheability) {
     $cacheability->addCacheableDependency($this);
     return $this->isLayoutBuilderEnabled();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getContainingEntity() {
+    return $this->getDisplay();
   }
 
   /**

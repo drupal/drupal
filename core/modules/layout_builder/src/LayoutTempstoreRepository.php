@@ -46,6 +46,14 @@ class LayoutTempstoreRepository implements LayoutTempstoreRepositoryInterface {
   /**
    * {@inheritdoc}
    */
+  public function getLock(SectionStorageInterface $section_storage) {
+    $key = $this->getKey($section_storage);
+    return $this->getTempstore($section_storage)->getMetadata($key);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function has(SectionStorageInterface $section_storage) {
     $key = $this->getKey($section_storage);
     $tempstore = $this->getTempstore($section_storage)->get($key);
