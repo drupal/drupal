@@ -41,7 +41,7 @@ use Symfony\Component\Routing\RouteCollection;
  * @internal
  *   Plugin classes are internal.
  */
-class DefaultsSectionStorage extends SectionStorageBase implements ContainerFactoryPluginInterface, DefaultsSectionStorageInterface, FormEditableSectionStorageInterface {
+class DefaultsSectionStorage extends SectionStorageBase implements ContainerFactoryPluginInterface, DefaultsSectionStorageInterface {
 
   /**
    * The entity type manager.
@@ -390,13 +390,6 @@ class DefaultsSectionStorage extends SectionStorageBase implements ContainerFact
   public function isApplicable(RefinableCacheableDependencyInterface $cacheability) {
     $cacheability->addCacheableDependency($this);
     return $this->isLayoutBuilderEnabled();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getContainingEntity() {
-    return $this->getDisplay();
   }
 
   /**

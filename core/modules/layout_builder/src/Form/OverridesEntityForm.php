@@ -113,7 +113,6 @@ class OverridesEntityForm extends ContentEntityForm {
     // rebuilt via ajax.
     $form['#action'] = $section_storage->getLayoutBuilderUrl()->toString();
     $form['layout_builder_message'] = $this->buildMessage($section_storage->getContextValue('entity'), $section_storage);
-    $form['#attributes']['data-drupal-layout-builder-entityform'] = '';
 
     return $form;
   }

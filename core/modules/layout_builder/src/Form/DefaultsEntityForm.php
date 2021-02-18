@@ -89,7 +89,6 @@ class DefaultsEntityForm extends EntityForm {
       '#process' => [[static::class, 'layoutBuilderElementGetKeys']],
     ];
     $form['layout_builder_message'] = $this->buildMessage($section_storage->getContextValue('display'));
-    $form['#attributes']['data-drupal-layout-builder-entityform'] = '';
 
     // #action must be explicitly set so it is not changed when the form is
     // rebuilt via ajax.
