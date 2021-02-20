@@ -92,7 +92,7 @@ use Drupal\views\ViewExecutable;
  *   Array of warning messages built by Analyzer::formatMessage to be displayed
  *   to the user following analysis of the view.
  */
-function hook_views_analyze(Drupal\views\ViewExecutable $view) {
+function hook_views_analyze(\Drupal\views\ViewExecutable $view) {
   $messages = [];
 
   if ($view->display_handler->options['pager']['type'] == 'none') {

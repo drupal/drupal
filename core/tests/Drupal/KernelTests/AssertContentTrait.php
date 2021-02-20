@@ -857,7 +857,7 @@ trait AssertContentTrait {
    *
    * @param string $callback
    *   The name of the theme hook to invoke; e.g. 'links' for links.html.twig.
-   * @param string $variables
+   * @param array $variables
    *   An array of variables to pass to the theme function.
    * @param string $expected
    *   The expected themed output string.
@@ -983,7 +983,7 @@ trait AssertContentTrait {
   /**
    * Get the selected value from a select field.
    *
-   * @param \SimpleXmlElement $element
+   * @param \SimpleXMLElement $element
    *   SimpleXMLElement select element.
    *
    * @return bool

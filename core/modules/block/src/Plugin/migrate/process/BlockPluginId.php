@@ -39,7 +39,7 @@ class BlockPluginId extends ProcessPluginBase implements ContainerFactoryPluginI
    *   The plugin configuration.
    * @param string $plugin_id
    *   The plugin ID.
-   * @param mixed $plugin_definition
+   * @param array $plugin_definition
    *   The plugin definition.
    * @param \Drupal\Core\Entity\EntityStorageInterface $storage
    *   The block content storage object.
