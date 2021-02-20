@@ -69,7 +69,7 @@ function hook_quickedit_editor_alter(&$editors) {
  *
  * @see \Drupal\Core\Field\FieldItemListInterface::view()
  */
-function hook_quickedit_render_field(Drupal\Core\Entity\EntityInterface $entity, $field_name, $view_mode_id, $langcode) {
+function hook_quickedit_render_field(\Drupal\Core\Entity\EntityInterface $entity, $field_name, $view_mode_id, $langcode) {
   return [
     '#prefix' => '<div class="example-markup">',
     'field' => $entity->getTranslation($langcode)->get($field_name)->view($view_mode_id),

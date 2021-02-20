@@ -115,7 +115,7 @@ class DateTimePlusTest extends TestCase {
   /**
    * Tests DateTimePlus::checkArray().
    *
-   * @param mixed $array
+   * @param array $array
    *   Input argument for DateTimePlus::checkArray().
    * @param bool $expected
    *   The expected result of DateTimePlus::checkArray().

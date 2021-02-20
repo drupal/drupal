@@ -25,7 +25,7 @@
  *
  * @see file_validate()
  */
-function hook_file_validate(Drupal\file\FileInterface $file) {
+function hook_file_validate(\Drupal\file\FileInterface $file) {
   $errors = [];
 
   if (!$file->getFilename()) {
@@ -48,7 +48,7 @@ function hook_file_validate(Drupal\file\FileInterface $file) {
  *
  * @see file_copy()
  */
-function hook_file_copy(Drupal\file\FileInterface $file, Drupal\file\FileInterface $source) {
+function hook_file_copy(\Drupal\file\FileInterface $file, \Drupal\file\FileInterface $source) {
   // Make sure that the file name starts with the owner's user name.
   if (strpos($file->getFilename(), $file->getOwner()->name) !== 0) {
     $file->setFilename($file->getOwner()->name . '_' . $file->getFilename());
@@ -68,7 +68,7 @@ function hook_file_copy(Drupal\file\FileInterface $file, Drupal\file\FileInterfa
  *
  * @see file_move()
  */
-function hook_file_move(Drupal\file\FileInterface $file, Drupal\file\FileInterface $source) {
+function hook_file_move(\Drupal\file\FileInterface $file, \Drupal\file\FileInterface $source) {
   // Make sure that the file name starts with the owner's user name.
   if (strpos($file->getFilename(), $file->getOwner()->name) !== 0) {
     $file->setFilename($file->getOwner()->name . '_' . $file->getFilename());
