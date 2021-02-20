@@ -24,6 +24,8 @@ use Drupal\migrate\Row;
  *   (optional table alias). This high_water_property is typically a timestamp
  *   or serial id showing what was the last imported record. Only content with a
  *   higher value will be imported.
+ * - constants: (optional) An array of constants that can be used in the process
+ *   pipeline. To use the constant 'foo' as a source value use 'constants/foo'.
  *
  * The high_water_property and track_changes are mutually exclusive.
  *
@@ -57,6 +59,20 @@ use Drupal\migrate\Row;
  * high_water_property defines which field marks the last imported row of the
  * migration. This will get converted into a SQL condition that looks like
  * 'n.changed' or 'changed' if no alias.
+ *
+ * Example:
+ *
+ * @code
+ * source:
+ *   plugin: some_source_plugin_name
+ *   constants:
+ *     - foo: bar
+ * process:
+ *   baz: constants/bar
+ * @endcode
+ *
+ * In this example, the constant 'foo' is defined with a value of 'bar'. It is
+ * later used in the process pipeline to set the value of the field baz.
  *
  * @see \Drupal\migrate\Plugin\MigratePluginManager
  * @see \Drupal\migrate\Annotation\MigrateSource
