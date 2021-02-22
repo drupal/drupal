@@ -50,9 +50,27 @@ class MenuLinkContentAccessControlHandler extends EntityAccessControlHandler imp
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     switch ($operation) {
       case 'view':
-        // There is no direct viewing of a menu link, but still for purposes of
-        // content_translation we need a generic way to check access.
-        return AccessResult::allowedIfHasPermission($account, 'administer menu');
+        if ($account->hasPermission('administer menu')) {
+          return AccessResult::allowed()
+            ->cachePerPermissions()
+            ->addCacheableDependency($entity);
+        }
+        // If menu link is internal, and user has access, grant view access to
+        // the menu link.
+        if (($url_object = $entity->getUrlObject()) && ($url_object->isRouted())) {
+          $link_access = $this->accessManager->checkNamedRoute($url_object->getRouteName(), $url_object->getRouteParameters(), $account, TRUE);
+          if ($link_access->isAllowed()) {
+            return AccessResult::allowed()
+              ->cachePerPermissions()
+              ->addCacheableDependency($entity);
+          }
+        }
+        // Grant view access to external links.
+        elseif ($url_object->isExternal()) {
+          return AccessResult::allowed()
+            ->cachePerPermissions()
+            ->addCacheableDependency($entity);
+        }
 
       case 'update':
         if (!$account->hasPermission('administer menu')) {
