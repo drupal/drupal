@@ -44,46 +44,68 @@ class TableDragTestForm extends FormBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Builds the draggable test table.
+   *
+   * @param array $rows
+   *   (optional) Rows that should be shown on the table. Default value is an
+   *   empty array.
+   * @param string $table_id
+   *   (optional) An HTML ID for the table, defaults to 'tabledrag-test-table'.
+   * @param string $group_prefix
+   *   (optional) A prefix for HTML classes generated in the method, defaults to
+   *   'tabledrag-test'.
+   * @param bool $indentation
+   *   (optional) A boolean indicating whether the rows can be indented,
+   *   defaults to TRUE.
+   *
+   * @return array
+   *   The renderable array of the draggable table used for testing.
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
-    $form['table'] = [
+  protected function buildTestTable(array $rows = [], $table_id = 'tabledrag-test-table', $group_prefix = 'tabledrag-test', $indentation = TRUE) {
+    $tabledrag = [
+      [
+        'action' => 'order',
+        'relationship' => 'sibling',
+        'group' => "$group_prefix-weight",
+      ],
+    ];
+
+    if ($indentation) {
+      $tabledrag[] = [
+        'action' => 'match',
+        'relationship' => 'parent',
+        'group' => "$group_prefix-parent",
+        'subgroup' => "$group_prefix-parent",
+        'source' => "$group_prefix-id",
+        'hidden' => TRUE,
+        'limit' => 2,
+      ];
+      $tabledrag[] = [
+        'action' => 'depth',
+        'relationship' => 'group',
+        'group' => "$group_prefix-depth",
+        'hidden' => TRUE,
+      ];
+    }
+
+    $table = [
       '#type' => 'table',
       '#header' => [
         [
           'data' => $this->t('Text'),
-          'colspan' => 4,
+          'colspan' => $indentation ? 4 : 2,
         ],
         $this->t('Weight'),
       ],
-      '#tabledrag' => [
-        [
-          'action' => 'order',
-          'relationship' => 'sibling',
-          'group' => 'tabledrag-test-weight',
-        ],
-        [
-          'action' => 'match',
-          'relationship' => 'parent',
-          'group' => 'tabledrag-test-parent',
-          'subgroup' => 'tabledrag-test-parent',
-          'source' => 'tabledrag-test-id',
-          'hidden' => TRUE,
-          'limit' => 2,
-        ],
-        [
-          'action' => 'depth',
-          'relationship' => 'group',
-          'group' => 'tabledrag-test-depth',
-          'hidden' => TRUE,
-        ],
-      ],
-      '#attributes' => ['id' => 'tabledrag-test-table'],
+      '#tabledrag' => $tabledrag,
+      '#attributes' => ['id' => $table_id],
       '#attached' => ['library' => ['tabledrag_test/tabledrag']],
     ];
 
     // Provide a default set of five rows.
-    $rows = $this->state->get('tabledrag_test_table', array_flip(range(1, 5)));
+    $rows = !empty($rows) ? $rows :
+      $this->state->get('tabledrag_test_table', array_flip(range(1, 5)));
+
     foreach ($rows as $id => $row) {
       if (!is_array($row)) {
         $row = [];
@@ -101,43 +123,56 @@ class TableDragTestForm extends FormBase {
         $row['classes'][] = 'draggable';
       }
 
-      $form['table'][$id] = [
+      $table[$id] = [
         'title' => [
           'indentation' => [
             '#theme' => 'indentation',
-            '#size' => $row['depth'],
+            '#size' => $indentation ? $row['depth'] : 0,
           ],
           '#plain_text' => "Row with id $id",
         ],
         'id' => [
           '#type' => 'hidden',
           '#value' => $id,
-          '#attributes' => ['class' => ['tabledrag-test-id']],
-        ],
-        'parent' => [
-          '#type' => 'hidden',
-          '#default_value' => $row['parent'],
-          '#parents' => ['table', $id, 'parent'],
-          '#attributes' => ['class' => ['tabledrag-test-parent']],
-        ],
-        'depth' => [
-          '#type' => 'hidden',
-          '#default_value' => $row['depth'],
-          '#attributes' => ['class' => ['tabledrag-test-depth']],
-        ],
-        'weight' => [
-          '#type' => 'weight',
-          '#default_value' => $row['weight'],
-          '#attributes' => ['class' => ['tabledrag-test-weight']],
+          '#parents' => ['table', $id, 'id'],
+          '#attributes' => ['class' => ["$group_prefix-id"]],
         ],
         '#attributes' => ['class' => $row['classes']],
       ];
+
+      if ($indentation) {
+        $table[$id]['parent'] = [
+          '#type' => 'hidden',
+          '#default_value' => $row['parent'],
+          '#parents' => ['table', $id, 'parent'],
+          '#attributes' => ['class' => ["$group_prefix-parent"]],
+        ];
+        $table[$id]['depth'] = [
+          '#type' => 'hidden',
+          '#default_value' => $row['depth'],
+          '#parents' => ['table', $id, 'depth'],
+          '#attributes' => ['class' => ["$group_prefix-depth"]],
+        ];
+      }
+
+      $table[$id]['weight'] = [
+        '#type' => 'weight',
+        '#default_value' => $row['weight'],
+        '#parents' => ['table', $id, 'weight'],
+        '#attributes' => ['class' => ["$group_prefix-weight"]],
+      ];
     }
 
-    $form['save'] = [
-      '#type' => 'submit',
-      '#value' => $this->t('Save'),
-    ];
+    return $table;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildForm(array $form, FormStateInterface $form_state) {
+    // Provide a default set of five rows.
+    $form['table'] = $this->buildTestTable();
+    $form['actions'] = $this->buildFormActions();
 
     return $form;
   }
@@ -146,12 +181,44 @@ class TableDragTestForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $test_table = [];
-    foreach ($form_state->getValue('table') as $row) {
-      $test_table[$row['id']] = $row;
-    }
+    $operation = isset($form_state->getTriggeringElement()['#op']) ?
+      $form_state->getTriggeringElement()['#op'] :
+      'save';
 
-    $this->state->set('tabledrag_test_table', $test_table);
+    switch ($operation) {
+      case 'reset':
+        $this->state->set('tabledrag_test_table', array_flip(range(1, 5)));
+        break;
+
+      default:
+        $test_table = [];
+        foreach ($form_state->getValue('table') as $row) {
+          $test_table[$row['id']] = $row;
+        }
+        $this->state->set('tabledrag_test_table', $test_table);
+        break;
+    }
+  }
+
+  /**
+   * Builds the test table form actions.
+   *
+   * @return array
+   *   The renderable array of form actions.
+   */
+  protected function buildFormActions() {
+    return [
+      '#type' => 'actions',
+      'save' => [
+        '#type' => 'submit',
+        '#value' => $this->t('Save'),
+      ],
+      'reset' => [
+        '#type' => 'submit',
+        '#op' => 'reset',
+        '#value' => $this->t('Reset'),
+      ],
+    ];
   }
 
 }
