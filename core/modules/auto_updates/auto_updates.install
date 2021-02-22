@@ -15,7 +15,7 @@ function auto_updates_requirements($phase) {
     return [];
   }
 
-  /** @var \Drupal\auto_updates\ReadinessChecker\ReadinessRequirement $readinessRequirement */
-  $readinessRequirement = \Drupal::classResolver(ReadinessRequirement::class);
-  return $readinessRequirement->getRequirements();
+  /** @var \Drupal\auto_updates\ReadinessChecker\ReadinessRequirement $readiness_requirement */
+  $readiness_requirement = \Drupal::classResolver(ReadinessRequirement::class);
+  return $readiness_requirement->getRequirements();
 }
