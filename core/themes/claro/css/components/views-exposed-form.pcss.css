@@ -22,7 +22,6 @@
 .views-exposed-form.views-exposed-form {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-end;
   margin-top: var(--space-l);
   margin-bottom: var(--space-l);
   padding: var(--space-xs) var(--space-l) var(--space-l) var(--space-l);
@@ -36,6 +35,7 @@
 }
 
 .views-exposed-form__item.views-exposed-form__item {
+  max-width: 100%;
   margin: var(--space-s) var(--space-xs) 0 0; /* LTR */
 }
 [dir="rtl"] .views-exposed-form__item.views-exposed-form__item {
@@ -52,6 +52,7 @@
 }
 
 .views-exposed-form__item--actions.views-exposed-form__item--actions .button {
+  margin-top: 0;
   margin-bottom: 0;
 }
 
@@ -60,4 +61,10 @@
 }
 [dir="rtl"] .views-exposed-form__item--actions.views-exposed-form__item--actions:last-child {
   margin-left: 0;
+}
+
+.views-exposed-form .form-item--no-label,
+.views-exposed-form__item.views-exposed-form__item.views-exposed-form__item--actions {
+  /* Line height of a label + existing margin for the element + margin for label */
+  margin-top: calc(var(--line-height-form-label) + var(--space-s) + var(--space-xs));
 }
