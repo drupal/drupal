@@ -11,11 +11,6 @@
   box-sizing: border-box;
 }
 
-::selection {
-  color: white;
-  background-color: var(--color--blue-20);
-}
-
 html {
   font-family: var(--font-sans);
   font-size: 100%;

@@ -16,11 +16,6 @@
   box-sizing: border-box;
 }
 
-::selection {
-  color: white;
-  background-color: #0d77b5;
-}
-
 html {
   font-family: "metropolis", sans-serif;
   font-size: 100%;
