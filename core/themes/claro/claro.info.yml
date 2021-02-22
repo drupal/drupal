@@ -48,10 +48,6 @@ libraries-override:
       component:
         misc/dropbutton/dropbutton.css: css/components/dropbutton.css
 
-  core/drupal.tabledrag:
-    js:
-      misc/tabledrag.js: js/tabledrag.js
-
   core/drupal.vertical-tabs:
     css:
       component:
@@ -136,6 +132,8 @@ libraries-extend:
     - claro/progress
   core/drupal.tabbingmanager:
     - claro/claro.jquery.ui
+  core/drupal.tabledrag:
+    - claro/claro.tabledrag
   core/drupal.vertical-tabs:
     - claro/vertical-tabs
   file/drupal.file:
