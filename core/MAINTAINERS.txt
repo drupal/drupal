@@ -469,6 +469,11 @@ Workflows
 Topic maintainers
 -----------------
 
+The Drupal Core topic maintainers are subject-matter experts in a topic that
+spans multiple subsystems. These correspond to the core gates which all
+proposed changes must pass. https://www.drupal.org/contribute/core/maintainers
+provides more information on their responsibilities.
+
 Accessibility
 - Rain Breaw Michaels 'rainbreaw' https://www.drupal.org/u/rainbreaw
 - Mike Gifford 'mgifford' https://www.drupal.org/u/mgifford
