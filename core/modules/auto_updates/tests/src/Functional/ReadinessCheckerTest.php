@@ -400,7 +400,6 @@ class ReadinessCheckerTest extends BrowserTestBase {
     // Check for message on 'admin/structure' instead of the status report
     // because checkers will be run if needed on the status report.
     $this->drupalGet('admin/structure');
-    file_put_contents("/Users/ted.bowman/sites/test.html", $this->getSession()->getPage()->getOuterHtml());
     $assert->pageTextContainsOnce($expected_result1->getErrorMessages()[0]);
     $assert->pageTextContainsOnce($expected_result2->getErrorMessages()[0]);
 
