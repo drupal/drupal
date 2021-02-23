@@ -12,6 +12,11 @@ use Drupal\Core\State\StateInterface;
 class TestChecker implements ReadinessCheckerInterface {
 
   /**
+   * The key to use store the test results.
+   */
+  protected const STATE_KEY = 'auto_updates_test.checker_results';
+
+  /**
    * The state service.
    *
    * @var \Drupal\Core\State\StateInterface
@@ -38,14 +43,14 @@ class TestChecker implements ReadinessCheckerInterface {
    *   The test checker result.
    */
   public static function setTestResult(ReadinessCheckerResult $checker_result): void {
-    \Drupal::state()->set('auto_updates_test.checker_results', $checker_result);
+    \Drupal::state()->set(static::STATE_KEY, $checker_result);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getResult(): ?ReadinessCheckerResult {
-    return $this->state->get('auto_updates_test.checker_results', NULL);
+    return $this->state->get(static::STATE_KEY, NULL);
   }
 
 }
