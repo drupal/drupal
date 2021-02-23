@@ -65,7 +65,7 @@ class ReadinessCheckerController extends ControllerBase {
    *   A redirect to the status report page.
    */
   public function run(bool $display_message_on_fails = FALSE): RedirectResponse {
-    $results = $this->readinessCheckerManager->getResults(TRUE);
+    $results = $this->readinessCheckerManager->run()->getResults();
     if (!$results) {
       // @todo Link "automatic updates" to documentation in
       //   https://www.drupal.org/node/3168405.

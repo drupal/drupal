@@ -32,7 +32,7 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
     $this->setTestMessages($error_messages, $warning_messages);
     $this->enableModules(['auto_updates']);
     $this->installConfig(['auto_updates']);
-    $this->assertSame($warning_messages, $this->getMessagesFromManager('warnings'));
+    $this->assertSame($warning_messages, $this->getMessagesFromManager('warnings', TRUE));
     $this->assertSame($error_messages, $this->getMessagesFromManager('errors'));
   }
 
@@ -84,7 +84,7 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
     $this->setTestMessages(['error1'], ['warning1']);
     $this->enableModules(['auto_updates']);
     $this->installConfig(['auto_updates']);
-    $this->assertSame(['warning1'], $this->getMessagesFromManager('warnings'));
+    $this->assertSame(['warning1'], $this->getMessagesFromManager('warnings', TRUE));
     $this->assertSame(['error1'], $this->getMessagesFromManager('errors'));
     // The readiness checkers will not be invoked in the next calls so changing
     // the test messages will not have an effect.
@@ -114,22 +114,28 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
    *
    * @param string $type
    *   The type of messages to get, either 'warnings' or 'errors'.
-   * @param bool $refresh
-   *   Whether to refresh the results.
+   * @param bool $run_checkers
+   *   Whether to run the checkers.
    *
    * @return string[]
    *   The messages of the type.
    *
    * @throws \Exception
    */
-  protected function getMessagesFromManager(string $type, bool $refresh = FALSE): array {
+  protected function getMessagesFromManager(string $type, bool $run_checkers = FALSE): array {
     $this->assertTrue(in_array($type, ['warnings', 'errors']), "Only 'warning' and 'errors' are valid types.");
     $manager = $this->container->get('auto_updates.readiness_checker_manager');
-    $results = $manager->getResults($refresh);
-    $messages = [];
-    foreach ($results as $result) {
-      $messages = array_merge($messages, $type === 'warnings' ? $result->getWarningMessages() : $result->getErrorMessages());
+    if ($run_checkers) {
+      $manager->run();
     }
+    $results = $manager->getResults();
+    $messages = [];
+    if ($results) {
+      foreach ($results as $result) {
+        $messages = array_merge($messages, $type === 'warnings' ? $result->getWarningMessages() : $result->getErrorMessages());
+      }
+    }
+
     return $messages;
   }
 

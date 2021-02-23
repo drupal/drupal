@@ -22,7 +22,14 @@ function auto_updates_page_top(array &$page_top) {
 function auto_updates_cron() {
   /** @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager $checker_manager */
   $checker_manager = \Drupal::service('auto_updates.readiness_checker_manager');
-  $checker_manager->getResults();
+  $last_results = $checker_manager->getResults();
+  $last_run_time = $checker_manager->getMostRecentRunTime();
+  // Do not run readiness checks more than once an hour unless there are no
+  // result available.
+  if (is_null($last_results) || !$last_run_time || \Drupal::time()->getRequestTime() - $last_run_time > 3600) {
+    $checker_manager->run();
+  }
+
 }
 
 /**
@@ -30,10 +37,13 @@ function auto_updates_cron() {
  */
 function auto_updates_modules_installed() {
   // Run the readiness checkers when any modules are installed in case they
-  // provide readiness checker services. Because ReadinessCheckerManager caches
-  // the results it will not rerun checkers if the modules don't provide new
-  // readiness checker services.
+  // provide readiness checker services.
   /** @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager $checker_manager */
   $checker_manager = \Drupal::service('auto_updates.readiness_checker_manager');
-  $checker_manager->getResults();
+  $results = $checker_manager->getResults();
+  // Only run the checkers if the $result is NULL because this indicates the
+  // previous result if are not valid.
+  if (is_null($results)) {
+    $checker_manager->run();
+  }
 }

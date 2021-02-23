@@ -6,7 +6,7 @@ services:
       - { name: auto_updates.readiness_checker }
   auto_updates.readiness_checker_manager:
     class: Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager
-    arguments: ['@keyvalue.expirable', '@config.factory', '@datetime.time']
+    arguments: ['@keyvalue.expirable', '@config.factory', '@datetime.time', 24]
     tags:
       - { name: service_collector, tag: auto_updates.readiness_checker, call: addChecker }
   logger.channel.auto_updates:

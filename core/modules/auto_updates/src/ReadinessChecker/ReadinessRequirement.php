@@ -87,25 +87,12 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
       }
       return ['auto_updates_readiness' => $requirement];
     }
-    elseif (!$this->readinessCheckerManager->hasRunRecently()) {
-      $requirement['title'] = $this->t('Update readiness checks');
-      $requirement['severity'] = SystemManager::REQUIREMENT_WARNING;
-      $time_ago = $this->dateFormatter->formatTimeDiffSince($last_check_timestamp);
-      // @todo Link "automatic updates" to documentation in
-      //   https://www.drupal.org/node/3168405.
-      $requirement['value'] = $this->t('Your site has not recently checked if it is ready to apply automatic updates.');
-      $requirement['description']['message']['#markup'] = $this->t('Readiness checks were last run @time ago.', ['@time' => $time_ago]);
-      if ($run_link) {
-        $requirement['description']['run_link'] = [
-          '#type' => 'container',
-          '#markup' => $run_link,
-        ];
-      }
-      return ['auto_updates_readiness' => $requirement];
-    }
     else {
-      $requirements = [];
       $results = $this->readinessCheckerManager->getResults();
+      if (is_null($results)) {
+        $results = $this->readinessCheckerManager->run()->getResults();
+      }
+      $requirements = [];
       if (empty($results)) {
         $requirements['auto_updates_readiness'] = [
           'title' => $this->t('Update readiness checks'),
@@ -125,7 +112,6 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
           }
         }
       }
-
       return $requirements;
     }
   }

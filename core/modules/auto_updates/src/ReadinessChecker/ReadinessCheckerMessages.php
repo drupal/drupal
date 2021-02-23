@@ -108,7 +108,8 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
     if (!$this->displayResultsOnCurrentPage()) {
       return;
     }
-    if (!$this->readinessCheckerManager->hasRunRecently()) {
+    $results = $this->readinessCheckerManager->getResults();
+    if (is_null($results)) {
       $checker_url = Url::fromRoute('auto_updates.update_readiness')->setOption('query', $this->getDestinationArray());
       if ($checker_url->access()) {
         $this->messenger->addError(t('Your site has not recently run an update readiness check. <a href=":url">Run readiness checks now.</a>', [
@@ -117,7 +118,6 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
       }
     }
     else {
-      $results = $this->readinessCheckerManager->getResults();
       if ($error_results = $this->getResultsBySeverity($results, SystemManager::REQUIREMENT_ERROR)) {
         // @todo Link "automatic updates" to documentation in
         //    https://www.drupal.org/node/3168405.

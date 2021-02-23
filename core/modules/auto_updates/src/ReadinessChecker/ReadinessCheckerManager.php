@@ -12,13 +12,6 @@ use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
 class ReadinessCheckerManager {
 
   /**
-   * Time (in seconds) since the last check after which we generate a warning.
-   *
-   * The value is equal to 1 day.
-   */
-  protected const LAST_CHECKED_WARNING = 60 * 60 * 24;
-
-  /**
    * The key/value storage.
    *
    * @var \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface
@@ -50,6 +43,13 @@ class ReadinessCheckerManager {
   protected $time;
 
   /**
+   * The number of hours to store results.
+   *
+   * @var int
+   */
+  protected $storeResultsHours;
+
+  /**
    * ReadinessCheckerManager constructor.
    *
    * @param \Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface $key_value_expirable_factory
@@ -58,11 +58,14 @@ class ReadinessCheckerManager {
    *   The config factory.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
+   * @param int $store_results_hours
+   *   The number of hours to store results.
    */
-  public function __construct(KeyValueExpirableFactoryInterface $key_value_expirable_factory, ConfigFactoryInterface $config_factory, TimeInterface $time) {
+  public function __construct(KeyValueExpirableFactoryInterface $key_value_expirable_factory, ConfigFactoryInterface $config_factory, TimeInterface $time, int $store_results_hours) {
     $this->keyValueExpirable = $key_value_expirable_factory->get('auto_updates');
     $this->configFactory = $config_factory;
     $this->time = $time;
+    $this->storeResultsHours = $store_results_hours;
   }
 
   /**
@@ -84,28 +87,11 @@ class ReadinessCheckerManager {
   }
 
   /**
-   * Get the readiness checker results.
+   * Run the result checkers.
    *
-   * @param bool $refresh
-   *   (optional) Whether to refresh the results, defaults to FALSE. If FALSE
-   *   then cached results will be returned if available.
-   *
-   * @return \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[]
-   *   The result objects for the readiness checkers.
+   * @return $this
    */
-  public function getResults(bool $refresh = FALSE): array {
-    if ($refresh) {
-      $this->keyValueExpirable->delete('readiness_check_last_run');
-    }
-    else {
-      $last_run = $this->keyValueExpirable->get('readiness_check_last_run');
-
-      // If the checkers have not changed return the results.
-      if ($last_run && $last_run['checkers'] === $this->getCurrentCheckerIds()) {
-        return $last_run['results'];
-      }
-    }
-
+  public function run(): self {
     $sorted_checkers = $this->getSortedCheckers();
     $results = [];
     foreach ($sorted_checkers as $checker) {
@@ -120,10 +106,27 @@ class ReadinessCheckerManager {
         'results' => $results,
         'checkers' => $this->getCurrentCheckerIds(),
       ],
-      3600
+      $this->storeResultsHours * 60 * 60
     );
     $this->keyValueExpirable->set('readiness_check_timestamp', $this->time->getRequestTime());
-    return $results;
+    return $this;
+  }
+
+  /**
+   * Get the readiness checker results from the last run.
+   *
+   * @return \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[]|
+   *   The result objects for the readiness checkers or NULL if no results are
+   *   available.
+   */
+  public function getResults(): ?array {
+    $last_run = $this->keyValueExpirable->get('readiness_check_last_run');
+
+    // If the checkers have not changed return the results.
+    if ($last_run && $last_run['checkers'] === $this->getCurrentCheckerIds()) {
+      return $last_run['results'];
+    }
+    return NULL;
   }
 
   /**
@@ -163,16 +166,6 @@ class ReadinessCheckerManager {
       $service_ids[] = $checker->_serviceId;
     }
     return implode('::', $service_ids);
-  }
-
-  /**
-   * Determines whether the readiness checkers have been run recently.
-   *
-   * @return bool
-   *   TRUE if the checkers have been run recently, otherwise FALSE.
-   */
-  public function hasRunRecently(): bool {
-    return $this->time->getRequestTime() <= $this->getMostRecentRunTime() + self::LAST_CHECKED_WARNING;
   }
 
 }
