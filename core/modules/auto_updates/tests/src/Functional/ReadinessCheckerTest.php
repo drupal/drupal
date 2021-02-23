@@ -3,6 +3,7 @@
 namespace Drupal\Tests\auto_updates\Functional;
 
 use Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult;
+use Drupal\auto_updates_test\Datetime\TestTime;
 use Drupal\auto_updates_test\ReadinessChecker\TestChecker;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -252,7 +253,8 @@ class ReadinessCheckerTest extends BrowserTestBase {
     // have a link to run the checks when the checks need to be run again.
     $expected_result = $this->testResults['1 error'];
     TestChecker::setTestResult($expected_result);
-    // @todo Change this to fake the request time in
+    // @todo Change this to use ::delayRequestTime() to simulate running cron
+    //   after a 24 wait instead of directly deleting 'readiness_check_last_run'
     //   https://www.drupal.org/node/3113971.
     /** @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface $key_value */
     $key_value = $this->container->get('keyvalue.expirable')->get('auto_updates');
@@ -274,9 +276,8 @@ class ReadinessCheckerTest extends BrowserTestBase {
 
     $expected_result = $this->testResults['1 error 1 warning'];
     TestChecker::setTestResult($expected_result);
-    $key_value->delete('readiness_check_last_run');
-    // Confirm a new message is displayed if the stored messages are deleted and
-    // cron is run.
+    // Confirm a new message is displayed if the cron is run after an hour.
+    $this->delayRequestTime();
     $this->cronRun();
     $this->drupalGet('admin/structure');
     $assert->pageTextContainsOnce(static::ERRORS_EXPLANATION);
@@ -288,10 +289,21 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $assert->pageTextNotContains($expected_result->getWarningMessages()[0]);
     $assert->pageTextNotContains($expected_result->getWarningsSummary());
 
-    $key_value->delete('readiness_check_last_run');
-    $expected_result = $this->testResults['2 errors 2 warnings'];
-    TestChecker::setTestResult($expected_result);
+    // Confirm that if cron runs less than hour after it previously ran it will
+    // not run the checkers again.
+    $unexpected_result = $this->testResults['2 errors 2 warnings'];
+    TestChecker::setTestResult($unexpected_result);
+    $this->delayRequestTime(30);
     $this->cronRun();
+    $this->drupalGet('admin/structure');
+    $assert->pageTextNotContains($unexpected_result->getErrorsSummary());
+    $assert->pageTextContainsOnce($expected_result->getErrorMessages()[0]);
+
+    // Confirm that is if cron is run over an hour after the checkers were
+    // previously run the checkers will be run again.
+    $this->delayRequestTime(31);
+    $this->cronRun();
+    $expected_result = $unexpected_result;
     $this->drupalGet('admin/structure');
     // Confirm on admin pages only the error summary will be displayed if there
     // is more than 1 error.
@@ -304,9 +316,9 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $assert->pageTextNotContains($expected_result->getWarningMessages()[1]);
     $assert->pageTextNotContains($expected_result->getWarningsSummary());
 
-    $key_value->delete('readiness_check_last_run');
     $expected_result = $this->testResults['2 warnings'];
     TestChecker::setTestResult($expected_result);
+    $this->delayRequestTime();
     $this->cronRun();
     $this->drupalGet('admin/structure');
     // Confirm that the warnings summary is displayed on admin pages if there
@@ -317,9 +329,9 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $assert->pageTextContainsOnce(static::WARNINGS_EXPLANATION);
     $assert->pageTextContainsOnce($expected_result->getWarningsSummary());
 
-    $key_value->delete('readiness_check_last_run');
     $expected_result = $this->testResults['1 warning'];
     TestChecker::setTestResult($expected_result);
+    $this->delayRequestTime();
     $this->cronRun();
     $this->drupalGet('admin/structure');
     $assert->pageTextNotContains(static::ERRORS_EXPLANATION);
@@ -403,6 +415,18 @@ class ReadinessCheckerTest extends BrowserTestBase {
       "h3#$section ~ details.system-status-report__entry:contains('Update readiness checks')",
     )->getText();
     $this->assertStringMatchesFormat($format, $text);
+  }
+
+  /**
+   * Delays the request for the test.
+   *
+   * @param int $minutes
+   *   The number of minutes to delay request time. Defaults to 61 minutes.
+   */
+  private function delayRequestTime(int $minutes = 61): void {
+    static $total_delay = 0;
+    $total_delay += $minutes;
+    TestTime::setFakeTimeByOffset("+$total_delay minutes");
   }
 
 }
