@@ -113,6 +113,18 @@ class ReadinessCheckerManager {
   }
 
   /**
+   * Runs the readiness checkers if there are no valid results.
+   *
+   * @return $this
+   */
+  public function runIfNeeded(): self {
+    if (is_null($this->getResults())) {
+      $this->run();
+    }
+    return $this;
+  }
+
+  /**
    * Get the readiness checker results from the last run.
    *
    * @return \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[]|

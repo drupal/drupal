@@ -36,30 +36,20 @@ function auto_updates_cron() {
  * Implements hook_modules_installed().
  */
 function auto_updates_modules_installed() {
-  // Run the readiness checkers when any modules are installed in case they
-  // provide readiness checker services.
+  // Run the readiness checkers if needed when any modules are installed in
+  // case they provide readiness checker services.
   /** @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager $checker_manager */
   $checker_manager = \Drupal::service('auto_updates.readiness_checker_manager');
-  $results = $checker_manager->getResults();
-  // Only run the checkers if $result is NULL because this indicates the
-  // previous results are not valid.
-  if (is_null($results)) {
-    $checker_manager->run();
-  }
+  $checker_manager->runIfNeeded();
 }
 
 /**
  * Implements hook_modules_uninstalled().
  */
 function auto_updates_modules_uninstalled($modules, $is_syncing) {
-  // Run the readiness checkers when any are uninstalled modules are installed
-  // in case they provided readiness checker services.
+  // Run the readiness checkers if needed when any modules are uninstalled in
+  // case they provided readiness checker services.
   /** @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager $checker_manager */
   $checker_manager = \Drupal::service('auto_updates.readiness_checker_manager');
-  $results = $checker_manager->getResults();
-  // Only run the checkers if $result is NULL because this indicates the
-  // previous results are not valid.
-  if (is_null($results)) {
-    $checker_manager->run();
-  }
+  $checker_manager->runIfNeeded();
 }

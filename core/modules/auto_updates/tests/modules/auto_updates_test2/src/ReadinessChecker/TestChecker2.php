@@ -11,5 +11,4 @@ class TestChecker2 extends TestChecker {
 
   protected const STATE_KEY = 'auto_updates_test2.checker_results';
 
-
 }

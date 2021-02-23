@@ -7,7 +7,6 @@ use Drupal\auto_updates_test\Datetime\TestTime;
 use Drupal\auto_updates_test\ReadinessChecker\TestChecker;
 use Drupal\auto_updates_test2\ReadinessChecker\TestChecker2;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\CronRunTrait;
 

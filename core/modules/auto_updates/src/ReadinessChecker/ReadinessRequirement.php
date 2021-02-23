@@ -88,10 +88,7 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
       return ['auto_updates_readiness' => $requirement];
     }
     else {
-      $results = $this->readinessCheckerManager->getResults();
-      if (is_null($results)) {
-        $results = $this->readinessCheckerManager->run()->getResults();
-      }
+      $results = $this->readinessCheckerManager->runIfNeeded()->getResults();
       $requirements = [];
       if (empty($results)) {
         $requirements['auto_updates_readiness'] = [
