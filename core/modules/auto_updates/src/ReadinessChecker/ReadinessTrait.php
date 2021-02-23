@@ -26,7 +26,7 @@ trait ReadinessTrait {
   }
 
   /**
-   * Get readiness checker results by severity.
+   * Gets readiness checker results by severity.
    *
    * @param \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[] $results
    *   The results to filter.

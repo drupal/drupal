@@ -3,7 +3,6 @@
 namespace Drupal\auto_updates\ReadinessChecker;
 
 use Drupal\Component\Datetime\TimeInterface;
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
 
 /**
@@ -12,18 +11,11 @@ use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
 class ReadinessCheckerManager {
 
   /**
-   * The key/value storage.
+   * The key/value expirable storage.
    *
    * @var \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface
    */
   protected $keyValueExpirable;
-
-  /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
 
   /**
    * An array of active checkers.
@@ -50,20 +42,17 @@ class ReadinessCheckerManager {
   protected $storeResultsHours;
 
   /**
-   * ReadinessCheckerManager constructor.
+   * Constructs a ReadinessCheckerManager.
    *
    * @param \Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface $key_value_expirable_factory
    *   The key/value expirable factory.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The config factory.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
    * @param int $store_results_hours
    *   The number of hours to store results.
    */
-  public function __construct(KeyValueExpirableFactoryInterface $key_value_expirable_factory, ConfigFactoryInterface $config_factory, TimeInterface $time, int $store_results_hours) {
+  public function __construct(KeyValueExpirableFactoryInterface $key_value_expirable_factory, TimeInterface $time, int $store_results_hours) {
     $this->keyValueExpirable = $key_value_expirable_factory->get('auto_updates');
-    $this->configFactory = $config_factory;
     $this->time = $time;
     $this->storeResultsHours = $store_results_hours;
   }
@@ -77,17 +66,14 @@ class ReadinessCheckerManager {
    *   (optional) The priority of the checker being added. Defaults to 0.
    *   Readiness checkers with larger priorities will run first within a
    *   category.
-   *
-   * @return $this
    */
-  public function addChecker(ReadinessCheckerInterface $checker, int $priority = 0): ReadinessCheckerManager {
+  public function addChecker(ReadinessCheckerInterface $checker, int $priority = 0): void {
     $this->checkersByPriority[$priority][] = $checker;
     ksort($this->checkersByPriority);
-    return $this;
   }
 
   /**
-   * Run the result checkers.
+   * Runs the result checkers.
    *
    * @return $this
    */
@@ -125,7 +111,7 @@ class ReadinessCheckerManager {
   }
 
   /**
-   * Get the readiness checker results from the last run.
+   * Gets the readiness checker results from the last run.
    *
    * @return \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[]|
    *   The result objects for the readiness checkers or NULL if no results are

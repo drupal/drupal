@@ -78,7 +78,7 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
   }
 
   /**
-   * Test that the option $refresh parameter works.
+   * Tests that the option $refresh parameter works.
    */
   public function testMessageRefresh(): void {
     $this->setTestMessages(['error1'], ['warning1']);

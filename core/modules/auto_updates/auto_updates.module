@@ -10,7 +10,7 @@ use Drupal\auto_updates\ReadinessChecker\ReadinessCheckerMessages;
 /**
  * Implements hook_page_top().
  */
-function auto_updates_page_top(array &$page_top) {
+function auto_updates_page_top() {
   /** @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerMessages $readiness_messages */
   $readiness_messages = \Drupal::classResolver(ReadinessCheckerMessages::class);
   $readiness_messages->adminPageMessages();
@@ -46,7 +46,7 @@ function auto_updates_modules_installed() {
 /**
  * Implements hook_modules_uninstalled().
  */
-function auto_updates_modules_uninstalled($modules, $is_syncing) {
+function auto_updates_modules_uninstalled() {
   // Run the readiness checkers if needed when any modules are uninstalled in
   // case they provided readiness checker services.
   /** @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager $checker_manager */

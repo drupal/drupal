@@ -18,8 +18,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Class for displaying messages on admin pages.
  *
  * @internal
- *   This class implements logic output the messages from readiness checkers. It
- *   should not be called directly.
+ *   This class implements logic to output the messages from readiness checkers
+ *   on admin pages. It should not be called directly.
  */
 final class ReadinessCheckerMessages implements ContainerInjectionInterface {
 
@@ -63,7 +63,7 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
   protected $currentRoute;
 
   /**
-   * ReadinessRequirement constructor.
+   * Constructs a ReadinessRequirement object.
    *
    * @param \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager $readiness_checker_manager
    *   The readiness checker manager service.
@@ -112,7 +112,7 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
     if (is_null($results)) {
       $checker_url = Url::fromRoute('auto_updates.update_readiness')->setOption('query', $this->getDestinationArray());
       if ($checker_url->access()) {
-        $this->messenger->addError(t('Your site has not recently run an update readiness check. <a href=":url">Run readiness checks now.</a>', [
+        $this->messenger->addError($this->t('Your site has not recently run an update readiness check. <a href=":url">Run readiness checks now.</a>', [
           ':url' => $checker_url->toString(),
         ]));
       }
@@ -120,7 +120,7 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
     else {
       if ($error_results = $this->getResultsBySeverity($results, SystemManager::REQUIREMENT_ERROR)) {
         // @todo Link "automatic updates" to documentation in
-        //    https://www.drupal.org/node/3168405.
+        //   https://www.drupal.org/node/3168405.
         $this->messenger->addError($this->getFailureMessageForSeverity(SystemManager::REQUIREMENT_ERROR));
         foreach ($error_results as $result) {
           $error_messages = $result->getErrorMessages();
@@ -133,7 +133,7 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
         $warning_results = $this->getResultsBySeverity($results, SystemManager::REQUIREMENT_WARNING);
         if ($warning_results) {
           // @todo Link "automatic updates" to documentation in
-          //    https://www.drupal.org/node/3168405.
+          //   https://www.drupal.org/node/3168405.
           $this->messenger->addWarning($this->getFailureMessageForSeverity(SystemManager::REQUIREMENT_WARNING));
           foreach ($warning_results as $result) {
             if ($warning_messages = $result->getWarningMessages()) {

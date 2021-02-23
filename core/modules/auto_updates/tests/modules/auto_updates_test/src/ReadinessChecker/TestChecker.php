@@ -34,9 +34,9 @@ class TestChecker implements ReadinessCheckerInterface {
   }
 
   /**
-   * Sets messages for the this readiness checker.
+   * Sets messages for this readiness checker.
    *
-   * This is a static method to enable setting the expected messages before the
+   * This method is static to enable setting the expected messages before the
    * test module is enabled.
    *
    * @param \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult $checker_result

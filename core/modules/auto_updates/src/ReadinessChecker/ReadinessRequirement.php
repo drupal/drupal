@@ -14,11 +14,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Class for generating the readiness checkers' output for hook_requirements.
  *
- * @see update_requirements()
+ * @see auto_updates_requirements()
  *
  * @internal
- *   This class implements logic output the messages from readiness checkers. It
- *   should not be called directly.
+ *   This class implements logic to output the messages from readiness checkers
+ *   on the status report page. It should not be called directly.
  */
 final class ReadinessRequirement implements ContainerInjectionInterface {
 
@@ -40,7 +40,7 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
   protected $dateFormatter;
 
   /**
-   * ReadinessRequirement constructor.
+   * Constructor ReadinessRequirement object.
    *
    * @param \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager $readiness_checker_manager
    *   The readiness checker manager service.
@@ -69,7 +69,7 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
   /**
    * Gets requirements arrays to as specified in hook_requirements.
    *
-   * @return array
+   * @return mixed[]
    *   Requirements arrays as specified by hook_requirements().
    */
   public function getRequirements(): array {
@@ -104,7 +104,7 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
       }
       else {
         foreach ([SystemManager::REQUIREMENT_WARNING, SystemManager::REQUIREMENT_ERROR] as $severity) {
-          if ($requirement = $this->createRequirementForSeverity($this->getResultsBySeverity($results, $severity), $severity)) {
+          if ($requirement = $this->createRequirementForSeverity($results, $severity)) {
             $requirements["auto_updates_readiness_$severity"] = $requirement;
           }
         }
@@ -117,16 +117,17 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
    * Creates a requirements section for readiness checker results.
    *
    * @param \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[] $results
-   *   The results for the severity.
+   *   The results.
    * @param int $severity
    *   The severity for requirement section.
    *
-   * @return array|null
+   * @return mixed[]|null
    *   Requirements array as specified by hook_requirements(), or NULL
    *   if no requirements can be determined.
    */
   protected function createRequirementForSeverity(array $results, int $severity): ?array {
     $severity_messages = [];
+    $results = $this->getResultsBySeverity($results, $severity);
     foreach ($results as $result) {
       if ($severity === SystemManager::REQUIREMENT_ERROR) {
         $summary = $result->getErrorsSummary();
