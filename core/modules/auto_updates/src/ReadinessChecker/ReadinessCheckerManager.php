@@ -104,7 +104,7 @@ class ReadinessCheckerManager {
    * @return $this
    */
   public function runIfNeeded(): self {
-    if (is_null($this->getResults())) {
+    if ($this->getResults() === NULL) {
       $this->run();
     }
     return $this;

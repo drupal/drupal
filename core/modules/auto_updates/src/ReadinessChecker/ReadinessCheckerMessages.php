@@ -109,7 +109,7 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
       return;
     }
     $results = $this->readinessCheckerManager->getResults();
-    if (is_null($results)) {
+    if ($results === NULL) {
       $checker_url = Url::fromRoute('auto_updates.update_readiness')->setOption('query', $this->getDestinationArray());
       if ($checker_url->access()) {
         $this->messenger->addError($this->t('Your site has not recently run an update readiness check. <a href=":url">Run readiness checks now.</a>', [
