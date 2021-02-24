@@ -14,7 +14,7 @@ trait ReadinessTrait {
    * Gets a message when readiness checkers not pass passed on severity.
    *
    * @param int $severity
-   *   The severity.
+   *   The severity. Should be one of the SystemManager::REQUIREMENT_* constants.
    *
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup
    *   The message.
