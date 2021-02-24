@@ -66,7 +66,7 @@ class DiskSpace implements ReadinessCheckerInterface {
     $root_statistics = stat($root);
     $vendor_statistics = stat($vendor);
     if ($root_statistics === FALSE || $vendor_statistics === FALSE) {
-      throw new \RuntimeException('Unable to determine if the root and vendor directories are on the same logic disk.');
+      throw new \RuntimeException('Unable to determine if the root and vendor directories are on the same logical disk.');
     }
     return $root_statistics['dev'] === $vendor_statistics['dev'];
   }
