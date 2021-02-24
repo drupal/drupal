@@ -1,0 +1,19 @@
+---
+label: 'URL test topic'
+top_level: true
+---
+{% set non_route_link = render_var(help_route_link('not a route', 'not_a_real_route')) %}
+{% set missing_params_link = render_var(help_route_link('missing params', 'help_topics_test.test_route')) %}
+{% set invalid_params_link = render_var(help_route_link('invalid params', 'help_topics_test.test_route', {'int_param': 'not_an_int'})) %}
+{% set valid_link = render_var(help_route_link('valid link', 'help_topics_test.test_route', {'int_param': 2})) %}
+{% set topic_link = render_var(help_topic_link('help_topics_test.additional')) %}
+{% set not_a_topic = render_var(help_topic_link('not_a_topic')) %}
+<p>{% trans %}This topic should be top-level. It is used to test URLs{% endtrans %}</p>
+<ul>
+  <li>{% trans %}Should not be a link: {{ non_route_link }}{% endtrans %}</li>
+  <li>{% trans %}Should not be a link: {{ missing_params_link }}{% endtrans %}</li>
+  <li>{% trans %}Should not be a link: {{ invalid_params_link }}{% endtrans %}</li>
+  <li>{% trans %}Should be a link if user has access: {{ valid_link }}{% endtrans %}</li>
+  <li>{% trans %}Should be a link: {{ topic_link }}{% endtrans %}</li>
+  <li>{% trans %}Should not be a link: {{ not_a_topic }}{% endtrans %}</li>
+</ul>
