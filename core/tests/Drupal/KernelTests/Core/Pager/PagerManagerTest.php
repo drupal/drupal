@@ -53,4 +53,36 @@ class PagerManagerTest extends KernelTestBase {
     $this->assertEquals(10, $pager_manager->findPage(1));
   }
 
+  /**
+   * @covers ::getMaxPagerElementId
+   *
+   * @dataProvider providerTestGetMaxPagerElementId
+   */
+  public function testGetMaxPagerElementId(array $elements, int $expected_max_element_id): void {
+    /* @var $pager_manager \Drupal\Core\Pager\PagerManagerInterface */
+    $pager_manager = $this->container->get('pager.manager');
+
+    foreach ($elements as $element) {
+      $pager_manager->createPager(30, 10, $element);
+    }
+
+    $this->assertEquals($expected_max_element_id, $pager_manager->getMaxPagerElementId());
+  }
+
+  /**
+   * Provides test cases for PagerManagerTest::testGetMaxPagerElementId().
+   *
+   * @return array
+   *   An array of test cases, each which the following values:
+   *   - Array of elements to pass to PagerManager::createPager().
+   *   - The expected value returned by PagerManager::getMaxPagerElementId().
+   */
+  public function providerTestGetMaxPagerElementId(): array {
+    return [
+      'no_pager' => [[], -1],
+      'single_pager' => [[0], 0],
+      'multiple_pagers' => [[30, 10, 20], 30],
+    ];
+  }
+
 }

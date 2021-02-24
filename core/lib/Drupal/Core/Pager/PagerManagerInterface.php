@@ -33,7 +33,7 @@ interface PagerManagerInterface {
    * before executing it. For example:
    * @code
    *   $query = $connection->select('some_table')
-   *     ->extend('Drupal\Core\Database\Query\PagerSelectExtender');
+   *     ->extend(PagerSelectExtender::class);
    * @endcode
    *
    * However, if you are using a different method for generating the items to be
@@ -162,5 +162,27 @@ interface PagerManagerInterface {
    *   The altered $query parameter array.
    */
   public function getUpdatedParameters(array $query, $element, $index);
+
+  /**
+   * Gets the extent of the pager page element IDs.
+   *
+   * @return int
+   *   The maximum element ID available, -1 if there are no elements.
+   */
+  public function getMaxPagerElementId();
+
+  /**
+   * Reserve a pager element ID.
+   *
+   * Calling code may need to reserve the ID of a pager before actually creating
+   * it. This methods allows to do so ensuring no collision occurs with
+   * ::getMaxPagerElementId().
+   *
+   * @param int $element
+   *   The ID of the pager to be reserved.
+   *
+   * @see \Drupal\Core\Database\Query\PagerSelectExtender::element()
+   */
+  public function reservePagerElementId(int $element): void;
 
 }
