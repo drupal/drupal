@@ -11,6 +11,7 @@ use Drupal\Core\Database\Query\Select;
 use Drupal\Core\Database\Query\Truncate;
 use Drupal\Core\Database\Query\Update;
 use Drupal\Core\Database\Query\Upsert;
+use Drupal\Core\Pager\PagerManagerInterface;
 
 /**
  * Base Database API class.
@@ -1966,6 +1967,19 @@ abstract class Connection {
     // @see \Drupal\Core\DrupalKernel::getModuleNamespacesPsr4()
     // @see https://www.drupal.org/docs/8/creating-custom-modules/naming-and-placing-your-drupal-8-module#s-name-your-module
     return ($first === 'Drupal' && strtolower($second) === $second) ? $second : 'core';
+  }
+
+  /**
+   * Get the pager manager service, if available.
+   *
+   * @return \Drupal\Core\Pager\PagerManagerInterface
+   *   The pager manager service, if available.
+   *
+   * @throws \Drupal\Core\DependencyInjection\ContainerNotInitializedException
+   *   If the container has not been initialized yet.
+   */
+  public function getPagerManager(): PagerManagerInterface {
+    return \Drupal::service('pager.manager');
   }
 
 }

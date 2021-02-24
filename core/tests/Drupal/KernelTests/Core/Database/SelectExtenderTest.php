@@ -1,20 +1,20 @@
 <?php
 
-namespace Drupal\Tests\Core\Database;
+namespace Drupal\KernelTests\Core\Database;
 
 use Composer\Autoload\ClassLoader;
 use Drupal\Core\Database\Query\SelectExtender;
+use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\Core\Database\Stub\StubConnection;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
-use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the Connection class.
+ * Tests the Select query extender classes.
  *
  * @coversDefaultClass \Drupal\Core\Database\Query\Select
  * @group Database
  */
-class SelectTest extends UnitTestCase {
+class SelectExtenderTest extends KernelTestBase {
 
   /**
    * Data provider for testExtend().
@@ -25,7 +25,7 @@ class SelectTest extends UnitTestCase {
    *   - The database driver namespace.
    *   - The namespaced class name for which to extend.
    */
-  public function providerExtend() {
+  public function providerExtend(): array {
     return [
       [
         'Drupal\Core\Database\Query\PagerSelectExtender',
@@ -115,7 +115,7 @@ class SelectTest extends UnitTestCase {
    * @covers \Drupal\Core\Database\Query\SelectExtender::extend
    * @dataProvider providerExtend
    */
-  public function testExtend($expected, $namespace, $extend) {
+  public function testExtend(string $expected, string $namespace, string $extend): void {
     $additional_class_loader = new ClassLoader();
     $additional_class_loader->addPsr4("Drupal\\corefake\\Driver\\Database\\corefake\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/module/corefake/src/Driver/Database/corefake");
     $additional_class_loader->addPsr4("Drupal\\corefake\\Driver\\Database\\corefakeWithAllCustomClasses\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/module/corefake/src/Driver/Database/corefakeWithAllCustomClasses");
@@ -130,7 +130,7 @@ class SelectTest extends UnitTestCase {
 
     // Get an instance of the class \Drupal\Core\Database\Query\SelectExtender.
     $select_extender = $connection->select('test')->extend(SelectExtender::class);
-    $this->assertEquals('Drupal\Core\Database\Query\SelectExtender', get_class($select_extender));
+    $this->assertEquals(SelectExtender::class, get_class($select_extender));
 
     // Tests the method \Drupal\Core\Database\Query\SelectExtender::extend().
     $select_extender_extended = $select_extender->extend($extend);
