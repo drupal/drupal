@@ -66,10 +66,6 @@ trait UiHelperTrait {
    *   underscores.
    */
   protected function submitForm(array $edit, $submit, $form_html_id = NULL) {
-    if (is_object($submit)) {
-      @trigger_error('Calling ' . __METHOD__ . '() with $submit as an object is deprecated in drupal:9.2.0 and strings will be required in drupal:10.0.0. Pass a plain string instead. See https://www.drupal.org/node/xxx', E_USER_DEPRECATED);
-    }
-
     $assert_session = $this->assertSession();
 
     // Get the form.
@@ -258,7 +254,7 @@ trait UiHelperTrait {
     $this->submitForm([
       'name' => $account->getAccountName(),
       'pass' => $account->passRaw,
-    ], 'Log in');
+    ], t('Log in'));
 
     // @see ::drupalUserIsLoggedIn()
     $account->sessionId = $this->getSession()->getCookie(\Drupal::service('session_configuration')->getOptions(\Drupal::request())['name']);
