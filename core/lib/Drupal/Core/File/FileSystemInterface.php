@@ -33,6 +33,20 @@ interface FileSystemInterface {
   const MODIFY_PERMISSIONS = 2;
 
   /**
+   * A list of insecure extensions.
+   *
+   * @see \Drupal\Core\File\FileSystemInterface::INSECURE_EXTENSION_REGEX
+   */
+  public const INSECURE_EXTENSIONS = ['phar', 'php', 'pl', 'py', 'cgi', 'asp', 'js'];
+
+  /**
+   * The regex pattern used when checking for insecure file types.
+   *
+   * @see \Drupal\Core\File\FileSystemInterface::INSECURE_EXTENSIONS
+   */
+  public const INSECURE_EXTENSION_REGEX = '/\.(phar|php|pl|py|cgi|asp|js)(\.|$)/i';
+
+  /**
    * Moves an uploaded file to a new location.
    *
    * PHP's move_uploaded_file() does not properly support streams if

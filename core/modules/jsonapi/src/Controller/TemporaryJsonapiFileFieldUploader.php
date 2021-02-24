@@ -8,6 +8,7 @@ use Drupal\Component\Utility\Environment;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\File\Event\FileUploadSanitizeNameEvent;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\Validation\DrupalTranslator;
 use Drupal\file\FileInterface;
@@ -26,8 +27,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
 use Symfony\Component\Validator\ConstraintViolation;
-
-// cspell:ignore btxt
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Reads data from an upload stream and creates a corresponding file entity.
@@ -101,6 +101,13 @@ class TemporaryJsonapiFileFieldUploader {
   protected $systemFileConfig;
 
   /**
+   * The event dispatcher.
+   *
+   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
+   */
+  protected $eventDispatcher;
+
+  /**
    * Constructs a FileUploadResource instance.
    *
    * @param \Psr\Log\LoggerInterface $logger
@@ -116,13 +123,17 @@ class TemporaryJsonapiFileFieldUploader {
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    */
-  public function __construct(LoggerInterface $logger, FileSystemInterface $file_system, $mime_type_guesser, Token $token, LockBackendInterface $lock, ConfigFactoryInterface $config_factory) {
+  public function __construct(LoggerInterface $logger, FileSystemInterface $file_system, $mime_type_guesser, Token $token, LockBackendInterface $lock, ConfigFactoryInterface $config_factory, EventDispatcherInterface $event_dispatcher = NULL) {
     $this->logger = $logger;
     $this->fileSystem = $file_system;
     $this->mimeTypeGuesser = $mime_type_guesser;
     $this->token = $token;
     $this->lock = $lock;
     $this->systemFileConfig = $config_factory->get('system.file');
+    if (!$event_dispatcher) {
+      $event_dispatcher = \Drupal::service('event_dispatcher');
+    }
+    $this->eventDispatcher = $event_dispatcher;
   }
 
   /**
@@ -388,46 +399,12 @@ class TemporaryJsonapiFileFieldUploader {
    *   The prepared/munged filename.
    */
   protected function prepareFilename($filename, array &$validators) {
-    //  Don't rename if 'allow_insecure_uploads' evaluates to TRUE.
-    if (!$this->systemFileConfig->get('allow_insecure_uploads')) {
-      if (!empty($validators['file_validate_extensions'][0])) {
-        // If there is a file_validate_extensions validator and a list of
-        // valid extensions, munge the filename to protect against possible
-        // malicious extension hiding within an unknown file type. For example,
-        // "filename.html.foo".
-        $filename = file_munge_filename($filename, $validators['file_validate_extensions'][0]);
-      }
-
-      // Rename potentially executable files, to help prevent exploits (i.e.
-      // will rename filename.php.foo and filename.php to filename._php._foo.txt
-      // and filename._php.txt, respectively).
-      if (preg_match(FILE_INSECURE_EXTENSION_REGEX, $filename)) {
-        // If the file will be rejected anyway due to a disallowed extension, it
-        // should not be renamed; rather, we'll let file_validate_extensions()
-        // reject it below.
-        if (!empty($validators['file_validate_extensions'][0])) {
-          $file = File::create([]);
-          $file->setFilename($filename);
-          $passes_validation = empty(file_validate_extensions($file, $validators['file_validate_extensions'][0]));
-          // Only allow upload and rename to .txt if .txt files are allowed.
-          $passes_validation = $passes_validation && preg_match('/\btxt\b/', $validators['file_validate_extensions'][0]);
-        }
-        else {
-          // All file extensions are allowed.
-          $passes_validation = TRUE;
-        }
-
-        if ($passes_validation) {
-          if (substr($filename, -4) != '.txt') {
-            // The destination filename will also later be used to create the URI.
-            $filename .= '.txt';
-          }
-          $filename = file_munge_filename($filename, $validators['file_validate_extensions'][0] ?? '');
-        }
-      }
-    }
-
-    return $filename;
+    // The actual extension validation occurs in
+    // \Drupal\jsonapi\Controller\TemporaryJsonapiFileFieldUploader::validate().
+    $extensions = $validators['file_validate_extensions'][0] ?? '';
+    $event = new FileUploadSanitizeNameEvent($filename, $extensions);
+    $this->eventDispatcher->dispatch($event);
+    return $event->getFilename();
   }
 
   /**

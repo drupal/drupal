@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\file\Plugin\Field\FieldType\FileItem;
 
@@ -28,7 +29,7 @@ function file_post_update_add_txt_if_allows_insecure_extensions(&$sandbox = NULL
       }
       foreach ($allowed_extensions as $extension) {
         // Allow .txt if an insecure extension is allowed.
-        if (preg_match(FILE_INSECURE_EXTENSION_REGEX, 'test.' . $extension)) {
+        if (preg_match(FileSystemInterface::INSECURE_EXTENSION_REGEX, 'test.' . $extension)) {
           $allowed_extensions_string .= ' txt';
           $field->setSetting('file_extensions', $allowed_extensions_string);
           return TRUE;

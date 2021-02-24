@@ -48,3 +48,8 @@ services:
     arguments: ['@current_user', '@config.factory']
     tags:
       - { name: event_subscriber }
+  system.file_event.subscriber:
+    class: Drupal\system\EventSubscriber\SecurityFileUploadEventSubscriber
+    arguments: ['@config.factory']
+    tags:
+      - { name: event_subscriber }

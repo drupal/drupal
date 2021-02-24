@@ -574,13 +574,13 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
     $this->field->setSetting('file_extensions', '')->save();
     $this->rebuildAll();
     $response = $this->fileRequest($uri, $php_string, ['Content-Disposition' => 'filename="example_5.php.png"']);
-    $expected = $this->getExpectedNormalizedEntity(5, 'example_5.php_.png_.txt', TRUE);
+    $expected = $this->getExpectedNormalizedEntity(5, 'example_5.php_.png', TRUE);
     // Override the expected filesize.
     $expected['filesize'][0]['value'] = strlen($php_string);
-    // The file mime should also now be text.
-    $expected['filemime'][0]['value'] = 'text/plain';
+    // The file mime should still see this as a PNG image.
+    $expected['filemime'][0]['value'] = 'image/png';
     $this->assertResponseData($expected, $response);
-    $this->assertFileExists('public://foobar/example_5.php_.png_.txt');
+    $this->assertFileExists('public://foobar/example_5.php_.png');
 
     // Dangerous extensions are munged if is renamed to end in .txt.
     $response = $this->fileRequest($uri, $php_string, ['Content-Disposition' => 'filename="example_6.cgi.png.txt"']);

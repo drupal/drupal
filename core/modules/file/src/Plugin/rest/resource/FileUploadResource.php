@@ -14,6 +14,7 @@ use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Utility\Token;
 use Drupal\file\FileInterface;
+use Drupal\Core\File\Event\FileUploadSanitizeNameEvent;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\Component\Render\PlainTextOutput;
@@ -23,6 +24,7 @@ use Drupal\rest\Plugin\rest\resource\EntityResourceValidationTrait;
 use Drupal\rest\RequestHandler;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -31,8 +33,6 @@ use Symfony\Component\Mime\MimeTypeGuesserInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-
-// cspell:ignore btxt
 
 /**
  * File upload resource.
@@ -129,6 +129,13 @@ class FileUploadResource extends ResourceBase {
   protected $systemFileConfig;
 
   /**
+   * The event dispatcher to dispatch the filename sanitize event.
+   *
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   */
+  protected $eventDispatcher;
+
+  /**
    * Constructs a FileUploadResource instance.
    *
    * @param array $configuration
@@ -157,8 +164,10 @@ class FileUploadResource extends ResourceBase {
    *   The lock service.
    * @param \Drupal\Core\Config\Config $system_file_config
    *   The system file configuration.
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   *   The event dispatcher service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, $serializer_formats, LoggerInterface $logger, FileSystemInterface $file_system, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, AccountInterface $current_user, $mime_type_guesser, Token $token, LockBackendInterface $lock, Config $system_file_config) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, $serializer_formats, LoggerInterface $logger, FileSystemInterface $file_system, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, AccountInterface $current_user, $mime_type_guesser, Token $token, LockBackendInterface $lock, Config $system_file_config, EventDispatcherInterface $event_dispatcher = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
     $this->fileSystem = $file_system;
     $this->entityTypeManager = $entity_type_manager;
@@ -168,6 +177,11 @@ class FileUploadResource extends ResourceBase {
     $this->token = $token;
     $this->lock = $lock;
     $this->systemFileConfig = $system_file_config;
+    if (!$event_dispatcher) {
+      @trigger_error('The event dispatcher service should be passed to FileUploadResource::__construct() since 9.2.0. This will be required in Drupal 10.0.0. See https://www.drupal.org/node/3032541', E_USER_DEPRECATED);
+      $event_dispatcher = \Drupal::service('event_dispatcher');
+    }
+    $this->eventDispatcher = $event_dispatcher;
   }
 
   /**
@@ -187,7 +201,8 @@ class FileUploadResource extends ResourceBase {
       $container->get('file.mime_type.guesser'),
       $container->get('token'),
       $container->get('lock'),
-      $container->get('config.factory')->get('system.file')
+      $container->get('config.factory')->get('system.file'),
+      $container->get('event_dispatcher')
     );
   }
 
@@ -470,46 +485,12 @@ class FileUploadResource extends ResourceBase {
    *   The prepared/munged filename.
    */
   protected function prepareFilename($filename, array &$validators) {
-    // Don't rename if 'allow_insecure_uploads' evaluates to TRUE.
-    if (!$this->systemFileConfig->get('allow_insecure_uploads')) {
-      if (!empty($validators['file_validate_extensions'][0])) {
-        // If there is a file_validate_extensions validator and a list of
-        // valid extensions, munge the filename to protect against possible
-        // malicious extension hiding within an unknown file type. For example,
-        // "filename.html.foo".
-        $filename = file_munge_filename($filename, $validators['file_validate_extensions'][0]);
-      }
-
-      // Rename potentially executable files, to help prevent exploits (i.e.
-      // will rename filename.php.foo and filename.php to filename._php._foo.txt
-      // and filename._php.txt, respectively).
-      if (preg_match(FILE_INSECURE_EXTENSION_REGEX, $filename)) {
-        // If the file will be rejected anyway due to a disallowed extension, it
-        // should not be renamed; rather, we'll let file_validate_extensions()
-        // reject it below.
-        if (!empty($validators['file_validate_extensions'][0])) {
-          $file = File::create([]);
-          $file->setFilename($filename);
-          $passes_validation = empty(file_validate_extensions($file, $validators['file_validate_extensions'][0]));
-          // Only allow upload and rename to .txt if .txt files are allowed.
-          $passes_validation = $passes_validation && preg_match('/\btxt\b/', $validators['file_validate_extensions'][0]);
-        }
-        else {
-          // All file extensions are allowed.
-          $passes_validation = TRUE;
-        }
-
-        if ($passes_validation) {
-          if ((substr($filename, -4) != '.txt')) {
-            // The destination filename will also later be used to create the URI.
-            $filename .= '.txt';
-          }
-          $filename = file_munge_filename($filename, $validators['file_validate_extensions'][0] ?? '');
-        }
-      }
-    }
-
-    return $filename;
+    // The actual extension validation occurs in
+    // \Drupal\file\Plugin\rest\resource\FileUploadResource::validate().
+    $extensions = $validators['file_validate_extensions'][0] ?? '';
+    $event = new FileUploadSanitizeNameEvent($filename, $extensions);
+    $this->eventDispatcher->dispatch($event);
+    return $event->getFilename();
   }
 
   /**

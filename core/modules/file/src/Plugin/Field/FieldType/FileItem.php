@@ -238,7 +238,7 @@ class FileItem extends EntityReferenceItem {
       // allowed extensions, ensure that no insecure extensions are allowed.
       if (!in_array('txt', $extension_array, TRUE) && !\Drupal::config('system.file')->get('allow_insecure_uploads')) {
         foreach ($extension_array as $extension) {
-          if (preg_match(FILE_INSECURE_EXTENSION_REGEX, 'test.' . $extension)) {
+          if (preg_match(FileSystemInterface::INSECURE_EXTENSION_REGEX, 'test.' . $extension)) {
             $form_state->setError($element, t('Add %txt_extension to the list of allowed extensions to securely upload files with a %extension extension. The %txt_extension extension will then be added automatically.', ['%extension' => $extension, '%txt_extension' => 'txt']));
             break;
           }
