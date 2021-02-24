@@ -177,8 +177,7 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
    * Creates a link to run the readiness checkers.
    *
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup|null
-   *   If the user has access to run the readiness checker then a link to run
-   *   the checkers, otherwise NULL.
+   *   A link, if the user has access to run the readiness checkers. Otherwise NULL.
    */
   protected function createRunLink(): ?TranslatableMarkup {
     $readiness_check_url = Url::fromRoute('auto_updates.update_readiness', ['display_message_on_fails' => TRUE]);
