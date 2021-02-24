@@ -107,7 +107,7 @@ class ReadinessCheckerResult {
   }
 
   /**
-   * Gets the readiness checker ID that produced the result.
+   * Gets the service ID of the readiness checker that produced this result.
    *
    * @return string
    *   The readiness checker ID.
