@@ -60,7 +60,7 @@ class DiskSpace implements ReadinessCheckerInterface {
    *   TRUE if they are on the same logical disk, FALSE otherwise.
    *
    * @throws \RuntimeException
-   *   Thrown if the an error is found trying get the directory information.
+   *   Thrown if an error is found trying get the directory information.
    */
   protected function areSameLogicalDisk(string $root, string $vendor): bool {
     $root_statistics = stat($root);
