@@ -64,8 +64,7 @@ class ReadinessCheckerManager {
    *   The checker interface to be appended to the checker chain.
    * @param int $priority
    *   (optional) The priority of the checker being added. Defaults to 0.
-   *   Readiness checkers with larger priorities will run first within a
-   *   category.
+   *   Readiness checkers with higher priorities will run first.
    */
   public function addChecker(ReadinessCheckerInterface $checker, int $priority = 0): void {
     $this->checkersByPriority[$priority][] = $checker;
