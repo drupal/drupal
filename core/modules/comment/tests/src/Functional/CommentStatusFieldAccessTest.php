@@ -88,16 +88,12 @@ class CommentStatusFieldAccessTest extends BrowserTestBase {
     $this->drupalGet('node/add/article');
     $assert = $this->assertSession();
     $assert->fieldNotExists('comment[0][status]');
-    $this->submitForm([
-      'title[0][value]' => 'Node 1',
-    ], t('Save'));
+    $this->submitForm(['title[0][value]' => 'Node 1'], 'Save');
     $assert->fieldExists('subject[0][value]');
     $this->drupalLogin($this->commentAdmin);
     $this->drupalGet('node/add/article');
     $assert->fieldExists('comment[0][status]');
-    $this->submitForm([
-      'title[0][value]' => 'Node 2',
-    ], t('Save'));
+    $this->submitForm(['title[0][value]' => 'Node 2'], 'Save');
     $assert->fieldExists('subject[0][value]');
   }
 
