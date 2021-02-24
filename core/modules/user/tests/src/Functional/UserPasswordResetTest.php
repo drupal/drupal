@@ -262,7 +262,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     // Test password reset with language prefixes.
     $this->drupalGet($visitingUrl);
     $edit = ['name' => $this->account->getAccountName()];
-    $this->submitForm($edit, 'Submit');
+    $this->submitForm($edit, t('Submit'));
     $this->assertValidPasswordReset($edit['name']);
 
     $resetURL = $this->getResetURL();
