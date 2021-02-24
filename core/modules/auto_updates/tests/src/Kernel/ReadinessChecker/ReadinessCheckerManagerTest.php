@@ -3,7 +3,8 @@
 namespace Drupal\Tests\auto_updates\Kernel\ReadinessChecker;
 
 use Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult;
-use Drupal\auto_updates_test\ReadinessChecker\TestChecker;
+use Drupal\auto_updates_test\ReadinessChecker\TestChecker1;
+use Drupal\auto_updates_test2\ReadinessChecker\TestChecker2;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -64,49 +65,125 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
   }
 
   /**
-   * Tests that the manager is run after the auto_updates module is installed.
+   * Tests that the manager is run after modules are installed.
    */
   public function testRunOnInstall(): void {
-    $key_value = $this->container->get('keyvalue.expirable')->get('auto_updates');
-    $this->assertEmpty($key_value->get('readiness_check_last_run'));
     $this->setTestMessages(['error1'], ['warning1']);
+    // Confirm that messages from an existing module are displayed when
+    // 'auto_updates' is installed.
     $this->container->get('module_installer')->install(['auto_updates']);
-    /** @var \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface $key_value */
-    $last_run = $key_value->get('readiness_check_last_run');
-    $this->assertNotEmpty($last_run);
-    $this->assertCount(1, $last_run['results']);
+    $this->assertSame(['warning1'], $this->getMessagesFromManager('warnings'));
+    $this->assertSame(['error1'], $this->getMessagesFromManager('errors'));
+
+    // Confirm that the checkers are run when a module that provides a readiness
+    // checker is installed.
+    $this->setTestMessages(['error2'], ['warning2']);
+    $this->setTestMessages(['error3'], ['warning3'], 2);
+    $this->container->get('module_installer')->install(['auto_updates_test2']);
+    $this->assertSame(['warning2', 'warning3'], $this->getMessagesFromManager('warnings'));
+    $this->assertSame(['error2', 'error3'], $this->getMessagesFromManager('errors'));
+
+    // Confirm that the checkers are not run when a module that does not provide
+    // a readiness checker is installed.
+    $this->setTestMessages(['error4'], ['warning4']);
+    $this->setTestMessages(['error5'], ['warning5'], 2);
+    $this->container->get('module_installer')->install(['help']);
+    $this->assertSame(['warning2', 'warning3'], $this->getMessagesFromManager('warnings'));
+    $this->assertSame(['error2', 'error3'], $this->getMessagesFromManager('errors'));
   }
 
   /**
-   * Tests that the option $refresh parameter works.
+   * Tests that the manager is run after modules are uninstalled.
    */
-  public function testMessageRefresh(): void {
+  public function testRunOnUninstall(): void {
+    $this->setTestMessages(['error1'], ['warning1']);
+    $this->setTestMessages(['error2'], ['warning2'], 2);
+    // Confirm that messages from existing modules are displayed when
+    // 'auto_updates' is installed.
+    $this->container->get('module_installer')->install(['auto_updates', 'auto_updates_test2', 'help']);
+    $this->assertSame(['warning1', 'warning2'], $this->getMessagesFromManager('warnings'));
+    $this->assertSame(['error1', 'error2'], $this->getMessagesFromManager('errors'));
+
+    // Confirm that the checkers are run when a module that provides a readiness
+    // checker is uninstalled.
+    $this->setTestMessages(['error3'], ['warning3']);
+    $this->setTestMessages(['error4'], ['warning4'], 2);
+    $this->container->get('module_installer')->uninstall(['auto_updates_test2']);
+    $this->assertSame(['warning3'], $this->getMessagesFromManager('warnings'));
+    $this->assertSame(['error3'], $this->getMessagesFromManager('errors'));
+
+    // Confirm that the checkers are not run when a module that does provide a
+    // readiness checker is uninstalled.
+    $this->setTestMessages(['error5'], ['warning5']);
+    $this->container->get('module_installer')->uninstall(['help']);
+    $this->assertSame(['warning3'], $this->getMessagesFromManager('warnings'));
+    $this->assertSame(['error3'], $this->getMessagesFromManager('errors'));
+  }
+
+  /**
+   * @covers ::runIfNeeded
+   */
+  public function testRunIfNeeded(): void {
     $this->setTestMessages(['error1'], ['warning1']);
     $this->enableModules(['auto_updates']);
     $this->installConfig(['auto_updates']);
     $this->assertSame(['warning1'], $this->getMessagesFromManager('warnings', TRUE));
     $this->assertSame(['error1'], $this->getMessagesFromManager('errors'));
-    // The readiness checkers will not be invoked in the next calls so changing
-    // the test messages will not have an effect.
     $this->setTestMessages(['error2'], ['warning2']);
+    $manager = $this->container->get('auto_updates.readiness_checker_manager');
+    // Confirm that the new message will not be returned because the checkers
+    // will not be run.
+    $manager->runIfNeeded();
     $this->assertSame(['warning1'], $this->getMessagesFromManager('warnings'));
     $this->assertSame(['error1'], $this->getMessagesFromManager('errors'));
-    // Calling get warnings with the optional $refresh parameter will return the
-    // new messages.
-    $this->assertSame(['warning2'], $this->getMessagesFromManager('warnings', TRUE));
-    $this->assertSame(['error2'], $this->getMessagesFromManager('errors'));
 
-    // Assert that empty results are also cached.
-    $this->setTestMessages([], []);
-    $this->assertSame([], $this->getMessagesFromManager('warnings', TRUE));
-    $this->assertSame([], $this->getMessagesFromManager('errors'));
-    $this->setTestMessages(['error3'], ['warning3']);
-    $this->assertSame([], $this->getMessagesFromManager('warnings'));
-    $this->assertSame([], $this->getMessagesFromManager('errors'));
-    // Calling get warnings with the optional $refresh parameter will return the
-    // new messages.
-    $this->assertSame(['warning3'], $this->getMessagesFromManager('warnings', TRUE));
-    $this->assertSame(['error3'], $this->getMessagesFromManager('errors'));
+    // Confirm that the new message will not be returned because the checkers
+    // will be run if the stored results are deleted.
+    /** @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface $key_value */
+    $key_value = $this->container->get('keyvalue.expirable')->get('auto_updates');
+    $key_value->delete('readiness_check_last_run');
+    $manager->runIfNeeded();
+    $this->assertSame(['warning2'], $this->getMessagesFromManager('warnings'));
+    $this->assertSame(['error2'], $this->getMessagesFromManager('errors'));
+  }
+
+  /**
+   * Tests the manager when checkers services are changed.
+   */
+  public function testCheckersServicesAltered(): void {
+    $this->setTestMessages(['error1'], ['warning1']);
+    // Confirm that messages from existing modules are displayed when
+    // 'auto_updates' is installed.
+    $this->container->get('module_installer')->install(['auto_updates']);
+    $this->assertSame(['warning1'], $this->getMessagesFromManager('warnings'));
+    $this->assertSame(['error1'], $this->getMessagesFromManager('errors'));
+
+    $this->setTestMessages(['error2'], ['warning2']);
+    // Confirm that messages are still returned after rebuilding the container.
+    /** @var \Drush\Drupal\DrupalKernel $kernel */
+    $kernel = $this->container->get('kernel');
+    $this->container = $kernel->rebuildContainer();
+    $this->assertSame(['warning1'], $this->getMessagesFromManager('warnings'));
+    $this->assertSame(['error1'], $this->getMessagesFromManager('errors'));
+
+    // Define a constant flag that will cause a duplicate readiness checker
+    // service to be defined.
+    // @see \Drupal\auto_updates_test\AutoUpdatesTestServiceProvider::alter().
+    define('AUTO_UPDATES_DUPLICATE_SERVICE', TRUE);
+
+    // Rebuild the container to trigger the service to be duplicated.
+    $kernel = $this->container->get('kernel');
+    $this->container = $kernel->rebuildContainer();
+    $manager = $this->container->get('auto_updates.readiness_checker_manager');
+    // Confirm that after the readiness checkers have been changed previous
+    // results will not be returned.
+    $this->assertNull($manager->getResults());
+
+    // Confirm that runIfNeeded() will run the checkers if the readiness checker
+    // services have changed.
+    $manager->runIfNeeded();
+    $this->assertSame(['warning2'], $this->getMessagesFromManager('warnings'));
+    $this->assertSame(['error2'], $this->getMessagesFromManager('errors'));
   }
 
   /**
@@ -146,17 +223,14 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
    *   The test error messages.
    * @param string[] $warning_messages
    *   The test warning messages.
+   * @param int $checker_number
+   *   The test checker to use, either 1 or 2. Defaults to 1.
    */
-  private function setTestMessages(array $error_messages, array $warning_messages): void {
-    TestChecker::setTestResult(
-      new ReadinessCheckerResult(
-      $this->container->get('auto_updates_test.checker'),
-      NULL,
-      $error_messages,
-      NULL,
-      $warning_messages
-      )
-    );
+  private function setTestMessages(array $error_messages, array $warning_messages, int $checker_number = 1): void {
+    $test_checker = $this->createMock(TestChecker1::class);
+    $test_checker->_serviceId = "auto_updates_test_$checker_number.checker";
+    $result = new ReadinessCheckerResult($test_checker, NULL, $error_messages, NULL, $warning_messages);
+    $checker_number === 1 ? TestChecker1::setTestResult($result) : TestChecker2::setTestResult($result);
   }
 
 }

@@ -1,6 +1,6 @@
 services:
   auto_updates_test.checker:
-    class: Drupal\auto_updates_test\ReadinessChecker\TestChecker
+    class: Drupal\auto_updates_test\ReadinessChecker\TestChecker1
     tags:
       - { name: auto_updates.readiness_checker, priority: 2 }
     arguments: ['@state']

@@ -4,7 +4,7 @@ namespace Drupal\Tests\auto_updates\Functional;
 
 use Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult;
 use Drupal\auto_updates_test\Datetime\TestTime;
-use Drupal\auto_updates_test\ReadinessChecker\TestChecker;
+use Drupal\auto_updates_test\ReadinessChecker\TestChecker1;
 use Drupal\auto_updates_test2\ReadinessChecker\TestChecker2;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Tests\BrowserTestBase;
@@ -52,7 +52,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
   /**
    * The test checker.
    *
-   * @var \Drupal\auto_updates_test\ReadinessChecker\TestChecker
+   * @var \Drupal\auto_updates_test\ReadinessChecker\TestChecker1
    */
   protected $testChecker;
 
@@ -78,7 +78,8 @@ class ReadinessCheckerTest extends BrowserTestBase {
       'access administration pages',
     ]);
 
-    $test_checker = $this->createMock(TestChecker::class);
+    // Set up various checker results for the test checkers.
+    $test_checker = $this->createMock(TestChecker1::class);
     foreach ([1, 2] as $checker_number) {
       $test_checker->_serviceId = "auto_updates_test$checker_number.checker";
       // Set test checker results.
@@ -174,7 +175,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/status');
     $this->assertReadinessReportMatches('Your site is ready for automatic updates. Run readiness checks now.', 'checked', FALSE);
     $expected_result = $this->testResults['checker_1']['1 error'];
-    TestChecker::setTestResult($expected_result);
+    TestChecker1::setTestResult($expected_result);
 
     // Run the readiness checks.
     $this->clickLink('Run readiness checks');
@@ -195,7 +196,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $this->assertReadinessReportMatches($expected_result->getErrorMessages()[0], 'error', static::ERRORS_EXPLANATION);
 
     $expected_result = $this->testResults['checker_1']['1 error 1 warning'];
-    TestChecker::setTestResult($expected_result);
+    TestChecker1::setTestResult($expected_result);
     $key_value->delete('readiness_check_last_run');
     // Confirm a new message is displayed if the stored messages are deleted.
     $this->drupalGet('admin/reports/status');
@@ -208,7 +209,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
 
     $key_value->delete('readiness_check_last_run');
     $expected_result = $this->testResults['checker_1']['2 errors 2 warnings'];
-    TestChecker::setTestResult($expected_result);
+    TestChecker1::setTestResult($expected_result);
     $this->drupalGet('admin/reports/status');
     // Confirm that both messages and summaries will be displayed on status
     // report when there multiple messages.
@@ -217,7 +218,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
 
     $key_value->delete('readiness_check_last_run');
     $expected_result = $this->testResults['checker_1']['2 warnings'];
-    TestChecker::setTestResult($expected_result);
+    TestChecker1::setTestResult($expected_result);
     $this->drupalGet('admin/reports/status');
     $assert->pageTextContainsOnce('Update readiness checks');
     // Confirm that warnings will display on the status report if there are no
@@ -226,7 +227,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
 
     $key_value->delete('readiness_check_last_run');
     $expected_result = $this->testResults['checker_1']['1 warning'];
-    TestChecker::setTestResult($expected_result);
+    TestChecker1::setTestResult($expected_result);
     $this->drupalGet('admin/reports/status');
     $assert->pageTextContainsOnce('Update readiness checks');
     $this->assertReadinessReportMatches($expected_result->getWarningMessages()[0], 'warning', static::WARNINGS_EXPLANATION);
@@ -255,7 +256,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
     // Confirm a user without the permission to run readiness checks does not
     // have a link to run the checks when the checks need to be run again.
     $expected_result = $this->testResults['checker_1']['1 error'];
-    TestChecker::setTestResult($expected_result);
+    TestChecker1::setTestResult($expected_result);
     // @todo Change this to use ::delayRequestTime() to simulate running cron
     //   after a 24 wait instead of directly deleting 'readiness_check_last_run'
     //   https://www.drupal.org/node/3113971.
@@ -278,7 +279,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $assert->pageTextContainsOnce($expected_result->getErrorMessages()[0]);
 
     $expected_result = $this->testResults['checker_1']['1 error 1 warning'];
-    TestChecker::setTestResult($expected_result);
+    TestChecker1::setTestResult($expected_result);
     // Confirm a new message is displayed if the cron is run after an hour.
     $this->delayRequestTime();
     $this->cronRun();
@@ -295,7 +296,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
     // Confirm that if cron runs less than hour after it previously ran it will
     // not run the checkers again.
     $unexpected_result = $this->testResults['checker_1']['2 errors 2 warnings'];
-    TestChecker::setTestResult($unexpected_result);
+    TestChecker1::setTestResult($unexpected_result);
     $this->delayRequestTime(30);
     $this->cronRun();
     $this->drupalGet('admin/structure');
@@ -320,7 +321,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $assert->pageTextNotContains($expected_result->getWarningsSummary());
 
     $expected_result = $this->testResults['checker_1']['2 warnings'];
-    TestChecker::setTestResult($expected_result);
+    TestChecker1::setTestResult($expected_result);
     $this->delayRequestTime();
     $this->cronRun();
     $this->drupalGet('admin/structure');
@@ -333,7 +334,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $assert->pageTextContainsOnce($expected_result->getWarningsSummary());
 
     $expected_result = $this->testResults['checker_1']['1 warning'];
-    TestChecker::setTestResult($expected_result);
+    TestChecker1::setTestResult($expected_result);
     $this->delayRequestTime();
     $this->cronRun();
     $this->drupalGet('admin/structure');
@@ -360,7 +361,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $this->assertReadinessReportMatches('Your site is ready for automatic updates. Run readiness checks now.', 'checked');
 
     $expected_result = $this->testResults['checker_1']['1 error'];
-    TestChecker::setTestResult($expected_result);
+    TestChecker1::setTestResult($expected_result);
     $this->container->get('module_installer')->install(['auto_updates_test']);
     $this->drupalGet('admin/structure');
     $assert->pageTextContainsOnce($expected_result->getErrorMessages()[0]);
@@ -368,7 +369,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
     // Confirm that installing a module that does not provide a new checker does
     // not run the checkers on install.
     $unexpected_result = $this->testResults['checker_1']['2 errors 2 warnings'];
-    TestChecker::setTestResult($unexpected_result);
+    TestChecker1::setTestResult($unexpected_result);
     $this->container->get('module_installer')->install(['help']);
     // Check for message on 'admin/structure' instead of the status report
     // because checkers will be run if needed on the status report.
@@ -388,7 +389,7 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $this->drupalLogin($this->checkerRunnerUser);
 
     $expected_result1 = $this->testResults['checker_1']['1 error'];
-    TestChecker::setTestResult($expected_result1);
+    TestChecker1::setTestResult($expected_result1);
     $expected_result2 = $this->testResults['checker_2']['1 error'];
     TestChecker2::setTestResult($expected_result2);
     $this->container->get('module_installer')->install([

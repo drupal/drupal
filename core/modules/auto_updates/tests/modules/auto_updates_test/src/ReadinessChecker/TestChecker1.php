@@ -9,7 +9,7 @@ use Drupal\Core\State\StateInterface;
 /**
  * A test readiness checker.
  */
-class TestChecker implements ReadinessCheckerInterface {
+class TestChecker1 implements ReadinessCheckerInterface {
 
   /**
    * The key to use store the test results.

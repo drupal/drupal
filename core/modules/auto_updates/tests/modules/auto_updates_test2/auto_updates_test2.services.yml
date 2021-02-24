@@ -2,5 +2,5 @@ services:
   auto_updates_test2.checker:
     class: Drupal\auto_updates_test2\ReadinessChecker\TestChecker2
     tags:
-      - { name: auto_updates.readiness_checker, priority: 2 }
+      - { name: auto_updates.readiness_checker, priority: 3 }
     arguments: ['@state']
