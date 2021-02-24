@@ -179,3 +179,13 @@ function system_post_update_delete_rss_settings() {
     ->clear('langcode')
     ->save();
 }
+
+/**
+ * Drop the 'all' index on the 'key_value_expire' table.
+ */
+function system_post_update_remove_key_value_expire_all_index() {
+  $schema = \Drupal::database()->schema();
+  if ($schema->tableExists('key_value_expire')) {
+    $schema->dropIndex('key_value_expire', 'all');
+  }
+}
