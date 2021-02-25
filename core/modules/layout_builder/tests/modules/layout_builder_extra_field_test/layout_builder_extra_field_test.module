@@ -1,0 +1,32 @@
+<?php
+
+/**
+ * @file
+ * Provides hook implementations for Layout Builder tests.
+ */
+
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function layout_builder_extra_field_test_entity_extra_field_info() {
+  $extra['node']['bundle_with_section_field']['display']['layout_builder_extra_field_test'] = [
+    'label' => t('New Extra Field'),
+    'description' => t('New Extra Field description'),
+    'weight' => 0,
+  ];
+  return $extra;
+}
+
+/**
+ * Implements hook_entity_node_view().
+ */
+function layout_builder_extra_field_test_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  if ($display->getComponent('layout_builder_extra_field_test')) {
+    $build['layout_builder_extra_field_test'] = [
+      '#markup' => 'A new extra field.',
+    ];
+  }
+}
