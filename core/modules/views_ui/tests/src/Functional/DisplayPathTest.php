@@ -125,7 +125,6 @@ class DisplayPathTest extends UITestBase {
    * Tests the menu and tab option form.
    */
   public function testMenuOptions() {
-    $this->container->get('module_installer')->install(['menu_ui']);
     $this->drupalGet('admin/structure/views/view/test_view');
 
     // Add a new page display.
@@ -192,7 +191,8 @@ class DisplayPathTest extends UITestBase {
    * Tests the regression in https://www.drupal.org/node/2532490.
    */
   public function testDefaultMenuTabRegression() {
-    $this->container->get('module_installer')->install(['menu_ui', 'menu_link_content', 'toolbar', 'system']);
+    $this->container->get('module_installer')->install(['menu_link_content', 'toolbar', 'system']);
+    $this->resetAll();
     $admin_user = $this->drupalCreateUser([
       'administer views',
       'administer blocks',
