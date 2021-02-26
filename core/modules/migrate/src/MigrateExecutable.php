@@ -99,8 +99,6 @@ class MigrateExecutable implements MigrateExecutableInterface {
    *   (optional) The migrate message service.
    * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   (optional) The event dispatcher.
-   *
-   * @throws \Drupal\migrate\MigrateException
    */
   public function __construct(MigrationInterface $migration, MigrateMessageInterface $message = NULL, EventDispatcherInterface $event_dispatcher = NULL) {
     $this->migration = $migration;
