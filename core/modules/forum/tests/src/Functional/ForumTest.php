@@ -719,4 +719,21 @@ class ForumTest extends BrowserTestBase {
     }
   }
 
+  /**
+   * Evaluate whether "Add new Forum topic" button is present or not.
+   */
+  public function testForumTopicButton() {
+    $this->drupalLogin($this->adminUser);
+
+    // Validate that link doesn't exist on the forum container page.
+    $forum_container = $this->createForum('container');
+    $this->drupalGet('forum/' . $forum_container['tid']);
+    $this->assertSession()->linkNotExists('Add new Forum topic');
+
+    // Validate that link exists on forum page.
+    $forum = $this->createForum('forum');
+    $this->drupalGet('forum/' . $forum['tid']);
+    $this->assertSession()->linkExists('Add new Forum topic');
+  }
+
 }
