@@ -782,11 +782,11 @@ abstract class ResourceTestBase extends BrowserTestBase {
     if (!empty($missing_member_names) || !empty($extra_member_names)) {
       $message_format = "The document members did not match the expected values. Missing: [ %s ]. Unexpected: [ %s ]";
       $message = sprintf($message_format, implode(', ', $missing_member_names), implode(', ', $extra_member_names));
-      $this->assertSame($expected_document, $actual_document, $message);
+      $this->assertEquals($expected_document, $actual_document, $message);
     }
     foreach ($expected_document as $member_name => $expected_member) {
       $actual_member = $actual_document[$member_name];
-      $this->assertSame($expected_member, $actual_member, "The '$member_name' member was not as expected.");
+      $this->assertEquals($expected_member, $actual_member, "The '$member_name' member was not as expected.");
     }
   }
 
@@ -2003,7 +2003,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       // contains the serialized created entity.
       $created_entity_document = $this->normalize($created_entity, $url);
       $decoded_response_body = Json::decode((string) $response->getBody());
-      $this->assertSame($created_entity_document, $decoded_response_body);
+      $this->assertEquals($created_entity_document, $decoded_response_body);
       // Assert that the entity was indeed created using the POSTed values.
       foreach ($this->getPostDocument()['data']['attributes'] as $field_name => $field_normalization) {
         // If the value is an array of properties, only verify that the sent
@@ -2015,7 +2015,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
           }
         }
         else {
-          $this->assertSame($field_normalization, $created_entity_document['data']['attributes'][$field_name]);
+          $this->assertEquals($field_normalization, $created_entity_document['data']['attributes'][$field_name]);
         }
       }
       if (isset($this->getPostDocument()['data']['relationships'])) {
@@ -2023,7 +2023,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
           // POSTing relationships: 'data' is required, 'links' is optional.
           static::recursiveKsort($relationship_field_normalization);
           static::recursiveKsort($created_entity_document['data']['relationships'][$field_name]);
-          $this->assertSame($relationship_field_normalization, array_diff_key($created_entity_document['data']['relationships'][$field_name], ['links' => TRUE]));
+          $this->assertEquals($relationship_field_normalization, array_diff_key($created_entity_document['data']['relationships'][$field_name], ['links' => TRUE]));
         }
       }
     }
