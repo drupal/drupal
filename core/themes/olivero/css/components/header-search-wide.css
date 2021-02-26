@@ -131,7 +131,8 @@
     }
 
 .search-wide__wrapper input[type="search"]:focus {
-      outline: 0
+      outline: solid 4px transparent;
+      outline-offset: -4px
 
       /*
         We normally indicate focus by animating background-image width. This isn't
@@ -251,7 +252,8 @@
       }
 
 .search-wide__wrapper .search-form__submit:focus {
-      outline: 0;
+      outline: solid 4px transparent;
+      outline-offset: -4px;
       box-shadow: none
     }
 
@@ -336,35 +338,29 @@
 }
 
 .header-nav__search-button:focus {
+    position: relative;
     outline: 0
   }
 
 .header-nav__search-button:focus:after {
-      transform: scaleX(0.5);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 80%;
+      height: 3.375rem;
+      content: "";
+      transform: translate(-50%, -50%);
+      border: solid 2px #2494db;
+      border-radius: 0.25rem;
     }
-
-[dir="ltr"] .header-nav__search-button:after {
-    left: 0;
-}
-
-[dir="rtl"] .header-nav__search-button:after {
-    right: 0;
-}
-
-.header-nav__search-button:after {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 0;
-    content: "";
-    transition: transform 0.2s;
-    transform: scaleX(0);
-    border-top: solid 9px #2494db;
-  }
 
 .header-nav__search-button[aria-expanded="true"] {
     background: #000
   }
+
+.header-nav__search-button[aria-expanded="true"]:focus:after {
+      border-color: #fff;
+    }
 
 .header-nav__search-button[aria-expanded="true"] .header-nav__search-button__close:before,
       .header-nav__search-button[aria-expanded="true"] .header-nav__search-button__close:after {

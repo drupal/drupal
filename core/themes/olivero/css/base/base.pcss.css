@@ -43,6 +43,11 @@ a {
   &:hover {
     color: var(--color--blue-50);
   }
+
+  &:focus {
+    outline: solid 2px currentColor;
+    outline-offset: 2px;
+  }
 }
 
 img,

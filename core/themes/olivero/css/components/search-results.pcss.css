@@ -38,17 +38,6 @@
     &:hover {
       color: var(--color--blue-20);
     }
-
-    &:focus {
-      color: var(--color--blue-20);
-      outline: 0;
-      background-size: 100% 3px;
-
-      @media screen and (-ms-high-contrast: active) {
-        text-decoration: underline;
-        outline: initial;
-      }
-    }
   }
 
   @media (--lg) {
