@@ -46,8 +46,7 @@
     color: inherit
   }
 
-.site-footer a:focus,
-    .site-footer a:hover {
+.site-footer a:hover {
       text-decoration: none;
     }
 

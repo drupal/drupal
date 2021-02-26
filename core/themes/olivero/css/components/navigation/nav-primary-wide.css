@@ -22,8 +22,25 @@
     body:not(.is-always-mobile-nav) .primary-nav__menu-link {
       letter-spacing: 0.02em;
       font-size: 1rem;
-      line-height: 1.6875rem;
+      line-height: 1.6875rem
     }
+
+      body:not(.is-always-mobile-nav) .primary-nav__menu-link:focus {
+        position: relative;
+        outline: 0
+      }
+
+        body:not(.is-always-mobile-nav) .primary-nav__menu-link:focus:before {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: calc(100% + 1.125rem);
+          height: 3.375rem;
+          content: "";
+          transform: translate(-50%, -50%);
+          border: solid 2px #2494db;
+          border-radius: 0.25rem;
+        }
       [dir="ltr"] body:not(.is-always-mobile-nav) .primary-nav__menu-link--button.primary-nav__menu-link--has-children {
         padding-right: 0.5625rem;
     }
@@ -33,6 +50,11 @@
       body:not(.is-always-mobile-nav) .primary-nav__menu-link--button.primary-nav__menu-link--has-children {
         overflow: visible /* Necessary to view icon in IE11 */
       }
+
+        body:not(.is-always-mobile-nav) .primary-nav__menu-link--button.primary-nav__menu-link--has-children:focus:before {
+          width: calc(100% + 1.6875rem);
+          content: "";
+        }
 
         body:not(.is-always-mobile-nav) .primary-nav__menu-link--button.primary-nav__menu-link--has-children:before {
           content: none;
@@ -213,6 +235,10 @@
     body:not(.is-always-mobile-nav) .primary-nav__menu-link--level-2 {
       display: block
     }
+
+      body:not(.is-always-mobile-nav) .primary-nav__menu-link--level-2:focus:before {
+        height: 100%;
+      }
 
       [dir="ltr"] body:not(.is-always-mobile-nav) .primary-nav__menu-link--level-2 .primary-nav__menu-link-inner {
         padding-left: 0;

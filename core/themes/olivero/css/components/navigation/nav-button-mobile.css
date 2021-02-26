@@ -19,6 +19,14 @@
 }
 
 [dir="ltr"] .mobile-nav-button {
+  margin-right: -0.5625rem
+}
+
+[dir="rtl"] .mobile-nav-button {
+  margin-left: -0.5625rem
+}
+
+[dir="ltr"] .mobile-nav-button {
   padding-left: 0
 }
 
@@ -27,11 +35,11 @@
 }
 
 [dir="ltr"] .mobile-nav-button {
-  padding-right: 0
+  padding-right: 0.5625rem
 }
 
 [dir="rtl"] .mobile-nav-button {
-  padding-left: 0
+  padding-left: 0.5625rem
 }
 
 .mobile-nav-button {
@@ -48,8 +56,14 @@
   cursor: pointer;
   border: none;
   background: transparent;
-  -webkit-appearance: none
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none
 }
+
+.mobile-nav-button:focus {
+    outline: solid 2px #0d77b5;
+  }
 
 @media (min-width: 31.25rem) {
 

@@ -22,12 +22,34 @@ body:not(.is-always-mobile-nav) {
       letter-spacing: 0.02em;
       font-size: 16px;
       line-height: var(--sp1-5);
+
+      &:focus {
+        position: relative;
+        outline: 0;
+
+        &:before {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: calc(100% + var(--sp));
+          height: var(--sp3);
+          content: "";
+          transform: translate(-50%, -50%);
+          border: solid 2px var(--color--blue-50);
+          border-radius: 4px;
+        }
+      }
     }
 
     & .primary-nav__menu-link--button {
       &.primary-nav__menu-link--has-children {
         overflow: visible; /* Necessary to view icon in IE11 */
         padding-inline-end: 9px;
+
+        &:focus:before {
+          width: calc(100% + var(--sp1-5));
+          content: "";
+        }
 
         &:before {
           content: none;
@@ -138,6 +160,10 @@ body:not(.is-always-mobile-nav) {
 
     & .primary-nav__menu-link--level-2 {
       display: block;
+
+      &:focus:before {
+        height: 100%;
+      }
 
       & .primary-nav__menu-link-inner {
         padding-block: var(--sp0-5);

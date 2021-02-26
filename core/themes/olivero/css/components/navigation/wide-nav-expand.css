@@ -26,13 +26,14 @@
     height: 6.75rem;
     cursor: pointer;
     pointer-events: auto;
+    color: #fff;
     border: 0;
-    outline: 0;
     background-color: #2494db
 }
 
     .wide-nav-expand:focus {
-      border: solid 1px transparent; /* Will show in IE/Edge high contrast mode. */
+      outline: solid 2px currentColor;
+      outline-offset: -4px;
     }
   }
 
@@ -64,7 +65,7 @@ body.is-always-mobile-nav .wide-nav-expand {
     display: block;
     height: 0;
     /* Intentionally not using CSS logical properties. */
-    border-top: solid 3px #fff
+    border-top: solid 3px currentColor
   }
 
 [dir="ltr"] .wide-nav-expand__icon > span:nth-child(1) {
@@ -81,7 +82,7 @@ body.is-always-mobile-nav .wide-nav-expand {
       width: 100%;
       height: 0;
       transition: transform 0.2s;
-      background-color: #fff;
+      background-color: currentColor;
     }
 
 [dir="ltr"] .wide-nav-expand__icon > span:nth-child(2) {
@@ -98,7 +99,7 @@ body.is-always-mobile-nav .wide-nav-expand {
       width: 100%;
       height: 0;
       transition: opacity 0.2s;
-      background-color: #fff;
+      background-color: currentColor;
     }
 
 [dir="ltr"] .wide-nav-expand__icon > span:nth-child(3) {
@@ -116,7 +117,7 @@ body.is-always-mobile-nav .wide-nav-expand {
       width: 100%;
       height: 0;
       transition: transform 0.2s;
-      background-color: #fff;
+      background-color: currentColor;
     }
 
 .js-fixed .wide-nav-expand__icon {

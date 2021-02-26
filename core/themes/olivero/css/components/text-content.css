@@ -66,10 +66,7 @@
       box-shadow: inset 0 -2px 0 0 #2494db
   }
 
-      .text-content a:hover,
-      .text-content a:focus,
-      .cke_editable a:hover,
-      .cke_editable a:focus {
+      .text-content a:hover, .cke_editable a:hover {
         text-decoration: underline;
         color: #000;
 
@@ -248,10 +245,7 @@
       box-shadow: none
     }
 
-.site-footer .text-content a:hover,
-      .site-footer .text-content a:focus,
-      .site-footer .cke_editable a:hover,
-      .site-footer .cke_editable a:focus {
+.site-footer .text-content a:hover, .site-footer .cke_editable a:hover {
         text-decoration: none;
         color: #fff;
         box-shadow: none;

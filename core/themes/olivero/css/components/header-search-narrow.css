@@ -71,7 +71,8 @@
     }
 
 .search-narrow__wrapper input[type="search"]:focus {
-      outline: 0;
+      outline: solid 4px transparent;
+      outline-offset: -4px;
       background-size: 100% 0.3125rem
 
       /*
@@ -206,7 +207,8 @@
       }
 
 .search-narrow__wrapper .search-form__submit:focus {
-      outline: 0;
+      outline: solid 4px transparent;
+      outline-offset: -4px;
       box-shadow: none
     }
 

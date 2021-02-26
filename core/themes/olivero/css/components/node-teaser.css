@@ -62,6 +62,10 @@
     margin: 0
   }
 
+.node--view-mode-teaser .field--name-field-image a {
+      display: block;
+    }
+
 .node--view-mode-teaser .field--name-field-image img {
       width: 3.9375rem;
       height: 3.9375rem;

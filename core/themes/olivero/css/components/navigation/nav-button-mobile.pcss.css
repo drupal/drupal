@@ -14,13 +14,18 @@
   width: var(--sp2);
   height: var(--sp2);
   margin-inline-start: auto;
+  margin-inline-end: calc(-1 * var(--sp0-5));
   padding-block: 0;
   padding-inline-start: 0;
-  padding-inline-end: 0;
+  padding-inline-end: var(--sp0-5);
   cursor: pointer;
   border: none;
   background: transparent;
-  -webkit-appearance: none;
+  appearance: none;
+
+  &:focus {
+    outline: solid 2px var(--color--blue-20);
+  }
 
   @media (--sm) {
     display: inline-flex;

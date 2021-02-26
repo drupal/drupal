@@ -62,7 +62,8 @@
     }
 
     &:focus {
-      outline: 0;
+      outline: solid 4px transparent;
+      outline-offset: -4px;
 
       /*
         We normally indicate focus by animating background-image width. This isn't
@@ -132,7 +133,8 @@
     }
 
     &:focus {
-      outline: 0;
+      outline: solid 4px transparent;
+      outline-offset: -4px;
       box-shadow: none;
 
       & span:after {
@@ -200,27 +202,28 @@
   -webkit-appearance: none;
 
   &:focus {
+    position: relative;
     outline: 0;
 
     &:after {
-      transform: scaleX(0.5);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 80%;
+      height: var(--sp3);
+      content: "";
+      transform: translate(-50%, -50%);
+      border: solid 2px var(--color--blue-50);
+      border-radius: 4px;
     }
-  }
-
-  &:after {
-    position: absolute;
-    inset-block-end: 0;
-    inset-inline-start: 0;
-    width: 100%;
-    height: 0;
-    content: "";
-    transition: transform 0.2s;
-    transform: scaleX(0);
-    border-block-start: solid var(--sp0-5) var(--color--blue-50);
   }
 
   &[aria-expanded="true"] {
     background: var(--color--black);
+
+    &:focus:after {
+      border-color: var(--color--white);
+    }
 
     & .header-nav__search-button__close {
       &:before,

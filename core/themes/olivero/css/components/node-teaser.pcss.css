@@ -45,6 +45,10 @@
     margin: 0;
     margin-inline-end: var(--sp1);
 
+    & a {
+      display: block;
+    }
+
     & img {
       width: calc(3.5 * var(--sp));
       height: calc(3.5 * var(--sp));

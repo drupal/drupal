@@ -50,6 +50,11 @@ a:hover {
     color: #2494db;
   }
 
+a:focus {
+    outline: solid 2px currentColor;
+    outline-offset: 2px;
+  }
+
 img,
 video {
   display: block;

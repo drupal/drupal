@@ -40,6 +40,11 @@
   &:hover {
     color: inherit;
   }
+
+  &:focus {
+    outline: auto 2px var(--color--blue-50);
+    outline-offset: 2px;
+  }
 }
 
 .primary-nav__menu-link--nolink {

@@ -82,8 +82,6 @@
   height: 100%;
   text-decoration: none;
   color: #6e7172;
-  border: 2px solid transparent;
-  outline: none;
 }
 
 .pager__link:hover {
@@ -92,7 +90,8 @@
 
 .pager__link:focus {
   color: #0d77b5;
-  border-color: #0d77b5;
+  outline: solid 2px #0d77b5;
+  outline-offset: -2px;
 }
 
 .pager__item svg {

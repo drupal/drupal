@@ -20,6 +20,11 @@
   background: transparent;
   -webkit-appearance: none;
 
+  &:focus {
+    outline: auto 2px var(--color--blue-50);
+    outline-offset: 2px;
+  }
+
   & .icon--menu-toggle {
     position: absolute;
     /* stylelint-disable csstools/use-logical */
@@ -80,12 +85,7 @@ body:not(.is-always-mobile-nav) {
         outline: 0;
 
         & .icon--menu-toggle {
-          border: solid 1px transparent;
-          background-color: var(--color--blue-50);
-
-          &:after {
-            border-color: var(--color--white);
-          }
+          border: solid 2px var(--color--blue-20);
         }
       }
 
@@ -100,7 +100,10 @@ body:not(.is-always-mobile-nav) {
 
       & .icon--menu-toggle {
         inset-inline-start: 3px;
+        width: 18px;
         transform: translateY(-50%);
+        border-radius: 4px;
+        background-color: var(--color--white);
 
         &:before {
           content: none;

@@ -17,7 +17,7 @@
     inset-block-start: 0;
     inset-inline-end: calc(var(--sp1) * -1);
     width: var(--sp3);
-    height: var(--sp1);
+    height: var(--sp2);
     content: "";
     background: linear-gradient(to left, var(--color--white) 0%, rgba(255, 255, 255, 0) 100%); /* LTR */
 
@@ -37,11 +37,17 @@
 
 .breadcrumb__content {
   overflow: auto;
+  margin-block-start: calc(var(--sp0-5) * -1);
+  margin-block-end: calc(var(--sp0-5) * -1);
+  margin-inline-start: calc(var(--sp0-5) * -1);
   margin-inline-end: calc(var(--sp1) * -1);
+  padding-block-start: var(--sp0-5);
+  padding-block-end: var(--sp0-5);
+  padding-inline-start: var(--sp0-5);
   -webkit-overflow-scrolling: touch;
 
   @media (--lg) {
-    margin: 0;
+    margin-inline-end: 0;
   }
 }
 

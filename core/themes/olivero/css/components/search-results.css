@@ -79,21 +79,6 @@
       color: #0d77b5;
     }
 
-.search-result__title a:focus {
-      color: #0d77b5;
-      outline: 0;
-      background-size: 100% 0.1875rem
-    }
-
-@media screen and (-ms-high-contrast: active) {
-
-.search-result__title a:focus {
-        text-decoration: underline;
-        outline: medium none invert;
-        outline: initial
-    }
-      }
-
 @media (min-width: 62.5rem) {
 
 .search-result__title {

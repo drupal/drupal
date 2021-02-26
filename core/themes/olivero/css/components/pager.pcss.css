@@ -51,8 +51,6 @@
   height: 100%;
   text-decoration: none;
   color: var(--color--gray-20);
-  border: 2px solid transparent;
-  outline: none;
 }
 
 .pager__link:hover {
@@ -61,7 +59,8 @@
 
 .pager__link:focus {
   color: var(--color--blue-20);
-  border-color: var(--color--blue-20);
+  outline: solid 2px var(--color--blue-20);
+  outline-offset: -2px;
 }
 
 .pager__item svg {
