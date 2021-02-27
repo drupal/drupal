@@ -125,6 +125,13 @@ function file_url_transform_relative($file_url) {
   $host = $request->getHost();
   $scheme = $request->getScheme();
   $port = $request->getPort() ?: 80;
+
+  // Files may be accessible on a different port than the web request.
+  $file_url_port = parse_url($file_url, PHP_URL_PORT) ?? $port;
+  if ($file_url_port != $port) {
+    return $file_url;
+  }
+
   if (('http' == $scheme && $port == 80) || ('https' == $scheme && $port == 443)) {
     $http_host = $host;
   }
