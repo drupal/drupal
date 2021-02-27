@@ -105,7 +105,7 @@ function hook_field_ui_preconfigured_options_alter(array &$options, $field_type)
  * @see entity_crud
  */
 function hook_field_storage_config_update_forbid(\Drupal\field\FieldStorageConfigInterface $field_storage, \Drupal\field\FieldStorageConfigInterface $prior_field_storage) {
-  if ($field_storage->module == 'options' && $field_storage->hasData()) {
+  if ($field_storage->getTypeProvider() == 'options' && $field_storage->hasData()) {
     // Forbid any update that removes allowed values with actual data.
     $allowed_values = $field_storage->getSetting('allowed_values');
     $prior_allowed_values = $prior_field_storage->getSetting('allowed_values');
