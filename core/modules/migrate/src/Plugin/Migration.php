@@ -628,6 +628,15 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
     $return = [];
     foreach ($this->getProcessNormalized($process) as $process_pipeline) {
       foreach ($process_pipeline as $plugin_configuration) {
+        // If the migration uses a deriver and has a migration_lookup with
+        // itself as the source migration, then skip adding dependencies.
+        // Otherwise the migration will depend on all the variations of itself.
+        // See d7_taxonomy_term for an example.
+        if (isset($this->deriver)
+            && $plugin_configuration['plugin'] === 'migration_lookup'
+            && $plugin_configuration['migration'] == $this->getBaseId()) {
+          continue;
+        }
         if (in_array($plugin_configuration['plugin'], ['migration', 'migration_lookup'], TRUE)) {
           $return = array_merge($return, (array) $plugin_configuration['migration']);
         }
