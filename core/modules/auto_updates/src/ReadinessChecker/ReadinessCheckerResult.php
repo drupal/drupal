@@ -3,6 +3,7 @@
 namespace Drupal\auto_updates\ReadinessChecker;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\system\SystemManager;
 
 /**
  * A value object to contain the results of a readiness check.
@@ -14,28 +15,15 @@ class ReadinessCheckerResult {
    *
    * @var \Drupal\Core\StringTranslation\TranslatableMarkup
    */
-  protected $errorsSummary;
+  protected $summary;
 
-  /**
-   * The summary of warnings.
-   *
-   * @var \Drupal\Core\StringTranslation\TranslatableMarkup
-   */
-  protected $warningsSummary;
 
   /**
    * The error messages.
    *
    * @var \Drupal\Core\StringTranslation\TranslatableMarkup[]
    */
-  protected $errorMessages;
-
-  /**
-   * The warning messages.
-   *
-   * @var \Drupal\Core\StringTranslation\TranslatableMarkup[]
-   */
-  protected $warningMessages;
+  protected $messages;
 
   /**
    * The ID of the check that produces the result.
@@ -45,65 +33,93 @@ class ReadinessCheckerResult {
   protected $checkerId;
 
   /**
+   * The severity of the result.
+   *
+   * @var int
+   */
+  protected $severity;
+
+  /**
    * Creates a ReadinessCheckerResult object.
    *
    * @param \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerInterface $readiness_checker
    *   The readiness checker that produced this result.
-   * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $errors_summary
+   * @param int $severity
+   *   The severity of the result. Should be one of the
+   *   SystemManager::REQUIREMENT_* constants.
+   * @param \Drupal\Core\StringTranslation\TranslatableMarkup[] $messages
+   *   The error messages.
+   * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $summary
    *   The errors summary.
-   * @param \Drupal\Core\StringTranslation\TranslatableMarkup[] $error_messages
-   *   The error messages.
-   * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $warnings_summary
-   *   The warnings summary.
-   * @param \Drupal\Core\StringTranslation\TranslatableMarkup[] $warning_messages
-   *   The warning messages.
    */
-  public function __construct(ReadinessCheckerInterface $readiness_checker, ?TranslatableMarkup $errors_summary, array $error_messages, ?TranslatableMarkup $warnings_summary, array $warning_messages) {
+  private function __construct(ReadinessCheckerInterface $readiness_checker, int $severity, array $messages, ?TranslatableMarkup $summary = NULL) {
+    if (count($messages) > 1 && !$summary) {
+      throw new \InvalidArgumentException('If more than 1 messages is provided the summary is required.');
+    }
     $this->checkerId = $readiness_checker->_serviceId;
-    $this->errorsSummary = $errors_summary;
-    $this->warningsSummary = $warnings_summary;
-    $this->errorMessages = $error_messages;
-    $this->warningMessages = $warning_messages;
+    $this->summary = $summary;
+    $this->messages = $messages;
+    $this->severity = $severity;
   }
 
   /**
-   * Gets the error summary.
+   * Creates an error ReadinessCheckerResult object.
+   *
+   * @param \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerInterface $readiness_checker
+   *   The readiness checker that produced this result.
+   *   The error messages.
+   * @param \Drupal\Core\StringTranslation\TranslatableMarkup[] $messages
+   *   The error messages.
+   * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $summary
+   *   The errors summary.
+   */
+  public static function createErrorResult(ReadinessCheckerInterface $readiness_checker, array $messages, ?TranslatableMarkup $summary = NULL) {
+    return new static(
+      $readiness_checker,
+      SystemManager::REQUIREMENT_ERROR,
+      $messages,
+      $summary
+    );
+  }
+
+  /**
+   * Creates an error ReadinessCheckerResult object.
+   *
+   * @param \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerInterface $readiness_checker
+   *   The readiness checker that produced this result.
+   *   The error messages.
+   * @param \Drupal\Core\StringTranslation\TranslatableMarkup[] $messages
+   *   The error messages.
+   * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $summary
+   *   The errors summary.
+   */
+  public static function createWarningResult(ReadinessCheckerInterface $readiness_checker, array $messages, ?TranslatableMarkup $summary = NULL) {
+    return new static(
+      $readiness_checker,
+      SystemManager::REQUIREMENT_WARNING,
+      $messages,
+      $summary
+    );
+  }
+
+  /**
+   * Gets the summary.
    *
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup|null
    *   The summary.
    */
-  public function getErrorsSummary(): ?TranslatableMarkup {
-    return $this->errorsSummary;
+  public function getSummary(): ?TranslatableMarkup {
+    return $this->summary;
   }
 
   /**
-   * Gets the warning summary.
-   *
-   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|null
-   *   The summary.
-   */
-  public function getWarningsSummary(): ?TranslatableMarkup {
-    return $this->warningsSummary;
-  }
-
-  /**
-   * Gets the error messages.
+   * Gets the messages.
    *
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup[]
    *   The error messages.
    */
-  public function getErrorMessages(): array {
-    return $this->errorMessages;
-  }
-
-  /**
-   * Gets the warning messages.
-   *
-   * @return \Drupal\Core\StringTranslation\TranslatableMarkup[]
-   *   The warning messages.
-   */
-  public function getWarningMessages(): array {
-    return $this->warningMessages;
+  public function getMessages(): array {
+    return $this->messages;
   }
 
   /**
@@ -114,6 +130,17 @@ class ReadinessCheckerResult {
    */
   public function getCheckerId(): string {
     return $this->checkerId;
+  }
+
+  /**
+   * The severity of the result.
+   *
+   * @return int
+   *   Either SystemManager::REQUIREMENT_ERROR or
+   *   SystemManager::REQUIREMENT_WARNING.
+   */
+  public function getSeverity(): int {
+    return $this->severity;
   }
 
 }

@@ -37,13 +37,12 @@ trait ReadinessTrait {
    *   The readiness checker results by category.
    */
   protected function getResultsBySeverity(array $results, int $severity): array {
-    $filtered_results = [];
-    foreach ($results as $result) {
-      if (($severity === SystemManager::REQUIREMENT_ERROR && $result->getErrorMessages()) || ($severity === SystemManager::REQUIREMENT_WARNING && $result->getWarningMessages())) {
-        $filtered_results[] = $result;
+    return array_filter(
+      $results,
+      function (ReadinessCheckerResult $result) use ($severity) {
+        return $result->getSeverity() === $severity;
       }
-    }
-    return $filtered_results;
+    );
   }
 
 }

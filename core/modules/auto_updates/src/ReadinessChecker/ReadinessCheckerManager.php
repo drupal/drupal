@@ -80,8 +80,8 @@ class ReadinessCheckerManager {
     $sorted_checkers = $this->getSortedCheckers();
     $results = [];
     foreach ($sorted_checkers as $checker) {
-      if ($result = $checker->getResult()) {
-        $results[$result->getCheckerId()] = $result;
+      if ($checker_results = $checker->getResults()) {
+        $results = array_merge($results, $checker_results);
       }
     }
 

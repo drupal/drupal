@@ -129,30 +129,22 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
     $severity_messages = [];
     $results = $this->getResultsBySeverity($results, $severity);
     foreach ($results as $result) {
-      if ($severity === SystemManager::REQUIREMENT_ERROR) {
-        $summary = $result->getErrorsSummary();
-        $checker_messages = $result->getErrorMessages();
-      }
-      elseif ($severity === SystemManager::REQUIREMENT_WARNING) {
-        $summary = $result->getWarningsSummary();
-        $checker_messages = $result->getWarningMessages();
-      }
-      else {
-        throw new \InvalidArgumentException('Unknown severity type: ' . $severity);
-      }
-      if (count($checker_messages) === 1) {
-        $severity_messages[] = ['#markup' => array_pop($checker_messages)];
-      }
-      else {
-        $severity_messages[] = [
-          '#type' => 'details',
-          '#title' => $summary,
-          '#open' => FALSE,
-          'messages' => [
-            '#theme' => 'item_list',
-            '#items' => $checker_messages,
-          ],
-        ];
+      if ($severity === $result->getSeverity()) {
+        $checker_messages = $result->getMessages();
+        if (count($checker_messages) === 1) {
+          $severity_messages[] = ['#markup' => array_pop($checker_messages)];
+        }
+        else {
+          $severity_messages[] = [
+            '#type' => 'details',
+            '#title' => $result->getSummary(),
+            '#open' => FALSE,
+            'messages' => [
+              '#theme' => 'item_list',
+              '#items' => $checker_messages,
+            ],
+          ];
+        }
       }
     }
     if ($severity_messages) {
@@ -177,7 +169,8 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
    * Creates a link to run the readiness checkers.
    *
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup|null
-   *   A link, if the user has access to run the readiness checkers. Otherwise NULL.
+   *   A link, if the user has access to run the readiness checkers, otherwise
+   *   NULL.
    */
   protected function createRunLink(): ?TranslatableMarkup {
     $readiness_check_url = Url::fromRoute('auto_updates.update_readiness', ['display_message_on_fails' => TRUE]);

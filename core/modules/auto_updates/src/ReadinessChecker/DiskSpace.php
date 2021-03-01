@@ -136,13 +136,18 @@ class DiskSpace implements ReadinessCheckerInterface {
   /**
    * {@inheritdoc}
    */
-  public function getResult(): ?ReadinessCheckerResult {
+  public function getResults(): array {
     $errors = $this->getErrors();
     if (empty($errors)) {
-      return NULL;
+      return [];
     }
-    $summary = count($errors) === 1 ? $errors[0] : $this->t('There is not enough disk space to perform an automatic update.');
-    return new ReadinessCheckerResult($this, $summary, $errors, NULL, []);
+    return [
+      ReadinessCheckerResult::createErrorResult(
+        $this,
+        $errors,
+        count($errors) === 1 ? NULL : $this->t('There is not enough disk space to perform an automatic update.')
+      ),
+    ];
   }
 
 }

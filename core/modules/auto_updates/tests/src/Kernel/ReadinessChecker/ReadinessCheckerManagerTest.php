@@ -42,7 +42,8 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
     ];
     TestChecker1::setTestResult($expected_results[0]);
     TestChecker2::setTestResult($expected_results[1]);
-    $this->assertCheckerResultsEqual($expected_results, TRUE);
+    $expected_results_all = array_merge($expected_results[0], $expected_results[1]);
+    $this->assertCheckerResultsEqual($expected_results_all, TRUE);
 
     // Define a constant flag that will cause the readiness checker
     // service priority to be altered.
@@ -55,8 +56,8 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
     // because the readiness checker services order has been altered.
     $this->assertNull($this->getResultsFromManager());
     // Confirm that after calling run() the expected results order has changed.
-    $expected_results = array_reverse($expected_results);
-    $this->assertCheckerResultsEqual($expected_results, TRUE);
+    $expected_results_all = array_reverse($expected_results_all);
+    $this->assertCheckerResultsEqual($expected_results_all, TRUE);
   }
 
   /**
@@ -68,7 +69,7 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
     // Confirm that messages from an existing module are displayed when
     // 'auto_updates' is installed.
     $this->container->get('module_installer')->install(['auto_updates']);
-    $this->assertCheckerResultsEqual($expected_results);
+    $this->assertCheckerResultsEqual($expected_results[0]);
 
     // Confirm that the checkers are run when a module that provides a readiness
     // checker is installed.
@@ -79,7 +80,8 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
     TestChecker1::setTestResult($expected_results[0]);
     TestChecker2::setTestResult($expected_results[1]);
     $this->container->get('module_installer')->install(['auto_updates_test2']);
-    $this->assertCheckerResultsEqual($expected_results);
+    $expected_results_all = array_merge($expected_results[0], $expected_results[1]);
+    $this->assertCheckerResultsEqual($expected_results_all);
 
     // Confirm that the checkers are not run when a module that does not provide
     // a readiness checker is installed.
@@ -90,7 +92,7 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
     TestChecker1::setTestResult($unexpected_results[0]);
     TestChecker2::setTestResult($unexpected_results[1]);
     $this->container->get('module_installer')->install(['help']);
-    $this->assertCheckerResultsEqual($expected_results);
+    $this->assertCheckerResultsEqual($expected_results_all);
   }
 
   /**
@@ -106,7 +108,8 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
     // Confirm that messages from existing modules are displayed when
     // 'auto_updates' is installed.
     $this->container->get('module_installer')->install(['auto_updates', 'auto_updates_test2', 'help']);
-    $this->assertCheckerResultsEqual($expected_results);
+    $expected_results_all = array_merge($expected_results[0], $expected_results[1]);
+    $this->assertCheckerResultsEqual($expected_results_all);
 
     // Confirm that the checkers are run when a module that provides a readiness
     // checker is uninstalled.
@@ -116,7 +119,7 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
     TestChecker1::setTestResult($expected_results[0]);
     TestChecker2::setTestResult(array_pop($this->testResults['checker_2']));
     $this->container->get('module_installer')->uninstall(['auto_updates_test2']);
-    $this->assertCheckerResultsEqual($expected_results);
+    $this->assertCheckerResultsEqual($expected_results[0]);
 
     // Confirm that the checkers are not run when a module that does provide a
     // readiness checker is uninstalled.
@@ -125,24 +128,20 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
     ];
     TestChecker1::setTestResult($unexpected_results[0]);
     $this->container->get('module_installer')->uninstall(['help']);
-    $this->assertCheckerResultsEqual($expected_results);
+    $this->assertCheckerResultsEqual($expected_results[0]);
   }
 
   /**
    * @covers ::runIfNeeded
    */
   public function testRunIfNeeded(): void {
-    $expected_results = [
-      array_pop($this->testResults['checker_1']),
-    ];
-    TestChecker1::setTestResult($expected_results[0]);
+    $expected_results = array_pop($this->testResults['checker_1']);
+    TestChecker1::setTestResult($expected_results);
     $this->container->get('module_installer')->install(['auto_updates']);
     $this->assertCheckerResultsEqual($expected_results);
 
-    $unexpected_results = [
-      array_pop($this->testResults['checker_1']),
-    ];
-    TestChecker1::setTestResult($unexpected_results[0]);
+    $unexpected_results = array_pop($this->testResults['checker_1']);
+    TestChecker1::setTestResult($unexpected_results);
     $manager = $this->container->get('auto_updates.readiness_checker_manager');
     // Confirm that the new results will not be returned because the checkers
     // will not be run.
@@ -159,19 +158,17 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
     $this->assertCheckerResultsEqual($expected_results);
 
     // Confirm that the results are the same after rebuilding the container.
-    $unexpected_results = [
-      array_pop($this->testResults['checker_1']),
-    ];
-    TestChecker1::setTestResult($unexpected_results[0]);
+    $unexpected_results = array_pop($this->testResults['checker_1']);
+    TestChecker1::setTestResult($unexpected_results);
     /** @var \Drush\Drupal\DrupalKernel $kernel */
     $kernel = $this->container->get('kernel');
     $this->container = $kernel->rebuildContainer();
     $this->assertCheckerResultsEqual($expected_results);
 
-    // Define a constant flag that will cause a duplicate readiness checker
-    // service to be defined.
+    // Define a constant flag that will cause the readiness checker
+    // service priority to be altered.
     // @see \Drupal\auto_updates_test\AutoUpdatesTestServiceProvider::alter().
-    define('AUTO_UPDATES_TEST_DUPLICATE_SERVICE', TRUE);
+    define('AUTO_UPDATES_TEST_SET_PRIORITY', -1);
 
     // Rebuild the container to trigger the service to be duplicated.
     $kernel = $this->container->get('kernel');
@@ -213,15 +210,11 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
 
     foreach ($expected_results as $expected_result) {
       $actual_result = array_shift($actual_results);
-      $this->assertSame((string) $expected_result->getErrorsSummary(), (string) $actual_result->getErrorsSummary());
-      $this->assertSame((string) $expected_result->getWarningsSummary(), (string) $actual_result->getWarningsSummary());
+      $this->assertSame($expected_result->getSeverity(), $actual_result->getSeverity());
+      $this->assertSame((string) $expected_result->getSummary(), (string) $actual_result->getSummary());
       $this->assertSame(
-        array_map('strval', $expected_result->getErrorMessages()),
-        array_map('strval', $actual_result->getErrorMessages())
-      );
-      $this->assertSame(
-        array_map('strval', $expected_result->getWarningMessages()),
-        array_map('strval', $actual_result->getWarningMessages())
+        array_map('strval', $expected_result->getMessages()),
+        array_map('strval', $actual_result->getMessages())
       );
     }
   }

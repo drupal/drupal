@@ -118,30 +118,9 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
       }
     }
     else {
-      if ($error_results = $this->getResultsBySeverity($results, SystemManager::REQUIREMENT_ERROR)) {
-        // @todo Link "automatic updates" to documentation in
-        //   https://www.drupal.org/node/3168405.
-        $this->messenger->addError($this->getFailureMessageForSeverity(SystemManager::REQUIREMENT_ERROR));
-        foreach ($error_results as $result) {
-          $error_messages = $result->getErrorMessages();
-          $message = count($error_messages) === 1 ? $error_messages[0] : $result->getErrorsSummary();
-          $this->messenger->addError($message);
-        }
-      }
-      else {
-        // Only display warning summaries if no errors were displayed.
-        $warning_results = $this->getResultsBySeverity($results, SystemManager::REQUIREMENT_WARNING);
-        if ($warning_results) {
-          // @todo Link "automatic updates" to documentation in
-          //   https://www.drupal.org/node/3168405.
-          $this->messenger->addWarning($this->getFailureMessageForSeverity(SystemManager::REQUIREMENT_WARNING));
-          foreach ($warning_results as $result) {
-            if ($warning_messages = $result->getWarningMessages()) {
-              $message = count($warning_messages) === 1 ? $warning_messages[0] : $result->getWarningsSummary();
-              $this->messenger->addWarning($message);
-            }
-          }
-        }
+      // Warnings are not displayed if there are any errors.
+      if (!$this->displayResultsForSeverity($results, SystemManager::REQUIREMENT_ERROR)) {
+        !$this->displayResultsForSeverity($results, SystemManager::REQUIREMENT_WARNING);
       }
     }
   }
@@ -170,6 +149,38 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
       return !in_array($this->currentRoute->getRouteName(), $disabled_routes, TRUE);
     }
     return FALSE;
+  }
+
+  /**
+   * Displays the results for severity.
+   *
+   * @param \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[] $results
+   *   The checker results.
+   * @param int $severity
+   *   The severity for the results to display. Should be one of the
+   *   SystemManager::REQUIREMENT_* constants.
+   *
+   * @return bool
+   *   Whether any results were displayed.
+   */
+  protected function displayResultsForSeverity(array $results, int $severity): bool {
+    $filtered_results = $this->getResultsBySeverity($results, $severity);
+    if (empty($filtered_results)) {
+      return FALSE;
+    }
+    $failure_message = $this->getFailureMessageForSeverity($severity);
+    $severity === SystemManager::REQUIREMENT_ERROR ?
+      $this->messenger->addError($failure_message) :
+      $this->messenger->addWarning($failure_message);
+
+    foreach ($filtered_results as $result) {
+      $messages = $result->getMessages();
+      $message = count($messages) === 1 ? $messages[0] : $result->getSummary();
+      $severity === SystemManager::REQUIREMENT_ERROR ?
+        $this->messenger->addError($message) :
+        $this->messenger->addWarning($message);
+    }
+    return TRUE;
   }
 
 }

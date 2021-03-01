@@ -24,31 +24,33 @@ class DiskSpaceTest extends KernelTestBase {
   public function testDiskSpace(): void {
     // No disk space issues.
     $checker = $this->container->get('auto_updates.disk_space_checker');
-    $result = $checker->getResult();
-    $this->assertNull($result);
+    $this->assertSame([], $checker->getResults());
 
     // Out of space.
     /** @var \Composer\Autoload\ClassLoader  $class_loader */
     $class_loader = $this->container->get('class_loader');
     $app_root = $this->container->getParameter('app.root');
     $checker = $this->replaceCheckerService(new TestDiskSpace($app_root, $class_loader));
-    $result = $checker->getResult();
-    $messages = $result->getErrorMessages();
+    $results = $checker->getResults();
+    $this->assertCount(1, $results);
+    $messages = $results[0]->getMessages();
     $this->assertCount(1, $messages);
     $this->assertStringMatchesFormat('Logical disk "%s" has insufficient space. There must be at least %s MB free.', (string) $messages[0]);
 
     // Out of space not the same logical disk.
     $checker = $this->replaceCheckerService(new TestDiskSpaceNonSameDisk($app_root, $class_loader));
-    $result = $checker->getResult();
-    $messages = $result->getErrorMessages();
+    $results = $checker->getResults();
+    $this->assertCount(1, $results);
+    $messages = $results[0]->getMessages();
     $this->assertCount(2, $messages);
     $this->assertStringMatchesFormat('Drupal root filesystem "%s" has insufficient space. There must be at least %s MB free.', (string) $messages[0]);
     $this->assertStringMatchesFormat('Vendor filesystem "%s" has insufficient space. There must be at least %s MB free.', (string) $messages[1]);
 
     // Web root and vendor path are invalid.
     $checker = $this->replaceCheckerService(new TestDiskSpaceInvalidVendor('if_there_was_ever_a_folder_with_this_path_this_test_would_fail', $class_loader));
-    $result = $checker->getResult();
-    $messages = $result->getErrorMessages();
+    $results = $checker->getResults();
+    $this->assertCount(1, $results);
+    $messages = $results[0]->getMessages();
     $this->assertCount(1, $messages);
     $this->assertEquals('Free disk space cannot be determined because the web root and vendor directories could not be located.', (string) $messages[0]);
   }

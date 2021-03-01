@@ -8,11 +8,11 @@ namespace Drupal\auto_updates\ReadinessChecker;
 interface ReadinessCheckerInterface {
 
   /**
-   * Gets the result of the checker.
+   * Gets the results of the checker.
    *
-   * @return \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult|null
-   *   The checker result object or NULL if there no warnings or errors.
+   * @return \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[]
+   *   The checker results.
    */
-  public function getResult(): ?ReadinessCheckerResult;
+  public function getResults(): array;
 
 }
