@@ -15,10 +15,11 @@ input[type="radio"] {
   display: inline-block;
   width: 1.6875rem;
   height: 1.6875rem;
-  vertical-align: text-bottom;
-  border: 2px solid #7e96a7;
-  border-radius: 2px;
-  background-color: #f7f9fa;
+  margin: 0;
+  vertical-align: middle;
+  border: 1px solid #7e96a7;
+  border-radius: 0.1875rem;
+  background-color: #fff;
   background-repeat: no-repeat;
   background-position: 50% 50%;
   background-size: 1.125rem 1.125rem;
@@ -28,14 +29,17 @@ input[type="radio"] {
 }
 
 input[type="checkbox"]:focus, input[type="radio"]:focus {
-    outline: 6px dashed transparent;
-    box-shadow: 0 0 0 2px #fff, 0 0 0 4px #53b0eb, 0 0 36px rgba(83, 176, 235, 0.25)
+    border: solid 2px #2494db;
+    outline: solid 2px #2494db
   }
 
 @supports (outline-style: double) {
 
 input[type="checkbox"]:focus, input[type="radio"]:focus {
-      outline-style: double
+      border-width: 1px;
+      outline-width: 6px;
+      outline-style: double;
+      outline-offset: -1px
   }
     }
 
@@ -44,12 +48,29 @@ input[type="checkbox"]:hover, input[type="radio"]:hover {
   }
 
 input[type="checkbox"][disabled], input[type="radio"][disabled] {
-    opacity: 0.3;
+    background-color: #f1f4f7
+  }
+
+input[type="checkbox"][disabled]:hover, input[type="radio"][disabled]:hover {
+      border-color: #7e96a7;
+    }
+
+input[type="checkbox"][disabled]:checked, input[type="radio"][disabled]:checked {
+      border-width: 1px;
+    }
+
+input[type="checkbox"]:checked, input[type="radio"]:checked {
+    border-width: 2px;
   }
 
 input[type="checkbox"].error, input[type="radio"].error {
-    border-color: #e33f1e;
+    border: solid 2px #e33f1e
   }
+
+input[type="checkbox"].error:focus, input[type="radio"].error:focus {
+      outline-color: #e33f1e;
+      outline-offset: -2px;
+    }
 
 input[type="checkbox"],
 input[type="radio"] {
@@ -61,8 +82,20 @@ input[type="checkbox"].error::-ms-check, input[type="radio"].error::-ms-check {
     border: 1px solid #e33f1e;
   }
 
+[dir="ltr"] input[type="checkbox"] + label,[dir="ltr"]  input[type="radio"] + label {
+    padding-left: 0.5625rem
+}
+
+[dir="rtl"] input[type="checkbox"] + label,[dir="rtl"]  input[type="radio"] + label {
+    padding-right: 0.5625rem
+}
+
+input[type="checkbox"] + label, input[type="radio"] + label {
+    display: inline-block;
+  }
+
 input[type="checkbox"]:checked {
-    background-image: url("data:image/svg+xml,%3Csvg width='18' height='14' viewBox='0 0 18 14' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%232494DB' d='M14.8232 0.176777C14.9209 0.0791457 15.0791 0.0791455 15.1768 0.176777L16.9445 1.94454C17.0422 2.04217 17.0422 2.20047 16.9445 2.2981L6.23744 13.0052C6.13981 13.1028 5.98151 13.1028 5.88388 13.0052L0.176777 7.2981C0.0791456 7.20047 0.0791456 7.04218 0.176777 6.94454L1.94454 5.17678C2.04217 5.07915 2.20047 5.07915 2.2981 5.17678L5.88388 8.76256C5.98151 8.86019 6.13981 8.86019 6.23744 8.76256L14.8232 0.176777Z'/%3E%3C/svg%3E%0A");
+    background-image: url("data:image/svg+xml,%3Csvg width='17px' height='13px' viewBox='0 0 17 13' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E%3Cpath d='M14.8232,0.176777 C14.9209,0.0791457 15.0791,0.0791455 15.1768,0.176777 L16.9445,1.94454 C17.0422,2.04217 17.0422,2.20047 16.9445,2.2981 L6.23744,13.0052 C6.13981,13.1028 5.98151,13.1028 5.88388,13.0052 L0.176777,7.2981 C0.0791456,7.20047 0.0791456,7.04218 0.176777,6.94454 L1.94454,5.17678 C2.04217,5.07915 2.20047,5.07915 2.2981,5.17678 L5.88388,8.76256 C5.98151,8.86019 6.13981,8.86019 6.23744,8.76256 L14.8232,0.176777 Z' id='Path' fill='%232494DB' fill-rule='nonzero'%3E%3C/path%3E%3C/svg%3E");
   }
 
 input[type="radio"] {
@@ -71,84 +104,22 @@ input[type="radio"] {
 
 input[type="radio"]:checked {
     background-image: url("data:image/svg+xml,%3Csvg width='17' height='17' viewBox='0 0 17 17' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='8.5' cy='8.5' r='8.5' fill='%232494DB'/%3E%3C/svg%3E%0A");
-    background-size: 1.0625rem 1.0625rem;
+    background-size: 1.0625rem;
   }
 
-[dir="ltr"] .form-type-boolean {
-  margin-left: 2.25rem
-}
+input[type="radio"]:focus {
+    border-width: 2px;
+    border-color: #2494db;
+    outline-color: transparent;
+    box-shadow: 0 0 0 2px white, 0 0 0 4px #2494db;
+  }
 
-[dir="rtl"] .form-type-boolean {
-  margin-right: 2.25rem
-}
+input[type="radio"].error:focus {
+    outline-color: transparent;
+    box-shadow: 0 0 0 2px white, 0 0 0 4px #e33f1e;
+  }
 
 .form-type-boolean {
-  clear: both
-}
-
-[dir="ltr"] .form-type-boolean input[type="checkbox"],[dir="ltr"] 
-  .form-type-boolean input[type="radio"] {
-    float: left
-}
-
-[dir="rtl"] .form-type-boolean input[type="checkbox"],[dir="rtl"] 
-  .form-type-boolean input[type="radio"] {
-    float: right
-}
-
-[dir="ltr"] .form-type-boolean input[type="checkbox"],[dir="ltr"] 
-  .form-type-boolean input[type="radio"] {
-    margin-left: -2.25rem
-}
-
-[dir="rtl"] .form-type-boolean input[type="checkbox"],[dir="rtl"] 
-  .form-type-boolean input[type="radio"] {
-    margin-right: -2.25rem
-}
-
-.form-type-boolean input[type="checkbox"],
-  .form-type-boolean input[type="radio"] {
-    position: relative;
-    top: 0.5625rem;
-    transform: translateY(-50%);
-  }
-
-[dir="ltr"] .form-type-boolean.form-no-label {
-    margin-left: 0
-}
-
-[dir="rtl"] .form-type-boolean.form-no-label {
-    margin-right: 0
-}
-
-.form-type-boolean.form-no-label input[type="checkbox"],
-    .form-type-boolean.form-no-label input[type="radio"] {
-      position: static;
-      float: none;
-      margin-left: 0;
-      margin-right: 0;
-      transform: none;
-    }
-
-[dir="ltr"] .form-type-boolean .form-item__description,[dir="ltr"] 
-  .form-type-boolean .form-item--error-message {
-    margin-left: -2.25rem
-}
-
-[dir="rtl"] .form-type-boolean .form-item__description,[dir="rtl"] 
-  .form-type-boolean .form-item--error-message {
-    margin-right: -2.25rem
-}
-
-.form-boolean-group .form-type-boolean {
   margin-top: 1.125rem;
   margin-bottom: 1.125rem;
-}
-
-[dir="ltr"] .container-inline .form-boolean-group .form-type-boolean:not(:last-child) {
-  margin-right: 1.125rem
-}
-
-[dir="rtl"] .container-inline .form-boolean-group .form-type-boolean:not(:last-child) {
-  margin-left: 1.125rem
 }

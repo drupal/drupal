@@ -10,19 +10,14 @@
  * Drop button specific styles.
  */
 
-.dropbutton {
-  border-top-left-radius: 2px; /* LTR */
-  border-top-right-radius: 0; /* LTR */
-  border-bottom-right-radius: 0; /* LTR */
-  border-bottom-left-radius: 2px; /* LTR */
-  background-color: #0d77b5;
+.dropbutton-widget {
+  overflow: hidden;
+  border: solid 1px #fff;
+  border-radius: 0.1875rem;
 }
 
-[dir="rtl"] .dropbutton {
-  border-top-left-radius: 0;
-  border-top-right-radius: 2px;
-  border-bottom-right-radius: 2px;
-  border-bottom-left-radius: 0;
+.dropbutton {
+  background-color: #0d77b5;
 }
 
 .js .dropbutton-widget .dropbutton {
@@ -54,11 +49,7 @@
     padding-top: 0.28125rem;
     padding-bottom: 0.28125rem;
     text-decoration: none;
-    color: #fff;
-    border-top-left-radius: 2px; /* LTR */
-    border-top-right-radius: 0; /* LTR */
-    border-bottom-right-radius: 0; /* LTR */
-    border-bottom-left-radius: 2px /* LTR */
+    color: #fff
   }
 
 .dropbutton-action a:hover {
@@ -66,21 +57,17 @@
     }
 
 .dropbutton-action a:focus {
-      outline: 2px solid  #53b0eb;
+      outline: 2px solid #53b0eb;
       outline-offset: 2px;
       background-color: #2494db;
-      box-shadow: var(--shadow-focusable-with-outline);
     }
 
-[dir="rtl"] .dropbutton-action a {
-  border-top-left-radius: 0;
-  border-top-right-radius: 2px;
-  border-bottom-right-radius: 2px;
-  border-bottom-left-radius: 0;
+.open .dropbutton-action:not(:last-child) {
+  border-bottom: solid 1px #fff;
 }
 
 .js .dropbutton-action a:focus {
-  outline: 2px solid  #53b0eb;
+  outline: 2px solid #53b0eb;
 }
 
 [dir="ltr"] .dropbutton-toggle {
@@ -92,10 +79,6 @@
 }
 
 .dropbutton-toggle {
-  border-top-left-radius: 0; /* LTR */
-  border-top-right-radius: 2px; /* LTR */
-  border-bottom-right-radius: 2px; /* LTR */
-  border-bottom-left-radius: 0; /* LTR */
   background-color: #0d77b5
 }
 
@@ -103,32 +86,10 @@
     background-color: #2494db;
   }
 
-.dropbutton-toggle button {
-    border-top-left-radius: 0; /* LTR */
-    border-top-right-radius: 2px; /* LTR */
-    border-bottom-right-radius: 2px; /* LTR */
-    border-bottom-left-radius: 0 /* LTR */
-  }
-
 .dropbutton-toggle button:focus {
-      outline: 2px solid  #53b0eb;
-      outline-offset: 2px;
-      background-color: #2494db;
-      box-shadow: var(--shadow-focusable-with-outline);
-    }
-
-[dir="rtl"] .dropbutton-toggle {
-  border-top-left-radius: 2px;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 2px
-}
-
-[dir="rtl"] .dropbutton-toggle button {
-    border-top-left-radius: 2px;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 2px;
+    outline: solid 2px #53b0eb;
+    outline-offset: 2px;
+    background-color: #2494db;
   }
 
 .dropbutton-arrow {
