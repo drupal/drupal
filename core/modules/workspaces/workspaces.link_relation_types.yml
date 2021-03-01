@@ -3,6 +3,3 @@
 activate-form:
   uri: https://drupal.org/link-relations/activate-form
   description: A form where a workspace can be activated.
-deploy-form:
-  uri: https://drupal.org/link-relations/deploy-form
-  description: A form where a workspace can be deployed.

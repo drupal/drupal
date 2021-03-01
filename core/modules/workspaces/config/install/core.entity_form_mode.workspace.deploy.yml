@@ -1,9 +1,0 @@
-langcode: en
-status: true
-dependencies:
-  module:
-    - workspaces
-id: workspace.deploy
-label: Deploy
-targetEntityType: workspace
-cache: true

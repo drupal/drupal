@@ -18,7 +18,7 @@ use Drupal\workspaces\Entity\Workspace;
 use Drupal\workspaces\WorkspaceAccessException;
 
 /**
- * Tests a complete deployment scenario across different workspaces.
+ * Tests a complete publishing scenario across different workspaces.
  *
  * @group #slow
  * @group workspaces
@@ -110,7 +110,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
   }
 
   /**
-   * Tests various scenarios for creating and deploying content in workspaces.
+   * Tests various scenarios for creating and publishing content in workspaces.
    */
   public function testWorkspaces() {
     $this->initializeWorkspacesModule();
@@ -280,7 +280,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $test_scenarios['add_published_node_in_stage'] = $revision_state;
     $expected_workspace_association['add_published_node_in_stage'] = ['stage' => [3, 4, 5, 7]];
 
-    // Deploying 'stage' to 'live' should simply make the latest revisions in
+    // Publishing 'stage' to 'live' should simply make the latest revisions in
     // 'stage' the default ones in 'live'.
     $revision_state = array_replace_recursive($revision_state, [
       'live' => [
@@ -337,7 +337,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $this->assertWorkspaceStatus($test_scenarios['add_published_node_in_stage'], 'node');
     $this->assertWorkspaceAssociation($expected_workspace_association['add_published_node_in_stage'], 'node');
 
-    // Deploy 'stage' to 'live'.
+    // Publish 'stage' to 'live'.
     /** @var \Drupal\workspaces\WorkspacePublisher $workspace_publisher */
     $workspace_publisher = \Drupal::service('workspaces.operation_factory')->getPublisher($this->workspaces['stage']);
 
@@ -1003,7 +1003,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
   }
 
   /**
-   * Test a deployment with fields in dedicated table storage.
+   * Test publishing with fields in dedicated table storage.
    */
   public function testPublishWorkspaceDedicatedTableStorage() {
     $this->initializeWorkspacesModule();

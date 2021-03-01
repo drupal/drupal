@@ -36,7 +36,6 @@ use Drupal\workspaces\WorkspaceInterface;
  *       "edit" = "\Drupal\workspaces\Form\WorkspaceForm",
  *       "delete" = "\Drupal\workspaces\Form\WorkspaceDeleteForm",
  *       "activate" = "\Drupal\workspaces\Form\WorkspaceActivateForm",
- *       "deploy" = "\Drupal\workspaces\Form\WorkspaceDeployForm",
  *     },
  *   },
  *   admin_permission = "administer workspaces",
@@ -58,7 +57,6 @@ use Drupal\workspaces\WorkspaceInterface;
  *     "edit-form" = "/admin/config/workflow/workspaces/manage/{workspace}/edit",
  *     "delete-form" = "/admin/config/workflow/workspaces/manage/{workspace}/delete",
  *     "activate-form" = "/admin/config/workflow/workspaces/manage/{workspace}/activate",
- *     "deploy-form" = "/admin/config/workflow/workspaces/manage/{workspace}/deploy",
  *     "collection" = "/admin/config/workflow/workspaces",
  *   },
  * )
