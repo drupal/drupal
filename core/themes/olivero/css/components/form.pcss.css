@@ -42,10 +42,8 @@ tr .form-item,
  * Form element label.
  */
 .form-item__label {
-  display: table;
+  display: block;
   margin-block: var(--sp0-5);
-  font-size: var(--font-size-l);
-  font-weight: 700;
 }
 
 .container-inline .form-item__label {

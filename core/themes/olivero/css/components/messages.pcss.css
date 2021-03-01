@@ -93,13 +93,11 @@
   background: none;
   appearance: none;
 
-  &::before,
-  &::after {
+  &:before,
+  &:after {
     position: absolute;
-    /* stylelint-disable csstools/use-logical */
     top: 50%;
     left: 50%;
-    /* stylelint-enable csstools/use-logical */
     display: block;
     width: 33px;
     height: 2px;
@@ -107,11 +105,11 @@
     background-color: var(--color--gray-30);
   }
 
-  &::before {
+  &:before {
     transform: translate(-50%, -50%) rotate(45deg);
   }
 
-  &::after {
+  &:after {
     transform: translate(-50%, -50%) rotate(-45deg);
   }
 
@@ -158,5 +156,5 @@
 
 .js-form-managed-file .messages {
   margin-block-end: var(--sp1);
-  border-inline-start: var(--form-element-border-size-left) solid var(--color--red);
+  border-inline-start: solid 6px var(--color--red);
 }

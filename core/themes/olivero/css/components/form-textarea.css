@@ -14,4 +14,5 @@ textarea {
   display: block;
   width: 100%;
   min-height: 9rem;
+  padding: 1.125rem;
 }

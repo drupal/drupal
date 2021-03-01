@@ -6,70 +6,36 @@
 @import "../base/variables.pcss.css";
 
 :root {
-  --form-element-select-height: var(--sp3);
-  --form-element-select-height--small: var(--sp2-5);
   --form-element-select-icon: url("../../images/chevron-down.svg");
-  --form-element-select-bg: url("../../images/select-chevron-bg-default.svg");
-  --form-element-select-bg--highlight: url("../../images/select-chevron-bg-highlight.svg");
-  --form-element-select-bg--error: url("../../images/select-chevron-bg-error.svg");
-  --form-element-select-border-size-right: var(--sp3);
 }
 
 select {
   max-width: 100%;
-  height: var(--form-element-select-height);
+  height: var(--sp3);
   padding-block: 0;
-  padding-inline-start: calc(var(--sp1) + var(--form-element-border-size-left));
-  padding-inline-end: calc(var(--sp1) + var(--form-element-select-border-size-right));
-  color: var(--color--gray-10);
-  border-width: var(--form-element-border-size-base) 0;
-  border-style: solid;
-  border-color: transparent;
-  border-top-left-radius: 0; /* LTR */
-  border-top-right-radius: var(--border-radius-base); /* LTR */
-  border-bottom-right-radius: var(--border-radius-base); /* LTR */
-  border-bottom-left-radius: 0; /* LTR */
-  outline: var(--outline--thin);
-  /*
-    Couple of notes here:
-
-    The select element is styled with external images so it's visible in Firefox in Windows high contrast
-    mode. There's a number of browser bugs that limit what we can do including not linear-gradients negating the
-    entire ruleset. To work around this, we split off the various backgrounds into separate SVG images, and
-    call them as appropriate. We cannot use the background CSS property because we split off the background-color.
-    We also cannot use a left border because it angles at the end to blend in with the top and bottom
-    transparent borders, so we re-use the background SVG image for this.
-
-    @todo - look at inlining some of the SVGs with an eye on CSS filesize.
-  */
-  background-color: var(--color--gray-95);
-  background-image: var(--form-element-select-icon), var(--form-element-select-bg), var(--form-element-select-bg);
+  padding-inline-start: var(--sp);
+  padding-inline-end: var(--sp3);
+  color: var(--color--gray-0);
+  border: 1px solid var(--color--gray-30);
+  border-radius: var(--border-radius);
+  background-color: var(--color--white);
+  background-image: var(--form-element-select-icon);
   background-repeat: no-repeat;
-  background-position: /* LTR */
-    right var(--sp1) center,
-    right 0 top calc(-1 * var(--form-element-border-size-base)),
-    left -48px top calc(-1 * var(--form-element-border-size-base));
+  background-position: right var(--sp) center; /* LTR */
   font-family: inherit;
-  font-size: var(--font-size-base);
-  line-height: calc(var(--form-element-select-height) - 2 * var(--form-element-border-size-base));
+  font-size: inherit;
   appearance: none;
 
   &:focus {
-    border-color: var(--color--gray-30);
-    outline: var(--outline--thick);
-    box-shadow: var(--shadow-focusable);
+    border: solid 2px var(--color--blue-50);
+    outline: solid 2px var(--color--blue-50);
 
     @supports (outline-style: double) {
+      border-width: 1px;
+      outline-width: 6px;
       outline-style: double;
+      outline-offset: -1px;
     }
-  }
-
-  &:hover {
-    border-color: var(--color--blue-70);
-    background-image:
-      var(--form-element-select-icon),
-      var(--form-element-select-bg--highlight),
-      var(--form-element-select-bg--highlight);
   }
 
   /* Disables border of select specifically for ms browser */
@@ -78,115 +44,43 @@ select {
   }
 
   &[disabled] {
-    pointer-events: none;
-    opacity: 0.6;
+    color: var(--color--gray-30);
+    background-color: var(--color--gray-90);
   }
 
   &.error {
-    border-color: var(--color--red);
-    background-image:
-      var(--form-element-select-icon),
-      var(--form-element-select-bg--error),
-      var(--form-element-select-bg--error);
+    border: solid 2px var(--color--red);
+
+    &:focus {
+      outline-color: var(--color--red);
+    }
   }
 
   &[multiple] {
     height: auto;
-    padding-block: var(--sp0-5);
-    padding-inline-start: var(--sp0-5);
-    padding-inline-end: var(--sp0-5);
-    border-block-start: 0;
-    border-inline-end: solid 2px transparent;
-    border-block-end: 0;
-    border-inline-start: solid 6px var(--color--gray-30);
+    padding: var(--sp0-5);
     background-image: none;
-    background-repeat: repeat-y;
-    background-position: left -48px top calc(-1 * var(--form-element-border-size-base)); /* LTR */
     line-height: 1; /* Needed by non-Chromium based MS Edge browsers. */
 
     & option {
-      padding-block: var(--sp0-5);
-      padding-inline-start: var(--sp0-5);
-      padding-inline-end: var(--sp0-5);
-    }
-
-    &:focus {
-      border-color: var(--color--gray-30);
-      box-shadow:
-        0 -2px 0 var(--color--gray-30),
-        0 2px 0 var(--color--gray-30),
-        0 -2px 0 2px var(--color--white),
-        0 2px 0 2px var(--color--white),
-        0 -2px 0 4px var(--color--blue-70),
-        0 2px 0 4px var(--color--blue-70),
-        var(--shadow-focusable-smooth);
-    }
-
-    &:hover {
-      border-color: var(--color--blue-70);
-      box-shadow:
-        0 -2px 0 var(--color--blue-70),
-        0 2px 0 var(--color--blue-70);
-    }
-
-    &:focus:hover {
-      box-shadow:
-        0 -2px 0 var(--color--blue-70),
-        0 2px 0 var(--color--blue-70),
-        0 -2px 0 2px var(--color--white),
-        0 2px 0 2px var(--color--white),
-        0 -2px 0 4px var(--color--blue-70),
-        0 2px 0 4px var(--color--blue-70),
-        var(--shadow-focusable-smooth);
-    }
-
-    &.error {
-      border-color: var(--color--red);
-      box-shadow:
-        0 -2px 0 var(--color--red),
-        0 2px 0 var(--color--red);
-
-      &:focus {
-        box-shadow:
-          0 -2px 0 var(--color--red),
-          0 2px 0 var(--color--red),
-          0 -2px 0 2px var(--color--white),
-          0 2px 0 2px var(--color--white),
-          0 -2px 0 4px var(--color--blue-70),
-          0 2px 0 4px var(--color--blue-70),
-          var(--shadow-focusable-smooth);
-      }
+      padding: var(--sp0-5);
     }
   }
 
   &.form-element--small {
-    height: var(--form-element-select-height--small);
-    padding-inline: calc(var(--sp0-75) + var(--form-element-border-size-left)) calc(var(--form-element-select-height--small) + var(--sp0-75));
-    background-position: right var(--sp0-75) center, right -10px top -2px, left -48px top -2px; /* LTR */
-    line-height: calc(var(--form-element-select-height--small) - 2 * var(--form-element-border-size-base));
+    height: var(--sp2-5);
   }
 
   /* Necessary for IE11 to show chevron. */
   @media screen and (-ms-high-contrast: active) {
     background-image: var(--form-element-select-icon);
+
+    &[multiple] {
+      background-image: none;
+    }
   }
 }
 
 [dir="rtl"] select {
-  border-top-left-radius: var(--border-radius-base);
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: var(--border-radius-base);
-  background-position:
-    left var(--sp1) center,
-    left 0 top calc(-1 * var(--form-element-border-size-base)),
-    right -48px top calc(-1 * var(--form-element-border-size-base));
-
-  &[multiple] {
-    background-position: right -48px top calc(-1 * var(--form-element-border-size-base));
-  }
-
-  &.form-element--small {
-    background-position: left var(--sp0-75) center, right -48px top -2px, left -10px top -2px;
-  }
+  background-position: left var(--sp) center;
 }
