@@ -90,6 +90,12 @@ class Statement extends StatementPrefetch implements StatementInterface {
       $return = parent::execute($args, $options);
     }
     catch (\PDOException $e) {
+      // The database schema might be changed by another process in between the
+      // time that the statement was prepared and the time the statement was run
+      // (e.g. usually happens when running tests). In this case, we need to
+      // re-run the query.
+      // @see http://www.sqlite.org/faq.html#q15
+      // @see http://www.sqlite.org/rescode.html#schema
       if (!empty($e->errorInfo[1]) && $e->errorInfo[1] === 17) {
         // The schema has changed. SQLite specifies that we must resend the query.
         $return = parent::execute($args, $options);
