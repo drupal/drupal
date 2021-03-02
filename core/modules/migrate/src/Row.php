@@ -167,7 +167,7 @@ class Row {
   }
 
   /**
-   * Sets a source property.
+   * Sets a source property if the row is not frozen.
    *
    * This can only be called from the source plugin.
    *
@@ -177,6 +177,8 @@ class Row {
    *   The property value to set on the source.
    *
    * @throws \Exception
+   *
+   * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase::next
    */
   public function setSourceProperty($property, $data) {
     if ($this->frozen) {
