@@ -106,7 +106,7 @@ abstract class Upsert extends Query implements \Countable {
       $stmt->execute($values, $this->queryOptions);
     }
     catch (\Exception $e) {
-      $this->exceptionHandler()->handleExecutionException($e, $stmt, $values, $this->queryOptions);
+      $this->connection->exceptionHandler()->handleExecutionException($e, $stmt, $values, $this->queryOptions);
     }
 
     // Re-initialize the values array so that we can re-use this query.
