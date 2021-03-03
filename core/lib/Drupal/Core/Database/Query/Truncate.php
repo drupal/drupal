@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Database\Query;
 
-use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Connection;
 
 /**
@@ -53,13 +52,12 @@ class Truncate extends Query {
    *   Return value is dependent on the database type.
    */
   public function execute() {
+    $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions, TRUE);
     try {
-      $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions, TRUE);
       $stmt->execute([], $this->queryOptions);
     }
-    catch (\PDOException $e) {
-      $message = $e->getMessage() . ": " . (string) $this . "; ";
-      throw new DatabaseExceptionWrapper($message, 0, $e);
+    catch (\Exception $e) {
+      $this->exceptionHandler()->handleExecutionException($e, $stmt, [], $this->queryOptions);
     }
     return $stmt->rowCount();
   }

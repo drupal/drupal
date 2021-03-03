@@ -3,7 +3,6 @@
 namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\DatabaseExceptionWrapper;
 
 /**
  * General class for an abstracted "Upsert" (UPDATE or INSERT) query operation.
@@ -102,13 +101,12 @@ abstract class Upsert extends Query implements \Countable {
       }
     }
 
+    $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions, TRUE);
     try {
-      $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions, TRUE);
       $stmt->execute($values, $this->queryOptions);
     }
-    catch (\PDOException $e) {
-      $message = $e->getMessage() . ": " . (string) $this . "; ";
-      throw new DatabaseExceptionWrapper($message, 0, $e);
+    catch (\Exception $e) {
+      $this->exceptionHandler()->handleExecutionException($e, $stmt, $values, $this->queryOptions);
     }
 
     // Re-initialize the values array so that we can re-use this query.
