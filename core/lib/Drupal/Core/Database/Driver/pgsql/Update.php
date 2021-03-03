@@ -2,8 +2,6 @@
 
 namespace Drupal\Core\Database\Driver\pgsql;
 
-use Drupal\Core\Database\DatabaseExceptionWrapper;
-use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Database\Query\Update as QueryUpdate;
 use Drupal\Core\Database\Query\SelectInterface;
 
@@ -76,18 +74,9 @@ class Update extends QueryUpdate {
       $this->connection->releaseSavepoint();
       return $stmt->rowCount();
     }
-    catch (\PDOException $e) {
-      $this->connection->rollbackSavepoint();
-      $message = $e->getMessage() . ": " . (string) $this . "; ";
-      // Match all SQLSTATE 23xxx errors.
-      if (substr($e->getCode(), -6, -3) == '23') {
-        throw new IntegrityConstraintViolationException($message, $e->getCode(), $e);
-      }
-      throw new DatabaseExceptionWrapper($message, 0, $e);
-    }
     catch (\Exception $e) {
       $this->connection->rollbackSavepoint();
-      throw $e;
+      $this->connection->exceptionHandler()->handleExecutionException($e, $stmt, [], $this->queryOptions);
     }
   }
 
