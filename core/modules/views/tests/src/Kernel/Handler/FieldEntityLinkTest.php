@@ -147,7 +147,7 @@ class FieldEntityLinkTest extends ViewsKernelTestBase {
           }
         }
         $link = $view->style_plugin->getField($index, $info[$template]['field_id']);
-        $this->assertEqual($link, $expected_link);
+        $this->assertEqual($expected_link, $link);
       }
       $index++;
     }

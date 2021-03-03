@@ -76,7 +76,7 @@ class ConfigSnapshotTest extends KernelTestBase {
 
     // Verify changed config was properly imported.
     \Drupal::configFactory()->reset($config_name);
-    $this->assertIdentical($this->config($config_name)->get($config_key), $new_data);
+    $this->assertSame($new_data, $this->config($config_name)->get($config_key));
 
     // Verify that a new snapshot was created which and that it matches
     // the active config.

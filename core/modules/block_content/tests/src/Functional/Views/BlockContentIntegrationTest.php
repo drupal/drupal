@@ -66,7 +66,7 @@ class BlockContentIntegrationTest extends BlockContentTestBase {
     foreach ($result as $element) {
       $ids[] = $element->getText();
     }
-    $this->assertEqual($ids, $expected_ids);
+    $this->assertEqual($expected_ids, $ids);
   }
 
 }

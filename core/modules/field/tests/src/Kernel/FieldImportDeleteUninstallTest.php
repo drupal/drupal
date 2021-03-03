@@ -71,9 +71,9 @@ class FieldImportDeleteUninstallTest extends FieldKernelTestBase {
     // Verify entity has been created properly.
     $id = $entity->id();
     $entity = EntityTest::load($id);
-    $this->assertEqual($entity->field_test->value, $value);
-    $this->assertEqual($entity->field_test[0]->value, $value);
-    $this->assertEqual($entity->field_int->value, '99');
+    $this->assertEqual($value, $entity->field_test->value);
+    $this->assertEqual($value, $entity->field_test[0]->value);
+    $this->assertEqual('99', $entity->field_int->value);
 
     // Delete unrelated field before copying configuration and running the
     // synchronization.
@@ -93,7 +93,7 @@ class FieldImportDeleteUninstallTest extends FieldKernelTestBase {
     $sync->delete('field.field.entity_test.entity_test.field_test');
 
     $steps = $this->configImporter()->initialize();
-    $this->assertIdentical($steps[0], ['\Drupal\field\ConfigImporterFieldPurger', 'process'], 'The additional process configuration synchronization step has been added.');
+    $this->assertSame(['\\Drupal\\field\\ConfigImporterFieldPurger', 'process'], $steps[0], 'The additional process configuration synchronization step has been added.');
 
     // This will purge all the data, delete the field and uninstall the
     // Telephone module.
@@ -135,7 +135,7 @@ class FieldImportDeleteUninstallTest extends FieldKernelTestBase {
       // Verify entity has been created properly.
       $id = $entity->id();
       $entity = EntityTest::load($id);
-      $this->assertEqual($entity->field_test->value, $value);
+      $this->assertEqual($value, $entity->field_test->value);
     }
 
     // Delete the field.
@@ -154,7 +154,7 @@ class FieldImportDeleteUninstallTest extends FieldKernelTestBase {
     $this->assertTrue(isset($deleted_storages[$field_storage_uuid]), 'Field has been deleted and needs purging before configuration synchronization.');
 
     $steps = $this->configImporter()->initialize();
-    $this->assertIdentical($steps[0], ['\Drupal\field\ConfigImporterFieldPurger', 'process'], 'The additional process configuration synchronization step has been added.');
+    $this->assertSame(['\\Drupal\\field\\ConfigImporterFieldPurger', 'process'], $steps[0], 'The additional process configuration synchronization step has been added.');
 
     // This will purge all the data, delete the field and uninstall the
     // Telephone module.

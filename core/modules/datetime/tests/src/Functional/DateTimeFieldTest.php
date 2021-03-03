@@ -711,10 +711,7 @@ class DateTimeFieldTest extends DateTestBase {
       // Check if default_date has been stored successfully.
       $config_entity = $this->config('field.field.node.date_content.' . $field_name)
         ->get();
-      $this->assertEqual($config_entity['default_value'][0], [
-        'default_date_type' => 'now',
-        'default_date' => 'now',
-      ], 'Default value has been stored successfully');
+      $this->assertEqual(['default_date_type' => 'now', 'default_date' => 'now'], $config_entity['default_value'][0], 'Default value has been stored successfully');
 
       // Clear field cache in order to avoid stale cache values.
       \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
@@ -722,8 +719,7 @@ class DateTimeFieldTest extends DateTestBase {
       // Create a new node to check that datetime field default value is today.
       $new_node = Node::create(['type' => 'date_content']);
       $expected_date = new DrupalDateTime('now', date_default_timezone_get());
-      $this->assertEqual($new_node->get($field_name)
-        ->offsetGet(0)->value, $expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT));
+      $this->assertEqual($expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT), $new_node->get($field_name)->offsetGet(0)->value);
 
       // Set an invalid relative default_value to test validation.
       $field_edit = [
@@ -750,10 +746,7 @@ class DateTimeFieldTest extends DateTestBase {
       // Check if default_date has been stored successfully.
       $config_entity = $this->config('field.field.node.date_content.' . $field_name)
         ->get();
-      $this->assertEqual($config_entity['default_value'][0], [
-        'default_date_type' => 'relative',
-        'default_date' => '+90 days',
-      ], 'Default value has been stored successfully');
+      $this->assertEqual(['default_date_type' => 'relative', 'default_date' => '+90 days'], $config_entity['default_value'][0], 'Default value has been stored successfully');
 
       // Clear field cache in order to avoid stale cache values.
       \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
@@ -762,8 +755,7 @@ class DateTimeFieldTest extends DateTestBase {
       // days.
       $new_node = Node::create(['type' => 'date_content']);
       $expected_date = new DrupalDateTime('+90 days', date_default_timezone_get());
-      $this->assertEqual($new_node->get($field_name)
-        ->offsetGet(0)->value, $expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT));
+      $this->assertEqual($expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT), $new_node->get($field_name)->offsetGet(0)->value);
 
       // Remove default value.
       $field_edit = [
@@ -813,32 +805,36 @@ class DateTimeFieldTest extends DateTestBase {
       "{$field_name}[0][value][time]" => '12:00:00',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid', 'Empty date value has been caught.');
+    $this->assertText('date is invalid');
 
+    // Invalid year value.
     $date_value = 'aaaa-12-01';
     $edit = [
       "{$field_name}[0][value][date]" => $date_value,
       "{$field_name}[0][value][time]" => '00:00:00',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid', new FormattableMarkup('Invalid year value %date has been caught.', ['%date' => $date_value]));
+    $this->assertText('date is invalid');
 
+    // Invalid month value.
     $date_value = '2012-75-01';
     $edit = [
       "{$field_name}[0][value][date]" => $date_value,
       "{$field_name}[0][value][time]" => '00:00:00',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid', new FormattableMarkup('Invalid month value %date has been caught.', ['%date' => $date_value]));
+    $this->assertText('date is invalid');
 
+    // Invalid day value.
     $date_value = '2012-12-99';
     $edit = [
       "{$field_name}[0][value][date]" => $date_value,
       "{$field_name}[0][value][time]" => '00:00:00',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid', new FormattableMarkup('Invalid day value %date has been caught.', ['%date' => $date_value]));
+    $this->assertText('date is invalid');
 
+    // Invalid time value.
     $date_value = '2012-12-01';
     $time_value = '';
     $edit = [
@@ -846,8 +842,9 @@ class DateTimeFieldTest extends DateTestBase {
       "{$field_name}[0][value][time]" => $time_value,
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid', 'Empty time value has been caught.');
+    $this->assertText('date is invalid');
 
+    // Invalid hour value.
     $date_value = '2012-12-01';
     $time_value = '49:00:00';
     $edit = [
@@ -855,8 +852,9 @@ class DateTimeFieldTest extends DateTestBase {
       "{$field_name}[0][value][time]" => $time_value,
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid', new FormattableMarkup('Invalid hour value %time has been caught.', ['%time' => $time_value]));
+    $this->assertText('date is invalid');
 
+    // Invalid minutes value.
     $date_value = '2012-12-01';
     $time_value = '12:99:00';
     $edit = [
@@ -864,8 +862,9 @@ class DateTimeFieldTest extends DateTestBase {
       "{$field_name}[0][value][time]" => $time_value,
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid', new FormattableMarkup('Invalid minute value %time has been caught.', ['%time' => $time_value]));
+    $this->assertText('date is invalid');
 
+    // Invalid seconds value.
     $date_value = '2012-12-01';
     $time_value = '12:15:99';
     $edit = [
@@ -873,7 +872,7 @@ class DateTimeFieldTest extends DateTestBase {
       "{$field_name}[0][value][time]" => $time_value,
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid', new FormattableMarkup('Invalid second value %time has been caught.', ['%time' => $time_value]));
+    $this->assertText('date is invalid');
   }
 
   /**

@@ -199,7 +199,7 @@ class ResponsiveImageStyleForm extends EntityForm {
       '#default_value' => $responsive_image_style->getFallbackImageStyle(),
       '#options' => $image_styles,
       '#required' => TRUE,
-      '#description' => t('Select the smallest image style you expect to appear in this space. The fallback image style should only appear on the site if an error occurs.'),
+      '#description' => $this->t('Select the smallest image style you expect to appear in this space. The fallback image style should only appear on the site if an error occurs.'),
     ];
 
     $form['#tree'] = TRUE;

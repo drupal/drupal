@@ -64,15 +64,13 @@ class CKEditorAdminTest extends BrowserTestBase {
     $this->assertNull($editor, 'No Editor config entity exists yet.');
 
     // Verify the "Text Editor" <select> when a text editor is available.
-    $select = $this->xpath('//select[@name="editor[editor]"]');
-    $select_is_disabled = $this->xpath('//select[@name="editor[editor]" and @disabled="disabled"]');
-    $options = $this->xpath('//select[@name="editor[editor]"]/option');
-    $this->assertCount(1, $select, 'The Text Editor select exists.');
-    $this->assertCount(0, $select_is_disabled, 'The Text Editor select is not disabled.');
-    $this->assertCount(2, $options, 'The Text Editor select has two options.');
-    $this->assertSame('None', $options[0]->getText(), 'Option 1 in the Text Editor select is "None".');
-    $this->assertSame('CKEditor', $options[1]->getText(), 'Option 2 in the Text Editor select is "CKEditor".');
-    $this->assertSame('selected', $options[0]->getAttribute('selected'), 'Option 1 ("None") is selected.');
+    $select = $this->assertSession()->selectExists('editor[editor]');
+    $this->assertFalse($select->hasAttribute('disabled'));
+    $options = $select->findAll('css', 'option');
+    $this->assertCount(2, $options);
+    $this->assertSame('None', $options[0]->getText());
+    $this->assertSame('CKEditor', $options[1]->getText());
+    $this->assertTrue($options[0]->isSelected());
 
     // Select the "CKEditor" editor and click the "Save configuration" button.
     $edit = [
@@ -202,8 +200,7 @@ class CKEditorAdminTest extends BrowserTestBase {
     $this->resetAll();
     $this->container->get('plugin.manager.ckeditor.plugin')->clearCachedDefinitions();
     $this->drupalGet('admin/config/content/formats/manage/filtered_html');
-    $ultra_llama_mode_checkbox = $this->xpath('//input[@type="checkbox" and @name="editor[settings][plugins][llama_contextual_and_button][ultra_llama_mode]" and not(@checked)]');
-    $this->assertCount(1, $ultra_llama_mode_checkbox, 'The "Ultra llama mode" checkbox exists and is not checked.');
+    $this->assertSession()->checkboxNotChecked('editor[settings][plugins][llama_contextual_and_button][ultra_llama_mode]');
     $editor = Editor::load('filtered_html');
     $this->assertInstanceOf(Editor::class, $editor);
     $this->assertEqual($expected_settings, $editor->getSettings(), 'The Editor config entity has the correct settings.');
@@ -215,8 +212,7 @@ class CKEditorAdminTest extends BrowserTestBase {
     ];
     $this->submitForm($edit, 'Save configuration');
     $this->drupalGet('admin/config/content/formats/manage/filtered_html');
-    $ultra_llama_mode_checkbox = $this->xpath('//input[@type="checkbox" and @name="editor[settings][plugins][llama_contextual_and_button][ultra_llama_mode]" and @checked="checked"]');
-    $this->assertCount(1, $ultra_llama_mode_checkbox, 'The "Ultra llama mode" checkbox exists and is checked.');
+    $this->assertSession()->checkboxChecked('editor[settings][plugins][llama_contextual_and_button][ultra_llama_mode]');
     $expected_settings['plugins']['llama_contextual_and_button']['ultra_llama_mode'] = TRUE;
     $editor = Editor::load('filtered_html');
     $this->assertInstanceOf(Editor::class, $editor);
@@ -247,15 +243,13 @@ class CKEditorAdminTest extends BrowserTestBase {
     $this->drupalGet('admin/config/content/formats/add');
 
     // Verify the "Text Editor" <select> when a text editor is available.
-    $select = $this->xpath('//select[@name="editor[editor]"]');
-    $select_is_disabled = $this->xpath('//select[@name="editor[editor]" and @disabled="disabled"]');
-    $options = $this->xpath('//select[@name="editor[editor]"]/option');
-    $this->assertCount(1, $select, 'The Text Editor select exists.');
-    $this->assertCount(0, $select_is_disabled, 'The Text Editor select is not disabled.');
-    $this->assertCount(2, $options, 'The Text Editor select has two options.');
-    $this->assertSame('None', $options[0]->getText(), 'Option 1 in the Text Editor select is "None".');
-    $this->assertSame('CKEditor', $options[1]->getText(), 'Option 2 in the Text Editor select is "CKEditor".');
-    $this->assertSame('selected', $options[0]->getAttribute('selected'), 'Option 1 ("None") is selected.');
+    $select = $this->assertSession()->selectExists('editor[editor]');
+    $this->assertFalse($select->hasAttribute('disabled'));
+    $options = $select->findAll('css', 'option');
+    $this->assertCount(2, $options);
+    $this->assertSame('None', $options[0]->getText());
+    $this->assertSame('CKEditor', $options[1]->getText());
+    $this->assertTrue($options[0]->isSelected());
 
     // Name our fancy new text format, select the "CKEditor" editor and click
     // the "Configure" button.

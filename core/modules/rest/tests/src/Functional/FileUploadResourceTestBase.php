@@ -523,11 +523,9 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
     $this->assertResponseData($expected, $response);
     $this->assertFileExists('public://foobar/example.php_.txt');
 
-    // Add php as an allowed format. Allow insecure uploads still being FALSE
-    // should still not allow this. So it should still have a .txt extension
-    // appended even though it is not in the list of allowed extensions.
-    $this->field->setSetting('file_extensions', 'php')
-      ->save();
+    // Add .php and .txt as allowed extensions. Since 'allow_insecure_uploads'
+    // is FALSE, .php files should be renamed to have a .txt extension.
+    $this->field->setSetting('file_extensions', 'php txt')->save();
     $this->refreshTestStateAfterRestConfigChange();
 
     $response = $this->fileRequest($uri, $php_string, ['Content-Disposition' => 'filename="example_2.php"']);
@@ -576,13 +574,13 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
     $this->field->setSetting('file_extensions', '')->save();
     $this->rebuildAll();
     $response = $this->fileRequest($uri, $php_string, ['Content-Disposition' => 'filename="example_5.php.png"']);
-    $expected = $this->getExpectedNormalizedEntity(5, 'example_5.php_.png_.txt', TRUE);
+    $expected = $this->getExpectedNormalizedEntity(5, 'example_5.php_.png', TRUE);
     // Override the expected filesize.
     $expected['filesize'][0]['value'] = strlen($php_string);
-    // The file mime should also now be text.
-    $expected['filemime'][0]['value'] = 'text/plain';
+    // The file mime should still see this as a PNG image.
+    $expected['filemime'][0]['value'] = 'image/png';
     $this->assertResponseData($expected, $response);
-    $this->assertFileExists('public://foobar/example_5.php_.png_.txt');
+    $this->assertFileExists('public://foobar/example_5.php_.png');
 
     // Dangerous extensions are munged if is renamed to end in .txt.
     $response = $this->fileRequest($uri, $php_string, ['Content-Disposition' => 'filename="example_6.cgi.png.txt"']);
@@ -593,6 +591,18 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
     $expected['filemime'][0]['value'] = 'text/plain';
     $this->assertResponseData($expected, $response);
     $this->assertFileExists('public://foobar/example_6.cgi_.png_.txt');
+
+    // Add .php as an allowed extension without .txt. Since insecure uploads are
+    // not allowed, .php files will be rejected.
+    $this->field->setSetting('file_extensions', 'php')->save();
+    $this->refreshTestStateAfterRestConfigChange();
+
+    $response = $this->fileRequest($uri, $php_string, ['Content-Disposition' => 'filename="example_7.php"']);
+    $this->assertResourceErrorResponse(422, "Unprocessable Entity: file validation failed.\nFor security reasons, your upload has been rejected.", $response);
+
+    // Make sure that no file was saved.
+    $this->assertFileNotExists('public://foobar/example_7.php');
+    $this->assertFileNotExists('public://foobar/example_7.php.txt');
 
     // Now allow insecure uploads.
     \Drupal::configFactory()

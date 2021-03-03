@@ -76,7 +76,7 @@ class TransactionTest extends DatabaseTestBase {
       // Roll back the transaction, if requested.
       // This rollback should propagate to the last savepoint.
       $txn->rollBack();
-      $this->assertTrue(($this->connection->transactionDepth() == $depth), 'Transaction has rolled back to the last savepoint after calling rollBack().');
+      $this->assertSame($depth, $this->connection->transactionDepth(), 'Transaction has rolled back to the last savepoint after calling rollBack().');
     }
   }
 
@@ -134,7 +134,7 @@ class TransactionTest extends DatabaseTestBase {
       // Roll back the transaction, if requested.
       // This rollback should propagate to the last savepoint.
       $txn->rollBack();
-      $this->assertTrue(($this->connection->transactionDepth() == $depth), 'Transaction has rolled back to the last savepoint after calling rollBack().');
+      $this->assertSame($depth, $this->connection->transactionDepth(), 'Transaction has rolled back to the last savepoint after calling rollBack().');
     }
   }
 
@@ -152,9 +152,9 @@ class TransactionTest extends DatabaseTestBase {
       // Neither of the rows we inserted in the two transaction layers
       // should be present in the tables post-rollback.
       $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'DavidB'])->fetchField();
-      $this->assertNotIdentical($saved_age, '24', 'Cannot retrieve DavidB row after commit.');
+      $this->assertNotSame('24', $saved_age, 'Cannot retrieve DavidB row after commit.');
       $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'DanielB'])->fetchField();
-      $this->assertNotIdentical($saved_age, '19', 'Cannot retrieve DanielB row after commit.');
+      $this->assertNotSame('19', $saved_age, 'Cannot retrieve DanielB row after commit.');
     }
     catch (\Exception $e) {
       $this->fail($e->getMessage());
@@ -174,9 +174,9 @@ class TransactionTest extends DatabaseTestBase {
 
       // Because we committed, both of the inserted rows should be present.
       $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'DavidA'])->fetchField();
-      $this->assertIdentical($saved_age, '24', 'Can retrieve DavidA row after commit.');
+      $this->assertSame('24', $saved_age, 'Can retrieve DavidA row after commit.');
       $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'DanielA'])->fetchField();
-      $this->assertIdentical($saved_age, '19', 'Can retrieve DanielA row after commit.');
+      $this->assertSame('19', $saved_age, 'Can retrieve DanielA row after commit.');
     }
     catch (\Exception $e) {
       $this->fail($e->getMessage());

@@ -52,16 +52,16 @@ class MigrateTrackerNodeTest extends MigrateDrupal7TestBase {
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertIdentical('1', $num_rows);
+    $this->assertSame('1', $num_rows);
 
     $tracker_nodes = $connection
       ->select('tracker_node', 'tn')
       ->fields('tn', ['nid', 'published', 'changed'])
       ->execute();
     $row = $tracker_nodes->fetchAssoc();
-    $this->assertIdentical('1', $row['nid']);
-    $this->assertIdentical('1', $row['published']);
-    $this->assertIdentical('1421727536', $row['changed']);
+    $this->assertSame('1', $row['nid']);
+    $this->assertSame('1', $row['published']);
+    $this->assertSame('1421727536', $row['changed']);
   }
 
 }

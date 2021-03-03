@@ -379,10 +379,3 @@
   border: 1px solid gray;
   background: white;
 }
-
-/* To standardize off-canvas selection color. */
-#drupal-off-canvas ::-moz-selection,
-#drupal-off-canvas ::selection {
-  color: inherit;
-  background-color: rgba(175, 175, 175, 0.5);
-}

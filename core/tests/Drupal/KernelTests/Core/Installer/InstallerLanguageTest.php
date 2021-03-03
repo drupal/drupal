@@ -20,8 +20,9 @@ class InstallerLanguageTest extends KernelTestBase {
     // Different translation files would be found depending on which language
     // we are looking for.
     $expected_translation_files = [
-      NULL => ['drupal-8.0.0-beta2.hu.po', 'drupal-8.0.0.de.po'],
+      NULL => ['drupal-8.0.0-beta2.hu.po', 'drupal-8.0.0.de.po', 'drupal-8.0.x.fr-CA.po'],
       'de' => ['drupal-8.0.0.de.po'],
+      'fr-CA' => ['drupal-8.0.x.fr-CA.po'],
       'hu' => ['drupal-8.0.0-beta2.hu.po'],
       'it' => [],
     ];

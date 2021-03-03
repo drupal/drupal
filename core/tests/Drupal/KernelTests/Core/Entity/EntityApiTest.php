@@ -67,25 +67,25 @@ class EntityApiTest extends EntityKernelTestBase {
       ->getStorage($entity_type);
 
     $entities = array_values($storage->loadByProperties(['name' => 'test']));
-    $this->assertEqual($entities[0]->name->value, 'test', new FormattableMarkup('%entity_type: Created and loaded entity', ['%entity_type' => $entity_type]));
-    $this->assertEqual($entities[1]->name->value, 'test', new FormattableMarkup('%entity_type: Created and loaded entity', ['%entity_type' => $entity_type]));
+    $this->assertEqual('test', $entities[0]->name->value, new FormattableMarkup('%entity_type: Created and loaded entity', ['%entity_type' => $entity_type]));
+    $this->assertEqual('test', $entities[1]->name->value, new FormattableMarkup('%entity_type: Created and loaded entity', ['%entity_type' => $entity_type]));
 
     // Test loading a single entity.
     $loaded_entity = $storage->load($entity->id());
-    $this->assertEqual($loaded_entity->id(), $entity->id(), new FormattableMarkup('%entity_type: Loaded a single entity by id.', ['%entity_type' => $entity_type]));
+    $this->assertEqual($entity->id(), $loaded_entity->id(), new FormattableMarkup('%entity_type: Loaded a single entity by id.', ['%entity_type' => $entity_type]));
 
     // Test deleting an entity.
     $entities = array_values($storage->loadByProperties(['name' => 'test2']));
     $entities[0]->delete();
     $entities = array_values($storage->loadByProperties(['name' => 'test2']));
-    $this->assertEqual($entities, [], new FormattableMarkup('%entity_type: Entity deleted.', ['%entity_type' => $entity_type]));
+    $this->assertEqual([], $entities, new FormattableMarkup('%entity_type: Entity deleted.', ['%entity_type' => $entity_type]));
 
     // Test updating an entity.
     $entities = array_values($storage->loadByProperties(['name' => 'test']));
     $entities[0]->name->value = 'test3';
     $entities[0]->save();
     $entity = $storage->load($entities[0]->id());
-    $this->assertEqual($entity->name->value, 'test3', new FormattableMarkup('%entity_type: Entity updated.', ['%entity_type' => $entity_type]));
+    $this->assertEqual('test3', $entity->name->value, new FormattableMarkup('%entity_type: Entity updated.', ['%entity_type' => $entity_type]));
 
     // Try deleting multiple test entities by deleting all.
     $entities = $storage->loadMultiple();
@@ -209,7 +209,7 @@ class EntityApiTest extends EntityKernelTestBase {
       $this->fail('Entity presave EntityStorageException thrown but not caught.');
     }
     catch (EntityStorageException $e) {
-      $this->assertEqual($e->getcode(), 1, 'Entity presave EntityStorageException caught.');
+      $this->assertEqual(1, $e->getcode(), 'Entity presave EntityStorageException caught.');
     }
 
     $entity = EntityTest::create(['name' => 'test2']);
@@ -218,7 +218,7 @@ class EntityApiTest extends EntityKernelTestBase {
       $entity->save();
     }
     catch (EntityStorageException $e) {
-      $this->assertNotEqual($e->getCode(), 1, 'Entity presave EntityStorageException caught.');
+      $this->assertNotEquals(1, $e->getCode(), 'Entity presave EntityStorageException caught.');
     }
 
     $entity = EntityTest::create(['name' => 'test3']);
@@ -229,7 +229,7 @@ class EntityApiTest extends EntityKernelTestBase {
       $this->fail('Entity predelete EntityStorageException not thrown.');
     }
     catch (EntityStorageException $e) {
-      $this->assertEqual($e->getCode(), 2, 'Entity predelete EntityStorageException caught.');
+      $this->assertEqual(2, $e->getCode(), 'Entity predelete EntityStorageException caught.');
     }
 
     unset($GLOBALS['entity_test_throw_exception']);
@@ -239,7 +239,7 @@ class EntityApiTest extends EntityKernelTestBase {
       $entity->delete();
     }
     catch (EntityStorageException $e) {
-      $this->assertNotEqual($e->getCode(), 2, 'Entity predelete EntityStorageException thrown.');
+      $this->assertNotEquals(2, $e->getCode(), 'Entity predelete EntityStorageException thrown.');
     }
   }
 

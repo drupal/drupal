@@ -40,7 +40,7 @@ class ConfigFormOverrideTest extends BrowserTestBase {
     $this->drupalGet('admin/config/system/site-information');
     $this->assertSession()->titleEquals('Basic site settings | ' . $overridden_name);
     $elements = $this->xpath('//input[@name="site_name"]');
-    $this->assertIdentical($elements[0]->getValue(), 'Drupal');
+    $this->assertSame('Drupal', $elements[0]->getValue());
 
     // Submit the form and ensure the site name is not changed.
     $edit = [
@@ -49,7 +49,7 @@ class ConfigFormOverrideTest extends BrowserTestBase {
     $this->drupalPostForm('admin/config/system/site-information', $edit, 'Save configuration');
     $this->assertSession()->titleEquals('Basic site settings | ' . $overridden_name);
     $elements = $this->xpath('//input[@name="site_name"]');
-    $this->assertIdentical($elements[0]->getValue(), $edit['site_name']);
+    $this->assertSame($edit['site_name'], $elements[0]->getValue());
   }
 
 }

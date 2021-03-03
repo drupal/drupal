@@ -44,7 +44,7 @@ class UpdateFeedItemTest extends AggregatorTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     $this->drupalPostForm('aggregator/sources/add', $edit, 'Save');
-    $this->assertText('The feed ' . $edit['title[0][value]'] . ' has been added.', new FormattableMarkup('The feed @name has been added.', ['@name' => $edit['title[0][value]']]));
+    $this->assertText('The feed ' . $edit['title[0][value]'] . ' has been added.');
 
     // Verify that the creation message contains a link to a feed.
     $this->assertSession()->elementExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "aggregator/sources/")]');
@@ -67,7 +67,7 @@ class UpdateFeedItemTest extends AggregatorTestBase {
     $feed->refreshItems();
 
     $after = Item::load(array_values($item_ids)[0])->getPostedTime();
-    $this->assertTrue($before === $after, new FormattableMarkup('Publish timestamp of feed item was not updated (@before === @after)', ['@before' => $before, '@after' => $after]));
+    $this->assertSame($before, $after, new FormattableMarkup('Publish timestamp of feed item was not updated (@before === @after)', ['@before' => $before, '@after' => $after]));
 
     // Make sure updating items works even after uninstalling a module
     // that provides the selected plugins.

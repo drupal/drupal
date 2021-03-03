@@ -11,7 +11,7 @@
  */
 
 .system-status-report__requirements-group {
-  padding-top: 20px;
+  padding-top: 1.25rem;
 }
 
 .system-status-report__entry {
@@ -32,8 +32,8 @@
 }
 
 .system-status-report__entry h3 {
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: 0.625rem;
+  margin-bottom: 0.625rem;
   font-size: 1.231em;
 }
 
@@ -75,11 +75,11 @@
 .details .system-status-report__status-icon:before {
   position: absolute;
   top: 1em;
-  left: 10px; /* LTR */
+  left: 0.625rem; /* LTR */
   display: inline-block;
-  width: 24px;
-  height: 24px;
-  margin-right: 10px; /* LTR */
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 0.625rem; /* LTR */
   content: "";
   vertical-align: top;
   background-repeat: no-repeat;
@@ -89,7 +89,7 @@
 
 [dir="rtl"] .system-status-report__status-title .details-title:before,
 [dir="rtl"].details .system-status-report__status-title:before {
-  right: 10px;
+  right: 0.625rem;
   left: auto;
   margin-right: 0;
 }
@@ -107,7 +107,7 @@
 .system-status-report__entry__value {
   box-sizing: border-box;
   padding: 0 1em 1em 3em; /* LTR */
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 
 [dir="rtl"] .system-status-report__entry__value {
@@ -145,7 +145,7 @@
   }
   .collapse-processed > .system-status-report__status-title:before {
     position: relative;
-    top: 3px;
+    top: 0.1875rem;
   }
   .system-status-report__entry__value {
     display: block;

@@ -62,6 +62,18 @@ class NodeEntityTranslationTest extends MigrateSqlSourceTestBase {
         'created' => 1531343528,
         'changed' => 1531343528,
       ],
+      [
+        'entity_type' => 'node',
+        'entity_id' => 3,
+        'revision_id' => 3,
+        'language' => 'fr',
+        'source' => 'en',
+        'uid' => 1,
+        'status' => 0,
+        'translate' => 0,
+        'created' => 1531343528,
+        'changed' => 1531343528,
+      ],
     ];
     $tests[0]['source_data']['field_config'] = [
       [
@@ -123,6 +135,15 @@ class NodeEntityTranslationTest extends MigrateSqlSourceTestBase {
         'data' => 'a:0:{}',
         'deleted' => 0,
       ],
+      [
+        'id' => 4,
+        'field_id' => 2,
+        'field_name' => 'title_field',
+        'entity_type' => 'node',
+        'bundle' => 'article',
+        'data' => 'a:0:{}',
+        'deleted' => 0,
+      ],
     ];
     $tests[0]['source_data']['field_revision_body'] = [
       [
@@ -173,6 +194,18 @@ class NodeEntityTranslationTest extends MigrateSqlSourceTestBase {
         'body_summary' => 'Spanish summary',
         'body_format' => 'filtered_html',
       ],
+      [
+        'entity_type' => 'node',
+        'bundle' => 'article',
+        'deleted' => 0,
+        'entity_id' => 3,
+        'revision_id' => 3,
+        'language' => 'fr',
+        'delta' => 0,
+        'body_value' => 'French body',
+        'body_summary' => 'French summary',
+        'body_format' => 'filtered_html',
+      ],
     ];
     $tests[0]['source_data']['field_revision_title_field'] = [
       [
@@ -206,6 +239,17 @@ class NodeEntityTranslationTest extends MigrateSqlSourceTestBase {
         'language' => 'es',
         'delta' => '0',
         'title_field_value' => 'Spanish Translation',
+        'title_field_format' => NULL,
+      ],
+      [
+        'entity_type' => 'node',
+        'bundle' => 'article',
+        'deleted' => '0',
+        'entity_id' => '3',
+        'revision_id' => '3',
+        'language' => 'fr',
+        'delta' => '0',
+        'title_field_value' => 'French Translation',
         'title_field_format' => NULL,
       ],
     ];
@@ -242,6 +286,22 @@ class NodeEntityTranslationTest extends MigrateSqlSourceTestBase {
         'tnid' => 0,
         'translate' => 0,
       ],
+      [
+        'nid' => 3,
+        'vid' => 3,
+        'type' => 'article',
+        'language' => 'en',
+        'title' => 'Translated article',
+        'uid' => 1,
+        'status' => 1,
+        'created' => 1531343456,
+        'changed' => 1531343456,
+        'comment' => 2,
+        'promote' => 0,
+        'sticky' => 0,
+        'tnid' => 0,
+        'translate' => 0,
+      ],
     ];
     $tests[0]['source_data']['node_revision'] = [
       [
@@ -261,6 +321,18 @@ class NodeEntityTranslationTest extends MigrateSqlSourceTestBase {
         'vid' => 2,
         'uid' => 1,
         'title' => 'Translated page',
+        'log' => '',
+        'timestamp' => 1531343528,
+        'status' => 1,
+        'comment' => 1,
+        'promote' => 0,
+        'sticky' => 0,
+      ],
+      [
+        'nid' => 3,
+        'vid' => 3,
+        'uid' => 1,
+        'title' => 'Translated article',
         'log' => '',
         'timestamp' => 1531343528,
         'status' => 1,
@@ -341,19 +413,41 @@ class NodeEntityTranslationTest extends MigrateSqlSourceTestBase {
       'node_type' => 'page',
     ];
 
-    // The source data.
-    $tests[1]['source_data'] = $tests[0]['source_data'];
-
-    // The expected results.
-    $tests[1]['expected_data'] = [];
-
-    // Do an automatic count.
-    $tests[1]['expected_count'] = NULL;
-
-    // Set up source plugin configuration.
+    // Tests retrieval translations of article and page content types.
+    $tests[1] = $tests[0];
     $tests[1]['configuration'] = [
-      'node_type' => 'article',
+      'node_type' => ['article', 'page'],
     ];
+    $tests[1]['expected_data'][] = [
+      'entity_type' => 'node',
+      'entity_id' => 3,
+      'revision_id' => 3,
+      'language' => 'fr',
+      'source' => 'en',
+      'uid' => 1,
+      'status' => 0,
+      'translate' => 0,
+      'created' => 1531343528,
+      'changed' => 1531343528,
+      'type' => 'article',
+      'title' => 'French Translation',
+      'promote' => 0,
+      'sticky' => 0,
+      'log' => '',
+      'timestamp' => 1531343528,
+      'revision_uid' => 1,
+      'body' => [
+        [
+          'value' => 'French body',
+          'summary' => 'French summary',
+          'format' => 'filtered_html',
+        ],
+      ],
+    ];
+
+    // Tests retrieval of entity translations without configuration.
+    $tests[2] = $tests[1];
+    $tests[2]['configuration'] = [];
 
     return $tests;
   }

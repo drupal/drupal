@@ -62,28 +62,28 @@ class TaxonomyRelationshipTest extends TaxonomyTestBase {
     // Check the generated views data of taxonomy_index.
     $views_data = Views::viewsData()->get('taxonomy_index');
     // Check the table join data.
-    $this->assertEqual($views_data['table']['join']['taxonomy_term_field_data']['left_field'], 'tid');
-    $this->assertEqual($views_data['table']['join']['taxonomy_term_field_data']['field'], 'tid');
-    $this->assertEqual($views_data['table']['join']['node_field_data']['left_field'], 'nid');
-    $this->assertEqual($views_data['table']['join']['node_field_data']['field'], 'nid');
-    $this->assertEqual($views_data['table']['join']['taxonomy_term__parent']['left_field'], 'entity_id');
-    $this->assertEqual($views_data['table']['join']['taxonomy_term__parent']['field'], 'tid');
+    $this->assertEqual('tid', $views_data['table']['join']['taxonomy_term_field_data']['left_field']);
+    $this->assertEqual('tid', $views_data['table']['join']['taxonomy_term_field_data']['field']);
+    $this->assertEqual('nid', $views_data['table']['join']['node_field_data']['left_field']);
+    $this->assertEqual('nid', $views_data['table']['join']['node_field_data']['field']);
+    $this->assertEqual('entity_id', $views_data['table']['join']['taxonomy_term__parent']['left_field']);
+    $this->assertEqual('tid', $views_data['table']['join']['taxonomy_term__parent']['field']);
 
     // Check the generated views data of taxonomy_term__parent.
     $views_data = Views::viewsData()->get('taxonomy_term__parent');
     // Check the table join data.
-    $this->assertEqual($views_data['table']['join']['taxonomy_term__parent']['left_field'], 'entity_id');
-    $this->assertEqual($views_data['table']['join']['taxonomy_term__parent']['field'], 'parent_target_id');
-    $this->assertEqual($views_data['table']['join']['taxonomy_term_field_data']['left_field'], 'tid');
-    $this->assertEqual($views_data['table']['join']['taxonomy_term_field_data']['field'], 'entity_id');
+    $this->assertEqual('entity_id', $views_data['table']['join']['taxonomy_term__parent']['left_field']);
+    $this->assertEqual('parent_target_id', $views_data['table']['join']['taxonomy_term__parent']['field']);
+    $this->assertEqual('tid', $views_data['table']['join']['taxonomy_term_field_data']['left_field']);
+    $this->assertEqual('entity_id', $views_data['table']['join']['taxonomy_term_field_data']['field']);
     // Check the parent relationship data.
-    $this->assertEqual($views_data['parent_target_id']['relationship']['base'], 'taxonomy_term_field_data');
-    $this->assertEqual($views_data['parent_target_id']['relationship']['base field'], 'tid');
-    $this->assertEqual($views_data['parent_target_id']['relationship']['label'], t('Parent'));
-    $this->assertEqual($views_data['parent_target_id']['relationship']['id'], 'standard');
+    $this->assertEqual('taxonomy_term_field_data', $views_data['parent_target_id']['relationship']['base']);
+    $this->assertEqual('tid', $views_data['parent_target_id']['relationship']['base field']);
+    $this->assertEqual(t('Parent'), $views_data['parent_target_id']['relationship']['label']);
+    $this->assertEqual('standard', $views_data['parent_target_id']['relationship']['id']);
     // Check the parent filter and argument data.
-    $this->assertEqual($views_data['parent_target_id']['filter']['id'], 'numeric');
-    $this->assertEqual($views_data['parent_target_id']['argument']['id'], 'taxonomy');
+    $this->assertEqual('numeric', $views_data['parent_target_id']['filter']['id']);
+    $this->assertEqual('taxonomy', $views_data['parent_target_id']['argument']['id']);
 
     // Check an actual test view.
     $view = Views::getView('test_taxonomy_term_relationship');
@@ -91,19 +91,19 @@ class TaxonomyRelationshipTest extends TaxonomyTestBase {
     /** @var \Drupal\views\ResultRow $row */
     foreach ($view->result as $index => $row) {
       // Check that the actual ID of the entity is the expected one.
-      $this->assertEqual($row->tid, $this->terms[$index]->id());
+      $this->assertEqual($this->terms[$index]->id(), $row->tid);
 
       // Also check that we have the correct result entity.
-      $this->assertEqual($row->_entity->id(), $this->terms[$index]->id());
+      $this->assertEqual($this->terms[$index]->id(), $row->_entity->id());
       $this->assertInstanceOf(TermInterface::class, $row->_entity);
 
       if (!$index) {
         $this->assertInstanceOf(TermInterface::class, $row->_relationship_entities['parent']);
-        $this->assertEqual($row->_relationship_entities['parent']->id(), $this->term2->id());
-        $this->assertEqual($row->taxonomy_term_field_data_taxonomy_term__parent_tid, $this->term2->id());
+        $this->assertEqual($this->term2->id(), $row->_relationship_entities['parent']->id());
+        $this->assertEqual($this->term2->id(), $row->taxonomy_term_field_data_taxonomy_term__parent_tid);
       }
       $this->assertInstanceOf(NodeInterface::class, $row->_relationship_entities['nid']);
-      $this->assertEqual($row->_relationship_entities['nid']->id(), $this->nodes[$index]->id());
+      $this->assertEqual($this->nodes[$index]->id(), $row->_relationship_entities['nid']->id());
     }
 
     // Test node fields are available through relationship.

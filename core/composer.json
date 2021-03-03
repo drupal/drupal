@@ -44,7 +44,7 @@
         "laminas/laminas-diactoros": "^2.1",
         "composer/semver": "^3.0",
         "asm89/stack-cors": "^1.1",
-        "pear/archive_tar": "^1.4.11",
+        "pear/archive_tar": "^1.4.12",
         "psr/log": "^1.0"
     },
     "conflict": {
@@ -217,7 +217,7 @@
                 "[web-root]/example.gitignore": "assets/scaffold/files/example.gitignore",
                 "[web-root]/index.php": "assets/scaffold/files/index.php",
                 "[web-root]/INSTALL.txt": "assets/scaffold/files/drupal.INSTALL.txt",
-                "[web-root]/README.txt": "assets/scaffold/files/drupal.README.txt",
+                "[web-root]/README.md": "assets/scaffold/files/drupal.README.md",
                 "[web-root]/robots.txt": "assets/scaffold/files/robots.txt",
                 "[web-root]/update.php": "assets/scaffold/files/update.php",
                 "[web-root]/web.config": "assets/scaffold/files/web.config",

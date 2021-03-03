@@ -88,16 +88,16 @@ class ForumNodeAccessTest extends BrowserTestBase {
     $this->drupalGet('');
 
     // Ensure private node and public node are found.
-    $this->assertText($private_node->getTitle(), 'Private node found in block by $access_user');
-    $this->assertText($public_node->getTitle(), 'Public node found in block by $access_user');
+    $this->assertText($private_node->getTitle());
+    $this->assertText($public_node->getTitle());
 
     // Test for $no_access_user.
     $this->drupalLogin($no_access_user);
     $this->drupalGet('');
 
     // Ensure private node is not found but public is found.
-    $this->assertNoText($private_node->getTitle(), 'Private node not found in block by $no_access_user');
-    $this->assertText($public_node->getTitle(), 'Public node found in block by $no_access_user');
+    $this->assertNoText($private_node->getTitle());
+    $this->assertText($public_node->getTitle());
   }
 
 }

@@ -13,28 +13,27 @@
  */
 
 [dir="ltr"] .skip-link {
-  padding-left: 18px
+  padding-left: 1.125rem
 }
 
 [dir="rtl"] .skip-link {
-  padding-right: 18px
+  padding-right: 1.125rem
 }
 
 [dir="ltr"] .skip-link {
-  padding-right: 18px
+  padding-right: 1.125rem
 }
 
 [dir="rtl"] .skip-link {
-  padding-left: 18px
+  padding-left: 1.125rem
 }
 
 .skip-link {
-  z-index: 1; /* Appear above header */
   display: block;
   width: 100%;
-  max-width: 1570px;
-  padding-top: 9px;
-  padding-bottom: 9px;
+  max-width: 98.125rem;
+  padding-top: 0.5625rem;
+  padding-bottom: 0.5625rem;
   text-decoration: none;
   color: #fff;
   outline: 0;

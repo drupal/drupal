@@ -1,0 +1,28 @@
+---
+label: 'Configuring a responsive image style'
+related:
+  - core.media
+  - field_ui.manage_display
+  - layout_builder.overview
+  - image.style
+  - breakpoint.overview
+---
+{% set overview = render_var(url('help.help_topic', {'id': 'core.media'})) %}
+{% set image_style = render_var(url('help.help_topic', {'id': 'image.style'})) %}
+{% set breakpoint = render_var(url('help.help_topic', {'id': 'breakpoint.overview'})) %}
+{% set styles = render_var(url('entity.responsive_image_style.collection')) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Configure a responsive image style, which can be used to display images at different sizes on different devices. See <a href="{{ overview }}">Managing media</a> for an overview of responsive image styles, and <a href="{{ breakpoint }}">Managing height, width, and resolution breakpoints</a> for an overview of breakpoints.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Media</em> &gt; <a href="{{ styles }}"><em>Responsive image styles</em></a>.{% endtrans %}</li>
+  <li>{% trans %}Click <em>Add responsive image style</em>.{% endtrans %}</li>
+  <li>{% trans %}Enter a descriptive <em>Label</em> for your style.{% endtrans %}</li>
+  <li>{% trans %}Select a <em>Breakpoint group</em> from the groups defined by your installed themes and modules.{% endtrans %}</li>
+  <li>{% trans %}Select a <em>Fallback image style</em> to use when none of the other styles apply. See <a href="{{ image_style }}">Adding an image style</a> if you need to add a new style.{% endtrans %}</li>
+  <li>{% trans %}Click <em>Save</em>.{% endtrans %}</li>
+  <li>{% trans %}On the next page, locate the fieldsets for the breakpoints provided by the selected <em>Breakpoint group</em>.{% endtrans %}</li>
+  <li>{% trans %}For each breakpoint that you want to use, expand the corresponding fieldset. Select the <em>Select a single image style.</em> radio button under <em>Type</em> for the breakpoint, and select the <em>Image style</em> to use for images when that breakpoint is in effect. Repeat this step for the rest of the breakpoints you want to use.{% endtrans %}</li>
+  <li>{% trans %}Click <em>Save</em>{% endtrans %}</li>
+  <li>{% trans %}You can now use this responsive image style to format a field containing an image, in your layouts or traditional field displays. See related topics below for more information.{% endtrans %}</li>
+</ol>

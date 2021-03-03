@@ -496,8 +496,8 @@ class RendererTest extends RendererTestBase {
     // ensure it remains sorted in the correct order. drupal_render() will
     // return an empty string if used on the same array in the same request.
     $children = Element::children($elements);
-    $this->assertTrue(array_shift($children) == 'first', 'Child found in the correct order.');
-    $this->assertTrue(array_shift($children) == 'second', 'Child found in the correct order.');
+    $this->assertSame('first', array_shift($children), 'Child found in the correct order.');
+    $this->assertSame('second', array_shift($children), 'Child found in the correct order.');
   }
 
   /**

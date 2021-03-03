@@ -98,36 +98,36 @@ function field_test_entity_display_build_alter(&$output, $context) {
 }
 
 /**
- * Implements hook_field_widget_form_alter().
+ * Implements hook_field_widget_single_element_form_alter().
  */
-function field_test_field_widget_form_alter(&$element, FormStateInterface $form_state, $context) {
+function field_test_field_widget_single_element_form_alter(&$element, FormStateInterface $form_state, $context) {
   // Set a message if this is for the form displayed to set default value for
   // the field.
   if ($context['default']) {
     \Drupal::messenger()
-      ->addStatus('From hook_field_widget_form_alter(): Default form is true.');
+      ->addStatus('From hook_field_widget_single_element_form_alter(): Default form is true.');
   }
 }
 
 /**
- * Implements hook_field_widget_multivalue_form_alter().
+ * Implements hook_field_widget_complete_form_alter().
  */
-function field_test_field_widget_multivalue_form_alter(array &$elements, FormStateInterface $form_state, array $context) {
-  _field_test_alter_widget("hook_field_widget_multivalue_form_alter", $elements, $form_state, $context);
+function field_test_field_widget_complete_form_alter(array &$field_widget_complete_form, FormStateInterface $form_state, array $context) {
+  _field_test_alter_widget("hook_field_widget_complete_form_alter", $field_widget_complete_form, $form_state, $context);
 }
 
 /**
- * Implements hook_field_widget_multivalue_WIDGET_TYPE_form_alter().
+ * Implements hook_field_widget_complete_WIDGET_TYPE_form_alter().
  */
-function field_test_field_widget_multivalue_test_field_widget_multiple_form_alter(array &$elements, FormStateInterface $form_state, array $context) {
-  _field_test_alter_widget("hook_field_widget_multivalue_WIDGET_TYPE_form_alter", $elements, $form_state, $context);
+function field_test_field_widget_complete_test_field_widget_multiple_form_alter(array &$field_widget_complete_form, FormStateInterface $form_state, array $context) {
+  _field_test_alter_widget("hook_field_widget_complete_WIDGET_TYPE_form_alter", $field_widget_complete_form, $form_state, $context);
 }
 
 /**
- * Implements hook_field_widget_multivalue_WIDGET_TYPE_form_alter().
+ * Implements hook_field_widget_complete_WIDGET_TYPE_form_alter().
  */
-function field_test_field_widget_multivalue_test_field_widget_multiple_single_value_form_alter(array &$elements, FormStateInterface $form_state, array $context) {
-  _field_test_alter_widget("hook_field_widget_multivalue_WIDGET_TYPE_form_alter", $elements, $form_state, $context);
+function field_test_field_widget_complete_test_field_widget_multiple_single_value_form_alter(array &$field_widget_complete_form, FormStateInterface $form_state, array $context) {
+  _field_test_alter_widget("hook_field_widget_complete_WIDGET_TYPE_form_alter", $field_widget_complete_form, $form_state, $context);
 }
 
 /**
@@ -135,8 +135,8 @@ function field_test_field_widget_multivalue_test_field_widget_multiple_single_va
  *
  * @see \Drupal\field\Tests\FormTest::widgetAlterTest()
  */
-function _field_test_alter_widget($hook, array &$elements, FormStateInterface $form_state, array $context) {
-
+function _field_test_alter_widget($hook, array &$field_widget_complete_form, FormStateInterface $form_state, array $context) {
+  $elements = &$field_widget_complete_form['widget'];
   // Set a message if this is for the form displayed to set default value for
   // the field.
   if ($context['default']) {
@@ -160,7 +160,7 @@ function _field_test_alter_widget($hook, array &$elements, FormStateInterface $f
 function field_test_query_efq_table_prefixing_test_alter(&$query) {
   // Add an additional join onto the entity base table. This will cause an
   // exception if the EFQ does not properly prefix the base table.
-  $query->join('entity_test', 'et2', '%alias.id = entity_test.id');
+  $query->join('entity_test', 'et2', '[%alias].[id] = [entity_test].[id]');
 }
 
 /**

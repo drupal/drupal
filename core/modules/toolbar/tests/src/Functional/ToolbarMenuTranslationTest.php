@@ -72,7 +72,7 @@ class ToolbarMenuTranslationTest extends BrowserTestBase {
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
     // Make sure will be able to translate the menu item.
-    $this->assertNoText('No strings available.', 'Search found the menu item as untranslated.');
+    $this->assertNoText('No strings available.');
 
     // Check that the class is on the item before we translate it.
     $xpath = $this->xpath('//a[contains(@class, "icon-system-admin-structure")]');
@@ -95,12 +95,12 @@ class ToolbarMenuTranslationTest extends BrowserTestBase {
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
     // Make sure the menu item string was translated.
-    $this->assertText($menu_item_translated, 'Search found the menu item as translated: ' . $menu_item_translated . '.');
+    $this->assertText($menu_item_translated);
 
     // Go to another page in the custom language and make sure the menu item
     // was translated.
     $this->drupalGet($langcode . '/admin/structure');
-    $this->assertText($menu_item_translated, 'Found the menu translated.');
+    $this->assertText($menu_item_translated);
 
     // Toolbar icons are included based on the presence of a specific class on
     // the menu item. Ensure that class also exists for a translated menu item.

@@ -32,15 +32,15 @@ class MigrateUserProfileEntityDisplayTest extends MigrateDrupal6TestBase {
 
     // Test a text field.
     $component = $display->getComponent('profile_color');
-    $this->assertIdentical('text_default', $component['type']);
+    $this->assertSame('text_default', $component['type']);
 
     // Test a list field.
     $component = $display->getComponent('profile_bands');
-    $this->assertIdentical('text_default', $component['type']);
+    $this->assertSame('text_default', $component['type']);
 
     // Test a date field.
     $component = $display->getComponent('profile_birthdate');
-    $this->assertIdentical('datetime_default', $component['type']);
+    $this->assertSame('datetime_default', $component['type']);
 
     // Test PROFILE_PRIVATE field is hidden.
     $this->assertNull($display->getComponent('profile_sell_address'));
@@ -50,7 +50,7 @@ class MigrateUserProfileEntityDisplayTest extends MigrateDrupal6TestBase {
 
     // Test a checkbox field.
     $component = $display->getComponent('profile_really_really_love_mig');
-    $this->assertIdentical('list_default', $component['type']);
+    $this->assertSame('list_default', $component['type']);
   }
 
 }

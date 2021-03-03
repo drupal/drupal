@@ -69,7 +69,7 @@ class UserRoleAdminTest extends BrowserTestBase {
     $this->assertIsObject($role);
 
     // Check that the role was created in site default language.
-    $this->assertEqual($role->language()->getId(), $default_langcode);
+    $this->assertEqual($default_langcode, $role->language()->getId());
 
     // Try adding a duplicate role.
     $this->drupalPostForm('admin/people/roles/add', $edit, 'Save');
@@ -82,7 +82,7 @@ class UserRoleAdminTest extends BrowserTestBase {
     $this->assertRaw(t('Role %label has been updated.', ['%label' => $role_name]));
     \Drupal::entityTypeManager()->getStorage('user_role')->resetCache([$role->id()]);
     $new_role = Role::load($role->id());
-    $this->assertEqual($new_role->label(), $role_name, 'The role name has been successfully changed.');
+    $this->assertEqual($role_name, $new_role->label(), 'The role name has been successfully changed.');
 
     // Test deleting a role.
     $this->drupalGet("admin/people/roles/manage/{$role->id()}");
@@ -97,10 +97,10 @@ class UserRoleAdminTest extends BrowserTestBase {
     // interface.
     $this->drupalGet('admin/people/roles/manage/' . RoleInterface::ANONYMOUS_ID);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertNoText('Delete role', 'Delete button for the anonymous role is not present.');
+    $this->assertNoText('Delete role');
     $this->drupalGet('admin/people/roles/manage/' . RoleInterface::AUTHENTICATED_ID);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertNoText('Delete role', 'Delete button for the authenticated role is not present.');
+    $this->assertNoText('Delete role');
   }
 
   /**
@@ -122,7 +122,7 @@ class UserRoleAdminTest extends BrowserTestBase {
       $weight--;
     }
     $this->drupalPostForm('admin/people/roles', $edit, 'Save');
-    $this->assertText('The role settings have been updated.', 'The role settings form submitted successfully.');
+    $this->assertText('The role settings have been updated.');
 
     // Load up the user roles with the new weights.
     $roles = user_roles();
@@ -133,7 +133,7 @@ class UserRoleAdminTest extends BrowserTestBase {
       $rids[] = $role->id();
     }
     // The order of the roles should be reversed.
-    $this->assertIdentical($rids, array_reverse($saved_rids));
+    $this->assertSame(array_reverse($saved_rids), $rids);
   }
 
 }

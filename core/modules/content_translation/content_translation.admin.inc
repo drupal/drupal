@@ -190,7 +190,7 @@ function _content_translation_is_field_translatability_configurable(EntityTypeIn
 }
 
 /**
- * (proxied) Implements hook_preprocess_HOOK();
+ * (proxied) Implements hook_preprocess_HOOK().
  */
 function _content_translation_preprocess_language_content_settings_table(&$variables) {
   // Alter the 'build' variable injecting the translation settings if the user

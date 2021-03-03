@@ -748,11 +748,7 @@ class UpdateCoreTest extends UpdateTestBase {
 
     // Make sure duplicate messages don't appear on Update status pages.
     $this->drupalGet('admin/reports/status');
-    // We're expecting "There is a security update..." inside the status report
-    // itself, but the message from
-    // \Drupal\Core\Messenger\MessengerInterface::addStatus() appears as an li
-    // so we can prefix with that and search for the raw HTML.
-    $this->assertNoRaw('<li>' . t('There is a security update available for your version of Drupal.'));
+    $this->assertSession()->pageTextContainsOnce('There is a security update available for your version of Drupal.');
 
     $this->drupalGet('admin/reports/updates');
     $this->assertNoText('There is a security update available for your version of Drupal.');
@@ -782,19 +778,19 @@ class UpdateCoreTest extends UpdateTestBase {
       'name' => 'bbb_update_test',
     ];
     $queue = \Drupal::queue('update_fetch_tasks');
-    $this->assertEqual($queue->numberOfItems(), 0, 'Queue is empty');
+    $this->assertEqual(0, $queue->numberOfItems(), 'Queue is empty');
     update_create_fetch_task($projecta);
-    $this->assertEqual($queue->numberOfItems(), 1, 'Queue contains one item');
+    $this->assertEqual(1, $queue->numberOfItems(), 'Queue contains one item');
     update_create_fetch_task($projectb);
-    $this->assertEqual($queue->numberOfItems(), 2, 'Queue contains two items');
+    $this->assertEqual(2, $queue->numberOfItems(), 'Queue contains two items');
     // Try to add a project again.
     update_create_fetch_task($projecta);
-    $this->assertEqual($queue->numberOfItems(), 2, 'Queue still contains two items');
+    $this->assertEqual(2, $queue->numberOfItems(), 'Queue still contains two items');
 
     // Clear storage and try again.
     update_storage_clear();
     update_create_fetch_task($projecta);
-    $this->assertEqual($queue->numberOfItems(), 2, 'Queue contains two items');
+    $this->assertEqual(2, $queue->numberOfItems(), 'Queue contains two items');
   }
 
   /**
@@ -827,15 +823,15 @@ class UpdateCoreTest extends UpdateTestBase {
     $this->drupalLogin($admin_user);
 
     $this->drupalGet('admin/modules');
-    $this->clickLink(t('Install new module'));
+    $this->clickLink(t('Add new module'));
     $this->assertSession()->addressEquals('admin/modules/install');
 
     $this->drupalGet('admin/appearance');
-    $this->clickLink(t('Install new theme'));
+    $this->clickLink(t('Add new theme'));
     $this->assertSession()->addressEquals('admin/theme/install');
 
     $this->drupalGet('admin/reports/updates');
-    $this->clickLink(t('Install new module or theme'));
+    $this->clickLink(t('Add new module or theme'));
     $this->assertSession()->addressEquals('admin/reports/updates/install');
   }
 

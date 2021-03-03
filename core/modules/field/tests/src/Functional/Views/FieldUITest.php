@@ -61,13 +61,11 @@ class FieldUITest extends FieldTestBase {
     $this->drupalGet($url);
 
     // Tests the available formatter options.
-    $result = $this->xpath('//select[@id=:id]/option', [':id' => 'edit-options-type']);
+    $options = $this->assertSession()->selectExists('edit-options-type')->findAll('css', 'option');
     $options = array_map(function ($item) {
-      return $item->getAttribute('value');
-    }, $result);
-    // @todo Replace this sort by assertArray once it's in.
-    sort($options, SORT_STRING);
-    $this->assertEqual($options, ['text_default', 'text_trimmed'], 'The text formatters for a simple text field appear as expected.');
+      return $item->getValue();
+    }, $options);
+    $this->assertEqualsCanonicalizing(['text_default', 'text_trimmed'], $options);
 
     $this->submitForm(['options[type]' => 'text_trimmed'], 'Apply');
 
@@ -83,8 +81,8 @@ class FieldUITest extends FieldTestBase {
     $this->drupalPostForm('admin/structure/views/view/test_view_fieldapi', [], 'Save');
     $view = Views::getView('test_view_fieldapi');
     $view->initHandlers();
-    $this->assertEqual($view->field['field_name_0']->options['type'], 'text_trimmed');
-    $this->assertEqual($view->field['field_name_0']->options['settings']['trim_length'], $random_number);
+    $this->assertEqual('text_trimmed', $view->field['field_name_0']->options['type']);
+    $this->assertEqual($random_number, $view->field['field_name_0']->options['settings']['trim_length']);
 
     // Now change the formatter back to 'default' which doesn't have any
     // settings. We want to ensure that the settings are empty then.
@@ -93,8 +91,8 @@ class FieldUITest extends FieldTestBase {
     $this->drupalPostForm('admin/structure/views/view/test_view_fieldapi', [], 'Save');
     $view = Views::getView('test_view_fieldapi');
     $view->initHandlers();
-    $this->assertEqual($view->field['field_name_0']->options['type'], 'text_default');
-    $this->assertEqual($view->field['field_name_0']->options['settings'], []);
+    $this->assertEqual('text_default', $view->field['field_name_0']->options['type']);
+    $this->assertEqual([], $view->field['field_name_0']->options['settings']);
 
     // Ensure that the view depends on the field storage.
     $dependencies = \Drupal::service('config.manager')->findConfigEntityDependents('config', [$this->fieldStorages[0]->getConfigDependencyName()]);
@@ -115,13 +113,11 @@ class FieldUITest extends FieldTestBase {
 
     // Test the click sort column options.
     // Tests the available formatter options.
-    $result = $this->xpath('//select[@id=:id]/option', [':id' => 'edit-options-click-sort-column']);
+    $options = $this->assertSession()->selectExists('edit-options-click-sort-column')->findAll('css', 'option');
     $options = array_map(function ($item) {
-      return (string) $item->getAttribute('value');
-    }, $result);
-    sort($options, SORT_STRING);
-
-    $this->assertEqual($options, ['format', 'value'], 'The expected sort field options were found.');
+      return $item->getValue();
+    }, $options);
+    $this->assertEqualsCanonicalizing(['format', 'value'], $options);
   }
 
   /**

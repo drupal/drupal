@@ -501,7 +501,9 @@ function views_invalidate_cache() {
 }
 
 /**
- * Set the current 'current view' that is being built/rendered so that it is
+ * Set the current view.
+ *
+ * Set the current view that is being built/rendered so that it is
  * easy for other modules or items in drupal_eval to identify
  *
  * @return \Drupal\views\ViewExecutable
@@ -748,12 +750,12 @@ function views_embed_view($name, $display_id = 'default') {
  * @param string $name
  *   The name of the view to retrieve the data from.
  * @param string $display_id
- *   The display id. On the edit page for the view in question, you'll find
- *   a list of displays at the left side of the control area. "Master"
- *   will be at the top of that list. Hover your cursor over the name of the
- *   display you want to use. A URL will appear in the status bar of your
- *   browser. This is usually at the bottom of the window, in the chrome.
- *   Everything after #views-tab- is the display ID, e.g. page_1.
+ *   The display ID. On the edit page for the view in question, you'll find a
+ *   list of displays at the left side of the control area. "Default" will be at
+ *   the top of that list. Hover your cursor over the name of the display you
+ *   want to use. A URL will appear in the status bar of your browser. This is
+ *   usually at the bottom of the window, in the chrome. Everything after
+ *   #views-tab- is the display ID, e.g. page_1.
  * @param ...
  *   Any additional parameters will be passed as arguments.
  *

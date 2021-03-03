@@ -144,3 +144,11 @@ test_page_test.deprecations:
     _controller: '\Drupal\test_page_test\Controller\Test::deprecations'
   requirements:
     _access: 'TRUE'
+
+test_page_test.test_page_var_dump:
+  path: '/test-page-var-dump'
+  defaults:
+    _title: 'Test front page with var dump'
+    _controller: '\Drupal\test_page_test\Controller\TestPageTestController::testPageVarDump'
+  requirements:
+    _access: 'TRUE'

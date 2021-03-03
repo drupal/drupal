@@ -90,7 +90,7 @@ class BooleanFormatterSettingsTest extends WebDriverTestBase {
   public function testBooleanFormatterSettings() {
     // List the options we expect to see on the settings form. Omit the one
     // with the Unicode check/x characters, which does not appear to work
-    // well in WebTestBase.
+    // well in BrowserTestBase.
     $options = [
       'Yes / No',
       'True / False',

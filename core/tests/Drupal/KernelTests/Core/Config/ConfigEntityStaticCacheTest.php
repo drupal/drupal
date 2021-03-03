@@ -76,7 +76,7 @@ class ConfigEntityStaticCacheTest extends KernelTestBase {
     $entity->label = 'New label';
     $entity->save();
     $entity = $storage->load($this->entityId);
-    $this->assertIdentical($entity->label, 'New label');
+    $this->assertSame('New label', $entity->label);
 
     // Ensure loading after a delete retrieves NULL rather than an obsolete
     // cached one.
@@ -97,19 +97,19 @@ class ConfigEntityStaticCacheTest extends KernelTestBase {
     // despite the prior cache priming.
     \Drupal::configFactory()->addOverride(new ConfigOverrider());
     $entity_override = $storage->load($this->entityId);
-    $this->assertIdentical($entity_override->label, 'Overridden label');
+    $this->assertSame('Overridden label', $entity_override->label);
 
     // Load override free to ensure that loading the config entity again does
     // not return the overridden value.
     $entity_no_override = $storage->loadOverrideFree($this->entityId);
-    $this->assertNotIdentical($entity_no_override->label, 'Overridden label');
-    $this->assertNotIdentical($entity_override->_loadStamp, $entity_no_override->_loadStamp);
+    $this->assertNotSame('Overridden label', $entity_no_override->label);
+    $this->assertNotSame($entity_override->_loadStamp, $entity_no_override->_loadStamp);
 
     // Reload the entity and ensure the cache is used.
-    $this->assertIdentical($storage->loadOverrideFree($this->entityId)->_loadStamp, $entity_no_override->_loadStamp);
+    $this->assertSame($entity_no_override->_loadStamp, $storage->loadOverrideFree($this->entityId)->_loadStamp);
 
     // Enable overrides and reload the entity and ensure the cache is used.
-    $this->assertIdentical($storage->load($this->entityId)->_loadStamp, $entity_override->_loadStamp);
+    $this->assertSame($entity_override->_loadStamp, $storage->load($this->entityId)->_loadStamp);
   }
 
 }

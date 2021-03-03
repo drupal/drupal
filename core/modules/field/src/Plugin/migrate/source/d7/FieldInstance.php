@@ -26,7 +26,7 @@ class FieldInstance extends DrupalSqlBase {
       ->condition('fc.storage_active', 1)
       ->condition('fc.deleted', 0)
       ->condition('fci.deleted', 0);
-    $query->join('field_config', 'fc', 'fci.field_id = fc.id');
+    $query->join('field_config', 'fc', '[fci].[field_id] = [fc].[id]');
 
     // Optionally filter by entity type and bundle.
     if (isset($this->configuration['entity_type'])) {
@@ -180,6 +180,17 @@ class FieldInstance extends DrupalSqlBase {
       }
     }
 
+    // Get the user roles for user reference fields.
+    if ($row->getSourceProperty('type') == 'user_reference') {
+      $data = unserialize($field_definition['data']);
+      if (!empty($data['settings']['referenceable_roles'])) {
+        $rid = $data['settings']['referenceable_roles'];
+        $query = $this->select('role', 'r')->fields('r')
+          ->condition('rid', $rid, 'IN');
+        $results = $query->execute()->fetchAll();
+        $row->setSourceProperty('roles', $results);
+      }
+    }
     return parent::prepareRow($row);
   }
 

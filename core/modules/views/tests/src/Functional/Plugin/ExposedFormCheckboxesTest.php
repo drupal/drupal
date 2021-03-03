@@ -97,10 +97,8 @@ class ExposedFormCheckboxesTest extends ViewTestBase {
     $view->save();
     $this->drupalGet('test_exposed_form_checkboxes');
 
-    $actual = $this->xpath('//form//input[@type="checkbox" and @name="type[article]"]');
-    $this->assertCount(1, $actual, 'Article option renders as a checkbox.');
-    $actual = $this->xpath('//form//input[@type="checkbox" and @name="type[page]"]');
-    $this->assertCount(1, $actual, 'Page option renders as a checkbox');
+    $this->assertSame('checkbox', $this->assertSession()->fieldExists('type[article]')->getAttribute('type'));
+    $this->assertSame('checkbox', $this->assertSession()->fieldExists('type[page]')->getAttribute('type'));
 
     // Ensure that all results are displayed.
     $rows = $this->xpath("//div[contains(@class, 'views-row')]");

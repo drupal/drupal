@@ -32,7 +32,7 @@ class InstallTest extends BrowserTestBase {
   public function testGetSchemaAtInstallTime() {
     // @see module_test_install()
     $value = Database::getConnection()->select('module_test', 'mt')->fields('mt', ['data'])->execute()->fetchField();
-    $this->assertIdentical($value, 'varchar');
+    $this->assertSame('varchar', $value);
   }
 
   /**
@@ -44,7 +44,7 @@ class InstallTest extends BrowserTestBase {
    */
   public function testEnableUserTwice() {
     \Drupal::service('module_installer')->install(['user'], FALSE);
-    $this->assertIdentical($this->config('core.extension')->get('module.user'), 0);
+    $this->assertSame(0, $this->config('core.extension')->get('module.user'));
   }
 
   /**

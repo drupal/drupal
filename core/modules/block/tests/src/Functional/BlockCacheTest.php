@@ -85,20 +85,21 @@ class BlockCacheTest extends BrowserTestBase {
     \Drupal::state()->set('block_test.content', $current_content);
     $this->drupalLogin($this->normalUser);
     $this->drupalGet('');
-    $this->assertText($current_content, 'Block content displays.');
+    $this->assertText($current_content);
 
     // Change the content, but the cached copy should still be served.
     $old_content = $current_content;
     $current_content = $this->randomMachineName();
     \Drupal::state()->set('block_test.content', $current_content);
     $this->drupalGet('');
-    $this->assertText($old_content, 'Block is served from the cache.');
+    $this->assertText($old_content);
 
     // Clear the cache and verify that the stale data is no longer there.
     Cache::invalidateTags(['block_view']);
     $this->drupalGet('');
-    $this->assertNoText($old_content, 'Block cache clear removes stale cache data.');
-    $this->assertText($current_content, 'Fresh block content is displayed after clearing the cache.');
+    $this->assertNoText($old_content);
+    // Fresh block content is displayed after clearing the cache.
+    $this->assertText($current_content);
 
     // Test whether the cached data is served for the correct users.
     $old_content = $current_content;
@@ -106,19 +107,23 @@ class BlockCacheTest extends BrowserTestBase {
     \Drupal::state()->set('block_test.content', $current_content);
     $this->drupalLogout();
     $this->drupalGet('');
-    $this->assertNoText($old_content, 'Anonymous user does not see content cached per-role for normal user.');
+    // Anonymous user does not see content cached per-role for normal user.
+    $this->assertNoText($old_content);
 
+    // User with the same roles sees per-role cached content.
     $this->drupalLogin($this->normalUserAlt);
     $this->drupalGet('');
-    $this->assertText($old_content, 'User with the same roles sees per-role cached content.');
+    $this->assertText($old_content);
 
+    // Admin user does not see content cached per-role for normal user.
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('');
-    $this->assertNoText($old_content, 'Admin user does not see content cached per-role for normal user.');
+    $this->assertNoText($old_content);
 
+    // Block is served from the per-role cache.
     $this->drupalLogin($this->normalUser);
     $this->drupalGet('');
-    $this->assertText($old_content, 'Block is served from the per-role cache.');
+    $this->assertText($old_content);
   }
 
   /**
@@ -133,18 +138,20 @@ class BlockCacheTest extends BrowserTestBase {
     \Drupal::state()->set('block_test.content', $current_content);
 
     $this->drupalGet('');
-    $this->assertText($current_content, 'Block content displays.');
+    $this->assertText($current_content);
 
     $old_content = $current_content;
     $current_content = $this->randomMachineName();
     \Drupal::state()->set('block_test.content', $current_content);
 
+    // Block content served from cache.
     $this->drupalGet('user');
-    $this->assertText($old_content, 'Block content served from cache.');
+    $this->assertText($old_content);
 
+    // Block content not served from cache.
     $this->drupalLogout();
     $this->drupalGet('user');
-    $this->assertText($current_content, 'Block content not served from cache.');
+    $this->assertText($current_content);
   }
 
   /**
@@ -158,13 +165,14 @@ class BlockCacheTest extends BrowserTestBase {
 
     // If max_age = 0 has no effect, the next request would be cached.
     $this->drupalGet('');
-    $this->assertText($current_content, 'Block content displays.');
+    $this->assertText($current_content);
 
     // A cached copy should not be served.
     $current_content = $this->randomMachineName();
     \Drupal::state()->set('block_test.content', $current_content);
     $this->drupalGet('');
-    $this->assertText($current_content, 'Maximum age of zero prevents blocks from being cached.');
+    // Maximum age of zero prevents blocks from being cached.
+    $this->assertText($current_content);
   }
 
   /**
@@ -178,22 +186,25 @@ class BlockCacheTest extends BrowserTestBase {
     $this->drupalLogin($this->normalUser);
 
     $this->drupalGet('');
-    $this->assertText($current_content, 'Block content displays.');
+    $this->assertText($current_content);
 
     $old_content = $current_content;
     $current_content = $this->randomMachineName();
     \Drupal::state()->set('block_test.content', $current_content);
 
+    // Block is served from per-user cache.
     $this->drupalGet('');
-    $this->assertText($old_content, 'Block is served from per-user cache.');
+    $this->assertText($old_content);
 
+    // Per-user block cache is not served for other users.
     $this->drupalLogin($this->normalUserAlt);
     $this->drupalGet('');
-    $this->assertText($current_content, 'Per-user block cache is not served for other users.');
+    $this->assertText($current_content);
 
+    // Per-user block cache is persistent.
     $this->drupalLogin($this->normalUser);
     $this->drupalGet('');
-    $this->assertText($old_content, 'Per-user block cache is persistent.');
+    $this->assertText($old_content);
   }
 
   /**
@@ -206,7 +217,7 @@ class BlockCacheTest extends BrowserTestBase {
     \Drupal::state()->set('block_test.content', $current_content);
 
     $this->drupalGet('test-page');
-    $this->assertText($current_content, 'Block content displays on the test page.');
+    $this->assertText($current_content);
 
     $old_content = $current_content;
     $current_content = $this->randomMachineName();
@@ -214,10 +225,13 @@ class BlockCacheTest extends BrowserTestBase {
 
     $this->drupalGet('user');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertNoText($old_content, 'Block content cached for the test page does not show up for the user page.');
+    // Verify that block content cached for the test page does not show up
+    // for the user page.
+    $this->assertNoText($old_content);
     $this->drupalGet('test-page');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText($old_content, 'Block content cached for the test page.');
+    // Verify that the block content is cached for the test page.
+    $this->assertText($old_content);
   }
 
 }

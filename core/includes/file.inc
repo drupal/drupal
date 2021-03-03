@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 
 /**
@@ -125,6 +126,13 @@ function file_url_transform_relative($file_url) {
   $host = $request->getHost();
   $scheme = $request->getScheme();
   $port = $request->getPort() ?: 80;
+
+  // Files may be accessible on a different port than the web request.
+  $file_url_port = parse_url($file_url, PHP_URL_PORT) ?? $port;
+  if ($file_url_port != $port) {
+    return $file_url;
+  }
+
   if (('http' == $scheme && $port == 80) || ('https' == $scheme && $port == 443)) {
     $http_host = $host;
   }
@@ -176,8 +184,14 @@ function file_build_uri($path) {
  *
  * @return string
  *   The potentially modified $filename.
+ *
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Dispatch a
+ *   \Drupal\Core\File\Event\FileUploadSanitizeNameEvent event instead.
+ *
+ * @see https://www.drupal.org/node/3032541
  */
 function file_munge_filename($filename, $extensions, $alerts = TRUE) {
+  @trigger_error('file_munge_filename() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Dispatch a \Drupal\Core\File\Event\FileUploadSanitizeNameEvent event instead. See https://www.drupal.org/node/3032541', E_USER_DEPRECATED);
   $original = $filename;
 
   // Allow potentially insecure uploads for very savvy users and admin
@@ -189,10 +203,7 @@ function file_munge_filename($filename, $extensions, $alerts = TRUE) {
     $allowed_extensions = array_unique(explode(' ', strtolower(trim($extensions))));
 
     // Remove unsafe extensions from the allowed list of extensions.
-    // @todo https://www.drupal.org/project/drupal/issues/3032390 Make the list
-    //   of unsafe extensions a constant. The list is copied from
-    //   FILE_INSECURE_EXTENSION_REGEX.
-    $allowed_extensions = array_diff($allowed_extensions, explode('|', 'phar|php|pl|py|cgi|asp|js'));
+    $allowed_extensions = array_diff($allowed_extensions, FileSystemInterface::INSECURE_EXTENSIONS);
 
     // Split the filename up by periods. The first part becomes the basename
     // the last part the final extension.
@@ -229,8 +240,14 @@ function file_munge_filename($filename, $extensions, $alerts = TRUE) {
  *
  * @return
  *   An unmunged filename string.
+ *
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+ *   str_replace() instead.
+ *
+ * @see https://www.drupal.org/node/3032541
  */
 function file_unmunge_filename($filename) {
+  @trigger_error('file_unmunge_filename() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use str_replace() instead. See https://www.drupal.org/node/3032541', E_USER_DEPRECATED);
   return str_replace('_.', '.', $filename);
 }
 

@@ -66,7 +66,7 @@ class NodeRevisionsUiTest extends NodeTestBase {
     // Load the node again and check the revision is the same as before.
     $node_storage->resetCache([$node->id()]);
     $node_revision = $node_storage->load($node->id(), TRUE);
-    $this->assertEqual($node_revision->getRevisionId(), $node->getRevisionId(), "After an existing node is saved with 'Create new revision' unchecked, a new revision is not created.");
+    $this->assertEqual($node->getRevisionId(), $node_revision->getRevisionId(), "After an existing node is saved with 'Create new revision' unchecked, a new revision is not created.");
 
     // Verify the checkbox is checked on the node edit form.
     $this->drupalGet('node/' . $node->id() . '/edit');
@@ -79,7 +79,7 @@ class NodeRevisionsUiTest extends NodeTestBase {
     // Load the node again and check the revision is different from before.
     $node_storage->resetCache([$node->id()]);
     $node_revision = $node_storage->load($node->id());
-    $this->assertNotEqual($node_revision->getRevisionId(), $node->getRevisionId(), "After an existing node is saved with 'Create new revision' checked, a new revision is created.");
+    $this->assertNotEquals($node->getRevisionId(), $node_revision->getRevisionId(), "After an existing node is saved with 'Create new revision' checked, a new revision is created.");
   }
 
   /**

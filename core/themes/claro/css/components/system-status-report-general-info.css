@@ -24,13 +24,13 @@
   overflow-x: auto;
   box-sizing: border-box;
   margin-bottom: 1.5rem;
-  padding: 18px;
+  padding: 1.125rem;
 }
 
 .system-status-general-info__item-icon {
   display: inline-block;
-  width: 42px;
-  height: 42px;
+  width: 2.625rem;
+  height: 2.625rem;
   vertical-align: top;
 }
 
@@ -39,11 +39,11 @@
   width: 100%;
   height: 100%;
   content: "";
-  border-radius: 42px;
+  border-radius: 2.625rem;
   background-color: #828388;
   background-repeat: no-repeat;
   background-position: 50% center;
-  background-size: 24px;
+  background-size: 1.5rem;
 }
 
 .system-status-general-info__item-icon--drupal:before {
@@ -60,7 +60,7 @@
 
 .system-status-general-info__item-icon--php:before {
   background-image: url("data:image/svg+xml,%3csvg height='33.447' viewBox='0 0 66 33.447' width='66' xmlns='http://www.w3.org/2000/svg'%3e%3cg fill='%23fff'%3e%3cpath d='m49.5 12.255h-2.7l-1.473 7h2.4c1.59 0 2.773-.342 3.55-.94.78-.6 1.304-1.62 1.577-3.023.26-1.345.142-1.975-.357-2.528-.5-.553-1.498-.51-2.996-.51z'/%3e%3cpath d='m33 0c-18.225 0-33 7.488-33 16.724s14.775 16.724 33 16.724 33-7.488 33-16.724-14.775-16.724-33-16.724zm-9.328 19.982c-.787.737-1.662 1.376-2.625 1.69-.963.313-2.19.583-3.68.583h-3.377l-.935 5h-3.945l3.52-18h7.584c2.28 0 3.946.34 4.992 1.537s1.36 2.74.944 4.885c-.172.884-.462 1.628-.87 2.36-.413.732-.947 1.338-1.608 1.945zm11.51 2.273 1.558-8.124c.177-.91.112-1.29-.196-1.62s-.962-.255-1.963-.255h-3.126l-2.016 10h-3.913l3.52-18h3.912l-.935 5h3.486c2.193 0 3.706.124 4.54.888.832.765 1.08 1.99.748 3.703l-1.637 8.41h-3.977zm21.747-6.708c-.173.884-.463 1.692-.872 2.424-.41.734-.944 1.404-1.605 2.01-.787.738-1.662 1.377-2.625 1.69-.963.314-2.19.584-3.68.584h-3.377l-.934 5h-3.944l3.518-18h7.584c2.282 0 3.946.34 4.992 1.537 1.046 1.2 1.36 2.61.943 4.757z'/%3e%3cpath d='m18.72 12.255h-2.703l-1.473 7h2.4c1.59 0 2.773-.342 3.552-.94.778-.6 1.303-1.62 1.576-3.023.26-1.345.142-1.975-.357-2.528-.5-.553-1.497-.51-2.996-.51z'/%3e%3c/g%3e%3c/svg%3e");
-  background-size: 32px;
+  background-size: 2rem;
 }
 
 .system-status-general-info__item-icon--database:before {
@@ -71,24 +71,24 @@
   position: relative;
   display: inline-block;
   box-sizing: border-box;
-  width: calc(100% - 60px);
-  padding-left: 10px; /* LTR */
-  font-size: 14px;
+  width: calc(100% - 3.75rem);
+  padding-left: 0.625rem; /* LTR */
+  font-size: 0.875rem;
 }
 
 [dir="rtl"] .system-status-general-info__item-details {
-  padding-right: 10px;
+  padding-right: 0.625rem;
   padding-left: 0;
 }
 
 .system-status-general-info__item-title {
-  margin: 0 0 8px;
-  font-size: 18px;
+  margin: 0 0 0.5rem;
+  font-size: 1.125rem;
 }
 
 .system-status-general-info__sub-item-title {
-  margin: 14px 0 0;
-  font-size: 14px;
+  margin: 0.875rem 0 0;
+  font-size: 0.875rem;
 }
 
 .system-status-general-info__sub-item__title {
@@ -129,7 +129,7 @@
     display: none;
   }
   .system-status-general-info {
-    margin-top: 25px;
+    margin-top: 1.5625rem;
     border-top: 0;
   }
 }

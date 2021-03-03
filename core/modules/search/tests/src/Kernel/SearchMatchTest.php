@@ -6,6 +6,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\search\SearchIndexInterface;
+use Drupal\search\SearchQuery;
 
 /**
  * Indexes content and queries it.
@@ -164,7 +165,7 @@ class SearchMatchTest extends KernelTestBase {
     $connection = Database::getConnection();
     foreach ($queries as $query => $results) {
       $result = $connection->select('search_index', 'i')
-        ->extend('Drupal\search\SearchQuery')
+        ->extend(SearchQuery::class)
         ->searchExpression($query, static::SEARCH_TYPE)
         ->execute();
 
@@ -184,7 +185,7 @@ class SearchMatchTest extends KernelTestBase {
     ];
     foreach ($queries as $query => $results) {
       $result = $connection->select('search_index', 'i')
-        ->extend('Drupal\search\SearchQuery')
+        ->extend(SearchQuery::class)
         ->searchExpression($query, static::SEARCH_TYPE_2)
         ->execute();
 
@@ -207,7 +208,7 @@ class SearchMatchTest extends KernelTestBase {
     ];
     foreach ($queries as $query => $results) {
       $result = $connection->select('search_index', 'i')
-        ->extend('Drupal\search\SearchQuery')
+        ->extend(SearchQuery::class)
         ->searchExpression($query, static::SEARCH_TYPE_JPN)
         ->execute();
 
@@ -253,7 +254,7 @@ class SearchMatchTest extends KernelTestBase {
     $this->assertEqual($scores, array_reverse($sorted), "Query order '$query'");
 
     // Check range.
-    $this->assertEqual(!count($scores) || (min($scores) > 0.0 && max($scores) <= 1.0001), TRUE, "Query scoring '$query'");
+    $this->assertTrue(!count($scores) || (min($scores) > 0.0 && max($scores) <= 1.0001), "Query scoring '$query'");
   }
 
 }

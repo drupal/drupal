@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\block\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\block\Entity\Block;
 use Drupal\Core\Url;
@@ -45,24 +44,27 @@ class BlockTest extends BlockTestBase {
     $this->assertSession()->checkboxChecked('edit-visibility-request-path-negate-0');
 
     $this->submitForm($edit, 'Save block');
-    $this->assertText('The block configuration has been saved.', 'Block was saved');
+    $this->assertText('The block configuration has been saved.');
 
     $this->clickLink('Configure');
     $this->assertSession()->checkboxChecked('edit-visibility-request-path-negate-1');
 
+    // Confirm that the block is displayed on the front page.
     $this->drupalGet('');
-    $this->assertText($title, 'Block was displayed on the front page.');
+    $this->assertText($title);
 
+    // Confirm that the block is not displayed according to block visibility
+    // rules.
     $this->drupalGet('user');
-    $this->assertNoText($title, 'Block was not displayed according to block visibility rules.');
+    $this->assertNoText($title);
 
     // Confirm that the block is not displayed to anonymous users.
     $this->drupalLogout();
     $this->drupalGet('');
-    $this->assertNoText($title, 'Block was not displayed to anonymous users.');
+    $this->assertNoText($title);
 
     // Confirm that an empty block is not displayed.
-    $this->assertNoText('Powered by Drupal', 'Empty block not displayed.');
+    $this->assertNoText('Powered by Drupal');
     $this->assertNoRaw('sidebar-first');
   }
 
@@ -98,8 +100,8 @@ class BlockTest extends BlockTestBase {
     /** @var \Drupal\block\BlockInterface $block */
     $block = Block::load($block_id);
     $visibility_config = $block->getVisibilityConditions()->getConfiguration();
-    $this->assertIdentical([], $visibility_config);
-    $this->assertIdentical([], $block->get('visibility'));
+    $this->assertSame([], $visibility_config);
+    $this->assertSame([], $block->get('visibility'));
   }
 
   /**
@@ -120,18 +122,22 @@ class BlockTest extends BlockTestBase {
     // Set the block to be hidden on any user path, and to be shown only to
     // authenticated users.
     $this->drupalPostForm('admin/structure/block/add/' . $block_name . '/' . $default_theme, $edit, 'Save block');
-    $this->assertText('The block configuration has been saved.', 'Block was saved');
+    $this->assertText('The block configuration has been saved.');
 
+    // Confirm that block was not displayed according to block visibility
+    // rules.
     $this->drupalGet('user');
-    $this->assertNoText($title, 'Block was not displayed according to block visibility rules.');
+    $this->assertNoText($title);
 
+    // Confirm that block was not displayed according to block visibility
+    // rules regardless of path case.
     $this->drupalGet('USER');
-    $this->assertNoText($title, 'Block was not displayed according to block visibility rules regardless of path case.');
+    $this->assertNoText($title);
 
     // Confirm that the block is not displayed to anonymous users.
     $this->drupalLogout();
     $this->drupalGet('');
-    $this->assertNoText($title, 'Block was not displayed to anonymous users on the front page.');
+    $this->assertNoText($title);
   }
 
   /**
@@ -200,11 +206,11 @@ class BlockTest extends BlockTestBase {
 
     // Set block title to confirm that interface works and override any custom titles.
     $this->drupalPostForm('admin/structure/block/add/' . $block['id'] . '/' . $block['theme'], ['settings[label]' => $block['settings[label]'], 'settings[label_display]' => $block['settings[label_display]'], 'id' => $block['id'], 'region' => $block['region']], 'Save block');
-    $this->assertText('The block configuration has been saved.', 'Block title set.');
+    $this->assertText('The block configuration has been saved.');
     // Check to see if the block was created by checking its configuration.
     $instance = Block::load($block['id']);
 
-    $this->assertEqual($instance->label(), $block['settings[label]'], 'Stored block title found.');
+    $this->assertEqual($block['settings[label]'], $instance->label(), 'Stored block title found.');
 
     // Check whether the block can be moved to all available regions.
     foreach ($this->regions as $region) {
@@ -216,7 +222,7 @@ class BlockTest extends BlockTestBase {
     $this->clickLink('Disable');
 
     // Confirm that the block is now listed as disabled.
-    $this->assertText('The block settings have been updated.', 'Block successfully moved to disabled region.');
+    $this->assertText('The block settings have been updated.');
 
     // Confirm that the block instance title and markup are not displayed.
     $this->drupalGet('node');
@@ -303,22 +309,24 @@ class BlockTest extends BlockTestBase {
       'settings[label]' => $title,
     ];
     $this->drupalPostForm('admin/structure/block/add/' . $block_name . '/' . $default_theme, $edit, 'Save block');
-    $this->assertText('The block configuration has been saved.', 'Block was saved');
+    $this->assertText('The block configuration has been saved.');
 
+    // Confirm that the block is not displayed by default.
     $this->drupalGet('user');
-    $this->assertNoText($title, 'Block title was not displayed by default.');
+    $this->assertNoText($title);
 
     $edit = [
       'settings[label_display]' => TRUE,
     ];
     $this->drupalPostForm('admin/structure/block/manage/' . $id, $edit, 'Save block');
-    $this->assertText('The block configuration has been saved.', 'Block was saved');
+    $this->assertText('The block configuration has been saved.');
 
     $this->drupalGet('admin/structure/block/manage/' . $id);
     $this->assertSession()->checkboxChecked('edit-settings-label-display');
 
+    // Confirm that the block is displayed when enabled.
     $this->drupalGet('user');
-    $this->assertText($title, 'Block title was displayed when enabled.');
+    $this->assertText($title);
   }
 
   /**
@@ -341,11 +349,11 @@ class BlockTest extends BlockTestBase {
     $this->drupalPostForm('admin/structure/block', $edit, 'Save blocks');
 
     // Confirm that the block was moved to the proper region.
-    $this->assertText('The block settings have been updated.', new FormattableMarkup('Block successfully moved to %region_name region.', ['%region_name' => $region]));
+    $this->assertText('The block settings have been updated.');
 
     // Confirm that the block is being displayed.
     $this->drupalGet('');
-    $this->assertText($block['settings[label]'], 'Block successfully being displayed on the page.');
+    $this->assertText($block['settings[label]']);
 
     // Confirm that the custom block was found at the proper region.
     $xpath = $this->assertSession()->buildXPathQuery('//div[@class=:region-class]//div[@id=:block-id]/*', [
@@ -395,7 +403,7 @@ class BlockTest extends BlockTestBase {
     ];
     sort($expected_cache_tags);
     $keys = \Drupal::service('cache_contexts_manager')->convertTokensToKeys(['languages:language_interface', 'theme', 'user.permissions'])->getKeys();
-    $this->assertIdentical($cache_entry->tags, $expected_cache_tags);
+    $this->assertSame($expected_cache_tags, $cache_entry->tags);
     $cache_entry = \Drupal::cache('render')->get('entity_view:block:powered:' . implode(':', $keys));
     $expected_cache_tags = [
       'block_view',
@@ -403,7 +411,7 @@ class BlockTest extends BlockTestBase {
       'rendered',
     ];
     sort($expected_cache_tags);
-    $this->assertIdentical($cache_entry->tags, $expected_cache_tags);
+    $this->assertSame($expected_cache_tags, $cache_entry->tags);
 
     // The "Powered by Drupal" block is modified; verify a cache miss.
     $block->setRegion('content');
@@ -436,7 +444,7 @@ class BlockTest extends BlockTestBase {
       'rendered',
     ];
     sort($expected_cache_tags);
-    $this->assertEqual($cache_entry->tags, $expected_cache_tags);
+    $this->assertEqual($expected_cache_tags, $cache_entry->tags);
     $expected_cache_tags = [
       'block_view',
       'config:block.block.powered',
@@ -445,7 +453,7 @@ class BlockTest extends BlockTestBase {
     sort($expected_cache_tags);
     $keys = \Drupal::service('cache_contexts_manager')->convertTokensToKeys(['languages:language_interface', 'theme', 'user.permissions'])->getKeys();
     $cache_entry = \Drupal::cache('render')->get('entity_view:block:powered:' . implode(':', $keys));
-    $this->assertIdentical($cache_entry->tags, $expected_cache_tags);
+    $this->assertSame($expected_cache_tags, $cache_entry->tags);
     $expected_cache_tags = [
       'block_view',
       'config:block.block.powered-2',
@@ -454,7 +462,7 @@ class BlockTest extends BlockTestBase {
     sort($expected_cache_tags);
     $keys = \Drupal::service('cache_contexts_manager')->convertTokensToKeys(['languages:language_interface', 'theme', 'user.permissions'])->getKeys();
     $cache_entry = \Drupal::cache('render')->get('entity_view:block:powered-2:' . implode(':', $keys));
-    $this->assertIdentical($cache_entry->tags, $expected_cache_tags);
+    $this->assertSame($expected_cache_tags, $cache_entry->tags);
 
     // Now we should have a cache hit again.
     $this->drupalGet('<front>');
@@ -501,7 +509,7 @@ class BlockTest extends BlockTestBase {
     $theme_installer->uninstall(['seven']);
 
     // Ensure that the block configuration does not exist anymore.
-    $this->assertIdentical(NULL, Block::load($block->id()));
+    $this->assertNull(Block::load($block->id()));
   }
 
   /**
@@ -542,17 +550,12 @@ class BlockTest extends BlockTestBase {
 
     $block->save();
 
-    $this->assertEqual($block->getVisibility()['user_role']['roles'], [
-      $role1->id() => $role1->id(),
-      $role2->id() => $role2->id(),
-    ]);
+    $this->assertEqual([$role1->id() => $role1->id(), $role2->id() => $role2->id()], $block->getVisibility()['user_role']['roles']);
 
     $role1->delete();
 
     $block = Block::load($block->id());
-    $this->assertEqual($block->getVisibility()['user_role']['roles'], [
-      $role2->id() => $role2->id(),
-    ]);
+    $this->assertEqual([$role2->id() => $role2->id()], $block->getVisibility()['user_role']['roles']);
   }
 
 }

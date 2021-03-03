@@ -86,7 +86,7 @@ class ExcludedFieldTokenTest extends ViewTestBase {
       ['nothing' => 'Article test 2'],
       ['nothing' => 'Article test 1'],
     ];
-    $this->assertIdentical($actual_json, json_encode($expected));
+    $this->assertSame(json_encode($expected), $actual_json);
   }
 
 }

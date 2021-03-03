@@ -134,7 +134,7 @@ class UserLoginTest extends BrowserTestBase {
     // Load the stored user. The password hash should reflect $default_count_log2.
     $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
     $account = User::load($account->id());
-    $this->assertIdentical($password_hasher->getCountLog2($account->getPassword()), $default_count_log2);
+    $this->assertSame($default_count_log2, $password_hasher->getCountLog2($account->getPassword()));
 
     // Change the required number of iterations by loading a test-module
     // containing the necessary container builder code and then verify that the
@@ -148,7 +148,7 @@ class UserLoginTest extends BrowserTestBase {
     // Load the stored user, which should have a different password hash now.
     $user_storage->resetCache([$account->id()]);
     $account = $user_storage->load($account->id());
-    $this->assertIdentical($password_hasher->getCountLog2($account->getPassword()), $overridden_count_log2);
+    $this->assertSame($overridden_count_log2, $password_hasher->getCountLog2($account->getPassword()));
     $this->assertTrue($password_hasher->check($password, $account->getPassword()));
   }
 

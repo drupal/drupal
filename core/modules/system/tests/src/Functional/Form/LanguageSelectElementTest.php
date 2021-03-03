@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\system\Functional\Form;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -90,11 +89,11 @@ class LanguageSelectElementTest extends BrowserTestBase {
     $edit = [];
     $this->submitForm($edit, 'Submit');
     $values = Json::decode($this->getSession()->getPage()->getContent());
-    $this->assertEqual($values['languages_all'], 'xx');
-    $this->assertEqual($values['languages_configurable'], 'en');
-    $this->assertEqual($values['languages_locked'], LanguageInterface::LANGCODE_NOT_SPECIFIED);
-    $this->assertEqual($values['languages_config_and_locked'], 'dummy_value');
-    $this->assertEqual($values['language_custom_options'], 'opt2');
+    $this->assertEqual('xx', $values['languages_all']);
+    $this->assertEqual('en', $values['languages_configurable']);
+    $this->assertEqual(LanguageInterface::LANGCODE_NOT_SPECIFIED, $values['languages_locked']);
+    $this->assertEqual('dummy_value', $values['languages_config_and_locked']);
+    $this->assertEqual('opt2', $values['language_custom_options']);
   }
 
   /**
@@ -109,16 +108,11 @@ class LanguageSelectElementTest extends BrowserTestBase {
   protected function _testLanguageSelectElementOptions($id, $options) {
     // Check that the options in the language field are exactly the same,
     // including the order, as the languages sent as a parameter.
-    $elements = $this->xpath("//select[@id='" . $id . "']");
-    $count = 0;
-    /** @var \Behat\Mink\Element\NodeElement $option */
-    foreach ($elements[0]->findAll('css', 'option') as $option) {
-      $count++;
-      $option_title = current($options);
-      $this->assertEqual($option->getText(), $option_title);
-      next($options);
-    }
-    $this->assertCount($count, $options, new FormattableMarkup('The number of languages and the number of options shown by the language element are the same: @languages languages, @number options', ['@languages' => count($options), '@number' => $count]));
+    $found_options = $this->assertSession()->selectExists($id)->findAll('css', 'option');
+    $found_options = array_map(function ($item) {
+      return $item->getText();
+    }, $found_options);
+    $this->assertEquals(array_values($options), $found_options);
   }
 
 }

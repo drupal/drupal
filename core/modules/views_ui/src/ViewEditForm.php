@@ -404,7 +404,7 @@ class ViewEditForm extends ViewFormBase {
     ];
 
     $is_display_deleted = !empty($display['deleted']);
-    // The master display cannot be duplicated.
+    // The default display cannot be duplicated.
     $is_default = $display['id'] == 'default';
     // @todo: Figure out why getOption doesn't work here.
     $is_enabled = $view->getExecutable()->displayHandlers->get($display['id'])->isEnabled();

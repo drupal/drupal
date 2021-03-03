@@ -897,10 +897,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     // Extra fields display under "Content fields".
     $this->drupalGet("admin/structure/types/manage/bundle_with_section_field/display/default/layout");
     $this->clickLink('Add block');
-    $page = $this->getSession()->getPage();
-    $content_fields_category = $page->find('xpath', '//details/summary[contains(text(),"Content fields")]/parent::details');
-    $extra_field = strpos($content_fields_category->getText(), 'Extra label');
-    $this->assertTrue($extra_field !== FALSE);
+    $assert_session->elementTextContains('xpath', '//details/summary[contains(text(),"Content fields")]/parent::details', 'Extra label');
 
     $this->drupalGet('node');
     $assert_session->linkExists('Read more');
@@ -912,6 +909,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     // View the layout and add the extra field that is not visible by default.
     $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default/layout');
     $assert_session->pageTextNotContains('Extra Field 2');
+    $page = $this->getSession()->getPage();
     $page->clickLink('Add block');
     $page->clickLink('Extra Field 2');
     $page->pressButton('Add block');
@@ -1045,6 +1043,39 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->pageTextContains('My Cool Section');
     $page->pressButton('Save layout');
     $assert_session->pageTextNotContains('My Cool Section');
+  }
+
+  /**
+   * Tests that layouts can be context-aware.
+   */
+  public function testContextAwareLayouts() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $account = $this->drupalCreateUser([
+      'configure any layout',
+      'administer node display',
+    ]);
+    $this->drupalLogin($account);
+
+    $this->drupalPostForm('admin/structure/types/manage/bundle_with_section_field/display/default', ['layout[enabled]' => TRUE], 'Save');
+    $page->clickLink('Manage layout');
+    $page->clickLink('Add section');
+    $page->clickLink('Layout Builder Test: Context Aware');
+    $page->pressButton('Add section');
+    // See \Drupal\layout_builder_test\Plugin\Layout\TestContextAwareLayout::build().
+    $assert_session->elementExists('css', '.user--' . $account->getAccountName());
+    $page->clickLink('Configure Section 1');
+    $page->fillField('layout_settings[label]', 'My section');
+    $page->pressButton('Update');
+    $assert_session->linkExists('Configure My section');
+    $page->clickLink('Add block');
+    $page->clickLink('Powered by Drupal');
+    $page->pressButton('Add block');
+    $page->pressButton('Save layout');
+    $this->drupalGet('node/1');
+    // See \Drupal\layout_builder_test\Plugin\Layout\TestContextAwareLayout::build().
+    $assert_session->elementExists('css', '.user--' . $account->getAccountName());
   }
 
   /**
@@ -1320,6 +1351,40 @@ class LayoutBuilderTest extends BrowserTestBase {
     $page->pressButton('Revert');
     $assert_session->elementsCount('css', '.layout', 0);
     $assert_session->pageTextNotContains('The first node body');
+  }
+
+  /**
+   * Tests removing section without layout label configuration.
+   */
+  public function testRemovingSectionWithoutLayoutLabel() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'configure any layout',
+      'administer node display',
+    ]));
+
+    // Enable overrides.
+    $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
+    $this->drupalGet("$field_ui_prefix/display/default");
+    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
+    $this->submitForm(['layout[allow_custom]' => TRUE], 'Save');
+
+    $this->drupalGet("$field_ui_prefix/display/default/layout");
+    $page->clickLink('Add section');
+
+    $assert_session->linkExists('Layout Without Label');
+    $page->clickLink('Layout Without Label');
+    $page->pressButton('Add section');
+    $assert_session->elementsCount('css', '.layout', 2);
+
+    $assert_session->linkExists('Remove Section 1');
+    $this->clickLink('Remove Section 1');
+    $page->pressButton('Remove');
+
+    $assert_session->statusCodeEquals(200);
+    $assert_session->elementsCount('css', '.layout', 1);
   }
 
   /**

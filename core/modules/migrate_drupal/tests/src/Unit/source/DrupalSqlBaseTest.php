@@ -79,6 +79,77 @@ class DrupalSqlBaseTest extends MigrateTestCase {
     $plugin->checkRequirements();
   }
 
+  /**
+   * @covers ::checkRequirements
+   *
+   * @param bool $success
+   *   True if this test will not throw an exception.
+   * @param null|string $minimum_version
+   *   The minimum version declared in the configuration of a source plugin.
+   * @param string $schema_version
+   *   The schema version for the source module declared in a source plugin.
+   *
+   * @dataProvider providerMinimumVersion
+   */
+  public function testMinimumVersion($success, $minimum_version, $schema_version) {
+    $plugin_definition['requirements_met'] = TRUE;
+    $plugin_definition['source_module'] = 'module1';
+    $plugin_definition['minimum_version'] = $minimum_version;
+    /** @var \Drupal\Core\State\StateInterface $state */
+    $state = $this->createMock('Drupal\Core\State\StateInterface');
+    /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
+    $entity_type_manager = $this->createMock('Drupal\Core\Entity\EntityTypeManagerInterface');
+    $this->databaseContents['system'][0]['status'] = 1;
+    $this->databaseContents['system'][0]['schema_version'] = $schema_version;
+    $plugin = new TestDrupalSqlBase([], 'test', $plugin_definition, $this->getMigration(), $state, $entity_type_manager);
+    $plugin->setDatabase($this->getDatabase($this->databaseContents));
+
+    if (!$success) {
+      $this->expectException(RequirementsException::class);
+      $this->expectExceptionMessage("Required minimum version $minimum_version");
+    }
+
+    $plugin->checkRequirements();
+  }
+
+  /**
+   * Provides data for testMinimumVersion.
+   */
+  public function providerMinimumVersion() {
+    return [
+      'minimum less than schema' => [
+        TRUE,
+        '7000',
+        '7001',
+      ],
+      'same version' => [
+        TRUE,
+        '7001',
+        '7001',
+      ],
+      'minimum greater than schema' => [
+        FALSE,
+        '7005',
+        '7001',
+      ],
+      'schema version 0' => [
+        FALSE,
+        '7000',
+        '0',
+      ],
+      'schema version -1' => [
+        FALSE,
+        '7000',
+        '-1',
+      ],
+      'minimum not set' => [
+        TRUE,
+        NULL,
+        '-1',
+      ],
+    ];
+  }
+
 }
 
 namespace Drupal\Tests\migrate_drupal\Unit\source;

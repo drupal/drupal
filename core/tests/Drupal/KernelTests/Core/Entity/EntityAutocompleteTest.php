@@ -58,8 +58,8 @@ class EntityAutocompleteTest extends EntityKernelTestBase {
     // We should get both entities in a JSON encoded string.
     $input = '10/';
     $data = $this->getAutocompleteResult($input);
-    $this->assertIdentical($data[0]['label'], Html::escape($entity_1->name->value), 'Autocomplete returned the first matching entity');
-    $this->assertIdentical($data[1]['label'], Html::escape($entity_2->name->value), 'Autocomplete returned the second matching entity');
+    $this->assertSame(Html::escape($entity_1->name->value), $data[0]['label'], 'Autocomplete returned the first matching entity');
+    $this->assertSame(Html::escape($entity_2->name->value), $data[1]['label'], 'Autocomplete returned the second matching entity');
 
     // Try to autocomplete an entity label that matches the first entity.
     // We should only get the first entity in a JSON encoded string.
@@ -69,13 +69,13 @@ class EntityAutocompleteTest extends EntityKernelTestBase {
       'value' => $entity_1->name->value . ' (1)',
       'label' => Html::escape($entity_1->name->value),
     ];
-    $this->assertIdentical(reset($data), $target, 'Autocomplete returns only the expected matching entity.');
+    $this->assertSame($target, reset($data), 'Autocomplete returns only the expected matching entity.');
 
     // Try to autocomplete an entity label that matches the second entity, and
     // the first entity  is already typed in the autocomplete (tags) widget.
     $input = $entity_1->name->value . ' (1), 10/17';
     $data = $this->getAutocompleteResult($input);
-    $this->assertIdentical($data[0]['label'], Html::escape($entity_2->name->value), 'Autocomplete returned the second matching entity');
+    $this->assertSame(Html::escape($entity_2->name->value), $data[0]['label'], 'Autocomplete returned the second matching entity');
 
     // Try to autocomplete an entity label with both comma, slash and markup.
     $input = '"label with, and /"';
@@ -87,7 +87,7 @@ class EntityAutocompleteTest extends EntityKernelTestBase {
       'value' => $n,
       'label' => Html::escape($entity_3->name->value),
     ];
-    $this->assertIdentical(reset($data), $target, 'Autocomplete returns an entity label containing a comma and a slash.');
+    $this->assertSame($target, reset($data), 'Autocomplete returns an entity label containing a comma and a slash.');
   }
 
   /**

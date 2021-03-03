@@ -178,10 +178,7 @@ class FilterFormTest extends BrowserTestBase {
    *   The HTML ID of the select element.
    */
   protected function assertNoSelect($id) {
-    $select = $this->xpath('//select[@id=:id]', [':id' => $id]);
-    $this->assertEmpty($select, new FormattableMarkup('Field @id does not exist.', [
-      '@id' => $id,
-    ]));
+    $this->assertSession()->elementNotExists('xpath', "//select[@id=$id]");
   }
 
   /**
@@ -198,35 +195,12 @@ class FilterFormTest extends BrowserTestBase {
    *   TRUE if the assertion passed; FALSE otherwise.
    */
   protected function assertOptions($id, array $expected_options, $selected) {
-    $select = $this->xpath('//select[@id=:id]', [':id' => $id]);
-    $this->assertNotEmpty($select, new FormattableMarkup('Field @id exists.', [
-      '@id' => $id,
-    ]));
-    $select = reset($select);
+    $select = $this->assertSession()->selectExists($id);
     $found_options = $select->findAll('css', 'option');
-    foreach ($found_options as $found_key => $found_option) {
-      $expected_key = array_search($found_option->getValue(), $expected_options);
-      if ($expected_key !== FALSE) {
-        unset($found_options[$found_key]);
-        unset($expected_options[$expected_key]);
-      }
-    }
-
-    // Make sure that all expected options were found and that there are no
-    // unexpected options.
-    foreach ($expected_options as $expected_option) {
-      $this->fail(new FormattableMarkup('Option @option for field @id exists.', [
-        '@option' => $expected_option,
-        '@id' => $id,
-      ]));
-    }
-    foreach ($found_options as $found_option) {
-      $this->fail(new FormattableMarkup('Option @option for field @id does not exist.', [
-        '@option' => $found_option->getValue(),
-        '@id' => $id,
-      ]));
-    }
-
+    $found_options = array_map(function ($item) {
+      return $item->getValue();
+    }, $found_options);
+    $this->assertEqualsCanonicalizing($expected_options, $found_options);
     $this->assertTrue($this->assertSession()->optionExists($id, $selected)->isSelected());
   }
 
@@ -243,12 +217,8 @@ class FilterFormTest extends BrowserTestBase {
    *   TRUE if the assertion passed; FALSE otherwise.
    */
   protected function assertRequiredSelectAndOptions($id, array $options) {
-    $select = $this->xpath('//select[@id=:id and contains(@required, "required")]', [
-      ':id' => $id,
-    ]);
-    $this->assertNotEmpty($select, new FormattableMarkup('Required field @id exists.', [
-      '@id' => $id,
-    ]));
+    $select = $this->assertSession()->selectExists($id);
+    $this->assertSame('required', $select->getAttribute('required'));
     // A required select element has a "- Select -" option whose key is an empty
     // string.
     $options[] = '';
@@ -291,9 +261,7 @@ class FilterFormTest extends BrowserTestBase {
     ]));
     $textarea = reset($textarea);
     $expected = 'This field has been disabled because you do not have sufficient permissions to edit it.';
-    $this->assertEqual($textarea->getText(), $expected, new FormattableMarkup('Disabled textarea @id hides text in an inaccessible text format.', [
-      '@id' => $id,
-    ]));
+    $this->assertEqual($expected, $textarea->getText(), new FormattableMarkup('Disabled textarea @id hides text in an inaccessible text format.', ['@id' => $id]));
     // Make sure the text format select is not shown.
     $select_id = str_replace('value', 'format--2', $id);
     $this->assertNoSelect($select_id);

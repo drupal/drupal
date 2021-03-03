@@ -11,23 +11,23 @@
  */
 
 .site-footer__inner {
-  padding-top: 36px;
-  padding-bottom: 36px
+  padding-top: 2.25rem;
+  padding-bottom: 2.25rem
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 75rem) {
 
 .site-footer__inner {
-    padding-top: 72px;
-    padding-bottom: 234px
+    padding-top: 4.5rem;
+    padding-bottom: 14.625rem
 }
   }
 
 .region--footer_top__inner > *, .region--footer_bottom__inner > * {
-    margin-bottom: 36px
+    margin-bottom: 2.25rem
   }
 
-@media (min-width: 700px) {
+@media (min-width: 43.75rem) {
 
 .region--footer_top__inner > *, .region--footer_bottom__inner > * {
       flex: 1;
@@ -35,15 +35,15 @@
   }
 
       [dir="ltr"] .region--footer_top__inner > *:not(:last-child),[dir="ltr"]  .region--footer_bottom__inner > *:not(:last-child) {
-        margin-right: 36px
+        margin-right: 2.25rem
   }
 
       [dir="rtl"] .region--footer_top__inner > *:not(:last-child),[dir="rtl"]  .region--footer_bottom__inner > *:not(:last-child) {
-        margin-left: 36px
+        margin-left: 2.25rem
   }
     }
 
-@media (min-width: 700px) {
+@media (min-width: 43.75rem) {
 
 .region--footer_top__inner,
 .region--footer_bottom__inner {

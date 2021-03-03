@@ -68,10 +68,10 @@ class UpdateContribTest extends UpdateTestBase {
     $this->drupalGet('admin/reports/updates');
     // Cannot use $this->standardTests() because we need to check for the
     // 'No available releases found' string.
-    $this->assertRaw('<h3>' . t('Drupal core') . '</h3>');
+    $this->assertSession()->responseContains('<h3>Drupal core</h3>');
     $this->assertRaw(Link::fromTextAndUrl(t('Drupal'), Url::fromUri('http://example.com/project/drupal'))->toString());
     $this->assertText('Up to date');
-    $this->assertRaw('<h3>' . t('Modules') . '</h3>');
+    $this->assertSession()->responseContains('<h3>Modules</h3>');
     $this->assertNoText('Update available');
     $this->assertText('No available releases found');
     $this->assertNoRaw(Link::fromTextAndUrl(t('AAA Update test'), Url::fromUri('http://example.com/project/aaa_update_test'))->toString());
@@ -104,7 +104,7 @@ class UpdateContribTest extends UpdateTestBase {
     );
     $this->standardTests();
     $this->assertText('Up to date');
-    $this->assertRaw('<h3>' . t('Modules') . '</h3>');
+    $this->assertSession()->responseContains('<h3>Modules</h3>');
     $this->assertNoText('Update available');
     $this->assertRaw($project_link);
 
@@ -487,7 +487,7 @@ class UpdateContribTest extends UpdateTestBase {
     // We need to check that this string is found as part of a project row, not
     // just in the "Failed to get available update data" message at the top of
     // the page.
-    $this->assertRaw('<div class="project-update__status">' . t('Failed to get available update data'));
+    $this->assertSession()->responseContains('<div class="project-update__status">Failed to get available update data');
 
     // We should see the output messages from fetching manually.
     $this->assertSession()->pageTextContainsOnce('Checked available update data for 3 projects.');
@@ -539,7 +539,7 @@ class UpdateContribTest extends UpdateTestBase {
       ]
     );
     $this->drupalGet('admin/reports/updates');
-    $this->assertRaw('<h3>' . t('Modules') . '</h3>');
+    $this->assertSession()->responseContains('<h3>Modules</h3>');
     $this->assertText('Security update required!');
     $this->assertRaw(Link::fromTextAndUrl(t('AAA Update test'), Url::fromUri('http://example.com/project/aaa_update_test'))->toString());
 
@@ -547,7 +547,7 @@ class UpdateContribTest extends UpdateTestBase {
     // status is back to normal.
     $update_test_config->set('update_status', [])->save();
     $this->drupalGet('admin/reports/updates');
-    $this->assertRaw('<h3>' . t('Modules') . '</h3>');
+    $this->assertSession()->responseContains('<h3>Modules</h3>');
     $this->assertNoText('Security update required!');
     $this->assertRaw(Link::fromTextAndUrl(t('AAA Update test'), Url::fromUri('http://example.com/project/aaa_update_test'))->toString());
 

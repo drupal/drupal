@@ -63,11 +63,11 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     $scheme = 'public';
     $actual = $this->style->buildUri("$scheme://foo/bar.gif");
     $expected = "$scheme://styles/" . $this->style->id() . "/$scheme/foo/bar.gif";
-    $this->assertEqual($actual, $expected, 'Got the path for a file URI.');
+    $this->assertEqual($expected, $actual, 'Got the path for a file URI.');
 
     $actual = $this->style->buildUri('foo/bar.gif');
     $expected = "$scheme://styles/" . $this->style->id() . "/$scheme/foo/bar.gif";
-    $this->assertEqual($actual, $expected, 'Got the path for a relative file path.');
+    $this->assertEqual($expected, $actual, 'Got the path for a relative file path.');
   }
 
   /**
@@ -177,7 +177,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     // in it.
     if ($extra_slash) {
       $modified_uri = str_replace('://', ':///', $original_uri);
-      $this->assertNotEqual($original_uri, $modified_uri, 'An extra slash was added to the generated file URI.');
+      $this->assertNotEquals($original_uri, $modified_uri, 'An extra slash was added to the generated file URI.');
       $generate_url = $this->style->buildUrl($modified_uri, $clean_url);
     }
     if (!$clean_url) {
@@ -300,8 +300,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     // Stop suppressing the security token in the URL.
     $this->config('image.settings')->set('suppress_itok_output', FALSE)->save();
     // Ensure allow_insecure_derivatives is enabled.
-    $this->assertEqual($this->config('image.settings')
-      ->get('allow_insecure_derivatives'), TRUE);
+    $this->assertEqual(TRUE, $this->config('image.settings')->get('allow_insecure_derivatives'));
     // Check that a security token is still required when generating a second
     // image derivative using the first one as a source.
     $nested_url = $this->style->buildUrl($generated_uri, $clean_url);

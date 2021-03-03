@@ -144,7 +144,7 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
 
     if (!empty($logger)) {
       $query_end = microtime(TRUE);
-      $logger->log($this, $args, $query_end - $query_start);
+      $logger->log($this, $args, $query_end - $query_start, $query_start);
     }
 
     return $return;
@@ -217,9 +217,9 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
   /**
    * {@inheritdoc}
    */
-  public function fetchObject(string $class_name = NULL) {
+  public function fetchObject(string $class_name = NULL, array $constructor_arguments = NULL) {
     if ($class_name) {
-      return $this->clientStatement->fetchObject($class_name);
+      return $this->clientStatement->fetchObject($class_name, $constructor_arguments);
     }
     return $this->clientStatement->fetchObject();
   }

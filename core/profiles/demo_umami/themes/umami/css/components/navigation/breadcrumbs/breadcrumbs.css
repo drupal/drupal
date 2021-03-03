@@ -3,15 +3,15 @@
  * This file is used to style the breadcrumbs.
  */
 .breadcrumb {
-  padding: 0.79rem 1.266rem;
+  padding: 0.79rem 4%;
 }
 .breadcrumb li {
   display: inline-block;
 }
-/* Large */
-@media screen and (min-width: 60rem) { /* 960px */
+/* Extra large + side margins */
+@media screen and (min-width: 80rem) { /* 1200px (large) + 80px (side margins) = 1280px */
   .breadcrumb {
-    padding-right: 2.37rem;
-    padding-left: 2.37rem;
+    padding-right: 0;
+    padding-left: 0;
   }
 }

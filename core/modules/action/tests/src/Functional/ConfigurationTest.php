@@ -52,8 +52,9 @@ class ConfigurationTest extends BrowserTestBase {
     $action_id = $edit['id'];
 
     // Make sure that the new complex action was saved properly.
-    $this->assertText('The action has been successfully saved.', "Make sure we get a confirmation that we've successfully saved the complex action.");
-    $this->assertText($action_label, "Make sure the action label appears on the configuration page after we've saved the complex action.");
+    $this->assertText('The action has been successfully saved.');
+    // The action label appears on the configuration page.
+    $this->assertText($action_label);
 
     // Make another POST request to the action edit page.
     $this->clickLink(t('Configure'));
@@ -66,9 +67,12 @@ class ConfigurationTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Make sure that the action updated properly.
-    $this->assertText('The action has been successfully saved.', "Make sure we get a confirmation that we've successfully updated the complex action.");
-    $this->assertNoText($action_label, "Make sure the old action label does NOT appear on the configuration page after we've updated the complex action.");
-    $this->assertText($new_action_label, "Make sure the action label appears on the configuration page after we've updated the complex action.");
+    $this->assertText('The action has been successfully saved.');
+    // The old action label does NOT appear on the configuration page.
+    $this->assertNoText($action_label);
+    // The action label appears on the configuration page after we've updated
+    // the complex action.
+    $this->assertText($new_action_label);
 
     $this->clickLink(t('Configure'));
     $element = $this->xpath('//input[@type="text" and @value="admin"]');
@@ -86,7 +90,8 @@ class ConfigurationTest extends BrowserTestBase {
     $this->assertRaw(t('The action %action has been deleted.', ['%action' => $new_action_label]));
     $this->drupalGet('admin/config/system/actions');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertNoText($new_action_label, "Make sure the action label does not appear on the overview page after we've deleted the action.");
+    // The action label does not appear on the overview page.
+    $this->assertNoText($new_action_label);
 
     $action = Action::load($action_id);
     $this->assertNull($action, 'Make sure the action is gone after being deleted.');

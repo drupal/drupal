@@ -99,7 +99,7 @@ class DatabaseBackendTest extends GenericCacheBackendUnitTestBase {
     $table = 'cache_' . $this->testBin;
     $connection = $this->container->get('database');
     $query = $connection->select($table);
-    $query->addExpression('COUNT(cid)', 'cid');
+    $query->addExpression('COUNT([cid])', 'cid');
     return (int) $query->execute()->fetchField();
   }
 

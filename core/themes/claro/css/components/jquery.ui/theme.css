@@ -79,9 +79,9 @@
 .ui-icon {
   display: block;
   overflow: hidden;
-  width: 16px;
-  height: 16px;
-  text-indent: -99999px;
+  width: 1rem;
+  height: 1rem;
+  text-indent: -6249.9375rem;
   background-image: url(../../../images/ui-icons-222222-256x240.png);
   background-repeat: no-repeat;
 }
@@ -111,11 +111,11 @@
 }
 
 .ui-widget p .ui-icon {
-  margin: 2px 3px 0 0; /* LTR */
+  margin: 2px 0.1875rem 0 0; /* LTR */
 }
 
 [dir="rtl"] .ui-widget p .ui-icon {
-  margin: 2px 0 0 3px;
+  margin: 2px 0 0 0.1875rem;
 }
 
 /* positioning */
@@ -481,7 +481,7 @@
 
 .ui-accordion h3.ui-accordion-header,
 #block-system-main h3.ui-accordion-header {
-  margin: 10px 0;
+  margin: 0.625rem 0;
   font-size: 1.1em;
 }
 
@@ -510,27 +510,27 @@
 
 .ui-tabs .ui-tabs-nav {
   margin: 0;
-  padding: 5px 10px 4px;
+  padding: 0.3125rem 0.625rem 0.25rem;
   border-bottom: solid 1px #ccc;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
-  line-height: 20px;
+  line-height: 1.25rem;
 }
 
 .ui-tabs .ui-tabs-nav li {
   margin: 0;
-  padding: 0 1em 0 10px; /* LTR */
+  padding: 0 1em 0 0.625rem; /* LTR */
   list-style: none;
 }
 
 [dir="rtl"] .ui-tabs .ui-tabs-nav li {
-  padding: 0 10px 0 1em;
+  padding: 0 0.625rem 0 1em;
 }
 
 .ui-tabs .ui-tabs-nav li a {
   float: none;
-  padding: 0 10px;
-  border-radius: 10px;
+  padding: 0 0.625rem;
+  border-radius: 0.625rem;
 }
 
 .ui-tabs .ui-tabs-nav li.ui-tabs-selected a {
@@ -566,7 +566,7 @@
   border-right-color: #d2d2d2;
   border-bottom: 1px solid #b4b4b4;
   border-left-color: #d2d2d2;
-  border-radius: 4px;
+  border-radius: 0.25rem;
   background-color: #e4e4e4;
 }
 

@@ -3,6 +3,7 @@
 namespace Drupal\Tests\workspaces\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
 /**
  * Test the workspace entity.
@@ -12,11 +13,12 @@ use Drupal\Tests\BrowserTestBase;
 class WorkspaceTest extends BrowserTestBase {
 
   use WorkspaceTestUtilities;
+  use ContentTypeCreationTrait;
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['workspaces', 'toolbar', 'field_ui'];
+  protected static $modules = ['block', 'field_ui', 'node', 'toolbar', 'user', 'workspaces'];
 
   /**
    * {@inheritdoc}
@@ -183,6 +185,29 @@ class WorkspaceTest extends BrowserTestBase {
     // Check that the field is displayed on the manage display page.
     $this->drupalGet('admin/config/workflow/workspaces/display');
     $this->assertText($field_label);
+  }
+
+  /**
+   * Verifies that a workspace with existing content may be deleted.
+   */
+  public function testDeleteWorkspaceWithExistingContent() {
+    $this->createContentType(['type' => 'test', 'label' => 'Test']);
+    $this->setupWorkspaceSwitcherBlock();
+
+    // Login and create a workspace.
+    $this->drupalLogin($this->rootUser);
+    $may_4 = $this->createWorkspaceThroughUi('May 4', 'may_4');
+    $this->switchToWorkspace($may_4);
+
+    // Create a node in the workspace.
+    $node = $this->createNodeThroughUi('A mayfly flies / In May or June', 'test');
+
+    // Delete the workspace.
+    $this->drupalGet('/admin/config/workflow/workspaces/manage/may_4/delete');
+    $this->assertSession()->statusCodeEquals(200);
+    $page = $this->getSession()->getPage();
+    $page->findButton('Delete')->click();
+    $page->hasContent('The workspace May 4 has been deleted.');
   }
 
 }

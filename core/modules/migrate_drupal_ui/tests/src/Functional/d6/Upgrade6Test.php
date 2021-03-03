@@ -77,13 +77,13 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'comment' => 8,
       // The 'standard' profile provides the 'comment' comment type, and the
       // migration creates 12 comment types, one per node type.
-      'comment_type' => 13,
+      'comment_type' => 14,
       'contact_form' => 5,
       'contact_message' => 0,
       'configurable_language' => 5,
       'editor' => 2,
-      'field_config' => 99,
-      'field_storage_config' => 70,
+      'field_config' => 103,
+      'field_storage_config' => 71,
       'file' => 7,
       'filter_format' => 7,
       'image_style' => 6,
@@ -91,7 +91,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'node' => 18,
       // The 'book' module provides the 'book' node type, and the migration
       // creates 12 node types.
-      'node_type' => 13,
+      'node_type' => 14,
       'rdf_mapping' => 7,
       'search_page' => 2,
       'shortcut' => 2,
@@ -107,11 +107,11 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'menu_link_content' => 10,
       'view' => 16,
       'date_format' => 11,
-      'entity_form_display' => 29,
+      'entity_form_display' => 31,
       'entity_form_mode' => 1,
-      'entity_view_display' => 58,
+      'entity_view_display' => 61,
       'entity_view_mode' => 14,
-      'base_field_override' => 38,
+      'base_field_override' => 41,
     ];
   }
 
@@ -122,7 +122,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
     $counts = $this->getEntityCounts();
     $counts['block_content'] = 3;
     $counts['comment'] = 9;
-    $counts['entity_view_display'] = 58;
+    $counts['entity_view_display'] = 61;
     $counts['entity_view_mode'] = 14;
     $counts['file'] = 8;
     $counts['menu_link_content'] = 11;
@@ -142,6 +142,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'Block',
       'Block translation',
       'Book',
+      'CCK translation',
       'Comment',
       'Contact',
       'Content',
@@ -154,6 +155,8 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'Forum',
       'ImageCache',
       'ImageField',
+      'Internationalization',
+      'Locale',
       'Menu',
       'Menu translation',
       'Node',
@@ -163,9 +166,11 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'Profile translation',
       'Search',
       'Statistics',
+      'String translation',
       'Synchronize translations',
       'System',
       'Taxonomy',
+      'Taxonomy translation',
       'Text',
       'Update status',
       'Upload',
@@ -188,13 +193,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
    * {@inheritdoc}
    */
   protected function getMissingPaths() {
-    return [
-      'CCK translation',
-      'Internationalization',
-      'Locale',
-      'String translation',
-      'Taxonomy translation',
-    ];
+    return [];
   }
 
   /**

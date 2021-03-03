@@ -52,7 +52,7 @@
       padding-left: 1em
 }
 
-@media (min-width: 700px) {
+@media (min-width: 43.75rem) {
 
 [dir="ltr"] .node--type-book .links.inline {
     text-align: right

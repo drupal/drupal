@@ -35,7 +35,6 @@ class MigrateShortcutSetUsersTest extends MigrateDrupal7TestBase {
     $this->migrateUsers(FALSE);
     $this->executeMigration('d7_shortcut_set');
     $this->executeMigration('d7_menu');
-    $this->executeMigration('d7_menu_links');
     $this->executeMigration('d7_shortcut');
     $this->executeMigration('d7_shortcut_set_users');
   }
@@ -48,7 +47,7 @@ class MigrateShortcutSetUsersTest extends MigrateDrupal7TestBase {
     $account = User::load(2);
     $shortcut_set = shortcut_current_displayed_set($account);
     /** @var \Drupal\shortcut\ShortcutSetInterface $shortcut_set */
-    $this->assertIdentical('shortcut_set_2', $shortcut_set->id());
+    $this->assertSame('shortcut_set_2', $shortcut_set->id());
   }
 
 }

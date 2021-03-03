@@ -82,13 +82,13 @@ class SearchPageTextTest extends BrowserTestBase {
     $this->assertText('Search');
     $title_source = 'Search for @keywords | Drupal';
     $this->assertSession()->titleEquals('Search for ' . Unicode::truncate($search_terms, 60, TRUE, TRUE) . ' | Drupal');
-    $this->assertNoText('Node', 'Erroneous tab and breadcrumb text is not present');
-    $this->assertNoText('Node', 'Erroneous translated tab and breadcrumb text is not present');
-    $this->assertText('Content', 'Tab and breadcrumb text is present');
+    $this->assertNoText('Node');
+    $this->assertNoText('Node');
+    $this->assertText('Content');
 
     $this->clickLink('About searching');
-    $this->assertText('About searching', 'Correct title is on search help page');
-    $this->assertText('Use upper-case OR to get more results', 'Correct text is on content search help page');
+    $this->assertText('About searching');
+    $this->assertText('Use upper-case OR to get more results');
 
     // Search for a longer text, and see that it is in the title, truncated.
     $edit = [];
@@ -102,7 +102,7 @@ class SearchPageTextTest extends BrowserTestBase {
     $edit['keys'] = $search_terms;
     $this->drupalPostForm('search/node', $edit, 'Search');
     $actual_title = $this->xpath('//title')[0]->getText();
-    $this->assertEqual($actual_title, Html::decodeEntities(t($title_source, ['@keywords' => Unicode::truncate($search_terms, 60, TRUE, TRUE)])), 'Search page title is correct');
+    $this->assertEqual(Html::decodeEntities(t($title_source, ['@keywords' => Unicode::truncate($search_terms, 60, TRUE, TRUE)])), $actual_title, 'Search page title is correct');
 
     $edit['keys'] = $this->searchingUser->getAccountName();
     $this->drupalPostForm('search/user', $edit, 'Search');
@@ -110,8 +110,8 @@ class SearchPageTextTest extends BrowserTestBase {
     $this->assertSession()->titleEquals('Search for ' . Unicode::truncate($this->searchingUser->getAccountName(), 60, TRUE, TRUE) . ' | Drupal');
 
     $this->clickLink('About searching');
-    $this->assertText('About searching', 'Correct title is on search help page');
-    $this->assertText('user names and partial user names', 'Correct text is on user search help page');
+    $this->assertText('About searching');
+    $this->assertText('user names and partial user names');
 
     // Test that search keywords containing slashes are correctly loaded
     // from the GET params and displayed in the search form.
@@ -138,37 +138,37 @@ class SearchPageTextTest extends BrowserTestBase {
     // Test that a search on Node or User with no keywords entered generates
     // the "Please enter some keywords" message.
     $this->drupalPostForm('search/node', [], 'Search');
-    $this->assertText('Please enter some keywords', 'With no keywords entered, message is displayed on node page');
+    $this->assertText('Please enter some keywords');
     $this->drupalPostForm('search/user', [], 'Search');
-    $this->assertText('Please enter some keywords', 'With no keywords entered, message is displayed on user page');
+    $this->assertText('Please enter some keywords');
 
     // Make sure the "Please enter some keywords" message is NOT displayed if
     // you use "or" words or phrases in Advanced Search.
     $this->drupalPostForm('search/node', ['or' => $this->randomMachineName() . ' ' . $this->randomMachineName()], 'edit-submit--2');
-    $this->assertNoText('Please enter some keywords', 'With advanced OR keywords entered, no keywords message is not displayed on node page');
+    $this->assertNoText('Please enter some keywords');
     $this->drupalPostForm('search/node', ['phrase' => '"' . $this->randomMachineName() . '" "' . $this->randomMachineName() . '"'], 'edit-submit--2');
-    $this->assertNoText('Please enter some keywords', 'With advanced phrase entered, no keywords message is not displayed on node page');
+    $this->assertNoText('Please enter some keywords');
 
     // Verify that if you search for a too-short keyword, you get the right
     // message, and that if after that you search for a longer keyword, you
     // do not still see the message.
     $this->drupalPostForm('search/node', ['keys' => $this->randomMachineName(1)], 'Search');
-    $this->assertText('You must include at least one keyword', 'Keyword message is displayed when searching for short word');
-    $this->assertNoText('Please enter some keywords', 'With short word entered, no keywords message is not displayed');
+    $this->assertText('You must include at least one keyword');
+    $this->assertNoText('Please enter some keywords');
     $this->submitForm(['keys' => $this->randomMachineName()], 'Search');
-    $this->assertNoText('You must include at least one keyword', 'Keyword message is not displayed when searching for long word after short word search');
+    $this->assertNoText('You must include at least one keyword');
 
     // Test that if you search for a URL with .. in it, you still end up at
     // the search page. See issue https://www.drupal.org/node/890058.
     $this->drupalPostForm('search/node', ['keys' => '../../admin'], 'Search');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('no results', 'Searching for ../../admin with non-admin user gives you a no search results page');
+    $this->assertText('no results');
 
     // Test that if you search for a URL starting with "./", you still end up
     // at the search page. See issue https://www.drupal.org/node/1421560.
     $this->drupalPostForm('search/node', ['keys' => '.something'], 'Search');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('no results', 'Searching for .something gives you a no search results page');
+    $this->assertText('no results');
   }
 
 }

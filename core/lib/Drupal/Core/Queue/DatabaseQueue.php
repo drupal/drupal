@@ -162,7 +162,7 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
           'expire' => 0,
         ])
         ->condition('item_id', $item->item_id);
-      return $update->execute();
+      return (bool) $update->execute();
     }
     catch (\Exception $e) {
       $this->catchException($e);
@@ -189,7 +189,7 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
           'expire' => $expire,
         ])
         ->condition('item_id', $item->item_id);
-      return $update->execute();
+      return (bool) $update->execute();
     }
     catch (\Exception $e) {
       $this->catchException($e);

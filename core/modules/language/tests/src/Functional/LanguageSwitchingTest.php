@@ -85,7 +85,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
   protected function doTestLanguageBlockAuthenticated($block_label) {
     // Assert that the language switching block is displayed on the frontpage.
     $this->drupalGet('');
-    $this->assertText($block_label, 'Language switcher block found.');
+    $this->assertText($block_label);
 
     // Assert that each list item and anchor element has the appropriate data-
     // attributes.
@@ -112,17 +112,17 @@ class LanguageSwitchingTest extends BrowserTestBase {
       0 => ['langcode_class' => 'en', 'data-drupal-link-system-path' => 'user/2'],
       1 => ['langcode_class' => 'fr', 'data-drupal-link-system-path' => 'user/2'],
     ];
-    $this->assertIdentical($list_items, $expected_list_items, 'The list items have the correct attributes that will allow the drupal.active-link library to mark them as active.');
+    $this->assertSame($expected_list_items, $list_items, 'The list items have the correct attributes that will allow the drupal.active-link library to mark them as active.');
     $expected_anchors = [
       0 => ['hreflang' => 'en', 'data-drupal-link-system-path' => 'user/2'],
       1 => ['hreflang' => 'fr', 'data-drupal-link-system-path' => 'user/2'],
     ];
-    $this->assertIdentical($anchors, $expected_anchors, 'The anchors have the correct attributes that will allow the drupal.active-link library to mark them as active.');
+    $this->assertSame($expected_anchors, $anchors, 'The anchors have the correct attributes that will allow the drupal.active-link library to mark them as active.');
     $settings = $this->getDrupalSettings();
-    $this->assertIdentical($settings['path']['currentPath'], 'user/2', 'drupalSettings.path.currentPath is set correctly to allow drupal.active-link to mark the correct links as active.');
+    $this->assertSame('user/2', $settings['path']['currentPath'], 'drupalSettings.path.currentPath is set correctly to allow drupal.active-link to mark the correct links as active.');
     $this->assertFalse($settings['path']['isFront'], 'drupalSettings.path.isFront is set correctly to allow drupal.active-link to mark the correct links as active.');
-    $this->assertIdentical($settings['path']['currentLanguage'], 'en', 'drupalSettings.path.currentLanguage is set correctly to allow drupal.active-link to mark the correct links as active.');
-    $this->assertIdentical($labels, ['English', 'français'], 'The language links labels are in their own language on the language switcher block.');
+    $this->assertSame('en', $settings['path']['currentLanguage'], 'drupalSettings.path.currentLanguage is set correctly to allow drupal.active-link to mark the correct links as active.');
+    $this->assertSame(['English', 'français'], $labels, 'The language links labels are in their own language on the language switcher block.');
   }
 
   /**
@@ -139,7 +139,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
     // Assert that the language switching block is displayed on the frontpage
     // and ensure that the active class is added when query params are present.
     $this->drupalGet('', ['query' => ['foo' => 'bar']]);
-    $this->assertText($block_label, 'Language switcher block found.');
+    $this->assertText($block_label);
 
     // Assert that only the current language is marked as active.
     $language_switchers = $this->xpath('//div[@id=:id]/ul/li', [':id' => 'block-test-language-block']);
@@ -172,9 +172,9 @@ class LanguageSwitchingTest extends BrowserTestBase {
       }
       $labels[] = $link->getText();
     }
-    $this->assertIdentical($links, ['active' => ['en'], 'inactive' => ['fr']], 'Only the current language list item is marked as active on the language switcher block.');
-    $this->assertIdentical($anchors, ['active' => ['en'], 'inactive' => ['fr']], 'Only the current language anchor is marked as active on the language switcher block.');
-    $this->assertIdentical($labels, ['English', 'français'], 'The language links labels are in their own language on the language switcher block.');
+    $this->assertSame(['active' => ['en'], 'inactive' => ['fr']], $links, 'Only the current language list item is marked as active on the language switcher block.');
+    $this->assertSame(['active' => ['en'], 'inactive' => ['fr']], $anchors, 'Only the current language anchor is marked as active on the language switcher block.');
+    $this->assertSame(['English', 'français'], $labels, 'The language links labels are in their own language on the language switcher block.');
   }
 
   /**
@@ -203,7 +203,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
       'domain[en]' => '',
     ];
     $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, 'Save configuration');
-    $this->assertText('The domain may not be left blank for English', 'The form does not allow blank domains.');
+    $this->assertText('The domain may not be left blank for English');
 
     // Change the domain for the Italian language.
     $edit = [
@@ -212,7 +212,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
       'domain[it]' => 'it.example.com',
     ];
     $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, 'Save configuration');
-    $this->assertText('The configuration options have been saved', 'Domain configuration is saved.');
+    $this->assertText('The configuration options have been saved');
 
     // Enable the language switcher block.
     $this->drupalPlaceBlock('language_block:' . LanguageInterface::TYPE_INTERFACE, ['id' => 'test_language_block']);
@@ -228,7 +228,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
       ':hreflang' => 'en',
     ]);
     $english_url = $generator->generateFromRoute('entity.user.canonical', ['user' => 2], ['language' => $languages['en']]);
-    $this->assertEqual($english_url, $english_link->getAttribute('href'));
+    $this->assertEqual($english_link->getAttribute('href'), $english_url);
 
     // Verify the Italian URL is correct
     list($italian_link) = $this->xpath('//div[@id=:id]/ul/li/a[@hreflang=:hreflang]', [
@@ -236,7 +236,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
       ':hreflang' => 'it',
     ]);
     $italian_url = $generator->generateFromRoute('entity.user.canonical', ['user' => 2], ['language' => $languages['it']]);
-    $this->assertEqual($italian_url, $italian_link->getAttribute('href'));
+    $this->assertEqual($italian_link->getAttribute('href'), $italian_url);
   }
 
   /**
@@ -330,9 +330,9 @@ class LanguageSwitchingTest extends BrowserTestBase {
 
     // Verify that drupalSettings contains the correct values.
     $settings = $this->getDrupalSettings();
-    $this->assertIdentical($settings['path']['currentPath'], $path, 'drupalSettings.path.currentPath is set correctly to allow drupal.active-link to mark the correct links as active.');
+    $this->assertSame($path, $settings['path']['currentPath'], 'drupalSettings.path.currentPath is set correctly to allow drupal.active-link to mark the correct links as active.');
     $this->assertFalse($settings['path']['isFront'], 'drupalSettings.path.isFront is set correctly to allow drupal.active-link to mark the correct links as active.');
-    $this->assertIdentical($settings['path']['currentLanguage'], 'en', 'drupalSettings.path.currentLanguage is set correctly to allow drupal.active-link to mark the correct links as active.');
+    $this->assertSame('en', $settings['path']['currentLanguage'], 'drupalSettings.path.currentLanguage is set correctly to allow drupal.active-link to mark the correct links as active.');
 
     // Test links generated by the link generator on a French page.
     $current_language = 'French';
@@ -355,9 +355,9 @@ class LanguageSwitchingTest extends BrowserTestBase {
 
     // Verify that drupalSettings contains the correct values.
     $settings = $this->getDrupalSettings();
-    $this->assertIdentical($settings['path']['currentPath'], $path, 'drupalSettings.path.currentPath is set correctly to allow drupal.active-link to mark the correct links as active.');
+    $this->assertSame($path, $settings['path']['currentPath'], 'drupalSettings.path.currentPath is set correctly to allow drupal.active-link to mark the correct links as active.');
     $this->assertFalse($settings['path']['isFront'], 'drupalSettings.path.isFront is set correctly to allow drupal.active-link to mark the correct links as active.');
-    $this->assertIdentical($settings['path']['currentLanguage'], 'fr', 'drupalSettings.path.currentLanguage is set correctly to allow drupal.active-link to mark the correct links as active.');
+    $this->assertSame('fr', $settings['path']['currentLanguage'], 'drupalSettings.path.currentLanguage is set correctly to allow drupal.active-link to mark the correct links as active.');
   }
 
   /**

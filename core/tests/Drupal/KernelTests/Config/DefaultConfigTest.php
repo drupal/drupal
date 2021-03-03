@@ -51,28 +51,45 @@ class DefaultConfigTest extends KernelTestBase {
    * @dataProvider coreModuleListDataProvider
    */
   public function testModuleConfig($module) {
+    $this->assertExtensionConfig($module, 'module');
+  }
+
+  /**
+   * Tests if installed config is equal to the exported config.
+   *
+   * @dataProvider themeListDataProvider
+   */
+  public function testThemeConfig($theme) {
+    $this->assertExtensionConfig($theme, 'theme');
+  }
+
+  /**
+   * Tests that the config provided by the extension is correct.
+   *
+   * @param string $name
+   *   Extension name.
+   * @param string $type
+   *   Extension type, either 'module' or 'theme'.
+   */
+  protected function assertExtensionConfig(string $name, string $type) {
     // System and user are required in order to be able to install some of the
     // other modules. Therefore they are put into static::$modules, which though
     // doesn't install config files, so import those config files explicitly. Do
     // this for all tests in case optional configuration depends on it.
     $this->installConfig(['system', 'user']);
 
-    $module_path = drupal_get_path('module', $module) . '/';
+    $extension_path = drupal_get_path($type, $name) . '/';
+    $extension_config_storage = new FileStorage($extension_path . InstallStorage::CONFIG_INSTALL_DIRECTORY, StorageInterface::DEFAULT_COLLECTION);
+    $optional_config_storage = new FileStorage($extension_path . InstallStorage::CONFIG_OPTIONAL_DIRECTORY, StorageInterface::DEFAULT_COLLECTION);
 
-    /** @var \Drupal\Core\Extension\ModuleInstallerInterface $module_installer */
-    $module_installer = $this->container->get('module_installer');
-
-    $module_config_storage = new FileStorage($module_path . InstallStorage::CONFIG_INSTALL_DIRECTORY, StorageInterface::DEFAULT_COLLECTION);
-    $optional_config_storage = new FileStorage($module_path . InstallStorage::CONFIG_OPTIONAL_DIRECTORY, StorageInterface::DEFAULT_COLLECTION);
-
-    if (empty($optional_config_storage->listAll()) && empty($module_config_storage->listAll())) {
-      $this->markTestSkipped("$module has no configuration to test");
+    if (empty($optional_config_storage->listAll()) && empty($extension_config_storage->listAll())) {
+      $this->markTestSkipped("$name has no configuration to test");
     }
 
     // Work out any additional modules and themes that need installing to create
     // an optional config.
-    $modules_to_install = [$module];
-    $themes_to_install = [];
+    $modules_to_install = $type !== 'theme' ? [$name] : [];
+    $themes_to_install = $type === 'theme' ? [$name] : [];
     foreach ($optional_config_storage->listAll() as $config_name) {
       $data = $optional_config_storage->read($config_name);
       $dependency = new ConfigEntityDependency($config_name, $data);
@@ -81,14 +98,36 @@ class DefaultConfigTest extends KernelTestBase {
     }
     // Remove core because that cannot be installed.
     $modules_to_install = array_diff(array_unique($modules_to_install), ['core']);
-    $module_installer->install($modules_to_install);
+    $this->container->get('module_installer')->install($modules_to_install);
     $this->container->get('theme_installer')->install(array_unique($themes_to_install));
 
     // Test configuration in the module's config/install directory.
-    $this->doTestsOnConfigStorage($module_config_storage, $module);
+    $this->doTestsOnConfigStorage($extension_config_storage, $name);
 
     // Test configuration in the module's config/optional directory.
-    $this->doTestsOnConfigStorage($optional_config_storage, $module);
+    $this->doTestsOnConfigStorage($optional_config_storage, $name);
+  }
+
+  /**
+   * A data provider that lists every theme in core.
+   *
+   * @return array
+   *   An array of theme names to test.
+   */
+  public function themeListDataProvider() {
+    $prefix = dirname(__DIR__, 4) . DIRECTORY_SEPARATOR . 'themes';
+    $theme_dirs = array_keys(iterator_to_array(new \FilesystemIterator($prefix)));
+    $theme_names = array_map(function ($path) use ($prefix) {
+      return str_replace($prefix . DIRECTORY_SEPARATOR, '', $path);
+    }, $theme_dirs);
+    $themes_keyed = array_combine($theme_names, $theme_names);
+
+    // Engines is not a theme.
+    unset($themes_keyed['engines']);
+
+    return array_map(function ($theme) {
+      return [$theme];
+    }, $themes_keyed);
   }
 
   /**

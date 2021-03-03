@@ -20,18 +20,21 @@ class LoggingTest extends DatabaseTestBase {
   public function testEnableLogging() {
     Database::startLog('testing');
 
+    $start = microtime(TRUE);
     $this->connection->query('SELECT [name] FROM {test} WHERE [age] > :age', [':age' => 25])->fetchCol();
     $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Ringo'])->fetchCol();
 
     // Trigger a call that does not have file in the backtrace.
-    call_user_func_array([Database::getConnection(), 'query'], ['SELECT age FROM {test} WHERE name = :name', [':name' => 'Ringo']])->fetchCol();
+    call_user_func_array([Database::getConnection(), 'query'], ['SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Ringo']])->fetchCol();
 
     $queries = Database::getLog('testing', 'default');
 
     $this->assertCount(3, $queries, 'Correct number of queries recorded.');
 
     foreach ($queries as $query) {
-      $this->assertEqual($query['caller']['function'], __FUNCTION__, 'Correct function in query log.');
+      $this->assertEqual(__FUNCTION__, $query['caller']['function'], 'Correct function in query log.');
+      $this->assertIsFloat($query['start']);
+      $this->assertGreaterThanOrEqual($start, $query['start']);
     }
   }
 
@@ -72,8 +75,8 @@ class LoggingTest extends DatabaseTestBase {
     $queries1 = Database::getLog('testing1');
 
     $this->assertCount(2, $queries1, 'Recorded queries from all targets.');
-    $this->assertEqual($queries1[0]['target'], 'default', 'First query used default target.');
-    $this->assertEqual($queries1[1]['target'], 'replica', 'Second query used replica target.');
+    $this->assertEqual('default', $queries1[0]['target'], 'First query used default target.');
+    $this->assertEqual('replica', $queries1[1]['target'], 'Second query used replica target.');
   }
 
   /**
@@ -98,8 +101,8 @@ class LoggingTest extends DatabaseTestBase {
     $queries1 = Database::getLog('testing1');
 
     $this->assertCount(2, $queries1, 'Recorded queries from all targets.');
-    $this->assertEqual($queries1[0]['target'], 'default', 'First query used default target.');
-    $this->assertEqual($queries1[1]['target'], 'default', 'Second query used default target as fallback.');
+    $this->assertEqual('default', $queries1[0]['target'], 'First query used default target.');
+    $this->assertEqual('default', $queries1[1]['target'], 'Second query used default target as fallback.');
   }
 
   /**
@@ -135,7 +138,7 @@ class LoggingTest extends DatabaseTestBase {
   public function testGetLoggingWrongKey() {
     $result = Database::getLog('wrong');
 
-    $this->assertEqual($result, [], 'The function getLog with a wrong key returns an empty array.');
+    $this->assertEqual([], $result, 'The function getLog with a wrong key returns an empty array.');
   }
 
   /**

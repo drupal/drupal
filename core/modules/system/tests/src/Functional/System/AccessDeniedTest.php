@@ -51,7 +51,7 @@ class AccessDeniedTest extends BrowserTestBase {
 
   public function testAccessDenied() {
     $this->drupalGet('admin');
-    $this->assertText('Access denied', 'Found the default 403 page');
+    $this->assertText('Access denied');
     $this->assertSession()->statusCodeEquals(403);
 
     // Ensure that users without permission are denied access and have the
@@ -60,9 +60,9 @@ class AccessDeniedTest extends BrowserTestBase {
     $this->drupalGet('admin', ['query' => ['foo' => 'bar']]);
 
     $settings = $this->getDrupalSettings();
-    $this->assertEqual($settings['path']['currentPath'], 'admin');
-    $this->assertEqual($settings['path']['currentPathIsAdmin'], TRUE);
-    $this->assertEqual($settings['path']['currentQuery'], ['foo' => 'bar']);
+    $this->assertEqual('admin', $settings['path']['currentPath']);
+    $this->assertTrue($settings['path']['currentPathIsAdmin']);
+    $this->assertEqual(['foo' => 'bar'], $settings['path']['currentQuery']);
 
     $this->drupalLogin($this->adminUser);
 
@@ -85,8 +85,8 @@ class AccessDeniedTest extends BrowserTestBase {
     // Log out and check that the user login block is shown on custom 403 pages.
     $this->drupalLogout();
     $this->drupalGet('admin');
-    $this->assertText($this->adminUser->getAccountName(), 'Found the custom 403 page');
-    $this->assertText('Username', 'Blocks are shown on the custom 403 page');
+    $this->assertText($this->adminUser->getAccountName());
+    $this->assertText('Username');
 
     // Log back in and remove the custom 403 page.
     $this->drupalLogin($this->adminUser);
@@ -98,9 +98,9 @@ class AccessDeniedTest extends BrowserTestBase {
     // Logout and check that the user login block is shown on default 403 pages.
     $this->drupalLogout();
     $this->drupalGet('admin');
-    $this->assertText('Access denied', 'Found the default 403 page');
+    $this->assertText('Access denied');
     $this->assertSession()->statusCodeEquals(403);
-    $this->assertText('Username', 'Blocks are shown on the default 403 page');
+    $this->assertText('Username');
 
     // Log back in, set the custom 403 page to /user/login and remove the block
     $this->drupalLogin($this->adminUser);

@@ -226,17 +226,17 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
     // Check that the expected number of entities is the same as the actual
     // number of entities.
     $entity_definitions = array_keys(\Drupal::entityTypeManager()->getDefinitions());
+    ksort($entity_counts);
     $expected_count_keys = array_keys($entity_counts);
     sort($entity_definitions);
-    sort($expected_count_keys);
     $this->assertSame($expected_count_keys, $entity_definitions);
 
-    // Assert the correct number of entities exist.
+    // Assert the correct number of entities exists.
+    $actual_entity_counts = [];
     foreach ($entity_definitions as $entity_type) {
-      $real_count = (int) \Drupal::entityQuery($entity_type)->count()->execute();
-      $expected_count = $entity_counts[$entity_type];
-      $this->assertSame($expected_count, $real_count, "Found $real_count $entity_type entities, expected $expected_count.");
+      $actual_entity_counts[$entity_type] = (int) \Drupal::entityQuery($entity_type)->count()->execute();
     }
+    $this->assertSame($entity_counts, $actual_entity_counts);
 
     $plugin_manager = \Drupal::service('plugin.manager.migration');
     $version = $this->getLegacyDrupalVersion($this->sourceDatabase);
@@ -293,6 +293,7 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
     }
     else {
       $edit['source_base_path'] = $this->getSourceBasePath();
+      $edit['source_private_file_path'] = $this->getSourcePrivateBasePath();
     }
     if (count($drivers) !== 1) {
       $edit['driver'] = $driver;
@@ -307,6 +308,35 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
     $user = User::load($uid);
     $user->passRaw = $pass;
     $this->drupalLogin($user);
+  }
+
+  /**
+   * Provides the source base path for private files for the credential form.
+   *
+   * @return string|null
+   *   The source base path.
+   */
+  protected function getSourcePrivateBasePath() {
+    return NULL;
+  }
+
+  /**
+   * Checks public and private files are copied but not temporary files.
+   */
+  protected function assertFileMigrations() {
+    $fs = \Drupal::service('file_system');
+    $files = $this->getManagedFiles();
+    foreach ($files as $file) {
+      preg_match('/^(private|public|temporary):/', $file['uri'], $matches);
+      $scheme = $matches[1];
+      $filepath = $fs->realpath($file['uri']);
+      if ($scheme === 'temporary') {
+        $this->assertFileNotExists($filepath);
+      }
+      else {
+        $this->assertFileExists($filepath);
+      }
+    }
   }
 
 }

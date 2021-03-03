@@ -337,8 +337,8 @@ class Sql extends QueryPluginBase {
    * they must join either to the primary table or to a pre-existing
    * relationship.
    *
-   * An example of a relationship would be a nodereference table.
-   * If you have a nodereference named 'book_parent' which links to a
+   * An example of a relationship would be a node reference table.
+   * If you have a node reference named 'book_parent' which links to a
    * parent node, you could set up a relationship 'node_book_parent'
    * to 'node'. Then, anything that links to 'node' can link to
    * 'node_book_parent' instead, thus allowing all properties of
@@ -1558,7 +1558,7 @@ class Sql extends QueryPluginBase {
 
   /**
    * Loads all entities contained in the passed-in $results.
-   *.
+   *
    * If the entity belongs to the base table, then it gets stored in
    * $result->_entity. Otherwise, it gets stored in
    * $result->_relationship_entities[$relationship_id];

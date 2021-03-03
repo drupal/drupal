@@ -129,7 +129,7 @@ display:
           tokenize: false
           plugin_id: text_custom
     display_plugin: default
-    display_title: Master
+    display_title: Default
     id: default
     position: 0
   page_1:

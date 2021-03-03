@@ -40,6 +40,7 @@ class ConstraintManager extends DefaultPluginManager {
    *   The module handler to invoke the alter hook with.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
+    $this->factory = new ConstraintFactory($this);
     parent::__construct('Plugin/Validation/Constraint', $namespaces, $module_handler, NULL, 'Drupal\Core\Validation\Annotation\Constraint');
     $this->alterInfo('validation_constraint');
     $this->setCacheBackend($cache_backend, 'validation_constraint_plugins');

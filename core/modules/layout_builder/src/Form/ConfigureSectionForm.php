@@ -2,14 +2,17 @@
 
 namespace Drupal\layout_builder\Form;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Ajax\AjaxFormHelperTrait;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
 use Drupal\Core\Layout\LayoutInterface;
+use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Plugin\PluginFormFactoryInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Plugin\PluginWithFormsInterface;
+use Drupal\layout_builder\Context\LayoutBuilderContextTrait;
 use Drupal\layout_builder\Controller\LayoutRebuildTrait;
 use Drupal\layout_builder\LayoutBuilderHighlightTrait;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
@@ -26,6 +29,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ConfigureSectionForm extends FormBase {
 
   use AjaxFormHelperTrait;
+  use LayoutBuilderContextTrait;
   use LayoutBuilderHighlightTrait;
   use LayoutRebuildTrait;
 
@@ -118,8 +122,12 @@ class ConfigureSectionForm extends FormBase {
     else {
       $section = new Section($plugin_id);
     }
+    // Passing available contexts to the layout plugin here could result in an
+    // exception since the layout may not have a context mapping for a required
+    // context slot on creation.
     $this->layout = $section->getLayout();
 
+    $form_state->setTemporaryValue('gathered_contexts', $this->getAvailableContexts($this->sectionStorage));
     $form['#tree'] = TRUE;
     $form['layout_settings'] = [];
     $subform_state = SubformState::createForSubform($form['layout_settings'], $form, $form_state);
@@ -132,6 +140,15 @@ class ConfigureSectionForm extends FormBase {
     ];
     if ($this->isAjax()) {
       $form['actions']['submit']['#ajax']['callback'] = '::ajaxSubmit';
+      // @todo static::ajaxSubmit() requires data-drupal-selector to be the same
+      //   between the various Ajax requests. A bug in
+      //   \Drupal\Core\Form\FormBuilder prevents that from happening unless
+      //   $form['#id'] is also the same. Normally, #id is set to a unique HTML
+      //   ID via Html::getUniqueId(), but here we bypass that in order to work
+      //   around the data-drupal-selector bug. This is okay so long as we
+      //   assume that this form only ever occurs once on a page. Remove this
+      //   workaround in https://www.drupal.org/node/2897377.
+      $form['#id'] = Html::getId($form_state->getBuildInfo()['form_id']);
     }
     $target_highlight_id = $this->isUpdate ? $this->sectionUpdateHighlightId($delta) : $this->sectionAddHighlightId($delta);
     $form['#attributes']['data-layout-builder-target-highlight-id'] = $target_highlight_id;
@@ -156,6 +173,11 @@ class ConfigureSectionForm extends FormBase {
     // Call the plugin submit handler.
     $subform_state = SubformState::createForSubform($form['layout_settings'], $form, $form_state);
     $this->getPluginForm($this->layout)->submitConfigurationForm($form['layout_settings'], $subform_state);
+
+    // If this layout is context-aware, set the context mapping.
+    if ($this->layout instanceof ContextAwarePluginInterface) {
+      $this->layout->setContextMapping($subform_state->getValue('context_mapping', []));
+    }
 
     $plugin_id = $this->layout->getPluginId();
     $configuration = $this->layout->getConfiguration();

@@ -55,7 +55,7 @@ class StatisticsTokenReplaceTest extends StatisticsTestBase {
 
     foreach ($tests as $input => $expected) {
       $output = \Drupal::token()->replace($input, ['node' => $node], ['langcode' => $language_interface->getId()]);
-      $this->assertEqual($output, $expected, new FormattableMarkup('Statistics token %token replaced.', ['%token' => $input]));
+      $this->assertEqual($expected, $output, new FormattableMarkup('Statistics token %token replaced.', ['%token' => $input]));
     }
   }
 

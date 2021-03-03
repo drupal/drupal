@@ -550,7 +550,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         $all_fields = $revisioned_fields;
         if ($data_fields) {
           $all_fields = array_merge($revisioned_fields, $data_fields);
-          $query->leftJoin($this->dataTable, 'data', "(revision.$this->idKey = data.$this->idKey and revision.$this->langcodeKey = data.$this->langcodeKey)");
+          $query->leftJoin($this->dataTable, 'data', "([revision].[$this->idKey] = [data].[$this->idKey] AND [revision].[$this->langcodeKey] = [data].[$this->langcodeKey])");
           $column_names = [];
           // Some fields can have more then one columns in the data table so
           // column names are needed.
@@ -695,10 +695,10 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     $query->addTag($this->entityTypeId . '_load_multiple');
 
     if ($revision_ids) {
-      $query->join($this->revisionTable, 'revision', "revision.{$this->idKey} = base.{$this->idKey} AND revision.{$this->revisionKey} IN (:revisionIds[])", [':revisionIds[]' => $revision_ids]);
+      $query->join($this->revisionTable, 'revision', "[revision].[{$this->idKey}] = [base].[{$this->idKey}] AND [revision].[{$this->revisionKey}] IN (:revisionIds[])", [':revisionIds[]' => $revision_ids]);
     }
     elseif ($this->revisionTable) {
-      $query->join($this->revisionTable, 'revision', "revision.{$this->revisionKey} = base.{$this->revisionKey}");
+      $query->join($this->revisionTable, 'revision', "[revision].[{$this->revisionKey}] = [base].[{$this->revisionKey}]");
     }
 
     // Add fields from the {entity} table.
@@ -724,7 +724,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
       // Compare revision ID of the base and revision table, if equal then this
       // is the default revision.
-      $query->addExpression('CASE base.' . $this->revisionKey . ' WHEN revision.' . $this->revisionKey . ' THEN 1 ELSE 0 END', 'isDefaultRevision');
+      $query->addExpression('CASE [base].[' . $this->revisionKey . '] WHEN [revision].[' . $this->revisionKey . '] THEN 1 ELSE 0 END', 'isDefaultRevision');
     }
 
     $query->fields('base', $entity_fields);

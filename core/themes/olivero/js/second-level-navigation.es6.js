@@ -11,15 +11,27 @@
    * @param {boolean} [toState] - Optional state where we want the submenu to end up.
    */
   function toggleSubNav(topLevelMenuITem, toState) {
-    const button = topLevelMenuITem.querySelector(
-      '.primary-nav__button-toggle, .primary-nav__menu-link--button',
-    );
+    const buttonSelector =
+      '.primary-nav__button-toggle, .primary-nav__menu-link--button';
+    const button = topLevelMenuITem.querySelector(buttonSelector);
     const state =
       toState !== undefined
         ? toState
         : button.getAttribute('aria-expanded') !== 'true';
 
     if (state) {
+      // If desktop nav, ensure all menus close before expanding new one.
+      if (isDesktopNav()) {
+        secondLevelNavMenus.forEach((el) => {
+          el.querySelector(buttonSelector).setAttribute(
+            'aria-expanded',
+            'false',
+          );
+          el.querySelector('.primary-nav__menu--level-2').classList.remove(
+            'is-active',
+          );
+        });
+      }
       button.setAttribute('aria-expanded', 'true');
       topLevelMenuITem
         .querySelector('.primary-nav__menu--level-2')

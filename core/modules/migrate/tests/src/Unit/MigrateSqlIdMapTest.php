@@ -110,7 +110,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
     $migration
       ->method('getDestinationPlugin')
       ->willReturn($plugin);
-    $event_dispatcher = $this->createMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
+    $event_dispatcher = $this->createMock('Symfony\Contracts\EventDispatcher\EventDispatcherInterface');
 
     $id_map = new TestSqlIdMap($this->database, [], 'sql', [], $migration, $event_dispatcher);
     $migration

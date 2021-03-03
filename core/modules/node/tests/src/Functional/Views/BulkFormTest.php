@@ -93,7 +93,7 @@ class BulkFormTest extends NodeTestBase {
       'bypass node access',
     ]));
     $this->drupalGet('test-node-bulk-form');
-    $elements = $this->xpath('//select[@id="edit-action"]//option');
+    $elements = $this->assertSession()->selectExists('edit-action')->findAll('css', 'option');
     $this->assertCount(8, $elements, 'All node operations are found.');
   }
 

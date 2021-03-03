@@ -472,11 +472,7 @@ class FormTest extends BrowserTestBase {
       'multiple_no_default_required' => ['three' => 'three'],
     ];
     foreach ($expected as $key => $value) {
-      $this->assertIdentical($values[$key], $value, new FormattableMarkup('@name: @actual is equal to @expected.', [
-        '@name' => $key,
-        '@actual' => var_export($values[$key], TRUE),
-        '@expected' => var_export($value, TRUE),
-      ]));
+      $this->assertSame($value, $values[$key], new FormattableMarkup('@name: @actual is equal to @expected.', ['@name' => $key, '@actual' => var_export($values[$key], TRUE), '@expected' => var_export($value, TRUE)]));
     }
   }
 
@@ -606,7 +602,7 @@ class FormTest extends BrowserTestBase {
       ->findAll('css', 'option, optgroup');
 
     $options = array_map($option_map_function, $option_nodes);
-    $this->assertIdentical($order, $options);
+    $this->assertSame($order, $options);
   }
 
   /**
@@ -679,10 +675,10 @@ class FormTest extends BrowserTestBase {
   public function testRange() {
     $this->drupalPostForm('form-test/range', [], 'Submit');
     $values = json_decode($this->getSession()->getPage()->getContent());
-    $this->assertEqual($values->with_default_value, 18);
-    $this->assertEqual($values->float, 10.5);
-    $this->assertEqual($values->integer, 6);
-    $this->assertEqual($values->offset, 6.9);
+    $this->assertEqual(18, $values->with_default_value);
+    $this->assertEqual(10.5, $values->float);
+    $this->assertEqual(6, $values->integer);
+    $this->assertEqual(6.9, $values->offset);
 
     $this->drupalPostForm('form-test/range/invalid', [], 'Submit');
     // Verify that the 'range' element has the error class.
@@ -711,7 +707,7 @@ class FormTest extends BrowserTestBase {
       ];
       $this->drupalPostForm('form-test/color', $edit, 'Submit');
       $result = json_decode($this->getSession()->getPage()->getContent());
-      $this->assertEqual($result->color, $expected);
+      $this->assertEqual($expected, $result->color);
     }
 
     // Tests invalid values are rejected.
@@ -769,10 +765,7 @@ class FormTest extends BrowserTestBase {
     // the disabled container.
     $actual_count = count($disabled_elements);
     $expected_count = 42;
-    $this->assertEqual($actual_count, $expected_count, new FormattableMarkup('Found @actual elements with disabled property (expected @expected).', [
-      '@actual' => count($disabled_elements),
-      '@expected' => $expected_count,
-    ]));
+    $this->assertEqual($expected_count, $actual_count, new FormattableMarkup('Found @actual elements with disabled property (expected @expected).', ['@actual' => count($disabled_elements), '@expected' => $expected_count]));
 
     // Mink does not "see" hidden elements, so we need to set the value of the
     // hidden element directly.
@@ -807,7 +800,7 @@ class FormTest extends BrowserTestBase {
           // Checkboxes values are not filtered out.
           $values[$key] = array_filter($values[$key]);
         }
-        $this->assertIdentical($expected_value, $values[$key], new FormattableMarkup('Default value for %type: expected %expected, returned %returned.', ['%type' => $key, '%expected' => var_export($expected_value, TRUE), '%returned' => var_export($values[$key], TRUE)]));
+        $this->assertSame($expected_value, $values[$key], new FormattableMarkup('Default value for %type: expected %expected, returned %returned.', ['%type' => $key, '%expected' => var_export($expected_value, TRUE), '%returned' => var_export($values[$key], TRUE)]));
       }
 
       // Recurse children.
@@ -891,7 +884,7 @@ class FormTest extends BrowserTestBase {
     // an input forgery.
     // @see \Drupal\form_test\Form\FormTestInputForgeryForm::postRender
     $this->submitForm(['checkboxes[one]' => TRUE, 'checkboxes[two]' => TRUE], 'Submit');
-    $this->assertText('An illegal choice has been detected.', 'Input forgery was detected.');
+    $this->assertText('An illegal choice has been detected.');
   }
 
   /**

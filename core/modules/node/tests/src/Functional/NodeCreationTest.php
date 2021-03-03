@@ -5,6 +5,7 @@ namespace Drupal\Tests\node\Functional;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\node\Entity\Node;
+use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
 /**
  * Create a node and test saving it.
@@ -12,6 +13,8 @@ use Drupal\node\Entity\Node;
  * @group node
  */
 class NodeCreationTest extends NodeTestBase {
+
+  use ContentTypeCreationTrait;
 
   /**
    * Modules to enable.
@@ -43,6 +46,18 @@ class NodeCreationTest extends NodeTestBase {
   }
 
   /**
+   * Tests the order of the node types on the add page.
+   */
+  public function testNodeAddPageOrder() {
+    $this->createContentType(['type' => 'bundle_1', 'name' => 'Bundle 1']);
+    $this->createContentType(['type' => 'bundle_2', 'name' => 'Aaa Bundle 2']);
+    $admin_content_types = $this->drupalCreateUser(['bypass node access']);
+    $this->drupalLogin($admin_content_types);
+    $this->drupalGet('node/add');
+    $this->assertSession()->pageTextMatches('/Aaa Bundle 2(.*)Bundle 1/');
+  }
+
+  /**
    * Creates a "Basic page" node and verifies its consistency in the database.
    */
   public function testNodeCreation() {
@@ -60,7 +75,7 @@ class NodeCreationTest extends NodeTestBase {
     $this->drupalPostForm('node/add/page', $edit, 'Save');
 
     // Check that the Basic page has been created.
-    $this->assertText('Basic page ' . $edit['title[0][value]'] . ' has been created.', 'Basic page created.');
+    $this->assertText('Basic page ' . $edit['title[0][value]'] . ' has been created.');
 
     // Verify that the creation message contains a link to a node.
     $this->assertSession()->elementExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "node/")]');

@@ -24,16 +24,16 @@
 .feed-icon__label {
   flex-shrink: 0;
   letter-spacing: 0.08em;
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 600;
 }
 
 [dir="ltr"] .feed-icon__icon {
-  margin-left: 9px
+  margin-left: 0.5625rem
 }
 
 [dir="rtl"] .feed-icon__icon {
-  margin-right: 9px
+  margin-right: 0.5625rem
 }
 
 .feed-icon__icon {
@@ -41,8 +41,8 @@
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  width: 27px;
-  height: 27px;
+  width: 1.6875rem;
+  height: 1.6875rem;
   color: #fff;
   background-color: #2494db
 }

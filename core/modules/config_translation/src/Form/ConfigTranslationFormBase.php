@@ -5,6 +5,7 @@ namespace Drupal\config_translation\Form;
 use Drupal\config_translation\ConfigMapperManagerInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\Form\BaseFormIdInterface;
 use Drupal\Core\Form\FormBase;
@@ -239,7 +240,7 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
     // Sequence schema elements.
     if (isset($definition['form_element_class'])) {
       if (!$definition->getLabel()) {
-        $definition->setLabel(t('n/a'));
+        $definition->setLabel(new TranslatableMarkup('n/a'));
       }
       $class = $definition['form_element_class'];
       return $class::create($schema);

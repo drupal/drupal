@@ -38,7 +38,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Route;
 use Drupal\user\Entity\User;
-use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\TransferException;
 
 /**
  * Do not run the task during the current installation request.
@@ -664,8 +664,12 @@ function install_run_task($task, &$install_state) {
       // @todo Replace this when we refactor the installer to use a request-
       //   response workflow.
       if ($output instanceof Response) {
+        if (\Drupal::request()->hasSession()) {
+          \Drupal::request()->getSession()->save();
+        }
+        // Send the response.
         $output->send();
-        $output = NULL;
+        exit;
       }
       // The task is complete when we try to access the batch page and receive
       // FALSE in return, since this means we are at a URL where we are no
@@ -1397,8 +1401,8 @@ function install_download_translation(&$install_state) {
   // Check whether all conditions are met to download. Download the translation
   // if possible.
   $requirements = install_check_translations($install_state['parameters']['langcode'], $install_state['server_pattern']);
-  // Render requirements only if any returned.
-  if ($requirements && $output = install_display_requirements($install_state, $requirements)) {
+  // Render requirements if any warnings or errors returned.
+  if ($output = install_display_requirements($install_state, $requirements)) {
     return $output;
   }
 
@@ -1442,7 +1446,7 @@ function install_retrieve_file($uri, $destination) {
       return FALSE;
     }
   }
-  catch (RequestException $e) {
+  catch (TransferException $e) {
     return FALSE;
   }
   return file_put_contents($path, $data) !== FALSE;
@@ -1462,7 +1466,7 @@ function install_check_localization_server($uri) {
     \Drupal::httpClient()->head($uri);
     return TRUE;
   }
-  catch (RequestException $e) {
+  catch (TransferException $e) {
     return FALSE;
   }
 }
@@ -1692,11 +1696,12 @@ function install_download_additional_translations_operations(&$install_state) {
   $languages = \Drupal::languageManager()->getLanguages();
   $operations = [];
   foreach ($languages as $langcode => $language) {
-    // The installer language was already downloaded. Check downloads for the
-    // other languages if any. Ignore any download errors here, since we
-    // are in the middle of an install process and there is no way back. We
-    // will not import what we cannot download.
-    if ($langcode != 'en' && $langcode != $install_state['parameters']['langcode']) {
+    // The installer language was already downloaded. Available translations are
+    // stored in $install_state. Check downloads for the other languages if any.
+    // Ignore any download errors here, since we are in the middle of an install
+    // process and there is no way back. We will not import what we cannot
+    // download.
+    if (!isset($install_state['translations'][$langcode])) {
       $operations[] = ['install_check_translations', [$langcode, $install_state['server_pattern']]];
     }
   }
@@ -1887,11 +1892,9 @@ function _install_module_batch($module, $module_name, &$context) {
  * @param string $server_pattern
  *   Server access pattern (to replace language code, version number, etc. in).
  *
- * @return array|null
- *   Requirements compliance array. If the translation was downloaded
- *   successfully then an empty array is returned. Otherwise the requirements
- *   error with detailed information. NULL if the file already exists for this
- *   language code.
+ * @return array
+ *   Requirements compliance array. If the translation cannot be downloaded this
+ *   will contain a requirements error with detailed information.
  */
 function install_check_translations($langcode, $server_pattern) {
   $requirements = [];
@@ -1918,11 +1921,6 @@ function install_check_translations($langcode, $server_pattern) {
     $readable = is_readable($translations_directory);
     $writable = is_writable($translations_directory);
     $translations_directory_exists = TRUE;
-  }
-
-  // The file already exists, no need to attempt to download.
-  if ($existing_file = glob($translations_directory . '/drupal-*.' . $langcode . '.po')) {
-    return;
   }
 
   $version = \Drupal::VERSION;

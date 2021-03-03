@@ -46,7 +46,7 @@ class HandlerFieldPermissionTest extends UserKernelTestBase {
       $rendered_permission = $style_plugin->getField($index, 'permission');
 
       $expected_output = implode(', ', $expected_permissions[$uid]);
-      $this->assertEqual($rendered_permission, $expected_output, 'The right permissions are rendered.');
+      $this->assertEqual($expected_output, $rendered_permission, 'The right permissions are rendered.');
     }
   }
 

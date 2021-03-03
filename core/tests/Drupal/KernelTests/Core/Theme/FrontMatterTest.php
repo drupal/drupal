@@ -44,7 +44,9 @@ class FrontMatterTest extends KernelTestBase {
   public function register(ContainerBuilder $container) {
     parent::register($container);
 
-    $container->setDefinition('twig_loader__file_system', new Definition('Twig_Loader_Filesystem', [[sys_get_temp_dir()]]))
+    $definition = new Definition('Twig_Loader_Filesystem', [[sys_get_temp_dir()]]);
+    $definition->setPublic(TRUE);
+    $container->setDefinition('twig_loader__file_system', $definition)
       ->addTag('twig.loader');
   }
 

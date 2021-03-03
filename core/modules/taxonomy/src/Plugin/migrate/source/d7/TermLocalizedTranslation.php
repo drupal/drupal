@@ -8,6 +8,11 @@ use Drupal\migrate\Row;
 /**
  * Gets i18n taxonomy terms from source database.
  *
+ * For available configuration keys, refer to the parent classes:
+ * @see \Drupal\taxonomy\Plugin\migrate\source\d7\Term
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
  * @MigrateSource(
  *   id = "d7_term_localized_translation",
  *   source_module = "i18n_taxonomy"
@@ -34,13 +39,13 @@ class TermLocalizedTranslation extends Term {
 
     // Add in the property, which is either name or description.
     // Cast td.tid as char for PostgreSQL compatibility.
-    $query->leftJoin('i18n_string', 'i18n', 'CAST(td.tid AS CHAR(255)) = i18n.objectid');
+    $query->leftJoin('i18n_string', 'i18n', 'CAST([td].[tid] AS CHAR(255)) = [i18n].[objectid]');
     $query->condition('i18n.type', 'term');
     $query->addField('i18n', 'lid');
     $query->addField('i18n', 'property');
 
     // Add in the translation for the property.
-    $query->innerJoin('locales_target', 'lt', 'i18n.lid = lt.lid');
+    $query->innerJoin('locales_target', 'lt', '[i18n].[lid] = [lt].[lid]');
     $query->addField('lt', 'language', 'lt.language');
     $query->addField('lt', 'translation');
     return $query;
@@ -50,7 +55,9 @@ class TermLocalizedTranslation extends Term {
    * {@inheritdoc}
    */
   public function prepareRow(Row $row) {
-    parent::prepareRow($row);
+    if (!parent::prepareRow($row)) {
+      return FALSE;
+    }
 
     // Override language with ltlanguage.
     $language = $row->getSourceProperty('ltlanguage');

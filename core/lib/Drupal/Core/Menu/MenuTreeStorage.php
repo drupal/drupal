@@ -555,7 +555,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       $query->expression($expression[0], $expression[1], $expression[2]);
     }
 
-    $query->expression('depth', 'depth + :depth', [':depth' => $shift]);
+    $query->expression('depth', '[depth] + :depth', [':depth' => $shift]);
     $query->condition('menu_name', $original['menu_name']);
 
     for ($i = 1; $i <= $this->maxDepth() && $original["p$i"]; $i++) {
@@ -1002,8 +1002,8 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     $route_names = [];
     foreach (array_keys($tree) as $id) {
       $definitions[$id] = $this->definitions[$id];
-      if (!empty($definition['route_name'])) {
-        $route_names[$definition['route_name']] = $definition['route_name'];
+      if (!empty($definitions[$id]['route_name'])) {
+        $route_names[$definitions[$id]['route_name']] = $definitions[$id]['route_name'];
       }
       if ($tree[$id]['subtree']) {
         $route_names += $this->doCollectRoutesAndDefinitions($tree[$id]['subtree'], $definitions);

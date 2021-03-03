@@ -838,13 +838,13 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       // The bundle field is not stored in the revision table, so we need to
       // join the data (or base) table and retrieve it from there.
       if ($base_table && $base_table !== $table_name) {
-        $join_condition = "entity_table.{$this->entityType->getKey('id')} = %alias.{$this->entityType->getKey('id')}";
+        $join_condition = "[entity_table].[{$this->entityType->getKey('id')}] = [%alias].[{$this->entityType->getKey('id')}]";
 
         // If the entity type is translatable, we also need to add the langcode
         // to the join, otherwise we'll get duplicate rows for each language.
         if ($this->entityType->isTranslatable()) {
           $langcode = $this->entityType->getKey('langcode');
-          $join_condition .= " AND entity_table.{$langcode} = %alias.{$langcode}";
+          $join_condition .= " AND [entity_table].[{$langcode}] = [%alias].[{$langcode}]";
         }
 
         $select->join($base_table, 'base_table', $join_condition);

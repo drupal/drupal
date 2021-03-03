@@ -142,7 +142,7 @@ class SelectionTest extends KernelTestBase {
       3 => '<span class="views-field views-field-title"><span class="field-content">' . Html::escape($this->nodes[3]->label()) . '</span></span>',
     ];
 
-    $this->assertEqual($filtered_rendered_results_formatted, $expected, 'Anchor tag stripping has failed.');
+    $this->assertEqual($expected, $filtered_rendered_results_formatted, 'Anchor tag stripping has failed.');
   }
 
   /**

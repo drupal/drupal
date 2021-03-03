@@ -31,9 +31,13 @@ happen automatically.
 The plugin can also be configured to clean up additional packages using the
 project's composer.json extra field.
 
+This plugin can also clean up packages that were installed outside of the
+vendor directory, using composer/installers. This allows users to configure the
+plugin to clean up, for instance, Drupal extensions and Drupal core.
+
 2) The plugin also adds .htaccess and web.config files to the root of the
-project's vendor directory. These files will do due diligence to keep the web
-server from serving files from within the vendor directory.
+project's vendor directory. These files will perform due diligence to keep the
+web server from serving files from within the vendor directory.
 
 How do I set it up?
 -------------------
@@ -60,3 +64,19 @@ the root package's composer.json extra field, like this:
 
 The above code will tell the plugin to remove the test/ and documentation/
 directories from the 'vendor/package' package when it is installed or updated.
+
+For packages installed outside of the vendor directory, such as those installed
+by composer/installers, the paths to remove should be relative to the package
+base. As an example, a Drupal module package named drupal/module_name might be
+installed by composer/installers to web/modules/contrib/module_name/. Cleanup
+paths specified for this package might look like this:
+
+    "extra": {
+      "drupal-core-vendor-hardening": {
+        "drupal/module_name": ["tests", "src/Tests"]
+      }
+    }
+
+This would then cause the plugin to try and remove
+web/modules/contrib/module_name/tests and
+web/modules/contrib/module_name/src/Tests.

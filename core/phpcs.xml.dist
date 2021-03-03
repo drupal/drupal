@@ -36,6 +36,7 @@
   <rule ref="Drupal.Classes.FullyQualifiedNamespace"/>
   <rule ref="Drupal.Classes.InterfaceName"/>
   <rule ref="Drupal.Classes.UnusedUseStatement"/>
+  <rule ref="Drupal.Classes.UseGlobalClass"/>
   <rule ref="Drupal.Classes.UseLeadingBackslash"/>
   <rule ref="Drupal.CSS.ClassDefinitionNameSpacing"/>
   <rule ref="Drupal.CSS.ColourDefinition"/>
@@ -47,14 +48,14 @@
   <rule ref="Drupal.Commenting.DocComment">
     <!-- Sniff for these errors: SpacingAfterTagGroup, WrongEnd, SpacingBetween,
       ContentAfterOpen, SpacingBeforeShort, TagValueIndent, ShortStartSpace,
-      SpacingAfter, LongNotCapital -->
+      SpacingAfter, LongNotCapital, ShortFullStop, TagGroupSpacing, Empty,
+      TagsNotGrouped -->
     <!-- ParamNotFirst still not decided for PHPUnit-based tests.
       @see https://www.drupal.org/node/2253915 -->
     <exclude name="Drupal.Commenting.DocComment.ParamNotFirst"/>
     <exclude name="Drupal.Commenting.DocComment.SpacingBeforeTags"/>
     <exclude name="Drupal.Commenting.DocComment.LongFullStop"/>
     <exclude name="Drupal.Commenting.DocComment.ShortNotCapital"/>
-    <exclude name="Drupal.Commenting.DocComment.ShortFullStop"/>
     <exclude name="Drupal.Commenting.DocComment.ParamGroup"/>
     <exclude name="Drupal.Commenting.DocComment.ShortSingleLine"/>
     <exclude name="Drupal.Commenting.DocComment.MissingShort"/>
@@ -62,9 +63,7 @@
   <rule ref="Drupal.Commenting.DocCommentStar"/>
   <rule ref="Drupal.Commenting.FileComment"/>
   <rule ref="Drupal.Commenting.FunctionComment">
-    <exclude name="Drupal.Commenting.FunctionComment.IncorrectTypeHint"/>
     <exclude name="Drupal.Commenting.FunctionComment.InvalidNoReturn"/>
-    <exclude name="Drupal.Commenting.FunctionComment.InvalidTypeHint"/>
     <exclude name="Drupal.Commenting.FunctionComment.Missing"/>
     <exclude name="Drupal.Commenting.FunctionComment.MissingParamComment"/>
     <exclude name="Drupal.Commenting.FunctionComment.MissingParamType"/>
@@ -74,6 +73,7 @@
     <exclude name="Drupal.Commenting.FunctionComment.ParamMissingDefinition"/>
     <exclude name="Drupal.Commenting.FunctionComment.TypeHintMissing"/>
   </rule>
+  <rule ref="Drupal.Commenting.HookComment"/>
   <rule ref="Drupal.Commenting.GenderNeutralComment" />
   <rule ref="Drupal.Commenting.VariableComment">
     <!-- Sniff for: DuplicateVar, EmptyVar, InlineVariableName -->

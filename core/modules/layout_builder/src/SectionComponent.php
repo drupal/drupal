@@ -272,7 +272,7 @@ class SectionComponent {
   /**
    * Wraps the event dispatcher.
    *
-   * @return \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   * @return \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
    *   The event dispatcher.
    */
   protected function eventDispatcher() {

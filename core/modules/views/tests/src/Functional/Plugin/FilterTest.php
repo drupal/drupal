@@ -85,15 +85,15 @@ class FilterTest extends ViewTestBase {
 
     // Check the data added.
     $where = $view->query->where;
-    $this->assertIdentical($where[0]['conditions'][0]['field'], 'views_test_data.name', 'Where condition field matches');
-    $this->assertIdentical($where[0]['conditions'][0]['value'], 'John', 'Where condition value matches');
-    $this->assertIdentical($where[0]['conditions'][0]['operator'], '=', 'Where condition operator matches');
+    $this->assertSame('views_test_data.name', $where[0]['conditions'][0]['field'], 'Where condition field matches');
+    $this->assertSame('John', $where[0]['conditions'][0]['value'], 'Where condition value matches');
+    $this->assertSame('=', $where[0]['conditions'][0]['operator'], 'Where condition operator matches');
 
     $this->executeView($view);
 
     // Check that our operator and value match on the filter.
-    $this->assertIdentical($view->filter['test_filter']->operator, '=');
-    $this->assertIdentical($view->filter['test_filter']->value, 'John');
+    $this->assertSame('=', $view->filter['test_filter']->operator);
+    $this->assertSame('John', $view->filter['test_filter']->value);
 
     // Check that we have a single element, as a result of applying the '= John'
     // filter.
@@ -118,8 +118,8 @@ class FilterTest extends ViewTestBase {
     $this->executeView($view);
 
     // Check that our operator and value match on the filter.
-    $this->assertIdentical($view->filter['test_filter']->operator, '<>');
-    $this->assertIdentical($view->filter['test_filter']->value, 'John');
+    $this->assertSame('<>', $view->filter['test_filter']->operator);
+    $this->assertSame('John', $view->filter['test_filter']->value);
 
     // Check if we have the other elements in the dataset, as a result of
     // applying the '<> John' filter.

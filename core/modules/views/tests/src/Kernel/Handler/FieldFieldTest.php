@@ -260,7 +260,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
     $this->assertEqual('1', $executable->getStyle()->getField(0, 'id'));
     $this->assertEqual('3', $executable->getStyle()->getField(0, 'field_test'));
     $this->assertEqual('2', $executable->getStyle()->getField(1, 'id'));
-    // @todo Switch this assertion to assertIdentical('', ...) when
+    // @todo Switch this assertion to assertSame('', ...) when
     //   https://www.drupal.org/node/2488006 gets fixed.
     $this->assertEqual('0', $executable->getStyle()->getField(1, 'field_test'));
     $this->assertEqual('3', $executable->getStyle()->getField(2, 'id'));

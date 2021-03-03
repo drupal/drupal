@@ -49,7 +49,7 @@ class BasicTest extends WizardTestBase {
     $this->assertSession()->linkByHrefExists(Url::fromRoute('entity.view.duplicate_form', ['view' => $view1['id']])->toString());
 
     // The view should not have a REST export display.
-    $this->assertNoText('REST export', 'When no options are enabled in the wizard, the resulting view does not have a REST export display.');
+    $this->assertNoText('REST export');
 
     // This view should not have a block.
     $this->drupalGet('admin/structure/block');
@@ -102,7 +102,7 @@ class BasicTest extends WizardTestBase {
     $this->assertSession()->linkByHrefExists(Url::fromRoute('view.' . $view2['id'] . '.page_1')->toString());
 
     // The view should not have a REST export display.
-    $this->assertNoText('REST export', 'If only the page option was enabled in the wizard, the resulting view does not have a REST export display.');
+    $this->assertNoText('REST export');
 
     // This view should not have a block.
     $this->drupalGet('admin/structure/block');
@@ -137,7 +137,7 @@ class BasicTest extends WizardTestBase {
     $this->assertSession()->linkByHrefExists(Url::fromRoute('view.' . $view3['id'] . '.page_1')->toString());
 
     // The view should not have a REST export display.
-    $this->assertNoText('REST export', 'If only the page and block options were enabled in the wizard, the resulting view does not have a REST export display.');
+    $this->assertNoText('REST export');
 
     // Confirm that the block is available in the block administration UI.
     $this->drupalGet('admin/structure/block/list/' . $this->config('system.theme')->get('default'));
@@ -154,7 +154,7 @@ class BasicTest extends WizardTestBase {
     $this->assertNoText($node2->label());
 
     // Make sure the listing page doesn't show disabled default views.
-    $this->assertNoText('tracker', 'Default tracker view does not show on the listing page.');
+    $this->assertNoText('tracker');
 
     // Create a view with only a REST export.
     $view4 = [];
@@ -175,7 +175,7 @@ class BasicTest extends WizardTestBase {
     $data = Json::decode($this->getSession()->getPage()->getContent());
     $this->assertCount(1, $data, 'Only the node of type page is exported.');
     $node = reset($data);
-    $this->assertEqual($node['nid'][0]['value'], $node1->id(), 'The node of type page is exported.');
+    $this->assertEqual($node1->id(), $node['nid'][0]['value'], 'The node of type page is exported.');
 
     // Create a view with a leading slash in the path and test that is properly
     // set.

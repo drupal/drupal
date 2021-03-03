@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\node\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Tests\content_translation\Functional\ContentTranslationUITestBase;
 use Drupal\Core\Language\LanguageInterface;
@@ -23,7 +22,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * {inheritdoc}
+   * {@inheritdoc}
    */
   protected $defaultCacheContexts = [
     'languages:language_interface',
@@ -230,10 +229,10 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     foreach ($this->langcodes as $langcode) {
       $translation = $entity->getTranslation($langcode);
       $metadata = $this->manager->getTranslationMetadata($translation);
-      $this->assertEqual($metadata->getAuthor()->id(), $values[$langcode]['uid'], 'Translation author correctly stored.');
-      $this->assertEqual($metadata->getCreatedTime(), $values[$langcode]['created'], 'Translation date correctly stored.');
-      $this->assertEqual($translation->isSticky(), $values[$langcode]['sticky'], 'Sticky of Translation correctly stored.');
-      $this->assertEqual($translation->isPromoted(), $values[$langcode]['promote'], 'Promoted of Translation correctly stored.');
+      $this->assertEqual($values[$langcode]['uid'], $metadata->getAuthor()->id(), 'Translation author correctly stored.');
+      $this->assertEqual($values[$langcode]['created'], $metadata->getCreatedTime(), 'Translation date correctly stored.');
+      $this->assertEqual($values[$langcode]['sticky'], $translation->isSticky(), 'Sticky of Translation correctly stored.');
+      $this->assertEqual($values[$langcode]['promote'], $translation->isPromoted(), 'Promoted of Translation correctly stored.');
     }
   }
 
@@ -349,7 +348,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
           $num_match_found++;
         }
       }
-      $this->assertTrue($num_match_found == 1, 'There is 1 Read more link, ' . $expected_href . ', for the ' . $langcode . ' translation of a node on the frontpage. (Found ' . $num_match_found . '.)');
+      $this->assertSame(1, $num_match_found, 'There is 1 Read more link, ' . $expected_href . ', for the ' . $langcode . ' translation of a node on the frontpage. (Found ' . $num_match_found . '.)');
     }
 
     // Check the frontpage for 'Add new comment' links that include the
@@ -371,7 +370,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
           $num_match_found++;
         }
       }
-      $this->assertTrue($num_match_found == 1, 'There is 1 Add new comment link, ' . $expected_href . ', for the ' . $langcode . ' translation of a node on the frontpage. (Found ' . $num_match_found . '.)');
+      $this->assertSame(1, $num_match_found, 'There is 1 Add new comment link, ' . $expected_href . ', for the ' . $langcode . ' translation of a node on the frontpage. (Found ' . $num_match_found . '.)');
     }
 
     // Test that the node page displays the correct translations.
@@ -393,7 +392,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $languages = $this->container->get('language_manager')->getLanguages();
     foreach ($this->langcodes as $langcode) {
       $this->drupalGet($path, ['language' => $languages[$langcode]]);
-      $this->assertText($values[$langcode]['title'][0]['value'], new FormattableMarkup('The %langcode node translation is correctly displayed.', ['%langcode' => $langcode]));
+      $this->assertText($values[$langcode]['title'][0]['value']);
     }
   }
 
@@ -522,7 +521,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $original_revision_url = $original_revision->toUrl('revision')->toString();
 
     // Should be different from regular node URL.
-    $this->assertNotIdentical($original_revision_url, $original_revision->toUrl()->toString());
+    $this->assertNotSame($original_revision_url, $original_revision->toUrl()->toString());
     $this->drupalGet($original_revision_url);
     $this->assertSession()->statusCodeEquals(200);
 
@@ -534,8 +533,8 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $url_fr = $original_revision->getTranslation('fr')->toUrl('revision')->toString();
 
     // Should have different URL from English.
-    $this->assertNotIdentical($url_fr, $original_revision->toUrl()->toString());
-    $this->assertNotIdentical($url_fr, $original_revision_url);
+    $this->assertNotSame($url_fr, $original_revision->toUrl()->toString());
+    $this->assertNotSame($url_fr, $original_revision_url);
     $this->drupalGet($url_fr);
     $this->assertSession()->statusCodeEquals(200);
 

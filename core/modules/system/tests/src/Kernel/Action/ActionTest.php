@@ -96,7 +96,7 @@ class ActionTest extends KernelTestBase {
         'user',
       ],
     ];
-    $this->assertIdentical($expected, $action->calculateDependencies()->getDependencies());
+    $this->assertSame($expected, $action->calculateDependencies()->getDependencies());
   }
 
 }

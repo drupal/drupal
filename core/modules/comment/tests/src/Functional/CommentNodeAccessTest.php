@@ -66,8 +66,8 @@ class CommentNodeAccessTest extends CommentTestBase {
 
     // Check comment display.
     $this->drupalGet('node/' . $this->node->id());
-    $this->assertText($comment_subject, 'Individual comment subject found.');
-    $this->assertText($comment_text, 'Individual comment body found.');
+    $this->assertText($comment_subject);
+    $this->assertText($comment_text);
 
     // Reply to comment, creating second comment.
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment/' . $comment->id());

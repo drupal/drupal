@@ -121,7 +121,7 @@ class GlossaryTest extends ViewTestBase {
       // The rendered output looks like "<a href=''>X</a> | (count)" so let's
       // figure out the int.
       $result_count = explode(' ', trim(str_replace(['|', '(', ')'], '', $result[0]->getText())))[1];
-      $this->assertEqual($result_count, $count, 'The expected number got rendered.');
+      $this->assertEqual($count, $result_count, 'The expected number got rendered.');
     }
   }
 

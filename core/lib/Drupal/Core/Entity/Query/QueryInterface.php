@@ -95,6 +95,7 @@ interface QueryInterface extends AlterableInterface {
    *   translation.
    *
    * @return $this
+   *
    * @see \Drupal\Core\Entity\Query\andConditionGroup
    * @see \Drupal\Core\Entity\Query\orConditionGroup
    */

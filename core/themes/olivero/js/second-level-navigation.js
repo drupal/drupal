@@ -10,10 +10,18 @@
   var secondLevelNavMenus = document.querySelectorAll('.primary-nav__menu-item--has-children');
 
   function toggleSubNav(topLevelMenuITem, toState) {
-    var button = topLevelMenuITem.querySelector('.primary-nav__button-toggle, .primary-nav__menu-link--button');
+    var buttonSelector = '.primary-nav__button-toggle, .primary-nav__menu-link--button';
+    var button = topLevelMenuITem.querySelector(buttonSelector);
     var state = toState !== undefined ? toState : button.getAttribute('aria-expanded') !== 'true';
 
     if (state) {
+      if (isDesktopNav()) {
+        secondLevelNavMenus.forEach(function (el) {
+          el.querySelector(buttonSelector).setAttribute('aria-expanded', 'false');
+          el.querySelector('.primary-nav__menu--level-2').classList.remove('is-active');
+        });
+      }
+
       button.setAttribute('aria-expanded', 'true');
       topLevelMenuITem.querySelector('.primary-nav__menu--level-2').classList.add('is-active');
     } else {

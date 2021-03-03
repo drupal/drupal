@@ -42,9 +42,9 @@ class MigrateTaxonomyVocabularyTest extends MigrateDrupal7TestBase {
     /** @var \Drupal\taxonomy\VocabularyInterface $entity */
     $entity = Vocabulary::load($id);
     $this->assertInstanceOf(VocabularyInterface::class, $entity);
-    $this->assertIdentical($expected_label, $entity->label());
-    $this->assertIdentical($expected_description, $entity->getDescription());
-    $this->assertIdentical($expected_weight, $entity->get('weight'));
+    $this->assertSame($expected_label, $entity->label());
+    $this->assertSame($expected_description, $entity->getDescription());
+    $this->assertSame($expected_weight, $entity->get('weight'));
   }
 
   /**

@@ -61,8 +61,8 @@ class InstallerSiteConfigProfileTest extends InstallerTestBase {
    * Verify the correct site config was set.
    */
   public function testInstaller() {
-    $this->assertEqual($this->config('system.site')->get('mail'), self::EXPECTED_SITE_MAIL);
-    $this->assertEqual($this->config('system.date')->get('timezone.default'), self::EXPECTED_TIMEZONE);
+    $this->assertEqual(self::EXPECTED_SITE_MAIL, $this->config('system.site')->get('mail'));
+    $this->assertEqual(self::EXPECTED_TIMEZONE, $this->config('system.date')->get('timezone.default'));
   }
 
 }

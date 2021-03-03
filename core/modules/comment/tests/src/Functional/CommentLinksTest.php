@@ -116,7 +116,7 @@ class CommentLinksTest extends CommentTestBase {
     $element = $this->cssSelect('article.js-comment > div');
     // Get last child element.
     $element = end($element);
-    $this->assertIdentical($element->getTagName(), 'div', 'Last element is comment body.');
+    $this->assertSame('div', $element->getTagName(), 'Last element is comment body.');
 
     // Change weight to make links go after comment body.
     $display_repository->getViewDisplay('comment', 'comment')

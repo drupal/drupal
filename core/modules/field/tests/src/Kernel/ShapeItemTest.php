@@ -63,24 +63,24 @@ class ShapeItemTest extends FieldKernelTestBase {
     $entity = EntityTest::load($id);
     $this->assertInstanceOf(FieldItemListInterface::class, $entity->{$this->fieldName});
     $this->assertInstanceOf(FieldItemInterface::class, $entity->{$this->fieldName}[0]);
-    $this->assertEqual($entity->{$this->fieldName}->shape, $shape);
-    $this->assertEqual($entity->{$this->fieldName}->color, $color);
-    $this->assertEqual($entity->{$this->fieldName}[0]->shape, $shape);
-    $this->assertEqual($entity->{$this->fieldName}[0]->color, $color);
+    $this->assertEqual($shape, $entity->{$this->fieldName}->shape);
+    $this->assertEqual($color, $entity->{$this->fieldName}->color);
+    $this->assertEqual($shape, $entity->{$this->fieldName}[0]->shape);
+    $this->assertEqual($color, $entity->{$this->fieldName}[0]->color);
 
     // Verify changing the field value.
     $new_shape = 'circle';
     $new_color = 'red';
     $entity->{$this->fieldName}->shape = $new_shape;
     $entity->{$this->fieldName}->color = $new_color;
-    $this->assertEqual($entity->{$this->fieldName}->shape, $new_shape);
-    $this->assertEqual($entity->{$this->fieldName}->color, $new_color);
+    $this->assertEqual($new_shape, $entity->{$this->fieldName}->shape);
+    $this->assertEqual($new_color, $entity->{$this->fieldName}->color);
 
     // Read changed entity and assert changed values.
     $entity->save();
     $entity = EntityTest::load($id);
-    $this->assertEqual($entity->{$this->fieldName}->shape, $new_shape);
-    $this->assertEqual($entity->{$this->fieldName}->color, $new_color);
+    $this->assertEqual($new_shape, $entity->{$this->fieldName}->shape);
+    $this->assertEqual($new_color, $entity->{$this->fieldName}->color);
   }
 
 }

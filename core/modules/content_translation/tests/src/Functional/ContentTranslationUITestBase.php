@@ -90,14 +90,14 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     $this->assertCacheContexts($this->defaultCacheContexts);
 
     $this->drupalGet($entity->toUrl('drupal:content-translation-overview'));
-    $this->assertNoText('Source language', 'Source language column correctly hidden.');
+    $this->assertNoText('Source language');
 
     $translation = $this->getTranslation($entity, $default_langcode);
     foreach ($values[$default_langcode] as $property => $value) {
       $stored_value = $this->getValue($translation, $property, $default_langcode);
       $value = is_array($value) ? $value[0]['value'] : $value;
       $message = new FormattableMarkup('@property correctly stored in the default language.', ['@property' => $property]);
-      $this->assertEqual($stored_value, $value, $message);
+      $this->assertEqual($value, $stored_value, $message);
     }
 
     // Add a content translation.
@@ -135,15 +135,14 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
 
     $author_field_name = $entity->hasField('content_translation_uid') ? 'content_translation_uid' : 'uid';
     if ($entity->getFieldDefinition($author_field_name)->isTranslatable()) {
-      $this->assertEqual($metadata_target_translation->getAuthor()->id(), $this->translator->id(),
-        new FormattableMarkup('Author of the target translation @langcode correctly stored for translatable owner field.', ['@langcode' => $langcode]));
+      $this->assertEqual($this->translator->id(), $metadata_target_translation->getAuthor()->id(), new FormattableMarkup('Author of the target translation @langcode correctly stored for translatable owner field.', ['@langcode' => $langcode]));
 
-      $this->assertNotEqual($metadata_target_translation->getAuthor()->id(), $metadata_source_translation->getAuthor()->id(),
+      $this->assertNotEquals($metadata_target_translation->getAuthor()->id(), $metadata_source_translation->getAuthor()->id(),
         new FormattableMarkup('Author of the target translation @target different from the author of the source translation @source for translatable owner field.',
           ['@target' => $langcode, '@source' => $default_langcode]));
     }
     else {
-      $this->assertEqual($metadata_target_translation->getAuthor()->id(), $this->editor->id(), 'Author of the entity remained untouched after translation for non translatable owner field.');
+      $this->assertEqual($this->editor->id(), $metadata_target_translation->getAuthor()->id(), 'Author of the entity remained untouched after translation for non translatable owner field.');
     }
 
     $created_field_name = $entity->hasField('content_translation_created') ? 'content_translation_created' : 'created';
@@ -154,7 +153,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
       $this->assertGreaterThan($metadata_source_translation->getCreatedTime(), $metadata_target_translation->getCreatedTime());
     }
     else {
-      $this->assertEqual($metadata_target_translation->getCreatedTime(), $metadata_source_translation->getCreatedTime(), 'Creation timestamp of the entity remained untouched after translation for non translatable created field.');
+      $this->assertEqual($metadata_source_translation->getCreatedTime(), $metadata_target_translation->getCreatedTime(), 'Creation timestamp of the entity remained untouched after translation for non translatable created field.');
     }
 
     if ($this->testLanguageSelector) {
@@ -164,7 +163,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId);
     $this->drupalGet($entity->toUrl('drupal:content-translation-overview'));
-    $this->assertNoText('Source language', 'Source language column correctly hidden.');
+    $this->assertNoText('Source language');
 
     // Switch the source language.
     $langcode = 'fr';
@@ -195,7 +194,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId);
     $this->drupalGet($entity->toUrl('drupal:content-translation-overview'));
-    $this->assertText('Source language', 'Source language column correctly shown.');
+    $this->assertText('Source language');
 
     // Check that the entered values have been correctly stored.
     foreach ($values as $langcode => $property_values) {
@@ -204,7 +203,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
         $stored_value = $this->getValue($translation, $property, $langcode);
         $value = is_array($value) ? $value[0]['value'] : $value;
         $message = new FormattableMarkup('%property correctly stored with language %language.', ['%property' => $property, '%language' => $langcode]);
-        $this->assertEqual($stored_value, $value, $message);
+        $this->assertEqual($value, $stored_value, $message);
       }
     }
   }
@@ -226,10 +225,10 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
         $language = new Language(['id' => $langcode]);
         $view_url = $entity->toUrl('canonical', ['language' => $language])->toString();
         $elements = $this->xpath('//table//a[@href=:href]', [':href' => $view_url]);
-        $this->assertEqual($elements[0]->getText(), $entity->getTranslation($langcode)->label(), new FormattableMarkup('Label correctly shown for %language translation.', ['%language' => $langcode]));
+        $this->assertEqual($entity->getTranslation($langcode)->label(), $elements[0]->getText(), new FormattableMarkup('Label correctly shown for %language translation.', ['%language' => $langcode]));
         $edit_path = $entity->toUrl('edit-form', ['language' => $language])->toString();
         $elements = $this->xpath('//table//ul[@class="dropbutton"]/li/a[@href=:href]', [':href' => $edit_path]);
-        $this->assertEqual($elements[0]->getText(), t('Edit'), new FormattableMarkup('Edit link correct for %language translation.', ['%language' => $langcode]));
+        $this->assertEqual(t('Edit'), $elements[0]->getText(), new FormattableMarkup('Edit link correct for %language translation.', ['%language' => $langcode]));
       }
     }
   }
@@ -340,8 +339,8 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     $entity = $storage->load($this->entityId);
     foreach ($this->langcodes as $langcode) {
       $metadata = $this->manager->getTranslationMetadata($entity->getTranslation($langcode));
-      $this->assertEqual($metadata->getAuthor()->id(), $values[$langcode]['uid'], 'Translation author correctly stored.');
-      $this->assertEqual($metadata->getCreatedTime(), $values[$langcode]['created'], 'Translation date correctly stored.');
+      $this->assertEqual($values[$langcode]['uid'], $metadata->getAuthor()->id(), 'Translation author correctly stored.');
+      $this->assertEqual($values[$langcode]['created'], $metadata->getCreatedTime(), 'Translation date correctly stored.');
     }
 
     // Try to post non valid values and check that they are rejected.
@@ -354,8 +353,8 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     $this->drupalPostForm($entity->toUrl('edit-form'), $edit, $this->getFormSubmitAction($entity, $langcode));
     $this->assertNotEmpty($this->xpath('//div[contains(@class, "error")]//ul'), 'Invalid values generate a list of form errors.');
     $metadata = $this->manager->getTranslationMetadata($entity->getTranslation($langcode));
-    $this->assertEqual($metadata->getAuthor()->id(), $values[$langcode]['uid'], 'Translation author correctly kept.');
-    $this->assertEqual($metadata->getCreatedTime(), $values[$langcode]['created'], 'Translation date correctly kept.');
+    $this->assertEqual($values[$langcode]['uid'], $metadata->getAuthor()->id(), 'Translation author correctly kept.');
+    $this->assertEqual($values[$langcode]['created'], $metadata->getCreatedTime(), 'Translation date correctly kept.');
   }
 
   /**
@@ -436,7 +435,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
    *   Name of the button to hit.
    */
   protected function getFormSubmitAction(EntityInterface $entity, $langcode) {
-    return t('Save') . $this->getFormSubmitSuffix($entity, $langcode);
+    return 'Save' . $this->getFormSubmitSuffix($entity, $langcode);
   }
 
   /**
@@ -581,16 +580,10 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
       }
 
       if ($translatable_changed_field) {
-        $this->assertEqual(
-          count($timestamps), count($entity->getTranslationLanguages()),
-          'All timestamps from all languages are different.'
-        );
+        $this->assertEqual(count($entity->getTranslationLanguages()), count($timestamps), 'All timestamps from all languages are different.');
       }
       else {
-        $this->assertEqual(
-          count($timestamps), 1,
-          'All timestamps from all languages are identical.'
-        );
+        $this->assertEqual(1, count($timestamps), 'All timestamps from all languages are identical.');
       }
     }
   }
@@ -624,7 +617,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
 
       $storage->resetCache([$this->entityId]);
       $entity = $storage->load($this->entityId);
-      $this->assertNotEqual($changed_timestamp, $entity->getChangedTime(), 'The entity\'s changed time was updated after form save without changes.');
+      $this->assertNotEquals($changed_timestamp, $entity->getChangedTime(), 'The entity\'s changed time was updated after form save without changes.');
     }
   }
 

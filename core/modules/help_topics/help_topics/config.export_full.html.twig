@@ -1,0 +1,17 @@
+---
+label: 'Exporting your complete site configuration'
+related:
+- core.config_overview
+- config.import_full
+- config.export_single
+- config.import_single
+---
+{% set export = render_var(url('config.export_full')) %}
+{% set config_overview = render_var(url('help.help_topic', {'id': 'core.config_overview'})) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Create and download an archive containing all your site's configuration, exported as YAML files. See <a href="{{ config_overview }}">Managing and deploying configuration</a> for more information about configuration.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Development</em> &gt; <em>Configuration synchronization</em> &gt; <a href="{{ export }}"><em>Export</em></a>.{% endtrans %}</li>
+  <li>{% trans %}Click <em>Export</em> and save the archive file.{% endtrans %}</li>
+</ol>

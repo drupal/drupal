@@ -102,7 +102,7 @@ class MenuUiNodeTest extends BrowserTestBase {
     ];
     $this->submitForm($edit, 'Save');
     $node = $this->drupalGetNodeByTitle($node_title);
-    $this->assertEqual($node->getTitle(), $edit['title[0][value]']);
+    $this->assertEqual($edit['title[0][value]'], $node->getTitle());
 
     // Test that we cannot set a menu item from a menu that is not set as
     // available.
@@ -230,7 +230,7 @@ class MenuUiNodeTest extends BrowserTestBase {
     // Assert that disabled Administration menu is not shown on the
     // node/$nid/edit page.
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertText('Provide a menu link', 'Link in not allowed menu not shown in node edit form');
+    $this->assertText('Provide a menu link');
     // Assert that the link is still in the Administration menu after save.
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
     $link = MenuLinkContent::load($item->id());

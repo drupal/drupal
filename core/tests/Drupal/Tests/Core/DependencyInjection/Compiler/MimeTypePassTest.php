@@ -34,15 +34,17 @@ class MimeTypePassTest extends UnitTestCase {
 
     $container
       ->register('handler1', __NAMESPACE__ . '\NewMimeTypeGuesser')
-      ->addTag('mime_type_guesser');
+      ->addTag('mime_type_guesser', ['priority' => 200]);
     $container
       ->register('handler2', __NAMESPACE__ . '\LegacyMimeTypeGuesser')
-      ->addTag('mime_type_guesser');
+      ->addTag('mime_type_guesser', ['priority' => 100]);
 
     $handler_pass = new MimeTypePass();
     $handler_pass->process($container);
     $method_calls = $container->getDefinition('file.mime_type.guesser')->getMethodCalls();
     $this->assertCount(2, $method_calls);
+    $this->assertSame(200, $method_calls[0][1][1]);
+    $this->assertSame(100, $method_calls[1][1][1]);
   }
 
 }

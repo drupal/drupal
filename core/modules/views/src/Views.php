@@ -196,6 +196,7 @@ class Views {
    *
    * @return array
    *   A list of arrays containing the $view_id and $display_id.
+   *
    * @code
    * array(
    *   array($view_id, $display_id),

@@ -56,7 +56,7 @@ class DisplayPathTest extends UITestBase {
 
     // Add a new page display and check the appearing text.
     $this->submitForm([], 'Add Page');
-    $this->assertText('No path is set', 'The right text appears if no path was set.');
+    $this->assertText('No path is set');
     $this->assertSession()->linkNotExists('View page', 'No view page link found on the page.');
 
     // Save a path and make sure the summary appears as expected.
@@ -66,7 +66,7 @@ class DisplayPathTest extends UITestBase {
     $random_path = str_replace(':', '', $random_path);
 
     $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/path', ['path' => $random_path], 'Apply');
-    $this->assertText('/' . $random_path, 'The custom path appears in the summary.');
+    $this->assertText('/' . $random_path);
     $display_link_text = t('View @display', ['@display' => 'Page']);
     $this->assertSession()->linkExists($display_link_text, 0, 'view page link found on the page.');
     $this->clickLink($display_link_text);
@@ -125,7 +125,6 @@ class DisplayPathTest extends UITestBase {
    * Tests the menu and tab option form.
    */
   public function testMenuOptions() {
-    $this->container->get('module_installer')->install(['menu_ui']);
     $this->drupalGet('admin/structure/views/view/test_view');
 
     // Add a new page display.
@@ -166,16 +165,12 @@ class DisplayPathTest extends UITestBase {
     // Ensure that you can select a parent in case the parent does not exist.
     $this->drupalGet('admin/structure/views/nojs/display/test_page_display_menu/page_5/menu');
     $this->assertSession()->statusCodeEquals(200);
-    $menu_parent = $this->xpath('//select[@id="edit-menu-parent"]');
-    $menu_options = (array) $menu_parent[0]->findAll('css', 'option');
-    unset($menu_options['@attributes']);
-
-    // Convert array to make the next assertion possible.
+    $menu_options = $this->assertSession()->selectExists('edit-menu-parent')->findAll('css', 'option');
     $menu_options = array_map(function ($element) {
       return $element->getText();
     }, $menu_options);
 
-    $this->assertEqual([
+    $this->assertEquals([
       '<User account menu>',
       '-- My account',
       '-- Log out',
@@ -196,7 +191,8 @@ class DisplayPathTest extends UITestBase {
    * Tests the regression in https://www.drupal.org/node/2532490.
    */
   public function testDefaultMenuTabRegression() {
-    $this->container->get('module_installer')->install(['menu_ui', 'menu_link_content', 'toolbar', 'system']);
+    $this->container->get('module_installer')->install(['menu_link_content', 'toolbar', 'system']);
+    $this->resetAll();
     $admin_user = $this->drupalCreateUser([
       'administer views',
       'administer blocks',

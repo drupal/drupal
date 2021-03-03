@@ -80,7 +80,7 @@ class UserAccountFormFieldsTest extends KernelTestBase {
 
     // Verify that autocomplete is off on all account fields.
     foreach (['mail', 'name', 'pass'] as $key) {
-      $this->assertIdentical($form['account'][$key]['#attributes']['autocomplete'], 'off', "'$key' field: 'autocomplete' attribute is 'off'.");
+      $this->assertSame('off', $form['account'][$key]['#attributes']['autocomplete'], "'{$key}' field: 'autocomplete' attribute is 'off'.");
     }
   }
 
@@ -109,7 +109,7 @@ class UserAccountFormFieldsTest extends KernelTestBase {
       }
       $index++;
     }
-    $this->assertEqual($name_index, $pass_index - 1, "'name' field ($name_index) appears before 'pass' field ($pass_index).");
+    $this->assertEqual($pass_index - 1, $name_index, "'name' field ({$name_index}) appears before 'pass' field ({$pass_index}).");
     $this->assertLessThan($pass_weight, $name_weight, "'name' field weight ($name_weight) should be smaller than 'pass' field weight ($pass_weight).");
   }
 

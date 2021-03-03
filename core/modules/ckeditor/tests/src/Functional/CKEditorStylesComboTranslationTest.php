@@ -15,7 +15,7 @@ use Drupal\Tests\BrowserTestBase;
 class CKEditorStylesComboTranslationTest extends BrowserTestBase {
 
   /**
-   * {inheritdoc}
+   * {@inheritdoc}
    */
   protected static $modules = ['ckeditor', 'config_translation'];
 

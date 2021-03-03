@@ -15,7 +15,7 @@ base_field: cid
 display:
   default:
     display_plugin: default
-    display_title: Master
+    display_title: Default
     id: default
     position: 0
     display_options:

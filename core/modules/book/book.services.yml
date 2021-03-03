@@ -1,18 +1,18 @@
 services:
   book.breadcrumb:
     class: Drupal\book\BookBreadcrumbBuilder
-    arguments: ['@entity_type.manager', '@current_user']
+    arguments: ['@entity_type.manager', '@current_user', '@entity.repository', '@language_manager']
     tags:
       - { name: breadcrumb_builder, priority: 701 }
   book.manager:
     class: Drupal\book\BookManager
-    arguments: ['@entity_type.manager', '@string_translation', '@config.factory', '@book.outline_storage', '@renderer']
+    arguments: ['@entity_type.manager', '@string_translation', '@config.factory', '@book.outline_storage', '@renderer', '@language_manager', '@entity.repository']
   book.outline:
     class: Drupal\book\BookOutline
     arguments: ['@book.manager']
   book.export:
     class: Drupal\book\BookExport
-    arguments: ['@entity_type.manager', '@book.manager']
+    arguments: ['@entity_type.manager', '@book.manager', '@entity.repository']
   book.outline_storage:
     class: Drupal\book\BookOutlineStorage
     arguments: ['@database']

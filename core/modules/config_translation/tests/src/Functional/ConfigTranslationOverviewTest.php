@@ -114,7 +114,7 @@ class ConfigTranslationOverviewTest extends BrowserTestBase {
       // dropbutton.
       foreach ($this->cssSelect('ul.dropbutton') as $i => $dropbutton) {
         $this->assertCount(1, $dropbutton->findAll('xpath', 'li'));
-        $this->assertIdentical('Translate', $dropbutton->getText());
+        $this->assertSame('Translate', $dropbutton->getText());
       }
 
       $entity_type = \Drupal::entityTypeManager()->getDefinition($test_entity->getEntityTypeId());
@@ -123,7 +123,7 @@ class ConfigTranslationOverviewTest extends BrowserTestBase {
       $title = $test_entity->label() . ' ' . $entity_type->getSingularLabel();
       $title = 'Translations for <em class="placeholder">' . Html::escape($title) . '</em>';
       $this->assertRaw($title);
-      $this->assertRaw('<th>' . t('Language') . '</th>');
+      $this->assertSession()->responseContains('<th>Language</th>');
 
       $this->drupalGet($base_url);
       $this->assertSession()->linkExists('Translate test configuration');
@@ -168,7 +168,7 @@ class ConfigTranslationOverviewTest extends BrowserTestBase {
     $this->writeSettings($settings);
 
     // Test that the overridden label is loaded with the entity.
-    $this->assertEqual($config_test_storage->load('dotted.default')->label(), $overridden_label);
+    $this->assertEqual($overridden_label, $config_test_storage->load('dotted.default')->label());
 
     // Test that the original label on the listing page is intact.
     $this->drupalGet('admin/config/regional/config-translation/config_test');

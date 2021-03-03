@@ -25,7 +25,7 @@ class FieldInstance extends DrupalSqlBase {
     if (isset($this->configuration['node_type'])) {
       $query->condition('cnfi.type_name', $this->configuration['node_type']);
     }
-    $query->join('content_node_field', 'cnf', 'cnf.field_name = cnfi.field_name');
+    $query->join('content_node_field', 'cnf', '[cnf].[field_name] = [cnfi].[field_name]');
     $query->fields('cnf');
     $query->orderBy('cnfi.field_name');
     $query->orderBy('cnfi.type_name');

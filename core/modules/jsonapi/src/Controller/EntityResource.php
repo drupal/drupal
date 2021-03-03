@@ -564,7 +564,7 @@ class EntityResource {
   public function getRelationship(ResourceType $resource_type, FieldableEntityInterface $entity, $related, Request $request, $response_code = 200) {
     /* @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
     $field_list = $entity->get($resource_type->getInternalName($related));
-    // Access will have already been checked by the RelationshipFieldAccess
+    // Access will have already been checked by the RelationshipRouteAccessCheck
     // service, so we don't need to call ::getAccessCheckedResourceObject().
     $resource_object = ResourceObject::createFromEntity($resource_type, $entity);
     $relationship = Relationship::createFromEntityReferenceField($resource_object, $field_list);

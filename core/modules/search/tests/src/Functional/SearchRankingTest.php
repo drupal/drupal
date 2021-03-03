@@ -133,7 +133,7 @@ class SearchRankingTest extends BrowserTestBase {
 
     // Check that all rankings are visible and set to 0.
     foreach ($node_ranks as $node_rank) {
-      $this->assertNotEmpty($this->xpath('//select[@id="edit-rankings-' . $node_rank . '-value"]//option[@value="0"]'), 'Select list to prioritize ' . $node_rank . ' for node ranks is visible and set to 0.');
+      $this->assertSession()->optionExists('edit-rankings-' . $node_rank . '-value', '0');
     }
 
     // Test each of the possible rankings.
@@ -143,14 +143,14 @@ class SearchRankingTest extends BrowserTestBase {
       $edit['rankings[' . $node_rank . '][value]'] = 10;
       $this->drupalPostForm('admin/config/search/pages/manage/node_search', $edit, 'Save search page');
       $this->drupalGet('admin/config/search/pages/manage/node_search');
-      $this->assertNotEmpty($this->xpath('//select[@id="edit-rankings-' . $node_rank . '-value"]//option[@value="10"]'), 'Select list to prioritize ' . $node_rank . ' for node ranks is visible and set to 10.');
+      $this->assertSession()->optionExists('edit-rankings-' . $node_rank . '-value', '10');
 
       // Reload the plugin to get the up-to-date values.
       $this->nodeSearch = SearchPage::load('node_search');
       // Do the search and assert the results.
       $this->nodeSearch->getPlugin()->setSearch('rocks', [], []);
       $set = $this->nodeSearch->getPlugin()->execute();
-      $this->assertEqual($set[0]['node']->id(), $nodes[$node_rank][1]->id(), 'Search ranking "' . $node_rank . '" order.');
+      $this->assertEqual($nodes[$node_rank][1]->id(), $set[0]['node']->id(), 'Search ranking "' . $node_rank . '" order.');
 
       // Clear this ranking for the next test.
       $edit['rankings[' . $node_rank . '][value]'] = 0;
@@ -161,7 +161,7 @@ class SearchRankingTest extends BrowserTestBase {
     $this->drupalPostForm('admin/config/search/pages/manage/node_search', $edit, 'Save search page');
     $this->drupalGet('admin/config/search/pages/manage/node_search');
     foreach ($node_ranks as $node_rank) {
-      $this->assertNotEmpty($this->xpath('//select[@id="edit-rankings-' . $node_rank . '-value"]//option[@value="0"]'), 'Select list to prioritize ' . $node_rank . ' for node ranks is visible and set to 0.');
+      $this->assertSession()->optionExists('edit-rankings-' . $node_rank . '-value', '0');
     }
 
     // Try with sticky, then promoted. This is a test for issue
@@ -185,8 +185,8 @@ class SearchRankingTest extends BrowserTestBase {
     // first, then the promoted node, then all the rest.
     $this->nodeSearch->getPlugin()->setSearch('rocks', [], []);
     $set = $this->nodeSearch->getPlugin()->execute();
-    $this->assertEqual($set[0]['node']->id(), $nodes['sticky'][1]->id(), 'Search ranking for sticky first worked.');
-    $this->assertEqual($set[1]['node']->id(), $nodes['promote'][1]->id(), 'Search ranking for promoted second worked.');
+    $this->assertEqual($nodes['sticky'][1]->id(), $set[0]['node']->id(), 'Search ranking for sticky first worked.');
+    $this->assertEqual($nodes['promote'][1]->id(), $set[1]['node']->id(), 'Search ranking for promoted second worked.');
 
     // Try with recent, then comments. This is a test for issues
     // https://www.drupal.org/node/771596 and
@@ -210,8 +210,8 @@ class SearchRankingTest extends BrowserTestBase {
     // first, then the commented node, then all the rest.
     $this->nodeSearch->getPlugin()->setSearch('rocks', [], []);
     $set = $this->nodeSearch->getPlugin()->execute();
-    $this->assertEqual($set[0]['node']->id(), $nodes['recent'][1]->id(), 'Search ranking for recent first worked.');
-    $this->assertEqual($set[1]['node']->id(), $nodes['comments'][1]->id(), 'Search ranking for comments second worked.');
+    $this->assertEqual($nodes['recent'][1]->id(), $set[0]['node']->id(), 'Search ranking for recent first worked.');
+    $this->assertEqual($nodes['comments'][1]->id(), $set[1]['node']->id(), 'Search ranking for comments second worked.');
 
   }
 
@@ -266,10 +266,10 @@ class SearchRankingTest extends BrowserTestBase {
     foreach ($sorted_tags as $tag_rank => $tag) {
       // Assert the results.
       if ($tag == 'notag') {
-        $this->assertEqual($set[$tag_rank]['node']->id(), $nodes[$tag]->id(), 'Search tag ranking for plain text order.');
+        $this->assertEqual($nodes[$tag]->id(), $set[$tag_rank]['node']->id(), 'Search tag ranking for plain text order.');
       }
       else {
-        $this->assertEqual($set[$tag_rank]['node']->id(), $nodes[$tag]->id(), 'Search tag ranking for "&lt;' . $sorted_tags[$tag_rank] . '&gt;" order.');
+        $this->assertEqual($nodes[$tag]->id(), $set[$tag_rank]['node']->id(), 'Search tag ranking for "&lt;' . $sorted_tags[$tag_rank] . '&gt;" order.');
       }
     }
 
@@ -290,7 +290,7 @@ class SearchRankingTest extends BrowserTestBase {
       $set = array_slice($set, -2, 1);
 
       // Assert the results.
-      $this->assertEqual($set[0]['node']->id(), $node->id(), 'Search tag ranking for "&lt;' . $tag . '&gt;" order.');
+      $this->assertEqual($node->id(), $set[0]['node']->id(), 'Search tag ranking for "&lt;' . $tag . '&gt;" order.');
 
       // Delete node so it doesn't show up in subsequent search results.
       $node->delete();

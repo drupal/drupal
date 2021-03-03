@@ -75,12 +75,12 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     // Get status of translation sources at local file system.
     $this->drupalGet('admin/reports/translations/check');
     $result = locale_translation_get_status();
-    $this->assertEqual($result['contrib_module_one']['de']->type, LOCALE_TRANSLATION_LOCAL, 'Translation of contrib_module_one found');
-    $this->assertEqual($result['contrib_module_one']['de']->timestamp, $this->timestampOld, 'Translation timestamp found');
-    $this->assertEqual($result['contrib_module_two']['de']->type, LOCALE_TRANSLATION_LOCAL, 'Translation of contrib_module_two found');
-    $this->assertEqual($result['contrib_module_two']['de']->timestamp, $this->timestampNew, 'Translation timestamp found');
-    $this->assertEqual($result['locale_test']['de']->type, LOCALE_TRANSLATION_LOCAL, 'Translation of locale_test found');
-    $this->assertEqual($result['custom_module_one']['de']->type, LOCALE_TRANSLATION_LOCAL, 'Translation of custom_module_one found');
+    $this->assertEqual(LOCALE_TRANSLATION_LOCAL, $result['contrib_module_one']['de']->type, 'Translation of contrib_module_one found');
+    $this->assertEqual($this->timestampOld, $result['contrib_module_one']['de']->timestamp, 'Translation timestamp found');
+    $this->assertEqual(LOCALE_TRANSLATION_LOCAL, $result['contrib_module_two']['de']->type, 'Translation of contrib_module_two found');
+    $this->assertEqual($this->timestampNew, $result['contrib_module_two']['de']->timestamp, 'Translation timestamp found');
+    $this->assertEqual(LOCALE_TRANSLATION_LOCAL, $result['locale_test']['de']->type, 'Translation of locale_test found');
+    $this->assertEqual(LOCALE_TRANSLATION_LOCAL, $result['custom_module_one']['de']->type, 'Translation of custom_module_one found');
 
     // Set the test conditions.
     $edit = [
@@ -91,14 +91,14 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     // Get status of translation sources at both local and remote locations.
     $this->drupalGet('admin/reports/translations/check');
     $result = locale_translation_get_status();
-    $this->assertEqual($result['contrib_module_one']['de']->type, LOCALE_TRANSLATION_REMOTE, 'Translation of contrib_module_one found');
-    $this->assertEqual($result['contrib_module_one']['de']->timestamp, $this->timestampNew, 'Translation timestamp found');
-    $this->assertEqual($result['contrib_module_two']['de']->type, LOCALE_TRANSLATION_LOCAL, 'Translation of contrib_module_two found');
-    $this->assertEqual($result['contrib_module_two']['de']->timestamp, $this->timestampNew, 'Translation timestamp found');
-    $this->assertEqual($result['contrib_module_three']['de']->type, LOCALE_TRANSLATION_LOCAL, 'Translation of contrib_module_three found');
-    $this->assertEqual($result['contrib_module_three']['de']->timestamp, $this->timestampOld, 'Translation timestamp found');
-    $this->assertEqual($result['locale_test']['de']->type, LOCALE_TRANSLATION_LOCAL, 'Translation of locale_test found');
-    $this->assertEqual($result['custom_module_one']['de']->type, LOCALE_TRANSLATION_LOCAL, 'Translation of custom_module_one found');
+    $this->assertEqual(LOCALE_TRANSLATION_REMOTE, $result['contrib_module_one']['de']->type, 'Translation of contrib_module_one found');
+    $this->assertEqual($this->timestampNew, $result['contrib_module_one']['de']->timestamp, 'Translation timestamp found');
+    $this->assertEqual(LOCALE_TRANSLATION_LOCAL, $result['contrib_module_two']['de']->type, 'Translation of contrib_module_two found');
+    $this->assertEqual($this->timestampNew, $result['contrib_module_two']['de']->timestamp, 'Translation timestamp found');
+    $this->assertEqual(LOCALE_TRANSLATION_LOCAL, $result['contrib_module_three']['de']->type, 'Translation of contrib_module_three found');
+    $this->assertEqual($this->timestampOld, $result['contrib_module_three']['de']->timestamp, 'Translation timestamp found');
+    $this->assertEqual(LOCALE_TRANSLATION_LOCAL, $result['locale_test']['de']->type, 'Translation of locale_test found');
+    $this->assertEqual(LOCALE_TRANSLATION_LOCAL, $result['custom_module_one']['de']->type, 'Translation of custom_module_one found');
   }
 
   /**
@@ -128,20 +128,20 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Check the status on the Available translation status page.
     $this->assertRaw('<label for="edit-langcodes-de" class="visually-hidden">Update German</label>');
-    $this->assertText('Updates for: Contributed module one, Contributed module two, Custom module one, Locale test', 'Updates found');
+    $this->assertText('Updates for: Contributed module one, Contributed module two, Custom module one, Locale test');
     /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
     $date_formatter = $this->container->get('date.formatter');
-    $this->assertText('Contributed module one (' . $date_formatter->format($this->timestampNew, 'html_date') . ')', 'Updates for Contrib module one');
-    $this->assertText('Contributed module two (' . $date_formatter->format($this->timestampNew, 'html_date') . ')', 'Updates for Contrib module two');
+    $this->assertText('Contributed module one (' . $date_formatter->format($this->timestampNew, 'html_date') . ')');
+    $this->assertText('Contributed module two (' . $date_formatter->format($this->timestampNew, 'html_date') . ')');
 
     // Execute the translation update.
     $this->drupalPostForm('admin/reports/translations', [], 'Update translations');
 
     // Check if the translation has been updated, using the status cache.
     $status = locale_translation_get_status();
-    $this->assertEqual($status['contrib_module_one']['de']->type, LOCALE_TRANSLATION_CURRENT, 'Translation of contrib_module_one found');
-    $this->assertEqual($status['contrib_module_two']['de']->type, LOCALE_TRANSLATION_CURRENT, 'Translation of contrib_module_two found');
-    $this->assertEqual($status['contrib_module_three']['de']->type, LOCALE_TRANSLATION_CURRENT, 'Translation of contrib_module_three found');
+    $this->assertEqual(LOCALE_TRANSLATION_CURRENT, $status['contrib_module_one']['de']->type, 'Translation of contrib_module_one found');
+    $this->assertEqual(LOCALE_TRANSLATION_CURRENT, $status['contrib_module_two']['de']->type, 'Translation of contrib_module_two found');
+    $this->assertEqual(LOCALE_TRANSLATION_CURRENT, $status['contrib_module_three']['de']->type, 'Translation of contrib_module_three found');
 
     // Check the new translation status.
     // The static cache needs to be flushed first to get the most recent data
@@ -152,21 +152,21 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     // updated.
     $this->assertGreaterThanOrEqual($this->timestampNow, $history['contrib_module_one']['de']->timestamp);
     $this->assertGreaterThanOrEqual($this->timestampNow, $history['contrib_module_one']['de']->last_checked);
-    $this->assertEqual($history['contrib_module_two']['de']->timestamp, $this->timestampNew, 'Translation of contrib_module_two is imported');
+    $this->assertEqual($this->timestampNew, $history['contrib_module_two']['de']->timestamp, 'Translation of contrib_module_two is imported');
     // Verify that the translation of contrib_module_two is updated.
     $this->assertGreaterThanOrEqual($this->timestampNow, $history['contrib_module_two']['de']->last_checked);
-    $this->assertEqual($history['contrib_module_three']['de']->timestamp, $this->timestampMedium, 'Translation of contrib_module_three is not imported');
-    $this->assertEqual($history['contrib_module_three']['de']->last_checked, $this->timestampMedium, 'Translation of contrib_module_three is not updated');
+    $this->assertEqual($this->timestampMedium, $history['contrib_module_three']['de']->timestamp, 'Translation of contrib_module_three is not imported');
+    $this->assertEqual($this->timestampMedium, $history['contrib_module_three']['de']->last_checked, 'Translation of contrib_module_three is not updated');
 
     // Check whether existing translations have (not) been overwritten.
     // cSpell:disable
-    $this->assertEqual(t('January', [], ['langcode' => 'de']), 'Januar_1', 'Translation of January');
-    $this->assertEqual(t('February', [], ['langcode' => 'de']), 'Februar_2', 'Translation of February');
-    $this->assertEqual(t('March', [], ['langcode' => 'de']), 'Marz_2', 'Translation of March');
-    $this->assertEqual(t('April', [], ['langcode' => 'de']), 'April_2', 'Translation of April');
-    $this->assertEqual(t('May', [], ['langcode' => 'de']), 'Mai_customized', 'Translation of May');
-    $this->assertEqual(t('June', [], ['langcode' => 'de']), 'Juni', 'Translation of June');
-    $this->assertEqual(t('Monday', [], ['langcode' => 'de']), 'Montag', 'Translation of Monday');
+    $this->assertEqual('Januar_1', t('January', [], ['langcode' => 'de']), 'Translation of January');
+    $this->assertEqual('Februar_2', t('February', [], ['langcode' => 'de']), 'Translation of February');
+    $this->assertEqual('Marz_2', t('March', [], ['langcode' => 'de']), 'Translation of March');
+    $this->assertEqual('April_2', t('April', [], ['langcode' => 'de']), 'Translation of April');
+    $this->assertEqual('Mai_customized', t('May', [], ['langcode' => 'de']), 'Translation of May');
+    $this->assertEqual('Juni', t('June', [], ['langcode' => 'de']), 'Translation of June');
+    $this->assertEqual('Montag', t('Monday', [], ['langcode' => 'de']), 'Translation of Monday');
     // cSpell:enable
   }
 
@@ -198,9 +198,9 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Check if the translation has been updated, using the status cache.
     $status = locale_translation_get_status();
-    $this->assertEqual($status['contrib_module_one']['de']->type, LOCALE_TRANSLATION_CURRENT, 'Translation of contrib_module_one found');
-    $this->assertEqual($status['contrib_module_two']['de']->type, LOCALE_TRANSLATION_CURRENT, 'Translation of contrib_module_two found');
-    $this->assertEqual($status['contrib_module_three']['de']->type, LOCALE_TRANSLATION_CURRENT, 'Translation of contrib_module_three found');
+    $this->assertEqual(LOCALE_TRANSLATION_CURRENT, $status['contrib_module_one']['de']->type, 'Translation of contrib_module_one found');
+    $this->assertEqual(LOCALE_TRANSLATION_CURRENT, $status['contrib_module_two']['de']->type, 'Translation of contrib_module_two found');
+    $this->assertEqual(LOCALE_TRANSLATION_CURRENT, $status['contrib_module_three']['de']->type, 'Translation of contrib_module_three found');
 
     // Check the new translation status.
     // The static cache needs to be flushed first to get the most recent data
@@ -209,22 +209,22 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $history = locale_translation_get_file_history();
     // Verify that the translation of contrib_module_one is imported.
     $this->assertGreaterThanOrEqual($this->timestampMedium, $history['contrib_module_one']['de']->timestamp);
-    $this->assertEqual($history['contrib_module_one']['de']->last_checked, $this->timestampMedium, 'Translation of contrib_module_one is updated');
-    $this->assertEqual($history['contrib_module_two']['de']->timestamp, $this->timestampNew, 'Translation of contrib_module_two is imported');
+    $this->assertEqual($this->timestampMedium, $history['contrib_module_one']['de']->last_checked, 'Translation of contrib_module_one is updated');
+    $this->assertEqual($this->timestampNew, $history['contrib_module_two']['de']->timestamp, 'Translation of contrib_module_two is imported');
     // Verify that the translation of contrib_module_two is updated.
     $this->assertGreaterThanOrEqual($this->timestampNow, $history['contrib_module_two']['de']->last_checked);
-    $this->assertEqual($history['contrib_module_three']['de']->timestamp, $this->timestampMedium, 'Translation of contrib_module_three is not imported');
-    $this->assertEqual($history['contrib_module_three']['de']->last_checked, $this->timestampMedium, 'Translation of contrib_module_three is not updated');
+    $this->assertEqual($this->timestampMedium, $history['contrib_module_three']['de']->timestamp, 'Translation of contrib_module_three is not imported');
+    $this->assertEqual($this->timestampMedium, $history['contrib_module_three']['de']->last_checked, 'Translation of contrib_module_three is not updated');
 
     // Check whether existing translations have (not) been overwritten.
     // cSpell:disable
-    $this->assertEqual(t('January', [], ['langcode' => 'de']), 'Januar_customized', 'Translation of January');
-    $this->assertEqual(t('February', [], ['langcode' => 'de']), 'Februar_2', 'Translation of February');
-    $this->assertEqual(t('March', [], ['langcode' => 'de']), 'Marz_2', 'Translation of March');
-    $this->assertEqual(t('April', [], ['langcode' => 'de']), 'April_2', 'Translation of April');
-    $this->assertEqual(t('May', [], ['langcode' => 'de']), 'Mai_customized', 'Translation of May');
-    $this->assertEqual(t('June', [], ['langcode' => 'de']), 'Juni', 'Translation of June');
-    $this->assertEqual(t('Monday', [], ['langcode' => 'de']), 'Montag', 'Translation of Monday');
+    $this->assertEqual('Januar_customized', t('January', [], ['langcode' => 'de']), 'Translation of January');
+    $this->assertEqual('Februar_2', t('February', [], ['langcode' => 'de']), 'Translation of February');
+    $this->assertEqual('Marz_2', t('March', [], ['langcode' => 'de']), 'Translation of March');
+    $this->assertEqual('April_2', t('April', [], ['langcode' => 'de']), 'Translation of April');
+    $this->assertEqual('Mai_customized', t('May', [], ['langcode' => 'de']), 'Translation of May');
+    $this->assertEqual('Juni', t('June', [], ['langcode' => 'de']), 'Translation of June');
+    $this->assertEqual('Montag', t('Monday', [], ['langcode' => 'de']), 'Translation of Monday');
     // cSpell:enable
   }
 
@@ -256,13 +256,13 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Check whether existing translations have (not) been overwritten.
     // cSpell:disable
-    $this->assertEqual(t('January', [], ['langcode' => 'de']), 'Januar_customized', 'Translation of January');
-    $this->assertEqual(t('February', [], ['langcode' => 'de']), 'Februar_customized', 'Translation of February');
-    $this->assertEqual(t('March', [], ['langcode' => 'de']), 'Marz_2', 'Translation of March');
-    $this->assertEqual(t('April', [], ['langcode' => 'de']), 'April_2', 'Translation of April');
-    $this->assertEqual(t('May', [], ['langcode' => 'de']), 'Mai_customized', 'Translation of May');
-    $this->assertEqual(t('June', [], ['langcode' => 'de']), 'Juni', 'Translation of June');
-    $this->assertEqual(t('Monday', [], ['langcode' => 'de']), 'Montag', 'Translation of Monday');
+    $this->assertEqual('Januar_customized', t('January', [], ['langcode' => 'de']), 'Translation of January');
+    $this->assertEqual('Februar_customized', t('February', [], ['langcode' => 'de']), 'Translation of February');
+    $this->assertEqual('Marz_2', t('March', [], ['langcode' => 'de']), 'Translation of March');
+    $this->assertEqual('April_2', t('April', [], ['langcode' => 'de']), 'Translation of April');
+    $this->assertEqual('Mai_customized', t('May', [], ['langcode' => 'de']), 'Translation of May');
+    $this->assertEqual('Juni', t('June', [], ['langcode' => 'de']), 'Translation of June');
+    $this->assertEqual('Montag', t('Monday', [], ['langcode' => 'de']), 'Translation of Monday');
     // cSpell:enable
   }
 
@@ -426,8 +426,8 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Ensure the translation file is automatically imported when the language
     // was added.
-    $this->assertText('One translation file imported.', 'Language file automatically imported.');
-    $this->assertText('One translation string was skipped because of disallowed or malformed HTML', 'Language file automatically imported.');
+    $this->assertText('One translation file imported.');
+    $this->assertText('One translation string was skipped because of disallowed or malformed HTML');
 
     // Ensure the strings were successfully imported.
     $search = [
@@ -436,7 +436,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
       'translation' => 'translated',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
-    $this->assertNoText('No strings available.', 'String successfully imported.');
+    $this->assertNoText('No strings available.');
 
     // Ensure the multiline string was imported.
     $search = [
@@ -445,7 +445,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
       'translation' => 'all',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
-    $this->assertText('Multiline translation string to make sure that import works with it.', 'String successfully imported.');
+    $this->assertText('Multiline translation string to make sure that import works with it.');
 
     // Ensure 'Allowed HTML source string' was imported but the translation for
     // 'Another allowed HTML source string' was not because it contains invalid
@@ -456,8 +456,8 @@ class LocaleUpdateTest extends LocaleUpdateBase {
       'translation' => 'all',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
-    $this->assertText('Allowed HTML source string', 'String successfully imported.');
-    $this->assertNoText('Another allowed HTML source string', 'String with disallowed translation not imported.');
+    $this->assertText('Allowed HTML source string');
+    $this->assertNoText('Another allowed HTML source string');
   }
 
 }

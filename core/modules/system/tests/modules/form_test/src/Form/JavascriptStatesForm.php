@@ -121,6 +121,15 @@ class JavascriptStatesForm extends FormBase {
         ],
       ],
     ];
+    $form['text_format_invisible_when_checkbox_trigger_checked'] = [
+      '#type' => 'text_format',
+      '#title' => 'Text format invisible when checkbox trigger checked',
+      '#states' => [
+        'invisible' => [
+          ':input[name="checkbox_trigger"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
 
     // Checkboxes trigger.
     $form['textfield_visible_when_checkboxes_trigger_value2_checked'] = [

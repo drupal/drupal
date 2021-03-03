@@ -23,7 +23,7 @@ class ServiceProviderTest extends KernelTestBase {
    */
   public function testServiceProviderRegistration() {
     $definition = $this->container->getDefinition('file.usage');
-    $this->assertTrue($definition->getClass() == 'Drupal\\service_provider_test\\TestFileUsage', 'Class has been changed');
+    $this->assertSame('Drupal\\service_provider_test\\TestFileUsage', $definition->getClass(), 'Class has been changed');
     $this->assertTrue(\Drupal::hasService('service_provider_test_class'), 'The service_provider_test_class service has been registered to the DIC');
   }
 

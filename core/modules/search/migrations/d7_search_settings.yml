@@ -7,7 +7,7 @@ source:
   plugin: variable
   constants:
     status: true
-  variables:
+  variables_no_row_if_missing:
     - minimum_word_size
     - overlap_cjk
     - search_cron_limit

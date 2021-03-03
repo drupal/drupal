@@ -38,8 +38,8 @@ class UserCreateTest extends BrowserTestBase {
     $user = $this->drupalCreateUser(['administer users']);
     $this->drupalLogin($user);
 
-    $this->assertEqual($user->getCreatedTime(), REQUEST_TIME, 'Creating a user sets default "created" timestamp.');
-    $this->assertEqual($user->getChangedTime(), REQUEST_TIME, 'Creating a user sets default "changed" timestamp.');
+    $this->assertEqual(REQUEST_TIME, $user->getCreatedTime(), 'Creating a user sets default "created" timestamp.');
+    $this->assertEqual(REQUEST_TIME, $user->getChangedTime(), 'Creating a user sets default "changed" timestamp.');
 
     // Create a field.
     $field_name = 'test_field';
@@ -108,16 +108,16 @@ class UserCreateTest extends BrowserTestBase {
       $this->drupalPostForm('admin/people/create', $edit, 'Create new account');
 
       if ($notify) {
-        $this->assertText('A welcome message with further instructions has been emailed to the new user ' . $edit['name'] . '.', 'User created');
+        $this->assertText('A welcome message with further instructions has been emailed to the new user ' . $edit['name'] . '.');
         $this->assertCount(1, $this->drupalGetMails(), 'Notification email sent');
       }
       else {
-        $this->assertText('Created a new user account for ' . $edit['name'] . '. No email has been sent.', 'User created');
+        $this->assertText('Created a new user account for ' . $edit['name'] . '. No email has been sent.');
         $this->assertCount(0, $this->drupalGetMails(), 'Notification email not sent');
       }
 
       $this->drupalGet('admin/people');
-      $this->assertText($edit['name'], 'User found in list of users');
+      $this->assertText($edit['name']);
       $user = user_load_by_name($name);
       $this->assertTrue($user->isActive(), 'User is not blocked');
     }

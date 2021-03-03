@@ -51,7 +51,7 @@ class BlockContentListTest extends BlockContentTestBase {
     // Test the contents of each th cell.
     $expected_items = [t('Block description'), t('Operations')];
     foreach ($elements as $key => $element) {
-      $this->assertEqual($element->getText(), $expected_items[$key]);
+      $this->assertEqual($expected_items[$key], $element->getText());
     }
 
     $label = 'Antelope';
@@ -76,7 +76,7 @@ class BlockContentListTest extends BlockContentTestBase {
     // Check the contents of each row cell. The first cell contains the label,
     // the second contains the machine name, and the third contains the
     // operations list.
-    $this->assertIdentical($elements[0]->getText(), $label);
+    $this->assertSame($label, $elements[0]->getText());
 
     // Edit the entity using the operations link.
     $blocks = $this->container

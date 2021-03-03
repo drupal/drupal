@@ -16,7 +16,7 @@ class BlockContentListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header['label'] = t('Block description');
+    $header['label'] = $this->t('Block description');
     return $header + parent::buildHeader();
   }
 

@@ -22,7 +22,7 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
    * {@inheritdoc}
    */
   protected function setDatabaseDumpFiles() {
-    $this->databaseDumpFiles[] = __DIR__ . '/../../../../modules/system/tests/fixtures/update/drupal-8.8.0.bare.standard.php.gz';
+    $this->databaseDumpFiles[] = __DIR__ . '/../../../../modules/system/tests/fixtures/update/drupal-9.0.0.bare.standard.php.gz';
     $this->databaseDumpFiles[] = __DIR__ . '/../../../../modules/system/tests/fixtures/update/drupal-8.update-test-schema-enabled.php';
     $this->databaseDumpFiles[] = __DIR__ . '/../../../../modules/system/tests/fixtures/update/drupal-8.update-test-semver-update-n-enabled.php';
   }
@@ -34,8 +34,8 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
     // Set a value in the cache to prove caches are cleared.
     \Drupal::service('cache.default')->set(__CLASS__, 'Test');
 
-    foreach (['user' => 8100, 'node' => 8700, 'system' => 8805, 'update_test_schema' => 8000] as $module => $schema) {
-      $this->assertEqual(drupal_get_installed_schema_version($module), $schema, new FormattableMarkup('Module @module schema is @schema', ['@module' => $module, '@schema' => $schema]));
+    foreach (['user' => 8100, 'node' => 8700, 'system' => 8901, 'update_test_schema' => 8000] as $module => $schema) {
+      $this->assertEqual($schema, drupal_get_installed_schema_version($module), new FormattableMarkup('Module @module schema is @schema', ['@module' => $module, '@schema' => $schema]));
     }
 
     // Ensure that all {router} entries can be unserialized. If they cannot be
@@ -64,7 +64,7 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
     // be broken.
     $this->runUpdates();
     $this->assertEquals('standard', \Drupal::config('core.extension')->get('profile'));
-    $this->assertEqual(\Drupal::config('system.site')->get('name'), 'Site-Install');
+    $this->assertEqual('Site-Install', \Drupal::config('system.site')->get('name'));
     $this->drupalGet('<front>');
     $this->assertText('Site-Install');
 
@@ -100,8 +100,8 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
     $this->assertEqual([], $container_cannot_be_saved_messages);
 
     // Ensure schema has changed.
-    $this->assertEqual(drupal_get_installed_schema_version('update_test_schema', TRUE), 8001);
-    $this->assertEqual(drupal_get_installed_schema_version('update_test_semver_update_n', TRUE), 8001);
+    $this->assertEqual(8001, drupal_get_installed_schema_version('update_test_schema', TRUE));
+    $this->assertEqual(8001, drupal_get_installed_schema_version('update_test_semver_update_n', TRUE));
     // Ensure the index was added for column a.
     $this->assertTrue($connection->schema()->indexExists('update_test_schema_table', 'test'), 'Version 8001 of the update_test_schema module is installed.');
     // Ensure update_test_semver_update_n_update_8001 was run.

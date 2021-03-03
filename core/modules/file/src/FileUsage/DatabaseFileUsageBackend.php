@@ -54,7 +54,7 @@ class DatabaseFileUsageBackend extends FileUsageBase {
         'id' => $id,
       ])
       ->fields(['count' => $count])
-      ->expression('count', 'count + :count', [':count' => $count])
+      ->expression('count', '[count] + :count', [':count' => $count])
       ->execute();
 
     parent::add($file, $module, $type, $id, $count);
@@ -88,7 +88,7 @@ class DatabaseFileUsageBackend extends FileUsageBase {
           ->condition('type', $type)
           ->condition('id', $id);
       }
-      $query->expression('count', 'count - :count', [':count' => $count]);
+      $query->expression('count', '[count] - :count', [':count' => $count]);
       $query->execute();
     }
 

@@ -8,6 +8,7 @@
 use Drupal\Component\Utility\OpCodeCache;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Database\Database;
 use Drupal\Core\Extension\Dependency;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Installer\InstallerKernel;
@@ -618,6 +619,18 @@ function drupal_install_system($install_state) {
   \Drupal::configFactory()->getEditable('core.extension')
     ->set('profile', $install_state['parameters']['profile'])
     ->save();
+
+  $connection = Database::getConnection();
+  $provider = $connection->getProvider();
+  // When the database driver is provided by a module, then install that module.
+  // This module must be installed before any other module, as it must be able
+  // to override any call to hook_schema() or any "backend_overridable" service.
+  if ($provider !== 'core') {
+    $autoload = $connection->getConnectionOptions()['autoload'] ?? '';
+    if (($pos = strpos($autoload, 'src/Driver/Database/')) !== FALSE) {
+      $kernel->getContainer()->get('module_installer')->install([$provider], FALSE);
+    }
+  }
 
   // Install System module.
   $kernel->getContainer()->get('module_installer')->install(['system'], FALSE);

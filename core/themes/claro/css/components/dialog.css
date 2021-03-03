@@ -13,7 +13,7 @@
 .ui-dialog {
   padding: 0;
   border: 0;
-  border-radius: 4px;
+  border-radius: 0.25rem;
   background: transparent;
   box-shadow: 0 0 1rem -0.25rem #222330;
 }

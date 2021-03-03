@@ -27,7 +27,7 @@ class BookOutlineStorage implements BookOutlineStorageInterface {
    * {@inheritdoc}
    */
   public function getBooks() {
-    return $this->connection->query("SELECT DISTINCT(bid) FROM {book}")->fetchCol();
+    return $this->connection->query("SELECT DISTINCT([bid]) FROM {book}")->fetchCol();
   }
 
   /**
@@ -35,7 +35,7 @@ class BookOutlineStorage implements BookOutlineStorageInterface {
    */
   public function hasBooks() {
     return (bool) $this->connection
-      ->query('SELECT count(bid) FROM {book}')
+      ->query('SELECT count([bid]) FROM {book}')
       ->fetchField();
   }
 
@@ -89,7 +89,7 @@ class BookOutlineStorage implements BookOutlineStorageInterface {
    */
   public function loadBookChildren($pid) {
     return $this->connection
-      ->query("SELECT * FROM {book} WHERE pid = :pid", [':pid' => $pid])
+      ->query("SELECT * FROM {book} WHERE [pid] = :pid", [':pid' => $pid])
       ->fetchAllAssoc('nid', \PDO::FETCH_ASSOC);
   }
 
@@ -160,7 +160,7 @@ class BookOutlineStorage implements BookOutlineStorageInterface {
       $query->expression($expression[0], $expression[1], $expression[2]);
     }
 
-    $query->expression('depth', 'depth + :depth', [':depth' => $shift]);
+    $query->expression('depth', '[depth] + :depth', [':depth' => $shift]);
     $query->condition('bid', $original['bid']);
     $p = 'p1';
     for ($i = 1; !empty($original[$p]); $p = 'p' . ++$i) {

@@ -4,6 +4,7 @@ namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\Query\PagerSelectExtender;
 use Drupal\Core\Database\RowCountException;
 use Drupal\user\Entity\User;
 
@@ -26,7 +27,7 @@ class SelectComplexTest extends DatabaseTestBase {
    */
   public function testDefaultJoin() {
     $query = $this->connection->select('test_task', 't');
-    $people_alias = $query->join('test', 'p', 't.pid = p.id');
+    $people_alias = $query->join('test', 'p', '[t].[pid] = [p].[id]');
     $name_field = $query->addField($people_alias, 'name', 'name');
     $query->addField('t', 'task', 'task');
     $priority_field = $query->addField('t', 'priority', 'priority');
@@ -40,11 +41,11 @@ class SelectComplexTest extends DatabaseTestBase {
     foreach ($result as $record) {
       $num_records++;
       $this->assertGreaterThanOrEqual($last_priority, $record->$priority_field);
-      $this->assertNotEqual($record->$name_field, 'Ringo', 'Taskless person not selected.');
+      $this->assertNotSame('Ringo', $record->$name_field, 'Taskless person not selected.');
       $last_priority = $record->$priority_field;
     }
 
-    $this->assertEqual($num_records, 7, 'Returned the correct number of rows.');
+    $this->assertEqual(7, $num_records, 'Returned the correct number of rows.');
   }
 
   /**
@@ -52,7 +53,7 @@ class SelectComplexTest extends DatabaseTestBase {
    */
   public function testLeftOuterJoin() {
     $query = $this->connection->select('test', 'p');
-    $people_alias = $query->leftJoin('test_task', 't', 't.pid = p.id');
+    $people_alias = $query->leftJoin('test_task', 't', '[t].[pid] = [p].[id]');
     $name_field = $query->addField('p', 'name', 'name');
     $query->addField($people_alias, 'task', 'task');
     $query->addField($people_alias, 'priority', 'priority');
@@ -69,7 +70,7 @@ class SelectComplexTest extends DatabaseTestBase {
       $this->assertGreaterThanOrEqual(0, strcmp($record->$name_field, $last_name));
     }
 
-    $this->assertEqual($num_records, 8, 'Returned the correct number of rows.');
+    $this->assertEqual(8, $num_records, 'Returned the correct number of rows.');
   }
 
   /**
@@ -77,7 +78,7 @@ class SelectComplexTest extends DatabaseTestBase {
    */
   public function testGroupBy() {
     $query = $this->connection->select('test_task', 't');
-    $count_field = $query->addExpression('COUNT(task)', 'num');
+    $count_field = $query->addExpression('COUNT([task])', 'num');
     $task_field = $query->addField('t', 'task');
     $query->orderBy($count_field);
     $query->groupBy($task_field);
@@ -103,10 +104,10 @@ class SelectComplexTest extends DatabaseTestBase {
     ];
 
     foreach ($correct_results as $task => $count) {
-      $this->assertEqual($records[$task], $count, new FormattableMarkup("Correct number of '@task' records found.", ['@task' => $task]));
+      $this->assertEqual($count, $records[$task], new FormattableMarkup("Correct number of '@task' records found.", ['@task' => $task]));
     }
 
-    $this->assertEqual($num_records, 6, 'Returned the correct number of total rows.');
+    $this->assertEqual(6, $num_records, 'Returned the correct number of total rows.');
   }
 
   /**
@@ -114,11 +115,11 @@ class SelectComplexTest extends DatabaseTestBase {
    */
   public function testGroupByAndHaving() {
     $query = $this->connection->select('test_task', 't');
-    $count_field = $query->addExpression('COUNT(task)', 'num');
+    $count_field = $query->addExpression('COUNT([task])', 'num');
     $task_field = $query->addField('t', 'task');
     $query->orderBy($count_field);
     $query->groupBy($task_field);
-    $query->having('COUNT(task) >= 2');
+    $query->having('COUNT([task]) >= 2');
     $result = $query->execute();
 
     $num_records = 0;
@@ -138,10 +139,10 @@ class SelectComplexTest extends DatabaseTestBase {
     ];
 
     foreach ($correct_results as $task => $count) {
-      $this->assertEqual($records[$task], $count, new FormattableMarkup("Correct number of '@task' records found.", ['@task' => $task]));
+      $this->assertEqual($count, $records[$task], new FormattableMarkup("Correct number of '@task' records found.", ['@task' => $task]));
     }
 
-    $this->assertEqual($num_records, 1, 'Returned the correct number of total rows.');
+    $this->assertEqual(1, $num_records, 'Returned the correct number of total rows.');
   }
 
   /**
@@ -156,7 +157,7 @@ class SelectComplexTest extends DatabaseTestBase {
     $query->range(0, 2);
     $query_result = $query->countQuery()->execute()->fetchField();
 
-    $this->assertEqual($query_result, 2, 'Returned the correct number of rows.');
+    $this->assertEqual(2, $query_result, 'Returned the correct number of rows.');
   }
 
   /**
@@ -170,7 +171,7 @@ class SelectComplexTest extends DatabaseTestBase {
     $query->range(NULL, NULL);
     $query_result = $query->countQuery()->execute()->fetchField();
 
-    $this->assertEqual($query_result, 4, 'Returned the correct number of rows.');
+    $this->assertEqual(4, $query_result, 'Returned the correct number of rows.');
   }
 
   /**
@@ -182,7 +183,7 @@ class SelectComplexTest extends DatabaseTestBase {
     $query->distinct();
     $query_result = $query->countQuery()->execute()->fetchField();
 
-    $this->assertEqual($query_result, 6, 'Returned the correct number of rows.');
+    $this->assertEqual(6, $query_result, 'Returned the correct number of rows.');
   }
 
   /**
@@ -196,13 +197,13 @@ class SelectComplexTest extends DatabaseTestBase {
 
     $count = $query->countQuery()->execute()->fetchField();
 
-    $this->assertEqual($count, 4, 'Counted the correct number of records.');
+    $this->assertEqual(4, $count, 'Counted the correct number of records.');
 
     // Now make sure we didn't break the original query!  We should still have
     // all of the fields we asked for.
     $record = $query->execute()->fetch();
-    $this->assertEqual($record->$name_field, 'George', 'Correct data retrieved.');
-    $this->assertEqual($record->$age_field, 27, 'Correct data retrieved.');
+    $this->assertEqual('George', $record->{$name_field}, 'Correct data retrieved.');
+    $this->assertEqual(27, $record->{$age_field}, 'Correct data retrieved.');
   }
 
   /**
@@ -210,13 +211,13 @@ class SelectComplexTest extends DatabaseTestBase {
    */
   public function testHavingCountQuery() {
     $query = $this->connection->select('test')
-      ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+      ->extend(PagerSelectExtender::class)
       ->groupBy('age')
-      ->having('age + 1 > 0');
+      ->having('[age] + 1 > 0');
     $query->addField('test', 'age');
-    $query->addExpression('age + 1');
+    $query->addExpression('[age] + 1');
     $count = count($query->execute()->fetchCol());
-    $this->assertEqual($count, 4, 'Counted the correct number of records.');
+    $this->assertEqual(4, $count, 'Counted the correct number of records.');
   }
 
   /**
@@ -230,7 +231,7 @@ class SelectComplexTest extends DatabaseTestBase {
 
     // Check that the 'all_fields' statement is handled properly.
     $tables = $query->getTables();
-    $this->assertEqual($tables['test']['all_fields'], 1, 'Query correctly sets \'all_fields\' statement.');
+    $this->assertEqual(1, $tables['test']['all_fields'], 'Query correctly sets \'all_fields\' statement.');
     $tables = $count->getTables();
     $this->assertFalse(isset($tables['test']['all_fields']), 'Count query correctly unsets \'all_fields\' statement.');
 
@@ -239,14 +240,14 @@ class SelectComplexTest extends DatabaseTestBase {
     // The orderby string is different for PostgreSQL.
     // @see Drupal\Core\Database\Driver\pgsql\Select::orderBy()
     $db_type = Database::getConnection()->databaseType();
-    $this->assertEqual($orderby['name'], ($db_type == 'pgsql' ? 'ASC NULLS FIRST' : 'ASC'), 'Query correctly sets ordering clause.');
+    $this->assertEqual($db_type == 'pgsql' ? 'ASC NULLS FIRST' : 'ASC', $orderby['name'], 'Query correctly sets ordering clause.');
     $orderby = $count->getOrderBy();
     $this->assertFalse(isset($orderby['name']), 'Count query correctly unsets ordering clause.');
 
     // Make sure that the count query works.
     $count = $count->execute()->fetchField();
 
-    $this->assertEqual($count, 4, 'Counted the correct number of records.');
+    $this->assertEqual(4, $count, 'Counted the correct number of records.');
   }
 
   /**
@@ -263,7 +264,7 @@ class SelectComplexTest extends DatabaseTestBase {
     $this->assertEqual(4, $query->countQuery()->execute()->fetchField(), 'Count Query removed fields');
 
     $query = $this->connection->select('test');
-    $query->addExpression('fail');
+    $query->addExpression('[fail]');
     $this->assertEqual(4, $query->countQuery()->execute()->fetchField(), 'Count Query removed expressions');
   }
 
@@ -277,7 +278,7 @@ class SelectComplexTest extends DatabaseTestBase {
 
     $count = $query->countQuery()->execute()->fetchField();
 
-    $this->assertEqual($count, 6, 'Counted the correct number of records.');
+    $this->assertEqual(6, $count, 'Counted the correct number of records.');
   }
 
   /**
@@ -290,19 +291,19 @@ class SelectComplexTest extends DatabaseTestBase {
 
     $count = $query->countQuery()->execute()->fetchField();
 
-    $this->assertEqual($count, 3, 'Counted the correct number of records.');
+    $this->assertEqual(3, $count, 'Counted the correct number of records.');
 
     // Use a column alias as, without one, the query can succeed for the wrong
     // reason.
     $query = $this->connection->select('test_task');
     $query->addField('test_task', 'pid', 'pid_alias');
-    $query->addExpression('COUNT(test_task.task)', 'count');
+    $query->addExpression('COUNT([test_task].[task])', 'count');
     $query->groupBy('pid_alias');
     $query->orderBy('pid_alias', 'asc');
 
     $count = $query->countQuery()->execute()->fetchField();
 
-    $this->assertEqual($count, 3, 'Counted the correct number of records.');
+    $this->assertEqual(3, $count, 'Counted the correct number of records.');
   }
 
   /**
@@ -319,7 +320,7 @@ class SelectComplexTest extends DatabaseTestBase {
     $query->condition(($this->connection->condition('OR'))->condition('age', 26)->condition('age', 27));
 
     $job = $query->execute()->fetchField();
-    $this->assertEqual($job, 'Songwriter', 'Correct data retrieved.');
+    $this->assertEqual('Songwriter', $job, 'Correct data retrieved.');
   }
 
   /**
@@ -327,13 +328,13 @@ class SelectComplexTest extends DatabaseTestBase {
    */
   public function testJoinTwice() {
     $query = $this->connection->select('test')->fields('test');
-    $alias = $query->join('test', 'test', 'test.job = %alias.job');
+    $alias = $query->join('test', 'test', '[test].[job] = [%alias].[job]');
     $query->addField($alias, 'name', 'other_name');
     $query->addField($alias, 'job', 'other_job');
-    $query->where("$alias.name <> test.name");
+    $query->where("[$alias].[name] <> [test].[name]");
     $crowded_job = $query->execute()->fetch();
-    $this->assertEqual($crowded_job->job, $crowded_job->other_job, 'Correctly joined same table twice.');
-    $this->assertNotEqual($crowded_job->name, $crowded_job->other_name, 'Correctly joined same table twice.');
+    $this->assertEqual($crowded_job->other_job, $crowded_job->job, 'Correctly joined same table twice.');
+    $this->assertNotEquals($crowded_job->other_name, $crowded_job->name, 'Correctly joined same table twice.');
   }
 
   /**
@@ -348,21 +349,21 @@ class SelectComplexTest extends DatabaseTestBase {
     ]);
 
     $query = Database::getConnection('replica')->select('test_task', 'tt');
-    $query->addExpression('tt.pid + 1', 'abc');
+    $query->addExpression('[tt].[pid] + 1', 'abc');
     $query->condition('priority', 1, '>');
     $query->condition('priority', 100, '<');
 
     $subquery = $this->connection->select('test', 'tp');
-    $subquery->join('test_one_blob', 'tpb', 'tp.id = tpb.id');
-    $subquery->join('node', 'n', 'tp.id = n.nid');
+    $subquery->join('test_one_blob', 'tpb', '[tp].[id] = [tpb].[id]');
+    $subquery->join('node', 'n', '[tp].[id] = [n].[nid]');
     $subquery->addTag('node_access');
     $subquery->addMetaData('account', $account);
     $subquery->addField('tp', 'id');
     $subquery->condition('age', 5, '>');
     $subquery->condition('age', 500, '<');
 
-    $query->leftJoin($subquery, 'sq', 'tt.pid = sq.id');
-    $query->join('test_one_blob', 'tb3', 'tt.pid = tb3.id');
+    $query->leftJoin($subquery, 'sq', '[tt].[pid] = [sq].[id]');
+    $query->join('test_one_blob', 'tb3', '[tt].[pid] = [tb3].[id]');
 
     // Construct the query string.
     // This is the same sequence that SelectQuery::execute() goes through.
@@ -399,7 +400,7 @@ class SelectComplexTest extends DatabaseTestBase {
   public function testJoinConditionObject() {
     // Same test as testDefaultJoin, but with a Condition object.
     $query = $this->connection->select('test_task', 't');
-    $join_cond = ($this->connection->condition('AND'))->where('t.pid = p.id');
+    $join_cond = ($this->connection->condition('AND'))->where('[t].[pid] = [p].[id]');
     $people_alias = $query->join('test', 'p', $join_cond);
     $name_field = $query->addField($people_alias, 'name', 'name');
     $query->addField('t', 'task', 'task');
@@ -414,11 +415,11 @@ class SelectComplexTest extends DatabaseTestBase {
       $num_records++;
       // Verify that the results are returned in the correct order.
       $this->assertGreaterThanOrEqual($last_priority, $record->$priority_field);
-      $this->assertNotEqual($record->$name_field, 'Ringo', 'Taskless person not selected.');
+      $this->assertNotSame('Ringo', $record->$name_field, 'Taskless person not selected.');
       $last_priority = $record->$priority_field;
     }
 
-    $this->assertEqual($num_records, 7, 'Returned the correct number of rows.');
+    $this->assertEqual(7, $num_records, 'Returned the correct number of rows.');
 
     // Test a condition object that creates placeholders.
     $t1_name = 'John';
@@ -432,11 +433,11 @@ class SelectComplexTest extends DatabaseTestBase {
     $query->addField('t2', 'name', 't2_name');
 
     $num_records = $query->countQuery()->execute()->fetchField();
-    $this->assertEqual($num_records, 1, 'Query expected to return 1 row. Actual: ' . $num_records);
+    $this->assertEqual(1, $num_records, 'Query expected to return 1 row. Actual: ' . $num_records);
     if ($num_records == 1) {
       $record = $query->execute()->fetchObject();
-      $this->assertEqual($record->t1_name, $t1_name, 'Query expected to retrieve name ' . $t1_name . ' from table t1. Actual: ' . $record->t1_name);
-      $this->assertEqual($record->t2_name, $t2_name, 'Query expected to retrieve name ' . $t2_name . ' from table t2. Actual: ' . $record->t2_name);
+      $this->assertEqual($t1_name, $record->t1_name, 'Query expected to retrieve name ' . $t1_name . ' from table t1. Actual: ' . $record->t1_name);
+      $this->assertEqual($t2_name, $record->t2_name, 'Query expected to retrieve name ' . $t2_name . ' from table t2. Actual: ' . $record->t2_name);
     }
   }
 

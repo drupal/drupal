@@ -63,8 +63,8 @@ class ModuleTest extends ViewsKernelTestBase {
       ],
     ];
     $form_state = new FormState();
-    $description_top = '<p>' . t('The handler for this item is broken or missing. The following details are available:') . '</p>';
-    $description_bottom = '<p>' . t('Enabling the appropriate module may solve this issue. Otherwise, check to see if there is a module update available.') . '</p>';
+    $description_top = '<p>The handler for this item is broken or missing. The following details are available:</p>';
+    $description_bottom = '<p>Enabling the appropriate module may solve this issue. Otherwise, check to see if there is a module update available.</p>';
     foreach ($types as $type => $class) {
       foreach ($items as $item) {
         $handler = $this->container->get('plugin.manager.views.' . $type)
@@ -147,12 +147,12 @@ class ModuleTest extends ViewsKernelTestBase {
 
     // Test Views::getViewsAsOptions().
     // Test the $views_only parameter.
-    $this->assertIdentical(array_keys($all_views), array_keys(Views::getViewsAsOptions(TRUE)), 'Expected option keys for all views were returned.');
+    $this->assertSame(array_keys($all_views), array_keys(Views::getViewsAsOptions(TRUE)), 'Expected option keys for all views were returned.');
     $expected_options = [];
     foreach ($all_views as $id => $view) {
       $expected_options[$id] = $view->label();
     }
-    $this->assertIdentical($expected_options, Views::getViewsAsOptions(TRUE), 'Expected options array was returned.');
+    $this->assertSame($expected_options, Views::getViewsAsOptions(TRUE), 'Expected options array was returned.');
 
     // Test the default.
     $this->assertEquals($this->formatViewOptions($all_views), Views::getViewsAsOptions(), 'Expected options array for all views was returned.');
@@ -164,7 +164,7 @@ class ModuleTest extends ViewsKernelTestBase {
     // Test the sort parameter.
     $all_views_sorted = $all_views;
     ksort($all_views_sorted);
-    $this->assertIdentical(array_keys($all_views_sorted), array_keys(Views::getViewsAsOptions(TRUE, 'all', NULL, FALSE, TRUE)), 'All view id keys returned in expected sort order');
+    $this->assertSame(array_keys($all_views_sorted), array_keys(Views::getViewsAsOptions(TRUE, 'all', NULL, FALSE, TRUE)), 'All view id keys returned in expected sort order');
 
     // Test $exclude_view parameter.
     $this->assertArrayNotHasKey('archive', Views::getViewsAsOptions(TRUE, 'all', 'archive'));
@@ -191,11 +191,11 @@ class ModuleTest extends ViewsKernelTestBase {
 
     views_enable_view($view);
     $this->assertTrue($view->status(), 'A view has been enabled.');
-    $this->assertEqual($view->status(), views_view_is_enabled($view), 'views_view_is_enabled is correct.');
+    $this->assertEqual(views_view_is_enabled($view), $view->status(), 'views_view_is_enabled is correct.');
 
     views_disable_view($view);
     $this->assertFalse($view->status(), 'A view has been disabled.');
-    $this->assertEqual(!$view->status(), views_view_is_disabled($view), 'views_view_is_disabled is correct.');
+    $this->assertEqual(views_view_is_disabled($view), !$view->status(), 'views_view_is_disabled is correct.');
   }
 
   /**
@@ -210,16 +210,16 @@ class ModuleTest extends ViewsKernelTestBase {
       $expected[$id] = $definition['title'];
     }
     asort($expected);
-    $this->assertIdentical(array_keys($plugins), array_keys($expected));
+    $this->assertSame(array_keys($expected), array_keys($plugins));
 
     // Test using the 'test' style plugin type only returns the test_style and
     // mapping_test plugins.
     $plugins = Views::fetchPluginNames('style', 'test');
-    $this->assertIdentical(array_keys($plugins), ['mapping_test', 'test_style', 'test_template_style']);
+    $this->assertSame(['mapping_test', 'test_style', 'test_template_style'], array_keys($plugins));
 
     // Test a non existent style plugin type returns no plugins.
     $plugins = Views::fetchPluginNames('style', $this->randomString());
-    $this->assertIdentical($plugins, []);
+    $this->assertSame([], $plugins);
   }
 
   /**
@@ -235,9 +235,9 @@ class ModuleTest extends ViewsKernelTestBase {
       $this->assertTrue(isset($plugin_list[$key]), new FormattableMarkup('The expected @key plugin list key was found.', ['@key' => $key]));
       $plugin_details = $plugin_list[$key];
 
-      $this->assertEqual($plugin_details['type'], $plugin_type, 'The expected plugin type was found.');
-      $this->assertEqual($plugin_details['title'], $plugin_def['title'], 'The expected plugin title was found.');
-      $this->assertEqual($plugin_details['provider'], $plugin_def['provider'], 'The expected plugin provider was found.');
+      $this->assertEqual($plugin_type, $plugin_details['type'], 'The expected plugin type was found.');
+      $this->assertEqual($plugin_def['title'], $plugin_details['title'], 'The expected plugin title was found.');
+      $this->assertEqual($plugin_def['provider'], $plugin_details['provider'], 'The expected plugin provider was found.');
       $this->assertContains('test_view', $plugin_details['views'], 'The test_view View was found in the list of views using this plugin.');
     }
   }
@@ -340,7 +340,7 @@ class ModuleTest extends ViewsKernelTestBase {
     $table_data = $this->container->get('views.views_data')->get($table);
     $field_data = $table_data[$field][$id];
 
-    $this->assertEqual($field_data['id'], $handler->getPluginId());
+    $this->assertEqual($handler->getPluginId(), $field_data['id']);
   }
 
 }

@@ -34,7 +34,7 @@ class Field extends DrupalSqlBase {
       ])
       ->distinct();
     // Only import fields which are actually being used.
-    $query->innerJoin('content_node_field_instance', 'cnfi', 'cnfi.field_name = cnf.field_name');
+    $query->innerJoin('content_node_field_instance', 'cnfi', '[cnfi].[field_name] = [cnf].[field_name]');
 
     return $query;
   }

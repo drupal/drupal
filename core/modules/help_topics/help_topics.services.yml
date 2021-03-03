@@ -23,3 +23,8 @@ services:
       - [setSearchManager, ['@?plugin.manager.search']]
     tags:
       - { name: plugin_manager_cache_clear }
+  help_twig.extension:
+    class: Drupal\help_topics\HelpTwigExtension
+    arguments: ['@access_manager', '@plugin.manager.help_topic', '@string_translation']
+    tags:
+      - { name: twig.extension }

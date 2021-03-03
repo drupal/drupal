@@ -137,11 +137,11 @@ trait BookTestTrait {
     }
 
     // Compare expected and got breadcrumbs.
-    $this->assertIdentical($expected_breadcrumb, $got_breadcrumb, 'The breadcrumb is correctly displayed on the page.');
+    $this->assertSame($expected_breadcrumb, $got_breadcrumb, 'The breadcrumb is correctly displayed on the page.');
 
     // Check printer friendly version.
     $this->drupalGet('book/export/html/' . $node->id());
-    $this->assertText($node->label(), 'Printer friendly title found.');
+    $this->assertText($node->label());
     $this->assertRaw($node->body->processed);
 
     $number++;

@@ -217,5 +217,22 @@ function hook_block_access(\Drupal\block\Entity\Block $block, $operation, \Drupa
 }
 
 /**
+ * Allow modules to alter the block plugin definitions.
+ *
+ * @param array[] $definitions
+ *   The array of block definitions, keyed by plugin ID.
+ *
+ * @ingroup block_api
+ */
+function hook_block_alter(&$definitions) {
+  foreach ($definitions as $id => $definition) {
+    if (strpos($id, 'system_menu_block:') === 0) {
+      // Replace $definition properties: id, deriver, class, provider to ones
+      // provided by this custom module.
+    }
+  }
+}
+
+/**
  * @} End of "addtogroup hooks".
  */

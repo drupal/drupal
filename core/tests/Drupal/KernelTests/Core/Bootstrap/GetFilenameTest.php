@@ -31,18 +31,18 @@ class GetFilenameTest extends KernelTestBase {
    */
   public function testDrupalGetFilename() {
     // Retrieving the location of a module.
-    $this->assertIdentical(drupal_get_filename('module', 'system'), 'core/modules/system/system.info.yml');
+    $this->assertSame('core/modules/system/system.info.yml', drupal_get_filename('module', 'system'));
 
     // Retrieving the location of a theme.
     \Drupal::service('theme_installer')->install(['stark']);
-    $this->assertIdentical(drupal_get_filename('theme', 'stark'), 'core/themes/stark/stark.info.yml');
+    $this->assertSame('core/themes/stark/stark.info.yml', drupal_get_filename('theme', 'stark'));
 
     // Retrieving the location of a theme engine.
-    $this->assertIdentical(drupal_get_filename('theme_engine', 'twig'), 'core/themes/engines/twig/twig.info.yml');
+    $this->assertSame('core/themes/engines/twig/twig.info.yml', drupal_get_filename('theme_engine', 'twig'));
 
     // Retrieving the location of a profile. Profiles are a special case with
     // a fixed location and naming.
-    $this->assertIdentical(drupal_get_filename('profile', 'testing'), 'core/profiles/testing/testing.info.yml');
+    $this->assertSame('core/profiles/testing/testing.info.yml', drupal_get_filename('profile', 'testing'));
 
     // Set a custom error handler so we can ignore the file not found error.
     set_error_handler(function ($severity, $message, $file, $line) {

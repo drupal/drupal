@@ -10,7 +10,7 @@
  */
 /** cspell:ignore grouptitle */
 .cke_editable {
-  margin: 18px;
+  margin: 1.125rem;
   background-image: none;
 }
 [dir].cke_panel_container body {
@@ -24,10 +24,10 @@
   margin: 0;
 }
 [dir="ltr"] .cke_editable blockquote {
-  margin-left: 54px;
+  margin-left: 3.375rem;
 }
 [dir="rtl"] .cke_editable blockquote {
-  margin-right: 54px;
+  margin-right: 3.375rem;
 }
 [dir="ltr"] .cke_editable .align-right {
   margin-right: 0;

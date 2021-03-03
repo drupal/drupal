@@ -8,7 +8,9 @@
 use Drupal\Core\Database\Query\AlterableInterface;
 
 /**
- * Implements hook_query_TAG_alter(): tag search_$type with $type node_search.
+ * Implements hook_query_TAG_alter().
+ *
+ * Tags search_$type with $type node_search.
  */
 function search_date_query_alter_query_search_node_search_alter(AlterableInterface $query) {
   // Start date Sat, 19 Mar 2016 00:00:00 GMT.

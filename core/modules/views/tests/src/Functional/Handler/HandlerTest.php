@@ -217,7 +217,7 @@ class HandlerTest extends ViewTestBase {
 
     foreach ($handler_types as $type) {
       $loaded_order = array_keys($view->display_handler->getOption($type));
-      $this->assertIdentical($original_order[$type], $loaded_order);
+      $this->assertSame($original_order[$type], $loaded_order);
     }
   }
 
@@ -275,7 +275,7 @@ class HandlerTest extends ViewTestBase {
       }
     }
     $expected_options = ['none', 'nid'];
-    $this->assertEqual($options, $expected_options);
+    $this->assertEqual($expected_options, $options);
 
     // Remove the relationship and make sure no relationship option appears.
     $this->drupalPostForm('admin/structure/views/nojs/handler/test_handler_relationships/default/relationship/nid', [], 'Remove');
@@ -349,9 +349,9 @@ class HandlerTest extends ViewTestBase {
     $string = ':' . $table . '_' . $field;
 
     // Make sure the placeholder variables are like expected.
-    $this->assertEqual($handler->getPlaceholder(), $string);
-    $this->assertEqual($handler->getPlaceholder(), $string . 1);
-    $this->assertEqual($handler->getPlaceholder(), $string . 2);
+    $this->assertEqual($string, $handler->getPlaceholder());
+    $this->assertEqual($string . 1, $handler->getPlaceholder());
+    $this->assertEqual($string . 2, $handler->getPlaceholder());
 
     // Set another table/field combination and make sure there are new
     // placeholders.
@@ -360,9 +360,9 @@ class HandlerTest extends ViewTestBase {
     $string = ':' . $table . '_' . $field;
 
     // Make sure the placeholder variables are like expected.
-    $this->assertEqual($handler->getPlaceholder(), $string);
-    $this->assertEqual($handler->getPlaceholder(), $string . 1);
-    $this->assertEqual($handler->getPlaceholder(), $string . 2);
+    $this->assertEqual($string, $handler->getPlaceholder());
+    $this->assertEqual($string . 1, $handler->getPlaceholder());
+    $this->assertEqual($string . 2, $handler->getPlaceholder());
   }
 
   /**

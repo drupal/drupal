@@ -54,11 +54,11 @@ class LocaleLocaleLookupTest extends BrowserTestBase {
     $this->drupalGet('');
     // Ensure state of fallback languages persisted by
     // locale_test_language_fallback_candidates_locale_lookup_alter() is empty.
-    $this->assertEqual(\Drupal::state()->get('locale.test_language_fallback_candidates_locale_lookup_alter_candidates'), []);
+    $this->assertEqual([], \Drupal::state()->get('locale.test_language_fallback_candidates_locale_lookup_alter_candidates'));
     // Make sure there is enough information provided for alter hooks.
     $context = \Drupal::state()->get('locale.test_language_fallback_candidates_locale_lookup_alter_context');
-    $this->assertEqual($context['langcode'], 'fr');
-    $this->assertEqual($context['operation'], 'locale_lookup');
+    $this->assertEqual('fr', $context['langcode']);
+    $this->assertEqual('locale_lookup', $context['operation']);
   }
 
   /**

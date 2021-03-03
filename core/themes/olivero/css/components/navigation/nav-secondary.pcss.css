@@ -1,15 +1,9 @@
 /**
  * @file
- * Nav Secondary.
+ * Secondary navigation styling.
  */
 
 @import "../../base/variables.pcss.css";
-
-.secondary-nav__wrapper {
-  display: flex;
-  margin-block-start: var(--sp2);
-  margin-block-end: var(--sp2);
-}
 
 .secondary-nav {
   letter-spacing: 0.02em;
@@ -66,7 +60,6 @@
         border-top: solid 2px currentColor;
       }
 
-      &:focus,
       &:hover {
         &:after {
           transform: translateY(0);
@@ -79,21 +72,30 @@
 
 body:not(.is-always-mobile-nav) {
   @media (--nav) {
-    & .secondary-nav__wrapper {
-      justify-content: flex-end;
-      margin: 0;
-
-      /* If the secondary nav is the first item within the header, it does not need left separator. */
-      &:first-child .secondary-nav:before {
-        content: none;
-      }
-    }
-
     & .secondary-nav {
       position: relative;
       display: flex;
       margin-inline-start: var(--sp);
       padding-inline-start: var(--sp2);
+
+      & .menu__link {
+        &:focus {
+          position: relative;
+          outline: 0;
+
+          &:before {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: calc(100% + var(--sp));
+            height: var(--sp3);
+            content: "";
+            transform: translate(-50%, -50%);
+            border: solid 2px var(--color--blue-50);
+            border-radius: 4px;
+          }
+        }
+      }
 
       &:before {
         position: absolute;

@@ -42,7 +42,7 @@ class RenderWebTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderEquals('Content-Type', 'application/json');
     $json = Json::decode($this->getSession()->getPage()->getContent());
     $this->assertEqual(['content', 'title'], array_keys($json));
-    $this->assertIdentical('Test active link class', $json['title']);
+    $this->assertSame('Test active link class', $json['title']);
     $this->assertCacheContext('url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT);
   }
 

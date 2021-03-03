@@ -13,15 +13,15 @@
 .forum table,
 .text-content table,
 .views-table {
-  margin-top: 36px;
-  margin-bottom: 36px;
+  margin-top: 2.25rem;
+  margin-bottom: 2.25rem;
   border-spacing: 0;
   color: #313637;
   border: 0;
   border-collapse: collapse;
   font-family: "metropolis", sans-serif;
-  font-size: 16px;
-  line-height: 27px
+  font-size: 1rem;
+  line-height: 1.6875rem
 }
 
 [dir="ltr"] .forum table caption,[dir="ltr"]  .text-content table caption,[dir="ltr"]  .views-table caption {
@@ -33,12 +33,12 @@
 }
 
 .forum table caption, .text-content table caption, .views-table caption {
-    margin-bottom: 18px;
+    margin-bottom: 1.125rem;
     color: #313637;
     font-family: "Lora", "georgia", serif;
-    font-size: 14px;
+    font-size: 0.875rem;
     font-style: italic;
-    line-height: 18px;
+    line-height: 1.125rem;
   }
 
 .forum table tr:last-child td, .text-content table tr:last-child td, .views-table tr:last-child td {
@@ -69,7 +69,7 @@
   .text-content table th,[dir="ltr"] 
   .views-table td,[dir="ltr"] 
   .views-table th {
-    padding-right: 18px
+    padding-right: 1.125rem
 }
 
 [dir="rtl"] .forum table td,[dir="rtl"] 
@@ -78,7 +78,7 @@
   .text-content table th,[dir="rtl"] 
   .views-table td,[dir="rtl"] 
   .views-table th {
-    padding-left: 18px
+    padding-left: 1.125rem
 }
 
 .forum table td,
@@ -87,8 +87,8 @@
   .text-content table th,
   .views-table td,
   .views-table th {
-    padding-top: 18px;
-    padding-bottom: 18px;
+    padding-top: 1.125rem;
+    padding-bottom: 1.125rem;
     vertical-align: top;
   }
 
@@ -123,8 +123,8 @@
     color: #0d1214;
     border-bottom: 2px solid #2494db;
     font-family: "metropolis", sans-serif;
-    font-size: 14px;
-    line-height: 18px
+    font-size: 0.875rem;
+    line-height: 1.125rem
 
     /**
      * Fixes for styles injected by CKEditor

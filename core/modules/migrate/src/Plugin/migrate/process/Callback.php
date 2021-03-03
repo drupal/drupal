@@ -22,7 +22,7 @@ use Drupal\migrate\Row;
  * process:
  *   destination_field:
  *     plugin: callback
- *     callable: strtolower
+ *     callable: mb_strtolower
  *     source: source_field
  * @endcode
  *
@@ -34,7 +34,7 @@ use Drupal\migrate\Row;
  *     plugin: callback
  *     callable:
  *       - '\Drupal\Component\Utility\Unicode'
- *       - strtolower
+ *       - ucfirst
  *     source: source_field
  * @endcode
  *

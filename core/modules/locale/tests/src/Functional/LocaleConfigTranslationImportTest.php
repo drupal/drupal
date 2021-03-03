@@ -81,7 +81,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
     // Check if configuration translations have been imported.
     $override = \Drupal::languageManager()->getLanguageConfigOverride('af', 'system.maintenance');
     // cSpell:disable-next-line
-    $this->assertEqual($override->get('message'), 'Ons is tans besig met onderhoud op @site. Wees asseblief geduldig, ons sal binnekort weer terug wees.');
+    $this->assertEqual('Ons is tans besig met onderhoud op @site. Wees asseblief geduldig, ons sal binnekort weer terug wees.', $override->get('message'));
   }
 
   /**
@@ -193,7 +193,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
     \Drupal::service('locale.storage')->delete($string);
     // Force a rebuild of config translations.
     $count = Locale::config()->updateConfigTranslations(['locale_test_translate.settings'], ['af']);
-    $this->assertEqual($count, 1, 'Correct count of updated translations');
+    $this->assertEqual(1, $count, 'Correct count of updated translations');
 
     $override = \Drupal::languageManager()->getLanguageConfigOverride('af', 'locale_test_translate.settings');
     $this->assertEqual([], $override->get());

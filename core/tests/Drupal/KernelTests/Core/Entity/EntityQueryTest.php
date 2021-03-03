@@ -319,7 +319,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     // This matches both the original and new current revisions, multiple
     // revisions are returned for some entities.
     $assert = [16 => '4', 17 => '5', 18 => '6', 19 => '7', 8 => '8', 9 => '9', 10 => '10', 11 => '11', 20 => '12', 21 => '13', 22 => '14', 23 => '15'];
-    $this->assertIdentical($results, $assert);
+    $this->assertSame($assert, $results);
     $results = $this->storage
       ->getQuery()
       ->condition("$greetings.value", 'siema', 'STARTS_WITH')
@@ -327,7 +327,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->execute();
     // Now we only get the ones that originally were siema, entity id 8 and
     // above.
-    $this->assertIdentical($results, array_slice($assert, 4, 8, TRUE));
+    $this->assertSame(array_slice($assert, 4, 8, TRUE), $results);
     $results = $this->storage
       ->getQuery()
       ->condition("$greetings.value", 'a', 'ENDS_WITH')
@@ -335,7 +335,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->execute();
     // It is very important that we do not get the ones which only have
     // xsiemax despite originally they were merhaba, ie. ended with a.
-    $this->assertIdentical($results, array_slice($assert, 4, 8, TRUE));
+    $this->assertSame(array_slice($assert, 4, 8, TRUE), $results);
     $results = $this->storage
       ->getQuery()
       ->condition("$greetings.value", 'a', 'ENDS_WITH')
@@ -345,7 +345,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->execute();
     // Now we get everything.
     $assert = [4 => '4', 5 => '5', 6 => '6', 7 => '7', 8 => '8', 9 => '9', 10 => '10', 11 => '11', 12 => '12', 20 => '12', 13 => '13', 21 => '13', 14 => '14', 22 => '14', 15 => '15', 23 => '15'];
-    $this->assertIdentical($results, $assert);
+    $this->assertSame($assert, $results);
 
     // Check that a query on the latest revisions without any condition returns
     // the correct results.
@@ -582,7 +582,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->condition($this->figures . '.shape', 'triangle');
 
     // We added 2 conditions so count should be 2.
-    $this->assertEqual($and_condition_group->count(), 2);
+    $this->assertEqual(2, $and_condition_group->count());
 
     // Add an OR condition group with 2 conditions in it.
     $or_condition_group = $query->orConditionGroup()
@@ -590,7 +590,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->condition($this->figures . '.shape', 'triangle');
 
     // We added 2 conditions so count should be 2.
-    $this->assertEqual($or_condition_group->count(), 2);
+    $this->assertEqual(2, $or_condition_group->count());
   }
 
   /**
@@ -694,7 +694,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     foreach ($expected as $binary) {
       $assert[$binary] = strval($binary);
     }
-    $this->assertIdentical($this->queryResults, $assert);
+    $this->assertSame($assert, $this->queryResults);
   }
 
   protected function assertRevisionResult($keys, $expected) {
@@ -702,7 +702,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     foreach ($expected as $key => $binary) {
       $assert[$keys[$key]] = strval($binary);
     }
-    $this->assertIdentical($this->queryResults, $assert);
+    $this->assertSame($assert, $this->queryResults);
     return $assert;
   }
 
@@ -740,7 +740,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->execute();
 
     global $efq_test_metadata;
-    $this->assertEqual($efq_test_metadata, 'bar', 'Tag and metadata propagated to the SQL query object.');
+    $this->assertEqual('bar', $efq_test_metadata, 'Tag and metadata propagated to the SQL query object.');
   }
 
   /**
@@ -975,7 +975,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       'name' => $this->randomMachineName(),
       'vid' => 'tags',
       'description' => [
-        'value' => $this->randomString(),
+        'value' => 'description1',
         'format' => 'format1',
       ],
     ]);
@@ -985,20 +985,37 @@ class EntityQueryTest extends EntityKernelTestBase {
       'name' => $this->randomMachineName(),
       'vid' => 'tags',
       'description' => [
-        'value' => $this->randomString(),
+        'value' => 'description2',
         'format' => 'format2',
       ],
     ]);
     $term2->save();
+
+    // Test that the properties can be queried directly.
+    $ids = $this->container->get('entity_type.manager')
+      ->getStorage('taxonomy_term')
+      ->getQuery()
+      ->condition('description.value', 'description1')
+      ->execute();
+    $this->assertCount(1, $ids);
+    $this->assertEquals($term1->id(), reset($ids));
 
     $ids = $this->container->get('entity_type.manager')
       ->getStorage('taxonomy_term')
       ->getQuery()
       ->condition('description.format', 'format1')
       ->execute();
-
     $this->assertCount(1, $ids);
-    $this->assertEqual($term1->id(), reset($ids));
+    $this->assertEquals($term1->id(), reset($ids));
+
+    // Test that the main property is queried if no property is specified.
+    $ids = $this->container->get('entity_type.manager')
+      ->getStorage('taxonomy_term')
+      ->getQuery()
+      ->condition('description', 'description1')
+      ->execute();
+    $this->assertCount(1, $ids);
+    $this->assertEquals($term1->id(), reset($ids));
   }
 
   /**
@@ -1038,14 +1055,14 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->condition('id', [14], 'IN')
       ->condition("$this->figures.color", $current_values[0]['color'])
       ->execute();
-    $this->assertEqual($result, [14 => '14']);
+    $this->assertEqual([14 => '14'], $result);
     $result = $this->storage
       ->getQuery()
       ->condition('id', [14], 'IN')
       ->condition("$this->figures.color", 'red')
       ->allRevisions()
       ->execute();
-    $this->assertEqual($result, [16 => '14']);
+    $this->assertEqual([16 => '14'], $result);
 
     // Add another pending revision on the same entity and repeat the checks.
     $entity->setNewRevision(TRUE);

@@ -97,8 +97,8 @@ class NodeEditFormTest extends NodeTestBase {
     $this->submitForm($edit, 'Save');
 
     // Check that the title and body fields are displayed with the updated values.
-    $this->assertText($edit[$title_key], 'Title displayed.');
-    $this->assertText($edit[$body_key], 'Body displayed.');
+    $this->assertText($edit[$title_key]);
+    $this->assertText($edit[$body_key]);
 
     // Log in as a second administrator user.
     $second_web_user = $this->drupalCreateUser([
@@ -116,15 +116,15 @@ class NodeEditFormTest extends NodeTestBase {
 
     // Ensure that the node revision has been created.
     $revised_node = $this->drupalGetNodeByTitle($edit['title[0][value]'], TRUE);
-    $this->assertNotIdentical($node->getRevisionId(), $revised_node->getRevisionId(), 'A new revision has been created.');
+    $this->assertNotSame($node->getRevisionId(), $revised_node->getRevisionId(), 'A new revision has been created.');
     // Ensure that the node author is preserved when it was not changed in the
     // edit form.
-    $this->assertIdentical($node->getOwnerId(), $revised_node->getOwnerId(), 'The node author has been preserved.');
+    $this->assertSame($node->getOwnerId(), $revised_node->getOwnerId(), 'The node author has been preserved.');
     // Ensure that the revision authors are different since the revisions were
     // made by different users.
     $first_node_version = node_revision_load($node->getRevisionId());
     $second_node_version = node_revision_load($revised_node->getRevisionId());
-    $this->assertNotIdentical($first_node_version->getRevisionUser()->id(), $second_node_version->getRevisionUser()->id(), 'Each revision has a distinct user.');
+    $this->assertNotSame($first_node_version->getRevisionUser()->id(), $second_node_version->getRevisionUser()->id(), 'Each revision has a distinct user.');
 
     // Check if the node revision checkbox is rendered on node edit form.
     $this->drupalGet('node/' . $node->id() . '/edit');
@@ -170,7 +170,7 @@ class NodeEditFormTest extends NodeTestBase {
 
     // Check that the node was authored by the currently logged in user.
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
-    $this->assertIdentical($node->getOwnerId(), $this->adminUser->id(), 'Node authored by admin user.');
+    $this->assertSame($this->adminUser->id(), $node->getOwnerId(), 'Node authored by admin user.');
 
     $this->checkVariousAuthoredByValues($node, 'uid[0][target_id]');
 
@@ -198,7 +198,7 @@ class NodeEditFormTest extends NodeTestBase {
     $this->drupalPostForm('node/' . $node->id() . '/edit', [], 'Save');
     $this->nodeStorage->resetCache([$node->id()]);
     $node = $this->nodeStorage->load($node->id());
-    $this->assertIdentical($this->webUser->id(), $node->getOwner()->id());
+    $this->assertSame($this->webUser->id(), $node->getOwner()->id());
 
     $this->checkVariousAuthoredByValues($node, 'uid[target_id]');
 
@@ -210,7 +210,7 @@ class NodeEditFormTest extends NodeTestBase {
     $this->drupalPostForm('node/' . $node->id() . '/edit', [], 'Save');
     $this->nodeStorage->resetCache([$node->id()]);
     $node = $this->nodeStorage->load($node->id());
-    $this->assertIdentical($this->webUser->id(), $node->getOwner()->id());
+    $this->assertSame($this->webUser->id(), $node->getOwner()->id());
   }
 
   /**
@@ -264,7 +264,7 @@ class NodeEditFormTest extends NodeTestBase {
       $form_element_name => 'invalid-name',
     ];
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
-    $this->assertRaw(t('There are no entities matching "%name".', ['%name' => 'invalid-name']));
+    $this->assertRaw(t('There are no users matching "%name".', ['%name' => 'invalid-name']));
 
     // Change the authored by field to an empty string, which should assign
     // authorship to the anonymous user (uid 0).
@@ -291,7 +291,7 @@ class NodeEditFormTest extends NodeTestBase {
     $this->submitForm($edit, 'Save');
     $this->nodeStorage->resetCache([$node->id()]);
     $node = $this->nodeStorage->load($node->id());
-    $this->assertIdentical($node->getOwnerId(), $this->webUser->id(), 'Node authored by normal user.');
+    $this->assertSame($this->webUser->id(), $node->getOwnerId(), 'Node authored by normal user.');
   }
 
 }

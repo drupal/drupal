@@ -230,13 +230,7 @@ class NodeAccessBaseTableTest extends NodeTestBase {
           if (!$is_admin && $tid_is_private) {
             $should_be_visible = $should_be_visible && $uid == $this->webUser->id();
           }
-          $this->assertIdentical(isset($this->nidsVisible[$nid]), $should_be_visible, strtr('A %private node by user %uid is %visible for user %current_uid on the %tid_is_private page.', [
-            '%private' => $is_private ? 'private' : 'public',
-            '%uid' => $uid,
-            '%visible' => isset($this->nidsVisible[$nid]) ? 'visible' : 'not visible',
-            '%current_uid' => $this->webUser->id(),
-            '%tid_is_private' => $tid_is_private ? 'private' : 'public',
-          ]));
+          $this->assertSame($should_be_visible, isset($this->nidsVisible[$nid]), strtr('A %private node by user %uid is %visible for user %current_uid on the %tid_is_private page.', ['%private' => $is_private ? 'private' : 'public', '%uid' => $uid, '%visible' => isset($this->nidsVisible[$nid]) ? 'visible' : 'not visible', '%current_uid' => $this->webUser->id(), '%tid_is_private' => $tid_is_private ? 'private' : 'public']));
         }
       }
     }

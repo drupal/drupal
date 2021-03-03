@@ -104,13 +104,13 @@ class SearchLanguageTest extends BrowserTestBase {
     // Add predefined language.
     $edit = ['predefined_langcode' => 'fr'];
     $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
-    $this->assertText('French', 'Language added successfully.');
+    $this->assertText('French');
 
     // Now we should have languages displayed.
     $this->drupalGet('search/node');
-    $this->assertText('Languages', 'Languages displayed to choose from.');
-    $this->assertText('English', 'English is a possible choice.');
-    $this->assertText('French', 'French is a possible choice.');
+    $this->assertText('Languages');
+    $this->assertText('English');
+    $this->assertText('French');
 
     // Ensure selecting no language does not make the query different.
     $this->drupalPostForm('search/node', [], 'edit-submit--2');

@@ -93,7 +93,7 @@ class FieldEntityOperationsTest extends ViewTestBase {
           $base_path = \Drupal::request()->getBasePath();
           $parts = explode('/', str_replace($base_path, '', $operation['url']->toString()));
           $expected_prefix = ($language->getId() != 'en' ? $language->getId() : 'node');
-          $this->assertEqual($parts[1], $expected_prefix, 'Entity operation links to the correct language for the entity.');
+          $this->assertEqual($expected_prefix, $parts[1], 'Entity operation links to the correct language for the entity.');
         }
       }
     }

@@ -30,7 +30,7 @@ class DisplayAttachmentTest extends UITestBase {
    */
   public function testAttachmentUI() {
     $this->drupalGet('admin/structure/views/view/test_attachment_ui/edit/attachment_1');
-    $this->assertText('Not defined', 'The right text appears if there is no attachment selection yet.');
+    $this->assertText('Not defined');
 
     $attachment_display_url = 'admin/structure/views/nojs/display/test_attachment_ui/attachment_1/displays';
     $this->drupalGet($attachment_display_url);
@@ -46,21 +46,21 @@ class DisplayAttachmentTest extends UITestBase {
     $this->assertSession()->assertEscaped('<em>Page</em>');
     $this->assertNoRaw('<em>Page</em>');
     $result = $this->xpath('//a[@id = :id]', [':id' => 'views-attachment-1-displays']);
-    $this->assertEqual($result[0]->getAttribute('title'), t('Page'));
+    $this->assertEqual(t('Page'), $result[0]->getAttribute('title'));
     $this->submitForm([], 'Save');
 
     $view = Views::getView('test_attachment_ui');
     $view->initDisplay();
-    $this->assertEqual(array_keys(array_filter($view->displayHandlers->get('attachment_1')->getOption('displays'))), ['page_1'], 'The attached displays got saved as expected');
+    $this->assertEqual(['page_1'], array_keys(array_filter($view->displayHandlers->get('attachment_1')->getOption('displays'))), 'The attached displays got saved as expected');
 
     $this->drupalPostForm($attachment_display_url, ['displays[default]' => 1, 'displays[page_1]' => 1], 'Apply');
     $result = $this->xpath('//a[@id = :id]', [':id' => 'views-attachment-1-displays']);
-    $this->assertEqual($result[0]->getAttribute('title'), t('Multiple displays'));
+    $this->assertEqual(t('Multiple displays'), $result[0]->getAttribute('title'));
     $this->submitForm([], 'Save');
 
     $view = Views::getView('test_attachment_ui');
     $view->initDisplay();
-    $this->assertEqual(array_keys($view->displayHandlers->get('attachment_1')->getOption('displays')), ['default', 'page_1'], 'The attached displays got saved as expected');
+    $this->assertEqual(['default', 'page_1'], array_keys($view->displayHandlers->get('attachment_1')->getOption('displays')), 'The attached displays got saved as expected');
   }
 
   /**
@@ -75,7 +75,7 @@ class DisplayAttachmentTest extends UITestBase {
     // Open the Page display and create the attachment display.
     $this->drupalGet($path_prefix . '/page_1');
     $this->submitForm([], 'Add Attachment');
-    $this->assertText('Not defined', 'The right text appears if there is no attachment selection yet.');
+    $this->assertText('Not defined');
 
     // Attach the Attachment to the Page display.
     $this->drupalPostForm($attachment_display_url, ['displays[page_1]' => 1], 'Apply');
@@ -94,7 +94,7 @@ class DisplayAttachmentTest extends UITestBase {
     $this->assertNoText("Plugin ID &#039;page_1&#039; was not found.");
 
     // Check that the attachment is no longer linked to the removed display.
-    $this->assertText('Not defined', 'The right text appears if there is no attachment selection yet.');
+    $this->assertText('Not defined');
 
   }
 

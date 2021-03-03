@@ -228,7 +228,7 @@ class TermAutocompleteTest extends TaxonomyTestBase {
       ['query' => ['q' => 'bbb']]
     );
 
-    $this->assertIdentical($expected, $data);
+    $this->assertSame($expected, $data);
   }
 
 }
