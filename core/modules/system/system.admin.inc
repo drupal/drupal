@@ -18,10 +18,11 @@ use Drupal\Core\Url;
  *
  * @param $variables
  *   An associative array containing:
- *   - content: An array containing information about the block. Each element
- *     of the array represents an administrative menu item, and must at least
- *     contain the keys 'title', 'link_path', and 'localized_options', which are
- *     passed to l(). A 'description' key may also be provided.
+ *   - content: List of administrative menu items. Each menu item contains:
+ *     - url: Path to the admin section.
+ *     - title: Short name of the section.
+ *     - description: Description of the administrative menu item.
+ *     - options: URL options. See \Drupal\Core\Url::fromUri() for details.
  */
 function template_preprocess_admin_block_content(&$variables) {
   if (!empty($variables['content'])) {
