@@ -4,10 +4,12 @@
  * Default theme implementation for the content of an administrative block.
  *
  * Available variables:
- * - content: A list containing information about the block. Each element
- *   of the array represents an administrative menu item, and must at least
- *   contain the keys 'title', 'link_path', and 'localized_options', which are
- *   passed to l(). A 'description' key may also be provided.
+ * - content: List of administrative menu items. Each menu item contains:
+ *   - link: Link to the admin section.
+ *   - title: Short name of the section.
+ *   - description: Description of the administrative menu item.
+ *   - url: URI to the admin section.
+ *   - options: URL options. See \Drupal\Core\Url::fromUri() for details.
  * - attributes: HTML attributes to be added to the element.
  * - compact: Boolean indicating whether compact mode is turned on or not.
  *
