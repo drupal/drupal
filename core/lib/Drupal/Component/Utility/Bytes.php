@@ -119,8 +119,8 @@ class Bytes {
       return FALSE;
     }
 
-    // Remove the numeric characters from the value.
-    $string = preg_replace('/[0-9\.]/', '', $string);
+    // Remove the numeric characters from the beginning of the value.
+    $string = preg_replace('/^[0-9\.]+/', '', $string);
 
     // Remove remaining space from the value.
     $string = preg_replace('/(\s)*/', '', $string);

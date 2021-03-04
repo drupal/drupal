@@ -6,8 +6,6 @@ use Drupal\Component\Utility\Bytes;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
-// cspell:ignore zettabytes
-
 /**
  * Tests bytes size parsing helper methods.
  *
@@ -174,8 +172,17 @@ class BytesTest extends TestCase {
       ['5 yb', TRUE],
       ['5 yottabyte', TRUE],
       ['5 yottabytes', TRUE],
+      // Test with decimal.
+      [5.1, TRUE],
+      ['5.1M', TRUE],
+      ['5.1mb', TRUE],
+      ['5.1 M', TRUE],
+      ['5.1 Mb', TRUE],
+      ['5.1 megabytes', TRUE],
       // Test with an unauthorized string.
       ['1five', FALSE],
+      ['1 1 byte', FALSE],
+      ['1,1 byte', FALSE],
     ];
   }
 
