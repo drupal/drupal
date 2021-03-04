@@ -8,6 +8,14 @@ use Drupal\migrate\Row;
 /**
  * Drupal 6 user picture source from database.
  *
+ * Available configuration keys:
+ * - site_path: (optional) The path to the site directory relative to Drupal
+ *   root. Defaults to 'sites/default'.
+ *
+ * For additional configuration keys, refer to the parent classes:
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
  * @MigrateSource(
  *   id = "d6_user_picture_file",
  *   source_module = "user"
