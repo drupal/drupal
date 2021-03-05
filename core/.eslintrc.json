@@ -20,6 +20,7 @@
     "Modernizr": true,
     "Popper": true,
     "Sortable": true,
+    "once": true,
     "CKEDITOR": true,
     "tabbable": true
   },

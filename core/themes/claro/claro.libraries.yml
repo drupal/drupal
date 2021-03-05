@@ -208,6 +208,8 @@ autocomplete:
   version: VERSION
   js:
     js/autocomplete.js: {}
+  dependencies:
+    - core/once
 
 drupal.shortcut:
   version: VERSION
