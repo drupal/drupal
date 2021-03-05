@@ -20,6 +20,7 @@
 [type="url"],
 [type="week"],
 textarea {
+  width: 100%;
   max-width: 100%;
   min-height: var(--sp3);
   padding: 0 var(--sp);
@@ -63,6 +64,10 @@ textarea {
 
   &.form-element--small {
     min-height: var(--sp2-5);
+  }
+
+  @media (--sm) {
+    width: auto;
   }
 }
 
