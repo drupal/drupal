@@ -11,9 +11,9 @@
  */
 
 select.cke_dialog_ui_input_select {
-  -webkit-appearance: auto;
-  -moz-appearance: auto;
-  appearance: auto
+  -webkit-appearance: menulist;
+  -moz-appearance: menulist;
+  appearance: menulist
 }
 
 select.cke_dialog_ui_input_select::-ms-expand {
