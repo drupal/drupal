@@ -38,6 +38,7 @@
         .classList.add('is-active');
     } else {
       button.setAttribute('aria-expanded', 'false');
+      topLevelMenuITem.classList.remove('is-touch-event');
       topLevelMenuITem
         .querySelector('.primary-nav__menu--level-2')
         .classList.remove('is-active');
@@ -46,8 +47,7 @@
 
   Drupal.olivero.toggleSubNav = toggleSubNav;
 
-  // Add hover and click event listeners onto each sub navigation parent and its
-  // button.
+  // Add event listeners onto each sub navigation parent and button.
   secondLevelNavMenus.forEach((el) => {
     const button = el.querySelector(
       '.primary-nav__button-toggle, .primary-nav__menu-link--button',
@@ -56,20 +56,39 @@
     button.removeAttribute('aria-hidden');
     button.removeAttribute('tabindex');
 
-    button.addEventListener('click', (e) => {
-      const topLevelMenuITem = e.currentTarget.parentNode;
-      toggleSubNav(topLevelMenuITem);
-    });
+    // If touch event, prevent mouseover event from triggering the submenu.
+    el.addEventListener(
+      'touchstart',
+      () => {
+        el.classList.add('is-touch-event');
+      },
+      { passive: true },
+    );
 
-    el.addEventListener('mouseover', (e) => {
-      if (isDesktopNav()) {
-        toggleSubNav(e.currentTarget, true);
+    el.addEventListener('mouseover', () => {
+      if (isDesktopNav() && !el.classList.contains('is-touch-event')) {
+        el.classList.add('is-active-mouseover-event');
+        toggleSubNav(el, true);
+
+        // Timeout is added to ensure that users of assistive devices (such as
+        // mouse grid tools) do not simultaneously trigger both the mouseover
+        // and click events. When these events are triggered together, the
+        // submenu to appear to not open.
+        setTimeout(() => {
+          el.classList.remove('is-active-mouseover-event');
+        }, 500);
       }
     });
 
-    el.addEventListener('mouseout', (e) => {
+    button.addEventListener('click', () => {
+      if (!el.classList.contains('is-active-mouseover-event')) {
+        toggleSubNav(el);
+      }
+    });
+
+    el.addEventListener('mouseout', () => {
       if (isDesktopNav()) {
-        toggleSubNav(e.currentTarget, false);
+        toggleSubNav(el, false);
       }
     });
   });
@@ -93,7 +112,9 @@
     let subNavsAreOpen = false;
 
     secondLevelNavMenus.forEach((el) => {
-      const button = el.querySelector('.primary-nav__button-toggle');
+      const button = el.querySelector(
+        '.primary-nav__button-toggle, .primary-nav__menu-link--button',
+      );
       const state = button.getAttribute('aria-expanded') === 'true';
 
       if (state) {
@@ -108,8 +129,24 @@
 
   // Ensure that desktop submenus close when ESC key is pressed.
   document.addEventListener('keyup', (e) => {
-    if (e.keyCode === 27 && isDesktopNav()) {
-      closeAllSubNav();
+    if (e.key === 'Escape' || e.key === 'Esc') {
+      if (isDesktopNav()) closeAllSubNav();
     }
   });
+
+  // If user taps outside of menu, close all menus.
+  document.addEventListener(
+    'touchstart',
+    (e) => {
+      if (
+        areAnySubNavsOpen() &&
+        !e.target.matches(
+          '.primary-nav__menu-item--has-children, .primary-nav__menu-item--has-children *',
+        )
+      ) {
+        closeAllSubNav();
+      }
+    },
+    { passive: true },
+  );
 })(Drupal);

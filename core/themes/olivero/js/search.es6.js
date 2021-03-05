@@ -22,6 +22,7 @@
     });
 
     if (visibility === true) {
+      Drupal.olivero.closeAllSubNav();
       searchWideWrapper.classList.add('is-active');
     } else {
       searchWideWrapper.classList.remove('is-active');

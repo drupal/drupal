@@ -26,6 +26,7 @@
       topLevelMenuITem.querySelector('.primary-nav__menu--level-2').classList.add('is-active');
     } else {
       button.setAttribute('aria-expanded', 'false');
+      topLevelMenuITem.classList.remove('is-touch-event');
       topLevelMenuITem.querySelector('.primary-nav__menu--level-2').classList.remove('is-active');
     }
   }
@@ -35,18 +36,28 @@
     var button = el.querySelector('.primary-nav__button-toggle, .primary-nav__menu-link--button');
     button.removeAttribute('aria-hidden');
     button.removeAttribute('tabindex');
-    button.addEventListener('click', function (e) {
-      var topLevelMenuITem = e.currentTarget.parentNode;
-      toggleSubNav(topLevelMenuITem);
+    el.addEventListener('touchstart', function () {
+      el.classList.add('is-touch-event');
+    }, {
+      passive: true
     });
-    el.addEventListener('mouseover', function (e) {
-      if (isDesktopNav()) {
-        toggleSubNav(e.currentTarget, true);
+    el.addEventListener('mouseover', function () {
+      if (isDesktopNav() && !el.classList.contains('is-touch-event')) {
+        el.classList.add('is-active-mouseover-event');
+        toggleSubNav(el, true);
+        setTimeout(function () {
+          el.classList.remove('is-active-mouseover-event');
+        }, 500);
       }
     });
-    el.addEventListener('mouseout', function (e) {
+    button.addEventListener('click', function () {
+      if (!el.classList.contains('is-active-mouseover-event')) {
+        toggleSubNav(el);
+      }
+    });
+    el.addEventListener('mouseout', function () {
       if (isDesktopNav()) {
-        toggleSubNav(e.currentTarget, false);
+        toggleSubNav(el, false);
       }
     });
   });
@@ -62,7 +73,7 @@
   function areAnySubNavsOpen() {
     var subNavsAreOpen = false;
     secondLevelNavMenus.forEach(function (el) {
-      var button = el.querySelector('.primary-nav__button-toggle');
+      var button = el.querySelector('.primary-nav__button-toggle, .primary-nav__menu-link--button');
       var state = button.getAttribute('aria-expanded') === 'true';
 
       if (state) {
@@ -74,8 +85,15 @@
 
   Drupal.olivero.areAnySubNavsOpen = areAnySubNavsOpen;
   document.addEventListener('keyup', function (e) {
-    if (e.keyCode === 27 && isDesktopNav()) {
+    if (e.key === 'Escape' || e.key === 'Esc') {
+      if (isDesktopNav()) closeAllSubNav();
+    }
+  });
+  document.addEventListener('touchstart', function (e) {
+    if (areAnySubNavsOpen() && !e.target.matches('.primary-nav__menu-item--has-children, .primary-nav__menu-item--has-children *')) {
       closeAllSubNav();
     }
+  }, {
+    passive: true
   });
 })(Drupal);
