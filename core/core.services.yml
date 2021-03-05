@@ -1545,6 +1545,9 @@ services:
     arguments: ['@session_manager', '@session.attribute_bag', '@session.flash_bag']
     tags:
       - { name: service_collector, tag: session_bag, call: registerBag }
+  # session.flash_bag has special treatment: it is passed to the session
+  # service as an argument. Other services using FlashBag should be tagged
+  # with the session_bag tag, so that they will persist across page loads.
   session.flash_bag:
     class: Symfony\Component\HttpFoundation\Session\Flash\FlashBag
     public: false
