@@ -22,6 +22,16 @@ ckeditor:
   js:
     assets/vendor/ckeditor/ckeditor.js: { preprocess: false, minified: true }
 
+css.escape:
+  remote: https://github.com/mathiasbynens/CSS.escape
+  version: "1.5.1"
+  license:
+    name: MIT
+    url: https://raw.githubusercontent.com/mathiasbynens/CSS.escape/v1.5.1/LICENSE-MIT.txt
+    gpl-compatible: true
+  js:
+    assets/vendor/css-escape/css.escape.js: { weight: -20 }
+
 drupal:
   version: VERSION
   js:
@@ -95,7 +105,6 @@ drupal.autocomplete:
     assets/vendor/jquery.ui/ui/widgets/autocomplete-min.js: { weight: -11.7, minified: true }
     assets/vendor/jquery.ui/ui/labels-min.js: { weight: -11.7, minified: true }
     assets/vendor/jquery.ui/ui/widgets/menu-min.js: { weight: -11.7, minified: true }
-    assets/vendor/jquery.ui/ui/tabbable-min.js: { weight: -11.7, minified: true }
     assets/vendor/jquery.ui/ui/data-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/disable-selection-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/escape-selector-min.js: { weight: -11.8, minified: true }
@@ -126,6 +135,7 @@ drupal.autocomplete:
     - core/drupal
     - core/drupalSettings
     - core/drupal.ajax
+    - core/tabbable.jquery.shim
 
 drupal.array.find:
   version: VERSION
@@ -200,7 +210,6 @@ drupal.dialog:
     assets/vendor/jquery.ui/ui/form-reset-mixin-min.js: { weight: -11.7, minified: true }
     assets/vendor/jquery.ui/ui/labels-min.js: { weight: -11.7, minified: true }
     assets/vendor/jquery.ui/ui/widgets/mouse-min.js: { weight: -11.7, minified: true }
-    assets/vendor/jquery.ui/ui/tabbable-min.js: { weight: -11.7, minified: true }
     assets/vendor/jquery.ui/ui/data-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/disable-selection-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/form-min.js: { weight: -11.8, minified: true }
@@ -235,6 +244,7 @@ drupal.dialog:
     - core/drupalSettings
     - core/drupal.debounce
     - core/drupal.displace
+    - core/tabbable.jquery.shim
 
 drupal.dialog.ajax:
   version: VERSION
@@ -338,37 +348,11 @@ drupal.tabbingmanager:
   version: VERSION
   js:
     misc/tabbingmanager.js: {}
-    # The remaining JavaScript assets previously came from core/jquery.ui, a
-    # deprecated library. These assets are used to provide the :tabbable pseudo
-    # selector to core's JavaScript. It should be possible to remove them once
-    # :tabbable is provided via a non-jQuery UI based library.
-    # All weights are based on on the requirements defined within each file.
-    # @todo replace with solution found in https://drupal.org/node/3113649
-    assets/vendor/jquery.ui/ui/labels-min.js: { weight: -11.7, minified: true }
-    assets/vendor/jquery.ui/ui/tabbable-min.js: { weight: -11.7, minified: true }
-    assets/vendor/jquery.ui/ui/disable-selection-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/form-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/escape-selector-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/focusable-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/ie-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/jquery-1-7-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/keycode-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/plugin-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/safe-active-element-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/safe-blur-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/scroll-parent-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/unique-id-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/version-min.js: { weight: -11.9, minified: true }
-  # All CSS assets previously came from core/jquery.ui, a deprecated library.
-  # @todo replace with solution found in https://drupal.org/node/3113649
-  css:
-    component:
-      assets/vendor/jquery.ui/themes/base/core.css: { weight: -11.8 }
-    theme:
-      assets/vendor/jquery.ui/themes/base/theme.css: { weight: -11.8 }
   dependencies:
     - core/jquery
     - core/drupal
+    - core/tabbable
+    - core/tabbable.jquery.shim
 
 drupal.tabledrag:
   version: VERSION
@@ -528,7 +512,6 @@ jquery.ui:
     gpl-compatible: true
   js:
     assets/vendor/jquery.ui/ui/labels-min.js: { weight: -11.7, minified: true }
-    assets/vendor/jquery.ui/ui/tabbable-min.js: { weight: -11.7, minified: true }
     assets/vendor/jquery.ui/ui/data-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/disable-selection-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/escape-selector-min.js: { weight: -11.8, minified: true }
@@ -550,6 +533,7 @@ jquery.ui:
       assets/vendor/jquery.ui/themes/base/theme.css: { weight: -11.8 }
   dependencies:
     - core/jquery
+    - core/tabbable.jquery.shim
   deprecated: &jquery_ui_unused_deprecated The "%library_id%" asset library is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. See https://www.drupal.org/node/3067969
 
 jquery.ui.autocomplete:
@@ -598,7 +582,6 @@ jquery.ui.dialog:
     assets/vendor/jquery.ui/ui/form-reset-mixin-min.js: { weight: -11.7, minified: true }
     assets/vendor/jquery.ui/ui/labels-min.js: { weight: -11.7, minified: true }
     assets/vendor/jquery.ui/ui/widgets/mouse-min.js: { weight: -11.7, minified: true }
-    assets/vendor/jquery.ui/ui/tabbable-min.js: { weight: -11.7, minified: true }
     assets/vendor/jquery.ui/ui/data-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/disable-selection-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/escape-selector-min.js: { weight: -11.8, minified: true }
@@ -627,6 +610,7 @@ jquery.ui.dialog:
       assets/vendor/jquery.ui/themes/base/theme.css: { weight: -11.8 }
   dependencies:
     - core/jquery
+    - core/tabbable.jquery.shim
   deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.draggable:
@@ -753,6 +737,26 @@ sortable:
     gpl-compatible: true
   js:
     assets/vendor/sortable/Sortable.min.js: { minified: true }
+
+tabbable:
+  remote: https://github.com/focus-trap/tabbable
+  version: "5.1.6"
+  license:
+    name: MIT
+    url: https://raw.githubusercontent.com/focus-trap/tabbable/v5.1.6/LICENSE
+    gpl-compatible: true
+  js:
+    assets/vendor/tabbable/index.umd.min.js: { weight: -1, minified: true }
+  dependencies:
+    - core/css.escape
+
+tabbable.jquery.shim:
+  version: VERSION
+  js:
+    misc/jquery.tabbable.shim.js: {}
+  dependencies:
+    - core/tabbable
+    - core/jquery
 
 underscore:
   remote: https://github.com/jashkenas/underscore

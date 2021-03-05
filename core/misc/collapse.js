@@ -24,6 +24,7 @@
   $.extend(CollapsibleDetails.prototype, {
     setupSummaryPolyfill: function setupSummaryPolyfill() {
       var $summary = this.$node.find('> summary');
+      $summary.attr('tabindex', '-1');
       $('<span class="details-summary-prefix visually-hidden"></span>').append(this.$node.attr('open') ? Drupal.t('Hide') : Drupal.t('Show')).prependTo($summary).after(document.createTextNode(' '));
       $('<a class="details-title"></a>').attr('href', "#".concat(this.$node.attr('id'))).prepend($summary.contents()).appendTo($summary);
       $summary.append(this.$summary).on('click', $.proxy(this.onSummaryClick, this));

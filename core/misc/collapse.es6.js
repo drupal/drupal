@@ -50,6 +50,11 @@
         // Turn the summary into a clickable link.
         const $summary = this.$node.find('> summary');
 
+        // If this polyfill is in use, the browser does not recognize
+        // <summary> as a focusable element. The tabindex is set to -1 so the
+        // tabbable library does not incorrectly identify it as tabbable.
+        $summary.attr('tabindex', '-1');
+
         $('<span class="details-summary-prefix visually-hidden"></span>')
           .append(this.$node.attr('open') ? Drupal.t('Hide') : Drupal.t('Show'))
           .prependTo($summary)
