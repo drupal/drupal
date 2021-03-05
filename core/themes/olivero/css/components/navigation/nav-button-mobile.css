@@ -19,27 +19,27 @@
 }
 
 [dir="ltr"] .mobile-nav-button {
-  margin-right: -0.5625rem
+  margin-right: -0.375rem
 }
 
 [dir="rtl"] .mobile-nav-button {
-  margin-left: -0.5625rem
+  margin-left: -0.375rem
 }
 
 [dir="ltr"] .mobile-nav-button {
-  padding-left: 0
+  padding-left: 0.375rem
 }
 
 [dir="rtl"] .mobile-nav-button {
-  padding-right: 0
+  padding-right: 0.375rem
 }
 
 [dir="ltr"] .mobile-nav-button {
-  padding-right: 0.5625rem
+  padding-right: 0.375rem
 }
 
 [dir="rtl"] .mobile-nav-button {
-  padding-left: 0.5625rem
+  padding-left: 0.375rem
 }
 
 .mobile-nav-button {

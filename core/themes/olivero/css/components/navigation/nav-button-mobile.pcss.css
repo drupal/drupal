@@ -14,10 +14,10 @@
   width: var(--sp2);
   height: var(--sp2);
   margin-inline-start: auto;
-  margin-inline-end: calc(-1 * var(--sp0-5));
+  margin-inline-end: -6px;
   padding-block: 0;
-  padding-inline-start: 0;
-  padding-inline-end: var(--sp0-5);
+  padding-inline-start: 6px;
+  padding-inline-end: 6px;
   cursor: pointer;
   border: none;
   background: transparent;
