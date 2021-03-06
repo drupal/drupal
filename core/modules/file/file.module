@@ -748,6 +748,7 @@ function file_cron() {
   // is disabled if $age set to 0.
   if ($age) {
     $fids = Drupal::entityQuery('file')
+      ->accessCheck(FALSE)
       ->condition('status', FILE_STATUS_PERMANENT, '<>')
       ->condition('changed', REQUEST_TIME - $age, '<')
       ->range(0, 100)

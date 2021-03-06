@@ -704,6 +704,7 @@ function node_cron() {
     $min_alias = 'min_created';
     $max_alias = 'max_created';
     $result = \Drupal::entityQueryAggregate('node')
+      ->accessCheck(FALSE)
       ->aggregate('created', 'MIN', NULL, $min_alias)
       ->aggregate('created', 'MAX', NULL, $max_alias)
       ->execute();
