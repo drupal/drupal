@@ -32,7 +32,8 @@ class ImageFieldWidgetTest extends ImageFieldTestBase {
     $this->createImageField($field_name, 'article', [], $field_settings, [], [], 'Image test on [site:name]');
     $this->drupalGet('node/add/article');
     $this->assertNotCount(0, $this->xpath('//div[contains(@class, "field--widget-image-image")]'), 'Image field widget found on add/node page', NULL);
-    $this->assertNotCount(0, $this->xpath('//input[contains(@accept, "image/*")]'), 'Image field widget limits accepted files.', NULL);
+    // Verify that the image field widget limits accepted files.
+    $this->assertSession()->elementExists('xpath', '//input[contains(@accept, "image/*")]');
     $this->assertNoText('Image test on [site:name]');
 
     // Check for allowed image file extensions - default.
