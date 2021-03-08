@@ -190,7 +190,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
       $records[$id] = $this->overrideFree ? $config->getOriginal(NULL, FALSE) : $config->get();
       $configs[$id] = $config;
     }
-    $entities = $this->mapFromStorageRecords($records, $configs);
+    $entities = $this->mapFromStorageRecords($records);
 
     // Config entities wrap config objects, and therefore they need to inherit
     // the cacheability metadata of config objects (to ensure e.g. additional
