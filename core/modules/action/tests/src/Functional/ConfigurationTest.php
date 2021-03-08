@@ -74,9 +74,9 @@ class ConfigurationTest extends BrowserTestBase {
     // the complex action.
     $this->assertText($new_action_label);
 
+    // Make sure the URL appears when re-editing the action.
     $this->clickLink(t('Configure'));
-    $element = $this->xpath('//input[@type="text" and @value="admin"]');
-    $this->assertTrue(!empty($element), 'Make sure the URL appears when re-editing the action.');
+    $this->assertSession()->fieldValueEquals('url', 'admin');
 
     // Make sure that deletions work properly.
     $this->drupalGet('admin/config/system/actions');

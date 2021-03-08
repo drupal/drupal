@@ -148,8 +148,9 @@ class EntityReferenceAdminTest extends BrowserTestBase {
 
     // Try to add a new node and fill the entity reference field.
     $this->drupalGet('node/add/' . $this->type);
-    $result = $this->xpath('//input[@name="field_test_entity_ref_field[0][target_id]" and contains(@data-autocomplete-path, "/entity_reference_autocomplete/node/views/")]');
-    $target_url = $this->getAbsoluteUrl($result[0]->getAttribute('data-autocomplete-path'));
+    $field = $this->assertSession()->fieldExists('field_test_entity_ref_field[0][target_id]');
+    $this->assertStringContainsString("/entity_reference_autocomplete/node/views/", $field->getAttribute('data-autocomplete-path'));
+    $target_url = $this->getAbsoluteUrl($field->getAttribute('data-autocomplete-path'));
     $this->drupalGet($target_url, ['query' => ['q' => 'Foo']]);
     $this->assertRaw($node1->getTitle() . ' (' . $node1->id() . ')');
     $this->assertRaw($node2->getTitle() . ' (' . $node2->id() . ')');

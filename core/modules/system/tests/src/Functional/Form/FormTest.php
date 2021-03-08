@@ -895,11 +895,8 @@ class FormTest extends BrowserTestBase {
     $expected = 'required';
     // Test to make sure the elements have the proper required attribute.
     foreach (['textfield', 'password'] as $type) {
-      $element = $this->xpath('//input[@id=:id and @required=:expected]', [
-        ':id' => 'edit-' . $type,
-        ':expected' => $expected,
-      ]);
-      $this->assertTrue(!empty($element), new FormattableMarkup('The @type has the proper required attribute.', ['@type' => $type]));
+      $field = $this->assertSession()->fieldExists("edit-$type");
+      $this->assertEquals($expected, $field->getAttribute('required'), "The $type has the proper required attribute.");
     }
 
     // Test to make sure textarea has the proper required attribute.

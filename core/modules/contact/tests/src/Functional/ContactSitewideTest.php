@@ -65,10 +65,10 @@ class ContactSitewideTest extends BrowserTestBase {
     $this->drupalGet('contact');
 
     // Ensure that there is no textfield for name.
-    $this->assertEmpty($this->xpath('//input[@name=:name]', [':name' => 'name']));
+    $this->assertSession()->fieldNotExists('name');
 
     // Ensure that there is no textfield for email.
-    $this->assertEmpty($this->xpath('//input[@name=:name]', [':name' => 'mail']));
+    $this->assertSession()->fieldNotExists('mail');
 
     // Logout and retrieve the page as an anonymous user
     $this->drupalLogout();
@@ -76,10 +76,10 @@ class ContactSitewideTest extends BrowserTestBase {
     $this->drupalGet('contact');
 
     // Ensure that there is textfield for name.
-    $this->assertNotEmpty($this->xpath('//input[@name=:name]', [':name' => 'name']));
+    $this->assertSession()->fieldExists('name');
 
     // Ensure that there is textfield for email.
-    $this->assertNotEmpty($this->xpath('//input[@name=:name]', [':name' => 'mail']));
+    $this->assertSession()->fieldExists('mail');
 
     // Create and log in administrative user.
     $admin_user = $this->drupalCreateUser([
