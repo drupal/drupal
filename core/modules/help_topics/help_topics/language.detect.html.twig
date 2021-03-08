@@ -1,0 +1,33 @@
+---
+label: 'Configuring language detection and selection'
+related:
+- core.translations
+- language.add
+---
+{% set detection = render_var(url('language.negotiation')) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Configure the methods used to decide which language will be used to display text on your site.{% endtrans %}</p>
+<h2>{% trans %}What is a language detection method?{% endtrans %}</h2>
+<p>{% trans %}A language detection method is a way for your site to decide what language should be used to display text. This decision is made by evaluating a series of detection methods for languages; the first detection method that gets a result will determine which language is used. If you have more than one language on your site, you can configure the detection methods that are used and the order they are evaluated, for both user interface text and content text. Configuration text always uses the interface text method, and most sites use the same detection methods for all types of text.{% endtrans %}</p>
+<h2>{% trans %}What language detection methods are available?{% endtrans %}</h2>
+<p>{% trans %}The available detection methods depend on what modules you have installed. Some of the most commonly-used language detection methods are:{% endtrans %}</p>
+<dl>
+  <dt>{% trans %}URL{% endtrans %}</dt>
+  <dd>{% trans %}Use the language from the URL, which can either be in a path prefix like <em>example.com/fr/page_path</em> for French (fr) language, or in a domain like <em>fr.example.com/page_path</em>.{% endtrans %}</dd>
+  <dt>{% trans %}User{% endtrans %}</dt>
+  <dd>{% trans %}For logged in users, use the language they have set in their profiles.{% endtrans %}</dd>
+  <dt>{% trans %}Browser{% endtrans %}</dt>
+  <dd>{% trans %}Use the language preferences from the user's browser.{% endtrans %}</dd>
+  <dt>{% trans %}Selected language{% endtrans %}</dt>
+  <dd>{% trans %}Use the language most recently selected from a <em>Language switcher</em> block.{% endtrans %}</dd>
+  <dt>{% trans %}Session{% endtrans %}</dt>
+  <dd>{% trans %}Use the language from a session parameter or a request parameter; for example, adding <em>?language=fr</em> to the end of the URL.{% endtrans %}</dd>
+</dl>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+    <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Regional and language</em> &gt; <em>Languages</em> &gt; <a href="{{ detection }}"><em>Detection and selection</em></a>.{% endtrans %}</li>
+    <li>{% trans %}Check the boxes to enable the desired language detection methods, and uncheck boxes for the methods you do not want to use.{% endtrans %}</li>
+    <li>{% trans %}Drag the methods to change their order, if desired.{% endtrans %}</li>
+    <li>{% trans %}Click <em>Save settings</em>.{% endtrans %}</li>
+    <li>{% trans %}Click <em>Configure</em> on each enabled detection method and verify that its configuration is correct (or update the configuration if not).{% endtrans %}</li>
+</ol>

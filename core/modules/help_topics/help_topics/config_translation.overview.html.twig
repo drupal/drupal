@@ -1,0 +1,19 @@
+---
+label: 'Translating configuration'
+related:
+  - core.config_overview
+  - core.translations
+  - language.add
+---
+{% set config_translation = render_var(url('config_translation.mapper_list'))%}
+{% set config_overview = render_var(url('help.help_topic', {'id': 'core.config_overview'})) %}
+{% set language_add = render_var(url('help.help_topic', {'id': 'language.add'})) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Translate your site configuration to another language. See <a href="{{ language_add }}">Adding a language</a> if you need to add a new language.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Regional and language</em> &gt; <a href="{{ config_translation }}"><em>Configuration translation</em></a>.{% endtrans %}</li>
+  <li>{% trans %}Find either the configuration entity type or the simple configuration item that you want to translate in the <em>Label</em> column of the list. Click <em>List</em> under <em>Operations</em> for a configuration entity, or <em>Translate</em> for simple configuration. (See <a href="{{ config_overview }}">Managing and deploying configuration</a> to learn more about types of configuration and configuration entities.){% endtrans %}</li>
+  <li>{% trans %}For configuration entities, find the specific entity that you want to translate on the next page, and click <em>Translate</em> under <em>Operations</em>.{% endtrans %}</li>
+  <li>{% trans %}Enter translations for the translatable text fields for the configuration item, and save.{% endtrans %}</li>
+</ol>

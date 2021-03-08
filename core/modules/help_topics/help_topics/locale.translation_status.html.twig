@@ -1,0 +1,19 @@
+---
+label: 'Checking interface translation status'
+related:
+- core.translations
+- locale.import
+- locale.translate_strings
+---
+{% set language = render_var(url('entity.configurable_language.collection')) %}
+{% set translation_updates = render_var(url('locale.translate_status')) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Check the current status of interface translations, and see if there are any updates available.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Regional and language</em> &gt; <a href="{{ language }}"><em>Languages</em></a>.{% endtrans %}</li>
+  <li>{% trans %}Look at the <em>Interface translation</em> column in the language table, to find the percentage of user interface text that has been translated for each language.{% endtrans %}</li>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Reports</em> &gt; <em><a href="{{ translation_updates }}">Available translation updates</a></em>. This report is only available if the core Update Status module is installed.{% endtrans %}</li>
+  <li>{% trans %}Optionally, click <em>Check manually</em> to update the report.{% endtrans %}</li>
+  <li>{% trans %}View the report to find out if any languages have translation updates that you can download.{% endtrans %}</li>
+</ol>
