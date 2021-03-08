@@ -27,39 +27,9 @@ class SourceProviderTest extends MigrateUpgradeTestBase {
     $this->loadFixture(drupal_get_path('module', 'migrate_drupal') . $path_to_database);
 
     $session = $this->assertSession();
-    $connection_options = $this->sourceDatabase->getConnectionOptions();
-    $driver = $connection_options['driver'];
-    $connection_options['prefix'] = $connection_options['prefix']['default'];
-    // Use the driver connection form to get the correct options out of the
-    // database settings. This supports all of the databases we test against.
-    $drivers = drupal_get_database_types();
-    $form = $drivers[$driver]->getFormOptions($connection_options);
-    $connection_options = array_intersect_key($connection_options, $form + $form['advanced_options']);
-    $version = $this->getLegacyDrupalVersion($this->sourceDatabase);
-    $edit = [
-      $driver => $connection_options,
-      'source_private_file_path' => $this->getSourceBasePath(),
-      'version' => $version,
-    ];
-    if ($version == 6) {
-      $edit['d6_source_base_path'] = $this->getSourceBasePath();
-    }
-    else {
-      $edit['source_base_path'] = $this->getSourceBasePath();
-    }
-    if (count($drivers) !== 1) {
-      $edit['driver'] = $driver;
-    }
-    $edits = $this->translatePostValues($edit);
 
-    // Start the upgrade.
-    $this->drupalGet('/upgrade');
-    [$new_site_version] = explode('.', \Drupal::VERSION, 2);
-    $session->responseContains("Upgrade a site by importing its files and the data from its database into a clean and empty new install of Drupal $new_site_version.");
-    $this->submitForm([], 'Continue');
-    $session->pageTextContains('Provide credentials for the database of the Drupal site you want to upgrade.');
-    $session->fieldExists('mysql[host]');
-    $this->submitForm($edits, 'Review upgrade');
+    // Start the upgrade process.
+    $this->submitCredentialForm();
 
     // Ensure we get errors about missing modules.
     $session->pageTextContains(t('Resolve all issues below to continue the upgrade.'));
@@ -71,11 +41,8 @@ class SourceProviderTest extends MigrateUpgradeTestBase {
 
     // Restart the upgrade process and test there is no source_module error.
     $this->drupalGet('/upgrade');
-    $session->responseContains("Upgrade a site by importing its files and the data from its database into a clean and empty new install of Drupal $new_site_version.");
     $this->submitForm([], 'Continue');
-    $session->pageTextContains('Provide credentials for the database of the Drupal site you want to upgrade.');
-    $session->fieldExists('mysql[host]');
-    $this->submitForm($edits, 'Review upgrade');
+    $this->submitForm($this->edits, 'Review upgrade');
 
     // Ensure there are no errors about missing modules from the test module.
     $session->pageTextNotContains(t('Source module not found for migration_provider_no_annotation.'));
