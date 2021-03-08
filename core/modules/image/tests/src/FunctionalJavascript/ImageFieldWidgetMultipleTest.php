@@ -43,7 +43,7 @@ class ImageFieldWidgetMultipleTest extends WebDriverTestBase {
     $this->createImageField($field_name, 'article', $storage_settings, $field_settings);
     $this->drupalLogin($this->drupalCreateUser(['access content', 'create article content']));
     $this->drupalGet('node/add/article');
-    $this->xpath('//input[@name="title[0][value]"]')[0]->setValue('Test');
+    $this->assertSession()->fieldExists('title[0][value]')->setValue('Test');
 
     $images = $this->getTestFiles('image');
     $images = array_slice($images, 0, 5);
@@ -58,7 +58,7 @@ class ImageFieldWidgetMultipleTest extends WebDriverTestBase {
       $remote_paths[] = $web_driver->uploadFileAndGetRemoteFilePath($path);
     }
 
-    $multiple_field = $this->xpath('//input[@multiple]')[0];
+    $multiple_field = $this->assertSession()->elementExists('xpath', '//input[@multiple]');
     $multiple_field->setValue(implode("\n", $remote_paths));
     $this->assertSession()->waitForElementVisible('css', '[data-drupal-selector="edit-images-4-preview"]');
     $this->getSession()->getPage()->findButton('Save')->click();

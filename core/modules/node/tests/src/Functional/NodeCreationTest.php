@@ -248,8 +248,8 @@ class NodeCreationTest extends NodeTestBase {
 
     $this->drupalGet('node/add/page');
 
-    $result = $this->xpath('//input[@id="edit-uid-0-value" and contains(@data-autocomplete-path, "user/autocomplete")]');
-    $this->assertCount(0, $result, 'No autocompletion without access user profiles.');
+    // Verify that no autocompletion exists without access user profiles.
+    $this->assertSession()->elementNotExists('xpath', '//input[@id="edit-uid-0-value" and contains(@data-autocomplete-path, "user/autocomplete")]');
 
     $admin_user = $this->drupalCreateUser([
       'administer nodes',
@@ -260,8 +260,8 @@ class NodeCreationTest extends NodeTestBase {
 
     $this->drupalGet('node/add/page');
 
-    $result = $this->xpath('//input[@id="edit-uid-0-target-id" and contains(@data-autocomplete-path, "/entity_reference_autocomplete/user/default")]');
-    $this->assertCount(1, $result, 'Ensure that the user does have access to the autocompletion');
+    // Ensure that the user does have access to the autocompletion.
+    $this->assertSession()->elementsCount('xpath', '//input[@id="edit-uid-0-target-id" and contains(@data-autocomplete-path, "/entity_reference_autocomplete/user/default")]', 1);
   }
 
   /**

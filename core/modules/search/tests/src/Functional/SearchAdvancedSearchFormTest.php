@@ -116,8 +116,7 @@ class SearchAdvancedSearchFormTest extends BrowserTestBase {
     $this->assertText('Search for cat dog OR gerbil -fish -snake');
     foreach ($edit as $key => $value) {
       if ($key != 'type[page]') {
-        $elements = $this->xpath('//input[@name=:name]', [':name' => $key]);
-        $this->assertFalse(isset($elements[0]) && $elements[0]->getValue() == $value, "Field $key is not set to $value");
+        $this->assertSession()->fieldValueNotEquals($key, $value);
       }
     }
   }

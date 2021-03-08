@@ -201,8 +201,7 @@ class DisplayBlockTest extends ViewTestBase {
     $this->drupalLogin($this->drupalCreateUser(['administer blocks']));
     $default_theme = $this->config('system.theme')->get('default');
     $this->drupalGet('admin/structure/block/add/views_block:test_view_block-block_1/' . $default_theme);
-    $elements = $this->xpath('//input[@name="label"]');
-    $this->assertTrue(empty($elements), 'The label field is not found for Views blocks.');
+    $this->assertSession()->fieldNotExists('label');
     // Test that the machine name field is hidden from display and has been
     // saved as expected from the default value.
     $this->assertSession()->fieldNotExists('edit-machine-name', NULL);
