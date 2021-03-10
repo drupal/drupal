@@ -57,11 +57,12 @@ global-styling:
 
   js:
     js/checkbox.js: {}
-    js/polyfills.js: {}
     js/scripts.js: {}
     js/navigation.js: {}
     js/second-level-navigation.js: {}
   dependencies:
+    - core/drupal.element.matches
+    - core/drupal.nodelist.foreach
     - core/drupal
 
 book:
