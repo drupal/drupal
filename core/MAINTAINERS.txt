@@ -513,7 +513,7 @@ Initiative coordinators
 
 The Drupal core initiative coordinators oversee approved projects that
 re-architect or otherwise improve large areas of Drupal core. See
-https://www.drupal.org/community-initiatives/drupal-core for more information on
+https://www.drupal.org/contribute/core/maintainers for more information on
 their responsibilities. The initiative coordinators are:
 
 Decoupled Menus Initiative
