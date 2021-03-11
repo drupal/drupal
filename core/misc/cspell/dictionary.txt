@@ -1,4 +1,5 @@
 a'foo
+a11yautocomplete
 abcdefg
 abcdefghijklmno
 abcdefghijklmnopqrstuvwxyz
@@ -470,7 +471,6 @@ dropbuttons
 droping
 dropzone
 drup
-drupalautocomplete
 drupalci
 drupaldatetime
 drupalget

@@ -22,7 +22,7 @@
     "Sortable": true,
     "once": true,
     "CKEDITOR": true,
-    "DrupalAutocomplete": true,
+    "A11yAutocomplete": true,
     "tabbable": true
   },
   "settings": {

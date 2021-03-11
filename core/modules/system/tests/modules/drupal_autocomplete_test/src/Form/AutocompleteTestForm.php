@@ -22,7 +22,7 @@ class AutocompleteTestForm extends FormBase {
    * {@inheritdoc}
    *
    * This form tests the various options that can be used to configure an
-   * instance of the DrupalAutocomplete JavaScript class. Options can be set
+   * instance of the A11yAutocomplete JavaScript class. Options can be set
    * directly on an element in two ways:
    * - Using a data-autocomplete-(dash separated option name) attribute.
    *   ex: data-autocomplete-min-chars="2"

@@ -339,7 +339,7 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
   }
 
   /**
-   * Tests the configurable options of the DrupalAutocomplete class.
+   * Tests the configurable options of the A11yAutocomplete class.
    *
    *  Options can be set directly on an element in two ways:
    *  - Using a data-autocomplete-(dash separated option name) attribute.
@@ -612,7 +612,7 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
    */
   public function assertScreenreader($message) {
     // Use assertJsCondition() instead of a standard DOM assertion in order to
-    // leverage wait(). With DrupalAutocomplete, the updating of
+    // leverage wait(). With A11yAutocomplete, the updating of
     // #drupal-live-announce is intentionally delayed to prevent collision with
     // browser default screenreader announcements.
     $this->assertJsCondition('document.getElementById("drupal-live-announce").innerText.includes("' . $message . '")', 10000, "Live region did not include: $message");

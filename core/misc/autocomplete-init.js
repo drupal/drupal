@@ -5,7 +5,7 @@
 * @preserve
 **/
 
-(function ($, Drupal, drupalSettings, DrupalAutocomplete, Popper, once) {
+(function ($, Drupal, drupalSettings, A11yAutocomplete, Popper, once) {
   Drupal.Autocomplete = {};
   Drupal.Autocomplete.instances = {};
   Drupal.Autocomplete.defaultOptions = {
@@ -45,7 +45,7 @@
     }
 
     var id = autocompleteInput.getAttribute('id');
-    Drupal.Autocomplete.instances[id] = new DrupalAutocomplete(autocompleteInput, options);
+    Drupal.Autocomplete.instances[id] = new A11yAutocomplete(autocompleteInput, options);
     var instance = Drupal.Autocomplete.instances[id];
     instance.resultsMessage = autocompleteResultsMessage;
     instance.sendToLiveRegion = autocompleteSendToLiveRegion;
@@ -75,4 +75,4 @@
       }
     }
   };
-})(jQuery, Drupal, drupalSettings, DrupalAutocomplete, Popper, once);
+})(jQuery, Drupal, drupalSettings, A11yAutocomplete, Popper, once);

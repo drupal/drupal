@@ -1,4 +1,4 @@
-(($, Drupal, drupalSettings, DrupalAutocomplete, Popper, once) => {
+(($, Drupal, drupalSettings, A11yAutocomplete, Popper, once) => {
   Drupal.Autocomplete = {};
   Drupal.Autocomplete.instances = {};
   Drupal.Autocomplete.defaultOptions = {
@@ -33,7 +33,7 @@
     /**
      * Formats a message reporting the number of results in a search.
      *
-     * This overrides DrupalAutocomplete.suggestionItem()
+     * This overrides A11yAutocomplete.suggestionItem()
      *
      * @param {number} count
      *   The number of results.
@@ -59,7 +59,7 @@
     /**
      * Formats a message reporting a suggestion has been highlighted.
      *
-     * This overrides DrupalAutocomplete.highlightMessage()
+     * This overrides A11yAutocomplete.highlightMessage()
      *
      * @param {object} item
      *   The suggestion item being highlighted.
@@ -78,7 +78,7 @@
     /**
      * Sends a message to assistive technology.
      *
-     * This overrides DrupalAutocomplete.sendToLiveRegion()
+     * This overrides A11yAutocomplete.sendToLiveRegion()
      *
      * @param {string} message
      *   The message to be announced.
@@ -87,11 +87,11 @@
       Drupal.announce(message, 'assertive');
     }
 
-    // Several DrupalAutocomplete methods are overridden so Drupal.t() and
+    // Several A11yAutocomplete methods are overridden so Drupal.t() and
     // Drupal.announce() can be used without the class itself requiring
     // Drupal.
     const id = autocompleteInput.getAttribute('id');
-    Drupal.Autocomplete.instances[id] = new DrupalAutocomplete(
+    Drupal.Autocomplete.instances[id] = new A11yAutocomplete(
       autocompleteInput,
       options,
     );
@@ -216,7 +216,7 @@
   //   /**
   //    * Formats an autocomplete suggestion for display in a list item.
   //    *
-  //    * This overrides DrupalAutocomplete.formatSuggestionItem()
+  //    * This overrides A11yAutocomplete.formatSuggestionItem()
   //    *
   //    * @param {object} suggestion
   //    *   An autocomplete suggestion.
@@ -319,7 +319,7 @@
     attach(context) {
       once('autocomplete-init', 'input.form-autocomplete').forEach(
         (autocompleteInput) => {
-          // The default cardinality of DrupalAutocomplete is 1. Fields in Drupal
+          // The default cardinality of A11yAutocomplete is 1. Fields in Drupal
           // without explicitly set cardinality should be set to -1, which
           // provides unlimited cardinality.
           if (
@@ -344,4 +344,4 @@
       }
     },
   };
-})(jQuery, Drupal, drupalSettings, DrupalAutocomplete, Popper, once);
+})(jQuery, Drupal, drupalSettings, A11yAutocomplete, Popper, once);

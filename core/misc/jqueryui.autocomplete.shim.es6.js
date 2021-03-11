@@ -116,7 +116,7 @@
     /**
      * Formats an autocomplete suggestion for display in a list item.
      *
-     * This overrides DrupalAutocomplete.formatSuggestionItem()
+     * This overrides A11yAutocomplete.formatSuggestionItem()
      *
      * @param {object} suggestion
      *   An autocomplete suggestion.

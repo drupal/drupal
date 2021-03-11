@@ -1040,7 +1040,7 @@ module.exports = {
       .executeAsync(
         // eslint-disable-next-line func-names, prefer-arrow-callback
         function (settingsArray, done) {
-          const usingDrupalautocomplete =
+          const usingA11yAutocomplete =
             Drupal.hasOwnProperty('Autocomplete') &&
             Drupal.Autocomplete.hasOwnProperty('instances');
           const toReturn = {};
@@ -1114,7 +1114,7 @@ module.exports = {
 
             // With Drupal autocomplete, triggering a search does not
             // happen with keydown.
-            if (usingDrupalautocomplete) {
+            if (usingA11yAutocomplete) {
               toReturn[settings.type].usingDrupal = true;
               toReturn[settings.type].element.autocomplete('search', 'j');
             } else {
@@ -1267,7 +1267,7 @@ module.exports = {
       .waitForElementPresent('#autocomplete-wrap1', 1000)
       .executeAsync(
         function (done) {
-          const usingDrupalautocomplete =
+          const usingA11yAutocomplete =
             Drupal.hasOwnProperty('Autocomplete') &&
             Drupal.Autocomplete.hasOwnProperty('instances');
           const toReturn = {};
@@ -1299,7 +1299,7 @@ module.exports = {
           const menu = element.autocomplete('widget');
           // With Drupal autocomplete, triggering a search does not
           // happen with keydown.
-          if (usingDrupalautocomplete) {
+          if (usingA11yAutocomplete) {
             element.autocomplete('search', 'ja');
           } else {
             element.val('ja').trigger('keydown');
@@ -1307,7 +1307,7 @@ module.exports = {
 
           setTimeout(() => {
             toReturn.menuHiddenAfterFirstSearch = menu.is(':hidden');
-            if (usingDrupalautocomplete) {
+            if (usingA11yAutocomplete) {
               element.autocomplete('search', 'java');
             } else {
               element.val('java').trigger('keydown');
@@ -1385,7 +1385,7 @@ module.exports = {
       .executeAsync(
         // eslint-disable-next-line func-names
         function (done) {
-          const usingDrupalautocomplete =
+          const usingA11yAutocomplete =
             Drupal.hasOwnProperty('Autocomplete') &&
             Drupal.Autocomplete.hasOwnProperty('instances');
           const data = [
@@ -1406,7 +1406,7 @@ module.exports = {
               return false;
             },
           });
-          if (usingDrupalautocomplete) {
+          if (usingA11yAutocomplete) {
             element.autocomplete('search', 'ja');
           } else {
             element.val('ja').trigger('keydown');
@@ -1416,7 +1416,7 @@ module.exports = {
             // Events don't translate from input to list items with Drupal
             // autocomplete, so the keydown happens directly to the focused
             // element.
-            if (usingDrupalautocomplete) {
+            if (usingA11yAutocomplete) {
               jQuery(document.activeElement).simulate('keydown', {
                 keyCode: jQuery.ui.keyCode.ENTER,
               });
@@ -1710,7 +1710,7 @@ module.exports = {
       .executeAsync(
         // eslint-disable-next-line func-names
         function (done) {
-          const usingDrupalautocomplete =
+          const usingA11yAutocomplete =
             Drupal.hasOwnProperty('Autocomplete') &&
             Drupal.Autocomplete.hasOwnProperty('instances');
           const data = [
@@ -1740,7 +1740,7 @@ module.exports = {
               );
             },
           });
-          if (usingDrupalautocomplete) {
+          if (usingA11yAutocomplete) {
             element.autocomplete('search', 'ja');
           } else {
             element.val('ja').trigger('keydown');
@@ -1763,7 +1763,7 @@ module.exports = {
       .executeAsync(
         // eslint-disable-next-line func-names
         function (done) {
-          const usingDrupalautocomplete =
+          const usingA11yAutocomplete =
             Drupal.hasOwnProperty('Autocomplete') &&
             Drupal.Autocomplete.hasOwnProperty('instances');
           const data = [
@@ -1795,7 +1795,7 @@ module.exports = {
               });
             },
           });
-          if (usingDrupalautocomplete) {
+          if (usingA11yAutocomplete) {
             element.autocomplete('search', 'ja');
           } else {
             element.val('ja').trigger('keydown');
@@ -1819,7 +1819,7 @@ module.exports = {
         // eslint-disable-next-line func-names
         function (done) {
           const toReturn = {};
-          const usingDrupalautocomplete =
+          const usingA11yAutocomplete =
             Drupal.hasOwnProperty('Autocomplete') &&
             Drupal.Autocomplete.hasOwnProperty('instances');
           const data = [
@@ -1842,7 +1842,7 @@ module.exports = {
             delay: 25,
           });
           const menu = element.autocomplete('widget');
-          if (usingDrupalautocomplete) {
+          if (usingA11yAutocomplete) {
             element.val('ja');
             element[0].dispatchEvent(new KeyboardEvent('input'));
           } else {
@@ -1881,7 +1881,7 @@ module.exports = {
         // eslint-disable-next-line func-names
         function (done) {
           const toReturn = {};
-          const usingDrupalautocomplete =
+          const usingA11yAutocomplete =
             Drupal.hasOwnProperty('Autocomplete') &&
             Drupal.Autocomplete.hasOwnProperty('instances');
           const data = [

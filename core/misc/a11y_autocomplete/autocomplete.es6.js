@@ -4,19 +4,19 @@
  */
 
 /**
- * Constructs a new instance of the DrupalAutocomplete class.
+ * Constructs a new instance of the A11yAutocomplete class.
  *
  * This adds autocomplete functionality to a text input.
  *
  * @param {HTMLElement} input
  *   The element to be used as an autocomplete.
  *
- * @return {DrupalAutocomplete}
+ * @return {A11yAutocomplete}
  *   Class to manage an input's autocomplete functionality.
  */
-class DrupalAutocomplete {
+class A11yAutocomplete {
   /**
-   * Construct a new DrupalAutocomplete class.
+   * Construct a new A11yAutocomplete class.
    *
    * @param {Element} input
    *   The input that will receive autocomplete functionality.
@@ -1017,4 +1017,4 @@ class DrupalAutocomplete {
   }
 }
 
-window.DrupalAutocomplete = DrupalAutocomplete;
+window.A11yAutocomplete = A11yAutocomplete;

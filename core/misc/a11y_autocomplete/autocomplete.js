@@ -17,13 +17,13 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var DrupalAutocomplete = function () {
-  function DrupalAutocomplete(input) {
+var A11yAutocomplete = function () {
+  function A11yAutocomplete(input) {
     var _this = this;
 
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-    _classCallCheck(this, DrupalAutocomplete);
+    _classCallCheck(this, A11yAutocomplete);
 
     this.keyCode = Object.freeze({
       TAB: 9,
@@ -134,7 +134,7 @@ var DrupalAutocomplete = function () {
     this.triggerEvent('autocomplete-created');
   }
 
-  _createClass(DrupalAutocomplete, [{
+  _createClass(A11yAutocomplete, [{
     key: "implementWrapper",
     value: function implementWrapper() {
       this.wrapper.setAttribute('data-drupal-autocomplete-wrapper', '');
@@ -773,7 +773,7 @@ var DrupalAutocomplete = function () {
     }
   }]);
 
-  return DrupalAutocomplete;
+  return A11yAutocomplete;
 }();
 
-window.DrupalAutocomplete = DrupalAutocomplete;
+window.A11yAutocomplete = A11yAutocomplete;
