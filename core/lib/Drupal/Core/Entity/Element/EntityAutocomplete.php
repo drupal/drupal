@@ -3,6 +3,7 @@
 namespace Drupal\Core\Entity\Element;
 
 use Drupal\Component\Utility\Crypt;
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\Tags;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface;
@@ -187,6 +188,26 @@ class EntityAutocomplete extends Textfield {
       'selection_handler' => $element['#selection_handler'],
       'selection_settings_key' => $selection_settings_key,
     ];
+
+    // Create attribute that will be used for client-side enforcement of field
+    // cardinality.
+    $element_parents_in_form = array_slice($element['#parents'], 0, count($element['#parents']) - 2);
+    $element_within_form = NestedArray::getValue($complete_form, $element_parents_in_form, $key_exists);
+
+    // If the input is a inside a multiple value widget, limit cardinality to 1
+    // as there is a dedicated input for each allowed value.
+    if (!empty($element_within_form['widget']['#theme']) && $element_within_form['widget']['#theme'] === 'field_multiple_value_form') {
+      $cardinality = 1;
+    }
+    elseif (!empty($element_within_form['widget']['#cardinality'])) {
+      $cardinality = $element_within_form['widget']['#cardinality'];
+    }
+    else {
+      // A Cardinality of -1 is considered unlimited.
+      $cardinality = -1;
+    }
+
+    $element['#attributes']['data-autocomplete-cardinality'] = $cardinality;
 
     return $element;
   }

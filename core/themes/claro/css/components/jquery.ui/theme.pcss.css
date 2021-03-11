@@ -404,17 +404,22 @@
 .ui-autocomplete .ui-menu-item-wrapper:hover {
   text-decoration: none;
 }
-.ui-autocomplete .ui-menu-item-wrapper.ui-state-active {
-  margin: 0;
-  color: var(--jui-dropdown--active-fg-color);
-  background: var(--jui-dropdown--active-bg-color);
-}
 .ui-autocomplete .ui-menu-item.ui-state-focus,
-.autocomplete .ui-menu-item.ui-state-hover {
+.autocomplete .ui-menu-item.ui-state-hover,
+[data-drupal-autocomplete-list] .ui-menu-item:hover {
   margin: 0;
   background: #0072b9;
 }
+.ui-autocomplete .ui-menu-item-wrapper.ui-state-active,
+[data-drupal-autocomplete-list] .ui-menu-item:focus {
+  margin: 0;
+  color: var(--jui-dropdown--active-fg-color);
+  background: var(--jui-dropdown--active-bg-color);
+  box-shadow: none;
+}
+
 .ui-autocomplete .ui-state-focus a,
-.autocomplete .ui-state-hover a {
+.autocomplete .ui-state-hover a,
+[data-drupal-autocomplete-list] .ui-menu-item:hover {
   color: #fff;
 }

@@ -1,0 +1,29 @@
+[data-drupal-autocomplete-wrapper] {
+  position: relative;
+}
+
+[data-drupal-autocomplete-list] {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+[data-drupal-autocomplete-list][hidden],
+[data-drupal-autocomplete-list]:empty {
+  display: none;
+}
+[data-drupal-autocomplete-list] li {
+  display: list-item;
+}
+[data-drupal-autocomplete-list] li a:hover {
+  cursor: pointer;
+}
+
+[data-drupal-autocomplete-live-region] {
+  position: absolute !important;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  width: 1px;
+  height: 1px;
+  word-wrap: normal;
+}

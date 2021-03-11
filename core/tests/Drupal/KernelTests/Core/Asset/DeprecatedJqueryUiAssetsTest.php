@@ -21,7 +21,7 @@ class DeprecatedJqueryUiAssetsTest extends KernelTestBase {
     $library_discovery = $this->container->get('library.discovery');
     $deprecated_jquery_ui_libraries = [
       'jquery.ui' => '291c28f873a71cd6b3116218d1f5da22',
-      'jquery.ui.autocomplete' => '153f2836f8f2da39767208b6e09cb5b4',
+      'jquery.ui.autocomplete' => '809d2d1a49a7ad9eab54793e36bbfa9e',
       'jquery.ui.button' => 'ad23e5de0fa1de1f511d10ba2e10d2dd',
       'jquery.ui.dialog' => '729090e5ddcd8563ddade80c3dabc87c',
       'jquery.ui.draggable' => 'af0f2bdc8aa4ade1e3de8042f31a9312',
@@ -35,13 +35,14 @@ class DeprecatedJqueryUiAssetsTest extends KernelTestBase {
     // this test.
     ini_set('serialize_precision', -1);
     foreach ($deprecated_jquery_ui_libraries as $library => $expected_hashed_library_definition) {
-      $this->expectDeprecation("The \"core/$library\" asset library is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. See https://www.drupal.org/node/3067969");
+      $issue_id = $library === 'jquery.ui.autocomplete' ? '3083715' : '3067969';
+      $this->expectDeprecation("The \"core/$library\" asset library is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. See https://www.drupal.org/node/$issue_id");
       $library_definition = $library_discovery->getLibraryByName('core', $library);
       $this->assertNotEmpty($library_definition['dependencies'], "$library must declare dependencies");
 
       // Confirm that the libraries extending jQuery UI functionality depend on
       // core/jquery.ui directly or via a dependency on core/jquery.ui.widget.
-      if ($library !== 'jquery.ui' && $library !== 'jquery.ui.dialog') {
+      if (!in_array($library, ['jquery.ui', 'jquery.ui.dialog', 'jquery.ui.autocomplete'])) {
         $has_main_or_widget = (in_array('core/jquery.ui', $library_definition['dependencies']) || in_array('core/jquery.ui.widget', $library_definition['dependencies']));
         $this->assertTrue($has_main_or_widget, "$library must depend on core/jquery.ui or core/jquery.ui.widget");
       }

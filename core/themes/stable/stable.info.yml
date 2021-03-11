@@ -63,6 +63,11 @@ libraries-override:
       component:
         css/contextual.toolbar.css: css/contextual/contextual.toolbar.css
 
+  core/drupal.autocomplete:
+    css:
+      component:
+        misc/autocomplete.css: css/core/autocomplete.css
+
   core/drupal.dialog.off_canvas:
     css:
       base:

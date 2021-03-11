@@ -1,0 +1,7 @@
+autocomplete_test_page:
+  path: '/autocomplete-shim-test'
+  defaults:
+    _controller: '\Drupal\autocomplete_shim_test\Controller\AutocompleteShimTestController::build'
+    _title: 'autocomplete testing'
+  requirements:
+    _access: 'TRUE'

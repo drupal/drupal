@@ -1,0 +1,14 @@
+[data-drupal-autocomplete-list] .ui-menu-item-wrapper {
+  position: relative;
+  display: block;
+  padding: 3px 1em 3px 0.4em;
+}
+
+[data-drupal-autocomplete-list] .ui-menu-item-wrapper:hover {
+  color: #840;
+}
+
+.ui-autocomplete {
+  border: 1px solid #ccc;
+  background: #fff;
+}

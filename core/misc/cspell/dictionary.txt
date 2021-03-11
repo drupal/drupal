@@ -82,7 +82,12 @@ auth's
 authless
 authmap
 authz
+autocompletechange
+autocompleteclose
+autocompletecreate
 autocompletefocus
+autocompleteopen
+autocompleteresponse
 autocompleteresponses
 autocompletesearch
 autocompleteselect
@@ -278,6 +283,7 @@ cnenzrgre
 cnfi
 cochez
 codesniffer
+coldfusion
 colgroups
 collegehumor
 colonpos
@@ -338,6 +344,7 @@ curle
 curlopt
 currenttime
 currentuser
+customevent
 customly
 customrequest
 cweagans
@@ -393,6 +400,7 @@ denormalizers
 denormalizes
 denormalizing
 denyall
+denylist
 dependee
 dependee's
 dependees
@@ -411,6 +419,7 @@ deserialization
 deserializes
 destid
 destructable
+destructure
 destructured
 desynchronized
 deutsch
@@ -461,6 +470,7 @@ dropbuttons
 droping
 dropzone
 drup
+drupalautocomplete
 drupalci
 drupaldatetime
 drupalget
@@ -500,6 +510,7 @@ elementspath
 elems
 elit
 embed's
+emptyj
 encapsed
 encoding's
 endapply
@@ -711,6 +722,7 @@ hookname
 horizontalrule
 hosters
 hostnames
+hoverable
 hreflang
 hreflangs
 hrefs
@@ -783,6 +795,7 @@ janeway
 januar
 januari
 janvier
+javajavascript
 javascripts
 jcbfyr
 jessebeach
@@ -909,6 +922,7 @@ mattfarina
 maxage
 maxdepth
 maximumred
+maxitems
 maxlifetime
 maxsize
 maynot
@@ -918,7 +932,9 @@ mdhash
 mediumint
 mediumtext
 membersonly
+menufocus
 menulist
+menuselect
 merhaba
 messagekey
 metainformation
@@ -934,6 +950,7 @@ mikey
 milli
 mimeheaders
 mimetypes
+minchar
 minifyzombies
 minimatch
 minimise
@@ -1124,7 +1141,9 @@ overwritable
 owasp
 pageable
 pagecache
+pagedown
 pagetop
+pageup
 pageviews
 pagina
 pangram
@@ -1263,6 +1282,7 @@ quickeditor
 quicklinks
 quickstart
 quinlan
+qunit
 quux
 quxqux
 qvalue
@@ -1347,10 +1367,12 @@ revisionid
 revisioning
 revlog
 revpub
+rhorizontal
 ribisi
 ritchie
 robloach
 robo
+roffset
 rolename
 roly
 routable
@@ -1358,12 +1380,15 @@ routeable
 routename
 rowspans
 rowtest
+rpercent
 rpos
+rposition
 rrggbb
 rsyslog
 rtsp
 ruleset
 rulesets
+rvertical
 rxpq
 répét
 répété
@@ -1947,6 +1972,7 @@ yygroup
 yyyymm
 zartan
 zendframework
+zindex
 zipf's
 znor
 zomg

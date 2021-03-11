@@ -82,6 +82,7 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
           if (strpos($file, 'jquery.ui') === FALSE) {
             continue;
           }
+          $this->assertTrue(isset($asset['weight']), $file);
           $weight = $asset['weight'];
           $this->weightGroupedAssets["$weight"][] = $file;
         }
@@ -134,7 +135,6 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
         'core/assets/vendor/jquery.ui/themes/base/core.css',
       ],
       [
-        'core/assets/vendor/jquery.ui/ui/widgets/autocomplete-min.js',
         'core/assets/vendor/jquery.ui/ui/labels-min.js',
         'core/assets/vendor/jquery.ui/ui/widgets/menu-min.js',
         'core/assets/vendor/jquery.ui/themes/base/autocomplete.css',
@@ -226,7 +226,7 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
    *
    * @dataProvider providerTestAssetLoading
    */
-  public function testLibraryAssetLoadingOrder($library) {
+  public function testLibraryAssetLoadingOrder($library, $expected_css, $expected_js) {
     $this->drupalGet("jqueryui_library_assets_test/$library");
     $this->assertSession()->statusCodeEquals(200);
 
@@ -249,41 +249,46 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
     }
     $this->assertNotEmpty($files_to_check);
 
-    // Find all jQuery UI CSS files loaded to the page, and compare their
-    // loading order to the weights configured in core.libraries.yml.
-    $css = $this->getSession()->getPage()->findAll('css', 'link[href*="jquery.ui"]');
-    $css_weight = -100;
-    foreach ($css as $item) {
-      $file = $this->trimFilePath($item->getAttribute('href'));
-      $found = FALSE;
-      foreach ($this->weightGroupedAssets as $key => $array) {
-        if (in_array($file, $array)) {
-          $found = TRUE;
-          $this->assertGreaterThanOrEqual($css_weight, $key, "The file $file not loading in the expected order based on its weight value.");
-          $css_weight = $key;
-          unset($files_to_check[$file]);
+    if (!empty($expected_css)) {
+      // Find all jQuery UI CSS files loaded to the page, and compare their
+      // loading order to the weights configured in core.libraries.yml.
+      $css = $this->getSession()->getPage()->findAll('css', 'link[href*="jquery.ui"]');
+      $css_weight = -100;
+      foreach ($css as $item) {
+        $file = $this->trimFilePath($item->getAttribute('href'));
+        $found = FALSE;
+        foreach ($this->weightGroupedAssets as $key => $array) {
+          if (in_array($file, $array)) {
+            $found = TRUE;
+            $this->assertGreaterThanOrEqual($css_weight, $key, "The file $file not loading in the expected order based on its weight value.");
+            $css_weight = $key;
+            unset($files_to_check[$file]);
+          }
         }
+        $this->assertTrue($found, "A jQuery UI file: $file was loaded by the page, but is not taken into account by the test.");
       }
-      $this->assertTrue($found, "A jQuery UI file: $file was loaded by the page, but is not taken into account by the test.");
+      $this->assertGreaterThan(-100, $css_weight);
     }
-    $this->assertGreaterThan(-100, $css_weight);
 
-    $js_weight = -100;
-    $js = $this->getSession()->getPage()->findAll('css', 'script[src*="jquery.ui"]');
-    foreach ($js as $item) {
-      $file = $this->trimFilePath($item->getAttribute('src'));
-      $found = FALSE;
-      foreach ($this->weightGroupedAssets as $key => $array) {
-        if (in_array($file, $array)) {
-          $found = TRUE;
-          $this->assertGreaterThanOrEqual($js_weight, $key, "The file $file not loading in the expected order based on its weight value.");
-          $js_weight = $key;
-          unset($files_to_check[$file]);
+    if (!empty($expected_js)) {
+      $js_weight = -100;
+      $js = $this->getSession()->getPage()->findAll('css', 'script[src*="jquery.ui"]');
+      foreach ($js as $item) {
+        $file = $this->trimFilePath($item->getAttribute('src'));
+        $found = FALSE;
+        foreach ($this->weightGroupedAssets as $key => $array) {
+          if (in_array($file, $array)) {
+            $found = TRUE;
+            $this->assertGreaterThanOrEqual($js_weight, $key, "The file $file not loading in the expected order based on its weight value.");
+            $js_weight = $key;
+            unset($files_to_check[$file]);
+          }
         }
+        $this->assertTrue($found, "A jQuery UI file: $file was loaded by the page, but is not taken into account by the test.");
       }
-      $this->assertTrue($found, "A jQuery UI file: $file was loaded by the page, but is not taken into account by the test.");
+      $this->assertGreaterThan(-100, $js_weight);
     }
-    $this->assertGreaterThan(-100, $js_weight);
+
     $this->assertEmpty($files_to_check);
   }
 
@@ -356,36 +361,6 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
    */
   public function providerTestAssetLoading() {
     return [
-      'drupal.autocomplete' => [
-        'library' => 'drupal.autocomplete',
-        'expected_css' => [
-          'core/assets/vendor/jquery.ui/themes/base/core.css',
-          'core/assets/vendor/jquery.ui/themes/base/menu.css',
-          'core/assets/vendor/jquery.ui/themes/base/autocomplete.css',
-          'core/assets/vendor/jquery.ui/themes/base/theme.css',
-        ],
-        'expected_js' => [
-          'core/assets/vendor/jquery.ui/ui/data-min.js',
-          'core/assets/vendor/jquery.ui/ui/disable-selection-min.js',
-          'core/assets/vendor/jquery.ui/ui/form-min.js',
-          'core/assets/vendor/jquery.ui/ui/labels-min.js',
-          'core/assets/vendor/jquery.ui/ui/jquery-1-7-min.js',
-          'core/assets/vendor/jquery.ui/ui/scroll-parent-min.js',
-          'core/assets/vendor/jquery.ui/ui/unique-id-min.js',
-          'core/assets/vendor/jquery.ui/ui/version-min.js',
-          'core/assets/vendor/jquery.ui/ui/escape-selector-min.js',
-          'core/assets/vendor/jquery.ui/ui/focusable-min.js',
-          'core/assets/vendor/jquery.ui/ui/ie-min.js',
-          'core/assets/vendor/jquery.ui/ui/keycode-min.js',
-          'core/assets/vendor/jquery.ui/ui/plugin-min.js',
-          'core/assets/vendor/jquery.ui/ui/safe-active-element-min.js',
-          'core/assets/vendor/jquery.ui/ui/safe-blur-min.js',
-          'core/assets/vendor/jquery.ui/ui/widget-min.js',
-          'core/assets/vendor/jquery.ui/ui/position-min.js',
-          'core/assets/vendor/jquery.ui/ui/widgets/menu-min.js',
-          'core/assets/vendor/jquery.ui/ui/widgets/autocomplete-min.js',
-        ],
-      ],
       'drupal.dialog' => [
         'library' => 'drupal.dialog',
         'expected_css' => [
@@ -452,32 +427,9 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
       'jquery.ui.autocomplete' => [
         'library' => 'jquery.ui.autocomplete',
         'expected_css' => [
-          'core/assets/vendor/jquery.ui/themes/base/core.css',
-          'core/assets/vendor/jquery.ui/themes/base/menu.css',
           'core/assets/vendor/jquery.ui/themes/base/autocomplete.css',
-          'core/assets/vendor/jquery.ui/themes/base/theme.css',
         ],
-        'expected_js' => [
-          'core/assets/vendor/jquery.ui/ui/data-min.js',
-          'core/assets/vendor/jquery.ui/ui/disable-selection-min.js',
-          'core/assets/vendor/jquery.ui/ui/form-min.js',
-          'core/assets/vendor/jquery.ui/ui/labels-min.js',
-          'core/assets/vendor/jquery.ui/ui/jquery-1-7-min.js',
-          'core/assets/vendor/jquery.ui/ui/scroll-parent-min.js',
-          'core/assets/vendor/jquery.ui/ui/unique-id-min.js',
-          'core/assets/vendor/jquery.ui/ui/version-min.js',
-          'core/assets/vendor/jquery.ui/ui/escape-selector-min.js',
-          'core/assets/vendor/jquery.ui/ui/focusable-min.js',
-          'core/assets/vendor/jquery.ui/ui/ie-min.js',
-          'core/assets/vendor/jquery.ui/ui/keycode-min.js',
-          'core/assets/vendor/jquery.ui/ui/plugin-min.js',
-          'core/assets/vendor/jquery.ui/ui/safe-active-element-min.js',
-          'core/assets/vendor/jquery.ui/ui/safe-blur-min.js',
-          'core/assets/vendor/jquery.ui/ui/widget-min.js',
-          'core/assets/vendor/jquery.ui/ui/position-min.js',
-          'core/assets/vendor/jquery.ui/ui/widgets/menu-min.js',
-          'core/assets/vendor/jquery.ui/ui/widgets/autocomplete-min.js',
-        ],
+        'expected_js' => [],
       ],
       'jquery.ui.button' => [
         'library' => 'jquery.ui.button',
@@ -709,8 +661,8 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
           'core/assets/vendor/jquery.ui/ui/widget-min.js',
         ],
       ],
-      'drupal.autocomplete|jquery.ui|jquery.ui.autocomplete|drupal.dialog' => [
-        'library' => 'drupal.autocomplete|jquery.ui|jquery.ui.autocomplete|drupal.dialog',
+      'jquery.ui|jquery.ui.autocomplete|drupal.dialog' => [
+        'library' => 'jquery.ui|jquery.ui.autocomplete|drupal.dialog',
         'expected_css' => [
           'core/assets/vendor/jquery.ui/themes/base/core.css',
           'core/assets/vendor/jquery.ui/themes/base/menu.css',
@@ -740,7 +692,6 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
           'core/assets/vendor/jquery.ui/ui/widget-min.js',
           'core/assets/vendor/jquery.ui/ui/position-min.js',
           'core/assets/vendor/jquery.ui/ui/widgets/menu-min.js',
-          'core/assets/vendor/jquery.ui/ui/widgets/autocomplete-min.js',
           'core/assets/vendor/jquery.ui/ui/ie-min.js',
           'core/assets/vendor/jquery.ui/ui/widgets/mouse-min.js',
           'core/assets/vendor/jquery.ui/ui/widgets/draggable-min.js',
@@ -789,7 +740,6 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
           'core/assets/vendor/jquery.ui/ui/widgets/draggable-min.js',
           'core/assets/vendor/jquery.ui/ui/form-reset-mixin-min.js',
           'core/assets/vendor/jquery.ui/ui/widgets/dialog-min.js',
-          'core/assets/vendor/jquery.ui/ui/widgets/autocomplete-min.js',
           'core/assets/vendor/jquery.ui/ui/widgets/button-min.js',
           'core/assets/vendor/jquery.ui/ui/widgets/controlgroup-min.js',
           'core/assets/vendor/jquery.ui/ui/widgets/checkboxradio-min.js',
