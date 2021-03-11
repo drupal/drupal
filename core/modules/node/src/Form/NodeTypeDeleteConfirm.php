@@ -17,6 +17,7 @@ class NodeTypeDeleteConfirm extends EntityDeleteForm {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $num_nodes = $this->entityTypeManager->getStorage('node')->getQuery()
+      ->accessCheck(FALSE)
       ->condition('type', $this->entity->id())
       ->count()
       ->execute();

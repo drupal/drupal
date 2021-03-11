@@ -17,6 +17,7 @@ class BlockContentTypeDeleteForm extends EntityDeleteForm {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $blocks = $this->entityTypeManager->getStorage('block_content')->getQuery()
+      ->accessCheck(FALSE)
       ->condition('type', $this->entity->id())
       ->execute();
     if (!empty($blocks)) {
