@@ -126,19 +126,11 @@ var DrupalAutocomplete = function () {
         }
       }
     };
-
-    if (window.jQuery) {
-      var $ = window.jQuery;
-      $(this.input).on(this.events.input);
-      $(this.ul).on(this.events.ul);
-    } else {
-      Object.keys(this.events).forEach(function (elementName) {
-        Object.keys(_this.events[elementName]).forEach(function (eventName) {
-          _this[elementName].addEventListener(eventName, _this.events[elementName][eventName]);
-        });
+    Object.keys(this.events).forEach(function (elementName) {
+      Object.keys(_this.events[elementName]).forEach(function (eventName) {
+        _this[elementName].addEventListener(eventName, _this.events[elementName][eventName]);
       });
-    }
-
+    });
     this.triggerEvent('autocomplete-created');
   }
 
@@ -751,18 +743,11 @@ var DrupalAutocomplete = function () {
     value: function destroy() {
       var _this10 = this;
 
-      if (window.jQuery) {
-        var $ = window.jQuery;
-        $(this.input).off(this.events.input);
-        $(this.ul).off(this.events.ul);
-      } else {
-        Object.keys(this.events).forEach(function (elementName) {
-          Object.keys(_this10.events[elementName]).forEach(function (eventName) {
-            _this10[elementName].removeEventListener(eventName, _this10.events[elementName][eventName]);
-          });
+      Object.keys(this.events).forEach(function (elementName) {
+        Object.keys(_this10.events[elementName]).forEach(function (eventName) {
+          _this10[elementName].removeEventListener(eventName, _this10.events[elementName][eventName]);
         });
-      }
-
+      });
       this.ul.remove();
       this.triggerEvent('autocomplete-destroy');
     }

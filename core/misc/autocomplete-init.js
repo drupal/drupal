@@ -5,7 +5,7 @@
 * @preserve
 **/
 
-(function ($, Drupal, drupalSettings, DrupalAutocomplete, Popper) {
+(function ($, Drupal, drupalSettings, DrupalAutocomplete, Popper, once) {
   Drupal.Autocomplete = {};
   Drupal.Autocomplete.instances = {};
   Drupal.Autocomplete.defaultOptions = {
@@ -29,8 +29,7 @@
         return Drupal.t('No results found');
       }
 
-      var pluralMessage = maxItems <= this.totalSuggestions ? 'There are at least @count results available. Type additional characters to refine your search.' : 'There are @count results available.';
-      return Drupal.formatPlural(count, 'There is one result available.', pluralMessage);
+      return Drupal.formatPlural(count, 'There is one result available.', maxItems <= this.totalSuggestions ? 'There are at least @count results available. Type additional characters to refine your search.' : 'There are @count results available.');
     }
 
     function autocompleteHighlightMessage(item) {
@@ -56,142 +55,9 @@
     });
   };
 
-  Drupal.Autocomplete.jqueryUiShimInit = function (autocompleteInput) {
-    var id = autocompleteInput.getAttribute('id');
-    var instance = Drupal.Autocomplete.instances[id];
-    var isContentEditable = instance.input.hasAttribute('contenteditable');
-    var isMultiline = instance.input.tagName === 'TEXTAREA' || instance.input.tagName !== 'INPUT' && isContentEditable;
-    instance.options.isMultiline = isMultiline;
-
-    if (instance.options.allowRepeatValues === null) {
-      instance.options.allowRepeatValues = true;
-    }
-
-    if (!instance.input.hasAttribute('data-autocomplete-list-appended')) {
-      var listBoxId = instance.ul.getAttribute('id');
-      var uiFront = $(autocompleteInput).closest('.ui-front, dialog');
-      var appendTo = uiFront.length > 0 ? uiFront[0] : document.querySelector('body');
-      appendTo.appendChild(Drupal.Autocomplete.instances[id].ul);
-    }
-
-    Popper.createPopper(instance.input, instance.ul, {
-      placement: 'bottom-start'
-    });
-
-    function shimmedInputKeyDown(e) {
-      if (!['INPUT', 'TEXTAREA'].includes(this.input.tagName) && this.input.hasAttribute('contenteditable')) {
-        this.input.value = this.input.textContent;
-      }
-
-      var keyCode = e.keyCode;
-
-      if (this.isOpened) {
-        if (keyCode === this.keyCode.ESC) {
-          this.close();
-        }
-
-        if (keyCode === this.keyCode.DOWN || keyCode === this.keyCode.UP) {
-          e.preventDefault();
-          this.preventCloseOnBlur = true;
-          var selector = keyCode === this.keyCode.DOWN ? 'li' : 'li:last-child';
-          this.highlightItem(this.ul.querySelector(selector));
-        }
-
-        if (keyCode === this.keyCode.RETURN) {
-          var active = instance.ul.querySelectorAll('.ui-menu-item-wrapper.ui-state-active');
-
-          if (active.length) {
-            e.preventDefault();
-          }
-        }
-      }
-
-      if (this.input.nodeName === 'INPUT' && !this.isOpened && this.options.list.length > 0 && (keyCode === this.keyCode.DOWN || keyCode === this.keyCode.UP)) {
-        e.preventDefault();
-        this.suggestionItems = this.options.list;
-        this.preventCloseOnBlur = true;
-        var typed = this.extractLastInputValue();
-
-        if (!typed && this.options.minChars < 1) {
-          this.ul.innerHTML = '';
-          this.prepareSuggestionList();
-        } else {
-          this.displayResults();
-        }
-
-        if (this.ul.children.length > 0) {
-          this.open();
-        }
-
-        if (this.isOpened) {
-          var _selector = keyCode === this.keyCode.DOWN ? 'li' : 'li:last-child';
-
-          this.highlightItem(this.ul.querySelector(_selector));
-        }
-      }
-
-      this.removeAssistiveHint();
-    }
-
-    function autocompleteFormatSuggestionItem(suggestion, li) {
-      var propertyToDisplay = this.options.displayLabels ? 'label' : 'value';
-      $(li).data('ui-autocomplete-item', suggestion);
-      return "<a tabindex=\"-1\" class=\"ui-menu-item-wrapper\">".concat(suggestion[propertyToDisplay].trim(), "</a>");
-    }
-
-    instance.formatSuggestionItem = autocompleteFormatSuggestionItem;
-    instance.inputKeyDown = shimmedInputKeyDown;
-
-    if (isContentEditable) {
-      instance.getValue = function () {
-        return this.input.textContent;
-      };
-
-      instance.replaceInputValue = function (element) {
-        var itemIndex = element.closest('[data-drupal-autocomplete-item]').getAttribute('data-drupal-autocomplete-item');
-        this.selected = this.suggestions[itemIndex];
-        var separator = this.separator();
-
-        if (separator.length > 0) {
-          var before = this.previousItems(separator);
-          this.input.textContent = "".concat(before).concat(element.textContent);
-        } else {
-          this.input.textContent = element.textContent;
-        }
-      };
-    }
-
-    var closeOnClickOutside = function closeOnClickOutside(event) {
-      var menuElement = instance.ul;
-      var targetInWidget = event.target === instance.input || event.target === menuElement || $.contains(menuElement, event.target);
-
-      if (!targetInWidget) {
-        instance.close();
-      }
-    };
-
-    instance.ul.addEventListener('mousedown', function (e) {
-      e.preventDefault();
-    });
-    instance.input.addEventListener('autocomplete-open', function (e) {
-      document.body.addEventListener('mousedown', closeOnClickOutside);
-    });
-    instance.input.addEventListener('autocomplete-close', function (e) {
-      document.body.removeEventListener('mousedown', closeOnClickOutside);
-    });
-    instance.input.addEventListener('autocomplete-highlight', function (e) {
-      instance.ul.querySelectorAll('.ui-menu-item-wrapper.ui-state-active').forEach(function (element) {
-        element.classList.remove('ui-state-active');
-      });
-      document.activeElement.querySelector('.ui-menu-item-wrapper').classList.add('ui-state-active');
-    });
-    $(instance.input).unwrap('[data-drupal-autocomplete-wrapper]');
-  };
-
   Drupal.behaviors.autocomplete = {
     attach: function attach(context) {
-      var $autoCompleteInputs = $(context).find('input.form-autocomplete').once('autocomplete-init');
-      $autoCompleteInputs.each(function (index, autocompleteInput) {
+      once('autocomplete-init', 'input.form-autocomplete').forEach(function (autocompleteInput) {
         if (!autocompleteInput.hasAttribute('data-autocomplete-cardinality')) {
           autocompleteInput.setAttribute('data-autocomplete-cardinality', '-1');
         }
@@ -200,11 +66,13 @@
         Drupal.Autocomplete.jqueryUiShimInit(autocompleteInput);
       });
     },
-    detach: function detach(context) {
-      context.querySelectorAll('input.form-autocomplete').forEach(function (input) {
-        var id = input.getAttribute('id');
-        Drupal.Autocomplete.instances[id].destroy();
-      });
+    detach: function detach(context, settings, trigger) {
+      if (trigger === 'unload') {
+        context.querySelectorAll('input.form-autocomplete').forEach(function (input) {
+          var id = input.getAttribute('id');
+          Drupal.Autocomplete.instances[id].destroy();
+        });
+      }
     }
   };
-})(jQuery, Drupal, drupalSettings, DrupalAutocomplete, Popper);
+})(jQuery, Drupal, drupalSettings, DrupalAutocomplete, Popper, once);

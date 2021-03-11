@@ -134,22 +134,14 @@ class DrupalAutocomplete {
       },
     };
 
-    // If jQuery is available, use it to add events listeners. Otherwise use
-    // vanilla JavaScript.
-    if (window.jQuery) {
-      const $ = window.jQuery;
-      $(this.input).on(this.events.input);
-      $(this.ul).on(this.events.ul);
-    } else {
-      Object.keys(this.events).forEach((elementName) => {
-        Object.keys(this.events[elementName]).forEach((eventName) => {
-          this[elementName].addEventListener(
-            eventName,
-            this.events[elementName][eventName],
-          );
-        });
+    Object.keys(this.events).forEach((elementName) => {
+      Object.keys(this.events[elementName]).forEach((eventName) => {
+        this[elementName].addEventListener(
+          eventName,
+          this.events[elementName][eventName],
+        );
       });
-    }
+    });
 
     this.triggerEvent('autocomplete-created');
   }
@@ -980,20 +972,14 @@ class DrupalAutocomplete {
    * Remove all event listeners added by this class.
    */
   destroy() {
-    if (window.jQuery) {
-      const $ = window.jQuery;
-      $(this.input).off(this.events.input);
-      $(this.ul).off(this.events.ul);
-    } else {
-      Object.keys(this.events).forEach((elementName) => {
-        Object.keys(this.events[elementName]).forEach((eventName) => {
-          this[elementName].removeEventListener(
-            eventName,
-            this.events[elementName][eventName],
-          );
-        });
+    Object.keys(this.events).forEach((elementName) => {
+      Object.keys(this.events[elementName]).forEach((eventName) => {
+        this[elementName].removeEventListener(
+          eventName,
+          this.events[elementName][eventName],
+        );
       });
-    }
+    });
     this.ul.remove();
 
     this.triggerEvent('autocomplete-destroy');
@@ -1008,6 +994,8 @@ class DrupalAutocomplete {
    *   Additional data attached to the event's `details` property.
    * @param {boolean} cancelable
    *   If the dispatched event should be cancelable.
+   * @param {Event} originalEvent
+   *   A native event that called the function that triggers a custom event.
    *
    * @return {boolean}
    *   If the event triggered successfully.

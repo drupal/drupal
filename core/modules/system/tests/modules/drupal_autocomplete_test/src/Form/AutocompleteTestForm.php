@@ -138,7 +138,7 @@ class AutocompleteTestForm extends FormBase {
     // Inputs with custom max options instead of the default 10.
     $form['maxitems_data_autocomplete'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('20 Max items data-autocomplete'),
+      '#title' => $this->t('10 Max items data-autocomplete'),
       '#default_value' => '',
       '#autocomplete_route_name' => 'drupal_autocomplete.country_autocomplete',
       '#attributes' => [
@@ -149,7 +149,7 @@ class AutocompleteTestForm extends FormBase {
     ];
     $form['maxitems_separate_data_attributes'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('20 Max items separate data attributes'),
+      '#title' => $this->t('10 Max items separate data attributes'),
       '#default_value' => '',
       '#autocomplete_route_name' => 'drupal_autocomplete.country_autocomplete',
       '#attributes' => [
