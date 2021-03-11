@@ -228,7 +228,7 @@ class DemoUmamiProfileTest extends BrowserTestBase {
     $this->submitForm([
       'name' => $account->getAccountName(),
       'pass' => $password,
-    ], t('Log in'));
+    ], 'Log in');
 
     // @see ::drupalUserIsLoggedIn()
     $account->sessionId = $this->getSession()->getCookie(\Drupal::service('session_configuration')->getOptions(\Drupal::request())['name']);
