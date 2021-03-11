@@ -295,6 +295,7 @@ function _tracker_remove($nid, $uid = NULL, $changed = NULL) {
     if (!$keep_subscription) {
       // Check if the user has commented at least once on the given nid.
       $keep_subscription = \Drupal::entityQuery('comment')
+        ->accessCheck(FALSE)
         ->condition('entity_type', 'node')
         ->condition('entity_id', $nid)
         ->condition('uid', $uid)
