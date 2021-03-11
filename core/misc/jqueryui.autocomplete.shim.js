@@ -269,8 +269,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
           }
 
           if (typeof args[2] !== 'undefined' && typeof args[1] === 'string') {
-            var methodName = args[0],
-                optionName = args[1],
+            var optionName = args[1],
                 optionValue = args[2];
             var listBoxId = instance.ul.getAttribute('id');
 

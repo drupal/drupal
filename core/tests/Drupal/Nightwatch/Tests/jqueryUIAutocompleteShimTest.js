@@ -194,16 +194,22 @@ module.exports = {
             .autocomplete('search');
           const menu = element.autocomplete('widget');
 
-          let event = jQuery.Event('keydown');
-          event.keyCode = jQuery.ui.keyCode.DOWN;
-          element.trigger(event);
+          // let event = jQuery.Event('keydown');
+          let event = new KeyboardEvent('keydown', {
+            keyCode: jQuery.ui.keyCode.DOWN,
+            cancelable: true,
+          });
+          element[0].dispatchEvent(event);
           toReturn.menuItemIsActive =
             menu.find('.ui-menu-item-wrapper.ui-state-active').length === 1;
 
-          event = jQuery.Event('keydown');
-          event.keyCode = jQuery.ui.keyCode.ENTER;
-          element.trigger(event);
-          toReturn.isDefaultPrevented = event.isDefaultPrevented();
+          // event = jQuery.Event('keydown');
+          event = new KeyboardEvent('keydown', {
+            keyCode: jQuery.ui.keyCode.ENTER,
+            cancelable: true,
+          });
+          element[0].dispatchEvent(event);
+          toReturn.isDefaultPrevented = event.defaultPrevented;
           return toReturn;
         },
         [],
@@ -1089,8 +1095,6 @@ module.exports = {
                 ].menu.is(':hidden');
               },
               select(event, ui) {
-                toReturn[settings.type].thatSelectOriginalEvent =
-                  event.originalEvent.type;
                 toReturn[settings.type].selectOriginalEvent =
                   event.originalEvent.type === 'menuselect';
                 toReturn[settings.type].selectUiItem = ui.item;
@@ -1111,6 +1115,7 @@ module.exports = {
             // With Drupal autocomplete, triggering a search does not
             // happen with keydown.
             if (usingDrupalautocomplete) {
+              toReturn[settings.type].usingDrupal = true;
               toReturn[settings.type].element.autocomplete('search', 'j');
             } else {
               toReturn[settings.type].element
@@ -1123,31 +1128,39 @@ module.exports = {
               toReturn[settings.type].menuVisibleAfterDelay = toReturn[
                 settings.type
               ].menu.is(':visible');
-              toReturn[settings.type].element.simulate('keydown', {
-                keyCode: jQuery.ui.keyCode.DOWN,
-              });
-              // The jQuery tests simulated typing enter on the input, but
-              // this is changed to the item being focused due to how Drupal
-              // autocomplete listens to UI events. This is actually a more
-              // accurate simulation of what happens in the UI.
-              jQuery(document.activeElement).simulate('keydown', {
-                keyCode: jQuery.ui.keyCode.ENTER,
-              });
+              toReturn[settings.type].element[0].dispatchEvent(
+                new KeyboardEvent('keydown', {
+                  keyCode: jQuery.ui.keyCode.DOWN,
+                  cancelable: true,
+                }),
+              );
               setTimeout(() => {
-                toReturn[settings.type].element.simulate('blur');
+                // The jQuery tests simulated typing enter on the input, but
+                // this is changed to the list due to how Drupal autocomplete
+                // listens to UI events. This is actually a more accurate
+                // accurate simulation of what happens in the UI.
+                toReturn[settings.type].menu[0].dispatchEvent(
+                  new KeyboardEvent('keydown', {
+                    keyCode: jQuery.ui.keyCode.ENTER,
+                    cancelable: true,
+                  }),
+                );
+                setTimeout(() => {
+                  toReturn[settings.type].element.simulate('blur');
 
-                if (index === 2) {
-                  setTimeout(() => {
-                    done(toReturn);
-                  }, 1000);
-                } else {
-                  setTimeout(() => {
-                    createTestingAutocomplete(
-                      settingsArray[index + 1],
-                      index + 1,
-                    );
-                  });
-                }
+                  if (index === 2) {
+                    setTimeout(() => {
+                      done(toReturn);
+                    }, 1000);
+                  } else {
+                    setTimeout(() => {
+                      createTestingAutocomplete(
+                        settingsArray[index + 1],
+                        index + 1,
+                      );
+                    });
+                  }
+                });
               });
             });
           }
@@ -1238,8 +1251,9 @@ module.exports = {
               done(ui.item === null);
             },
           });
-          element.triggerHandler('focus');
-          element.val('ja').triggerHandler('blur');
+          element[0].dispatchEvent(new FocusEvent('focus'));
+          element.val('ja');
+          element[0].dispatchEvent(new FocusEvent('blur'));
         },
         [],
         (result) => {
@@ -1829,7 +1843,8 @@ module.exports = {
           });
           const menu = element.autocomplete('widget');
           if (usingDrupalautocomplete) {
-            element.val('ja').trigger('input');
+            element.val('ja');
+            element[0].dispatchEvent(new KeyboardEvent('input'));
           } else {
             element.val('ja').trigger('keydown');
           }

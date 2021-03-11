@@ -101,7 +101,7 @@
             }
             if (eventName === 'autocompleteselect') {
               ui.item = e.detail.selected;
-              e.originalEvent.type = 'menuselect';
+              e.originalEvent = $.Event('menuselect');
             }
             if (eventName === 'autocompleteclose') {
               e.originalEvent = $.Event('menuselect');

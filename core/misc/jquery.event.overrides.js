@@ -105,7 +105,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
             if (eventName === 'autocompleteselect') {
               ui.item = e.detail.selected;
-              e.originalEvent.type = 'menuselect';
+              e.originalEvent = $.Event('menuselect');
             }
 
             if (eventName === 'autocompleteclose') {

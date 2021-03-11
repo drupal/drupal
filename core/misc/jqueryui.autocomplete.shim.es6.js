@@ -316,7 +316,7 @@
 
           // If args[2] has a value, then this is setting an option.
           if (typeof args[2] !== 'undefined' && typeof args[1] === 'string') {
-            const [methodName, optionName, optionValue] = args;
+            const [, optionName, optionValue] = args;
             const listBoxId = instance.ul.getAttribute('id');
 
             switch (optionName) {
