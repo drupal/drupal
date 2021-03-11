@@ -2,10 +2,12 @@
 a11y_autocomplete:
   version: VERSION
   js:
-    misc/a11y_autocomplete/autocomplete.js: { weight: -2 }
+    # This will eventually be moved to vendor, once it has stabilized and is
+    # published as an external library.
+    misc/a11y_autocomplete/a11y.autocomplete.js: { weight: -2 }
   css:
     component:
-      assets/vendor/drupal/a11y_autocomplete/autocomplete.css: {}
+      assets/vendor/drupal/a11y_autocomplete/a11y.autocomplete.css: {}
 
 backbone:
   remote: https://github.com/jashkenas/backbone
