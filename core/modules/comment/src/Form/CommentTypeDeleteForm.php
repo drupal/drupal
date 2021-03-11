@@ -65,6 +65,7 @@ class CommentTypeDeleteForm extends EntityDeleteForm {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $comments = $this->entityTypeManager->getStorage('comment')->getQuery()
+      ->accessCheck(FALSE)
       ->condition('comment_type', $this->entity->id())
       ->execute();
     $entity_type = $this->entity->getTargetEntityTypeId();
