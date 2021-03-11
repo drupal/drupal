@@ -66,7 +66,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->assertSession()->optionNotExists('moderation_state[0][state]', 'archived');
 
     // Create new moderated content in draft.
-    $this->submitForm(['moderation_state[0][state]' => 'draft'], t('Save'));
+    $this->submitForm(['moderation_state[0][state]' => 'draft'], 'Save');
 
     $node = $this->drupalGetNodeByTitle('Some moderated content');
     $canonical_path = sprintf('node/%d', $node->id());

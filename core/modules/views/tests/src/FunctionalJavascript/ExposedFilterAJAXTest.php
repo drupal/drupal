@@ -67,7 +67,7 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
     $this->assertStringContainsString('Page Two', $html);
 
     // Search for "Page One".
-    $this->submitForm(['title' => 'Page One'], t('Filter'));
+    $this->submitForm(['title' => 'Page One'], 'Filter');
     $this->assertSession()->assertWaitOnAjaxRequest();
 
     // Verify that only the "Page One" Node is present.
@@ -76,7 +76,7 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
     $this->assertStringNotContainsString('Page Two', $html);
 
     // Search for "Page Two".
-    $this->submitForm(['title' => 'Page Two'], t('Filter'));
+    $this->submitForm(['title' => 'Page Two'], 'Filter');
     $this->assertSession()->assertWaitOnAjaxRequest();
 
     // Verify that only the "Page Two" Node is present.
@@ -89,13 +89,13 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
     $this->submitForm([
       'action' => 'node_make_sticky_action',
       'node_bulk_form[0]' => TRUE,
-    ], t('Apply to selected items'));
+    ], 'Apply to selected items');
 
     // Verify that the action was performed.
     $this->assertSession()->pageTextContains('Make content sticky was applied to 1 item.');
 
     // Reset the form.
-    $this->submitForm([], t('Reset'));
+    $this->submitForm([], 'Reset');
     $this->assertSession()->assertWaitOnAjaxRequest();
 
     $this->assertSession()->pageTextContains('Page One');
