@@ -194,6 +194,7 @@ class FieldStorageConfigEditForm extends EntityForm {
       // one selected. Deltas start with 0, so the selected value does not
       // need to be incremented.
       $entities_with_higher_delta = \Drupal::entityQuery($this->entity->getTargetEntityTypeId())
+        ->accessCheck(FALSE)
         ->condition($this->entity->getName() . '.%delta', $form_state->getValue('cardinality'))
         ->count()
         ->execute();
