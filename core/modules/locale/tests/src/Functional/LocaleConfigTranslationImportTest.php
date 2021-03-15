@@ -248,8 +248,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
       'translation' => 'all',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
-    $textareas = $this->xpath('//textarea');
-    $textarea = current($textareas);
+    $textarea = $this->assertSession()->elementExists('xpath', '//textarea');
     $lid = $textarea->getAttribute('name');
     $edit = [
       $lid => '',

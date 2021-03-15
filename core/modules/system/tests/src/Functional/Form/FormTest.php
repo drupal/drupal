@@ -892,19 +892,10 @@ class FormTest extends BrowserTestBase {
    */
   public function testRequiredAttribute() {
     $this->drupalGet('form-test/required-attribute');
-    $expected = 'required';
-    // Test to make sure the elements have the proper required attribute.
-    foreach (['textfield', 'password'] as $type) {
+    foreach (['textfield', 'password', 'textarea'] as $type) {
       $field = $this->assertSession()->fieldExists("edit-$type");
-      $this->assertEquals($expected, $field->getAttribute('required'), "The $type has the proper required attribute.");
+      $this->assertSame('required', $field->getAttribute('required'), "The $type has the proper required attribute.");
     }
-
-    // Test to make sure textarea has the proper required attribute.
-    $element = $this->xpath('//textarea[@id=:id and @required=:expected]', [
-      ':id' => 'edit-textarea',
-      ':expected' => $expected,
-    ]);
-    $this->assertTrue(!empty($element), 'The textarea has the proper required attribute.');
   }
 
 }

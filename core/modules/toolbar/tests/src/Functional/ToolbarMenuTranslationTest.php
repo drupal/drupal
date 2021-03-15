@@ -80,7 +80,7 @@ class ToolbarMenuTranslationTest extends BrowserTestBase {
 
     // Translate the menu item.
     $menu_item_translated = $this->randomMachineName();
-    $textarea = current($this->xpath('//textarea'));
+    $textarea = $this->assertSession()->elementExists('xpath', '//textarea');
     $lid = (string) $textarea->getAttribute('name');
     $edit = [
       $lid => $menu_item_translated,
