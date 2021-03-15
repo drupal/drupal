@@ -143,7 +143,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
       'langcode' => $langcode_browser_fallback,
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
-    $textarea = current($this->xpath('//textarea'));
+    $textarea = $this->assertSession()->elementExists('xpath', '//textarea');
     $lid = $textarea->getAttribute('name');
     $edit = [
       $lid => $language_browser_fallback_string,
@@ -155,7 +155,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
       'langcode' => $langcode,
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
-    $textarea = current($this->xpath('//textarea'));
+    $textarea = $this->assertSession()->elementExists('xpath', '//textarea');
     $lid = $textarea->getAttribute('name');
     $edit = [
       $lid => $language_string,

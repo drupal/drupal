@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\config_translation\Functional;
 
-use Behat\Mink\Element\NodeElement;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Language\Language;
@@ -204,7 +203,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
 
-    $textarea = current($this->xpath('//textarea'));
+    $textarea = $this->assertSession()->elementExists('xpath', '//textarea');
     $lid = $textarea->getAttribute('name');
     $edit = [
       $lid => $fr_site_name_label,
@@ -1146,13 +1145,9 @@ class ConfigTranslationUiTest extends BrowserTestBase {
    *   TRUE if the assertion passed; FALSE otherwise.
    */
   protected function assertDisabledTextarea($id) {
-    $textarea = $this->xpath('//textarea[@id=:id and contains(@disabled, "disabled")]', [
-      ':id' => $id,
-    ]);
-    $textarea = reset($textarea);
-    $this->assertInstanceOf(NodeElement::class, $textarea);
-    $expected = 'This field has been disabled because you do not have sufficient permissions to edit it.';
-    $this->assertEqual($expected, $textarea->getText(), new FormattableMarkup('Disabled textarea @id hides text in an inaccessible text format.', ['@id' => $id]));
+    $textarea = $this->assertSession()->fieldDisabled($id);
+    $this->assertSame('textarea', $textarea->getTagName());
+    $this->assertSame('This field has been disabled because you do not have sufficient permissions to edit it.', $textarea->getText());
     // Make sure the text format select is not shown.
     $select_id = str_replace('value', 'format--2', $id);
     $xpath = $this->assertSession()->buildXPathQuery('//select[@id=:id]', [':id' => $select_id]);

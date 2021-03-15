@@ -29,19 +29,10 @@ class ElementTest extends BrowserTestBase {
    */
   public function testPlaceHolderText() {
     $this->drupalGet('form-test/placeholder-text');
-    $expected = 'placeholder-text';
-    // Test to make sure non-textarea elements have the proper placeholder text.
-    foreach (['textfield', 'tel', 'url', 'password', 'email', 'number'] as $type) {
+    foreach (['textfield', 'tel', 'url', 'password', 'email', 'number', 'textarea'] as $type) {
       $field = $this->assertSession()->fieldExists("edit-$type");
-      $this->assertSame($expected, $field->getAttribute('placeholder'));
+      $this->assertSame('placeholder-text', $field->getAttribute('placeholder'));
     }
-
-    // Test to make sure textarea has the proper placeholder text.
-    $element = $this->xpath('//textarea[@id=:id and @placeholder=:expected]', [
-      ':id' => 'edit-textarea',
-      ':expected' => $expected,
-    ]);
-    $this->assertTrue(!empty($element), 'Placeholder text placed in textarea.');
   }
 
   /**
