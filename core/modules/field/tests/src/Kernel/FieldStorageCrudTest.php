@@ -219,7 +219,11 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
     $this->assertArrayHasKey($id, $fields, 'The field has the correct key.');
 
     // Check that 'multi column' criteria works.
-    $fields = $field_storage_config_storage->loadByProperties(['field_name' => $field_storage_definition['field_name'], 'type' => $field_storage_definition['type']]);
+    $fields = $field_storage_config_storage->loadByProperties([
+      'field_name' => $field_storage_definition['field_name'],
+      'type' => $field_storage_definition['type'],
+      'entity_type' => $field_storage_definition['entity_type'],
+    ]);
     $this->assertCount(1, $fields, 'The field was properly read.');
     $this->assertArrayHasKey($id, $fields, 'The field has the correct key.');
     $fields = $field_storage_config_storage->loadByProperties(['field_name' => $field_storage_definition['field_name'], 'type' => 'foo']);
