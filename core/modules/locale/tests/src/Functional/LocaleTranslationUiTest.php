@@ -110,7 +110,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     $this->assertText($name);
 
     // Assume this is the only result, given the random name.
-    $textarea = current($this->xpath('//textarea'));
+    $textarea = $this->assertSession()->elementExists('xpath', '//textarea');
     $lid = $textarea->getAttribute('name');
     $edit = [
       $lid => $translation,
@@ -133,7 +133,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
       'translation' => 'untranslated',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
-    $textarea = current($this->xpath('//textarea'));
+    $textarea = $this->assertSession()->elementExists('xpath', '//textarea');
     $lid = $textarea->getAttribute('name');
     $edit = [
       $lid => $translation_to_en,
@@ -178,7 +178,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
       'translation' => 'untranslated',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
-    $textarea = current($this->xpath('//textarea'));
+    $textarea = $this->assertSession()->elementExists('xpath', '//textarea');
     $lid = $textarea->getAttribute('name');
     $edit = [
       $lid => 'Please enter your Llama username.',
@@ -212,7 +212,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
     // Assume this is the only result, given the random name.
-    $textarea = current($this->xpath('//textarea'));
+    $textarea = $this->assertSession()->elementExists('xpath', '//textarea');
     $lid = $textarea->getAttribute('name');
     $edit = [
       $lid => '',
@@ -275,7 +275,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
 
-    $textarea = current($this->xpath('//textarea'));
+    $textarea = $this->assertSession()->elementExists('xpath', '//textarea');
     $lid = $textarea->getAttribute('name');
     $edit = [
       $lid => $this->randomMachineName(),
@@ -340,16 +340,16 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
     // Find the edit path.
 
-    $textarea = current($this->xpath('//textarea'));
+    $textarea = $this->assertSession()->elementExists('xpath', '//textarea');
     $lid = $textarea->getAttribute('name');
     foreach ($bad_translations as $translation) {
       $edit = [
         $lid => $translation,
       ];
       $this->drupalPostForm('admin/config/regional/translate', $edit, 'Save translations');
-      // Check for a form error on the textarea.
-      $form_class = $this->xpath('//form[@id="locale-translate-edit-form"]//textarea/@class');
-      $this->assertStringContainsString('error', $form_class[0]->getText(), 'The string was rejected as unsafe.');
+      // Check for a form error on the textarea, which means the string was
+      // rejected as unsafe.
+      $this->assertSession()->elementAttributeContains('xpath', '//form[@id="locale-translate-edit-form"]//textarea', 'class', 'error');
       $this->assertNoText('The string has been saved.');
     }
   }
@@ -436,7 +436,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     // Add translation.
     // Assume this is the only result, given the random name.
     // We save the lid from the path.
-    $textarea = current($this->xpath('//textarea'));
+    $textarea = $this->assertSession()->elementExists('xpath', '//textarea');
     $lid = $textarea->getAttribute('name');
     $edit = [
       $lid => $translation,
@@ -544,7 +544,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     $this->assertText($translation->getString());
 
     // Submit the translations without changing the translation.
-    $textarea = current($this->xpath('//textarea'));
+    $textarea = $this->assertSession()->elementExists('xpath', '//textarea');
     $lid = $textarea->getAttribute('name');
     $edit = [
       $lid => $translation->getString(),
@@ -563,7 +563,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     $this->assertText($string->getString());
 
     // Submit the translations with a new translation.
-    $textarea = current($this->xpath('//textarea'));
+    $textarea = $this->assertSession()->elementExists('xpath', '//textarea');
     $lid = $textarea->getAttribute('name');
     $edit = [
       $lid => $this->randomMachineName(100),

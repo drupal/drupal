@@ -88,8 +88,7 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
       'translation' => 'all',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
-    $textareas = $this->xpath('//textarea');
-    $textarea = current($textareas);
+    $textarea = $this->assertSession()->elementExists('xpath', '//textarea');
     $lid = $textarea->getAttribute('name');
     $edit = [
       $lid => $message,
@@ -112,8 +111,7 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
       'translation' => 'all',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
-    $textareas = $this->xpath('//textarea');
-    $textarea = current($textareas);
+    $textarea = $this->assertSession()->elementExists('xpath', '//textarea');
     $lid = $textarea->getAttribute('name');
     $edit = [
       $lid => 'D',
@@ -158,7 +156,7 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
       'translation' => 'all',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
-    $textarea = current($this->xpath('//textarea'));
+    $textarea = $this->assertSession()->elementExists('xpath', '//textarea');
     $lid = $textarea->getAttribute('name');
     $edit = [
       $lid => $image_style_label,
@@ -192,7 +190,7 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
       'translation' => 'all',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
-    $textarea = current($this->xpath('//textarea'));
+    $textarea = $this->assertSession()->elementExists('xpath', '//textarea');
     $lid = $textarea->getAttribute('name');
     $edit = [
       $lid => $category_label,

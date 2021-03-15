@@ -253,7 +253,7 @@ EOD;
     $this->assertSession()->optionExists('config_name', 'user.settings');
 
     $this->drupalGet('admin/config/development/configuration/single/export/system.simple/system.image');
-    $this->assertEquals("toolkit: gd\n_core:\n  default_config_hash: durWHaKeBaq4d9Wpi4RqwADj1OufDepcnJuhVLmKN24\n", $this->xpath('//textarea[@name="export"]')[0]->getValue(), 'The expected system configuration is displayed.');
+    $this->assertSession()->fieldValueEquals('export', "toolkit: gd\n_core:\n  default_config_hash: durWHaKeBaq4d9Wpi4RqwADj1OufDepcnJuhVLmKN24\n");
 
     // Verify that the date format entity type is selected when specified in
     // the URL.
@@ -267,7 +267,7 @@ EOD;
     $option_node = $this->assertSession()->optionExists("config_name", 'Fallback date format (fallback)');
     $this->assertTrue($option_node->isSelected());
     $fallback_date = \Drupal::entityTypeManager()->getStorage('date_format')->load('fallback');
-    $yaml_text = $this->xpath('//textarea[@name="export"]')[0]->getValue();
+    $yaml_text = $this->assertSession()->fieldExists('export')->getValue();
     $this->assertEquals(Yaml::decode($yaml_text), $fallback_date->toArray(), 'The fallback date format config entity export code is displayed.');
   }
 

@@ -317,7 +317,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
 
     // Assume this is the only result.
     // Translate the string to a random string.
-    $textarea = current($this->xpath('//textarea'));
+    $textarea = $this->assertSession()->elementExists('xpath', '//textarea');
     $lid = (string) $textarea->getAttribute('name');
     $edit = [
       $lid => $translation,
