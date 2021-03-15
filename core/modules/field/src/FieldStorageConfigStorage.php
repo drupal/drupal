@@ -113,7 +113,7 @@ class FieldStorageConfigStorage extends ConfigEntityStorage {
     if (empty($conditions['deleted'])) {
       if (isset($conditions['entity_type']) && isset($conditions['field_name'])) {
         // Optimize for the most frequent case where we do have a specific ID.
-        $id = $conditions['entity_type'] . $conditions['field_name'];
+        $id = $conditions['entity_type'] . '.' . $conditions['field_name'];
         $storages = $this->loadMultiple([$id]);
       }
       else {
