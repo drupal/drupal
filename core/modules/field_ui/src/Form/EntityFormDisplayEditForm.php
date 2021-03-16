@@ -36,6 +36,28 @@ class EntityFormDisplayEditForm extends EntityDisplayFormBase {
   /**
    * {@inheritdoc}
    */
+  public function form(array $form, FormStateInterface $form_state) {
+    $form = parent::form($form, $form_state);
+
+    $target_entity_type = $this->entityTypeManager->getDefinition($this->entity->getTargetEntityTypeId());
+    if ($bundle_entity_type_id = $target_entity_type->getBundleEntityType()) {
+      $bundle = $this->entityTypeManager->getStorage($bundle_entity_type_id)->load($this->entity->getTargetBundle());
+      $form['#title'] = $this->t('Manage form display: @bundle-label', [
+        '@bundle-label' => $bundle->label(),
+      ]);
+    }
+    else {
+      $form['#title'] = $this->t('Manage form display: @entity-type-label', [
+        '@entity-type-label' => $target_entity_type->getLabel(),
+      ]);
+    }
+
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function buildFieldRow(FieldDefinitionInterface $field_definition, array $form, FormStateInterface $form_state) {
     $field_row = parent::buildFieldRow($field_definition, $form, $form_state);
 

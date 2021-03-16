@@ -126,6 +126,18 @@ class FieldStorageAddForm extends FormBase {
     $this->entityTypeId = $form_state->get('entity_type_id');
     $this->bundle = $form_state->get('bundle');
 
+    if ($bundle_entity_type_id = $this->entityTypeManager->getDefinition($this->entityTypeId)->getBundleEntityType()) {
+      $bundle_entity = $this->entityTypeManager->getStorage($bundle_entity_type_id)->load($this->bundle);
+      $form['#title'] = $this->t('Add field to @bundle-label', [
+        '@bundle-label' => $bundle_entity->label(),
+      ]);
+    }
+    else {
+      $form['#title'] = $this->t('Add field to @entity-type-label', [
+        '@entity-type-label' => $this->entityTypeManager->getDefinition($this->entityTypeId)->getLabel(),
+      ]);
+    }
+
     // Gather valid field types.
     $field_type_options = [];
     foreach ($this->fieldTypePluginManager->getGroupedDefinitions($this->fieldTypePluginManager->getUiDefinitions()) as $category => $field_types) {

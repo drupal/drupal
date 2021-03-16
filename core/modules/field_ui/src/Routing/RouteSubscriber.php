@@ -91,7 +91,7 @@ class RouteSubscriber extends RouteSubscriberBase {
           "$path/fields",
           [
             '_controller' => '\Drupal\field_ui\Controller\FieldConfigListController::listing',
-            '_title' => 'Manage fields',
+            '_title_callback' => '\Drupal\field_ui\Controller\FieldConfigListController::title',
           ] + $defaults,
           ['_permission' => 'administer ' . $entity_type_id . ' fields'],
           $options
@@ -102,7 +102,6 @@ class RouteSubscriber extends RouteSubscriberBase {
           "$path/fields/add-field",
           [
             '_form' => '\Drupal\field_ui\Form\FieldStorageAddForm',
-            '_title' => 'Add field',
           ] + $defaults,
           ['_permission' => 'administer ' . $entity_type_id . ' fields'],
           $options
@@ -113,7 +112,6 @@ class RouteSubscriber extends RouteSubscriberBase {
           "$path/form-display",
           [
             '_entity_form' => 'entity_form_display.edit',
-            '_title' => 'Manage form display',
             'form_mode_name' => 'default',
           ] + $defaults,
           ['_field_ui_form_mode_access' => 'administer ' . $entity_type_id . ' form display'],
@@ -125,7 +123,6 @@ class RouteSubscriber extends RouteSubscriberBase {
           "$path/form-display/{form_mode_name}",
           [
             '_entity_form' => 'entity_form_display.edit',
-            '_title' => 'Manage form display',
           ] + $defaults,
           ['_field_ui_form_mode_access' => 'administer ' . $entity_type_id . ' form display'],
           $options
@@ -136,7 +133,6 @@ class RouteSubscriber extends RouteSubscriberBase {
           "$path/display",
           [
             '_entity_form' => 'entity_view_display.edit',
-            '_title' => 'Manage display',
             'view_mode_name' => 'default',
           ] + $defaults,
           ['_field_ui_view_mode_access' => 'administer ' . $entity_type_id . ' display'],
@@ -148,7 +144,6 @@ class RouteSubscriber extends RouteSubscriberBase {
           "$path/display/{view_mode_name}",
           [
             '_entity_form' => 'entity_view_display.edit',
-            '_title' => 'Manage display',
           ] + $defaults,
           ['_field_ui_view_mode_access' => 'administer ' . $entity_type_id . ' display'],
           $options

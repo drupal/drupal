@@ -28,4 +28,26 @@ class FieldConfigListController extends EntityListController {
     return $this->entityTypeManager()->getListBuilder('field_config')->render($entity_type_id, $bundle);
   }
 
+  /**
+   * Provides the title for the 'Manage fields' page.
+   *
+   * @return string
+   *   The title.
+   */
+  public function title($entity_type_id = NULL, $bundle = NULL) {
+    $target_entity_type = $this->entityTypeManager()->getDefinition($entity_type_id);
+    if ($bundle_entity_type_id = $target_entity_type->getBundleEntityType()) {
+      $bundle_entity = $this->entityTypeManager()->getStorage($bundle_entity_type_id)->load($bundle);
+
+      return $this->t('Manage fields: @bundle-label', [
+        '@bundle-label' => $bundle_entity->label(),
+      ]);
+    }
+    else {
+      return $this->t('Manage fields: @entity-type-label', [
+        '@entity-type-label' => $target_entity_type->getLabel(),
+      ]);
+    }
+  }
+
 }
