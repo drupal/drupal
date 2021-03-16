@@ -28,6 +28,11 @@ class FieldInstanceDefaults extends ProcessPluginBase {
       unset($default_value[0]['email']);
     }
 
+    if ($widget_type == 'link_field' && $default_value) {
+      $default_value[0]['uri'] = $default_value[0]['url'];
+      $default_value[0]['options'] = ['attributes' => []];
+      unset($default_value[0]['url']);
+    }
     return $default_value;
   }
 
