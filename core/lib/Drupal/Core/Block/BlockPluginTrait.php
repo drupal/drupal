@@ -161,7 +161,7 @@ trait BlockPluginTrait {
     $form['admin_label'] = [
       '#type' => 'item',
       '#title' => $this->t('Block description'),
-      '#plain_text' => $definition['admin_label'],
+      '#markup' => $definition['admin_label'],
     ];
     $form['label'] = [
       '#type' => 'textfield',
