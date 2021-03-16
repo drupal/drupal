@@ -6,6 +6,32 @@ use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
+ * Drupal language source from database.
+ *
+ * Available configuration keys:
+ * - fetch_all: (optional) If not empty, all source languages are retrieved and
+ *   available as "languages" source property. Each language is an array with
+ *   the same structure as a source row.
+ * - domain_negotiation: (optional) If not empty and domain negotiation is
+ *   enabled in the source database, the "domain_negotiation_used" source
+ *   property is set to TRUE.
+ *
+ * Example:
+ *
+ * @code
+ * plugin: language
+ * fetch_all: true
+ * domain_negotiation: true
+ * @endcode
+ *
+ * In this example, available languages are retrieved from the source database.
+ * Given that fetch_all and domain_negotiation are specified, each row also
+ * contains all languages and the domain negotiation status, if enabled.
+ *
+ * For additional configuration keys, refer to the parent classes:
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
  * @MigrateSource(
  *   id = "language",
  *   source_module = "locale"
