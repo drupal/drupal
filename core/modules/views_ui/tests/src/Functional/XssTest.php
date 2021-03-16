@@ -46,4 +46,14 @@ class XssTest extends UITestBase {
     $this->assertSession()->assertNoEscaped('&lt;');
   }
 
+  /**
+   * Test properly escaped characters in description when views block title
+   * contains special characters.
+   */
+  public function testEscapedBlockDescription() {
+    // Visit the block placement URL directly and validate block description.
+    $this->drupalGet('admin/structure/block/add/views_block%3Aarticles_and_pages-block_1/' . $this->config('system.theme')->get('default') . '?region=content');
+    $this->assertSession()->pageTextContains('Articles and Pages: Articles & Pages');
+  }
+
 }

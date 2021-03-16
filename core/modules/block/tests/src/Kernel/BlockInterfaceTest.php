@@ -60,7 +60,7 @@ class BlockInterfaceTest extends KernelTestBase {
       'admin_label' => [
         '#type' => 'item',
         '#title' => t('Block description'),
-        '#plain_text' => $definition['admin_label'],
+        '#markup' => $definition['admin_label'],
       ],
       'label' => [
         '#type' => 'textfield',
