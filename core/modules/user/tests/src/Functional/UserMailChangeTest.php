@@ -69,7 +69,8 @@ class UserMailChangeTest extends BrowserTestBase {
       'mail' => $new_mail,
       'current_pass' => $this->account->pass_raw,
     ];
-    $this->drupalPostForm($this->account->toUrl('edit-form'), $edit, 'Save');
+    $this->drupalGet($this->account->toUrl('edit-form'));
+    $this->submitForm($edit, 'Save');
 
     // Check that the validation status message has been displayed.
     $this->assertSession()->pageTextContains('Your updated email address needs to be validated. Further instructions have been sent to your new email address.');
@@ -97,7 +98,7 @@ class UserMailChangeTest extends BrowserTestBase {
 
     // Check that the change mail URL is not cached and expires after first use.
     $this->drupalGet($sent_mail_change_url);
-    $this->assertNull($this->drupalGetHeader('X-Drupal-Cache'));
+    self::assertNull($this->getSession()->getResponseHeader('X-Drupal-Cache'));
     $this->assertSession()->responseContains('You have tried to use an email address change link that has either been used or is no longer valid. Please visit your account and change your email again.');
 
     // Check that the user mail has been changed.
@@ -120,14 +121,15 @@ class UserMailChangeTest extends BrowserTestBase {
       'mail' => $this->getRandomEmailAddress(),
       'current_pass' => $this->account->pass_raw,
     ];
-    $this->drupalPostForm($this->account->toUrl('edit-form'), $edit, 'Save');
+    $this->drupalGet($this->account->toUrl('edit-form'));
+    $this->submitForm($edit, 'Save');
 
     // Check that the validation status message has been displayed.
     $this->assertSession()->pageTextContains('Your updated email address needs to be validated. Further instructions have been sent to your new email address.');
 
     // Check that only the verification message was sent.
-    $this->assertCount(1, $this->getMails());
-    $this->assertNotEmpty($this->getMails(['id' => 'user_mail_change_verification']));
+    self::assertCount(1, $this->getMails());
+    self::assertNotEmpty($this->getMails(['id' => 'user_mail_change_verification']));
   }
 
   /**
@@ -146,13 +148,14 @@ class UserMailChangeTest extends BrowserTestBase {
       'mail' => $new_mail,
       'current_pass' => $this->account->pass_raw,
     ];
-    $this->drupalPostForm($this->account->toUrl('edit-form'), $edit, 'Save');
+    $this->drupalGet($this->account->toUrl('edit-form'));
+    $this->submitForm($edit, 'Save');
 
     // Check that the validation status message has not been displayed.
     $this->assertSession()->pageTextNotContains('Your updated email address needs to be validated. Further instructions have been sent to your new email address.');
 
     // Check that no E-mail was sent to the old or to the new address.
-    $this->assertEmpty($this->getMails());
+    self::assertEmpty($this->getMails());
 
     // Check that the user's E-mail was changed instantly.
     self::assertSame($new_mail, User::load($this->account->id())->getEmail());
