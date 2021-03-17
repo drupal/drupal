@@ -199,7 +199,7 @@ class AccountSettingsForm extends ConfigFormBase {
     ];
     // These email tokens are shared for all settings, so just define
     // the list once to help ensure they stay in sync.
-    $email_token_help = $this->t('Available variables are: [site:name], [site:url], [user:display-name], [user:account-name], [user:mail], [site:login-url], [site:url-brief], [user:edit-url], [user:one-time-login-url], [user:cancel-url].');
+    $email_token_help = $this->t('Available variables are: [site:name], [site:url], [user:display-name], [user:account-name], [user:mail], [site:login-url], [site:url-brief], [user:edit-url], [user:one-time-login-url], [user:mail-change-url], [user:cancel-url].');
 
     $form['email_admin_created'] = [
       '#type' => 'details',
@@ -299,6 +299,77 @@ class AccountSettingsForm extends ConfigFormBase {
       '#title' => $this->t('Body'),
       '#default_value' => $mail_config->get('password_reset.body'),
       '#rows' => 12,
+    ];
+
+    $form['mail_change'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Account email changing'),
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#group' => 'email',
+      '#weight' => 11,
+    ];
+    $form['mail_change']['mail_change_notification'] = [
+      '#type' => 'details',
+      '#tree' => TRUE,
+      '#title' => $this->t('Notification of old email'),
+      '#description' => $this->t("Edit the email message sent to the user's old email address when the email address is changed.") . ' ' . $email_token_help,
+      '#open' => TRUE,
+    ];
+    $form['mail_change']['mail_change_notification']['enabled'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Notify user when email changes'),
+      '#default_value' => $config->get('notify.mail_change_notification'),
+    ];
+    $states = [
+      'invisible' => [
+        'input[name="mail_change_notification[enabled]"]' => ['checked' => FALSE],
+      ],
+    ];
+    $form['mail_change']['mail_change_notification']['subject'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Subject'),
+      '#default_value' => $mail_config->get('mail_change_notification.subject'),
+      '#maxlength' => 180,
+      '#states' => $states,
+    ];
+    $form['mail_change']['mail_change_notification']['body'] = [
+      '#type' => 'textarea',
+      '#title' => $this->t('Body'),
+      '#default_value' => $mail_config->get('mail_change_notification.body'),
+      '#rows' => 12,
+      '#states' => $states,
+    ];
+    $form['mail_change']['mail_change_verification'] = [
+      '#type' => 'details',
+      '#tree' => TRUE,
+      '#title' => $this->t('Verification of new email'),
+      '#description' => $this->t("Edit the email message sent to user's new email address when the email address is changed.") . ' ' . $email_token_help,
+      '#open' => TRUE,
+    ];
+    $form['mail_change']['mail_change_verification']['enabled'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Require email verification when a user changes their email address'),
+      '#default_value' => $config->get('notify.mail_change_verification'),
+    ];
+    $states = [
+      'invisible' => [
+        'input[name="mail_change_verification[enabled]"]' => ['checked' => FALSE],
+      ],
+    ];
+    $form['mail_change']['mail_change_verification']['subject'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Subject'),
+      '#default_value' => $mail_config->get('mail_change_verification.subject'),
+      '#maxlength' => 180,
+      '#states' => $states,
+    ];
+    $form['mail_change']['mail_change_verification']['body'] = [
+      '#type' => 'textarea',
+      '#title' => $this->t('Body'),
+      '#default_value' => $mail_config->get('mail_change_verification.body'),
+      '#rows' => 12,
+      '#states' => $states,
     ];
 
     $form['email_activated'] = [
@@ -437,12 +508,20 @@ class AccountSettingsForm extends ConfigFormBase {
       ->set('notify.status_activated', $form_state->getValue('user_mail_status_activated_notify'))
       ->set('notify.status_blocked', $form_state->getValue('user_mail_status_blocked_notify'))
       ->set('notify.status_canceled', $form_state->getValue('user_mail_status_canceled_notify'))
+      ->set('notify.mail_change_notification', $form_state->getValue(['mail_change_notification', 'enabled']))
+      ->set('notify.mail_change_verification', $form_state->getValue(['mail_change_verification', 'enabled']))
       ->save();
+
+    $form_state->unsetValue(['mail_change_notification', 'enabled']);
+    $form_state->unsetValue(['mail_change_verification', 'enabled']);
+
     $this->config('user.mail')
       ->set('cancel_confirm.body', $form_state->getValue('user_mail_cancel_confirm_body'))
       ->set('cancel_confirm.subject', $form_state->getValue('user_mail_cancel_confirm_subject'))
       ->set('password_reset.body', $form_state->getValue('user_mail_password_reset_body'))
       ->set('password_reset.subject', $form_state->getValue('user_mail_password_reset_subject'))
+      ->set('mail_change_notification', $form_state->getValue('mail_change_notification'))
+      ->set('mail_change_verification', $form_state->getValue('mail_change_verification'))
       ->set('register_admin_created.body', $form_state->getValue('user_mail_register_admin_created_body'))
       ->set('register_admin_created.subject', $form_state->getValue('user_mail_register_admin_created_subject'))
       ->set('register_no_approval_required.body', $form_state->getValue('user_mail_register_no_approval_required_body'))

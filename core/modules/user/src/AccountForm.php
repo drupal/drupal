@@ -426,13 +426,34 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    /** @var \Drupal\user\UserInterface $account */
+    $account = $this->getEntity();
+    $new_mail = $form_state->getValue('mail');
+    $old_mail = $account->getEmail();
+
+    $own_account = $this->currentUser()->id() == $account->id();
+    $skip_verification = !$own_account || $this->currentUser()->hasPermission('administer users');
+    if (!$account->isNew() && ($old_mail !== $new_mail) && !$skip_verification) {
+      // Send a verification to the new email address.
+      $account_cloned = clone $account;
+      $account_cloned->setEmail($new_mail);
+      if (_user_mail_notify('mail_change_verification', $account_cloned) !== NULL) {
+        // Send notification email to the old email address, if it's set.
+        if ($old_mail) {
+          _user_mail_notify('mail_change_notification', $account);
+        }
+        // The user's mail address will be updated only after verification.
+        $form_state->setValue('mail', $old_mail);
+        $this->messenger()->addWarning($this->t('Your updated email address needs to be validated. Further instructions have been sent to your new email address.'));
+      }
+    }
+
     parent::submitForm($form, $form_state);
 
-    $user = $this->getEntity($form_state);
     // If there's a session set to the users id, remove the password reset tag
     // since a new password was saved.
-    if (isset($_SESSION['pass_reset_' . $user->id()])) {
-      unset($_SESSION['pass_reset_' . $user->id()]);
+    if (isset($_SESSION['pass_reset_' . $account->id()])) {
+      unset($_SESSION['pass_reset_' . $account->id()]);
     }
   }
 

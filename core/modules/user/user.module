@@ -21,6 +21,7 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\image\Plugin\Field\FieldType\ImageItem;
 use Drupal\system\Entity\Action;
+use Drupal\user\Controller\MailChangeController;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
@@ -570,15 +571,19 @@ function user_cancel_url(UserInterface $account, $options = []) {
  *   An object containing the user account.
  * @param int $timestamp
  *   A UNIX timestamp, typically REQUEST_TIME.
+ * @param string $mail
+ *   (optional) If passed, this value will be used to compute the hash instead
+ *   of that stored into $account.
  *
  * @return string
  *   A string that is safe for use in URLs and SQL statements.
  */
-function user_pass_rehash(UserInterface $account, $timestamp) {
+function user_pass_rehash(UserInterface $account, $timestamp, $mail = NULL) {
+  $mail = $mail ?: $account->getEmail();
   $data = $timestamp;
   $data .= $account->getLastLoginTime();
   $data .= $account->id();
-  $data .= $account->getEmail();
+  $data .= $mail;
   return Crypt::hmacBase64($data, Settings::getHashSalt() . $account->getPassword());
 }
 
@@ -805,6 +810,7 @@ function user_mail($key, &$message, $params) {
  *   properties:
  *   - login: The UNIX timestamp of the user's last login.
  *   - pass: The hashed account login password.
+ *   - email: The user's email address.
  * @param array $options
  *   A keyed array of settings and flags to control the token replacement
  *   process. See \Drupal\Core\Utility\Token::replace().
@@ -812,6 +818,9 @@ function user_mail($key, &$message, $params) {
 function user_mail_tokens(&$replacements, $data, $options) {
   if (isset($data['user'])) {
     $replacements['[user:one-time-login-url]'] = user_pass_reset_url($data['user'], $options);
+    if ($data['user']->getEmail()) {
+      $replacements['[user:mail-change-url]'] = MailChangeController::getUrl($data['user'], $options)->toString();
+    }
     $replacements['[user:cancel-url]'] = user_cancel_url($data['user'], $options);
   }
 }
@@ -1022,6 +1031,8 @@ function user_role_revoke_permissions($rid, array $permissions = []) {
  *   - 'register_pending_approval': Welcome message, user pending admin
  *     approval.
  *   - 'password_reset': Password recovery request.
+ *   - 'mail_change_notification': Email change notification.
+ *   - 'mail_change_verification': Email change verification.
  *   - 'status_activated': Account activated.
  *   - 'status_blocked': Account blocked.
  *   - 'cancel_confirm': Account cancellation request.
@@ -1035,11 +1046,13 @@ function user_role_revoke_permissions($rid, array $permissions = []) {
  *   the $langcode parameter is deprecated in drupal:9.2.0 and is removed from
  *   drupal:10.0.0. Omit the parameter. See https://www.drupal.org/node/3187082
  *
- * @return array
- *   An array containing various information about the message.
- *   See \Drupal\Core\Mail\MailManagerInterface::mail() for details.
+ * @return array|null
+ *   An array containing various information about the message, as they are
+ *   returned by \Drupal\Core\Mail\MailManagerInterface::mail(), or NULL if the
+ *   notifications for the required operation are disabled.
  *
  * @see user_mail_tokens()
+ * @see \Drupal\Core\Mail\MailManagerInterface::mail()
  */
 function _user_mail_notify($op, AccountInterface $account, $langcode = NULL) {
   if ($langcode) {

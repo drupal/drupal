@@ -38,6 +38,12 @@ user.settings:
         register_pending_approval:
           type: boolean
           label: 'Welcome (awaiting approval)'
+        mail_change_notification:
+          type: boolean
+          label: 'Notify user when email changes'
+        mail_change_verification:
+          type: boolean
+          label: 'Require email verification when a user changes their email address'
     register:
       type: string
       label: 'Who can register accounts?'
@@ -47,6 +53,9 @@ user.settings:
     password_reset_timeout:
       type: integer
       label: 'Password reset timeout'
+    mail_change_timeout:
+      type: integer
+      label: 'Mail change timeout'
     password_strength:
       type: boolean
       label: 'Enable password strength indicator'
@@ -61,6 +70,12 @@ user.mail:
   password_reset:
     type: mail
     label: 'Password recovery'
+  mail_change_notification:
+    type: mail
+    label: 'Change mail notification'
+  mail_change_verification:
+    type: mail
+    label: 'Change mail verification'
   register_admin_created:
     type: mail
     label: 'Account created by administrator'
