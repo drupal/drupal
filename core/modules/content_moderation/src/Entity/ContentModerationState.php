@@ -135,6 +135,7 @@ class ContentModerationState extends ContentEntityBase implements ContentModerat
       $storage = \Drupal::entityTypeManager()->getStorage('content_moderation_state');
 
       $ids = $storage->getQuery()
+        ->accessCheck(FALSE)
         ->condition('content_entity_type_id', $entity->getEntityTypeId())
         ->condition('content_entity_id', $entity->id())
         ->condition('workflow', $moderation_info->getWorkflowForEntity($entity)->id())
