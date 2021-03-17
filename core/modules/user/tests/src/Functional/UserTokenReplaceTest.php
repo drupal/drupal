@@ -7,6 +7,7 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\user\Controller\MailChangeController;
 use Drupal\user\Entity\User;
 
 /**
@@ -138,6 +139,7 @@ class UserTokenReplaceTest extends BrowserTestBase {
     // Generate login and cancel link.
     $tests = [];
     $tests['[user:one-time-login-url]'] = user_pass_reset_url($account);
+    $tests['[user:mail-change-url]'] = MailChangeController::getUrl($account)->toString();
     $tests['[user:cancel-url]'] = user_cancel_url($account);
 
     // Generate tokens with interface language.

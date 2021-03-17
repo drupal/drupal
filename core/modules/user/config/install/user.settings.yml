@@ -9,8 +9,11 @@ notify:
   register_admin_created: true
   register_no_approval_required: true
   register_pending_approval: true
+  mail_change_notification: true
+  mail_change_verification: true
 register: visitors
 cancel_method: user_cancel_block
 password_reset_timeout: 86400
+mail_change_timeout: 86400
 password_strength: true
 langcode: en
