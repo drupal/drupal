@@ -152,6 +152,26 @@ class MigrationProvidersExistTest extends MigrateDrupalTestBase {
         'source_module' => 'user_reference',
         'destination_module' => 'core',
       ],
+      'boolean' => [
+        'source_module' => 'list',
+        'destination_module' => 'core',
+      ],
+      'd6_number_decimal' => [
+        'source_module' => 'number',
+        'destination_module' => 'core',
+      ],
+      'd6_number_float' => [
+        'source_module' => 'number',
+        'destination_module' => 'core',
+      ],
+      'd6_number_integer' => [
+        'source_module' => 'number',
+        'destination_module' => 'core',
+      ],
+      'd6_phone' => [
+        'source_module' => 'phone',
+        'destination_module' => 'telephone',
+      ],
     ];
     $this->enableAllModules();
 
