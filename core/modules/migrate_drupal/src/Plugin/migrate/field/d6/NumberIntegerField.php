@@ -5,6 +5,8 @@ namespace Drupal\migrate_drupal\Plugin\migrate\field\d6;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
 
+// cspell:ignore optionwidgets
+
 /**
  * MigrateField plugin for Drupal 6 CCK number_integer fields.
  *

@@ -4,7 +4,7 @@ namespace Drupal\image\Plugin\migrate\field\d6;
 
 use Drupal\file\Plugin\migrate\field\d6\FileField as DefaultFileField;
 
-// cspell:ignore imagefield filefield
+// cspell:ignore imagefield
 
 /**
  * Replacement plugin class for the Drupal 6 'filefield' field migration plugin.

@@ -37,4 +37,3 @@ class NumberDecimalField extends NumberFloatField {
   }
 
 }
-

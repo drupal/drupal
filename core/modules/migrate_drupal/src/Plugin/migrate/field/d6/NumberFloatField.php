@@ -4,6 +4,8 @@ namespace Drupal\migrate_drupal\Plugin\migrate\field\d6;
 
 use Drupal\migrate\Row;
 
+// cspell:ignore optionwidgets
+
 /**
  * MigrateField plugin for Drupal 6 CCK number_decimal and number_float fields.
  *
@@ -53,4 +55,3 @@ class NumberFloatField extends NumberIntegerField {
   }
 
 }
-
