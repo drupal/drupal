@@ -46,21 +46,7 @@ process:
       plugin: static_map
       bypass: true
       source: widget_type
-      map:
-        number: number
-        email_textfield: email_default
-        date_select: datetime_default
-        date_text: datetime_default
-        date_popup: datetime_default
-        imagefield_widget: image_image
-        phone_textfield: telephone_default
-        optionwidgets_onoff: boolean_checkbox
-        optionwidgets_buttons: options_buttons
-        optionwidgets_select: options_select
-        nodereference_select: options_select
-        nodereference_buttons: options_buttons
-        nodereference_autocomplete: entity_reference_autocomplete_tags
-        userreference_select: options_select
+      map: { }
   'options/settings':
     -
       plugin: field_instance_widget_settings

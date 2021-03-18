@@ -29,6 +29,9 @@ class TextField extends FieldPluginBase {
   public function getFieldWidgetMap() {
     return [
       'text_textfield' => 'text_textfield',
+      'optionwidgets_buttons' => 'options_buttons',
+      'optionwidgets_select' => 'options_select',
+      'optionwidgets_onoff' => 'boolean_checkbox',
     ];
   }
 

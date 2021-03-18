@@ -49,7 +49,9 @@ abstract class FieldPluginBase extends PluginBase implements MigrateFieldInterfa
    * {@inheritdoc}
    */
   public function getFieldFormatterType(Row $row) {
-    return $row->getSourceProperty('formatter/type');
+    // Drupal 6 formatter settings migration has 'display_settings/format',
+    // Drupal 7 formatter settings migration has 'formatter/type'.
+    return $row->getSourceProperty('formatter/type') ?? $row->getSourceProperty('display_settings/format');
   }
 
   /**
@@ -63,7 +65,9 @@ abstract class FieldPluginBase extends PluginBase implements MigrateFieldInterfa
    * {@inheritdoc}
    */
   public function getFieldWidgetType(Row $row) {
-    return $row->getSourceProperty('widget/type');
+    // Drupal 6 widget settings migration has 'widget_type',
+    // Drupal 7 widget settings migration has 'widget/type'.
+    return $row->getSourceProperty('widget/type') ?? $row->getSourceProperty('widget_type');
   }
 
   /**
@@ -81,12 +85,19 @@ abstract class FieldPluginBase extends PluginBase implements MigrateFieldInterfa
    */
   public function alterFieldFormatterMigration(MigrationInterface $migration) {
     $process = [];
-    // Some migrate field plugin IDs are prefixed with 'd6_' or 'd7_'. Since the
-    // plugin ID is used in the static map as the module name, we have to remove
-    // this prefix from the plugin ID.
+    // Certain migrate field plugins do not have type map annotation. For these,
+    // the plugin ID is used for determining the source field type, which might
+    // be prefixed with 'd6_' or 'd7_'. We have to remove this prefix from the
+    // plugin ID.
     $plugin_id = preg_replace('/d[67]_/', '', $this->pluginId);
-    foreach ($this->getFieldFormatterMap() as $source_format => $destination_format) {
-      $process[0]['map'][$plugin_id][$source_format] = $destination_format;
+    $plugin_definition = $this->getPluginDefinition();
+    $source_field_types = !empty($plugin_definition['type_map'])
+      ? array_keys($plugin_definition['type_map'])
+      : [$plugin_id];
+    foreach ($source_field_types as $source_field_type) {
+      foreach ($this->getFieldFormatterMap() as $source_format => $destination_format) {
+        $process[0]['map'][$source_field_type][$source_format] = $destination_format;
+      }
     }
     $migration->mergeProcessOfProperty('options/type', $process);
   }

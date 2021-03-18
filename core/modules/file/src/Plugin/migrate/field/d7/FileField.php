@@ -41,4 +41,13 @@ class FileField extends D6FileField {
     $migration->mergeProcessOfProperty($field_name, $process);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldWidgetMap() {
+    return parent::getFieldWidgetMap() + [
+      'media_generic' => 'file_generic',
+    ];
+  }
+
 }

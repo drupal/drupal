@@ -45,4 +45,13 @@ class TaxonomyTermReference extends FieldPluginBase {
     $migration->setProcessOfProperty($field_name, $process);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldWidgetMap() {
+    return [
+      'taxonomy_autocomplete' => 'entity_reference_autocomplete',
+    ];
+  }
+
 }

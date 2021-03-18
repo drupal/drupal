@@ -42,6 +42,11 @@ class Email extends FieldPluginBase {
       'email_contact' => 'basic_string',
       'email_plain' => 'basic_string',
       'email_spamspan' => 'basic_string',
+      // Drupal 6.
+      'default' => 'email_mailto',
+      'spamspan' => 'email_mailto',
+      'contact' => 'email_mailto',
+      'plain' => 'basic_string',
     ];
   }
 

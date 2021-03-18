@@ -142,6 +142,16 @@ class FieldDiscoveryTest extends MigrateDrupal6TestBase {
           'options/type' => [
             0 => [
               'map' => [
+                'userreference' => [
+                  'default' => 'entity_reference_label',
+                  'plain' => 'entity_reference_label',
+                ],
+                'nodereference' => [
+                  'default' => 'entity_reference_label',
+                  'plain' => 'entity_reference_label',
+                  'full' => 'entity_reference_entity_view',
+                  'teaser' => 'entity_reference_entity_view',
+                ],
                 'email' => [
                   'email_formatter_default' => 'email_mailto',
                   'email_formatter_contact' => 'basic_string',
@@ -151,11 +161,44 @@ class FieldDiscoveryTest extends MigrateDrupal6TestBase {
                   'email_contact' => 'basic_string',
                   'email_plain' => 'basic_string',
                   'email_spamspan' => 'basic_string',
+                  'default' => 'email_mailto',
+                  'spamspan' => 'email_mailto',
+                  'contact' => 'email_mailto',
+                  'plain' => 'basic_string',
+                ],
+                'number_decimal' => [
+                  'default' => 'number_decimal',
+                  'us_0' => 'number_decimal',
+                  'us_1' => 'number_decimal',
+                  'us_2' => 'number_decimal',
+                  'be_0' => 'number_decimal',
+                  'be_1' => 'number_decimal',
+                  'be_2' => 'number_decimal',
+                  'fr_0' => 'number_decimal',
+                  'fr_1' => 'number_decimal',
+                  'fr_2' => 'number_decimal',
+                  'unformatted' => 'number_unformatted',
                 ],
                 'text' => [
                   'default' => 'text_default',
                   'trimmed' => 'text_trimmed',
                   'plain' => 'basic_string',
+                ],
+                'text_long' => [
+                  'default' => 'text_default',
+                  'trimmed' => 'text_trimmed',
+                  'plain' => 'basic_string',
+                ],
+                'text_with_summary' => [
+                  'default' => 'text_default',
+                  'trimmed' => 'text_trimmed',
+                  'plain' => 'basic_string',
+                ],
+                'date' => [
+                  'date_default' => 'datetime_default',
+                ],
+                'datestamp' => [
+                  'date_default' => 'datetime_default',
                 ],
                 'datetime' => [
                   'date_default' => 'datetime_default',
@@ -170,6 +213,26 @@ class FieldDiscoveryTest extends MigrateDrupal6TestBase {
                   'image_nodelink' => 'image',
                   'image_imagelink' => 'image',
                 ],
+                'number_float' => [
+                  'default' => 'number_decimal',
+                  'us_0' => 'number_decimal',
+                  'us_1' => 'number_decimal',
+                  'us_2' => 'number_decimal',
+                  'be_0' => 'number_decimal',
+                  'be_1' => 'number_decimal',
+                  'be_2' => 'number_decimal',
+                  'fr_0' => 'number_decimal',
+                  'fr_1' => 'number_decimal',
+                  'fr_2' => 'number_decimal',
+                  'unformatted' => 'number_unformatted',
+                ],
+                'number_integer' => [
+                  'default' => 'number_integer',
+                  'us_0' => 'number_integer',
+                  'be_0' => 'number_integer',
+                  'fr_0' => 'number_integer',
+                  'unformatted' => 'number_unformatted',
+                ],
                 'link' => [
                   'default' => 'link',
                   'plain' => 'link',
@@ -179,6 +242,99 @@ class FieldDiscoveryTest extends MigrateDrupal6TestBase {
                   'short' => 'link',
                   'label' => 'link',
                   'separate' => 'link_separate',
+                ],
+                'au_phone' => [
+                  'default' => 'basic_string',
+                ],
+                'be_phone' => [
+                  'default' => 'basic_string',
+                ],
+                'br_phone' => [
+                  'default' => 'basic_string',
+                ],
+                'ca_phone' => [
+                  'default' => 'basic_string',
+                ],
+                'ch_phone' => [
+                  'default' => 'basic_string',
+                ],
+                'cl_phone' => [
+                  'default' => 'basic_string',
+                ],
+                'cr_phone' => [
+                  'default' => 'basic_string',
+                ],
+                'cs_phone' => [
+                  'default' => 'basic_string',
+                ],
+                'eg_phone' => [
+                  'default' => 'basic_string',
+                ],
+                'el_phone' => [
+                  'default' => 'basic_string',
+                ],
+                'es_phone' => [
+                  'default' => 'basic_string',
+                ],
+                'fr_phone' => [
+                  'default' => 'basic_string',
+                ],
+                'gb_phone' => [
+                  'default' => 'basic_string',
+                ],
+                'hk_phone' => [
+                  'default' => 'basic_string',
+                ],
+                'hu_phone' => [
+                  'default' => 'basic_string',
+                ],
+                'il_phone' => [
+                  'default' => 'basic_string',
+                ],
+                'int_phone' => [
+                  'default' => 'basic_string',
+                ],
+                'it_phone' => [
+                  'default' => 'basic_string',
+                ],
+                'jo_phone' => [
+                  'default' => 'basic_string',
+                ],
+                'mo_phone' => [
+                  'default' => 'basic_string',
+                ],
+                'nl_phone' => [
+                  'default' => 'basic_string',
+                ],
+                'nz_phone' => [
+                  'default' => 'basic_string',
+                ],
+                'pa_phone' => [
+                  'default' => 'basic_string',
+                ],
+                'ph_phone' => [
+                  'default' => 'basic_string',
+                ],
+                'pk_phone' => [
+                  'default' => 'basic_string',
+                ],
+                'pl_phone' => [
+                  'default' => 'basic_string',
+                ],
+                'ru_phone' => [
+                  'default' => 'basic_string',
+                ],
+                'se_phone' => [
+                  'default' => 'basic_string',
+                ],
+                'sg_phone' => [
+                  'default' => 'basic_string',
+                ],
+                'ua_phone' => [
+                  'default' => 'basic_string',
+                ],
+                'za_phone' => [
+                  'default' => 'basic_string',
                 ],
               ],
             ],
@@ -198,12 +354,21 @@ class FieldDiscoveryTest extends MigrateDrupal6TestBase {
                 'nodereference_buttons' => 'options_buttons',
                 'nodereference_autocomplete' => 'entity_reference_autocomplete_tags',
                 'email_textfield' => 'email_default',
+                'number' => 'number',
+                'optionwidgets_buttons' => 'options_buttons',
+                'optionwidgets_select' => 'options_select',
+                'optionwidgets_onoff' => 'boolean_checkbox',
                 'text_textfield' => 'text_textfield',
                 'date' => 'datetime_default',
                 'datetime' => 'datetime_default',
                 'datestamp' => 'datetime_timestamp',
+                'date_select' => 'datetime_default',
+                'date_text' => 'datetime_default',
+                'date_popup' => 'datetime_default',
+                'imagefield_widget' => 'image_image',
                 'filefield_widget' => 'file_generic',
                 'link' => 'link_default',
+                'phone_textfield' => 'telephone_default',
               ],
             ],
           ],

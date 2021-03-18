@@ -45,6 +45,9 @@ class DateField extends FieldPluginBase {
       'date' => 'datetime_default',
       'datetime' => 'datetime_default',
       'datestamp' => 'datetime_timestamp',
+      'date_select' => 'datetime_default',
+      'date_text' => 'datetime_default',
+      'date_popup' => 'datetime_default',
     ];
   }
 

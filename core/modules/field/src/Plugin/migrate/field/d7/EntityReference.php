@@ -30,4 +30,14 @@ class EntityReference extends FieldPluginBase {
     ];
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldWidgetMap() {
+    return [
+      'entityreference_autocomplete' => 'entity_reference_autocomplete',
+      'entityreference_autocomplete_tags' => 'entity_reference_autocomplete_tags',
+    ];
+  }
+
 }
