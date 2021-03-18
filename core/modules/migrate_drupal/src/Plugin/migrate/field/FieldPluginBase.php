@@ -85,10 +85,10 @@ abstract class FieldPluginBase extends PluginBase implements MigrateFieldInterfa
    */
   public function alterFieldFormatterMigration(MigrationInterface $migration) {
     $process = [];
-    // Certain migrate field plugins do not have type map annotation. For these,
-    // the plugin ID is used for determining the source field type, which might
-    // be prefixed with 'd6_' or 'd7_'. We have to remove this prefix from the
-    // plugin ID.
+    // Certain migrate field plugins do not have a type map annotation. For
+    // these, the plugin ID is used for determining the source field type, which
+    // might be prefixed with 'd6_' or 'd7_'. We have to remove this prefix from
+    // the plugin ID.
     $plugin_id = preg_replace('/d[67]_/', '', $this->pluginId);
     $plugin_definition = $this->getPluginDefinition();
     $source_field_types = !empty($plugin_definition['type_map'])
