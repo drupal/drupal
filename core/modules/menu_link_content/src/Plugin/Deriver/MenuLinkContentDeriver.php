@@ -59,6 +59,7 @@ class MenuLinkContentDeriver extends DeriverBase implements ContainerDeriverInte
   public function getDerivativeDefinitions($base_plugin_definition) {
     // Get all custom menu links which should be rediscovered.
     $entity_ids = $this->entityTypeManager->getStorage('menu_link_content')->getQuery()
+      ->accessCheck(FALSE)
       ->condition('rediscover', TRUE)
       ->execute();
     $plugin_definitions = [];
