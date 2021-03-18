@@ -141,6 +141,8 @@ class PhpTransliterationTest extends TestCase {
       ['da', $random, $random],
       ['kg', $three_byte, 'ts'],
       // Test strings in some other languages.
+      // Ukrainian pangram.
+      ['uk', 'На подушечці форми любої є й ґудзик щоб пірʼя геть жовте сховати.', 'Na podushechtsi formy lyuboyi ye y gudzyk shchob pirya het zhovte skhovaty.'],
       // Turkish, provided by drupal.org user Kartagis.
       ['tr', 'Abayı serdiler bize. Söyleyeceğim yüzlerine. Sanırım hepimiz aynı şeyi düşünüyoruz.', 'Abayi serdiler bize. Soyleyecegim yuzlerine. Sanirim hepimiz ayni seyi dusunuyoruz.'],
       // Max length.
