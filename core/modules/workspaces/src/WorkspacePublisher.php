@@ -163,6 +163,7 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
       $query = $this->entityTypeManager
         ->getStorage($entity_type_id)
         ->getQuery()
+        ->accessCheck(FALSE)
         ->condition($entity_type->getKey('id'), $tracked_revisions, 'IN')
         ->latestRevision();
       $result = $query->execute();
