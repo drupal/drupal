@@ -1032,4 +1032,45 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $this->assertEquals('Bar body', $reloaded->body->value);
   }
 
+  /**
+   * Tests workspace publishing is not sensitive to node access.
+   *
+   * The node_access_test module makes anonymous nodes unviewable,
+   * so enable it and test getDifferringRevisionIdsOnTarget() with an anonymous
+   * node.
+   */
+  public function testNodeAccessDifferringRevisionIdsOnTarget() {
+    $this->initializeWorkspacesModule();
+    \Drupal::service('module_installer')->install(['node_access_test']);
+    node_access_rebuild();
+
+    // Edit node 1 in 'stage'.
+    $this->switchToWorkspace('stage');
+    $node = $this->entityTypeManager->getStorage('node')->load(1);
+    $node->setTitle('stage - 1 - r3 - unpublished');
+    $node->save();
+
+    // Edit node 1 in 'live', and ensure it's anonymous.
+    $this->switchToWorkspace('live');
+    $node = $this->entityTypeManager->getStorage('node')->load(1);
+    $node->setTitle('live - 1 - r4 - unpublished');
+    $node->set('uid', 0);
+    $node->save();
+
+    /** @var \Drupal\workspaces\WorkspacePublisher $workspace_publisher */
+    $workspace_publisher = \Drupal::service('workspaces.operation_factory')->getPublisher($this->workspaces['stage']);
+
+    // Check which revisions are tracked on stage but differ on target.
+    $expected = [
+      'node' => [
+        4 => 1,
+      ],
+    ];
+    $this->assertEquals($expected, $workspace_publisher->getDifferringRevisionIdsOnTarget());
+
+    // Check that there are no more revisions to push after publishing.
+    $this->workspaces['stage']->publish();
+    $this->assertEmpty($workspace_publisher->getDifferringRevisionIdsOnTarget());
+  }
+
 }
