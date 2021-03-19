@@ -5,6 +5,7 @@ namespace Drupal\datetime\Plugin\migrate\field;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateException;
+use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
 
 /**
@@ -34,6 +35,9 @@ class DateField extends FieldPluginBase {
       // The date_plain formatter exists in Drupal 7 but not Drupal 6. It is
       // added here because this plugin is declared for Drupal 6 and Drupal 7.
       'date_plain' => 'datetime_plain',
+      // Drupal 6.
+      // @see ::getFieldFormatterType
+      'default' => 'datetime_default',
     ];
   }
 
@@ -101,6 +105,21 @@ class DateField extends FieldPluginBase {
       'process' => $process,
     ];
     $migration->mergeProcessOfProperty($field_name, $process);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldFormatterType(Row $row) {
+    if ($d6_formatter_type = $row->getSourceProperty('display_settings/format')) {
+      // The Drupal 6 date formatter ID might be the machine name of the date
+      // format, e.g. 'short', 'medium', 'long', or any other custom format.
+      if ($d6_formatter_type !== 'format_interval') {
+        return 'default';
+      }
+    }
+
+    return parent::getFieldFormatterType($row);
   }
 
 }
