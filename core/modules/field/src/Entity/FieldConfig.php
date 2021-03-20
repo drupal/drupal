@@ -366,7 +366,7 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
    * @param string $field_name
    *   Name of the field.
    *
-   * @return Drupal\field\Entity\FieldConfigInterface|null
+   * @return Drupal\field\FieldConfigInterface|null
    *   The field config entity if one exists for the provided field
    *   name, otherwise NULL.
    */
