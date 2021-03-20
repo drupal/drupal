@@ -79,7 +79,7 @@ function node_access_test_node_grants($account, $op) {
 function node_access_test_node_access_records(NodeInterface $node) {
   $grants = [];
   // For NodeAccessBaseTableTestCase, only set records for private nodes.
-  if (!\Drupal::state()->get('node_access_test.private') || $node->private->value) {
+  if (!\Drupal::state()->get('node_access_test.private') || (isset($node->private) && $node->private->value)) {
     // Groups 8888 and 8889 for the node_access_test realm both receive a view
     // grant for all controlled nodes. See node_access_test_node_grants().
     $grants[] = [
