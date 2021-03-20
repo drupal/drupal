@@ -6,6 +6,7 @@ use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\node\Entity\Node;
+use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\User;
 
@@ -278,6 +279,47 @@ class UserCancelTest extends BrowserTestBase {
     $storage->resetCache([$comment->id()]);
     $comment = $storage->load($comment->id());
     $this->assertFalse($comment->isPublished(), 'Comment of the user has been unpublished.');
+  }
+
+  /**
+   * Tests nodes are unpublished even if inaccessible to cancelling user.
+   */
+  public function testUserBlockUnpublishNodeAccess() {
+    \Drupal::service('module_installer')->install(['node_access_test', 'user_form_test']);
+
+    // Setup node access
+    node_access_rebuild();
+    node_access_test_add_field(NodeType::load('page'));
+    \Drupal::state()->set('node_access_test.private', TRUE);
+
+    $this->config('user.settings')->set('cancel_method', 'user_cancel_block_unpublish')->save();
+
+    // Create a user.
+    $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
+    $account = $this->drupalCreateUser(['cancel account']);
+    // Load a real user object.
+    $user_storage->resetCache([$account->id()]);
+    $account = $user_storage->load($account->id());
+
+    // Create a published private node.
+    $node = $this->drupalCreateNode([
+      'uid' => $account->id(),
+      'type' => 'page',
+      'status' => 1,
+      'private' => TRUE,
+    ]);
+
+    // Cancel node author.
+    $admin_user = $this->drupalCreateUser(['cancel other accounts']);
+    $this->drupalLogin($admin_user);
+    $this->drupalPostForm('user_form_test_cancel/' . $account->id(), [], 'Cancel account');
+
+    // Confirm node has been unpublished, even though the admin user
+    // does not have permission to access it.
+    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage->resetCache([$node->id()]);
+    $test_node = $node_storage->load($node->id());
+    $this->assertFalse($test_node->isPublished(), 'Node of the user has been unpublished.');
   }
 
   /**

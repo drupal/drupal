@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\Module;
 
+use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 
@@ -38,7 +39,7 @@ class PrepareUninstallTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['node', 'taxonomy', 'entity_test'];
+  protected static $modules = ['node', 'taxonomy', 'entity_test', 'node_access_test'];
 
   /**
    * {@inheritdoc}
@@ -49,10 +50,16 @@ class PrepareUninstallTest extends BrowserTestBase {
     $admin_user = $this->drupalCreateUser(['administer modules']);
     $this->drupalLogin($admin_user);
 
+    $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
+    node_access_rebuild();
+    node_access_test_add_field(NodeType::load('article'));
+    \Drupal::state()->set('node_access_test.private', TRUE);
+
     // Create 10 nodes.
     for ($i = 1; $i <= 5; $i++) {
       $this->nodes[] = $this->drupalCreateNode(['type' => 'page']);
-      $this->nodes[] = $this->drupalCreateNode(['type' => 'article']);
+      // These 5 articles are inaccessible to the admin user doing the uninstalling.
+      $this->nodes[] = $this->drupalCreateNode(['type' => 'article', 'uid' => 0, 'private' => TRUE]);
     }
 
     // Create 3 top-level taxonomy terms, each with 11 children.
@@ -110,7 +117,19 @@ class PrepareUninstallTest extends BrowserTestBase {
 
     // Delete Node data.
     $this->drupalGet('admin/modules/uninstall/entity/node');
-    // All 10 nodes should be listed.
+    // Only the 5 pages should be listed as the 5 articles are initially inaccessible.
+    foreach ($this->nodes as $node) {
+      if ($node->bundle() === 'page') {
+        $this->assertText($node->label());
+      }
+      else {
+        $node->set('private', FALSE)->save();
+      }
+    }
+    $this->assertText('And 5 more content items.');
+
+    // All 10 nodes should now be listed as none are still inaccessible.
+    $this->drupalGet('admin/modules/uninstall/entity/node');
     foreach ($this->nodes as $node) {
       $this->assertText($node->label());
     }
@@ -127,11 +146,9 @@ class PrepareUninstallTest extends BrowserTestBase {
     // the first 10's labels.
     $this->assertText('And 1 more content item.');
 
-    // Create another node so we have 12.
-    $this->nodes[] = $this->drupalCreateNode(['type' => 'article']);
+    // Create another node so we have 12, with one private.
+    $this->nodes[] = $this->drupalCreateNode(['type' => 'article', 'private' => TRUE]);
     $this->drupalGet('admin/modules/uninstall/entity/node');
-    // Ensures singular case is used when a single entity is left after listing
-    // the first 10's labels.
     $this->assertText('And 2 more content items.');
 
     $this->submitForm([], 'Delete all content items');
