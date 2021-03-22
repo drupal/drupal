@@ -194,9 +194,9 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    *     handler's constructor, so that one class can be used for multiple
    *     entity forms when the forms are similar. The classes must implement
    *     \Drupal\Core\Entity\EntityFormInterface.
-   *   - list: The name of the class that provides listings of the entities. The
+   *   - list_builder: The name of the class that provides listings of the entities. The
    *     class must implement \Drupal\Core\Entity\EntityListBuilderInterface.
-   *   - render: The name of the class that is used to render the entities. The
+   *   - view_builder: The name of the class that is used to render the entities. The
    *     class must implement \Drupal\Core\Entity\EntityViewBuilderInterface.
    *   - access: The name of the class that is used for access checks. The class
    *     must implement \Drupal\Core\Entity\EntityAccessControlHandlerInterface.
