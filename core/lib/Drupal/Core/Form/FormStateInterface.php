@@ -210,7 +210,7 @@ interface FormStateInterface {
   /**
    * Determines if an arbitrary property is present.
    *
-   * @param string $property
+   * @param string|array $property
    *   Properties are often stored as multi-dimensional associative arrays. If
    *   $property is a string, it will return isset($storage[$property]). If
    *   $property is an array, each element of the array will be used as a nested
