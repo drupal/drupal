@@ -133,7 +133,14 @@ class EntityTypeInfo implements ContainerInjectionInterface {
       // entity type needs to be excluded for now.
       // @todo Enable moderation for path aliases after they become publishable
       //   in https://www.drupal.org/project/drupal/issues/3007669.
-      if ($entity_type->isRevisionable() && !$entity_type->isInternal() && $entity_type_id !== 'path_alias') {
+      // Workspace entities can not be moderated because they use string IDs.
+      // @see \Drupal\content_moderation\Entity\ContentModerationState::baseFieldDefinitions()
+      // where the target entity ID is defined as an integer.
+      $entity_type_to_exclude = [
+        'path_alias',
+        'workspace',
+      ];
+      if ($entity_type->isRevisionable() && !$entity_type->isInternal() && !in_array($entity_type_id, $entity_type_to_exclude)) {
         $entity_types[$entity_type_id] = $this->addModerationToEntityType($entity_type);
       }
     }
