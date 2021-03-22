@@ -248,13 +248,9 @@ class SessionHttpsTest extends BrowserTestBase {
    *   The insecure session ID to search for.
    * @param $assertion_text
    *   The text to display when we perform the assertion.
-   *
-   * @return
-   *   The result of assertTrue() that there's a session in the system that
-   *   has the given insecure and secure session IDs.
    */
   protected function assertSessionIds($sid, $assertion_text) {
-    return $this->assertNotEmpty(\Drupal::database()->select('sessions', 's')->fields('s', ['timestamp'])->condition('sid', Crypt::hashBase64($sid))->execute()->fetchField(), $assertion_text);
+    $this->assertNotEmpty(\Drupal::database()->select('sessions', 's')->fields('s', ['timestamp'])->condition('sid', Crypt::hashBase64($sid))->execute()->fetchField(), $assertion_text);
   }
 
   /**

@@ -66,9 +66,6 @@ abstract class DiscoveryTestBase extends KernelTestBase {
    *   The definition to test.
    * @param array $expected_definition
    *   The expected definition to test against.
-   *
-   * @return bool
-   *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertDefinitionIdentical(array $definition, array $expected_definition) {
     $func = function (&$item) {
@@ -78,7 +75,7 @@ abstract class DiscoveryTestBase extends KernelTestBase {
     };
     array_walk_recursive($definition, $func);
     array_walk_recursive($expected_definition, $func);
-    return $this->assertSame($expected_definition, $definition);
+    $this->assertSame($expected_definition, $definition);
   }
 
 }

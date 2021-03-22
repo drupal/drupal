@@ -363,9 +363,6 @@ class ExposedFormTest extends ViewTestBase {
    *
    * @param int[] $ids
    *   The ids to check.
-   *
-   * @return bool
-   *   TRUE if ids match, FALSE otherwise.
    */
   protected function assertIds(array $ids) {
     $elements = $this->cssSelect('div.view-test-exposed-form-sort-items-per-page div.views-row span.field-content');
@@ -374,7 +371,7 @@ class ExposedFormTest extends ViewTestBase {
       $actual_ids[] = (int) $element->getText();
     }
 
-    return $this->assertSame($ids, $actual_ids);
+    $this->assertSame($ids, $actual_ids);
   }
 
   /**

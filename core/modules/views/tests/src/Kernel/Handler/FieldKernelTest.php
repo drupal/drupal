@@ -109,12 +109,9 @@ class FieldKernelTest extends ViewsKernelTestBase {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
-   *
-   * @return bool
-   *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertSubString($haystack, $needle, $message = '', $group = 'Other') {
-    return $this->assertStringContainsString($needle, $haystack, $message);
+    $this->assertStringContainsString($needle, $haystack, $message);
   }
 
   /**
@@ -134,12 +131,9 @@ class FieldKernelTest extends ViewsKernelTestBase {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
-   *
-   * @return bool
-   *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertNotSubString($haystack, $needle, $message = '', $group = 'Other') {
-    return $this->assertStringNotContainsString($needle, $haystack, $message);
+    $this->assertStringNotContainsString($needle, $haystack, $message);
   }
 
   /**
