@@ -47,9 +47,9 @@ abstract class ModuleTestBase extends BrowserTestBase {
     $tables = $connection->schema()->findTables($connection->prefixTables('{' . $base_table . '}') . '%');
 
     if ($count) {
-      return $this->assertNotEmpty($tables, new FormattableMarkup('Tables matching "@base_table" found.', ['@base_table' => $base_table]));
+      $this->assertNotEmpty($tables, new FormattableMarkup('Tables matching "@base_table" found.', ['@base_table' => $base_table]));
     }
-    return $this->assertEmpty($tables, new FormattableMarkup('Tables matching "@base_table" not found.', ['@base_table' => $base_table]));
+    $this->assertEmpty($tables, new FormattableMarkup('Tables matching "@base_table" not found.', ['@base_table' => $base_table]));
   }
 
   /**
@@ -67,7 +67,7 @@ abstract class ModuleTestBase extends BrowserTestBase {
         $tables_exist = FALSE;
       }
     }
-    return $this->assertTrue($tables_exist, new FormattableMarkup('All database tables defined by the @module module exist.', ['@module' => $module]));
+    $this->assertTrue($tables_exist, new FormattableMarkup('All database tables defined by the @module module exist.', ['@module' => $module]));
   }
 
   /**
@@ -85,7 +85,7 @@ abstract class ModuleTestBase extends BrowserTestBase {
         $tables_exist = TRUE;
       }
     }
-    return $this->assertFalse($tables_exist, new FormattableMarkup('None of the database tables defined by the @module module exist.', ['@module' => $module]));
+    $this->assertFalse($tables_exist, new FormattableMarkup('None of the database tables defined by the @module module exist.', ['@module' => $module]));
   }
 
   /**
@@ -93,11 +93,6 @@ abstract class ModuleTestBase extends BrowserTestBase {
    *
    * @param string $module
    *   The name of the module.
-   *
-   * @return bool|null
-   *   TRUE if configuration has been installed, FALSE otherwise. Returns NULL
-   *   if the module configuration directory does not exist or does not contain
-   *   any configuration files.
    */
   public function assertModuleConfig($module) {
     $module_config_dir = drupal_get_path('module', $module) . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
@@ -131,7 +126,7 @@ abstract class ModuleTestBase extends BrowserTestBase {
     }
     // Verify that all configuration has been installed (which means that $names
     // is empty).
-    return $this->assertEmpty($names, new FormattableMarkup('All default configuration of @module module found.', ['@module' => $module]));
+    $this->assertEmpty($names, new FormattableMarkup('All default configuration of @module module found.', ['@module' => $module]));
   }
 
   /**
@@ -139,13 +134,10 @@ abstract class ModuleTestBase extends BrowserTestBase {
    *
    * @param string $module
    *   The name of the module.
-   *
-   * @return bool
-   *   TRUE if no configuration was found, FALSE otherwise.
    */
   public function assertNoModuleConfig($module) {
     $names = \Drupal::configFactory()->listAll($module . '.');
-    return $this->assertEmpty($names, new FormattableMarkup('No configuration found for @module module.', ['@module' => $module]));
+    $this->assertEmpty($names, new FormattableMarkup('No configuration found for @module module.', ['@module' => $module]));
   }
 
   /**

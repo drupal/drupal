@@ -1142,12 +1142,9 @@ body {color:red}
    *   (optional) Message to display if failed. Defaults to an empty string.
    * @param string $group
    *   (optional) The group this message belongs to. Defaults to 'Other'.
-   *
-   * @return bool
-   *   TRUE on pass, FALSE on fail.
    */
   public function assertNormalized($haystack, $needle, $message = '', $group = 'Other') {
-    return $this->assertStringContainsString($needle, strtolower(Html::decodeEntities($haystack)), $message);
+    $this->assertStringContainsString($needle, strtolower(Html::decodeEntities($haystack)), $message);
   }
 
   /**
@@ -1167,12 +1164,9 @@ body {color:red}
    *   (optional) Message to display if failed. Defaults to an empty string.
    * @param string $group
    *   (optional) The group this message belongs to. Defaults to 'Other'.
-   *
-   * @return bool
-   *   TRUE on pass, FALSE on fail.
    */
   public function assertNoNormalized($haystack, $needle, $message = '', $group = 'Other') {
-    return $this->assertStringNotContainsString($needle, strtolower(Html::decodeEntities($haystack)), $message);
+    $this->assertStringNotContainsString($needle, strtolower(Html::decodeEntities($haystack)), $message);
   }
 
 }
