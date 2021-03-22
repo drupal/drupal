@@ -98,7 +98,7 @@ class FieldTranslationSqlStorageTest extends EntityLanguageTestBase {
       }
     }
 
-    return $this->assertTrue($status, $message);
+    $this->assertTrue($status, $message);
   }
 
 }
