@@ -480,6 +480,10 @@ class UserLoginTestCase extends DrupalWebTestCase {
 class UserPasswordResetTestCase extends DrupalWebTestCase {
   protected $profile = 'standard';
 
+  function setUp() {
+    parent::setUp('user_form_test');
+  }
+
   public static function getInfo() {
     return array(
       'name' => 'Reset password',
@@ -491,20 +495,38 @@ class UserPasswordResetTestCase extends DrupalWebTestCase {
   /**
    * Retrieves password reset email and extracts the login link.
    */
-  public function getResetURL() {
+  public function getResetURL($bypass_form = FALSE) {
     // Assume the most recent email.
     $_emails = $this->drupalGetMails();
     $email = end($_emails);
     $urls = array();
     preg_match('#.+user/reset/.+#', $email['body'], $urls);
 
-    return $urls[0];
+    return $urls[0] . ($bypass_form ? '/login' : '');
+  }
+
+  /**
+   * Generates login link.
+   */
+  public function generateResetURL($account, $bypass_form = FALSE) {
+    return user_pass_reset_url($account) . ($bypass_form ? '/login' : '');
+  }
+
+  /**
+   * Turns a password reset URL into a 'confirm' URL.
+   */
+  public function getConfirmURL($reset_url) {
+    // Last part is always the hash; replace with "confirm".
+    $parts = explode('/', $reset_url);
+    array_pop($parts);
+    array_push($parts, 'confirm');
+    return implode('/', $parts);
   }
 
   /**
    * Tests password reset functionality.
    */
-  function testUserPasswordReset() {
+  function testUserPasswordReset($use_direct_login_link = FALSE) {
     // Create a user.
     $account = $this->drupalCreateUser();
     $this->drupalLogin($account);
@@ -540,11 +562,19 @@ class UserPasswordResetTestCase extends DrupalWebTestCase {
     );
     field_create_instance($instance);
 
-    $resetURL = $this->getResetURL();
+    variable_del("user_test_pass_reset_form_submit_{$account->uid}");
+    $resetURL = $this->getResetURL($use_direct_login_link);
     $this->drupalGet($resetURL);
 
     // Check successful login.
-    $this->drupalPost(NULL, NULL, t('Log in'));
+    if (!$use_direct_login_link) {
+      $this->assertUrl($this->getConfirmURL($resetURL), array(), 'The user is redirected to the reset password confirm form.');
+      $this->drupalPost(NULL, NULL, t('Log in'));
+      // The form was fully processed before redirecting.
+      $form_submit_handled = variable_get("user_test_pass_reset_form_submit_{$account->uid}", FALSE);
+      $this->assertTrue($form_submit_handled, 'A custom submit handler executed.');
+    }
+    $this->assertText('You have just used your one-time login link. It is no longer necessary to use this link to log in. Please change your password.');
 
     // Make sure the Ajax request from uploading a file does not invalidate the
     // reset token.
@@ -559,6 +589,16 @@ class UserPasswordResetTestCase extends DrupalWebTestCase {
     $edit = array('pass[pass1]' => $password, 'pass[pass2]' => $password);
     $this->drupalPost(NULL, $edit, t('Save'));
     $this->assertText(t('The changes have been saved.'), 'Forgotten password changed.');
+
+    // Ensure blocked and deleted accounts can't access the direct login link.
+    $this->drupalLogout();
+    $reset_url = $this->generateResetURL($account, $use_direct_login_link);
+    user_save($account, array('status' => 0));
+    $this->drupalGet($reset_url);
+    $this->assertResponse(403);
+    user_delete($account->uid);
+    $this->drupalGet($reset_url);
+    $this->assertResponse(403);
   }
 
   /**
@@ -642,21 +682,51 @@ class UserPasswordResetTestCase extends DrupalWebTestCase {
   /**
    * Test user password reset while logged in.
    */
-  function testUserPasswordResetLoggedIn() {
+  function testUserPasswordResetLoggedIn($use_direct_login_link = FALSE) {
+    $another_account = $this->drupalCreateUser();
     $account = $this->drupalCreateUser();
     $this->drupalLogin($account);
     // Make sure the test account has a valid password.
     user_save($account, array('pass' => user_password()));
 
+    // Try to use the login link while logged in as a different user.
     // Generate one time login link.
-    $reset_url = user_pass_reset_url($account);
+    $reset_url = $this->generateResetURL($another_account, $use_direct_login_link);
     $this->drupalGet($reset_url);
+    $this->assertRaw(t(
+      'Another user (%other_user) is already logged into the site on this computer, but you tried to use a one-time link for user %resetting_user. Please <a href="!logout">logout</a> and try using the link again.',
+      array('%other_user' => $account->name, '%resetting_user' => $another_account->name, '!logout' => url('user/logout'))
+    ));
 
-    $this->assertText('Reset password');
-    $this->drupalPost(NULL, NULL, t('Log in'));
+    // Test the link for a deleted user while logged in.
+    user_delete($another_account->uid);
+    $this->drupalGet($reset_url);
+    $this->assertText('The one-time login link you clicked is invalid.');
 
+    // Generate a one time login link for the logged-in user.
+    $fapi_action = $use_direct_login_link ? 'build' : 'submit';
+    variable_del("user_test_pass_reset_form_{$fapi_action}_{$account->uid}");
+    $reset_url = $this->generateResetURL($account, $use_direct_login_link);
+    $this->drupalGet($reset_url);
+    if ($use_direct_login_link) {
+      // The form is never fully built; user is logged out (session destroyed)
+      // and redirected to the same URL, then logged in again and redirected
+      // during form build.
+      $form_built = variable_get("user_test_pass_reset_form_build_{$account->uid}", FALSE);
+      $this->assertTrue(!$form_built, 'The password reset form was never fully built.');
+    }
+    else {
+      $this->assertUrl($this->getConfirmURL($reset_url), array(), 'The user is redirected to the reset password confirm form.');
+      $this->assertText('Reset password');
+      $this->drupalPost(NULL, NULL, t('Log in'));
+      // The form was fully processed before redirecting.
+      $form_submit_handled = variable_get("user_test_pass_reset_form_submit_{$account->uid}", FALSE);
+      $this->assertTrue($form_submit_handled, 'A custom submit handler executed.');
+    }
     $this->assertText('You have just used your one-time login link. It is no longer necessary to use this link to log in. Please change your password.');
 
+    // The user can change the forgotten password on the page they are
+    // redirected to.
     $pass = user_password();
     $edit = array(
       'pass[pass1]' => $pass,
@@ -665,6 +735,14 @@ class UserPasswordResetTestCase extends DrupalWebTestCase {
     $this->drupalPost(NULL, $edit, t('Save'));
 
     $this->assertText('The changes have been saved.');
+  }
+
+  /**
+   * Test direct login link that bypasses the password reset form.
+   */
+  function testUserDirectLogin() {
+    $this->testUserPasswordReset(TRUE);
+    $this->testUserPasswordResetLoggedIn(TRUE);
   }
 
   /**
@@ -770,7 +848,7 @@ class UserPasswordResetTestCase extends DrupalWebTestCase {
     $reset_url = url("user/reset/$user1->uid/$timestamp/$reset_url_token", array('absolute' => TRUE));
     $this->drupalGet($reset_url);
     $this->assertText($user1->name, 'The valid password reset page shows the user name.');
-    $this->assertUrl($reset_url, array(), 'The user remains on the password reset login page.');
+    $this->assertUrl($this->getConfirmURL($reset_url), array(), 'The user is redirected to the reset password confirm form.');
     $this->assertNoText('You have tried to use a one-time login link that has either been used or is no longer valid. Please request a new one using the form below.');
   }
 

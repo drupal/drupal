@@ -80,3 +80,42 @@ function user_form_test_user_account_submit($form, &$form_state) {
   // test for bugs that can be triggered in contributed modules.
   $form_state['rebuild'] = TRUE;
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function user_form_test_form_user_pass_reset_alter(&$form, &$form_state) {
+  // An unaltered form has no form values; the uid/timestmap/"confirm" are in
+  // the URL arguments. (If for some reason a form_alter method needs the
+  // hash, it can be retrieved from $form['#action'].)
+  if (!is_numeric(arg(2)) || !is_numeric(arg(3)) || !is_string(arg(4)) || arg(4) !== 'confirm') {
+    throw new Exception("Something unexpected changed in the user_pass_reset form; we are not getting the UID/timestamp/'confirm' passed anymore.");
+  }
+  // Use the variable system to communicate to the test code, since we don't
+  // share a session with it.
+  variable_set('user_test_pass_reset_form_build_' . arg(2), TRUE);
+
+  $form['#submit'][] = 'user_form_test_form_user_pass_reset_submit';
+  // We must cache the form to ensure the form builder (user_pass_reset()) is
+  // skipped when processing the submitted form, otherwise we get redirected
+  // already during form build.
+  $form_state['cache'] = TRUE;
+}
+
+/**
+ * Submit function for user_pass_reset().
+ */
+function user_form_test_form_user_pass_reset_submit($form, &$form_state) {
+  // On submit, the hash is in arg(4).
+  if (!is_numeric(arg(2)) || !is_numeric(arg(3)) || !is_string(arg(4)) || strlen(arg(4)) < 32) {
+    throw new Exception("Something unexpected changed in the user_pass_reset form; we are not getting the UID/timestamp/hash passed anymore.");
+  }
+  variable_set('user_test_pass_reset_form_submit_' . arg(2), TRUE);
+  // Because the form does no further processing and has no redirect set,
+  // drupal_redirect_form() will redirect back to ourselves
+  // (user/reset/UID/TIMESTAMP/HASH/login); we will be logged in and redirected
+  // while the form is built again. FYI: we cannot set $form_state['rebuild']
+  // to get around the first redirect without further hacks, because then the
+  // form won't pass the hash. (Our original $form_state['build_info']['args']
+  // contains "confirm" for the 3rd argument.)
+}
