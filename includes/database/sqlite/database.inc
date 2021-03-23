@@ -121,7 +121,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
 
     // Execute sqlite init_commands.
     if (isset($connection_options['init_commands'])) {
-      $this->exec(implode('; ', $connection_options['init_commands']));
+      $this->connection->exec(implode('; ', $connection_options['init_commands']));
     }
   }
 
@@ -259,7 +259,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
    * expose this function to the world.
    */
   public function PDOPrepare($query, array $options = array()) {
-    return parent::prepare($query, $options);
+    return $this->connection->prepare($query, $options);
   }
 
   public function queryRange($query, $from, $count, array $args = array(), array $options = array()) {
@@ -350,7 +350,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
       }
     }
     if ($this->supportsTransactions()) {
-      PDO::rollBack();
+      $this->connection->rollBack();
     }
   }
 
@@ -365,7 +365,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
       throw new DatabaseTransactionNameNonUniqueException($name . " is already in use.");
     }
     if (!$this->inTransaction()) {
-      PDO::beginTransaction();
+      $this->connection->beginTransaction();
     }
     $this->transactionLayers[$name] = $name;
   }
@@ -390,9 +390,9 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
         // If there was any rollback() we should roll back whole transaction.
         if ($this->willRollback) {
           $this->willRollback = FALSE;
-          PDO::rollBack();
+          $this->connection->rollBack();
         }
-        elseif (!PDO::commit()) {
+        elseif (!$this->connection->commit()) {
           throw new DatabaseTransactionCommitFailedException();
         }
       }

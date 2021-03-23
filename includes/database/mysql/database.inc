@@ -345,10 +345,10 @@ class DatabaseConnection_mysql extends DatabaseConnection {
     // certain one has been set; otherwise, MySQL defaults to 'utf8_general_ci'
     // for UTF-8.
     if (!empty($connection_options['collation'])) {
-      $this->exec('SET NAMES ' . $charset . ' COLLATE ' . $connection_options['collation']);
+      $this->connection->exec('SET NAMES ' . $charset . ' COLLATE ' . $connection_options['collation']);
     }
     else {
-      $this->exec('SET NAMES ' . $charset);
+      $this->connection->exec('SET NAMES ' . $charset);
     }
 
     // Set MySQL init_commands if not already defined.  Default Drupal's MySQL
@@ -366,7 +366,7 @@ class DatabaseConnection_mysql extends DatabaseConnection {
     $sql_mode = 'REAL_AS_FLOAT,PIPES_AS_CONCAT,ANSI_QUOTES,IGNORE_SPACE,STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO';
     // NO_AUTO_CREATE_USER was removed in MySQL 8.0.11
     // https://dev.mysql.com/doc/relnotes/mysql/8.0/en/news-8-0-11.html#mysqld-8-0-11-deprecation-removal
-    if (version_compare($this->getAttribute(PDO::ATTR_SERVER_VERSION), '8.0.11', '<')) {
+    if (version_compare($this->connection->getAttribute(PDO::ATTR_SERVER_VERSION), '8.0.11', '<')) {
       $sql_mode .= ',NO_AUTO_CREATE_USER';
     }
     $connection_options['init_commands'] += array(
@@ -375,7 +375,7 @@ class DatabaseConnection_mysql extends DatabaseConnection {
 
     // Execute initial commands.
     foreach ($connection_options['init_commands'] as $sql) {
-      $this->exec($sql);
+      $this->connection->exec($sql);
     }
   }
 
@@ -536,7 +536,7 @@ class DatabaseConnection_mysql extends DatabaseConnection {
       // If there are no more layers left then we should commit.
       unset($this->transactionLayers[$name]);
       if (empty($this->transactionLayers)) {
-        if (!PDO::commit()) {
+        if (!$this->connection->commit()) {
           throw new DatabaseTransactionCommitFailedException();
         }
       }
@@ -559,7 +559,7 @@ class DatabaseConnection_mysql extends DatabaseConnection {
             $this->transactionLayers = array();
             // We also have to explain to PDO that the transaction stack has
             // been cleaned-up.
-            PDO::commit();
+            $this->connection->commit();
           }
           else {
             throw $e;
@@ -579,7 +579,7 @@ class DatabaseConnection_mysql extends DatabaseConnection {
 
   public function utf8mb4IsSupported() {
     // Ensure that the MySQL driver supports utf8mb4 encoding.
-    $version = $this->getAttribute(PDO::ATTR_CLIENT_VERSION);
+    $version = $this->connection->getAttribute(PDO::ATTR_CLIENT_VERSION);
     if (strpos($version, 'mysqlnd') !== FALSE) {
       // The mysqlnd driver supports utf8mb4 starting at version 5.0.9.
       $version = preg_replace('/^\D+([\d.]+).*/', '$1', $version);

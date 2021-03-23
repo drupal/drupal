@@ -184,7 +184,7 @@
  *
  * @see http://php.net/manual/book.pdo.php
  */
-abstract class DatabaseConnection extends PDO {
+abstract class DatabaseConnection {
 
   /**
    * The database target this connection is for.
@@ -262,6 +262,13 @@ abstract class DatabaseConnection extends PDO {
   protected $temporaryNameIndex = 0;
 
   /**
+   * The actual PDO connection.
+   *
+   * @var \PDO
+   */
+  protected $connection;
+
+  /**
    * The connection information for this connection object.
    *
    * @var array
@@ -325,12 +332,25 @@ abstract class DatabaseConnection extends PDO {
     $driver_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 
     // Call PDO::__construct and PDO::setAttribute.
-    parent::__construct($dsn, $username, $password, $driver_options);
+    $this->connection = new PDO($dsn, $username, $password, $driver_options);
 
     // Set a Statement class, unless the driver opted out.
     if (!empty($this->statementClass)) {
-      $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array($this->statementClass, array($this)));
+      $this->connection->setAttribute(PDO::ATTR_STATEMENT_CLASS, array($this->statementClass, array($this)));
     }
+  }
+
+  /**
+   * Proxy possible direct calls to the \PDO methods.
+   *
+   * Since PHP8.0 the signature of the the \PDO::query() method has changed,
+   * and this class can't extending \PDO any more.
+   *
+   * However, for the BC, proxy any calls to the \PDO methods to the actual
+   * PDO connection object.
+   */
+  public function __call($name, $arguments) {
+    return call_user_func_array(array($this->connection, $name), $arguments);
   }
 
   /**
@@ -346,7 +366,7 @@ abstract class DatabaseConnection extends PDO {
     // The Statement class attribute only accepts a new value that presents a
     // proper callable, so we reset it to PDOStatement.
     if (!empty($this->statementClass)) {
-      $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('PDOStatement', array()));
+      $this->connection->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('PDOStatement', array()));
     }
     $this->schema = NULL;
   }
@@ -521,7 +541,7 @@ abstract class DatabaseConnection extends PDO {
     $query = $this->prefixTables($query);
 
     // Call PDO::prepare.
-    return parent::prepare($query);
+    return $this->connection->prepare($query);
   }
 
   /**
@@ -733,7 +753,7 @@ abstract class DatabaseConnection extends PDO {
         case Database::RETURN_AFFECTED:
           return $stmt->rowCount();
         case Database::RETURN_INSERT_ID:
-          return $this->lastInsertId();
+          return $this->connection->lastInsertId();
         case Database::RETURN_NULL:
           return;
         default:
@@ -1116,7 +1136,7 @@ abstract class DatabaseConnection extends PDO {
         $rolled_back_other_active_savepoints = TRUE;
       }
     }
-    parent::rollBack();
+    $this->connection->rollBack();
     if ($rolled_back_other_active_savepoints) {
       throw new DatabaseTransactionOutOfOrderException();
     }
@@ -1144,7 +1164,7 @@ abstract class DatabaseConnection extends PDO {
       $this->query('SAVEPOINT ' . $name);
     }
     else {
-      parent::beginTransaction();
+      $this->connection->beginTransaction();
     }
     $this->transactionLayers[$name] = $name;
   }
@@ -1195,7 +1215,7 @@ abstract class DatabaseConnection extends PDO {
       // If there are no more layers left then we should commit.
       unset($this->transactionLayers[$name]);
       if (empty($this->transactionLayers)) {
-        if (!parent::commit()) {
+        if (!$this->connection->commit()) {
           throw new DatabaseTransactionCommitFailedException();
         }
       }
@@ -1279,7 +1299,7 @@ abstract class DatabaseConnection extends PDO {
    * Returns the version of the database server.
    */
   public function version() {
-    return $this->getAttribute(PDO::ATTR_SERVER_VERSION);
+    return $this->connection->getAttribute(PDO::ATTR_SERVER_VERSION);
   }
 
   /**
