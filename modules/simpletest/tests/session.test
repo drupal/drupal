@@ -245,6 +245,187 @@ class SessionTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Test absence of SameSite attribute on session cookies by default.
+   */
+  function testNoSameSiteCookieAttributeDefault() {
+    $user = $this->drupalCreateUser(array('access content'));
+    $this->sessionReset($user->uid);
+    if (\PHP_VERSION_ID < 70300) {
+      $this->drupalLogin($user);
+    }
+    else {
+      // PHP often defaults to an empty value for session.cookie_samesite but
+      // that may vary, so we set an explicit empty value.
+      // Send our own login POST so that we can pass a custom header to trigger
+      // session_test.module to call ini_set('session.cookie_samesite', $value)
+      $headers[] = 'X-Session-Cookie-Ini-Set: *EMPTY*';
+      $edit = array(
+        'name' => $user->name,
+        'pass' => $user->pass_raw,
+      );
+      $this->drupalPost('user', $edit, t('Log in'), array(), $headers);
+    }
+    $this->assertFalse(preg_match('/SameSite=/i', $this->drupalGetHeader('Set-Cookie', TRUE)), 'Session cookie has no SameSite attribute (default).');
+  }
+
+  /**
+   * Test SameSite attribute = None by default on Secure session cookies.
+   */
+  function testSameSiteCookieAttributeNoneSecure() {
+    $user = $this->drupalCreateUser(array('access content'));
+    $this->sessionReset($user->uid);
+    $headers = array();
+    if (\PHP_VERSION_ID >= 70300) {
+      // Send our own login POST so that we can pass a custom header to trigger
+      // session_test.module to call ini_set('session.cookie_samesite', $value)
+      $headers[] = 'X-Session-Cookie-Ini-Set: None';
+    }
+    // Test HTTPS session handling by altering the form action to submit the
+    // login form through https.php, which creates a mock HTTPS request.
+    $this->drupalGet('user');
+    $form = $this->xpath('//form[@id="user-login"]');
+    $form[0]['action'] = $this->httpsUrl('user');
+    $edit = array('name' => $user->name, 'pass' => $user->pass_raw);
+    $this->drupalPost(NULL, $edit, t('Log in'), array(), $headers);
+    $this->assertTrue(preg_match('/SameSite=None/i', $this->drupalGetHeader('Set-Cookie', TRUE)), 'Session cookie is set as SameSite=None.');
+  }
+
+  /**
+   * Test SameSite attribute = None on session cookies.
+   */
+  function testSameSiteCookieAttributeNone() {
+    variable_set('samesite_cookie_value', 'None');
+    $user = $this->drupalCreateUser(array('access content'));
+    $this->sessionReset($user->uid);
+    $this->drupalLogin($user);
+    $this->assertTrue(preg_match('/SameSite=None/i', $this->drupalGetHeader('Set-Cookie', TRUE)), 'Session cookie is set as SameSite=None.');
+  }
+
+  /**
+   * Test SameSite attribute = Lax on session cookies.
+   */
+  function testSameSiteCookieAttributeLax() {
+    variable_set('samesite_cookie_value', 'Lax');
+    $user = $this->drupalCreateUser(array('access content'));
+    $this->sessionReset($user->uid);
+    $this->drupalLogin($user);
+    $this->assertTrue(preg_match('/SameSite=Lax/i', $this->drupalGetHeader('Set-Cookie', TRUE)), 'Session cookie is set as SameSite=Lax.');
+  }
+
+  /**
+   * Test SameSite attribute = Strict on session cookies.
+   */
+  function testSameSiteCookieAttributeStrict() {
+    variable_set('samesite_cookie_value', 'Strict');
+    $user = $this->drupalCreateUser(array('access content'));
+    $this->sessionReset($user->uid);
+    $this->drupalLogin($user);
+    $this->assertTrue(preg_match('/SameSite=Strict/i', $this->drupalGetHeader('Set-Cookie', TRUE)), 'Session cookie is set as SameSite=Strict.');
+  }
+
+  /**
+   * Test disabling the samesite attribute on session cookies via $conf
+   */
+  function testSameSiteCookieAttributeDisabledViaConf() {
+    $user = $this->drupalCreateUser(array('access content'));
+    $this->sessionReset($user->uid);
+    variable_set('samesite_cookie_value', FALSE);
+    if (\PHP_VERSION_ID < 70300) {
+      // There is no session.cookie_samesite in earlier PHP versions.
+      $this->drupalLogin($user);
+    }
+    else {
+      // Send our own login POST so that we can pass a custom header to trigger
+      // session_test.module to call ini_set('session.cookie_samesite', $value)
+      $headers[] = 'X-Session-Cookie-Ini-Set: Lax';
+      $edit = array(
+        'name' => $user->name,
+        'pass' => $user->pass_raw,
+      );
+      $this->drupalPost('user', $edit, t('Log in'), array(), $headers);
+    }
+    $this->assertFalse(preg_match('/SameSite=/i', $this->drupalGetHeader('Set-Cookie', TRUE)), 'Session cookie has no SameSite attribute (conf).');
+  }
+
+  /**
+   * Test disabling the samesite attribute on session cookies via php ini
+   */
+  function testSameSiteCookieAttributeDisabledViaPhpIni() {
+    if (\PHP_VERSION_ID < 70300) {
+      // There is no session.cookie_samesite in earlier PHP versions.
+      $this->pass('This test is only for PHP 7.3 and later.');
+      return;
+    }
+    $user = $this->drupalCreateUser(array('access content'));
+    // Send our own login POST so that we can pass a custom header to trigger
+    // session_test.module to call ini_set('session.cookie_samesite', $value)
+    $headers[] = 'X-Session-Cookie-Ini-Set: *EMPTY*';
+    $edit = array(
+      'name' => $user->name,
+      'pass' => $user->pass_raw,
+    );
+    $this->drupalPost('user', $edit, t('Log in'), array(), $headers);
+    $this->assertFalse(preg_match('/SameSite=/i', $this->drupalGetHeader('Set-Cookie', TRUE)), 'Session cookie has no SameSite attribute (ini).');
+  }
+
+  /**
+   * Test that a PHP setting for session.cookie_samesite is not overridden by
+   * the default value in Drupal, without a samesite_cookie_value variable.
+   */
+  function testSamesiteCookiePhpSettingLax() {
+    if (\PHP_VERSION_ID < 70300) {
+      // There is no session.cookie_samesite in earlier PHP versions.
+      $this->pass('This test is only for PHP 7.3 and later.');
+      return;
+    }
+    $user = $this->drupalCreateUser(array('access content'));
+    // Send our own login POST so that we can pass a custom header to trigger
+    // session_test.module to call ini_set('session.cookie_samesite', $value)
+    $headers[] = 'X-Session-Cookie-Ini-Set: Lax';
+    $edit = array(
+      'name' => $user->name,
+      'pass' => $user->pass_raw,
+    );
+    $this->drupalPost('user', $edit, t('Log in'), array(), $headers);
+    $this->assertTrue(preg_match('/SameSite=Lax/i', $this->drupalGetHeader('Set-Cookie', TRUE)), 'Session cookie is set as SameSite=Lax.');
+  }
+
+  /**
+   * Test overriding the PHP setting for session.cookie_samesite with the
+   * samesite_cookie_value variable.
+   */
+  function testSamesiteCookieOverrideLaxToStrict() {
+    if (\PHP_VERSION_ID < 70300) {
+      // There is no session.cookie_samesite in earlier PHP versions.
+      $this->pass('This test is only for PHP 7.3 and later.');
+      return;
+    }
+    variable_set('samesite_cookie_value', 'Strict');
+    $user = $this->drupalCreateUser(array('access content'));
+    // Send our own login POST so that we can pass a custom header to trigger
+    // session_test.module to call ini_set('session.cookie_samesite', $value)
+    $headers[] = 'X-Session-Cookie-Ini-Set: Lax';
+    $edit = array(
+      'name' => $user->name,
+      'pass' => $user->pass_raw,
+    );
+    $this->drupalPost('user', $edit, t('Log in'), array(), $headers);
+    $this->assertTrue(preg_match('/SameSite=Strict/i', $this->drupalGetHeader('Set-Cookie', TRUE)), 'Session cookie is set as SameSite=Strict.');
+  }
+
+  /**
+   * Test SameSite attribute = Lax on set-cookie header on logout.
+   */
+  function testSamesiteCookieLogoutLax() {
+    variable_set('samesite_cookie_value', 'Lax');
+    $user = $this->drupalCreateUser(array('access content'));
+    $this->sessionReset($user->uid);
+    $this->drupalLogin($user);
+    $this->drupalGet('user/logout');
+    $this->assertTrue(preg_match('/SameSite=Lax/i', $this->drupalGetHeader('Set-Cookie', TRUE)), 'Session cookie deletion includes SameSite=Lax.');
+  }
+
+  /**
    * Reset the cookie file so that it refers to the specified user.
    *
    * @param $uid User id to set as the active session.
@@ -284,6 +465,20 @@ class SessionTestCase extends DrupalWebTestCase {
     else {
       $this->assertIdentical($this->drupalGetHeader('X-Session-Empty'), '0', 'Session was not empty.');
     }
+  }
+
+  /**
+   * Builds a URL for submitting a mock HTTPS request to HTTP test environments.
+   *
+   * @param $url
+   *   A Drupal path such as 'user'.
+   *
+   * @return
+   *   An absolute URL.
+   */
+  protected function httpsUrl($url) {
+    global $base_url;
+    return $base_url . '/modules/simpletest/tests/https.php?q=' . $url;
   }
 }
 

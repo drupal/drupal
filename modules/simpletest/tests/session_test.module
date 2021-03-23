@@ -65,6 +65,19 @@ function session_test_menu() {
 }
 
 /**
+ * It's very unusual to do anything outside of a function / hook, but in this
+ * case we want to simulate a given session.cookie_samesite setting in php.ini
+ * or via ini_set() in settings.php. This would almost never be a good idea
+ * outside of a test scenario.
+ */
+if (isset($_SERVER['HTTP_X_SESSION_COOKIE_INI_SET'])) {
+  if (in_array($_SERVER['HTTP_X_SESSION_COOKIE_INI_SET'], array('None', 'Lax', 'Strict', '*EMPTY*'))) {
+    $value = ($_SERVER['HTTP_X_SESSION_COOKIE_INI_SET'] == '*EMPTY*') ? '' : $_SERVER['HTTP_X_SESSION_COOKIE_INI_SET'];
+    ini_set('session.cookie_samesite', $value);
+  }
+}
+
+/**
  * Implements hook_boot().
  */
 function session_test_boot() {
