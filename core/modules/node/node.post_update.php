@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\views\Entity\View;
 
 /**
 * Load all form displays for nodes, add status with these settings, save.
@@ -33,4 +34,35 @@ function node_post_update_configure_status_field_widget() {
  */
 function node_post_update_node_revision_views_data() {
   // Empty post-update hook.
+}
+
+/**
+ * Add a published filter to the glossary View.
+ */
+function node_post_update_glossary_view_published() {
+  if (\Drupal::moduleHandler()->moduleExists('views')) {
+    $view = View::load('glossary');
+    if (!$view) {
+      return;
+    }
+    $display =& $view->getDisplay('default');
+    if (!isset($display['display_options']['filters']['status'])) {
+      $display['display_options']['filters']['status'] = [
+        'expose' => [
+          'operator' => '',
+          'operator_limit_selection' => FALSE,
+          'operator_list' => [],
+        ],
+        'field' => 'status',
+        'group' => 1,
+        'id' => 'status',
+        'table' => 'node_field_data',
+        'value' => '1',
+        'plugin_id' => 'boolean',
+        'entity_type' => 'node',
+        'entity_field' => 'status',
+      ];
+      $view->save();
+    }
+  }
 }
