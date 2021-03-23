@@ -1,0 +1,6 @@
+name: 'JS Errors test'
+description: 'Provides a Javascript error can be used for tests'
+type: module
+package: Testing
+version: VERSION
+core: 8.x
