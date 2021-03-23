@@ -453,13 +453,13 @@ class BootstrapGetFilenameTestCase extends DrupalUnitTestCase {
   /**
    * Skips handling of "file not found" errors.
    */
-  public function fileNotFoundErrorHandler($error_level, $message, $filename, $line, $context) {
+  public function fileNotFoundErrorHandler($error_level, $message, $filename, $line) {
     // Skip error handling if this is a "file not found" error.
     if (strpos($message, 'is missing from the file system:') !== FALSE || strpos($message, 'has moved within the file system:') !== FALSE) {
       $this->getFilenameTestTriggeredError = $message;
       return;
     }
-    _drupal_error_handler($error_level, $message, $filename, $line, $context);
+    _drupal_error_handler($error_level, $message, $filename, $line);
   }
 }
 
@@ -569,13 +569,13 @@ class BootstrapGetFilenameWebTestCase extends DrupalWebTestCase {
   /**
    * Skips handling of "file not found" errors.
    */
-  public function fileNotFoundErrorHandler($error_level, $message, $filename, $line, $context) {
+  public function fileNotFoundErrorHandler($error_level, $message, $filename, $line) {
     // Skip error handling if this is a "file not found" error.
     if (strpos($message, 'is missing from the file system:') !== FALSE || strpos($message, 'has moved within the file system:') !== FALSE) {
       $this->getFilenameTestTriggeredError = $message;
       return;
     }
-    _drupal_error_handler($error_level, $message, $filename, $line, $context);
+    _drupal_error_handler($error_level, $message, $filename, $line);
   }
 
   /**
