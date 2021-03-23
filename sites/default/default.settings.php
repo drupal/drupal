@@ -703,6 +703,15 @@ $conf['file_scan_ignore_directories'] = array(
 # $conf['variable_initialize_wait_for_lock'] = FALSE;
 
 /**
+ * Opt in to field_sql_storage_field_storage_write() optimization.
+ *
+ * To reduce unnecessary writes field_sql_storage_field_storage_write() can skip
+ * fields where values have apparently not changed. To opt in to this
+ * optimization, set this variable to TRUE.
+ */
+$conf['field_sql_storage_skip_writing_unchanged_fields'] = TRUE;
+
+/**
  * Use site name as display-name in outgoing mail.
  *
  * Drupal can use the site name (i.e. the value of the site_name variable) as
