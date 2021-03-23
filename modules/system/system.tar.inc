@@ -280,7 +280,7 @@ class Archive_Tar
     {
         $this->_close();
         // ----- Look for a local copy to delete
-        if ($this->_temp_tarname != '') {
+        if ($this->_temp_tarname != '' && (bool) preg_match('/^tar[[:alnum:]]*\.tmp$/', $this->_temp_tarname)) {
             @drupal_unlink($this->_temp_tarname);
         }
     }
