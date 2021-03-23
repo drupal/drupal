@@ -101,7 +101,7 @@ class BookTestCase extends DrupalWebTestCase {
 
     // Check that book pages display along with the correct outlines and
     // previous/next links.
-    $this->checkBookNode($book, array($nodes[0], $nodes[3], $nodes[4]), FALSE, FALSE, $nodes[0], array());
+    $this->checkBookNode($book, array($nodes[0], $nodes[3], $nodes[4]), FALSE, FALSE, $nodes[0]);
     $this->checkBookNode($nodes[0], array($nodes[1], $nodes[2]), $book, $book, $nodes[1], array($book));
     $this->checkBookNode($nodes[1], NULL, $nodes[0], $nodes[0], $nodes[2], array($book, $nodes[0]));
     $this->checkBookNode($nodes[2], NULL, $nodes[1], $nodes[0], $nodes[3], array($book, $nodes[0]));
@@ -124,7 +124,7 @@ class BookTestCase extends DrupalWebTestCase {
     // First we must set $this->book to the second book, so that the
     // correct regex will be generated for testing the outline.
     $this->book = $other_book;
-    $this->checkBookNode($other_book, array($node), FALSE, FALSE, $node, array());
+    $this->checkBookNode($other_book, array($node), FALSE, FALSE, $node);
     $this->checkBookNode($node, NULL, $other_book, $other_book, FALSE, array($other_book));
   }
 
@@ -144,9 +144,9 @@ class BookTestCase extends DrupalWebTestCase {
    * @param $next
    *   (optional) Next link node. Defaults to FALSE.
    * @param $breadcrumb
-   *   The nodes that should be displayed in the breadcrumb.
+   *   (optional) The nodes that should be displayed in the breadcrumb.
    */
-  function checkBookNode($node, $nodes, $previous = FALSE, $up = FALSE, $next = FALSE, array $breadcrumb) {
+  function checkBookNode($node, $nodes = NULL, $previous = FALSE, $up = FALSE, $next = FALSE, array $breadcrumb = array()) {
     // $number does not use drupal_static as it should not be reset
     // since it uniquely identifies each call to checkBookNode().
     static $number = 0;

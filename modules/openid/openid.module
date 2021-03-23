@@ -743,7 +743,7 @@ function openid_association_request($public) {
   return $request;
 }
 
-function openid_authentication_request($claimed_id, $identity, $return_to = '', $assoc_handle = '', $service) {
+function openid_authentication_request($claimed_id, $identity, $return_to, $assoc_handle, $service) {
   global $base_url;
 
   module_load_include('inc', 'openid');

@@ -593,7 +593,7 @@ function file_field_widget_uri($field, $instance, $data = array()) {
 /**
  * The #value_callback for the file_generic field element.
  */
-function file_field_widget_value($element, $input = FALSE, $form_state) {
+function file_field_widget_value($element, $input = FALSE, $form_state = array()) {
   if ($input) {
     // Checkboxes lose their value when empty.
     // If the display field is present make sure its unchecked value is saved.

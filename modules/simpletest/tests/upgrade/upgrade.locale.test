@@ -124,7 +124,7 @@ class LocaleUpgradePathTestCase extends UpgradePathTestCase {
   /**
    * Asserts that a page exists and is in the specified language.
    */
-  public function assertPageInLanguage($path = NULL, $langcode) {
+  public function assertPageInLanguage($path, $langcode) {
     if (isset($path)) {
       $this->drupalGet($path);
     }

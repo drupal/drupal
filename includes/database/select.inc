@@ -964,7 +964,7 @@ class SelectQuery extends Query implements SelectQueryInterface {
    */
   protected $forUpdate = FALSE;
 
-  public function __construct($table, $alias = NULL, DatabaseConnection $connection, $options = array()) {
+  public function __construct($table, $alias, DatabaseConnection $connection, $options = array()) {
     $options['return'] = Database::RETURN_STATEMENT;
     parent::__construct($connection, $options);
     $this->where = new DatabaseCondition('AND');
