@@ -17,7 +17,7 @@ class JavascriptErrorsSuppressionTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['js_errors_test'];
+  protected static $modules = ['js_errors_test'];
 
   /**
    * {@inheritdoc}
@@ -27,7 +27,7 @@ class JavascriptErrorsSuppressionTest extends WebDriverTestBase {
   /**
    * Tests that Javascript console errors can be suppressed in core.
    */
-  public function testJavascriptErrors() {
+  public function testJavascriptErrors(): void {
     // Visit page that will throw a Javascript console error.
     $this->drupalGet('js_errors_test');
     // Ensure that errors from previous page loads will be

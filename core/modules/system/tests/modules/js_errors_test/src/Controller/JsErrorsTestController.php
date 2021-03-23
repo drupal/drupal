@@ -10,10 +10,10 @@ class JsErrorsTestController {
   /**
    * Renders page that has js_errors_test/errors_test library attached.
    *
-   * @return array
+   * @return string[][]
    *   Render array.
    */
-  public function jsErrorsTest() {
+  public function jsErrorsTest(): array {
     return [
       '#attached' => ['library' => ['js_errors_test/errors_test']],
     ];

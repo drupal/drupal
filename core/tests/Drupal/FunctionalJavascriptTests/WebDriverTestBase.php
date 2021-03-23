@@ -46,14 +46,14 @@ abstract class WebDriverTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $class = get_class($this);
 
     // Force core tests that do not have ::failOnJavascriptConsoleErrors set in
     // in class to fail on Javascript console errors.
-    $propFailOnJavascriptConsoleErrors = new \ReflectionProperty($class, 'failOnJavascriptConsoleErrors');
-    if ($propFailOnJavascriptConsoleErrors->getDeclaringClass()->getName() === self::class && $this->isCoreTest()) {
+    $prop_fail_on_javascript_console_errors = new \ReflectionProperty($class, 'failOnJavascriptConsoleErrors');
+    if ($prop_fail_on_javascript_console_errors->getDeclaringClass()->getName() === self::class && $this->isCoreTest()) {
       $this->failOnJavascriptConsoleErrors = TRUE;
     }
   }
@@ -137,8 +137,8 @@ abstract class WebDriverTestBase extends BrowserTestBase {
       }
       if ($this->failOnJavascriptConsoleErrors) {
         $errors = $this->getSession()->evaluateScript("JSON.parse(sessionStorage.getItem('js_testing_log_test.errors') || JSON.stringify([]))");
-        $this->assertEquals([], $errors,'Javascript errors found.');
-        //trigger_error("Javascript errors, ". implode('::', $errors), E_USER_WARNING);
+        $this->assertEquals([], $errors, 'Javascript errors found.');
+        // trigger_error("Javascript errors, ". implode('::', $errors), E_USER_WARNING);
       }
 
     }
@@ -245,7 +245,7 @@ EndOfScript;
    * @return bool
    *   Returns TRUE if the current test is core test, otherwise FALSE.
    */
-  protected function isCoreTest() {
+  protected function isCoreTest(): bool {
     $class = new \ReflectionClass(self::class);
     return strpos($class->getFileName(), '/core/') !== FALSE;
   }

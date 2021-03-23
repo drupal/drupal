@@ -19,14 +19,14 @@ class JavascriptErrorsTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['js_errors_test'];
+  protected static $modules = ['js_errors_test'];
 
   /**
    * Tests that Javascript console errors cause a test failure.
    *
    * The actual assert for the error is in ::tearDown().
    */
-  public function testJavascriptErrors() {
+  public function testJavascriptErrors(): void {
     // Visit page that will throw a Javascript console error.
     $this->drupalGet('js_errors_test');
     // Ensure that errors from previous page loads will be
@@ -37,7 +37,7 @@ class JavascriptErrorsTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function tearDown() {
+  protected function tearDown(): void {
     try {
       // Call parent::tearDown() to ensure that an error will found for the
       // expected Javascript error.
