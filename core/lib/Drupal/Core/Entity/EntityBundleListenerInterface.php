@@ -4,8 +4,6 @@ namespace Drupal\Core\Entity;
 
 /**
  * An interface for reacting to entity bundle creation and deletion.
- *
- * @todo Convert to Symfony events: https://www.drupal.org/node/2332935
  */
 interface EntityBundleListenerInterface {
 
