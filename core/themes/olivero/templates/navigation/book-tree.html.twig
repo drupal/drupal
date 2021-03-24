@@ -32,7 +32,7 @@
     {% if menu_level == 0 %}
       <ul{{ attributes.addClass('menu', 'menu--level-' ~ (menu_level + 1)) }}>
     {% else %}
-      <ul class='menu menu--level-'  ~ (menu_level + 1)>
+      <ul class='menu menu--level-{{ menu_level + 1 }}'>
     {% endif %}
     {% for item in items %}
       {%
