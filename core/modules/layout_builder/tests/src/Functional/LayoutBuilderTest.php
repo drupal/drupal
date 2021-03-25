@@ -1230,6 +1230,7 @@ class LayoutBuilderTest extends BrowserTestBase {
       'Content types' => $base_path . 'admin/structure/types',
       'Bundle with section field' => $base_path . 'admin/structure/types/manage/bundle_with_section_field',
       'Manage display' => $base_path . 'admin/structure/types/manage/bundle_with_section_field/display/default',
+      'External link' => 'http://www.example.com',
     ];
     $this->assertSame($expected, $breadcrumb_titles);
   }
