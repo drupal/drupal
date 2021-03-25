@@ -5,10 +5,14 @@
  * Provides hook implementations for Layout Builder tests.
  */
 
+use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_plugin_filter_TYPE__CONSUMER_alter().
@@ -104,5 +108,26 @@ function layout_builder_entity_form_display_alter(EntityFormDisplayInterface $fo
         'display_label' => TRUE,
       ],
     ]);
+  }
+}
+
+/**
+ * Implements hook_system_breadcrumb_alter().
+ */
+function layout_builder_test_system_breadcrumb_alter(Breadcrumb &$breadcrumb, RouteMatchInterface $route_match, array $context) {
+  $breadcrumb->addLink(Link::fromTextAndUrl('External link', Url::fromUri('http://www.example.com')));
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function layout_builder_test_module_implements_alter(&$implementations, $hook) {
+  if ($hook === 'system_breadcrumb_alter') {
+    // Move our hook_system_breadcrumb_alter() implementation to run before
+    // layout_builder_system_breadcrumb_alter().
+    $group = $implementations['layout_builder_test'];
+    $implementations = [
+      'layout_builder_test' => $group,
+    ] + $implementations;
   }
 }
