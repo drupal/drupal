@@ -144,7 +144,7 @@ class OpmlFeedAdd extends FormBase {
       }
 
       // Check for duplicate titles or URLs.
-      $query = $this->feedStorage->getQuery();
+      $query = $this->feedStorage->getQuery()->accessCheck(FALSE);
       $condition = $query->orConditionGroup()
         ->condition('title', $feed['title'])
         ->condition('url', $feed['url']);
