@@ -357,7 +357,7 @@ function olivero_preprocess_field_multiple_value_form(&$variables) {
   // Make disabled available for the template.
   $variables['disabled'] = !empty($variables['element']['#disabled']);
 
-  if ($variables['multiple']) {
+  if (isset($variables['multiple'])) {
     // Add an additional CSS class for the field label table cell.
     // This repeats the logic of template_preprocess_field_multiple_value_form()
     // without using '#prefix' and '#suffix' for the wrapper element.
