@@ -49,7 +49,7 @@ class FieldUIRouteTest extends BrowserTestBase {
     $this->assertText('No fields are present yet.');
 
     $this->drupalGet('admin/config/people/accounts/fields');
-    $this->assertSession()->titleEquals('Manage fields: Entity Test without id | Drupal');
+    $this->assertSession()->titleEquals('Manage fields: User | Drupal');
     $this->assertLocalTasks();
 
     // Test manage display tabs and titles.
