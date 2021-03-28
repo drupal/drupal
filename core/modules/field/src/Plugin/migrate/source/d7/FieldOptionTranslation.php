@@ -3,7 +3,11 @@
 namespace Drupal\field\Plugin\migrate\source\d7;
 
 /**
- * Gets field option label translations.
+ * Drupal 7 i18n field option label source from database.
+ *
+ * For available configuration keys, refer to the parent classes:
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  *
  * @MigrateSource(
  *   id = "d7_field_option_translation",
