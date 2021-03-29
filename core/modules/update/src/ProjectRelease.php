@@ -95,13 +95,15 @@ final class ProjectRelease {
   }
 
   /**
-   * Creates a ProjectRelease from an array.
+   * Creates a ProjectRelease instance from an array.
    *
    * @param array $release_data
-   *   The project release data.
+   *   The project release data as returned by update_get_available().
    *
    * @return \Drupal\update\ProjectRelease
    *   The ProjectRelease instance.
+   *
+   * @see \update_get_available()
    */
   public static function createFromArray(array $release_data): ProjectRelease {
     return new ProjectRelease(
@@ -180,7 +182,7 @@ final class ProjectRelease {
   }
 
   /**
-   * Determines if the release is unpublished.
+   * Determines if the release is published.
    *
    * @return bool
    *   TRUE if the release is published, or FALSE otherwise.
@@ -190,7 +192,7 @@ final class ProjectRelease {
   }
 
   /**
-   * Gets the releases core compatibility Composer constraint.
+   * Determines whether release is compatible the site's version of Drupal core.
    *
    * @return bool|null
    *   Whether the release is compatible or NULL if no data is set.
