@@ -50,6 +50,8 @@ class EntityDeriver implements ContainerDeriverInterface {
    *   The base plugin ID.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $bundle_info_service
+   *   The bundle info service.
    */
   public function __construct($base_plugin_id, EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $bundle_info_service) {
     $this->basePluginId = $base_plugin_id;

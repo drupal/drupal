@@ -118,6 +118,8 @@ abstract class EntityLanguageTestBase extends EntityKernelTestBase {
    *
    * @param string $entity_type
    *   The type of the entity fields are attached to.
+   * @param string $bundle
+   *   The bundle of the entity.
    */
   protected function toggleFieldTranslatability($entity_type, $bundle) {
     $fields = [$this->fieldName, $this->untranslatableFieldName];

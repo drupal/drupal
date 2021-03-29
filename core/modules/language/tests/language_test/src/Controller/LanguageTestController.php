@@ -37,6 +37,8 @@ class LanguageTestController implements ContainerInjectionInterface {
    *
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel
    *   An HTTP kernel.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager.
    */
   public function __construct(HttpKernelInterface $httpKernel, LanguageManagerInterface $language_manager) {
     $this->httpKernel = $httpKernel;
