@@ -8,6 +8,34 @@ namespace Drupal\update;
 final class ProjectRelease {
 
   /**
+   * Whether the release is compatible with the site's Drupal core version.
+   *
+   * @var bool
+   */
+  private $isCoreCompatible;
+
+  /**
+   * The core compatibility message.
+   *
+   * @var string|null
+   */
+  protected $coreCompatibilityMessage;
+
+  /**
+   * The download URL.
+   *
+   * @var string
+   */
+  protected $downloadUrl;
+
+  /**
+   * The URL for the release.
+   *
+   * @var string
+   */
+  protected $url;
+
+  /**
    * The release types for the release.
    *
    * @var array|null
@@ -46,12 +74,24 @@ final class ProjectRelease {
    *   The release version.
    * @param string|null $date
    *   The release date.
+   * @param bool|null $is_core_compatible
+   *   The core compatibility constraint.
+   * @param string|null $core_compatibility_message
+   *   The core compatibility message.
+   * @param string $download_url
+   *   The download URL.
+   * @param string $url
+   *   The URL for the release.
    */
-  private function __construct(?array $release_types, string $status, string $version, ?string $date) {
+  private function __construct(?array $release_types, string $status, string $version, ?string $date, ?bool $is_core_compatible, ?string $core_compatibility_message, string $download_url, string $url) {
     $this->releaseTypes = $release_types;
     $this->status = $status;
     $this->version = $version;
     $this->date = $date;
+    $this->isCoreCompatible = $is_core_compatible;
+    $this->coreCompatibilityMessage = $core_compatibility_message;
+    $this->downloadUrl = $download_url;
+    $this->url = $url;
   }
 
   /**
@@ -68,7 +108,11 @@ final class ProjectRelease {
       $release_data['terms']['Release type'] ?? NULL,
       $release_data['status'],
       $release_data['version'] ?? NULL,
-      $release_data['date'] ?? NULL
+      $release_data['date'] ?? NULL,
+      $release_data['core_compatible'] ?? NULL,
+      $release_data['core_compatibility_message'] ?? NULL,
+      $release_data['download_link'],
+      $release_data['link']
     );
   }
 
@@ -143,6 +187,46 @@ final class ProjectRelease {
    */
   public function isUnpublished(): bool {
     return $this->status === 'unpublished';
+  }
+
+  /**
+   * Gets the releases core compatibility Composer constraint.
+   *
+   * @return bool|null
+   *   Whether the release is compatible or NULL if no data is set.
+   */
+  public function isCoreCompatible(): ?bool {
+    return $this->isCoreCompatible;
+  }
+
+  /**
+   * Gets the core compatibility message for the site's version of Drupal core.
+   *
+   * @return string
+   *   The core compatibility message or NULL if none is available.
+   */
+  public function getCoreCompatibilityMessage(): ?string {
+    return $this->coreCompatibilityMessage;
+  }
+
+  /**
+   * Gets the download URL of the release.
+   *
+   * @return string
+   *   The download URL.
+   */
+  public function getDownloadUrl(): string {
+    return $this->downloadUrl;
+  }
+
+  /**
+   * Gets the URL of the release.
+   *
+   * @return string
+   *   The URL of the release.
+   */
+  public function getUrl(): string {
+    return $this->url;
   }
 
 }
