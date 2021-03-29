@@ -60,11 +60,6 @@ final class ProjectSecurityData {
    *
    * @var array
    *
-   * Each release item in the array has metadata about that release. This class
-   * uses the keys:
-   * - status (string): The status of the release.
-   * - version (string): The version number of the release.
-   *
    * @see update_get_available()
    */
   protected $releases;
