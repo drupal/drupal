@@ -12,7 +12,6 @@ use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Routing\RouteBuilderInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\system\ModuleDependencyMessageTrait;
 use Psr\Log\LoggerInterface;
 
 /**
