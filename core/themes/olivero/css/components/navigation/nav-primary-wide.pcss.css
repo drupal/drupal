@@ -150,7 +150,7 @@ body:not(.is-always-mobile-nav) {
         border-left: solid 10px transparent;
       }
 
-      &.is-active {
+      &.is-active-menu-parent {
         visibility: visible;
         margin-block-start: 0;
         transform: translate(-50%, 0);

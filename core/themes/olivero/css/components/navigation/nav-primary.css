@@ -291,7 +291,7 @@
   opacity: 0
 }
 
-.primary-nav__menu--level-2.is-active {
+.primary-nav__menu--level-2.is-active-menu-parent {
     visibility: visible;
     max-height: none;
     margin-top: 1.6875rem;

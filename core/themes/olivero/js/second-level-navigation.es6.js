@@ -28,20 +28,20 @@
             'false',
           );
           el.querySelector('.primary-nav__menu--level-2').classList.remove(
-            'is-active',
+            'is-active-menu-parent',
           );
         });
       }
       button.setAttribute('aria-expanded', 'true');
       topLevelMenuITem
         .querySelector('.primary-nav__menu--level-2')
-        .classList.add('is-active');
+        .classList.add('is-active-menu-parent');
     } else {
       button.setAttribute('aria-expanded', 'false');
       topLevelMenuITem.classList.remove('is-touch-event');
       topLevelMenuITem
         .querySelector('.primary-nav__menu--level-2')
-        .classList.remove('is-active');
+        .classList.remove('is-active-menu-parent');
     }
   }
 
@@ -87,7 +87,12 @@
     });
 
     el.addEventListener('mouseout', () => {
-      if (isDesktopNav()) {
+      if (
+        isDesktopNav() &&
+        !document.activeElement.matches(
+          '[aria-expanded="true"], .is-active-menu-parent *',
+        )
+      ) {
         toggleSubNav(el, false);
       }
     });
