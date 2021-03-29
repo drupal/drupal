@@ -2,6 +2,13 @@
 
 namespace Drupal\update;
 
+use Symfony\Component\Validator\Constraints\Choice;
+use Symfony\Component\Validator\Constraints\Collection;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Optional;
+use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Validator\Validation;
+
 /**
  * Provides a project release value object.
  */
@@ -106,6 +113,7 @@ final class ProjectRelease {
    * @see \update_get_available()
    */
   public static function createFromArray(array $release_data): ProjectRelease {
+    static::validateReleaseData($release_data);
     return new ProjectRelease(
       $release_data['terms']['Release type'] ?? NULL,
       $release_data['status'] === 'published',
@@ -116,6 +124,51 @@ final class ProjectRelease {
       $release_data['download_link'],
       $release_data['release_link']
     );
+  }
+
+  /**
+   * Validates the project release data.
+   *
+   * @param mixed[] $data
+   *   The project release data.
+   *
+   * @throws \UnexpectedValueException
+   *   Thrown if project release data is not valid.
+   */
+  protected static function validateReleaseData(array $data): void {
+    $not_blank_constraints = [
+      new Type(['type' => 'string']),
+      new NotBlank(),
+    ];
+    $collection_constraint = new Collection([
+      'fields' => [
+        'version' => new Optional($not_blank_constraints),
+        'date' => new Optional($not_blank_constraints),
+        'core_compatible' => new Optional([
+          new Type('boolean'),
+        ]),
+        'core_compatibility_message' => new Optional($not_blank_constraints),
+        'status' => new Choice(['published', 'unpublished']),
+        'download_link' => $not_blank_constraints,
+        'release_link' => $not_blank_constraints,
+        'terms' => new Optional([
+          new Type(['type' => 'array']),
+          new Collection([
+            'Release type' => new Optional([
+              new Type(['type' => 'array']),
+            ]),
+          ]),
+        ]),
+      ],
+      'allowExtraFields' => TRUE,
+    ]);
+    $violations = Validation::createValidator()->validate($data, $collection_constraint);
+    if ($violations->count()) {
+      foreach ($violations as $violation) {
+        $violation_messages[] = "Field " . $violation->getPropertyPath() . ": " . $violation->getMessage();
+      }
+      throw new \UnexpectedValueException('Malformed release data: ' . implode(",\n", $violation_messages));
+    }
   }
 
   /**
