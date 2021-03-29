@@ -2,10 +2,10 @@
  * @file
  *  Testing tools for deprecating JavaScript functions and class properties.
  */
-(function(Drupal) {
+(function (Drupal) {
   if (typeof console !== 'undefined' && console.warn) {
     const originalWarnFunction = console.warn;
-    console.warn = warning => {
+    console.warn = (warning) => {
       const warnings = JSON.parse(
         sessionStorage.getItem('js_testing_log_test.warnings') ||
           JSON.stringify([]),
@@ -19,10 +19,10 @@
     };
 
     const originalThrowFunction = Drupal.throwError;
-    Drupal.throwError = error => {
+    Drupal.throwError = (error) => {
       const errors = JSON.parse(
         sessionStorage.getItem('js_testing_log_test.errors') ||
-        JSON.stringify([]),
+          JSON.stringify([]),
       );
       errors.push(error.stack);
       sessionStorage.setItem(

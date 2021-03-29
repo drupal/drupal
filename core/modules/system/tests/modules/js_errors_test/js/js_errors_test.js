@@ -8,7 +8,6 @@
 (function (_ref) {
   var throwError = _ref.throwError,
       behaviors = _ref.behaviors;
-
   behaviors.testErrors = {
     attach: function attach() {
       throwError(new Error('A manually thrown error.'));
