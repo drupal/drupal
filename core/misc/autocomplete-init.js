@@ -5,14 +5,14 @@
 * @preserve
 **/
 
-(function ($, Drupal, drupalSettings, A11yAutocomplete, Popper, once) {
+(function (Drupal, drupalSettings, A11yAutocomplete, Popper, once) {
   Drupal.Autocomplete = {};
   Drupal.Autocomplete.instances = {};
   Drupal.Autocomplete.defaultOptions = {
     inputClass: 'ui-autocomplete-input',
     ulClass: 'ui-menu ui-widget ui-widget-content ui-autocomplete ui-front',
     loadingClass: 'ui-autocomplete-loading',
-    itemClass: 'ui-menu-item',
+    itemClass: 'ui-menu-item-wrapper',
     createLiveRegion: false,
     displayLabels: false
   };
@@ -63,7 +63,10 @@
         }
 
         Drupal.Autocomplete.initialize(autocompleteInput);
-        Drupal.Autocomplete.jqueryUiShimInit(autocompleteInput);
+
+        if (!autocompleteInput.hasAttribute('data-core-autocomplete')) {
+          Drupal.Autocomplete.jqueryUiShimInit(autocompleteInput);
+        }
       });
     },
     detach: function detach(context, settings, trigger) {
@@ -75,4 +78,4 @@
       }
     }
   };
-})(jQuery, Drupal, drupalSettings, A11yAutocomplete, Popper, once);
+})(Drupal, drupalSettings, A11yAutocomplete, Popper, once);

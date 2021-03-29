@@ -1,4 +1,4 @@
-(($, Drupal, drupalSettings, A11yAutocomplete, Popper, once) => {
+((Drupal, drupalSettings, A11yAutocomplete, Popper, once) => {
   Drupal.Autocomplete = {};
   Drupal.Autocomplete.instances = {};
   Drupal.Autocomplete.defaultOptions = {
@@ -7,7 +7,7 @@
     inputClass: 'ui-autocomplete-input',
     ulClass: 'ui-menu ui-widget ui-widget-content ui-autocomplete ui-front',
     loadingClass: 'ui-autocomplete-loading',
-    itemClass: 'ui-menu-item',
+    itemClass: 'ui-menu-item-wrapper',
     // Do not create an autocomplete-specific live region since
     // #drupal-live-announce will be used.
     createLiveRegion: false,
@@ -107,206 +107,6 @@
     });
   };
 
-  // /**
-  //  * Provides overrides needed for jQuery UIs backwards compatibility.
-  //  *
-  //  * @param {Element} autocompleteInput
-  //  */
-  // Drupal.Autocomplete.jqueryUiShimInit = (autocompleteInput) => {
-  //   const id = autocompleteInput.getAttribute('id');
-  //   const instance = Drupal.Autocomplete.instances[id];
-  //   const isContentEditable = instance.input.hasAttribute('contenteditable');
-  //   const isMultiline =
-  //     instance.input.tagName === 'TEXTAREA' ||
-  //     (instance.input.tagName !== 'INPUT' && isContentEditable);
-  //
-  //   instance.options.isMultiline = isMultiline;
-  //
-  //   // jQuery UI allows repeat values in multivalue inputs.
-  //   // If the option is explicitly set to false, that option was set by the form
-  //   // API and should be preserved. Otherwise set to true.
-  //   if (instance.options.allowRepeatValues === null) {
-  //     instance.options.allowRepeatValues = true;
-  //   }
-  //
-  //   // If the list was not explicitly appended somewhere else, then it should be
-  //   // appended to body to match jQuery UI markup.
-  //   if (!instance.input.hasAttribute('data-autocomplete-list-appended')) {
-  //     const listBoxId = instance.ul.getAttribute('id');
-  //     const uiFront = $(autocompleteInput).closest('.ui-front, dialog');
-  //     const appendTo =
-  //       uiFront.length > 0 ? uiFront[0] : document.querySelector('body');
-  //     appendTo.appendChild(Drupal.Autocomplete.instances[id].ul);
-  //     Drupal.Autocomplete.instances[id].ul = document.querySelector(
-  //       `#${listBoxId}`,
-  //     );
-  //   }
-  //
-  //   // Use Popper to position the list. This isn't needed with
-  //   // Drupal Autocomplete, but must be done when the markup matches jQuery UI.
-  //   Popper.createPopper(instance.input, instance.ul, {
-  //     placement: 'bottom-start',
-  //   });
-  //
-  //   /**
-  //    * Alters input keydown behavior to match jQuery UI.
-  //    *
-  //    * @param {Event} e
-  //    *   The keydown event.
-  //    */
-  //   function shimmedInputKeyDown(e) {
-  //     if (
-  //       !['INPUT', 'TEXTAREA'].includes(this.input.tagName) &&
-  //       this.input.hasAttribute('contenteditable')
-  //     ) {
-  //       this.input.value = this.input.textContent;
-  //     }
-  //     const { keyCode } = e;
-  //     if (this.isOpened) {
-  //       if (keyCode === this.keyCode.ESC) {
-  //         this.close();
-  //       }
-  //       if (keyCode === this.keyCode.DOWN || keyCode === this.keyCode.UP) {
-  //         e.preventDefault();
-  //         this.preventCloseOnBlur = true;
-  //         const selector =
-  //           keyCode === this.keyCode.DOWN ? 'li' : 'li:last-child';
-  //         this.highlightItem(this.ul.querySelector(selector));
-  //       }
-  //       if (keyCode === this.keyCode.RETURN) {
-  //         const active = instance.ul.querySelectorAll(
-  //           '.ui-menu-item-wrapper.ui-state-active',
-  //         );
-  //         if (active.length) {
-  //           e.preventDefault();
-  //         }
-  //       }
-  //     }
-  //     if (
-  //       this.input.nodeName === 'INPUT' &&
-  //       !this.isOpened &&
-  //       this.options.list.length > 0 &&
-  //       (keyCode === this.keyCode.DOWN || keyCode === this.keyCode.UP)
-  //     ) {
-  //       e.preventDefault();
-  //       this.suggestionItems = this.options.list;
-  //
-  //       this.preventCloseOnBlur = true;
-  //
-  //       const typed = this.extractLastInputValue();
-  //       if (!typed && this.options.minChars < 1) {
-  //         this.ul.innerHTML = '';
-  //         this.prepareSuggestionList();
-  //       } else {
-  //         this.displayResults();
-  //       }
-  //       if (this.ul.children.length > 0) {
-  //         this.open();
-  //       }
-  //
-  //       if (this.isOpened) {
-  //         const selector =
-  //           keyCode === this.keyCode.DOWN ? 'li' : 'li:last-child';
-  //         this.highlightItem(this.ul.querySelector(selector));
-  //       }
-  //     }
-  //     this.removeAssistiveHint();
-  //   }
-  //
-  //   /**
-  //    * Formats an autocomplete suggestion for display in a list item.
-  //    *
-  //    * This overrides A11yAutocomplete.formatSuggestionItem()
-  //    *
-  //    * @param {object} suggestion
-  //    *   An autocomplete suggestion.
-  //    * @return {string|HTMLElement}
-  //    *   The contents of the list item.
-  //    */
-  //   function autocompleteFormatSuggestionItem(suggestion, li) {
-  //     const propertyToDisplay = this.options.displayLabels ? 'label' : 'value';
-  //     $(li).data('ui-autocomplete-item', suggestion);
-  //
-  //     // Wrap the item text in an `<a>`, This tag is not added by default
-  //     // as it's not needed for functionality. However, Claro and Seven
-  //     // both have styles assuming the presence of this tag.
-  //     return `<a tabindex="-1" class="ui-menu-item-wrapper">${suggestion[
-  //       propertyToDisplay
-  //     ].trim()}</a>`;
-  //   }
-  //
-  //   instance.formatSuggestionItem = autocompleteFormatSuggestionItem;
-  //   instance.inputKeyDown = shimmedInputKeyDown;
-  //
-  //   // Content editable inputs do not
-  //   if (isContentEditable) {
-  //     instance.getValue = function () {
-  //       return this.input.textContent;
-  //     };
-  //     instance.replaceInputValue = function (element) {
-  //       const itemIndex = element
-  //         .closest('[data-drupal-autocomplete-item]')
-  //         .getAttribute('data-drupal-autocomplete-item');
-  //       this.selected = this.suggestions[itemIndex];
-  //       const separator = this.separator();
-  //       if (separator.length > 0) {
-  //         const before = this.previousItems(separator);
-  //         this.input.textContent = `${before}${element.textContent}`;
-  //       } else {
-  //         this.input.textContent = element.textContent;
-  //       }
-  //     };
-  //   }
-  //
-  //   /**
-  //    * Replicates a jQuery function of the same name.
-  //    *
-  //    * Used for triggering a close when a click occurs anywhere outside of the
-  //    * autocomplete elements. Drupal Autocomplete has this functionality as
-  //    * well but it's achieved via different events.
-  //    *
-  //    * @param {Event} event
-  //    *   A mousedown event.
-  //    */
-  //   const closeOnClickOutside = (event) => {
-  //     const menuElement = instance.ul;
-  //     const targetInWidget =
-  //       event.target === instance.input ||
-  //       event.target === menuElement ||
-  //       $.contains(menuElement, event.target);
-  //     if (!targetInWidget) {
-  //       instance.close();
-  //     }
-  //   };
-  //
-  //   // jQuery UI has an mousedown listener on the list that prevents default.
-  //   instance.ul.addEventListener('mousedown', (e) => {
-  //     e.preventDefault();
-  //   });
-  //
-  //   instance.input.addEventListener('autocomplete-open', (e) => {
-  //     document.body.addEventListener('mousedown', closeOnClickOutside);
-  //   });
-  //
-  //   instance.input.addEventListener('autocomplete-close', (e) => {
-  //     document.body.removeEventListener('mousedown', closeOnClickOutside);
-  //   });
-  //
-  //   instance.input.addEventListener('autocomplete-highlight', (e) => {
-  //     instance.ul
-  //       .querySelectorAll('.ui-menu-item-wrapper.ui-state-active')
-  //       .forEach((element) => {
-  //         element.classList.remove('ui-state-active');
-  //       });
-  //     document.activeElement
-  //       .querySelector('.ui-menu-item-wrapper')
-  //       .classList.add('ui-state-active');
-  //   });
-  //
-  //   // jQuery UI autocomplete does not have a wrapper
-  //   $(instance.input).unwrap('[data-drupal-autocomplete-wrapper]');
-  // };
-
   /**
    * Attaches the autocomplete behavior to fields configured for autocomplete.
    *
@@ -331,7 +131,12 @@
             );
           }
           Drupal.Autocomplete.initialize(autocompleteInput);
-          Drupal.Autocomplete.jqueryUiShimInit(autocompleteInput);
+
+          // @todo remove this conditional and its contents, in
+          //   https://drupal.org/node/3206225, it is not needed in Drupal 10.
+          if (!autocompleteInput.hasAttribute('data-core-autocomplete')) {
+            Drupal.Autocomplete.jqueryUiShimInit(autocompleteInput);
+          }
         },
       );
     },
@@ -344,4 +149,4 @@
       }
     },
   };
-})(jQuery, Drupal, drupalSettings, A11yAutocomplete, Popper, once);
+})(Drupal, drupalSettings, A11yAutocomplete, Popper, once);

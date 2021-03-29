@@ -277,6 +277,7 @@ clearfix's
 cleartype
 clicksort
 clicksorter
+clipperton
 clist
 closethick
 closur
@@ -931,6 +932,7 @@ mdash
 mdhash
 mediumint
 mediumtext
+melilla
 membersonly
 menufocus
 menulist
