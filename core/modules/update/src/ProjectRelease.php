@@ -12,7 +12,7 @@ final class ProjectRelease {
    *
    * @var bool
    */
-  private $isCoreCompatible;
+  private $coreCompatible;
 
   /**
    * The core compatibility message.
@@ -43,11 +43,11 @@ final class ProjectRelease {
   private $releaseTypes = [];
 
   /**
-   * The status of the release.
+   * Whether release is published.
    *
-   * @var string
+   * @var bool
    */
-  private $status;
+  private $published;
 
   /**
    * The release version.
@@ -68,14 +68,14 @@ final class ProjectRelease {
    *
    * @param string[]|null $release_types
    *   The release types.
-   * @param string $status
-   *   The release status.
+   * @param bool $published
+   *   Whether release is published.
    * @param string $version
    *   The release version.
    * @param string|null $date
    *   The release date.
-   * @param bool|null $is_core_compatible
-   *   The core compatibility constraint.
+   * @param bool|null $core_compatible
+   *   Whether the release is compatible with the site's version of Drupal core.
    * @param string|null $core_compatibility_message
    *   The core compatibility message.
    * @param string $download_url
@@ -83,12 +83,12 @@ final class ProjectRelease {
    * @param string $url
    *   The URL for the release.
    */
-  private function __construct(?array $release_types, string $status, string $version, ?string $date, ?bool $is_core_compatible, ?string $core_compatibility_message, string $download_url, string $url) {
+  private function __construct(?array $release_types, bool $published, string $version, ?string $date, ?bool $core_compatible, ?string $core_compatibility_message, string $download_url, string $url) {
     $this->releaseTypes = $release_types;
-    $this->status = $status;
+    $this->published = $published;
     $this->version = $version;
     $this->date = $date;
-    $this->isCoreCompatible = $is_core_compatible;
+    $this->coreCompatible = $core_compatible;
     $this->coreCompatibilityMessage = $core_compatibility_message;
     $this->downloadUrl = $download_url;
     $this->url = $url;
@@ -106,13 +106,13 @@ final class ProjectRelease {
   public static function createFromArray(array $release_data): ProjectRelease {
     return new ProjectRelease(
       $release_data['terms']['Release type'] ?? NULL,
-      $release_data['status'],
+      $release_data['status'] === 'published',
       $release_data['version'] ?? NULL,
       $release_data['date'] ?? NULL,
       $release_data['core_compatible'] ?? NULL,
       $release_data['core_compatibility_message'] ?? NULL,
       $release_data['download_link'],
-      $release_data['link']
+      $release_data['release_link']
     );
   }
 
@@ -183,10 +183,10 @@ final class ProjectRelease {
    * Determines if the release is unpublished.
    *
    * @return bool
-   *   TRUE if the release is unpublished, or FALSE otherwise.
+   *   TRUE if the release is published, or FALSE otherwise.
    */
-  public function isUnpublished(): bool {
-    return $this->status === 'unpublished';
+  public function isPublished(): bool {
+    return $this->published;
   }
 
   /**
@@ -196,7 +196,7 @@ final class ProjectRelease {
    *   Whether the release is compatible or NULL if no data is set.
    */
   public function isCoreCompatible(): ?bool {
-    return $this->isCoreCompatible;
+    return $this->coreCompatible;
   }
 
   /**

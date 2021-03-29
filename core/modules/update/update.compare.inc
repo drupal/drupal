@@ -370,7 +370,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
       if ($release->isInSecure()) {
         $project_data['status'] = UpdateManagerInterface::NOT_SECURE;
       }
-      elseif ($release->isUnpublished()) {
+      elseif (!$release->isPublished()) {
         $project_data['status'] = UpdateManagerInterface::REVOKED;
         if (empty($project_data['extra'])) {
           $project_data['extra'] = [];
@@ -395,7 +395,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
     }
     // Other than the currently installed release, ignore unpublished, insecure,
     // or unsupported updates.
-    elseif ($release->isUnpublished() ||
+    elseif (!$release->isPublished() ||
             !$is_in_supported_branch($release->getVersion()) ||
             $release->isUnsupported() ||
             $release->isInSecure()
