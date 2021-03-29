@@ -116,6 +116,8 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
    *   The messenger service.
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter service.
+   * @param \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository
+   *   The installed entity definition repository service.
    */
   public function __construct(EntityTypeInterface $entity_type, LanguageManagerInterface $language_manager, ContentTranslationManagerInterface $manager, EntityTypeManagerInterface $entity_type_manager, AccountInterface $current_user, MessengerInterface $messenger, DateFormatterInterface $date_formatter, EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository) {
     $this->entityTypeId = $entity_type->id();
@@ -667,6 +669,10 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
    *   The type of the entity.
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity whose form is being built.
+   * @param array $form
+   *   A nested array form elements comprising the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    *
    * @see \Drupal\content_translation\ContentTranslationHandler::entityFormAlter()
    */

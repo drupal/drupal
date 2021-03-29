@@ -247,6 +247,8 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
    *   one that allows the user to create media and a second that does not.
    * @param bool $list_access
    *   Whether to grant the test user access to list media.
+   * @param string $widget_id
+   *   The widget ID to test.
    *
    * @see media_field_widget_entity_reference_autocomplete_form_alter()
    * @see media_field_widget_multiple_entity_reference_autocomplete_form_alter()

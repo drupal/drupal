@@ -77,8 +77,6 @@ interface EntityFormInterface extends BaseFormIdInterface {
    * the submitted form values are copied to entity properties. The form's
    * entity remains unchanged.
    *
-   * @see \Drupal\Core\Entity\EntityFormInterface::getEntity()
-   *
    * @param array $form
    *   A nested array form elements comprising the form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
@@ -86,6 +84,8 @@ interface EntityFormInterface extends BaseFormIdInterface {
    *
    * @return \Drupal\Core\Entity\EntityInterface
    *   An updated copy of the form's entity object.
+   *
+   * @see \Drupal\Core\Entity\EntityFormInterface::getEntity()
    */
   public function buildEntity(array $form, FormStateInterface $form_state);
 

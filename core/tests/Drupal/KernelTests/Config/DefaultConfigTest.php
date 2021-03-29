@@ -135,6 +135,8 @@ class DefaultConfigTest extends KernelTestBase {
    *
    * @param \Drupal\Core\Config\StorageInterface $default_config_storage
    *   The default config storage to test.
+   * @param string $module
+   *   The module that is being tested.
    */
   protected function doTestsOnConfigStorage(StorageInterface $default_config_storage, $module) {
     /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */

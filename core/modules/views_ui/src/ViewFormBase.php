@@ -81,8 +81,11 @@ abstract class ViewFormBase extends EntityForm {
    * having them as secondary local tasks isn't desired. The caller is responsible
    * for setting the active tab's #active property to TRUE.
    *
-   * @param $display_id
-   *   The display_id which is edited on the current request.
+   * @param \Drupal\views_ui\ViewUI $view
+   *   The ViewUI entity.
+   *
+   * @return array
+   *   An array of tab definitions.
    */
   public function getDisplayTabs(ViewUI $view) {
     $executable = $view->getExecutable();

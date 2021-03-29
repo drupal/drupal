@@ -143,6 +143,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *   The allowed formats for this resource.
    * @param string[] $authentication
    *   The allowed authentication providers for this resource.
+   * @param string[] $methods
+   *   The allowed methods for this resource.
    */
   protected function provisionResource($formats = [], $authentication = [], array $methods = ['GET', 'POST', 'PATCH', 'DELETE']) {
     $this->resourceConfigStorage->create([

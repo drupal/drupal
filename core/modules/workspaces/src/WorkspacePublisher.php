@@ -62,6 +62,8 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
    *   The workspace manager.
    * @param \Drupal\workspaces\WorkspaceAssociationInterface $workspace_association
    *   The workspace association service.
+   * @param \Drupal\workspaces\WorkspaceInterface $source
+   *   The source workspace entity.
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager, Connection $database, WorkspaceManagerInterface $workspace_manager, WorkspaceAssociationInterface $workspace_association, WorkspaceInterface $source) {
     $this->entityTypeManager = $entity_type_manager;

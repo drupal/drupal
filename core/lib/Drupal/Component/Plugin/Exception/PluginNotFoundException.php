@@ -10,10 +10,14 @@ class PluginNotFoundException extends PluginException {
   /**
    * Construct a PluginNotFoundException exception.
    *
-   * For the remaining parameters see \Exception.
-   *
    * @param string $plugin_id
    *   The plugin ID that was not found.
+   * @param string $message
+   *   The exception message.
+   * @param int $code
+   *   The exception code.
+   * @param \Exception|null $previous
+   *   The previous throwable used for exception chaining.
    *
    * @see \Exception
    */

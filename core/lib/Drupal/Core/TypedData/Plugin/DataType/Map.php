@@ -70,6 +70,10 @@ class Map extends TypedData implements \IteratorAggregate, ComplexDataInterface 
    *
    * @param array|null $values
    *   An array of property values.
+   * @param bool $notify
+   *   (optional) Whether to notify the parent object of the change. Defaults to
+   *   TRUE. If a property is updated from a parent object, set it to FALSE to
+   *   avoid being notified again.
    */
   public function setValue($values, $notify = TRUE) {
     if (isset($values) && !is_array($values)) {
@@ -214,6 +218,8 @@ class Map extends TypedData implements \IteratorAggregate, ComplexDataInterface 
   /**
    * {@inheritdoc}
    *
+   * @param $property_name
+   *   The name of the property.
    * @param bool $notify
    *   (optional) Whether to forward the notification to the parent. Defaults to
    *   TRUE. By passing FALSE, overrides of this method can re-use the logic

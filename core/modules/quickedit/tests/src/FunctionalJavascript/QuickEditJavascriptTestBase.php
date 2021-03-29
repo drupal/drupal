@@ -156,7 +156,10 @@ JS;
    * Asserts the state of the Quick Edit entity toolbar.
    *
    * @param string $expected_entity_label
-   *   The expected label in the Quick Edit Entity Toolbar.
+   *   The expected entity label in the Quick Edit Entity Toolbar.
+   * @param string|null $expected_field_label
+   *   The expected field label in the Quick Edit Entity Toolbar, or NULL
+   *   if no field label is expected.
    */
   protected function assertQuickEditEntityToolbar($expected_entity_label, $expected_field_label) {
     $quickedit_entity_toolbar = $this->getSession()->getPage()->findById('quickedit-entity-toolbar');

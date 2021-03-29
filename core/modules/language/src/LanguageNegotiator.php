@@ -81,6 +81,8 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
    *   The configuration factory.
    * @param \Drupal\Core\Site\Settings $settings
    *   The settings instance.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
+   *   The request stack service.
    */
   public function __construct(ConfigurableLanguageManagerInterface $language_manager, PluginManagerInterface $negotiator_manager, ConfigFactoryInterface $config_factory, Settings $settings, RequestStack $requestStack) {
     $this->languageManager = $language_manager;

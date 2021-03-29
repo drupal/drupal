@@ -578,6 +578,9 @@ class DefaultTableMappingTest extends UnitTestCase {
    *   The field name.
    * @param array $column_names
    *   An array of column names for the storage definition.
+   * @param bool $base_field
+   *   Flag indicating whether the field should be treated as a base or bundle
+   *   field.
    *
    * @return \Drupal\Core\Field\FieldStorageDefinitionInterface|\PHPUnit\Framework\MockObject\MockObject
    */
