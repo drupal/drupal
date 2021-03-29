@@ -1,8 +1,6 @@
 <?php
 
-namespace Drupal\system;
-
-use Drupal\Core\Extension\Dependency;
+namespace Drupal\Core\Extension;
 
 /**
  * Messages for missing or incompatible dependencies on modules.
