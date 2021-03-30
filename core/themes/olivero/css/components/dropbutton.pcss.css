@@ -5,19 +5,14 @@
 
 @import "../base/variables.pcss.css";
 
-.dropbutton {
-  border-top-left-radius: var(--border-radius-base); /* LTR */
-  border-top-right-radius: 0; /* LTR */
-  border-bottom-right-radius: 0; /* LTR */
-  border-bottom-left-radius: var(--border-radius-base); /* LTR */
-  background-color: var(--color--blue-20);
+.dropbutton-widget {
+  overflow: hidden;
+  border: solid 1px var(--color--white);
+  border-radius: var(--border-radius);
 }
 
-[dir="rtl"] .dropbutton {
-  border-top-left-radius: 0;
-  border-top-right-radius: var(--border-radius-base);
-  border-bottom-right-radius: var(--border-radius-base);
-  border-bottom-left-radius: 0;
+.dropbutton {
+  background-color: var(--color--blue-20);
 }
 
 .js .dropbutton-widget .dropbutton {
@@ -34,73 +29,39 @@
     padding-inline-end: var(--sp1);
     text-decoration: none;
     color: var(--color--white);
-    border-top-left-radius: var(--border-radius); /* LTR */
-    border-top-right-radius: 0; /* LTR */
-    border-bottom-right-radius: 0; /* LTR */
-    border-bottom-left-radius: var(--border-radius); /* LTR */
 
     &:hover {
       background-color: var(--color--blue-50);
     }
 
     &:focus {
-      outline: var(--outline--base);
-      outline-offset: var(--outline-offset);
+      outline: 2px solid var(--color--blue-70);
+      outline-offset: 2px;
       background-color: var(--color--blue-50);
-      box-shadow: var(--shadow-focusable-with-outline);
     }
   }
 }
 
-[dir="rtl"] .dropbutton-action a {
-  border-top-left-radius: 0;
-  border-top-right-radius: var(--border-radius);
-  border-bottom-right-radius: var(--border-radius);
-  border-bottom-left-radius: 0;
+.open .dropbutton-action:not(:last-child) {
+  border-block-end: solid 1px var(--color--white);
 }
 
 .js .dropbutton-action a:focus {
-  outline: var(--outline--base);
+  outline: 2px solid var(--color--blue-70);
 }
 
 .dropbutton-toggle {
   border-inline-start: 1px solid var(--color--white);
-  border-top-left-radius: 0; /* LTR */
-  border-top-right-radius: var(--border-radius-base); /* LTR */
-  border-bottom-right-radius: var(--border-radius-base); /* LTR */
-  border-bottom-left-radius: 0; /* LTR */
   background-color: var(--color--blue-20);
 
   &:hover {
     background-color: var(--color--blue-50);
   }
 
-  & button {
-    border-top-left-radius: 0; /* LTR */
-    border-top-right-radius: var(--border-radius-base); /* LTR */
-    border-bottom-right-radius: var(--border-radius-base); /* LTR */
-    border-bottom-left-radius: 0; /* LTR */
-
-    &:focus {
-      outline: var(--outline--base);
-      outline-offset: var(--outline-offset);
-      background-color: var(--color--blue-50);
-      box-shadow: var(--shadow-focusable-with-outline);
-    }
-  }
-}
-
-[dir="rtl"] .dropbutton-toggle {
-  border-top-left-radius: var(--border-radius-base);
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: var(--border-radius-base);
-
-  & button {
-    border-top-left-radius: var(--border-radius-base);
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: var(--border-radius-base);
+  & button:focus {
+    outline: solid 2px var(--color--blue-70);
+    outline-offset: 2px;
+    background-color: var(--color--blue-50);
   }
 }
 

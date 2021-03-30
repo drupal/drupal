@@ -68,7 +68,7 @@ class SettingsTest extends UnitTestCase {
   }
 
   /**
-   * Tests Settings::getHashSalt();
+   * Tests Settings::getHashSalt().
    *
    * @covers ::getHashSalt
    */

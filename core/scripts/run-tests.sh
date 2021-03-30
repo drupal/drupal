@@ -276,11 +276,13 @@ All arguments are long options.
 
   --class     Run tests identified by specific class names, instead of group names.
               A specific test method can be added, for example,
-              'Drupal\book\Tests\BookTest::testBookExport'.
+              'Drupal\book\Tests\BookTest::testBookExport'. This argument must
+              be last on the command line.
 
   --file      Run tests identified by specific file names, instead of group names.
               Specify the path and the extension
-              (i.e. 'core/modules/user/user.test').
+              (i.e. 'core/modules/user/user.test'). This argument must be last
+              on the command line.
 
   --types
 
@@ -1493,7 +1495,7 @@ function simpletest_script_load_messages_by_test_id($test_ids) {
   foreach ($test_id_chunks as $test_id_chunk) {
     try {
       $result_chunk = Database::getConnection('default', 'test-runner')
-        ->query("SELECT * FROM {simpletest} WHERE test_id IN ( :test_ids[] ) ORDER BY test_class, message_id", [
+        ->query("SELECT * FROM {simpletest} WHERE [test_id] IN ( :test_ids[] ) ORDER BY [test_class], [message_id]", [
           ':test_ids[]' => $test_id_chunk,
         ])->fetchAll();
     }

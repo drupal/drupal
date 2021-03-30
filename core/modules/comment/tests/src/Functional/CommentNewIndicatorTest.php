@@ -99,8 +99,8 @@ class CommentNewIndicatorTest extends CommentTestBase {
     // The data will be pre-seeded on this particular page in drupalSettings, to
     // avoid the need for the client to make a separate request to the server.
     $settings = $this->getDrupalSettings();
-    $this->assertEqual($settings['history'], ['lastReadTimestamps' => [1 => 0]]);
-    $this->assertEqual($settings['comment'], [
+    $this->assertEqual(['lastReadTimestamps' => [1 => 0]], $settings['history']);
+    $this->assertEqual([
       'newCommentsLinks' => [
         'node' => [
           'comment' => [
@@ -113,7 +113,7 @@ class CommentNewIndicatorTest extends CommentTestBase {
           ],
         ],
       ],
-    ]);
+    ], $settings['comment']);
     // Pretend the data was not present in drupalSettings, i.e. test the
     // separate request to the server.
     $response = $this->renderNewCommentsNodeLinks([$this->node->id()]);
@@ -125,7 +125,7 @@ class CommentNewIndicatorTest extends CommentTestBase {
         'first_new_comment_link' => $this->node->toUrl('canonical', ['fragment' => 'new'])->toString(),
       ],
     ];
-    $this->assertIdentical($expected, $json);
+    $this->assertSame($expected, $json);
 
     // Failing to specify node IDs for the endpoint should return a 404.
     $response = $this->renderNewCommentsNodeLinks([]);

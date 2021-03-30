@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\system\Functional\Form;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Render\Element;
 use Drupal\Tests\BrowserTestBase;
 
@@ -37,7 +36,7 @@ class ValidationTest extends BrowserTestBase {
     ];
     $this->submitForm($edit, 'Save');
     $this->assertSession()->fieldValueEquals('name', '#value changed by #element_validate');
-    $this->assertText('Name value: value changed by setValueForElement() in #element_validate', 'Form element value in $form_state was altered.');
+    $this->assertText('Name value: value changed by setValueForElement() in #element_validate');
 
     // Verify that #validate handlers can alter the form and submitted
     // form values.
@@ -46,7 +45,7 @@ class ValidationTest extends BrowserTestBase {
     ];
     $this->submitForm($edit, 'Save');
     $this->assertSession()->fieldValueEquals('name', '#value changed by #validate');
-    $this->assertText('Name value: value changed by setValueForElement() in #validate', 'Form element value in $form_state was altered.');
+    $this->assertText('Name value: value changed by setValueForElement() in #validate');
 
     // Verify that #element_validate handlers can make form elements
     // inaccessible, but values persist.
@@ -55,12 +54,12 @@ class ValidationTest extends BrowserTestBase {
     ];
     $this->submitForm($edit, 'Save');
     $this->assertSession()->fieldNotExists('name');
-    $this->assertText('Name value: element_validate_access', 'Value for inaccessible form element exists.');
+    $this->assertText('Name value: element_validate_access');
 
     // Verify that value for inaccessible form element persists.
     $this->submitForm([], 'Save');
     $this->assertSession()->fieldValueNotEquals('name', 'Form element was hidden.');
-    $this->assertText('Name value: element_validate_access', 'Value for inaccessible form element exists.');
+    $this->assertText('Name value: element_validate_access');
 
     // Verify that #validate handlers don't run if the CSRF token is invalid.
     $this->drupalLogin($this->drupalCreateUser());
@@ -73,7 +72,7 @@ class ValidationTest extends BrowserTestBase {
       ->setValue('invalid_token');
     $this->submitForm(['name' => 'validate'], 'Save');
     $this->assertSession()->fieldValueNotEquals('name', '#value changed by #validate');
-    $this->assertNoText('Name value: value changed by setValueForElement() in #validate', 'Form element value in $form_state was not altered.');
+    $this->assertNoText('Name value: value changed by setValueForElement() in #validate');
     $this->assertText('The form has become outdated.');
   }
 
@@ -102,18 +101,12 @@ class ValidationTest extends BrowserTestBase {
     $this->drupalGet($path);
     $expected = 'formnovalidate';
     foreach (['partial', 'partial-numeric-index', 'substring'] as $type) {
-      $element = $this->xpath('//input[@id=:id and @formnovalidate=:expected]', [
-        ':id' => 'edit-' . $type,
-        ':expected' => $expected,
-      ]);
-      $this->assertTrue(!empty($element), new FormattableMarkup('The @type button has the proper formnovalidate attribute.', ['@type' => $type]));
+      // Verify the $type button has the proper formnovalidate attribute.
+      $this->assertSession()->elementExists('xpath', "//input[@id='edit-$type' and @formnovalidate='$expected']");
     }
     // The button with full server-side validation should not have the
     // 'formnovalidate' attribute.
-    $element = $this->xpath('//input[@id=:id and not(@formnovalidate)]', [
-      ':id' => 'edit-full',
-    ]);
-    $this->assertTrue(!empty($element), 'The button with full server-side validation does not have the formnovalidate attribute.');
+    $this->assertSession()->elementExists('xpath', "//input[@id='edit-full' and not(@formnovalidate)]");
 
     // Submit the form by pressing the 'Partial validate' button (uses
     // #limit_validation_errors) and ensure that the title field is not

@@ -77,8 +77,8 @@ EOD;
     $this->assertRaw(t('Are you sure you want to create a new %name @type?', ['%name' => 'first', '@type' => 'test configuration']));
     $this->submitForm([], 'Confirm');
     $entity = $storage->load('first');
-    $this->assertIdentical($entity->label(), 'First');
-    $this->assertIdentical($entity->id(), 'first');
+    $this->assertSame('First', $entity->label());
+    $this->assertSame('first', $entity->id());
     $this->assertTrue($entity->status());
     $this->assertRaw(t('The configuration was imported successfully.'));
 
@@ -117,10 +117,10 @@ EOD;
     $this->submitForm([], 'Confirm');
     $entity = $storage->load('second');
     $this->assertRaw(t('The configuration was imported successfully.'));
-    $this->assertIdentical($entity->label(), 'Second');
-    $this->assertIdentical($entity->id(), 'second');
+    $this->assertSame('Second', $entity->label());
+    $this->assertSame('second', $entity->id());
     $this->assertFalse($entity->status());
-    $this->assertIdentical($entity->uuid(), $second_uuid);
+    $this->assertSame($second_uuid, $entity->uuid());
 
     // Perform an update.
     $import = <<<EOD
@@ -140,7 +140,7 @@ EOD;
     $this->submitForm([], 'Confirm');
     $entity = $storage->load('second');
     $this->assertRaw(t('The configuration was imported successfully.'));
-    $this->assertIdentical($entity->label(), 'Second updated');
+    $this->assertSame('Second updated', $entity->label());
 
     // Try to perform an update which adds missing dependencies.
     $import = <<<EOD
@@ -249,16 +249,11 @@ EOD;
     $option_node = $this->assertSession()->optionExists("config_type", 'Simple configuration');
     $this->assertTrue($option_node->isSelected());
     // Spot check several known simple configuration files.
-    $element = $this->xpath('//select[@name="config_name"]')[0];
-    $options = $element->findAll('css', 'option');
-    $expected_options = ['system.site', 'user.settings'];
-    foreach ($options as &$option) {
-      $option = $option->getValue();
-    }
-    $this->assertIdentical($expected_options, array_intersect($expected_options, $options), 'The expected configuration files are listed.');
+    $this->assertSession()->optionExists('config_name', 'system.site');
+    $this->assertSession()->optionExists('config_name', 'user.settings');
 
     $this->drupalGet('admin/config/development/configuration/single/export/system.simple/system.image');
-    $this->assertEquals("toolkit: gd\n_core:\n  default_config_hash: durWHaKeBaq4d9Wpi4RqwADj1OufDepcnJuhVLmKN24\n", $this->xpath('//textarea[@name="export"]')[0]->getValue(), 'The expected system configuration is displayed.');
+    $this->assertSession()->fieldValueEquals('export', "toolkit: gd\n_core:\n  default_config_hash: durWHaKeBaq4d9Wpi4RqwADj1OufDepcnJuhVLmKN24\n");
 
     // Verify that the date format entity type is selected when specified in
     // the URL.
@@ -272,7 +267,7 @@ EOD;
     $option_node = $this->assertSession()->optionExists("config_name", 'Fallback date format (fallback)');
     $this->assertTrue($option_node->isSelected());
     $fallback_date = \Drupal::entityTypeManager()->getStorage('date_format')->load('fallback');
-    $yaml_text = $this->xpath('//textarea[@name="export"]')[0]->getValue();
+    $yaml_text = $this->assertSession()->fieldExists('export')->getValue();
     $this->assertEquals(Yaml::decode($yaml_text), $fallback_date->toArray(), 'The fallback date format config entity export code is displayed.');
   }
 

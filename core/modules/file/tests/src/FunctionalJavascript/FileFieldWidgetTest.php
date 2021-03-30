@@ -108,7 +108,7 @@ class FileFieldWidgetTest extends WebDriverTestBase {
             $check_field_name = $field_name;
           }
 
-          $this->assertIdentical($button->getAttribute('name'), $check_field_name . '_' . $key . '_remove_button');
+          $this->assertSame($check_field_name . '_' . $key . '_remove_button', $button->getAttribute('name'));
         }
 
         $button_name = $current_field_name . '_' . $delta . '_remove_button';
@@ -122,13 +122,13 @@ class FileFieldWidgetTest extends WebDriverTestBase {
         // correct name.
         $upload_button_name = $current_field_name . '_' . $remaining . '_upload_button';
         $this->assertNotNull($assert_session->waitForButton($upload_button_name));
-        $buttons = $this->xpath('//input[@type="submit" and @value="Upload" and @name=:name]', [':name' => $upload_button_name]);
-        $this->assertCount(1, $buttons, 'The upload button is displayed with the correct name.');
+        $button = $this->assertSession()->buttonExists($upload_button_name);
+        $this->assertSame('Upload', $button->getValue());
 
-        // Ensure only at most one button per field is displayed.
-        $buttons = $this->xpath('//input[@type="submit" and @value="Upload"]');
+        // Verify that after removing a file, only one "Upload" button for each
+        // possible field is displayed.
         $expected = $current_field_name == $field_name ? 1 : 2;
-        $this->assertCount($expected, $buttons, 'After removing a file, only one "Upload" button for each possible field is displayed.');
+        $this->assertSession()->elementsCount('xpath', '//input[@type="submit" and @value="Upload"]', $expected);
       }
     }
   }

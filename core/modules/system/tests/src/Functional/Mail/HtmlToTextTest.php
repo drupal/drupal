@@ -57,12 +57,7 @@ class HtmlToTextTest extends BrowserTestBase {
     $tested_tags = implode(', ', array_unique($matches[1]));
     $message .= ' (' . $tested_tags . ')';
     $result = MailFormatHelper::htmlToText($html, $allowed_tags);
-    $this->assertEqual($result, $text, Html::escape($message));
-    $verbose = 'html = <pre>' . $this->stringToHtml($html)
-      . '</pre><br />result = <pre>' . $this->stringToHtml($result)
-      . '</pre><br />expected = <pre>' . $this->stringToHtml($text)
-      . '</pre>';
-    $this->verbose($verbose);
+    $this->assertEqual($text, $result, Html::escape($message));
   }
 
   /**
@@ -239,25 +234,11 @@ class HtmlToTextTest extends BrowserTestBase {
 EOT;
     $input = str_replace(["\r", "\n"], '', $input);
     $output = MailFormatHelper::htmlToText($input);
-    $pass = $this->assertNotRegExp('/\][^\n]*\[/s', $output, 'Block-level HTML tags should force newlines');
-    if (!$pass) {
-      $this->verbose($this->stringToHtml($output));
-    }
+    $this->assertNotRegExp('/\][^\n]*\[/s', $output, 'Block-level HTML tags should force newlines');
     $output_upper = mb_strtoupper($output);
     $upper_input = mb_strtoupper($input);
     $upper_output = MailFormatHelper::htmlToText($upper_input);
-    $pass = $this->assertEqual(
-      $upper_output,
-      $output_upper,
-      'Tag recognition should be case-insensitive'
-    );
-    if (!$pass) {
-      $this->verbose(
-        $upper_output
-        . '<br />should  be equal to <br />'
-        . $output_upper
-      );
-    }
+    $this->assertEquals($output_upper, $upper_output, 'Tag recognition should be case-insensitive');
   }
 
   /**
@@ -371,7 +352,7 @@ EOT;
   public function testRemoveTrailingWhitespace() {
     $text = "Hi there! \nHerp Derp";
     $mail_lines = explode("\n", MailFormatHelper::wrapMail($text));
-    $this->assertNotEqual(" ", substr($mail_lines[0], -1), 'Trailing whitespace removed.');
+    $this->assertNotEquals(" ", substr($mail_lines[0], -1), 'Trailing whitespace removed.');
   }
 
   /**

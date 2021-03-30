@@ -81,7 +81,7 @@ class CommentTypeTest extends CommentTestBase {
 
     // Check that the comment type was created in site default language.
     $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
-    $this->assertEqual($comment_type->language()->getId(), $default_langcode);
+    $this->assertEqual($default_langcode, $comment_type->language()->getId());
 
     // Edit the comment-type and ensure that we cannot change the entity-type.
     $this->drupalGet('admin/structure/comment/manage/foo');
@@ -92,7 +92,7 @@ class CommentTypeTest extends CommentTestBase {
     $this->submitForm([], 'Save');
     \Drupal::entityTypeManager()->getStorage('comment_type')->resetCache(['foo']);
     $comment_type = CommentType::load('foo');
-    $this->assertEqual($comment_type->getTargetEntityTypeId(), 'node');
+    $this->assertEqual('node', $comment_type->getTargetEntityTypeId());
   }
 
   /**
@@ -102,7 +102,7 @@ class CommentTypeTest extends CommentTestBase {
     $this->drupalLogin($this->adminUser);
 
     $field = FieldConfig::loadByName('comment', 'comment', 'comment_body');
-    $this->assertEqual($field->getLabel(), 'Comment', 'Comment body field was found.');
+    $this->assertEqual('Comment', $field->getLabel(), 'Comment body field was found.');
 
     // Change the comment type name.
     $this->drupalGet('admin/structure/comment');
@@ -166,7 +166,7 @@ class CommentTypeTest extends CommentTestBase {
         '%field' => 'node.foo',
       ])
     );
-    $this->assertNoText('This action cannot be undone.', 'The comment type deletion confirmation form is not available.');
+    $this->assertNoText('This action cannot be undone.');
 
     // Delete the comment and the field.
     $comment->delete();
@@ -176,7 +176,7 @@ class CommentTypeTest extends CommentTestBase {
     $this->assertRaw(
       t('Are you sure you want to delete the comment type %type?', ['%type' => $type->id()])
     );
-    $this->assertText('This action cannot be undone.', 'The comment type deletion confirmation form is available.');
+    $this->assertText('This action cannot be undone.');
 
     // Test exception thrown when re-using an existing comment type.
     try {

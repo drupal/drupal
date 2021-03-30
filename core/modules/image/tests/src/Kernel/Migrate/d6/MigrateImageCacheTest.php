@@ -51,8 +51,8 @@ class MigrateImageCacheTest extends MigrateDrupal6TestBase {
     $style = ImageStyle::load('big_blue_cheese');
 
     // Check basic Style info.
-    $this->assertIdentical('big_blue_cheese', $style->get('name'), 'ImageStyle name set correctly');
-    $this->assertIdentical('big_blue_cheese', $style->get('label'), 'ImageStyle label set correctly');
+    $this->assertSame('big_blue_cheese', $style->get('name'), 'ImageStyle name set correctly');
+    $this->assertSame('big_blue_cheese', $style->get('label'), 'ImageStyle label set correctly');
 
     // Test effects.
     $effects = $style->getEffects();
@@ -103,7 +103,7 @@ class MigrateImageCacheTest extends MigrateDrupal6TestBase {
     $messages = iterator_to_array($this->migration->getIdMap()->getMessages());
     $this->assertCount(1, $messages);
     $this->assertStringContainsString('The "image_deprecated_scale" plugin does not exist.', $messages[0]->message);
-    $this->assertEqual($messages[0]->level, MigrationInterface::MESSAGE_ERROR);
+    $this->assertEqual(MigrationInterface::MESSAGE_ERROR, $messages[0]->level);
   }
 
   /**

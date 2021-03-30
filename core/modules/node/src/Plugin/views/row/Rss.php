@@ -2,8 +2,6 @@
 
 namespace Drupal\node\Plugin\views\row;
 
-use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\views\Plugin\views\row\RssPluginBase;
 
 /**
@@ -36,32 +34,6 @@ class Rss extends RssPluginBase {
   protected $entityTypeId = 'node';
 
   /**
-   * The node storage.
-   *
-   * @var \Drupal\node\NodeStorageInterface
-   */
-  protected $nodeStorage;
-
-  /**
-   * Constructs the Rss object.
-   *
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
-   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
-   *   The entity display repository.
-   */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, EntityDisplayRepositoryInterface $entity_display_repository = NULL) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $entity_display_repository);
-    $this->nodeStorage = $entity_type_manager->getStorage('node');
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function buildOptionsForm_summary_options() {
@@ -82,7 +54,7 @@ class Rss extends RssPluginBase {
       $nids[] = $row->{$this->field_alias};
     }
     if (!empty($nids)) {
-      $this->nodes = $this->nodeStorage->loadMultiple($nids);
+      $this->nodes = $this->entityTypeManager->getStorage('node')->loadMultiple($nids);
     }
   }
 

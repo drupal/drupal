@@ -7,6 +7,14 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 /**
  * Base class for D7 source plugins which need to collect field values from
  * the Field API.
+ *
+ * Refer to the existing implementations for examples:
+ * @see \Drupal\node\Plugin\migrate\source\d7\Node
+ * @see \Drupal\user\Plugin\migrate\source\d7\User
+ *
+ * For available configuration keys, refer to the parent classes:
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  */
 abstract class FieldableEntity extends DrupalSqlBase {
 
@@ -30,7 +38,7 @@ abstract class FieldableEntity extends DrupalSqlBase {
 
     // Join the 'field_config' table and add the 'translatable' setting to the
     // query.
-    $query->leftJoin('field_config', 'fc', 'fci.field_id = fc.id');
+    $query->leftJoin('field_config', 'fc', '[fci].[field_id] = [fc].[id]');
     $query->addField('fc', 'translatable');
 
     return $query->execute()->fetchAllAssoc('field_name');

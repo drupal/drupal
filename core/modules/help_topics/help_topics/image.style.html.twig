@@ -1,0 +1,22 @@
+---
+label: 'Adding an image style'
+related:
+  - core.media
+  - field_ui.manage_display
+  - layout_builder.overview
+---
+{% set overview = render_var(url('help.help_topic', {'id': 'core.media'})) %}
+{% set styles = render_var(url('entity.image_style.collection')) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Add a new image style, which can be used to process and display images. See <a href="{{ overview }}">Managing media</a> for an overview of image styles.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Media</em> &gt; <a href="{{ styles }}"><em>Image styles</em></a>.{% endtrans %}</li>
+  <li>{% trans %}Click <em>Add image style</em>.{% endtrans %}</li>
+  <li>{% trans %}Enter a descriptive <em>Image style name</em>, and click <em>Create new style</em>.{% endtrans %}</li>
+  <li>{% trans %}Under <em>Effect</em>, choose an effect to apply and click <em>Add</em>.{% endtrans %}</li>
+  <li>{% trans %}Configure the effect on the next page. Most effects require some additional configuration after they are added.  For example, for the <em>Crop</em> effect, enter the <em>Width</em> and <em>Height</em> to crop the image to, and choose the <em>Anchor</em> point. Click <em>Add effect</em>.{% endtrans %}</li>
+  <li>{% trans %}Repeat the previous two steps until all of the effects have been added.{% endtrans %}</li>
+  <li>{% trans %}Drag to change the order of the effects. Then click <em>Save</em> to save the new order.{% endtrans %}</li>
+  <li>{% trans %}The image style can now be used to format a field containing an image in your layouts or traditional field displays. It can also be used as part of a responsive image style. See related topics below for more information.{% endtrans %}</li>
+</ol>

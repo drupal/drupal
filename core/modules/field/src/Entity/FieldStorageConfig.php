@@ -245,6 +245,9 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    *     a 'field_name' property can be accepted in place of 'id'.
    *   - entity_type: required.
    *   - type: required.
+   * @param string $entity_type
+   *   (optional) The entity type on which the field should be created.
+   *   Defaults to "field_storage_config".
    */
   public function __construct(array $values, $entity_type = 'field_storage_config') {
     // Check required properties.

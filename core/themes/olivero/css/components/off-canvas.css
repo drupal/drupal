@@ -19,14 +19,14 @@
 }
 
 #drupal-off-canvas .form-type-boolean {
-    line-height: 18px
+    line-height: 1.125rem
   }
 
 #drupal-off-canvas .form-type-boolean input[type="checkbox"],
     #drupal-off-canvas .form-type-boolean input[type="radio"] {
       float: none;
-      width: 13.5px;
-      height: 13.5px;
+      width: 0.84375rem;
+      height: 0.84375rem;
       transform: none;
       vertical-align: middle;
     }
@@ -51,7 +51,7 @@
   }
 
 #drupal-off-canvas .olivero-details__wrapper {
-    padding: 20px;
+    padding: 1.25rem;
   }
 
 #drupal-off-canvas {
@@ -120,5 +120,5 @@
 #drupal-off-canvas div {
     display: block;
     color: #ddd;
-    font-size: 14px;
+    font-size: 0.875rem;
   }

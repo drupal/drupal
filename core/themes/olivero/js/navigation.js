@@ -65,6 +65,8 @@
         props.body.classList.remove('js-overlay-active');
         props.body.classList.remove('js-fixed');
       }
+
+      Drupal.olivero.closeAllSubNav();
     });
   }
 

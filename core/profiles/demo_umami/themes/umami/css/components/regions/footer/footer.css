@@ -7,16 +7,15 @@
  */
 
 .footer {
-  padding: 2rem 1rem;
+  padding: 2rem 4%;
   text-align: center;
   color: #fff;
   background-color: #5f635d;
   font-size: 0.9rem;
 }
-
-@media screen and (min-width: 60rem) {
+/* Large */
+@media screen and (min-width: 60rem) { /* 960px */
   .footer {
-    padding: 1rem 1rem 0;
     text-align: left; /* LTR */
   }
   [dir="rtl"] .footer {
@@ -25,6 +24,12 @@
   .region-footer {
     display: flex;
     justify-content: space-between;
+  }
+}
+/* Extra large + side margins */
+@media screen and (min-width: 80rem) { /* 1200px (large) + 80px (side margins) = 1280px */
+  .footer {
+    padding: 2rem 0;
   }
 }
 

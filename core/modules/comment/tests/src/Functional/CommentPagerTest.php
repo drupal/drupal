@@ -290,7 +290,7 @@ class CommentPagerTest extends CommentTestBase {
     foreach ($expected_pages as $new_replies => $expected_page) {
       $returned_page = \Drupal::entityTypeManager()->getStorage('comment')
         ->getNewCommentPageNumber($node->get('comment')->comment_count, $new_replies, $node, 'comment');
-      $this->assertIdentical($expected_page, $returned_page, new FormattableMarkup('Flat mode, @new replies: expected page @expected, returned page @returned.', ['@new' => $new_replies, '@expected' => $expected_page, '@returned' => $returned_page]));
+      $this->assertSame($expected_page, $returned_page, new FormattableMarkup('Flat mode, @new replies: expected page @expected, returned page @returned.', ['@new' => $new_replies, '@expected' => $expected_page, '@returned' => $returned_page]));
     }
 
     $this->setCommentSettings('default_mode', CommentManagerInterface::COMMENT_MODE_THREADED, 'Switched to threaded mode.');
@@ -343,7 +343,8 @@ class CommentPagerTest extends CommentTestBase {
     $account = $this->drupalCreateUser(['administer node display']);
     $this->drupalLogin($account);
     $this->drupalGet('admin/structure/types/manage/article/display');
-    $this->assertNoText('Pager ID: 0', 'No summary for standard pager');
+    // No summary for standard pager.
+    $this->assertNoText('Pager ID: 0');
     $this->assertText('Pager ID: 1');
     $this->submitForm([], 'comment_settings_edit');
     // Change default pager to 2.
@@ -352,7 +353,8 @@ class CommentPagerTest extends CommentTestBase {
     // Revert the changes.
     $this->submitForm([], 'comment_settings_edit');
     $this->submitForm(['fields[comment][settings_edit_form][settings][pager_id]' => 0], 'Save');
-    $this->assertNoText('Pager ID: 0', 'No summary for standard pager');
+    // No summary for standard pager.
+    $this->assertNoText('Pager ID: 0');
 
     $this->drupalLogin($this->adminUser);
 
@@ -422,7 +424,7 @@ class CommentPagerTest extends CommentTestBase {
    * @return string|false
    *   Page contents on success, or FALSE on failure.
    *
-   * @see WebTestBase::clickLink()
+   * @see \Drupal\Tests\UiHelperTrait::clickLink()
    */
   protected function clickLinkWithXPath($xpath, $arguments = [], $index = 0) {
     $url_before = $this->getUrl();

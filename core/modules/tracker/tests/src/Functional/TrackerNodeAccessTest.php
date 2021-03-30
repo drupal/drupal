@@ -43,6 +43,32 @@ class TrackerNodeAccessTest extends BrowserTestBase {
   }
 
   /**
+   * Ensure that tracker_cron is not access sensitive.
+   */
+  public function testTrackerNodeAccessIndexing() {
+    // The node is private and not authored by the anonymous user, so any entity
+    // queries run for the anonymous user will miss it.
+    $author = $this->drupalCreateUser();
+    $private_node = $this->drupalCreateNode([
+      'title' => t('Private node test'),
+      'private' => TRUE,
+      'uid' => $author->id(),
+    ]);
+
+    // Remove index entries, and index as tracker_install() does.
+    \Drupal::database()->delete('tracker_node')->execute();
+    \Drupal::state()->set('tracker.index_nid', $private_node->id());
+    tracker_cron();
+
+    // Test that the private node has been indexed and so can be viewed by a
+    // user with node test view permission.
+    $user = $this->drupalCreateUser(['node test view']);
+    $this->drupalLogin($user);
+    $this->drupalGet('activity');
+    $this->assertText($private_node->getTitle());
+  }
+
+  /**
    * Ensure private node on /tracker is only visible to users with permission.
    */
   public function testTrackerNodeAccess() {
@@ -69,20 +95,20 @@ class TrackerNodeAccessTest extends BrowserTestBase {
 
     // User with access should see both nodes created.
     $this->drupalGet('activity');
-    $this->assertText($private_node->getTitle(), 'Private node is visible to user with private access.');
-    $this->assertText($public_node->getTitle(), 'Public node is visible to user with private access.');
+    $this->assertText($private_node->getTitle());
+    $this->assertText($public_node->getTitle());
     $this->drupalGet('user/' . $access_user->id() . '/activity');
-    $this->assertText($private_node->getTitle(), 'Private node is visible to user with private access.');
-    $this->assertText($public_node->getTitle(), 'Public node is visible to user with private access.');
+    $this->assertText($private_node->getTitle());
+    $this->assertText($public_node->getTitle());
 
     // User without access should not see private node.
     $this->drupalLogin($no_access_user);
     $this->drupalGet('activity');
-    $this->assertNoText($private_node->getTitle(), 'Private node is not visible to user without private access.');
-    $this->assertText($public_node->getTitle(), 'Public node is visible to user without private access.');
+    $this->assertNoText($private_node->getTitle());
+    $this->assertText($public_node->getTitle());
     $this->drupalGet('user/' . $access_user->id() . '/activity');
-    $this->assertNoText($private_node->getTitle(), 'Private node is not visible to user without private access.');
-    $this->assertText($public_node->getTitle(), 'Public node is visible to user without private access.');
+    $this->assertNoText($private_node->getTitle());
+    $this->assertText($public_node->getTitle());
   }
 
 }

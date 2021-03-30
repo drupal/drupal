@@ -109,6 +109,6 @@ display:
           default_field_elements: true
           hide_empty: false
     display_plugin: default
-    display_title: Master
+    display_title: Default
     id: default
     position: 0

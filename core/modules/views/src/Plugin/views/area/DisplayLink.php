@@ -90,7 +90,7 @@ class DisplayLink extends AreaPluginBase {
 
     // Do not add errors for the default display if it is not displayed in the
     // UI.
-    if ($this->displayHandler->isDefaultDisplay() && !\Drupal::config('views.settings')->get('ui.show.master_display')) {
+    if ($this->displayHandler->isDefaultDisplay() && !\Drupal::config('views.settings')->get('ui.show.default_display')) {
       return $errors;
     }
 

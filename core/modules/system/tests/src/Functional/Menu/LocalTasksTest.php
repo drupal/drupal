@@ -167,12 +167,12 @@ class LocalTasksTest extends BrowserTestBase {
 
     // Ensures that the local tasks contains the proper 'provider key'
     $definitions = $this->container->get('plugin.manager.menu.local_task')->getDefinitions();
-    $this->assertEqual($definitions['menu_test.local_task_test_tasks_view']['provider'], 'menu_test');
-    $this->assertEqual($definitions['menu_test.local_task_test_tasks_edit']['provider'], 'menu_test');
-    $this->assertEqual($definitions['menu_test.local_task_test_tasks_settings']['provider'], 'menu_test');
-    $this->assertEqual($definitions['menu_test.local_task_test_tasks_settings_sub1']['provider'], 'menu_test');
-    $this->assertEqual($definitions['menu_test.local_task_test_tasks_settings_sub2']['provider'], 'menu_test');
-    $this->assertEqual($definitions['menu_test.local_task_test_tasks_settings_sub3']['provider'], 'menu_test');
+    $this->assertEqual('menu_test', $definitions['menu_test.local_task_test_tasks_view']['provider']);
+    $this->assertEqual('menu_test', $definitions['menu_test.local_task_test_tasks_edit']['provider']);
+    $this->assertEqual('menu_test', $definitions['menu_test.local_task_test_tasks_settings']['provider']);
+    $this->assertEqual('menu_test', $definitions['menu_test.local_task_test_tasks_settings_sub1']['provider']);
+    $this->assertEqual('menu_test', $definitions['menu_test.local_task_test_tasks_settings_sub2']['provider']);
+    $this->assertEqual('menu_test', $definitions['menu_test.local_task_test_tasks_settings_sub3']['provider']);
 
     // Test that we we correctly apply the active class to tabs where one of the
     // request attributes is upcast to an entity object.

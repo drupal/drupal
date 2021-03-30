@@ -78,7 +78,7 @@ class NodeFormSaveChangedTimeTest extends BrowserTestBase {
 
     $storage->resetCache([1]);
     $node = $storage->load(1);
-    $this->assertNotEqual($changed_timestamp, $node->getChangedTime(), "The entity's changed time was updated after form save without changes.");
+    $this->assertNotEquals($node->getChangedTime(), $changed_timestamp, "The entity's changed time was updated after form save without changes.");
   }
 
 }

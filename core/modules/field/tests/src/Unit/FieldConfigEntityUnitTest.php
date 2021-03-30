@@ -64,7 +64,7 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
   protected $fieldStorage;
 
   /**
-   * The mock field type plugin manager;
+   * The mock field type plugin manager.
    *
    * @var \Drupal\Core\Field\FieldTypePluginManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */

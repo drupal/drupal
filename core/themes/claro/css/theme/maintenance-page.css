@@ -35,7 +35,7 @@
 .site-name,
 .title,
 .content {
-  max-width: 512px;
+  max-width: 32rem;
 }
 
 /**
@@ -122,7 +122,7 @@
   margin-right: 1.25em;
   margin-left: 1.25em;
   padding: 3rem;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   background: #fff;
   box-shadow: 0 14px 30px rgba(0, 0, 0, 0.1);
 }
@@ -162,12 +162,12 @@
    */
   .layout-container.layout-container.layout-container {
     width: 75%;
-    max-width: 940px;
+    max-width: 58.75rem;
     margin: 0 auto;
   }
   ul {
     margin: 0.25em 0;
-    padding: 15px;
+    padding: 0.9375rem;
   }
   [dir="rtl"] ul {
     margin-right: 0; /* Overrides default [dir="rtl"] ul margin */

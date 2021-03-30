@@ -38,13 +38,13 @@
 }
 
 .cke_reset_all .cke_dialog_body * {
-  font: 13px/1.538em BlinkMacSystemFont, -apple-system, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  font: 0.8125rem/1.538em BlinkMacSystemFont, -apple-system, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 }
 
 /* Dialog's header. */
 
 .cke_reset_all .cke_dialog_title {
-  padding: 15px 49px 15px 15px;
+  padding: 0.9375rem 3.0625rem 0.9375rem 0.9375rem;
   color: #fff;
   border: 0;
   border-top-left-radius: 5px;
@@ -59,23 +59,23 @@
 }
 
 [dir="rtl"] .cke_reset_all .cke_dialog_title {
-  padding: 15px 15px 15px 49px;
+  padding: 0.9375rem 0.9375rem 0.9375rem 3.0625rem;
 }
 
 /* More specificity to prevent overriding in high density screens. */
 
 .cke_reset_all .cke_dialog .cke_dialog_close_button {
-  top: 16px;
-  right: 20px;
-  width: 16px;
-  height: 16px;
+  top: 1rem;
+  right: 1.25rem;
+  width: 1rem;
+  height: 1rem;
   opacity: 1;
   background: url("data:image/svg+xml,%3csvg height='16' width='16' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='m3.51 13.925c.194.194.512.195.706.001l3.432-3.431c.194-.194.514-.194.708 0l3.432 3.431c.192.194.514.193.707-.001l1.405-1.417c.191-.195.189-.514-.002-.709l-3.397-3.4c-.192-.193-.192-.514-.002-.708l3.401-3.43c.189-.195.189-.515 0-.709l-1.407-1.418c-.195-.195-.513-.195-.707-.001l-3.43 3.431c-.195.194-.516.194-.708 0l-3.432-3.431c-.195-.195-.512-.194-.706.001l-1.407 1.417c-.194.195-.194.515 0 .71l3.403 3.429c.193.195.193.514-.001.708l-3.4 3.399c-.194.195-.195.516-.001.709l1.406 1.419z' fill='%23fff'/%3e%3c/svg%3e") 0 0 no-repeat;
 }
 
 [dir="rtl"] .cke_reset_all .cke_dialog .cke_dialog_close_button {
   right: auto;
-  left: 20px;
+  left: 1.25rem;
 }
 
 .cke_reset_all .cke_dialog .cke_label {
@@ -101,7 +101,7 @@
 [dir="rtl"] .cke_reset_all .cke_dialog_ui_hbox_first,
 [dir="rtl"] .cke_reset_all .cke_dialog_ui_hbox_child {
   padding-right: 0;
-  padding-left: 10px;
+  padding-left: 0.625rem;
 }
 
 .cke_reset_all .cke_dialog_body label {
@@ -122,7 +122,7 @@
 .cke_reset_all select.cke_dialog_ui_input_select {
   box-sizing: border-box;
   max-width: 100%;
-  margin: 0 0 3px;
+  margin: 0 0 0.1875rem;
   padding: 0.3em 0.4em 0.3em 0.5em;
   transition: border linear 0.2s, box-shadow linear 0.2s;
   color: #595959;
@@ -153,7 +153,7 @@
 
 .cke_reset_all .cke_dialog .cke_dialog_footer {
   margin: 0;
-  padding: 15px 20px;
+  padding: 0.9375rem 1.25rem;
   text-align: left;
   border: 0;
   border-bottom-right-radius: 5px;
@@ -187,7 +187,7 @@
   display: inline-block;
   box-sizing: border-box;
   margin-right: 1em;
-  padding: 4px 1.5em;
+  padding: 0.25rem 1.5em;
   cursor: pointer;
   transition: all 0.1s;
   text-align: center;
@@ -216,7 +216,7 @@
 
 .cke_reset_all .cke_dialog_footer_buttons a.cke_dialog_ui_button:hover,
 .cke_reset_all .cke_dialog_footer_buttons a.cke_dialog_ui_button:focus {
-  padding: 4px 1.5em;
+  padding: 0.25rem 1.5em;
   text-decoration: none;
   color: #1a1a1a;
   border: 1px solid #a6a6a6;
@@ -232,7 +232,7 @@
 }
 
 .cke_reset_all .cke_dialog_footer_buttons a.cke_dialog_ui_button:active {
-  padding: 4px 1.5em;
+  padding: 0.25rem 1.5em;
   transition: none;
   border: 1px solid #a6a6a6;
   background-color: #dfdfd9;

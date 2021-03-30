@@ -82,6 +82,7 @@ class ViewsDisplay extends ViewsPluginAnnotationBase {
 
   /**
    * A list of places where contextual links should be added.
+   *
    * For example:
    * @code
    * array(

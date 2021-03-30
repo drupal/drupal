@@ -12,12 +12,12 @@
 
 .system-status-report-counters__item {
   width: 100%;
-  margin: 10px 0;
+  margin: 0.625rem 0;
 }
 
 @media screen and (min-width: 60em) {
   .system-status-report-counters__item {
-    margin-bottom: 20px;
+    margin-bottom: 1.25rem;
   }
   .system-status-report-counters {
     display: flex;

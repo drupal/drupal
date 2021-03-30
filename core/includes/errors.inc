@@ -217,7 +217,6 @@ function _drupal_log_error($error, $fatal = FALSE) {
 
       // If error type is 'User notice' then treat it as debug information
       // instead of an error message.
-      // @see debug()
       if ($error['%type'] == 'User notice') {
         $error['%type'] = 'Debug';
         $class = 'status';

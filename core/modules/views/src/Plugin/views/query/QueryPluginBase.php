@@ -59,7 +59,7 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
   /**
    * Let modules modify the query just prior to finalizing it.
    *
-   * @param view $view
+   * @param \Drupal\views\ViewExecutable $view
    *   The view which is executed.
    */
   public function alter(ViewExecutable $view) {}
@@ -67,7 +67,7 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
   /**
    * Builds the necessary info to execute the query.
    *
-   * @param view $view
+   * @param \Drupal\views\ViewExecutable $view
    *   The view which is executed.
    */
   public function build(ViewExecutable $view) {}
@@ -82,7 +82,7 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
    * $view->result should contain an array of objects. The array must use a
    * numeric index starting at 0.
    *
-   * @param view $view
+   * @param \Drupal\views\ViewExecutable $view
    *   The view which is executed.
    */
   public function execute(ViewExecutable $view) {}
@@ -93,7 +93,7 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
    * This signature is something that can be used when perusing query logs to
    * discern where particular queries might be coming from.
    *
-   * @param view $view
+   * @param \Drupal\views\ViewExecutable $view
    *   The view which is executed.
    */
   public function addSignature(ViewExecutable $view) {}
@@ -192,7 +192,7 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
 
   /**
    * Loads all entities contained in the passed-in $results.
-   *.
+   *
    * If the entity belongs to the base table, then it gets stored in
    * $result->_entity. Otherwise, it gets stored in
    * $result->_relationship_entities[$relationship_id];

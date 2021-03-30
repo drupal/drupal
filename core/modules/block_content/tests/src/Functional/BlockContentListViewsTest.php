@@ -59,10 +59,10 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     $expected_items = ['Block description', 'Block type', 'Updated Sort ascending', 'Operations'];
     foreach ($elements as $key => $element) {
       if ($element->find('xpath', 'a')) {
-        $this->assertIdentical(trim($element->find('xpath', 'a')->getText()), $expected_items[$key]);
+        $this->assertSame($expected_items[$key], trim($element->find('xpath', 'a')->getText()));
       }
       else {
-        $this->assertIdentical(trim($element->getText()), $expected_items[$key]);
+        $this->assertSame($expected_items[$key], trim($element->getText()));
       }
     }
 
@@ -88,7 +88,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     // Check the contents of each row cell. The first cell contains the label,
     // the second contains the machine name, and the third contains the
     // operations list.
-    $this->assertIdentical($elements[0]->find('xpath', 'a')->getText(), $label);
+    $this->assertSame($label, $elements[0]->find('xpath', 'a')->getText());
 
     // Edit the entity using the operations link.
     $blocks = $this->container

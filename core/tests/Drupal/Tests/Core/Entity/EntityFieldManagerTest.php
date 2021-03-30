@@ -17,6 +17,7 @@ use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityFieldManager;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -89,7 +90,7 @@ class EntityFieldManagerTest extends UnitTestCase {
   /**
    * The event dispatcher.
    *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface|\Prophecy\Prophecy\ProphecyInterface
+   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface|\Prophecy\Prophecy\ProphecyInterface
    */
   protected $eventDispatcher;
 
@@ -143,6 +144,13 @@ class EntityFieldManagerTest extends UnitTestCase {
   protected $entityType;
 
   /**
+   * The entity last installed schema repository.
+   *
+   * @var \Prophecy\Prophecy\ObjectProphecy|\Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface
+   */
+  protected $entityLastInstalledSchemaRepository;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -175,8 +183,9 @@ class EntityFieldManagerTest extends UnitTestCase {
     $this->entityTypeRepository = $this->prophesize(EntityTypeRepositoryInterface::class);
     $this->entityTypeBundleInfo = $this->prophesize(EntityTypeBundleInfoInterface::class);
     $this->entityDisplayRepository = $this->prophesize(EntityDisplayRepositoryInterface::class);
+    $this->entityLastInstalledSchemaRepository = $this->prophesize(EntityLastInstalledSchemaRepositoryInterface::class);
 
-    $this->entityFieldManager = new TestEntityFieldManager($this->entityTypeManager->reveal(), $this->entityTypeBundleInfo->reveal(), $this->entityDisplayRepository->reveal(), $this->typedDataManager->reveal(), $this->languageManager->reveal(), $this->keyValueFactory->reveal(), $this->moduleHandler->reveal(), $this->cacheBackend->reveal());
+    $this->entityFieldManager = new TestEntityFieldManager($this->entityTypeManager->reveal(), $this->entityTypeBundleInfo->reveal(), $this->entityDisplayRepository->reveal(), $this->typedDataManager->reveal(), $this->languageManager->reveal(), $this->keyValueFactory->reveal(), $this->moduleHandler->reveal(), $this->cacheBackend->reveal(), $this->entityLastInstalledSchemaRepository->reveal());
   }
 
   /**

@@ -74,6 +74,8 @@ class MigrateSourceTest extends MigrateTestCase {
    * @param int $status
    *   (optional) The default status for the new rows to be imported. Defaults
    *   to MigrateIdMapInterface::STATUS_NEEDS_UPDATE.
+   * @param int $high_water_value
+   *   (optional) The high water mark to start from, if set.
    *
    * @return \Drupal\migrate\Plugin\MigrateSourceInterface
    *   A mocked source plugin.
@@ -444,8 +446,8 @@ class MigrateSourceTest extends MigrateTestCase {
   protected function getMigrateExecutable($migration) {
     /** @var \Drupal\migrate\MigrateMessageInterface $message */
     $message = $this->createMock('Drupal\migrate\MigrateMessageInterface');
-    /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher */
-    $event_dispatcher = $this->createMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
+    /** @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher */
+    $event_dispatcher = $this->createMock('Symfony\Contracts\EventDispatcher\EventDispatcherInterface');
     return new MigrateExecutable($migration, $message, $event_dispatcher);
   }
 

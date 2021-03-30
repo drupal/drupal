@@ -125,7 +125,7 @@ class CommentAnonymousTest extends CommentTestBase {
 
     $anonymous_comment3 = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName(), TRUE);
     // Name should have 'Anonymous' for value by default.
-    $this->assertText('Email field is required.', 'Email required.');
+    $this->assertText('Email field is required.');
     $this->assertFalse($this->commentExists($anonymous_comment3), 'Anonymous comment with contact info (required) not found.');
 
     // Post comment with contact info (required).

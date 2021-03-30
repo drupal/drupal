@@ -70,10 +70,10 @@ class ConfigInstallWebTest extends BrowserTestBase {
     \Drupal::configFactory()->reset($default_configuration_entity);
     $config_static = $this->config($default_config);
     $this->assertFalse($config_static->isNew());
-    $this->assertIdentical($config_static->get('foo'), 'default setting');
+    $this->assertSame('default setting', $config_static->get('foo'));
     $config_entity = $this->config($default_configuration_entity);
     $this->assertFalse($config_entity->isNew());
-    $this->assertIdentical($config_entity->get('label'), 'Default integration config label');
+    $this->assertSame('Default integration config label', $config_entity->get('label'));
 
     // Customize both configuration objects.
     $config_static->set('foo', 'customized setting')->save();
@@ -95,7 +95,7 @@ class ConfigInstallWebTest extends BrowserTestBase {
     // Verify the integration config still exists.
     $config_entity = $this->config($default_configuration_entity);
     $this->assertFalse($config_entity->isNew());
-    $this->assertIdentical($config_entity->get('label'), 'Customized integration config label');
+    $this->assertSame('Customized integration config label', $config_entity->get('label'));
 
     // Reinstall the integration module.
     try {
@@ -117,12 +117,12 @@ class ConfigInstallWebTest extends BrowserTestBase {
     \Drupal::configFactory()->reset($default_configuration_entity);
     $config_static = $this->config($default_config);
     $this->assertFalse($config_static->isNew());
-    $this->assertIdentical($config_static->get('foo'), 'default setting');
+    $this->assertSame('default setting', $config_static->get('foo'));
 
     // Verify the integration config is using the default.
     $config_entity = \Drupal::config($default_configuration_entity);
     $this->assertFalse($config_entity->isNew());
-    $this->assertIdentical($config_entity->get('label'), 'Default integration config label');
+    $this->assertSame('Default integration config label', $config_entity->get('label'));
   }
 
   /**

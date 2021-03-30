@@ -108,6 +108,8 @@ class MigrationTest extends KernelTestBase {
   public function testGetMigrationDependencies() {
     $plugin_manager = \Drupal::service('plugin.manager.migration');
     $plugin_definition = [
+      'id' => 'foo',
+      'deriver' => 'fooDeriver',
       'process' => [
         'f1' => 'bar',
         'f2' => [
@@ -144,6 +146,10 @@ class MigrationTest extends KernelTestBase {
               'migration' => 'm5',
             ],
           ],
+        ],
+        'f7' => [
+          'plugin' => 'migration_lookup',
+          'migration' => 'foo',
         ],
       ],
     ];

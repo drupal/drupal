@@ -21,6 +21,7 @@ class MigrateSystemMaintenanceTranslationTest extends MigrateDrupal6TestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->executeMigration('system_maintenance');
     $this->executeMigration('d6_system_maintenance_translation');
   }
 
@@ -29,7 +30,7 @@ class MigrateSystemMaintenanceTranslationTest extends MigrateDrupal6TestBase {
    */
   public function testSystemMaintenance() {
     $config = \Drupal::service('language_manager')->getLanguageConfigOverride('fr', 'system.maintenance');
-    $this->assertIdentical('fr - Drupal is currently under maintenance. We should be back shortly. Thank you for your patience.', $config->get('message'));
+    $this->assertSame('fr - Drupal is currently under maintenance. We should be back shortly. Thank you for your patience.', $config->get('message'));
   }
 
 }

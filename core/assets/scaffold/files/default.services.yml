@@ -36,6 +36,22 @@ parameters:
     # @default none
     # cookie_domain: '.example.com'
     #
+    # Set the session ID string length. The length can be between 22 to 256. The
+    # PHP recommended value is 48. See
+    # https://www.php.net/manual/session.security.ini.php for more information.
+    # This value should be kept in sync with
+    # \Drupal\Core\Session\SessionConfiguration::__construct()
+    # @default 48
+    sid_length: 48
+    #
+    # Set the number of bits in encoded session ID character. The possible
+    # values are '4' (0-9, a-f), '5' (0-9, a-v), and '6' (0-9, a-z, A-Z, "-",
+    # ","). The PHP recommended value is 6. See
+    # https://www.php.net/manual/session.security.ini.php for more information.
+    # This value should be kept in sync with
+    # \Drupal\Core\Session\SessionConfiguration::__construct()
+    # @default 6
+    sid_bits_per_character: 6
   twig.config:
     # Twig debugging:
     #

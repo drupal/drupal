@@ -6,9 +6,9 @@ namespace Drupal\Core\Config\Entity;
  * Interface for configuration entities to store third party information.
  *
  * A third party is a module that needs to store tightly coupled information to
- * the configuration entity. For example, a module alters the node type form
- * can use this to store its configuration so that it will be deployed with the
- * node type.
+ * the configuration entity. For example, a module that alters the node type
+ * form can use this to store its configuration so that it will be deployed
+ * with the node type.
  */
 interface ThirdPartySettingsInterface {
 

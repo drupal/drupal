@@ -88,10 +88,11 @@ class FetchTest extends DatabaseTestBase {
   public function testQueryFetchObjectClass() {
     $records = 0;
     $query = $this->connection->query('SELECT [name] FROM {test} WHERE [age] = :age', [':age' => 25]);
-    while ($result = $query->fetchObject(FakeRecord::class)) {
+    while ($result = $query->fetchObject(FakeRecord::class, [1])) {
       $records += 1;
       $this->assertInstanceOf(FakeRecord::class, $result);
       $this->assertSame('John', $result->name, '25 year old is John.');
+      $this->assertSame(1, $result->fakeArg, 'The record has received an argument through its constructor.');
     }
     $this->assertSame(1, $records, 'There is only one record.');
   }
@@ -160,7 +161,7 @@ class FetchTest extends DatabaseTestBase {
     $query_result = $query->execute()->fetchAll(\PDO::FETCH_COLUMN);
 
     $expected_result = ['George', 'John', 'Paul', 'Ringo'];
-    $this->assertEqual($query_result, $expected_result, 'Returned the correct result.');
+    $this->assertEqual($expected_result, $query_result, 'Returned the correct result.');
   }
 
   /**
@@ -174,7 +175,7 @@ class FetchTest extends DatabaseTestBase {
     $result = $this->connection->query('SELECT [name] FROM {test} WHERE [age] > :age', [':age' => 25]);
     $i = 0;
     foreach ($result as $record) {
-      $this->assertIdentical($record->name, $column[$i++], 'Column matches direct access.');
+      $this->assertSame($column[$i++], $record->name, 'Column matches direct access.');
     }
   }
 

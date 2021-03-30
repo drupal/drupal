@@ -15,7 +15,7 @@
   margin-block: var(--sp1);
   color: inherit;
   border: var(--details-border-width) solid var(--color--gray-80);
-  border-radius: var(--border-radius-base);
+  border-radius: var(--border-radius);
   box-shadow: 0 1px 4px var(--color--gray-70);
 }
 
@@ -67,7 +67,7 @@
   content: "";
   pointer-events: none;
   opacity: 0;
-  border-radius: var(--border-radius-base);
+  border-radius: var(--border-radius);
   box-shadow: inset 0 0 0 2px var(--color--blue-70);
 }
 

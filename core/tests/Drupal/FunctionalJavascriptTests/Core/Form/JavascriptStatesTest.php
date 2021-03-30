@@ -2,6 +2,7 @@
 
 namespace Drupal\FunctionalJavascriptTests\Core\Form;
 
+use Drupal\filter\Entity\FilterFormat;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
@@ -20,6 +21,33 @@ class JavascriptStatesTest extends WebDriverTestBase {
    * {@inheritdoc}
    */
   protected static $modules = ['form_test'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp():void {
+    parent::setUp();
+    // Add text formats.
+    $filtered_html_format = FilterFormat::create([
+      'format' => 'filtered_html',
+      'name' => 'Filtered HTML',
+      'weight' => 0,
+      'filters' => [],
+    ]);
+    $filtered_html_format->save();
+    $full_html_format = FilterFormat::create([
+      'format' => 'full_html',
+      'name' => 'Full HTML',
+      'weight' => 1,
+      'filters' => [],
+    ]);
+    $full_html_format->save();
+    $normal_user = $this->drupalCreateUser([
+      'use text format filtered_html',
+      'use text format full_html',
+    ]);
+    $this->drupalLogin($normal_user);
+  }
 
   /**
    * Tests the JavaScript #states functionality of form elements.
@@ -60,6 +88,10 @@ class JavascriptStatesTest extends WebDriverTestBase {
     $this->assertNotEmpty($checkbox_unchecked_element);
     $checkbox_visible_element = $page->findField('checkbox_visible_when_checkbox_trigger_checked');
     $this->assertNotEmpty($checkbox_visible_element);
+    $text_format_invisible_value = $page->findField('text_format_invisible_when_checkbox_trigger_checked[value]');
+    $this->assertNotEmpty($text_format_invisible_value);
+    $text_format_invisible_format = $page->findField('text_format_invisible_when_checkbox_trigger_checked[format]');
+    $this->assertNotEmpty($text_format_invisible_format);
 
     // Verify initial state.
     $this->assertTrue($textfield_invisible_element->isVisible());
@@ -69,6 +101,8 @@ class JavascriptStatesTest extends WebDriverTestBase {
     $this->assertFalse($checkbox_checked_element->isChecked());
     $this->assertTrue($checkbox_unchecked_element->isChecked());
     $this->assertFalse($checkbox_visible_element->isVisible());
+    $this->assertTrue($text_format_invisible_value->isVisible());
+    $this->assertTrue($text_format_invisible_format->isVisible());
 
     // Change state: check the checkbox.
     $trigger->check();
@@ -80,6 +114,8 @@ class JavascriptStatesTest extends WebDriverTestBase {
     $this->assertTrue($checkbox_checked_element->isChecked());
     $this->assertFalse($checkbox_unchecked_element->isChecked());
     $this->assertTrue($checkbox_visible_element->isVisible());
+    $this->assertFalse($text_format_invisible_value->isVisible());
+    $this->assertFalse($text_format_invisible_format->isVisible());
   }
 
   /**

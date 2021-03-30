@@ -15,22 +15,18 @@ use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
 class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
-    'file',
-    'language',
-    'config_translation',
-    'content_translation',
-    'migrate_drupal_ui',
-    'telephone',
     'aggregator',
     'book',
+    'config_translation',
+    'content_translation',
     'forum',
-    'rdf',
+    'language',
+    'migrate_drupal_ui',
     'statistics',
+    'telephone',
   ];
 
   /**
@@ -78,21 +74,21 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'comment' => 4,
       // The 'standard' profile provides the 'comment' comment type, and the
       // migration creates 6 comment types, one per node type.
-      'comment_type' => 8,
+      'comment_type' => 9,
       // Module 'language' comes with 'en', 'und', 'zxx'. Migration adds 'is'
       // and 'fr'.
       'configurable_language' => 5,
       'contact_form' => 3,
       'contact_message' => 0,
       'editor' => 2,
-      'field_config' => 81,
-      'field_storage_config' => 62,
+      'field_config' => 87,
+      'field_storage_config' => 66,
       'file' => 3,
       'filter_format' => 7,
       'image_style' => 7,
       'language_content_settings' => 22,
       'node' => 7,
-      'node_type' => 7,
+      'node_type' => 8,
       'rdf_mapping' => 8,
       'search_page' => 2,
       'shortcut' => 6,
@@ -108,9 +104,9 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'menu_link_content' => 12,
       'view' => 16,
       'date_format' => 11,
-      'entity_form_display' => 22,
+      'entity_form_display' => 24,
       'entity_form_mode' => 1,
-      'entity_view_display' => 33,
+      'entity_view_display' => 37,
       'entity_view_mode' => 14,
       'base_field_override' => 4,
     ];
@@ -151,16 +147,20 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'Entity Reference',
       'Entity Translation',
       'Field SQL storage',
+      'Field translation',
       'Field',
       'File',
       'Filter',
       'Forum',
       'Image',
+      'Internationalization',
+      'Locale',
       'Link',
       'List',
       'Menu',
       'Menu translation',
       'Node',
+      'Node Reference',
       'Number',
       'Options',
       'Path',
@@ -169,12 +169,16 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'Search',
       'Shortcut',
       'Statistics',
+      'String translation',
       'Synchronize translations',
       'System',
+      'Taxonomy translation',
       'Taxonomy',
+      'Telephone',
       'Text',
       'Title',
       'User',
+      'User Reference',
       'Variable translation',
       // Include modules that do not have an upgrade path and are enabled in the
       // source database.
@@ -196,11 +200,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
    */
   protected function getMissingPaths() {
     return [
-      'Field translation',
-      'Internationalization',
-      'Locale',
-      'String translation',
-      'Taxonomy translation',
+      'References',
       'Translation sets',
       'Variable realm',
       'Variable store',
@@ -216,8 +216,9 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
   /**
    * Executes all steps of migrations upgrade.
    */
-  public function testMigrateUpgradeExecute() {
-    parent::testMigrateUpgradeExecute();
+  public function testUpgradeAndIncremental() {
+    // Perform upgrade followed by an incremental upgrade.
+    $this->doUpgradeAndIncremental();
 
     // Ensure a migrated user can log in.
     $this->assertUserLogIn(2, 'a password');

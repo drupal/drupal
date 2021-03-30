@@ -83,7 +83,7 @@ abstract class FileManagedTestBase extends BrowserTestBase {
         $message = new FormattableMarkup('hook_file_@name was expected to be called %expected times but was called %actual times.', ['@name' => $hook, '%expected' => $expected_count, '%actual' => $actual_count]);
       }
     }
-    $this->assertEqual($actual_count, $expected_count, $message);
+    $this->assertEqual($expected_count, $actual_count, $message);
   }
 
   /**
@@ -113,8 +113,8 @@ abstract class FileManagedTestBase extends BrowserTestBase {
    *   File object to compare.
    */
   public function assertDifferentFile(FileInterface $file1, FileInterface $file2) {
-    $this->assertNotEqual($file1->id(), $file2->id(), t('Files have different ids: %file1 != %file2.', ['%file1' => $file1->id(), '%file2' => $file2->id()]), 'Different file');
-    $this->assertNotEqual($file1->getFileUri(), $file2->getFileUri(), t('Files have different paths: %file1 != %file2.', ['%file1' => $file1->getFileUri(), '%file2' => $file2->getFileUri()]), 'Different file');
+    $this->assertNotEquals($file1->id(), $file2->id(), t('Files have different ids: %file1 != %file2.', ['%file1' => $file1->id(), '%file2' => $file2->id()]));
+    $this->assertNotEquals($file1->getFileUri(), $file2->getFileUri(), t('Files have different paths: %file1 != %file2.', ['%file1' => $file1->getFileUri(), '%file2' => $file2->getFileUri()]));
   }
 
   /**

@@ -106,8 +106,8 @@ class Upsert extends QueryUpsert {
 
     // Default fields are always placed first for consistency.
     $insert_fields = array_merge($this->defaultFields, $this->insertFields);
-    $insert_fields = array_map(function ($f) {
-      return $this->connection->escapeField($f);
+    $insert_fields = array_map(function ($field) {
+      return $this->connection->escapeField($field);
     }, $insert_fields);
 
     $query = $comments . 'INSERT INTO {' . $this->table . '} (' . implode(', ', $insert_fields) . ') VALUES ';
@@ -120,6 +120,8 @@ class Upsert extends QueryUpsert {
 
     $update = [];
     foreach ($insert_fields as $field) {
+      // The "excluded." prefix causes the field to refer to the value for field
+      // that would have been inserted had there been no conflict.
       $update[] = "$field = EXCLUDED.$field";
     }
 

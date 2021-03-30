@@ -208,17 +208,17 @@ class AttachedAssetsTest extends KernelTestBase {
 
     // Test whether the settings for core/drupalSettings are available.
     $this->assertTrue(isset($parsed_settings['path']['baseUrl']), 'drupalSettings.path.baseUrl is present.');
-    $this->assertIdentical($parsed_settings['path']['pathPrefix'], 'yarhar', 'drupalSettings.path.pathPrefix is present and has the correct (overridden) value.');
-    $this->assertIdentical($parsed_settings['path']['currentPath'], '', 'drupalSettings.path.currentPath is present and has the correct value.');
+    $this->assertSame('yarhar', $parsed_settings['path']['pathPrefix'], 'drupalSettings.path.pathPrefix is present and has the correct (overridden) value.');
+    $this->assertSame('', $parsed_settings['path']['currentPath'], 'drupalSettings.path.currentPath is present and has the correct value.');
     $this->assertFalse($parsed_settings['path']['currentPathIsAdmin'], 'drupalSettings.path.currentPathIsAdmin is present and has the correct value.');
     $this->assertFalse($parsed_settings['path']['isFront'], 'drupalSettings.path.isFront is present and has the correct value.');
-    $this->assertIdentical($parsed_settings['path']['currentLanguage'], 'en', 'drupalSettings.path.currentLanguage is present and has the correct value.');
+    $this->assertSame('en', $parsed_settings['path']['currentLanguage'], 'drupalSettings.path.currentLanguage is present and has the correct value.');
 
     // Tests whether altering JavaScript settings via hook_js_settings_alter()
     // is working as expected.
     // @see common_test_js_settings_alter()
-    $this->assertIdentical($parsed_settings['pluralDelimiter'], '☃');
-    $this->assertIdentical($parsed_settings['foo'], 'bar');
+    $this->assertSame('☃', $parsed_settings['pluralDelimiter']);
+    $this->assertSame('bar', $parsed_settings['foo']);
   }
 
   /**
@@ -318,7 +318,7 @@ class AttachedAssetsTest extends KernelTestBase {
     else {
       $result = [];
     }
-    $this->assertIdentical($result, $expected_order_js, 'JavaScript is added in the expected weight order.');
+    $this->assertSame($expected_order_js, $result, 'JavaScript is added in the expected weight order.');
 
     // Construct the expected result from the regex.
     $expected_order_css = [
@@ -360,7 +360,7 @@ class AttachedAssetsTest extends KernelTestBase {
     else {
       $result = [];
     }
-    $this->assertIdentical($result, $expected_order_css, 'CSS is added in the expected weight order.');
+    $this->assertSame($expected_order_css, $result, 'CSS is added in the expected weight order.');
   }
 
   /**
@@ -415,7 +415,7 @@ class AttachedAssetsTest extends KernelTestBase {
     /** @var \Drupal\Core\Asset\LibraryDiscoveryInterface $library_discovery */
     $library_discovery = \Drupal::service('library.discovery');
     $library = $library_discovery->getLibraryByName('core', 'jquery.farbtastic');
-    $this->assertEqual($library['version'], '0.0', 'Registered libraries were altered.');
+    $this->assertEqual('0.0', $library['version'], 'Registered libraries were altered.');
 
     // common_test_library_info_alter() also added a dependency on jQuery Form.
     $build['#attached']['library'][] = 'core/jquery.farbtastic';
@@ -455,7 +455,7 @@ class AttachedAssetsTest extends KernelTestBase {
     /** @var \Drupal\Core\Asset\LibraryDiscoveryInterface $library_discovery */
     $library_discovery = \Drupal::service('library.discovery');
     $farbtastic = $library_discovery->getLibraryByName('common_test', 'jquery.farbtastic');
-    $this->assertEqual($farbtastic['version'], '0.1', 'Alternative libraries can be added to the page.');
+    $this->assertEqual('0.1', $farbtastic['version'], 'Alternative libraries can be added to the page.');
   }
 
   /**

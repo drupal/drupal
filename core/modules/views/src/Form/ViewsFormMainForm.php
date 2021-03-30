@@ -9,8 +9,11 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\views\Render\ViewsRenderPipelineMarkup;
 use Drupal\views\ViewExecutable;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 class ViewsFormMainForm implements FormInterface, TrustedCallbackInterface {
+
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
@@ -88,7 +91,7 @@ class ViewsFormMainForm implements FormInterface, TrustedCallbackInterface {
     ];
     $form['actions']['submit'] = [
       '#type' => 'submit',
-      '#value' => t('Save'),
+      '#value' => $this->t('Save'),
     ];
 
     $substitutions = [];

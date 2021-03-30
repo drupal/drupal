@@ -139,8 +139,8 @@ class TermAutocompleteTest extends TaxonomyTestBase {
 
     // Retrieve the autocomplete url.
     $this->drupalGet('node/add/article');
-    $result = $this->xpath('//input[@name="' . $this->fieldName . '[0][target_id]"]');
-    $this->autocompleteUrl = $this->getAbsoluteUrl($result[0]->getAttribute('data-autocomplete-path'));
+    $field = $this->assertSession()->fieldExists("{$this->fieldName}[0][target_id]");
+    $this->autocompleteUrl = $this->getAbsoluteUrl($field->getAttribute('data-autocomplete-path'));
   }
 
   /**
@@ -228,7 +228,7 @@ class TermAutocompleteTest extends TaxonomyTestBase {
       ['query' => ['q' => 'bbb']]
     );
 
-    $this->assertIdentical($expected, $data);
+    $this->assertSame($expected, $data);
   }
 
 }

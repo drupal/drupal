@@ -8,6 +8,43 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 /**
  * Drupal 7 field instances source from database.
  *
+ * If the Drupal 7 Title module is enabled, the fields it provides are not
+ * migrated. The values of those fields will be migrated to the base fields they
+ * were replacing.
+ *
+ * Available configuration keys:
+ *  - entity_type: (optional) The entity type (machine name) to filter field
+ *    instances retrieved from the source. If omitted, all field instances are
+ *    retrieved.
+ *  - bundle: (optional) The bundle machine name to filter field instances
+ *    retrieved from the source. It should be used in combination with
+ *    entity_type property and will be ignored otherwise.
+ *
+ * Examples:
+ *
+ * @code
+ * source:
+ *   plugin: d7_field_instance
+ *   entity_type: node
+ * @endcode
+ *
+ * In this example field instances of node entity type are retrieved from the
+ * source database.
+ *
+ * @code
+ * source:
+ *   plugin: d7_field_instance
+ *   entity_type: node
+ *   bundle: page
+ * @endcode
+ *
+ * In this example field instances of page content type are retrieved from the
+ * source database.
+ *
+ * For additional configuration keys, refer to the parent classes:
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
  * @MigrateSource(
  *   id = "d7_field_instance",
  *   source_module = "field"
@@ -26,7 +63,7 @@ class FieldInstance extends DrupalSqlBase {
       ->condition('fc.storage_active', 1)
       ->condition('fc.deleted', 0)
       ->condition('fci.deleted', 0);
-    $query->join('field_config', 'fc', 'fci.field_id = fc.id');
+    $query->join('field_config', 'fc', '[fci].[field_id] = [fc].[id]');
 
     // Optionally filter by entity type and bundle.
     if (isset($this->configuration['entity_type'])) {
@@ -37,9 +74,7 @@ class FieldInstance extends DrupalSqlBase {
       }
     }
 
-    // If the Drupal 7 Title module is enabled, we don't want to migrate the
-    // fields it provides. The values of those fields will be migrated to the
-    // base fields they were replacing.
+    // The Title module fields are not migrated.
     if ($this->moduleExists('title')) {
       $title_fields = [
         'title_field',
@@ -180,6 +215,17 @@ class FieldInstance extends DrupalSqlBase {
       }
     }
 
+    // Get the user roles for user reference fields.
+    if ($row->getSourceProperty('type') == 'user_reference') {
+      $data = unserialize($field_definition['data']);
+      if (!empty($data['settings']['referenceable_roles'])) {
+        $rid = $data['settings']['referenceable_roles'];
+        $query = $this->select('role', 'r')->fields('r')
+          ->condition('rid', $rid, 'IN');
+        $results = $query->execute()->fetchAll();
+        $row->setSourceProperty('roles', $results);
+      }
+    }
     return parent::prepareRow($row);
   }
 

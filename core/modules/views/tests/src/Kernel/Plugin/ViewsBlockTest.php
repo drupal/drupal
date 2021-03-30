@@ -49,7 +49,7 @@ class ViewsBlockTest extends ViewsKernelTestBase {
     $plugin_id = 'views_block:test_view_block-block_1';
     $views_block = ViewsBlock::create($this->container, [], $plugin_id, $plugin_definition);
 
-    $this->assertEqual($views_block->getMachineNameSuggestion(), 'views_block__test_view_block_block_1');
+    $this->assertEqual('views_block__test_view_block_block_1', $views_block->getMachineNameSuggestion());
   }
 
   /**
@@ -139,7 +139,7 @@ class ViewsBlockTest extends ViewsKernelTestBase {
     $plugin_id = 'views_block:test_view_block-block_1';
     $views_block = ViewsBlock::create($this->container, [], $plugin_id, $plugin_definition);
 
-    $this->assertEqual($views_block->getPreviewFallbackString(), '"test_view_block::block_1" views block');
+    $this->assertEqual('"test_view_block::block_1" views block', $views_block->getPreviewFallbackString());
   }
 
 }

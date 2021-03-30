@@ -5,6 +5,7 @@ namespace Drupal\Tests\help_topics\Functional;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\help_topics\HelpTopicDiscovery;
 use PHPUnit\Framework\ExpectationFailedException;
+use PHPUnit\Framework\AssertionFailedError;
 
 /**
  * Verifies that all core Help topics can be rendered and comply with standards.
@@ -25,6 +26,7 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
   protected static $modules = [
     'help',
     'help_topics',
+    'locale',
   ];
 
   /**
@@ -131,6 +133,7 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
     $body = preg_replace('|---.*---|sU', '', $body);
     $body = preg_replace('|\{\{.*\}\}|sU', '', $body);
     $body = preg_replace('|\{\% set.*\%\}|sU', '', $body);
+    $body = preg_replace('|\{\% endset \%\}|sU', '', $body);
     $body = trim($body);
     $this->assertNotEmpty($body, 'Topic ' . $id . ' Twig file contains some text outside of front matter');
 
@@ -141,14 +144,40 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
     $text = preg_replace('|\s+|', '', $text);
     $this->assertEmpty($text, 'Topic ' . $id . ' Twig file has all of its text translated');
 
-    // Load the topic body as HTML and verify that it parses.
+    // Verify that all of the translated text is locale-safe and valid HTML.
+    $matches = [];
+    preg_match_all('|\{\% trans \%\}(.*)\{\% endtrans \%\}|sU', $body, $matches, PREG_PATTERN_ORDER);
+    foreach ($matches[1] as $string) {
+      $this->assertTrue(locale_string_is_safe($string), 'Topic ' . $id . ' Twig file translatable strings are all exportable');
+      $this->validateHtml($string, $id);
+    }
+
+    // Validate the HTML in the body as a whole.
+    $this->validateHtml($body, $id);
+
+    // Validate the HTML in the body with the translated text replaced by a
+    // dummy string, to verify that HTML syntax is not partly in and partly out
+    // of the translated text.
+    $text = preg_replace('|\{\% trans \%\}.*\{\% endtrans \%\}|sU', 'dummy', $body);
+    $this->validateHtml($text, $id);
+  }
+
+  /**
+   * Validates the HTML and header hierarchy for topic text.
+   *
+   * @param string $body
+   *   Body text to validate.
+   * @param string $id
+   *   ID of help topic (for error messages).
+   */
+  protected function validateHtml(string $body, string $id) {
     $doc = new \DOMDocument();
     $doc->strictErrorChecking = TRUE;
-    $doc->validateOnParse = TRUE;
+    $doc->validateOnParse = FALSE;
     libxml_use_internal_errors(TRUE);
-    if (!$doc->loadHTML($body)) {
+    if (!$doc->loadXML('<html><body>' . $body . '</body></html>')) {
       foreach (libxml_get_errors() as $error) {
-        $this->fail($error->message);
+        $this->fail('Topic ' . $id . ' fails HTML validation: ' . $error->message);
       }
 
       libxml_clear_errors();
@@ -185,10 +214,12 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
   protected function verifyBadTopic($id, $definitions) {
     $bad_topic_type = substr($id, 16);
     // Topics should fail verifyTopic() in specific ways.
+    $found_error = FALSE;
     try {
       $this->verifyTopic($id, $definitions, 404);
     }
-    catch (ExpectationFailedException $e) {
+    catch (ExpectationFailedException | AssertionFailedError $e) {
+      $found_error = TRUE;
       $message = $e->getMessage();
       switch ($bad_topic_type) {
         case 'related':
@@ -196,7 +227,9 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
           break;
 
         case 'bad_html':
-          $this->assertStringContainsString('Unexpected end tag', $message);
+        case 'bad_html2':
+        case 'bad_html3':
+          $this->assertStringContainsString('Opening and ending tag mismatch', $message);
           break;
 
         case 'top_level':
@@ -223,6 +256,10 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
           // This was an unexpected error.
           throw $e;
       }
+    }
+
+    if (!$found_error) {
+      $this->fail('Bad help topic ' . $bad_topic_type . ' did not fail as expected');
     }
   }
 

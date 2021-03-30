@@ -161,7 +161,7 @@ function system_requirements($phase) {
         'title' => t('Apache version'),
         'value' => $apache_version_string,
         'severity' => REQUIREMENT_ERROR,
-        'description' => t('The minimum version of Apache needed to run Drupal without mod_rewrite enabled is 2.2.16. See the <a href=":link">enabling clean URLs</a> page for more information on mod_rewrite.', [':link' => 'http://drupal.org/docs/8/clean-urls-in-drupal-8']),
+        'description' => t('The minimum version of Apache needed to run Drupal without mod_rewrite enabled is 2.2.16. See the <a href=":link">enabling clean URLs</a> page for more information on mod_rewrite.', [':link' => 'https://www.drupal.org/docs/8/clean-urls-in-drupal-8']),
       ];
     }
 
@@ -170,7 +170,7 @@ function system_requirements($phase) {
         'title' => t('Clean URLs'),
         'value' => t('Disabled'),
         'severity' => REQUIREMENT_WARNING,
-        'description' => t('Your server is capable of using clean URLs, but it is not enabled. Using clean URLs gives an improved user experience and is recommended. <a href=":link">Enable clean URLs</a>', [':link' => 'http://drupal.org/docs/8/clean-urls-in-drupal-8']),
+        'description' => t('Your server is capable of using clean URLs, but it is not enabled. Using clean URLs gives an improved user experience and is recommended. <a href=":link">Enable clean URLs</a>', [':link' => 'https://www.drupal.org/docs/8/clean-urls-in-drupal-8']),
       ];
     }
   }
@@ -1123,6 +1123,24 @@ function system_requirements($phase) {
         'value' => t('Enabled'),
         'description' => t('The trusted_host_patterns setting is set to allow %trusted_host_patterns', ['%trusted_host_patterns' => implode(', ', $trusted_host_patterns)]),
       ];
+    }
+  }
+
+  // When the database driver is provided by a module, then check that the
+  // providing module is enabled.
+  if ($phase === 'runtime' || $phase === 'update') {
+    $connection = Database::getConnection();
+    $provider = $connection->getProvider();
+    if ($provider !== 'core' && !\Drupal::moduleHandler()->moduleExists($provider)) {
+      $autoload = $connection->getConnectionOptions()['autoload'] ?? '';
+      if (($pos = strpos($autoload, 'src/Driver/Database/')) !== FALSE) {
+        $requirements['database_driver_provided_by_module'] = [
+          'title' => t('Database driver provided by module'),
+          'value' => t('Not enabled'),
+          'description' => t('The current database driver is provided by the module: %module. The module is currently not enabled. You should immediately <a href=":enable">enable</a> the module.', ['%module' => $provider, ':enable' => Url::fromRoute('system.modules_list')->toString()]),
+          'severity' => REQUIREMENT_ERROR,
+        ];
+      }
     }
   }
 

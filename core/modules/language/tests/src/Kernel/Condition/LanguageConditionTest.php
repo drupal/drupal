@@ -56,19 +56,19 @@ class LanguageConditionTest extends KernelTestBase {
       ->setContextValue('language', $language);
     $this->assertTrue($condition->execute(), 'Language condition passes as expected.');
     // Check for the proper summary.
-    $this->assertEqual($condition->summary(), 'The language is English, Italian.');
+    $this->assertEqual('The language is English, Italian.', $condition->summary());
 
     // Change to Italian only.
     $condition->setConfig('langcodes', ['it' => 'it']);
     $this->assertFalse($condition->execute(), 'Language condition fails as expected.');
     // Check for the proper summary.
-    $this->assertEqual($condition->summary(), 'The language is Italian.');
+    $this->assertEqual('The language is Italian.', $condition->summary());
 
     // Negate the condition
     $condition->setConfig('negate', TRUE);
     $this->assertTrue($condition->execute(), 'Language condition passes as expected.');
     // Check for the proper summary.
-    $this->assertEqual($condition->summary(), 'The language is not Italian.');
+    $this->assertEqual('The language is not Italian.', $condition->summary());
 
     // Change the default language to Italian.
     $language = \Drupal::languageManager()->getLanguage('it');
@@ -79,19 +79,19 @@ class LanguageConditionTest extends KernelTestBase {
 
     $this->assertTrue($condition->execute(), 'Language condition passes as expected.');
     // Check for the proper summary.
-    $this->assertEqual($condition->summary(), 'The language is English, Italian.');
+    $this->assertEqual('The language is English, Italian.', $condition->summary());
 
     // Change to Italian only.
     $condition->setConfig('langcodes', ['it' => 'it']);
     $this->assertTrue($condition->execute(), 'Language condition passes as expected.');
     // Check for the proper summary.
-    $this->assertEqual($condition->summary(), 'The language is Italian.');
+    $this->assertEqual('The language is Italian.', $condition->summary());
 
     // Negate the condition
     $condition->setConfig('negate', TRUE);
     $this->assertFalse($condition->execute(), 'Language condition fails as expected.');
     // Check for the proper summary.
-    $this->assertEqual($condition->summary(), 'The language is not Italian.');
+    $this->assertEqual('The language is not Italian.', $condition->summary());
   }
 
 }

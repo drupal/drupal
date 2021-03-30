@@ -1,0 +1,18 @@
+/**
+ * @file
+ * This file is used to style the tabs region.
+ *
+ */
+
+.layout-tabs {
+  background-color: #79bd8f;
+}
+.region-tabs {
+  padding: 0 4%;
+}
+/* Extra large + side margins */
+@media screen and (min-width: 80rem) { /* 1200px (large) + 80px (side margins) = 1280px */
+  .region-tabs {
+    padding: 0;
+  }
+}

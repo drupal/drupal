@@ -201,8 +201,7 @@ class DisplayBlockTest extends ViewTestBase {
     $this->drupalLogin($this->drupalCreateUser(['administer blocks']));
     $default_theme = $this->config('system.theme')->get('default');
     $this->drupalGet('admin/structure/block/add/views_block:test_view_block-block_1/' . $default_theme);
-    $elements = $this->xpath('//input[@name="label"]');
-    $this->assertTrue(empty($elements), 'The label field is not found for Views blocks.');
+    $this->assertSession()->fieldNotExists('label');
     // Test that the machine name field is hidden from display and has been
     // saved as expected from the default value.
     $this->assertSession()->fieldNotExists('edit-machine-name', NULL);
@@ -264,7 +263,7 @@ class DisplayBlockTest extends ViewTestBase {
     $this->drupalGet('');
 
     $result = $this->xpath('//div[contains(@class, "region-sidebar-first")]/div[contains(@class, "block-views")]/h2');
-    $this->assertEqual($result[0]->getText(), 'Custom title');
+    $this->assertEqual('Custom title', $result[0]->getText());
 
     // Don't override the title anymore.
     $plugin = $block->getPlugin();
@@ -273,7 +272,7 @@ class DisplayBlockTest extends ViewTestBase {
 
     $this->drupalGet('');
     $result = $this->xpath('//div[contains(@class, "region-sidebar-first")]/div[contains(@class, "block-views")]/h2');
-    $this->assertEqual($result[0]->getText(), 'test_view_block');
+    $this->assertEqual('test_view_block', $result[0]->getText());
 
     // Hide the title.
     $block->getPlugin()->setConfigurationValue('label_display', FALSE);
@@ -395,8 +394,8 @@ class DisplayBlockTest extends ViewTestBase {
     $this->getSession()->getDriver()->getClient()->request('POST', $url, $post);
     $this->assertSession()->statusCodeEquals(200);
     $json = Json::decode($this->getSession()->getPage()->getContent());
-    $this->assertIdentical($json[$id], '<ul class="contextual-links"><li class="block-configure"><a href="' . base_path() . 'admin/structure/block/manage/' . $block->id() . '">Configure block</a></li><li class="entityviewedit-form"><a href="' . base_path() . 'admin/structure/views/view/test_view_block/edit/block_1">Edit view</a></li></ul>');
-    $this->assertIdentical($json[$cached_id], '<ul class="contextual-links"><li class="block-configure"><a href="' . base_path() . 'admin/structure/block/manage/' . $cached_block->id() . '">Configure block</a></li><li class="entityviewedit-form"><a href="' . base_path() . 'admin/structure/views/view/test_view_block/edit/block_1">Edit view</a></li></ul>');
+    $this->assertSame('<ul class="contextual-links"><li class="block-configure"><a href="' . base_path() . 'admin/structure/block/manage/' . $block->id() . '">Configure block</a></li><li class="entityviewedit-form"><a href="' . base_path() . 'admin/structure/views/view/test_view_block/edit/block_1">Edit view</a></li></ul>', $json[$id]);
+    $this->assertSame('<ul class="contextual-links"><li class="block-configure"><a href="' . base_path() . 'admin/structure/block/manage/' . $cached_block->id() . '">Configure block</a></li><li class="entityviewedit-form"><a href="' . base_path() . 'admin/structure/views/view/test_view_block/edit/block_1">Edit view</a></li></ul>', $json[$cached_id]);
   }
 
 }

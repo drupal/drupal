@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\comment\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Entity\CommentType;
@@ -74,7 +73,7 @@ class CommentNonNodeTest extends BrowserTestBase {
 
     // Verify that bundles are defined correctly.
     $bundles = \Drupal::service('entity_type.bundle.info')->getBundleInfo('comment');
-    $this->assertEqual($bundles['comment']['label'], 'Comment settings');
+    $this->assertEqual('Comment settings', $bundles['comment']['label']);
 
     // Create test user.
     $this->adminUser = $this->drupalCreateUser([
@@ -173,9 +172,9 @@ class CommentNonNodeTest extends BrowserTestBase {
     if ($contact !== TRUE) {
       // If true then attempting to find error message.
       if ($subject) {
-        $this->assertText($subject, 'Comment subject posted.');
+        $this->assertText($subject);
       }
-      $this->assertText($comment, 'Comment body posted.');
+      $this->assertText($comment);
       // Check the comment ID was extracted.
       $this->assertArrayHasKey(1, $match);
     }
@@ -242,7 +241,7 @@ class CommentNonNodeTest extends BrowserTestBase {
       $this->assertRaw(\Drupal::translation()->formatPlural(1, 'Deleted 1 comment.', 'Deleted @count comments.'));
     }
     else {
-      $this->assertText('The update has been performed.', new FormattableMarkup('Operation "@operation" was performed on comment.', ['@operation' => $operation]));
+      $this->assertText('The update has been performed.');
     }
   }
 
@@ -289,7 +288,7 @@ class CommentNonNodeTest extends BrowserTestBase {
     // Test breadcrumb on comment add page.
     $this->drupalGet('comment/reply/entity_test/' . $this->entity->id() . '/comment');
     $xpath = '//nav[@class="breadcrumb"]/ol/li[last()]/a';
-    $this->assertEqual(current($this->xpath($xpath))->getText(), $this->entity->label(), 'Last breadcrumb item is equal to node title on comment reply page.');
+    $this->assertEqual($this->entity->label(), current($this->xpath($xpath))->getText(), 'Last breadcrumb item is equal to node title on comment reply page.');
 
     // Post a comment.
     /** @var \Drupal\comment\CommentInterface $comment1 */
@@ -299,17 +298,17 @@ class CommentNonNodeTest extends BrowserTestBase {
     // Test breadcrumb on comment reply page.
     $this->drupalGet('comment/reply/entity_test/' . $this->entity->id() . '/comment/' . $comment1->id());
     $xpath = '//nav[@class="breadcrumb"]/ol/li[last()]/a';
-    $this->assertEqual(current($this->xpath($xpath))->getText(), $comment1->getSubject(), 'Last breadcrumb item is equal to comment title on comment reply page.');
+    $this->assertEqual($comment1->getSubject(), current($this->xpath($xpath))->getText(), 'Last breadcrumb item is equal to comment title on comment reply page.');
 
     // Test breadcrumb on comment edit page.
     $this->drupalGet('comment/' . $comment1->id() . '/edit');
     $xpath = '//nav[@class="breadcrumb"]/ol/li[last()]/a';
-    $this->assertEqual(current($this->xpath($xpath))->getText(), $comment1->getSubject(), 'Last breadcrumb item is equal to comment subject on edit page.');
+    $this->assertEqual($comment1->getSubject(), current($this->xpath($xpath))->getText(), 'Last breadcrumb item is equal to comment subject on edit page.');
 
     // Test breadcrumb on comment delete page.
     $this->drupalGet('comment/' . $comment1->id() . '/delete');
     $xpath = '//nav[@class="breadcrumb"]/ol/li[last()]/a';
-    $this->assertEqual(current($this->xpath($xpath))->getText(), $comment1->getSubject(), 'Last breadcrumb item is equal to comment subject on delete confirm page.');
+    $this->assertEqual($comment1->getSubject(), current($this->xpath($xpath))->getText(), 'Last breadcrumb item is equal to comment subject on delete confirm page.');
 
     // Unpublish the comment.
     $this->performCommentOperation($comment1, 'unpublish');
@@ -335,13 +334,13 @@ class CommentNonNodeTest extends BrowserTestBase {
     $this->assertRaw('comments[' . $comment1->id() . ']');
 
     // Check that entity access applies to administrative page.
-    $this->assertText($this->entity->label(), 'Name of commented account found.');
+    $this->assertText($this->entity->label());
     $limited_user = $this->drupalCreateUser([
       'administer comments',
     ]);
     $this->drupalLogin($limited_user);
     $this->drupalGet('admin/content/comment');
-    $this->assertNoText($this->entity->label(), 'No commented account name found.');
+    $this->assertNoText($this->entity->label());
 
     $this->drupalLogout();
 
@@ -396,7 +395,7 @@ class CommentNonNodeTest extends BrowserTestBase {
 
     $this->drupalGet('comment/reply/entity_test/' . $this->entity->id() . '/comment/' . $comment1->id());
     $this->assertSession()->statusCodeEquals(403);
-    $this->assertNoText($comment1->getSubject(), 'Comment not displayed.');
+    $this->assertNoText($comment1->getSubject());
 
     // Test comment field widget changes.
     $limited_user = $this->drupalCreateUser([
@@ -443,8 +442,8 @@ class CommentNonNodeTest extends BrowserTestBase {
     // Check the field contains the correct comment type.
     $field_storage = FieldStorageConfig::load('entity_test.field_barfoo');
     $this->assertInstanceOf(FieldStorageConfig::class, $field_storage);
-    $this->assertEqual($field_storage->getSetting('comment_type'), 'foobar');
-    $this->assertEqual($field_storage->getCardinality(), 1);
+    $this->assertEqual('foobar', $field_storage->getSetting('comment_type'));
+    $this->assertEqual(1, $field_storage->getCardinality());
 
     // Test the new entity commenting inherits default.
     $random_label = $this->randomMachineName();

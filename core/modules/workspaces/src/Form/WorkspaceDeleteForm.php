@@ -91,7 +91,7 @@ class WorkspaceDeleteForm extends ContentEntityDeleteForm implements WorkspaceFo
 
     $tracked_entities = $this->workspaceAssociation->getTrackedEntities($this->entity->id());
     $items = [];
-    foreach (array_keys($tracked_entities) as $entity_type_id => $entity_ids) {
+    foreach ($tracked_entities as $entity_type_id => $entity_ids) {
       $revision_ids = $this->workspaceAssociation->getAssociatedRevisions($this->entity->id(), $entity_type_id, $entity_ids);
       $label = $this->entityTypeManager->getDefinition($entity_type_id)->getLabel();
       $items[] = $this->formatPlural(count($revision_ids), '1 @label revision.', '@count @label revisions.', ['@label' => $label]);

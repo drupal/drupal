@@ -40,7 +40,7 @@ tr .form-item,
   margin-bottom: calc(var(--space-xs) / 2); /* 4px */
   font-size: var(--font-size-s); /* ~14px */
   font-weight: bold;
-  line-height: calc(18rem / 16); /* 18px */
+  line-height: var(--line-height-form-label);
 }
 .form-item__label--multiple-value-form {
   margin-top: 0;

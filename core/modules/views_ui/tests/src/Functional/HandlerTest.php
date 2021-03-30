@@ -218,7 +218,7 @@ class HandlerTest extends UITestBase {
 
       $text = 'Broken/missing handler';
 
-      $this->assertIdentical($result[0]->getText(), $text, 'Ensure the broken handler text was found.');
+      $this->assertSame($text, $result[0]->getText(), 'Ensure the broken handler text was found.');
 
       $this->drupalGet($href);
       $result = $this->xpath('//h1[@class="page-title"]');

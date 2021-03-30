@@ -25,7 +25,7 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
    */
   protected function setDatabaseDumpFiles() {
     parent::setDatabaseDumpFiles();
-    $this->databaseDumpFiles[0] = __DIR__ . '/../../../../tests/fixtures/update/drupal-8.8.0.filled.standard.php.gz';
+    $this->databaseDumpFiles[0] = __DIR__ . '/../../../../tests/fixtures/update/drupal-9.0.0.filled.standard.php.gz';
   }
 
   /**
@@ -51,9 +51,9 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
 
       // Make sure our English nodes still exist.
       $node = Node::load($id);
-      $this->assertEqual($node->language()->getId(), $langcode);
-      $this->assertEqual($node->getType(), $type);
-      $this->assertEqual($node->getTitle(), $title);
+      $this->assertEqual($langcode, $node->language()->getId());
+      $this->assertEqual($type, $node->getType());
+      $this->assertEqual($title, $node->getTitle());
       // Assert that nodes are all published.
       $this->assertTrue($node->isPublished());
       $this->drupalGet('node/' . $id);

@@ -5,17 +5,16 @@
 
 .grid--3 .views-row {
   margin-bottom: 28px;
-  padding: 0 14px;
 }
-
-@media screen and (min-width: 30em) {
+/* Small */
+@media screen and (min-width: 30em) { /* 480px */
   .grid--3 {
     overflow-x: hidden;
   }
   .grid--3 .view-content {
     display: flex;
     flex-wrap: wrap;
-    margin: 0;
+    margin: 0 -14px;
   }
   .grid--3 .views-row {
     display: flex;
@@ -26,19 +25,11 @@
     padding: 0;
   }
 }
-
-@media screen and (min-width: 60em) {
+/* Large */
+@media screen and (min-width: 60em) { /* 960px */
   .grid--3 .views-row {
-    flex-basis: calc(33% - 28px);
+    flex-basis: calc(33.3% - 28px);
     flex-grow: 0;
     flex-shrink: 0;
-  }
-}
-
-/* 77em == the max width of .container + 1em either side */
-@media screen and (min-width: 77em) {
-  .grid--3 .view-content {
-    margin-right: -14px;
-    margin-left: -14px;
   }
 }

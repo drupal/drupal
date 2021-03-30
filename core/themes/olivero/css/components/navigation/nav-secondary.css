@@ -7,51 +7,45 @@
 
 /**
  * @file
- * Nav Secondary.
+ * Secondary navigation styling.
  */
-
-.secondary-nav__wrapper {
-  display: flex;
-  margin-top: 36px;
-  margin-bottom: 36px;
-}
 
 .secondary-nav {
   letter-spacing: 0.02em;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 600
 }
 
 [dir="ltr"] .secondary-nav ul.menu {
-    margin-left: 0;
+    margin-left: 0
 }
 
 [dir="rtl"] .secondary-nav ul.menu {
-    margin-right: 0;
+    margin-right: 0
 }
 
 [dir="ltr"] .secondary-nav ul.menu {
-    margin-right: 0;
+    margin-right: 0
 }
 
 [dir="rtl"] .secondary-nav ul.menu {
-    margin-left: 0;
+    margin-left: 0
 }
 
 [dir="ltr"] .secondary-nav ul.menu {
-    padding-left: 0;
+    padding-left: 0
 }
 
 [dir="rtl"] .secondary-nav ul.menu {
-    padding-right: 0;
+    padding-right: 0
 }
 
 [dir="ltr"] .secondary-nav ul.menu {
-    padding-right: 0;
+    padding-right: 0
 }
 
 [dir="rtl"] .secondary-nav ul.menu {
-    padding-left: 0;
+    padding-left: 0
 }
 
 .secondary-nav ul.menu {
@@ -73,22 +67,22 @@
       /* @todo should this be scoped to desktop nav? */
       width: -webkit-max-content;
       width: max-content;
-      max-width: 200px
+      max-width: 12.5rem
     }
 
 [dir="ltr"] .secondary-nav ul.menu li:not(:last-child) {
-        margin-right: 27px;
+        margin-right: 1.6875rem
 }
 
 [dir="rtl"] .secondary-nav ul.menu li:not(:last-child) {
-        margin-left: 27px;
+        margin-left: 1.6875rem
 }
 
 .secondary-nav ul.menu a:not(.button--primary) {
       position: relative;
       display: inline-flex;
       align-items: center;
-      height: 36px;
+      height: 2.25rem;
       text-decoration: none;
       color: inherit
     }
@@ -103,72 +97,74 @@
         height: 0;
         content: "";
         transition: opacity 0.2s, transform 0.2s;
-        transform: translateY(5px);
+        transform: translateY(0.3125rem);
         opacity: 0;
         /* Intentionally not using CSS logical properties. */
         border-top: solid 2px currentColor;
       }
 
-.secondary-nav ul.menu a:not(.button--primary):focus:after, .secondary-nav ul.menu a:not(.button--primary):hover:after {
+.secondary-nav ul.menu a:not(.button--primary):hover:after {
           transform: translateY(0);
           opacity: 0.8;
         }
 
-@media (min-width: 1200px) {
-    body:not(.is-always-mobile-nav) .secondary-nav__wrapper {
-      justify-content: flex-end;
-      margin: 0
-
-      /* If the secondary nav is the first item within the header, it does not need left separator. */
-    }
-      body:not(.is-always-mobile-nav) .secondary-nav__wrapper:first-child .secondary-nav:before {
-        content: none;
-      }
-
+@media (min-width: 75rem) {
     [dir="ltr"] body:not(.is-always-mobile-nav) .secondary-nav {
-      margin-left: 18px;
+      margin-left: 1.125rem
   }
-
     [dir="rtl"] body:not(.is-always-mobile-nav) .secondary-nav {
-      margin-right: 18px;
+      margin-right: 1.125rem
   }
-
     [dir="ltr"] body:not(.is-always-mobile-nav) .secondary-nav {
-      padding-left: 36px;
+      padding-left: 2.25rem
   }
-
     [dir="rtl"] body:not(.is-always-mobile-nav) .secondary-nav {
-      padding-right: 36px;
+      padding-right: 2.25rem
   }
-
     body:not(.is-always-mobile-nav) .secondary-nav {
       position: relative;
       display: flex
     }
+        body:not(.is-always-mobile-nav) .secondary-nav .menu__link:focus {
+          position: relative;
+          outline: 0
+        }
+
+          body:not(.is-always-mobile-nav) .secondary-nav .menu__link:focus:before {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: calc(100% + 1.125rem);
+            height: 3.375rem;
+            content: "";
+            transform: translate(-50%, -50%);
+            border: solid 2px #2494db;
+            border-radius: 0.25rem;
+          }
 
       [dir="ltr"] body:not(.is-always-mobile-nav) .secondary-nav:before {
-        left: 0;
+        left: 0
   }
 
       [dir="rtl"] body:not(.is-always-mobile-nav) .secondary-nav:before {
-        right: 0;
+        right: 0
   }
 
       body:not(.is-always-mobile-nav) .secondary-nav:before {
         position: absolute;
         top: 50%;
         width: 2px;
-        height: 36px;
+        height: 2.25rem;
         content: "";
         transform: translateY(-50%);
         background-color: #d7e1e8;
       }
 
       [dir="ltr"] body:not(.is-always-mobile-nav) .secondary-nav ul.menu li:not(:last-child) {
-        margin-right: 36px;
+        margin-right: 2.25rem
   }
 
       [dir="rtl"] body:not(.is-always-mobile-nav) .secondary-nav ul.menu li:not(:last-child) {
-        margin-left: 36px;
+        margin-left: 2.25rem
   }
   }

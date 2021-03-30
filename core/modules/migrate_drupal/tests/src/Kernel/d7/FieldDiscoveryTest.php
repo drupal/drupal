@@ -80,6 +80,7 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
       'et' => 'comment_node_et',
       'forum' => 'comment_forum',
       'test_content_type' => 'comment_node_test_content_type',
+      'a_thirty_two_character_type_name' => 'a_thirty_two_character_type_name',
     ];
     foreach ($node_types as $node_type => $comment_type) {
       NodeType::create([
@@ -97,6 +98,7 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
     Vocabulary::create(['vid' => 'test_vocabulary'])->save();
     $this->executeMigrations([
       'd7_field',
+      'd7_comment_type',
       'd7_taxonomy_vocabulary',
       'd7_field_instance',
     ]);
@@ -148,6 +150,8 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
       'field_node_entityreference',
       'field_user_entityreference',
       'field_term_entityreference',
+      'field_node_reference',
+      'field_user_reference',
       'field_private_file',
       'field_datetime_without_time',
       'field_date_without_time',
@@ -215,6 +219,20 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
                   'entityreference_entity_id' => 'entity_reference_entity_id',
                   'entityreference_entity_view' => 'entity_reference_entity_view',
                 ],
+                'node_reference' => [
+                  'node_reference_default' => 'entity_reference_label',
+                  'node_reference_plain' => 'entity_reference_label',
+                  'node_reference_nid' => 'entity_reference_entity_id',
+                  'node_reference_node' => 'entity_reference_entity_view',
+                  'node_reference_path' => 'entity_reference_label',
+                ],
+                'user_reference' => [
+                  'user_reference_default' => 'entity_reference_label',
+                  'user_reference_plain' => 'entity_reference_label',
+                  'user_reference_uid' => 'entity_reference_entity_id',
+                  'user_reference_user' => 'entity_reference_entity_view',
+                  'user_reference_path' => 'entity_reference_label',
+                ],
                 'email' => [
                   'email_formatter_default' => 'email_mailto',
                   'email_formatter_contact' => 'basic_string',
@@ -239,6 +257,10 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
                   'image_nodelink' => 'image',
                   'image_imagelink' => 'image',
                 ],
+                'telephone' => [
+                  'text_plain' => 'string',
+                  'telephone_link' => 'telephone_link',
+                ],
               ],
             ],
           ],
@@ -256,6 +278,12 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
                 'image' => 'image_default',
                 'link_field' => 'link_default',
                 'entityreference' => 'entityreference_default',
+                'node_reference_select' => 'options_select',
+                'node_reference_buttons' => 'options_buttons',
+                'node_reference_autocomplete' => 'entity_reference_autocomplete_tags',
+                'user_reference_select' => 'options_select',
+                'user_reference_buttons' => 'options_buttons',
+                'user_reference_autocomplete' => 'entity_reference_autocomplete_tags',
                 'list' => 'list_default',
                 'email_textfield' => 'email_default',
                 'phone' => 'phone_default',
@@ -283,9 +311,9 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
     $this->assertArrayHasKey('test_vocabulary', $actual_fields['taxonomy_term']);
     $this->assertArrayHasKey('user', $actual_fields['user']);
     $this->assertArrayHasKey('test_content_type', $actual_fields['node']);
-    $this->assertCount(7, $actual_fields['node']);
-    $this->assertCount(7, $actual_fields['comment']);
-    $this->assertCount(22, $actual_fields['node']['test_content_type']);
+    $this->assertCount(8, $actual_fields['node']);
+    $this->assertCount(8, $actual_fields['comment']);
+    $this->assertCount(23, $actual_fields['node']['test_content_type']);
     foreach ($actual_fields as $entity_type_id => $bundles) {
       foreach ($bundles as $bundle => $fields) {
         foreach ($fields as $field_name => $field_info) {

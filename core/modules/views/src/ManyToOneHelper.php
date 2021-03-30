@@ -39,9 +39,11 @@ class ManyToOneHelper {
   }
 
   /**
+   * Get the field via formula or build it using alias and field name.
+   *
    * Sometimes the handler might want us to use some kind of formula, so give
    * it that option. If it wants us to do this, it must set $helper->formula = TRUE
-   * and implement handler->getFormula();
+   * and implement handler->getFormula().
    */
   public function getField() {
     if (!empty($this->formula)) {

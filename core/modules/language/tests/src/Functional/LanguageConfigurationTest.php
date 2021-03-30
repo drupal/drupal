@@ -32,7 +32,7 @@ class LanguageConfigurationTest extends BrowserTestBase {
   public function testLanguageConfiguration() {
     // Ensure the after installing the language module the weight of the English
     // language is still 0.
-    $this->assertEqual(ConfigurableLanguage::load('en')->getWeight(), 0, 'The English language has a weight of 0.');
+    $this->assertEqual(0, ConfigurableLanguage::load('en')->getWeight(), 'The English language has a weight of 0.');
 
     // User to add and remove language.
     $admin_user = $this->drupalCreateUser([
@@ -59,7 +59,7 @@ class LanguageConfigurationTest extends BrowserTestBase {
     $this->assertSession()->addressEquals(Url::fromRoute('entity.configurable_language.collection'));
     // Langcode for Languages is always 'en'.
     $language = $this->config('language.entity.fr')->get();
-    $this->assertEqual($language['langcode'], 'en');
+    $this->assertEqual('en', $language['langcode']);
 
     // Check if the Default English language has no path prefix.
     $this->drupalGet('admin/config/regional/language/detection/url');
@@ -101,7 +101,7 @@ class LanguageConfigurationTest extends BrowserTestBase {
       'prefix[fr]' => '',
     ];
     $this->submitForm($edit, 'Save configuration');
-    $this->assertNoText('The prefix may only be left blank for the selected detection fallback language.', 'The path prefix can be removed for the default language');
+    $this->assertNoText('The prefix may only be left blank for the selected detection fallback language.');
 
     // Change default negotiation language.
     $this->config('language.negotiation')->set('selected_langcode', 'fr')->save();
@@ -118,7 +118,7 @@ class LanguageConfigurationTest extends BrowserTestBase {
       'prefix[en]' => 'foo/bar',
     ];
     $this->submitForm($edit, 'Save configuration');
-    $this->assertText('The prefix may not contain a slash.', 'English prefix cannot be changed to contain a slash.');
+    $this->assertText('The prefix may not contain a slash.');
 
     // Remove English language and add a new Language to check if langcode of
     // Language entity is 'en'.
@@ -129,30 +129,30 @@ class LanguageConfigurationTest extends BrowserTestBase {
     // Ensure that French language has a weight of 1 after being created through
     // the UI.
     $french = ConfigurableLanguage::load('fr');
-    $this->assertEqual($french->getWeight(), 1, 'The French language has a weight of 1.');
+    $this->assertEqual(1, $french->getWeight(), 'The French language has a weight of 1.');
     // Ensure that French language can now have a weight of 0.
     $french->setWeight(0)->save();
-    $this->assertEqual($french->getWeight(), 0, 'The French language has a weight of 0.');
+    $this->assertEqual(0, $french->getWeight(), 'The French language has a weight of 0.');
     // Ensure that new languages created through the API get a weight of 0.
     $afrikaans = ConfigurableLanguage::createFromLangcode('af');
     $afrikaans->save();
-    $this->assertEqual($afrikaans->getWeight(), 0, 'The Afrikaans language has a weight of 0.');
+    $this->assertEqual(0, $afrikaans->getWeight(), 'The Afrikaans language has a weight of 0.');
     // Ensure that a new language can be created with any weight.
     $arabic = ConfigurableLanguage::createFromLangcode('ar');
     $arabic->setWeight(4)->save();
-    $this->assertEqual($arabic->getWeight(), 4, 'The Arabic language has a weight of 0.');
+    $this->assertEqual(4, $arabic->getWeight(), 'The Arabic language has a weight of 0.');
 
     $edit = [
       'predefined_langcode' => 'de',
     ];
     $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
     $language = $this->config('language.entity.de')->get();
-    $this->assertEqual($language['langcode'], 'fr');
+    $this->assertEqual('fr', $language['langcode']);
 
     // Ensure that German language has a weight of 5 after being created through
     // the UI.
     $french = ConfigurableLanguage::load('de');
-    $this->assertEqual($french->getWeight(), 5, 'The German language has a weight of 5.');
+    $this->assertEqual(5, $french->getWeight(), 'The German language has a weight of 5.');
   }
 
   /**

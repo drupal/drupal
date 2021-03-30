@@ -143,7 +143,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
       'langcode' => $langcode_browser_fallback,
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
-    $textarea = current($this->xpath('//textarea'));
+    $textarea = $this->assertSession()->elementExists('xpath', '//textarea');
     $lid = $textarea->getAttribute('name');
     $edit = [
       $lid => $language_browser_fallback_string,
@@ -155,7 +155,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
       'langcode' => $langcode,
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
-    $textarea = current($this->xpath('//textarea'));
+    $textarea = $this->assertSession()->elementExists('xpath', '//textarea');
     $lid = $textarea->getAttribute('name');
     $edit = [
       $lid => $language_string,
@@ -409,7 +409,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
     }
     $this->container->get('language_manager')->reset();
     $this->drupalGet($test['path'], $test['path_options'], $test['http_header']);
-    $this->assertText($test['expect'], $test['message']);
+    $this->assertText($test['expect']);
     $this->assertText('Language negotiation method: ' . $test['expected_method_id']);
 
     // Get the private file and ensure it is a 200. It is important to
@@ -499,7 +499,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
       'domain[en]' => '',
     ];
     $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, 'Save configuration');
-    $this->assertText('The domain may not be left blank for English', 'The form does not allow blank domains.');
+    $this->assertText('The domain may not be left blank for English');
     $this->rebuildContainer();
 
     // Change the domain for the Italian language.
@@ -509,7 +509,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
       'domain[it]' => 'it.example.com',
     ];
     $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, 'Save configuration');
-    $this->assertText('The configuration options have been saved', 'Domain configuration is saved.');
+    $this->assertText('The configuration options have been saved');
     $this->rebuildContainer();
 
     // Try to use an invalid domain.
@@ -530,19 +530,19 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
     $italian_url = Url::fromRoute('system.admin', [], ['language' => $languages['it']])->toString();
     $url_scheme = \Drupal::request()->isSecure() ? 'https://' : 'http://';
     $correct_link = $url_scheme . $link;
-    $this->assertEqual($italian_url, $correct_link, new FormattableMarkup('The right URL (@url) in accordance with the chosen language', ['@url' => $italian_url]));
+    $this->assertEqual($correct_link, $italian_url, new FormattableMarkup('The right URL (@url) in accordance with the chosen language', ['@url' => $italian_url]));
 
     // Test HTTPS via options.
     $italian_url = Url::fromRoute('system.admin', [], ['https' => TRUE, 'language' => $languages['it']])->toString();
     $correct_link = 'https://' . $link;
-    $this->assertTrue($italian_url == $correct_link, new FormattableMarkup('The right HTTPS URL (via options) (@url) in accordance with the chosen language', ['@url' => $italian_url]));
+    $this->assertSame($correct_link, $italian_url, new FormattableMarkup('The right HTTPS URL (via options) (@url) in accordance with the chosen language', ['@url' => $italian_url]));
 
     // Test HTTPS via current URL scheme.
     $request = Request::create('', 'GET', [], [], [], ['HTTPS' => 'on']);
     $this->container->get('request_stack')->push($request);
     $italian_url = Url::fromRoute('system.admin', [], ['language' => $languages['it']])->toString();
     $correct_link = 'https://' . $link;
-    $this->assertTrue($italian_url == $correct_link, new FormattableMarkup('The right URL (via current URL scheme) (@url) in accordance with the chosen language', ['@url' => $italian_url]));
+    $this->assertSame($correct_link, $italian_url, new FormattableMarkup('The right URL (via current URL scheme) (@url) in accordance with the chosen language', ['@url' => $italian_url]));
   }
 
   /**

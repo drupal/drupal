@@ -29,7 +29,7 @@ class MenuLink extends DrupalSqlBase {
       ->condition('ml.customized', 1)
       ->condition($and);
     $query->condition($condition);
-    $query->leftJoin('menu_links', 'pl', 'ml.plid = pl.mlid');
+    $query->leftJoin('menu_links', 'pl', '[ml].[plid] = [pl].[mlid]');
     $query->addField('pl', 'link_path', 'parent_link_path');
     $query->orderBy('ml.depth');
     $query->orderby('ml.mlid');

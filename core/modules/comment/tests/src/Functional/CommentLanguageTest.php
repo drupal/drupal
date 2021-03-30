@@ -140,8 +140,8 @@ class CommentLanguageTest extends BrowserTestBase {
           ->execute();
         $comment = Comment::load(reset($cids));
         $args = ['%node_language' => $node_langcode, '%comment_language' => $comment->langcode->value, '%langcode' => $langcode];
-        $this->assertEqual($comment->langcode->value, $langcode, new FormattableMarkup('The comment posted with content language %langcode and belonging to the node with language %node_language has language %comment_language', $args));
-        $this->assertEqual($comment->comment_body->value, $comment_values[$node_langcode][$langcode], 'Comment body correctly stored.');
+        $this->assertEqual($langcode, $comment->langcode->value, new FormattableMarkup('The comment posted with content language %langcode and belonging to the node with language %node_language has language %comment_language', $args));
+        $this->assertEqual($comment_values[$node_langcode][$langcode], $comment->comment_body->value, 'Comment body correctly stored.');
       }
     }
 

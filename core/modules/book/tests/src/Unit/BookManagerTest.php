@@ -20,6 +20,20 @@ class BookManagerTest extends UnitTestCase {
   protected $entityTypeManager;
 
   /**
+   * The mocked language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManager|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected $languageManager;
+
+  /**
+   * The mocked entity repository.
+   *
+   * @var \Drupal\Core\Entity\EntityRepositoryInterface|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected $entityRepository;
+
+  /**
    * The mocked config factory.
    *
    * @var \Drupal\Core\Config\ConfigFactory|\PHPUnit\Framework\MockObject\MockObject
@@ -63,7 +77,9 @@ class BookManagerTest extends UnitTestCase {
     $this->configFactory = $this->getConfigFactoryStub([]);
     $this->bookOutlineStorage = $this->createMock('Drupal\book\BookOutlineStorageInterface');
     $this->renderer = $this->createMock('\Drupal\Core\Render\RendererInterface');
-    $this->bookManager = new BookManager($this->entityTypeManager, $this->translation, $this->configFactory, $this->bookOutlineStorage, $this->renderer);
+    $this->languageManager = $this->createMock('Drupal\Core\Language\LanguageManagerInterface');
+    $this->entityRepository = $this->createMock('Drupal\Core\Entity\EntityRepositoryInterface');
+    $this->bookManager = new BookManager($this->entityTypeManager, $this->translation, $this->configFactory, $this->bookOutlineStorage, $this->renderer, $this->languageManager, $this->entityRepository);
   }
 
   /**

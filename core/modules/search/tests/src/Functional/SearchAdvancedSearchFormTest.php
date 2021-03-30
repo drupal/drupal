@@ -55,29 +55,29 @@ class SearchAdvancedSearchFormTest extends BrowserTestBase {
    */
   public function testNodeType() {
     // Verify some properties of the node that was created.
-    $this->assertTrue($this->node->getType() == 'page', 'Node type is Basic page.');
+    $this->assertSame('page', $this->node->getType(), 'Node type is Basic page.');
     $dummy_title = 'Lorem ipsum';
-    $this->assertNotEqual($dummy_title, $this->node->label(), "Dummy title doesn't equal node title.");
+    $this->assertNotEquals($dummy_title, $this->node->label(), "Dummy title doesn't equal node title.");
 
     // Search for the dummy title with a GET query.
     $this->drupalGet('search/node', ['query' => ['keys' => $dummy_title]]);
-    $this->assertNoText($this->node->label(), 'Basic page node is not found with dummy title.');
+    $this->assertNoText($this->node->label());
 
     // Search for the title of the node with a GET query.
     $this->drupalGet('search/node', ['query' => ['keys' => $this->node->label()]]);
-    $this->assertText($this->node->label(), 'Basic page node is found with GET query.');
+    $this->assertText($this->node->label());
 
     // Search for the title of the node with a POST query.
     $edit = ['or' => $this->node->label()];
     $this->drupalPostForm('search/node', $edit, 'edit-submit--2');
-    $this->assertText($this->node->label(), 'Basic page node is found with POST query.');
+    $this->assertText($this->node->label());
 
     // Search by node type.
     $this->drupalPostForm('search/node', array_merge($edit, ['type[page]' => 'page']), 'edit-submit--2');
-    $this->assertText($this->node->label(), 'Basic page node is found with POST query and type:page.');
+    $this->assertText($this->node->label());
 
     $this->drupalPostForm('search/node', array_merge($edit, ['type[article]' => 'article']), 'edit-submit--2');
-    $this->assertText('search yielded no results', 'Article node is not found with POST query and type:article.');
+    $this->assertText('search yielded no results');
   }
 
   /**
@@ -116,8 +116,7 @@ class SearchAdvancedSearchFormTest extends BrowserTestBase {
     $this->assertText('Search for cat dog OR gerbil -fish -snake');
     foreach ($edit as $key => $value) {
       if ($key != 'type[page]') {
-        $elements = $this->xpath('//input[@name=:name]', [':name' => $key]);
-        $this->assertFalse(isset($elements[0]) && $elements[0]->getValue() == $value, "Field $key is not set to $value");
+        $this->assertSession()->fieldValueNotEquals($key, $value);
       }
     }
   }

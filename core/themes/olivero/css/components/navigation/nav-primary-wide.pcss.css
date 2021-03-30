@@ -22,12 +22,34 @@ body:not(.is-always-mobile-nav) {
       letter-spacing: 0.02em;
       font-size: 16px;
       line-height: var(--sp1-5);
+
+      &:focus {
+        position: relative;
+        outline: 0;
+
+        &:before {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: calc(100% + var(--sp));
+          height: var(--sp3);
+          content: "";
+          transform: translate(-50%, -50%);
+          border: solid 2px var(--color--blue-50);
+          border-radius: 4px;
+        }
+      }
     }
 
     & .primary-nav__menu-link--button {
       &.primary-nav__menu-link--has-children {
         overflow: visible; /* Necessary to view icon in IE11 */
         padding-inline-end: 9px;
+
+        &:focus:before {
+          width: calc(100% + var(--sp1-5));
+          content: "";
+        }
 
         &:before {
           content: none;
@@ -85,7 +107,7 @@ body:not(.is-always-mobile-nav) {
 
     & .primary-nav__menu--level-2 {
       position: absolute;
-      z-index: 5; /* Appear above search container. */
+      z-index: 105; /* Appear above search container. */
       /* stylelint-disable csstools/use-logical */
       top: calc(100% - (0.5 * var(--sp)));
       left: 50%;
@@ -128,7 +150,7 @@ body:not(.is-always-mobile-nav) {
         border-left: solid 10px transparent;
       }
 
-      &.is-active {
+      &.is-active-menu-parent {
         visibility: visible;
         margin-block-start: 0;
         transform: translate(-50%, 0);
@@ -138,6 +160,10 @@ body:not(.is-always-mobile-nav) {
 
     & .primary-nav__menu-link--level-2 {
       display: block;
+
+      &:focus:before {
+        height: 100%;
+      }
 
       & .primary-nav__menu-link-inner {
         padding-block: var(--sp0-5);

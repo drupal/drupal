@@ -25,6 +25,7 @@ class ContextDefinitionTest extends KernelTestBase {
     $this->assertArrayHasKey('user', $definition['context_definitions']);
     $this->assertInstanceOf(ContextDefinition::class, $definition['context_definitions']['user']);
     $this->assertEquals(['NotNull' => []], $definition['context_definitions']['user']->getConstraints());
+    $this->assertEquals("User Context", $definition['context_definitions']['user']->getLabel());
   }
 
 }

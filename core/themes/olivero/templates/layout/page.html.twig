@@ -50,13 +50,13 @@
   <div id="page">
 
     {% if page.header or page.primary_menu or page.secondary_menu %}
-      <header id="header" class="header site-header" role="banner">
+      <header id="header" class="site-header" role="banner">
 
         {# Gets fixed by JS at wide widths. #}
         <div class="site-header__fixable fixable">
-          <div class="header__left">
-            <button class="nav-primary__button" aria-controls="site-header__inner" aria-label="Toggle navigation" aria-expanded="false">
-              <span class="nav-primary__icon">
+          <div class="site-header__initial">
+            <button class="wide-nav-expand" aria-controls="site-header__inner" aria-label="{{ 'Toggle navigation'|t }}" aria-expanded="false">
+              <span class="wide-nav-expand__icon">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -79,14 +79,8 @@
                 </div>
 
                 <div id="header-nav" class="header-nav" data-menu-open="false">
-
                   {{ page.primary_menu }}
-
-                  {% if page.secondary_menu %}
-                    <div class="secondary-nav__wrapper">
-                      {{ page.secondary_menu }}
-                    </div>
-                  {% endif %}
+                  {{ page.secondary_menu }}
                 </div>
               {% endif %}
             </div>

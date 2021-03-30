@@ -281,7 +281,7 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
     $system_date_config = \Drupal::config('system.date');
     $form['timezone'] = [
       '#type' => 'details',
-      '#title' => t('Locale settings'),
+      '#title' => $this->t('Locale settings'),
       '#open' => TRUE,
       '#weight' => 6,
       '#access' => $system_date_config->get('timezone.user.configurable'),
@@ -291,10 +291,10 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
     }
     $form['timezone']['timezone'] = [
       '#type' => 'select',
-      '#title' => t('Time zone'),
+      '#title' => $this->t('Time zone'),
       '#default_value' => $account->getTimezone() ?: $system_date_config->get('timezone.default'),
       '#options' => system_time_zones($account->id() != $user->id(), TRUE),
-      '#description' => t('Select the desired local time and time zone. Dates and times throughout this site will be displayed using this time zone.'),
+      '#description' => $this->t('Select the desired local time and time zone. Dates and times throughout this site will be displayed using this time zone.'),
     ];
 
     // If not set or selected yet, detect timezone for the current user only.

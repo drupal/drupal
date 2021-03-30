@@ -43,7 +43,7 @@ class WidgetPluginManagerTest extends FieldKernelTestBase {
     ];
 
     $instance = $widget_plugin_manager->getInstance($widget_options);
-    $this->assertEqual($instance->getPluginId(), 'test_field_widget_multiple');
+    $this->assertEqual('test_field_widget_multiple', $instance->getPluginId());
 
     // Now do the same but with machine name field_onewidgetfield, because that
     // makes isApplicable() return FALSE.
@@ -51,8 +51,8 @@ class WidgetPluginManagerTest extends FieldKernelTestBase {
     $instance = $widget_plugin_manager->getInstance($widget_options);
 
     // Instance should be default widget.
-    $this->assertNotEqual($instance->getPluginId(), 'test_field_widget_multiple');
-    $this->assertEqual($instance->getPluginId(), 'test_field_widget');
+    $this->assertNotSame('test_field_widget_multiple', $instance->getPluginId());
+    $this->assertEqual('test_field_widget', $instance->getPluginId());
   }
 
 }

@@ -72,7 +72,7 @@
 
 .views-ui-dialog .views-messages {
   overflow: auto;
-  max-height: 200px;
+  max-height: 12.5rem;
 }
 
 .form-item--options-value-all {

@@ -7,7 +7,7 @@
 
 .header-nav {
   position: fixed;
-  z-index: 5; /* appear above overlay */
+  z-index: 105; /* appear above overlay */
   inset-block-start: 0;
   inset-inline-end: 0;
   visibility: hidden;

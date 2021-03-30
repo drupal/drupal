@@ -15,6 +15,35 @@ use Drupal\migrate\Row;
 /**
  * The base class for source plugins.
  *
+ * The migration uses the next() method to iterate over rows returned by the
+ * source plugin. Information about the row is also tracked using the ID map
+ * plugin. For each row, the corresponding tracked map row, if it exists, is
+ * deleted before allowing modification to the source row. Then, source plugins
+ * can modify the row using the prepareRow() method, which also invokes
+ * hook_prepare_row(). The row is now prepared and we can decide if it will be
+ * processed.
+ *
+ * To be processed the row must meet any of these conditions:
+ * - The row has not already been imported.
+ *   - This is indicated by an incomplete map row with the status set to
+ *     \Drupal\migrate\Plugin\MigrateIdMapInterface::STATUS_NEEDS_UPDATE.
+ * - The row needs an update.
+ *   - Rows can be marked by custom or contrib modules using the
+ *     \Drupal\migrate\Plugin\MigrateIdMapInterface::prepareUpdate() os
+ *     \Drupal\migrate\Plugin\MigrateIdMapInterface::setUpdate()
+ *     methods.
+ * - The row is above the highwater mark.
+ *   - The highwater mark is the highest encountered value of the property
+ *     defined by the configuration key high_water_property.
+ * - The source row has changed.
+ *   - A row is considered changed only if the track_changes property is set on
+ *     the source plugin and the source values for the row have changed since
+ *     the last import.
+ *
+ * When set to be processed, the row is also marked frozen and no further
+ * changes to the row source properties are allowed. The last step is to set the
+ * highwater value, if highwater is in use.
+ *
  * Available configuration keys:
  * - cache_counts: (optional) If set, cache the source count.
  * - cache_key: (optional) Uniquely named cache key used for cache_counts.
@@ -24,6 +53,8 @@ use Drupal\migrate\Row;
  *   (optional table alias). This high_water_property is typically a timestamp
  *   or serial id showing what was the last imported record. Only content with a
  *   higher value will be imported.
+ * - constants: (optional) An array of constants that can be used in the process
+ *   pipeline. To use the constant 'foo' as a source value use 'constants/foo'.
  *
  * The high_water_property and track_changes are mutually exclusive.
  *
@@ -58,9 +89,25 @@ use Drupal\migrate\Row;
  * migration. This will get converted into a SQL condition that looks like
  * 'n.changed' or 'changed' if no alias.
  *
- * @see \Drupal\migrate\Plugin\MigratePluginManager
+ * Example:
+ *
+ * @code
+ * source:
+ *   plugin: some_source_plugin_name
+ *   constants:
+ *     - foo: bar
+ * process:
+ *   baz: constants/bar
+ * @endcode
+ *
+ * In this example, the constant 'foo' is defined with a value of 'bar'. It is
+ * later used in the process pipeline to set the value of the field baz.
+ *
  * @see \Drupal\migrate\Annotation\MigrateSource
+ * @see \Drupal\migrate\Plugin\MigrateIdMapInterface
+ * @see \Drupal\migrate\Plugin\MigratePluginManager
  * @see \Drupal\migrate\Plugin\MigrateSourceInterface
+ *
  * @see plugin_api
  *
  * @ingroup migration
@@ -332,17 +379,6 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
 
   /**
    * {@inheritdoc}
-   *
-   * The migration iterates over rows returned by the source plugin. This
-   * method determines the next row which will be processed and imported into
-   * the system.
-   *
-   * The method tracks the source and destination IDs using the ID map plugin.
-   *
-   * This also takes care about highwater support. Highwater allows to reimport
-   * rows from a previous migration run, which got changed in the meantime.
-   * This is done by specifying a highwater field, which is compared with the
-   * last time, the migration got executed (originalHighWater).
    */
   public function next() {
     $this->currentSourceIds = NULL;

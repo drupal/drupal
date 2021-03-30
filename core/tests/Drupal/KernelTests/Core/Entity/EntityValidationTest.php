@@ -128,65 +128,65 @@ class EntityValidationTest extends EntityKernelTestBase {
   protected function checkValidation($entity_type) {
     $entity = $this->createTestEntity($entity_type);
     $violations = $entity->validate();
-    $this->assertEqual($violations->count(), 0, 'Validation passes.');
+    $this->assertEqual(0, $violations->count(), 'Validation passes.');
 
     // Test triggering a fail for each of the constraints specified.
     $test_entity = clone $entity;
     $test_entity->id->value = -1;
     $violations = $test_entity->validate();
-    $this->assertEqual($violations->count(), 1, 'Validation failed.');
-    $this->assertEqual($violations[0]->getMessage(), t('%name: The integer must be larger or equal to %min.', ['%name' => 'ID', '%min' => 0]));
+    $this->assertEqual(1, $violations->count(), 'Validation failed.');
+    $this->assertEqual(t('%name: The integer must be larger or equal to %min.', ['%name' => 'ID', '%min' => 0]), $violations[0]->getMessage());
 
     $test_entity = clone $entity;
     $test_entity->uuid->value = $this->randomString(129);
     $violations = $test_entity->validate();
-    $this->assertEqual($violations->count(), 1, 'Validation failed.');
-    $this->assertEqual($violations[0]->getMessage(), t('%name: may not be longer than @max characters.', ['%name' => 'UUID', '@max' => 128]));
+    $this->assertEqual(1, $violations->count(), 'Validation failed.');
+    $this->assertEqual(t('%name: may not be longer than @max characters.', ['%name' => 'UUID', '@max' => 128]), $violations[0]->getMessage());
 
     $test_entity = clone $entity;
     $langcode_key = $this->entityTypeManager->getDefinition($entity_type)->getKey('langcode');
     $test_entity->{$langcode_key}->value = $this->randomString(13);
     $violations = $test_entity->validate();
     // This should fail on AllowedValues and Length constraints.
-    $this->assertEqual($violations->count(), 2, 'Validation failed.');
-    $this->assertEqual($violations[0]->getMessage(), t('This value is too long. It should have %limit characters or less.', ['%limit' => '12']));
-    $this->assertEqual($violations[1]->getMessage(), t('The value you selected is not a valid choice.'));
+    $this->assertEqual(2, $violations->count(), 'Validation failed.');
+    $this->assertEqual(t('This value is too long. It should have %limit characters or less.', ['%limit' => '12']), $violations[0]->getMessage());
+    $this->assertEqual(t('The value you selected is not a valid choice.'), $violations[1]->getMessage());
 
     $test_entity = clone $entity;
     $test_entity->type->value = NULL;
     $violations = $test_entity->validate();
-    $this->assertEqual($violations->count(), 1, 'Validation failed.');
-    $this->assertEqual($violations[0]->getMessage(), t('This value should not be null.'));
+    $this->assertEqual(1, $violations->count(), 'Validation failed.');
+    $this->assertEqual(t('This value should not be null.'), $violations[0]->getMessage());
 
     $test_entity = clone $entity;
     $test_entity->name->value = $this->randomString(33);
     $violations = $test_entity->validate();
-    $this->assertEqual($violations->count(), 1, 'Validation failed.');
-    $this->assertEqual($violations[0]->getMessage(), t('%name: may not be longer than @max characters.', ['%name' => 'Name', '@max' => 32]));
+    $this->assertEqual(1, $violations->count(), 'Validation failed.');
+    $this->assertEqual(t('%name: may not be longer than @max characters.', ['%name' => 'Name', '@max' => 32]), $violations[0]->getMessage());
 
     // Make sure the information provided by a violation is correct.
     $violation = $violations[0];
-    $this->assertEqual($violation->getRoot()->getValue(), $test_entity, 'Violation root is entity.');
-    $this->assertEqual($violation->getPropertyPath(), 'name.0.value', 'Violation property path is correct.');
-    $this->assertEqual($violation->getInvalidValue(), $test_entity->name->value, 'Violation contains invalid value.');
+    $this->assertEqual($test_entity, $violation->getRoot()->getValue(), 'Violation root is entity.');
+    $this->assertEqual('name.0.value', $violation->getPropertyPath(), 'Violation property path is correct.');
+    $this->assertEqual($test_entity->name->value, $violation->getInvalidValue(), 'Violation contains invalid value.');
 
     $test_entity = clone $entity;
     $test_entity->set('user_id', 9999);
     $violations = $test_entity->validate();
-    $this->assertEqual($violations->count(), 1, 'Validation failed.');
-    $this->assertEqual($violations[0]->getMessage(), t('The referenced entity (%type: %id) does not exist.', ['%type' => 'user', '%id' => 9999]));
+    $this->assertEqual(1, $violations->count(), 'Validation failed.');
+    $this->assertEqual(t('The referenced entity (%type: %id) does not exist.', ['%type' => 'user', '%id' => 9999]), $violations[0]->getMessage());
 
     $test_entity = clone $entity;
     $test_entity->field_test_text->format = $this->randomString(33);
     $violations = $test_entity->validate();
-    $this->assertEqual($violations->count(), 1, 'Validation failed.');
-    $this->assertEqual($violations[0]->getMessage(), t('The value you selected is not a valid choice.'));
+    $this->assertEqual(1, $violations->count(), 'Validation failed.');
+    $this->assertEqual(t('The value you selected is not a valid choice.'), $violations[0]->getMessage());
 
     // Make sure the information provided by a violation is correct.
     $violation = $violations[0];
-    $this->assertEqual($violation->getRoot()->getValue(), $test_entity, 'Violation root is entity.');
-    $this->assertEqual($violation->getPropertyPath(), 'field_test_text.0.format', 'Violation property path is correct.');
-    $this->assertEqual($violation->getInvalidValue(), $test_entity->field_test_text->format, 'Violation contains invalid value.');
+    $this->assertEqual($test_entity, $violation->getRoot()->getValue(), 'Violation root is entity.');
+    $this->assertEqual('field_test_text.0.format', $violation->getPropertyPath(), 'Violation property path is correct.');
+    $this->assertEqual($test_entity->field_test_text->format, $violation->getInvalidValue(), 'Violation contains invalid value.');
   }
 
   /**
@@ -195,13 +195,13 @@ class EntityValidationTest extends EntityKernelTestBase {
   public function testCompositeConstraintValidation() {
     $entity = $this->createTestEntity('entity_test_composite_constraint');
     $violations = $entity->validate();
-    $this->assertEqual($violations->count(), 0);
+    $this->assertEqual(0, $violations->count());
 
     // Trigger violation condition.
     $entity->name->value = 'test';
     $entity->type->value = 'test2';
     $violations = $entity->validate();
-    $this->assertEqual($violations->count(), 1);
+    $this->assertEqual(1, $violations->count());
 
     // Make sure we can determine this is composite constraint.
     $constraint = $violations[0]->getConstraint();
@@ -209,7 +209,7 @@ class EntityValidationTest extends EntityKernelTestBase {
     $this->assertEqual('type', $violations[0]->getPropertyPath());
 
     /** @var \Drupal\Core\Entity\Plugin\Validation\Constraint\CompositeConstraintBase $constraint */
-    $this->assertEqual($constraint->coversFields(), ['name', 'type'], 'Information about covered fields can be retrieved.');
+    $this->assertEqual(['name', 'type'], $constraint->coversFields(), 'Information about covered fields can be retrieved.');
   }
 
   /**
@@ -227,7 +227,7 @@ class EntityValidationTest extends EntityKernelTestBase {
     $entity->setChangedTime($entity->getChangedTime() - 1);
     $violations = $entity->validate();
     $this->assertEquals(1, $violations->count());
-    $this->assertEqual($violations[0]->getMessage(), 'The content has either been modified by another user, or you have already submitted modifications. As a result, your changes cannot be saved.');
+    $this->assertEqual('The content has either been modified by another user, or you have already submitted modifications. As a result, your changes cannot be saved.', $violations[0]->getMessage());
 
     $entity = $storage->loadUnchanged($entity->id());
     $translation = $entity->addTranslation('de');
@@ -254,7 +254,7 @@ class EntityValidationTest extends EntityKernelTestBase {
     // previous version of the entity and thus reverting changes by other users.
     $violations = $entity->validate();
     $this->assertEquals(1, $violations->count());
-    $this->assertEqual($violations[0]->getMessage(), 'The content has either been modified by another user, or you have already submitted modifications. As a result, your changes cannot be saved.');
+    $this->assertEqual('The content has either been modified by another user, or you have already submitted modifications. As a result, your changes cannot be saved.', $violations[0]->getMessage());
   }
 
 }

@@ -135,19 +135,19 @@ interface QueryAggregateInterface extends QueryInterface {
    * @return array
    *   A list of result row arrays. Each result row contains the aggregate
    *   results as keys and also the groupBy columns as keys:
-   * @code
-   * $result = $query
-   *   ->aggregate('nid', 'count')
-   *   ->condition('status', 1)
-   *   ->groupby('type')
-   *   ->executeAggregate();
-   * @endcode
-   * Will return:
-   * @code
-   * $result[0] = array('count_nid' => 3, 'type' => 'page');
-   * $result[1] = array('count_nid' => 1, 'type' => 'poll');
-   * $result[2] = array('count_nid' => 4, 'type' => 'story');
-   * @endcode
+   *
+   *   @code
+   *     $result = $query
+   *       ->aggregate('nid', 'count')
+   *       ->condition('status', 1)
+   *       ->groupby('type')
+   *       ->execute();
+   *   @endcode
+   *   Will return:
+   *   @code
+   *     $result[0] = array('count_nid' => 3, 'type' => 'page');
+   *     $result[1] = array('count_nid' => 4, 'type' => 'article');
+   *   @endcode
    */
   public function execute();
 

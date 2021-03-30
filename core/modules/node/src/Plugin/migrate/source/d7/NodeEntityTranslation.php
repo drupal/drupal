@@ -8,6 +8,33 @@ use Drupal\migrate_drupal\Plugin\migrate\source\d7\FieldableEntity;
 /**
  * Provides Drupal 7 node entity translations source plugin.
  *
+ * Available configuration keys:
+ * - node_type: The node_types to get from the source - can be a string or
+ *   an array. If not declared then nodes of all types will be retrieved.
+ *
+ * Examples:
+ *
+ * @code
+ * source:
+ *   plugin: d7_node_entity_translation
+ *   node_type: page
+ * @endcode
+ *
+ * In this example nodes of type page are retrieved from the source database.
+ *
+ * @code
+ * source:
+ *   plugin: d7_node_entity_translation
+ *   node_type: [page, test]
+ * @endcode
+ *
+ * In this example nodes of type page and test are retrieved from the source
+ * database.
+ *
+ * For additional configuration keys, refer to the parent classes:
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
  * @MigrateSource(
  *   id = "d7_node_entity_translation",
  *   source_module = "entity_translation"
@@ -36,11 +63,11 @@ class NodeEntityTranslation extends FieldableEntity {
 
     $query->addField('nr', 'uid', 'revision_uid');
 
-    $query->innerJoin('node', 'n', 'n.nid = et.entity_id');
-    $query->innerJoin('node_revision', 'nr', 'nr.vid = et.revision_id');
+    $query->innerJoin('node', 'n', '[n].[nid] = [et].[entity_id]');
+    $query->innerJoin('node_revision', 'nr', '[nr].[vid] = [et].[revision_id]');
 
     if (isset($this->configuration['node_type'])) {
-      $query->condition('n.type', $this->configuration['node_type']);
+      $query->condition('n.type', (array) $this->configuration['node_type'], 'IN');
     }
 
     return $query;

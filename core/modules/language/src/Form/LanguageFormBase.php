@@ -95,7 +95,7 @@ abstract class LanguageFormBase extends EntityForm {
    */
   public function validateCommon(array $form, FormStateInterface $form_state) {
     // Ensure sane field values for langcode and name.
-    if (!isset($form['langcode_view']) && !preg_match('@^[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*$@', $form_state->getValue('langcode'))) {
+    if (!isset($form['langcode_view']) && !preg_match('@^' . LanguageInterface::VALID_LANGCODE_REGEX . '$@', $form_state->getValue('langcode'))) {
       $form_state->setErrorByName('langcode', $this->t('%field must be a valid language tag as <a href=":url">defined by the W3C</a>.', [
         '%field' => $form['langcode']['#title'],
         ':url' => 'http://www.w3.org/International/articles/language-tags/',

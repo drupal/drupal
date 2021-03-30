@@ -93,7 +93,7 @@ class BlockViewBuilderTest extends KernelTestBase {
     $expected[] = '  </div>';
     $expected[] = '';
     $expected_output = implode("\n", $expected);
-    $this->assertEqual($this->renderer->renderRoot($output), $expected_output);
+    $this->assertEqual($expected_output, $this->renderer->renderRoot($output));
 
     // Reset the HTML IDs so that the next render is not affected.
     Html::resetSeenIds();
@@ -118,7 +118,7 @@ class BlockViewBuilderTest extends KernelTestBase {
     $expected[] = '  </div>';
     $expected[] = '';
     $expected_output = implode("\n", $expected);
-    $this->assertEqual($this->renderer->renderRoot($output), $expected_output);
+    $this->assertEqual($expected_output, $this->renderer->renderRoot($output));
   }
 
   /**
@@ -188,14 +188,14 @@ class BlockViewBuilderTest extends KernelTestBase {
     // Establish baseline.
     $build = $this->getBlockRenderArray();
     $this->setRawContent((string) $this->renderer->renderRoot($build));
-    $this->assertIdentical(trim((string) $this->cssSelect('div')[0]), 'Llamas > unicorns!');
+    $this->assertSame('Llamas > unicorns!', trim((string) $this->cssSelect('div')[0]));
 
     // Enable the block view alter hook that adds a foo=bar attribute.
     \Drupal::state()->set('block_test_view_alter_suffix', TRUE);
     Cache::invalidateTags($this->block->getCacheTagsToInvalidate());
     $build = $this->getBlockRenderArray();
     $this->setRawContent((string) $this->renderer->renderRoot($build));
-    $this->assertIdentical(trim((string) $this->cssSelect('[foo=bar]')[0]), 'Llamas > unicorns!');
+    $this->assertSame('Llamas > unicorns!', trim((string) $this->cssSelect('[foo=bar]')[0]));
     \Drupal::state()->set('block_test_view_alter_suffix', FALSE);
 
     \Drupal::state()->set('block_test.content', NULL);
@@ -206,7 +206,7 @@ class BlockViewBuilderTest extends KernelTestBase {
     \Drupal::state()->set('block_test_view_alter_append_pre_render_prefix', TRUE);
     $build = $this->getBlockRenderArray();
     $this->assertFalse(isset($build['#prefix']), 'The appended #pre_render callback has not yet run before rendering.');
-    $this->assertIdentical((string) $this->renderer->renderRoot($build), 'Hiya!<br>');
+    $this->assertSame('Hiya!<br>', (string) $this->renderer->renderRoot($build));
     // Check that a cached block without content is altered.
     $this->assertArrayHasKey('#prefix', $build);
     $this->assertSame('Hiya!<br>', $build['#prefix']);
@@ -269,7 +269,7 @@ class BlockViewBuilderTest extends KernelTestBase {
       \Drupal::state()->set('block_test_block_alter_create_placeholder', $value);
       $build = $this->getBlockRenderArray();
       $this->assertTrue(isset($build['#create_placeholder']));
-      $this->assertIdentical($value, $build['#create_placeholder']);
+      $this->assertSame($value, $build['#create_placeholder']);
     }
     \Drupal::state()->set('block_test_block_alter_create_placeholder', NULL);
 
@@ -295,10 +295,10 @@ class BlockViewBuilderTest extends KernelTestBase {
     // Check that the expected cacheability metadata is present in:
     // - the built render array;
     $build = $this->getBlockRenderArray();
-    $this->assertIdentical($expected_keys, $build['#cache']['keys']);
-    $this->assertIdentical($expected_contexts, $build['#cache']['contexts']);
-    $this->assertIdentical($expected_tags, $build['#cache']['tags']);
-    $this->assertIdentical($expected_max_age, $build['#cache']['max-age']);
+    $this->assertSame($expected_keys, $build['#cache']['keys']);
+    $this->assertSame($expected_contexts, $build['#cache']['contexts']);
+    $this->assertSame($expected_tags, $build['#cache']['tags']);
+    $this->assertSame($expected_max_age, $build['#cache']['max-age']);
     $this->assertFalse(isset($build['#create_placeholder']));
     // - the rendered render array;
     $this->renderer->renderRoot($build);
@@ -307,10 +307,10 @@ class BlockViewBuilderTest extends KernelTestBase {
     $cid = implode(':', $expected_keys) . ':' . implode(':', \Drupal::service('cache_contexts_manager')->convertTokensToKeys($final_cache_contexts)->getKeys());
     $cache_item = $this->container->get('cache.render')->get($cid);
     $this->assertNotEmpty($cache_item, 'The block render element has been cached with the expected cache ID.');
-    $this->assertIdentical(Cache::mergeTags($expected_tags, ['rendered']), $cache_item->tags);
-    $this->assertIdentical($final_cache_contexts, $cache_item->data['#cache']['contexts']);
-    $this->assertIdentical($expected_tags, $cache_item->data['#cache']['tags']);
-    $this->assertIdentical($expected_max_age, $cache_item->data['#cache']['max-age']);
+    $this->assertSame(Cache::mergeTags($expected_tags, ['rendered']), $cache_item->tags);
+    $this->assertSame($final_cache_contexts, $cache_item->data['#cache']['contexts']);
+    $this->assertSame($expected_tags, $cache_item->data['#cache']['tags']);
+    $this->assertSame($expected_max_age, $cache_item->data['#cache']['max-age']);
 
     $this->container->get('cache.render')->delete($cid);
   }

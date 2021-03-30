@@ -43,24 +43,29 @@ class MigrateNodeTypeTest extends MigrateDrupal7TestBase {
    *   The expected node type description.
    * @param string $help
    *   The expected help text.
+   * @param bool $display_submitted
+   * @param bool $new_revision
+   * @param array $expected_available_menus
+   * @param string $expected_parent
+   * @param string|null $body_label
    */
   protected function assertEntity($id, $label, $description, $help, $display_submitted, $new_revision, $expected_available_menus, $expected_parent, $body_label = NULL) {
     /** @var \Drupal\node\NodeTypeInterface $entity */
     $entity = NodeType::load($id);
     $this->assertInstanceOf(NodeTypeInterface::class, $entity);
-    $this->assertIdentical($label, $entity->label());
-    $this->assertIdentical($description, $entity->getDescription());
+    $this->assertSame($label, $entity->label());
+    $this->assertSame($description, $entity->getDescription());
 
-    $this->assertIdentical($help, $entity->getHelp());
+    $this->assertSame($help, $entity->getHelp());
 
-    $this->assertIdentical($display_submitted, $entity->displaySubmitted(), 'Submission info is displayed');
-    $this->assertIdentical($new_revision, $entity->shouldCreateNewRevision(), 'Is a new revision');
+    $this->assertSame($display_submitted, $entity->displaySubmitted(), 'Submission info is displayed');
+    $this->assertSame($new_revision, $entity->shouldCreateNewRevision(), 'Is a new revision');
 
     if ($body_label) {
       /** @var \Drupal\field\FieldConfigInterface $body */
       $body = FieldConfig::load('node.' . $id . '.body');
       $this->assertInstanceOf(FieldConfigInterface::class, $body);
-      $this->assertIdentical($body_label, $body->label());
+      $this->assertSame($body_label, $body->label());
     }
 
     $this->assertSame($expected_available_menus, $entity->getThirdPartySetting('menu_ui', 'available_menus'));
@@ -80,6 +85,9 @@ class MigrateNodeTypeTest extends MigrateDrupal7TestBase {
     $this->assertEntity('book', 'Book page', '<em>Books</em> have a built-in hierarchical navigation. Use for handbooks or tutorials.', '', TRUE, TRUE, $expected_available_menus, $expected_parent, "Body");
     $this->assertEntity('forum', 'Forum topic', 'A <em>forum topic</em> starts a new discussion thread within a forum.', 'No name-calling, no flame wars. Be nice.', TRUE, FALSE, $expected_available_menus, $expected_parent, 'Body');
     $this->assertEntity('page', 'Basic page', "Use <em>basic pages</em> for your static content, such as an 'About us' page.", 'Help text for basic pages', FALSE, FALSE, $expected_available_menus, $expected_parent, "Body");
+    // Test the 32 character type name exists.
+    $this->assertEntity('a_thirty_two_character_type_name', 'Test long name', '', '', TRUE, FALSE, NULL, NULL, "Body");
+
     // This node type does not carry a body field.
     $expected_available_menus = [
       'main-menu',

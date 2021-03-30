@@ -601,7 +601,7 @@ function _drupal_flush_css_js() {
  * Outputs debug information.
  *
  * The debug information is passed on to trigger_error() after being converted
- * to a string using _drupal_debug_message().
+ * to a string using print_r() or var_export().
  *
  * @param $data
  *   Data to be output.
@@ -611,8 +611,14 @@ function _drupal_flush_css_js() {
  *   Flag to switch between print_r() and var_export() for data conversion to
  *   string. Set $print_r to FALSE to use var_export() instead of print_r().
  *   Passing recursive data structures to var_export() will generate an error.
+ *
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use dump()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3192283
  */
 function debug($data, $label = NULL, $print_r = TRUE) {
+  @trigger_error('debug() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use dump() instead. See https://www.drupal.org/node/3192283', E_USER_DEPRECATED);
   // Print $data contents to string.
   $string = Html::escape($print_r ? print_r($data, TRUE) : var_export($data, TRUE));
 

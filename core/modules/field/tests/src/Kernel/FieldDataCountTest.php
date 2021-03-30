@@ -65,7 +65,7 @@ class FieldDataCountTest extends FieldKernelTestBase {
     ])->save();
 
     $this->assertFalse($field_storage->hasdata(), 'There are no entities with field data.');
-    $this->assertIdentical($this->storage->countFieldData($field_storage), 0, 'There are 0 entities with field data.');
+    $this->assertSame(0, $this->storage->countFieldData($field_storage), 'There are 0 entities with field data.');
 
     // Create 1 entity without the field.
     $entity = EntityTest::create();
@@ -73,7 +73,7 @@ class FieldDataCountTest extends FieldKernelTestBase {
     $entity->save();
 
     $this->assertFalse($field_storage->hasdata(), 'There are no entities with field data.');
-    $this->assertIdentical($this->storage->countFieldData($field_storage), 0, 'There are 0 entities with field data.');
+    $this->assertSame(0, $this->storage->countFieldData($field_storage), 'There are 0 entities with field data.');
 
     // Create 12 entities to ensure that the purging works as expected.
     for ($i = 0; $i < 12; $i++) {
@@ -94,20 +94,20 @@ class FieldDataCountTest extends FieldKernelTestBase {
         ->countQuery()
         ->execute()
         ->fetchField();
-      $this->assertEqual($result, 24, 'The field table has 24 rows.');
+      $this->assertEqual(24, $result, 'The field table has 24 rows.');
     }
 
     $this->assertTrue($field_storage->hasdata(), 'There are entities with field data.');
-    $this->assertEqual($this->storage->countFieldData($field_storage), 12, 'There are 12 entities with field data.');
+    $this->assertEqual(12, $this->storage->countFieldData($field_storage), 'There are 12 entities with field data.');
 
     // Ensure the methods work on deleted fields.
     $field_storage->delete();
     $this->assertTrue($field_storage->hasdata(), 'There are entities with deleted field data.');
-    $this->assertEqual($this->storage->countFieldData($field_storage), 12, 'There are 12 entities with deleted field data.');
+    $this->assertEqual(12, $this->storage->countFieldData($field_storage), 'There are 12 entities with deleted field data.');
 
     field_purge_batch(6);
     $this->assertTrue($field_storage->hasdata(), 'There are entities with deleted field data.');
-    $this->assertEqual($this->storage->countFieldData($field_storage), 6, 'There are 6 entities with deleted field data.');
+    $this->assertEqual(6, $this->storage->countFieldData($field_storage), 'There are 6 entities with deleted field data.');
 
     $entity_type = 'entity_test_rev';
     $this->createFieldWithStorage('_2', $entity_type);
@@ -118,7 +118,7 @@ class FieldDataCountTest extends FieldKernelTestBase {
     $cardinality = $this->fieldTestData->field_storage_2->getCardinality();
 
     $this->assertFalse($this->fieldTestData->field_storage_2->hasData(), 'There are no entities with field data.');
-    $this->assertIdentical($this->storageRev->countFieldData($this->fieldTestData->field_storage_2), 0, 'There are 0 entities with field data.');
+    $this->assertSame(0, $this->storageRev->countFieldData($this->fieldTestData->field_storage_2), 'There are 0 entities with field data.');
 
     // Create 1 entity with the field.
     $entity = clone($entity_init);
@@ -129,7 +129,7 @@ class FieldDataCountTest extends FieldKernelTestBase {
     $first_revision = $entity->getRevisionId();
 
     $this->assertTrue($this->fieldTestData->field_storage_2->hasData(), 'There are entities with field data.');
-    $this->assertIdentical($this->storageRev->countFieldData($this->fieldTestData->field_storage_2), 1, 'There is 1 entity with field data.');
+    $this->assertSame(1, $this->storageRev->countFieldData($this->fieldTestData->field_storage_2), 'There is 1 entity with field data.');
 
     $entity->{$this->fieldTestData->field_name_2} = [];
     $entity->setNewRevision();

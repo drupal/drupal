@@ -27,7 +27,7 @@ class TwigThemeTestController {
   }
 
   /**
-   * Controller for testing the twig placeholder filter outside of {% trans %}
+   * Controller for testing the twig placeholder filter outside of {% trans %}.
    */
   public function placeholderOutsideTransRender() {
     return [

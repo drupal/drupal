@@ -115,7 +115,9 @@ destination:
   no_stub: true
 migration_dependencies:
   optional:
+    - d6_menu
     - d6_menu_links
     - d6_node_translation
+    - d7_menu
     - d7_menu_links
     - d7_node_translation

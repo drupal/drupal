@@ -102,7 +102,7 @@ interface WorkspaceAssociationInterface {
    * @param string|null $entity_type_id
    *   (optional) The target entity type of the associations to delete. Defaults
    *   to NULL.
-   * @param string|null $entity_ids
+   * @param int[]|string[]|null $entity_ids
    *   (optional) The target entity IDs of the associations to delete. Defaults
    *   to NULL.
    */

@@ -46,7 +46,7 @@ class UserLanguageCreationTest extends BrowserTestBase {
       'language_interface[enabled][language-url]' => TRUE,
     ];
     $this->drupalPostForm('admin/config/regional/language/detection', $edit, 'Save settings');
-    $this->assertText('Language detection configuration saved.', 'Set language negotiation.');
+    $this->assertText('Language detection configuration saved.');
 
     // Check if the language selector is available on admin/people/create and
     // set to the currently active language.
@@ -66,8 +66,8 @@ class UserLanguageCreationTest extends BrowserTestBase {
     $this->drupalPostForm($langcode . '/admin/people/create', $edit, 'Create new account');
 
     $user = user_load_by_name($username);
-    $this->assertEqual($user->getPreferredLangcode(), $langcode, 'New user has correct preferred language set.');
-    $this->assertEqual($user->language()->getId(), $langcode, 'New user has correct profile language set.');
+    $this->assertEqual($langcode, $user->getPreferredLangcode(), 'New user has correct preferred language set.');
+    $this->assertEqual($langcode, $user->language()->getId(), 'New user has correct profile language set.');
 
     // Register a new user and check if the language selector is hidden.
     $this->drupalLogout();
@@ -84,8 +84,8 @@ class UserLanguageCreationTest extends BrowserTestBase {
     $this->drupalPostForm($langcode . '/user/register', $edit, 'Create new account');
 
     $user = user_load_by_name($username);
-    $this->assertEqual($user->getPreferredLangcode(), $langcode, 'New user has correct preferred language set.');
-    $this->assertEqual($user->language()->getId(), $langcode, 'New user has correct profile language set.');
+    $this->assertEqual($langcode, $user->getPreferredLangcode(), 'New user has correct preferred language set.');
+    $this->assertEqual($langcode, $user->language()->getId(), 'New user has correct profile language set.');
 
     // Test that the admin can use the language selector and if the correct
     // language is saved.

@@ -12,11 +12,11 @@
 
 .block__title {
   margin-top: 0;
-  margin-bottom: 18px;
+  margin-bottom: 1.125rem;
   letter-spacing: 0.02em;
   color: #6e7172;
-  font-size: 14px;
-  line-height: 18px;
+  font-size: 0.875rem;
+  line-height: 1.125rem;
 }
 
 .site-footer .block__title {

@@ -131,10 +131,14 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
 
     // Apply a simple aggregation for different aggregation functions.
     foreach ($function_expected as $aggregation_function => $expected) {
-      $this->queryResult = $this->entityStorage->getAggregateQuery()
-        ->aggregate('id', $aggregation_function)
-        ->execute();
-      $this->assertEqual($this->queryResult, $expected);
+      $query = $this->entityStorage->getAggregateQuery()
+        ->aggregate('id', $aggregation_function);
+      $this->queryResult = $query->execute();
+      // We need to check that a character exists before and after the table,
+      // column and alias identifiers. These would be the quote characters
+      // specific for each database system.
+      $this->assertRegExp('/' . $aggregation_function . '\(.entity_test.\..id.\) AS .id_' . $aggregation_function . './', (string) $query, 'The argument to the aggregation function should be a quoted field.');
+      $this->assertEquals($expected, $this->queryResult);
     }
 
     // Apply aggregation and groupby on the same query.
@@ -578,6 +582,7 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
    *
    * @param array $expected
    *   An array of the expected results.
+   * @param bool $sorted
    */
   protected function assertResults($expected, $sorted = FALSE) {
     $found = TRUE;
@@ -593,7 +598,7 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
       $found = FALSE;
       break;
     }
-    return $this->assertTrue($found, strtr('!expected expected, !found found', ['!expected' => print_r($expected, TRUE), '!found' => print_r($this->queryResult, TRUE)]));
+    $this->assertTrue($found, strtr('!expected expected, !found found', ['!expected' => print_r($expected, TRUE), '!found' => print_r($this->queryResult, TRUE)]));
   }
 
   /**

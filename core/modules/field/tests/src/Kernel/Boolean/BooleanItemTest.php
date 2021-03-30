@@ -59,18 +59,18 @@ class BooleanItemTest extends FieldKernelTestBase {
     $entity = EntityTest::load($id);
     $this->assertInstanceOf(FieldItemListInterface::class, $entity->field_boolean);
     $this->assertInstanceOf(FieldItemInterface::class, $entity->field_boolean[0]);
-    $this->assertEqual($entity->field_boolean->value, $value);
-    $this->assertEqual($entity->field_boolean[0]->value, $value);
+    $this->assertEqual($value, $entity->field_boolean->value);
+    $this->assertEqual($value, $entity->field_boolean[0]->value);
 
     // Verify changing the boolean value.
     $new_value = 0;
     $entity->field_boolean->value = $new_value;
-    $this->assertEqual($entity->field_boolean->value, $new_value);
+    $this->assertEqual($new_value, $entity->field_boolean->value);
 
     // Read changed entity and assert changed values.
     $entity->save();
     $entity = EntityTest::load($id);
-    $this->assertEqual($entity->field_boolean->value, $new_value);
+    $this->assertEqual($new_value, $entity->field_boolean->value);
 
     // Test sample item generation.
     $entity = EntityTest::create();

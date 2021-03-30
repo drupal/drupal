@@ -2,6 +2,7 @@
 
 namespace Drupal\system\Plugin\migrate\destination;
 
+use Drupal\Core\Datetime\DateFormatInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\migrate\Plugin\migrate\destination\EntityConfigBase;
 
@@ -14,11 +15,9 @@ class EntityDateFormat extends EntityConfigBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @param \Drupal\Core\Datetime\DateFormatInterface $entity
-   *   The date entity.
    */
   protected function updateEntityProperty(EntityInterface $entity, array $parents, $value) {
+    assert($entity instanceof DateFormatInterface);
     if ($parents[0] == 'pattern') {
       $entity->setPattern($value);
     }

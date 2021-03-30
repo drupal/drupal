@@ -427,6 +427,8 @@ class InstallHelper implements ContainerInjectionInterface {
    *
    * @param array $data
    *   Data of line that was read from the file.
+   * @param string $langcode
+   *   Current language code.
    *
    * @return array
    *   Data structured as a recipe node.

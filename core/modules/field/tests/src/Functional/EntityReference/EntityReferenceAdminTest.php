@@ -148,8 +148,9 @@ class EntityReferenceAdminTest extends BrowserTestBase {
 
     // Try to add a new node and fill the entity reference field.
     $this->drupalGet('node/add/' . $this->type);
-    $result = $this->xpath('//input[@name="field_test_entity_ref_field[0][target_id]" and contains(@data-autocomplete-path, "/entity_reference_autocomplete/node/views/")]');
-    $target_url = $this->getAbsoluteUrl($result[0]->getAttribute('data-autocomplete-path'));
+    $field = $this->assertSession()->fieldExists('field_test_entity_ref_field[0][target_id]');
+    $this->assertStringContainsString("/entity_reference_autocomplete/node/views/", $field->getAttribute('data-autocomplete-path'));
+    $target_url = $this->getAbsoluteUrl($field->getAttribute('data-autocomplete-path'));
     $this->drupalGet($target_url, ['query' => ['q' => 'Foo']]);
     $this->assertRaw($node1->getTitle() . ' (' . $node1->id() . ')');
     $this->assertRaw($node2->getTitle() . ' (' . $node2->id() . ')');
@@ -172,7 +173,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     $this->drupalPostForm('node/add/' . $this->type, $edit, 'Save');
 
     // Assert that entity reference autocomplete field is validated.
-    $this->assertText('There are no entities matching "Test"');
+    $this->assertText('There are no content items matching "Test"');
 
     $edit = [
       'title[0][value]' => 'Test',
@@ -182,7 +183,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
 
     // Assert the results multiple times to avoid sorting problem of nodes with
     // the same title.
-    $this->assertText('Multiple entities match this reference;');
+    $this->assertText('Multiple content items match this reference;');
     $this->assertText($node1->getTitle() . ' (' . $node1->id() . ')');
     $this->assertText($node2->getTitle() . ' (' . $node2->id() . ')');
     $this->assertText('Specify the one you want by appending the id in parentheses, like "' . $node2->getTitle() . ' (' . $node2->id() . ')' . '".');
@@ -335,13 +336,13 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     /** @var \Drupal\field\Entity\FieldConfig $field_config */
     $field_config = FieldConfig::load($field_id);
     // Expect that the target bundle has been saved in the backend.
-    $this->assertEqual($field_config->getSetting('handler_settings')['auto_create_bundle'], $vocabularies[1]->id());
+    $this->assertEqual($vocabularies[1]->id(), $field_config->getSetting('handler_settings')['auto_create_bundle']);
 
     // Delete the other bundle. Field config should not be affected.
     $vocabularies[0]->delete();
     $field_config = FieldConfig::load($field_id);
     $this->assertTrue($field_config->getSetting('handler_settings')['auto_create']);
-    $this->assertIdentical($field_config->getSetting('handler_settings')['auto_create_bundle'], $vocabularies[1]->id());
+    $this->assertSame($vocabularies[1]->id(), $field_config->getSetting('handler_settings')['auto_create_bundle']);
 
     // Delete the bundle set for entity auto-creation. Auto-created settings
     // should be reset (no auto-creation).
@@ -390,21 +391,11 @@ class EntityReferenceAdminTest extends BrowserTestBase {
    *   An array of expected options.
    */
   protected function assertFieldSelectOptions($name, array $expected_options) {
-    $xpath = $this->assertSession()->buildXPathQuery('//select[@name=:name]', [':name' => $name]);
-    $fields = $this->xpath($xpath);
-    if ($fields) {
-      $field = $fields[0];
-      $options = $field->findAll('xpath', 'option');
-      array_walk($options, function (NodeElement &$option) {
-        $option = $option->getValue();
-      });
-      sort($options);
-      sort($expected_options);
-      $this->assertIdentical($options, $expected_options);
-    }
-    else {
-      $this->fail('Unable to find field ' . $name);
-    }
+    $options = $this->assertSession()->selectExists($name)->findAll('xpath', 'option');
+    array_walk($options, function (NodeElement &$option) {
+      $option = $option->getValue();
+    });
+    $this->assertEqualsCanonicalizing($expected_options, $options);
   }
 
 }

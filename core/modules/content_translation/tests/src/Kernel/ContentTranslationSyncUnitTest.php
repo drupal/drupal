@@ -251,7 +251,7 @@ class ContentTranslationSyncUnitTest extends KernelTestBase {
           // If the column is synchronized, the value should have been synced,
           // for unsynchronized columns, the value must not change.
           $expected_value = in_array($column, $this->synchronized) ? $changed_items[$delta][$column] : $this->unchangedFieldValues[$langcode][$delta][$column];
-          $this->assertEqual($field_values[$langcode][$delta][$column], $expected_value, "Differing Item $delta column $column for langcode $langcode synced correctly");
+          $this->assertEqual($expected_value, $field_values[$langcode][$delta][$column], "Differing Item {$delta} column {$column} for langcode {$langcode} synced correctly");
         }
       }
     }

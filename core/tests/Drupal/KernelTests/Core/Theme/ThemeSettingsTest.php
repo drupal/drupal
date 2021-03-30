@@ -46,7 +46,7 @@ class ThemeSettingsTest extends KernelTestBase {
     $path = $this->availableThemes[$name]->getPath();
     $this->assertFileExists("$path/" . InstallStorage::CONFIG_INSTALL_DIRECTORY . "/$name.settings.yml");
     $this->container->get('theme_installer')->install([$name]);
-    $this->assertIdentical(theme_get_setting('base', $name), 'only');
+    $this->assertSame('only', theme_get_setting('base', $name));
   }
 
   /**

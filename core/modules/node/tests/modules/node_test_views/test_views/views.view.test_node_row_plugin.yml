@@ -47,7 +47,7 @@ display:
         type: default
       title: test_node_row_plugin
     display_plugin: default
-    display_title: Master
+    display_title: Default
     id: default
     position: 0
   page_1:

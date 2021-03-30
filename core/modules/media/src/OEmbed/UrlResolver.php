@@ -8,7 +8,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\UseCacheBackendTrait;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\TransferException;
 
 /**
  * Converts oEmbed media URLs into endpoint-specific resource URLs.
@@ -91,7 +91,7 @@ class UrlResolver implements UrlResolverInterface {
     try {
       $response = $this->httpClient->get($url);
     }
-    catch (RequestException $e) {
+    catch (TransferException $e) {
       return FALSE;
     }
 
@@ -158,10 +158,8 @@ class UrlResolver implements UrlResolverInterface {
     }
 
     $provider = $this->getProviderByUrl($url);
-    $endpoints = $provider->getEndpoints();
-    $endpoint = reset($endpoints);
-    $resource_url = $endpoint->buildResourceUrl($url);
 
+    $resource_url = $this->getEndpointMatchingUrl($url, $provider);
     $parsed_url = UrlHelper::parse($resource_url);
     if ($max_width) {
       $parsed_url['query']['maxwidth'] = $max_width;
@@ -179,6 +177,29 @@ class UrlResolver implements UrlResolverInterface {
     $this->cacheSet($cache_id, $resource_url);
 
     return $resource_url;
+  }
+
+  /**
+   * For the given media item URL find an endpoint with schemes that match.
+   *
+   * @param string $url
+   *   The media URL used to lookup the matching endpoint.
+   * @param \Drupal\media\OEmbed\Provider $provider
+   *   The oEmbed provider for the asset.
+   *
+   * @return string
+   *   The resource url.
+   */
+  protected function getEndpointMatchingUrl($url, Provider $provider) {
+    $endpoints = $provider->getEndpoints();
+    $resource_url = reset($endpoints)->buildResourceUrl($url);
+    foreach ($endpoints as $endpoint) {
+      if ($endpoint->matchUrl($url)) {
+        $resource_url = $endpoint->buildResourceUrl($url);
+        break;
+      }
+    }
+    return $resource_url ?? reset($endpoints)->buildResourceUrl($url);
   }
 
 }

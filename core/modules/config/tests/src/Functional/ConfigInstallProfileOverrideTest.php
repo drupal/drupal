@@ -61,12 +61,12 @@ class ConfigInstallProfileOverrideTest extends BrowserTestBase {
     $this->assertDirectoryExists($config_dir);
     $source_storage = new FileStorage($config_dir);
     $data = $source_storage->read($config_name);
-    $this->assertIdentical($data, $expected_original_data);
+    $this->assertSame($expected_original_data, $data);
 
     // Verify that active configuration matches the expected data, which was
     // created from the testing install profile's system.cron.yml file.
     $config = $this->config($config_name);
-    $this->assertIdentical($config->get(), $expected_profile_data);
+    $this->assertSame($expected_profile_data, $config->get());
 
     $config = $this->config('system.site');
     // Verify the system.site config has a valid UUID.

@@ -25,6 +25,7 @@ use Drupal\Component\Render\FormattableMarkup;
  *   - (name).foo.txt -> (unchecked) -> (name).foo.txt after un-munging
  *
  * @group File
+ * @group legacy
  */
 class NameMungingTest extends FileTestBase {
 
@@ -60,13 +61,14 @@ class NameMungingTest extends FileTestBase {
    * Create a file and munge/unmunge the name.
    */
   public function testMunging() {
+    $this->expectDeprecation('file_munge_filename() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Dispatch a \Drupal\Core\File\Event\FileUploadSanitizeNameEvent event instead. See https://www.drupal.org/node/3032541');
     // Disable insecure uploads.
     $this->config('system.file')->set('allow_insecure_uploads', 0)->save();
     $munged_name = file_munge_filename($this->name, '', TRUE);
     $messages = \Drupal::messenger()->all();
     \Drupal::messenger()->deleteAll();
     $this->assertContainsEquals(strtr('For security reasons, your upload has been renamed to <em class="placeholder">%filename</em>.', ['%filename' => $munged_name]), $messages['status'], 'Alert properly set when a file is renamed.');
-    $this->assertNotEqual($munged_name, $this->name, new FormattableMarkup('The new filename (%munged) has been modified from the original (%original)', ['%munged' => $munged_name, '%original' => $this->name]));
+    $this->assertNotEquals($this->name, $munged_name, new FormattableMarkup('The new filename (%munged) has been modified from the original (%original)', ['%munged' => $munged_name, '%original' => $this->name]));
   }
 
   /**
@@ -75,7 +77,7 @@ class NameMungingTest extends FileTestBase {
   public function testMungeNullByte() {
     $prefix = $this->randomMachineName();
     $filename = $prefix . '.' . $this->badExtension . "\0.txt";
-    $this->assertEqual(file_munge_filename($filename, ''), $prefix . '.' . $this->badExtension . '_.txt', 'A filename with a null byte is correctly munged to remove the null byte.');
+    $this->assertEqual($prefix . '.' . $this->badExtension . '_.txt', file_munge_filename($filename, ''), 'A filename with a null byte is correctly munged to remove the null byte.');
   }
 
   /**
@@ -117,6 +119,7 @@ class NameMungingTest extends FileTestBase {
    * Ensure that unmunge gets your name back.
    */
   public function testUnMunge() {
+    $this->expectDeprecation('file_unmunge_filename() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use str_replace() instead. See https://www.drupal.org/node/3032541');
     $munged_name = file_munge_filename($this->name, '', FALSE);
     $unmunged_name = file_unmunge_filename($munged_name);
     $this->assertSame($unmunged_name, $this->name, new FormattableMarkup('The unmunged (%unmunged) filename matches the original (%original)', ['%unmunged' => $unmunged_name, '%original' => $this->name]));

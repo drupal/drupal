@@ -99,7 +99,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
   public function testFilterUI() {
     $this->drupalGet('admin/structure/views/nojs/handler/test_filter_taxonomy_index_tid/default/filter/tid');
 
-    $result = $this->xpath('//select[@id="edit-options-value"]/option');
+    $result = $this->assertSession()->selectExists('edit-options-value')->findAll('css', 'option');
 
     // Ensure that the expected hierarchy is available in the UI.
     $counter = 0;
@@ -137,7 +137,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
         'user',
       ],
     ];
-    $this->assertIdentical($expected, $view->calculateDependencies()->getDependencies());
+    $this->assertSame($expected, $view->calculateDependencies()->getDependencies());
   }
 
   /**

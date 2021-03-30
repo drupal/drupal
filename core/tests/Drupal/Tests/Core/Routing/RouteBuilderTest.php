@@ -47,7 +47,7 @@ class RouteBuilderTest extends UnitTestCase {
   /**
    * The mocked event dispatcher.
    *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $dispatcher;
 
@@ -80,7 +80,7 @@ class RouteBuilderTest extends UnitTestCase {
   protected function setUp(): void {
     $this->dumper = $this->createMock('Drupal\Core\Routing\MatcherDumperInterface');
     $this->lock = $this->createMock('Drupal\Core\Lock\LockBackendInterface');
-    $this->dispatcher = $this->createMock('\Symfony\Component\EventDispatcher\EventDispatcherInterface');
+    $this->dispatcher = $this->createMock('\Symfony\Contracts\EventDispatcher\EventDispatcherInterface');
     $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->controllerResolver = $this->createMock('Drupal\Core\Controller\ControllerResolverInterface');
     $this->yamlDiscovery = $this->getMockBuilder('\Drupal\Core\Discovery\YamlDiscovery')

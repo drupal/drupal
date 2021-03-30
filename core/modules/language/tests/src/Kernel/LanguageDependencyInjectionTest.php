@@ -40,7 +40,7 @@ class LanguageDependencyInjectionTest extends LanguageTestBase {
     // The language system creates a Language object which contains the
     // same properties as the new default language object.
     $result = \Drupal::languageManager()->getCurrentLanguage();
-    $this->assertIdentical($result->getId(), 'fr');
+    $this->assertSame('fr', $result->getId());
 
     // Delete the language to check that we fallback to the default.
     try {
@@ -56,7 +56,7 @@ class LanguageDependencyInjectionTest extends LanguageTestBase {
 
     $fr->delete();
     $result = \Drupal::languageManager()->getCurrentLanguage();
-    $this->assertIdentical($result->getId(), $default_language->getId());
+    $this->assertSame($default_language->getId(), $result->getId());
   }
 
 }

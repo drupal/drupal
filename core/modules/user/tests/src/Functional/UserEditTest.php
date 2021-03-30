@@ -49,12 +49,12 @@ class UserEditTest extends BrowserTestBase {
     $edit['pass[pass1]'] = '';
     $edit['pass[pass2]'] = $this->randomMachineName();
     $this->drupalPostForm("user/" . $user1->id() . "/edit", $edit, 'Save');
-    $this->assertText("The specified passwords do not match.", 'Typing mismatched passwords displays an error message.');
+    $this->assertText("The specified passwords do not match.");
 
     $edit['pass[pass1]'] = $this->randomMachineName();
     $edit['pass[pass2]'] = '';
     $this->drupalPostForm("user/" . $user1->id() . "/edit", $edit, 'Save');
-    $this->assertText("The specified passwords do not match.", 'Typing mismatched passwords displays an error message.');
+    $this->assertText("The specified passwords do not match.");
 
     // Test that the error message appears when attempting to change the mail or
     // pass without the current password.
@@ -79,8 +79,13 @@ class UserEditTest extends BrowserTestBase {
     $this->drupalPostForm("user/" . $user1->id() . "/edit", $edit, 'Save');
     $this->assertRaw(t("The changes have been saved."));
 
+    // Confirm there's only one session in the database as the existing session
+    // has been migrated when the password is changed.
+    // @see \Drupal\user\Entity\User::postSave()
+    $this->assertSame(1, (int) \Drupal::database()->select('sessions', 's')->countQuery()->execute()->fetchField());
+
     // Make sure the changed timestamp is updated.
-    $this->assertEqual($user1->getChangedTime(), REQUEST_TIME, 'Changing a user sets "changed" timestamp.');
+    $this->assertEqual(REQUEST_TIME, $user1->getChangedTime(), 'Changing a user sets "changed" timestamp.');
 
     // Make sure the user can log in with their new password.
     $this->drupalLogout();

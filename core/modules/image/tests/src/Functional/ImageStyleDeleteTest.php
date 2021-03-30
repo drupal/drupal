@@ -71,7 +71,7 @@ class ImageStyleDeleteTest extends ImageFieldTestBase {
     // Checks that widget setting is preserved with the image preview disabled.
     $form_display = EntityFormDisplay::load('node.page.default');
     $this->assertNotNull($widget = $form_display->getComponent('foo'));
-    $this->assertIdentical($widget['settings']['preview_image_style'], '');
+    $this->assertSame('', $widget['settings']['preview_image_style']);
 
     $this->drupalGet('admin/config/media/image-styles/manage/wide/delete');
     // Checks that the 'replacement' select element is displayed.

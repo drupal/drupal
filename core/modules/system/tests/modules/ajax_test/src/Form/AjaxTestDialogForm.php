@@ -27,12 +27,6 @@ class AjaxTestDialogForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    // In order to use WebTestBase::drupalPostAjaxForm() to POST from a link, we need
-    // to have a dummy field we can set in WebTestBase::drupalPostForm() else it won't
-    // submit anything.
-    $form['textfield'] = [
-      '#type' => 'hidden',
-    ];
     $form['button1'] = [
       '#type' => 'submit',
       '#name' => 'button1',

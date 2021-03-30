@@ -714,7 +714,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *   arrays of options for that display.
    */
   protected function buildDisplayOptions($form, FormStateInterface $form_state) {
-    // Display: Master
+    // Display: Default
     $display_options['default'] = $this->defaultDisplayOptions();
     $display_options['default'] += [
       'filters' => [],
@@ -765,8 +765,8 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     // instances.
     $executable = $view->getExecutable();
 
-    // Display: Master
-    $default_display = $executable->newDisplay('default', 'Master', 'default');
+    // Display: Default
+    $default_display = $executable->newDisplay('default', 'Default', 'default');
     foreach ($display_options['default'] as $option => $value) {
       $default_display->setOption($option, $value);
     }

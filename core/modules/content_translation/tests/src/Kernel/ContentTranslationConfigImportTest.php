@@ -100,7 +100,7 @@ class ContentTranslationConfigImportTest extends KernelTestBase {
 
     // Verify the values appeared.
     $config = $this->config($config_name);
-    $this->assertIdentical($config->get('id'), $config_id);
+    $this->assertSame($config_id, $config->get('id'));
 
     // Verify that updates were performed.
     $entity_type = $this->container->get('entity_type.manager')->getDefinition($entity_type_id);

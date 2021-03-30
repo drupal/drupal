@@ -148,14 +148,14 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     $this->assertInstanceOf(DefaultStyle::class, $view->style_plugin);
     // Test the plugin has been invited and view have references to the view and
     // display handler.
-    $this->assertEqual(spl_object_hash($view->style_plugin->view), $view_hash);
-    $this->assertEqual(spl_object_hash($view->style_plugin->displayHandler), $display_hash);
+    $this->assertEqual($view_hash, spl_object_hash($view->style_plugin->view));
+    $this->assertEqual($display_hash, spl_object_hash($view->style_plugin->displayHandler));
 
     // Test the initQuery method().
     $view->initQuery();
     $this->assertInstanceOf(Sql::class, $view->query);
-    $this->assertEqual(spl_object_hash($view->query->view), $view_hash);
-    $this->assertEqual(spl_object_hash($view->query->displayHandler), $display_hash);
+    $this->assertEqual($view_hash, spl_object_hash($view->query->view));
+    $this->assertEqual($display_hash, spl_object_hash($view->query->displayHandler));
 
     $view->destroy();
 
@@ -163,22 +163,22 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     $display_plugin = $view->getDisplay();
     $this->assertInstanceOf(DefaultDisplay::class, $display_plugin);
     $this->assertInstanceOf(DefaultDisplay::class, $view->display_handler);
-    $this->assertIdentical($display_plugin, $view->getDisplay(), 'The same display plugin instance was returned.');
+    $this->assertSame($display_plugin, $view->getDisplay(), 'The same display plugin instance was returned.');
 
     $style_plugin = $view->getStyle();
     $this->assertInstanceOf(DefaultStyle::class, $style_plugin);
     $this->assertInstanceOf(DefaultStyle::class, $view->style_plugin);
-    $this->assertIdentical($style_plugin, $view->getStyle(), 'The same style plugin instance was returned.');
+    $this->assertSame($style_plugin, $view->getStyle(), 'The same style plugin instance was returned.');
 
     $pager_plugin = $view->getPager();
     $this->assertInstanceOf(PagerPluginBase::class, $pager_plugin);
     $this->assertInstanceOf(PagerPluginBase::class, $view->pager);
-    $this->assertIdentical($pager_plugin, $view->getPager(), 'The same pager plugin instance was returned.');
+    $this->assertSame($pager_plugin, $view->getPager(), 'The same pager plugin instance was returned.');
 
     $query_plugin = $view->getQuery();
     $this->assertInstanceOf(QueryPluginBase::class, $query_plugin);
     $this->assertInstanceOf(QueryPluginBase::class, $view->query);
-    $this->assertIdentical($query_plugin, $view->getQuery(), 'The same query plugin instance was returned.');
+    $this->assertSame($query_plugin, $view->getQuery(), 'The same query plugin instance was returned.');
   }
 
   /**
@@ -198,7 +198,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     }
 
     // Per default exposed input should fall back to an empty array.
-    $this->assertEqual($view->getExposedInput(), []);
+    $this->assertEqual([], $view->getExposedInput());
   }
 
   public function testSetDisplayWithInvalidDisplay() {
@@ -214,8 +214,8 @@ class ViewExecutableTest extends ViewsKernelTestBase {
       $this->assertEquals('setDisplay() called with invalid display ID "invalid".', $e->getMessage());
     }
 
-    $this->assertEqual($view->current_display, 'default', 'If setDisplay is called with an invalid display id the default display should be used.');
-    $this->assertEqual(spl_object_hash($view->display_handler), spl_object_hash($view->displayHandlers->get('default')));
+    $this->assertEqual('default', $view->current_display, 'If setDisplay is called with an invalid display id the default display should be used.');
+    $this->assertEqual(spl_object_hash($view->displayHandlers->get('default')), spl_object_hash($view->display_handler));
   }
 
   /**
@@ -233,26 +233,26 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     $this->assertInstanceOf(Page::class, $view->displayHandlers->get('page_2'));
 
     // After initializing the default display is the current used display.
-    $this->assertEqual($view->current_display, 'default');
-    $this->assertEqual(spl_object_hash($view->display_handler), spl_object_hash($view->displayHandlers->get('default')));
+    $this->assertEqual('default', $view->current_display);
+    $this->assertEqual(spl_object_hash($view->displayHandlers->get('default')), spl_object_hash($view->display_handler));
 
     // All handlers should have a reference to the default display.
-    $this->assertEqual(spl_object_hash($view->displayHandlers->get('page_1')->default_display), spl_object_hash($view->displayHandlers->get('default')));
-    $this->assertEqual(spl_object_hash($view->displayHandlers->get('page_2')->default_display), spl_object_hash($view->displayHandlers->get('default')));
+    $this->assertEqual(spl_object_hash($view->displayHandlers->get('default')), spl_object_hash($view->displayHandlers->get('page_1')->default_display));
+    $this->assertEqual(spl_object_hash($view->displayHandlers->get('default')), spl_object_hash($view->displayHandlers->get('page_2')->default_display));
 
     // Tests Drupal\views\ViewExecutable::setDisplay().
     $view->setDisplay();
-    $this->assertEqual($view->current_display, 'default', 'If setDisplay is called with no parameter the default display should be used.');
-    $this->assertEqual(spl_object_hash($view->display_handler), spl_object_hash($view->displayHandlers->get('default')));
+    $this->assertEqual('default', $view->current_display, 'If setDisplay is called with no parameter the default display should be used.');
+    $this->assertEqual(spl_object_hash($view->displayHandlers->get('default')), spl_object_hash($view->display_handler));
 
     // Set two different valid displays.
     $view->setDisplay('page_1');
-    $this->assertEqual($view->current_display, 'page_1', 'If setDisplay is called with a valid display id the appropriate display should be used.');
-    $this->assertEqual(spl_object_hash($view->display_handler), spl_object_hash($view->displayHandlers->get('page_1')));
+    $this->assertEqual('page_1', $view->current_display, 'If setDisplay is called with a valid display id the appropriate display should be used.');
+    $this->assertEqual(spl_object_hash($view->displayHandlers->get('page_1')), spl_object_hash($view->display_handler));
 
     $view->setDisplay('page_2');
-    $this->assertEqual($view->current_display, 'page_2', 'If setDisplay is called with a valid display id the appropriate display should be used.');
-    $this->assertEqual(spl_object_hash($view->display_handler), spl_object_hash($view->displayHandlers->get('page_2')));
+    $this->assertEqual('page_2', $view->current_display, 'If setDisplay is called with a valid display id the appropriate display should be used.');
+    $this->assertEqual(spl_object_hash($view->displayHandlers->get('page_2')), spl_object_hash($view->display_handler));
 
     // Destroy the view, so we can start again and test an invalid display.
     $view->destroy();
@@ -314,35 +314,35 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     // Test setting and getting the offset.
     $rand = rand();
     $view->setOffset($rand);
-    $this->assertEqual($view->getOffset(), $rand);
+    $this->assertEqual($rand, $view->getOffset());
 
     // Test the getBaseTable() method.
     $expected = [
       'views_test_data' => TRUE,
       '#global' => TRUE,
     ];
-    $this->assertIdentical($view->getBaseTables(), $expected);
+    $this->assertSame($expected, $view->getBaseTables());
 
     // Test response methods.
     $this->assertInstanceOf(Response::class, $view->getResponse());
     $new_response = new Response();
     $view->setResponse($new_response);
-    $this->assertIdentical(spl_object_hash($view->getResponse()), spl_object_hash($new_response), 'New response object correctly set.');
+    $this->assertSame(spl_object_hash($view->getResponse()), spl_object_hash($new_response), 'New response object correctly set.');
 
     // Test the getPath() method.
     $path = $this->randomMachineName();
     $view->displayHandlers->get('page_1')->overrideOption('path', $path);
     $view->setDisplay('page_1');
-    $this->assertEqual($view->getPath(), $path);
+    $this->assertEqual($path, $view->getPath());
     // Test the override_path property override.
     $override_path = $this->randomMachineName();
     $view->override_path = $override_path;
-    $this->assertEqual($view->getPath(), $override_path);
+    $this->assertEqual($override_path, $view->getPath());
 
     // Test the title methods.
     $title = $this->randomString();
     $view->setTitle($title);
-    $this->assertEqual($view->getTitle(), Xss::filterAdmin($title));
+    $this->assertEqual(Xss::filterAdmin($title), $view->getTitle());
   }
 
   /**
@@ -375,7 +375,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     );
 
     foreach ($defaults as $property => $default) {
-      $this->assertIdentical($this->getProtectedProperty($view, $property), $default);
+      $this->assertSame($this->getProtectedProperty($view, $property), $default);
     }
   }
 
@@ -407,10 +407,10 @@ class ViewExecutableTest extends ViewsKernelTestBase {
       //   or something similar instead of the singular, but so long check for
       //   this special case.
       if (isset($types[$type]['type']) && $types[$type]['type'] == 'area') {
-        $this->assertEqual($types[$type]['plural'], $type);
+        $this->assertEqual($type, $types[$type]['plural']);
       }
       else {
-        $this->assertEqual($types[$type]['plural'], $type . 's');
+        $this->assertEqual($type . 's', $types[$type]['plural']);
       }
     }
   }
@@ -456,7 +456,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     $display['deleted'] = TRUE;
     $validate_deleted = $view->validate();
 
-    $this->assertNotIdentical($validate, $validate_deleted, 'Master display has not been validated.');
+    $this->assertNotSame($validate, $validate_deleted);
   }
 
   /**
@@ -475,7 +475,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
       return $carry;
     });
     // Assert that there were 9 total errors across 3 displays.
-    $this->assertIdentical(9, $total_error_count);
+    $this->assertSame(9, $total_error_count);
     $this->assertCount(3, $errors);
   }
 
@@ -498,10 +498,10 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     $unserialized = unserialize($serialized);
 
     $this->assertInstanceOf(ViewExecutable::class, $unserialized);
-    $this->assertIdentical($view->storage->id(), $unserialized->storage->id(), 'The expected storage entity was loaded on the unserialized view.');
-    $this->assertIdentical($unserialized->current_display, 'page_1', 'The expected display was set on the unserialized view.');
-    $this->assertIdentical($unserialized->args, ['test'], 'The expected argument was set on the unserialized view.');
-    $this->assertIdentical($unserialized->getCurrentPage(), 2, 'The expected current page was set on the unserialized view.');
+    $this->assertSame($unserialized->storage->id(), $view->storage->id(), 'The expected storage entity was loaded on the unserialized view.');
+    $this->assertSame('page_1', $unserialized->current_display, 'The expected display was set on the unserialized view.');
+    $this->assertSame(['test'], $unserialized->args, 'The expected argument was set on the unserialized view.');
+    $this->assertSame(2, $unserialized->getCurrentPage(), 'The expected current page was set on the unserialized view.');
 
     // Get the definition of node's nid field, for example. Only get it not from
     // the field manager directly, but from the item data definition. It should

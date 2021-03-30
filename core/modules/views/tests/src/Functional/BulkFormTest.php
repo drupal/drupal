@@ -35,7 +35,7 @@ class BulkFormTest extends BrowserTestBase {
     // First, test an empty bulk form with the default style plugin to make sure
     // the empty region is rendered correctly.
     $this->drupalGet('test_bulk_form_empty');
-    $this->assertText('This view is empty.', 'Empty text found on empty bulk form.');
+    $this->assertText('This view is empty.');
 
     $nodes = [];
     for ($i = 0; $i < 10; $i++) {
@@ -116,7 +116,7 @@ class BulkFormTest extends BrowserTestBase {
     $view->save();
 
     $this->drupalGet('test_bulk_form');
-    $options = $this->xpath('//select[@id=:id]/option', [':id' => 'edit-action']);
+    $options = $this->assertSession()->selectExists('edit-action')->findAll('css', 'option');
     $this->assertCount(2, $options);
     $this->assertSession()->optionExists('edit-action', 'node_make_sticky_action');
     $this->assertSession()->optionExists('edit-action', 'node_make_unsticky_action');

@@ -46,7 +46,7 @@ class UserRegistrationTest extends BrowserTestBase {
     $edit['name'] = $name = $this->randomMachineName();
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
     $this->drupalPostForm('user/register', $edit, 'Create new account');
-    $this->assertText('A welcome message with further instructions has been sent to your email address.', 'User registered successfully.');
+    $this->assertText('A welcome message with further instructions has been sent to your email address.');
 
     /** @var EntityStorageInterface $storage */
     $storage = $this->container->get('entity_type.manager')->getStorage('user');
@@ -86,7 +86,7 @@ class UserRegistrationTest extends BrowserTestBase {
     $edit['pass[pass1]'] = '99999.0';
     $edit['pass[pass2]'] = '99999';
     $this->drupalPostForm('user/register', $edit, 'Create new account');
-    $this->assertText('The specified passwords do not match.', 'Typing mismatched passwords displays an error message.');
+    $this->assertText('The specified passwords do not match.');
 
     // Enter a correct password.
     $edit['pass[pass1]'] = $new_pass = $this->randomMachineName();
@@ -97,7 +97,7 @@ class UserRegistrationTest extends BrowserTestBase {
       ->loadByProperties(['name' => $name, 'mail' => $mail]);
     $new_user = reset($accounts);
     $this->assertNotNull($new_user, 'New account successfully created with matching passwords.');
-    $this->assertText('Registration successful. You are now logged in.', 'Users are logged in after registering.');
+    $this->assertText('Registration successful. You are now logged in.');
     $this->drupalLogout();
 
     // Allow registration by site visitors, but require administrator approval.
@@ -108,7 +108,7 @@ class UserRegistrationTest extends BrowserTestBase {
     $edit['pass[pass1]'] = $pass = $this->randomMachineName();
     $edit['pass[pass2]'] = $pass;
     $this->drupalPostForm('user/register', $edit, 'Create new account');
-    $this->assertText('Thank you for applying for an account. Your account is currently pending approval by the site administrator.', 'Users are notified of pending approval');
+    $this->assertText('Thank you for applying for an account. Your account is currently pending approval by the site administrator.');
 
     // Try to log in before administrator approval.
     $auth = [
@@ -116,7 +116,7 @@ class UserRegistrationTest extends BrowserTestBase {
       'pass' => $pass,
     ];
     $this->drupalPostForm('user/login', $auth, 'Log in');
-    $this->assertText('The username ' . $name . ' has not been activated or is blocked.', 'User cannot log in yet.');
+    $this->assertText('The username ' . $name . ' has not been activated or is blocked.');
 
     // Activate the new account.
     $accounts = $this->container->get('entity_type.manager')->getStorage('user')
@@ -132,7 +132,7 @@ class UserRegistrationTest extends BrowserTestBase {
 
     // Log in after administrator approval.
     $this->drupalPostForm('user/login', $auth, 'Log in');
-    $this->assertText('Member for', 'User can log in after administrator approval.');
+    $this->assertText('Member for');
   }
 
   public function testRegistrationEmailDuplicates() {
@@ -152,13 +152,13 @@ class UserRegistrationTest extends BrowserTestBase {
 
     // Attempt to create a new account using an existing email address.
     $this->drupalPostForm('user/register', $edit, 'Create new account');
-    $this->assertText('The email address ' . $duplicate_user->getEmail() . ' is already taken.', 'Supplying an exact duplicate email address displays an error message');
+    $this->assertText('The email address ' . $duplicate_user->getEmail() . ' is already taken.');
 
     // Attempt to bypass duplicate email registration validation by adding spaces.
     $edit['mail'] = '   ' . $duplicate_user->getEmail() . '   ';
 
     $this->drupalPostForm('user/register', $edit, 'Create new account');
-    $this->assertText('The email address ' . $duplicate_user->getEmail() . ' is already taken.', 'Supplying a duplicate email address with added whitespace displays an error message');
+    $this->assertText('The email address ' . $duplicate_user->getEmail() . ' is already taken.');
   }
 
   /**
@@ -258,15 +258,15 @@ class UserRegistrationTest extends BrowserTestBase {
     $accounts = $this->container->get('entity_type.manager')->getStorage('user')
       ->loadByProperties(['name' => $name, 'mail' => $mail]);
     $new_user = reset($accounts);
-    $this->assertEqual($new_user->getAccountName(), $name, 'Username matches.');
-    $this->assertEqual($new_user->getEmail(), $mail, 'Email address matches.');
+    $this->assertEqual($name, $new_user->getAccountName(), 'Username matches.');
+    $this->assertEqual($mail, $new_user->getEmail(), 'Email address matches.');
     // Verify that the creation time is correct.
     $this->assertGreaterThan(REQUEST_TIME - 20, $new_user->getCreatedTime());
-    $this->assertEqual($new_user->isActive(), $config_user_settings->get('register') == UserInterface::REGISTER_VISITORS ? 1 : 0, 'Correct status field.');
-    $this->assertEqual($new_user->getTimezone(), $config_system_date->get('timezone.default'), 'Correct time zone field.');
-    $this->assertEqual($new_user->langcode->value, \Drupal::languageManager()->getDefaultLanguage()->getId(), 'Correct language field.');
-    $this->assertEqual($new_user->preferred_langcode->value, \Drupal::languageManager()->getDefaultLanguage()->getId(), 'Correct preferred language field.');
-    $this->assertEqual($new_user->init->value, $mail, 'Correct init field.');
+    $this->assertEqual($config_user_settings->get('register') == UserInterface::REGISTER_VISITORS ? 1 : 0, $new_user->isActive(), 'Correct status field.');
+    $this->assertEqual($config_system_date->get('timezone.default'), $new_user->getTimezone(), 'Correct time zone field.');
+    $this->assertEqual(\Drupal::languageManager()->getDefaultLanguage()->getId(), $new_user->langcode->value, 'Correct language field.');
+    $this->assertEqual(\Drupal::languageManager()->getDefaultLanguage()->getId(), $new_user->preferred_langcode->value, 'Correct preferred language field.');
+    $this->assertEqual($mail, $new_user->init->value, 'Correct init field.');
   }
 
   /**
@@ -318,7 +318,7 @@ class UserRegistrationTest extends BrowserTestBase {
 
     // Check that the field does not appear on the registration form.
     $this->drupalGet('user/register');
-    $this->assertNoText($field->label(), 'The field does not appear on user registration form');
+    $this->assertNoText($field->label());
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:core.entity_form_display.user.user.register');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:user.settings');
 
@@ -328,7 +328,7 @@ class UserRegistrationTest extends BrowserTestBase {
       ->save();
 
     $this->drupalGet('user/register');
-    $this->assertText($field->label(), 'The field appears on user registration form');
+    $this->assertText($field->label());
     $this->assertRegistrationFormCacheTagsWithUserFields();
 
     // Check that validation errors are correctly reported.
@@ -354,7 +354,7 @@ class UserRegistrationTest extends BrowserTestBase {
     $accounts = $this->container->get('entity_type.manager')->getStorage('user')
       ->loadByProperties(['name' => $name, 'mail' => $mail]);
     $new_user = reset($accounts);
-    $this->assertEqual($new_user->test_user_field->value, $value, 'The field value was correctly saved.');
+    $this->assertEqual($value, $new_user->test_user_field->value, 'The field value was correctly saved.');
 
     // Check that the 'add more' button works.
     $field_storage->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
@@ -377,9 +377,9 @@ class UserRegistrationTest extends BrowserTestBase {
     $accounts = $this->container->get('entity_type.manager')->getStorage('user')
       ->loadByProperties(['name' => $name, 'mail' => $mail]);
     $new_user = reset($accounts);
-    $this->assertEqual($new_user->test_user_field[0]->value, $value, 'The field value was correctly saved.');
-    $this->assertEqual($new_user->test_user_field[1]->value, $value + 1, 'The field value was correctly saved.');
-    $this->assertEqual($new_user->test_user_field[2]->value, $value + 2, 'The field value was correctly saved.');
+    $this->assertEqual($value, $new_user->test_user_field[0]->value, 'The field value was correctly saved.');
+    $this->assertEqual($value + 1, $new_user->test_user_field[1]->value, 'The field value was correctly saved.');
+    $this->assertEqual($value + 2, $new_user->test_user_field[2]->value, 'The field value was correctly saved.');
   }
 
   /**

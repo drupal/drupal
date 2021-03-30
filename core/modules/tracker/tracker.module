@@ -49,6 +49,7 @@ function tracker_cron() {
     $count = 0;
 
     $nids = \Drupal::entityQuery('node')
+      ->accessCheck(FALSE)
       ->condition('nid', $max_nid, '<=')
       ->sort('nid', 'DESC')
       ->range(0, \Drupal::config('tracker.settings')->get('cron_index_limit'))
@@ -95,6 +96,7 @@ function tracker_cron() {
       // database agnostic way. We don't actually care about the comments here
       // so don't add an aggregate field.
       $result = \Drupal::entityQueryAggregate('comment')
+        ->accessCheck(FALSE)
         ->condition('entity_type', 'node')
         ->condition('entity_id', $node->id())
         ->condition('uid', $node->getOwnerId(), '<>')
@@ -212,7 +214,7 @@ function _tracker_add($nid, $uid, $changed) {
   $connection = \Drupal::database();
   // @todo This should be actually filtering on the desired language and just
   //   fall back to the default language.
-  $node = $connection->query('SELECT nid, status, uid, changed FROM {node_field_data} WHERE nid = :nid AND default_langcode = 1 ORDER BY changed DESC, status DESC', [':nid' => $nid])->fetchObject();
+  $node = $connection->query('SELECT [nid], [status], [uid], [changed] FROM {node_field_data} WHERE [nid] = :nid AND [default_langcode] = 1 ORDER BY [changed] DESC, [status] DESC', [':nid' => $nid])->fetchObject();
 
   // Adding a comment can only increase the changed timestamp, so our
   // calculation here is simple.
@@ -293,6 +295,7 @@ function _tracker_remove($nid, $uid = NULL, $changed = NULL) {
     if (!$keep_subscription) {
       // Check if the user has commented at least once on the given nid.
       $keep_subscription = \Drupal::entityQuery('comment')
+        ->accessCheck(FALSE)
         ->condition('entity_type', 'node')
         ->condition('entity_id', $nid)
         ->condition('uid', $uid)
@@ -314,7 +317,7 @@ function _tracker_remove($nid, $uid = NULL, $changed = NULL) {
     // and the node itself.
     // We only need to do this if the removed item has a timestamp that equals
     // or exceeds the listed changed timestamp for the node.
-    $tracker_node = $connection->query('SELECT nid, changed FROM {tracker_node} WHERE nid = :nid', [':nid' => $nid])->fetchObject();
+    $tracker_node = $connection->query('SELECT [nid], [changed] FROM {tracker_node} WHERE [nid] = :nid', [':nid' => $nid])->fetchObject();
     if ($tracker_node && $changed >= $tracker_node->changed) {
       // If we're here, the item being removed is *possibly* the item that
       // established the node's changed timestamp.

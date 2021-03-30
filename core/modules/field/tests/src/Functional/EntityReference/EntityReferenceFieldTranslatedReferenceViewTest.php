@@ -180,13 +180,13 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends BrowserTestBase {
     $translation_url = $this->referrerEntity->toUrl('canonical', ['language' => ConfigurableLanguage::load($this->translateToLangcode)]);
 
     $this->drupalGet($url);
-    $this->assertText($this->labelOfNotTranslatedReference, 'The label of not translated reference is displayed.');
-    $this->assertText($this->originalLabel, 'The default label of translated reference is displayed.');
-    $this->assertNoText($this->translatedLabel, 'The translated label of translated reference is not displayed.');
+    $this->assertText($this->labelOfNotTranslatedReference);
+    $this->assertText($this->originalLabel);
+    $this->assertNoText($this->translatedLabel);
     $this->drupalGet($translation_url);
-    $this->assertText($this->labelOfNotTranslatedReference, 'The label of not translated reference is displayed.');
-    $this->assertNoText($this->originalLabel, 'The default label of translated reference is not displayed.');
-    $this->assertText($this->translatedLabel, 'The translated label of translated reference is displayed.');
+    $this->assertText($this->labelOfNotTranslatedReference);
+    $this->assertNoText($this->originalLabel);
+    $this->assertText($this->translatedLabel);
   }
 
   /**

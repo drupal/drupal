@@ -41,10 +41,9 @@ function update_process_project_info(&$projects) {
       if (preg_match('/^(\d+\.x-)?(\d+)\..*$/', $info['version'], $matches)) {
         $info['major'] = $matches[2];
       }
-      elseif (!isset($info['major'])) {
+      else {
         // This would only happen for version strings that don't follow the
-        // drupal.org convention. We let contribs define "major" in their
-        // .info.yml in this case, and only if that's missing would we hit this.
+        // drupal.org convention.
         $info['major'] = -1;
       }
     }

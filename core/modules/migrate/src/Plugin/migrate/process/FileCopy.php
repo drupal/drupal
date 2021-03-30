@@ -81,7 +81,7 @@ class FileCopy extends FileProcessBase implements ContainerFactoryPluginInterfac
    *   The plugin configuration.
    * @param string $plugin_id
    *   The plugin ID.
-   * @param mixed $plugin_definition
+   * @param array $plugin_definition
    *   The plugin definition.
    * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrappers
    *   The stream wrapper manager service.

@@ -81,7 +81,7 @@ class HandlerFilterRolesTest extends UserKernelTestBase {
     $view = Views::getView('test_user_name');
     $view->initDisplay();
     $view->initHandlers();
-    $this->assertEqual(array_keys($view->filter['roles_target_id']->getValueOptions()), ['test_user_role']);
+    $this->assertEqual(['test_user_role'], array_keys($view->filter['roles_target_id']->getValueOptions()));
 
     $view = View::load('test_user_name');
     $display = &$view->getDisplay('default');

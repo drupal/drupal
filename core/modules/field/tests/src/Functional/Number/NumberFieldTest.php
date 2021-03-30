@@ -86,7 +86,7 @@ class NumberFieldTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText('entity_test ' . $id . ' has been created.', 'Entity was created');
+    $this->assertText('entity_test ' . $id . ' has been created.');
     $this->assertRaw($value);
 
     // Try to create entries with more than one decimal separator; assert fail.
@@ -186,7 +186,7 @@ class NumberFieldTest extends BrowserTestBase {
       'indexes' => [],
       'foreign keys' => [],
     ];
-    $this->assertEqual($storage->getSchema(), $expected);
+    $this->assertEqual($expected, $storage->getSchema());
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
@@ -201,7 +201,7 @@ class NumberFieldTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText('entity_test ' . $id . ' has been created.', 'Entity was created');
+    $this->assertText('entity_test ' . $id . ' has been created.');
 
     // Try to set a value below the minimum value
     $this->drupalGet('entity_test/add');
@@ -250,7 +250,7 @@ class NumberFieldTest extends BrowserTestBase {
       $this->submitForm($edit, 'Save');
       preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
       $id = $match[1];
-      $this->assertText('entity_test ' . $id . ' has been created.', 'Entity was created');
+      $this->assertText('entity_test ' . $id . ' has been created.');
       $this->assertRaw($valid_entry);
       // Verify that the "content" attribute is not present since the Prefix is
       // not being displayed.
@@ -274,7 +274,7 @@ class NumberFieldTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText('entity_test ' . $id . ' has been created.', 'Entity was created');
+    $this->assertText('entity_test ' . $id . ' has been created.');
     $this->drupalGet('entity_test/' . $id);
     // Verify that the "content" attribute has been set to the value of the
     // field, and the prefix is being displayed.
@@ -330,7 +330,7 @@ class NumberFieldTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText('entity_test ' . $id . ' has been created.', 'Entity was created');
+    $this->assertText('entity_test ' . $id . ' has been created.');
 
     // Ensure that the 'number_decimal' formatter displays the number with the
     // expected rounding.

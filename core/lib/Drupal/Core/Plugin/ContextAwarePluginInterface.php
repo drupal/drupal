@@ -31,7 +31,7 @@ interface ContextAwarePluginInterface extends ComponentContextAwarePluginInterfa
    * @return \Drupal\Core\Plugin\Context\ContextDefinitionInterface
    *   The definition against which the context value must validate.
    *
-   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   * @throws \Drupal\Component\Plugin\Exception\ContextException
    *   If the requested context is not defined.
    */
   public function getContextDefinition($name);

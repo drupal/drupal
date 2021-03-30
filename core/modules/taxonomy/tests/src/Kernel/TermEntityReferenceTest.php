@@ -107,7 +107,7 @@ class TermEntityReferenceTest extends KernelTestBase {
       ],
     ];
 
-    $this->assertIdentical($result, $expected_result, 'Terms selection restricted to a single vocabulary.');
+    $this->assertSame($expected_result, $result, 'Terms selection restricted to a single vocabulary.');
   }
 
 }

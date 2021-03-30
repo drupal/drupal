@@ -30,13 +30,14 @@
   {% import _self as book_tree %}
   {% if items %}
     {% if menu_level == 0 %}
-      <ul{{ attributes.addClass('menu', 'menu--level-' ~ (menu_level + 1)) }}>
+      <ul{{ attributes.addClass('book-navigation__menu menu', 'menu--level-' ~ (menu_level + 1)) }}>
     {% else %}
-      <ul class='menu menu--level-'  ~ (menu_level + 1)>
+      <ul class='menu menu--level-{{ menu_level + 1 }}'>
     {% endif %}
     {% for item in items %}
       {%
         set item_classes = [
+          'book-navigation__item',
           'menu-item',
           'menu__item--level-' ~ (menu_level + 1),
           item.is_expanded ? 'menu-item--expanded',
@@ -45,6 +46,7 @@
         ]
       %}
       {% set link_classes = [
+          'book-navigation__link',
           'menu__link',
           'menu__link--link',
           'menu__link--level-' ~ (menu_level + 1),

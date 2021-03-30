@@ -13,6 +13,7 @@ use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
 use Drupal\Tests\TestFileCreationTrait;
+use Drupal\user\RoleInterface;
 
 /**
  * Tests the node entity preview functionality.
@@ -205,8 +206,8 @@ class PagePreviewTest extends NodeTestBase {
     $expected_title = $edit[$title_key] . ' | Drupal';
     $this->assertSession()->titleEquals($expected_title);
     $this->assertSession()->assertEscaped($edit[$title_key]);
-    $this->assertText($edit[$body_key], 'Body displayed.');
-    $this->assertText($edit[$term_key], 'Term displayed.');
+    $this->assertText($edit[$body_key]);
+    $this->assertText($edit[$term_key]);
     $this->assertSession()->linkExists('Back to content editing');
 
     // Check that we see the class of the node type on the body element.
@@ -228,7 +229,7 @@ class PagePreviewTest extends NodeTestBase {
     $view_mode_edit = ['view_mode' => 'teaser'];
     $this->drupalPostForm('node/preview/' . $uuid . '/full', $view_mode_edit, 'Switch');
     $this->assertRaw('view-mode-teaser');
-    $this->assertNoText($edit[$body_key], 'Body not displayed.');
+    $this->assertNoText($edit[$body_key]);
 
     // Check that the title, body and term fields are displayed with the
     // values after going back to the content edit page.
@@ -245,8 +246,8 @@ class PagePreviewTest extends NodeTestBase {
     $this->submitForm([], 'Preview');
     $this->assertSession()->titleEquals($expected_title);
     $this->assertSession()->assertEscaped($edit[$title_key]);
-    $this->assertText($edit[$body_key], 'Body displayed.');
-    $this->assertText($edit[$term_key], 'Term displayed.');
+    $this->assertText($edit[$body_key]);
+    $this->assertText($edit[$term_key]);
     $this->assertSession()->linkExists('Back to content editing');
 
     // Assert the content is kept when reloading the page.
@@ -262,7 +263,7 @@ class PagePreviewTest extends NodeTestBase {
 
     // Check the term was displayed on the saved node.
     $this->drupalGet('node/' . $node->id());
-    $this->assertText($edit[$term_key], 'Term displayed.');
+    $this->assertText($edit[$term_key]);
 
     // Check the term appears again on the edit form.
     $this->drupalGet('node/' . $node->id() . '/edit');
@@ -304,7 +305,7 @@ class PagePreviewTest extends NodeTestBase {
       $title_key => $this->randomMachineName(8),
     ];
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Preview');
-    $this->assertText($edit[$title_key], 'New title displayed.');
+    $this->assertText($edit[$title_key]);
     $this->clickLink(t('Back to content editing'));
     $this->assertSession()->fieldValueEquals($title_key, $edit[$title_key]);
     // Navigate away from the node without saving.
@@ -445,9 +446,9 @@ class PagePreviewTest extends NodeTestBase {
 
     // Check that the preview is displaying the title, body and term.
     $this->assertSession()->titleEquals($edit[$title_key] . ' | Drupal');
-    $this->assertText($edit[$title_key], 'Title displayed.');
-    $this->assertText($edit[$body_key], 'Body displayed.');
-    $this->assertText($edit[$term_key], 'Term displayed.');
+    $this->assertText($edit[$title_key]);
+    $this->assertText($edit[$body_key]);
+    $this->assertText($edit[$term_key]);
 
     // Check that the title and body fields are displayed with the correct
     // values after going back to the content edit page.
@@ -498,6 +499,29 @@ class PagePreviewTest extends NodeTestBase {
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit2, 'Preview');
     $this->assertSession()->addressEquals(Url::fromRoute('entity.node.preview', ['node_preview' => $node->uuid(), 'view_mode_id' => 'full']));
     $this->assertText($edit2[$title_key]);
+  }
+
+  /**
+   * Tests node preview with dynamic_page_cache and anonymous users.
+   */
+  public function testPagePreviewCache() {
+    \Drupal::service('module_installer')->uninstall(['node_test']);
+    $this->drupalLogout();
+    $title_key = 'title[0][value]';
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['create page content', 'access content']);
+    $edit = [
+      $title_key => $this->randomMachineName(8),
+    ];
+    $this->drupalGet('/node/add/page');
+    $this->submitForm($edit, 'Preview');
+    $this->assertSession()->pageTextContains($edit[$title_key]);
+    $this->clickLink(t('Back to content editing'));
+
+    $edit = [
+      $title_key => $this->randomMachineName(8),
+    ];
+    $this->submitForm($edit, 'Preview');
+    $this->assertSession()->pageTextContains($edit[$title_key]);
   }
 
 }

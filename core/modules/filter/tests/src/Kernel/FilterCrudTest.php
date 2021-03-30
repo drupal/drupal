@@ -82,7 +82,7 @@ class FilterCrudTest extends KernelTestBase {
       $this->fail($message);
     }
     catch (\LogicException $e) {
-      $this->assertIdentical($e->getMessage(), "The fallback text format 'plain_text' cannot be disabled.", $message);
+      $this->assertSame("The fallback text format 'plain_text' cannot be disabled.", $e->getMessage(), $message);
     }
   }
 
@@ -95,11 +95,11 @@ class FilterCrudTest extends KernelTestBase {
 
     // Verify the loaded filter has all properties.
     $filter_format = FilterFormat::load($format->id());
-    $this->assertEqual($filter_format->id(), $format->id(), new FormattableMarkup('filter_format_load: Proper format id for text format %format.', $t_args));
-    $this->assertEqual($filter_format->label(), $format->label(), new FormattableMarkup('filter_format_load: Proper title for text format %format.', $t_args));
-    $this->assertEqual($filter_format->get('weight'), $format->get('weight'), new FormattableMarkup('filter_format_load: Proper weight for text format %format.', $t_args));
+    $this->assertEqual($format->id(), $filter_format->id(), new FormattableMarkup('filter_format_load: Proper format id for text format %format.', $t_args));
+    $this->assertEqual($format->label(), $filter_format->label(), new FormattableMarkup('filter_format_load: Proper title for text format %format.', $t_args));
+    $this->assertEqual($format->get('weight'), $filter_format->get('weight'), new FormattableMarkup('filter_format_load: Proper weight for text format %format.', $t_args));
     // Check that the filter was created in site default language.
-    $this->assertEqual($format->language()->getId(), $default_langcode, new FormattableMarkup('filter_format_load: Proper language code for text format %format.', $t_args));
+    $this->assertEqual($default_langcode, $format->language()->getId(), new FormattableMarkup('filter_format_load: Proper language code for text format %format.', $t_args));
   }
 
 }

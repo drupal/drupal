@@ -73,7 +73,7 @@ class AreaEntityTest extends ViewsKernelTestBase {
     foreach (array_keys($expected_entities) as $entity) {
       $this->assertTrue(!empty($data['entity_' . $entity]), new FormattableMarkup('Views entity area data found for @entity', ['@entity' => $entity]));
       // Test that entity_type is set correctly in the area data.
-      $this->assertEqual($entity, $data['entity_' . $entity]['area']['entity_type'], new FormattableMarkup('Correct entity_type set for @entity', ['@entity' => $entity]));
+      $this->assertEqual($data['entity_' . $entity]['area']['entity_type'], $entity, new FormattableMarkup('Correct entity_type set for @entity', ['@entity' => $entity]));
     }
 
     $expected_entities = array_filter($entity_types, function (EntityTypeInterface $type) {

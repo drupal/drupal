@@ -159,7 +159,7 @@ class Cron implements CronInterface {
     // Record cron time.
     $request_time = $this->time->getRequestTime();
     $this->state->set('system.cron_last', $request_time);
-    $this->logger->notice('Cron run completed.');
+    $this->logger->info('Cron run completed.');
   }
 
   /**
@@ -232,12 +232,12 @@ class Cron implements CronInterface {
     foreach ($this->moduleHandler->getImplementations('cron') as $module) {
 
       if (!$module_previous) {
-        $logger->notice('Starting execution of @module_cron().', [
+        $logger->info('Starting execution of @module_cron().', [
           '@module' => $module,
         ]);
       }
       else {
-        $logger->notice('Starting execution of @module_cron(), execution of @module_previous_cron() took @time.', [
+        $logger->info('Starting execution of @module_cron(), execution of @module_previous_cron() took @time.', [
           '@module' => $module,
           '@module_previous' => $module_previous,
           '@time' => Timer::read('cron_' . $module_previous) . 'ms',
@@ -257,7 +257,7 @@ class Cron implements CronInterface {
       $module_previous = $module;
     }
     if ($module_previous) {
-      $logger->notice('Execution of @module_previous_cron() took @time.', [
+      $logger->info('Execution of @module_previous_cron() took @time.', [
         '@module_previous' => $module_previous,
         '@time' => Timer::read('cron_' . $module_previous) . 'ms',
       ]);

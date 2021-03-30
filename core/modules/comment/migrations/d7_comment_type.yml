@@ -24,6 +24,12 @@ process:
       # want to reuse if it exists.
       map:
         comment_node_forum: comment_forum
+    -
+      plugin: make_unique_entity_field
+      entity_type: comment_type
+      field: id
+      length: 30
+      migrated: true
   label:
     plugin: concat
     source:

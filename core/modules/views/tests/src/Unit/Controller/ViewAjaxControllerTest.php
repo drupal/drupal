@@ -192,6 +192,38 @@ class ViewAjaxControllerTest extends UnitTestCase {
     $this->redirectDestination->expects($this->atLeastOnce())
       ->method('set')
       ->with('/test-page?type=article');
+    $this->currentPath->expects($this->once())
+      ->method('setPath')
+      ->with('/test-page', $request);
+
+    $response = $this->viewAjaxController->ajaxView($request);
+    $this->assertTrue($response instanceof ViewAjaxResponse);
+
+    $this->assertSame($response->getView(), $executable);
+
+    $this->assertViewResultCommand($response);
+  }
+
+  /**
+   * Tests a valid view with a view_path with no slash.
+   */
+  public function testAjaxViewViewPathNoSlash() {
+    $request = new Request();
+    $request->request->set('view_name', 'test_view');
+    $request->request->set('view_display_id', 'page_1');
+    $request->request->set('view_path', 'test-page');
+    $request->request->set('_wrapper_format', 'ajax');
+    $request->request->set('ajax_page_state', 'drupal.settings[]');
+    $request->request->set('type', 'article');
+
+    list($view, $executable) = $this->setupValidMocks();
+
+    $this->redirectDestination->expects($this->atLeastOnce())
+      ->method('set')
+      ->with('test-page?type=article');
+    $this->currentPath->expects($this->once())
+      ->method('setPath')
+      ->with('/test-page');
 
     $response = $this->viewAjaxController->ajaxView($request);
     $this->assertInstanceOf(ViewAjaxResponse::class, $response);

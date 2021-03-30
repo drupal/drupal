@@ -188,7 +188,7 @@ trait FunctionalTestSetupTrait {
    * @see TestBase::prepareEnvironment()
    * @see TestBase::restoreEnvironment()
    *
-   * @todo Fix https://www.drupal.org/node/2021959 so that module enable/disable
+   * @todo Fix https://www.drupal.org/node/2941757 so that module enable/disable
    *   changes are immediately reflected in \Drupal::getContainer(). Until then,
    *   tests can invoke this workaround when requiring services from newly
    *   enabled modules to be immediately available in the same request.
@@ -211,7 +211,6 @@ trait FunctionalTestSetupTrait {
    *
    * @see \Drupal\Core\Test\FunctionalTestSetupTrait::rebuildAll()
    * @see \Drupal\Tests\BrowserTestBase::installDrupal()
-   * @see \Drupal\simpletest\WebTestBase::setUp()
    */
   protected function resetAll() {
     // Clear all database and static caches and rebuild data structures.

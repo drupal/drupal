@@ -50,13 +50,13 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
     $t_args = ['@type' => $bundle_label, '%title' => $node_title];
-    $this->assertText(strip_tags(t('@type %title has been created.', $t_args)), 'The node was created.');
+    $this->assertText(strip_tags(t('@type %title has been created.', $t_args)));
     $matches = [];
     if (preg_match('@node/(\d+)$@', $this->getUrl(), $matches)) {
       $nid = end($matches);
-      $this->assertNotEqual($nid, 0, 'The node ID was extracted from the URL.');
+      $this->assertNotEquals(0, $nid, 'The node ID was extracted from the URL.');
       $node = Node::load($nid);
-      $this->assertNotEqual($node, NULL, 'The node was loaded successfully.');
+      $this->assertNotNull($node, 'The node was loaded successfully.');
     }
   }
 
@@ -86,13 +86,13 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
     $t_args = ['@type' => $bundle_label, '%title' => $node_title];
-    $this->assertText(strip_tags(t('@type %title has been created.', $t_args)), 'The node was created.');
+    $this->assertText(strip_tags(t('@type %title has been created.', $t_args)));
     $matches = [];
     if (preg_match('@node/(\d+)$@', $this->getUrl(), $matches)) {
       $nid = end($matches);
-      $this->assertNotEqual($nid, 0, 'The node ID was extracted from the URL.');
+      $this->assertNotEquals(0, $nid, 'The node ID was extracted from the URL.');
       $node = Node::load($nid);
-      $this->assertNotEqual($node, NULL, 'The node was loaded successfully.');
+      $this->assertNotNull($node, 'The node was loaded successfully.');
       $this->assertFileExists(File::load($node->field_image->target_id)->getFileUri());
     }
   }
@@ -148,7 +148,7 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
     $this->submitForm($edit, $label);
     $this->assertSession()->statusCodeEquals(200);
     $t_args = ['@type' => $bundle_label, '%title' => $node_title];
-    $this->assertNoText(strip_tags(t('@type %title has been created.', $t_args)), 'The node was created.');
+    $this->assertNoText(strip_tags(t('@type %title has been created.', $t_args)));
     $this->assertText('Title field is required.');
 
     // Submit the form again but this time with the missing title field. This
@@ -160,13 +160,13 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
 
     // Confirm the final submission actually worked.
     $t_args = ['@type' => $bundle_label, '%title' => $node_title];
-    $this->assertText(strip_tags(t('@type %title has been created.', $t_args)), 'The node was created.');
+    $this->assertText(strip_tags(t('@type %title has been created.', $t_args)));
     $matches = [];
     if (preg_match('@node/(\d+)$@', $this->getUrl(), $matches)) {
       $nid = end($matches);
-      $this->assertNotEqual($nid, 0, 'The node ID was extracted from the URL.');
+      $this->assertNotEquals(0, $nid, 'The node ID was extracted from the URL.');
       $node = Node::load($nid);
-      $this->assertNotEqual($node, NULL, 'The node was loaded successfully.');
+      $this->assertNotNull($node, 'The node was loaded successfully.');
       $this->assertFileExists(File::load($node->field_image->target_id)->getFileUri());
     }
   }

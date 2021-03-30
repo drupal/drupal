@@ -30,11 +30,14 @@ class ExtractTest extends MigrateProcessTestCase {
 
   /**
    * Tests invalid input.
+   *
+   * @dataProvider providerTestExtractInvalid
    */
-  public function testExtractFromString() {
+  public function testExtractInvalid($value) {
     $this->expectException(MigrateException::class);
-    $this->expectExceptionMessage('Input should be an array.');
-    $this->plugin->transform('bar', $this->migrateExecutable, $this->row, 'destination_property');
+    $type = gettype($value);
+    $this->expectExceptionMessage(sprintf("Input should be an array, instead it was of type '%s'", $type));
+    $this->plugin->transform($value, $this->migrateExecutable, $this->row, 'destination_property');
   }
 
   /**
@@ -42,7 +45,7 @@ class ExtractTest extends MigrateProcessTestCase {
    */
   public function testExtractFail() {
     $this->expectException(MigrateException::class);
-    $this->expectExceptionMessage('Array index missing, extraction failed.');
+    $this->expectExceptionMessage("Array index missing, extraction failed for 'array(\n  'bar' => 'foo',\n)'. Consider adding a `default` key to the configuration.");
     $this->plugin->transform(['bar' => 'foo'], $this->migrateExecutable, $this->row, 'destination_property');
   }
 
@@ -128,6 +131,49 @@ class ExtractTest extends MigrateProcessTestCase {
           'default' => NULL,
         ],
         '',
+      ],
+    ];
+  }
+
+  /**
+   * Provides data for the testExtractInvalid.
+   */
+  public function providerTestExtractInvalid() {
+    $xml_str = <<<XML
+    <xml version='1.0'?>
+      <authors>
+        <name>Test Extract Invalid</name>
+      </authors>
+    XML;
+    $object = (object) [
+      'one' => 'test1',
+      'two' => 'test2',
+      'three' => 'test3',
+    ];
+    return [
+      'empty string' => [
+        '',
+      ],
+      'string' => [
+        'Extract Test',
+      ],
+      'integer' => [
+        1,
+      ],
+      'float' => [
+        1.0,
+      ],
+      'NULL' => [
+        NULL,
+      ],
+      'boolean' => [
+        TRUE,
+      ],
+      'xml' => [
+        $xml_str,
+      ],
+      'object' => [
+        $object,
       ],
     ];
   }

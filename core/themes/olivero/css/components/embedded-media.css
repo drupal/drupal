@@ -15,53 +15,53 @@ figure {
 }
 
 [dir="ltr"] figcaption {
-  padding-left: 9px;
+  padding-left: 0.5625rem;
 }
 
 [dir="rtl"] figcaption {
-  padding-right: 9px;
+  padding-right: 0.5625rem;
 }
 
 [dir="ltr"] figcaption {
-  padding-right: 9px;
+  padding-right: 0.5625rem;
 }
 
 [dir="rtl"] figcaption {
-  padding-left: 9px;
+  padding-left: 0.5625rem;
 }
 
 figcaption {
-  padding-top: 9px;
-  padding-bottom: 9px;
+  padding-top: 0.5625rem;
+  padding-bottom: 0.5625rem;
   color: #313637;
   background: #f7f9fa;
   font-family: "Lora", "georgia", serif;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-style: italic;
-  line-height: 18px
+  line-height: 1.125rem
 }
 
-@media (min-width: 500px) {
+@media (min-width: 31.25rem) {
 
 [dir="ltr"] figcaption {
-    padding-left: 18px;
+    padding-left: 1.125rem;
   }
 
 [dir="rtl"] figcaption {
-    padding-right: 18px;
+    padding-right: 1.125rem;
   }
 
 [dir="ltr"] figcaption {
-    padding-right: 18px;
+    padding-right: 1.125rem;
   }
 
 [dir="rtl"] figcaption {
-    padding-left: 18px;
+    padding-left: 1.125rem;
   }
 
 figcaption {
-    padding-top: 18px;
-    padding-bottom: 18px
+    padding-top: 1.125rem;
+    padding-bottom: 1.125rem
 }
   }
 
@@ -84,11 +84,11 @@ figcaption {
 .align-right {
   float: none; /* Override core's align.module.css. */
   max-width: 100%;
-  margin-top: 54px;
-  margin-bottom: 54px
+  margin-top: 3.375rem;
+  margin-bottom: 3.375rem
 }
 
-@media (min-width: 700px) {
+@media (min-width: 43.75rem) {
 
 [dir="ltr"] .align-right {
     float: right;
@@ -99,11 +99,11 @@ figcaption {
   }
 
 [dir="ltr"] .align-right {
-    margin-left: 18px;
+    margin-left: 1.125rem;
   }
 
 [dir="rtl"] .align-right {
-    margin-right: 18px;
+    margin-right: 1.125rem;
   }
 
 [dir="ltr"] .align-right {
@@ -116,14 +116,14 @@ figcaption {
 
 .align-right {
     max-width: 50%;
-    margin-top: 18px;
-    margin-bottom: 18px
+    margin-top: 1.125rem;
+    margin-bottom: 1.125rem
 }
   }
 
 /* Pull out of grid if nested in content narrow layout. */
 
-@media (min-width: 700px) {
+@media (min-width: 43.75rem) {
 
 [dir="ltr"] .layout--content-narrow .align-right,[dir="ltr"] 
 .layout--pass--content-narrow > * .align-right {
@@ -136,7 +136,7 @@ figcaption {
   }
   }
 
-@media (min-width: 1000px) {
+@media (min-width: 62.5rem) {
 
 [dir="ltr"] .layout--content-narrow .align-right,[dir="ltr"] 
 .layout--pass--content-narrow > * .align-right {
@@ -149,29 +149,29 @@ figcaption {
   }
   }
 
-@media (min-width: 1200px) {
+@media (min-width: 75rem) {
 
 [dir="ltr"] .layout--content-narrow .align-right,[dir="ltr"] 
 .layout--pass--content-narrow > * .align-right {
-    margin-right: calc(-21.42857vw - -30.21429px);
+    margin-right: calc(-21.42857vw - -1.88839rem);
   }
 
 [dir="rtl"] .layout--content-narrow .align-right,[dir="rtl"] 
 .layout--pass--content-narrow > * .align-right {
-    margin-left: calc(-21.42857vw - -30.21429px);
+    margin-left: calc(-21.42857vw - -1.88839rem);
   }
   }
 
-@media (min-width: 1440px) {
+@media (min-width: 90rem) {
 
 [dir="ltr"] .layout--content-narrow .align-right,[dir="ltr"] 
 .layout--pass--content-narrow > * .align-right {
-    margin-right: -281.57143px;
+    margin-right: -17.59821rem;
   }
 
 [dir="rtl"] .layout--content-narrow .align-right,[dir="rtl"] 
 .layout--pass--content-narrow > * .align-right {
-    margin-left: -281.57143px;
+    margin-left: -17.59821rem;
   }
   }
 
@@ -194,11 +194,11 @@ figcaption {
 .align-left {
   float: none; /* Override core's align.module.css. */
   max-width: 100%;
-  margin-top: 54px;
-  margin-bottom: 54px
+  margin-top: 3.375rem;
+  margin-bottom: 3.375rem
 }
 
-@media (min-width: 700px) {
+@media (min-width: 43.75rem) {
 
 [dir="ltr"] .align-left {
     float: left;
@@ -217,23 +217,23 @@ figcaption {
   }
 
 [dir="ltr"] .align-left {
-    margin-right: 36px;
+    margin-right: 2.25rem;
   }
 
 [dir="rtl"] .align-left {
-    margin-left: 36px;
+    margin-left: 2.25rem;
   }
 
 .align-left {
     max-width: 50%;
-    margin-top: 18px;
-    margin-bottom: 18px /* Extra right margins in case of aligning next to lists. */
+    margin-top: 1.125rem;
+    margin-bottom: 1.125rem /* Extra right margins in case of aligning next to lists. */
 }
   }
 
 /* Pull out of grid if nested in content narrow layout. */
 
-@media (min-width: 700px) {
+@media (min-width: 43.75rem) {
 
 [dir="ltr"] .layout--content-narrow .align-left,[dir="ltr"] 
 .layout--pass--content-narrow > * .align-left {
@@ -246,7 +246,7 @@ figcaption {
   }
   }
 
-@media (min-width: 1000px) {
+@media (min-width: 62.5rem) {
 
 [dir="ltr"] .layout--content-narrow .align-left,[dir="ltr"] 
 .layout--pass--content-narrow > * .align-left {
@@ -259,29 +259,29 @@ figcaption {
   }
   }
 
-@media (min-width: 1200px) {
+@media (min-width: 75rem) {
 
 [dir="ltr"] .layout--content-narrow .align-left,[dir="ltr"] 
 .layout--pass--content-narrow > * .align-left {
-    margin-left: calc(-7.14286vw - -10.07143px);
+    margin-left: calc(-7.14286vw - -0.62946rem);
   }
 
 [dir="rtl"] .layout--content-narrow .align-left,[dir="rtl"] 
 .layout--pass--content-narrow > * .align-left {
-    margin-right: calc(-7.14286vw - -10.07143px);
+    margin-right: calc(-7.14286vw - -0.62946rem);
   }
   }
 
-@media (min-width: 1440px) {
+@media (min-width: 90rem) {
 
 [dir="ltr"] .layout--content-narrow .align-left,[dir="ltr"] 
 .layout--pass--content-narrow > * .align-left {
-    margin-left: -93.85714px;
+    margin-left: -5.86607rem;
   }
 
 [dir="rtl"] .layout--content-narrow .align-left,[dir="rtl"] 
 .layout--pass--content-narrow > * .align-left {
-    margin-right: -93.85714px;
+    margin-right: -5.86607rem;
   }
   }
 

@@ -452,10 +452,12 @@ class LibraryDiscoveryParser {
    *   The containing library definition.
    * @param array $sub_key
    *   An array containing the sub-keys specifying the library asset, e.g.
-   *   @code['js']@endcode or @code['css', 'component']@endcode
+   *   ['js'] or ['css', 'component'].
    * @param array $overrides
    *   Specifies the overrides, this is an array where the key is the asset to
    *   be overridden while the value is overriding asset.
+   * @param string $theme_path
+   *   The theme or base theme.
    */
   protected function setOverrideValue(array &$library, array $sub_key, array $overrides, $theme_path) {
     foreach ($overrides as $original => $replacement) {

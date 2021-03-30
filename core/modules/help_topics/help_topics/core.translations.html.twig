@@ -1,0 +1,18 @@
+---
+label: 'Working with languages and translations'
+top_level: true
+related:
+  - block.place
+  - block.configure
+---
+{% set config_overview = render_var(url('help.help_topic', {'id': 'core.config_overview'})) %}
+{% set content_structure = render_var(url('help.help_topic', {'id': 'core.content_structure'})) %}
+<h2>{% trans %}What text can be translated in your site?{% endtrans %}</h2>
+<p>{% trans %}There are three types of text that can be translated:{% endtrans %}</p>
+<ul>
+  <li>{% trans %}Content (blocks, content items, etc.) can be written in English or another language, and can be translated into additional languages. See <a href="{{ content_structure }}">Managing content structure</a> to learn more about content.{% endtrans %}</li>
+  <li>{% trans %}Many configuration items also include text that can be translated. Default configuration provided by your site's software is provided in English; you can also download community-provided translations. See <a href="{{ config_overview }}">Managing and deploying configuration</a> to learn more about configuration.{% endtrans %}</li>
+  <li>{% trans %}User interface text that is provided by the core software, your install profile, themes, and modules is provided in English, but can be translated into other languages. You can also download translations that community-members have provided.{% endtrans %}</li>
+</ul>
+<h2>{% trans %}Working with languages overview{% endtrans %}</h2>
+<p>{% trans %}The core Language module lets you add new languages to your site, provides the <em>Language switcher</em> block, and provides the ability to configure block visibility by language; the block and block visibility settings are only available if you have multiple languages configured. The core Content Translation, Configuration Translation, and Interface Translation modules let you translate content, configuration, and the built-in user interface, respectively. The core Update Manager module manages automatic downloads of community-provided translations of default configuration and user-interface text. See the related topics listed below for specific tasks.{% endtrans %}</p>
