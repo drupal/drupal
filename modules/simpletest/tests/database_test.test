@@ -3755,19 +3755,34 @@ class DatabaseTransactionTestCase extends DatabaseTestCase {
       $transaction = db_transaction();
       $this->insertRow('row');
       $this->executeDDLStatement();
-      // Rollback the outer transaction.
+
+      set_error_handler(array($this, 'rollBackWithoutTransactionErrorHandler'));
       try {
+        // Rollback the outer transaction.
         $transaction->rollback();
-        unset($transaction);
-        // @TODO: an exception should be triggered here, but is not, because
-        // "ROLLBACK" fails silently in MySQL if there is no transaction active.
-        // $this->fail(t('Rolling back a transaction containing DDL should fail.'));
+        // @see \DatabaseConnection_mysql::rollback()
+        if (PHP_VERSION_ID >= 80000) {
+          $this->fail('Rolling back a transaction containing DDL should produce a warning.');
+        }
       }
-      catch (DatabaseTransactionNoActiveException $e) {
-        $this->pass('Rolling back a transaction containing DDL should fail.');
+      catch (Exception $e) {
+        $this->assertEqual('Rollback attempted when there is no active transaction.', $e->getMessage());
       }
+      restore_error_handler();
+      unset($transaction);
       $this->assertRowPresent('row');
     }
+  }
+
+  /**
+   * Special handling of "rollback without transaction" errors.
+   */
+  public function rollBackWithoutTransactionErrorHandler($error_level, $message, $filename, $line) {
+    // Throw an exception if this is a "rollback without transaction" error.
+    if (strpos($message, 'Rollback attempted when there is no active transaction.') !== FALSE ) {
+      throw new Exception('Rollback attempted when there is no active transaction.');
+    }
+    _drupal_error_handler($error_level, $message, $filename, $line);
   }
 
   /**
