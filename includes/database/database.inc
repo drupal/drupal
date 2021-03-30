@@ -1744,12 +1744,16 @@ abstract class Database {
    *
    * @param $key
    *   The connection key.
+   * @param $close
+   *   Whether to close the connection.
    * @return
    *   TRUE in case of success, FALSE otherwise.
    */
-  final public static function removeConnection($key) {
+  final public static function removeConnection($key, $close = TRUE) {
     if (isset(self::$databaseInfo[$key])) {
-      self::closeConnection(NULL, $key);
+      if ($close) {
+        self::closeConnection(NULL, $key);
+      }
       unset(self::$databaseInfo[$key]);
       return TRUE;
     }
