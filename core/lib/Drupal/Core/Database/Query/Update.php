@@ -2,8 +2,6 @@
 
 namespace Drupal\Core\Database\Query;
 
-use Drupal\Core\Database\DatabaseExceptionWrapper;
-use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Database\Connection;
 
 /**
@@ -145,17 +143,12 @@ class Update extends Query implements ConditionInterface {
       $update_values = array_merge($update_values, $this->condition->arguments());
     }
 
+    $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions, TRUE);
     try {
-      $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions, TRUE);
       $stmt->execute($update_values, $this->queryOptions);
     }
-    catch (\PDOException $e) {
-      $message = $e->getMessage() . ": " . (string) $this . "; ";
-      // Match all SQLSTATE 23xxx errors.
-      if (substr($e->getCode(), -6, -3) == '23') {
-        throw new IntegrityConstraintViolationException($message, $e->getCode(), $e);
-      }
-      throw new DatabaseExceptionWrapper($message, 0, $e);
+    catch (\Exception $e) {
+      $this->connection->exceptionHandler()->handleExecutionException($e, $stmt, $update_values, $this->queryOptions);
     }
 
     return $stmt->rowCount();

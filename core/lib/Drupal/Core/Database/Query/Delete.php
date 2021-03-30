@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Database\Query;
 
-use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Connection;
 
 /**
@@ -51,13 +50,12 @@ class Delete extends Query implements ConditionInterface {
       $values = $this->condition->arguments();
     }
 
+    $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions, TRUE);
     try {
-      $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions, TRUE);
       $stmt->execute($values, $this->queryOptions);
     }
-    catch (\PDOException $e) {
-      $message = $e->getMessage() . ": " . (string) $this . "; ";
-      throw new DatabaseExceptionWrapper($message, 0, $e);
+    catch (\Exception $e) {
+      $this->connection->exceptionHandler()->handleExecutionException($e, $stmt, $values, $this->queryOptions);
     }
 
     return $stmt->rowCount();

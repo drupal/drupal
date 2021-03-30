@@ -89,7 +89,7 @@ class UpsertTest extends DatabaseTestBase {
   }
 
   /**
-   * Upserting a not existing table throws a DatabaseExceptionWrapper.
+   * Upsert on a not existing table throws a DatabaseExceptionWrapper.
    */
   public function testUpsertNonExistingTable(): void {
     $this->expectException(DatabaseExceptionWrapper::class);

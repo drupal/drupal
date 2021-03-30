@@ -443,12 +443,16 @@ class Connection extends DatabaseConnection {
     // simple cases. If another transaction wants to write the same row, it will
     // wait until this transaction commits.
     $stmt = $this->prepareStatement('UPDATE {sequences} SET value = GREATEST(value, :existing_id) + 1', [], TRUE);
-    $stmt->execute([':existing_id' => $existing_id]);
+    $args = [':existing_id' => $existing_id];
+    try {
+      $stmt->execute($args);
+    }
+    catch (\Exception $e) {
+      $this->exceptionHandler()->handleExecutionException($e, $stmt, $args, []);
+    }
     $affected = $stmt->rowCount();
     if (!$affected) {
-      $this->query('INSERT INTO {sequences} (value) VALUES (:existing_id + 1)', [
-        ':existing_id' => $existing_id,
-      ]);
+      $this->query('INSERT INTO {sequences} (value) VALUES (:existing_id + 1)', $args);
     }
     // The transaction gets committed when the transaction object gets destroyed
     // because it gets out of scope.
