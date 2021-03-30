@@ -955,17 +955,14 @@ function theme_file_upload_help($variables) {
   if (isset($upload_validators['file_validate_image_resolution'])) {
     $max = $upload_validators['file_validate_image_resolution'][0];
     $min = $upload_validators['file_validate_image_resolution'][1];
-    if ($min && $max && $min == $max) {
-      $descriptions[] = t('Images must be exactly !size pixels.', array('!size' => '<strong>' . $max . '</strong>'));
-    }
-    elseif ($min && $max) {
-      $descriptions[] = t('Images must be between !min and !max pixels.', array('!min' => '<strong>' . $min . '</strong>', '!max' => '<strong>' . $max . '</strong>'));
+    if ($min && $max) {
+      $descriptions[] = t('Images must be at least !min pixels. Images larger than !max pixels will be resized.', array('!min' => '<strong>' . $min . '</strong>', '!max' => '<strong>' . $max . '</strong>'));
     }
     elseif ($min) {
-      $descriptions[] = t('Images must be larger than !min pixels.', array('!min' => '<strong>' . $min . '</strong>'));
+      $descriptions[] = t('Images must be at least !min pixels.', array('!min' => '<strong>' . $min . '</strong>'));
     }
     elseif ($max) {
-      $descriptions[] = t('Images must be smaller than !max pixels.', array('!max' => '<strong>' . $max . '</strong>'));
+      $descriptions[] = t('Images larger than !max pixels will be resized.', array('!max' => '<strong>' . $max . '</strong>'));
     }
   }
 
