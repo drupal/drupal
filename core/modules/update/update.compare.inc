@@ -357,7 +357,13 @@ function update_calculate_project_update_status(&$project_data, $available) {
   $recommended_release = NULL;
 
   foreach ($available['releases'] as $version => $release_info) {
-    $release = ProjectRelease::createFromArray($release_info);
+    try {
+      $release = ProjectRelease::createFromArray($release_info);
+    }
+    catch (UnexpectedValueException $exception) {
+      
+      continue;
+    }
 
     try {
       $release_module_version = ExtensionVersion::createFromVersionString($release->getVersion());

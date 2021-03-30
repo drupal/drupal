@@ -29,9 +29,9 @@ final class ProjectRelease {
   protected $coreCompatibilityMessage;
 
   /**
-   * The download URL.
+   * The download URL or NULL if none is available.
    *
-   * @var string
+   * @var string|null
    */
   protected $downloadUrl;
 
@@ -108,7 +108,10 @@ final class ProjectRelease {
    *   The project release data as returned by update_get_available().
    *
    * @return \Drupal\update\ProjectRelease
-   *   The ProjectRelease instance.
+   *   The ProjectRelease instance
+   *
+   * @throws \UnexpectedValueException
+   *   Thrown if project release data is not valid.
    *
    * @see \update_get_available()
    */
@@ -121,8 +124,6 @@ final class ProjectRelease {
       $release_data['date'] ?? NULL,
       $release_data['core_compatible'] ?? NULL,
       $release_data['core_compatibility_message'] ?? NULL,
-      // @todo Some tests like \Drupal\Tests\update\Functional\UpdateUploadTest::testUploadModule()
-      // fail if is required, investigate. Is this valid?
       $release_data['download_link'] ?? NULL,
       $release_data['release_link']
     );
@@ -151,8 +152,6 @@ final class ProjectRelease {
         ]),
         'core_compatibility_message' => new Optional($not_blank_constraints),
         'status' => new Choice(['published', 'unpublished']),
-        // @todo Some tests like \Drupal\Tests\update\Functional\UpdateUploadTest::testUploadModule()
-        // fail if is required, investigate. Is this valid?
         'download_link' => new Optional($not_blank_constraints),
         'release_link' => $not_blank_constraints,
         'terms' => new Optional([
@@ -272,7 +271,7 @@ final class ProjectRelease {
    * Gets the download URL of the release.
    *
    * @return string|null
-   *   The download URL.
+   *   The download URL or NULL if none is available.
    */
   public function getDownloadUrl(): ?string {
     return $this->downloadUrl;
