@@ -22,7 +22,7 @@ final class ProjectRelease {
   private $coreCompatible;
 
   /**
-   * The core compatibility message.
+   * The core compatibility message or NULL if not set.
    *
    * @var string|null
    */
@@ -43,14 +43,14 @@ final class ProjectRelease {
   protected $url;
 
   /**
-   * The release types for the release.
+   * The release types or NULL if not set.
    *
    * @var array|null
    */
   private $releaseTypes = [];
 
   /**
-   * Whether release is published.
+   * Whether the release is published.
    *
    * @var bool
    */
@@ -64,7 +64,7 @@ final class ProjectRelease {
   private $version;
 
   /**
-   * The date of release.
+   * The release date.
    *
    * @var string|null
    */
@@ -74,9 +74,9 @@ final class ProjectRelease {
    * Constructs a ProjectRelease object.
    *
    * @param string[]|null $release_types
-   *   The release types.
+   *   The release types or NULL if not set.
    * @param bool $published
-   *   Whether release is published.
+   *   Whether the release is published.
    * @param string $version
    *   The release version.
    * @param string|null $date
@@ -84,9 +84,9 @@ final class ProjectRelease {
    * @param bool|null $core_compatible
    *   Whether the release is compatible with the site's version of Drupal core.
    * @param string|null $core_compatibility_message
-   *   The core compatibility message.
+   *   The core compatibility message or NULL if not set.
    * @param string|null $download_url
-   *   The download URL.
+   *   The download URL or NULL if not available.
    * @param string $url
    *   The URL for the release.
    */
