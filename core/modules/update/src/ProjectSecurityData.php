@@ -215,7 +215,21 @@ final class ProjectSecurityData {
     $security_covered_version_major = ExtensionVersion::createFromVersionString($security_covered_version)->getMajorVersion();
     $security_covered_version_minor = $this->getSemanticMinorVersion($security_covered_version);
     foreach ($this->releases as $release_info) {
-      $release = ProjectRelease::createFromArray($release_info);
+      try {
+        $release = ProjectRelease::createFromArray($release_info);
+      }
+      catch (\UnexpectedValueException $exception) {
+        // Ignore releases that are in an invalid format. Although this is
+        // highly unlikely we should still process releases in the correct
+        // format.
+        watchdog_exception(
+          'update',
+          $exception,
+          'Invalid project format: @release',
+          ['@release' => print_r($release_info, TRUE)]
+        );
+        continue;
+      }
       $release_version = ExtensionVersion::createFromVersionString($release->getVersion());
       if ($release_version->getMajorVersion() === $security_covered_version_major && $release->isPublished() && !$release_version->getVersionExtra()) {
         // The releases are ordered with the most recent releases first.
