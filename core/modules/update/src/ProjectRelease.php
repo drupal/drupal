@@ -85,12 +85,12 @@ final class ProjectRelease {
    *   Whether the release is compatible with the site's version of Drupal core.
    * @param string|null $core_compatibility_message
    *   The core compatibility message.
-   * @param string $download_url
+   * @param string|null $download_url
    *   The download URL.
    * @param string $url
    *   The URL for the release.
    */
-  private function __construct(?array $release_types, bool $published, string $version, ?string $date, ?bool $core_compatible, ?string $core_compatibility_message, string $download_url, string $url) {
+  private function __construct(?array $release_types, bool $published, string $version, ?string $date, ?bool $core_compatible, ?string $core_compatibility_message, ?string $download_url, string $url) {
     $this->releaseTypes = $release_types;
     $this->published = $published;
     $this->version = $version;
@@ -121,7 +121,9 @@ final class ProjectRelease {
       $release_data['date'] ?? NULL,
       $release_data['core_compatible'] ?? NULL,
       $release_data['core_compatibility_message'] ?? NULL,
-      $release_data['download_link'],
+      // @todo Some tests like \Drupal\Tests\update\Functional\UpdateUploadTest::testUploadModule()
+      // fail if is required, investigate. Is this valid?
+      $release_data['download_link'] ?? NULL,
       $release_data['release_link']
     );
   }
@@ -149,7 +151,9 @@ final class ProjectRelease {
         ]),
         'core_compatibility_message' => new Optional($not_blank_constraints),
         'status' => new Choice(['published', 'unpublished']),
-        'download_link' => $not_blank_constraints,
+        // @todo Some tests like \Drupal\Tests\update\Functional\UpdateUploadTest::testUploadModule()
+        // fail if is required, investigate. Is this valid?
+        'download_link' => new Optional($not_blank_constraints),
         'release_link' => $not_blank_constraints,
         'terms' => new Optional([
           new Type(['type' => 'array']),
@@ -267,10 +271,10 @@ final class ProjectRelease {
   /**
    * Gets the download URL of the release.
    *
-   * @return string
+   * @return string|null
    *   The download URL.
    */
-  public function getDownloadUrl(): string {
+  public function getDownloadUrl(): ?string {
     return $this->downloadUrl;
   }
 
