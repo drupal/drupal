@@ -659,7 +659,7 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
 
     $shimmed_id = 'edit-shimmed';
     $not_shimmed_id = 'edit-not-shimmed';
-    $shimmed_input = $page->findById($shimmed_id );
+    $shimmed_input = $page->findById($shimmed_id);
     $not_shimmed_input = $page->findById($not_shimmed_id);
 
     // Confirm shimmed input is structured as expected.

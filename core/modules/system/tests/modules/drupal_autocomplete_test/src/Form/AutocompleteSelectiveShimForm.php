@@ -6,7 +6,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Provides a form that uses shimmed and non-shimmed autocompletes.
+ * Provides a form that uses shimmed and non-shimmed autocomplete inputs.
  */
 class AutocompleteSelectiveShimForm extends FormBase {
 
