@@ -408,7 +408,7 @@ Drupal.ajax.prototype.beforeSend = function (xmlhttprequest, options) {
 
   // Insert progressbar or throbber.
   if (this.progress.type == 'bar') {
-    var progressBar = new Drupal.progressBar('ajax-progress-' + this.element.id, eval(this.progress.update_callback), this.progress.method, eval(this.progress.error_callback));
+    var progressBar = new Drupal.progressBar('ajax-progress-' + this.element.id, $.noop, this.progress.method, $.noop);
     if (this.progress.message) {
       progressBar.setProgress(-1, this.progress.message);
     }
