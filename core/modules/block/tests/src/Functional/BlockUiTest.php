@@ -388,7 +388,11 @@ class BlockUiTest extends BrowserTestBase {
   public function testBrokenBlockVisibility() {
     $assert_session = $this->assertSession();
 
-    $this->drupalPlaceBlock('broken');
+    $block = $this->drupalPlaceBlock('broken');
+
+    // Ensure that broken block configuration can be accessed.
+    $this->drupalGet('admin/structure/block/manage/' . $block->id());
+    $assert_session->statusCodeEquals(200);
 
     // Login as an admin user to the site.
     $this->drupalLogin($this->adminUser);
