@@ -40,7 +40,7 @@ final class ProjectRelease {
    *
    * @var string
    */
-  private $url;
+  private $releaseUrl;
 
   /**
    * The release types or NULL if not set.
@@ -64,41 +64,41 @@ final class ProjectRelease {
   private $version;
 
   /**
-   * The release date.
+   * The release date in Unix timestamp format.
    *
-   * @var string|null
+   * @var string
    */
   private $date;
 
   /**
    * Constructs a ProjectRelease object.
    *
-   * @param string[]|null $release_types
-   *   The release types or NULL if not set.
    * @param bool $published
    *   Whether the release is published.
    * @param string $version
    *   The release version.
-   * @param string|null $date
-   *   The release date.
+   * @param string $date
+   *   The release date in Unix timestamp format.
+   * @param string $release_url
+   *   The URL for the release.
+   * @param string[]|null $release_types
+   *   The release types or NULL if not set.
    * @param bool|null $core_compatible
    *   Whether the release is compatible with the site's version of Drupal core.
    * @param string|null $core_compatibility_message
    *   The core compatibility message or NULL if not set.
    * @param string|null $download_url
    *   The download URL or NULL if not available.
-   * @param string $url
-   *   The URL for the release.
    */
-  private function __construct(?array $release_types, bool $published, string $version, ?string $date, ?bool $core_compatible, ?string $core_compatibility_message, ?string $download_url, string $url) {
-    $this->releaseTypes = $release_types;
+  private function __construct(bool $published, string $version, string $date, string $release_url, ?array $release_types, ?bool $core_compatible, ?string $core_compatibility_message, ?string $download_url) {
     $this->published = $published;
     $this->version = $version;
     $this->date = $date;
+    $this->releaseUrl = $release_url;
+    $this->releaseTypes = $release_types;
     $this->coreCompatible = $core_compatible;
     $this->coreCompatibilityMessage = $core_compatibility_message;
     $this->downloadUrl = $download_url;
-    $this->url = $url;
   }
 
   /**
@@ -108,7 +108,7 @@ final class ProjectRelease {
    *   The project release data as returned by update_get_available().
    *
    * @return \Drupal\update\ProjectRelease
-   *   The ProjectRelease instance
+   *   The ProjectRelease instance.
    *
    * @throws \UnexpectedValueException
    *   Thrown if project release data is not valid.
@@ -118,14 +118,14 @@ final class ProjectRelease {
   public static function createFromArray(array $release_data): ProjectRelease {
     static::validateReleaseData($release_data);
     return new ProjectRelease(
-      $release_data['terms']['Release type'] ?? NULL,
       $release_data['status'] === 'published',
-      $release_data['version'] ?? NULL,
-      $release_data['date'] ?? NULL,
+      $release_data['version'],
+      $release_data['date'],
+      $release_data['release_link'],
+      $release_data['terms']['Release type'] ?? NULL,
       $release_data['core_compatible'] ?? NULL,
       $release_data['core_compatibility_message'] ?? NULL,
-      $release_data['download_link'] ?? NULL,
-      $release_data['release_link']
+      $release_data['download_link'] ?? NULL
     );
   }
 
@@ -145,8 +145,8 @@ final class ProjectRelease {
     ];
     $collection_constraint = new Collection([
       'fields' => [
-        'version' => new Optional($not_blank_constraints),
-        'date' => new Optional($not_blank_constraints),
+        'version' => $not_blank_constraints,
+        'date' => $not_blank_constraints,
         'core_compatible' => new Optional([
           new Type('boolean'),
         ]),
@@ -187,10 +187,10 @@ final class ProjectRelease {
   /**
    * Gets the release date if set.
    *
-   * @return string|null
+   * @return string
    *   The date of the release or null if no date is available.
    */
-  public function getDate(): ?string {
+  public function getDate(): string {
     return $this->date;
   }
 
@@ -260,7 +260,7 @@ final class ProjectRelease {
   /**
    * Gets the core compatibility message for the site's version of Drupal core.
    *
-   * @return string
+   * @return string|null
    *   The core compatibility message or NULL if none is available.
    */
   public function getCoreCompatibilityMessage(): ?string {
@@ -283,8 +283,8 @@ final class ProjectRelease {
    * @return string
    *   The URL of the release.
    */
-  public function getUrl(): string {
-    return $this->url;
+  public function getReleaseUrl(): string {
+    return $this->releaseUrl;
   }
 
 }
