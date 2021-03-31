@@ -21,6 +21,7 @@
       (instance.input.tagName !== 'INPUT' && isContentEditable);
 
     instance.options.isMultiline = isMultiline;
+    instance.options.itemClass = 'ui-menu-item';
 
     // jQuery UI allows repeat values in multivalue inputs.
     // If the option is explicitly set to false, that option was set by the form

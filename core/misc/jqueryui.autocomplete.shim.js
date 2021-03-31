@@ -32,6 +32,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     var isContentEditable = instance.input.hasAttribute('contenteditable');
     var isMultiline = instance.input.tagName === 'TEXTAREA' || instance.input.tagName !== 'INPUT' && isContentEditable;
     instance.options.isMultiline = isMultiline;
+    instance.options.itemClass = 'ui-menu-item';
 
     if (instance.options.allowRepeatValues === null) {
       instance.options.allowRepeatValues = true;

@@ -1,6 +1,6 @@
-// Skipping "handle race condition", doesn't really measure BC
-// Skipping "ARIA", the AT implementation does not need to be BC.
-// Skipping "Destroy"
+// These are Nightwatch equivalents of jQuery UI's autocomplete tests. These
+// are present to confirm that tests that pass with jQuery UI autocomplete
+// also pass with the shimmed core autocomplete.
 
 function arrowsInvokeSearch(id, isKeyUp, shouldMove) {
   let didMove = false;
@@ -69,7 +69,6 @@ function arrowsNavigateElement(id, isKeyUp, shouldMove) {
   });
 
   element.on('keypress', (e) => {
-    // didMove = !e.isDefaultPrevented();
     didMove = document.activeElement.tagName === 'LI';
   });
   element.simulate('keydown', {
