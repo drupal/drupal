@@ -26,28 +26,28 @@ final class ProjectRelease {
    *
    * @var string|null
    */
-  protected $coreCompatibilityMessage;
+  private $coreCompatibilityMessage;
 
   /**
    * The download URL or NULL if none is available.
    *
    * @var string|null
    */
-  protected $downloadUrl;
+  private $downloadUrl;
 
   /**
    * The URL for the release.
    *
    * @var string
    */
-  protected $url;
+  private $url;
 
   /**
    * The release types or NULL if not set.
    *
    * @var array|null
    */
-  private $releaseTypes = [];
+  private $releaseTypes;
 
   /**
    * Whether the release is published.
@@ -138,7 +138,7 @@ final class ProjectRelease {
    * @throws \UnexpectedValueException
    *   Thrown if project release data is not valid.
    */
-  protected static function validateReleaseData(array $data): void {
+  private static function validateReleaseData(array $data): void {
     $not_blank_constraints = [
       new Type(['type' => 'string']),
       new NotBlank(),
@@ -220,7 +220,7 @@ final class ProjectRelease {
    * @return bool
    *   TRUE if the release is insecure, or FALSE otherwise.
    */
-  public function isInSecure(): bool {
+  public function isInsecure(): bool {
     return $this->isReleaseType('Insecure');
   }
 
@@ -234,7 +234,7 @@ final class ProjectRelease {
    *   TRUE if the release matches the type, or FALSE otherwise.
    */
   private function isReleaseType(string $type): bool {
-    return $this->releaseTypes && in_array($type, $this->releaseTypes);
+    return $this->releaseTypes && in_array($type, $this->releaseTypes, TRUE);
   }
 
   /**

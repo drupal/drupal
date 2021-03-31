@@ -380,7 +380,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
     }
     // First, if this is the existing release, check a few conditions.
     if ($project_data['existing_version'] === $version) {
-      if ($release->isInSecure()) {
+      if ($release->isInsecure()) {
         $project_data['status'] = UpdateManagerInterface::NOT_SECURE;
       }
       elseif (!$release->isPublished()) {
@@ -411,7 +411,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
     elseif (!$release->isPublished() ||
             !$is_in_supported_branch($release->getVersion()) ||
             $release->isUnsupported() ||
-            $release->isInSecure()
+            $release->isInsecure()
     ) {
       continue;
     }
