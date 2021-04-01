@@ -460,6 +460,7 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
     }
 
     // Add entity-access tag.
+    $query->accessCheck(TRUE);
     $query->addTag($target_type . '_access');
 
     // Add the Selection handler for system_query_entity_reference_alter().
