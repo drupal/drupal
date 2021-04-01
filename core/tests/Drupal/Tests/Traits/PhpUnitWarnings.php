@@ -68,6 +68,12 @@ trait PhpUnitWarnings {
       return;
     }
 
+    // assertInternalType() has many similar deprecation warnings.
+    if (preg_match('/^assertInternalType\(\) is deprecated and will be removed in PHPUnit 9. Refactor your test to use assert.*\(\) instead.$/', $warning)) {
+      @trigger_error($warning, E_USER_DEPRECATED);
+      return;
+    }
+
     // Otherwise, let the parent raise any warning not specifically listed.
     parent::addWarning($warning);
   }
