@@ -49,11 +49,17 @@ class UpdateFeedItemTest extends AggregatorTestBase {
     // Verify that the creation message contains a link to a feed.
     $this->assertSession()->elementExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "aggregator/sources/")]');
 
-    $fids = \Drupal::entityQuery('aggregator_feed')->condition('url', $edit['url[0][value]'])->execute();
+    $fids = \Drupal::entityQuery('aggregator_feed')
+      ->accessCheck(FALSE)
+      ->condition('url', $edit['url[0][value]'])
+      ->execute();
     $feed = Feed::load(array_values($fids)[0]);
 
     $feed->refreshItems();
-    $item_ids = \Drupal::entityQuery('aggregator_item')->condition('fid', $feed->id())->execute();
+    $item_ids = \Drupal::entityQuery('aggregator_item')
+      ->accessCheck(FALSE)
+      ->condition('fid', $feed->id())
+      ->execute();
     $before = Item::load(array_values($item_ids)[0])->getPostedTime();
 
     // Sleep for 3 second.
