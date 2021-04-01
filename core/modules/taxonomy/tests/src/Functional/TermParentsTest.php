@@ -121,6 +121,7 @@ class TermParentsTest extends BrowserTestBase {
 
     $result = $this->termStorage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('name', $name)
       ->execute();
     /* @var \Drupal\taxonomy\TermInterface $term_1 */

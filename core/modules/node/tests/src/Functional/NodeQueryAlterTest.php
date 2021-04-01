@@ -92,6 +92,7 @@ class NodeQueryAlterTest extends NodeTestBase {
     try {
       $query = \Drupal::entityTypeManager()->getStorage('node')->getQuery();
       $result = $query
+        ->accessCheck(TRUE)
         ->allRevisions()
         ->execute();
 

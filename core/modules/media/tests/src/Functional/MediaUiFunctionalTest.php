@@ -67,6 +67,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $media_id = $this->container->get('entity_type.manager')
       ->getStorage('media')
       ->getQuery()
+      ->accessCheck(FALSE)
       ->execute();
     $media_id = reset($media_id);
     /** @var \Drupal\media\MediaInterface $media */
@@ -139,7 +140,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $page->clickLink('Delete');
     $assert_session->pageTextContains('This action cannot be undone');
     $page->pressButton('Delete');
-    $media_id = \Drupal::entityQuery('media')->execute();
+    $media_id = \Drupal::entityQuery('media')->accessCheck(FALSE)->execute();
     $this->assertEmpty($media_id);
   }
 
@@ -444,6 +445,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $media_id = $this->container->get('entity_type.manager')
       ->getStorage('media')
       ->getQuery()
+      ->accessCheck(FALSE)
       ->execute();
     $media_id = reset($media_id);
     $assert_session->addressEquals("media/$media_id/edit");

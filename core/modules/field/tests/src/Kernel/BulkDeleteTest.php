@@ -168,6 +168,7 @@ class BulkDeleteTest extends FieldKernelTestBase {
     // There are 10 entities of this bundle.
     $found = $storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('type', $bundle)
       ->execute();
     $this->assertCount(10, $found, 'Correct number of entities found before deleting');
@@ -197,6 +198,7 @@ class BulkDeleteTest extends FieldKernelTestBase {
     // There are 0 entities of this bundle with non-deleted data.
     $found = $storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('type', $bundle)
       ->condition("$field_name.deleted", 0)
       ->execute();
@@ -206,6 +208,7 @@ class BulkDeleteTest extends FieldKernelTestBase {
     // their values are correct.
     $found = $storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('type', $bundle)
       ->condition("$field_name.deleted", 1)
       ->sort('id')
@@ -334,6 +337,7 @@ class BulkDeleteTest extends FieldKernelTestBase {
 
       // There are $count deleted entities left.
       $found = \Drupal::entityQuery('entity_test')
+        ->accessCheck(FALSE)
         ->condition('type', $bundle)
         ->condition($field_name . '.deleted', 1)
         ->execute();

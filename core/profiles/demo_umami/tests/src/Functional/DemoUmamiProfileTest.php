@@ -96,6 +96,7 @@ class DemoUmamiProfileTest extends BrowserTestBase {
   public function testUser() {
     $password = $this->rootUser->pass_raw;
     $ids = \Drupal::entityQuery('user')
+      ->accessCheck(FALSE)
       ->condition('roles', ['author', 'editor'], 'IN')
       ->execute();
 

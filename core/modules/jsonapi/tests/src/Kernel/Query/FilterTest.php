@@ -169,7 +169,7 @@ class FilterTest extends JsonapiKernelTestBase {
       $expected_query = $case[1];
       $filter = Filter::createFromQueryParameter($parameter, $resource_type, $this->fieldResolver);
 
-      $query = $this->nodeStorage->getQuery();
+      $query = $this->nodeStorage->getQuery()->accessCheck(FALSE);
 
       // Get the query condition parsed from the input.
       $condition = $filter->queryCondition($query);
@@ -192,7 +192,7 @@ class FilterTest extends JsonapiKernelTestBase {
    */
   protected function queryConditionData() {
     // ((RED or CIRCLE) or (YELLOW and SQUARE))
-    $query = $this->nodeStorage->getQuery();
+    $query = $this->nodeStorage->getQuery()->accessCheck(FALSE);
 
     $or_group = $query->orConditionGroup();
 

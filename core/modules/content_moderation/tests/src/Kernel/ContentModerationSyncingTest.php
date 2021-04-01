@@ -192,6 +192,7 @@ class ContentModerationSyncingTest extends KernelTestBase {
     return array_map(function ($revision_id) use ($storage) {
       return $storage->loadRevision($revision_id)->name->value;
     }, array_keys($storage->getQuery()
+      ->accessCheck(FALSE)
       ->allRevisions()
       ->condition('id', $entity->id())
       ->sort('revision_id', 'ASC')

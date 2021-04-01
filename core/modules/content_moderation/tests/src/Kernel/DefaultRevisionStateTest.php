@@ -127,7 +127,7 @@ class DefaultRevisionStateTest extends KernelTestBase {
   protected function assertModerationState($revision_id, $langcode, $expected_state, $expected_workflow = 'editorial') {
     $moderation_state_storage = $this->entityTypeManager->getStorage('content_moderation_state');
 
-    $query = $moderation_state_storage->getQuery();
+    $query = $moderation_state_storage->getQuery()->accessCheck(FALSE);
     $results = $query->allRevisions()
       ->condition('content_entity_revision_id', $revision_id)
       ->condition('langcode', $langcode)

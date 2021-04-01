@@ -295,7 +295,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
     // least three times.
     /** @var \Drupal\Core\Entity\TranslatableRevisionableStorageInterface|\Drupal\Core\Entity\EntityStorageInterface $storage */
     $storage = $this->entityTypeManager->getStorage($this->entityTypeId);
-    $next_id = $storage->getQuery()->count()->execute() + 1;
+    $next_id = $storage->getQuery()->accessCheck(FALSE)->count()->execute() + 1;
 
     // Create test entities with two translations and two revisions.
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
