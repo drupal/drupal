@@ -136,6 +136,7 @@ class DefaultMenuLinkTreeManipulators {
       $nids = array_keys($node_links);
 
       $query = $this->entityTypeManager->getStorage('node')->getQuery();
+      $query->accessCheck(TRUE);
       $query->condition('nid', $nids, 'IN');
 
       // Allows admins to view all nodes, by both disabling node_access

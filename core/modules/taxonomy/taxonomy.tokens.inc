@@ -175,6 +175,7 @@ function taxonomy_tokens($type, $tokens, array $data, array $options, Bubbleable
 
         case 'term-count':
           $replacements[$original] = \Drupal::entityQuery('taxonomy_term')
+            ->accessCheck(TRUE)
             ->condition('vid', $vocabulary->id())
             ->addTag('vocabulary_term_count')
             ->count()

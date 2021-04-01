@@ -161,6 +161,7 @@ class CommentAdminOverview extends FormBase {
       'operations' => $this->t('Operations'),
     ];
     $cids = $this->commentStorage->getQuery()
+      ->accessCheck(TRUE)
       ->condition('status', $status)
       ->tableSort($header)
       ->pager(50)

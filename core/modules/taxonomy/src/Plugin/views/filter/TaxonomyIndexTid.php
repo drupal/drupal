@@ -209,6 +209,7 @@ class TaxonomyIndexTid extends ManyToOne {
       else {
         $options = [];
         $query = \Drupal::entityQuery('taxonomy_term')
+          ->accessCheck(TRUE)
           // @todo Sorting on vocabulary properties -
           //   https://www.drupal.org/node/1821274.
           ->sort('weight')

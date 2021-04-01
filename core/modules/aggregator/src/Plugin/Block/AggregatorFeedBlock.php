@@ -129,6 +129,7 @@ class AggregatorFeedBlock extends BlockBase implements ContainerFactoryPluginInt
     // Load the selected feed.
     if ($feed = $this->feedStorage->load($this->configuration['feed'])) {
       $result = $this->itemStorage->getQuery()
+        ->accessCheck(TRUE)
         ->condition('fid', $feed->id())
         ->range(0, $this->configuration['block_count'])
         ->sort('timestamp', 'DESC')
