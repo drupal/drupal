@@ -300,6 +300,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
    */
   protected function getRevisionIds(NodeInterface $node, NodeStorageInterface $node_storage) {
     $result = $node_storage->getQuery()
+      ->accessCheck(TRUE)
       ->allRevisions()
       ->condition($node->getEntityType()->getKey('id'), $node->id())
       ->sort($node->getEntityType()->getKey('revision'), 'DESC')

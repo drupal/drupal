@@ -67,6 +67,7 @@ class UserListBuilder extends EntityListBuilder {
    */
   public function load() {
     $entity_query = $this->storage->getQuery();
+    $entity_query->accessCheck(TRUE);
     $entity_query->condition('uid', 0, '<>');
     $entity_query->pager(50);
     $header = $this->buildHeader();

@@ -220,6 +220,7 @@ class CommentManager implements CommentManagerInterface {
 
       // Use the timestamp to retrieve the number of new comments.
       $query = $this->entityTypeManager->getStorage('comment')->getQuery()
+        ->accessCheck(TRUE)
         ->condition('entity_type', $entity->getEntityTypeId())
         ->condition('entity_id', $entity->id())
         ->condition('created', $timestamp, '>')
