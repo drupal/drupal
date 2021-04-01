@@ -61,7 +61,7 @@ function user_filter_form() {
     if ($type == 'permission') {
       // Merge arrays of module permissions into one.
       // Slice past the first element '[any]' whose value is not an array.
-      $options = call_user_func_array('array_merge', array_slice($filters[$type]['options'], 1));
+      $options = call_user_func_array('array_merge', array_values(array_slice($filters[$type]['options'], 1)));
       $value = $options[$value];
     }
     else {
@@ -1050,4 +1050,3 @@ function user_admin_role_delete_confirm_submit($form, &$form_state) {
   drupal_set_message(t('The role has been deleted.'));
   $form_state['redirect'] = 'admin/people/permissions/roles';
 }
-
