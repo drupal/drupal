@@ -12,6 +12,7 @@ use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\DrupalKernel;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
@@ -460,10 +461,11 @@ function show(&$element) {
 }
 
 /**
- * Flushes all persistent caches, resets all variables, and rebuilds all data structures.
+ * Rebuilds the container, flushes all persistent caches, resets all variables, and rebuilds all data structures.
  *
  * At times, it is necessary to re-initialize the entire system to account for
  * changed or new code. This function:
+ * - Rebuilds the container if $kernel is not passed in.
  * - Clears all persistent caches:
  *   - The bootstrap cache bin containing base system, module system, and theme
  *     system information.
@@ -482,6 +484,10 @@ function show(&$element) {
  *     database
  *   - The 'active' status of fields is refreshed.
  * - Rebuilds the menu router.
+ *
+ * It's discouraged to call this during a regular page request.
+ * If you call this function in tests, every code afterwards should use the new
+ * container.
  *
  * This means the entire system is reset so all caches and static variables are
  * effectively empty. After that is guaranteed, information about the currently
@@ -512,12 +518,19 @@ function show(&$element) {
  *   cache though.)
  * @todo Add a global lock to ensure that caches are not primed in concurrent
  *   requests.
+ *
+ * @param \Drupal\Core\DrupalKernel|array $kernel
+ *   (optional) The Drupal Kernel. It is the caller's responsibility to rebuild
+ *   the container if this is passed in. Sometimes drupal_flush_all_caches is
+ *   used as a batch operation so $kernel will be an array, in this instance it
+ *   will be treated as if it it NULL.
  */
-function drupal_flush_all_caches() {
+function drupal_flush_all_caches($kernel = NULL) {
+  // This is executed based on old/previously known information if $kernel is
+  // not passed in, which is sufficient, since new extensions cannot have any
+  // primed caches yet.
   $module_handler = \Drupal::moduleHandler();
   // Flush all persistent caches.
-  // This is executed based on old/previously known information, which is
-  // sufficient, since new extensions cannot have any primed caches yet.
   $module_handler->invokeAll('cache_flush');
   foreach (Cache::getBins() as $service_id => $cache_backend) {
     $cache_backend->deleteAll();
@@ -531,43 +544,26 @@ function drupal_flush_all_caches() {
   // Reset all static caches.
   drupal_static_reset();
 
-  // Invalidate the container.
-  \Drupal::service('kernel')->invalidateContainer();
-
   // Wipe the Twig PHP Storage cache.
   \Drupal::service('twig')->invalidate();
 
-  // Rebuild module and theme data.
-  $module_data = \Drupal::service('extension.list.module')->reset()->getList();
-  /** @var \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler */
-  $theme_handler = \Drupal::service('theme_handler');
-  $theme_handler->refreshInfo();
+  // Rebuild theme data that is stored in state.
+  \Drupal::service('theme_handler')->refreshInfo();
   // In case the active theme gets requested later in the same request we need
   // to reset the theme manager.
   \Drupal::theme()->resetActiveTheme();
 
-  // Rebuild and reboot a new kernel. A simple DrupalKernel reboot is not
-  // sufficient, since the list of enabled modules might have been adjusted
-  // above due to changed code.
-  $files = [];
-  $modules = [];
-  foreach ($module_data as $name => $extension) {
-    if ($extension->status) {
-      $files[$name] = $extension;
-      $modules[$name] = $extension->weight;
-    }
+  if (!$kernel instanceof DrupalKernel) {
+    $kernel = \Drupal::service('kernel');
+    $kernel->invalidateContainer();
+    $kernel->rebuildContainer();
   }
-  $modules = module_config_sort($modules);
-  \Drupal::service('kernel')->updateModules($modules, $files);
-  // New container, new module handler.
-  $module_handler = \Drupal::moduleHandler();
 
-  // Ensure that all modules that are currently supposed to be enabled are
-  // actually loaded.
-  $module_handler->loadAll();
+  // Rebuild module data that is stored in state.
+  \Drupal::service('extension.list.module')->reset();
 
   // Rebuild all information based on new module data.
-  $module_handler->invokeAll('rebuild');
+  \Drupal::moduleHandler()->invokeAll('rebuild');
 
   // Clear all plugin caches.
   \Drupal::service('plugin.cache_clearer')->clearCachedDefinitions();
