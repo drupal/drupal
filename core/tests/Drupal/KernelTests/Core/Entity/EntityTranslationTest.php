@@ -273,7 +273,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
 
     // Test property conditions and orders with multiple languages in the same
     // query.
-    $query = \Drupal::entityQuery($entity_type);
+    $query = \Drupal::entityQuery($entity_type)->accessCheck(FALSE);
     $group = $query->andConditionGroup()
       ->condition('user_id', $properties[$default_langcode]['user_id'][0], '=', $default_langcode)
       ->condition('name', $properties[$default_langcode]['name'][0], '=', $default_langcode);
@@ -289,7 +289,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
     $field_value = $this->randomString();
     $entity->getTranslation($langcode)->set($this->fieldName, [['value' => $field_value]]);
     $entity->save();
-    $query = \Drupal::entityQuery($entity_type);
+    $query = \Drupal::entityQuery($entity_type)->accessCheck(FALSE);
     $default_langcode_group = $query->andConditionGroup()
       ->condition('user_id', $properties[$default_langcode]['user_id'][0], '=', $default_langcode)
       ->condition('name', $properties[$default_langcode]['name'][0], '=', $default_langcode);

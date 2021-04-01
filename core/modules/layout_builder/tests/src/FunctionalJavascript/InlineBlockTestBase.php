@@ -97,7 +97,11 @@ abstract class InlineBlockTestBase extends WebDriverTestBase {
    * Gets the latest block entity id.
    */
   protected function getLatestBlockEntityId() {
-    $block_ids = \Drupal::entityQuery('block_content')->sort('id', 'DESC')->range(0, 1)->execute();
+    $block_ids = \Drupal::entityQuery('block_content')
+      ->accessCheck(FALSE)
+      ->sort('id', 'DESC')
+      ->range(0, 1)
+      ->execute();
     $block_id = array_pop($block_ids);
     $this->assertNotEmpty($this->blockStorage->load($block_id));
     return $block_id;

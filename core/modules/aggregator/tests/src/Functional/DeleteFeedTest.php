@@ -48,7 +48,12 @@ class DeleteFeedTest extends AggregatorTestBase {
     $this->assertSession()->statusCodeEquals(404);
 
     // Check database for feed.
-    $result = \Drupal::entityQuery('aggregator_feed')->condition('title', $feed1->label())->condition('url', $feed1->getUrl())->count()->execute();
+    $result = \Drupal::entityQuery('aggregator_feed')
+      ->accessCheck(FALSE)
+      ->condition('title', $feed1->label())
+      ->condition('url', $feed1->getUrl())
+      ->count()
+      ->execute();
     $this->assertEquals(0, $result, 'Feed not found in database');
   }
 

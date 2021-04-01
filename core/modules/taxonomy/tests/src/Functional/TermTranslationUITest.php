@@ -97,6 +97,7 @@ class TermTranslationUITest extends ContentTranslationUITestBase {
     // Make sure that no row was inserted for taxonomy vocabularies which do
     // not have translations enabled.
     $tids = \Drupal::entityQueryAggregate('taxonomy_term')
+      ->accessCheck(FALSE)
       ->aggregate('tid', 'COUNT')
       ->condition('vid', $this->bundle, '<>')
       ->groupBy('tid')

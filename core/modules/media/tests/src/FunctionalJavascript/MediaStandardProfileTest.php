@@ -124,6 +124,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
       ->get('entity_type.manager')
       ->getStorage('media')
       ->getQuery()
+      ->accessCheck(FALSE)
       ->sort('mid', 'DESC')
       ->execute();
     $audio_media_id = reset($audio_media_id);
@@ -209,6 +210,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
       ->get('entity_type.manager')
       ->getStorage('media')
       ->getQuery()
+      ->accessCheck(FALSE)
       ->sort('mid', 'DESC')
       ->execute();
     $image_media_id = reset($image_media_id);
@@ -308,6 +310,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
       ->get('entity_type.manager')
       ->getStorage('media')
       ->getQuery()
+      ->accessCheck(FALSE)
       ->sort('mid', 'DESC')
       ->execute();
     $file_media_id = reset($file_media_id);
@@ -395,6 +398,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
       ->get('entity_type.manager')
       ->getStorage('media')
       ->getQuery()
+      ->accessCheck(FALSE)
       ->sort('mid', 'DESC')
       ->execute();
     $remote_video_media_id = reset($remote_video_media_id);
@@ -491,6 +495,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
       ->get('entity_type.manager')
       ->getStorage('media')
       ->getQuery()
+      ->accessCheck(FALSE)
       ->sort('mid', 'DESC')
       ->execute();
     $video_media_id = reset($video_media_id);

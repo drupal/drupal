@@ -182,7 +182,7 @@ class TrackChangesTest extends MigrateTestBase {
    */
   protected function termExists($property, $value) {
     $property = $property === 'description' ? 'description__value' : $property;
-    $query = \Drupal::entityQuery('taxonomy_term');
+    $query = \Drupal::entityQuery('taxonomy_term')->accessCheck(FALSE);
     $result = $query
       ->condition($property, $value)
       ->range(0, 1)
