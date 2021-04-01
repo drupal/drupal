@@ -1,0 +1,6 @@
+container_rebuild_test.module_path:
+  path: '/container_rebuild_test/{module}/{function}'
+  defaults:
+    _controller: '\Drupal\container_rebuild_test\TestController::showModuleInfo'
+  requirements:
+    _access: 'TRUE'

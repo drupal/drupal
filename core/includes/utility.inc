@@ -5,8 +5,6 @@
  * Miscellaneous functions.
  */
 
-use Drupal\Core\PhpStorage\PhpStorageFactory;
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\DrupalKernel;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -28,12 +26,11 @@ function drupal_rebuild($class_loader, Request $request) {
   restore_error_handler();
   restore_exception_handler();
 
-  // Force kernel to rebuild php cache.
-  PhpStorageFactory::get('twig')->deleteAll();
-
+  // Invalidate the container.
   // Bootstrap up to where caches exist and clear them.
   $kernel = new DrupalKernel('prod', $class_loader);
   $kernel->setSitePath(DrupalKernel::findSitePath($request));
+  $kernel->invalidateContainer();
   $kernel->boot();
   $kernel->preHandle($request);
   // Ensure our request includes the session if appropriate.
@@ -41,17 +38,10 @@ function drupal_rebuild($class_loader, Request $request) {
     $request->setSession($kernel->getContainer()->get('session'));
   }
 
-  // Invalidate the container.
-  $kernel->invalidateContainer();
-
-  foreach (Cache::getBins() as $bin) {
-    $bin->deleteAll();
-  }
+  drupal_flush_all_caches($kernel);
 
   // Disable recording of cached pages.
   \Drupal::service('page_cache_kill_switch')->trigger();
-
-  drupal_flush_all_caches();
 
   // Restore Drupal's error and exception handlers.
   // @see \Drupal\Core\DrupalKernel::boot()
