@@ -22,13 +22,13 @@ class DrupalErrorHandlerTestCase extends DrupalWebTestCase {
   function testErrorHandler() {
     $error_notice = array(
       '%type' => 'Notice',
-      '!message' => 'Undefined variable: bananas',
+      '!message' => 'Object of class stdClass could not be converted to int',
       '%function' => 'error_test_generate_warnings()',
       '%file' => drupal_realpath('modules/simpletest/tests/error_test.module'),
     );
     $error_warning = array(
       '%type' => 'Warning',
-      '!message' => 'Division by zero',
+      '!message' => \PHP_VERSION_ID < 80000 ? 'Invalid argument supplied for foreach()' : 'foreach() argument must be of type array|object, string given',
       '%function' => 'error_test_generate_warnings()',
       '%file' => drupal_realpath('modules/simpletest/tests/error_test.module'),
     );
@@ -113,4 +113,3 @@ class DrupalErrorHandlerTestCase extends DrupalWebTestCase {
     $this->assertNoRaw($message, format_string('Did not find error message: !message.', array('!message' => $message)));
   }
 }
-

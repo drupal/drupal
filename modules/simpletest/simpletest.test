@@ -164,13 +164,16 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
     $this->pass(t('Test ID is @id.', array('@id' => $this->testId)));
 
     // Generates a warning.
-    $i = 1 / 0;
+    $a = '';
+    foreach ($a as $b) {
+
+    }
 
     // Call an assert function specific to that class.
     $this->assertNothing();
 
-    // Generates a warning inside a PHP function.
-    array_key_exists(NULL, NULL);
+    // Generates 3 warnings inside a PHP function.
+    simplexml_load_string('<fake>');
 
     debug('Foo', 'Debug');
   }
@@ -195,19 +198,21 @@ class SimpleTestFunctionalTest extends DrupalWebTestCase {
     $this->assertAssertion(t('Invalid permission %permission.', array('%permission' => $this->invalid_permission)), 'Role', 'Fail', 'simpletest.test', 'SimpleTestFunctionalTest->stubTest()');
 
     // Check that a warning is caught by simpletest.
-    $this->assertAssertion('Division by zero', 'Warning', 'Fail', 'simpletest.test', 'SimpleTestFunctionalTest->stubTest()');
+    // The exact error message differs between PHP versions so we check only
+    // the presense of the 'foreach' statement.
+    $this->assertAssertion('foreach()', 'Warning', 'Fail', 'simpletest.test', 'SimpleTestFunctionalTest->stubTest()');
 
     // Check that the backtracing code works for specific assert function.
     $this->assertAssertion('This is nothing.', 'Other', 'Pass', 'simpletest.test', 'SimpleTestFunctionalTest->stubTest()');
 
     // Check that errors that occur inside PHP internal functions are correctly reported.
     // The exact error message differs between PHP versions so we check only
-    // the function name 'array_key_exists'.
-    $this->assertAssertion('array_key_exists', 'Warning', 'Fail', 'simpletest.test', 'SimpleTestFunctionalTest->stubTest()');
+    // the function name 'simplexml_load_string'.
+    $this->assertAssertion('simplexml_load_string', 'Warning', 'Fail', 'simpletest.test', 'SimpleTestFunctionalTest->stubTest()');
 
     $this->assertAssertion("Debug: 'Foo'", 'Debug', 'Fail', 'simpletest.test', 'SimpleTestFunctionalTest->stubTest()');
 
-    $this->assertEqual('6 passes, 5 fails, 2 exceptions, and 1 debug message', $this->childTestResults['summary'], 'Stub test summary is correct');
+    $this->assertEqual('6 passes, 5 fails, 4 exceptions, and 1 debug message', $this->childTestResults['summary'], 'Stub test summary is correct');
 
     $this->test_ids[] = $test_id = $this->getTestIdFromResults();
     $this->assertTrue($test_id, 'Found test ID in results.');

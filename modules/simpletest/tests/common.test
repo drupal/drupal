@@ -2633,8 +2633,8 @@ class DrupalErrorCollectionUnitTest extends DrupalWebTestCase {
     $this->assertEqual(count($this->collectedErrors), 3, 'Three errors were collected');
 
     if (count($this->collectedErrors) == 3) {
-      $this->assertError($this->collectedErrors[0], 'Notice', 'error_test_generate_warnings()', 'error_test.module', 'Undefined variable: bananas');
-      $this->assertError($this->collectedErrors[1], 'Warning', 'error_test_generate_warnings()', 'error_test.module', 'Division by zero');
+      $this->assertError($this->collectedErrors[0], 'Notice', 'error_test_generate_warnings()', 'error_test.module', 'Object of class stdClass could not be converted to int');
+      $this->assertError($this->collectedErrors[1], 'Warning', 'error_test_generate_warnings()', 'error_test.module', \PHP_VERSION_ID < 80000 ? 'Invalid argument supplied for foreach()' : 'foreach() argument must be of type array|object, string given');
       $this->assertError($this->collectedErrors[2], 'User warning', 'error_test_generate_warnings()', 'error_test.module', 'Drupal is awesome');
     }
     else {
