@@ -11,3 +11,5 @@ npm install -g modernizr
 modernizr -c modernizr-config.json // This is the file downloaded from http://modernizr.com/download
 ```
 This produces a `modernizr.js` file that should be renamed to `modernizr.min.js` and copied to `core/assets/vendor/modernizr/modernizr.min.js`.
+
+Please also remember to update the version number of Modernizer in `core/core.libraries.yml`.
