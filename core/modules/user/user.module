@@ -391,6 +391,7 @@ function _user_role_permissions_update($roles) {
  */
 function user_is_blocked($name) {
   return (bool) \Drupal::entityQuery('user')
+    ->accessCheck(FALSE)
     ->condition('name', $name)
     ->condition('status', 0)
     ->execute();
