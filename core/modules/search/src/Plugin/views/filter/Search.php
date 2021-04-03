@@ -27,9 +27,9 @@ class Search extends FilterPluginBase {
 
   /**
    * A search query to use for parsing search keywords.
-    *
-    * @var \Drupal\search\ViewsSearchQuery
-    */
+   *
+   * @var \Drupal\search\ViewsSearchQuery
+   */
   protected $searchQuery = NULL;
 
   /**

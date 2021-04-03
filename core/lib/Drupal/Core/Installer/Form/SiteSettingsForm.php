@@ -46,8 +46,8 @@ class SiteSettingsForm extends FormBase {
   }
 
   /**
-    * {@inheritdoc}
-    */
+   * {@inheritdoc}
+   */
   public static function create(ContainerInterface $container) {
     return new static(
       $container->getParameter('site.path'),

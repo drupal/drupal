@@ -333,8 +333,8 @@ class EntityAdapterUnitTest extends UnitTestCase {
   }
 
   /**
- * @covers ::getProperties
- */
+   * @covers ::getProperties
+   */
   public function testGetProperties() {
     $fields = $this->entityAdapter->getProperties();
     $this->assertInstanceOf('Drupal\Core\Field\FieldItemListInterface', $fields['id']);

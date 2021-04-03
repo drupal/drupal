@@ -12,10 +12,10 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class NodeStatisticsDatabaseStorage implements StatisticsStorageInterface {
 
   /**
-  * The database connection used.
-  *
-  * @var \Drupal\Core\Database\Connection
-  */
+   * The database connection used.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
   protected $connection;
 
   /**

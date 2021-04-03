@@ -277,7 +277,7 @@ class DbLogTest extends BrowserTestBase {
    *   (optional) The log entry type.
    * @param string $severity
    *   (optional) The log entry severity.
-  */
+   */
   protected function filterLogsEntries($type = NULL, $severity = NULL) {
     $edit = [];
     if (isset($type)) {

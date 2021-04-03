@@ -350,7 +350,7 @@ class KernelTestBaseTest extends KernelTestBase {
    * Tests the deprecation of AssertLegacyTrait::assertIdenticalObject.
    *
    * @group legacy
-    */
+   */
   public function testAssertIdenticalObject() {
     $this->expectDeprecation('AssertLegacyTrait::assertIdenticalObject() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertEquals() instead. See https://www.drupal.org/node/3129738');
     $this->assertIdenticalObject((object) ['foo' => 'bar'], (object) ['foo' => 'bar']);
@@ -360,7 +360,7 @@ class KernelTestBaseTest extends KernelTestBase {
    * Tests the deprecation of AssertLegacyTrait::assertNotEqual.
    *
    * @group legacy
-    */
+   */
   public function testAssertNotEqual() {
     $this->expectDeprecation('AssertLegacyTrait::assertNotEqual() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertNotEquals() instead. See https://www.drupal.org/node/3129738');
     $this->assertNotEqual('foo', 'bar');
@@ -370,7 +370,7 @@ class KernelTestBaseTest extends KernelTestBase {
    * Tests the deprecation of AssertLegacyTrait::assertIdentical.
    *
    * @group legacy
-    */
+   */
   public function testAssertIdentical() {
     $this->expectDeprecation('AssertLegacyTrait::assertIdentical() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertSame() instead. See https://www.drupal.org/node/3129738');
     $this->assertIdentical('foo', 'foo');
@@ -380,7 +380,7 @@ class KernelTestBaseTest extends KernelTestBase {
    * Tests the deprecation of AssertLegacyTrait::assertNotIdentical.
    *
    * @group legacy
-    */
+   */
   public function testAssertNotIdentical() {
     $this->expectDeprecation('AssertLegacyTrait::assertNotIdentical() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertNotSame() instead. See https://www.drupal.org/node/3129738');
     $this->assertNotIdentical('foo', 'bar');
@@ -390,7 +390,7 @@ class KernelTestBaseTest extends KernelTestBase {
    * Tests the deprecation of AssertLegacyTrait::verbose().
    *
    * @group legacy
-    */
+   */
   public function testVerbose() {
     $this->expectDeprecation('AssertLegacyTrait::verbose() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use dump() instead. See https://www.drupal.org/node/3197514');
     $this->verbose('The show must go on');
@@ -400,7 +400,7 @@ class KernelTestBaseTest extends KernelTestBase {
    * Tests the deprecation of ::installSchema with the tables key_value(_expire).
    *
    * @group legacy
-    */
+   */
   public function testKernelTestBaseInstallSchema() {
     $this->expectDeprecation('Installing the tables key_value and key_value_expire with the method KernelTestBase::installSchema() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. The tables are now lazy loaded and therefore will be installed automatically when used. See https://www.drupal.org/node/3143286');
     $this->enableModules(['system']);

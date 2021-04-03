@@ -282,8 +282,8 @@ class NumberFieldTest extends BrowserTestBase {
   }
 
   /**
-  * Test float field.
-  */
+   * Test float field.
+   */
   public function testNumberFloatField() {
     // Create a field with settings to validate.
     $field_name = mb_strtolower($this->randomMachineName());
