@@ -341,7 +341,7 @@ abstract class BrowserTestBase extends TestCase {
    * be overridden in a derived class so it is possible to use a different
    * value for a subset of tests, e.g. the JavaScript tests.
    *
-   *  @return string|false
+   * @return string|false
    *   The JSON-encoded argument string. False if it is not set.
    */
   protected function getMinkDriverArgs() {
