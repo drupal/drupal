@@ -329,8 +329,7 @@ EOD;
   }
 
   /**
-   * Create an SQL string for a field to be used in table creation or
-   * alteration.
+   * Create SQL string for a field to be used in table creation or alteration.
    *
    * @param $name
    *   Name of the field.
@@ -1044,8 +1043,9 @@ EOD;
   }
 
   /**
-   * Calculates a base-64 encoded, PostgreSQL-safe sha-256 hash per PostgreSQL
-   * documentation: 4.1. Lexical Structure.
+   * Calculates a base-64 encoded, PostgreSQL-safe sha-256 hash.
+   *
+   * Per PostgreSQL documentation: 4.1. Lexical Structure.
    *
    * @param $data
    *   String to be hashed.

@@ -37,16 +37,18 @@ class OpenDialogCommand implements CommandInterface, CommandWithAttachedAssetsIn
   protected $content;
 
   /**
-   * Stores dialog-specific options passed directly to jQuery UI dialogs. Any
-   * jQuery UI option can be used. See http://api.jqueryui.com/dialog.
+   * Stores dialog-specific options passed directly to jQuery UI dialogs.
+   *
+   * Any jQuery UI option can be used.
+   *
+   * @see http://api.jqueryui.com/dialog.
    *
    * @var array
    */
   protected $dialogOptions;
 
   /**
-   * Custom settings that will be passed to the Drupal behaviors on the content
-   * of the dialog.
+   * Custom settings passed to Drupal behaviors on the content of the dialog.
    *
    * @var array
    */

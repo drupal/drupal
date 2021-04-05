@@ -53,6 +53,7 @@ class QueueWorker extends Plugin {
 
   /**
    * An associative array containing the optional key:
+   *
    *   - time: (optional) How much time Drupal cron should spend on calling
    *     this worker in seconds. Defaults to 15.
    *

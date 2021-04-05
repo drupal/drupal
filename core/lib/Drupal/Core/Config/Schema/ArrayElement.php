@@ -136,8 +136,10 @@ abstract class ArrayElement extends Element implements \IteratorAggregate, Typed
   }
 
   /**
-   * Creates a new data definition object from a type definition array and
-   * actual configuration data.
+   * Creates a new data definition object.
+   *
+   * Data definition object is created from a type definition array and actual
+   * configuration data.
    *
    * @param array $definition
    *   The base type definition array, for which a data definition should be

@@ -93,8 +93,9 @@ class Select extends Query implements SelectInterface {
   protected $range;
 
   /**
-   * An array whose elements specify a query to UNION, and the UNION type. The
-   * 'type' key may be '', 'ALL', or 'DISTINCT' to represent a 'UNION',
+   * An array whose elements specify a query to UNION, and the UNION type.
+   *
+   * The 'type' key may be '', 'ALL', or 'DISTINCT' to represent a 'UNION',
    * 'UNION ALL', or 'UNION DISTINCT' statement, respectively.
    *
    * All entries in this array will be applied from front to back, with the
