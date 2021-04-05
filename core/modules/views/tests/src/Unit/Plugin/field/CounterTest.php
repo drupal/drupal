@@ -27,7 +27,7 @@ class CounterTest extends UnitTestCase {
    *
    * @var \Drupal\views\ViewExecutable
    */
-  protected  $view;
+  protected $view;
 
   /**
    * The display plugin instance.
