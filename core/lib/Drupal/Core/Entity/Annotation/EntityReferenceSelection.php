@@ -60,8 +60,9 @@ class EntityReferenceSelection extends Plugin {
   public $group;
 
   /**
-   * An array of entity types that can be referenced by this plugin. Defaults to
-   * all entity types.
+   * An array of entity types that can be referenced by this plugin.
+   *
+   * Defaults to all entity types.
    *
    * @var array (optional)
    */
