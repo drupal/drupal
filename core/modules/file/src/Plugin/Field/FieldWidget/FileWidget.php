@@ -333,8 +333,9 @@ class FileWidget extends WidgetBase {
   }
 
   /**
-   * Form element validation callback for upload element on file widget. Checks
-   * if user has uploaded more files than allowed.
+   * Form element validation callback for upload element on file widget.
+   *
+   * Checks if user has uploaded more files than allowed.
    *
    * This validator is used only when cardinality not set to 1 or unlimited.
    */

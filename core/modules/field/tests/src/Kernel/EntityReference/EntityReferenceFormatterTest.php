@@ -54,6 +54,8 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
   protected $referencedEntity;
 
   /**
+   * The unsaved referenced entity.
+   *
    * The entity that is not yet saved to its persistent storage to be referenced
    * in this test.
    *
@@ -406,7 +408,9 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
   }
 
   /**
-   * Sets field values and returns a render array as built by
+   * Sets field values and returns a render array.
+   *
+   * Render array is as built by
    * \Drupal\Core\Field\FieldItemListInterface::view().
    *
    * @param \Drupal\Core\Entity\EntityInterface[] $referenced_entities

@@ -8,8 +8,10 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\file\Entity\File;
 
 /**
- * Tests validation functions such as file type, max file size, max size per
- * node, and required.
+ * Tests validation functions.
+ *
+ * Validtion functions include file type, max file size, max size per node, and
+ * required.
  *
  * @group file
  */

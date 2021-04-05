@@ -35,8 +35,9 @@ abstract class FieldTestBase extends ViewTestBase {
   public $fieldStorages;
 
   /**
-   * Stores the fields of the field storage. They have the same keys as the
-   * field storages.
+   * Stores the fields of the field storage.
+   *
+   * They have the same keys as the field storages.
    *
    * @var array
    */

@@ -152,6 +152,8 @@ class BulkDeleteTest extends FieldKernelTestBase {
   }
 
   /**
+   * Tests deleting fields.
+   *
    * Verify that deleting a field leaves the field data items in the database
    * and that the appropriate Field API functions can operate on the deleted
    * data and field definition.
@@ -311,6 +313,8 @@ class BulkDeleteTest extends FieldKernelTestBase {
   }
 
   /**
+   * Tests purging fields.
+   *
    * Verify that field data items and fields are purged when a field storage is
    * deleted.
    */
@@ -370,6 +374,8 @@ class BulkDeleteTest extends FieldKernelTestBase {
   }
 
   /**
+   * Tests purging field storages.
+   *
    * Verify that field storages are preserved and purged correctly as multiple
    * fields are deleted and purged.
    */

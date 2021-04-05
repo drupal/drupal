@@ -7,6 +7,8 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
+ * Tests for deleting and uninstalling field and fields storages through the UI.
+ *
  * Delete field storages and fields during config synchronization and uninstall
  * module that provides the field type through the UI.
  *

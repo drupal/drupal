@@ -7,8 +7,9 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
- * Delete field storages and fields during config synchronization and uninstall
- * module that provides the field type.
+ * Delete field storages and fields during config synchronization.
+ *
+ * Also uninstall module that provides the field type.
  *
  * @group field
  * @see \Drupal\field\ConfigImporterFieldPurger
