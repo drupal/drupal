@@ -7,8 +7,10 @@ use Drupal\Tests\file\Functional\FileFieldCreationTrait;
 use Drupal\Tests\TestFileCreationTrait;
 
 /**
- * Tests validation functions such as file type, max file size, max size per
- * node, and required.
+ * Tests validation functions.
+ *
+ * Validation functions include file type, max file size, max size per node, and
+ * required.
  *
  * @group file
  */
