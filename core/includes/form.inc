@@ -393,6 +393,7 @@ function template_preprocess_textarea(&$variables) {
 
 /**
  * Returns HTML for a form element.
+ *
  * Prepares variables for form element templates.
  *
  * Default template: form-element.html.twig.

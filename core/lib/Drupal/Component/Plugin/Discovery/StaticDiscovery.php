@@ -3,8 +3,10 @@
 namespace Drupal\Component\Plugin\Discovery;
 
 /**
- * A discovery mechanism that allows plugin definitions to be manually
- * registered rather than actively discovered.
+ * A discovery mechanism.
+ *
+ * Allowing plugin definitions to be manually registered rather than actively
+ * discovered.
  */
 class StaticDiscovery implements DiscoveryInterface {
 
