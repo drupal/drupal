@@ -367,6 +367,7 @@
       <property name="ignoreNewlines" value="true"/>
     </properties>
   </rule>
+  <rule ref="Squiz.WhiteSpace.ScopeKeywordSpacing"/>
   <rule ref="Squiz.WhiteSpace.SemicolonSpacing"/>
   <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace"/>
 
