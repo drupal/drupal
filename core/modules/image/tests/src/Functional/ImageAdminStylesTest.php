@@ -57,8 +57,9 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
   }
 
   /**
-   * Test creating an image style with a numeric name and ensuring it can be
-   * applied to an image.
+   * Test creating an image style with a numeric name.
+   *
+   * Also ensuring it can be applied to an image.
    */
   public function testNumericStyleName() {
     $style_name = rand();
