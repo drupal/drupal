@@ -7,6 +7,10 @@ use Drupal\block\Plugin\migrate\source\Block;
 /**
  * Gets i18n block data from source database.
  *
+ * For available configuration keys, refer to the parent classes:
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
  * @MigrateSource(
  *   id = "d7_block_translation",
  *   source_module = "i18n_block"
