@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal.
- */
-
 use Drupal\Core\DependencyInjection\ContainerNotInitializedException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
