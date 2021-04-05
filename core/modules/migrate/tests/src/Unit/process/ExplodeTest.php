@@ -89,8 +89,7 @@ class ExplodeTest extends MigrateProcessTestCase {
   }
 
   /**
-   * Tests that explode raises an exception when the value cannot be casted to
-   * string.
+   * Tests if explode raises an exception when value cannot be casted to string.
    */
   public function testExplodeWithNonStrictAndNonCastable() {
     $plugin = new Explode(['delimiter' => '|', 'strict' => FALSE], 'map', []);
@@ -101,8 +100,7 @@ class ExplodeTest extends MigrateProcessTestCase {
   }
 
   /**
-   * Tests that explode with an empty string and strict check returns a
-   * non-empty array.
+   * Test if explode with empty string and strict check returns non-empty array.
    */
   public function testExplodeWithStrictAndEmptyString() {
     $plugin = new Explode(['delimiter' => '|'], 'map', []);

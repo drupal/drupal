@@ -117,14 +117,16 @@ const LOCALE_TRANSLATION_STATUS_TTL = 600;
 const LOCALE_TRANSLATION_OVERWRITE_ALL = 'all';
 
 /**
- * UI option for override of existing translations. Only override non-customized
- * translations.
+ * UI option for override of existing translations.
+ *
+ * Only override non-customized translations.
  */
 const LOCALE_TRANSLATION_OVERWRITE_NON_CUSTOMIZED = 'non_customized';
 
 /**
- * UI option for override of existing translations. Don't override existing
- * translations.
+ * UI option for override of existing translations.
+ *
+ * Don't override existing translations.
  */
 const LOCALE_TRANSLATION_OVERWRITE_NONE = 'none';
 
@@ -1088,6 +1090,8 @@ function _locale_strip_quotes($string) {
 }
 
 /**
+ * Helper function.
+ *
  * Parses a JavaScript file, extracts strings wrapped in Drupal.t() and
  * Drupal.formatPlural() and inserts them into the database.
  *

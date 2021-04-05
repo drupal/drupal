@@ -328,8 +328,9 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
   }
 
   /**
-   * This duplicates some of the 'file_upload' REST resource plugin test
-   * coverage, to be able to test it on a concrete use case.
+   * Duplicate some of the 'file_upload' REST resource plugin test coverage.
+   *
+   * This is to be able to test it on a concrete use case.
    */
   protected function uploadFile() {
     // Enable the 'file_upload' REST resource for the current format + auth.

@@ -7,8 +7,9 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\node\NodeInterface;
 
 /**
- * Tests you can enable multilingual support on content types and configure a
- * language for a node.
+ * Tests if you can enable multilingual support on content types.
+ *
+ * Also tests if you can configure a language for a node.
  *
  * @group locale
  */

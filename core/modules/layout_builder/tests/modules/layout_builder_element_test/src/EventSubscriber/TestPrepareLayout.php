@@ -12,7 +12,9 @@ use Drupal\layout_builder\SectionComponent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * An event subscriber to test altering section storage via the
+ * An event subscriber to test altering section storage.
+ *
+ * Section storage works via the
  * \Drupal\layout_builder\Event\PrepareLayoutEvent.
  *
  * @see \Drupal\layout_builder\Event\PrepareLayoutEvent

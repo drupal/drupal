@@ -15,8 +15,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
- * Ensures that rendered menu links bubble the necessary bubbleable metadata
- * for outbound path/route processing.
+ * Ensures that rendered menu links bubble the necessary bubbleable metadata.
+ *
+ * This for outbound path/route processing.
  *
  * @group menu_link_content
  */

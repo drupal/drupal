@@ -208,8 +208,7 @@ EOF;
   }
 
   /**
-   * Setup existing translations in the database and set up the status of
-   * existing translations.
+   * Setup existing translations in the database and also their status.
    */
   protected function setCurrentTranslations() {
     // Add non customized translations to the database.

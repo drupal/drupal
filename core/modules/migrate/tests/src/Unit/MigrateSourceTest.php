@@ -420,8 +420,7 @@ class MigrateSourceTest extends MigrateTestCase {
   }
 
   /**
-   * Test that cacheCounts, skipCount, trackChanges preserve their default
-   * values.
+   * Test if cacheCounts, skipCount, trackChanges preserve their default values.
    */
   public function testDefaultPropertiesValues() {
     $this->migrationConfiguration['id'] = 'test_migration';
@@ -499,8 +498,9 @@ class StubSourcePlugin extends SourcePluginBase {
 }
 
 /**
- * Stubbed source plugin with a generator as iterator. Also it overwrites the
- * $skipCount, $cacheCounts and $trackChanges properties.
+ * Stubbed source plugin with a generator as iterator.
+ *
+ * Also it overwrites the $skipCount, $cacheCounts and $trackChanges properties.
  */
 class StubSourceGeneratorPlugin extends StubSourcePlugin {
 

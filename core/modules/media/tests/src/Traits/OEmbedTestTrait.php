@@ -39,6 +39,8 @@ trait OEmbedTestTrait {
   }
 
   /**
+   * Locks HTTP client to fixtures.
+   *
    * Configures the http_client service so that all requests are carried out
    * relative to the URL of the fixtures directory. For example, after calling
    * this method, a request for foobar.html will actually request

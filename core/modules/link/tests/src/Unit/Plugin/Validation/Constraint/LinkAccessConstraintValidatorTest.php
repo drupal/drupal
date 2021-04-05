@@ -16,6 +16,8 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 class LinkAccessConstraintValidatorTest extends UnitTestCase {
 
   /**
+   * Tests validation.
+   *
    * Tests the \Drupal\link\Plugin\Validation\Constraint\LinkAccessConstraintValidator::validate()
    * method.
    *
