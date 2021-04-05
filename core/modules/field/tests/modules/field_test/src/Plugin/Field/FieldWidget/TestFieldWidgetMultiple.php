@@ -94,6 +94,7 @@ class TestFieldWidgetMultiple extends WidgetBase {
 
   /**
    * {@inheritdoc}
+   *
    * Used in \Drupal\field\Tests\EntityReference\EntityReferenceAdminTest::testAvailableFormatters().
    */
   public static function isApplicable(FieldDefinitionInterface $field_definition) {

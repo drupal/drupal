@@ -12,6 +12,8 @@ use Drupal\tour\Entity\Tour;
 use Drupal\user\Entity\Role;
 
 /**
+ * Tests config install profile override.
+ *
  * Tests installation and removal of configuration objects in install, disable
  * and uninstall functionality.
  *

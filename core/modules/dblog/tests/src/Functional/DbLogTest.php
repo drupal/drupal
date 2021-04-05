@@ -14,8 +14,9 @@ use Drupal\error_test\Controller\ErrorTestController;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Generate events and verify dblog entries; verify user access to log reports
- * based on permissions.
+ * Generate events and verify dblog entries.
+ *
+ * Verify user access to log reports based on permissions.
  *
  * @group dblog
  */
@@ -386,8 +387,7 @@ class DbLogTest extends BrowserTestBase {
   }
 
   /**
-   * Tests the escaping of links in the operation row of a database log detail
-   * page.
+   * Tests escaping of links in the operation row of a database log detail page.
    */
   private function verifyLinkEscaping() {
     $link = Link::fromTextAndUrl('View', Url::fromRoute('entity.node.canonical', ['node' => 1]))->toString();

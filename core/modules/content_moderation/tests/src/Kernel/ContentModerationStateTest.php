@@ -534,8 +534,7 @@ class ContentModerationStateTest extends KernelTestBase {
   }
 
   /**
-   * Tests that a non-translatable entity type without a langcode can be
-   * moderated.
+   * Tests that non-translatable entity type without langcode can be moderated.
    */
   public function testNonLangcodeEntityTypeModeration() {
     // Unset the langcode entity key for 'entity_test_rev'.

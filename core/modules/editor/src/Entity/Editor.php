@@ -35,8 +35,7 @@ use Drupal\editor\EditorInterface;
 class Editor extends ConfigEntityBase implements EditorInterface {
 
   /**
-   * The machine name of the text format with which this configured text editor
-   * is associated.
+   * Machine name of text format for this configured text editor.
    *
    * @var string
    *

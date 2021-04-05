@@ -5,8 +5,7 @@ namespace Drupal\Tests\contextual\Kernel;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Tests all edge cases of converting from #contextual_links to ids and vice
- * versa.
+ * Tests edge cases of converting from #contextual_links to ids and vice versa.
  *
  * @group contextual
  */

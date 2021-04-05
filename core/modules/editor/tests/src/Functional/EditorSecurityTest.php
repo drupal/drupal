@@ -62,8 +62,9 @@ class EditorSecurityTest extends BrowserTestBase {
   protected $normalUser;
 
   /**
-   * User with access to Restricted HTML text format, dangerous tags allowed
-   * with text editor.
+   * User with access to Restricted HTML text format.
+   *
+   * Dangerous tags allowed with text editor.
    *
    * @var \Drupal\user\UserInterface
    */
