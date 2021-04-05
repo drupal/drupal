@@ -48,6 +48,7 @@ class ContentModerationStateTest extends KernelTestBase {
     'text',
     'workflows',
     'path_alias',
+    'taxonomy',
   ];
 
   /**
@@ -785,6 +786,16 @@ class ContentModerationStateTest extends KernelTestBase {
     if ($published !== NULL && $entity instanceof EntityPublishedInterface) {
       $this->assertSame($published, $entity->isPublished());
     }
+  }
+
+  /**
+   * Tests that the 'taxonomy_term' entity type cannot be moderated.
+   */
+  public function testTaxonomyTermEntityTypeModeration() {
+    /** @var \Drupal\content_moderation\ModerationInformationInterface $moderation_info */
+    $moderation_info = \Drupal::service('content_moderation.moderation_information');
+    $entity_type = \Drupal::entityTypeManager()->getDefinition('taxonomy_term');
+    $this->assertFalse($moderation_info->canModerateEntitiesOfEntityType($entity_type));
   }
 
 }

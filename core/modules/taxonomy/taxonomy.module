@@ -49,16 +49,6 @@ function taxonomy_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_entity_type_alter().
- */
-function taxonomy_entity_type_alter(array &$entity_types) {
-  // @todo Moderation is disabled for taxonomy terms until integration is
-  //   enabled for them.
-  //   @see https://www.drupal.org/project/drupal/issues/3047110
-  $entity_types['taxonomy_term']->setHandlerClass('moderation', '');
-}
-
-/**
  * Entity URI callback.
  */
 function taxonomy_term_uri($term) {

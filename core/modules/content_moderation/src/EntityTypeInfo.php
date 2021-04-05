@@ -138,9 +138,13 @@ class EntityTypeInfo implements ContainerInjectionInterface {
       // Workspace entities can not be moderated because they use string IDs.
       // @see \Drupal\content_moderation\Entity\ContentModerationState::baseFieldDefinitions()
       // where the target entity ID is defined as an integer.
+      // @todo Moderation is disabled for taxonomy terms until integration is
+      //   enabled for them.
+      // @see https://www.drupal.org/project/drupal/issues/3047110
       $entity_type_to_exclude = [
         'path_alias',
         'workspace',
+        'taxonomy_term',
       ];
       if ($entity_type->isRevisionable() && !$entity_type->isInternal() && !in_array($entity_type_id, $entity_type_to_exclude)) {
         $entity_types[$entity_type_id] = $this->addModerationToEntityType($entity_type);
