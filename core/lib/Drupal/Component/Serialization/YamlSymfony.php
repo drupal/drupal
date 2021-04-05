@@ -19,7 +19,7 @@ class YamlSymfony implements SerializationInterface {
     try {
       // Set the indentation to 2 to match Drupal's coding standards.
       $yaml = new Dumper(2);
-      return $yaml->dump($data, PHP_INT_MAX, 0, SymfonyYaml::DUMP_EXCEPTION_ON_INVALID_TYPE);
+      return $yaml->dump($data, PHP_INT_MAX, 0, SymfonyYaml::DUMP_EXCEPTION_ON_INVALID_TYPE | SymfonyYaml::DUMP_MULTI_LINE_LITERAL_BLOCK);
     }
     catch (\Exception $e) {
       throw new InvalidDataTypeException($e->getMessage(), $e->getCode(), $e);
