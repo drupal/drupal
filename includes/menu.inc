@@ -2595,7 +2595,7 @@ function menu_get_active_breadcrumb() {
 
     // Don't show a link to the current page in the breadcrumb trail.
     $end = end($active_trail);
-    if ($item['href'] == $end['href']) {
+    if (is_array($end) && $item['href'] == $end['href']) {
       array_pop($active_trail);
     }
 
