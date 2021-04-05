@@ -12,8 +12,9 @@ use Drupal\Core\Database\Database;
 class TestDatabase {
 
   /**
-   * A random number used to ensure that test fixtures are unique to each test
-   * method.
+   * A random number.
+   *
+   * Used to ensure that test fixtures are unique to each test method.
    *
    * @var int
    */

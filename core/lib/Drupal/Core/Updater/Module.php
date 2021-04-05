@@ -5,8 +5,9 @@ namespace Drupal\Core\Updater;
 use Drupal\Core\Url;
 
 /**
- * Defines a class for updating modules using
- * Drupal\Core\FileTransfer\FileTransfer classes via authorize.php.
+ * Defines a class for updating modules.
+ *
+ * Uses Drupal\Core\FileTransfer\FileTransfer classes via authorize.php.
  */
 class Module extends Updater implements UpdaterInterface {
 
