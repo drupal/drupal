@@ -23,8 +23,9 @@ use Drupal\Core\Form\OptGroup;
 abstract class OptionsWidgetBase extends WidgetBase {
 
   /**
-   * Abstract over the actual field columns, to allow different field types to
-   * reuse those widgets.
+   * Abstract over the actual field columns.
+   *
+   * Allows different field types to reuse those widgets.
    *
    * @var string
    */

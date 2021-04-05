@@ -10,8 +10,7 @@ namespace Drupal\Core\Entity;
 trait SynchronizableEntityTrait {
 
   /**
-   * Whether this entity is being created, updated or deleted through a
-   * synchronization process.
+   * Is entity being created updated or deleted through synchronization process.
    *
    * @var bool
    */

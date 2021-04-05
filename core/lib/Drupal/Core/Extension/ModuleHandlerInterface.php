@@ -379,8 +379,10 @@ interface ModuleHandlerInterface {
   public function alterDeprecated($description, $type, &$data, &$context1 = NULL, &$context2 = NULL);
 
   /**
-   * Returns an array of directories for all enabled modules. Useful for
-   * tasks such as finding a file that exists in all module directories.
+   * Returns an array of directories for all enabled modules.
+   *
+   * Useful for tasks such as finding a file that exists in all module
+   * directories.
    *
    * @return array
    */

@@ -4,21 +4,20 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 
 /**
  * Provides a common base class for entity view and form displays.
  */
 abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDisplayInterface {
 
-  /**
-   * The 'mode' for runtime EntityDisplay objects used to render entities with
-   * arbitrary display options rather than a configured view mode or form mode.
-   *
-   * @todo Prevent creation of a mode with this ID
-   *   https://www.drupal.org/node/2410727
-   */
+  // The 'mode' for runtime EntityDisplay objects used to render entities with
+  // arbitrary display options rather than a configured view mode or form mode.
+  //
+  // @todo Prevent creation of a mode with this ID
+  // https://www.drupal.org/node/2410727
+
   const CUSTOM_MODE = '_custom';
 
   /**
@@ -57,8 +56,10 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   protected $mode = self::CUSTOM_MODE;
 
   /**
-   * Whether this display is enabled or not. If the entity (form) display
-   * is disabled, we'll fall back to the 'default' display.
+   * Whether this display is enabled or not.
+   *
+   * If the entity (form) display is disabled, we'll fall back to the 'default'
+   * display.
    *
    * @var bool
    */
@@ -79,8 +80,10 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   protected $hidden = [];
 
   /**
-   * The original view or form mode that was requested (case of view/form modes
-   * being configured to fall back to the 'default' display).
+   * The original view or form mode that was requested.
+   *
+   * Case of view/form modes being configured to fall back to the 'default' \
+   * display.
    *
    * @var string
    */

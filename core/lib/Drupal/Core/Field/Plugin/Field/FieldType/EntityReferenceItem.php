@@ -635,9 +635,9 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
   }
 
   /**
-   * Render API callback: Processes the field settings form.
+   * Render API callback.
    *
-   * Allows access to the form state.
+   * Processes the field settings form and allows access to the form state.
    *
    * @see static::fieldSettingsForm()
    */
@@ -647,8 +647,9 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
   }
 
   /**
-   * Adds entity_reference specific properties to AJAX form elements from the
-   * field settings form.
+   * Adds entity_reference specific properties to AJAX form elements.
+   *
+   * Those AJAX form elements are from the field settings form.
    *
    * @see static::fieldSettingsAjaxProcess()
    */
@@ -667,9 +668,10 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
   }
 
   /**
-   * Render API callback: Moves entity_reference specific Form API elements
-   * (i.e. 'handler_settings') up a level for easier processing by the
-   * validation and submission handlers.
+   * Render API callback.
+   *
+   * Moves entity_reference specific Form API elements (i.e. 'handler_settings')
+   * up a level for easier processing by the validation and submission handlers.
    *
    * @see _entity_reference_field_settings_process()
    */

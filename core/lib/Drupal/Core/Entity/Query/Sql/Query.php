@@ -41,8 +41,9 @@ class Query extends QueryBase implements QueryInterface {
   protected $sqlFields = [];
 
   /**
-   * An array of strings added as to the group by, keyed by the string to avoid
-   * duplicates.
+   * An array of strings added as to the group by.
+   *
+   * Keyed by the string to avoid duplicates.
    *
    * @var array
    */

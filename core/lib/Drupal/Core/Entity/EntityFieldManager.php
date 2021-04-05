@@ -63,8 +63,10 @@ class EntityFieldManager implements EntityFieldManagerInterface {
   protected $activeFieldStorageDefinitions;
 
   /**
-   * An array keyed by entity type. Each value is an array whose keys are
-   * field names and whose value is an array with two entries:
+   * An array keyed by entity type.
+   *
+   * Each value is an array whose keys are field names and whose value is an
+   * array with two entries:
    *   - type: The field type.
    *   - bundles: The bundles in which the field appears.
    *
@@ -73,8 +75,10 @@ class EntityFieldManager implements EntityFieldManagerInterface {
   protected $fieldMap = [];
 
   /**
-   * An array keyed by field type. Each value is an array whose key are entity
-   * types including arrays in the same form that $fieldMap.
+   * An array keyed by field type.
+   *
+   * Each value is an array whose key are entity types including arrays in the
+   * same form that $fieldMap.
    *
    * It helps access the mapping between types and fields by the field type.
    *
