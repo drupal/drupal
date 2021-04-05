@@ -5,8 +5,9 @@ namespace Drupal\comment\Plugin\views\sort;
 use Drupal\views\Plugin\views\sort\SortPluginBase;
 
 /**
- * Sort handler to sort by last comment name which might be in 2 different
- * fields.
+ * Sort handler.
+ *
+ * Sorts by last comment name which might be in 2 different fields.
  *
  * @ingroup views_sort_handlers
  *

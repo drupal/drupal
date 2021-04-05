@@ -48,6 +48,8 @@ class BlockRegionTest extends UnitTestCase {
   }
 
   /**
+   * Tests identical themes and existing region.
+   *
    * If the source and destination themes are identical, the region should only
    * be passed through if it actually exists in the destination theme.
    *
@@ -58,6 +60,8 @@ class BlockRegionTest extends UnitTestCase {
   }
 
   /**
+   *  Tests identical themes and non-existing region.
+   *
    * If the source and destination themes are identical, the region should be
    * changed to 'content' if it doesn't exist in the destination theme.
    *

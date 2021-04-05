@@ -2,8 +2,10 @@
 
 /**
  * @file
- * Dummy module emptying comment titles to test for appropriate and accessible
- * markup in edge case scenarios where comments have empty titles.
+ * Dummy module.
+ *
+ * Emptying comment titles to test for appropriate and accessible markup in edge
+ * case scenarios where comments have empty titles.
  */
 
 /**

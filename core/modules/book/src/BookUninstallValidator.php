@@ -8,8 +8,10 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 
 /**
- * Prevents book module from being uninstalled whilst any book nodes exist or
- * there are any book outline stored.
+ * Prevents book module from being uninstalled under certain conditions.
+ *
+ * These conditions are when any book nodes exist or there are any book outline
+ * stored.
  */
 class BookUninstallValidator implements ModuleUninstallValidatorInterface {
 
