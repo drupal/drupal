@@ -3,6 +3,8 @@
 namespace Drupal\Core\Queue;
 
 /**
+ * QueueGarbageCollectionInterface.
+ *
  * If the Drupal 'queue' service implements this interface, the
  * garbageCollection() method will be called during cron.
  *
