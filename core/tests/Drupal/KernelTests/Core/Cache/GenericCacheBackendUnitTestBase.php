@@ -433,8 +433,10 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
   }
 
   /**
-   * Test Drupal\Core\Cache\CacheBackendInterface::delete() and
-   * Drupal\Core\Cache\CacheBackendInterface::deleteMultiple().
+   * Tests:
+   *
+   * - Drupal\Core\Cache\CacheBackendInterface::delete()
+   * - Drupal\Core\Cache\CacheBackendInterface::deleteMultiple().
    */
   public function testDeleteMultiple() {
     $backend = $this->getCacheBackend();
@@ -500,8 +502,10 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
   }
 
   /**
-   * Test Drupal\Core\Cache\CacheBackendInterface::invalidate() and
-   * Drupal\Core\Cache\CacheBackendInterface::invalidateMultiple().
+   * Tests:
+   *
+   * - Drupal\Core\Cache\CacheBackendInterface::invalidate()
+   * - Drupal\Core\Cache\CacheBackendInterface::invalidateMultiple().
    */
   public function testInvalidate() {
     $backend = $this->getCacheBackend();

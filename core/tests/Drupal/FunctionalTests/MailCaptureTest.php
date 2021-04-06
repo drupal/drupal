@@ -7,8 +7,11 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\Test\AssertMailTrait;
 
 /**
- * Tests the SimpleTest email capturing logic, the assertMail assertion and the
- * drupalGetMails function.
+ * Tests the SimpleTest following:
+ *
+ * - email capturing logic
+ * - assertMail assertion
+ * - drupalGetMails function.
  *
  * @group browsertestbase
  */

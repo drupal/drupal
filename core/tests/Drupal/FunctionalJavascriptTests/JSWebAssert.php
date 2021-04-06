@@ -165,8 +165,9 @@ JS;
   }
 
   /**
-   * Waits for a button (input[type=submit|image|button|reset], button) with
-   * specified locator and returns it.
+   * Waits for a button specified locator and returns it.
+   *
+   * Button with (input[type=submit|image|button|reset], button).
    *
    * @param string $locator
    *   The button ID, value or alt string.

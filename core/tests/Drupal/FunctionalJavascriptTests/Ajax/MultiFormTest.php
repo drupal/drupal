@@ -8,6 +8,8 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
+ * Multi form test.
+ *
  * Tests that AJAX-enabled forms work when multiple instances of the same form
  * are on a page.
  *

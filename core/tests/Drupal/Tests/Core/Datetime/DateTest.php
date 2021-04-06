@@ -424,8 +424,10 @@ class DateTest extends UnitTestCase {
   }
 
   /**
-   * Creates a UNIX timestamp given a date and time string in the format
-   * year-month-day hour:minute:seconds (e.g. 2013-12-11 10:09:08).
+   * Creates a UNIX timestamp given a date and time string.
+   *
+   * String is in the format year-month-day hour:minute:seconds
+   * (e.g. 2013-12-11 10:09:08).
    *
    * @param string $dateTimeString
    *   The formatted date and time string.

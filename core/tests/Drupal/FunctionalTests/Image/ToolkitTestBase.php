@@ -82,6 +82,8 @@ abstract class ToolkitTestBase extends BrowserTestBase {
   }
 
   /**
+   * Assert toolkit operations called.
+   *
    * Assert that all of the specified image toolkit operations were called
    * exactly once once, other values result in failure.
    *
