@@ -227,7 +227,7 @@ class TextSummaryTest extends KernelTestBase {
   }
 
   /**
-   * Test invalide filter format.
+   * Test invalid filter format.
    *
    * Test text_summary() returns an empty string without any error when called
    * with an invalid format.
