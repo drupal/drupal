@@ -275,6 +275,8 @@ class FilterNumericTest extends ViewsKernelTestBase {
   }
 
   /**
+   * Test filter numeric exposed grouped regular expression.
+   *
    * Tests the numeric filter handler with the 'regular_expression' operator
    * to grouped exposed filters.
    */

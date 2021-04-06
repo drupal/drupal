@@ -200,9 +200,10 @@ function views_ui_nojs_submit($form, FormStateInterface $form_state) {
 }
 
 /**
- * Add a <select> dropdown for a given section, allowing the user to
- * change whether this info is stored on the default display or on
- * the current display.
+ * Add a <select> dropdown for a given section.
+ *
+ * This allowes the user to change whether this info is stored on the default
+ * display or on the current display.
  */
 function views_ui_standard_display_dropdown(&$form, FormStateInterface $form_state, $section) {
   $view = $form_state->get('view');
@@ -269,8 +270,9 @@ function views_ui_standard_display_dropdown(&$form, FormStateInterface $form_sta
 }
 
 /**
- * Create the menu path for one of our standard AJAX forms based upon known
- * information about the form.
+ * Create the menu path for one of our standard AJAX forms.
+ *
+ * Creation is based upon known information about the form.
  *
  * @return \Drupal\Core\Url
  *   The URL object pointing to the form URL.

@@ -151,6 +151,8 @@ class FilterTest extends ViewTestBase {
   }
 
   /**
+   * Test in operator select all options.
+   *
    * Test no error message is displayed when all options are selected in an
    * exposed filter.
    */

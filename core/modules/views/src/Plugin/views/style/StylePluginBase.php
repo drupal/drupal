@@ -246,8 +246,7 @@ abstract class StylePluginBase extends PluginBase {
   }
 
   /**
-   * Should the output of the style plugin be rendered even if it's an empty
-   * view.
+   * Should the output of style plugin be rendered even if it's an empty view.
    */
   public function evenEmpty() {
     return !empty($this->definition['even empty']);
@@ -416,6 +415,8 @@ abstract class StylePluginBase extends PluginBase {
   }
 
   /**
+   * Build sort.
+   *
    * Called by the view builder to see if this style handler wants to
    * interfere with the sorts. If so it should build; if it returns
    * any non-TRUE value, normal sorting will NOT be added to the query.
@@ -425,6 +426,8 @@ abstract class StylePluginBase extends PluginBase {
   }
 
   /**
+   * Build sort post.
+   *
    * Called by the view builder to let the style build a second set of
    * sorts that will come after any other sorts in the view.
    */

@@ -3,8 +3,7 @@
 namespace Drupal\Tests\views\Functional\Wizard;
 
 /**
- * Tests the ability of the views wizard to specify the number of items per
- * page.
+ * Tests the ability of views wizard to specify the number of items per page.
  *
  * @group views
  */

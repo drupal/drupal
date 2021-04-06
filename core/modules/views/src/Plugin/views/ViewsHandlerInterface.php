@@ -30,8 +30,9 @@ interface ViewsHandlerInterface extends ViewsPluginInterface {
   public function getEntityType();
 
   /**
-   * Determines if the handler is considered 'broken', meaning it's a
-   * placeholder used when a handler can't be found.
+   * Determines if the handler is considered 'broken'.
+   *
+   * Broken means it's a placeholder used when a handler can't be found.
    */
   public function broken();
 
@@ -111,8 +112,9 @@ interface ViewsHandlerInterface extends ViewsPluginInterface {
   public function showExposeForm(&$form, FormStateInterface $form_state);
 
   /**
-   * Called just prior to query(), this lets a handler set up any relationship
-   * it needs.
+   * Called just prior to query().
+   *
+   * This lets a handler set up any relationship it needs.
    */
   public function setRelationship();
 

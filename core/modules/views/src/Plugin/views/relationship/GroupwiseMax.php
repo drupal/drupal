@@ -8,7 +8,9 @@ use Drupal\views\Views;
 use Drupal\views\Entity\View;
 
 /**
- * Relationship handler that allows a groupwise maximum of the linked in table.
+ * Relationship handler.
+ *
+ * It allows a groupwise maximum of the linked in table.
  * For a definition, see:
  * http://dev.mysql.com/doc/refman/5.0/en/example-maximum-column-group-row.html
  * In lay terms, instead of joining to get all matching records in the linked

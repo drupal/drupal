@@ -46,6 +46,8 @@ use Drupal\views\ViewExecutable;
 abstract class FilterPluginBase extends HandlerBase implements CacheableDependencyInterface {
 
   /**
+   * The value.
+   *
    * Contains the actual value of the field,either configured in the views ui
    * or entered in the exposed filters.
    */
@@ -185,6 +187,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
 
   /**
    * Determine if a filter can be converted into a group.
+   *
    * Only exposed filters with operators available can be converted into groups.
    */
   protected function canBuildGroup() {
@@ -200,6 +203,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
 
   /**
    * Provide the basic form which calls through to subforms.
+   *
    * If overridden, it is best to call through to the parent,
    * or to at least make sure all of the functions in this form
    * are called.
@@ -846,8 +850,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
   }
 
   /**
-   * Build a form containing a group of operator | values to apply as a
-   * single filter.
+   * Build form containing group of operator | values to apply as single filter.
    */
   public function groupForm(&$form, FormStateInterface $form_state) {
     if (!empty($this->options['group_info']['optional']) && !$this->multipleExposedInput()) {
@@ -1269,8 +1272,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
   }
 
   /**
-   * Make some translations to a form item to make it more suitable to
-   * exposing.
+   * Make some translations to a form item to make it more suitable to exposing.
    */
   protected function exposedTranslate(&$form, $type) {
     if (!isset($form['#type'])) {
@@ -1334,8 +1336,10 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
   }
 
   /**
-   * Tell the renderer about our exposed form. This only needs to be
-   * overridden for particularly complex forms. And maybe not even then.
+   * Tell the renderer about our exposed form.
+   *
+   * This only needs to be overridden for particularly complex forms. And maybe
+   * not even then.
    *
    * @return array|null
    *   For standard exposed filters. An array with the following keys:
@@ -1413,6 +1417,8 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
   }
 
   /**
+   * Group multiple exposed input.
+   *
    * Returns the options available for a grouped filter that users checkboxes
    * as widget, and therefore has to be applied several times, one per
    * item selected.
@@ -1425,6 +1431,8 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
   }
 
   /**
+   * Multiple exposed input
+   *
    * Returns TRUE if users can select multiple groups items of a
    * grouped exposed filter.
    */
@@ -1434,6 +1442,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
 
   /**
    * If set to remember exposed input in the session, store it there.
+   *
    * This function is similar to storeExposedInput but modified to
    * work properly when the filter is a group.
    */

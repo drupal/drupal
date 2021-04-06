@@ -128,6 +128,8 @@ class Combine extends StringFilter {
   }
 
   /**
+   * Operation equal.
+   *
    * By default things like opEqual uses add_where, that doesn't support
    * complex expressions, so override opEqual (and all operators below).
    */

@@ -126,6 +126,7 @@ abstract class RowPluginBase extends PluginBase {
 
   /**
    * Perform any necessary changes to the form values prior to storage.
+   *
    * There is no need for this function to actually store the data.
    */
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {}
@@ -154,8 +155,10 @@ abstract class RowPluginBase extends PluginBase {
   public function preRender($result) {}
 
   /**
-   * Render a row object. This usually passes through to a theme template
-   * of some form, but not always.
+   * Render a row object.
+   *
+   * This usually passes through to a theme template of some form, but not
+   * always.
    *
    * @param object $row
    *   A single row of the query result, so an element of $view->result.
@@ -174,7 +177,3 @@ abstract class RowPluginBase extends PluginBase {
   }
 
 }
-
-/**
- * @}
- */
