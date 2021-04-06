@@ -202,7 +202,7 @@ function views_ui_nojs_submit($form, FormStateInterface $form_state) {
 /**
  * Add a <select> dropdown for a given section.
  *
- * This allowes the user to change whether this info is stored on the default
+ * This allows the user to change whether this info is stored on the default
  * display or on the current display.
  */
 function views_ui_standard_display_dropdown(&$form, FormStateInterface $form_state, $section) {

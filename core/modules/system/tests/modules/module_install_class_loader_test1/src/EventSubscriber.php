@@ -5,7 +5,7 @@ namespace Drupal\module_install_class_loader_test1;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Event subscriber that does different things depending on classes existance.
+ * Event subscriber that does different things depending on classes existence.
  */
 class EventSubscriber implements EventSubscriberInterface {
 

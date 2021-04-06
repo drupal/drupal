@@ -9,7 +9,7 @@ use Drupal\Tests\BrowserTestBase;
 /**
  * Tests that the jail is respected.
  *
- * Also teststhat protocols using recursive file move operations work.
+ * Also tests that protocols using recursive file move operations work.
  *
  * @group FileTransfer
  */

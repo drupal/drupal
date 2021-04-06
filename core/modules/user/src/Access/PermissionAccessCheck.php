@@ -8,7 +8,7 @@ use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\Routing\Route;
 
 /**
- * Permisson access check.
+ * Permission access check.
  *
  * Determines access to routes based on permissions defined via
  * $module.permissions.yml files.

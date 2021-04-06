@@ -21,7 +21,7 @@ class AnnotatedClassDiscovery extends ComponentAnnotatedClassDiscovery {
   protected $directorySuffix = '';
 
   /**
-   * Namespoce suffix.
+   * The namespace suffix.
    *
    * A suffix to append to each base namespace, to obtain the namespaces where
    * plugins are found.

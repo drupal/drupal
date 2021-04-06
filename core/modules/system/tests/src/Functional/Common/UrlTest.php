@@ -12,7 +12,7 @@ use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Confirm that these closses work correctly with various input.
+ * Confirm that these classes work correctly with various input.
  *
  * \Drupal\Core\Url,
  * \Drupal\Component\Utility\UrlHelper::filterQueryParameters(),

@@ -357,7 +357,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
   }
 
   /**
-   * Has extro options.
+   * Has extra options.
    *
    * If a handler has 'extra options' it will get a little settings widget and
    * another form called extra_options.
