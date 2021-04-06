@@ -64,6 +64,8 @@ trait OEmbedTestTrait {
   }
 
   /**
+   * Hijack provider endpoints.
+   *
    * Ensures that all oEmbed provider endpoints defined in the fixture
    * providers.json will use the media_test_oembed.resource.get route as their
    * URL.

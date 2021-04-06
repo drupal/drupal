@@ -24,6 +24,8 @@ use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\ResponseInterface;
 
 /**
+ * EntityResourceTestBase.
+ *
  * Even though there is the generic EntityResource, it's necessary for every
  * entity type to have its own test, because they each have different fields,
  * validation constraints, et cetera. It's not because the generic case works,
@@ -90,6 +92,8 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   protected static $patchProtectedFieldNames;
 
   /**
+   * The unique field names.
+   *
    * The fields that need a different (random) value for each new entity created
    * by a POST request.
    *
@@ -98,8 +102,9 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   protected static $uniqueFieldNames = [];
 
   /**
-   * Optionally specify which field is the 'label' field. Some entities do not
-   * specify a 'label' entity key. For example: User.
+   * Optionally specify which field is the 'label' field.
+   *
+   * Some entities do not specify a 'label' entity key. For example: User.
    *
    * @see ::getInvalidNormalizedEntityToCreate
    *

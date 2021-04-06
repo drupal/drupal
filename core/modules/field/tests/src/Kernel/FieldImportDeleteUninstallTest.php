@@ -108,8 +108,7 @@ class FieldImportDeleteUninstallTest extends FieldKernelTestBase {
   }
 
   /**
-   * Tests purging already deleted field storages and fields during a config
-   * import.
+   * Tests purging already deleted field storages and fields in a config import.
    */
   public function testImportAlreadyDeletedUninstall() {
     // Create a telephone field for validation.
