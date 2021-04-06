@@ -37,8 +37,9 @@ interface ViewsHandlerInterface extends ViewsPluginInterface {
   public function broken();
 
   /**
-   * Ensure the main table for this handler is in the query. This is used
-   * a lot.
+   * Ensure the main table for this handler is in the query.
+   *
+   * This is used a lot.
    */
   public function ensureMyTable();
 

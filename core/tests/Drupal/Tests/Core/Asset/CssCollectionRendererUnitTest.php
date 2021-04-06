@@ -296,8 +296,9 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
 }
 
 /**
- * Temporary mock for file_create_url(), until that is moved into
- * Component/Utility.
+ * Temporary mock for file_create_url().
+ *
+ * Until that is moved into Component/Utility.
  */
 if (!function_exists('Drupal\Tests\Core\Asset\file_create_url')) {
 
@@ -308,7 +309,7 @@ if (!function_exists('Drupal\Tests\Core\Asset\file_create_url')) {
 }
 
 /**
- * Temporary mock of file_url_transform_relative.
+ * Temporary mock of file_url_transform_relative().
  *
  * Until that is moved into Component/Utility.
  */
