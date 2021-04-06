@@ -183,8 +183,10 @@ class EntitySerializationTest extends NormalizerTestBase {
   }
 
   /**
-   * Tests user normalization, using the entity_serialization_test module to
-   * override some default access controls.
+   * Tests user normalization.
+   *
+   * Using the entity_serialization_test module to override some default access
+   * controls.
    */
   public function testUserNormalize() {
     // Test password isn't available.

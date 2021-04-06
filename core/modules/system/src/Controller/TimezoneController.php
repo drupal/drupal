@@ -10,8 +10,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class TimezoneController {
 
   /**
-   * Retrieve a JSON object containing a time zone name given a timezone
-   * abbreviation.
+   * Retrieve a JSON object.
+   *
+   * JSON object contains a time zone name given a timezone abbreviation.
    *
    * @param string $abbreviation
    *   Time zone abbreviation.

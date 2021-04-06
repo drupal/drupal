@@ -25,6 +25,8 @@ class ElementsLabelsTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * Test form labels.
+   *
    * Test form elements, labels, title attributes and required marks output
    * correctly and have the correct label option class if needed.
    */

@@ -369,8 +369,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
   }
 
   /**
-   * Form submission handler for the reindex button on the search admin settings
-   * form.
+   * Form submission handler for reindex button on search admin settings form.
    */
   public function searchAdminReindexSubmit(array &$form, FormStateInterface $form_state) {
     // Send the user to the confirmation page.

@@ -399,6 +399,8 @@ class ShortcutLinksTest extends ShortcutTestBase {
   }
 
   /**
+   * Verify access shortcuts permission for edit pages.
+   *
    * Tests that the 'access shortcuts' permission is required for shortcut set
    * administration page access.
    */
@@ -423,6 +425,8 @@ class ShortcutLinksTest extends ShortcutTestBase {
   }
 
   /**
+   * Test shortcut block access.
+   *
    * Tests that the 'access shortcuts' permission is required to access the
    * shortcut block.
    */

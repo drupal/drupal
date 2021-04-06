@@ -10,8 +10,9 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Create a entity with revisions and test viewing, saving, reverting, and
- * deleting revisions.
+ * Create a entity with revisions.
+ *
+ * Test viewing, saving, reverting, and deleting revisions.
  *
  * @group Entity
  */

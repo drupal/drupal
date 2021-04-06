@@ -2,9 +2,10 @@
 
 /**
  * @file
- * Test module setting up two tests, one for checking if the entity $langcode is
- * being passed on and another one sets up the alternate verb forms for the
- * stemming test.
+ * Test module setting up two tests.
+ *
+ * One for checking if the entity $langcode is being passed on and another one
+ * sets up the alternate verb forms for the stemming test.
  */
 
 /**
