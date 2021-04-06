@@ -267,8 +267,9 @@ class CssOptimizerUnitTest extends UnitTestCase {
 }
 
 /**
- * Temporary mock for file_create_url(), until that is moved into
- * Component/Utility.
+ * Temporary mock for file_create_url().
+ *
+ * Until that is moved into Component/Utility.
  */
 if (!function_exists('Drupal\Tests\Core\Asset\file_create_url')) {
 
@@ -279,8 +280,10 @@ if (!function_exists('Drupal\Tests\Core\Asset\file_create_url')) {
 }
 
 /**
- * Temporary mock of file_url_transform_relative, until that is moved into
- * Component/Utility.
+ * Temporary mock of file_url_transform_relative().
+ *
+ *
+ * Until that is moved into Component/Utility.
  */
 if (!function_exists('Drupal\Tests\Core\Asset\file_url_transform_relative')) {
 
@@ -291,6 +294,8 @@ if (!function_exists('Drupal\Tests\Core\Asset\file_url_transform_relative')) {
 }
 
 /**
+ * Hack for Simpletest test runner.
+ *
  * CssCollectionRenderer uses file_create_url() & file_url_transform_relative(),
  * which *are* available when using the Simpletest test runner, but not when
  * using the PHPUnit test runner; hence this hack.
@@ -299,10 +304,8 @@ namespace Drupal\Core\Asset;
 
 if (!function_exists('Drupal\Core\Asset\file_create_url')) {
 
-  /**
-   * Temporary mock for file_create_url(), until that is moved into
-   * Component/Utility.
-   */
+   // Temporary mock for file_create_url(), until that is moved into
+   // Component/Utility.
   function file_create_url($uri) {
     return \Drupal\Tests\Core\Asset\file_create_url($uri);
   }
@@ -310,10 +313,8 @@ if (!function_exists('Drupal\Core\Asset\file_create_url')) {
 }
 if (!function_exists('Drupal\Core\Asset\file_url_transform_relative')) {
 
-  /**
-   * Temporary mock of file_url_transform_relative, until that is moved into
-   * Component/Utility.
-   */
+   // Temporary mock of file_url_transform_relative(), until that is moved into
+   // Component/Utility.
   function file_url_transform_relative($uri) {
     return \Drupal\Tests\Core\Asset\file_url_transform_relative($uri);
   }

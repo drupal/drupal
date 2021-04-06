@@ -64,6 +64,8 @@ class ModuleImplementsAlterTest extends KernelTestBase {
   }
 
   /**
+   * Test module implements alter non existing implementation.
+   *
    * Tests what happens if hook_module_implements_alter() adds a non-existing
    * function to the implementations.
    *

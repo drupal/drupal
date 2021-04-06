@@ -63,8 +63,9 @@ class TableTest extends KernelTestBase {
   }
 
   /**
-   * Tests that the table header is printed correctly even if there are no rows,
-   * and that the empty text is displayed correctly.
+   * Tests that the table header is printed correctly even if there are no rows.
+   *
+   * Also tests that the empty text is displayed correctly.
    */
   public function testThemeTableWithEmptyMessage() {
     $header = [

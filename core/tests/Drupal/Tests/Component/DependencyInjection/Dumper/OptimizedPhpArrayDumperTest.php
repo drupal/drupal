@@ -702,6 +702,8 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
 }
 
 /**
+ * Define a dummy ExpressionLanguage component.
+ *
  * As Drupal Core does not ship with ExpressionLanguage component we need to
  * define a dummy, else it cannot be tested.
  */

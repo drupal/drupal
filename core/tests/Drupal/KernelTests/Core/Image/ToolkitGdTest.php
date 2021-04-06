@@ -9,8 +9,10 @@ use Drupal\Core\Site\Settings;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Tests that core image manipulations work properly: scale, resize, rotate,
- * crop, scale and crop, and desaturate.
+ * Tests that core image manipulations work properly.
+ *
+ * Core image manipulations are : scale, resize, rotate, crop, scale and crop,
+ * and desaturate.
  *
  * @group Image
  */
@@ -108,6 +110,8 @@ class ToolkitGdTest extends KernelTestBase {
   }
 
   /**
+   * Test manipulations.
+   *
    * Since PHP can't visually check that our images have been manipulated
    * properly, build a list of expected color values for each of the corners and
    * the expected height and widths for the final images.

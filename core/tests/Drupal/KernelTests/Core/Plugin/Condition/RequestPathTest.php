@@ -9,8 +9,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Tests that the Request Path Condition, provided by the system module, is
- * working properly.
+ * Tests that the Request Path Condition is working properly.
+ *
+ * The Request Path Condition is provided by the system module.
  *
  * @group Plugin
  */

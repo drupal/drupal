@@ -182,8 +182,10 @@ class DateTimePlusTest extends TestCase {
   }
 
   /**
-   * Assertion helper for testTimestamp and testDateTimestamp since they need
-   * different dataProviders.
+   * Assertion helper.
+   *
+   * Used for testTimestamp and testDateTimestamp since they need different
+   * dataProviders.
    *
    * @param \Drupal\Component\Datetime\DateTimePlus $date
    *   DateTimePlus to test.
@@ -267,6 +269,7 @@ class DateTimePlusTest extends TestCase {
 
   /**
    * Tests that DrupalDateTime can detect the right timezone to use.
+   *
    * When specified or not.
    *
    * @param mixed $input
@@ -287,8 +290,9 @@ class DateTimePlusTest extends TestCase {
   }
 
   /**
-   * Test that DrupalDateTime can detect the right timezone to use when
-   * constructed from a datetime object.
+   * Test that DrupalDateTime can detect the right timezone to use.
+   *
+   * But only when the DrupalDateTime is constructed from a datetime object.
    */
   public function testDateTimezoneWithDateTimeObject() {
     // Create a date object with another date object.

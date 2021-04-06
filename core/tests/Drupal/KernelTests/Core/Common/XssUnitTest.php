@@ -6,8 +6,10 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Confirm that \Drupal\Component\Utility\Xss::filter() and check_url() work
- * correctly, including invalid multi-byte sequences.
+ * Confirm that these work correctly, including invalid multi-byte sequences.
+ *
+ * - \Drupal\Component\Utility\Xss::filter()
+ * - check_url()
  *
  * @group Common
  */

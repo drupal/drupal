@@ -209,8 +209,7 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
   }
 
   /**
-   * Test that the delete tags operation is propagated to all backends
-   * in the chain.
+   * Test that delete tags operation is propagated to all backends in the chain.
    */
   public function testDeleteTagsPropagation() {
     // Create two cache entries with the same tag and tag value.

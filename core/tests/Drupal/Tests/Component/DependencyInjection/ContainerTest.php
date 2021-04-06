@@ -88,8 +88,7 @@ class ContainerTest extends TestCase {
   }
 
   /**
-   * Tests that Container::getParameter() works properly for non-existing
-   * parameters.
+   * Tests Container::getParameter() works properly for non-existing parameters.
    *
    * @covers ::getParameter
    * @covers ::getParameterAlternatives

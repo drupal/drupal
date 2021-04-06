@@ -5,6 +5,8 @@ namespace Drupal\KernelTests\Core\Plugin\Discovery;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 
 /**
+ * CustomDirectoryAnnotatedClassDiscoveryTest.
+ *
  * Tests that plugins in a custom directory are correctly discovered using
  * annotated classes.
  *

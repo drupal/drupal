@@ -99,6 +99,7 @@ class FetchTest extends DatabaseTestBase {
 
   /**
    * Confirms that we can fetch a record into a new instance of a custom class.
+   *
    * The name of the class is determined from a value of the first column.
    *
    * @see \Drupal\Tests\system\Functional\Database\FakeRecord

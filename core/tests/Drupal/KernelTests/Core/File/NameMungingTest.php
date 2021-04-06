@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 namespace Drupal\KernelTests\Core\File;
 
@@ -81,6 +81,8 @@ class NameMungingTest extends FileTestBase {
   }
 
   /**
+   * Test munge ignore insecure.
+   *
    * If the system.file.allow_insecure_uploads setting evaluates to true, the file should
    * come out untouched, no matter how evil the filename.
    */

@@ -6,8 +6,7 @@ use Drupal\Core\Language\Language;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Tests that language, module and settings.php are applied in the correct
- * order.
+ * Tests that language, module and settings.php are applied in correct order.
  *
  * @group config
  */
