@@ -109,7 +109,7 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
   }
 
   /**
-   * We grant access to the entity if both of these conditions are met:
+   * We grant access to the entity if both of these conditions are met.
    *
    * - No modules say to deny access.
    * - At least one module says to grant access.

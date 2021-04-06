@@ -337,7 +337,7 @@ class Sql extends QueryPluginBase {
   }
 
   /**
-   * Add relationship
+   * Add relationship.
    *
    * A relationship is an alternative endpoint to a series of table
    * joins. Relationships must be aliases of the primary table and

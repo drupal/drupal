@@ -332,8 +332,11 @@ namespace Drupal\Core\Asset;
 
 if (!function_exists('Drupal\Core\Asset\file_create_url')) {
 
-  // Temporary mock for file_create_url(), until that is moved into
-  // Component/Utility.
+  /**
+   * Temporary mock for file_create_url().
+   *
+   * Until that is moved into Component/Utility.
+   */
   function file_create_url($uri) {
     return \Drupal\Tests\Core\Asset\file_create_url($uri);
   }
@@ -341,8 +344,11 @@ if (!function_exists('Drupal\Core\Asset\file_create_url')) {
 }
 if (!function_exists('Drupal\Core\Asset\file_url_transform_relative')) {
 
-  // Temporary mock for file_url_transform_relative(), until that is moved into
-  // Component/Utility.
+  /**
+   * Temporary mock for file_url_transform_relative().
+   *
+   * Until that is moved into Component/Utility.
+   */
   function file_url_transform_relative($uri) {
     return \Drupal\Tests\Core\Asset\file_url_transform_relative($uri);
   }

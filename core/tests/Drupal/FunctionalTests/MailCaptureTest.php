@@ -7,7 +7,7 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\Test\AssertMailTrait;
 
 /**
- * Tests the SimpleTest following:
+ * Tests the SimpleTest following.
  *
  * - email capturing logic
  * - assertMail assertion

@@ -80,7 +80,7 @@ class FilterAPITest extends EntityKernelTestBase {
   }
 
   /**
-   * Tests the following functions for a variety of formats:
+   * Tests the following functions for a variety of formats.
    *
    *   - \Drupal\filter\Entity\FilterFormatInterface::getHtmlRestrictions()
    *   - \Drupal\filter\Entity\FilterFormatInterface::getFilterTypes()

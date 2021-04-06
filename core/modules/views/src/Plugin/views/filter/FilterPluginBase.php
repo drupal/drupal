@@ -1431,7 +1431,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
   }
 
   /**
-   * Multiple exposed input
+   * Multiple exposed input.
    *
    * Returns TRUE if users can select multiple groups items of a
    * grouped exposed filter.

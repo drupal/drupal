@@ -9,7 +9,7 @@ use Drupal\Core\Site\Settings;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Tests:
+ * Tests.
  *
  * - \Drupal::formBuilder()->setCache()
  * - \Drupal::formBuilder()->getCache()

@@ -14,10 +14,10 @@ use Drupal\Tests\UnitTestCase;
 abstract class NormalizerDenormalizeExceptionsUnitTestBase extends UnitTestCase {
 
   /**
-   * Provides data for both exceptions:
+   * Provides data for both exceptions.
    *
    * - FieldItemNormalizerDenormalizeExceptionsUnitTest::testFieldItemNormalizerDenormalizeExceptions()
-   * = FieldNormalizerDenormalizeExceptionsUnitTest::testFieldNormalizerDenormalizeExceptions().
+   * = FieldNormalizerDenormalizeExceptionsUnitTest::testFieldNormalizerDenormalizeExceptions()
    *
    * @return array Test data.
    */
