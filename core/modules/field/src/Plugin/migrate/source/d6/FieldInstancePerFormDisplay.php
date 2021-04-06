@@ -5,7 +5,11 @@ namespace Drupal\field\Plugin\migrate\source\d6;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
- * The field instance per form display source class.
+ * Drupal 6 field instance per form display source from database.
+ *
+ * For available configuration keys, refer to the parent classes:
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  *
  * @MigrateSource(
  *   id = "d6_field_instance_per_form_display",

@@ -10,6 +10,26 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 /**
  * Drupal 6 field instances source from database.
  *
+ * Available configuration keys:
+ * - node_type: (optional) The content type (machine name) to filter field
+ *   instances retrieved from the source. If omitted, all field instances are
+ *   retrieved.
+ *
+ * Example:
+ *
+ * @code
+ * source:
+ *   plugin: d6_field_instance
+ *   node_type: page
+ * @endcode
+ *
+ * In this example field instances of type page are retrieved from the source
+ * database.
+ *
+ * For additional configuration keys, refer to the parent classes:
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
  * @MigrateSource(
  *   id = "d6_field_instance",
  *   source_module = "content"
