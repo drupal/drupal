@@ -20,8 +20,10 @@ class NullArgument extends ArgumentPluginBase {
   }
 
   /**
-   * Override buildOptionsForm() so that only the relevant options
-   * are displayed to the user.
+   * Build options form.
+   *
+   * Override buildOptionsForm() so that only the relevant options are displayed
+   * to the user.
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
@@ -37,8 +39,10 @@ class NullArgument extends ArgumentPluginBase {
   }
 
   /**
-   * Override defaultActions() to remove actions that don't
-   * make sense for a null argument.
+   * Default actions.
+   *
+   * Override defaultActions() to remove actions that don't make sense for a
+   * null argument.
    */
   protected function defaultActions($which = NULL) {
     if ($which) {
@@ -54,8 +58,7 @@ class NullArgument extends ArgumentPluginBase {
   }
 
   /**
-   * Override the behavior of query() to prevent the query
-   * from being changed in any way.
+   * Override the behavior of query() to prevent the query from being changed.
    */
   public function query($group_by = FALSE) {}
 

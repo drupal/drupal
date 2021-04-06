@@ -221,6 +221,8 @@ class MenuRouterTest extends BrowserTestBase {
   }
 
   /**
+   * Test authenticated user login.
+   *
    * Test that an authenticated user hitting 'user/login' gets redirected to
    * 'user' and 'user/register' gets redirected to the user edit page.
    */

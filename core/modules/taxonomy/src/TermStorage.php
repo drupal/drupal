@@ -40,8 +40,9 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
   protected $trees = [];
 
   /**
-   * Array of all loaded term ancestry keyed by ancestor term ID, keyed by term
-   * ID.
+   * Array of all loaded term ancestry keyed by ancestor term ID.
+   *
+   * Array is keyed by term ID.
    *
    * @var \Drupal\taxonomy\TermInterface[][]
    */

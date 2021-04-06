@@ -205,6 +205,8 @@ class HtmlToTextTest extends BrowserTestBase {
   }
 
   /**
+   * Test Drupal HTML to text block tag to new line.
+   *
    * Test that text separated by block-level tags in HTML get separated by
    * (at least) a newline in the plaintext version.
    */
@@ -296,6 +298,8 @@ EOT;
   }
 
   /**
+   * Test Drupal HTML to text paragraphs.
+   *
    * Test that combinations of paragraph breaks, line breaks, linefeeds,
    * and spaces are properly handled.
    */

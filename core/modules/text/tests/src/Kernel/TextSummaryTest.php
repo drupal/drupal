@@ -36,6 +36,8 @@ class TextSummaryTest extends KernelTestBase {
   }
 
   /**
+   * Test first sentence question.
+   *
    * Tests an edge case where the first sentence is a question and
    * subsequent sentences are not. This edge case is documented at
    * https://www.drupal.org/node/180425.
@@ -225,6 +227,8 @@ class TextSummaryTest extends KernelTestBase {
   }
 
   /**
+   * Test invalide filter format.
+   *
    * Test text_summary() returns an empty string without any error when called
    * with an invalid format.
    */

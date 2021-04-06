@@ -90,6 +90,8 @@ class EntityReferenceSelectionReferenceableTest extends KernelTestBase {
   }
 
   /**
+   * Tests referenceables with no label key.
+   *
    * Tests values returned by SelectionInterface::getReferenceableEntities()
    * when the target entity type has no 'label' key.
    *

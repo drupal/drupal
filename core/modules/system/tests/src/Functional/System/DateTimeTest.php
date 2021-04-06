@@ -7,8 +7,9 @@ use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Configure date and time settings. Test date formatting and time zone
- * handling, including daylight saving time.
+ * Configure date and time settings.
+ *
+ * Test date formatting and time zone handling, including daylight saving time.
  *
  * @group system
  */

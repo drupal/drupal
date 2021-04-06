@@ -13,6 +13,8 @@ use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
 
 /**
+ * User creation trait.
+ *
  * Provides methods to create additional test users and switch the currently
  * logged in one.
  *

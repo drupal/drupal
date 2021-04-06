@@ -5,8 +5,7 @@ namespace Drupal\Tests\system\Functional\UpdateSystem;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests that the hook invocation for determining update dependencies works
- * correctly.
+ * Tests that the hook invocation for determining update dependencies works.
  *
  * @group Update
  */

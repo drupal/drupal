@@ -110,8 +110,10 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
   }
 
   /**
-   * Tests the toolbar_modules_installed() and toolbar_modules_uninstalled() hook
-   * implementations.
+   * Tests the following hook implementations.
+   *
+   * - toolbar_modules_installed()
+   * - toolbar_modules_uninstalled().
    */
   public function testModuleStatusChangeSubtreesHashCacheClear() {
     // Uninstall a module.
@@ -157,8 +159,10 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
   }
 
   /**
-   * Exercises the toolbar_user_role_update() and toolbar_user_update() hook
-   * implementations.
+   * Exercises the following hook implementations.
+   *
+   * = toolbar_user_role_update()
+   * - toolbar_user_update().
    */
   public function testUserRoleUpdateSubtreesHashCacheClear() {
     // Find the new role ID.
@@ -221,6 +225,8 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
   }
 
   /**
+   * Test non current user account updates.
+   *
    * Tests that changes to a user account by another user clears the changed
    * account's toolbar cached, not the user's who took the action.
    */
@@ -430,6 +436,8 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
   }
 
   /**
+   * Helper function.
+   *
    * Asserts the subtrees hash on a fresh page GET is different from the hash
    * from the previous page GET.
    */

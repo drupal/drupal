@@ -6,6 +6,8 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\RequirementsPageTrait;
 
 /**
+ * Tests updates with 7.x.
+ *
  * Tests that the minimum schema version is correct even if only 7.x update
  * hooks are retained .
  *

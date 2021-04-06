@@ -19,7 +19,9 @@ class FormElementsRenderTest extends KernelTestBase {
   protected static $modules = ['common_test', 'system'];
 
   /**
-   * Tests rendering form elements without passing through
+   * Tests rendering form elements.
+   *
+   * Form elements are not passed through
    * \Drupal::formBuilder()->doBuildForm().
    */
   public function testDrupalRenderFormElements() {

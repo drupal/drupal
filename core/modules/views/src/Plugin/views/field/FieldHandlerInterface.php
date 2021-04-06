@@ -136,6 +136,8 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
   public function getValue(ResultRow $values, $field = NULL);
 
   /**
+   * Use string group by.
+   *
    * Determines if this field will be available as an option to group the result
    * by in the style settings.
    *

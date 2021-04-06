@@ -27,8 +27,11 @@ class SessionTest extends BrowserTestBase {
   protected $dumpHeaders = TRUE;
 
   /**
-   * Tests for \Drupal\Core\Session\WriteSafeSessionHandler::setSessionWritable()
-   * ::isSessionWritable and \Drupal\Core\Session\SessionManager::regenerate().
+   * Tests for:
+   *
+   * \Drupal\Core\Session\WriteSafeSessionHandler::setSessionWritable()
+   * \Drupal\Core\Session\WriteSafeSessionHandler::isSessionWritable
+   * \Drupal\Core\Session\SessionManager::regenerate().
    */
   public function testSessionSaveRegenerate() {
     $session_handler = $this->container->get('session_handler.write_safe');

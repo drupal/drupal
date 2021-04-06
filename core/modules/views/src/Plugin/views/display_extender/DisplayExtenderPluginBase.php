@@ -71,6 +71,8 @@ abstract class DisplayExtenderPluginBase extends PluginBase {
   public function optionsSummary(&$categories, &$options) {}
 
   /**
+   * Defaultable sections.
+   *
    * Static member function to list which sections are defaultable
    * and what items each section contains.
    */

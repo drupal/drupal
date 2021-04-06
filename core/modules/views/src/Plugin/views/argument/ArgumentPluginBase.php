@@ -66,6 +66,8 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
   public $name_table;
 
   /**
+   * The name field.
+   *
    * The field to use for the name to use in the summary, which is
    * the displayed output. For example, for the node: nid argument,
    * the argument itself is the nid, but node.title is displayed.
@@ -491,6 +493,8 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
   }
 
   /**
+   * Default actions.
+   *
    * Provide a list of default behaviors for this argument if the argument
    * is not present.
    *
@@ -547,8 +551,10 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
   }
 
   /**
-   * Provide a form for selecting the default argument when the
-   * default action is set to provide default argument.
+   * Default argument form.
+   *
+   * Provide a form for selecting the default argument when the  default action
+   * is set to provide default argument.
    */
   public function defaultArgumentForm(&$form, FormStateInterface $form_state) {
     $plugins = Views::pluginManager('argument_default')->getDefinitions();
@@ -612,6 +618,8 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
   }
 
   /**
+   * Default summary form.
+   *
    * Provide a form for selecting further summary options when the
    * default action is set to display one.
    */
@@ -778,8 +786,9 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
   }
 
   /**
-   * This just returns true. The view argument builder will know where
-   * to find the argument from.
+   * This just returns true.
+   *
+   * The view argument builder will know where to find the argument from.
    */
   protected function defaultDefault() {
     return TRUE;
@@ -868,6 +877,8 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
   }
 
   /**
+   * Summary name field.
+   *
    * Add the name field, which is the field displayed in summary queries.
    * This is often used when the argument is numeric.
    */
@@ -903,6 +914,8 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
   }
 
   /**
+   * Summary basics.
+   *
    * Some basic summary behavior that doesn't need to be repeated as much as
    * code that goes into summaryQuery()
    */
@@ -921,8 +934,9 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
   }
 
   /**
-   * Sorts the summary based upon the user's selection. The base variant of
-   * this is usually adequate.
+   * Sorts the summary based upon the user's selection.
+   *
+   * The base variant of this is usually adequate.
    *
    * @param $order
    *   The order selected in the UI.
@@ -935,8 +949,9 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
   }
 
   /**
-   * Provide the argument to use to link from the summary to the next level;
-   * this will be called once per row of a summary, and used as part of
+   * Provide the argument to use to link from the summary to the next level.
+   *
+   * This will be called once per row of a summary, and used as part of
    * $view->getUrl().
    *
    * @param $data
@@ -947,8 +962,9 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
   }
 
   /**
-   * Provides the name to use for the summary. By default this is just
-   * the name field.
+   * Provides the name to use for the summary.
+   *
+   * By default this is just the name field.
    *
    * @param $data
    *   The query results for the row.
@@ -981,8 +997,10 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
   }
 
   /**
-   * Called by the view object to get the title. This may be set by a
-   * validator so we don't necessarily call through to title().
+   * Called by the view object to get the title.
+   *
+   * This may be set by a validator so we don't necessarily call through to
+   * title().
    */
   public function getTitle() {
     if (isset($this->validated_title)) {

@@ -84,6 +84,8 @@ abstract class ArgumentDefaultPluginBase extends PluginBase {
   }
 
   /**
+   * Check access.
+   *
    * If we don't have access to the form but are showing it anyway, ensure that
    * the form is safe and cannot be changed from user input.
    *
