@@ -12,8 +12,10 @@ use Drupal\node\NodeInterface;
 use Drupal\Component\Serialization\Json;
 
 /**
- * Create a node with revisions and test viewing, saving, reverting, and
- * deleting revisions for users with access for this content type.
+ * Create a node with revisions.
+ *
+ * Test viewing, saving, reverting, and deleting revisions for users with access
+ * for this content type.
  *
  * @group node
  */

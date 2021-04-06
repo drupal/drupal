@@ -5,8 +5,9 @@ namespace Drupal\migrate_drupal\Plugin\migrate\source\d7;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
- * Base class for D7 source plugins which need to collect field values from
- * the Field API.
+ * Base class for D7 source plugins which need to collect field values.
+ *
+ * Field values are collected from the Field API.
  *
  * Refer to the existing implementations for examples:
  * @see \Drupal\node\Plugin\migrate\source\d7\Node

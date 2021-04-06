@@ -3,8 +3,9 @@
 namespace Drupal\Tests\node\Functional;
 
 /**
- * Tests that the post information (submitted by Username on date) text displays
- * appropriately.
+ * Tests that the post information text displays appropriately.
+ *
+ * Post information is submitted by Username on date.
  *
  * @group node
  */

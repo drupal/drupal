@@ -10,8 +10,7 @@ use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\argument\NumericArgument;
 
 /**
- * Argument handler for list field to show the human readable name in the
- * summary.
+ * Argument handler for list field to show human readable name in the summary.
  *
  * @ingroup views_argument_handlers
  *

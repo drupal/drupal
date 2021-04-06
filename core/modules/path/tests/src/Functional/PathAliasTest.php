@@ -7,8 +7,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Url;
 
 /**
- * Add, edit, delete, and change alias and verify its consistency in the
- * database.
+ * Add, edit, delete, and change alias and verify its consistency in database.
  *
  * @group path
  */

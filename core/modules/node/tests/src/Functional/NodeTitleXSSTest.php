@@ -5,8 +5,7 @@ namespace Drupal\Tests\node\Functional;
 use Drupal\Component\Utility\Html;
 
 /**
- * Create a node with dangerous tags in its title and test that they are
- * escaped.
+ * Create node with dangerous tags in its title and test that they are escaped.
  *
  * @group node
  */

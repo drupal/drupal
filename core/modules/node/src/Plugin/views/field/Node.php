@@ -11,8 +11,10 @@ use Drupal\views\Plugin\views\field\FieldPluginBase;
 
 /**
  * Field handler to provide simple renderer that allows linking to a node.
+ *
  * Definition terms:
- * - link_to_node default: Should this field have the checkbox "link to node" enabled by default.
+ * - link_to_node default: Should this field have the checkbox "link to node"
+ *   enabled by default.
  *
  * @ingroup views_field_handlers
  *
