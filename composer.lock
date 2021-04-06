@@ -530,7 +530,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "365584bd91d9f305a9bf0db5a9acecf55c22ba57"
+                "reference": "61e76134960efb386657f10795ee24161b24a560"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -572,7 +572,7 @@
                 "symfony/serializer": "^4.4",
                 "symfony/translation": "^4.4",
                 "symfony/validator": "^4.4",
-                "symfony/yaml": "^4.4",
+                "symfony/yaml": "^4.4.19",
                 "twig/twig": "^2.12.0",
                 "typo3/phar-stream-wrapper": "^3.1.3"
             },
