@@ -5,7 +5,7 @@
 * @preserve
 **/
 
-(function (Drupal) {
+(function (Drupal, once) {
   function isNavOpen(navWrapper) {
     return navWrapper.classList.contains('is-active');
   }
@@ -71,12 +71,11 @@
   }
 
   Drupal.behaviors.oliveroNavigation = {
-    attach: function attach(context, settings) {
+    attach: function attach(context) {
       var navWrapperId = 'header-nav';
-      var navWrapper = context.querySelector("#".concat(navWrapperId, ":not(.").concat(navWrapperId, "-processed)"));
+      var navWrapper = once('olivero-navigation', "#".concat(navWrapperId), context).shift();
 
       if (navWrapper) {
-        navWrapper.classList.add("".concat(navWrapperId, "-processed"));
         var olivero = Drupal.olivero;
         var navButton = context.querySelector('.mobile-nav-button');
         var body = context.querySelector('body');
@@ -85,7 +84,6 @@
         var firstFocusableEl = focusableNavElements[0];
         var lastFocusableEl = focusableNavElements[focusableNavElements.length - 1];
         init({
-          settings: settings,
           olivero: olivero,
           navWrapperId: navWrapperId,
           navWrapper: navWrapper,
@@ -98,4 +96,4 @@
       }
     }
   };
-})(Drupal);
+})(Drupal, once);

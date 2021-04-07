@@ -1,4 +1,4 @@
-((Drupal) => {
+((Drupal, once) => {
   /**
    * Checks if navWrapper contains "is-active" class.
    * @param {object} navWrapper
@@ -103,13 +103,15 @@
    * Initialize the navigation JS.
    */
   Drupal.behaviors.oliveroNavigation = {
-    attach(context, settings) {
+    attach(context) {
       const navWrapperId = 'header-nav';
-      const navWrapper = context.querySelector(
-        `#${navWrapperId}:not(.${navWrapperId}-processed)`,
-      );
+      const navWrapper = once(
+        'olivero-navigation',
+        `#${navWrapperId}`,
+        context,
+      ).shift();
+
       if (navWrapper) {
-        navWrapper.classList.add(`${navWrapperId}-processed`);
         const { olivero } = Drupal;
         const navButton = context.querySelector('.mobile-nav-button');
         const body = context.querySelector('body');
@@ -122,7 +124,6 @@
           focusableNavElements[focusableNavElements.length - 1];
 
         init({
-          settings,
           olivero,
           navWrapperId,
           navWrapper,
@@ -135,4 +136,4 @@
       }
     },
   };
-})(Drupal);
+})(Drupal, once);
