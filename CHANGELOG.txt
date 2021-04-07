@@ -1,5 +1,8 @@
-Drupal 7.xx, xxxx-xx-xx (development version)
+Drupal 7.79, 2021-04-07
 -----------------------
+- Initial support for PHP 8
+- Support for SameSite cookie attribute
+- Avoid write for unchanged fields (opt-in)
 
 Drupal 7.78, 2021-01-19
 -----------------------
