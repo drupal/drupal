@@ -5,7 +5,7 @@
 * @preserve
 **/
 
-(function (Drupal) {
+(function (Drupal, once) {
   function init(el) {
     var tabs = el.querySelector('.tabs');
     var expandedClass = 'is-expanded';
@@ -37,9 +37,7 @@
 
   Drupal.behaviors.tabs = {
     attach: function attach(context) {
-      context.querySelectorAll('[data-drupal-nav-tabs]').forEach(function (el) {
-        return init(el);
-      });
+      once('olivero-tabs', '[data-drupal-nav-tabs]', context).forEach(init);
     }
   };
-})(Drupal);
+})(Drupal, once);

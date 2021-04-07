@@ -5,7 +5,7 @@
 * @preserve
 **/
 
-(function (Drupal) {
+(function (Drupal, once) {
   var closeMessage = function closeMessage(message) {
     var messageContainer = message.querySelector('.messages__container');
     var closeBtnWrapper = document.createElement('div');
@@ -19,7 +19,6 @@
     messageContainer.appendChild(closeBtnWrapper);
     closeBtnWrapper.appendChild(closeBtn);
     closeBtn.appendChild(closeBtnText);
-    message.classList.add('messages-processed');
     closeBtn.addEventListener('click', function () {
       message.classList.add('hidden');
     });
@@ -31,7 +30,7 @@
         id = _ref2.id;
     var messagesTypes = Drupal.Message.getMessageTypeLabels();
     var messageWrapper = document.createElement('div');
-    messageWrapper.setAttribute('class', "messages-list__item messages messages--".concat(type, " messages-processed"));
+    messageWrapper.setAttribute('class', "messages-list__item messages messages--".concat(type));
     messageWrapper.setAttribute('role', type === 'error' || type === 'warning' ? 'alert' : 'status');
     messageWrapper.setAttribute('aria-labelledby', "".concat(id, "-title"));
     messageWrapper.setAttribute('data-drupal-message-id', id);
@@ -63,10 +62,7 @@
 
   Drupal.behaviors.messages = {
     attach: function attach(context) {
-      var messages = context.querySelectorAll('.messages:not(.messages-processed)');
-      messages.forEach(function (message) {
-        closeMessage(message);
-      });
+      once('olivero-messages', '.messages', context).forEach(closeMessage);
     }
   };
-})(Drupal);
+})(Drupal, once);

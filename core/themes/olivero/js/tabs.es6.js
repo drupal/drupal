@@ -1,4 +1,4 @@
-((Drupal) => {
+((Drupal, once) => {
   function init(el) {
     const tabs = el.querySelector('.tabs');
     const expandedClass = 'is-expanded';
@@ -32,9 +32,7 @@
 
   Drupal.behaviors.tabs = {
     attach(context) {
-      context
-        .querySelectorAll('[data-drupal-nav-tabs]')
-        .forEach((el) => init(el));
+      once('olivero-tabs', '[data-drupal-nav-tabs]', context).forEach(init);
     },
   };
-})(Drupal);
+})(Drupal, once);

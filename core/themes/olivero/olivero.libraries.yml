@@ -64,6 +64,7 @@ global-styling:
     - core/drupal.element.matches
     - core/drupal.nodelist.foreach
     - core/drupal
+    - core/once
 
 book:
   css:
