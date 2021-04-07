@@ -128,3 +128,8 @@ textarea {
   padding-top: 0.84375rem;
   padding-bottom: 0.84375rem;
 }
+
+[type="color"] {
+  width: 3.375rem;
+  padding: 0;
+}

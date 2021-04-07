@@ -84,3 +84,8 @@ textarea {
   height: auto;
   padding-block: var(--sp0-75);
 }
+
+[type="color"] {
+  width: var(--sp3);
+  padding: 0;
+}
