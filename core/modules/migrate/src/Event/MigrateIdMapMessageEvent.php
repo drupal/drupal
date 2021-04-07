@@ -88,7 +88,7 @@ class MigrateIdMapMessageEvent extends Event {
   }
 
   /**
-   * Gets the severity level of the message
+   * Gets the severity level of the message.
    *
    * Message levels are declared in MigrationInterface and start with MESSAGE_.
    *

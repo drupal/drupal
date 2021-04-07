@@ -82,7 +82,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   /**
    * The original view or form mode that was requested.
    *
-   * Case of view/form modes being configured to fall back to the 'default' \
+   * Case of view/form modes being configured to fall back to the 'default'
    * display.
    *
    * @var string
