@@ -1,3 +1,6 @@
+Drupal 7.xx, xxxx-xx-xx (development version)
+-----------------------
+
 Drupal 7.79, 2021-04-07
 -----------------------
 - Initial support for PHP 8
