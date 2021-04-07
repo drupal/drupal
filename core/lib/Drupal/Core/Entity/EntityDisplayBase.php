@@ -5,19 +5,18 @@ namespace Drupal\Core\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
 
 /**
  * Provides a common base class for entity view and form displays.
  */
 abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDisplayInterface {
 
-  // The 'mode' for runtime EntityDisplay objects used to render entities with
-  // arbitrary display options rather than a configured view mode or form mode.
-  //
-  // @todo Prevent creation of a mode with this ID
-  // https://www.drupal.org/node/2410727
-
+  /**
+   * The mode used to render entities with arbitrary display options.
+   *
+   * @todo Prevent creation of a mode with this ID
+   *   https://www.drupal.org/node/2410727
+   */
   const CUSTOM_MODE = '_custom';
 
   /**

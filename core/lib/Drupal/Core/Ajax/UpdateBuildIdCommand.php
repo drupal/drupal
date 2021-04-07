@@ -3,7 +3,7 @@
 namespace Drupal\Core\Ajax;
 
 /**
- * AJAX command.
+ * Ajax command for updating the form build ID.
  *
  * Used for updating the value of a hidden form_build_id input element on a
  * form. It requires the form passed in to have keys for both the old build ID

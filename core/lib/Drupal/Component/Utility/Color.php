@@ -58,10 +58,7 @@ class Color {
   }
 
   /**
-   * Converts RGB color arrays and RGB strings in CSS notation.
-   *
-   * RGB color arrays and RGB strings will be converted to lowercase simple
-   * colors like '#aabbcc'.
+   * Converts RGB color arrays or strings to lowercase CSS notation.
    *
    * @param array|string $input
    *   The value to convert. If the value is an array the first three elements

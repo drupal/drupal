@@ -103,7 +103,6 @@ class PoItem {
   /**
    * Gets source string or array of strings if the translation has plurals.
    *
-   *
    * @return string or array $translation
    */
   public function getSource() {
