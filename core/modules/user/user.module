@@ -1026,7 +1026,6 @@ function user_role_revoke_permissions($rid, array $permissions = []) {
  *   - 'status_blocked': Account blocked.
  *   - 'cancel_confirm': Account cancellation request.
  *   - 'status_canceled': Account canceled.
- *
  * @param \Drupal\Core\Session\AccountInterface $account
  *   The user object of the account being notified. Must contain at
  *   least the fields 'uid', 'name', and 'mail'.

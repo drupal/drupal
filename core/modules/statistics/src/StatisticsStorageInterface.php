@@ -54,7 +54,6 @@ interface StatisticsStorageInterface {
    *   - 'totalcount' The total number of views.
    *   - 'daycount' The number of views today.
    *   - 'timestamp' The unix timestamp of the last view.
-   *
    * @param int $limit
    *   The number of entity IDs to return.
    *
