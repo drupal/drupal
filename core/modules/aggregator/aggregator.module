@@ -171,6 +171,7 @@ function aggregator_cron() {
 
   // Delete queued timestamp after 6 hours assuming the update has failed.
   $ids = \Drupal::entityQuery('aggregator_feed')
+    ->accessCheck(FALSE)
     ->condition('queued', REQUEST_TIME - (3600 * 6), '<')
     ->execute();
 

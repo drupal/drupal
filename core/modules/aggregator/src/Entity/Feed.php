@@ -121,6 +121,7 @@ class Feed extends ContentEntityBase implements FeedInterface {
     if (\Drupal::moduleHandler()->moduleExists('block')) {
       // Make sure there are no active blocks for these feeds.
       $ids = \Drupal::entityQuery('block')
+        ->accessCheck(FALSE)
         ->condition('plugin', 'aggregator_feed_block')
         ->condition('settings.feed', array_keys($entities))
         ->execute();
