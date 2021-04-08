@@ -40,6 +40,16 @@ final class OliveroPreprocessFieldCommentTest extends UnitTestCase {
     olivero_preprocess_field__comment($variables);
     $this->assertEquals(0, $variables['comment_count']);
 
+    $variables = [
+      'comments' => [
+        1 => [],
+        2 => [],
+      ],
+    ];
+
+    olivero_preprocess_field__comment($variables);
+    $this->assertEquals(2, $variables['comment_count']);
+
   }
-  
+
 }
