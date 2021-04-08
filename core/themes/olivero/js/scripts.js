@@ -14,25 +14,47 @@
   }
 
   Drupal.olivero.isDesktopNav = isDesktopNav;
-  var wideNavButton = document.querySelector('.wide-nav-expand');
+  var stickyHeaderToggleButton = document.querySelector('.sticky-header-toggle');
   var siteHeaderFixable = document.querySelector('.site-header__fixable');
 
-  function wideNavIsOpen() {
-    return wideNavButton.getAttribute('aria-expanded') === 'true';
+  function stickyHeaderIsEnabled() {
+    return stickyHeaderToggleButton.getAttribute('aria-checked') === 'true';
   }
 
-  function showWideNav() {
+  function setStickyHeaderStorage(expandedState) {
+    var now = new Date();
+    var item = {
+      value: expandedState,
+      expiry: now.getTime() + 20160000
+    };
+    localStorage.setItem('Drupal.olivero.stickyHeaderState', JSON.stringify(item));
+  }
+
+  function toggleStickyHeaderState(pinnedState) {
     if (isDesktopNav()) {
-      wideNavButton.setAttribute('aria-expanded', 'true');
-      siteHeaderFixable.classList.add('is-expanded');
+      if (pinnedState === true) {
+        siteHeaderFixable.classList.add('is-expanded');
+      } else {
+        siteHeaderFixable.classList.remove('is-expanded');
+      }
+
+      stickyHeaderToggleButton.setAttribute('aria-checked', pinnedState);
+      setStickyHeaderStorage(pinnedState);
     }
   }
 
-  function hideWideNav() {
-    if (isDesktopNav()) {
-      wideNavButton.setAttribute('aria-expanded', 'false');
-      siteHeaderFixable.classList.remove('is-expanded');
+  function getStickyHeaderStorage() {
+    var stickyHeaderState = localStorage.getItem('Drupal.olivero.stickyHeaderState');
+    if (!stickyHeaderState) return null;
+    var item = JSON.parse(stickyHeaderState);
+    var now = new Date();
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem('Drupal.olivero.stickyHeaderState');
+      return null;
     }
+
+    return item.value;
   }
 
   if ('IntersectionObserver' in window && 'IntersectionObserverEntry' in window && 'intersectionRatio' in window.IntersectionObserverEntry.prototype) {
@@ -79,25 +101,22 @@
       observer.observe(primaryNav);
     }
 
-    wideNavButton.addEventListener('click', function () {
-      if (!wideNavIsOpen()) {
-        showWideNav();
-      } else {
-        hideWideNav();
+    stickyHeaderToggleButton.addEventListener('click', function () {
+      toggleStickyHeaderState(!stickyHeaderIsEnabled());
+    });
+    document.querySelector('#site-header__inner').addEventListener('focusin', function () {
+      if (isDesktopNav() && !stickyHeaderIsEnabled()) {
+        var header = document.querySelector('#header');
+        var headerNav = header.querySelector('#header-nav');
+        var headerMargin = header.clientHeight - headerNav.clientHeight;
+
+        if (window.scrollY > headerMargin) {
+          window.scrollTo(0, headerMargin);
+        }
       }
     });
-    siteHeaderFixable.querySelector('.site-header__inner').addEventListener('focusin', showWideNav);
-    document.querySelector('.skip-link').addEventListener('click', hideWideNav);
     monitorNavPosition();
+    setStickyHeaderStorage(getStickyHeaderStorage());
+    toggleStickyHeaderState(getStickyHeaderStorage());
   }
-
-  document.addEventListener('keyup', function (e) {
-    if (e.keyCode === 27) {
-      if ('toggleSearchVisibility' in Drupal.olivero && 'searchIsVisible' in Drupal.olivero && Drupal.olivero.searchIsVisible()) {
-        Drupal.olivero.toggleSearchVisibility(false);
-      } else {
-          hideWideNav();
-        }
-    }
-  });
 })(Drupal);

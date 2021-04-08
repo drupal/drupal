@@ -1,3 +1,6 @@
+const buttonSelector = 'button.sticky-header-toggle';
+const mainMenuSelector = '#block-olivero-main-menu';
+
 module.exports = {
   '@tags': ['core', 'olivero'],
   before(browser) {
@@ -18,14 +21,19 @@ module.exports = {
         '#block-olivero-content h2',
         'Congratulations and welcome to the Drupal community!',
       )
-      .assert.not.visible('button.wide-nav-expand')
+      .assert.not.visible(buttonSelector)
       .getLocationInView('footer.site-footer', () => {
-        browser.assert.visible('button.wide-nav-expand');
+        browser.assert.visible(buttonSelector);
         browser.assert.not.visible('#site-header__inner');
       })
-      .assert.not.visible('#block-olivero-main-menu')
-      .click('button.wide-nav-expand', () => {
-        browser.assert.visible('#block-olivero-main-menu');
-      });
+      .assert.not.visible(mainMenuSelector)
+      .click(buttonSelector)
+      .assert.visible(mainMenuSelector)
+      .assert.attributeEquals(buttonSelector, 'aria-checked', 'true')
+
+      // Sticky header should remain open after page reload in open state.
+      .drupalRelativeURL('/node')
+      .assert.visible(mainMenuSelector)
+      .assert.attributeEquals(buttonSelector, 'aria-checked', 'true');
   },
 };

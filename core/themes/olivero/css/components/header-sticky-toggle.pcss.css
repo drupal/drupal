@@ -1,0 +1,115 @@
+/**
+ * @file
+ * Sticky Header Toggle Button.
+ *
+ * This button shows on the left hand side of the header (in LTR layouts), and
+ * toggles fixing the header to the top of the viewport.
+ */
+
+@import "../base/variables.pcss.css";
+
+.sticky-header-toggle {
+  display: none;
+
+  @media (--nav) {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: var(--content-left);
+    height: var(--sp6);
+    pointer-events: none;
+    opacity: 0;
+    border: 0;
+    outline: 0;
+    background-color: var(--color--blue-50);
+
+    &:focus {
+      cursor: pointer;
+      pointer-events: auto;
+      opacity: 1;
+      outline: solid 2px var(--color--white);
+      outline-offset: -4px;
+    }
+  }
+}
+
+body:not(.is-always-mobile-nav) .js-fixed .sticky-header-toggle {
+  @media (--nav) {
+    visibility: visible;
+  }
+}
+
+body.is-always-mobile-nav .sticky-header-toggle {
+  @media (--nav) {
+    visibility: hidden;
+  }
+}
+
+.sticky-header-toggle__icon {
+  position: relative;
+  width: var(--sp2);
+  height: 21px;
+  transition: opacity 0.2s;
+  pointer-events: none;
+  transform-style: preserve-3d;
+
+  & > span {
+    display: block;
+    height: 0;
+    /* Intentionally not using CSS logical properties. */
+    border-top: solid 3px var(--color--white);
+
+    &:nth-child(1) {
+      position: absolute;
+      inset-block-start: 0;
+      inset-inline-start: 0;
+      width: 100%;
+      height: 0;
+      transition: transform 0.2s;
+      background-color: var(--color--white);
+    }
+
+    &:nth-child(2) {
+      position: absolute;
+      inset-block-start: 9px;
+      inset-inline-start: 0;
+      width: 100%;
+      height: 0;
+      transition: opacity 0.2s;
+      background-color: var(--color--white);
+    }
+
+    &:nth-child(3) {
+      position: absolute;
+      inset-block: auto 0;
+      inset-inline-start: 0;
+      width: 100%;
+      height: 0;
+      transition: transform 0.2s;
+      background-color: var(--color--white);
+    }
+  }
+}
+
+.js-fixed .sticky-header-toggle {
+  cursor: pointer;
+  pointer-events: auto;
+  opacity: 1;
+}
+
+[aria-checked="true"] .sticky-header-toggle__icon {
+  & > span:nth-child(1) {
+    inset-block-start: 9px;
+    transform: rotate(-45deg);
+  }
+
+  & > span:nth-child(2) {
+    opacity: 0;
+  }
+
+  & > span:nth-child(3) {
+    inset-block-start: 9px;
+    transform: rotate(45deg);
+  }
+}
