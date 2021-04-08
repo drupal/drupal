@@ -151,6 +151,7 @@
   <rule ref="Generic.CodeAnalysis.EmptyPHPStatement" />
   <rule ref="Generic.Files.ByteOrderMark"/>
   <rule ref="Generic.Files.LineEndings"/>
+  <rule ref="Generic.Formatting.DisallowMultipleStatements"/>
   <rule ref="Generic.Formatting.SpaceAfterCast"/>
   <rule ref="Generic.Functions.FunctionCallArgumentSpacing"/>
   <rule ref="Generic.Functions.OpeningFunctionBraceKernighanRitchie">
