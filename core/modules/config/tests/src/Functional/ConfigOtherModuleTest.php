@@ -65,7 +65,8 @@ class ConfigOtherModuleTest extends BrowserTestBase {
     // Ensure that optional configuration with unmet dependencies is only
     // installed once all the dependencies are met.
     $this->assertNull($this->getStorage()->load('other_module_test_unmet'), 'The optional configuration config_test.dynamic.other_module_test_unmet whose dependencies are not met is not created.');
-    $this->assertNull($this->getStorage()->load('other_module_test_optional_entity_unmet'), 'The optional configuration config_test.dynamic.other_module_test_optional_entity_unmet whose dependencies are not met is not created.');    $this->installModule('config_test_language');
+    $this->assertNull($this->getStorage()->load('other_module_test_optional_entity_unmet'), 'The optional configuration config_test.dynamic.other_module_test_optional_entity_unmet whose dependencies are not met is not created.');
+    $this->installModule('config_test_language');
     $this->assertNull($this->getStorage()->load('other_module_test_optional_entity_unmet'), 'The optional configuration config_test.dynamic.other_module_test_optional_entity_unmet whose dependencies are met is not created.');
     $this->installModule('config_install_dependency_test');
     $this->assertNotEmpty($this->getStorage()->load('other_module_test_unmet'), 'The optional configuration config_test.dynamic.other_module_test_unmet whose dependencies are met is now created.');
