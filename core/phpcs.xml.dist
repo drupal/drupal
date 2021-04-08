@@ -49,14 +49,13 @@
     <!-- Sniff for these errors: SpacingAfterTagGroup, WrongEnd, SpacingBetween,
       ContentAfterOpen, SpacingBeforeShort, TagValueIndent, ShortStartSpace,
       SpacingAfter, LongNotCapital, ShortFullStop, TagGroupSpacing, Empty,
-      TagsNotGrouped -->
+      TagsNotGrouped, ParamGroup -->
     <!-- ParamNotFirst still not decided for PHPUnit-based tests.
       @see https://www.drupal.org/node/2253915 -->
     <exclude name="Drupal.Commenting.DocComment.ParamNotFirst"/>
     <exclude name="Drupal.Commenting.DocComment.SpacingBeforeTags"/>
     <exclude name="Drupal.Commenting.DocComment.LongFullStop"/>
     <exclude name="Drupal.Commenting.DocComment.ShortNotCapital"/>
-    <exclude name="Drupal.Commenting.DocComment.ParamGroup"/>
     <exclude name="Drupal.Commenting.DocComment.ShortSingleLine"/>
     <exclude name="Drupal.Commenting.DocComment.MissingShort"/>
   </rule>
