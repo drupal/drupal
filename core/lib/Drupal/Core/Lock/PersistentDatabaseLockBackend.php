@@ -5,9 +5,7 @@ namespace Drupal\Core\Lock;
 use Drupal\Core\Database\Connection;
 
 /**
- * Defines the persistent database lock backend.
- *
- * This backend is global for this Drupal installation.
+ * Ensure required arguments are passed and optional arguments have defaults.
  *
  * @ingroup lock
  */

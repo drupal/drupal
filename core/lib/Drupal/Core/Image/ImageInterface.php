@@ -170,7 +170,7 @@ interface ImageInterface {
   public function scaleAndCrop($width, $height);
 
   /**
-   * Instructs toolkit to save image in format specified by the extension.
+   * Converts an image to the format specified by the extension.
    *
    * @param string $extension
    *   The extension to convert to (for instance, 'jpeg' or 'png'). Allowed

@@ -841,7 +841,7 @@ function hook_element_plugin_alter(array &$definitions) {
 }
 
 /**
- * Alter JavaScript presented on a page.
+ * Alter JavaScript before it is presented on the page.
  *
  * Performs necessary alterations to the JavaScript before it is presented on
  * the page.

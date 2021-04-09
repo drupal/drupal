@@ -7,7 +7,7 @@ use Drupal\Tests\BrowserTestBase;
 /**
  * Modify the Bartik theme colors.
  *
- * Make sure the changes are reflected on the frontend.
+ * Tests that changing the Bartik theme colors are reflected on the frontend.
  *
  * @group color
  */

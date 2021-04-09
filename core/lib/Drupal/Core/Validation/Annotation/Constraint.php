@@ -38,7 +38,7 @@ class Constraint extends Plugin {
   public $label;
 
   /**
-   * An array of DataType plugin IDs for which this constraint applies.
+   * DataType plugin IDs for which this constraint applies.
    *
    * Valid values are any types registered by the typed data API, or an array
    * of multiple type names. For supporting all types, FALSE may be specified.

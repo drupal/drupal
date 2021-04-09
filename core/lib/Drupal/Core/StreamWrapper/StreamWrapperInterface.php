@@ -82,7 +82,7 @@ interface StreamWrapperInterface extends PhpStreamWrapperInterface {
   const READ_VISIBLE = 0x0014;
 
   /**
-   * This is the default 'type' flag.
+   * The default 'type' flag.
    *
    * This does not include StreamWrapperInterface::LOCAL, because PHP grants a
    * greater trust level to local files (for example, they can be used in an

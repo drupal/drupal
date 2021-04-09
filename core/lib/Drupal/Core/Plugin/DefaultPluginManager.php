@@ -68,8 +68,8 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
   /**
    * A set of defaults to be referenced by $this->processDefinition().
    *
-   * If additional processing of plugins is necessary or helpful for development
-   * purposes.
+   * Allows for additional processing of plugins when necessary or helpful for
+   * development purposes.
    *
    * @var array
    */

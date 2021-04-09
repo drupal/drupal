@@ -11,7 +11,7 @@ use Drupal\editor\Entity\Editor;
 /**
  * Defines a "LlamaContextualAndButton" plugin.
  *
- * Plugin has a contextually OR toolbar builder-enabled "llama" feature.
+ * The plugin has a contextually or toolbar builder-enabled "llama" feature.
  *
  * @CKEditorPlugin(
  *   id = "llama_contextual_and_button",
