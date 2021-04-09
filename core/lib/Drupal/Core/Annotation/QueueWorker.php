@@ -52,7 +52,7 @@ class QueueWorker extends Plugin {
   public $title;
 
   /**
-   * An associative array containing the optional key:
+   * An associative array containing the optional key.
    *
    * This property is optional in the annotation and can be left out.
    *
