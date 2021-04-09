@@ -65,6 +65,7 @@ global-styling:
     - core/drupal.nodelist.foreach
     - core/drupal
     - core/once
+    - core/tabbable
 
 book:
   css:
