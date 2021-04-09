@@ -44,6 +44,8 @@ class ImageEffect extends Plugin {
   /**
    * A brief description of the image effect.
    *
+   * This property is optional in the annotation and can be left out.
+   *
    * This will be shown when adding or configuring this image effect.
    *
    * @ingroup plugin_translatable

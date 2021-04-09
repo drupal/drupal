@@ -67,6 +67,8 @@ class Layout extends Plugin {
   /**
    * The template file to render this layout (relative to the 'path' given).
    *
+   * This property is optional in the annotation and can be left out.
+   *
    * If specified, then the layout_discovery module will register the template
    * with hook_theme() and the module or theme registering this layout does not
    * need to do it.
@@ -79,6 +81,8 @@ class Layout extends Plugin {
 
   /**
    * The theme hook used to render this layout.
+   *
+   * This property is optional in the annotation and can be left out.
    *
    * If specified, it's assumed that the module or theme registering this layout
    * will also register the theme hook with hook_theme() itself. This is
@@ -93,12 +97,16 @@ class Layout extends Plugin {
   /**
    * Path (relative to the module or theme) to resources like icon or template.
    *
+   * This property is optional in the annotation and can be left out.
+   *
    * @var string
    */
   public $path;
 
   /**
    * The asset library.
+   *
+   * This property is optional in the annotation and can be left out.
    *
    * @var string
    */
@@ -107,12 +115,16 @@ class Layout extends Plugin {
   /**
    * The path to the preview image (relative to the 'path' given).
    *
+   * This property is optional in the annotation and can be left out.
+   *
    * @var string
    */
   public $icon;
 
   /**
    * The icon map.
+   *
+   * This property is optional in the annotation and can be left out.
    *
    * @var string[][]
    *

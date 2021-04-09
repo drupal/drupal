@@ -39,6 +39,8 @@ class Action extends Plugin {
   /**
    * The route name for a confirmation form for this action.
    *
+   * This property is optional in the annotation and can be left out.
+   *
    * @todo Provide a more generic way to allow an action to be confirmed first.
    *
    * @var string
