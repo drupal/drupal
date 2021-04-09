@@ -41,7 +41,7 @@ class MigrateProcessPlugin extends Plugin {
    * can skip setting this attribute and let
    * \Drupal\migrate\MigrateExecutable::processRow() handle the iteration.
    *
-   * @var bool (optional)
+   * @var bool
    */
   public $handle_multiples = FALSE;
 

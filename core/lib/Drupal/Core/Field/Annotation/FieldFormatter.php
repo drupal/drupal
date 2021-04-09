@@ -68,7 +68,7 @@ class FieldFormatter extends Plugin {
    * formatter in the Field UI when selecting a formatter for a given field
    * instance.
    *
-   * @var int optional
+   * @var int
    */
   public $weight = NULL;
 

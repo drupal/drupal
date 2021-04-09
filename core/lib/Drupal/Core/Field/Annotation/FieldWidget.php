@@ -73,7 +73,7 @@ class FieldWidget extends Plugin {
    * An integer to determine the weight of this widget relative to other widgets
    * in the Field UI when selecting a widget for a given field.
    *
-   * @var int optional
+   * @var int
    */
   public $weight = NULL;
 

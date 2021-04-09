@@ -56,7 +56,7 @@ class QueueWorker extends Plugin {
    *   - time: (optional) How much time Drupal cron should spend on calling
    *     this worker in seconds. Defaults to 15.
    *
-   * @var array (optional)
+   * @var array
    */
   public $cron;
 

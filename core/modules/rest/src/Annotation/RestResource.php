@@ -43,7 +43,7 @@ class RestResource extends Plugin {
    *
    * @see \Symfony\Component\Serializer\SerializerInterface's "type" parameter.
    *
-   * @var string (optional)
+   * @var string
    */
   public $serialization_class;
 

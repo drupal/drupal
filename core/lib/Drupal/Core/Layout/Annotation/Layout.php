@@ -71,7 +71,7 @@ class Layout extends Plugin {
    * with hook_theme() and the module or theme registering this layout does not
    * need to do it.
    *
-   * @var string optional
+   * @var string
    *
    * @see hook_theme()
    */
@@ -84,7 +84,7 @@ class Layout extends Plugin {
    * will also register the theme hook with hook_theme() itself. This is
    * mutually exclusive with 'template' - you can't specify both.
    *
-   * @var string optional
+   * @var string
    *
    * @see hook_theme()
    */
@@ -93,28 +93,28 @@ class Layout extends Plugin {
   /**
    * Path (relative to the module or theme) to resources like icon or template.
    *
-   * @var string optional
+   * @var string
    */
   public $path;
 
   /**
    * The asset library.
    *
-   * @var string optional
+   * @var string
    */
   public $library;
 
   /**
    * The path to the preview image (relative to the 'path' given).
    *
-   * @var string optional
+   * @var string
    */
   public $icon;
 
   /**
    * The icon map.
    *
-   * @var string[][] optional
+   * @var string[][]
    *
    * @see \Drupal\Core\Layout\Icon\IconBuilderInterface::build()
    */

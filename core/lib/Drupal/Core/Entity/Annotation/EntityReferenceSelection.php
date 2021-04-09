@@ -63,7 +63,7 @@ class EntityReferenceSelection extends Plugin {
    * An array of entity types that can be referenced by this plugin. Defaults to
    * all entity types.
    *
-   * @var array (optional)
+   * @var array
    */
   public $entity_types = [];
 

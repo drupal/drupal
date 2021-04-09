@@ -50,28 +50,28 @@ class Filter extends Plugin {
    *
    * @ingroup plugin_translatable
    *
-   * @var \Drupal\Core\Annotation\Translation (optional)
+   * @var \Drupal\Core\Annotation\Translation
    */
   public $description = '';
 
   /**
    * A default weight for the filter in new text formats.
    *
-   * @var int (optional)
+   * @var int
    */
   public $weight = 0;
 
   /**
    * Whether this filter is enabled or disabled by default.
    *
-   * @var bool (optional)
+   * @var bool
    */
   public $status = FALSE;
 
   /**
    * The default settings for the filter.
    *
-   * @var array (optional)
+   * @var array
    */
   public $settings = [];
 

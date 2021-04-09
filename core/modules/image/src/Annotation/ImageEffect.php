@@ -48,7 +48,7 @@ class ImageEffect extends Plugin {
    *
    * @ingroup plugin_translatable
    *
-   * @var \Drupal\Core\Annotation\Translation (optional)
+   * @var \Drupal\Core\Annotation\Translation
    */
   public $description = '';
 
