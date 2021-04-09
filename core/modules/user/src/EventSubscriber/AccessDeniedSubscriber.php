@@ -65,6 +65,9 @@ class AccessDeniedSubscriber implements EventSubscriberInterface {
       elseif ($route_name === 'user.page') {
         $redirect_url = Url::fromRoute('user.login', [], ['absolute' => TRUE]);
       }
+      elseif ($route_name === 'user.logout') {
+        $redirect_url = Url::fromRoute('<front>', [], ['absolute' => TRUE]);
+      }
 
       if ($redirect_url) {
         $event->setResponse(new RedirectResponse($redirect_url->toString()));
