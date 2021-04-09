@@ -3,6 +3,33 @@ const headerNavSelector = '#header-nav';
 const linkSubMenuId = 'home-submenu-1';
 const buttonSubMenuId = 'button-submenu-2';
 
+/**
+ * Sends arbitrary number of tab keys, and then checks that the last focused
+ * element is within the given parent selector.
+ *
+ * @param {object} browser - Nightwatch Browser object
+ * @param {string} parentSelector - Selector to which to test focused element against.
+ * @param {number} tabCount - Amount of tab presses to send to browser
+ * @param {boolean} [tabBackwards] - Hold down the SHIFT key when sending tabs
+ */
+const focusTrapCheck = (browser, parentSelector, tabCount, tabBackwards) => {
+  if (tabBackwards === true) browser.keys(browser.Keys.SHIFT);
+  for (let i = 0; i < tabCount; i++) {
+    browser.keys(browser.Keys.TAB).pause(50);
+  }
+  browser.execute(
+    // eslint-disable-next-line func-names, prefer-arrow-callback, no-shadow
+    function (parentSelector) {
+      // Verify focused element is still within the focus trap.
+      return document.activeElement.matches(parentSelector);
+    },
+    [parentSelector],
+    (result) => {
+      browser.assert.ok(result.value);
+    },
+  );
+};
+
 module.exports = {
   '@tags': ['core', 'olivero'],
   before(browser) {
@@ -55,26 +82,16 @@ module.exports = {
   },
   'Verify mobile menu focus trap': (browser) => {
     browser.drupalRelativeURL('/').click(mobileNavButtonSelector);
-    // Send the tab key 17 times.
-    // @todo test shift+tab functionality when
-    // https://www.drupal.org/project/drupal/issues/3191077 is committed.
-    for (let i = 0; i < 17; i++) {
-      browser.keys(browser.Keys.TAB).pause(50);
-    }
-
-    // Ensure that focus trap keeps focused element within the navigation.
-    browser.execute(
-      // eslint-disable-next-line func-names, prefer-arrow-callback, no-shadow
-      function (mobileNavButtonSelector, headerNavSelector) {
-        // Verify focused element is still within the focus trap.
-        return document.activeElement.matches(
-          `${headerNavSelector} *, ${mobileNavButtonSelector}`,
-        );
-      },
-      [mobileNavButtonSelector, headerNavSelector],
-      (result) => {
-        browser.assert.ok(result.value);
-      },
+    focusTrapCheck(
+      browser,
+      `${headerNavSelector} *, ${mobileNavButtonSelector}`,
+      17,
+    );
+    focusTrapCheck(
+      browser,
+      `${headerNavSelector} *, ${mobileNavButtonSelector}`,
+      19,
+      true,
     );
   },
 };
