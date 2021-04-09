@@ -5,6 +5,7 @@ namespace Drupal\Core\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 
 /**
  * Provides a common base class for entity view and form displays.
