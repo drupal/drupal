@@ -148,6 +148,11 @@ class UserAccountLinksTest extends BrowserTestBase {
     $this->drupalGet('user/logout');
     $this->assertSession()->addressEquals('/');
     $this->assertSession()->statusCodeEquals(200);
+
+    // The redirection shouldn't affect other pages.
+    $this->drupalGet('admin');
+    $this->assertSession()->addressEquals('/admin');
+    $this->assertSession()->statusCodeEquals(403);
   }
 
 }
