@@ -211,7 +211,7 @@ class UpdateContribTest extends UpdateTestBase {
    */
   public function testUpdateBaseThemeSecurityUpdate() {
     // @todo https://www.drupal.org/node/2338175 base themes have to be
-    //  installed.
+    //   installed.
     // Only install the subtheme, not the base theme.
     \Drupal::service('theme_installer')->install(['update_test_subtheme']);
 

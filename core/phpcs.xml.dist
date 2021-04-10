@@ -89,7 +89,6 @@
     <exclude name="Drupal.Commenting.InlineComment.InvalidEndChar"/>
     <exclude name="Drupal.Commenting.InlineComment.NotCapital"/>
     <exclude name="Drupal.Commenting.InlineComment.SpacingAfter"/>
-    <exclude name="Drupal.Commenting.InlineComment.SpacingBefore"/>
   </rule>
   <rule ref="Drupal.Commenting.PostStatementComment"/>
   <rule ref="Drupal.ControlStructures.ElseIf"/>

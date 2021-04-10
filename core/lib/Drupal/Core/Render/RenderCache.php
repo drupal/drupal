@@ -62,7 +62,7 @@ class RenderCache implements RenderCacheInterface {
     // Form submissions rely on the form being built during the POST request,
     // and render caching of forms prevents this from happening.
     // @todo remove the isMethodCacheable() check when
-    //       https://www.drupal.org/node/2367555 lands.
+    //   https://www.drupal.org/node/2367555 lands.
     if (!$this->requestStack->getCurrentRequest()->isMethodCacheable() || !$cid = $this->createCacheID($elements)) {
       return FALSE;
     }
@@ -89,7 +89,7 @@ class RenderCache implements RenderCacheInterface {
     // Form submissions rely on the form being built during the POST request,
     // and render caching of forms prevents this from happening.
     // @todo remove the isMethodCacheable() check when
-    //       https://www.drupal.org/node/2367555 lands.
+    //   https://www.drupal.org/node/2367555 lands.
     if (!$this->requestStack->getCurrentRequest()->isMethodCacheable() || !$cid = $this->createCacheID($elements)) {
       return FALSE;
     }
@@ -120,6 +120,7 @@ class RenderCache implements RenderCacheInterface {
       // were specified by all children, so what we need is a way to
       // persist that information between the cache write and the next cache
       // read. So, what we can do is store the following into 'foo':
+      // @code
       // [
       //   '#cache_redirect' => TRUE,
       //   '#cache' => [
@@ -127,6 +128,7 @@ class RenderCache implements RenderCacheInterface {
       //     'contexts' => ['b'],
       //   ],
       // ]
+      // @endcode
       //
       // This efficiently lets cacheGet() redirect to a $cid that includes all
       // of the required contexts. The strategy is on-demand: in the case where
@@ -152,6 +154,7 @@ class RenderCache implements RenderCacheInterface {
       // following:
       // - When a request is processed where context 'b' = 'b1', what would be
       //   cached for a $pre_bubbling_cid of 'foo' is:
+      // @code
       //   [
       //     '#cache_redirect' => TRUE,
       //     '#cache' => [
@@ -159,12 +162,14 @@ class RenderCache implements RenderCacheInterface {
       //       'contexts' => ['b', 'c'],
       //     ],
       //   ]
+      // @endcode
       // - When a request is processed where context 'b' = 'b2', we would
       //   retrieve the above from cache, but when following that redirection,
       //   get a cache miss, since we're processing a 'b' context value that
       //   has not yet been cached. Given the cache miss, we would continue
       //   with rendering the structure, perform the required context bubbling
       //   and then overwrite the above item with:
+      // @code
       //   [
       //     '#cache_redirect' => TRUE,
       //     '#cache' => [
@@ -172,11 +177,13 @@ class RenderCache implements RenderCacheInterface {
       //       'contexts' => ['b', 'd'],
       //     ],
       //   ]
+      // @endcode
       // - Now, if a request comes in where context 'b' = 'b1' again, the above
       //   would redirect to a cache key that doesn't exist, since we have not
       //   yet cached an item that includes 'b'='b1' and something for 'd'. So
       //   we would process this request as a cache miss, at the end of which,
       //   we would overwrite the above item back to:
+      // @code
       //   [
       //     '#cache_redirect' => TRUE,
       //     '#cache' => [
@@ -184,6 +191,7 @@ class RenderCache implements RenderCacheInterface {
       //       'contexts' => ['b', 'c'],
       //     ],
       //   ]
+      // @endcode
       // - The above would always result in accurate renderings, but would
       //   result in poor performance as we keep processing requests as cache
       //   misses even though the target of the redirection is cached, and
@@ -193,6 +201,7 @@ class RenderCache implements RenderCacheInterface {
       // A way to resolve the ping-pong problem is to eventually reach a cache
       // state where the redirection element includes all of the contexts used
       // throughout all requests:
+      // @code
       // [
       //   '#cache_redirect' => TRUE,
       //   '#cache' => [
@@ -200,6 +209,7 @@ class RenderCache implements RenderCacheInterface {
       //     'contexts' => ['b', 'c', 'd'],
       //   ],
       // ]
+      // @endcode
       //
       // We can't reach that state right away, since we don't know what the
       // result of future requests will be, but we can incrementally move

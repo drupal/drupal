@@ -357,8 +357,8 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
                 }
                 // Both list an array of attribute values; do an intersection,
                 // where we take into account that a value of:
-                //  - TRUE means the attribute value is allowed;
-                //  - FALSE means the attribute value is forbidden;
+                // - TRUE means the attribute value is allowed;
+                // - FALSE means the attribute value is forbidden;
                 // hence we keep the ANDed result.
                 else {
                   $intersection[$tag] = array_intersect_key($intersection[$tag], $new_attributes);
