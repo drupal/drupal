@@ -1011,7 +1011,7 @@ function user_role_revoke_permissions($rid, array $permissions = []) {
 }
 
 /**
- * Helper function.
+ * Helper to send a notification email.
  *
  * Conditionally create and send a notification email when a certain
  * operation happens on the given user account.

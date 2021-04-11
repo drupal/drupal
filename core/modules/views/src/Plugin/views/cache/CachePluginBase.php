@@ -80,11 +80,11 @@ abstract class CachePluginBase extends PluginBase {
   }
 
   /**
-   * Determine expiration time in the cache table of the cache type.
+   * Determine cache expiration time.
    *
-   * Or CACHE_PERMANENT if item shouldn't be removed automatically from cache.
-   *
-   * Plugins must override this to implement expiration in the cache table.
+   * Plugins must override this to implement expiration in the cache table. The
+   * default is CACHE_PERMANENT, indicating that the item will not be removed
+   * automatically from cache.
    *
    * @param $type
    *   The cache type, either 'query', 'result'.

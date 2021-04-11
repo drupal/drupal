@@ -6,7 +6,7 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Base class.
+ * File test base class.
  *
  * Used for file tests that adds some additional file specific assertions and
  * helper functions.

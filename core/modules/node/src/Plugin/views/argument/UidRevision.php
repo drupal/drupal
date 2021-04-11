@@ -7,7 +7,7 @@ use Drupal\user\Plugin\views\argument\Uid;
 /**
  * Filter handler.
  *
- * Used to accept a user id to check for nodes that  user posted or created a
+ * Used to accept a user id to check for nodes that a user posted or created a
  * revision on.
  *
  * @ViewsArgument("node_uid_revision")

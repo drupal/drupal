@@ -113,9 +113,9 @@ interface ViewsHandlerInterface extends ViewsPluginInterface {
   public function showExposeForm(&$form, FormStateInterface $form_state);
 
   /**
-   * Called just prior to query().
+   * Set up any needed relationship.
    *
-   * This lets a handler set up any relationship it needs.
+   * This is called just prior to query().
    */
   public function setRelationship();
 

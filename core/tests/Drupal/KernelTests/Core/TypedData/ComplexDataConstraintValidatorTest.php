@@ -7,7 +7,7 @@ use Drupal\Core\TypedData\MapDataDefinition;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * ComplexDataConstraintValidatorTest.
+ * Tests complex data constraint validator.
  *
  * Tests ComplexData validation constraint with both valid and invalid values
  * for a key.

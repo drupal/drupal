@@ -5,8 +5,6 @@ namespace Drupal\node\Plugin\views\row;
 use Drupal\views\Plugin\views\row\RssPluginBase;
 
 /**
- * Plugin.
- *
  * Performs a node_view on the resulting object and formats it as an RSS item.
  *
  * @ViewsRow(

@@ -182,10 +182,7 @@ class DateTimePlusTest extends TestCase {
   }
 
   /**
-   * Assertion helper.
-   *
-   * Used for testTimestamp and testDateTimestamp since they need different
-   * dataProviders.
+   * Asserts a DateTimePlus value.
    *
    * @param \Drupal\Component\Datetime\DateTimePlus $date
    *   DateTimePlus to test.

@@ -46,9 +46,7 @@ class UserRolesAssignmentTest extends BrowserTestBase {
   }
 
   /**
-   * Tests that when creating a user the role can be assigned.
-   *
-   * And that it can be removed again.
+   * Tests assigning a role at user creation and removing the role.
    */
   public function testCreateUserWithRole() {
     $rid = $this->drupalCreateRole(['administer users']);

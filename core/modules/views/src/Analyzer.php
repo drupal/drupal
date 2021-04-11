@@ -5,7 +5,7 @@ namespace Drupal\views;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 
 /**
- * Analyzer.
+ * View analyzer plugin manager.
  *
  * This tool is a small plugin manager to perform analysis on a view and
  * report results to the user. This tool is meant to let modules that

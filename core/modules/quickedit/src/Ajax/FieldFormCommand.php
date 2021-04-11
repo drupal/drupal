@@ -5,9 +5,7 @@ namespace Drupal\quickedit\Ajax;
 use Drupal\Core\Ajax\BaseCommand;
 
 /**
- * AJAX command.
- *
- * Passes a rendered field form to Quick Edit's JavaScript app.
+ *  Command for passing a rendered field form to Quick Edit's JavaScript app.
  */
 class FieldFormCommand extends BaseCommand {
 

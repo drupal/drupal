@@ -659,13 +659,11 @@ class Sql extends QueryPluginBase {
   }
 
   /**
-   * Ensure path.
+   * Ensure the specified table can be linked to the primary table in the JOINs.
    *
-   * Make sure that the specified table can be properly linked to the primary
-   * table in the JOINs. This function uses recursion. If the tables
-   * needed to complete the path back to the primary table are not in the
-   * query they will be added, but additional copies will NOT be added
-   * if the table is already there.
+   * This function uses recursion. If the tables needed to complete the path
+   * back to the primary table are not in the query they will be added, but
+   * additional copies will NOT be added if the table is already there.
    */
   protected function ensurePath($table, $relationship = NULL, $join = NULL, $traced = [], $add = []) {
     if (!isset($relationship)) {

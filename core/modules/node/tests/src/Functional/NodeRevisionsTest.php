@@ -12,7 +12,7 @@ use Drupal\node\NodeInterface;
 use Drupal\Component\Serialization\Json;
 
 /**
- * Create a node with revisions.
+ * Tests a node with revisions with a user with access to this content type.
  *
  * Test viewing, saving, reverting, and deleting revisions for users with access
  * for this content type.

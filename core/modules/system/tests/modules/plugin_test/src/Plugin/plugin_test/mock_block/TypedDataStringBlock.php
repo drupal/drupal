@@ -12,6 +12,7 @@ use Drupal\Core\Plugin\PluginBase;
  * Used by Plugin API context test.
  *
  * @see \Drupal\plugin_test\Plugin\MockBlockManager
+ * @see \Drupal\KernelTests\Core\Plugin\PluginTestBase
  */
 class TypedDataStringBlock extends PluginBase implements ContextAwarePluginInterface {
 

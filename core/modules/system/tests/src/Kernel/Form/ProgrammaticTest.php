@@ -57,10 +57,7 @@ class ProgrammaticTest extends KernelTestBase {
   }
 
   /**
-   * Helper function.
-   *
-   * Used to programmatically submit the form defined in form_test.module with
-   * the given values.
+   * Helper to programmatically submit the form defined in form_test.module.
    *
    * @param $values
    *   An array of field values to be submitted.

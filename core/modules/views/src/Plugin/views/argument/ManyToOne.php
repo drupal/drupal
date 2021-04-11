@@ -8,7 +8,7 @@ use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ManyToOneHelper;
 
 /**
- * Many to one.
+ * Argument handler for many to one relationships.
  *
  * An argument handler for use in fields that have a many to one relationship
  * with the table(s) to the left. This adds a bunch of options that are
@@ -91,9 +91,7 @@ class ManyToOne extends ArgumentPluginBase {
   }
 
   /**
-   * Override ensureMyTable so we can control how this joins in.
-   *
-   * The operator actually has influence over joining.
+   * {@inheritdoc}
    */
   public function ensureMyTable() {
     $this->helper->ensureMyTable();
