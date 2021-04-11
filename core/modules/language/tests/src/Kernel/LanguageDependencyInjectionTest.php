@@ -6,7 +6,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Exception\DeleteDefaultLanguageException;
 
 /**
- * Compares the default language.
+ * Tests the default language.
  *
  * It is compared from $GLOBALS against the dependency injected language object.
  *

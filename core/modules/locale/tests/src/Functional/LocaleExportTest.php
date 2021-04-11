@@ -153,9 +153,7 @@ EOF;
   }
 
   /**
-   * Helper function.
-   *
-   * Returns a .po file which strings will be marked as customized.
+   * Helper function that returns a .po file that will be customized.
    */
   public function getCustomPoFile() {
     return <<< EOF

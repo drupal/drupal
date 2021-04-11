@@ -1090,10 +1090,10 @@ function _locale_strip_quotes($string) {
 }
 
 /**
- * Helper function.
+ * Helper to parse a JavaScript file and insert data into the database.
  *
- * Parses a JavaScript file, extracts strings wrapped in Drupal.t() and
- * Drupal.formatPlural() and inserts them into the database.
+ * The strings wrapped in Drupal.t() and  Drupal.formatPlural() are extracted
+ * and inserted into the database.
  *
  * @param string $filepath
  *   File name to parse.

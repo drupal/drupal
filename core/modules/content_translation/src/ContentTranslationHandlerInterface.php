@@ -21,7 +21,7 @@ interface ContentTranslationHandlerInterface {
   public function getFieldDefinitions();
 
   /**
-   * Tests if user can perform given operation on translation of wrapped entity.
+   * Tests that user can perform an operation on translation of wrapped entity.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity whose translation has to be accessed.
