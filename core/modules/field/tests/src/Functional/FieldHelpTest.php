@@ -23,9 +23,6 @@ class FieldHelpTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  // Tests field help implementation without optional core modules enabled.
-  protected $profile = 'minimal';
-
   /**
    * The admin user that will be created.
    */
@@ -53,9 +50,6 @@ class FieldHelpTest extends BrowserTestBase {
 
     // Enable the Options, Email and Field API Test modules.
     \Drupal::service('module_installer')->install(['options', 'field_test']);
-    $this->resetAll();
-    \Drupal::service('plugin.manager.field.widget')->clearCachedDefinitions();
-    \Drupal::service('plugin.manager.field.field_type')->clearCachedDefinitions();
 
     $this->drupalGet('admin/help/field');
     $this->assertSession()->linkExists('Options', 0, 'Options module is listed on the Field help page.');
