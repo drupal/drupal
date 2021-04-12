@@ -7,13 +7,13 @@
   /**
    * Shows and hides the specified menu item's second level submenu.
    *
-   * @param {element} topLevelMenuITem - the <li> element that is the container for the menu and submenus.
+   * @param {element} topLevelMenuItem - the <li> element that is the container for the menu and submenus.
    * @param {boolean} [toState] - Optional state where we want the submenu to end up.
    */
-  function toggleSubNav(topLevelMenuITem, toState) {
+  function toggleSubNav(topLevelMenuItem, toState) {
     const buttonSelector =
       '.primary-nav__button-toggle, .primary-nav__menu-link--button';
-    const button = topLevelMenuITem.querySelector(buttonSelector);
+    const button = topLevelMenuItem.querySelector(buttonSelector);
     const state =
       toState !== undefined
         ? toState
@@ -33,13 +33,13 @@
         });
       }
       button.setAttribute('aria-expanded', 'true');
-      topLevelMenuITem
+      topLevelMenuItem
         .querySelector('.primary-nav__menu--level-2')
         .classList.add('is-active-menu-parent');
     } else {
       button.setAttribute('aria-expanded', 'false');
-      topLevelMenuITem.classList.remove('is-touch-event');
-      topLevelMenuITem
+      topLevelMenuItem.classList.remove('is-touch-event');
+      topLevelMenuItem
         .querySelector('.primary-nav__menu--level-2')
         .classList.remove('is-active-menu-parent');
     }
