@@ -576,6 +576,8 @@ class EntityFieldManager implements EntityFieldManagerInterface {
           //  proper provider setter. See https://www.drupal.org/node/2225961.
           if ($definition instanceof BaseFieldDefinition) {
             $definition->setProvider($module);
+            $definition->setName($field_name);
+            $definition->setTargetEntityTypeId($entity_type_id);
           }
           $field_definitions[$field_name] = $definition;
         }
