@@ -35,6 +35,7 @@ function demo_umami_form_install_configure_submit($form, FormStateInterface $for
 function demo_umami_set_users_passwords($admin_password) {
   // Collect the IDs of all users with roles editor or author.
   $ids = \Drupal::entityQuery('user')
+    ->accessCheck(FALSE)
     ->condition('roles', ['author', 'editor'], 'IN')
     ->execute();
 
