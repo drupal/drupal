@@ -19,7 +19,6 @@ branch.
   <release>
     <name>aaa_update_test 8.x-2.0</name>
     <version>8.x-2.0</version>
-    <tag>8.x-2.0</tag>
     <status>published</status>
     <release_link>http://example.com/aaa_update_test-8-x-2-0-release</release_link>
     <download_link>http://example.com/aaa_update_test-8.x-2.0.tar.gz</download_link>
@@ -32,7 +31,6 @@ branch.
   <release>
     <name>aaa_update_test 8.x-2.0-beta1</name>
     <version>8.x-2.0-beta1</version>
-    <tag>8.x-2.0-beta1</tag>
     <status>published</status>
     <release_link>http://example.com/aaa_update_test-8-x-2-0-beta1-release</release_link>
     <download_link>http://example.com/aaa_update_test-8.x-2.0-beta1.tar.gz</download_link>
@@ -45,7 +43,6 @@ branch.
   <release>
     <name>aaa_update_test 8.x-2.0-alpha1</name>
     <version>8.x-2.0-alpha1</version>
-    <tag>8.x-2.0-alpha1</tag>
     <status>published</status>
     <release_link>http://example.com/aaa_update_test-8-x-2-0-alpha1-release</release_link>
     <download_link>http://example.com/aaa_update_test-8.x-2.0-alpha1.tar.gz</download_link>
@@ -58,7 +55,6 @@ branch.
   <release>
     <name>aaa_update_test 8.x-1.1</name>
     <version>8.x-1.1</version>
-    <tag>8.x-1.1</tag>
     <status>published</status>
     <release_link>http://example.com/aaa_update_test-8-x-1-1-release</release_link>
     <download_link>http://example.com/aaa_update_test-8.x-1.1.tar.gz</download_link>
@@ -72,7 +68,6 @@ branch.
   <release>
     <name>aaa_update_test 8.x-1.0</name>
     <version>8.x-1.0</version>
-    <tag>8.x-1.0</tag>
     <status>unpublished</status>
     <release_link>http://example.com/aaa_update_test-8-x-1-0-release</release_link>
     <download_link>http://example.com/aaa_update_test-8.x-1.0.tar.gz</download_link>

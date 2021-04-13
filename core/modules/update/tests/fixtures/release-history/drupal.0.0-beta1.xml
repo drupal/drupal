@@ -14,7 +14,6 @@
     <!-- This release is not in a supported branch; therefore it should not be recommended. -->
     <name>Drupal 8.2.0</name>
     <version>8.2.0</version>
-    <tag>DRUPAL-8-2-0</tag>
     <status>published</status>
     <release_link>http://example.com/drupal-8-2-0-release</release_link>
     <download_link>http://example.com/drupal-8-2-0.tar.gz</download_link>
@@ -27,7 +26,6 @@
  <release>
    <name>Drupal 8.0.0-beta1</name>
    <version>8.0.0-beta1</version>
-   <tag>DRUPAL-8-0-0-beta1</tag>
    <status>published</status>
    <release_link>http://example.com/drupal-8-0-0-beta1-release</release_link>
    <download_link>http://example.com/drupal-8-0-0-beta1.tar.gz</download_link>
@@ -40,7 +38,6 @@
  <release>
   <name>Drupal 8.0.0-alpha1</name>
   <version>8.0.0-alpha1</version>
-  <tag>DRUPAL-8-0-0-alpha1</tag>
   <status>published</status>
   <release_link>http://example.com/drupal-8-0-0-alpha1-release</release_link>
   <download_link>http://example.com/drupal-8-0-0-alpha1.tar.gz</download_link>

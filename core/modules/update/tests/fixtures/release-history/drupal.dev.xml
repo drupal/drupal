@@ -13,7 +13,6 @@
  <release>
   <name>Drupal 8.0.0</name>
   <version>8.0.0</version>
-  <tag>DRUPAL-8-0-0</tag>
   <status>published</status>
   <release_link>http://example.com/drupal-8-0-0-release</release_link>
   <download_link>http://example.com/drupal-8-0-0.tar.gz</download_link>
@@ -26,7 +25,6 @@
  <release>
   <name>Drupal 8.0.x-dev</name>
   <version>8.0.x-dev</version>
-  <tag>DRUPAL-8-0</tag>
   <status>published</status>
   <release_link>http://example.com/drupal-8-0-x-dev-release</release_link>
   <download_link>http://example.com/drupal-8.0.x-dev.tar.gz</download_link>

@@ -14,7 +14,6 @@
         <release>
             <name>drupal 8.3.0-rc1</name>
             <version>8.3.0-rc1</version>
-            <tag>8.3.0-rc1</tag>
             <status>published</status>
             <release_link>http://example.com/drupal-8-3-0-rc1-release</release_link>
             <download_link>http://example.com/drupal-8-3-0-rc1.tar.gz</download_link>
@@ -30,7 +29,6 @@
         <release>
             <name>Drupal 8.2.0</name>
             <version>8.2.0</version>
-            <tag>DRUPAL-8-2-0</tag>
             <status>published</status>
             <release_link>http://example.com/drupal-8-2-0-release</release_link>
             <download_link>http://example.com/drupal-8-2-0.tar.gz</download_link>
@@ -49,7 +47,6 @@
         <release>
             <name>drupal 8.2.0-beta2</name>
             <version>8.2.0-beta2</version>
-            <tag>8.2.0-beta2</tag>
             <status>published</status>
             <release_link>http://example.com/drupal-8-2-0-beta2-release</release_link>
             <download_link>http://example.com/drupal-8-2-0-beta2.tar.gz</download_link>
@@ -65,7 +62,6 @@
         <release>
             <name>Drupal 8.1.0</name>
             <version>8.1.0</version>
-            <tag>DRUPAL-8-1-0</tag>
             <status>published</status>
             <release_link>http://example.com/drupal-8-1-0-release</release_link>
             <download_link>http://example.com/drupal-8-1-0.tar.gz</download_link>
@@ -84,7 +80,6 @@
         <release>
             <name>Drupal 8.0.0</name>
             <version>8.0.0</version>
-            <tag>DRUPAL-8-0-0</tag>
             <status>published</status>
             <release_link>http://example.com/drupal-8-0-0-release</release_link>
             <download_link>http://example.com/drupal-8-0-0.tar.gz</download_link>
