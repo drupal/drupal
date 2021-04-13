@@ -475,7 +475,7 @@ class Tables implements TablesInterface {
    *   The alias of the next entity table joined in.
    */
   protected function addNextBaseTable(EntityType $entity_type, $table, $sql_column, FieldStorageDefinitionInterface $field_storage) {
-    $join_condition = '%alias.' . $entity_type->getKey('id') . " = $table.$sql_column";
+    $join_condition = '[%alias].[' . $entity_type->getKey('id') . "] = [$table].[$sql_column]";
     return $this->sqlQuery->leftJoin($entity_type->getBaseTable(), NULL, $join_condition);
   }
 
