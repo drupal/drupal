@@ -9,6 +9,7 @@ use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Routing\Route;
 
 /**
  * Defines a class which preloads non-admin routes.
@@ -99,7 +100,7 @@ class RoutePreloader implements EventSubscriberInterface {
   public function onAlterRoutes(RouteBuildEvent $event) {
     $collection = $event->getRouteCollection();
     foreach ($collection->all() as $name => $route) {
-      if (strpos($route->getPath(), '/admin/') !== 0 && $route->getPath() != '/admin') {
+      if (strpos($route->getPath(), '/admin/') !== 0 && $route->getPath() != '/admin' && static::isGetAndHtmlRoute($route)) {
         $this->nonAdminRoutesOnRebuild[] = $name;
       }
     }
@@ -128,6 +129,23 @@ class RoutePreloader implements EventSubscriberInterface {
     // the kernel request event).
     $events[KernelEvents::REQUEST][] = ['onRequest'];
     return $events;
+  }
+
+  /**
+   * Determines whether the given route is a GET and HTML route.
+   *
+   * @param \Symfony\Component\Routing\Route $route
+   *   The route to analyze.
+   *
+   * @return bool
+   *   TRUE if GET is a valid method and HTML is a valid format for this route.
+   */
+  protected static function isGetAndHtmlRoute(Route $route) {
+    $methods = $route->getMethods() ?: ['GET'];
+    // If a route has no explicit format, then HTML is valid.
+    // @see \Drupal\Core\Routing\RequestFormatRouteFilter::getAvailableFormats()
+    $format = $route->hasRequirement('_format') ? explode('|', $route->getRequirement('_format')) : ['html'];
+    return in_array('GET', $methods, TRUE) && in_array('html', $format, TRUE);
   }
 
 }
