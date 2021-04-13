@@ -9,9 +9,9 @@
   var isDesktopNav = Drupal.olivero.isDesktopNav;
   var secondLevelNavMenus = document.querySelectorAll('.primary-nav__menu-item--has-children');
 
-  function toggleSubNav(topLevelMenuITem, toState) {
+  function toggleSubNav(topLevelMenuItem, toState) {
     var buttonSelector = '.primary-nav__button-toggle, .primary-nav__menu-link--button';
-    var button = topLevelMenuITem.querySelector(buttonSelector);
+    var button = topLevelMenuItem.querySelector(buttonSelector);
     var state = toState !== undefined ? toState : button.getAttribute('aria-expanded') !== 'true';
 
     if (state) {
@@ -23,11 +23,11 @@
       }
 
       button.setAttribute('aria-expanded', 'true');
-      topLevelMenuITem.querySelector('.primary-nav__menu--level-2').classList.add('is-active-menu-parent');
+      topLevelMenuItem.querySelector('.primary-nav__menu--level-2').classList.add('is-active-menu-parent');
     } else {
       button.setAttribute('aria-expanded', 'false');
-      topLevelMenuITem.classList.remove('is-touch-event');
-      topLevelMenuITem.querySelector('.primary-nav__menu--level-2').classList.remove('is-active-menu-parent');
+      topLevelMenuItem.classList.remove('is-touch-event');
+      topLevelMenuItem.querySelector('.primary-nav__menu--level-2').classList.remove('is-active-menu-parent');
     }
   }
 
