@@ -152,8 +152,8 @@ class UserPasswordResetTest extends BrowserTestBase {
     // Log out, and try to log in again using the same one-time link.
     $this->drupalLogout();
     $this->drupalGet($resetURL);
-    $this->submitForm([], 'Log in');
-    $this->assertText('You have tried to use a one-time login link that has either been used or is no longer valid. Please request a new one using the form below.');
+    $this->assertSession()->addressEquals(Url::fromRoute('user.pass'));
+    $this->assertSession()->pageTextContains('You have tried to use a one-time login link that has expired. Please request a new one using the form below.');
 
     // Request a new password again, this time using the email address.
     // Count email messages before to compare with after.
@@ -178,11 +178,11 @@ class UserPasswordResetTest extends BrowserTestBase {
     $bogus_timestamp = REQUEST_TIME - $timeout - 60;
     $_uid = $this->account->id();
     $this->drupalGet("user/reset/$_uid/$bogus_timestamp/" . user_pass_rehash($this->account, $bogus_timestamp));
-    $this->submitForm([], 'Log in');
+    $this->assertSession()->addressEquals(Url::fromRoute('user.pass'));
     $this->assertText('You have tried to use a one-time login link that has expired. Please request a new one using the form below.');
 
     // Create a user, block the account, and verify that a login link is denied.
-    $timestamp = REQUEST_TIME - 1;
+    $timestamp = \Drupal::time()->getRequestTime() - 1;
     $blocked_account = $this->drupalCreateUser()->block();
     $blocked_account->save();
     $this->drupalGet("user/reset/" . $blocked_account->id() . "/$timestamp/" . user_pass_rehash($blocked_account, $timestamp));
@@ -204,8 +204,8 @@ class UserPasswordResetTest extends BrowserTestBase {
     $this->account->setEmail("1" . $this->account->getEmail());
     $this->account->save();
     $this->drupalGet($old_email_reset_link);
-    $this->submitForm([], 'Log in');
-    $this->assertText('You have tried to use a one-time login link that has either been used or is no longer valid. Please request a new one using the form below.');
+    $this->assertSession()->addressEquals(Url::fromRoute('user.pass'));
+    $this->assertSession()->pageTextContains('You have tried to use a one-time login link that has expired. Please request a new one using the form below.');
 
     // Verify a password reset link will automatically log a user when /login is
     // appended.
@@ -220,15 +220,15 @@ class UserPasswordResetTest extends BrowserTestBase {
     // Ensure blocked and deleted accounts can't access the user.reset.login
     // route.
     $this->drupalLogout();
-    $timestamp = REQUEST_TIME - 1;
+    $timestamp = \Drupal::time()->getRequestTime() - 1;
     $blocked_account = $this->drupalCreateUser()->block();
     $blocked_account->save();
     $this->drupalGet("user/reset/" . $blocked_account->id() . "/$timestamp/" . user_pass_rehash($blocked_account, $timestamp) . '/login');
-    $this->assertSession()->statusCodeEquals(403);
+    $this->assertSession()->pageTextContains('You have tried to use a one-time login link that has expired. Please request a new one using the form below.');
 
     $blocked_account->delete();
     $this->drupalGet("user/reset/" . $blocked_account->id() . "/$timestamp/" . user_pass_rehash($blocked_account, $timestamp) . '/login');
-    $this->assertSession()->statusCodeEquals(403);
+    $this->assertSession()->pageTextContains('You have tried to use a one-time login link that has expired. Please request a new one using the form below.');
   }
 
   /**
@@ -332,7 +332,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     $this->drupalLogin($this->account);
     $this->drupalGet($resetURL);
     $this->assertRaw(new FormattableMarkup(
-      'Another user (%other_user) is already logged into the site on this computer, but you tried to use a one-time link for user %resetting_user. Please <a href=":logout">log out</a> and try using the link again.',
+      'Another user (%other_user) is already logged into the site on this computer. Please <a href=":logout">log out</a> and try using the link again.',
       ['%other_user' => $this->account->getAccountName(), '%resetting_user' => $another_account->getAccountName(), ':logout' => Url::fromRoute('user.logout')->toString()]
     ));
 
@@ -554,11 +554,11 @@ class UserPasswordResetTest extends BrowserTestBase {
     $reset_url = user_pass_reset_url($user1);
     $attack_reset_url = str_replace("user/reset/{$user1->id()}", "user/reset/{$user2->id()}", $reset_url);
     $this->drupalGet($attack_reset_url);
-    $this->submitForm([], 'Log in');
+    $this->assertSession()->addressEquals(Url::fromRoute('user.pass'));
     // Verify that the invalid password reset page does not show the user name.
     $this->assertNoText($user2->getAccountName());
     $this->assertSession()->addressEquals('user/password');
-    $this->assertText('You have tried to use a one-time login link that has either been used or is no longer valid. Please request a new one using the form below.');
+    $this->assertSession()->pageTextContains('You have tried to use a one-time login link that has expired. Please request a new one using the form below.');
   }
 
 }

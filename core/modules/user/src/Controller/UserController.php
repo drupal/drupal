@@ -130,23 +130,20 @@ class UserController extends ControllerBase {
         );
       }
       // A different user is already logged in on the computer.
-      else {
-        /** @var \Drupal\user\UserInterface $reset_link_user */
-        if ($reset_link_user = $this->userStorage->load($uid)) {
-          $this->messenger()
-            ->addWarning($this->t('Another user (%other_user) is already logged into the site on this computer, but you tried to use a one-time link for user %resetting_user. Please <a href=":logout">log out</a> and try using the link again.',
-              [
-                '%other_user' => $account->getAccountName(),
-                '%resetting_user' => $reset_link_user->getAccountName(),
-                ':logout' => Url::fromRoute('user.logout')->toString(),
-              ]));
-        }
-        else {
-          // Invalid one-time link specifies an unknown user.
-          $this->messenger()->addError($this->t('The one-time login link you clicked is invalid.'));
-        }
-        return $this->redirect('<front>');
+      /** @var \Drupal\user\UserInterface $reset_link_user */
+      if ($this->validPassResetHash($uid, $timestamp, $hash) && $reset_link_user = $this->userStorage->load($uid)) {
+        $this->messenger()
+          ->addWarning($this->t('Another user (%other_user) is already logged into the site on this computer. Please <a href=":logout">log out</a> and try using the link again.',
+            [
+              '%other_user' => $account->getAccountName(),
+              ':logout' => Url::fromRoute('user.logout')->toString(),
+            ]));
       }
+      else {
+        // Invalid one-time link specifies an unknown user.
+        $this->messenger()->addError($this->t('The one-time login link you clicked is invalid.'));
+      }
+      return $this->redirect('<front>');
     }
 
     $session = $request->getSession();
@@ -196,6 +193,25 @@ class UserController extends ControllerBase {
 
     // Time out, in seconds, until login URL expires.
     $timeout = $this->config('user.settings')->get('password_reset_timeout');
+    $current = \Drupal::time()->getRequestTime();
+    // Check whether the link has expired.
+    if ($current - $timestamp > $timeout) {
+      $this->messenger()
+        ->addError($this->t('You have tried to use a one-time login link that has expired. Please request a new one using the form below.'));
+      return $this->redirect('user.pass');
+    }
+    // Check whether the password reset URL is valid.
+    if (!$this->validPassResetHash($uid, $timestamp, $hash)) {
+      $current_user = \Drupal::currentUser();
+      if ($current_user->isAuthenticated() && $user != $current_user) {
+        // Another user is logged in, deny access. The parameters will be in
+        // the watchdog's URL for the administrator to check.
+        throw new AccessDeniedHttpException();
+      }
+      // Link is not valid.
+      $this->messenger()->addError($this->t('You have tried to use a one-time login link that has expired. Please request a new one using the form below.'));
+      return $this->redirect('user.pass');
+    }
 
     $expiration_date = $user->getLastLoginTime() ? $this->dateFormatter->format($timestamp + $timeout) : NULL;
     return $this->formBuilder()->getForm(UserPasswordResetForm::class, $user, $expiration_date, $timestamp, $hash);
@@ -221,25 +237,14 @@ class UserController extends ControllerBase {
    */
   public function resetPassLogin($uid, $timestamp, $hash) {
     // The current user is not logged in, so check the parameters.
-    $current = REQUEST_TIME;
     /** @var \Drupal\user\UserInterface $user */
     $user = $this->userStorage->load($uid);
 
-    // Verify that the user exists and is active.
     if ($user === NULL || !$user->isActive()) {
-      // Blocked or invalid user ID, so deny access. The parameters will be in
-      // the watchdog's URL for the administrator to check.
-      throw new AccessDeniedHttpException();
-    }
-
-    // Time out, in seconds, until login URL expires.
-    $timeout = $this->config('user.settings')->get('password_reset_timeout');
-    // No time out for first time login.
-    if ($user->getLastLoginTime() && $current - $timestamp > $timeout) {
       $this->messenger()->addError($this->t('You have tried to use a one-time login link that has expired. Please request a new one using the form below.'));
       return $this->redirect('user.pass');
     }
-    elseif ($user->isAuthenticated() && ($timestamp >= $user->getLastLoginTime()) && ($timestamp <= $current) && hash_equals($hash, user_pass_rehash($user, $timestamp))) {
+    if ($this->validPassResetHash($uid, $timestamp, $hash)) {
       user_login_finalize($user);
       $this->logger->notice('User %name used one-time login link at time %timestamp.', ['%name' => $user->getDisplayName(), '%timestamp' => $timestamp]);
       $this->messenger()->addStatus($this->t('You have just used your one-time login link. It is no longer necessary to use this link to log in. Please change your password.'));
@@ -261,6 +266,29 @@ class UserController extends ControllerBase {
 
     $this->messenger()->addError($this->t('You have tried to use a one-time login link that has either been used or is no longer valid. Please request a new one using the form below.'));
     return $this->redirect('user.pass');
+  }
+
+  /**
+   * Validate a password reset request.
+   *
+   * @param int $uid
+   *   User ID of the user requesting reset.
+   * @param int $timestamp
+   *   The current timestamp.
+   * @param string $hash
+   *   Login link hash.
+   *
+   * @return bool
+   *   Returns TRUE if the password reset request is valid.
+   *
+   * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+   *   If $uid is for a blocked user or invalid user ID.
+   */
+  protected function validPassResetHash($uid, $timestamp, $hash) {
+    /** @var \Drupal\user\UserInterface $user */
+    $user = $this->userStorage->load($uid);
+    $current = \Drupal::time()->getRequestTime();
+    return isset($user) && $user->isAuthenticated() && ($timestamp >= $user->getLastLoginTime()) && ($timestamp <= $current) && hash_equals($hash, user_pass_rehash($user, $timestamp)) && $user->isActive();
   }
 
   /**

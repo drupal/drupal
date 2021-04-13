@@ -42,12 +42,21 @@ class UserPasswordResetForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state, AccountInterface $user = NULL, $expiration_date = NULL, $timestamp = NULL, $hash = NULL) {
     if ($expiration_date) {
-      $form['message'] = ['#markup' => $this->t('<p>This is a one-time login for %user_name and will expire on %expiration_date.</p><p>Click on this button to log in to the site and change your password.</p>', ['%user_name' => $user->getAccountName(), '%expiration_date' => $expiration_date])];
+      $form['message'] = [
+        '#markup' => $this->t('<p>This is a one-time login for %user_name_mask and will expire on %expiration_date.</p><p>Click on this button to log in to the site and change your password.</p>', [
+          '%user_name_mask' => $this->maskUsername($user->getAccountName()),
+          '%expiration_date' => $expiration_date,
+        ]),
+      ];
       $form['#title'] = $this->t('Reset password');
     }
     else {
       // No expiration for first time login.
-      $form['message'] = ['#markup' => $this->t('<p>This is a one-time login for %user_name.</p><p>Click on this button to log in to the site and change your password.</p>', ['%user_name' => $user->getAccountName()])];
+      $form['message'] = [
+        '#markup' => $this->t('<p>This is a one-time login for %user_name_mask.</p><p>Click on this button to log in to the site and change your password.</p>', [
+          '%user_name_mask' => $this->maskUsername($user->getAccountName()),
+        ]),
+      ];
       $form['#title'] = $this->t('Set password');
     }
 
@@ -71,6 +80,20 @@ class UserPasswordResetForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // This form works by submitting the hash and timestamp to the user.reset
     // route with a 'login' action.
+  }
+
+  /**
+   * Masks the account username.
+   *
+   * @param $account_name
+   *   Account username.
+   *
+   * @return string
+   *   Masked account username.
+   */
+  private function maskUsername($account_name) {
+    $length = strlen($account_name);
+    return substr($account_name, 0, 1) . str_repeat('*', $length - 2) . substr($account_name, $length - 1, 1);
   }
 
 }
