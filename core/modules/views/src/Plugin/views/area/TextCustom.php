@@ -3,6 +3,7 @@
 namespace Drupal\views\Plugin\views\area;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Component\Utility\Xss;
 
 /**
  * Views area text handler.
@@ -31,6 +32,9 @@ class TextCustom extends TokenizeAreaPluginBase {
     $form['content'] = [
       '#title' => $this->t('Content'),
       '#type' => 'textarea',
+      '#description' => $this->t('You may enter data from this view as per the "Available global token replacements" above. You may include the following allowed HTML tags: <code>@tags</code>', [
+        '@tags' => '<' . implode('> <', Xss::getAdminTagList()) . '>',
+      ]),
       '#default_value' => $this->options['content'],
       '#rows' => 6,
     ];
