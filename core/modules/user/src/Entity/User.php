@@ -578,4 +578,19 @@ class User extends ContentEntityBase implements UserInterface {
     return array_keys(\Drupal::languageManager()->getLanguages(LanguageInterface::STATE_CONFIGURABLE));
   }
 
+  /**
+   * Masks the account username.
+   *
+   * Only the first and last character are shown, the other characters are
+   * replaced by asterisks.
+   *
+   * @return string
+   *   Masked account username.
+   */
+  public function maskUsername() {
+    $accountName = $this->getAccountName();
+    $length = strlen($accountName);
+    return $accountName[0] . str_repeat('*', $length - 2) . $accountName[$length - 1];
+  }
+
 }

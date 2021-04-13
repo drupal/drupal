@@ -130,7 +130,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderDoesNotExist('X-Drupal-Cache');
 
     // Check the one-time login page.
-    $this->assertText($this->account->getAccountName());
+    $this->assertText($this->account->maskUsername());
     $this->assertText('This login can be used only once.');
     $this->assertSession()->titleEquals('Reset password | Drupal');
 
