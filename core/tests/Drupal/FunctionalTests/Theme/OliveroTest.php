@@ -73,16 +73,17 @@ class OliveroTest extends BrowserTestBase {
     $this->drupalGet('');
     $this->assertSession()->statusCodeEquals(200);
 
-    // Confirm that search narrow and search wide libraries haven't yet been added
+    // Confirm that search narrow and search wide libraries haven't yet been
+    // added.
     $this->assertSession()->responseNotContains('olivero/css/components/header-search-wide.css');
     $this->assertSession()->responseNotContains('olivero/css/components/header-search-narrow.css');
 
-    // Enable modules that will exercise preprocess block logic
+    // Enable modules that will exercise preprocess block logic.
     \Drupal::service('module_installer')->install(
       ['search', 'menu_link_content']
     );
 
-    // Add at least one link to the main menu
+    // Add at least one link to the main menu.
     $parent_menu_link_content = MenuLinkContent::create([
       'title' => 'Home',
       'menu_name' => 'main',
@@ -90,7 +91,7 @@ class OliveroTest extends BrowserTestBase {
     ]);
     $parent_menu_link_content->save();
 
-    // Set branding color
+    // Set branding color.
     $system_theme_config = $this->container->get('config.factory')->getEditable('olivero.settings');
     $system_theme_config
       ->set('site_branding_bg_color', 'gray')
@@ -101,17 +102,18 @@ class OliveroTest extends BrowserTestBase {
       $this->drupalCreateUser(['search content'])
     );
 
-    // Ensure region attribute was added for primary menu
+    // Ensure region attribute was added for primary menu.
     $this->assertSession()->elementExists('css', 'ul[region="primary_menu"]');
 
-    // Confirm that search narrow and search wide libraries were added by preprocess
+    // Confirm that search narrow and search wide libraries were added by
+    // preprocess.
     $this->assertSession()->responseContains('olivero/css/components/header-search-wide.css');
     $this->assertSession()->responseContains('olivero/css/components/header-search-narrow.css');
 
-    // Confirm primary-nav class was added to main menu navigation block
+    // Confirm primary-nav class was added to main menu navigation block.
     $this->assertSession()->elementExists('css', '#block-olivero-main-menu.primary-nav');
 
-    // Ensure branding background color class was added
+    // Ensure branding background color class was added.
     $this->assertSession()->elementExists('css', '#block-olivero-site-branding.site-branding--bg-gray');
   }
 
@@ -119,7 +121,10 @@ class OliveroTest extends BrowserTestBase {
    * Tests that the Olivero theme can be uninstalled.
    */
   public function testIsUninstallable() {
-    $this->drupalLogin($this->drupalCreateUser(['access administration pages', 'administer themes']));
+    $this->drupalLogin($this->drupalCreateUser([
+      'access administration pages',
+      'administer themes',
+    ]));
 
     $this->drupalGet('admin/appearance');
     $this->cssSelect('a[title="Install Bartik as default theme"]')[0]->click();

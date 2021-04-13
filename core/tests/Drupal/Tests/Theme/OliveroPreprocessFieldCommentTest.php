@@ -3,9 +3,6 @@
 namespace Drupal\Tests\Theme;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Form\FormState;
-use Drupal\Core\Render\Element\Radio;
-use Drupal\form_test\Form\FormTestLabelForm;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -35,7 +32,7 @@ final class OliveroPreprocessFieldCommentTest extends UnitTestCase {
   public function testPreprocessFieldCommentCount() {
 
     $variables = [
-        'comments' => [],
+      'comments' => [],
     ];
     olivero_preprocess_field__comment($variables);
     $this->assertEquals(0, $variables['comment_count']);

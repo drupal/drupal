@@ -136,7 +136,6 @@ final class OliveroFormAlterTest extends UnitTestCase {
         ],
       ],
     ];
-
     // If three buttons, skipped since it cannot be determined.
     yield [
       [

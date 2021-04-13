@@ -5,7 +5,7 @@ namespace Drupal\Tests\Theme;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the Olivero theme's hook_preprocess_field_multiple_value_form
+ * Tests the Olivero theme's hook_preprocess_field_multiple_value_form.
  *
  * @group olivero
  */
@@ -44,7 +44,12 @@ final class OliveroPreprocessFieldMultipleValueFormTest extends UnitTestCase {
         '#title' => "Title",
       ],
     ];
-    $header_attributes = ['class' => ['form-item__label', 'form-item__label--multiple-value-form']];
+    $header_attributes = [
+      'class' => [
+        'form-item__label',
+        'form-item__label--multiple-value-form',
+      ],
+    ];
 
     olivero_preprocess_field_multiple_value_form($variables);
     $this->assertEquals($header_attributes, $variables['table']['#header'][0]['data']['#attributes']);
@@ -61,7 +66,14 @@ final class OliveroPreprocessFieldMultipleValueFormTest extends UnitTestCase {
         '#title' => "Title",
       ],
     ];
-    $header_attributes = ['class' => ['form-item__label', 'form-item__label--multiple-value-form', 'js-form-required', 'form-required']];
+    $header_attributes = [
+      'class' => [
+        'form-item__label',
+        'form-item__label--multiple-value-form',
+        'js-form-required',
+        'form-required',
+      ],
+    ];
 
     olivero_preprocess_field_multiple_value_form($variables);
     $this->assertEquals($header_attributes, $variables['table']['#header'][0]['data']['#attributes']);
@@ -96,9 +108,10 @@ final class OliveroPreprocessFieldMultipleValueFormTest extends UnitTestCase {
 
     olivero_preprocess_field_multiple_value_form($variables);
     $this->assertEquals(['tabledrag-disabled', 'js-tabledrag-disabled'], $variables['table']['#attributes']['class']);
-    // Test default case of adding 'is-disabled' class
+    // Test default case of adding 'is-disabled' class.
     $this->assertEquals(['is-disabled'], $variables['table']['#header'][0]['class']);
-    // Test adding 'is-disabled' class structure of header cell needs to be modified
+    // Test adding 'is-disabled' class structure of header cell needs to be
+    // modified.
     $this->assertEquals(['is-disabled'], $variables['table']['#header'][1]['class']);
   }
 

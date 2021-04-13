@@ -59,9 +59,7 @@ final class OliveroPreprocessInputTest extends UnitTestCase {
   }
 
   /**
-   * Provides test arguments for
-   * @return array
-   *   Test arguments.
+   * Data provider to test different types.
    */
   public function preprocessInputDataProvider() {
     $tests = [];
@@ -85,7 +83,11 @@ final class OliveroPreprocessInputTest extends UnitTestCase {
     $tests = [];
     foreach ($types as $html_type => $api_type) {
       $tests[] = [
-        ['form-element', 'form-element--type-' . $html_type, 'form-element--api-' . $api_type],
+        [
+          'form-element',
+          'form-element--type-' . $html_type,
+          'form-element--api-' . $api_type,
+        ],
         [
           '#type' => $api_type,
           '#title' => 'Field test ' . $html_type,
@@ -98,4 +100,5 @@ final class OliveroPreprocessInputTest extends UnitTestCase {
     }
     return $tests;
   }
+
 }
