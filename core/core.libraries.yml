@@ -85,6 +85,7 @@ drupal.ajax:
     - core/drupalSettings
     - core/drupal.progress
     - core/jquery.once
+    - core/tabbable
 
 drupal.announce:
   version: VERSION

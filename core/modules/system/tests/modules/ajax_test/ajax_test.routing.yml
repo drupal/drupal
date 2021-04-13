@@ -85,3 +85,11 @@ ajax_test.message_form:
     _form: '\Drupal\ajax_test\Form\AjaxTestMessageCommandForm'
   requirements:
     _access: 'TRUE'
+
+ajax_test.focus_first_form:
+  path: '/ajax-test/focus-first'
+  defaults:
+    _title: 'Ajax Focus First Form'
+    _form: '\Drupal\ajax_test\Form\AjaxTestFocusFirstForm'
+  requirements:
+    _access: 'TRUE'
