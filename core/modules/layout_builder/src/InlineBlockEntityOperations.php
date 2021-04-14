@@ -228,7 +228,7 @@ class InlineBlockEntityOperations implements ContainerInjectionInterface {
    */
   protected function getBlockIdsForRevisionIds(array $revision_ids) {
     if ($revision_ids) {
-      $query = $this->blockContentStorage->getQuery();
+      $query = $this->blockContentStorage->getQuery()->accessCheck(FALSE);
       $query->condition('revision_id', $revision_ids, 'IN');
       $block_ids = $query->execute();
       return $block_ids;
