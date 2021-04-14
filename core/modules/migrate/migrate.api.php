@@ -27,12 +27,9 @@ use Drupal\migrate\Row;
  * data source. The data can be migrated from a database, loaded from a file
  * (for example CSV, JSON or XML) or fetched from a web service (for example RSS
  * or REST). The row is sent to the process phase where it is transformed as
- * needed or marked to be skipped. Processing can also determine if a 'stub'
- * needs to be created. For example, if a term has a parent term which hasn't
- * been migrated yet, a stub term is created so that the parent relation can be
- * established, and the stub is updated at a later point. After processing, the
- * transformed row is passed to the destination phase where it is loaded (saved)
- * into the target Drupal site.
+ * needed or marked to be skipped. After processing, the transformed row is
+ * passed to the destination phase where it is loaded (saved) into the target
+ * Drupal site.
  *
  * Migrate API uses the Drupal plugin system for many different purposes. Most
  * importantly, the overall ETL process is defined as a migration plugin and the
@@ -81,6 +78,51 @@ use Drupal\migrate\Row;
  * class.
  *
  * @link https://api.drupal.org/api/drupal/namespace/Drupal!migrate!Plugin!migrate!destination List of destination plugins for Drupal configuration and content entities provided by the core Migrate module. @endlink
+ *
+ * @section sec_key_concepts Migrate API key concepts
+ * @subsection sec_stubs Stubs
+ * Taxonomy terms are an example of a data structure where an entity can have a
+ * reference to a parent. When a term is being migrated, it is possible that its
+ * parent term has not yet been migrated. Migrate API addresses this 'chicken
+ * and egg' dilemma by creating a stub term for the parent so that the child
+ * term can establish a reference to it. When the parent term is eventually
+ * migrated, Migrate API updates the previously created stub with the actual
+ * content.
+ *
+ * @subsection sec_map_tables Map tables
+ * Once a migrated row is saved and the destination IDs are known, Migrate API
+ * saves the source IDs, destination IDs, and the row hash into a map table. The
+ * source IDs and the hash facilitate tracking changes for continuous
+ * migrations. Other migrations can use the map tables for lookup purposes when
+ * establishing relationships between records.
+ *
+ * @subsection sec_highwater_mark Highwater mark
+ * A Highwater mark allows the Migrate API to track changes so that only data
+ * that has been created or updated in the source since the migration was
+ * previously executed is migrated. The only requirement to use the highwater
+ * feature is to declare the row property to use for the highwater mark. This
+ * can be any property that indicates the highest value migrated so far. For
+ * example, a timestamp property that indicates when a row of data was created
+ * or last updated would make an excellent highwater property. If the migration
+ * is executed again, only those rows that have a higher timestamp than in the
+ * previous migration would be included.
+ *
+ * @code
+ * source:
+ *   plugin: d7_node
+ *   high_water_property:
+ *     name: changed
+ * @endcode
+ *
+ * In this example, the row property 'changed' is the high_water_property. If
+ * the value of 'changed' is greater than the current highwater mark the row
+ * is processed and the value of the highwater mark is updated to the value of
+ * 'changed'.
+ *
+ * @subsection sec_rollbacks Rollbacks
+ * When developing a migration, it is quite typical that the first version does
+ * not provide correct results for all migrated data. Rollbacks allow you to
+ * undo a migration and then execute it again after adjusting it.
  *
  * @section sec_more_info Documentation handbooks
  * @link https://www.drupal.org/docs/8/api/migrate-api Migrate API handbook. @endlink
