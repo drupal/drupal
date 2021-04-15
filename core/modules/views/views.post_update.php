@@ -54,7 +54,6 @@ function views_post_update_configuration_entity_relationships() {
 }
 
 /**
-<<<<<<< HEAD
  * Rename the setting for showing the default display to 'default_display'.
  */
 function views_post_update_rename_default_display_setting() {
