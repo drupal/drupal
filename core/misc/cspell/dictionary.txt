@@ -656,7 +656,6 @@ giggabyte
 gitattributes
 gitignored
 gloop
-gnomovision
 gnumeric
 goldfinger
 gonner
@@ -1952,7 +1951,6 @@ yourbackend
 yourmodule
 youtube
 yowser
-yoyodyne
 yygroup
 yyyymm
 zartan
