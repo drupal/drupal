@@ -134,7 +134,7 @@ abstract class FileManagedTestBase extends BrowserTestBase {
   }
 
   /**
-   * Create file, save it to files table and assert that it occurs correctly.
+   * Creates and saves a file, asserting that it was saved.
    *
    * @param string $filepath
    *   Optional string specifying the file path. If none is provided then a
