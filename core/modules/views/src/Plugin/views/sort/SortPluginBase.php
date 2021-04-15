@@ -237,11 +237,11 @@ abstract class SortPluginBase extends HandlerBase implements CacheableDependency
 
     // Validate that the sort field identifier is unique within the sort
     // handlers. Note that the sort field identifier is different that other
-    // identifiers because is used, in URLs, as query string value of 'sort_by'
-    // parameter, while the others are used as query string parameter keys. For
-    // this reason it's legit to have a sort field identifier same as an exposed
-    // filter identifier. This prevents us to validate the uniqueness of this
-    // identifier by using DisplayPluginInterface::isIdentifierUnique().
+    // identifiers because it is used as a query string value of the 'sort_by'
+    // parameter, while the others are used as query string parameter keys.
+    // Therefore we can have a sort field identifier be the same as an exposed
+    // filter identifier. This prevents us from using
+    // DisplayPluginInterface::isIdentifierUnique() to test for uniqueness.
     // @see \Drupal\views\Plugin\views\display\DisplayPluginInterface::isIdentifierUnique()
     foreach ($this->view->display_handler->getHandlers('sort') as $key => $handler) {
       if ($handler->canExpose() && $handler->isExposed()) {
