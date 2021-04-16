@@ -111,7 +111,7 @@ class Bytes {
    *   The string to validate.
    *
    * @return bool
-   *   TRUE if the string is valid. FALSE otherwise.
+   *   TRUE if the string is valid, FALSE otherwise.
    */
   public static function validate($string): bool {
     // Ensure that the string starts with a numeric character.
@@ -122,17 +122,10 @@ class Bytes {
     // Remove the numeric characters from the beginning of the value.
     $string = preg_replace('/^[0-9\.]+/', '', $string);
 
-    // Remove remaining space from the value.
-    $string = preg_replace('/(\s)*/', '', $string);
+    // Remove remaining spaces from the value.
+    $string = trim($string);
 
-    // Lowercase the suffix.
-    $string = strtolower($string);
-
-    if (!in_array($string, self::ALLOWED_SUFFIXES)) {
-      return FALSE;
-    }
-
-    return TRUE;
+    return in_array(strtolower($string), self::ALLOWED_SUFFIXES);
   }
 
 }
