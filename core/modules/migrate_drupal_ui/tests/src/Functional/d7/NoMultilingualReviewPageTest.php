@@ -4,6 +4,8 @@ namespace Drupal\Tests\migrate_drupal_ui\Functional\d7;
 
 use Drupal\Tests\migrate_drupal_ui\Functional\NoMultilingualReviewPageTestBase;
 
+// cspell:ignore Multiupload Imagefield
+
 /**
  * Tests Drupal 7 upgrade without translations.
  *
@@ -90,6 +92,8 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'Locale',
       'Menu',
       'Menu translation',
+      'Multiupload Filefield Widget',
+      'Multiupload Imagefield Widget',
       'Node',
       'Node Reference',
       'Number',

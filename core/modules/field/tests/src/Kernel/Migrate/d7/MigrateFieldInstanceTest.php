@@ -108,6 +108,8 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
     $this->assertEntity('node.article.field_image', 'Image', 'image', FALSE, TRUE);
     $this->assertEntity('comment.comment_node_blog.comment_body', 'Comment', 'text_long', TRUE, FALSE);
     $this->assertEntity('node.blog.body', 'Body', 'text_with_summary', FALSE, TRUE);
+    $this->assertEntity('node.blog.field_file_mfw', 'file_mfw', 'file', FALSE, TRUE);
+    $this->assertEntity('node.blog.field_image_miw', 'image_miw', 'image', FALSE, TRUE);
     $this->assertEntity('comment.comment_node_book.comment_body', 'Comment', 'text_long', TRUE, FALSE);
     $this->assertEntity('node.book.body', 'Body', 'text_with_summary', FALSE, FALSE);
     $this->assertEntity('node.forum.taxonomy_forums', 'Forums', 'entity_reference', TRUE, FALSE);

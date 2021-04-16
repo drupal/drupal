@@ -114,6 +114,7 @@ class FieldInstanceSettings extends ProcessPluginBase {
 
     switch ($widget_type) {
       case 'image_image':
+      case 'image_miw':
         $settings = $instance_settings;
         $settings['default_image'] = [
           'alt' => '',
