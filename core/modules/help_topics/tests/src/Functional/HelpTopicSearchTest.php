@@ -58,9 +58,11 @@ class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
     // here.
     $this->rebuildContainer();
 
-    // Before running cron, verify that a search returns no results.
+    // Before running cron, verify that a search returns no results and shows
+    // warning.
     $this->drupalPostForm('search/help', ['keys' => 'notawordenglish'], 'Search');
     $this->assertSearchResultsCount(0);
+    $this->assertSession()->pageTextContains('is not fully indexed');
 
     // Run cron until the topics are fully indexed, with a limit of 100 runs
     // to avoid infinite loops.
@@ -76,6 +78,10 @@ class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
     // Visit the Search settings page and verify it says 100% indexed.
     $this->drupalGet('admin/config/search/pages');
     $this->assertSession()->pageTextContains('100% of the site has been indexed');
+    // Search and verify there is no warning.
+    $this->drupalPostForm('search/help', ['keys' => 'notawordenglish'], 'Search');
+    $this->assertSearchResultsCount(1);
+    $this->assertSession()->pageTextNotContains('is not fully indexed');
   }
 
   /**

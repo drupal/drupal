@@ -68,9 +68,11 @@ function help_topics_modules_uninstalled(array $modules) {
   }
   $search_plugin_manager = \Drupal::service('plugin.manager.search');
   if ($search_plugin_manager->hasDefinition('help_search')) {
-    // Ensure that topics for extensions that have been uninstalled are removed.
+    // Ensure that topics for extensions that have been uninstalled are removed
+    // and that the index state variable is updated.
     $help_search = $search_plugin_manager->createInstance('help_search');
     $help_search->updateTopicList();
+    $help_search->updateIndexState();
   }
 }
 
@@ -80,5 +82,23 @@ function help_topics_modules_uninstalled(array $modules) {
 function help_topics_themes_uninstalled(array $themes) {
   // Use the same code as module uninstall to ensure that theme help is removed
   // when a theme is uninstalled.
+  help_topics_modules_uninstalled([]);
+}
+
+/**
+ * Implements hook_modules_installed().
+ */
+function help_topics_modules_installed(array $modules, $is_syncing) {
+  // Use the same code as module uninstall to ensure that index state is
+  // updated when a module is installed.
+  help_topics_modules_uninstalled([]);
+}
+
+/**
+ * Implements hook_themes_installed().
+ */
+function help_topics_themes_installed(array $themes) {
+  // Use the same code as module uninstall to ensure that index state is
+  // updated when a theme is installed.
   help_topics_modules_uninstalled([]);
 }
