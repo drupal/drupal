@@ -43,6 +43,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     'node',
     'views',
     'views_ui',
+    'menu_ui',
   ];
 
   /**
@@ -55,7 +56,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected $langcodes = ['fr', 'ta'];
+  protected $langcodes = ['fr', 'ta', 'tyv'];
 
   /**
    * Administrator user for tests.
@@ -1070,6 +1071,24 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     // Check that the translations are saved.
     $this->clickLink('Add');
     $this->assertRaw('FR label');
+  }
+
+  /**
+   * Test translation save confirmation message.
+   */
+  public function testMenuTranslationWithoutChange() {
+    $this->drupalLogin($this->adminUser);
+    $this->drupalGet('admin/structure/menu/manage/main/translate/tyv/add');
+    $this->submitForm([], 'Save translation');
+    $this->assertSession()->pageTextContains('Tuvan translation was not added. To add a translation, you must modify the configuration.');
+
+    $this->drupalGet('admin/structure/menu/manage/main/translate/tyv/add');
+    $edit = [
+      'translation[config_names][system.menu.main][label]' => 'Main navigation Translation',
+      'translation[config_names][system.menu.main][description]' => 'Site section links Translation',
+    ];
+    $this->submitForm($edit, 'Save translation');
+    $this->assertSession()->pageTextContains('Successfully saved Tuvan translation.');
   }
 
   /**

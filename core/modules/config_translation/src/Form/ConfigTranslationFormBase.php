@@ -211,9 +211,11 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
       $saved_config = $config_translation->get();
       if (empty($saved_config)) {
         $config_translation->delete();
+        $this->messenger()->addStatus($this->t('@language translation was not added. To add a translation, you must modify the configuration.', ['@language' => $this->language->getName()]));
       }
       else {
         $config_translation->save();
+        $this->messenger()->addStatus($this->t('Successfully saved @language translation.', ['@language' => $this->language->getName()]));
       }
     }
 
