@@ -21,7 +21,6 @@ use Drupal\file\Entity\File;
 use Drupal\Core\File\Event\FileUploadSanitizeNameEvent;
 use Drupal\file\FileInterface;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Template\Attribute;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
@@ -594,10 +593,8 @@ function file_save_data($data, $destination = NULL, $replace = FileSystemInterfa
  *   \Symfony\Component\HttpFoundation\StreamedResponse.
  */
 function file_get_content_headers(FileInterface $file) {
-  $type = Unicode::mimeHeaderEncode($file->getMimeType());
-
   return [
-    'Content-Type' => $type,
+    'Content-Type' => $file->getMimeType(),
     'Content-Length' => $file->getSize(),
     'Cache-Control' => 'private',
   ];
