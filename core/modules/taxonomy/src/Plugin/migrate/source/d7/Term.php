@@ -6,7 +6,7 @@ use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\d7\FieldableEntity;
 
 /**
- * Taxonomy term source from database.
+ * Drupal 7 taxonomy term source from database.
  *
  * Available configuration keys:
  * - bundle: (optional) The taxonomy vocabulary (machine name) to filter terms

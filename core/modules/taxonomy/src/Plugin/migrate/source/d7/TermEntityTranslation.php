@@ -6,7 +6,7 @@ use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\d7\FieldableEntity;
 
 /**
- * Provides Drupal 7 taxonomy term entity translation source plugin.
+ * Drupal 7 taxonomy term entity translation source plugin.
  *
  * Available configuration keys:
  * - bundle: (optional) The taxonomy vocabulary (machine name) to filter terms
