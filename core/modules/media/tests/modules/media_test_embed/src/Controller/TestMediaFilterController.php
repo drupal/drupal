@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\media_test_ckeditor\Controller;
+namespace Drupal\media_test_embed\Controller;
 
 use Drupal\filter\FilterFormatInterface;
 use Drupal\media\Controller\MediaFilterController;
