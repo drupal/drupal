@@ -11,11 +11,11 @@
  */
 
 [dir="ltr"] .header-nav {
-  right: 0
+  left: 100%
 }
 
 [dir="rtl"] .header-nav {
-  left: 0
+  right: 100%
 }
 
 [dir="ltr"] .header-nav {
@@ -49,7 +49,6 @@
   height: 100%;
   padding-top: 0;
   padding-bottom: 1.125rem;
-  transform: translateX(101%); /* LTR */
   border-top: solid #fff 54px; /* Create room for the "close" button. */
   background-color: #fff;
   box-shadow: 0 0 72px rgba(0, 0, 0, 0.1)
@@ -57,6 +56,7 @@
 
 .header-nav.is-active {
     visibility: visible;
+    transform: translateX(-100%); /* LTR */
   }
 
 @supports (flex-basis: max-content) {
@@ -206,16 +206,6 @@ body.is-always-mobile-nav.toolbar-horizontal.toolbar-fixed.toolbar-tray-open .he
 @media (min-width: 75rem) {
 
 [dir="ltr"] body.is-always-mobile-nav .header-nav {
-      left: 100vw;
-      right: auto
-  }
-
-[dir="rtl"] body.is-always-mobile-nav .header-nav {
-      right: 100vw;
-      left: auto
-  }
-
-[dir="ltr"] body.is-always-mobile-nav .header-nav {
       padding-right: 1.125rem
   }
 
@@ -229,10 +219,6 @@ body.is-always-mobile-nav .header-nav {
       transition: transform 0.2s, visibility 0.2s;
       border-top-width: 198px
   }
-
-      body.is-always-mobile-nav .header-nav.is-active {
-        transform: translateX(-100%); /* LTR */
-      }
     }
 
 @media (min-width: 90rem) {
@@ -250,19 +236,6 @@ body.is-always-mobile-nav .header-nav {
   }
     }
 
-/* Necessary to override specificity of LTR and RTL compiled selectors. */
-
-[dir] .header-nav.is-active {
-  transform: translateX(0);
+[dir="rtl"] .header-nav.is-active {
+  transform: translateX(100%);
 }
-
-@media (min-width: 75rem) {
-
-[dir="rtl"] body.is-always-mobile-nav .header-nav.is-active {
-      transform: translateX(100%)
-  }
-    }
-
-[dir="rtl"] .header-nav {
-    transform: translateX(-101%);
-  }
