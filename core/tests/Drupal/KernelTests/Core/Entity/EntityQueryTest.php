@@ -916,12 +916,14 @@ class EntityQueryTest extends EntityKernelTestBase {
 
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_cs', [$fixtures[0]['uppercase'] . $fixtures[1]['uppercase']], 'IN')
       ->execute();
     $this->assertCount(0, $result, 'Case sensitive, uppercase');
 
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_cs', [$fixtures[0]['uppercase'] . $fixtures[1]['lowercase']], 'IN')
       ->execute();
     $this->assertCount(1, $result, 'Case sensitive, mixed');
@@ -929,6 +931,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     // Check the case insensitive field, STARTS_WITH operator.
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_ci', $fixtures[0]['lowercase'], 'STARTS_WITH')
       ->execute();
     $this->assertCount(1, $result, 'Case sensitive, lowercase.');
@@ -942,6 +945,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     // Check the case sensitive field, STARTS_WITH operator.
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_cs', $fixtures[0]['lowercase'], 'STARTS_WITH')
       ->execute();
     $this->assertCount(0, $result, 'Case sensitive, lowercase.');
@@ -955,12 +959,14 @@ class EntityQueryTest extends EntityKernelTestBase {
     // Check the case insensitive field, ENDS_WITH operator.
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_ci', $fixtures[1]['lowercase'], 'ENDS_WITH')
       ->execute();
     $this->assertCount(1, $result, 'Case sensitive, lowercase.');
 
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_ci', $fixtures[1]['uppercase'], 'ENDS_WITH')
       ->execute();
     $this->assertCount(1, $result, 'Case sensitive, exact match.');
@@ -968,12 +974,14 @@ class EntityQueryTest extends EntityKernelTestBase {
     // Check the case sensitive field, ENDS_WITH operator.
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_cs', $fixtures[1]['lowercase'], 'ENDS_WITH')
       ->execute();
     $this->assertCount(1, $result, 'Case sensitive, lowercase.');
 
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_cs', $fixtures[1]['uppercase'], 'ENDS_WITH')
       ->execute();
     $this->assertCount(0, $result, 'Case sensitive, exact match.');
@@ -982,12 +990,14 @@ class EntityQueryTest extends EntityKernelTestBase {
     // characters of the uppercase and lowercase strings.
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_ci', mb_substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8), 'CONTAINS')
       ->execute();
     $this->assertCount(1, $result, 'Case sensitive, lowercase.');
 
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_ci', mb_strtolower(mb_substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8)), 'CONTAINS')
       ->execute();
     $this->assertCount(1, $result, 'Case sensitive, exact match.');
@@ -995,12 +1005,14 @@ class EntityQueryTest extends EntityKernelTestBase {
     // Check the case sensitive field, CONTAINS operator.
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_cs', mb_substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8), 'CONTAINS')
       ->execute();
     $this->assertCount(1, $result, 'Case sensitive, lowercase.');
 
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_cs', mb_strtolower(mb_substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8)), 'CONTAINS')
       ->execute();
     $this->assertCount(0, $result, 'Case sensitive, exact match.');
