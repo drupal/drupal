@@ -9,7 +9,7 @@
   position: fixed;
   z-index: 105; /* appear above overlay */
   inset-block-start: 0;
-  inset-inline-end: 0;
+  inset-inline-start: 100%;
   visibility: hidden;
   overflow: auto;
   /* Ensure that header nav not use additional space and force
@@ -22,13 +22,13 @@
   padding-block: 0 var(--sp);
   padding-inline-start: var(--sp);
   padding-inline-end: var(--sp);
-  transform: translateX(101%); /* LTR */
   border-block-start: solid var(--color--white) var(--sp3); /* Create room for the "close" button. */
   background-color: var(--color--white);
   box-shadow: 0 0 72px rgba(0, 0, 0, 0.1);
 
   &.is-active {
     visibility: visible;
+    transform: translateX(-100%); /* LTR */
   }
 
   @supports (flex-basis: max-content) {
@@ -122,16 +122,11 @@ body.is-always-mobile-nav {
 
   & .header-nav {
     @media (--nav) {
-      inset-inline: 100vw auto;
       overflow: auto;
       max-width: calc((7 * (var(--grid-col-width--nav) + var(--grid-gap--nav))));
       padding-inline-end: var(--sp);
       transition: transform 0.2s, visibility 0.2s;
       border-top-width: var(--sp11);
-
-      &.is-active {
-        transform: translateX(-100%); /* LTR */
-      }
     }
 
     @media (--grid-max) {
@@ -141,19 +136,6 @@ body.is-always-mobile-nav {
   }
 }
 
-/* Necessary to override specificity of LTR and RTL compiled selectors. */
-[dir] .header-nav.is-active {
-  transform: translateX(0);
-}
-
-[dir="rtl"] {
-  & body.is-always-mobile-nav .header-nav.is-active {
-    @media (--nav) {
-      transform: translateX(100%);
-    }
-  }
-
-  & .header-nav {
-    transform: translateX(-101%);
-  }
+[dir="rtl"] .header-nav.is-active {
+  transform: translateX(100%);
 }
