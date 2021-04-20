@@ -240,6 +240,12 @@
 #drupal-off-canvas ul li,
 #drupal-off-canvas ol li {
   display: block;
+  padding: 5px 0;
+  border-bottom: 1px solid #333;
+  &:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+  }
 }
 #drupal-off-canvas blockquote,
 #drupal-off-canvas code {
