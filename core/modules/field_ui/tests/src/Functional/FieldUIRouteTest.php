@@ -137,7 +137,7 @@ class FieldUIRouteTest extends BrowserTestBase {
     $node_type_label = $node_type->label();
     /** @var \Drupal\Core\Entity\EntityViewModeInterface $teaser_display_mode */
     $teaser_display_mode = EntityViewMode::load('node.teaser');
-    $user_entity_type_label = $this->container->get('entity.manager')
+    $user_entity_type_label = $this->container->get('entity_type.manager')
       ->getStorage('user')->getEntityType()->getLabel();
     /** @var \Drupal\Core\Entity\EntityViewModeInterface $compact_display_mode */
     $compact_display_mode = EntityViewMode::load('user.compact');
