@@ -94,7 +94,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
     }
     $this->connection = $connection;
     if (!$update_registry) {
-      @trigger_error('Calling ModuleInstaller::__construct() without the $update_registry argument is deprecated in drupal:9.2.0. The $update_registry argument will be required in drupal:10.0.0. See https://www.drupal.org/project/drupal/issues/2124069.', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without the $update_registry argument is deprecated in drupal:9.2.0. The $update_registry argument will be required in drupal:10.0.0. See https://www.drupal.org/project/drupal/issues/2124069.', E_USER_DEPRECATED);
       $update_registry = \Drupal::service('update.update_registry');
     }
     $this->updateRegistry = $update_registry;
