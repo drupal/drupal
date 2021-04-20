@@ -171,7 +171,7 @@ class FieldUIRouteTest extends BrowserTestBase {
 
     foreach ($titles as $path => $title) {
       $this->drupalGet($path);
-      $this->assertText($title);
+      $this->assertSession()->pageTextContains($title);
     }
   }
 
