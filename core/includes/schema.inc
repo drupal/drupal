@@ -52,18 +52,21 @@ function drupal_get_schema_versions($module) {
  *   module is not installed.
  *
  * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0.
- *   Use \Drupal\Core\Update\VersioningUpdateRegistry::getInstalledVersion()
+ *   Use \Drupal\Core\Update\VersioningUpdateRegistry::getInstalledVersion() or
+ *   \Drupal\Core\Update\VersioningUpdateRegistry::getAllInstalledVersions()
  *   instead.
  *
  * @see https://www.drupal.org/node/2444417
  * @see \Drupal\Core\Update\VersioningUpdateRegistry::getInstalledVersion()
  */
 function drupal_get_installed_schema_version($module, $reset = FALSE, $array = FALSE) {
-  @trigger_error('drupal_get_installed_schema_version() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Update\VersioningUpdateRegistry::getInstalledVersion() instead. See https://www.drupal.org/node/2444417', E_USER_DEPRECATED);
+  @trigger_error('drupal_get_installed_schema_version() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Update\VersioningUpdateRegistry::getInstalledVersion() or \Drupal\Core\Update\VersioningUpdateRegistry::getAllInstalledVersions() instead. See https://www.drupal.org/node/2444417', E_USER_DEPRECATED);
+  /** @var \Drupal\Core\Update\VersioningUpdateRegistry $service */
+  $service = \Drupal::service('update.update_registry');
   if ($array) {
-    return \Drupal::keyValue('system.schema')->getAll();
+    return $service->getAllInstalledVersions();
   }
-  return \Drupal::service('update.update_registry')->getInstalledVersion($module);
+  return $service->getInstalledVersion((string) $module);
 }
 
 /**

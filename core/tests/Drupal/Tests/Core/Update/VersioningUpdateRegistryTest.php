@@ -102,6 +102,7 @@ class VersioningUpdateRegistryTest extends UnitTestCase {
 
   /**
    * @covers ::getInstalledVersion
+   * @covers ::getAllInstalledVersions
    * @covers ::setInstalledVersion
    */
   public function testGetInstalledVersion() {
@@ -127,6 +128,7 @@ class VersioningUpdateRegistryTest extends UnitTestCase {
     $this->assertSame(3000, $update_registry->getInstalledVersion('module3'));
     $update_registry->setInstalledVersion('module3', 3001);
     $this->assertSame(3001, $update_registry->getInstalledVersion('module3'));
+    $this->assertSame($versions, $update_registry->getAllInstalledVersions());
   }
 
 }

@@ -48,6 +48,7 @@ class VersioningUpdateRegistry {
   public function __construct(array $enabled_modules, KeyValueStoreInterface $key_value) {
     $this->enabledModules = $enabled_modules;
     $this->keyValue = $key_value;
+    $this->installedVersions = $this->keyValue->getAll();
   }
 
   /**
@@ -108,9 +109,6 @@ class VersioningUpdateRegistry {
    *   module is not installed.
    */
   public function getInstalledVersion(string $module): int {
-    if (!$this->installedVersions) {
-      $this->installedVersions = $this->keyValue->getAll();
-    }
     return $this->installedVersions[$module] ?? SCHEMA_UNINSTALLED;
   }
 
@@ -126,6 +124,18 @@ class VersioningUpdateRegistry {
     $this->keyValue->set($module, $version);
     // Update the static cache of module schema versions.
     $this->installedVersions[$module] = $version;
+  }
+
+  /**
+   * Returns the currently installed schema version for all modules.
+   *
+   * @return int[]
+   *   Array of modules as the keys and values as the currently installed
+   *   schema version of corresponding module, or SCHEMA_UNINSTALLED if the
+   *   module is not installed.
+   */
+  public function getAllInstalledVersions(): array {
+    return $this->installedVersions;
   }
 
 }
