@@ -54,7 +54,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
   protected $connection;
 
   /**
-   * The schema service.
+   * The update registry service.
    *
    * @var \Drupal\Core\Update\VersioningUpdateRegistry
    */
