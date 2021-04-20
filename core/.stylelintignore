@@ -1,2 +1,6 @@
 themes/claro/**/*.css
 !themes/claro/**/*.pcss.css
+misc/dialog/off-canvas.reset.css
+misc/dialog/off-canvas.base.css
+themes/stable/css/core/dialog/off-canvas.reset.css
+themes/stable/css/core/dialog/off-canvas.base.css
