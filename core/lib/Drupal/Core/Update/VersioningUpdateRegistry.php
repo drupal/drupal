@@ -26,14 +26,14 @@ class VersioningUpdateRegistry {
   /**
    * A static cache of schema currentVersions per module.
    *
-   * @var array
+   * @var int[][]
    */
   protected $allVersions = [];
 
   /**
    * A static cache of installed schema versions per module.
    *
-   * @var array
+   * @var int[]
    */
   protected $installedVersions = [];
 
@@ -56,9 +56,9 @@ class VersioningUpdateRegistry {
    * @param string $module
    *   A module name.
    *
-   * @return array|bool
-   *   If the module has updates, an array of available updates sorted by
-   *   version. Otherwise, FALSE.
+   * @return int[]
+   *   An array of available updates sorted by version. Empty array returned if
+   *   no updates available.
    */
   public function getAvailableUpdates(string $module) {
     if (!isset($this->allVersions[$module])) {
