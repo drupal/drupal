@@ -42,12 +42,12 @@ class EntityViewDisplayEditForm extends EntityDisplayFormBase {
     $target_entity_type = $this->entityTypeManager->getDefinition($this->entity->getTargetEntityTypeId());
     if ($bundle_entity_type_id = $target_entity_type->getBundleEntityType()) {
       $bundle = $this->entityTypeManager->getStorage($bundle_entity_type_id)->load($this->entity->getTargetBundle());
-      $form['#title'] = $this->t('Manage view display: @bundle-label', [
+      $form['#title'] = $this->t('Manage display: @bundle-label', [
         '@bundle-label' => $bundle->label(),
       ]);
     }
     else {
-      $form['#title'] = $this->t('Manage view display: @entity-type-label', [
+      $form['#title'] = $this->t('Manage display: @entity-type-label', [
         '@entity-type-label' => $target_entity_type->getLabel(),
       ]);
     }
