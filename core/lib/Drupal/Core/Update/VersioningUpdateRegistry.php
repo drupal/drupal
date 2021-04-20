@@ -61,7 +61,7 @@ class VersioningUpdateRegistry {
    *   An array of available updates sorted by version. Empty array returned if
    *   no updates available.
    */
-  public function getAvailableUpdates(string $module) {
+  public function getAvailableUpdates(string $module): array {
     if (!isset($this->allVersions[$module])) {
       $this->allVersions[$module] = [];
 
@@ -120,7 +120,7 @@ class VersioningUpdateRegistry {
    * @param int $version
    *   The new schema version.
    */
-  public function setInstalledVersion(string $module, int $version) {
+  public function setInstalledVersion(string $module, int $version): void {
     $this->keyValue->set($module, $version);
     // Update the static cache of module schema versions.
     $this->installedVersions[$module] = $version;
