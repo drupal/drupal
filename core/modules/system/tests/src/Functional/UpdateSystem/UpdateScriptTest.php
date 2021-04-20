@@ -613,7 +613,7 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->assertEqual(8001, $schema_version, 'update_script_test schema version is 8001 after updating.');
 
     // Set the installed schema version to one less than the current update.
-    $update_registry->getInstalledVersion('update_script_test', $schema_version - 1);
+    $update_registry->setInstalledVersion('update_script_test', $schema_version - 1);
     $schema_version = $update_registry->getInstalledVersion('update_script_test');
     $this->assertEqual(8000, $schema_version, 'update_script_test schema version overridden to 8000.');
 
