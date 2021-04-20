@@ -1,0 +1,6 @@
+services:
+  tracker.storage:
+    class: Drupal\tracker\TrackerStorage
+    arguments: ['@state', '@database', '@entity_type.manager', '@config.factory', '@logger.factory', '@comment.statistics']
+    tags:
+      - { name: backend_overridable }

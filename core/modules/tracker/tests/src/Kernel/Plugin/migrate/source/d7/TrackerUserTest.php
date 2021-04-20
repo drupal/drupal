@@ -16,7 +16,7 @@ class TrackerUserTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['tracker', 'migrate_drupal'];
+  protected static $modules = ['tracker', 'comment', 'migrate_drupal'];
 
   /**
    * {@inheritdoc}

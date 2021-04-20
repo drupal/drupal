@@ -11,7 +11,7 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
  */
 class MigrateTrackerSettingsTest extends MigrateDrupal7TestBase {
 
-  protected static $modules = ['tracker'];
+  protected static $modules = ['tracker', 'comment'];
 
   /**
    * {@inheritdoc}
