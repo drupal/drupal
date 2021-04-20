@@ -42,7 +42,7 @@ class Layout extends Plugin {
   /**
    * A description for advanced layouts.
    *
-   * This property is optional and it does not need to be declared.   
+   * This property is optional and it does not need to be declared.
    *
    * Sometimes layouts are so complex that the name is insufficient to describe
    * a layout such that a visually impaired administrator could layout a page
