@@ -68,7 +68,7 @@ class FieldFormatter extends Plugin {
    * formatter in the Field UI when selecting a formatter for a given field
    * instance.
    *
-   * This property is optional in the annotation and can be left out.
+   * This property is optional and it does not need to be declared.
    *
    * @var int
    */

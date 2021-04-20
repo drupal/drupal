@@ -63,7 +63,7 @@ class EntityReferenceSelection extends Plugin {
    * An array of entity types that can be referenced by this plugin. Defaults to
    * all entity types.
    *
-   * This property is optional in the annotation and can be left out.
+   * This property is optional and it does not need to be declared.
    *
    * @var array
    */

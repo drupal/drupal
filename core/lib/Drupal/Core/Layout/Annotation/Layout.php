@@ -40,7 +40,9 @@ class Layout extends Plugin {
   public $label;
 
   /**
-   * An optional description for advanced layouts.
+   * A description for advanced layouts.
+   *
+   * This property is optional and it does not need to be declared.   
    *
    * Sometimes layouts are so complex that the name is insufficient to describe
    * a layout such that a visually impaired administrator could layout a page
@@ -67,7 +69,7 @@ class Layout extends Plugin {
   /**
    * The template file to render this layout (relative to the 'path' given).
    *
-   * This property is optional in the annotation and can be left out.
+   * This property is optional and it does not need to be declared.
    *
    * If specified, then the layout_discovery module will register the template
    * with hook_theme() and the module or theme registering this layout does not
@@ -82,7 +84,7 @@ class Layout extends Plugin {
   /**
    * The theme hook used to render this layout.
    *
-   * This property is optional in the annotation and can be left out.
+   * This property is optional and it does not need to be declared.
    *
    * If specified, it's assumed that the module or theme registering this layout
    * will also register the theme hook with hook_theme() itself. This is
@@ -97,7 +99,7 @@ class Layout extends Plugin {
   /**
    * Path (relative to the module or theme) to resources like icon or template.
    *
-   * This property is optional in the annotation and can be left out.
+   * This property is optional and it does not need to be declared.
    *
    * @var string
    */
@@ -106,7 +108,7 @@ class Layout extends Plugin {
   /**
    * The asset library.
    *
-   * This property is optional in the annotation and can be left out.
+   * This property is optional and it does not need to be declared.
    *
    * @var string
    */
@@ -115,7 +117,7 @@ class Layout extends Plugin {
   /**
    * The path to the preview image (relative to the 'path' given).
    *
-   * This property is optional in the annotation and can be left out.
+   * This property is optional and it does not need to be declared.
    *
    * @var string
    */
@@ -124,7 +126,7 @@ class Layout extends Plugin {
   /**
    * The icon map.
    *
-   * This property is optional in the annotation and can be left out.
+   * This property is optional and it does not need to be declared.
    *
    * @var string[][]
    *

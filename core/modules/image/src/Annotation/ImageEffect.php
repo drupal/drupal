@@ -44,7 +44,7 @@ class ImageEffect extends Plugin {
   /**
    * A brief description of the image effect.
    *
-   * This property is optional in the annotation and can be left out.
+   * This property is optional and it does not need to be declared.
    *
    * This will be shown when adding or configuring this image effect.
    *

@@ -48,7 +48,7 @@ class Filter extends Plugin {
   /**
    * Additional administrative information about the filter's behavior.
    *
-   * This property is optional in the annotation and can be left out.
+   * This property is optional and it does not need to be declared.
    *
    * @ingroup plugin_translatable
    *
@@ -59,7 +59,7 @@ class Filter extends Plugin {
   /**
    * A default weight for the filter in new text formats.
    *
-   * This property is optional in the annotation and can be left out.
+   * This property is optional and it does not need to be declared.
    *
    * @var int
    */
@@ -68,7 +68,7 @@ class Filter extends Plugin {
   /**
    * Whether this filter is enabled or disabled by default.
    *
-   * This property is optional in the annotation and can be left out.
+   * This property is optional and it does not need to be declared.
    *
    * @var bool
    */
@@ -77,7 +77,7 @@ class Filter extends Plugin {
   /**
    * The default settings for the filter.
    *
-   * This property is optional in the annotation and can be left out.
+   * This property is optional and it does not need to be declared.
    *
    * @var array
    */

@@ -35,7 +35,7 @@ class MigrateProcessPlugin extends Plugin {
   /**
    * Whether the plugin handles multiples itself.
    *
-   * This property is optional in the annotation and can be left out.
+   * This property is optional and it does not need to be declared.
    *
    * Typically these plugins will expect an array as input and iterate over it
    * themselves, changing the whole array. For example the 'sub_process' and the
