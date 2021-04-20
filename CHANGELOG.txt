@@ -1,3 +1,8 @@
+Drupal 7.80, 2021-04-20
+-----------------------
+- Fixed security issues:
+   - SA-CORE-2021-002
+
 Drupal 7.79, 2021-04-07
 -----------------------
 - Initial support for PHP 8
