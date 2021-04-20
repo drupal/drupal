@@ -162,11 +162,11 @@ class FieldUIRouteTest extends BrowserTestBase {
     $titles += [
       "$path/fields" => (string) t('Manage fields: @entity', $args),
       "$path/fields/add-field" => (string) t('Add field to @entity', $args),
-      "$path/form-display" => (string) t('Manage form display @mode for @entity', $args + ['@mode' => (string) t('Default')]),
-      "$path/form-display/default" => (string) t('Manage form display @mode for @entity', $args + ['@mode' => (string) t('Default')]),
-      "$path/display" => (string) t('Manage display @mode for @entity', $args + ['@mode' => (string) t('Default')]),
-      "$path/display/default" => (string) t('Manage display @mode for @entity', $args + ['@mode' => (string) t('Default')]),
-      "$path/display/compact" => (string) t('Manage display @mode for @entity', $args + ['@mode' => $compact_display_mode->label()]),
+      "$path/form-display" => (string) t('Manage form display: @entity', $args + ['@mode' => (string) t('Default')]),
+      "$path/form-display/default" => (string) t('Manage form display: @entity', $args + ['@mode' => (string) t('Default')]),
+      "$path/display" => (string) t('Manage display: @entity', $args + ['@mode' => (string) t('Default')]),
+      "$path/display/default" => (string) t('Manage display: @entity', $args + ['@mode' => (string) t('Default')]),
+      "$path/display/compact" => (string) t('Manage display: @entity', $args + ['@mode' => $compact_display_mode->label()]),
     ];
 
     foreach ($titles as $path => $title) {
