@@ -30,4 +30,15 @@ class UpdateSchemaTest extends KernelTestBase {
     }
   }
 
+  /**
+   * Deprecation testing for drupal_get_schema_versions function.
+   *
+   * @group legacy
+   * @see drupal_get_schema_versions()
+   */
+  public function testDrupalGetSchemaVersionsLegacyTest() {
+    $this->expectDeprecation('drupal_get_schema_versions() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Update\VersioningUpdateRegistry::getAvailableUpdates() instead. See https://www.drupal.org/node/2444417');
+    $this->assertEmpty(drupal_get_schema_versions('update_test_schema'));
+  }
+
 }
