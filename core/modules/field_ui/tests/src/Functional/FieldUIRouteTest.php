@@ -160,7 +160,7 @@ class FieldUIRouteTest extends BrowserTestBase {
     $path = 'admin/config/people/accounts';
     $args = ['@entity' => $user_entity_type_label];
     $titles += [
-      "$path/fields" => (string) t('Manage fields for @entity', $args),
+      "$path/fields" => (string) t('Manage fields: @entity', $args),
       "$path/fields/add-field" => (string) t('Add field to @entity', $args),
       "$path/form-display" => (string) t('Manage form display @mode for @entity', $args + ['@mode' => (string) t('Default')]),
       "$path/form-display/default" => (string) t('Manage form display @mode for @entity', $args + ['@mode' => (string) t('Default')]),
