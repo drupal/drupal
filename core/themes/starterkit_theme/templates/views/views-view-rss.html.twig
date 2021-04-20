@@ -1,0 +1,28 @@
+{#
+/**
+ * @file
+ * Theme override for feed displays that use the RSS style.
+ *
+ * Available variables:
+ * - link: The link to the feed (the view path).
+ * - namespaces: The XML namespaces (added automatically).
+ * - title: The title of the feed (as set in the view).
+ * - description: The feed description (from feed settings).
+ * - langcode: The language encoding.
+ * - channel_elements: The formatted channel elements.
+ * - items: The feed items themselves.
+ *
+ * @see template_preprocess_views_view_rss()
+ */
+#}
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xml:base="{{ link }}"{{ namespaces }}>
+  <channel>
+    <title>{{ title }}</title>
+    <link>{{ link }}</link>
+    <description>{{ description }}</description>
+    <language>{{ langcode }}</language>
+    {{ channel_elements }}
+    {{ items }}
+  </channel>
+</rss>

@@ -1,0 +1,55 @@
+{#
+/**
+ * @file
+ * Theme override of a media item in the media library.
+ *
+ * This is used for media that the user can select from the grid of media
+ * items. It is not used for items that have already been selected in the
+ * corresponding field widget, or for items that have been previously selected
+ * before adding new media to the library.
+ *
+ * Available variables:
+ * - media: The entity with limited access to object properties and methods.
+ *   Only method names starting with "get", "has", or "is" and a few common
+ *   methods such as "id", "label", and "bundle" are available. For example:
+ *   - entity.getEntityTypeId() will return the entity type ID.
+ *   - entity.hasField('field_example') returns TRUE if the entity includes
+ *     field_example. (This does not indicate the presence of a value in this
+ *     field.)
+ *   Calling other methods, such as entity.delete(), will result in an exception.
+ *   See \Drupal\Core\Entity\EntityInterface for a full list of methods.
+ * - name: Name of the media.
+ * - content: Media content.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the main title tag that appears in the template.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the main title tag that appears in the template.
+ * - view_mode: View mode; for example, "teaser" or "full".
+ * - attributes: HTML attributes for the containing element.
+ * - title_attributes: Same as attributes, except applied to the main title
+ *   tag that appears in the template.
+ * - url: Direct URL of the media.
+ * - preview_attributes: HTML attributes for the preview wrapper.
+ * - metadata_attributes: HTML attributes for the expandable metadata area.
+ * - status: Whether or not the Media is published.
+ *
+ * @see template_preprocess_media()
+ *
+ * @ingroup themeable
+ */
+#}
+<article{{ attributes }}>
+  {% if content %}
+    <div{{ preview_attributes.addClass('media-library-item__preview js-media-library-item-preview') }}>
+      {{ content|without('name') }}
+    </div>
+    {% if not status %}
+      <div class="media-library-item__status">{{ "unpublished" | t }}</div>
+    {% endif %}
+    <div{{ metadata_attributes.addClass('media-library-item__attributes') }}>
+      <div class="media-library-item__name">
+        {{ name }}
+      </div>
+    </div>
+  {% endif %}
+</article>

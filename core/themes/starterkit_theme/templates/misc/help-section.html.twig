@@ -1,0 +1,48 @@
+{#
+/**
+ * @file
+ * Theme override for a section of the help page.
+ *
+ * This implementation divides the links into 4 columns.
+ *
+ * Available variables:
+ * - title: The section title.
+ * - description: The description text for the section.
+ * - links: Links to display in the section.
+ * - empty: Text to display if there are no links.
+ */
+#}
+<div class="clearfix">
+  <h2>{{ title }}</h2>
+  <p>{{ description }}</p>
+  {% if links %}
+    {# Calculate the column length, to divide links into 4 columns. #}
+    {% set size = links|length // 4 %}
+    {% if size * 4 < links|length %}
+      {% set size = size + 1 %}
+    {% endif %}
+
+    {# Output the links in 4 columns. #}
+    {% set count = 0 %}
+    {% for link in links %}
+      {% if count == 0 %}
+        {# Start a new column. #}
+        <div class="layout-column layout-column--quarter"><ul>
+      {% endif %}
+      <li>{{ link }}</li>
+      {% set count = count + 1 %}
+      {% if count >= size %}
+        {# End the current column. #}
+        {% set count = 0 %}
+        </ul></div>
+      {% endif %}
+    {% endfor %}
+
+    {# End the last column, if one is open. #}
+    {% if count > 0 %}
+      </ul></div>
+    {% endif %}
+  {% else %}
+    <p>{{ empty }}</p>
+  {% endif %}
+</div>
