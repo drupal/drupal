@@ -124,6 +124,9 @@ class RequestPath extends ConditionPluginBase implements ContainerFactoryPluginI
    * {@inheritdoc}
    */
   public function summary() {
+    if (empty($this->configuration['pages'])) {
+      return $this->t('No page is specified');
+    }
     $pages = array_map('trim', explode("\n", $this->configuration['pages']));
     $pages = implode(', ', $pages);
     if (!empty($this->configuration['negate'])) {
