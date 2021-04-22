@@ -1679,7 +1679,7 @@ module.exports = {
           element.autocomplete({
             appendTo: jQuery(),
           });
-          toReturn.emptyjQueryObjectInsideUiFront =
+          toReturn.emptyObjectInsideUiFront =
             element.autocomplete('widget').parent()[0] ===
             jQuery('#autocomplete-wrap2')[0];
 
@@ -1689,7 +1689,7 @@ module.exports = {
         (result) => {
           const expectedTrue = {
             nullInsideUiFront: 'null, inside .ui-front',
-            emptyjQueryObjectInsideUiFront:
+            emptyObjectInsideUiFront:
               'empty jQuery object, inside .ui-front',
           };
           Object.keys(expectedTrue).forEach((property) => {
