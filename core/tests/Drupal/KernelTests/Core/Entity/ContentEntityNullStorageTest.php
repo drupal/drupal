@@ -30,10 +30,10 @@ class ContentEntityNullStorageTest extends KernelTestBase {
    * @see \Drupal\Core\Entity\Query\Null\Query
    */
   public function testEntityQuery() {
-    $this->assertSame(0, \Drupal::entityQuery('contact_message')->count()->execute(), 'Counting a null storage returns 0.');
-    $this->assertSame([], \Drupal::entityQuery('contact_message')->execute(), 'Querying a null storage returns an empty array.');
-    $this->assertSame([], \Drupal::entityQuery('contact_message')->condition('contact_form', 'test')->execute(), 'Querying a null storage returns an empty array and conditions are ignored.');
-    $this->assertSame([], \Drupal::entityQueryAggregate('contact_message')->aggregate('name', 'AVG')->execute(), 'Aggregate querying a null storage returns an empty array');
+    $this->assertSame(0, \Drupal::entityQuery('contact_message')->accessCheck(FALSE)->count()->execute(), 'Counting a null storage returns 0.');
+    $this->assertSame([], \Drupal::entityQuery('contact_message')->accessCheck(FALSE)->execute(), 'Querying a null storage returns an empty array.');
+    $this->assertSame([], \Drupal::entityQuery('contact_message')->accessCheck(FALSE)->condition('contact_form', 'test')->execute(), 'Querying a null storage returns an empty array and conditions are ignored.');
+    $this->assertSame([], \Drupal::entityQueryAggregate('contact_message')->accessCheck(FALSE)->aggregate('name', 'AVG')->execute(), 'Aggregate querying a null storage returns an empty array');
 
   }
 

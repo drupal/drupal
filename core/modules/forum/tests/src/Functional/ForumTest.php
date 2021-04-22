@@ -273,6 +273,7 @@ class ForumTest extends BrowserTestBase {
     // Must remove forum topics to test creating orphan topics.
     $vid = $this->config('forum.settings')->get('vocabulary');
     $tids = \Drupal::entityQuery('taxonomy_term')
+      ->accessCheck(FALSE)
       ->condition('vid', $vid)
       ->execute();
     $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');

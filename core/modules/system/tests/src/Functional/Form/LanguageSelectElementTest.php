@@ -101,7 +101,6 @@ class LanguageSelectElementTest extends BrowserTestBase {
    *
    * @param string $id
    *   The id of the language select element to check.
-   *
    * @param array $options
    *   An array with options to compare with.
    */

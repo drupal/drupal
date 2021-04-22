@@ -1,0 +1,23 @@
+# Create items in the Main menu.
+olivero_test.front_page:
+  title: Home
+  route_name: <front>
+  menu_name: main
+  weight: 100
+olivero_test.child:
+  title: Child link
+  route_name: <front>
+  parent: olivero_test.front_page
+  menu_name: main
+  weight: 100
+olivero_test.button:
+  title: Button
+  route_name: <button>
+  menu_name: main
+  weight: 200
+olivero_test.child_button:
+  title: Child button link
+  route_name: <front>
+  parent: olivero_test.button
+  menu_name: main
+  weight: 100
