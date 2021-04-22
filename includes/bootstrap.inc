@@ -756,8 +756,9 @@ function drupal_settings_initialize() {
   global $databases, $cookie_domain, $conf, $installed_profile, $update_free_access, $db_url, $db_prefix, $drupal_hash_salt, $is_https, $base_secure_url, $base_insecure_url;
   $conf = array();
 
-  if (file_exists(DRUPAL_ROOT . '/' . conf_path() . '/settings.php')) {
-    include_once DRUPAL_ROOT . '/' . conf_path() . '/settings.php';
+  $conf_path = conf_path();
+  if (file_exists(DRUPAL_ROOT . '/' . $conf_path . '/settings.php')) {
+    include_once DRUPAL_ROOT . '/' . $conf_path . '/settings.php';
   }
   $is_https = drupal_is_https();
 
