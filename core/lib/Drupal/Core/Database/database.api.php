@@ -390,7 +390,9 @@ use Drupal\Core\Database\Query\SelectInterface;
  * ];
  * @endcode
  *
- * @see drupal_install_schema()
+ * @see \Drupal\Core\Extension\ModuleInstaller::installSchema()
+ * @see \Drupal\Core\Extension\ModuleInstaller::uninstallSchema()
+ * @see \Drupal\TestTools\Extension\SchemaInspector::getTablesSpecification()
  *
  * @}
  */

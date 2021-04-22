@@ -112,8 +112,15 @@ function drupal_set_installed_schema_version($module, $version) {
  *
  * @param string $module
  *   The module for which the tables will be created.
+ *
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. No direct
+ *   replacement is provided.
+ *
+ * @see https://www.drupal.org/node/2970993
+ * @see \Drupal\Core\Extension\ModuleInstaller::installSchema()
  */
 function drupal_install_schema($module) {
+  @trigger_error('drupal_install_schema() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/2970993', E_USER_DEPRECATED);
   $schema = drupal_get_module_schema($module);
   _drupal_schema_initialize($schema, $module, FALSE);
 
@@ -127,8 +134,15 @@ function drupal_install_schema($module) {
  *
  * @param string $module
  *   The module for which the tables will be removed.
+ *
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. No direct
+ *   replacement is provided.
+ *
+ * @see https://www.drupal.org/node/2970993
+ * @see \Drupal\Core\Extension\ModuleInstaller::uninstallSchema()
  */
 function drupal_uninstall_schema($module) {
+  @trigger_error('drupal_uninstall_schema() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/2970993', E_USER_DEPRECATED);
   $tables = drupal_get_module_schema($module);
   _drupal_schema_initialize($tables, $module, FALSE);
   $schema = \Drupal::database()->schema();
@@ -151,8 +165,16 @@ function drupal_uninstall_schema($module) {
  * @param string $table
  *   The name of the table. If not given, the module's complete schema
  *   is returned.
+ *
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. No direct
+ *   replacement is provided. Testing classes could use
+ *   \Drupal\TestTools\Extension\SchemaInspector for introspection.
+ *
+ * @see https://www.drupal.org/node/2970993
+ * @see \Drupal\TestTools\Extension\SchemaInspector::getTablesSpecification()
  */
 function drupal_get_module_schema($module, $table = NULL) {
+  @trigger_error('drupal_get_module_schema() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. No direct replacement is provided. Testing classes could use \Drupal\TestTools\Extension\SchemaInspector for introspection. See https://www.drupal.org/node/2970993', E_USER_DEPRECATED);
   // Load the .install file to get hook_schema.
   module_load_install($module);
   $schema = \Drupal::moduleHandler()->invoke($module, 'schema');
@@ -181,8 +203,14 @@ function drupal_get_module_schema($module, $table = NULL) {
  *   (optional) Whether to additionally remove 'description' keys of all tables
  *   and fields to improve performance of serialize() and unserialize().
  *   Defaults to TRUE.
+ *
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. No direct
+ *   replacement is provided.
+ *
+ * @see https://www.drupal.org/node/2970993
  */
 function _drupal_schema_initialize(&$schema, $module, $remove_descriptions = TRUE) {
+  @trigger_error('_drupal_schema_initialize() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/2970993', E_USER_DEPRECATED);
   // Set the name and module key for all tables.
   foreach ($schema as $name => &$table) {
     if (empty($table['module'])) {
