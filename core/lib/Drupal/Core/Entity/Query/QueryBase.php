@@ -95,11 +95,11 @@ abstract class QueryBase implements QueryInterface {
   protected $alterTags;
 
   /**
-   * Whether access check is requested or not. Defaults to TRUE.
+   * Whether access check is requested or not.
    *
-   * @var bool
+   * @var bool|null
    */
-  protected $accessCheck = TRUE;
+  protected $accessCheck;
 
   /**
    * Flag indicating whether to query the current revision or all revisions.
