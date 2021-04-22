@@ -3,7 +3,6 @@
 namespace Drupal\Driver\Database\fake;
 
 use Drupal\Core\Database\Connection as CoreConnection;
-use Drupal\Core\Database\StatementEmpty;
 
 /**
  * A fake Connection class for testing purposes.
@@ -22,7 +21,7 @@ class Connection extends CoreConnection {
    * {@inheritdoc}
    */
   public function queryRange($query, $from, $count, array $args = [], array $options = []) {
-    return new StatementEmpty();
+    return NULL;
   }
 
   /**
