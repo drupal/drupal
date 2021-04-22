@@ -524,7 +524,7 @@ services:
     class: Drupal\Core\Extension\ModuleInstaller
     tags:
       - { name: service_collector, tag: 'module_install.uninstall_validator', call: addUninstallValidator }
-    arguments: ['%app.root%', '@module_handler', '@kernel']
+    arguments: ['%app.root%', '@module_handler', '@kernel', '@database']
     lazy: true
   extension.list.module:
     class: Drupal\Core\Extension\ModuleExtensionList
