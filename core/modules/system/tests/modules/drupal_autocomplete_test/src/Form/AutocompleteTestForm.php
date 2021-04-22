@@ -35,11 +35,11 @@ class AutocompleteTestForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     // Inputs with the minimum characters option.
-    $form['two_minchar_data_autocomplete'] = [
+    $form['two_minChar_data_autocomplete'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Minimum 2 Characters data-autocomplete'),
       '#default_value' => '',
-      '#description' => $this->t('This also tests appending minchar screenreader hints to descriptions'),
+      '#description' => $this->t('This also tests appending minChar screenreader hints to descriptions'),
       '#autocomplete_route_name' => 'drupal_autocomplete.country_autocomplete',
       '#attributes' => [
         'data-autocomplete' => JSON::encode([
@@ -47,7 +47,7 @@ class AutocompleteTestForm extends FormBase {
         ]),
       ],
     ];
-    $form['two_minchar_separate_data_attributes'] = [
+    $form['two_minChar_separate_data_attributes'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Minimum 2 Characters data-min-char'),
       '#default_value' => '',
@@ -140,7 +140,7 @@ class AutocompleteTestForm extends FormBase {
     ];
 
     // Inputs with custom max options instead of the default 10.
-    $form['maxitems_data_autocomplete'] = [
+    $form['maxItems_data_autocomplete'] = [
       '#type' => 'textfield',
       '#title' => $this->t('10 Max items data-autocomplete'),
       '#default_value' => '',
@@ -151,7 +151,7 @@ class AutocompleteTestForm extends FormBase {
         ]),
       ],
     ];
-    $form['maxitems_separate_data_attributes'] = [
+    $form['maxItems_separate_data_attributes'] = [
       '#type' => 'textfield',
       '#title' => $this->t('10 Max items separate data attributes'),
       '#default_value' => '',

@@ -1485,7 +1485,7 @@ module.exports = {
             'c++',
             'java',
             'php',
-            'coldfusion',
+            'coldFusion',
             'javascript',
             'asp',
             'ruby',
@@ -1689,8 +1689,7 @@ module.exports = {
         (result) => {
           const expectedTrue = {
             nullInsideUiFront: 'null, inside .ui-front',
-            emptyObjectInsideUiFront:
-              'empty jQuery object, inside .ui-front',
+            emptyObjectInsideUiFront: 'empty jQuery object, inside .ui-front',
           };
           Object.keys(expectedTrue).forEach((property) => {
             browser.assert.equal(
@@ -1716,7 +1715,7 @@ module.exports = {
             'c++',
             'java',
             'php',
-            'coldfusion',
+            'coldFusion',
             'javascript',
             'asp',
             'ruby',
@@ -1769,7 +1768,7 @@ module.exports = {
             'c++',
             'java',
             'php',
-            'coldfusion',
+            'coldFusion',
             'javascript',
             'asp',
             'ruby',
@@ -1825,7 +1824,7 @@ module.exports = {
             'c++',
             'java',
             'php',
-            'coldfusion',
+            'coldFusion',
             'javascript',
             'asp',
             'ruby',
@@ -1887,7 +1886,7 @@ module.exports = {
             'c++',
             'java',
             'php',
-            'coldfusion',
+            'coldFusion',
             'javascript',
             'asp',
             'ruby',
@@ -1947,7 +1946,7 @@ module.exports = {
             'c++',
             'java',
             'php',
-            'coldfusion',
+            'coldFusion',
             'javascript',
             'asp',
             'ruby',
@@ -2094,7 +2093,7 @@ module.exports = {
             'c++',
             'java',
             'php',
-            'coldfusion',
+            'coldFusion',
             'javascript',
             'asp',
             'ruby',
@@ -2111,6 +2110,8 @@ module.exports = {
           const menu = element.autocomplete('widget');
 
           element.val('ja').autocomplete('search');
+
+          /* cspell:disable-next-line */
           return menu.find('.ui-menu-item').text() === 'javajavascript';
         },
         [],
@@ -2131,7 +2132,7 @@ module.exports = {
           return sourceTestFn([
             { label: 'java', value: null },
             { label: 'php', value: null },
-            { label: 'coldfusion', value: '' },
+            { label: 'coldFusion', value: '' },
             { label: 'javascript', value: '' },
             { label: 'clojure' },
           ]);
@@ -2160,7 +2161,7 @@ module.exports = {
           return sourceTestFn([
             { value: 'java', label: null },
             { value: 'php', label: null },
-            { value: 'coldfusion', label: '' },
+            { value: 'coldFusion', label: '' },
             { value: 'javascript', label: '' },
             { value: 'clojure' },
           ]);
@@ -2313,8 +2314,10 @@ module.exports = {
           });
           const menu = element.autocomplete('widget');
           element.val('ja').autocomplete('search');
+          /* cspell:disable */
           toReturn.expectedItems1 =
             menu.find('.ui-menu-item').text() === 'javajavascript';
+          /* cspell:enable */
           element.autocomplete('option', 'source', ['php', 'asp']);
           element.val('ph').autocomplete('search');
           toReturn.expectedItems2 = menu.find('.ui-menu-item').text() === 'php';
@@ -2325,7 +2328,7 @@ module.exports = {
           browser.assert.equal(
             result.value.expectedItems1,
             true,
-            'first search returns javajavascript',
+            'first search returns java and javascript',
           );
           browser.assert.equal(
             result.value.expectedItems2,

@@ -357,10 +357,12 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
     $assert_session = $this->assertSession();
 
     // Test the minChar: option.
+    /* cspell:disable */
     foreach ([
       'edit-two-minchar-data-autocomplete',
       'edit-two-minchar-separate-data-attributes',
     ] as $id) {
+      /* cspell:enable */
       $input = $page->findById($id);
       $list = $this->getList($input);
       $description = $this->getDescription($input);
@@ -371,15 +373,17 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
       // with it. That means the screenreader instructions must be added to the
       // description in a visually-hidden container.
       $inserted_screenreader_only_description = $description->find('css', '[data-drupal-autocomplete-assistive-hint]');
+      /* cspell:disable-next-line */
       if ($id === 'edit-two-minchar-data-autocomplete') {
         // This input has a pre-existing description, so check for the visually
         // hidden supplement to the description.
         $this->assertNotNull($inserted_screenreader_only_description);
-        $expected_description = 'This also tests appending minchar screenreader hints to descriptions Type 2 or more characters for results. When autocomplete results are available use up and down arrows to review and enter to select. Touch device users, explore by touch or with swipe gestures.';
+        $expected_description = 'This also tests appending minChar screenreader hints to descriptions Type 2 or more characters for results. When autocomplete results are available use up and down arrows to review and enter to select. Touch device users, explore by touch or with swipe gestures.';
         $expected_screenreader_only_description = 'Type 2 or more characters for results. When autocomplete results are available use up and down arrows to review and enter to select. Touch device users, explore by touch or with swipe gestures.';
         $this->assertEquals($expected_description, $description->getText());
         $this->assertEquals($expected_screenreader_only_description, $inserted_screenreader_only_description->getText());
       }
+      /* cspell:disable-next-line */
       if ($id === 'edit-two-minchar-separate-data-attributes') {
         // This input does not have a pre-existing description, so a visually
         // hidden one is added solely for assistive tech.
@@ -394,12 +398,15 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
       $this->setAutocompleteValue($input, $id, 'Un');
       $this->assertCount(3, $list->findAll('css', 'li'), $id);
 
+      /* cspell:disable-next-line */
       if ($id === 'edit-two-minchar-data-autocomplete') {
         $inserted_screenreader_only_description = $description->find('css', '[data-drupal-autocomplete-assistive-hint]');
         $this->assertNull($inserted_screenreader_only_description);
-        $expected_description = 'This also tests appending minchar screenreader hints to descriptions';
+        $expected_description = 'This also tests appending minChar screenreader hints to descriptions';
         $this->assertEquals($expected_description, $description->getText());
       }
+
+      /* cspell:disable-next-line */
       if ($id === 'edit-two-minchar-separate-data-attributes') {
         $this->assertFalse($input->hasAttribute('aria-describedby'));
       }
@@ -464,7 +471,7 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
       $this->assertCount(0, $list->findAll('css', 'li'));
 
       // Confirm that a search for 'a' only provides 19 results, to confirm that
-      // the upcoming maxitems test is accurate.
+      // the next test is accurate.
       $this->setAutocompleteValue($input, $id, 'a');
       $this->assertCount(19, $list->findAll('css', 'li'));
 
@@ -472,11 +479,13 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
       $this->setAutocompleteValue($input, $id, ' ', FALSE);
     }
 
-    // Test the maxItems: option.
+    /* cspell:disable */
+    // Test the maxitems: option.
     foreach ([
       'edit-maxitems-data-autocomplete',
       'edit-maxitems-separate-data-attributes',
     ] as $id) {
+      /* cspell:enable */
       $input = $page->findById($id);
       $list = $this->getList($input);
       $this->setAutocompleteValue($input, $id, 'a');
@@ -668,6 +677,7 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
     $shimmed_list_parent = $shimmed_list->getParent();
     $this->assertEquals('body', $shimmed_list_parent->getTagName());
     $this->assertFalse($shimmed_list_parent->hasAttribute('data-drupal-autocomplete-wrapper'));
+    /* cspell:disable-next-line */
     $this->assertEquals('Cambodia (KH) Cameroon (CM) Canada (CA) Canary Islands (IC) Cape Verde (CV) Caribbean Netherlands (BQ) Cayman Islands (KY) Central African Republic (CF) Ceuta & Melilla (EA) Chad (TD) Chile (CL) China (CN) Christmas Island (CX) Clipperton Island (CP) Cocos (Keeling) Islands (CC) Colombia (CO) Comoros (KM) Congo - Brazzaville (CG) Congo - Kinshasa (CD) Cook Islands (CK)', $shimmed_list->getText());
     $this->setAutocompleteValue($shimmed_input, $shimmed_id, ' ', FALSE);
 

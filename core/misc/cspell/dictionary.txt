@@ -277,7 +277,6 @@ clearfix's
 cleartype
 clicksort
 clicksorter
-clipperton
 clist
 closethick
 closur
@@ -285,7 +284,6 @@ cnenzrgre
 cnfi
 cochez
 codesniffer
-coldfusion
 colgroups
 collegehumor
 colonpos
@@ -795,7 +793,6 @@ janeway
 januar
 januari
 janvier
-javajavascript
 javascripts
 jcbfyr
 jessebeach
@@ -922,7 +919,6 @@ mattfarina
 maxage
 maxdepth
 maximumred
-maxitems
 maxlifetime
 maxsize
 maynot
@@ -931,7 +927,6 @@ mdash
 mdhash
 mediumint
 mediumtext
-melilla
 membersonly
 menufocus
 menulist
@@ -951,7 +946,6 @@ mikey
 milli
 mimeheaders
 mimetypes
-minchar
 minifyzombies
 minimatch
 minimise
@@ -1142,9 +1136,7 @@ overwritable
 owasp
 pageable
 pagecache
-pagedown
 pagetop
-pageup
 pageviews
 pagina
 pangram
@@ -1283,7 +1275,6 @@ quickeditor
 quicklinks
 quickstart
 quinlan
-qunit
 quux
 quxqux
 qvalue
@@ -1368,12 +1359,10 @@ revisionid
 revisioning
 revlog
 revpub
-rhorizontal
 ribisi
 ritchie
 robloach
 robo
-roffset
 rolename
 roly
 routable
@@ -1381,15 +1370,12 @@ routeable
 routename
 rowspans
 rowtest
-rpercent
 rpos
-rposition
 rrggbb
 rsyslog
 rtsp
 ruleset
 rulesets
-rvertical
 rxpq
 répét
 répété
@@ -1973,7 +1959,6 @@ yygroup
 yyyymm
 zartan
 zendframework
-zindex
 zipf's
 znor
 zomg
