@@ -88,6 +88,7 @@ class RequestPathTest extends KernelTestBase {
 
     /* @var \Drupal\system\Plugin\Condition\RequestPath $condition */
     $condition = $this->pluginManager->createInstance('request_path');
+    $this->assertEquals('No page is specified', $condition->summary());
     $condition->setConfig('pages', $pages);
 
     $this->aliasManager->addAlias('/my/pass/page2', '/my/pass/page2');
