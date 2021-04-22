@@ -2,6 +2,7 @@
 
 namespace Drupal\form_test\Form;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
