@@ -103,4 +103,20 @@ class DatabaseBackendTest extends GenericCacheBackendUnitTestBase {
     return (int) $query->execute()->fetchField();
   }
 
+  /**
+   * Test that the service "cache_tags.invalidator.checksum" is backend overridable.
+   */
+  public function testCacheTagsInvalidatorChecksumIsBackendOverridable() {
+    $definition = $this->container->getDefinition('cache_tags.invalidator.checksum');
+    $this->assertTrue($definition->hasTag('backend_overridable'));
+  }
+
+  /**
+   * Test that the service "cache.backend.database" is backend overridable.
+   */
+  public function testCacheBackendDatabaseIsBackendOverridable() {
+    $definition = $this->container->getDefinition('cache.backend.database');
+    $this->assertTrue($definition->hasTag('backend_overridable'));
+  }
+
 }
