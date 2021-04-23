@@ -59,6 +59,24 @@ final class OliveroPreprocessInputTest extends UnitTestCase {
   }
 
   /**
+   * Tests the olivero_preprocess_input adjustments to autocomplete message.
+   */
+  public function testPreprocessInputAutocompleteMessage() {
+    $variables = [
+      'element' => [
+        '#autocomplete_route_name' => 'mock',
+        '#type' => 'text',
+      ],
+      'attributes' => [
+        'type' => 'text',
+      ],
+    ];
+    olivero_preprocess_input($variables);
+    $loading_message = t('Loading…');
+    $this->assertEquals($loading_message, $variables['autocomplete_message']);
+  }
+
+  /**
    * Data provider to test different types.
    */
   public function preprocessInputDataProvider() {
