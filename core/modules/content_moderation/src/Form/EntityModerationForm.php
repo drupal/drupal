@@ -159,7 +159,7 @@ class EntityModerationForm extends FormBase {
 
     $this->messenger()->addStatus($this->t('The moderation state has been updated.'));
 
-    $new_state = $this->moderationInfo->getWorkflowForEntity($entity)->getTypePlugin()->getState($new_state);
+    $new_state = $this->moderationInfo->getWorkflowForEntity($entity)->getTypePlugin()->getState($entity->moderation_state->value);
     // The page we're on likely won't be visible if we just set the entity to
     // the default state, as we hide that latest-revision tab if there is no
     // pending revision. Redirect to the canonical URL instead, since that will
