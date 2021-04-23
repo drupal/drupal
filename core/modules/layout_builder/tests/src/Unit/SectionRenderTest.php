@@ -175,13 +175,7 @@ class SectionRenderTest extends UnitTestCase {
     ];
     $expected = [
       'content' => [
-        'some_uuid' => [
-          '#cache' => [
-            'contexts' => [],
-            'tags' => [],
-            'max-age' => -1,
-          ],
-        ],
+        'some_uuid' => static::CACHE_DEFAULT,
       ],
     ] + static::CACHE_DEFAULT;
     $result = (new Section('layout_onecol', [], $section))->toRenderArray();
@@ -261,12 +255,7 @@ class SectionRenderTest extends UnitTestCase {
       '#base_plugin_id' => 'block_plugin_id',
       '#derivative_plugin_id' => NULL,
       'content' => $block_content,
-      '#cache' => [
-        'contexts' => [],
-        'tags' => [],
-        'max-age' => -1,
-      ],
-    ];
+    ] + static::CACHE_DEFAULT;
 
     $block = $this->prophesize(BlockPluginInterface::class)
       ->willImplement(ContextAwarePluginInterface::class)
