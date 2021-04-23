@@ -117,11 +117,18 @@ const DRUPAL_EXTENSION_NAME_MAX_LENGTH = 50;
 define('REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
 
 /**
- * Defines the root directory of the Drupal installation.
+ * Define the root directory of the Drupal installation.
  *
- * This strips two levels of directories off the current directory.
+ * This is either done by the scaffold-generated location.inc file, or, as a
+ * fallback if scaffolding is not present, by stripping two levels of
+ * directories off the current directory.
  */
-define('DRUPAL_ROOT', dirname(__DIR__, 2));
+if (file_exists(__DIR__ . '/locations.inc')) {
+  include_once(__DIR__ . '/locations.inc');
+}
+else {
+  define('DRUPAL_ROOT', dirname(__DIR__, 2));
+}
 
 /**
  * Declare class aliases that will be added by the autoloader.
