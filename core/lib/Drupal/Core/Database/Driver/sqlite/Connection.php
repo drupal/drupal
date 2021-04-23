@@ -450,7 +450,7 @@ class Connection extends DatabaseConnection {
     catch (\Exception $e) {
       $this->exceptionHandler()->handleExecutionException($e, $stmt, $args, []);
     }
-    if ($stmt->rowCount() == 0) {
+    if ($stmt->rowCount() === 0) {
       $this->query('INSERT INTO {sequences} (value) VALUES (:existing_id + 1)', $args);
     }
     // The transaction gets committed when the transaction object gets destroyed
