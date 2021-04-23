@@ -18,6 +18,7 @@ use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Render\PreviewFallbackInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\layout_builder\EventSubscriber\BlockComponentRenderArray;
+use Drupal\layout_builder\EventSubscriber\SectionRenderArraySubscriber;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionComponent;
 use Drupal\Tests\UnitTestCase;
@@ -28,6 +29,19 @@ use Prophecy\Argument;
  * @group layout_builder
  */
 class SectionRenderTest extends UnitTestCase {
+
+  /**
+   * Default cache metadata.
+   *
+   * @var array
+   */
+  const CACHE_DEFAULT = [
+    '#cache' => [
+      'contexts' => [],
+      'tags' => [],
+      'max-age' => -1,
+    ],
+  ];
 
   /**
    * The current user.
@@ -78,8 +92,11 @@ class SectionRenderTest extends UnitTestCase {
     $this->eventDispatcher = (new \ReflectionClass(ContainerAwareEventDispatcher::class))->newInstanceWithoutConstructor();
 
     $this->account = $this->prophesize(AccountInterface::class);
-    $subscriber = new BlockComponentRenderArray($this->account->reveal());
-    $this->eventDispatcher->addSubscriber($subscriber);
+    $component_subscriber = new BlockComponentRenderArray($this->account->reveal());
+    $section_subscriber = new SectionRenderArraySubscriber();
+
+    $this->eventDispatcher->addSubscriber($component_subscriber);
+    $this->eventDispatcher->addSubscriber($section_subscriber);
 
     $layout = $this->prophesize(LayoutInterface::class);
     $layout->getPluginDefinition()->willReturn(new LayoutDefinition([]));
@@ -110,12 +127,7 @@ class SectionRenderTest extends UnitTestCase {
       '#base_plugin_id' => 'block_plugin_id',
       '#derivative_plugin_id' => NULL,
       'content' => $block_content,
-      '#cache' => [
-        'contexts' => [],
-        'tags' => [],
-        'max-age' => -1,
-      ],
-    ];
+    ] + static::CACHE_DEFAULT;
 
     $block = $this->prophesize(BlockPluginInterface::class)->willImplement(PreviewFallbackInterface::class);
     $this->blockManager->createInstance('block_plugin_id', ['id' => 'block_plugin_id'])->willReturn($block->reveal());
@@ -139,7 +151,7 @@ class SectionRenderTest extends UnitTestCase {
       'content' => [
         'some_uuid' => $render_array,
       ],
-    ];
+    ] + static::CACHE_DEFAULT;
     $result = (new Section('layout_onecol', [], $section))->toRenderArray();
     $this->assertEquals($expected, $result);
   }
@@ -170,8 +182,8 @@ class SectionRenderTest extends UnitTestCase {
             'max-age' => -1,
           ],
         ],
-      ],
-    ];
+      ]
+    ] + static::CACHE_DEFAULT;
     $result = (new Section('layout_onecol', [], $section))->toRenderArray();
     $this->assertEquals($expected, $result);
   }
@@ -220,7 +232,7 @@ class SectionRenderTest extends UnitTestCase {
       'content' => [
         'some_uuid' => $render_array,
       ],
-    ];
+    ] + static::CACHE_DEFAULT;
     $result = (new Section('layout_onecol', [], $section))->toRenderArray([], TRUE);
     $this->assertEquals($expected, $result);
   }
@@ -230,7 +242,7 @@ class SectionRenderTest extends UnitTestCase {
    */
   public function testToRenderArrayEmpty() {
     $section = [];
-    $expected = [];
+    $expected = static::CACHE_DEFAULT;
     $result = (new Section('layout_onecol', [], $section))->toRenderArray();
     $this->assertEquals($expected, $result);
   }
@@ -281,7 +293,7 @@ class SectionRenderTest extends UnitTestCase {
       'content' => [
         'some_uuid' => $render_array,
       ],
-    ];
+    ] + static::CACHE_DEFAULT;
     $result = (new Section('layout_onecol', [], $section))->toRenderArray();
     $this->assertEquals($expected, $result);
   }

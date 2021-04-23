@@ -33,6 +33,10 @@ services:
   layout_builder.sample_entity_generator:
     class: Drupal\layout_builder\Entity\LayoutBuilderSampleEntityGenerator
     arguments: ['@tempstore.shared', '@entity_type.manager']
+  layout_builder.build_section_regions_subscriber:
+    class: Drupal\layout_builder\EventSubscriber\SectionRenderArraySubscriber
+    tags:
+      - { name: event_subscriber }
   layout_builder.render_block_component_subscriber:
     class: Drupal\layout_builder\EventSubscriber\BlockComponentRenderArray
     arguments: ['@current_user']
