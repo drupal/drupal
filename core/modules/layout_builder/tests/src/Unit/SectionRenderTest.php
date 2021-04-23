@@ -182,7 +182,7 @@ class SectionRenderTest extends UnitTestCase {
             'max-age' => -1,
           ],
         ],
-      ]
+      ],
     ] + static::CACHE_DEFAULT;
     $result = (new Section('layout_onecol', [], $section))->toRenderArray();
     $this->assertEquals($expected, $result);
