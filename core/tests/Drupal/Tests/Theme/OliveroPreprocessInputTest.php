@@ -59,6 +59,21 @@ final class OliveroPreprocessInputTest extends UnitTestCase {
   }
 
   /**
+   * Tests the olivero_preprocess_input adjustments to type attribute.
+   *
+   * @dataProvider preprocessInputBooleanDataProvider()
+   */
+  public function testPreprocessBooleanInputTypeAttribute($expected, $element) {
+    $variables = [
+      'element' => $element,
+      'attributes' => $element['#attributes'],
+    ];
+    olivero_preprocess_input($variables);
+
+    $this->assertEquals($expected, $variables['attributes']['class']);
+  }
+
+  /**
    * Tests the olivero_preprocess_input adjustments to autocomplete message.
    */
   public function testPreprocessInputAutocompleteMessage() {
@@ -105,6 +120,36 @@ final class OliveroPreprocessInputTest extends UnitTestCase {
           'form-element',
           'form-element--type-' . $html_type,
           'form-element--api-' . $api_type,
+        ],
+        [
+          '#type' => $api_type,
+          '#title' => 'Field test ' . $html_type,
+          '#attributes' => [
+            'type' => $html_type,
+            'title' => 'Field test ' . $html_type,
+          ],
+        ],
+      ];
+    }
+    return $tests;
+  }
+
+  /**
+   * Data provider to test boolean types.
+   */
+  public function preprocessInputBooleanDataProvider() {
+    $tests = [];
+    $types = [
+      'checkbox' => 'checkbox',
+      'radio' => 'radio',
+    ];
+
+    $tests = [];
+    foreach ($types as $html_type => $api_type) {
+      $tests[] = [
+        [
+          'form-boolean',
+          'form-boolean--type-' . $html_type,
         ],
         [
           '#type' => $api_type,
