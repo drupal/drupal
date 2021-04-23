@@ -12,6 +12,8 @@ use Drupal\Composer\Plugin\Scaffold\Operations\OperationData;
 use Drupal\Composer\Plugin\Scaffold\Operations\OperationFactory;
 use Drupal\Composer\Plugin\Scaffold\Operations\ScaffoldFileCollection;
 
+include './vendor/symfony/var-dumper/Resources/functions/dump.php';
+
 /**
  * Core class of the plugin.
  *
@@ -173,6 +175,23 @@ class Handler {
     if (!GenerateAutoloadReferenceFile::autoloadFileCommitted($this->io, $this->rootPackageName(), $web_root)) {
       $scaffold_results[] = GenerateAutoloadReferenceFile::generateAutoload($this->io, $this->rootPackageName(), $web_root, $this->getVendorPath());
     }
+
+    // Generate a file to define location constants in core/includes.
+    // This allows Drupal to find the web root once the Composer autoloader is
+    // loaded.
+    $drupal_package = $this->composer->getRepositoryManager()->getLocalRepository()->findPackage('drupal/core', '*');
+    $drupal_core_install_path = $this->composer->getInstallationManager()->getInstallPath($drupal_package);
+
+    // Get the project root's absolute path from the root composer file path.
+    // This is given as a relative path.
+    $composer_file_path = \Composer\Factory::getComposerFile();
+    $project_root_path = realpath(dirname($composer_file_path));
+
+    // Append the webroot. This is set in the drupal-scaffold configuration in
+    // the form 'web/', so we remove the trailing slash.
+    $drupal_root = $project_root_path . '/' . rtrim($web_root, '/');
+
+    GenerateLocationsFile::generateLocationsFile($this->io, $drupal_core_install_path, $drupal_root);
 
     // Add the managed scaffold files to .gitignore if applicable.
     $gitIgnoreManager = new ManageGitIgnore($this->io, getcwd());
