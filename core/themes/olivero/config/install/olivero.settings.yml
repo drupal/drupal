@@ -9,6 +9,6 @@ features:
 logo:
   use_default: false
 favicon:
-  use_default: true
+  use_default: false
 mobile_menu_all_widths: 0
 site_branding_bg_color: default
