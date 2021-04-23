@@ -4,6 +4,7 @@ namespace Drupal\layout_builder;
 
 use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
 use Drupal\layout_builder\Event\SectionBuildRenderArrayEvent;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Provides a domain object for layout sections.
@@ -86,7 +87,7 @@ class Section implements ThirdPartySettingsInterface {
     $this->eventDispatcher()->dispatch($event);
     $regions = $event->getRegions();
     $event->getCacheableMetadata()->applyTo($regions);
-    return $this->getLayout()->build($regions);
+    return $this->getLayout($contexts)->build($regions);
   }
 
   /**
