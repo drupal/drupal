@@ -398,7 +398,14 @@ function update_get_update_list() {
         if ($update > $schema_version) {
           // The description for an update comes from its Doxygen.
           $func = new ReflectionFunction($module . '_update_' . $update);
-          $description = str_replace(["\n", '*', '/'], '', $func->getDocComment());
+          $patterns = [
+            '/^\s*[\/*]*/',
+            '/(\n\s*\**)(.*)/',
+            '/\/$/',
+            '/^\s*/',
+          ];
+          $replacements = ['', '$2', '', ''];
+          $description = preg_replace($patterns, $replacements, $func->getDocComment());
           $ret[$module]['pending'][$update] = "$update - $description";
           if (!isset($ret[$module]['start'])) {
             $ret[$module]['start'] = $update;
