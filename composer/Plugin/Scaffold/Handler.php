@@ -192,6 +192,8 @@ class Handler {
     // the form 'web/', so we remove the trailing slash.
     $drupal_root = $project_root_path . '/' . rtrim($web_root, '/');
 
+    // The locations.inc file does not need to be added dynamically to a
+    // .gitignore because it is written to a fixed location.
     GenerateLocationsFile::generateLocationsFile($this->io, $drupal_core_install_path, $drupal_root);
 
     // Add the managed scaffold files to .gitignore if applicable.
