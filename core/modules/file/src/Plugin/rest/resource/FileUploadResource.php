@@ -247,7 +247,7 @@ class FileUploadResource extends ResourceBase {
     $lock_id = $this->generateLockIdFromFileUri($file_uri);
 
     if (!$this->lock->acquire($lock_id)) {
-      throw new HttpException(503, sprintf('File "%s" is already locked for writing'), NULL, ['Retry-After' => 1]);
+      throw new HttpException(503, sprintf('File "%s" is already locked for writing', $file_uri), NULL, ['Retry-After' => 1]);
     }
 
     // Begin building file entity.

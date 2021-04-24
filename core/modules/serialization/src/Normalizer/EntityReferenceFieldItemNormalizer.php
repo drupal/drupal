@@ -75,7 +75,7 @@ class EntityReferenceFieldItemNormalizer extends FieldItemNormalizer {
       /** @var \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem $field_item */
       $field_item = $context['target_instance'];
       if (empty($data['target_uuid'])) {
-        throw new InvalidArgumentException(sprintf('If provided "target_uuid" cannot be empty for field "%s".', $data['target_type'], $data['target_uuid'], $field_item->getName()));
+        throw new InvalidArgumentException(sprintf('If provided "target_uuid" cannot be empty for field "%s".', $field_item->getName()));
       }
       $target_type = $field_item->getFieldDefinition()->getSetting('target_type');
       if (!empty($data['target_type']) && $target_type !== $data['target_type']) {
