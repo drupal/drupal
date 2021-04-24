@@ -3,8 +3,6 @@
 namespace Drupal\Composer\Plugin\Scaffold;
 
 use Composer\IO\IOInterface;
-use Composer\Util\Filesystem;
-use Drupal\Composer\Plugin\Scaffold\Operations\ScaffoldResult;
 
 /**
  * Generates the 'includes/locations.inc' file which defines location constants.
