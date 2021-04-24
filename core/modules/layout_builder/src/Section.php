@@ -3,7 +3,7 @@
 namespace Drupal\layout_builder;
 
 use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
-use Drupal\layout_builder\Event\SectionBuildRenderArrayEvent;
+use Drupal\layout_builder\Event\SectionBuildRegionsRenderArrayEvent;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -83,7 +83,7 @@ class Section implements ThirdPartySettingsInterface {
    *   A renderable array representing the content of the section.
    */
   public function toRenderArray(array $contexts = [], $in_preview = FALSE) {
-    $event = new SectionBuildRenderArrayEvent($this, $contexts, $in_preview);
+    $event = new SectionBuildRegionsRenderArrayEvent($this, $contexts, $in_preview);
     $this->eventDispatcher()->dispatch($event);
     $regions = $event->getRegions();
     $event->getCacheableMetadata()->applyTo($regions);

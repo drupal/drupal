@@ -53,7 +53,7 @@ class SectionThirdPartyIntegrationTest extends KernelTestBase {
 
     // Activate regions altering by third-party and recreate the render array.
     // @see \Drupal\layout_builder_test\EventSubscriber\LayoutBuilderTestSubscriber::isSubscriberEnabled()
-    $this->container->get('state')->set('layout_test.subscriber.enabled', TRUE);
+    $this->container->get('state')->set('layout_builder_test.subscriber.active', TRUE);
     $region = $section_storage->getSection(0)->toRenderArray()['main'];
 
     // Check that that 'main' region render array has been altered.

@@ -7,16 +7,18 @@ use Drupal\Core\Cache\CacheableResponseTrait;
 use Drupal\layout_builder\Section;
 
 /**
- * Event fired when a section's regions array is being built.
+ * Event fired when a section's regions render array is being built.
  *
- * Subscribers to this event should manipulate the regions array in this event.
+ * Subscribers to this event should read and alter the regions render array,
+ * then set the updated render array using ::setRegions(). They can also respond
+ * with cacheable metadata.
  */
-class SectionBuildRenderArrayEvent extends Event {
+class SectionBuildRegionsRenderArrayEvent extends Event {
 
   use CacheableResponseTrait;
 
   /**
-   * The section whose regions array is being built.
+   * The section whose regions render array is being built.
    *
    * @var \Drupal\layout_builder\Section
    */
@@ -37,7 +39,7 @@ class SectionBuildRenderArrayEvent extends Event {
   protected $inPreview;
 
   /**
-   * The regions array being built by the event subscribers.
+   * The regions render array being built by the event subscribers.
    *
    * @var array
    */
@@ -47,7 +49,7 @@ class SectionBuildRenderArrayEvent extends Event {
    * Constructs a new event instance.
    *
    * @param \Drupal\layout_builder\Section $section
-   *   The section whose regions array is being built.
+   *   The section whose regions render array is being built.
    * @param \Drupal\Core\Plugin\Context\ContextInterface[] $contexts
    *   The available contexts.
    * @param bool $in_preview
@@ -60,7 +62,7 @@ class SectionBuildRenderArrayEvent extends Event {
   }
 
   /**
-   * Get the section whose regions array is being built.
+   * Gets the section whose regions render array is being built.
    *
    * @return \Drupal\layout_builder\Section
    *   The section whose regions array is being built.
@@ -70,7 +72,7 @@ class SectionBuildRenderArrayEvent extends Event {
   }
 
   /**
-   * Get the available contexts.
+   * Gets the available contexts.
    *
    * @return array|\Drupal\Core\Plugin\Context\ContextInterface[]
    *   The available contexts.
@@ -80,7 +82,7 @@ class SectionBuildRenderArrayEvent extends Event {
   }
 
   /**
-   * Determine if the section is in preview mode.
+   * Determines if the section is in preview mode.
    *
    * @return bool
    *   Whether the section is in preview mode or not.
@@ -90,7 +92,7 @@ class SectionBuildRenderArrayEvent extends Event {
   }
 
   /**
-   * Get the regions render array in its current state.
+   * Gets the regions render array in its current state.
    *
    * @return array
    *   The regions array built by the event subscribers.
@@ -100,7 +102,7 @@ class SectionBuildRenderArrayEvent extends Event {
   }
 
   /**
-   * Set the regions render array.
+   * Sets the regions render array.
    *
    * @param array $regions
    *   A regions render array.

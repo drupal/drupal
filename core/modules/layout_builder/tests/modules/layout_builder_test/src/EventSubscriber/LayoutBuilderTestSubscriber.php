@@ -3,7 +3,7 @@
 namespace Drupal\layout_builder_test\EventSubscriber;
 
 use Drupal\Core\State\StateInterface;
-use Drupal\layout_builder\Event\SectionBuildRenderArrayEvent;
+use Drupal\layout_builder\Event\SectionBuildRegionsRenderArrayEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class LayoutBuilderTestSubscriber implements EventSubscriberInterface {
@@ -30,11 +30,11 @@ class LayoutBuilderTestSubscriber implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents(): array {
     // Add two subscribers, one to run before core subscriber and one after.
-    // @see
+    // @see \Drupal\layout_builder\EventSubscriber\SectionRegionsRenderArraySubscriber
     return [
-      SectionBuildRenderArrayEvent::class => [
-        ['beforeBuildRegionRenderArray', 200],
-        ['afterBuildRegionRenderArray', 0],
+      SectionBuildRegionsRenderArrayEvent::class => [
+        ['beforeBuildRegionsRenderArray', 200],
+        ['afterBuildRegionsRenderArray', 0],
       ],
     ];
   }
@@ -42,11 +42,11 @@ class LayoutBuilderTestSubscriber implements EventSubscriberInterface {
   /**
    * Reacts before layout_builder is building the regions.
    *
-   * @param \Drupal\layout_builder\Event\SectionBuildRenderArrayEvent $event
-   *   The event.
+   * @param \Drupal\layout_builder\Event\SectionBuildRegionsRenderArrayEvent $event
+   *   The event object.
    */
-  public function beforeBuildRegionRenderArray(SectionBuildRenderArrayEvent $event): void {
-    if ($this->isSubscriberEnabled()) {
+  public function beforeBuildRegionsRenderArray(SectionBuildRegionsRenderArrayEvent $event): void {
+    if ($this->isActivated()) {
       $regions = $event->getRegions();
       $regions['main']['before'] = [
         '#markup' => '3rd party: before',
@@ -56,13 +56,13 @@ class LayoutBuilderTestSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Reacts before layout_builder is building the regions.
+   * Reacts after layout_builder is building the regions.
    *
-   * @param \Drupal\layout_builder\Event\SectionBuildRenderArrayEvent $event
-   *   The event.
+   * @param \Drupal\layout_builder\Event\SectionBuildRegionsRenderArrayEvent $event
+   *   The event object.
    */
-  public function afterBuildRegionRenderArray(SectionBuildRenderArrayEvent $event): void {
-    if ($this->isSubscriberEnabled()) {
+  public function afterBuildRegionsRenderArray(SectionBuildRegionsRenderArrayEvent $event): void {
+    if ($this->isActivated()) {
       $regions = $event->getRegions();
       $regions['main']['after'] = [
         '#markup' => '3rd party: after',
@@ -74,13 +74,13 @@ class LayoutBuilderTestSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Checks if the subscriber is enabled.
+   * Checks if the subscriber is activated.
    *
    * @return bool
-   *   If the subscriber is enabled.
+   *   If the subscriber is active.
    */
-  protected function isSubscriberEnabled(): bool {
-    return $this->state->get('layout_test.subscriber.enabled', FALSE);
+  protected function isActivated(): bool {
+    return $this->state->get('layout_builder_test.subscriber.active', FALSE);
   }
 
 }

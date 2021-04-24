@@ -2,7 +2,7 @@
 
 namespace Drupal\layout_builder\EventSubscriber;
 
-use Drupal\layout_builder\Event\SectionBuildRenderArrayEvent;
+use Drupal\layout_builder\Event\SectionBuildRegionsRenderArrayEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -18,17 +18,17 @@ class SectionRegionsRenderArraySubscriber implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents(): array {
     return [
-      SectionBuildRenderArrayEvent::class => ['onBuildRegionRenderArray', 100],
+      SectionBuildRegionsRenderArrayEvent::class => ['onBuildRegionsRenderArray', 100],
     ];
   }
 
   /**
    * Builds the regions render array from the section components.
    *
-   * @param \Drupal\layout_builder\Event\SectionBuildRenderArrayEvent $event
+   * @param \Drupal\layout_builder\Event\SectionBuildRegionsRenderArrayEvent $event
    *   The section build regions render array event.
    */
-  public function onBuildRegionRenderArray(SectionBuildRenderArrayEvent $event): void {
+  public function onBuildRegionsRenderArray(SectionBuildRegionsRenderArrayEvent $event): void {
     $regions = $event->getRegions();
     foreach ($event->getSection()->getComponents() as $component) {
       if ($output = $component->toRenderArray($event->getContexts(), $event->isInPreview())) {
