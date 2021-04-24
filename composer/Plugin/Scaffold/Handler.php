@@ -4,6 +4,7 @@ namespace Drupal\Composer\Plugin\Scaffold;
 
 use Composer\Composer;
 use Composer\EventDispatcher\EventDispatcher;
+use Composer\Factory;
 use Composer\Installer\PackageEvent;
 use Composer\IO\IOInterface;
 use Composer\Package\PackageInterface;
@@ -184,7 +185,7 @@ class Handler {
 
     // Get the project root's absolute path from the root composer file path.
     // This is given as a relative path.
-    $composer_file_path = \Composer\Factory::getComposerFile();
+    $composer_file_path = Factory::getComposerFile();
     $project_root_path = realpath(dirname($composer_file_path));
 
     // Append the webroot. This is set in the drupal-scaffold configuration in
