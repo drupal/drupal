@@ -18,7 +18,7 @@ use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Render\PreviewFallbackInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\layout_builder\EventSubscriber\BlockComponentRenderArray;
-use Drupal\layout_builder\EventSubscriber\SectionRenderArraySubscriber;
+use Drupal\layout_builder\EventSubscriber\SectionRegionsRenderArraySubscriber;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionComponent;
 use Drupal\Tests\UnitTestCase;
@@ -93,7 +93,7 @@ class SectionRenderTest extends UnitTestCase {
 
     $this->account = $this->prophesize(AccountInterface::class);
     $component_subscriber = new BlockComponentRenderArray($this->account->reveal());
-    $section_subscriber = new SectionRenderArraySubscriber();
+    $section_subscriber = new SectionRegionsRenderArraySubscriber();
 
     $this->eventDispatcher->addSubscriber($component_subscriber);
     $this->eventDispatcher->addSubscriber($section_subscriber);
