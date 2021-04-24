@@ -1,0 +1,3 @@
+# Ignore the locations file which is written to this directory by the
+# scaffolding process.
+locations.inc
