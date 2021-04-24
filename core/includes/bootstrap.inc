@@ -124,7 +124,7 @@ define('REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
  * directories off the current directory.
  */
 if (file_exists(__DIR__ . '/locations.inc')) {
-  include_once(__DIR__ . '/locations.inc');
+  include_once __DIR__ . '/locations.inc';
 }
 else {
   define('DRUPAL_ROOT', dirname(__DIR__, 2));
