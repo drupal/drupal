@@ -53,13 +53,13 @@ class FieldUIRouteTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(403);
 
     $this->drupalGet('admin/config/people/accounts/display');
-    $this->assertSession()->titleEquals('Manage display | Drupal');
+    $this->assertSession()->titleEquals('Manage display: User | Drupal');
     $this->assertLocalTasks();
 
     $edit = ['display_modes_custom[compact]' => TRUE];
     $this->submitForm($edit, 'Save');
     $this->drupalGet('admin/config/people/accounts/display/compact');
-    $this->assertSession()->titleEquals('Manage display | Drupal');
+    $this->assertSession()->titleEquals('Manage display: User | Drupal');
     $this->assertLocalTasks();
 
     // Test manage form display tabs and titles.
@@ -67,14 +67,14 @@ class FieldUIRouteTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(403);
 
     $this->drupalGet('admin/config/people/accounts/form-display');
-    $this->assertSession()->titleEquals('Manage form display | Drupal');
+    $this->assertSession()->titleEquals('Manage form display: User | Drupal');
     $this->assertLocalTasks();
 
     $edit = ['display_modes_custom[register]' => TRUE];
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet('admin/config/people/accounts/form-display/register');
-    $this->assertSession()->titleEquals('Manage form display | Drupal');
+    $this->assertSession()->titleEquals('Manage form display: User | Drupal');
     $this->assertLocalTasks();
     $this->assertCount(1, $this->xpath('//ul/li[1]/a[contains(text(), :text)]', [':text' => 'Default']), 'Default secondary tab is in first position.');
 
