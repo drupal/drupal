@@ -1,0 +1,7 @@
+views_test_render_cache.blocks:
+  path: '/views_test_render_cache/{view_id}/{display_id}/{args_1}/{args_2}'
+  defaults:
+    _controller: '\Drupal\views_test_render_cache\Controller\ViewsTestRenderCacheController::double'
+    _title: 'Test!'
+  requirements:
+    _access: 'TRUE'

@@ -2410,6 +2410,12 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       // Places like \Drupal\views\ViewExecutable::setCurrentPage() set up an
       // additional cache context.
       $this->view->element['#cache']['keys'] = array_merge(['views', 'display', $this->view->element['#name'], $this->view->element['#display_id']], $this->view->element['#cache']['keys']);
+
+      // Add arguments to the cache key.
+      if ($args) {
+        $this->view->element['#cache']['keys'][] = 'args';
+        $this->view->element['#cache']['keys'][] = implode(',', $args);
+      }
     }
     else {
       // Remove the cache keys, to ensure render caching is not triggered. We
