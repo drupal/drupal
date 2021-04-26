@@ -194,7 +194,7 @@ class Handler {
 
     // The locations.inc file does not need to be added dynamically to a
     // .gitignore because it is written to a fixed location.
-    GenerateLocationsFile::generateLocationsFile($this->io, $drupal_core_install_path, $drupal_root);
+    GenerateLocationsFile::generateLocations($this->io, $drupal_core_install_path, $drupal_root);
 
     // Add the managed scaffold files to .gitignore if applicable.
     $gitIgnoreManager = new ManageGitIgnore($this->io, getcwd());

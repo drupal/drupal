@@ -31,7 +31,7 @@ final class GenerateLocationsFile {
    *   The location of the Drupal web root, that is, where this scaffolding
    *   plugin writes files such as 'index.php'.
    */
-  public static function generateLocationsFile(IOInterface $io, $drupal_core_install_path, $drupal_root) {
+  public static function generateLocations(IOInterface $io, $drupal_core_install_path, $drupal_root) {
     file_put_contents($drupal_core_install_path . '/includes/locations.inc', static::locationsContents($drupal_root));
   }
 
