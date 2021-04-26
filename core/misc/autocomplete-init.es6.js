@@ -22,10 +22,8 @@
    */
   Drupal.Autocomplete.initialize = (autocompleteInput) => {
     const options = Drupal.Autocomplete.defaultOptions || {};
-    if (!Object.hasOwnProperty('messages')) {
-      options.messages = {};
-    }
-    options.messages.inputAssistiveHint = Drupal.t(
+
+    options.inputAssistiveHint = Drupal.t(
       'When autocomplete results are available use up and down arrows to review and enter to select.  Touch device users, explore by touch or with swipe gestures.',
     );
 

@@ -19,12 +19,7 @@
 
   Drupal.Autocomplete.initialize = function (autocompleteInput) {
     var options = Drupal.Autocomplete.defaultOptions || {};
-
-    if (!Object.hasOwnProperty('messages')) {
-      options.messages = {};
-    }
-
-    options.messages.inputAssistiveHint = Drupal.t('When autocomplete results are available use up and down arrows to review and enter to select.  Touch device users, explore by touch or with swipe gestures.');
+    options.inputAssistiveHint = Drupal.t('When autocomplete results are available use up and down arrows to review and enter to select.  Touch device users, explore by touch or with swipe gestures.');
     options.liveRegion = false;
 
     function autocompleteResultsMessage(count) {

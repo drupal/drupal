@@ -65,18 +65,16 @@ class A11yAutocomplete {
       separatorChar: ',',
       createLiveRegion: true,
       listZindex: 100,
-      messages: {
-        minCharAssistiveHint: 'Type @count or more characters for results',
-        inputAssistiveHint:
-          'When autocomplete results are available use up and down arrows to review and enter to select. Touch device users, explore by touch or with swipe gestures.',
-        noResults: 'No results found',
-        moreThanMaxResults:
-          'There are at least @count results available. Type additional characters to refine your search.',
-        someResults: 'There are @count results available.',
-        oneResult: 'There is one result available.',
-      },
       allowRepeatValues: null,
       searchDelay: 300,
+      minCharAssistiveHint: 'Type @count or more characters for results',
+      inputAssistiveHint:
+        'When autocomplete results are available use up and down arrows to review and enter to select. Touch device users, explore by touch or with swipe gestures.',
+      noResultsAssistiveHint: 'No results found',
+      moreThanMaxResultsAssistiveHint:
+        'There are at least @count results available. Type additional characters to refine your search.',
+      someResultsAssistiveHint: 'There are @count results available.',
+      oneResultAssistiveHint: 'There is one result available.',
     };
 
     this.options = {
@@ -177,7 +175,7 @@ class A11yAutocomplete {
 
     const description = document.createElement('span');
     description.textContent =
-      this.minCharsMessage() + this.options.messages.inputAssistiveHint;
+      this.minCharsMessage() + this.options.inputAssistiveHint;
     description.classList.add('visually-hidden');
     if (this.inputDescribedBy) {
       description.setAttribute(
@@ -949,13 +947,13 @@ class A11yAutocomplete {
     const { maxItems } = this.options;
     let message = '';
     if (count === 0) {
-      message = this.options.messages.noResults;
+      message = this.options.noResultsAssistiveHint;
     } else if (maxItems === this.totalSuggestions) {
-      message = this.options.messages.moreThanMaxResults;
+      message = this.options.moreThanMaxResultsAssistiveHint;
     } else if (count === 1) {
-      message = this.options.messages.oneResult;
+      message = this.options.oneResultAssistiveHint;
     } else {
-      message = this.options.messages.someResults;
+      message = this.options.someResultsAssistiveHint;
     }
     return message.replace('@count', count);
   }
@@ -968,7 +966,7 @@ class A11yAutocomplete {
    */
   minCharsMessage() {
     if (this.options.minChars > 1) {
-      return `${this.options.messages.minCharAssistiveHint.replace(
+      return `${this.options.minCharAssistiveHint.replace(
         '@count',
         this.options.minChars,
       )}. `;
