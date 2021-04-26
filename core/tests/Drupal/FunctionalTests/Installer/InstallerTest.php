@@ -21,6 +21,7 @@ class InstallerTest extends InstallerTestBase {
    * Ensures that the user page is available after installation.
    */
   public function testInstaller() {
+    $this->assertNotNull(\Drupal::state()->get('system.css_js_query_string'), 'The dummy query string should be set during install');
     $this->assertSession()->addressEquals('user/1');
     $this->assertSession()->statusCodeEquals(200);
     // Confirm that we are logged-in after installation.
