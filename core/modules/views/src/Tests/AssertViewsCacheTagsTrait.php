@@ -44,7 +44,7 @@ trait AssertViewsCacheTagsTrait {
     // active for direct rendering of views, just like for actual requests.
     /** @var \Symfony\Component\HttpFoundation\RequestStack $request_stack */
     $request_stack = \Drupal::service('request_stack');
-    $request = new Request();
+    $request = Request::createFromGlobals();
     $request->server->set('REQUEST_TIME', REQUEST_TIME);
     $view->setRequest($request);
     $request_stack->push($request);
