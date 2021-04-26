@@ -26,9 +26,23 @@ class VersioningUpdateRegistry {
   /**
    * A static cache of schema currentVersions per module.
    *
+   * Stores schema versions of the modules based on their defined hook_update_N
+   * implementations.
+   * Example:
+   * ```
+   * [
+   *   'example_module' => [
+   *     8000,
+   *     8001,
+   *     8002
+   *   ]
+   * ]
+   * ```
+   *
    * @var int[][]
+   * @see \Drupal\Core\Update\VersioningUpdateRegistry::getAvailableUpdates()
    */
-  protected $allVersions = [];
+  protected $allAvailableSchemaVersions = [];
 
   /**
    * Constructs a new UpdateRegistry.
@@ -54,11 +68,11 @@ class VersioningUpdateRegistry {
    *   no updates available.
    */
   public function getAvailableUpdates(string $module): array {
-    if (!isset($this->allVersions[$module])) {
-      $this->allVersions[$module] = [];
+    if (!isset($this->allAvailableSchemaVersions[$module])) {
+      $this->allAvailableSchemaVersions[$module] = [];
 
       foreach ($this->enabledModules as $enabled_module) {
-        $this->allVersions[$enabled_module] = [];
+        $this->allAvailableSchemaVersions[$enabled_module] = [];
       }
 
       // Prepare regular expression to match all possible defined
@@ -75,19 +89,19 @@ class VersioningUpdateRegistry {
         // If this function is a module update function, add it to the list of
         // module updates.
         if (preg_match($regexp, $function, $matches)) {
-          $this->allVersions[$matches['module']][] = (int) $matches['version'];
+          $this->allAvailableSchemaVersions[$matches['module']][] = (int) $matches['version'];
         }
       }
       // Ensure that updates are applied in numerical order.
       array_walk(
-        $this->allVersions,
-        function (&$module_updates) {
+        $this->allAvailableSchemaVersions,
+        static function (&$module_updates) {
           sort($module_updates, SORT_NUMERIC);
         }
       );
     }
 
-    return empty($this->allVersions[$module]) ? [] : $this->allVersions[$module];
+    return empty($this->allAvailableSchemaVersions[$module]) ? [] : $this->allAvailableSchemaVersions[$module];
   }
 
   /**
