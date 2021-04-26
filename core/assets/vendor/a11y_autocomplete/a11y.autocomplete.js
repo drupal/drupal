@@ -60,9 +60,9 @@ var A11yAutocomplete = function () {
       separatorChar: ',',
       createLiveRegion: true,
       listZindex: 100,
-      inputAssistiveHint: 'When autocomplete results are available use up and down arrows to review and enter to select. Touch device users, explore by touch or with swipe gestures.',
-      minCharAssistiveHint: 'Type @count or more characters for results',
       messages: {
+        minCharAssistiveHint: 'Type @count or more characters for results',
+        inputAssistiveHint: 'When autocomplete results are available use up and down arrows to review and enter to select. Touch device users, explore by touch or with swipe gestures.',
         noResults: 'No results found',
         moreThanMaxResults: 'There are at least @count results available. Type additional characters to refine your search.',
         someResults: 'There are @count results available.',
@@ -164,7 +164,7 @@ var A11yAutocomplete = function () {
       }
 
       var description = document.createElement('span');
-      description.textContent = this.minCharsMessage() + this.options.inputAssistiveHint;
+      description.textContent = this.minCharsMessage() + this.options.messages.inputAssistiveHint;
       description.classList.add('visually-hidden');
 
       if (this.inputDescribedBy) {
@@ -733,7 +733,7 @@ var A11yAutocomplete = function () {
     key: "minCharsMessage",
     value: function minCharsMessage() {
       if (this.options.minChars > 1) {
-        return "".concat(this.options.minCharAssistiveHint.replace('@count', this.options.minChars), ". ");
+        return "".concat(this.options.messages.minCharAssistiveHint.replace('@count', this.options.minChars), ". ");
       }
 
       return '';

@@ -65,10 +65,10 @@ class A11yAutocomplete {
       separatorChar: ',',
       createLiveRegion: true,
       listZindex: 100,
-      inputAssistiveHint:
-        'When autocomplete results are available use up and down arrows to review and enter to select. Touch device users, explore by touch or with swipe gestures.',
-      minCharAssistiveHint: 'Type @count or more characters for results',
       messages: {
+        minCharAssistiveHint: 'Type @count or more characters for results',
+        inputAssistiveHint:
+          'When autocomplete results are available use up and down arrows to review and enter to select. Touch device users, explore by touch or with swipe gestures.',
         noResults: 'No results found',
         moreThanMaxResults:
           'There are at least @count results available. Type additional characters to refine your search.',
@@ -177,7 +177,7 @@ class A11yAutocomplete {
 
     const description = document.createElement('span');
     description.textContent =
-      this.minCharsMessage() + this.options.inputAssistiveHint;
+      this.minCharsMessage() + this.options.messages.inputAssistiveHint;
     description.classList.add('visually-hidden');
     if (this.inputDescribedBy) {
       description.setAttribute(
@@ -451,6 +451,14 @@ class A11yAutocomplete {
     );
   }
 
+  /**
+   * A message announced when an item is highlighted.
+   *
+   * @param {element} item
+   *  The list item being highlighted.
+   * @return {string}
+   *  The message conveying that the item is highlighted
+   */
   highlightMessage(item) {
     return `${item.innerText} ${item.getAttribute('aria-posinset')} of ${
       this.ul.children.length
@@ -960,7 +968,7 @@ class A11yAutocomplete {
    */
   minCharsMessage() {
     if (this.options.minChars > 1) {
-      return `${this.options.minCharAssistiveHint.replace(
+      return `${this.options.messages.minCharAssistiveHint.replace(
         '@count',
         this.options.minChars,
       )}. `;

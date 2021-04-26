@@ -151,6 +151,11 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     instance.input.addEventListener('autocomplete-close', function (e) {
       document.body.removeEventListener('mousedown', closeOnClickOutside);
     });
+    instance.input.addEventListener('focus', function () {
+      instance.ul.querySelectorAll('.ui-menu-item-wrapper.ui-state-active').forEach(function (element) {
+        element.classList.remove('ui-state-active');
+      });
+    });
     instance.input.addEventListener('autocomplete-highlight', function (e) {
       instance.ul.querySelectorAll('.ui-menu-item-wrapper.ui-state-active').forEach(function (element) {
         element.classList.remove('ui-state-active');

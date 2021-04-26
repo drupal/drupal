@@ -180,19 +180,32 @@
       }
     };
 
-    // jQuery UI has an mousedown listener on the list that prevents default.
+    // jQuery UI has a mousedown listener on the list that prevents default.
     instance.ul.addEventListener('mousedown', (e) => {
       e.preventDefault();
     });
 
+    // jQuery UI will close the autocomplete results on any mousedown that lands
+    // outside of the autocomplete widget.
     instance.input.addEventListener('autocomplete-open', (e) => {
       document.body.addEventListener('mousedown', closeOnClickOutside);
     });
-
     instance.input.addEventListener('autocomplete-close', (e) => {
       document.body.removeEventListener('mousedown', closeOnClickOutside);
     });
 
+    // If the input receives focus, remove the ui-state-active class from all
+    // result items.
+    instance.input.addEventListener('focus', () => {
+      instance.ul
+        .querySelectorAll('.ui-menu-item-wrapper.ui-state-active')
+        .forEach((element) => {
+          element.classList.remove('ui-state-active');
+        });
+    });
+
+    // When a result item is highlighted, jQuery UI adds a ui-state-active
+    // class to it.
     instance.input.addEventListener('autocomplete-highlight', (e) => {
       instance.ul
         .querySelectorAll('.ui-menu-item-wrapper.ui-state-active')
