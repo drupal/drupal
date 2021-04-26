@@ -1313,9 +1313,6 @@ function system_install() {
     $site->set('name', 'Drupal');
   }
   $site->save(TRUE);
-
-  // Populate the dummy query string added to all CSS and JavaScript files.
-  _drupal_flush_css_js();
 }
 
 /**
