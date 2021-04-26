@@ -566,10 +566,6 @@ abstract class BrowserTestBase extends TestCase {
     // as expected.
     $this->container->get('cache_tags.invalidator')->resetChecksums();
 
-    // Set the dummy query string added to all CSS and JavaScript files.
-    // @todo Remove in https://www.drupal.org/project/drupal/issues/3207893.
-    _drupal_flush_css_js();
-
     // Generate a route to prime the url generator with the correct base url.
     // @todo Remove in https://www.drupal.org/project/drupal/issues/3207896.
     Url::fromRoute('<front>')->setAbsolute()->toString();
