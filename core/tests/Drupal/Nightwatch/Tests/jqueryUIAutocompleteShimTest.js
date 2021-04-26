@@ -2,131 +2,6 @@
 // are present to confirm that tests that pass with jQuery UI autocomplete
 // also pass with the shimmed core autocomplete.
 
-function arrowsInvokeSearch(id, isKeyUp, shouldMove) {
-  let didMove = false;
-  const element = jQuery(id).autocomplete({
-    source: ['a'],
-    delay: 0,
-    minLength: 0,
-  });
-  // override highlight item
-  if (
-    Drupal.hasOwnProperty('Autocomplete') &&
-    Drupal.Autocomplete.hasOwnProperty('instances')
-  ) {
-    Drupal.Autocomplete.instances[
-      element.attr('id')
-    ].highlightItem = function () {
-      didMove = true;
-    };
-  } else {
-    element.autocomplete('instance')._move = () => {
-      didMove = true;
-    };
-  }
-
-  element.simulate('keydown', {
-    keyCode: isKeyUp ? jQuery.ui.keyCode.UP : jQuery.ui.keyCode.DOWN,
-  });
-  return didMove === shouldMove;
-}
-
-function arrowsMoveFocus(id, isKeyUp) {
-  let didMove = false;
-  const element = jQuery(id).autocomplete({
-    source: ['a'],
-    delay: 0,
-    minLength: 0,
-  });
-  // override highlight item
-  if (
-    Drupal.hasOwnProperty('Autocomplete') &&
-    Drupal.Autocomplete.hasOwnProperty('instances')
-  ) {
-    Drupal.Autocomplete.instances[
-      element.attr('id')
-    ].highlightItem = function () {
-      didMove = true;
-    };
-  } else {
-    element.autocomplete('instance')._move = () => {
-      didMove = true;
-    };
-  }
-  element.autocomplete('search');
-  element.simulate('keydown', {
-    keyCode: isKeyUp ? jQuery.ui.keyCode.UP : jQuery.ui.keyCode.DOWN,
-  });
-  return didMove;
-}
-
-function arrowsNavigateElement(id, isKeyUp, shouldMove) {
-  let didMove = false;
-  const element = jQuery(id).autocomplete({
-    source: ['a'],
-    delay: 0,
-    minLength: 0,
-  });
-
-  element.on('keypress', (e) => {
-    didMove = document.activeElement.tagName === 'LI';
-  });
-  element.simulate('keydown', {
-    keyCode: isKeyUp ? jQuery.ui.keyCode.UP : jQuery.ui.keyCode.DOWN,
-  });
-
-  element.simulate('keypress');
-  return shouldMove === (document.activeElement.tagName !== 'LI');
-}
-
-function sourceTest(source, async, done) {
-  const toReturn = {};
-  toReturn.errors = [];
-
-  const element = jQuery('#autocomplete').autocomplete({
-    source,
-  });
-  const menu = element.autocomplete('widget');
-
-  function itemMatch(item, name) {
-    return item.value === name && item.label === name;
-  }
-
-  function result() {
-    const items = menu.find('.ui-menu-item');
-    toReturn.calledResult = true;
-    if (items.length !== 3) {
-      toReturn.errors.push('Should find three results.');
-    }
-    if (!itemMatch(items.eq(0).data('ui-autocomplete-item'), 'java')) {
-      toReturn.errors.push('Item 0 expected value');
-    }
-    if (!itemMatch(items.eq(1).data('ui-autocomplete-item'), 'javascript')) {
-      toReturn.errors.push('Item 1 expected value');
-    }
-    if (!itemMatch(items.eq(2).data('ui-autocomplete-item'), 'clojure')) {
-      toReturn.errors.push('Item 2 expected value');
-    }
-
-    element.autocomplete('destroy');
-    if (async) {
-      toReturn.isAsync = true;
-      done(toReturn);
-    } else {
-      toReturn.notAtAllAsync = true;
-    }
-  }
-  if (async) {
-    jQuery(document).on('ajaxStop', result);
-    element[0].addEventListener('autocomplete-open', result);
-  }
-  element.val('j').autocomplete('search');
-  if (!async) {
-    result();
-    return toReturn;
-  }
-}
-
 module.exports = {
   '@tags': ['core'],
   before(browser) {
@@ -2339,3 +2214,128 @@ module.exports = {
       );
   },
 };
+
+function arrowsInvokeSearch(id, isKeyUp, shouldMove) {
+  let didMove = false;
+  const element = jQuery(id).autocomplete({
+    source: ['a'],
+    delay: 0,
+    minLength: 0,
+  });
+  // override highlight item
+  if (
+    Drupal.hasOwnProperty('Autocomplete') &&
+    Drupal.Autocomplete.hasOwnProperty('instances')
+  ) {
+    Drupal.Autocomplete.instances[
+      element.attr('id')
+      ].highlightItem = function () {
+      didMove = true;
+    };
+  } else {
+    element.autocomplete('instance')._move = () => {
+      didMove = true;
+    };
+  }
+
+  element.simulate('keydown', {
+    keyCode: isKeyUp ? jQuery.ui.keyCode.UP : jQuery.ui.keyCode.DOWN,
+  });
+  return didMove === shouldMove;
+}
+
+function arrowsMoveFocus(id, isKeyUp) {
+  let didMove = false;
+  const element = jQuery(id).autocomplete({
+    source: ['a'],
+    delay: 0,
+    minLength: 0,
+  });
+  // override highlight item
+  if (
+    Drupal.hasOwnProperty('Autocomplete') &&
+    Drupal.Autocomplete.hasOwnProperty('instances')
+  ) {
+    Drupal.Autocomplete.instances[
+      element.attr('id')
+      ].highlightItem = function () {
+      didMove = true;
+    };
+  } else {
+    element.autocomplete('instance')._move = () => {
+      didMove = true;
+    };
+  }
+  element.autocomplete('search');
+  element.simulate('keydown', {
+    keyCode: isKeyUp ? jQuery.ui.keyCode.UP : jQuery.ui.keyCode.DOWN,
+  });
+  return didMove;
+}
+
+function arrowsNavigateElement(id, isKeyUp, shouldMove) {
+  let didMove = false;
+  const element = jQuery(id).autocomplete({
+    source: ['a'],
+    delay: 0,
+    minLength: 0,
+  });
+
+  element.on('keypress', (e) => {
+    didMove = document.activeElement.tagName === 'LI';
+  });
+  element.simulate('keydown', {
+    keyCode: isKeyUp ? jQuery.ui.keyCode.UP : jQuery.ui.keyCode.DOWN,
+  });
+
+  element.simulate('keypress');
+  return shouldMove === (document.activeElement.tagName !== 'LI');
+}
+
+function sourceTest(source, async, done) {
+  const toReturn = {};
+  toReturn.errors = [];
+
+  const element = jQuery('#autocomplete').autocomplete({
+    source,
+  });
+  const menu = element.autocomplete('widget');
+
+  function itemMatch(item, name) {
+    return item.value === name && item.label === name;
+  }
+
+  function result() {
+    const items = menu.find('.ui-menu-item');
+    toReturn.calledResult = true;
+    if (items.length !== 3) {
+      toReturn.errors.push('Should find three results.');
+    }
+    if (!itemMatch(items.eq(0).data('ui-autocomplete-item'), 'java')) {
+      toReturn.errors.push('Item 0 expected value');
+    }
+    if (!itemMatch(items.eq(1).data('ui-autocomplete-item'), 'javascript')) {
+      toReturn.errors.push('Item 1 expected value');
+    }
+    if (!itemMatch(items.eq(2).data('ui-autocomplete-item'), 'clojure')) {
+      toReturn.errors.push('Item 2 expected value');
+    }
+
+    element.autocomplete('destroy');
+    if (async) {
+      toReturn.isAsync = true;
+      done(toReturn);
+    } else {
+      toReturn.notAtAllAsync = true;
+    }
+  }
+  if (async) {
+    jQuery(document).on('ajaxStop', result);
+    element[0].addEventListener('autocomplete-open', result);
+  }
+  element.val('j').autocomplete('search');
+  if (!async) {
+    result();
+    return toReturn;
+  }
+}
