@@ -51,6 +51,8 @@ class WorkspaceListBuilder extends EntityListBuilder {
    *   The entity storage class.
    * @param \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager
    *   The workspace manager service.
+   * @param \Drupal\workspaces\WorkspaceRepositoryInterface $workspace_repository
+   *   The workspace repository service.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
    */

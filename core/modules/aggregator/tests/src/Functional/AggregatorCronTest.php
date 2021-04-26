@@ -25,7 +25,10 @@ class AggregatorCronTest extends AggregatorTestBase {
     // Create feed and test basic updating on cron.
     $this->createSampleNodes();
     $feed = $this->createFeed();
-    $count_query = \Drupal::entityQuery('aggregator_item')->condition('fid', $feed->id())->count();
+    $count_query = \Drupal::entityQuery('aggregator_item')
+      ->accessCheck(FALSE)
+      ->condition('fid', $feed->id())
+      ->count();
 
     $this->cronRun();
     $this->assertEqual(5, $count_query->execute());

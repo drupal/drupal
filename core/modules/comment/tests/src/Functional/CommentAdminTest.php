@@ -258,6 +258,7 @@ class CommentAdminTest extends CommentTestBase {
     $count_query = \Drupal::entityTypeManager()
       ->getStorage('comment')
       ->getQuery()
+      ->accessCheck(FALSE)
       ->count();
     $before_count = $count_query->execute();
     // Post 2 anonymous comments without contact info.

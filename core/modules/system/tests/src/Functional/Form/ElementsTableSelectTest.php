@@ -196,13 +196,16 @@ class ElementsTableSelectTest extends BrowserTestBase {
   /**
    * Helper function for the option check test to submit a form while collecting errors.
    *
-   * @param $form_element
-   *   A form element to test.
-   * @param $edit
+   * @param array $form
+   *   Nested array of form elements that comprise the form.
+   * @param array $edit
    *   An array containing post data.
    *
-   * @return
+   * @return array
    *   An array containing the processed form, the form_state and any errors.
+   *
+   * @internal param $form_element A form element to test.
+   *   A form element to test.
    */
   private function formSubmitHelper($form, $edit) {
     $form_id = $this->randomMachineName();

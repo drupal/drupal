@@ -359,7 +359,7 @@ class InstallUninstallTest extends ModuleTestBase {
   protected function preUninstallForum() {
     // There only should be a 'General discussion' term in the 'forums'
     // vocabulary, but just delete any terms there in case the name changes.
-    $query = \Drupal::entityQuery('taxonomy_term');
+    $query = \Drupal::entityQuery('taxonomy_term')->accessCheck(FALSE);
     $query->condition('vid', 'forums');
     $ids = $query->execute();
     $storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');

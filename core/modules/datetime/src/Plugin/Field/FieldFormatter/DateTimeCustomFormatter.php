@@ -16,7 +16,7 @@ use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
  *   field_types = {
  *     "datetime"
  *   }
- *)
+ * )
  */
 class DateTimeCustomFormatter extends DateTimeFormatterBase {
 

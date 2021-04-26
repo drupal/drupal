@@ -342,6 +342,7 @@ class InlineBlockTest extends InlineBlockTestBase {
    */
   protected function assertBlockRevisionCountByTitle($block_title, $expected_revision_count) {
     $actual_revision_count = $this->blockStorage->getQuery()
+      ->accessCheck(FALSE)
       ->condition('info', $block_title)
       ->allRevisions()
       ->count()

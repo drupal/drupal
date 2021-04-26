@@ -187,7 +187,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
           if (empty($table_alias)) {
             trigger_error(sprintf(
-              "Handler % tried to add additional_field %s but % could not be added!",
+              "Handler %s tried to add additional_field %s but %s could not be added!",
               $this->definition['id'],
               $identifier,
               $info['table']
@@ -1365,7 +1365,6 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    *     - word_boundary: Trim only on a word boundary.
    *     - ellipsis: Show an ellipsis (…) at the end of the trimmed string.
    *     - html: Make sure that the html is correct.
-   *
    * @param string $value
    *   The string which should be trimmed.
    *
@@ -1681,7 +1680,6 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    *
    * @param $array
    *   An array of values.
-   *
    * @param $parent_keys
    *   An array of parent keys. This will represent the array depth.
    *
@@ -1793,7 +1791,6 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    *     - word_boundary: Trim only on a word boundary.
    *     - ellipsis: Show an ellipsis (…) at the end of the trimmed string.
    *     - html: Make sure that the html is correct.
-   *
    * @param string $value
    *   The string which should be trimmed.
    *

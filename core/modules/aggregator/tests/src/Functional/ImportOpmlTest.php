@@ -57,7 +57,7 @@ class ImportOpmlTest extends AggregatorTestBase {
    * Submits form filled with invalid fields.
    */
   public function validateImportFormFields() {
-    $count_query = \Drupal::entityQuery('aggregator_feed')->count();
+    $count_query = \Drupal::entityQuery('aggregator_feed')->accessCheck(FALSE)->count();
     $before = $count_query->execute();
 
     $edit = [];
@@ -85,7 +85,7 @@ class ImportOpmlTest extends AggregatorTestBase {
    * Submits form with invalid, empty, and valid OPML files.
    */
   protected function submitImportForm() {
-    $count_query = \Drupal::entityQuery('aggregator_feed')->count();
+    $count_query = \Drupal::entityQuery('aggregator_feed')->accessCheck(FALSE)->count();
     $before = $count_query->execute();
 
     // Attempting to upload invalid XML.

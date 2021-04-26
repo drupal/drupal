@@ -14,7 +14,6 @@
     <!-- This release is not in a supported branch; therefore it should not be recommended. -->
     <name>aaa_update_test 8.x-3.0</name>
     <version>8.x-3.0</version>
-    <tag>DRUPAL-8--3-0</tag>
     <status>published</status>
     <release_link>http://example.com/aaa_update_test-8-x-3-0-release</release_link>
     <download_link>http://example.com/aaa_update_test-8.x-3.0.tar.gz</download_link>
@@ -27,7 +26,6 @@
   <release>
     <name>aaa_update_test 8.x-1.2-beta1</name>
     <version>8.x-1.2-beta1</version>
-    <tag>DRUPAL-8--1-1-beta1</tag>
     <status>published</status>
     <release_link>http://example.com/aaa_update_test-8-x-1-2-beta1-release</release_link>
     <download_link>http://example.com/aaa_update_test-8.x-1.2-beta1.tar.gz</download_link>
@@ -40,7 +38,6 @@
   <release>
     <name>aaa_update_test 8.x-1.2-alpha1</name>
     <version>8.x-1.2-alpha1</version>
-    <tag>DRUPAL-8--1-1-alpha1</tag>
     <status>published</status>
     <release_link>http://example.com/aaa_update_test-8-x-1-2-alpha1-release</release_link>
     <download_link>http://example.com/aaa_update_test-8.x-1.2-alpha1.tar.gz</download_link>
@@ -53,7 +50,6 @@
   <release>
     <name>aaa_update_test 8.x-1.1</name>
     <version>8.x-1.1</version>
-    <tag>DRUPAL-8--1-1</tag>
     <status>published</status>
     <release_link>http://example.com/aaa_update_test-8-x-1-1-release</release_link>
     <download_link>http://example.com/aaa_update_test-8.x-1.1.tar.gz</download_link>
@@ -66,7 +62,6 @@
   <release>
     <name>aaa_update_test 8.x-1.1-beta1</name>
     <version>8.x-1.1-beta1</version>
-    <tag>DRUPAL-8--1-1-beta1</tag>
     <status>published</status>
     <release_link>http://example.com/aaa_update_test-8-x-1-1-beta1-release</release_link>
     <download_link>http://example.com/aaa_update_test-8.x-1.1-beta1.tar.gz</download_link>
@@ -79,7 +74,6 @@
   <release>
     <name>aaa_update_test 8.x-1.1-alpha1</name>
     <version>8.x-1.1-alpha1</version>
-    <tag>DRUPAL-8--1-1-alpha1</tag>
     <status>published</status>
     <release_link>http://example.com/aaa_update_test-8-x-1-1-alpha1-release</release_link>
     <download_link>http://example.com/aaa_update_test-8.x-1.1-alpha1.tar.gz</download_link>
@@ -92,7 +86,6 @@
   <release>
     <name>aaa_update_test 8.x-1.0</name>
     <version>8.x-1.0</version>
-    <tag>DRUPAL-8--1-0</tag>
     <status>published</status>
     <release_link>http://example.com/aaa_update_test-8-x-1-0-release</release_link>
     <download_link>http://example.com/aaa_update_test-8.x-1.0.tar.gz</download_link>
