@@ -35,6 +35,7 @@
   <rule ref="Drupal.Classes.ClassFileName"/>
   <rule ref="Drupal.Classes.FullyQualifiedNamespace"/>
   <rule ref="Drupal.Classes.InterfaceName"/>
+  <rule ref="Drupal.Classes.PropertyDeclaration"/>
   <rule ref="Drupal.Classes.UnusedUseStatement"/>
   <rule ref="Drupal.Classes.UseGlobalClass"/>
   <rule ref="Drupal.Classes.UseLeadingBackslash"/>
