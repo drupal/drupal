@@ -85,12 +85,12 @@ class FileItemTest extends UnitTestCase {
       ['1 1 byte', FALSE],
       ['1,1 byte', FALSE],
       // Test with leading and trailing spaces.
-      [' 5.1mb', FALSE],
+      [' 5.1mb', TRUE],
       ['5.1mb ', TRUE],
-      [' 5.1mb ', FALSE],
-      [' 5.1 megabytes', FALSE],
+      [' 5.1mb ', TRUE],
+      [' 5.1 megabytes', TRUE],
       ['5.1 megabytes ', TRUE],
-      [' 5.1 megabytes ', FALSE],
+      [' 5.1 megabytes ', TRUE],
     ];
   }
 
