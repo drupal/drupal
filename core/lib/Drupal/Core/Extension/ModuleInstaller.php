@@ -536,8 +536,9 @@ class ModuleInstaller implements ModuleInstallerInterface {
 
       \Drupal::logger('system')->info('%module module uninstalled.', ['%module' => $module]);
 
-      $schema_store = \Drupal::keyValue('system.schema');
-      $schema_store->delete($module);
+      /** @var \Drupal\Core\Update\VersioningUpdateRegistry $post_update_registry */
+      $post_update_registry = \Drupal::service('update.update_registry');
+      $post_update_registry->deleteInstalledVersion($module);
 
       /** @var \Drupal\Core\Update\UpdateRegistry $post_update_registry */
       $post_update_registry = \Drupal::service('update.post_update_registry');

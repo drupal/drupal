@@ -412,7 +412,7 @@ class UpdateScriptTest extends BrowserTestBase {
     // nonexistent module. This replicates what would happen if you had a module
     // installed and then completely remove it from the filesystem and clear it
     // out of the core.extension config list without uninstalling it cleanly.
-    \Drupal::keyValue('system.schema')->set('my_already_removed_module', 8000);
+    \Drupal::service('update.update_registry')->setInstalledVersion('my_already_removed_module', 8000);
 
     // Visit update.php and make sure we can click through to the 'No pending
     // updates' page without errors.
@@ -426,8 +426,8 @@ class UpdateScriptTest extends BrowserTestBase {
 
     // Try again with another orphaned entry, this time for a test module that
     // does exist in the filesystem.
-    \Drupal::keyValue('system.schema')->delete('my_already_removed_module');
-    \Drupal::keyValue('system.schema')->set('update_test_0', 8000);
+    \Drupal::service('update.update_registry')->deleteInstalledVersion('my_already_removed_module');
+    \Drupal::service('update.update_registry')->setInstalledVersion('update_test_0', 8000);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->updateRequirementsProblem();
     $this->clickLink(t('Continue'));
@@ -437,7 +437,7 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->assertSession()->elementTextEquals('xpath', '//div[@aria-label="Warning message"]', 'Warning message Module update_test_0 has an entry in the system.schema key/value storage, but is not installed. More information about this error.');
 
     // Finally, try with both kinds of orphans and make sure we get both warnings.
-    \Drupal::keyValue('system.schema')->set('my_already_removed_module', 8000);
+    \Drupal::service('update.update_registry')->setInstalledVersion('my_already_removed_module', 8000);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->updateRequirementsProblem();
     $this->clickLink(t('Continue'));

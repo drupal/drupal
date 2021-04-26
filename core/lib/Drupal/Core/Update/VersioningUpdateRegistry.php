@@ -31,13 +31,6 @@ class VersioningUpdateRegistry {
   protected $allVersions = [];
 
   /**
-   * A static cache of installed schema versions per module.
-   *
-   * @var int[]
-   */
-  protected $installedVersions = [];
-
-  /**
    * Constructs a new UpdateRegistry.
    *
    * @param string[] $enabled_modules
@@ -48,7 +41,6 @@ class VersioningUpdateRegistry {
   public function __construct(array $enabled_modules, KeyValueStoreInterface $key_value) {
     $this->enabledModules = $enabled_modules;
     $this->keyValue = $key_value;
-    $this->installedVersions = $this->keyValue->getAll();
   }
 
   /**
@@ -109,7 +101,7 @@ class VersioningUpdateRegistry {
    *   module is not installed.
    */
   public function getInstalledVersion(string $module): int {
-    return $this->installedVersions[$module] ?? SCHEMA_UNINSTALLED;
+    return $this->keyValue->get($module, SCHEMA_UNINSTALLED);
   }
 
   /**
@@ -122,8 +114,16 @@ class VersioningUpdateRegistry {
    */
   public function setInstalledVersion(string $module, int $version): void {
     $this->keyValue->set($module, $version);
-    // Update the static cache of module schema versions.
-    $this->installedVersions[$module] = $version;
+  }
+
+  /**
+   * Deletes the installed version information for the module.
+   *
+   * @param string $module
+   *   The module name to delete.
+   */
+  public function deleteInstalledVersion(string $module): void {
+    $this->keyValue->delete($module);
   }
 
   /**
@@ -135,7 +135,7 @@ class VersioningUpdateRegistry {
    *   module is not installed.
    */
   public function getAllInstalledVersions(): array {
-    return $this->installedVersions;
+    return $this->keyValue->getAll();
   }
 
 }

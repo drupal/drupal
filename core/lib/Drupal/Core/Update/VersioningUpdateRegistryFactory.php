@@ -19,7 +19,10 @@ class VersioningUpdateRegistryFactory implements ContainerAwareInterface {
    *   The update registry instance.
    */
   public function create() {
-    return new VersioningUpdateRegistry(array_keys($this->container->get('module_handler')->getModuleList()), $this->container->get('keyvalue')->get('system.schema'));
+    return new VersioningUpdateRegistry(
+      array_keys($this->container->get('module_handler')->getModuleList()),
+      $this->container->get('keyvalue')->get('system.schema')
+    );
   }
 
 }

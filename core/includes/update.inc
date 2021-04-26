@@ -104,11 +104,11 @@ function update_check_requirements() {
  * https://www.drupal.org/project/drupal/issues/3130037 has been fixed.
  */
 function _update_fix_missing_schema() {
-  $versions = \Drupal::keyValue('system.schema')->getAll();
-  $module_handler = \Drupal::moduleHandler();
-  $enabled_modules = $module_handler->getModuleList();
   /** @var \Drupal\Core\Update\VersioningUpdateRegistry $update_registry */
   $update_registry = \Drupal::service('update.update_registry');
+  $versions = $update_registry->getAllInstalledVersions();
+  $module_handler = \Drupal::moduleHandler();
+  $enabled_modules = $module_handler->getModuleList();
 
   foreach (array_keys($enabled_modules) as $module) {
     // All modules should have a recorded schema version, but when they
@@ -352,9 +352,9 @@ function update_get_update_list() {
   // Make sure that the system module is first in the list of updates.
   $ret = ['system' => []];
 
-  $modules = \Drupal::keyValue('system.schema')->getAll();
   /** @var \Drupal\Core\Update\VersioningUpdateRegistry $update_registry */
   $update_registry = \Drupal::service('update.update_registry');
+  $modules = $update_registry->getAllInstalledVersions();
   /** @var \Drupal\Core\Extension\ExtensionList $extension_list */
   $extension_list = \Drupal::service('extension.list.module');
   /** @var array $installed_module_info */
@@ -686,9 +686,11 @@ function update_retrieve_dependencies() {
   $return = [];
   /** @var \Drupal\Core\Extension\ModuleExtensionList */
   $extension_list = \Drupal::service('extension.list.module');
+  /** @var \Drupal\Core\Update\VersioningUpdateRegistry $update_registry */
+  $update_registry = \Drupal::service('update.update_registry');
   // Get a list of installed modules, arranged so that we invoke their hooks in
   // the same order that \Drupal::moduleHandler()->invokeAll() does.
-  foreach (\Drupal::keyValue('system.schema')->getAll() as $module => $schema) {
+  foreach ($update_registry->getAllInstalledVersions() as $module => $schema) {
     // Skip modules that are entirely missing from the filesystem here, since
     // module_load_install() will call trigger_error() if invoked on a module
     // that doesn't exist. There's no way to catch() that, so avoid it entirely.
