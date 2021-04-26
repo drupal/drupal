@@ -137,7 +137,7 @@
 
           // @todo remove this conditional and its contents, in
           //   https://drupal.org/node/3206225, it is not needed in Drupal 10.
-          if (!autocompleteInput.hasAttribute('data-core-autocomplete')) {
+          if (!autocompleteInput.hasAttribute('data-drupal-10-autocomplete')) {
             Drupal.Autocomplete.jqueryUiShimInit(autocompleteInput);
           }
         },

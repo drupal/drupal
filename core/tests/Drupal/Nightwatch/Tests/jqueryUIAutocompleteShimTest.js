@@ -1,6 +1,7 @@
 // These are Nightwatch equivalents of jQuery UI's autocomplete tests. These
 // are present to confirm that tests that pass with jQuery UI autocomplete
 // also pass with the shimmed core autocomplete.
+/* eslint-disable no-use-before-define */
 
 module.exports = {
   '@tags': ['core'],
@@ -2229,7 +2230,7 @@ function arrowsInvokeSearch(id, isKeyUp, shouldMove) {
   ) {
     Drupal.Autocomplete.instances[
       element.attr('id')
-      ].highlightItem = function () {
+    ].highlightItem = function () {
       didMove = true;
     };
   } else {
@@ -2258,7 +2259,7 @@ function arrowsMoveFocus(id, isKeyUp) {
   ) {
     Drupal.Autocomplete.instances[
       element.attr('id')
-      ].highlightItem = function () {
+    ].highlightItem = function () {
       didMove = true;
     };
   } else {

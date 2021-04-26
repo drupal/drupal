@@ -171,9 +171,9 @@ abstract class FormElement extends RenderElement implements FormElementInterface
    *     autocomplete JavaScript library.
    *   - #autocomplete_route_parameters: The parameters to be used in
    *     conjunction with the route name.
-   *   - #use-core-autocomplete: As of Drupal 9.2, jQuery UI Autocomplete is no
-   *     longer used by Drupal core. It has been replaced with the core library
-   *     a11y_autocomplete. By default, a shim is present that provides
+   *   - #use-drupal-10-autocomplete: As of Drupal 9.2, jQuery UI Autocomplete
+   *     is no longer used by Drupal core. It has been replaced with the core
+   *     library A11y_autocomplete. By default, a shim is present that provides
    *     backwards compatibility with the jQuery UI Autocomplete API and markup.
    *     This shim will be removed in Drupal 10. Set this property to TRUE to
    *     use autocomplete without the jQuery UI shim.
@@ -207,13 +207,13 @@ abstract class FormElement extends RenderElement implements FormElementInterface
         $metadata = $metadata->merge($url);
 
         // @todo remove this conditional, its contents, and any documentation
-        //   referencing use-core-autocomplete in
+        //   referencing use-drupal-10-autocomplete in
         //   https://drupal.org/node/3206225, this property is not needed in
         //   Drupal 10.
-        if (!empty($element['#use-core-autocomplete'])) {
-          // Use core autocomplete without the jQuery UI Autocomplete backwards
-          // compatible shim.
-          $element['#attributes']['data-core-autocomplete'] = TRUE;
+        if (!empty($element['#use-drupal-10-autocomplete'])) {
+          // Use the Drupal 10 autocomplete without the jQuery UI Autocomplete
+          // backwards compatible shim.
+          $element['#attributes']['data-drupal-10-autocomplete'] = TRUE;
         }
       }
       $metadata

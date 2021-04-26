@@ -69,7 +69,7 @@
 
         Drupal.Autocomplete.initialize(autocompleteInput);
 
-        if (!autocompleteInput.hasAttribute('data-core-autocomplete')) {
+        if (!autocompleteInput.hasAttribute('data-drupal-10-autocomplete')) {
           Drupal.Autocomplete.jqueryUiShimInit(autocompleteInput);
         }
       });

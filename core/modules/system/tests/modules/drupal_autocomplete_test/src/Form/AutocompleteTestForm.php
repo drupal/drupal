@@ -95,7 +95,7 @@ class AutocompleteTestForm extends FormBase {
         ]),
       ],
       // This feature will only work on the non-shimmed autocomplete.
-      '#use-core-autocomplete' => TRUE,
+      '#use-drupal-10-autocomplete' => TRUE,
     ];
     $form['custom_classes_separate_data_attributes'] = [
       '#type' => 'textfield',
@@ -108,7 +108,7 @@ class AutocompleteTestForm extends FormBase {
         'data-autocomplete-item-class' => 'class-added-to-item another-class-added-to-item',
       ],
       // This feature will only work on the non-shimmed autocomplete.
-      '#use-core-autocomplete' => TRUE,
+      '#use-drupal-10-autocomplete' => TRUE,
     ];
 
     // Inputs with set cardinality and a custom separator.
