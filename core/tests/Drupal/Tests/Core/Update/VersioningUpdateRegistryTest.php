@@ -119,6 +119,16 @@ class VersioningUpdateRegistryTest extends UnitTestCase {
         return $versions;
       });
     $this->keyValueStore
+      ->method('get')
+      ->willReturnCallback(static function ($key) use (&$versions) {
+        return $versions[$key];
+      });
+    $this->keyValueStore
+      ->method('delete')
+      ->willReturnCallback(static function ($key) use (&$versions) {
+        return $versions[$key] = VersioningUpdateRegistry::SCHEMA_UNINSTALLED;
+      });
+    $this->keyValueStore
       ->method('set')
       ->willReturnCallback(static function ($key, $value) use (&$versions) {
         $versions[$key] = $value;
