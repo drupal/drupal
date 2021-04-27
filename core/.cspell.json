@@ -31,7 +31,8 @@
     "ignoreRegExpList": [
       "^msgstr .*",
       "!!binary .*",
-      "%[0-9][0-9A-F]"
+      "%[0-9][0-9A-F]",
+      "\\Wi18n"
     ],
     "dictionaries": ["drupal","companies", "fonts", "html", "php", "softwareTerms"],
     "dictionaryDefinitions": [
