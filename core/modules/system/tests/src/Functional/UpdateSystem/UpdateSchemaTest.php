@@ -78,13 +78,6 @@ class UpdateSchemaTest extends BrowserTestBase {
     $this->assertEqual(8001, drupal_get_installed_schema_version('update_test_schema', TRUE));
     // Ensure the index was added for column a.
     $this->assertTrue($connection->schema()->indexExists('update_test_schema_table', 'test'), 'Version 8001 of the update_test_schema module is installed.');
-
-    // Test the update_set_schema() utility function.
-    require_once $this->root . '/core/includes/update.inc';
-    update_set_schema('update_test_schema', 8003);
-    // Ensure schema has changed.
-    $this->assertEqual(8003, drupal_get_installed_schema_version('update_test_schema'));
-
   }
 
 }
