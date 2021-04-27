@@ -428,11 +428,14 @@ class Connection extends DatabaseConnection {
    * {@inheritdoc}
    */
   public function prepareStatement(string $query, array $options): StatementInterface {
-    $query = $this->prefixTables($query);
-    if (!($options['allow_square_brackets'] ?? FALSE)) {
-      $query = $this->quoteIdentifiers($query);
+    try {
+      $query = $this->preprocessStatement($query, $options);
+      $statement = new Statement($this->connection, $this, $query, $options['pdo'] ?? []);
     }
-    return new Statement($this->connection, $this, $query, $options['pdo'] ?? []);
+    catch (\Exception $e) {
+      $this->exceptionHandler()->handleStatementException($e, $query, $options);
+    }
+    return $statement;
   }
 
   public function nextId($existing_id = 0) {
