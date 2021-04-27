@@ -58,14 +58,31 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * process:
  *   uid:
  *     plugin: migration_lookup
- *       migration:
- *         - users
- *         - members
- *       source_ids:
- *         users:
- *           - author
- *         members:
- *           - id
+ *     migration:
+ *       - users
+ *       - members
+ *     source_ids:
+ *       users:
+ *         - author
+ *       members:
+ *         - id
+ * @endcode
+ *
+ * It's not required to describe source identifiers for each migration. If the
+ * source identifier for migration is not specified, default source value will
+ * be used. In the example below, 'author' source property will be used to
+ * do a lookup in 'users' migration, and 'uid' property in 'members' migration.
+ * @code
+ * process:
+ *   uid:
+ *     plugin: migration_lookup
+ *     source: uid
+ *     migration:
+ *       - users
+ *       - members
+ *     source_ids:
+ *       users:
+ *         - author
  * @endcode
  *
  * If the migration_lookup plugin does not find the source ID in the migration
