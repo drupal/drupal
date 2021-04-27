@@ -106,7 +106,7 @@ class VersioningUpdateRegistry {
       );
     }
 
-    return empty($this->allAvailableSchemaVersions[$module]) ? [] : $this->allAvailableSchemaVersions[$module];
+    return $this->allAvailableSchemaVersions[$module];
   }
 
   /**
