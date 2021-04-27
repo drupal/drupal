@@ -25,6 +25,7 @@ use Drupal\TestTools\Extension\SchemaInspector;
 use Drupal\TestTools\TestVarDumper;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
 use org\bovigo\vfs\vfsStream;
@@ -575,7 +576,22 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
       $container->getDefinition('password')
         ->setArguments([1]);
     }
-    TestServiceProvider::addRouteProvider($container);
+
+    // Add the on demand rebuild route provider service.
+    $route_provider_service_name = 'router.route_provider';
+    // While $container->get() does a recursive resolve, getDefinition() does
+    // not, so do it ourselves.
+    $id = $route_provider_service_name;
+    while ($container->hasAlias($id)) {
+      $id = (string) $container->getAlias($id);
+    }
+    $definition = $container->getDefinition($id);
+    $definition->clearTag('needs_destruction');
+    $container->setDefinition("simpletest.$route_provider_service_name", $definition);
+
+    $route_provider_definition = new Definition(RouteProvider::class);
+    $route_provider_definition->setPublic(TRUE);
+    $container->setDefinition($id, $route_provider_definition);
   }
 
   /**

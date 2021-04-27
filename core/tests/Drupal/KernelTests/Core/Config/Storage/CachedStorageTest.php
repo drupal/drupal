@@ -4,9 +4,7 @@ namespace Drupal\KernelTests\Core\Config\Storage;
 
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\CachedStorage;
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\StreamWrapper\PublicStream;
-use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Tests CachedStorage operations.
@@ -78,17 +76,6 @@ class CachedStorageTest extends ConfigStorageTestBase {
   protected function delete($name) {
     $this->cache->delete($name);
     unlink($this->fileStorage->getFilePath($name));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function containerBuild(ContainerBuilder $container) {
-    parent::containerBuild($container);
-    // Use the regular database cache backend to aid testing.
-    $container->register('cache_factory', 'Drupal\Core\Cache\DatabaseBackendFactory')
-      ->addArgument(new Reference('database'))
-      ->addArgument(new Reference('cache_tags.invalidator.checksum'));
   }
 
 }
