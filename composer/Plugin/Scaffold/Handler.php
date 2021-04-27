@@ -13,8 +13,6 @@ use Drupal\Composer\Plugin\Scaffold\Operations\OperationData;
 use Drupal\Composer\Plugin\Scaffold\Operations\OperationFactory;
 use Drupal\Composer\Plugin\Scaffold\Operations\ScaffoldFileCollection;
 
-include './vendor/symfony/var-dumper/Resources/functions/dump.php';
-
 /**
  * Core class of the plugin.
  *
