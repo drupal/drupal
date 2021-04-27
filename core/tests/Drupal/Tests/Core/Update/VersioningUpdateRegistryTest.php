@@ -131,7 +131,7 @@ class VersioningUpdateRegistryTest extends UnitTestCase {
     $this->assertSame(3001, $update_registry->getInstalledVersion('module3'));
     $this->assertSame($versions, $update_registry->getAllInstalledVersions());
     $update_registry->deleteInstalledVersion('module3');
-    $this->assertSame(SCHEMA_UNINSTALLED, $update_registry->getInstalledVersion('module3'));
+    $this->assertSame(VersioningUpdateRegistry::SCHEMA_UNINSTALLED, $update_registry->getInstalledVersion('module3'));
   }
 
 }

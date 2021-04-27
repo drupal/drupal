@@ -162,7 +162,7 @@ class ModulesUninstallForm extends FormBase {
       // All modules which depend on this one must be uninstalled first, before
       // we can allow this module to be uninstalled.
       foreach (array_keys($module->required_by) as $dependent) {
-        if ($this->updateRegistry->getInstalledVersion($dependent) !== SCHEMA_UNINSTALLED) {
+        if ($this->updateRegistry->getInstalledVersion($dependent) !== $this->updateRegistry::SCHEMA_UNINSTALLED) {
           $form['modules'][$module->getName()]['#required_by'][] = $dependent;
           $form['uninstall'][$module->getName()]['#disabled'] = TRUE;
         }

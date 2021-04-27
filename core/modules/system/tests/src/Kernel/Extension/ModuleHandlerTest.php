@@ -128,7 +128,7 @@ class ModuleHandlerTest extends KernelTestBase {
     /** @var \Drupal\Core\Update\VersioningUpdateRegistry $update_registry */
     $update_registry = \Drupal::service('update.update_registry');
     foreach (['color', 'config', 'help'] as $module) {
-      $this->assertEqual(SCHEMA_UNINSTALLED, $update_registry->getInstalledVersion($module), "{$module} module was uninstalled.");
+      $this->assertEqual($update_registry::SCHEMA_UNINSTALLED, $update_registry->getInstalledVersion($module), "{$module} module was uninstalled.");
     }
     $uninstalled_modules = \Drupal::state()->get('module_test.uninstall_order', []);
     $this->assertEqual(['color', 'config', 'help'], $uninstalled_modules, 'Modules were uninstalled in the correct order.');
@@ -183,7 +183,7 @@ class ModuleHandlerTest extends KernelTestBase {
     $result = $this->moduleInstaller()->uninstall([$non_dependency]);
     $this->assertTrue($result, 'ModuleInstaller::uninstall() returns TRUE.');
     $this->assertFalse($this->moduleHandler()->moduleExists($non_dependency));
-    $this->assertEquals($update_registry->getInstalledVersion($non_dependency), SCHEMA_UNINSTALLED, "$non_dependency module was uninstalled.");
+    $this->assertEquals($update_registry->getInstalledVersion($non_dependency), $update_registry::SCHEMA_UNINSTALLED, "$non_dependency module was uninstalled.");
 
     // Verify that the installation profile itself was not uninstalled.
     $uninstalled_modules = \Drupal::state()->get('module_test.uninstall_order', []);
@@ -280,7 +280,7 @@ class ModuleHandlerTest extends KernelTestBase {
     $update_registry = \Drupal::service('update.update_registry');
     $result = $this->moduleInstaller()->uninstall(['help']);
     $this->assertTrue($result, 'ModuleInstaller::uninstall() returns TRUE.');
-    $this->assertEqual(SCHEMA_UNINSTALLED, $update_registry->getInstalledVersion('entity_test'), "entity_test module was uninstalled.");
+    $this->assertEqual($update_registry::SCHEMA_UNINSTALLED, $update_registry->getInstalledVersion('entity_test'), "entity_test module was uninstalled.");
   }
 
   /**

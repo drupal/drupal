@@ -10,6 +10,11 @@ use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 class VersioningUpdateRegistry {
 
   /**
+   * Indicates that a module has not been installed yet.
+   */
+  public const SCHEMA_UNINSTALLED = -1;
+
+  /**
    * A list of enabled modules.
    *
    * @var string[]
@@ -115,7 +120,7 @@ class VersioningUpdateRegistry {
    *   module is not installed.
    */
   public function getInstalledVersion(string $module): int {
-    return $this->keyValue->get($module, SCHEMA_UNINSTALLED);
+    return $this->keyValue->get($module, self::SCHEMA_UNINSTALLED);
   }
 
   /**

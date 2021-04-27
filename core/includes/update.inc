@@ -362,7 +362,7 @@ function update_get_update_list() {
   foreach ($modules as $module => $schema_version) {
     // Skip uninstalled and incompatible modules.
     try {
-      if ($schema_version == SCHEMA_UNINSTALLED || $extension_list->checkIncompatibility($module)) {
+      if ($schema_version == $update_registry::SCHEMA_UNINSTALLED || $extension_list->checkIncompatibility($module)) {
         continue;
       }
     }
@@ -698,7 +698,7 @@ function update_retrieve_dependencies() {
     // store for modules that have been removed from a site without first being
     // cleanly uninstalled. We don't care here if the module has been installed
     // or not, since we'll filter those out in update_get_update_list().
-    if ($schema == SCHEMA_UNINSTALLED || !$extension_list->exists($module)) {
+    if ($schema == $update_registry::SCHEMA_UNINSTALLED || !$extension_list->exists($module)) {
       // Nothing to upgrade.
       continue;
     }
