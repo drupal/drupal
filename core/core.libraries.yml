@@ -280,6 +280,13 @@ drupal.dropbutton:
     - core/drupalSettings
     - core/jquery.once
 
+drupal.element.closest:
+  version: VERSION
+  js:
+    misc/polyfills/element.closest.js: { weight: -20 }
+  dependencies:
+    - core/drupal.element.matches
+
 drupal.element.matches:
   version: VERSION
   js:

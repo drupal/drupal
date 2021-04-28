@@ -32,6 +32,18 @@
   }
 
   Drupal.olivero.toggleSubNav = toggleSubNav;
+
+  function handleBlur(e) {
+    if (!Drupal.olivero.isDesktopNav()) return;
+    setTimeout(function () {
+      var menuParentItem = e.target.closest('.primary-nav__menu-item--has-children');
+
+      if (!menuParentItem.contains(document.activeElement)) {
+        toggleSubNav(menuParentItem, false);
+      }
+    }, 200);
+  }
+
   secondLevelNavMenus.forEach(function (el) {
     var button = el.querySelector('.primary-nav__button-toggle, .primary-nav__menu-link--button');
     button.removeAttribute('aria-hidden');
@@ -60,6 +72,7 @@
         toggleSubNav(el, false);
       }
     });
+    el.addEventListener('blur', handleBlur, true);
   });
 
   function closeAllSubNav() {

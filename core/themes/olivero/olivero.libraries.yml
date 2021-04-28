@@ -61,6 +61,7 @@ global-styling:
     js/navigation.js: {}
     js/second-level-navigation.js: {}
   dependencies:
+    - core/drupal.element.closest
     - core/drupal.element.matches
     - core/drupal.nodelist.foreach
     - core/drupal
