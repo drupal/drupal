@@ -119,7 +119,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->assertText($node3->label());
 
     // Check to make sure nodes are in the right order.
-    $this->assertNotEmpty($this->xpath('//div[@id="block-test-block"]//div[@class="item-list"]/ul/li[1]/div/span/a[text() = "' . $node3->label() . '"]'), 'Nodes were ordered correctly in block.');
+    $this->assertSession()->elementExists('xpath', '//div[@id="block-test-block"]//div[@class="item-list"]/ul/li[1]/div/span/a[text() = "' . $node3->label() . '"]');
 
     $this->drupalLogout();
     $this->drupalLogin($this->adminUser);
