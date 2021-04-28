@@ -25,7 +25,7 @@ interface FormElementBuilderBaseInterface extends BuilderBaseInterface {
    *
    * @return $this
    */
-  public function setValueCallack($value);
+  public function setValueCallback($value);
 
   /**
    * Set the 'tree' property.

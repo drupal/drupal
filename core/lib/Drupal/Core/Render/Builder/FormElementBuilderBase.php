@@ -18,7 +18,7 @@ abstract class FormElementBuilderBase extends BuilderBase implements FormElement
   /**
    * {@inheritdoc}
    */
-  public function setValueCallack($value) {
+  public function setValueCallback($value) {
     $this->set('value_callback', $value);
     return $this;
   }
