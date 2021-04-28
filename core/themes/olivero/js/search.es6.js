@@ -31,6 +31,12 @@
 
   Drupal.olivero.toggleSearchVisibility = toggleSearchVisibility;
 
+  document.addEventListener('keyup', (e) => {
+    if (e.key === 'Escape' || e.key === 'Esc') {
+      toggleSearchVisibility(false);
+    }
+  });
+
   document.addEventListener('click', (e) => {
     if (
       e.target.matches(
