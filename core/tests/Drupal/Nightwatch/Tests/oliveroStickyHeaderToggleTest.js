@@ -22,6 +22,7 @@ module.exports = {
         'Congratulations and welcome to the Drupal community!',
       )
       .assert.not.visible(buttonSelector)
+      .assert.attributeEquals(buttonSelector, 'aria-checked', 'false')
       .getLocationInView('footer.site-footer', () => {
         browser.assert.visible(buttonSelector);
         browser.assert.not.visible('#site-header__inner');

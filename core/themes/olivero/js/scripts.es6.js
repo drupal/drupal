@@ -73,7 +73,7 @@
       'Drupal.olivero.stickyHeaderState',
     );
 
-    if (!stickyHeaderState) return null;
+    if (!stickyHeaderState) return false;
 
     const item = JSON.parse(stickyHeaderState);
     const now = new Date();
@@ -82,7 +82,7 @@
     if (now.getTime() > item.expiry) {
       // If the item is expired, delete the item from storage and return null.
       localStorage.removeItem('Drupal.olivero.stickyHeaderState');
-      return null;
+      return false;
     }
     return item.value;
   }
