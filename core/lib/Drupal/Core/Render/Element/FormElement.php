@@ -90,6 +90,38 @@ use Drupal\Core\Url;
  */
 abstract class FormElement extends RenderElement implements FormElementInterface {
 
+  public function setDefaultValue($default_value) {
+    return $this->set('default_value', $default_value);
+  }
+
+  public function setDescription($description) {
+    return $this->set('description', $description);
+  }
+
+  public function setDisabled(bool $disabled = TRUE) {
+    return $this->set('disabled', $disabled);
+  }
+
+  public function setRequired(bool $required = TRUE) {
+    return $this->set('required', $required);
+  }
+
+  public function setTitle($title) {
+    return $this->set('title', $title);
+  }
+
+  public function setTitleDisplay(string $title_display) {
+    return $this->set('title_display', $title_display);
+  }
+
+  public function setFieldPrefix($field_prefix) {
+    return $this->set('field_prefix', $field_prefix);
+  }
+
+  public function setFieldSuffix($field_suffix) {
+    return $this->set('field_suffix', $field_suffix);
+  }
+
   /**
    * {@inheritdoc}
    */

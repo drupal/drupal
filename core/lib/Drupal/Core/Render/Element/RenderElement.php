@@ -7,6 +7,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\RenderableInterface;
 use Drupal\Core\Url;
 
 /**
@@ -121,7 +122,21 @@ use Drupal\Core\Url;
  *
  * @ingroup theme_render
  */
-abstract class RenderElement extends PluginBase implements ElementInterface {
+abstract class RenderElement extends PluginBase implements ElementInterface, RenderableInterface {
+
+  protected $renderable = [];
+
+  /**
+   * {@inheritdoc}
+   */
+  public function toRenderable() {
+    return $this->renderable + $this->getInfo();
+  }
+
+  protected function set(string $name, $value) {
+    $this->renderable["#$name"] = $value;
+    return $this;
+  }
 
   /**
    * {@inheritdoc}

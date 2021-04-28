@@ -27,7 +27,27 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * @FormElement("textarea")
  */
-class Textarea extends FormElement {
+class Textarea extends PlaceholderFormElement {
+
+  use AjaxableElementTrait;
+  use ElementAttributesTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $renderable = ['#type' => 'textarea'];
+
+  public function setCols(int $cols) {
+    return $this->set('cols', $cols);
+  }
+
+  public function setRows(int $rows) {
+    return $this->set('rows', $rows);
+  }
+
+  public function setResizable(string $resizable) {
+    return $this->set('resizable', $resizable);
+  }
 
   /**
    * {@inheritdoc}
