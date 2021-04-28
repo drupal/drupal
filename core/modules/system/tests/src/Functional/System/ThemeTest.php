@@ -112,10 +112,6 @@ class ThemeTest extends BrowserTestBase {
       $this->assertSession()->fieldValueEquals('logo_path', $expected['form']);
 
       // Verify logo path examples.
-      $elements = $this->xpath('//div[contains(@class, :item)]/div[@class=:description]/code', [
-        ':item' => 'js-form-item-logo-path',
-        ':description' => 'description',
-      ]);
       // Expected default values (if all else fails).
       $implicit_public_file = 'logo.svg';
       $explicit_file = 'public://logo.svg';
@@ -136,9 +132,10 @@ class ThemeTest extends BrowserTestBase {
         $explicit_file = 'public://' . $input;
         $local_file = PublicStream::basePath() . '/' . $input;
       }
-      $this->assertEqual($implicit_public_file, $elements[0]->getText());
-      $this->assertEqual($explicit_file, $elements[1]->getText());
-      $this->assertEqual($local_file, $elements[2]->getText());
+      $xpath = "//div[contains(@class, 'js-form-item-logo-path')]/div[@class='description']/code";
+      $this->assertSession()->elementTextEquals('xpath', "{$xpath}[1]", $implicit_public_file);
+      $this->assertSession()->elementTextEquals('xpath', "{$xpath}[2]", $explicit_file);
+      $this->assertSession()->elementTextEquals('xpath', "{$xpath}[3]", $local_file);
 
       // Verify the actual 'src' attribute of the logo being output in a site
       // branding block.

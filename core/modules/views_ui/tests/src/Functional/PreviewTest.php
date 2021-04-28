@@ -32,8 +32,8 @@ class PreviewTest extends UITestBase {
     $this->assertSession()->statusCodeEquals(200);
     $this->submitForm($edit = [], 'Update preview');
 
-    $elements = $this->xpath('//div[@id="views-live-preview"]//ul[contains(@class, :ul-class)]/li[contains(@class, :li-class)]', [':ul-class' => 'contextual-links', ':li-class' => 'filter-add']);
-    $this->assertCount(1, $elements, 'The contextual link to add a new field is shown.');
+    // Verify that the contextual link to add a new field is shown.
+    $this->assertSession()->elementsCount('xpath', '//div[@id="views-live-preview"]//ul[contains(@class, "contextual-links")]/li[contains(@class, "filter-add")]', 1);
 
     $this->submitForm($edit = ['view_args' => '100'], 'Update preview');
 
@@ -53,20 +53,15 @@ class PreviewTest extends UITestBase {
 
     $this->submitForm($edit = [], 'Update preview');
 
-    $elements = $this->xpath('//div[@class = "view-content"]/div[contains(@class, views-row)]');
-    $this->assertCount(5, $elements);
+    $this->assertSession()->elementsCount('xpath', '//div[@class = "view-content"]/div[contains(@class, views-row)]', 5);
 
     // Filter just the first result.
     $this->submitForm($edit = ['view_args' => '1'], 'Update preview');
-
-    $elements = $this->xpath('//div[@class = "view-content"]/div[contains(@class, views-row)]');
-    $this->assertCount(1, $elements);
+    $this->assertSession()->elementsCount('xpath', '//div[@class = "view-content"]/div[contains(@class, views-row)]', 1);
 
     // Filter for no results.
     $this->submitForm($edit = ['view_args' => '100'], 'Update preview');
-
-    $elements = $this->xpath('//div[@class = "view-content"]/div[contains(@class, views-row)]');
-    $this->assertCount(0, $elements);
+    $this->assertSession()->elementNotExists('xpath', '//div[@class = "view-content"]/div[contains(@class, views-row)]');
 
     // Test that area text and exposed filters are present and rendered.
     $this->assertSession()->fieldExists('id');
@@ -86,8 +81,7 @@ class PreviewTest extends UITestBase {
     $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
     $this->clickLink(t('Feed'));
     $this->submitForm([], 'Update preview');
-    $result = $this->xpath('//div[@id="views-live-preview"]/pre');
-    $this->assertStringContainsString('<title>' . $view['page[title]'] . '</title>', $result[0]->getText(), 'The Feed RSS preview was rendered.');
+    $this->assertSession()->elementTextContains('xpath', '//div[@id="views-live-preview"]/pre', '<title>' . $view['page[title]'] . '</title>');
 
     // Test the non-default UI display options.
     // Statistics only, no query.
@@ -126,8 +120,7 @@ SQL;
     // Test that the preview title isn't double escaped.
     $this->drupalPostForm("admin/structure/views/nojs/display/test_preview/default/title", $edit = ['title' => 'Double & escaped'], 'Apply');
     $this->submitForm([], 'Update preview');
-    $elements = $this->xpath('//div[@id="views-live-preview"]/div[contains(@class, views-query-info)]//td[text()=:text]', [':text' => 'Double & escaped']);
-    $this->assertCount(1, $elements);
+    $this->assertSession()->elementsCount('xpath', '//div[@id="views-live-preview"]/div[contains(@class, views-query-info)]//td[text()="Double & escaped"]', 1);
   }
 
   /**
@@ -144,8 +137,8 @@ SQL;
 
     // Check for implementation of hook_views_preview_info_alter().
     // @see views_ui_test.module
-    $elements = $this->xpath('//div[@id="views-live-preview"]/div[contains(@class, views-query-info)]//td[text()=:text]', [':text' => 'Test row count']);
-    $this->assertCount(1, $elements, 'Views Query Preview Info area altered.');
+    // Verify that Views Query Preview Info area was altered.
+    $this->assertSession()->elementsCount('xpath', '//div[@id="views-live-preview"]/div[contains(@class, views-query-info)]//td[text()="Test row count"]', 1);
     // Check that additional assets are attached.
     $this->assertStringContainsString('views_ui_test/views_ui_test.test', $this->getDrupalSettings()['ajaxPageState']['libraries'], 'Attached library found.');
     $this->assertRaw('css/views_ui_test.test.css');

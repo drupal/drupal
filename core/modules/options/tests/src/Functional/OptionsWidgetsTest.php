@@ -568,8 +568,11 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Display form: check that _none options are present and has label.
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
-    $this->assertNotEmpty($this->xpath('//div[@id=:id]//input[@value=:value]', [':id' => 'edit-card-1', ':value' => '_none']), 'A test radio button has a "None" choice.');
-    $this->assertNotEmpty($this->xpath('//div[@id=:id]//label[@for=:for and text()=:label]', [':id' => 'edit-card-1', ':for' => 'edit-card-1-none', ':label' => 'N/A']), 'A test radio button has a "N/A" choice.');
+    // Verify that a test radio button has a "None" choice.
+    $this->assertSession()->elementExists('xpath', '//div[@id="edit-card-1"]//input[@value="_none"]');
+    // Verify that a test radio button has a "N/A" choice..
+    $this->assertSession()->elementExists('xpath', '//div[@id="edit-card-1"]//label[@for="edit-card-1-none"]');
+    $this->assertSession()->elementTextEquals('xpath', '//div[@id="edit-card-1"]//label[@for="edit-card-1-none"]', "N/A");
 
     // Change it to the select widget.
     $display_repository->getFormDisplay('entity_test', 'entity_test')

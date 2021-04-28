@@ -53,8 +53,7 @@ class BulkFormTest extends BrowserTestBase {
     $this->drupalGet('test_bulk_form');
 
     // Test that the views edit header appears first.
-    $first_form_element = $this->xpath('//form/div[1][@id = :id]', [':id' => 'edit-header']);
-    $this->assertNotEmpty($first_form_element, 'The views form edit header appears first.');
+    $this->assertSession()->elementExists('xpath', '//form/div[1][@id = "edit-header"]');
 
     $this->assertSession()->fieldExists('edit-action');
 
@@ -156,8 +155,7 @@ class BulkFormTest extends BrowserTestBase {
     $this->submitForm($edit, 'Apply to selected items');
     // Make sure we don't show an action message while we are still on the
     // confirmation page.
-    $errors = $this->xpath('//div[contains(@class, "messages--status")]');
-    $this->assertEmpty($errors, 'No action message shown.');
+    $this->assertSession()->elementNotExists('xpath', '//div[contains(@class, "messages--status")]');
     $this->submitForm([], 'Delete');
     $this->assertText('Deleted 5 content items.');
     // Check if we got redirected to the original page.
@@ -177,8 +175,7 @@ class BulkFormTest extends BrowserTestBase {
     $this->submitForm($edit, 'Apply to selected items');
     // Make sure we just return to the bulk view with no warnings.
     $this->assertSession()->addressEquals('test_bulk_form');
-    $errors = $this->xpath('//div[contains(@class, "messages--status")]');
-    $this->assertEmpty($errors, 'No action message shown.');
+    $this->assertSession()->elementNotExists('xpath', '//div[contains(@class, "messages--status")]');
 
     // Test that the bulk form works when multiple nodes are selected
     // but one of the selected nodes are already deleted by another user before
@@ -194,8 +191,7 @@ class BulkFormTest extends BrowserTestBase {
     $this->submitForm($edit, 'Apply to selected items');
     // Make sure we don't show an action message while we are still on the
     // confirmation page.
-    $errors = $this->xpath('//div[contains(@class, "messages--status")]');
-    $this->assertEmpty($errors, 'No action message shown.');
+    $this->assertSession()->elementNotExists('xpath', '//div[contains(@class, "messages--status")]');
     $this->submitForm([], 'Delete');
     $this->assertText('Deleted 1 content item.');
 

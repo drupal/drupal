@@ -41,18 +41,14 @@ class BlockContentListTest extends BlockContentTestBase {
     $this->assertSession()->titleEquals('Custom block library | Drupal');
 
     // Test for the table.
-    $element = $this->xpath('//div[@class="layout-content"]//table');
-    $this->assertNotEmpty($element, 'Configuration entity list table found.');
+    $this->assertSession()->elementExists('xpath', '//div[@class="layout-content"]//table');
 
-    // Test the table header.
-    $elements = $this->xpath('//div[@class="layout-content"]//table/thead/tr/th');
-    $this->assertCount(2, $elements, 'Correct number of table header cells found.');
+    // Test the table header, two cells should be present.
+    $this->assertSession()->elementsCount('xpath', '//div[@class="layout-content"]//table/thead/tr/th', 2);
 
     // Test the contents of each th cell.
-    $expected_items = [t('Block description'), t('Operations')];
-    foreach ($elements as $key => $element) {
-      $this->assertEqual($expected_items[$key], $element->getText());
-    }
+    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/thead/tr/th[1]', 'Block description');
+    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/thead/tr/th[2]', 'Operations');
 
     $label = 'Antelope';
     $new_label = 'Albatross';
@@ -71,12 +67,11 @@ class BlockContentListTest extends BlockContentTestBase {
     $this->assertSession()->elementTextContains('xpath', '//td', $label);
 
     // Check the number of table row cells.
-    $elements = $this->xpath('//div[@class="layout-content"]//table/tbody/tr[@class="odd"]/td');
-    $this->assertCount(2, $elements, 'Correct number of table row cells found.');
+    $this->assertSession()->elementsCount('xpath', '//div[@class="layout-content"]//table/tbody/tr[@class="odd"]/td', 2);
     // Check the contents of each row cell. The first cell contains the label,
     // the second contains the machine name, and the third contains the
     // operations list.
-    $this->assertSame($label, $elements[0]->getText());
+    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/tbody/tr[@class="odd"]/td[1]', $label);
 
     // Edit the entity using the operations link.
     $blocks = $this->container
