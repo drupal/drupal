@@ -4,7 +4,6 @@ namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
-use Symfony\Component\CssSelector\CssSelectorConverter;
 
 /**
  * Tests output on the status overview page.
@@ -87,9 +86,7 @@ class StatusTest extends BrowserTestBase {
     $cron_last_run = \Drupal::state()->get('system.cron_last');
     \Drupal::state()->set('system.cron_last', 0);
     $this->drupalGet('admin/reports/status');
-    $css_selector_converter = new CssSelectorConverter();
-    $xpath = $css_selector_converter->toXPath('details.system-status-report__entry') . '//div[contains(text(), "Cron has not run recently")]';
-    $this->assertNotEmpty($this->xpath($xpath), 'Cron has not run recently error is being displayed.');
+    $this->assertSession()->elementExists('xpath', '//details[contains(@class, "system-status-report__entry")]//div[contains(text(), "Cron has not run recently")]');
     \Drupal::state()->set('system.cron_last', $cron_last_run);
   }
 

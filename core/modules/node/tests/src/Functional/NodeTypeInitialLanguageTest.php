@@ -114,10 +114,7 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
 
     // Loads node page and check if Language field is hidden by default.
     $this->drupalGet('node/' . $node->id());
-    $language_field = $this->xpath('//div[@id=:id]/div', [
-      ':id' => 'field-language-display',
-    ]);
-    $this->assertTrue(empty($language_field), 'Language field value is not shown by default on node page.');
+    $this->assertSession()->elementNotExists('xpath', '//div[@id="field-language-display"]/div');
 
     // Configures Language field formatter and check if it is saved.
     $edit = [
@@ -130,10 +127,7 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
 
     // Loads node page and check if Language field is shown.
     $this->drupalGet('node/' . $node->id());
-    $language_field = $this->xpath('//div[@id=:id]/div', [
-      ':id' => 'field-language-display',
-    ]);
-    $this->assertFalse(empty($language_field), 'Language field value is shown on node page.');
+    $this->assertSession()->elementExists('xpath', '//div[@id="field-language-display"]/div');
   }
 
 }

@@ -272,8 +272,8 @@ class BlockTest extends BlockTestBase {
       // Set the default theme and ensure the block is placed.
       $theme_settings->set('default', $theme)->save();
       $this->drupalGet('');
-      $elements = $this->xpath('//div[@id = :id]', [':id' => Html::getUniqueId('block-' . $block['id'])]);
-      $this->assertTrue(!empty($elements), 'The block was found.');
+      $block_id = Html::getUniqueId('block-' . $block['id']);
+      $this->assertSession()->elementExists('xpath', "//div[@id = '$block_id']");
     }
   }
 

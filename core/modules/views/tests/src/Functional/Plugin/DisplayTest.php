@@ -327,7 +327,7 @@ class DisplayTest extends ViewTestBase {
 
     $this->drupalGet('<front>');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertCount(1, $this->xpath('//div[@id = :id]', [':id' => 'block-' . $block->id()]));
+    $this->assertSession()->elementsCount('xpath', "//div[@id = 'block-{$block->id()}']", 1);
 
     // Change the block plugin ID to an invalid one.
     $config = $this->config('views.view.test_display_invalid');
@@ -339,7 +339,7 @@ class DisplayTest extends ViewTestBase {
     $this->drupalGet('<front>');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertText('The &quot;invalid&quot; plugin does not exist.');
-    $this->assertCount(0, $this->xpath('//div[@id = :id]', [':id' => 'block-' . $block->id()]));
+    $this->assertSession()->elementNotExists('xpath', "//div[@id = 'block-{$block->id()}']");
   }
 
   /**

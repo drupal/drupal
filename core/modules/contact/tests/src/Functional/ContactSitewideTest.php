@@ -376,8 +376,8 @@ class ContactSitewideTest extends BrowserTestBase {
       $field_name . '[0][value]' => $this->randomMachineName(),
     ];
     $this->submitForm($edit, 'Send message');
-    $result = $this->xpath('//div[@role=:role]', [':role' => 'contentinfo']);
-    $this->assertCount(0, $result, 'Messages not found.');
+    // Verify that messages are not found.
+    $this->assertSession()->elementNotExists('xpath', '//div[@role="contentinfo"]');
     $this->assertSession()->addressEquals('user/' . $admin_user->id());
 
     // Test preview and visibility of the message field and label. Submit the

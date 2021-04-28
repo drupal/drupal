@@ -84,4 +84,16 @@ class WebAssertTest extends BrowserTestBase {
     $this->assertSession()->pageTextContainsOnce('does-not-exist');
   }
 
+  /**
+   * @covers ::elementTextEquals
+   */
+  public function testElementTextEquals(): void {
+    $this->drupalGet('test-page');
+    $this->assertSession()->elementTextEquals('xpath', '//h1', 'Test page');
+
+    $this->expectException(AssertionFailedError::class);
+    $this->expectExceptionMessage("Failed asserting that the text of the element identified by '//h1' equals 'Foo page'.");
+    $this->assertSession()->elementTextEquals('xpath', '//h1', 'Foo page');
+  }
+
 }

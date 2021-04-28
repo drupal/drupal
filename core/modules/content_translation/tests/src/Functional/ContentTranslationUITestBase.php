@@ -351,7 +351,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
       'content_translation[created]' => '19/11/1978',
     ];
     $this->drupalPostForm($entity->toUrl('edit-form'), $edit, $this->getFormSubmitAction($entity, $langcode));
-    $this->assertNotEmpty($this->xpath('//div[contains(@class, "error")]//ul'), 'Invalid values generate a list of form errors.');
+    $this->assertSession()->elementExists('xpath', '//div[contains(@class, "error")]//ul');
     $metadata = $this->manager->getTranslationMetadata($entity->getTranslation($langcode));
     $this->assertEqual($values[$langcode]['uid'], $metadata->getAuthor()->id(), 'Translation author correctly kept.');
     $this->assertEqual($values[$langcode]['created'], $metadata->getCreatedTime(), 'Translation date correctly kept.');
