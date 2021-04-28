@@ -13,14 +13,6 @@
   font-size: 14px;
   line-height: var(--sp);
 
-  & .field--name-user-picture img {
-    width: var(--sp2-5);
-    height: var(--sp2-5);
-    margin-inline-end: var(--sp0-5);
-    object-fit: cover;
-    border-radius: 50%;
-  }
-
   & a {
     font-weight: bold;
   }
@@ -28,6 +20,14 @@
   @media (--sm) {
     margin-block-end: var(--sp2);
   }
+}
+
+.node__author-image img {
+  width: var(--sp2-5);
+  height: var(--sp2-5);
+  margin-inline-end: var(--sp0-5);
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .node__title {

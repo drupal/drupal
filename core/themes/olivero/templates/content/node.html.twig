@@ -92,7 +92,11 @@
     {{ title_suffix }}
     {% if display_submitted %}
       <div class="node__meta">
-        {{ author_picture }}
+      {% if author_picture %}
+        <div class="node__author-image">
+          {{ author_picture }}
+        </div>
+      {% endif %}
         <span{{ author_attributes }}>
           {{ 'By'|t }} {% apply spaceless %}{{ author_name }}{% endapply %}, {{ date }}
         </span>
