@@ -546,3 +546,20 @@ function media_library_filter_format_edit_form_validate($form, FormStateInterfac
     }
   }
 }
+
+/**
+ * Implements hook_preprocess_HOOK() for details element templates.
+ */
+function media_library_preprocess_fieldset(&$variables) {
+  _media_library_set_errors_inline($variables);
+}
+
+/**
+ * Populates form errors in the template.
+ */
+function _media_library_set_errors_inline(&$variables) {
+  $element = $variables['element'];
+  if (!empty($element['#errors'])) {
+    $variables['element']['#attributes']['class'][] = 'error';
+  }
+}

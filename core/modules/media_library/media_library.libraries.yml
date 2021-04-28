@@ -19,6 +19,9 @@ widget:
   version: VERSION
   js:
     js/media_library.widget.js: {}
+  css:
+    component:
+      css/fieldset.widget.css: {}
   dependencies:
     - core/drupal.dialog.ajax
     - core/jquery.once

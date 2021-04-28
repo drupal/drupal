@@ -160,6 +160,11 @@ libraries-override:
       component:
         css/oembed.frame.css: css/media/oembed.frame.css
 
+  media_library/widget:
+    css:
+      component:
+        css/fieldset.widget.css: css/media_library/fieldset.widget.css
+
   menu_ui/drupal.menu_ui.adminforms:
     css:
       theme:

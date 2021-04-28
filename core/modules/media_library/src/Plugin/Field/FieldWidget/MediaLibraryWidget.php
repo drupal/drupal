@@ -16,8 +16,10 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\field_ui\FieldUI;
 use Drupal\media\Entity\Media;
@@ -316,6 +318,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
       '#attached' => [
         'library' => ['media_library/widget'],
       ],
+      '#element_validate' => [[static::class, 'validateMediaLibraryWidget']],
       '#theme_wrappers' => [
         'fieldset__media_library_widget',
       ],
@@ -938,6 +941,35 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
    */
   protected static function setFieldState(array $element, FormStateInterface $form_state, array $field_state) {
     static::setWidgetState($element['#field_parents'], $element['#field_name'], $form_state, $field_state);
+  }
+
+  /**
+   * Validation checks specific to the Media Library widget in a parent form.
+   *
+   * @param array $element
+   *   The form element.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   * @param array $form
+   *   The form array.
+   */
+  public static function validateMediaLibraryWidget(array $element, FormStateInterface $form_state, array $form) {
+    // If a remove button triggered submit, this validation isn't needed.
+    if (in_array([static::class, 'removeItem'], $form_state->getSubmitHandlers(), TRUE)) {
+      return;
+    }
+
+    $media = static::getNewMediaItems($element, $form_state);
+
+    // Trigger error if the field is required and no media is present. Although
+    // the Form API's default validation would also catch this, the validation
+    // error message is too vague, so a more precise one is provided here.
+    $selection_count = !empty($element['selection']) ? count(Element::children($element['selection'])) : 0;
+    if (empty($media) && $selection_count === 0 && !empty($element['#required'])) {
+      $form_state->setError($element, new TranslatableMarkup('@name field is required.',
+        ['@name' => $element['#title']]));
+      return;
+    }
   }
 
 }
