@@ -886,9 +886,10 @@ module.exports = {
                 if (attachToKey === 'window') {
                   const atOffsets = parseOffset(options.at, tip[0]);
                   if (atOffsets.horizontal === 'center') {
-                    x = Drupal.hasOwnProperty('PopperInstances')
-                      ? $(window).outerWidth() / 2 - x
-                      : document.documentElement.clientWidth / 2 - x;
+                    x = document.documentElement.clientWidth / 2 - x;
+                    // x = Drupal.hasOwnProperty('PopperInstances')
+                    //   ? $(window).outerWidth() / 2 - x
+                    //   : document.documentElement.clientWidth / 2 - x;
                   } else if (atOffsets.horizontal === 'right') {
                     x = document.documentElement.clientWidth - x;
                   }
@@ -917,15 +918,6 @@ module.exports = {
                   toReturn[idKey] = true;
                 }
 
-                // Remove the tip after checking position so it does not impact
-                // the coordinates of tips added in the next iteration.
-                tip.remove();
-
-                // There are 313 scenarios. Complete the test after the final
-                // scenario completes.
-                if (Object.keys(toReturn).length === 313) {
-                  done(toReturn);
-                }
                 resolve();
               }, 25);
             });
@@ -965,13 +957,21 @@ module.exports = {
                 });
                 // eslint-disable-next-line no-await-in-loop
                 await checkPosition(tip, options, attachToKey, idKey);
+                tip.remove();
               }
             }
+            done(toReturn);
           })();
         },
         [testScenarios],
         (result) => {
-          Object.keys(result.value).forEach((item) => {
+          let numberOfScenarios = 0;
+          Object.keys(testScenarios).forEach((scenario) => {
+            numberOfScenarios += Object.keys(testScenarios[scenario]).length;
+          });
+          const valueKeys = Object.keys(result.value);
+          browser.assert.equal(valueKeys.length, numberOfScenarios);
+          valueKeys.forEach((item) => {
             browser.assert.equal(
               result.value[item],
               true,
