@@ -112,6 +112,18 @@ function layout_builder_entity_form_display_alter(EntityFormDisplayInterface $fo
 }
 
 /**
+ * Implements hook_preprocess_HOOK().
+ */
+function layout_builder_test_preprocess_layout__onecol(&$vars) {
+  if (!empty($vars['content']['#entity'])) {
+    $vars['content']['content'][\Drupal::service('uuid')->generate()] = [
+      '#type' => 'markup',
+      '#markup' => sprintf('Yes, I can access the %s', $vars['content']['#entity']->label()),
+    ];
+  }
+}
+
+/**
  * Implements hook_system_breadcrumb_alter().
  */
 function layout_builder_test_system_breadcrumb_alter(Breadcrumb &$breadcrumb, RouteMatchInterface $route_match, array $context) {
