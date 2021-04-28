@@ -27,6 +27,7 @@ class ModeratedContentViewTest extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
+    'block',
     'content_moderation',
     'node',
     'views',
@@ -45,6 +46,8 @@ class ModeratedContentViewTest extends BrowserTestBase {
   public function setUp(): void {
     parent::setUp();
 
+    $this->drupalPlaceBlock('local_tasks_block');
+
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page'])->save();
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article'])->save();
     $this->drupalCreateContentType(['type' => 'unmoderated_type', 'name' => 'Unmoderated type'])->save();
@@ -56,6 +59,7 @@ class ModeratedContentViewTest extends BrowserTestBase {
 
     $this->adminUser = $this->drupalCreateUser([
       'access administration pages',
+      'access content overview',
       'view any unpublished content',
       'administer nodes',
       'bypass node access',
@@ -100,6 +104,11 @@ class ModeratedContentViewTest extends BrowserTestBase {
     $nodes['draft_article'] = $this->drupalCreateNode(['type' => 'article', 'changed' => $time--, 'moderation_state' => 'draft']);
     $nodes['draft_page_1'] = $this->drupalCreateNode(['type' => 'page', 'changed' => $time--, 'moderation_state' => 'draft']);
     $nodes['draft_page_2'] = $this->drupalCreateNode(['type' => 'page', 'changed' => $time, 'moderation_state' => 'draft']);
+
+    // Verify the moderated content tab exists.
+    $this->drupalGet('admin/content');
+    $assert_session->statusCodeEquals(200);
+    $assert_session->linkExists('Moderated content');
 
     // Verify view, edit, and delete links for any content.
     $this->drupalGet('admin/content/moderated');
