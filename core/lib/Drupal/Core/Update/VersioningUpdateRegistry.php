@@ -116,7 +116,7 @@ class VersioningUpdateRegistry {
    *   A module name.
    *
    * @return int
-   *   The currently installed schema version, or SCHEMA_UNINSTALLED if the
+   *   The currently installed schema version, or self::SCHEMA_UNINSTALLED if the
    *   module is not installed.
    */
   public function getInstalledVersion(string $module): int {
@@ -150,7 +150,7 @@ class VersioningUpdateRegistry {
    *
    * @return int[]
    *   Array of modules as the keys and values as the currently installed
-   *   schema version of corresponding module, or SCHEMA_UNINSTALLED if the
+   *   schema version of corresponding module, or self::SCHEMA_UNINSTALLED if the
    *   module is not installed.
    */
   public function getAllInstalledVersions(): array {
