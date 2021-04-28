@@ -798,7 +798,7 @@ module.exports = {
            *  The actual coordinate value.
            * @param {number} expected
            *  The expected coordinate value.
-           * @return {boolean|boolean}
+           * @return {boolean}
            *  True if the actual is within 3px of the expected.
            */
           const withinRange = (actual, expected) => {
@@ -813,9 +813,9 @@ module.exports = {
            * separates horizontal and vertical alignment and their respective
            * offsets into distinct object properties.
            *
-           * @param {string}offset
+           * @param {string} offset
            *   Offset configuration in jQuery UI Position format.
-           * @param {element} element
+           * @param {Element} element
            *   The element being positioned.
            * @return {{horizontal: (*|string), verticalOffset: number, vertical: (*|string), horizontalOffset: number}}
            *   The horizontal and vertical alignment and offset values for the element.
