@@ -17,7 +17,7 @@ class SortTest extends TestCase {
    *
    * @var string
    */
-  private string $filePath;
+  private $filePath;
 
   /**
    * {@inheritdoc}
