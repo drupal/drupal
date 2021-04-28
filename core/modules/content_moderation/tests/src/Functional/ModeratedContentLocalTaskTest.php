@@ -21,7 +21,7 @@ class ModeratedContentLocalTaskTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'block',
     'content_moderation',
   ];
