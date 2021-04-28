@@ -102,23 +102,12 @@
 }
 
 [dir="ltr"] .add-comment__form {
-  padding-left: 3.375rem
+  padding-left: 0
 }
 
 [dir="rtl"] .add-comment__form {
-  padding-right: 3.375rem
+  padding-right: 0
 }
-
-@media (min-width: 43.75rem) {
-
-[dir="ltr"] .add-comment__form {
-    padding-left: 0
-  }
-
-[dir="rtl"] .add-comment__form {
-    padding-right: 0
-  }
-  }
 
 [dir="ltr"] .comment {
   padding-left: 3.375rem

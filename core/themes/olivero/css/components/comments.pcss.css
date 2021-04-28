@@ -59,11 +59,7 @@
 }
 
 .add-comment__form {
-  padding-inline-start: var(--sp3);
-
-  @media (--grid-md) {
-    padding-inline-start: 0;
-  }
+  padding-inline-start: 0;
 }
 
 .comment {
