@@ -560,7 +560,7 @@ class ModerationFormTest extends ModerationStateTestBase {
   /**
    * Tests the form redirects to the right destination.
    */
-  function testModerationFormRedirect() {
+  public function testModerationFormRedirect() {
     // Create new moderated content in published state.
     $node = $this->createNode(['type' => 'moderated_content', 'moderation_state' => 'published']);
     // Make a pending revision.
