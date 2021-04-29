@@ -23,10 +23,15 @@ trait FieldCreationTrait {
    *   The bundle that this field will be added to.
    * @param array $storage_settings
    *   A list of field storage settings that will be added to the defaults.
+   *   Additionally, a 'cardinality' key may be included to set the field
+   *   storage's cardinality.
    * @param array $field_settings
    *   A list of instance settings that will be added to the instance defaults.
+   *   Additionally, a 'required' key may be included to set the field's
+   *   'required' property.
    * @param array $widget_settings
    *   A list of widget settings that will be added to the widget defaults.
+   *   Additionally, a 'widget' key may be included to set the widget type.
    *
    * @return \Drupal\field\FieldStorageConfigInterface
    *   The file field.
