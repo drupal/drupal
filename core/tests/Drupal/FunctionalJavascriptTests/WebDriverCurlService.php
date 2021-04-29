@@ -15,6 +15,25 @@ use WebDriver\Exception as WebDriverException;
 class WebDriverCurlService extends CurlService {
 
   /**
+   * The maximum number of times to try in the event of a stale element
+   * reference error.
+   *
+   * @var int
+   */
+  private static $maxRetries = 10;
+
+  /**
+   * Sets the maximum number of retries.
+   *
+   * @param int $max_retries
+   *   The maximum number of times to try in the event of a stale element
+   *   reference error. This number must be greater than 10.
+   */
+  public static function setMaxRetries(int $max_retries) {
+    static::$maxRetries = max($max_retries, static::$maxRetries);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function execute($requestMethod, $url, $parameters = NULL, $extraOptions = []) {
@@ -22,7 +41,7 @@ class WebDriverCurlService extends CurlService {
       CURLOPT_FAILONERROR => TRUE,
     ];
     $retries = 0;
-    while ($retries < 10) {
+    while ($retries < static::$maxRetries) {
       try {
         $customHeaders = [
           'Content-Type: application/json;charset=UTF-8',
@@ -104,8 +123,9 @@ class WebDriverCurlService extends CurlService {
 
         $result = json_decode($rawResult, TRUE);
         if (isset($result['status']) && $result['status'] === WebDriverException::STALE_ELEMENT_REFERENCE) {
-          usleep(100000);
           $retries++;
+          // Wait a bit longer each time a stale reference error has occurred.
+          usleep(100000 * $retries);
           continue;
         }
         return [$rawResult, $info];
@@ -113,6 +133,9 @@ class WebDriverCurlService extends CurlService {
       catch (CurlExec $exception) {
         $retries++;
       }
+    }
+    if (empty($error)) {
+      $error = "Retries: $retries and last result:\n" . ($rawResult ?? '');
     }
     throw WebDriverException::factory(WebDriverException::CURL_EXEC, sprintf("Curl error thrown for http %s to %s%s\n\n%s", $requestMethod, $url, $parameters && is_array($parameters) ? ' with params: ' . json_encode($parameters) : '', $error));
   }
