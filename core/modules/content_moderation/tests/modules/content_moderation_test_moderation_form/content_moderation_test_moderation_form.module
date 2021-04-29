@@ -1,0 +1,18 @@
+<?php
+
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * @file
+ * Module file for the content moderation test moderation form module.
+ */
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for node entities.
+ */
+function content_moderation_test_moderation_form_node_presave(EntityInterface $entity) {
+  // Reset "published" state to "draft" to test the moderation form.
+  if (isset($entity->moderation_state->value) && $entity->moderation_state->value == 'published') {
+    $entity->set('moderation_state', 'draft');
+  }
+}

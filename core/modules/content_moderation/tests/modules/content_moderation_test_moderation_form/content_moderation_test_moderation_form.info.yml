@@ -1,0 +1,8 @@
+name: 'Content moderation test moderation form'
+type: module
+description: 'Alters entities being saved to test the moderation form redirects appropriately'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:content_moderation
+  - drupal:node
