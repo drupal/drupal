@@ -46,6 +46,31 @@ trait FieldCreationTrait {
     ]);
     $field_storage->save();
 
+    $this->attachField($field_name, $field_type, $entity_type, $bundle_name, $field_settings, $widget_settings);
+
+    return $field_storage;
+  }
+
+  /**
+   * Attaches a existing field to an entity.
+   *
+   * @param string $name
+   *   The name of the new field (all lowercase).
+   * @param string $field_type
+   *   The field type.
+   * @param string $entity_type
+   *   The entity type.
+   * @param string $bundle_name
+   *   The bundle that this field will be added to.
+   * @param array $field_settings
+   *   A list of instance settings that will be added to the instance defaults.
+   *   Additionally, a 'required' key may be included to set the field's
+   *   'required' property.
+   * @param array $widget_settings
+   *   A list of widget settings that will be added to the widget defaults.
+   *   Additionally, a 'widget' key may be included to set the widget type.
+   */
+  protected function attachField($field_name, $field_type, $entity_type, $bundle_name, $field_settings = [], $widget_settings = []) {
     $field = FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => $bundle_name,
@@ -76,8 +101,6 @@ trait FieldCreationTrait {
         'type' => $field_type_definition['default_formatter'],
       ])
       ->save();
-
-    return $field_storage;
   }
 
 }
