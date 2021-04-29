@@ -1,11 +1,11 @@
 <?php
 
+use Drupal\Core\Entity\EntityInterface;
+
 /**
  * @file
  * Module file for the content moderation test moderation form module.
  */
-
-use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Implements hook_ENTITY_TYPE_presave() for node entities.
