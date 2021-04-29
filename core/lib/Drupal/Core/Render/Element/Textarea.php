@@ -29,7 +29,7 @@ use Drupal\Core\Form\FormStateInterface;
  */
 class Textarea extends PlaceholderFormElement {
 
-  use AjaxableElementTrait;
+  use ElementAjaxTrait;
   use ElementAttributesTrait;
 
   /**

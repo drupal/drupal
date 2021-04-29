@@ -4,7 +4,7 @@ namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Url;
 
-trait AjaxableElementTrait {
+trait ElementAjaxTrait {
 
   protected function setAjaxProperty(string $name, $value) {
     $this->renderable['#ajax'][$name] = $value;
