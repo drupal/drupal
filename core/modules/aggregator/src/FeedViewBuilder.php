@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityViewBuilder;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Render\Element\Image;
 use Drupal\Core\Theme\Registry;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -121,11 +122,10 @@ class FeedViewBuilder extends EntityViewBuilder {
         $label = $entity->label();
         $link_href = $entity->getWebsiteUrl();
         if ($image && $label && $link_href) {
-          $link_title = [
-            '#theme' => 'image',
-            '#uri' => $image,
-            '#alt' => $label,
-          ];
+          $link_title = Image::getBuilder()
+            ->setUri($image)
+            ->setAlt($label)
+            ->toRenderable();
           $image_link = [
             '#type' => 'link',
             '#title' => $link_title,

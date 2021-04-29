@@ -152,6 +152,18 @@ abstract class RenderElement extends PluginBase implements ElementInterface, Ren
     return $this->set('theme', $theme_hook);
   }
 
+  public function setPrefix($prefix) {
+    return $this->set('prefix', $prefix);
+  }
+
+  public function setAccess($access) {
+    return $this->set('access', $access);
+  }
+
+  public function setSuffix($suffix) {
+    return $this->set('suffix', $suffix);
+  }
+
   /**
    * {@inheritdoc}
    */

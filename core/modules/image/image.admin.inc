@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Element\Image;
 
 /**
  * Prepares variables for image style preview templates.
@@ -69,17 +70,14 @@ function template_preprocess_image_style_preview(&$variables) {
   }
 
   // Build the preview of the original image.
-  $variables['original']['rendered'] = [
-    '#theme' => 'image',
-    '#uri' => $original_path,
-    '#alt' => t('Sample original image'),
-    '#title' => '',
-    '#attributes' => [
-      'width' => $variables['original']['width'],
-      'height' => $variables['original']['height'],
-      'style' => 'width: ' . $variables['preview']['original']['width'] . 'px; height: ' . $variables['preview']['original']['height'] . 'px;',
-    ],
-  ];
+  $variables['original']['rendered'] = Image::getBuilder()
+    ->setUri($original_path)
+    ->setAlt(t('Sample original image'))
+    ->setTitle('')
+    ->setAttribute('width', $variables['original']['width'])
+    ->setAttribute('height', $variables['original']['height'])
+    ->setAttribute('style', 'width: ' . $variables['preview']['original']['width'] . 'px; height: ' . $variables['preview']['original']['height'] . 'px;')
+    ->toRenderable();
 
   // Build the preview of the image style derivative. Timestamps are added
   // to prevent caching of images on the client side.

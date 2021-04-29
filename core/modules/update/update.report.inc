@@ -5,6 +5,7 @@
  * Code required only when rendering the available updates report.
  */
 
+use Drupal\Core\Render\Element\Image;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\update\UpdateFetcherInterface;
@@ -325,14 +326,13 @@ function template_preprocess_update_project_status(&$variables) {
       break;
   }
 
-  $variables['status']['icon'] = [
-    '#theme' => 'image',
-    '#width' => 18,
-    '#height' => 18,
-    '#uri' => $uri,
-    '#alt' => $text,
-    '#title' => $text,
-  ];
+  $variables['status']['icon'] = Image::getBuilder()
+    ->setWidth(18)
+    ->setHeight(18)
+    ->setUri($uri)
+    ->setAlt($text)
+    ->setTitle($text)
+    ->toRenderable();
 }
 
 /**

@@ -9,6 +9,7 @@ use Drupal\Component\Plugin\Definition\PluginDefinitionInterface;
 use Drupal\Component\Plugin\Definition\PluginDefinition;
 use Drupal\Core\Plugin\Definition\DependentPluginDefinitionInterface;
 use Drupal\Core\Plugin\Definition\DependentPluginDefinitionTrait;
+use Drupal\Core\Render\Element\Image;
 
 /**
  * Provides an implementation of a layout definition and its metadata.
@@ -437,13 +438,12 @@ class LayoutDefinition extends PluginDefinition implements PluginDefinitionInter
   public function getIcon($width = 125, $height = 150, $stroke_width = NULL, $padding = NULL) {
     $icon = [];
     if ($icon_path = $this->getIconPath()) {
-      $icon = [
-        '#theme' => 'image',
-        '#uri' => $icon_path,
-        '#width' => $width,
-        '#height' => $height,
-        '#alt' => $this->getLabel(),
-      ];
+      $icon = Image::getBuilder()
+        ->setUri($icon_path)
+        ->setWidth($width)
+        ->setHeight($height)
+        ->setAlt($this->getLabel())
+        ->toRenderable();
     }
     elseif ($icon_map = $this->getIconMap()) {
       $icon_builder = $this->getIconBuilder()
