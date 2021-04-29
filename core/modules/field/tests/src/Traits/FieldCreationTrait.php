@@ -51,8 +51,10 @@ trait FieldCreationTrait {
     $field->save();
 
     $field_type_definition = $this->container->get('plugin.manager.field.field_type')->getDefinition($field_type);
-    if (!isset($field_type_definition['default_widget'])) {
-      throw new \Exception("The field type $field_type has no default widget, and no widget type was given.");
+    if (!isset($widget_settings['widget'])) {
+      if (!isset($field_type_definition['default_widget'])) {
+        throw new \Exception("The field type $field_type has no default widget, and no widget type was given.");
+      }
     }
     if (!isset($field_type_definition['default_formatter'])) {
       throw new \Exception("The field type $field_type has no default formatter, and no formatter type was given.");
@@ -60,7 +62,7 @@ trait FieldCreationTrait {
 
     $form_display = $this->container->get('entity_display.repository')->getFormDisplay($entity_type, $bundle_name);
     $form_display->setComponent($field_name, [
-        'type' => $field_type_definition['default_widget'],
+        'type' => $widget_settings['widget'] ?? $field_type_definition['default_widget'],
         'settings' => $widget_settings,
       ])
       ->save();
