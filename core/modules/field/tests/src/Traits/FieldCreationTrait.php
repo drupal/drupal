@@ -19,7 +19,7 @@ trait FieldCreationTrait {
    *   The field type.
    * @param string $entity_type
    *   The entity type.
-   * @param string $bundle
+   * @param string $bundle_name
    *   The bundle that this field will be added to.
    * @param array $storage_settings
    *   A list of field storage settings that will be added to the defaults.
