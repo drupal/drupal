@@ -166,7 +166,7 @@ drupal.collapse:
 drupal.customevent:
   version: VERSION
   js:
-    misc/polyfills/customevent.js: { weight: -20 }
+    misc/polyfills/customevent.js: { weight: -20, attributes: { nomodule: "" } }
 
 drupal.date:
   version: VERSION
