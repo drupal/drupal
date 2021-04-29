@@ -470,6 +470,26 @@ class FileFieldWidgetTest extends FileFieldTestBase {
   }
 
   /**
+   * Tests maximum upload file size validation.
+   */
+  public function testMaximumUploadFileSizeValidation() {
+    // Grant the admin user required permissions.
+    user_role_grant_permissions($this->adminUser->roles[0]->target_id, ['administer node fields']);
+
+    $type_name = 'article';
+    $field_name = strtolower($this->randomMachineName());
+    $this->createFileField($field_name, 'node', $type_name);
+    $field = FieldConfig::loadByName('node', $type_name, $field_name);
+    $field_id = $field->id();
+    $this->drupalGet("admin/structure/types/manage/$type_name/fields/$field_id");
+
+    // Tests that form validation trims the user input.
+    $edit = ['settings[max_filesize]' => ' 5.1 megabytes '];
+    $this->submitForm($edit, 'Save settings');
+    $this->assertSession()->pageTextContains('Saved ' . $field_name . ' configuration.');
+  }
+
+  /**
    * Tests configuring file field's allowed file extensions setting.
    */
   public function testFileExtensionsSetting() {
