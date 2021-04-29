@@ -813,12 +813,17 @@ module.exports = {
            * separates horizontal and vertical alignment and their respective
            * offsets into distinct object properties.
            *
+           * This is a copy of the parseOffset function from the jQuery position
+           * API.
+           *
            * @param {string} offset
            *   Offset configuration in jQuery UI Position format.
            * @param {Element} element
            *   The element being positioned.
            * @return {{horizontal: (*|string), verticalOffset: number, vertical: (*|string), horizontalOffset: number}}
            *   The horizontal and vertical alignment and offset values for the element.
+           *
+           * @see core/misc/position.es6.js
            */
           const parseOffset = (offset, element) => {
             const regexHorizontal = /left|center|right/;
@@ -861,35 +866,40 @@ module.exports = {
            * Checks the position of an element.
            *
            * The position values of an element are based on their distance
-           * relative to the element their being positioned against.
+           * relative to the element they're positioned against.
            *
            * @param {jQuery} tip
            *  The element being positioned.
            * @param {Object} options
            *  The position options.
-           * @param {string} attachToKey
-           *  The type of element being attached to.
+           * @param {string} attachToType
+           *  A string representing the data type used for the value of the `of`
+           *  option. This could be 'selector', 'window', 'jQuery', 'element'.
+           *
            * @param {string} idKey
            *   The unique id of the element indicating the use case scenario.
            *
            * @return {Promise}
-           *   Default resolve after all but the final iteration, which returns
-           *   a Nightwatch test completion promise.
+           *   Resolve after the tip position is calculated.
            */
-          const checkPosition = (tip, options, attachToKey, idKey) =>
+          const checkPosition = (tip, options, attachToType, idKey) =>
             new Promise((resolve) => {
               setTimeout(() => {
                 const box = tip[0].getBoundingClientRect();
                 let { x, y } = box;
                 // If the tip is attaching to the window, X and Y are measured
                 // based on their distance from the closest window boundary.
-                if (attachToKey === 'window') {
+                if (attachToType === 'window') {
+                  // Parse options.at to get the configured the horizontal and
+                  // vertical positioning within the window. This will be used
+                  // to get the tip distance relative to the configured position
+                  // within the window. This provides a reliable way of
+                  // getting position info that doesn't rely on an exact
+                  // viewport width.
                   const atOffsets = parseOffset(options.at, tip[0]);
+
                   if (atOffsets.horizontal === 'center') {
                     x = document.documentElement.clientWidth / 2 - x;
-                    // x = Drupal.hasOwnProperty('PopperInstances')
-                    //   ? $(window).outerWidth() / 2 - x
-                    //   : document.documentElement.clientWidth / 2 - x;
                   } else if (atOffsets.horizontal === 'right') {
                     x = document.documentElement.clientWidth - x;
                   }
@@ -905,10 +915,8 @@ module.exports = {
                   const refRect = document
                     .querySelector('#position-reference-1')
                     .getBoundingClientRect();
-                  const refX = refRect.x;
-                  const refY = refRect.y;
-                  x -= refX;
-                  y -= refY;
+                  x -= refRect.x;
+                  y -= refRect.y;
                 }
                 if (!withinRange(x, options.x) || !withinRange(y, options.y)) {
                   toReturn[
@@ -932,22 +940,22 @@ module.exports = {
           // Loop through testScenarios and attachScenarios to get config for a
           // positioned tip.
           (async function iterate() {
-            const attachToKeys = Object.keys(attachScenarios);
-            for (let i = 0; i < attachToKeys.length; i++) {
-              const attachToKey = attachToKeys[i];
-              const scenarios = Object.keys(testIterations[attachToKey]);
+            const attachToTypes = Object.keys(attachScenarios);
+            for (let i = 0; i < attachToTypes.length; i++) {
+              const attachToType = attachToTypes[i];
+              const scenarios = Object.keys(testIterations[attachToType]);
               for (let j = 0; j < scenarios.length; j++) {
                 const key = scenarios[j];
-                const options = testIterations[attachToKey][key];
-                options.of = attachScenarios[attachToKey];
+                const options = testIterations[attachToType][key];
+                options.of = attachScenarios[attachToType];
                 options.collision = 'none';
-                const idKey = `${attachToKey}${key}`;
+                const idKey = `${attachToType}${key}`;
 
                 // eslint-disable-next-line no-await-in-loop
                 const tip = await new Promise((resolve) => {
                   const addedTip = $(
                     `<div class="test-tip"  style="position:${
-                      attachToKey === 'window' ? 'fixed' : 'absolute'
+                      attachToType === 'window' ? 'fixed' : 'absolute'
                     }" id="${idKey}">${idKey}</div>`,
                   ).appendTo('main');
                   addedTip.position(options);
@@ -956,7 +964,7 @@ module.exports = {
                   });
                 });
                 // eslint-disable-next-line no-await-in-loop
-                await checkPosition(tip, options, attachToKey, idKey);
+                await checkPosition(tip, options, attachToType, idKey);
                 tip.remove();
               }
             }
