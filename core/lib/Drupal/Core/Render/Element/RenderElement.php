@@ -126,6 +126,10 @@ abstract class RenderElement extends PluginBase implements ElementInterface, Ren
 
   protected $renderable = [];
 
+  public static function getBuilder() {
+    return new static([], uniqid(), []);
+  }
+
   /**
    * {@inheritdoc}
    */
@@ -133,9 +137,19 @@ abstract class RenderElement extends PluginBase implements ElementInterface, Ren
     return $this->renderable + $this->getInfo();
   }
 
+  /**
+   * @param string $name
+   * @param $value
+   *
+   * @return $this
+   */
   protected function set(string $name, $value) {
     $this->renderable["#$name"] = $value;
     return $this;
+  }
+
+  public function setThemeHook(string $theme_hook) {
+    return $this->set('theme', $theme_hook);
   }
 
   /**

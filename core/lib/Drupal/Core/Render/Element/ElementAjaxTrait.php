@@ -27,7 +27,7 @@ trait ElementAjaxTrait {
     return $this->setAjaxProperty('effect', $effect);
   }
 
-  public function setAjaxEffectSped($speed) {
+  public function setAjaxEffectSpeed($speed) {
     return $this->setAjaxProperty('speed', $speed);
   }
 

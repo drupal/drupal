@@ -4,8 +4,9 @@ namespace Drupal\Core\Render\Element;
 
 trait ElementAttributesTrait {
 
-  public function setAttributes(array $attributes) {
-    return $this->set('attributes', $attributes);
+  public function setAttribute(string $name, $value) {
+    $this->renderable['#attributes'][$name] = $value;
+    return $this;
   }
 
 }

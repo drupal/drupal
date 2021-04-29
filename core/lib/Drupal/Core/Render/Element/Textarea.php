@@ -6,20 +6,14 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Provides a form element for input of multiple-line text.
- *
- * Properties:
- * - #rows: Number of rows in the text box.
- * - #cols: Number of columns in the text box.
- * - #resizable: Controls whether the text area is resizable.  Allowed values
- *   are "none", "vertical", "horizontal", or "both" (defaults to "vertical").
- * - #maxlength: The maximum amount of characters to accept as input.
- *
+
  * Usage example:
  * @code
- * $form['text'] = array(
- *   '#type' => 'textarea',
- *   '#title' => $this->t('Text'),
- * );
+ * use Drupal\Core\Render\Element\Textarea;
+ *
+ * $form['text'] = Textarea::getBuilder()
+ *   ->setTitle($this->t('Text'))
+ *   ->toRenderable();
  * @endcode
  *
  * @see \Drupal\Core\Render\Element\Textfield
@@ -27,7 +21,7 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * @FormElement("textarea")
  */
-class Textarea extends PlaceholderFormElement {
+class Textarea extends TextElement {
 
   use ElementAjaxTrait;
   use ElementAttributesTrait;
@@ -37,14 +31,39 @@ class Textarea extends PlaceholderFormElement {
    */
   protected $renderable = ['#type' => 'textarea'];
 
+  /**
+   * Sets the number of columns in the text box.
+   *
+   * @param int $cols
+   *   The number of columns in the text box.
+   *
+   * @return $this
+   */
   public function setCols(int $cols) {
     return $this->set('cols', $cols);
   }
 
+  /**
+   * Sets the number of rows in the text box.
+   *
+   * @param int $rows
+   *   The number of rows in the text box.
+   *
+   * @return $this
+   */
   public function setRows(int $rows) {
     return $this->set('rows', $rows);
   }
 
+  /**
+   * Sets whether the text area is resizable.
+   *
+   * @param string $resizable
+   *   Whether the text area is resizable. Allowed values are "none",
+   *   "vertical", "horizontal", or "both" (defaults to "vertical").
+   *
+   * @return $this
+   */
   public function setResizable(string $resizable) {
     return $this->set('resizable', $resizable);
   }
