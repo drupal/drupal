@@ -24,6 +24,7 @@ class ModeratedContentLocalTaskTest extends BrowserTestBase {
   protected static $modules = [
     'block',
     'content_moderation',
+    'node',
   ];
 
   /**
@@ -41,18 +42,27 @@ class ModeratedContentLocalTaskTest extends BrowserTestBase {
 
     $this->adminUser = $this->drupalCreateUser([
       'access administration pages',
+      'access content overview',
+      'view any unpublished content',
     ]);
   }
 
   /**
    * Tests the moderated content local task appears.
    */
-  public function testModeratedContentPage() {
+  public function testModeratedContentLocalTask() {
     $this->drupalLogin($this->adminUser);
 
+    // Verify the moderated content tab exists.
+    $this->drupalGet('admin/content');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->linkExists('Moderated content');
+
+    // Uninstall the node module which should also remove the tab.
+    $this->container->get('module_installer')->uninstall(['node']);
+
     // Verify the moderated content local task does not exist without the node
-    // module installed. We can test this works with the node module in
-    // ModeratedContentViewTest::testModeratedContentPage().
+    // module installed.
     $this->drupalGet('admin/content');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->linkNotExists('Moderated content');
