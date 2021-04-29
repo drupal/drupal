@@ -6,6 +6,11 @@ a11y_autocomplete:
   css:
     component:
       assets/vendor/a11y_autocomplete/a11y.autocomplete.css: {}
+  dependencies:
+    - core/drupal.customevent
+    - core/drupal.fetch
+    - core/drupal.array.includes
+    - core/drupal.string.includes
 
 backbone:
   remote: https://github.com/jashkenas/backbone
@@ -124,6 +129,11 @@ drupal.array.find:
   version: VERSION
   js:
     misc/polyfills/array.find.js: { weight: -20 }
+
+drupal.array.includes:
+  version: VERSION
+  js:
+    misc/polyfills/array.includes.js: { weight: -20 }
 
 drupal.batch:
   version: VERSION
@@ -354,6 +364,11 @@ drupal.states:
     - core/drupal
     - core/drupalSettings
     - core/jquery.once
+
+drupal.string.includes:
+  version: VERSION
+  js:
+    misc/polyfills/string.includes.js: { weight: -20 }
 
 drupal.tabbingmanager:
   version: VERSION
