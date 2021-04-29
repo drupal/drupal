@@ -116,8 +116,8 @@ class MiniPagerTest extends ViewTestBase {
     $this->assertNoText('‹‹ test');
     $this->assertNoText('Page 1');
     $this->assertNoText('test ››');
-    $result = $this->xpath('//div[contains(@class, "views-row")]');
-    $this->assertSame(count($this->nodes), count($result), 'All rows appear on the page.');
+    // Verify that all rows appear on the page.
+    $this->assertSession()->elementsCount('xpath', "//div[contains(@class, 'views-row')]", count($this->nodes));
 
     // Remove all items beside 1, so there should be no links shown.
     for ($i = 0; $i < 19; $i++) {

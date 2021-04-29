@@ -108,9 +108,9 @@ class SettingsTest extends UITestBase {
     $view['id'] = strtolower($this->randomMachineName());
     $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
 
+    // Verify that the views sql is hidden.
     $this->submitForm([], 'Update preview');
-    $xpath = $this->xpath('//div[@class="views-query-info"]/pre');
-    $this->assertCount(0, $xpath, 'The views sql is hidden.');
+    $this->assertSession()->elementNotExists('xpath', '//div[@class="views-query-info"]/pre');
 
     $edit = [
       'ui_show_sql_query_enabled' => TRUE,
@@ -120,11 +120,14 @@ class SettingsTest extends UITestBase {
     $view['id'] = strtolower($this->randomMachineName());
     $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
 
+    // Verify that the views sql is shown.
     $this->submitForm([], 'Update preview');
-    $xpath = $this->xpath('//div[@class="views-query-info"]//pre');
-    $this->assertCount(1, $xpath, 'The views sql is shown.');
-    $this->assertStringNotContainsString('db_condition_placeholder', $xpath[0]->getText(), 'No placeholders are shown in the views sql.');
-    $this->assertStringContainsString(Database::getConnection()->escapeField("node_field_data.status") . " = '1'", $xpath[0]->getText(), 'The placeholders in the views sql is replace by the actual value.');
+    $this->assertSession()->elementExists('xpath', '//div[@class="views-query-info"]//pre');
+    // Verify that no placeholders are shown in the views sql.
+    $this->assertSession()->elementTextNotContains('xpath', '//div[@class="views-query-info"]//pre', 'db_condition_placeholder');
+    // Verify that the placeholders in the views sql are replaced by the actual
+    // values.
+    $this->assertSession()->elementTextContains('xpath', '//div[@class="views-query-info"]//pre', Database::getConnection()->escapeField("node_field_data.status") . " = '1'");
 
     // Test the advanced settings form.
 
