@@ -36,7 +36,7 @@ trait FieldCreationTrait {
    * @return \Drupal\field\FieldStorageConfigInterface
    *   The file field.
    */
-  protected function fieldAddNewField($field_name, $field_type, $entity_type, $bundle_name, $storage_settings = [], $field_settings = [], $widget_settings = []) {
+  protected function createField($field_name, $field_type, $entity_type, $bundle_name, $storage_settings = [], $field_settings = [], $widget_settings = []) {
     $field_storage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => $entity_type,
