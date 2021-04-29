@@ -145,6 +145,74 @@ class ContentTranslationOperationsTest extends NodeTestBase {
   }
 
   /**
+   * Tests that operation access can be altered using hook_entity_access().
+   */
+  public function testOperationTranslateLinkWithEntityAccessHook() {
+    $node = $this->drupalCreateNode(['type' => 'article', 'langcode' => 'es']);
+    // Verify no translation operation links are displayed for users without
+    // permission.
+    $this->drupalLogin($this->baseUser1);
+    $this->drupalGet('admin/content');
+    $this->assertSession()->linkByHrefNotExists('node/' . $node->id() . '/translations');
+    $this->drupalLogout();
+
+    // Verify that access can be given using the entity access hook.
+    $this->state->set('content_translation.entity_access.node', [
+      'create translation' => TRUE,
+      'update translation' => TRUE,
+      'delete translation' => TRUE,
+    ]);
+    $this->drupalGet('admin/content');
+    $this->assertSession()->linkByHrefExists('node/' . $node->id() . '/translations');
+
+    // Ensure that an unintended misconfiguration of permissions does not open
+    // access to the translation form, see https://www.drupal.org/node/2558905.
+    $this->drupalLogout();
+    user_role_change_permissions(
+      Role::AUTHENTICATED_ID,
+      [
+        'create content translations' => TRUE,
+        'access content' => FALSE,
+      ]
+    );
+    $this->drupalLogin($this->baseUser1);
+    $this->drupalGet($node->toUrl('drupal:content-translation-overview'));
+    $this->assertSession()->statusCodeEquals(403);
+
+    // Ensure that the translation overview is also not accessible when the user
+    // has 'access content', but the node is not published.
+    user_role_change_permissions(
+      Role::AUTHENTICATED_ID,
+      [
+        'create content translations' => TRUE,
+        'access content' => TRUE,
+      ]
+    );
+    $node->setUnpublished()->save();
+    $this->drupalGet($node->toUrl('drupal:content-translation-overview'));
+    $this->assertSession()->statusCodeEquals(403);
+    $this->drupalLogout();
+
+    // Ensure the 'Translate' local task does not show up anymore when disabling
+    // translations for a content type.
+    $node->setPublished()->save();
+    user_role_change_permissions(
+      Role::AUTHENTICATED_ID,
+      [
+        'administer content translation' => TRUE,
+        'administer languages' => TRUE,
+      ]
+    );
+    $this->drupalPlaceBlock('local_tasks_block');
+    $this->drupalLogin($this->baseUser2);
+    $this->drupalGet('node/' . $node->id());
+    $this->assertSession()->linkByHrefExists('node/' . $node->id() . '/translations');
+    $this->drupalPostForm('admin/config/regional/content-language', ['settings[node][article][translatable]' => FALSE], 'Save configuration');
+    $this->drupalGet('node/' . $node->id());
+    $this->assertSession()->linkByHrefNotExists('node/' . $node->id() . '/translations');
+  }
+
+  /**
    * Tests the access to the overview page for translations.
    *
    * @see content_translation_translate_access()
