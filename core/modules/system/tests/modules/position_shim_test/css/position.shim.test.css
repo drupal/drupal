@@ -1,0 +1,19 @@
+body {
+  overflow-x: hidden;
+}
+#position-reference-1 {
+  width: 200px;
+  height: 200px;
+  margin: 75px 100px;
+  border: 1px solid black;
+}
+
+.test-tip {
+  width: 75px;
+  height: 75px;
+  border: 1px solid blue;
+}
+
+[data-off-canvas-main-canvas] {
+  min-height: 1200px;
+}

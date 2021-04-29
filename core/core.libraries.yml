@@ -115,7 +115,6 @@ drupal.autocomplete:
     assets/vendor/jquery.ui/ui/jquery-1-7-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/keycode-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/plugin-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/position-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/safe-active-element-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/safe-blur-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/scroll-parent-min.js: { weight: -11.8, minified: true }
@@ -137,6 +136,8 @@ drupal.autocomplete:
     - core/drupalSettings
     - core/drupal.ajax
     - core/tabbable.jquery.shim
+    - core/drupal.jquery.position
+
 
 drupal.array.find:
   version: VERSION
@@ -222,7 +223,6 @@ drupal.dialog:
     assets/vendor/jquery.ui/ui/ie-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/keycode-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/plugin-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/position-min.js: { weight: -11.8,  minified: true }
     assets/vendor/jquery.ui/ui/safe-active-element-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/safe-blur-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/widget-min.js: { weight: -11.8, minified: true }
@@ -246,6 +246,7 @@ drupal.dialog:
     - core/drupal.debounce
     - core/drupal.displace
     - core/tabbable.jquery.shim
+    - core/drupal.jquery.position
 
 drupal.dialog.ajax:
   version: VERSION
@@ -604,7 +605,6 @@ jquery.ui.dialog:
     assets/vendor/jquery.ui/ui/jquery-1-7-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/keycode-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/plugin-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/position-min.js: { weight: -11.8,  minified: true }
     assets/vendor/jquery.ui/ui/safe-active-element-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/safe-blur-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/scroll-parent-min.js: { weight: -11.8, minified: true }
@@ -624,6 +624,7 @@ jquery.ui.dialog:
   dependencies:
     - core/jquery
     - core/tabbable.jquery.shim
+    - core/drupal.jquery.position
   deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.draggable:
@@ -661,13 +662,23 @@ jquery.ui.mouse:
     - core/jquery.ui.widget
   deprecated: *jquery_ui_unused_deprecated
 
+drupal.jquery.position:
+  # For most positioning needs, the core/popperjs library should be used. This
+  # is a modified version of jQuery UI position for that does not require any
+  # jQuery UI assets, only jQuery. It is provided by core for use with
+  # pre-existing libraries that expect the jQuery UI position API. Popperjs is
+  # recommended for any new uses.
+  version: VERSION
+  js:
+    misc/position.js: {}
+  dependencies:
+    - core/jquery
+
 jquery.ui.position:
   version: *jquery_ui_version
   license: *jquery_ui_license
-  js:
-    assets/vendor/jquery.ui/ui/position-min.js: { weight: -11.8, minified: true }
   dependencies:
-    - core/jquery.ui
+    - core/drupal.jquery.position
   deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.resizable:

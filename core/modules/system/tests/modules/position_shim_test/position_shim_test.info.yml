@@ -1,0 +1,5 @@
+name: 'Position Shim Test'
+type: module
+description: 'Module for the testing jQuery UI position shim'
+package: Testing
+version: VERSION

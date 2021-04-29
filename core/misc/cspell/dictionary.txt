@@ -595,6 +595,7 @@ fixnull
 flexbox
 flexslider
 flickr
+flipfit
 floatingspace
 foaf
 foat
