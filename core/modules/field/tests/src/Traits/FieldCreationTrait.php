@@ -37,7 +37,6 @@ trait FieldCreationTrait {
    *   The file field.
    */
   protected function fieldAddNewField($field_name, $field_type, $entity_type, $bundle_name, $storage_settings = [], $field_settings = [], $widget_settings = []) {
-    // todo: non-default widget and formatter types
     $field_storage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => $entity_type,
