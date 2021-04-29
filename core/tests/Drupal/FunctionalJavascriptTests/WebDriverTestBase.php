@@ -4,7 +4,6 @@ namespace Drupal\FunctionalJavascriptTests;
 
 use Behat\Mink\Exception\DriverException;
 use Drupal\Tests\BrowserTestBase;
-use PHPUnit\Runner\BaseTestRunner;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Zumba\GastonJS\Exception\DeadClient;
 use Zumba\Mink\Driver\PhantomJSDriver;
@@ -36,21 +35,11 @@ abstract class WebDriverTestBase extends BrowserTestBase {
   protected $minkDefaultDriverClass = DrupalSelenium2Driver::class;
 
   /**
-   * The maximum number of times to try a webdriver request.
-   *
-   * @var int
-   *
-   * @see \Drupal\FunctionalJavascriptTests\WebDriverCurlService::$maxRetries
-   */
-  protected const WEBDRIVER_RETRIES = 10;
-
-  /**
    * {@inheritdoc}
    */
   protected function initMink() {
     if ($this->minkDefaultDriverClass === DrupalSelenium2Driver::class) {
       $this->minkDefaultDriverArgs = ['chrome', NULL, 'http://localhost:4444'];
-      WebDriverCurlService::setMaxRetries(max((int) getenv('WEBDRIVER_RETRIES'), static::WEBDRIVER_RETRIES));
     }
     elseif ($this->minkDefaultDriverClass === PhantomJSDriver::class) {
       // Set up the template cache used by the PhantomJS mink driver.
@@ -109,11 +98,6 @@ abstract class WebDriverTestBase extends BrowserTestBase {
    */
   protected function tearDown() {
     if ($this->mink) {
-      $status = $this->getStatus();
-      if ($status === BaseTestRunner::STATUS_ERROR || $status === BaseTestRunner::STATUS_WARNING || $status === BaseTestRunner::STATUS_FAILURE) {
-        // Ensure we capture the output at point of failure.
-        @$this->htmlOutput();
-      }
       // Wait for all requests to finish. It is possible that an AJAX request is
       // still on-going.
       $result = $this->getSession()->wait(5000, '(typeof(jQuery)=="undefined" || (0 === jQuery.active && 0 === jQuery(\':animated\').length))');
