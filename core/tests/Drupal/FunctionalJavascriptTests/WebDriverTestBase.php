@@ -32,15 +32,6 @@ abstract class WebDriverTestBase extends BrowserTestBase {
   protected $minkDefaultDriverClass = DrupalSelenium2Driver::class;
 
   /**
-   * The maximum number of times to try a webdriver request.
-   *
-   * @var int
-   *
-   * @see \Drupal\FunctionalJavascriptTests\WebDriverCurlService::$maxRetries
-   */
-  protected const WEBDRIVER_RETRIES = 10;
-
-  /**
    * {@inheritdoc}
    */
   protected function initMink() {
@@ -48,7 +39,6 @@ abstract class WebDriverTestBase extends BrowserTestBase {
       throw new \UnexpectedValueException(sprintf("%s has to be an instance of %s", $this->minkDefaultDriverClass, DrupalSelenium2Driver::class));
     }
     $this->minkDefaultDriverArgs = ['chrome', NULL, 'http://localhost:4444'];
-    WebDriverCurlService::setMaxRetries(max((int) getenv('WEBDRIVER_RETRIES'), static::WEBDRIVER_RETRIES));
 
     try {
       return parent::initMink();
