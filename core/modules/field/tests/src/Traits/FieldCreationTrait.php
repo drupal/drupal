@@ -8,7 +8,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 /**
  * Provides helpers to create and update fields in test setup.
  */
-trait FieldTestTrait {
+trait FieldCreationTrait {
 
   /**
    * Creates a new field via the API.
