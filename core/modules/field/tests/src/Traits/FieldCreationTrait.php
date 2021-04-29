@@ -13,7 +13,7 @@ trait FieldCreationTrait {
   /**
    * Creates a new field via the API.
    *
-   * @param string $name
+   * @param string $field_name
    *   The name of the new field (all lowercase).
    * @param string $field_type
    *   The field type.
@@ -54,7 +54,7 @@ trait FieldCreationTrait {
   /**
    * Attaches a existing field to an entity.
    *
-   * @param string $name
+   * @param string $field_name
    *   The name of the new field (all lowercase).
    * @param string $field_type
    *   The field type.
