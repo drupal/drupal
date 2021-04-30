@@ -398,22 +398,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $sites = [];
     include $app_root . '/sites/sites.php';
 
-    // Check for access to a test site.
-    // This is only allowed if $allow_access_to_test_site is defined as TRUE
-    // in sites.php.
-    if (!empty($allow_access_to_test_site)) {
-      if ($request->query->has('test_site_prefix')) {
-        $test_id = $request->query->get('test_site_prefix');
-        if (!is_numeric($test_id)) {
-          throw new \Exception("The 'test_site_prefix' query parameter must be numeric.");
-        }
-        $test_prefix = 'test' . $test_id;
-
-        $test_db = new TestDatabase($test_prefix);
-        return $test_db->getTestSitePath();
-      }
-    }
-
     $uri = explode('/', $script_name);
     $server = explode('.', implode('.', array_reverse(explode(':', rtrim($http_host, '.')))));
     for ($i = count($uri) - 1; $i > 0; $i--) {
