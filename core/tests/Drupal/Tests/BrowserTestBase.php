@@ -187,6 +187,15 @@ abstract class BrowserTestBase extends TestCase {
 
   /**
    * Whether to preserve the site DB tables and directory when the test is done.
+   *
+   * If a site is preserved, it may be accessed with a browser after the test
+   * for debugging and development. To activate this feature, set
+   * $allow_access_to_test_site in sites.php and access the site with a
+   * test_site_prefix query parameter set to the numeric part of the test
+   * prefix.
+   *
+   * @see sites/example.sites.php
+   * @see \Drupal\Core\DrupalKernel::findSitePath()
    */
   protected $preserveSiteInTearDown = FALSE;
 

@@ -51,6 +51,12 @@
  * $sites['8080.www.drupal.org.mysite.test'] = 'example.com';
  * @endcode
  *
+ * Additionally, this file may be used to allow browser access to a test site that has been
+ * preserved after a test run. To enable this feature, define:
+ * @code
+ * $allow_access_to_test_site = TRUE;
+ * @endcode
+ *
  * @see default.settings.php
  * @see \Drupal\Core\DrupalKernel::getSitePath()
  * @see https://www.drupal.org/documentation/install/multi-site
