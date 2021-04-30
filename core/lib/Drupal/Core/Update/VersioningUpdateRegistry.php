@@ -130,9 +130,13 @@ class VersioningUpdateRegistry {
    *   A module name.
    * @param int $version
    *   The new schema version.
+   *
+   * @return self
+   *   Returns self to support chained method calls.
    */
-  public function setInstalledVersion(string $module, int $version): void {
+  public function setInstalledVersion(string $module, int $version): self {
     $this->keyValue->set($module, $version);
+    return $this;
   }
 
   /**
