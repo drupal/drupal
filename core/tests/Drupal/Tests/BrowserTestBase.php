@@ -186,6 +186,11 @@ abstract class BrowserTestBase extends TestCase {
   protected $runTestInSeparateProcess = TRUE;
 
   /**
+   * Whether to preserve the site DB tables and directory when the test is done.
+   */
+  protected $preserveSiteInTearDown = FALSE;
+
+  /**
    * {@inheritdoc}
    */
   protected $preserveGlobalState = FALSE;
@@ -452,7 +457,9 @@ abstract class BrowserTestBase extends TestCase {
 
     // Destroy the testing kernel.
     if (isset($this->kernel)) {
-      $this->cleanupEnvironment();
+      if (!$this->preserveSiteInTearDown) {
+        $this->cleanupEnvironment();
+      }
       $this->kernel->shutdown();
     }
 
