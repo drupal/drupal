@@ -194,6 +194,9 @@ abstract class BrowserTestBase extends TestCase {
    * test_site_prefix query parameter set to the numeric part of the test
    * prefix.
    *
+   * When this is set to TRUE, the password of the admin user in the test site
+   * is set to 'admin' to allow logging in.
+   *
    * @see sites/example.sites.php
    * @see \Drupal\Core\DrupalKernel::findSitePath()
    */
