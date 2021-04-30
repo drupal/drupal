@@ -46,7 +46,6 @@ class EntityReferenceFieldCreationTest extends BrowserTestBase {
     $this->expectException('\Drupal\Core\Field\FieldException');
     $this->expectExceptionMessage('Entity type "entity_test_no_id" has no ID key and cannot be targeted by entity reference field "test_reference_field"');
     $this->createEntityReferenceField('node', $node_type, 'test_reference_field', 'Test Field', 'entity_test_no_id');
-
   }
 
 }
