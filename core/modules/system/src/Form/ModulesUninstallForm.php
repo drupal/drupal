@@ -8,6 +8,7 @@ use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
+use Drupal\Core\Update\VersioningUpdateRegistry;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -56,14 +57,13 @@ class ModulesUninstallForm extends FormBase {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    $instance = new static(
+    return new static(
       $container->get('module_handler'),
       $container->get('module_installer'),
       $container->get('keyvalue.expirable')->get('modules_uninstall'),
-      $container->get('extension.list.module')
+      $container->get('extension.list.module'),
+      $container->get('update.update_registry')
     );
-    $instance->updateRegistry = $container->get('update.update_registry');
-    return $instance;
   }
 
   /**
@@ -77,12 +77,19 @@ class ModulesUninstallForm extends FormBase {
    *   The key value expirable factory.
    * @param \Drupal\Core\Extension\ModuleExtensionList $extension_list_module
    *   The module extension list.
+   * @param \Drupal\Core\Update\VersioningUpdateRegistry|null $versioning_update_registry
+   *   Verioning update registry service.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, KeyValueStoreExpirableInterface $key_value_expirable, ModuleExtensionList $extension_list_module) {
+  public function __construct(ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, KeyValueStoreExpirableInterface $key_value_expirable, ModuleExtensionList $extension_list_module, VersioningUpdateRegistry $versioning_update_registry = NULL) {
     $this->moduleExtensionList = $extension_list_module;
     $this->moduleHandler = $module_handler;
     $this->moduleInstaller = $module_installer;
     $this->keyValueExpirable = $key_value_expirable;
+    if ($versioning_update_registry === NULL) {
+      @trigger_error('The update.update_registry service must be passed to ' . __NAMESPACE__ . '\ModulesUninstallForm::__construct(). It was added in drupal:9.2.0 and will be required before drupal:10.0.0.', E_USER_DEPRECATED);
+      $versioning_update_registry = \Drupal::service('update.update_registry');
+    }
+    $this->updateRegistry = $versioning_update_registry;
   }
 
   /**
