@@ -116,15 +116,12 @@ abstract class TourTipPluginBase extends PluginBase implements TipPluginInterfac
       'left',
       'left-start',
       'left-end',
+      NULL,
     ];
 
-    if (!is_null($location)) {
-      // This assertion is skipped if `$location` is null, as that instructs
-      // Shepherd to use automatic positioning.
-      assert(in_array(trim($location), $valid_values), "$location is not a valid Tour Tip position value.");
-    }
+    assert(in_array(trim($location), $valid_values), new \LogicException("$location is not a valid Tour Tip position value."));
 
-    return in_array(trim($location), $valid_values) ? $location : NULL;
+    return $location;
   }
 
   /**
