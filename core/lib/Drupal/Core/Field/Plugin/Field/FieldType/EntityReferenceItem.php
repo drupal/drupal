@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\TypedData\EntityDataDefinition;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldException;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\PreconfiguredFieldUiOptionsInterface;
@@ -66,6 +67,12 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $settings = $field_definition->getSettings();
     $target_type_info = \Drupal::entityTypeManager()->getDefinition($settings['target_type']);
+
+    // If the target entity type doesn't have an ID key, we cannot determine
+    // the target_id data type.
+    if (!$target_type_info->hasKey('id')) {
+      throw new FieldException('Entity type "' . $target_type_info->id() . '" has no ID key and cannot be targeted by entity reference field "' . $field_definition->getName() . '"');
+    }
 
     $target_id_data_type = 'string';
     if ($target_type_info->entityClassImplements(FieldableEntityInterface::class)) {
