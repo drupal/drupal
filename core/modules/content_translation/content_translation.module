@@ -376,7 +376,20 @@ function content_translation_translate_access(EntityInterface $entity) {
   $entity_can_be_viewed = $entity instanceof ContentEntityInterface && $entity->access('view');
   $entity_is_translatable = !$entity->getUntranslated()->language()->isLocked() && \Drupal::languageManager()->isMultilingual() && $entity->isTranslatable();
 
-  // @todo BC layer, to be properly marked for removal in final patch.
+  // @todo Remove when this module's access layer receives a proper overhaul
+  //    that introduces better permission names and alterable return values. For
+  //    now, this function is mainly called to determine overview access for
+  //    accounts that do NOT have the 'translate any', entity type or bundle
+  //    permission, which would otherwise grant them overview access even if
+  //    they could not do anything on said overview.
+  //    See: \Drupal\content_translation\AccessContentTranslationOverviewAccess.
+  //    Furthermore, this function checks for a number of permissions in
+  //    combination with entity access, which makes it hard to alter the return
+  //    value, whereas full use of the entity access layer (operation checks)
+  //    would make it a walk in the park.
+  //    The old way is represented by $has_any_permissions and the new way by
+  //    $has_access. The goal is to shift to a more alterable access layer
+  //    entirely, it being the entity access layer at the time of writing.
   $account = \Drupal::currentUser();
   $has_any_permission = $account->hasPermission('create content translations')
     || $account->hasPermission('update content translations')
