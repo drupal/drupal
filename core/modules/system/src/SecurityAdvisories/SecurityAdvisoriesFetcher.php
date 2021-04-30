@@ -228,7 +228,7 @@ final class SecurityAdvisoriesFetcher {
   }
 
   /**
-   * Gets the information for an extension in the security advisory project.
+   * Gets the information for an extension affected by the security advisory.
    *
    * @param \Drupal\system\SecurityAdvisories\SecurityAdvisory $sa
    *   The security advisory.
