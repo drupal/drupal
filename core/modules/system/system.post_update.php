@@ -195,5 +195,5 @@ function system_post_update_remove_key_value_expire_all_index() {
  */
 function system_post_update_service_advisory_settings() {
   $config = \Drupal::configFactory()->getEditable('system.advisories');
-  $config->set('interval_hours', 12)->set('enabled', TRUE)->save();
+  $config->set('interval_hours', 6)->set('enabled', TRUE)->save();
 }
