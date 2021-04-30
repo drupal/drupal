@@ -6,6 +6,11 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
+/**
+ * Tests entity reference fields that target contact messages.
+ *
+ * @group contact
+ */
 class ContactReferenceFieldTest extends KernelTestBase {
 
   use ContentTypeCreationTrait;
