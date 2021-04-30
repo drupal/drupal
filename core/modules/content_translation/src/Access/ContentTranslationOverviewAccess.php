@@ -47,7 +47,12 @@ class ContentTranslationOverviewAccess implements AccessInterface {
     /* @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $route_match->getParameter($entity_type_id);
     if ($entity && $entity->isTranslatable()) {
-      // @todo BC layer, to be properly marked for removal in final patch.
+      // @todo Remove when this module's access layer receives a proper overhaul
+      //    that introduces better permission names and alterable return values.
+      //    For now the idea is that you only need to have the 'translate any',
+      //    entity type or bundle permission to access the overview, even if you
+      //    can't do anything there. A better solution would be to introduce an
+      //    'access translation overview' permission.
       if ($account->hasPermission('translate any entity')) {
         return AccessResult::allowed()->cachePerPermissions();
       }
