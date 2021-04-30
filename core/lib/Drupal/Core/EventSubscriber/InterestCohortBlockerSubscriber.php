@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\EventSubscriber;
 
+use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -19,6 +20,10 @@ class InterestCohortBlockerSubscriber implements EventSubscriberInterface {
    */
   public function onKernelResponse(ResponseEvent $event) {
     if (!$event->isMasterRequest()) {
+      return;
+    }
+
+    if (!Settings::get('interest_cohort_blocker_subscriber', TRUE)) {
       return;
     }
 
