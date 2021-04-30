@@ -356,13 +356,16 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
     $element['target_type'] = [
       '#type' => 'select',
       '#title' => t('Type of item to reference'),
-      '#options' => \Drupal::service('entity_type.repository')->getEntityTypeLabels(TRUE),
       '#default_value' => $this->getSetting('target_type'),
       '#required' => TRUE,
       '#disabled' => $has_data,
       '#size' => 1,
     ];
-
+    $options = \Drupal::service('entity_type.repository')->getEntityTypeLabels(TRUE);
+    foreach ($options as $group => $option) {
+      $options[$group] = array_filter($option, [$this, "entityTypeHasId"], ARRAY_FILTER_USE_KEY);
+    }
+    $element['target_type']['#options'] = $options;
     return $element;
   }
 
@@ -618,8 +621,9 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
   }
 
   /**
-   * Render API callback: Processes the field settings form and allows access to
-   * the form state.
+   * Render API callback: Processes the field settings form.
+   *
+   * Allows access to the form state.
    *
    * @see static::fieldSettingsForm()
    */
@@ -706,6 +710,20 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
     }
 
     return $options;
+  }
+
+  /**
+   * Checks whether the entity type as 'id' key.
+   *
+   * @param string $entity_label
+   *   Machine name of entity type.
+   *
+   * @return bool
+   *   TRUE if entity type has 'id' otherwise FALSE.
+   */
+  private function entityTypeHasId($entity_label) {
+    $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_label);
+    return $entity_type->hasKey('id');
   }
 
 }
