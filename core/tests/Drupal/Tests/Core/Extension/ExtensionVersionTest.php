@@ -6,7 +6,7 @@ use Drupal\Core\Extension\ExtensionVersion;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\core\Extension\ExtensionVersion
+ * @coversDefaultClass \Drupal\Core\Extension\ExtensionVersion
  *
  * @group Extension
  */
@@ -294,7 +294,7 @@ class ExtensionVersionTest extends UnitTestCase {
    */
   public function testInvalidVersionCorePrefix(string $version): void {
     $this->expectException(\UnexpectedValueException::class);
-    $this->expectExceptionMessage("Unexpected version core prefix in $version. The only core prefix expected in \Drupal\core\Extension\ExtensionVersion is: 8.x-");
+    $this->expectExceptionMessage("Unexpected version core prefix in $version. The only core prefix expected in \Drupal\Core\Extension\ExtensionVersion is: 8.x-");
     ExtensionVersion::createFromVersionString($version);
   }
 
@@ -323,7 +323,7 @@ class ExtensionVersionTest extends UnitTestCase {
    */
   public function testInvalidBranchCorePrefix(string $branch): void {
     $this->expectException(\UnexpectedValueException::class);
-    $this->expectExceptionMessage("Unexpected version core prefix in {$branch}0. The only core prefix expected in \Drupal\core\Extension\ExtensionVersion is: 8.x-");
+    $this->expectExceptionMessage("Unexpected version core prefix in {$branch}0. The only core prefix expected in \Drupal\Core\Extension\ExtensionVersion is: 8.x-");
     ExtensionVersion::createFromSupportBranch($branch);
   }
 

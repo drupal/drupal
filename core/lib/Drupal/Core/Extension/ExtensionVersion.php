@@ -48,7 +48,7 @@ final class ExtensionVersion {
    * @param string $version_string
    *   The version string.
    *
-   * @return \Drupal\core\Extension\ExtensionVersion
+   * @return \Drupal\Core\Extension\ExtensionVersion
    *   The extension version instance.
    */
   public static function createFromVersionString(string $version_string): ExtensionVersion {
@@ -62,7 +62,7 @@ final class ExtensionVersion {
       if ($dot_x_position === 1 || $dot_x_position === 2) {
         $after_core_prefix = explode('.x-', $version_string)[1];
         if ($after_core_prefix !== 'dev') {
-          throw new \UnexpectedValueException("Unexpected version core prefix in $version_string. The only core prefix expected in \Drupal\core\Extension\ExtensionVersion is: 8.x-");
+          throw new \UnexpectedValueException("Unexpected version core prefix in $version_string. The only core prefix expected in \Drupal\Core\Extension\ExtensionVersion is: 8.x-");
         }
       }
     }
