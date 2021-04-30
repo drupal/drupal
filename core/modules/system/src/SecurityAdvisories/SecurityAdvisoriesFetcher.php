@@ -224,17 +224,18 @@ final class SecurityAdvisoriesFetcher {
   }
 
   /**
-   * Gets the project information for a security advisory.
+   * Gets the information for an extension in the security advisory project.
    *
    * @param \Drupal\system\SecurityAdvisories\SecurityAdvisory $sa
    *   The security advisory.
    *
    * @return mixed[]|null
-   *   The project information as set in the info.yml file and then processed by
-   *   the corresponding extension list if the project exists, or otherwise
-   *   NULL.
+   *   The information as set in the info.yml file and then processed by the
+   *   corresponding extension list for the first extension found that matches
+   *   the project name of the security advisory. If no matching extension is
+   *   found NULL is returned.
    */
-  protected function getProjectInfo(SecurityAdvisory $sa): ?array {
+  protected function getMatchingExtensionInfo(SecurityAdvisory $sa): ?array {
     if (!isset($this->extensionLists[$sa->getProjectType()])) {
       return NULL;
     }
@@ -264,8 +265,8 @@ final class SecurityAdvisoriesFetcher {
     if ($sa->isCoreAdvisory()) {
       return \Drupal::VERSION;
     }
-    $project_info = $this->getProjectInfo($sa);
-    return $project_info['version'] ?? NULL;
+    $extension_info = $this->getMatchingExtensionInfo($sa);
+    return $extension_info['version'] ?? NULL;
   }
 
   /**
@@ -282,7 +283,7 @@ final class SecurityAdvisoriesFetcher {
     // Only projects that are in the site's codebase can be applicable. Core
     // will always be in the codebase, and other projects are in the codebase if
     // ::getProjectInfo() finds a matching extension for the project name.
-    if ($sa->isCoreAdvisory() || $this->getProjectInfo($sa)) {
+    if ($sa->isCoreAdvisory() || $this->getMatchingExtensionInfo($sa)) {
       // Public service announcements are always applicable because they are not
       // dependent on the version of the project that is currently present on
       // the site. Other advisories are only applicable if they match the
