@@ -41,6 +41,9 @@ class ContactReferenceFieldTest extends KernelTestBase {
    */
   public function testCreateContactMessageReferenceField(): void {
     $node_type = $this->createContentType()->id();
+
+    $this->expectException('\Drupal\Core\Field\FieldException');
+    $this->expectExceptionMessage('Entity type "contact_message" has no ID key and cannot be targeted by entity reference field "field_messages"');
     $this->createEntityReferenceField('node', $node_type, 'field_messages', 'Messages', 'contact_message');
   }
 

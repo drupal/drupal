@@ -76,6 +76,13 @@ class FieldStorageDefinitionListener implements FieldStorageDefinitionListenerIn
    * {@inheritdoc}
    */
   public function onFieldStorageDefinitionCreate(FieldStorageDefinitionInterface $storage_definition) {
+    if ($storage_definition->getType() === 'entity_reference') {
+      $target_entity_type = $this->entityTypeManager->getDefinition($storage_definition->getSetting('target_type'));
+      if (!$target_entity_type->hasKey('id')) {
+        throw new FieldException('Entity type "' . $target_entity_type->id() . '" has no ID key and cannot be targeted by entity reference field "' . $storage_definition->getName() . '"');
+      }
+    }
+
     $entity_type_id = $storage_definition->getTargetEntityTypeId();
 
     // @todo Forward this to all interested handlers, not only storage, once
