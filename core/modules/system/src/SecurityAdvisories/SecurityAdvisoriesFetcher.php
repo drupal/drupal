@@ -235,10 +235,10 @@ final class SecurityAdvisoriesFetcher {
    *   NULL.
    */
   protected function getProjectInfo(SecurityAdvisory $sa): ?array {
-    $project_info = new ProjectInfo();
     if (!isset($this->extensionLists[$sa->getProjectType()])) {
       return NULL;
     }
+    $project_info = new ProjectInfo();
     // The project name on the security advisory will not always match the
     // machine name for the extension, so we need to search through all
     // extensions of the expected type to find the matching project.
