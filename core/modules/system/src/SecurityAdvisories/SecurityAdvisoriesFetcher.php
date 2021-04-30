@@ -140,15 +140,15 @@ final class SecurityAdvisoriesFetcher {
       }
     }
 
-    foreach ($json_payload as $json) {
+    foreach ($json_payload as $advisory_data) {
       try {
-        $sa = SecurityAdvisory::createFromArray($json);
+        $sa = SecurityAdvisory::createFromArray($advisory_data);
       }
       catch (\UnexpectedValueException $unexpected_value_exception) {
         // Ignore items in the feed that are in an invalid format. Although
         // this is highly unlikely we should still display the items that are
         // in the correct format.
-        watchdog_exception('system', $unexpected_value_exception, 'Invalid security advisory format: ' . Json::encode($json));
+        watchdog_exception('system', $unexpected_value_exception, 'Invalid security advisory format: ' . Json::encode($advisory_data));
         continue;
       }
 
