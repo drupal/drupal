@@ -368,11 +368,18 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
       '#disabled' => $has_data,
       '#size' => 1,
     ];
+
+    // Only allow the field to target entity types that have an ID key. This
+    // is enforced in ::propertyDefinitions().
     $options = \Drupal::service('entity_type.repository')->getEntityTypeLabels(TRUE);
-    foreach ($options as $group => $option) {
-      $options[$group] = array_filter($option, [$this, "entityTypeHasId"], ARRAY_FILTER_USE_KEY);
+    $filter = function (string $entity_type_id): bool {
+      return \Drupal::entityTypeManager()
+        ->getDefinition($entity_type_id)
+        ->hasKey('id');
+    };
+    foreach ($options as $group_name => $group) {
+      $element['target_type']['#options'][$group_name] = array_filter($group, $filter, ARRAY_FILTER_USE_KEY);
     }
-    $element['target_type']['#options'] = $options;
     return $element;
   }
 
@@ -717,20 +724,6 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
     }
 
     return $options;
-  }
-
-  /**
-   * Checks whether the entity type as 'id' key.
-   *
-   * @param string $entity_label
-   *   Machine name of entity type.
-   *
-   * @return bool
-   *   TRUE if entity type has 'id' otherwise FALSE.
-   */
-  private function entityTypeHasId($entity_label) {
-    $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_label);
-    return $entity_type->hasKey('id');
   }
 
 }
