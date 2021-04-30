@@ -10,7 +10,7 @@ use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Utility\ProjectInfo;
-use Drupal\system\ExtensionVersion;
+use Drupal\core\Extension\ExtensionVersion;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\RequestOptions;

@@ -5,7 +5,7 @@
  * Code required only when comparing available updates to existing data.
  */
 
-use Drupal\system\ExtensionVersion;
+use Drupal\core\Extension\ExtensionVersion;
 use Drupal\update\UpdateFetcherInterface;
 use Drupal\update\UpdateManagerInterface;
 use Drupal\update\ProjectCoreCompatibility;

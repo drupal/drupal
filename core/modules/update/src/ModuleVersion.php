@@ -6,7 +6,7 @@ namespace Drupal\update;
  * Provides a module version value object.
  *
  * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
- *   \Drupal\system\ExtensionVersion instead. As an internal class
+   *   \Drupal\core\Extension\ExtensionVersion instead. As an internal class
  *   ExtensionVersion may also be removed in a minor release.
  *
  * @internal
@@ -89,7 +89,7 @@ final class ModuleVersion {
    *   The extra version string.
    */
   private function __construct($major_version, $version_extra) {
-    @trigger_error(__CLASS__ . ' is deprecated in drupal:9.2.0 and will be removed before drupal:10.0.0. Use The \Drupal\system\ExtensionVersion instead. As an internal class, ExtensionVersion may also be removed in a minor release.', E_USER_DEPRECATED);
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:9.2.0 and will be removed before drupal:10.0.0. Use The \Drupal\core\Extension\ExtensionVersion instead. As an internal class, ExtensionVersion may also be removed in a minor release.', E_USER_DEPRECATED);
     $this->majorVersion = $major_version;
     $this->versionExtra = $version_extra;
   }

@@ -2,7 +2,7 @@
 
 namespace Drupal\update;
 
-use Drupal\system\ExtensionVersion;
+use Drupal\core\Extension\ExtensionVersion;
 
 /**
  * Calculates a project's security coverage information.
