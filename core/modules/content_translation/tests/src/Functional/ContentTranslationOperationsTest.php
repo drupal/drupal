@@ -154,7 +154,7 @@ class ContentTranslationOperationsTest extends NodeTestBase {
     $this->drupalLogin($this->baseUser1);
     $this->drupalGet('admin/content');
     $this->assertSession()->linkByHrefNotExists('node/' . $node->id() . '/translations');
-    $this->drupalLogout();
+    \Drupal::entityTypeManager()->getStorage('view')->load('content')->invalidateCaches();
 
     // Verify that access can be given using the entity access hook.
     $this->state->set('content_translation.entity_access.node', [
@@ -191,7 +191,6 @@ class ContentTranslationOperationsTest extends NodeTestBase {
     $node->setUnpublished()->save();
     $this->drupalGet($node->toUrl('drupal:content-translation-overview'));
     $this->assertSession()->statusCodeEquals(403);
-    $this->drupalLogout();
 
     // Ensure the 'Translate' local task does not show up anymore when disabling
     // translations for a content type.
@@ -204,7 +203,6 @@ class ContentTranslationOperationsTest extends NodeTestBase {
       ]
     );
     $this->drupalPlaceBlock('local_tasks_block');
-    $this->drupalLogin($this->baseUser2);
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->linkByHrefExists('node/' . $node->id() . '/translations');
     $this->drupalPostForm('admin/config/regional/content-language', ['settings[node][article][translatable]' => FALSE], 'Save configuration');
