@@ -68,6 +68,12 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
     $settings = $field_definition->getSettings();
     $target_type_info = \Drupal::entityTypeManager()->getDefinition($settings['target_type']);
 
+    // If the target entity type doesn't have an ID key, we cannot determine
+    // the target_id data type.
+    if (!$target_type_info->hasKey('id')) {
+      throw new FieldException('Entity type "' . $target_type_info->id() . '" has no ID key and cannot be targeted by entity reference field "' . $field_definition->getName() . '"');
+    }
+
     $target_id_data_type = 'string';
     if ($target_type_info->entityClassImplements(FieldableEntityInterface::class)) {
       $id_definition = \Drupal::service('entity_field.manager')->getBaseFieldDefinitions($settings['target_type'])[$target_type_info->getKey('id')];
@@ -116,13 +122,6 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
     $target_type = $field_definition->getSetting('target_type');
     $target_type_info = \Drupal::entityTypeManager()->getDefinition($target_type);
-
-    // If the target entity type doesn't have an ID key, we cannot determine
-    // the target_id data type.
-    if (!$target_type_info->hasKey('id')) {
-      throw new FieldException('Entity type "' . $target_type_info->id() . '" has no ID key and cannot be targeted by entity reference field "' . $field_definition->getName() . '"');
-    }
-
     $properties = static::propertyDefinitions($field_definition)['target_id'];
     if ($target_type_info->entityClassImplements(FieldableEntityInterface::class) && $properties->getDataType() === 'integer') {
       $columns = [
@@ -371,7 +370,7 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
     ];
 
     // Only allow the field to target entity types that have an ID key. This
-    // is enforced in ::schema().
+    // is enforced in ::propertyDefinitions().
     $options = \Drupal::service('entity_type.repository')->getEntityTypeLabels(TRUE);
     $filter = function (string $entity_type_id): bool {
       return \Drupal::entityTypeManager()
