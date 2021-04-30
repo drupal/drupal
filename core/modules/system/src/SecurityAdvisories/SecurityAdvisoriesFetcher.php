@@ -206,7 +206,7 @@ final class SecurityAdvisoriesFetcher {
               // the major version alone is considered a match.
               return TRUE;
             }
-            elseif ($existing_project_version->getMinorVersion() === $insecure_project_version->getMinorVersion()) {
+            if ($existing_project_version->getMinorVersion() === $insecure_project_version->getMinorVersion()) {
               // If the dev version specifies a minor version, then the insecure
               // version must match on the minor version.
               return TRUE;
