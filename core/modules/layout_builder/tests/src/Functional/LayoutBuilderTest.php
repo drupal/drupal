@@ -352,6 +352,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->pageTextNotContains('Powered by Drupal');
     $assert_session->pageTextNotContains('Extra, Extra read all about it.');
     $assert_session->pageTextNotContains('Placeholder for the "Extra label" field');
+    $assert_session->pageTextContains(sprintf('Yes, I can access the entity %s in two column', Node::load(1)->label()));
 
     // Assert that overrides cannot be turned off while overrides exist.
     $this->drupalGet("$field_ui_prefix/display/default");
@@ -376,6 +377,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->pageTextContains('Powered by Drupal');
     $assert_session->pageTextContains('Extra, Extra read all about it.');
     $assert_session->pageTextNotContains('Placeholder for the "Extra label" field');
+    $assert_session->pageTextContains(sprintf('Yes, I can access the %s', Node::load(2)->label()));
 
     // The overridden node does not pick up the changes to defaults.
     $this->drupalGet('node/1');
@@ -406,6 +408,8 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session->pageTextContains('The first node body');
     $assert_session->pageTextContains('Powered by Drupal');
     $assert_session->pageTextContains('Extra, Extra read all about it.');
+    $assert_session->pageTextNotContains(sprintf('Yes, I can access the entity %s in two column', Node::load(1)->label()));
+    $assert_session->pageTextContains(sprintf('Yes, I can access the %s', Node::load(1)->label()));
 
     // Assert that overrides can be turned off now that all overrides are gone.
     $this->drupalGet("{$field_ui_prefix}/display/default");
