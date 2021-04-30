@@ -12,6 +12,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Test\FunctionalTestSetupTrait;
 use Drupal\Core\Test\TestSetupTrait;
+use Drupal\Core\Url;
 use Drupal\Core\Utility\Error;
 use Drupal\FunctionalTests\AssertLegacyTrait;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
@@ -341,7 +342,7 @@ abstract class BrowserTestBase extends TestCase {
    * be overridden in a derived class so it is possible to use a different
    * value for a subset of tests, e.g. the JavaScript tests.
    *
-   *  @return string|false
+   * @return string|false
    *   The JSON-encoded argument string. False if it is not set.
    */
   protected function getMinkDriverArgs() {
@@ -556,11 +557,24 @@ abstract class BrowserTestBase extends TestCase {
     $this->prepareSettings();
     $this->doInstall();
     $this->initSettings();
-    $container = $this->initKernel(\Drupal::request());
+    $this->container = $container = $this->initKernel(\Drupal::request());
     $this->initConfig($container);
     $this->installDefaultThemeFromClassProperty($container);
     $this->installModulesFromClassProperty($container);
-    $this->rebuildAll();
+
+    // Clear the static cache so that subsequent cache invalidations will work
+    // as expected.
+    $this->container->get('cache_tags.invalidator')->resetChecksums();
+
+    // Generate a route to prime the url generator with the correct base url.
+    // @todo Remove in https://www.drupal.org/project/drupal/issues/3207896.
+    Url::fromRoute('<front>')->setAbsolute()->toString();
+
+    // Explicitly call register() again on the container registered in \Drupal.
+    // @todo This should already be called through
+    //   DrupalKernel::prepareLegacyRequest() -> DrupalKernel::boot() but that
+    //   appears to be calling a different container.
+    $this->container->get('stream_wrapper_manager')->register();
   }
 
   /**

@@ -171,7 +171,7 @@ function comment_field_storage_config_insert(FieldStorageConfigInterface $field_
 function comment_field_config_delete(FieldConfigInterface $field) {
   if ($field->getType() == 'comment') {
     // Delete all comments that used by the entity bundle.
-    $entity_query = \Drupal::entityQuery('comment');
+    $entity_query = \Drupal::entityQuery('comment')->accessCheck(FALSE);
     $entity_query->condition('entity_type', $field->getEntityTypeId());
     $entity_query->condition('field_name', $field->getName());
     $cids = $entity_query->execute();
@@ -318,7 +318,7 @@ function comment_entity_predelete(EntityInterface $entity) {
   // entity type that has an integer ID, $entity->id() might be a string
   // containing a number), and then cast it to an integer when querying.
   if ($entity instanceof FieldableEntityInterface && is_numeric($entity->id())) {
-    $entity_query = \Drupal::entityQuery('comment');
+    $entity_query = \Drupal::entityQuery('comment')->accessCheck(FALSE);
     $entity_query->condition('entity_id', (int) $entity->id());
     $entity_query->condition('entity_type', $entity->getEntityTypeId());
     $cids = $entity_query->execute();
@@ -472,7 +472,7 @@ function comment_user_cancel($edit, UserInterface $account, $method) {
  * Implements hook_ENTITY_TYPE_predelete() for user entities.
  */
 function comment_user_predelete($account) {
-  $entity_query = \Drupal::entityQuery('comment');
+  $entity_query = \Drupal::entityQuery('comment')->accessCheck(FALSE);
   $entity_query->condition('uid', $account->id());
   $cids = $entity_query->execute();
   $comment_storage = \Drupal::entityTypeManager()->getStorage('comment');

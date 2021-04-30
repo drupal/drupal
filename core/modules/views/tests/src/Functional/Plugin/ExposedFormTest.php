@@ -268,15 +268,14 @@ class ExposedFormTest extends ViewTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $this->helperButtonHasLabel('edit-submit-test-exposed-form-buttons', 'Apply');
 
-    // Ensure that no results are displayed.
-    $rows = $this->xpath("//div[contains(@class, 'views-row')]");
-    $this->assertCount(0, $rows, 'No rows are displayed by default when no input is provided.');
+    // Ensure that no results are displayed by default when no input is
+    // provided.
+    $this->assertSession()->elementNotExists('xpath', "//div[contains(@class, 'views-row')]");
 
     $this->drupalGet('test_exposed_form_buttons', ['query' => ['type' => 'article']]);
 
-    // Ensure that results are displayed.
-    $rows = $this->xpath("//div[contains(@class, 'views-row')]");
-    $this->assertCount(5, $rows, 'All rows are displayed by default when input is provided.');
+    // Ensure that results are displayed by default when input is provided.
+    $this->assertSession()->elementsCount('xpath', "//div[contains(@class, 'views-row')]", 5);
   }
 
   /**
@@ -363,9 +362,6 @@ class ExposedFormTest extends ViewTestBase {
    *
    * @param int[] $ids
    *   The ids to check.
-   *
-   * @return bool
-   *   TRUE if ids match, FALSE otherwise.
    */
   protected function assertIds(array $ids) {
     $elements = $this->cssSelect('div.view-test-exposed-form-sort-items-per-page div.views-row span.field-content');
@@ -374,7 +370,7 @@ class ExposedFormTest extends ViewTestBase {
       $actual_ids[] = (int) $element->getText();
     }
 
-    return $this->assertSame($ids, $actual_ids);
+    $this->assertSame($ids, $actual_ids);
   }
 
   /**

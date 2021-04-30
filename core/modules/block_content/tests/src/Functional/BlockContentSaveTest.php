@@ -37,7 +37,10 @@ class BlockContentSaveTest extends BlockContentTestBase {
    */
   public function testImport() {
     // Custom block ID must be a number that is not in the database.
-    $max_id = (int) \Drupal::entityQueryAggregate('block_content')->aggregate('id', 'max')->execute()[0]['id_max'];
+    $max_id = (int) \Drupal::entityQueryAggregate('block_content')
+      ->accessCheck(FALSE)
+      ->aggregate('id', 'max')
+      ->execute()[0]['id_max'];
     $test_id = $max_id + mt_rand(1000, 1000000);
     $info = $this->randomMachineName(8);
     $block_array = [

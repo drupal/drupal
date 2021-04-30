@@ -4587,6 +4587,36 @@ $connection->insert('field_config')
   'translatable' => '0',
   'deleted' => '0',
 ))
+->values(array(
+  'id' => '59',
+  'field_name' => 'field_file_mfw',
+  'type' => 'file',
+  'module' => 'file',
+  'active' => '1',
+  'storage_type' => 'field_sql_storage',
+  'storage_module' => 'field_sql_storage',
+  'storage_active' => '1',
+  'locked' => '0',
+  'data' => 'a:7:{s:12:"translatable";i:0;s:12:"entity_types";a:0:{}s:8:"settings";a:4:{s:13:"display_field";i:0;s:15:"display_default";i:0;s:10:"uri_scheme";s:6:"public";s:23:"entity_translation_sync";a:1:{i:0;s:3:"fid";}}s:7:"storage";a:5:{s:4:"type";s:17:"field_sql_storage";s:8:"settings";a:0:{}s:6:"module";s:17:"field_sql_storage";s:6:"active";s:1:"1";s:7:"details";a:1:{s:3:"sql";a:2:{s:18:"FIELD_LOAD_CURRENT";a:1:{s:25:"field_data_field_file_mfw";a:3:{s:3:"fid";s:18:"field_file_mfw_fid";s:7:"display";s:22:"field_file_mfw_display";s:11:"description";s:26:"field_file_mfw_description";}}s:19:"FIELD_LOAD_REVISION";a:1:{s:29:"field_revision_field_file_mfw";a:3:{s:3:"fid";s:18:"field_file_mfw_fid";s:7:"display";s:22:"field_file_mfw_display";s:11:"description";s:26:"field_file_mfw_description";}}}}}s:12:"foreign keys";a:1:{s:3:"fid";a:2:{s:5:"table";s:12:"file_managed";s:7:"columns";a:1:{s:3:"fid";s:3:"fid";}}}s:7:"indexes";a:1:{s:3:"fid";a:1:{i:0;s:3:"fid";}}s:2:"id";s:2:"56";}',
+  'cardinality' => '1',
+  'translatable' => '0',
+  'deleted' => '0',
+))
+->values(array(
+  'id' => '60',
+  'field_name' => 'field_image_miw',
+  'type' => 'image',
+  'module' => 'image',
+  'active' => '1',
+  'storage_type' => 'field_sql_storage',
+  'storage_module' => 'field_sql_storage',
+  'storage_active' => '1',
+  'locked' => '0',
+  'data' => 'a:7:{s:12:"translatable";i:0;s:12:"entity_types";a:0:{}s:8:"settings";a:3:{s:10:"uri_scheme";s:6:"public";s:13:"default_image";i:0;s:23:"entity_translation_sync";a:1:{i:0;s:3:"fid";}}s:7:"storage";a:5:{s:4:"type";s:17:"field_sql_storage";s:8:"settings";a:0:{}s:6:"module";s:17:"field_sql_storage";s:6:"active";s:1:"1";s:7:"details";a:1:{s:3:"sql";a:2:{s:18:"FIELD_LOAD_CURRENT";a:1:{s:26:"field_data_field_image_miw";a:5:{s:3:"fid";s:19:"field_image_miw_fid";s:3:"alt";s:19:"field_image_miw_alt";s:5:"title";s:21:"field_image_miw_title";s:5:"width";s:21:"field_image_miw_width";s:6:"height";s:22:"field_image_miw_height";}}s:19:"FIELD_LOAD_REVISION";a:1:{s:30:"field_revision_field_image_miw";a:5:{s:3:"fid";s:19:"field_image_miw_fid";s:3:"alt";s:19:"field_image_miw_alt";s:5:"title";s:21:"field_image_miw_title";s:5:"width";s:21:"field_image_miw_width";s:6:"height";s:22:"field_image_miw_height";}}}}}s:12:"foreign keys";a:1:{s:3:"fid";a:2:{s:5:"table";s:12:"file_managed";s:7:"columns";a:1:{s:3:"fid";s:3:"fid";}}}s:7:"indexes";a:1:{s:3:"fid";a:1:{i:0;s:3:"fid";}}s:2:"id";s:2:"57";}',
+  'cardinality' => '1',
+  'translatable' => '0',
+  'deleted' => '0',
+))
 ->execute();
 $connection->schema()->createTable('field_config_instance', array(
   'fields' => array(
@@ -5427,6 +5457,24 @@ $connection->insert('field_config_instance')
   'entity_type' => 'node',
   'bundle' => 'test_content_type',
   'data' => 'a:7:{s:5:"label";s:9:"Telephone";s:6:"widget";a:5:{s:6:"weight";s:2:"21";s:4:"type";s:17:"telephone_default";s:6:"module";s:9:"telephone";s:6:"active";i:1;s:8:"settings";a:1:{s:11:"placeholder";s:0:"";}}s:8:"settings";a:2:{s:18:"user_register_form";b:0;s:23:"entity_translation_sync";b:0;}s:7:"display";a:2:{s:7:"default";a:5:{s:5:"label";s:5:"above";s:4:"type";s:14:"telephone_link";s:6:"weight";s:2:"21";s:8:"settings";a:1:{s:5:"title";s:0:"";}s:6:"module";s:9:"telephone";}s:6:"teaser";a:5:{s:5:"label";s:5:"above";s:4:"type";s:10:"text_plain";s:6:"weight";s:1:"0";s:8:"settings";a:0:{}s:6:"module";s:4:"text";}}s:8:"required";i:0;s:11:"description";s:0:"";s:13:"default_value";N;}',
+  'deleted' => '0',
+))
+->values(array(
+  'id' => '91',
+  'field_id' => '59',
+  'field_name' => 'field_file_mfw',
+  'entity_type' => 'node',
+  'bundle' => 'blog',
+  'data' => 'a:6:{s:5:"label";s:8:"file_mfw";s:6:"widget";a:5:{s:6:"weight";s:2:"17";s:4:"type";s:8:"file_mfw";s:6:"module";s:28:"multiupload_filefield_widget";s:6:"active";i:1;s:8:"settings";a:1:{s:18:"progress_indicator";s:8:"throbber";}}s:8:"settings";a:6:{s:14:"file_directory";s:0:"";s:15:"file_extensions";s:3:"txt";s:12:"max_filesize";s:0:"";s:17:"description_field";i:0;s:18:"user_register_form";b:0;s:23:"entity_translation_sync";b:0;}s:7:"display";a:1:{s:7:"default";a:5:{s:5:"label";s:5:"above";s:4:"type";s:12:"file_default";s:8:"settings";a:0:{}s:6:"module";s:4:"file";s:6:"weight";i:15;}}s:8:"required";i:0;s:11:"description";s:0:"";}',
+  'deleted' => '0',
+))
+->values(array(
+  'id' => '92',
+  'field_id' => '60',
+  'field_name' => 'field_image_miw',
+  'entity_type' => 'node',
+  'bundle' => 'blog',
+  'data' => 'a:6:{s:5:"label";s:9:"image_miw";s:6:"widget";a:5:{s:6:"weight";s:2:"18";s:4:"type";s:9:"image_miw";s:6:"module";s:29:"multiupload_imagefield_widget";s:6:"active";i:1;s:8:"settings";a:2:{s:18:"progress_indicator";s:8:"throbber";s:19:"preview_image_style";s:9:"thumbnail";}}s:8:"settings";a:10:{s:14:"file_directory";s:0:"";s:15:"file_extensions";s:16:"png gif jpg jpeg";s:12:"max_filesize";s:0:"";s:14:"max_resolution";s:0:"";s:14:"min_resolution";s:0:"";s:9:"alt_field";i:0;s:11:"title_field";i:0;s:13:"default_image";i:0;s:18:"user_register_form";b:0;s:23:"entity_translation_sync";b:0;}s:7:"display";a:1:{s:7:"default";a:5:{s:5:"label";s:5:"above";s:4:"type";s:5:"image";s:8:"settings";a:2:{s:11:"image_style";s:0:"";s:10:"image_link";s:0:"";}s:6:"module";s:5:"image";s:6:"weight";i:16;}}s:8:"required";i:0;s:11:"description";s:0:"";}',
   'deleted' => '0',
 ))
 ->execute();
@@ -6762,6 +6810,102 @@ $connection->insert('field_data_field_file')
   'field_file_description' => 'file desc',
 ))
 ->execute();
+$connection->schema()->createTable('field_data_field_file_mfw', array(
+  'fields' => array(
+    'entity_type' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'bundle' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'deleted' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'tiny',
+      'default' => '0',
+    ),
+    'entity_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'revision_id' => array(
+      'type' => 'int',
+      'not null' => FALSE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'language' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '32',
+      'default' => '',
+    ),
+    'delta' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'field_file_mfw_fid' => array(
+      'type' => 'int',
+      'not null' => FALSE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'field_file_mfw_display' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'tiny',
+      'default' => '1',
+      'unsigned' => TRUE,
+    ),
+    'field_file_mfw_description' => array(
+      'type' => 'text',
+      'not null' => FALSE,
+      'size' => 'normal',
+    ),
+  ),
+  'primary key' => array(
+    'entity_type',
+    'entity_id',
+    'deleted',
+    'delta',
+    'language',
+  ),
+  'indexes' => array(
+    'entity_type' => array(
+      'entity_type',
+    ),
+    'bundle' => array(
+      'bundle',
+    ),
+    'deleted' => array(
+      'deleted',
+    ),
+    'entity_id' => array(
+      'entity_id',
+    ),
+    'revision_id' => array(
+      'revision_id',
+    ),
+    'language' => array(
+      'language',
+    ),
+    'field_file_mfw_fid' => array(
+      'field_file_mfw_fid',
+    ),
+  ),
+  'mysql_character_set' => 'utf8',
+));
+
 $connection->schema()->createTable('field_data_field_float', array(
   'fields' => array(
     'entity_type' => array(
@@ -7029,6 +7173,111 @@ $connection->schema()->createTable('field_data_field_image', array(
     'entity_id',
     'language',
     'delta',
+  ),
+  'mysql_character_set' => 'utf8',
+));
+$connection->schema()->createTable('field_data_field_image_miw', array(
+  'fields' => array(
+    'entity_type' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'bundle' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'deleted' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'tiny',
+      'default' => '0',
+    ),
+    'entity_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'revision_id' => array(
+      'type' => 'int',
+      'not null' => FALSE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'language' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '32',
+      'default' => '',
+    ),
+    'delta' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'field_image_miw_fid' => array(
+      'type' => 'int',
+      'not null' => FALSE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'field_image_miw_alt' => array(
+      'type' => 'varchar',
+      'not null' => FALSE,
+      'length' => '512',
+    ),
+    'field_image_miw_title' => array(
+      'type' => 'varchar',
+      'not null' => FALSE,
+      'length' => '1024',
+    ),
+    'field_image_miw_width' => array(
+      'type' => 'int',
+      'not null' => FALSE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'field_image_miw_height' => array(
+      'type' => 'int',
+      'not null' => FALSE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+  ),
+  'primary key' => array(
+    'entity_type',
+    'entity_id',
+    'deleted',
+    'delta',
+    'language',
+  ),
+  'indexes' => array(
+    'entity_type' => array(
+      'entity_type',
+    ),
+    'bundle' => array(
+      'bundle',
+    ),
+    'deleted' => array(
+      'deleted',
+    ),
+    'entity_id' => array(
+      'entity_id',
+    ),
+    'revision_id' => array(
+      'revision_id',
+    ),
+    'language' => array(
+      'language',
+    ),
+    'field_image_miw_fid' => array(
+      'field_image_miw_fid',
+    ),
   ),
   'mysql_character_set' => 'utf8',
 ));
@@ -12995,6 +13244,103 @@ $connection->insert('field_revision_field_file')
   'field_file_description' => 'file desc',
 ))
 ->execute();
+$connection->schema()->createTable('field_revision_field_file_mfw', array(
+  'fields' => array(
+    'entity_type' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'bundle' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'deleted' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'tiny',
+      'default' => '0',
+    ),
+    'entity_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'revision_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'language' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '32',
+      'default' => '',
+    ),
+    'delta' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'field_file_mfw_fid' => array(
+      'type' => 'int',
+      'not null' => FALSE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'field_file_mfw_display' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'tiny',
+      'default' => '1',
+      'unsigned' => TRUE,
+    ),
+    'field_file_mfw_description' => array(
+      'type' => 'text',
+      'not null' => FALSE,
+      'size' => 'normal',
+    ),
+  ),
+  'primary key' => array(
+    'entity_type',
+    'entity_id',
+    'revision_id',
+    'deleted',
+    'delta',
+    'language',
+  ),
+  'indexes' => array(
+    'entity_type' => array(
+      'entity_type',
+    ),
+    'bundle' => array(
+      'bundle',
+    ),
+    'deleted' => array(
+      'deleted',
+    ),
+    'entity_id' => array(
+      'entity_id',
+    ),
+    'revision_id' => array(
+      'revision_id',
+    ),
+    'language' => array(
+      'language',
+    ),
+    'field_file_mfw_fid' => array(
+      'field_file_mfw_fid',
+    ),
+  ),
+  'mysql_character_set' => 'utf8',
+));
+
 $connection->schema()->createTable('field_revision_field_float', array(
   'fields' => array(
     'entity_type' => array(
@@ -13265,6 +13611,113 @@ $connection->schema()->createTable('field_revision_field_image', array(
     'revision_id',
     'language',
     'delta',
+  ),
+  'mysql_character_set' => 'utf8',
+));
+
+$connection->schema()->createTable('field_revision_field_image_miw', array(
+  'fields' => array(
+    'entity_type' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'bundle' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '128',
+      'default' => '',
+    ),
+    'deleted' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'tiny',
+      'default' => '0',
+    ),
+    'entity_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'revision_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'language' => array(
+      'type' => 'varchar',
+      'not null' => TRUE,
+      'length' => '32',
+      'default' => '',
+    ),
+    'delta' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'field_image_miw_fid' => array(
+      'type' => 'int',
+      'not null' => FALSE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'field_image_miw_alt' => array(
+      'type' => 'varchar',
+      'not null' => FALSE,
+      'length' => '512',
+    ),
+    'field_image_miw_title' => array(
+      'type' => 'varchar',
+      'not null' => FALSE,
+      'length' => '1024',
+    ),
+    'field_image_miw_width' => array(
+      'type' => 'int',
+      'not null' => FALSE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+    'field_image_miw_height' => array(
+      'type' => 'int',
+      'not null' => FALSE,
+      'size' => 'normal',
+      'unsigned' => TRUE,
+    ),
+  ),
+  'primary key' => array(
+    'entity_type',
+    'entity_id',
+    'revision_id',
+    'deleted',
+    'delta',
+    'language',
+  ),
+  'indexes' => array(
+    'entity_type' => array(
+      'entity_type',
+    ),
+    'bundle' => array(
+      'bundle',
+    ),
+    'deleted' => array(
+      'deleted',
+    ),
+    'entity_id' => array(
+      'entity_id',
+    ),
+    'revision_id' => array(
+      'revision_id',
+    ),
+    'language' => array(
+      'language',
+    ),
+    'field_image_miw_fid' => array(
+      'field_image_miw_fid',
+    ),
   ),
   'mysql_character_set' => 'utf8',
 ));
@@ -56431,6 +56884,28 @@ $connection->insert('system')
   'schema_version' => '-1',
   'weight' => '0',
   'info' => 'a:11:{s:4:"name";s:22:"Breakpoints Theme Test";s:11:"description";s:35:"Test breakpoints provided by themes";s:7:"package";s:5:"Other";s:4:"core";s:3:"7.x";s:6:"hidden";b:1;s:5:"mtime";i:1544938132;s:12:"dependencies";a:0:{}s:7:"version";N;s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/contrib/multiupload_filefield_widget/multiupload_filefield_widget.module',
+  'name' => 'multiupload_filefield_widget',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '1',
+  'bootstrap' => '0',
+  'schema_version' => '0',
+  'weight' => '0',
+  'info' => 'a:12:{s:4:"name";s:28:"Multiupload Filefield Widget";s:11:"description";s:76:"Creates a widget for filefield to upload multiple files at once using html5.";s:7:"package";s:6:"Fields";s:4:"core";s:3:"7.x";s:12:"dependencies";a:1:{i:0;s:4:"file";}s:5:"files";a:2:{i:0;s:35:"multiupload_filefield_widget.module";i:1;s:33:"multiupload_filefield_widget.test";}s:7:"version";s:8:"7.x-1.13";s:7:"project";s:28:"multiupload_filefield_widget";s:9:"datestamp";s:10:"1388873905";s:5:"mtime";i:1388873905;s:3:"php";s:5:"5.2.4";s:9:"bootstrap";i:0;}',
+))
+->values(array(
+  'filename' => 'sites/all/modules/contrib/multiupload_imagefield_widget/multiupload_imagefield_widget.module',
+  'name' => 'multiupload_imagefield_widget',
+  'type' => 'module',
+  'owner' => '',
+  'status' => '1',
+  'bootstrap' => '0',
+  'schema_version' => '0',
+  'weight' => '0',
+  'info' => 'a:12:{s:4:"name";s:29:"Multiupload Imagefield Widget";s:11:"description";s:77:"Creates a widget for imagefield to upload multiple files at once using html5.";s:7:"package";s:6:"Fields";s:12:"dependencies";a:2:{i:0;s:28:"multiupload_filefield_widget";i:1;s:5:"image";}s:4:"core";s:3:"7.x";s:7:"version";s:7:"7.x-1.3";s:7:"project";s:29:"multiupload_imagefield_widget";s:9:"datestamp";s:10:"1388874206";s:5:"mtime";i:1388874206;s:3:"php";s:5:"5.2.4";s:5:"files";a:0:{}s:9:"bootstrap";i:0;}',
 ))
 ->values(array(
   'filename' => 'sites/all/modules/ctools/bulk_export/bulk_export.module',

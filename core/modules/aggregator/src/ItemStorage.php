@@ -18,6 +18,7 @@ class ItemStorage extends SqlContentEntityStorage implements ItemStorageInterfac
    */
   public function getItemCount(FeedInterface $feed) {
     $query = \Drupal::entityQuery('aggregator_item')
+      ->accessCheck(FALSE)
       ->condition('fid', $feed->id())
       ->count();
 
@@ -53,7 +54,8 @@ class ItemStorage extends SqlContentEntityStorage implements ItemStorageInterfac
    *   An array of the feed items.
    */
   protected function executeFeedItemQuery(QueryInterface $query, $limit) {
-    $query->sort('timestamp', 'DESC')
+    $query->accessCheck(FALSE)
+      ->sort('timestamp', 'DESC')
       ->sort('iid', 'DESC');
     if (!empty($limit)) {
       $query->pager($limit);

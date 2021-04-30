@@ -102,6 +102,9 @@
 }
 
 .button--icon-back {
+  display: inline-flex;
+  align-items: center;
+
   &:before {
     display: block;
     width: 0.5em;

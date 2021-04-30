@@ -328,7 +328,8 @@ class ConfigNamesMapperTest extends UnitTestCase {
     $route_match = new RouteMatch('example', new Route('/test/{langcode}'), ['langcode' => 'xx']);
     $this->configNamesMapper->populateFromRouteMatch($route_match);
 
-    $expected = ['langcode' => 'xx'];    $result = $this->configNamesMapper->getDeleteRouteParameters();
+    $expected = ['langcode' => 'xx'];
+    $result = $this->configNamesMapper->getDeleteRouteParameters();
     $this->assertSame($expected, $result);
   }
 

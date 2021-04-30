@@ -12,10 +12,10 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class NodeStatisticsDatabaseStorage implements StatisticsStorageInterface {
 
   /**
-  * The database connection used.
-  *
-  * @var \Drupal\Core\Database\Connection
-  */
+   * The database connection used.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
   protected $connection;
 
   /**
@@ -39,6 +39,8 @@ class NodeStatisticsDatabaseStorage implements StatisticsStorageInterface {
    *   The database connection for the node view storage.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state service.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack.
    */
   public function __construct(Connection $connection, StateInterface $state, RequestStack $request_stack) {
     $this->connection = $connection;

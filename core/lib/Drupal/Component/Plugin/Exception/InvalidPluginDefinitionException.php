@@ -17,10 +17,14 @@ class InvalidPluginDefinitionException extends PluginException {
   /**
    * Constructs an InvalidPluginDefinitionException.
    *
-   * For the remaining parameters see \Exception.
-   *
    * @param string $plugin_id
    *   The plugin ID of the mapper.
+   * @param string $message
+   *   The exception message.
+   * @param int $code
+   *   The exception code.
+   * @param \Exception|null $previous
+   *   The previous throwable used for exception chaining.
    *
    * @see \Exception
    */

@@ -412,6 +412,18 @@ class UserTest extends ResourceTestBase {
     $this->assertArrayNotHasKey('mail', $doc['data'][2]['attributes']);
     $this->assertSame($user_b->uuid(), $doc['data'][count($doc['data']) - 1]['id']);
     $this->assertArrayHasKey('mail', $doc['data'][count($doc['data']) - 1]['attributes']);
+
+    // Now grant permission to view user email addresses and verify.
+    $this->grantPermissionsToTestedRole(['view user email addresses']);
+    // Viewing user A as user B: "mail" field should be accessible.
+    $response = $this->request('GET', $user_a_url, $request_options);
+    $doc = Json::decode((string) $response->getBody());
+    $this->assertArrayHasKey('mail', $doc['data']['attributes']);
+    // Also when looking at the collection.
+    $response = $this->request('GET', $collection_url, $request_options);
+    $doc = Json::decode((string) $response->getBody());
+    $this->assertSame($user_a->uuid(), $doc['data']['2']['id']);
+    $this->assertArrayHasKey('mail', $doc['data'][2]['attributes']);
   }
 
   /**

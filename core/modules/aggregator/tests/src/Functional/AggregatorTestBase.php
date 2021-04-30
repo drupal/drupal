@@ -80,7 +80,11 @@ abstract class AggregatorTestBase extends BrowserTestBase {
     // Verify that the creation message contains a link to a feed.
     $this->assertSession()->elementExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "aggregator/sources/")]');
 
-    $fids = \Drupal::entityQuery('aggregator_feed')->condition('title', $edit['title[0][value]'])->condition('url', $edit['url[0][value]'])->execute();
+    $fids = \Drupal::entityQuery('aggregator_feed')
+      ->accessCheck(FALSE)
+      ->condition('title', $edit['title[0][value]'])
+      ->condition('url', $edit['url[0][value]'])
+      ->execute();
     $this->assertNotEmpty($fids, 'The feed found in database.');
     return Feed::load(array_values($fids)[0]);
   }
@@ -195,7 +199,10 @@ abstract class AggregatorTestBase extends BrowserTestBase {
     $this->clickLink('Update items');
 
     // Ensure we have the right number of items.
-    $item_ids = \Drupal::entityQuery('aggregator_item')->condition('fid', $feed->id())->execute();
+    $item_ids = \Drupal::entityQuery('aggregator_item')
+      ->accessCheck(FALSE)
+      ->condition('fid', $feed->id())
+      ->execute();
     $feed->items = array_values($item_ids);
 
     if ($expected_count !== NULL) {
@@ -224,7 +231,10 @@ abstract class AggregatorTestBase extends BrowserTestBase {
    *   Expected number of feed items.
    */
   public function updateAndDelete(FeedInterface $feed, $expected_count) {
-    $count_query = \Drupal::entityQuery('aggregator_item')->condition('fid', $feed->id())->count();
+    $count_query = \Drupal::entityQuery('aggregator_item')
+      ->accessCheck(FALSE)
+      ->condition('fid', $feed->id())
+      ->count();
     $this->updateFeedItems($feed, $expected_count);
     $count = $count_query->execute();
     $this->assertGreaterThan(0, $count);
@@ -245,7 +255,12 @@ abstract class AggregatorTestBase extends BrowserTestBase {
    *   TRUE if feed is unique.
    */
   public function uniqueFeed($feed_name, $feed_url) {
-    $result = \Drupal::entityQuery('aggregator_feed')->condition('title', $feed_name)->condition('url', $feed_url)->count()->execute();
+    $result = \Drupal::entityQuery('aggregator_feed')
+      ->accessCheck(FALSE)
+      ->condition('title', $feed_name)
+      ->condition('url', $feed_url)
+      ->count()
+      ->execute();
     return (1 == $result);
   }
 

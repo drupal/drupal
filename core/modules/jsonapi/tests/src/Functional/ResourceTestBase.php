@@ -355,10 +355,13 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   protected function getData() {
-    if ($this->entityStorage->getQuery()->count()->execute() < 2) {
+    if ($this->entityStorage->getQuery()->accessCheck(FALSE)->count()->execute() < 2) {
       $this->createAnotherEntity('two');
     }
-    $query = $this->entityStorage->getQuery()->sort($this->entity->getEntityType()->getKey('id'));
+    $query = $this->entityStorage
+      ->getQuery()
+      ->accessCheck(FALSE)
+      ->sort($this->entity->getEntityType()->getKey('id'));
     return $this->entityStorage->loadMultiple($query->execute());
   }
 

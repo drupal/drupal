@@ -225,7 +225,7 @@
         border-left: solid 10px transparent;
       }
 
-      body:not(.is-always-mobile-nav) .primary-nav__menu--level-2.is-active {
+      body:not(.is-always-mobile-nav) .primary-nav__menu--level-2.is-active-menu-parent {
         visibility: visible;
         margin-top: 0;
         transform: translate(-50%, 0);

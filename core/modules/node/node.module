@@ -615,6 +615,7 @@ function node_user_cancel($edit, UserInterface $account, $method) {
     case 'user_cancel_block_unpublish':
       // Unpublish nodes (current revisions).
       $nids = \Drupal::entityQuery('node')
+        ->accessCheck(FALSE)
         ->condition('uid', $account->id())
         ->execute();
       module_load_include('inc', 'node', 'node.admin');

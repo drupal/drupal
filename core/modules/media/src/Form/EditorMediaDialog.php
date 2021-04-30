@@ -77,6 +77,10 @@ class EditorMediaDialog extends FormBase {
   /**
    * {@inheritdoc}
    *
+   * @param array $form
+   *   A nested array form elements comprising the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    * @param \Drupal\editor\EditorInterface $editor
    *   The text editor to which this dialog corresponds.
    */
