@@ -74,7 +74,17 @@ class TipPluginImage extends TourTipPluginBase implements ContainerFactoryPlugin
       '#alt' => $this->get('alt'),
     ];
 
-    return $image;
+//    return $image;
+
+    return [
+      '#type' => 'html_tag',
+      '#tag' => 'p',
+//      '#value' => $this->token->replace($this->get('body')),
+      '#attributes' => [
+        'class' => ['tour-tip-image'],
+      ],
+      'image' => $image,
+    ];
   }
 
 }

@@ -59,7 +59,14 @@ class TipPluginText extends TourTipPluginBase implements ContainerFactoryPluginI
    * {@inheritdoc}
    */
   public function getBody() {
-    return ['#markup' => $this->token->replace($this->get('body'))];
+    return [
+      '#type' => 'html_tag',
+      '#tag' => 'p',
+      '#value' => $this->token->replace($this->get('body')),
+      '#attributes' => [
+        'class' => ['tour-tip-body'],
+      ],
+    ];
   }
 
   /**

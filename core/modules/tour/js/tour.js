@@ -153,6 +153,6 @@
   };
 
   Drupal.theme.tourItemContent = function (step) {
-    return "<p>".concat(step.body, "</p><div class=\"tour-progress\">").concat(step.counter, "</div>");
+    return "".concat(step.body, "<div class=\"tour-progress\">").concat(step.counter, "</div>");
   };
 })(jQuery, Backbone, Drupal, drupalSettings, document, window.Shepherd);

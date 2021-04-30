@@ -59,6 +59,7 @@
       'data-index',
       shepherdTour.currentStep.options.index,
     );
+    shepherdElement.querySelector('footer').remove();
 
     // If the class list includes `tip-uses-getoutput`, then the tip was created
     // by a deprecated tip plugin. This means the markup has some differences
@@ -66,9 +67,8 @@
     // @todo remove the contents of the 'if' in this conditional in
     //   https://drupal.org/node/3195193.
     if (shepherdElement.classList.contains('tip-uses-getoutput')) {
-      // Move the next button and remove the now unnecessary footer.
+      // Move the next button.
       shepherdText.appendChild(shepherdNext);
-      shepherdElement.querySelector('footer').remove();
 
       // Move the cancel button and remove the now unnecessary header.
       shepherdText.appendChild(shepherdCancel);
@@ -95,25 +95,15 @@
       shepherdContent.insertBefore(tourProgress, shepherdText.nextSibling);
       shepherdContent.appendChild(shepherdCancel);
       shepherdContent.querySelector('.shepherd-header').remove();
-
-      const shepherdTextFirstParagraph = shepherdElement.querySelector(
-        '.shepherd-text > p',
-      );
-      const firstParagraphHTML = shepherdTextFirstParagraph.innerHTML;
-      shepherdTextFirstParagraph.remove();
-      const remainingHTML = shepherdText.innerHTML;
-      shepherdText.innerHTML = firstParagraphHTML;
-      shepherdText.insertAdjacentHTML('afterend', remainingHTML);
-      shepherdText.classList.add(`tour-tip-${joyrideContentContainerName}`);
       shepherdContent.insertBefore(shepherdNext, tourProgress.nextSibling);
-      shepherdElement.querySelector('footer').remove();
       shepherdCancel.innerHTML = '<span aria-hidden="true">×</span>';
-
       shepherdTitle.classList.add('tour-tip-label');
 
       // Convert elements to use the tags they used in Joyride.
       changeTag(shepherdTitle, 'h2');
-      changeTag(shepherdText, 'p');
+
+      // Remove the wrapper Shepherd adds for tip content.
+      shepherdText.outerHTML = shepherdText.innerHTML;
     }
 
     // Convert the next and cancel buttons to links so they match Joyride's

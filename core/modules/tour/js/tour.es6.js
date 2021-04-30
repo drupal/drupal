@@ -326,5 +326,5 @@
    * @see https://shepherdjs.dev/docs/Step.html
    */
   Drupal.theme.tourItemContent = (step) =>
-    `<p>${step.body}</p><div class="tour-progress">${step.counter}</div>`;
+    `${step.body}<div class="tour-progress">${step.counter}</div>`;
 })(jQuery, Backbone, Drupal, drupalSettings, document, window.Shepherd);

@@ -51,10 +51,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     shepherdCancel.setAttribute('href', '#');
     shepherdCancel.setAttribute('role', 'button');
     shepherdElement.setAttribute('data-index', shepherdTour.currentStep.options.index);
+    shepherdElement.querySelector('footer').remove();
 
     if (shepherdElement.classList.contains('tip-uses-getoutput')) {
       shepherdText.appendChild(shepherdNext);
-      shepherdElement.querySelector('footer').remove();
       shepherdText.appendChild(shepherdCancel);
       shepherdContent.querySelector('.shepherd-header').remove();
       Array.from(shepherdText.children).forEach(function (node) {
@@ -68,19 +68,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       shepherdContent.insertBefore(tourProgress, shepherdText.nextSibling);
       shepherdContent.appendChild(shepherdCancel);
       shepherdContent.querySelector('.shepherd-header').remove();
-      var shepherdTextFirstParagraph = shepherdElement.querySelector('.shepherd-text > p');
-      var firstParagraphHTML = shepherdTextFirstParagraph.innerHTML;
-      shepherdTextFirstParagraph.remove();
-      var remainingHTML = shepherdText.innerHTML;
-      shepherdText.innerHTML = firstParagraphHTML;
-      shepherdText.insertAdjacentHTML('afterend', remainingHTML);
-      shepherdText.classList.add("tour-tip-".concat(joyrideContentContainerName));
       shepherdContent.insertBefore(shepherdNext, tourProgress.nextSibling);
-      shepherdElement.querySelector('footer').remove();
       shepherdCancel.innerHTML = '<span aria-hidden="true">×</span>';
       shepherdTitle.classList.add('tour-tip-label');
       changeTag(shepherdTitle, 'h2');
-      changeTag(shepherdText, 'p');
+      shepherdText.outerHTML = shepherdText.innerHTML;
     }
 
     changeTag(shepherdElement.querySelector('.joyride-close-tip'), 'a');
