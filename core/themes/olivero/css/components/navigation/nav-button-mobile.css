@@ -65,6 +65,10 @@
     outline: solid 2px #0d77b5;
   }
 
+.mobile-nav-button:active {
+    color: inherit; /* Override Safari's default UA styles. */
+  }
+
 @media (min-width: 31.25rem) {
 
 [dir="ltr"] .mobile-nav-button {
