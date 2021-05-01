@@ -479,6 +479,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $type_name = 'article';
     $field_name = strtolower($this->randomMachineName());
     $this->createFileField($field_name, 'node', $type_name);
+    /** @var \Drupal\Field\FieldConfigInterface $field */
     $field = FieldConfig::loadByName('node', $type_name, $field_name);
     $field_id = $field->id();
     $this->drupalGet("admin/structure/types/manage/$type_name/fields/$field_id");
@@ -487,6 +488,12 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $edit = ['settings[max_filesize]' => ' 5.1 megabytes '];
     $this->submitForm($edit, 'Save settings');
     $this->assertSession()->pageTextContains('Saved ' . $field_name . ' configuration.');
+
+    // Reload the field config to check for the saved value.
+    /** @var \Drupal\Field\FieldConfigInterface $field */
+    $field = FieldConfig::loadByName('node', $type_name, $field_name);
+    $settings = $field->getSettings();
+    $this->assertEquals('5.1 megabytes', $settings['max_filesize'], 'The max filesize value had been trimmed on save.');
   }
 
   /**
