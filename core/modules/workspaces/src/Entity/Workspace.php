@@ -37,6 +37,7 @@ use Drupal\workspaces\WorkspaceInterface;
  *       "delete" = "\Drupal\workspaces\Form\WorkspaceDeleteForm",
  *       "activate" = "\Drupal\workspaces\Form\WorkspaceActivateForm",
  *     },
+ *     "user_cancel" = "\Drupal\user\BatchCancellationHandler",
  *   },
  *   admin_permission = "administer workspaces",
  *   base_table = "workspace",

@@ -32,6 +32,7 @@ use Symfony\Component\Mime\MimeTypeGuesserInterface;
  *     "storage_schema" = "Drupal\file\FileStorageSchema",
  *     "access" = "Drupal\file\FileAccessControlHandler",
  *     "views_data" = "Drupal\file\FileViewsData",
+ *     "user_cancel" = "Drupal\user\BatchCancellationHandler",
  *   },
  *   base_table = "file_managed",
  *   entity_keys = {

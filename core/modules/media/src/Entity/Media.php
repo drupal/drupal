@@ -43,7 +43,8 @@ use Drupal\user\EntityOwnerTrait;
  *     "views_data" = "Drupal\media\MediaViewsData",
  *     "route_provider" = {
  *       "html" = "Drupal\media\Routing\MediaRouteProvider",
- *     }
+ *     },
+ *     "user_cancel" = "Drupal\user\BatchCancellationHandler",
  *   },
  *   base_table = "media",
  *   data_table = "media_field_data",

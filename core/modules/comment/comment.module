@@ -26,7 +26,6 @@ use Drupal\field\FieldConfigInterface;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\node\NodeInterface;
 use Drupal\user\RoleInterface;
-use Drupal\user\UserInterface;
 
 /**
  * The time cutoff for comments marked as read for entity types other node.
@@ -440,31 +439,6 @@ function comment_node_search_result(EntityInterface $node) {
   // or all comment fields are hidden.
   if ($comments > 0 || $open) {
     return ['comment' => \Drupal::translation()->formatPlural($comments, '1 comment', '@count comments')];
-  }
-}
-
-/**
- * Implements hook_user_cancel().
- */
-function comment_user_cancel($edit, UserInterface $account, $method) {
-  switch ($method) {
-    case 'user_cancel_block_unpublish':
-      $comments = \Drupal::entityTypeManager()->getStorage('comment')->loadByProperties(['uid' => $account->id()]);
-      foreach ($comments as $comment) {
-        $comment->setUnpublished();
-        $comment->save();
-      }
-      break;
-
-    case 'user_cancel_reassign':
-      /** @var \Drupal\comment\CommentInterface[] $comments */
-      $comments = \Drupal::entityTypeManager()->getStorage('comment')->loadByProperties(['uid' => $account->id()]);
-      foreach ($comments as $comment) {
-        $comment->setOwnerId(0);
-        $comment->setAuthorName(\Drupal::config('user.settings')->get('anonymous'));
-        $comment->save();
-      }
-      break;
   }
 }
 
