@@ -11,19 +11,19 @@
  */
 
 [dir="ltr"] select {
-  padding-left: 1.5rem
+  padding-left: 1.125rem
 }
 
 [dir="rtl"] select {
-  padding-right: 1.5rem
+  padding-right: 1.125rem
 }
 
 [dir="ltr"] select {
-  padding-right: 4.5rem
+  padding-right: 3.375rem
 }
 
 [dir="rtl"] select {
-  padding-left: 4.5rem
+  padding-left: 3.375rem
 }
 
 select {
@@ -31,62 +31,34 @@ select {
   height: 3.375rem;
   padding-top: 0;
   padding-bottom: 0;
-  color: #313637;
-  border-width: 2px 0;
-  border-style: solid;
-  border-color: transparent;
-  border-top-left-radius: 0; /* LTR */
-  border-top-right-radius: 2px; /* LTR */
-  border-bottom-right-radius: 2px; /* LTR */
-  border-bottom-left-radius: 0; /* LTR */
-  outline: 1px solid transparent;
-  /*
-    Couple of notes here:
-
-    The select element is styled with external images so it's visible in Firefox in Windows high contrast
-    mode. There's a number of browser bugs that limit what we can do including not linear-gradients negating the
-    entire ruleset. To work around this, we split off the various backgrounds into separate SVG images, and
-    call them as appropriate. We cannot use the background CSS property because we split off the background-color.
-    We also cannot use a left border because it angles at the end to blend in with the top and bottom
-    transparent borders, so we re-use the background SVG image for this.
-
-    @todo - look at inlining some of the SVGs with an eye on CSS filesize.
-  */
-  background-color: #f7f9fa;
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='18' height='10.5' viewBox='0 0 18 10.5'%3e  %3cpath fill='%23fff' d='M18,1.5c0-0.1-0.1-0.3-0.2-0.4l-0.9-0.9c-0.2-0.2-0.6-0.2-0.8,0L9,7.3L1.9,0.2c-0.2-0.2-0.6-0.2-0.8,0L0.2,1.1c-0.2,0.2-0.2,0.6,0,0.8l8.4,8.4c0.2,0.2,0.6,0.2,0.8,0l8.4-8.4C17.9,1.8,18,1.6,18,1.5z'/%3e%3c/svg%3e"), url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='54' height='54' viewBox='0 0 54 54'%3e  %3cpath fill='%237e96a7' d='M0 0h54v54H0z'/%3e%3c/svg%3e"), url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='54' height='54' viewBox='0 0 54 54'%3e  %3cpath fill='%237e96a7' d='M0 0h54v54H0z'/%3e%3c/svg%3e");
+  color: #0d1214;
+  border: 1px solid #7e96a7;
+  border-radius: 0.1875rem;
+  background-color: #fff;
+  background-image: url("data:image/svg+xml,%3csvg width='18' height='11' viewBox='0 0 18 11' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M18 1.49699C18 1.35271 17.9279 1.19038 17.8196 1.08216L16.9178 0.18036C16.8096 0.0721439 16.6473 0 16.503 0C16.3587 0 16.1964 0.0721439 16.0882 0.18036L9 7.26854L1.91182 0.18036C1.80361 0.0721439 1.64128 0 1.49699 0C1.33467 0 1.19038 0.0721439 1.08216 0.18036L0.180361 1.08216C0.0721442 1.19038 0 1.35271 0 1.49699C0 1.64128 0.0721442 1.80361 0.180361 1.91182L8.58517 10.3166C8.69339 10.4248 8.85571 10.497 9 10.497C9.14429 10.497 9.30661 10.4248 9.41483 10.3166L17.8196 1.91182C17.9279 1.80361 18 1.64128 18 1.49699Z' fill='%235D7585'/%3e%3c/svg%3e");
   background-repeat: no-repeat;
-  background-position: /* LTR */
-    right 18px center,
-    right 0 top -2px,
-    left -48px top -2px;
+  background-position: right 18px center; /* LTR */
   font-family: inherit;
-  font-size: 1rem;
-  line-height: 3.125rem;
+  font-size: inherit;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none
 }
 
 select:focus {
-    border-color: #7e96a7;
-    outline: 6px dashed transparent;
-    box-shadow: 0 0 0 2px #fff, 0 0 0 4px #53b0eb, 0 0 36px rgba(83, 176, 235, 0.25)
+    border: solid 2px #2494db;
+    outline: solid 2px #2494db
   }
 
 @supports (outline-style: double) {
 
 select:focus {
-      outline-style: double
+      border-width: 1px;
+      outline-width: 6px;
+      outline-style: double;
+      outline-offset: -1px
   }
     }
-
-select:hover {
-    border-color: #53b0eb;
-    background-image:
-      url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='18' height='10.5' viewBox='0 0 18 10.5'%3e  %3cpath fill='%23fff' d='M18,1.5c0-0.1-0.1-0.3-0.2-0.4l-0.9-0.9c-0.2-0.2-0.6-0.2-0.8,0L9,7.3L1.9,0.2c-0.2-0.2-0.6-0.2-0.8,0L0.2,1.1c-0.2,0.2-0.2,0.6,0,0.8l8.4,8.4c0.2,0.2,0.6,0.2,0.8,0l8.4-8.4C17.9,1.8,18,1.6,18,1.5z'/%3e%3c/svg%3e"),
-      url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='54' height='54' viewBox='0 0 54 54'%3e  %3cpath fill='%2353b0eb' d='M0 0h54v54H0z'/%3e%3c/svg%3e"),
-      url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='54' height='54' viewBox='0 0 54 54'%3e  %3cpath fill='%2353b0eb' d='M0 0h54v54H0z'/%3e%3c/svg%3e");
-  }
 
 select {
 
@@ -98,145 +70,31 @@ select::-ms-expand {
   }
 
 select[disabled] {
-    pointer-events: none;
-    opacity: 0.6;
+    color: #7e96a7;
+    background-color: #f1f4f7;
   }
 
 select.error {
-    border-color: #e33f1e;
-    background-image:
-      url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='18' height='10.5' viewBox='0 0 18 10.5'%3e  %3cpath fill='%23fff' d='M18,1.5c0-0.1-0.1-0.3-0.2-0.4l-0.9-0.9c-0.2-0.2-0.6-0.2-0.8,0L9,7.3L1.9,0.2c-0.2-0.2-0.6-0.2-0.8,0L0.2,1.1c-0.2,0.2-0.2,0.6,0,0.8l8.4,8.4c0.2,0.2,0.6,0.2,0.8,0l8.4-8.4C17.9,1.8,18,1.6,18,1.5z'/%3e%3c/svg%3e"),
-      url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='54' height='54' viewBox='0 0 54 54'%3e  %3cpath fill='%23e33f1e' d='M0 0h54v54H0z'/%3e%3c/svg%3e"),
-      url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='54' height='54' viewBox='0 0 54 54'%3e  %3cpath fill='%23e33f1e' d='M0 0h54v54H0z'/%3e%3c/svg%3e");
+    border: solid 2px #e33f1e
   }
 
-[dir="ltr"] select[multiple] {
-    padding-left: 0.5625rem
-}
-
-[dir="rtl"] select[multiple] {
-    padding-right: 0.5625rem
-}
-
-[dir="ltr"] select[multiple] {
-    padding-right: 0.5625rem
-}
-
-[dir="rtl"] select[multiple] {
-    padding-left: 0.5625rem
-}
-
-[dir="ltr"] select[multiple] {
-    border-right: solid 2px transparent
-}
-
-[dir="rtl"] select[multiple] {
-    border-left: solid 2px transparent
-}
-
-[dir="ltr"] select[multiple] {
-    border-left: solid 6px #7e96a7
-}
-
-[dir="rtl"] select[multiple] {
-    border-right: solid 6px #7e96a7
-}
+select.error:focus {
+      outline-color: #e33f1e;
+    }
 
 select[multiple] {
     height: auto;
-    padding-top: 0.5625rem;
-    padding-bottom: 0.5625rem;
-    border-top: 0;
-    border-bottom: 0;
+    padding: 0.5625rem;
     background-image: none;
-    background-repeat: repeat-y;
-    background-position: left -48px top -2px; /* LTR */
     line-height: 1 /* Needed by non-Chromium based MS Edge browsers. */
   }
 
-[dir="ltr"] select[multiple] option {
-      padding-left: 0.5625rem
-}
-
-[dir="rtl"] select[multiple] option {
-      padding-right: 0.5625rem
-}
-
-[dir="ltr"] select[multiple] option {
-      padding-right: 0.5625rem
-}
-
-[dir="rtl"] select[multiple] option {
-      padding-left: 0.5625rem
-}
-
 select[multiple] option {
-      padding-top: 0.5625rem;
-      padding-bottom: 0.5625rem;
+      padding: 0.5625rem;
     }
-
-select[multiple]:focus {
-      border-color: #7e96a7;
-      box-shadow:
-        0 -2px 0 #7e96a7,
-        0 2px 0 #7e96a7,
-        0 -2px 0 2px #fff,
-        0 2px 0 2px #fff,
-        0 -2px 0 4px #53b0eb,
-        0 2px 0 4px #53b0eb,
-        0 0 36px rgba(83, 176, 235, 0.25);
-    }
-
-select[multiple]:hover {
-      border-color: #53b0eb;
-      box-shadow:
-        0 -2px 0 #53b0eb,
-        0 2px 0 #53b0eb;
-    }
-
-select[multiple]:focus:hover {
-      box-shadow:
-        0 -2px 0 #53b0eb,
-        0 2px 0 #53b0eb,
-        0 -2px 0 2px #fff,
-        0 2px 0 2px #fff,
-        0 -2px 0 4px #53b0eb,
-        0 2px 0 4px #53b0eb,
-        0 0 36px rgba(83, 176, 235, 0.25);
-    }
-
-select[multiple].error {
-      border-color: #e33f1e;
-      box-shadow:
-        0 -2px 0 #e33f1e,
-        0 2px 0 #e33f1e
-    }
-
-select[multiple].error:focus {
-        box-shadow:
-          0 -2px 0 #e33f1e,
-          0 2px 0 #e33f1e,
-          0 -2px 0 2px #fff,
-          0 2px 0 2px #fff,
-          0 -2px 0 4px #53b0eb,
-          0 2px 0 4px #53b0eb,
-          0 0 36px rgba(83, 176, 235, 0.25);
-      }
-
-[dir="ltr"] select.form-element--small {
-    padding-left: 1.21875rem;
-    padding-right: 3.65625rem
-}
-
-[dir="rtl"] select.form-element--small {
-    padding-right: 1.21875rem;
-    padding-left: 3.65625rem
-}
 
 select.form-element--small {
     height: 2.8125rem;
-    background-position: right 13.5px center, right -10px top -2px, left -48px top -2px; /* LTR */
-    line-height: 2.5625rem;
   }
 
 select {
@@ -247,25 +105,14 @@ select {
 @media screen and (-ms-high-contrast: active) {
 
 select {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='18' height='10.5' viewBox='0 0 18 10.5'%3e  %3cpath fill='%23fff' d='M18,1.5c0-0.1-0.1-0.3-0.2-0.4l-0.9-0.9c-0.2-0.2-0.6-0.2-0.8,0L9,7.3L1.9,0.2c-0.2-0.2-0.6-0.2-0.8,0L0.2,1.1c-0.2,0.2-0.2,0.6,0,0.8l8.4,8.4c0.2,0.2,0.6,0.2,0.8,0l8.4-8.4C17.9,1.8,18,1.6,18,1.5z'/%3e%3c/svg%3e")
+    background-image: url("data:image/svg+xml,%3csvg width='18' height='11' viewBox='0 0 18 11' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M18 1.49699C18 1.35271 17.9279 1.19038 17.8196 1.08216L16.9178 0.18036C16.8096 0.0721439 16.6473 0 16.503 0C16.3587 0 16.1964 0.0721439 16.0882 0.18036L9 7.26854L1.91182 0.18036C1.80361 0.0721439 1.64128 0 1.49699 0C1.33467 0 1.19038 0.0721439 1.08216 0.18036L0.180361 1.08216C0.0721442 1.19038 0 1.35271 0 1.49699C0 1.64128 0.0721442 1.80361 0.180361 1.91182L8.58517 10.3166C8.69339 10.4248 8.85571 10.497 9 10.497C9.14429 10.497 9.30661 10.4248 9.41483 10.3166L17.8196 1.91182C17.9279 1.80361 18 1.64128 18 1.49699Z' fill='%235D7585'/%3e%3c/svg%3e")
 }
+
+    select[multiple] {
+      background-image: none;
+    }
   }
 
 [dir="rtl"] select {
-  border-top-left-radius: 2px;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 2px;
-  background-position:
-    left 18px center,
-    left 0 top -2px,
-    right -48px top -2px
+  background-position: left 18px center;
 }
-
-[dir="rtl"] select[multiple] {
-    background-position: right -48px top -2px;
-  }
-
-[dir="rtl"] select.form-element--small {
-    background-position: left 13.5px center, right -48px top -2px, left -10px top -2px;
-  }

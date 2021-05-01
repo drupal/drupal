@@ -21,6 +21,7 @@ class MigrateSystemSiteTranslationTest extends MigrateDrupal6TestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->executeMigration('system_site');
     $this->executeMigration('d6_system_site_translation');
   }
 

@@ -123,7 +123,7 @@ class BlockVisibility extends ProcessPluginBase implements ContainerFactoryPlugi
         // anything else -- the block will simply have no PHP or request_path
         // visibility configuration.
         elseif ($this->skipPHP) {
-          throw new MigrateSkipRowException(sprintf("The block with bid '%d' from module '%s' will have no PHP or request_path visibility configuration.", $row->getSourceProperty('bid'), $row->getSourceProperty('module'), $destination_property));
+          throw new MigrateSkipRowException(sprintf("The block with bid '%d' from module '%s' will have no PHP or request_path visibility configuration.", $row->getSourceProperty('bid'), $row->getSourceProperty('module')));
         }
       }
       else {

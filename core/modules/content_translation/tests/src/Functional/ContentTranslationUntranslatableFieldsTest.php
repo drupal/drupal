@@ -171,12 +171,12 @@ class ContentTranslationUntranslatableFieldsTest extends ContentTranslationPendi
     // Verify that checkboxes on the language content settings page are checked
     // and disabled for moderated bundles.
     $this->drupalGet($settings_url);
-    $input_xpath = '//input[@name="settings[' . $this->entityTypeId . '][' . $this->bundle . '][settings][content_translation][untranslatable_fields_hide]" and @value=1 and @disabled="disabled"]';
-    $elements = $this->xpath($input_xpath);
-    $this->assertNotEmpty($elements);
+    $field_name = "settings[{$this->entityTypeId}][{$this->bundle}][settings][content_translation][untranslatable_fields_hide]";
+    $this->assertSession()->fieldValueEquals($field_name, 1);
+    $this->assertSession()->fieldDisabled($field_name);
     $this->submitForm([$settings_key => 0], 'Save configuration');
-    $elements = $this->xpath($input_xpath);
-    $this->assertNotEmpty($elements);
+    $this->assertSession()->fieldValueEquals($field_name, 1);
+    $this->assertSession()->fieldDisabled($field_name);
   }
 
 }

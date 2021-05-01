@@ -49,6 +49,7 @@ function tracker_cron() {
     $count = 0;
 
     $nids = \Drupal::entityQuery('node')
+      ->accessCheck(FALSE)
       ->condition('nid', $max_nid, '<=')
       ->sort('nid', 'DESC')
       ->range(0, \Drupal::config('tracker.settings')->get('cron_index_limit'))
@@ -95,6 +96,7 @@ function tracker_cron() {
       // database agnostic way. We don't actually care about the comments here
       // so don't add an aggregate field.
       $result = \Drupal::entityQueryAggregate('comment')
+        ->accessCheck(FALSE)
         ->condition('entity_type', 'node')
         ->condition('entity_id', $node->id())
         ->condition('uid', $node->getOwnerId(), '<>')
@@ -293,6 +295,7 @@ function _tracker_remove($nid, $uid = NULL, $changed = NULL) {
     if (!$keep_subscription) {
       // Check if the user has commented at least once on the given nid.
       $keep_subscription = \Drupal::entityQuery('comment')
+        ->accessCheck(FALSE)
         ->condition('entity_type', 'node')
         ->condition('entity_id', $nid)
         ->condition('uid', $uid)

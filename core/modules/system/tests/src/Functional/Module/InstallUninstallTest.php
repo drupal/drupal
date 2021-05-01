@@ -174,11 +174,8 @@ class InstallUninstallTest extends ModuleTestBase {
           // See if we can currently uninstall this module (if its dependencies
           // have been uninstalled), and do so if we can.
           $this->drupalGet('admin/modules/uninstall');
-          $field_name = "uninstall[$to_uninstall]";
-          $has_checkbox = $this->xpath('//input[@type="checkbox" and @name="' . $field_name . '"]');
-          $disabled = $this->xpath('//input[@type="checkbox" and @name="' . $field_name . '" and @disabled="disabled"]');
-
-          if (!empty($has_checkbox) && empty($disabled)) {
+          $checkbox = $this->assertSession()->fieldExists("uninstall[$to_uninstall]");
+          if (!$checkbox->hasAttribute('disabled')) {
             // This one is eligible for being uninstalled.
             $package = $all_modules[$to_uninstall]->info['package'];
             $this->assertSuccessfulUninstall($to_uninstall, $package);
@@ -362,7 +359,7 @@ class InstallUninstallTest extends ModuleTestBase {
   protected function preUninstallForum() {
     // There only should be a 'General discussion' term in the 'forums'
     // vocabulary, but just delete any terms there in case the name changes.
-    $query = \Drupal::entityQuery('taxonomy_term');
+    $query = \Drupal::entityQuery('taxonomy_term')->accessCheck(FALSE);
     $query->condition('vid', 'forums');
     $ids = $query->execute();
     $storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');

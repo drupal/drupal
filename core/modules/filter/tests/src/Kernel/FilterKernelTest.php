@@ -389,10 +389,7 @@ class FilterKernelTest extends KernelTestBase {
     $limit = max(ini_get('pcre.backtrack_limit'), ini_get('pcre.recursion_limit'));
     $source = $this->randomMachineName($limit);
     $result = _filter_autop($source);
-    $success = $this->assertEquals($result, '<p>' . $source . "</p>\n", 'Line break filter can process very long strings.');
-    if (!$success) {
-      $this->verbose("\n" . $source . "\n<hr />\n" . $result);
-    }
+    $this->assertEquals($result, '<p>' . $source . "</p>\n", 'Line break filter can process very long strings.');
   }
 
   /**
@@ -1142,12 +1139,9 @@ body {color:red}
    *   (optional) Message to display if failed. Defaults to an empty string.
    * @param string $group
    *   (optional) The group this message belongs to. Defaults to 'Other'.
-   *
-   * @return bool
-   *   TRUE on pass, FALSE on fail.
    */
   public function assertNormalized($haystack, $needle, $message = '', $group = 'Other') {
-    return $this->assertStringContainsString($needle, strtolower(Html::decodeEntities($haystack)), $message);
+    $this->assertStringContainsString($needle, strtolower(Html::decodeEntities($haystack)), $message);
   }
 
   /**
@@ -1167,12 +1161,9 @@ body {color:red}
    *   (optional) Message to display if failed. Defaults to an empty string.
    * @param string $group
    *   (optional) The group this message belongs to. Defaults to 'Other'.
-   *
-   * @return bool
-   *   TRUE on pass, FALSE on fail.
    */
   public function assertNoNormalized($haystack, $needle, $message = '', $group = 'Other') {
-    return $this->assertStringNotContainsString($needle, strtolower(Html::decodeEntities($haystack)), $message);
+    $this->assertStringNotContainsString($needle, strtolower(Html::decodeEntities($haystack)), $message);
   }
 
 }

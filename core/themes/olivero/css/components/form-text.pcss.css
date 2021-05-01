@@ -20,44 +20,28 @@
 [type="url"],
 [type="week"],
 textarea {
+  width: 100%;
   max-width: 100%;
   min-height: var(--sp3);
-  padding-block: calc((var(--sp3) - (var(--font-size-base) * 1.5) - (var(--form-element-border-size-base) * 2)) / 2);
-  padding-inline-start: calc(var(--sp1) + var(--form-element-border-size-left));
-  padding-inline-end: calc(var(--sp1) + var(--form-element-border-size-base));
-  color: var(--color--gray-10);
-  border-width: var(--form-element-border-size-base) 0;
-  border-style: solid;
-  border-color: transparent;
-  border-top-left-radius: 0; /* LTR */
-  border-top-right-radius: var(--border-radius-base); /* LTR */
-  border-bottom-right-radius: var(--border-radius-base); /* LTR */
-  border-bottom-left-radius: 0; /* LTR */
-  outline: var(--outline--thin);
-  background: linear-gradient(to right, var(--color--gray-30) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%) var(--color--gray-95); /* LTR */
+  padding: 0 var(--sp);
+  color: var(--color--gray-0);
+  border: 1px solid var(--color--gray-30);
+  border-radius: var(--border-radius);
+  background-color: var(--color--white);
   font-family: inherit;
-  font-size: var(--font-size-base);
-  line-height: calc(var(--font-size-base) * 1.5);
+  font-size: inherit;
   appearance: none;
 
   &:focus {
-    border-color: var(--color--gray-30);
-    outline: var(--outline--thick);
-    background: /* LTR */
-      linear-gradient(to right, var(--color--gray-30) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%),
-      linear-gradient(to left, var(--color--gray-30) var(--form-element-border-size-base), transparent var(--form-element-border-size-base), transparent 100%) var(--color--gray-95);
-    box-shadow: var(--shadow-focusable);
+    border: solid 2px var(--color--blue-50);
+    outline: solid 2px var(--color--blue-50);
 
     @supports (outline-style: double) {
+      border-width: 1px;
+      outline-width: 6px;
       outline-style: double;
+      outline-offset: -1px;
     }
-  }
-
-  &:hover {
-    border-color: var(--color--blue-70);
-    background: /* LTR */
-      linear-gradient(to right, var(--color--blue-70) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%),
-      linear-gradient(to left, var(--color--blue-70) var(--form-element-border-size-base), transparent var(--form-element-border-size-base), transparent 100%) var(--color--gray-95);
   }
 
   &::-ms-clear {
@@ -66,26 +50,24 @@ textarea {
 
   &[disabled] {
     color: var(--color--gray-30);
-    border-color: transparent;
-    background: linear-gradient(to right, var(--color--gray-70) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%) var(--color--gray-95); /* LTR */
+    background-color: var(--color--gray-90);
   }
 
   &.error {
-    border-color: var(--color--red);
-    background: /* LTR */
-      linear-gradient(to right, var(--color--red) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%),
-      linear-gradient(to left, var(--color--red) var(--form-element-border-size-base), transparent var(--form-element-border-size-base), transparent 100%) var(--color--gray-95);
+    border: solid 2px var(--color--red);
 
     &:focus {
-      box-shadow: var(--shadow-focusable);
+      outline-color: var(--color--red);
+      outline-offset: -2px;
     }
   }
 
   &.form-element--small {
     min-height: var(--sp2-5);
-    padding-block: calc((var(--sp2-5) - (var(--font-size-base) * 1.5) - (var(--form-element-border-size-base) * 2)) / 2);
-    padding-inline-start: calc(var(--sp0-75) + var(--form-element-border-size-left));
-    padding-inline-end: calc(var(--sp0-75) + var(--form-element-border-size-base));
+  }
+
+  @media (--sm) {
+    width: auto;
   }
 }
 
@@ -98,48 +80,12 @@ textarea {
   }
 }
 
-[dir="rtl"] {
-  & [type="color"],
-  & [type="date"],
-  & [type="datetime-local"],
-  & [type="email"],
-  & [type="file"],
-  & [type="month"],
-  & [type="number"],
-  & [type="password"],
-  & [type="search"],
-  & [type="tel"],
-  & [type="text"],
-  & [type="time"],
-  & [type="url"],
-  & [type="week"],
-  & textarea {
-    border-top-left-radius: var(--border-radius-base);
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: var(--border-radius-base);
-    background: linear-gradient(to left, var(--color--gray-30) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%) var(--color--gray-95);
+[type="file"] {
+  height: auto;
+  padding-block: var(--sp0-75);
+}
 
-    &:focus {
-      background:
-        linear-gradient(to left, var(--color--gray-30) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%),
-        linear-gradient(to right, var(--color--gray-30) var(--form-element-border-size-base), transparent var(--form-element-border-size-base), transparent 100%) var(--color--gray-95);
-    }
-
-    &:hover {
-      background:
-        linear-gradient(to left, var(--color--blue-70) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%),
-        linear-gradient(to right, var(--color--blue-70) var(--form-element-border-size-base), transparent var(--form-element-border-size-base), transparent 100%) var(--color--gray-95);
-    }
-
-    &[disabled] {
-      background: linear-gradient(to left, var(--color--gray-70) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%) var(--color--gray-95);
-    }
-
-    &.error {
-      background:
-        linear-gradient(to left, var(--color--red) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%),
-        linear-gradient(to right, var(--color--red) var(--form-element-border-size-base), transparent var(--form-element-border-size-base), transparent 100%) var(--color--gray-95);
-    }
-  }
+[type="color"] {
+  width: var(--sp3);
+  padding: 0;
 }

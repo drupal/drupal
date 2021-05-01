@@ -2,11 +2,11 @@
 
 namespace Drupal\Tests\field_ui\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\node\Entity\NodeType;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
@@ -34,6 +34,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     'taxonomy',
     'image',
     'block',
+    'node_access_test',
   ];
 
   /**
@@ -93,7 +94,6 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       'administer users',
       'administer account settings',
       'administer user display',
-      'bypass node access',
     ]);
     $this->drupalLogin($admin_user);
 
@@ -130,6 +130,12 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       ->getFormDisplay('node', 'article')
       ->setComponent('field_' . $vocabulary->id())
       ->save();
+
+    // Setup node access testing.
+    node_access_rebuild();
+    node_access_test_add_field(NodeType::load('article'));
+    \Drupal::state()->set('node_access_test.private', TRUE);
+
   }
 
   /**
@@ -253,9 +259,9 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
 
     // Check that fields of other entity types (here, the 'comment_body' field)
     // do not show up in the "Re-use existing field" list.
-    $this->assertEmpty($this->xpath('//select[@id="edit-existing-storage-name"]//option[@value="comment"]'), 'The list of options respects entity type restrictions.');
+    $this->assertSession()->optionNotExists('edit-existing-storage-name', 'comment');
     // Validate the FALSE assertion above by also testing a valid one.
-    $this->assertNotEmpty($this->xpath('//select[@id="edit-existing-storage-name"]//option[@value=:field_name]', [':field_name' => $this->fieldName]), 'The list of options shows a valid option.');
+    $this->assertSession()->optionExists('edit-existing-storage-name', $this->fieldName);
 
     // Add a new field based on an existing field.
     $this->fieldUIAddExistingField("admin/structure/types/manage/page", $this->fieldName, $this->fieldLabel . '_2');
@@ -342,6 +348,46 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $edit = [
       'cardinality' => 'number',
       'cardinality_number' => 3,
+    ];
+    $this->drupalPostForm($field_edit_path, $edit, 'Save field settings');
+
+    // Test the cardinality validation is not access sensitive.
+
+    // Remove the cardinality limit 4 so we can add a node the user doesn't have access to.
+    $edit = [
+      'cardinality' => (string) FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
+    ];
+    $this->drupalPostForm($field_edit_path, $edit, 'Save field settings');
+    $node = $this->drupalCreateNode([
+      'private' => TRUE,
+      'uid' => 0,
+      'type' => 'article',
+    ]);
+    $node->body->appendItem('body 1');
+    $node->body->appendItem('body 2');
+    $node->body->appendItem('body 3');
+    $node->body->appendItem('body 4');
+    $node->save();
+
+    // Assert that you can't set the cardinality to a lower number then the
+    // highest delta of this field (including inaccessible entities) but can
+    // set it to the same.
+    $this->drupalGet($field_edit_path);
+    $edit = [
+      'cardinality' => 'number',
+      'cardinality_number' => 2,
+    ];
+    $this->drupalPostForm($field_edit_path, $edit, 'Save field settings');
+    $this->assertRaw(t('There are @count entities with @delta or more values in this field.', ['@count' => 2, '@delta' => 3]));
+    $edit = [
+      'cardinality' => 'number',
+      'cardinality_number' => 3,
+    ];
+    $this->drupalPostForm($field_edit_path, $edit, 'Save field settings');
+    $this->assertRaw(t('There is @count entity with @delta or more values in this field.', ['@count' => 1, '@delta' => 4]));
+    $edit = [
+      'cardinality' => 'number',
+      'cardinality_number' => 4,
     ];
     $this->drupalPostForm($field_edit_path, $edit, 'Save field settings');
   }
@@ -609,8 +655,8 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
   public function testHiddenFields() {
     // Check that the field type is not available in the 'add new field' row.
     $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/add-field');
-    $this->assertEmpty($this->xpath('//select[@id="edit-new-storage-type"]//option[@value="hidden_test_field"]'), "The 'add new field' select respects field types 'no_ui' property.");
-    $this->assertNotEmpty($this->xpath('//select[@id="edit-new-storage-type"]//option[@value="shape"]'), "The 'add new field' select shows a valid option.");
+    $this->assertSession()->optionNotExists('edit-new-storage-type', 'hidden_test_field');
+    $this->assertSession()->optionExists('edit-new-storage-type', 'shape');
 
     // Create a field storage and a field programmatically.
     $field_name = 'hidden_test_field';
@@ -640,17 +686,17 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     // Check that the field does not appear in the 're-use existing field' row
     // on other bundles.
     $this->drupalGet('admin/structure/types/manage/page/fields/add-field');
-    $this->assertEmpty($this->xpath('//select[@id="edit-existing-storage-name"]//option[@value=:field_name]', [':field_name' => $field_name]), "The 're-use existing field' select respects field types 'no_ui' property.");
-    $this->assertNotEmpty($this->xpath('//select[@id="edit-existing-storage-name"]//option[@value=:field_name]', [':field_name' => 'field_tags']), "The 're-use existing field' select shows a valid option.");
+    $this->assertSession()->optionNotExists('edit-existing-storage-name', $field_name);
+    $this->assertSession()->optionExists('edit-existing-storage-name', 'field_tags');
 
     // Check that non-configurable fields are not available.
     $field_types = \Drupal::service('plugin.manager.field.field_type')->getDefinitions();
     foreach ($field_types as $field_type => $definition) {
       if (empty($definition['no_ui'])) {
-        $this->assertNotEmpty($this->xpath('//select[@id="edit-new-storage-type"]//option[@value=:field_type]', [':field_type' => $field_type]), new FormattableMarkup('Configurable field type @field_type is available.', ['@field_type' => $field_type]));
+        $this->assertSession()->optionExists('edit-new-storage-type', $field_type);
       }
       else {
-        $this->assertEmpty($this->xpath('//select[@id="edit-new-storage-type"]//option[@value=:field_type]', [':field_type' => $field_type]), new FormattableMarkup('Non-configurable field type @field_type is not available.', ['@field_type' => $field_type]));
+        $this->assertSession()->optionNotExists('edit-new-storage-type', $field_type);
       }
     }
   }

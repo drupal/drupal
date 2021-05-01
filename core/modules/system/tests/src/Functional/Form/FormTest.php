@@ -861,16 +861,8 @@ class FormTest extends BrowserTestBase {
     }
 
     // Verify special element #type text-format.
-    $element = $this->xpath('//div[contains(@class, :div-class)]/descendant::textarea[@name=:name]', [
-      ':name' => 'text_format[value]',
-      ':div-class' => 'form-disabled',
-    ]);
-    $this->assertTrue(isset($element[0]), new FormattableMarkup('Disabled form element class found for #type %type.', ['%type' => 'text_format[value]']));
-    $element = $this->xpath('//div[contains(@class, :div-class)]/descendant::select[@name=:name]', [
-      ':name' => 'text_format[format]',
-      ':div-class' => 'form-disabled',
-    ]);
-    $this->assertTrue(isset($element[0]), new FormattableMarkup('Disabled form element class found for #type %type.', ['%type' => 'text_format[format]']));
+    $this->assertSession()->elementExists('xpath', "//div[contains(@class, 'form-disabled')]/descendant::textarea[@name='text_format[value]']");
+    $this->assertSession()->elementExists('xpath', "//div[contains(@class, 'form-disabled')]/descendant::select[@name='text_format[format]']");
   }
 
   /**
@@ -892,22 +884,10 @@ class FormTest extends BrowserTestBase {
    */
   public function testRequiredAttribute() {
     $this->drupalGet('form-test/required-attribute');
-    $expected = 'required';
-    // Test to make sure the elements have the proper required attribute.
-    foreach (['textfield', 'password'] as $type) {
-      $element = $this->xpath('//input[@id=:id and @required=:expected]', [
-        ':id' => 'edit-' . $type,
-        ':expected' => $expected,
-      ]);
-      $this->assertTrue(!empty($element), new FormattableMarkup('The @type has the proper required attribute.', ['@type' => $type]));
+    foreach (['textfield', 'password', 'textarea'] as $type) {
+      $field = $this->assertSession()->fieldExists("edit-$type");
+      $this->assertSame('required', $field->getAttribute('required'), "The $type has the proper required attribute.");
     }
-
-    // Test to make sure textarea has the proper required attribute.
-    $element = $this->xpath('//textarea[@id=:id and @required=:expected]', [
-      ':id' => 'edit-textarea',
-      ':expected' => $expected,
-    ]);
-    $this->assertTrue(!empty($element), 'The textarea has the proper required attribute.');
   }
 
 }

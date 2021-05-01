@@ -362,6 +362,11 @@ layout_plugin.settings:
     label:
       type: label
       label: 'Label'
+    context_mapping:
+      type: sequence
+      label: 'Context assignments'
+      sequence:
+        type: string
 
 layout_plugin.settings.*:
   type: layout_plugin.settings

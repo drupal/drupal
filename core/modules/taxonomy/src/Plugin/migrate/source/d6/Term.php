@@ -8,6 +8,35 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 /**
  * Taxonomy term source from database.
  *
+ * Available configuration keys:
+ * - bundle: (optional) The taxonomy vocabulary (vid) to filter terms retrieved
+ *   from the source - can be an integer or an array. If omitted, all terms are
+ *   retrieved.
+ *
+ * Examples:
+ *
+ * @code
+ * source:
+ *   plugin: d6_taxonomy_term
+ *   bundle: 0
+ * @endcode
+ *
+ * In this example terms of vocabulary with 'vid' equal to 0 are retrieved from
+ * the source database.
+ *
+ * @code
+ * source:
+ *   plugin: d6_taxonomy_term
+ *   bundle: [1, 3, 5]
+ * @endcode
+ *
+ * In this example terms of vocabularies with 'vid' one of 1, 3, 5 are retrieved
+ * from the source database.
+ *
+ * For additional configuration keys, refer to the parent classes:
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
  * @todo Support term_relation, term_synonym table if possible.
  *
  * @MigrateSource(

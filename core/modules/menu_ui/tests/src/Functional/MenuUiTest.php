@@ -84,6 +84,7 @@ class MenuUiTest extends BrowserTestBase {
     parent::setUp();
 
     $this->drupalPlaceBlock('page_title_block');
+    $this->drupalPlaceBlock('system_menu_block:main');
 
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
 
@@ -493,6 +494,28 @@ class MenuUiTest extends BrowserTestBase {
   }
 
   /**
+   * Test logout link isn't displayed when the user is logged out.
+   */
+  public function testLogoutLinkVisibility() {
+    $adminUserWithLinkAnyPage = $this->drupalCreateUser([
+      'access administration pages',
+      'administer blocks',
+      'administer menu',
+      'create article content',
+      'link to any page',
+    ]);
+    $this->drupalLogin($adminUserWithLinkAnyPage);
+    $this->addMenuLink('', '/user/logout', 'main');
+    $assert = $this->assertSession();
+    // Verify that any link with logout URL is displayed.
+    $assert->linkByHrefExists('user/logout');
+
+    // Verify that any link with logout URL is not displayed.
+    $this->drupalLogout();
+    $assert->linkByHrefNotExists('user/logout');
+  }
+
+  /**
    * Ensures that the proper default values are set when adding a menu link.
    */
   protected function doMenuLinkFormDefaultsTest() {
@@ -737,7 +760,7 @@ class MenuUiTest extends BrowserTestBase {
   /**
    * Changes the parent of a menu link using the UI.
    *
-   * @param \Drupal\menu_link_content\MenuLinkContentInterface $item
+   * @param \Drupal\menu_link_content\MenuLinkContent $item
    *   The menu link item to move.
    * @param int $parent
    *   The id of the new parent.

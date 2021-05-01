@@ -5,6 +5,7 @@ namespace Drupal\Tests\node\Functional;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\node\Entity\Node;
+use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
 /**
  * Create a node and test saving it.
@@ -12,6 +13,8 @@ use Drupal\node\Entity\Node;
  * @group node
  */
 class NodeCreationTest extends NodeTestBase {
+
+  use ContentTypeCreationTrait;
 
   /**
    * Modules to enable.
@@ -40,6 +43,18 @@ class NodeCreationTest extends NodeTestBase {
       'edit own page content',
     ]);
     $this->drupalLogin($web_user);
+  }
+
+  /**
+   * Tests the order of the node types on the add page.
+   */
+  public function testNodeAddPageOrder() {
+    $this->createContentType(['type' => 'bundle_1', 'name' => 'Bundle 1']);
+    $this->createContentType(['type' => 'bundle_2', 'name' => 'Aaa Bundle 2']);
+    $admin_content_types = $this->drupalCreateUser(['bypass node access']);
+    $this->drupalLogin($admin_content_types);
+    $this->drupalGet('node/add');
+    $this->assertSession()->pageTextMatches('/Aaa Bundle 2(.*)Bundle 1/');
   }
 
   /**
@@ -233,8 +248,8 @@ class NodeCreationTest extends NodeTestBase {
 
     $this->drupalGet('node/add/page');
 
-    $result = $this->xpath('//input[@id="edit-uid-0-value" and contains(@data-autocomplete-path, "user/autocomplete")]');
-    $this->assertCount(0, $result, 'No autocompletion without access user profiles.');
+    // Verify that no autocompletion exists without access user profiles.
+    $this->assertSession()->elementNotExists('xpath', '//input[@id="edit-uid-0-value" and contains(@data-autocomplete-path, "user/autocomplete")]');
 
     $admin_user = $this->drupalCreateUser([
       'administer nodes',
@@ -245,8 +260,8 @@ class NodeCreationTest extends NodeTestBase {
 
     $this->drupalGet('node/add/page');
 
-    $result = $this->xpath('//input[@id="edit-uid-0-target-id" and contains(@data-autocomplete-path, "/entity_reference_autocomplete/user/default")]');
-    $this->assertCount(1, $result, 'Ensure that the user does have access to the autocompletion');
+    // Ensure that the user does have access to the autocompletion.
+    $this->assertSession()->elementsCount('xpath', '//input[@id="edit-uid-0-target-id" and contains(@data-autocomplete-path, "/entity_reference_autocomplete/user/default")]', 1);
   }
 
   /**

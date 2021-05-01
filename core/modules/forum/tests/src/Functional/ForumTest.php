@@ -273,6 +273,7 @@ class ForumTest extends BrowserTestBase {
     // Must remove forum topics to test creating orphan topics.
     $vid = $this->config('forum.settings')->get('vocabulary');
     $tids = \Drupal::entityQuery('taxonomy_term')
+      ->accessCheck(FALSE)
       ->condition('vid', $vid)
       ->execute();
     $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
@@ -717,6 +718,23 @@ class ForumTest extends BrowserTestBase {
       $node = $this->createForumTopic($this->forum, FALSE);
       $this->nids[] = $node->id();
     }
+  }
+
+  /**
+   * Evaluate whether "Add new Forum topic" button is present or not.
+   */
+  public function testForumTopicButton() {
+    $this->drupalLogin($this->adminUser);
+
+    // Validate that link doesn't exist on the forum container page.
+    $forum_container = $this->createForum('container');
+    $this->drupalGet('forum/' . $forum_container['tid']);
+    $this->assertSession()->linkNotExists('Add new Forum topic');
+
+    // Validate that link exists on forum page.
+    $forum = $this->createForum('forum');
+    $this->drupalGet('forum/' . $forum['tid']);
+    $this->assertSession()->linkExists('Add new Forum topic');
   }
 
 }

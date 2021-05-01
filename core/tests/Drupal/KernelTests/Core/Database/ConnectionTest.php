@@ -181,11 +181,19 @@ class ConnectionTest extends DatabaseTestBase {
   }
 
   /**
-   * Ensure that you cannot execute multiple statements.
+   * Ensure that you cannot execute multiple statements in a query.
+   */
+  public function testMultipleStatementsQuery() {
+    $this->expectException(\InvalidArgumentException::class);
+    Database::getConnection('default', 'default')->query('SELECT * FROM {test}; SELECT * FROM {test_people}');
+  }
+
+  /**
+   * Ensure that you cannot prepare multiple statements.
    */
   public function testMultipleStatements() {
     $this->expectException(\InvalidArgumentException::class);
-    Database::getConnection('default', 'default')->query('SELECT * FROM {test}; SELECT * FROM {test_people}');
+    Database::getConnection('default', 'default')->prepareStatement('SELECT * FROM {test}; SELECT * FROM {test_people}', []);
   }
 
   /**

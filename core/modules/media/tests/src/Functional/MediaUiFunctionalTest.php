@@ -67,6 +67,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $media_id = $this->container->get('entity_type.manager')
       ->getStorage('media')
       ->getQuery()
+      ->accessCheck(FALSE)
       ->execute();
     $media_id = reset($media_id);
     /** @var \Drupal\media\MediaInterface $media */
@@ -139,7 +140,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $page->clickLink('Delete');
     $assert_session->pageTextContains('This action cannot be undone');
     $page->pressButton('Delete');
-    $media_id = \Drupal::entityQuery('media')->execute();
+    $media_id = \Drupal::entityQuery('media')->accessCheck(FALSE)->execute();
     $this->assertEmpty($media_id);
   }
 
@@ -247,6 +248,8 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
    *   one that allows the user to create media and a second that does not.
    * @param bool $list_access
    *   Whether to grant the test user access to list media.
+   * @param string $widget_id
+   *   The widget ID to test.
    *
    * @see media_field_widget_entity_reference_autocomplete_form_alter()
    * @see media_field_widget_multiple_entity_reference_autocomplete_form_alter()
@@ -444,6 +447,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $media_id = $this->container->get('entity_type.manager')
       ->getStorage('media')
       ->getQuery()
+      ->accessCheck(FALSE)
       ->execute();
     $media_id = reset($media_id);
     $assert_session->addressEquals("media/$media_id/edit");

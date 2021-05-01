@@ -7,140 +7,118 @@
 
 /**
  * @file
- * Nav Secondary.
+ * Secondary navigation styling.
  */
-
-.secondary-nav__wrapper {
-  display: flex;
-  margin-top: 2.25rem;
-  margin-bottom: 2.25rem;
-}
 
 .secondary-nav {
   letter-spacing: 0.02em;
   font-size: 0.875rem;
-  font-weight: 600
+  font-weight: 600;
 }
 
-[dir="ltr"] .secondary-nav ul.menu {
-    margin-left: 0;
+[dir="ltr"] .secondary-nav__menu {
+  margin-left: 0;
 }
 
-[dir="rtl"] .secondary-nav ul.menu {
-    margin-right: 0;
+[dir="rtl"] .secondary-nav__menu {
+  margin-right: 0;
 }
 
-[dir="ltr"] .secondary-nav ul.menu {
-    margin-right: 0;
+[dir="ltr"] .secondary-nav__menu {
+  margin-right: 0;
 }
 
-[dir="rtl"] .secondary-nav ul.menu {
-    margin-left: 0;
+[dir="rtl"] .secondary-nav__menu {
+  margin-left: 0;
 }
 
-[dir="ltr"] .secondary-nav ul.menu {
-    padding-left: 0;
+[dir="ltr"] .secondary-nav__menu {
+  padding-left: 0;
 }
 
-[dir="rtl"] .secondary-nav ul.menu {
-    padding-right: 0;
+[dir="rtl"] .secondary-nav__menu {
+  padding-right: 0;
 }
 
-[dir="ltr"] .secondary-nav ul.menu {
-    padding-right: 0;
+[dir="ltr"] .secondary-nav__menu {
+  padding-right: 0;
 }
 
-[dir="rtl"] .secondary-nav ul.menu {
-    padding-left: 0;
+[dir="rtl"] .secondary-nav__menu {
+  padding-left: 0;
 }
 
-.secondary-nav ul.menu {
-    display: flex;
-    align-items: center;
-    margin-top: 0;
-    margin-bottom: 0;
-    padding-top: 0;
-    padding-bottom: 0;
-    list-style: none
+.secondary-nav__menu {
+  display: flex;
+  align-items: center;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  list-style: none;
+}
+
+.secondary-nav__menu-item {
+  /* Parent element is set to flex-basis: 0. We
+   * don't want text to wrap unless it goes over a
+   * certain arbitrary width.
+   */
+
+  /* @todo should this be scoped to desktop nav? */
+  width: -webkit-max-content;
+  width: max-content;
+  max-width: 12.5rem
+}
+
+[dir="ltr"] .secondary-nav__menu-item:not(:last-child) {
+    margin-right: 1.6875rem;
+}
+
+[dir="rtl"] .secondary-nav__menu-item:not(:last-child) {
+    margin-left: 1.6875rem;
+}
+
+.secondary-nav__menu-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  height: 2.25rem;
+  text-decoration: none;
+  color: inherit
+}
+
+.secondary-nav__menu-link:after {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
+    content: "";
+    transition: opacity 0.2s, transform 0.2s;
+    transform: translateY(0.3125rem);
+    opacity: 0;
+    /* Intentionally not using CSS logical properties. */
+    border-top: solid 2px currentColor;
   }
 
-.secondary-nav ul.menu li {
-      /* Parent element is set to flex-basis: 0. We
-       * don't want text to wrap unless it goes over a
-       * certain arbitrary width.
-      */
-
-      /* @todo should this be scoped to desktop nav? */
-      width: -webkit-max-content;
-      width: max-content;
-      max-width: 12.5rem
+.secondary-nav__menu-link:hover:after {
+      transform: translateY(0);
+      opacity: 0.8;
     }
-
-[dir="ltr"] .secondary-nav ul.menu li:not(:last-child) {
-        margin-right: 1.6875rem;
-}
-
-[dir="rtl"] .secondary-nav ul.menu li:not(:last-child) {
-        margin-left: 1.6875rem;
-}
-
-.secondary-nav ul.menu a:not(.button--primary) {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      height: 2.25rem;
-      text-decoration: none;
-      color: inherit
-    }
-
-.secondary-nav ul.menu a:not(.button--primary):after {
-        position: absolute;
-        /* stylelint-disable csstools/use-logical */
-        bottom: 0;
-        left: 0;
-        /* stylelint-enable csstools/use-logical */
-        width: 100%;
-        height: 0;
-        content: "";
-        transition: opacity 0.2s, transform 0.2s;
-        transform: translateY(0.3125rem);
-        opacity: 0;
-        /* Intentionally not using CSS logical properties. */
-        border-top: solid 2px currentColor;
-      }
-
-.secondary-nav ul.menu a:not(.button--primary):focus:after, .secondary-nav ul.menu a:not(.button--primary):hover:after {
-          transform: translateY(0);
-          opacity: 0.8;
-        }
 
 @media (min-width: 75rem) {
-    body:not(.is-always-mobile-nav) .secondary-nav__wrapper {
-      justify-content: flex-end;
-      margin: 0
-
-      /* If the secondary nav is the first item within the header, it does not need left separator. */
-    }
-      body:not(.is-always-mobile-nav) .secondary-nav__wrapper:first-child .secondary-nav:before {
-        content: none;
-      }
-
     [dir="ltr"] body:not(.is-always-mobile-nav) .secondary-nav {
       margin-left: 1.125rem;
   }
-
     [dir="rtl"] body:not(.is-always-mobile-nav) .secondary-nav {
       margin-right: 1.125rem;
   }
-
     [dir="ltr"] body:not(.is-always-mobile-nav) .secondary-nav {
       padding-left: 2.25rem;
   }
-
     [dir="rtl"] body:not(.is-always-mobile-nav) .secondary-nav {
       padding-right: 2.25rem;
   }
-
     body:not(.is-always-mobile-nav) .secondary-nav {
       position: relative;
       display: flex
@@ -164,11 +142,27 @@
         background-color: #d7e1e8;
       }
 
-      [dir="ltr"] body:not(.is-always-mobile-nav) .secondary-nav ul.menu li:not(:last-child) {
-        margin-right: 2.25rem;
+    [dir="ltr"] body:not(.is-always-mobile-nav) .secondary-nav__menu-item:not(:last-child) {
+      margin-right: 2.25rem;
   }
 
-      [dir="rtl"] body:not(.is-always-mobile-nav) .secondary-nav ul.menu li:not(:last-child) {
-        margin-left: 2.25rem;
+    [dir="rtl"] body:not(.is-always-mobile-nav) .secondary-nav__menu-item:not(:last-child) {
+      margin-left: 2.25rem;
   }
+      body:not(.is-always-mobile-nav) .secondary-nav__menu-link:focus {
+        position: relative;
+        outline: 0
+      }
+
+        body:not(.is-always-mobile-nav) .secondary-nav__menu-link:focus:before {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: calc(100% + 1.125rem);
+          height: 3.375rem;
+          content: "";
+          transform: translate(-50%, -50%);
+          border: solid 2px #2494db;
+          border-radius: 0.25rem;
+        }
   }

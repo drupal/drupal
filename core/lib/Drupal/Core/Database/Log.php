@@ -22,8 +22,8 @@ class Log {
    *
    * array(
    *   $logging_key = array(
-   *     array('query' => '', 'args' => array(), 'caller' => '', 'target' => '', 'time' => 0),
-   *     array('query' => '', 'args' => array(), 'caller' => '', 'target' => '', 'time' => 0),
+   *     array('query' => '', 'args' => array(), 'caller' => '', 'target' => '', 'time' => 0, 'start' => 0),
+   *     array('query' => '', 'args' => array(), 'caller' => '', 'target' => '', 'time' => 0, 'start' => 0),
    *   ),
    * );
    *
@@ -103,14 +103,18 @@ class Log {
   /**
    * Log a query to all active logging keys.
    *
-   * @param $statement
+   * @param \Drupal\Core\Database\StatementInterface $statement
    *   The prepared statement object to log.
-   * @param $args
+   * @param array $args
    *   The arguments passed to the statement object.
-   * @param $time
-   *   The time in milliseconds the query took to execute.
+   * @param float $time
+   *   The time the query took to execute as a float (in seconds with
+   *   microsecond precision).
+   * @param float $start
+   *   The time the query started as a float (in seconds since the Unix epoch
+   *   with microsecond precision).
    */
-  public function log(StatementInterface $statement, $args, $time) {
+  public function log(StatementInterface $statement, $args, $time, float $start = NULL) {
     foreach (array_keys($this->queryLog) as $key) {
       $this->queryLog[$key][] = [
         'query' => $statement->getQueryString(),
@@ -118,6 +122,7 @@ class Log {
         'target' => $statement->dbh->getTarget(),
         'caller' => $this->findCaller(),
         'time' => $time,
+        'start' => $start,
       ];
     }
   }

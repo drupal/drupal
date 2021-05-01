@@ -265,6 +265,9 @@ class PlaceholdersTest implements TrustedCallbackInterface {
    *
    * @param string $animal
    *   An animal.
+   * @param bool $use_animal_as_array_key
+   *   TRUE if the $animal parameter should be used as an array key, FALSE
+   *   if it should be used as a plain string.
    *
    * @return array
    *   A renderable array.

@@ -97,18 +97,18 @@ class ExposedFormCheckboxesTest extends ViewTestBase {
     $view->save();
     $this->drupalGet('test_exposed_form_checkboxes');
 
-    $actual = $this->xpath('//form//input[@type="checkbox" and @name="type[article]"]');
-    $this->assertCount(1, $actual, 'Article option renders as a checkbox.');
-    $actual = $this->xpath('//form//input[@type="checkbox" and @name="type[page]"]');
-    $this->assertCount(1, $actual, 'Page option renders as a checkbox');
+    $this->assertSame('checkbox', $this->assertSession()->fieldExists('type[article]')->getAttribute('type'));
+    $this->assertSame('checkbox', $this->assertSession()->fieldExists('type[page]')->getAttribute('type'));
 
     // Ensure that all results are displayed.
-    $rows = $this->xpath("//div[contains(@class, 'views-row')]");
-    $this->assertCount(5, $rows, '5 rows are displayed by default on the first page when no options are checked.');
+    // 5 rows are displayed by default on the first page when no options are
+    // checked.
+    $this->assertSession()->elementsCount('xpath', "//div[contains(@class, 'views-row')]", 5);
 
+    // 1 row is displayed by default on the second page when no options are
+    // checked.
     $this->clickLink('Page 2');
-    $rows = $this->xpath("//div[contains(@class, 'views-row')]");
-    $this->assertCount(1, $rows, '1 row is displayed by default on the second page when no options are checked.');
+    $this->assertSession()->elementsCount('xpath', "//div[contains(@class, 'views-row')]", 1);
     $this->assertNoText('An illegal choice has been detected. Please contact the site administrator.');
   }
 
@@ -155,17 +155,16 @@ class ExposedFormCheckboxesTest extends ViewTestBase {
     $this->drupalGet('test_exposed_form_checkboxes');
 
     // Ensure that all results are displayed.
-    $rows = $this->xpath("//div[contains(@class, 'views-row')]");
-    $this->assertCount(8, $rows, 'All rows are displayed by default on the first page when no options are checked.');
+    // All rows are displayed by default on the first page when no options are
+    // checked.
+    $this->assertSession()->elementsCount('xpath', "//div[contains(@class, 'views-row')]", 8);
     $this->assertNoText('An illegal choice has been detected. Please contact the site administrator.');
 
     // Select one option and ensure we still have results.
     $tid = $this->terms[0]->id();
     $this->submitForm(["tid[$tid]" => $tid], 'Apply');
-
     // Ensure only nodes tagged with $tid are displayed.
-    $rows = $this->xpath("//div[contains(@class, 'views-row')]");
-    $this->assertCount(2, $rows, 'Correct rows are displayed when a tid is selected.');
+    $this->assertSession()->elementsCount('xpath', "//div[contains(@class, 'views-row')]", 2);
     $this->assertNoText('An illegal choice has been detected. Please contact the site administrator.');
   }
 

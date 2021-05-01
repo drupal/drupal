@@ -58,11 +58,9 @@ tr .form-item,
  */
 
 .form-item__label {
-  display: table;
+  display: block;
   margin-top: 0.5625rem;
   margin-bottom: 0.5625rem;
-  font-size: 1.125rem;
-  font-weight: 700;
 }
 
 [dir="ltr"] .container-inline .form-item__label {

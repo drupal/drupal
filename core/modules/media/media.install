@@ -135,7 +135,7 @@ function media_requirements($phase) {
         ->getViewDisplay('media', $type->id());
 
       $source_field_definition = $type->getSource()->getSourceFieldDefinition($type);
-      if (!is_a($source_field_definition->getItemDefinition()->getClass(), ImageItem::class, TRUE)) {
+      if (empty($source_field_definition) || !is_a($source_field_definition->getItemDefinition()->getClass(), ImageItem::class, TRUE)) {
         continue;
       }
 

@@ -133,6 +133,7 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
     $body = preg_replace('|---.*---|sU', '', $body);
     $body = preg_replace('|\{\{.*\}\}|sU', '', $body);
     $body = preg_replace('|\{\% set.*\%\}|sU', '', $body);
+    $body = preg_replace('|\{\% endset \%\}|sU', '', $body);
     $body = trim($body);
     $this->assertNotEmpty($body, 'Topic ' . $id . ' Twig file contains some text outside of front matter');
 

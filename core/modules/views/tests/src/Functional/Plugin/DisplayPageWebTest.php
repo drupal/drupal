@@ -150,6 +150,7 @@ class DisplayPageWebTest extends ViewTestBase {
     $this->drupalLogin($this->rootUser);
     $this->assertPagePath('0');
     $this->assertPagePath('9999');
+    $this->assertPagePath('☺');
   }
 
   /**

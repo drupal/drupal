@@ -58,11 +58,6 @@ class HtmlToTextTest extends BrowserTestBase {
     $message .= ' (' . $tested_tags . ')';
     $result = MailFormatHelper::htmlToText($html, $allowed_tags);
     $this->assertEquals($text, $result, Html::escape($message));
-    $verbose = 'html = <pre>' . $this->stringToHtml($html)
-      . '</pre><br />result = <pre>' . $this->stringToHtml($result)
-      . '</pre><br />expected = <pre>' . $this->stringToHtml($text)
-      . '</pre>';
-    $this->verbose($verbose);
   }
 
   /**
@@ -90,10 +85,10 @@ class HtmlToTextTest extends BrowserTestBase {
       // @todo The <div> tag is currently not supported.
       '<div>Drupal</div><div>Drupal</div>' => "DrupalDrupal\n",
       '<em>Drupal</em>' => "/Drupal/\n",
-      '<h1>Drupal</h1>' => "======== DRUPAL ==============================================================\n\n",
-      '<h1>Drupal</h1><p>Drupal</p>' => "======== DRUPAL ==============================================================\n\nDrupal\n\n",
-      '<h2>Drupal</h2>' => "-------- DRUPAL --------------------------------------------------------------\n\n",
-      '<h2>Drupal</h2><p>Drupal</p>' => "-------- DRUPAL --------------------------------------------------------------\n\nDrupal\n\n",
+      '<h1>Drupal</h1>' => "======== Drupal ==============================================================\n\n",
+      '<h1>Drupal</h1><p>Drupal</p>' => "======== Drupal ==============================================================\n\nDrupal\n\n",
+      '<h2>Drupal</h2>' => "-------- Drupal --------------------------------------------------------------\n\n",
+      '<h2>Drupal</h2><p>Drupal</p>' => "-------- Drupal --------------------------------------------------------------\n\nDrupal\n\n",
       '<h3>Drupal</h3>' => ".... Drupal\n\n",
       '<h3>Drupal</h3><p>Drupal</p>' => ".... Drupal\n\nDrupal\n\n",
       '<h4>Drupal</h4>' => ".. Drupal\n\n",
@@ -239,25 +234,11 @@ class HtmlToTextTest extends BrowserTestBase {
 EOT;
     $input = str_replace(["\r", "\n"], '', $input);
     $output = MailFormatHelper::htmlToText($input);
-    $pass = $this->assertNotRegExp('/\][^\n]*\[/s', $output, 'Block-level HTML tags should force newlines');
-    if (!$pass) {
-      $this->verbose($this->stringToHtml($output));
-    }
+    $this->assertNotRegExp('/\][^\n]*\[/s', $output, 'Block-level HTML tags should force newlines');
     $output_upper = mb_strtoupper($output);
     $upper_input = mb_strtoupper($input);
     $upper_output = MailFormatHelper::htmlToText($upper_input);
-    $pass = $this->assertEquals(
-      $upper_output,
-      $output_upper,
-      'Tag recognition should be case-insensitive'
-    );
-    if (!$pass) {
-      $this->verbose(
-        $upper_output
-        . '<br />should  be equal to <br />'
-        . $output_upper
-      );
-    }
+    $this->assertEquals($output_upper, $upper_output, 'Tag recognition should be case-insensitive');
   }
 
   /**
@@ -266,21 +247,21 @@ EOT;
   public function testHeaderSeparation() {
     $html = 'Drupal<h1>Drupal</h1>Drupal';
     // @todo There should be more space above the header than below it.
-    $text = "Drupal\n======== DRUPAL ==============================================================\n\nDrupal\n";
+    $text = "Drupal\n======== Drupal ==============================================================\n\nDrupal\n";
     $this->assertHtmlToText($html, $text,
       'Text before and after <h1> tag');
     $html = '<p>Drupal</p><h1>Drupal</h1>Drupal';
     // @todo There should be more space above the header than below it.
-    $text = "Drupal\n\n======== DRUPAL ==============================================================\n\nDrupal\n";
+    $text = "Drupal\n\n======== Drupal ==============================================================\n\nDrupal\n";
     $this->assertHtmlToText($html, $text,
       'Paragraph before and text after <h1> tag');
     $html = 'Drupal<h1>Drupal</h1><p>Drupal</p>';
     // @todo There should be more space above the header than below it.
-    $text = "Drupal\n======== DRUPAL ==============================================================\n\nDrupal\n\n";
+    $text = "Drupal\n======== Drupal ==============================================================\n\nDrupal\n\n";
     $this->assertHtmlToText($html, $text,
       'Text before and paragraph after <h1> tag');
     $html = '<p>Drupal</p><h1>Drupal</h1><p>Drupal</p>';
-    $text = "Drupal\n\n======== DRUPAL ==============================================================\n\nDrupal\n\n";
+    $text = "Drupal\n\n======== Drupal ==============================================================\n\nDrupal\n\n";
     $this->assertHtmlToText($html, $text,
       'Paragraph before and after <h1> tag');
   }

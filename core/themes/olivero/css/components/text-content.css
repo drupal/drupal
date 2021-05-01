@@ -53,7 +53,6 @@
     color: #0d77b5;
     -webkit-text-decoration-color: #0d77b5;
     text-decoration-color: #0d77b5;
-    text-decoration-width: 2px;
     text-decoration-thickness: 2px;
     word-wrap: break-word
   }
@@ -66,10 +65,7 @@
       box-shadow: inset 0 -2px 0 0 #2494db
   }
 
-      .text-content a:hover,
-      .text-content a:focus,
-      .cke_editable a:hover,
-      .cke_editable a:focus {
+      .text-content a:hover, .cke_editable a:hover {
         text-decoration: underline;
         color: #000;
 
@@ -233,26 +229,22 @@
  * Special colors for footer that has a dark background.
  */
 
-.site-footer .text-content,
-  .site-footer .cke_editable {
-    color: inherit
+.site-footer .text-content {
+  color: inherit
+}
+
+.site-footer .text-content * {
+    color: inherit;
   }
 
-.site-footer .text-content *, .site-footer .cke_editable * {
-      color: inherit;
-    }
+.site-footer .text-content a {
+    text-decoration: underline;
+    color: #fff;
+    box-shadow: none
+  }
 
-.site-footer .text-content a, .site-footer .cke_editable a {
-      text-decoration: underline;
+.site-footer .text-content a:hover {
+      text-decoration: none;
       color: #fff;
-      box-shadow: none
+      box-shadow: none;
     }
-
-.site-footer .text-content a:hover,
-      .site-footer .text-content a:focus,
-      .site-footer .cke_editable a:hover,
-      .site-footer .cke_editable a:focus {
-        text-decoration: none;
-        color: #fff;
-        box-shadow: none;
-      }

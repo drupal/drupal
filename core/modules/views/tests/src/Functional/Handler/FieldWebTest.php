@@ -125,12 +125,9 @@ class FieldWebTest extends ViewTestBase {
    *   The message to display along with the assertion.
    * @param string $group
    *   The type of assertion - examples are "Browser", "PHP".
-   *
-   * @return bool
-   *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertSubString($haystack, $needle, $message = '', $group = 'Other') {
-    return $this->assertStringContainsString($needle, $haystack, $message);
+    $this->assertStringContainsString($needle, $haystack, $message);
   }
 
   /**
@@ -144,12 +141,9 @@ class FieldWebTest extends ViewTestBase {
    *   The message to display along with the assertion.
    * @param string $group
    *   The type of assertion - examples are "Browser", "PHP".
-   *
-   * @return bool
-   *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertNotSubString($haystack, $needle, $message = '', $group = 'Other') {
-    return $this->assertStringNotContainsString($needle, $haystack, $message);
+    $this->assertStringNotContainsString($needle, $haystack, $message);
   }
 
   /**

@@ -22,6 +22,7 @@
     });
 
     if (visibility === true) {
+      Drupal.olivero.closeAllSubNav();
       searchWideWrapper.classList.add('is-active');
     } else {
       searchWideWrapper.classList.remove('is-active');
@@ -29,6 +30,12 @@
   }
 
   Drupal.olivero.toggleSearchVisibility = toggleSearchVisibility;
+
+  document.addEventListener('keyup', (e) => {
+    if (e.key === 'Escape' || e.key === 'Esc') {
+      toggleSearchVisibility(false);
+    }
+  });
 
   document.addEventListener('click', (e) => {
     if (

@@ -34,7 +34,6 @@ class MigrateShortcutSetTest extends MigrateDrupal7TestBase {
     $this->installEntitySchema('menu_link_content');
     $this->executeMigration('d7_shortcut_set');
     $this->executeMigration('d7_menu');
-    $this->executeMigration('d7_menu_links');
     $this->executeMigration('d7_shortcut');
   }
 

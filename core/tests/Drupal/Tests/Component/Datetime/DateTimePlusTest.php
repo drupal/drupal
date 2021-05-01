@@ -115,7 +115,7 @@ class DateTimePlusTest extends TestCase {
   /**
    * Tests DateTimePlus::checkArray().
    *
-   * @param mixed $array
+   * @param array $array
    *   Input argument for DateTimePlus::checkArray().
    * @param bool $expected
    *   The expected result of DateTimePlus::checkArray().
@@ -187,8 +187,7 @@ class DateTimePlusTest extends TestCase {
    *
    * @param \Drupal\Component\Datetime\DateTimePlus $date
    *   DateTimePlus to test.
-   *
-   * @input mixed $input
+   * @param string $input
    *   The original input passed to the test method.
    * @param array $initial
    *   @see testTimestamp()
@@ -231,6 +230,7 @@ class DateTimePlusTest extends TestCase {
    *   Input argument for DateTimePlus.
    * @param string $timezone
    *   Timezone argument for DateTimePlus.
+   * @param string $format
    * @param string $format_date
    *   Format argument for DateTimePlus::format().
    * @param string $expected

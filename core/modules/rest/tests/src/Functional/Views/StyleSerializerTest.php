@@ -644,8 +644,8 @@ class StyleSerializerTest extends ViewTestBase {
     $this->drupalPostForm('admin/structure/views/view/test_serializer_display_field/edit/rest_export_1', $edit = [], 'Update preview');
     $this->assertSession()->statusCodeEquals(200);
     // Check if we receive the expected result.
-    $result = $this->xpath('//div[@id="views-live-preview"]/pre');
-    $json_preview = $result[0]->getText();
+    $result = $this->assertSession()->elementExists('xpath', '//div[@id="views-live-preview"]/pre');
+    $json_preview = $result->getText();
     $this->assertSame($json_preview, $this->drupalGet('test/serialize/field', ['query' => ['_format' => 'json']]), 'The expected JSON preview output was found.');
   }
 

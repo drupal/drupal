@@ -125,7 +125,6 @@ class DisplayPathTest extends UITestBase {
    * Tests the menu and tab option form.
    */
   public function testMenuOptions() {
-    $this->container->get('module_installer')->install(['menu_ui']);
     $this->drupalGet('admin/structure/views/view/test_view');
 
     // Add a new page display.
@@ -166,11 +165,7 @@ class DisplayPathTest extends UITestBase {
     // Ensure that you can select a parent in case the parent does not exist.
     $this->drupalGet('admin/structure/views/nojs/display/test_page_display_menu/page_5/menu');
     $this->assertSession()->statusCodeEquals(200);
-    $menu_parent = $this->xpath('//select[@id="edit-menu-parent"]');
-    $menu_options = (array) $menu_parent[0]->findAll('css', 'option');
-    unset($menu_options['@attributes']);
-
-    // Convert array to make the next assertion possible.
+    $menu_options = $this->assertSession()->selectExists('edit-menu-parent')->findAll('css', 'option');
     $menu_options = array_map(function ($element) {
       return $element->getText();
     }, $menu_options);
@@ -196,7 +191,8 @@ class DisplayPathTest extends UITestBase {
    * Tests the regression in https://www.drupal.org/node/2532490.
    */
   public function testDefaultMenuTabRegression() {
-    $this->container->get('module_installer')->install(['menu_ui', 'menu_link_content', 'toolbar', 'system']);
+    $this->container->get('module_installer')->install(['menu_link_content', 'toolbar', 'system']);
+    $this->resetAll();
     $admin_user = $this->drupalCreateUser([
       'administer views',
       'administer blocks',
@@ -218,6 +214,7 @@ class DisplayPathTest extends UITestBase {
     $this->drupalPostForm('admin/structure/menu/manage/admin/add', $edit, 'Save');
 
     $menu_items = \Drupal::entityTypeManager()->getStorage('menu_link_content')->getQuery()
+      ->accessCheck(FALSE)
       ->sort('id', 'DESC')
       ->pager(1)
       ->execute();
