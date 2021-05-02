@@ -153,8 +153,14 @@ function _update_fix_missing_schema() {
  *   Name of the module.
  * @param string $schema_version
  *   The schema version the module should be set to.
+ *
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. No direct
+ *   replacement is provided.
+ *
+ * @see https://www.drupal.org/node/3210925
  */
 function update_set_schema($module, $schema_version) {
+  @trigger_error('update_set_schema() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3210925', E_USER_DEPRECATED);
   \Drupal::keyValue('system.schema')->set($module, $schema_version);
   \Drupal::service('extension.list.profile')->reset();
   \Drupal::service('extension.list.module')->reset();

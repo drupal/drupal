@@ -47,6 +47,25 @@
 
   Drupal.olivero.toggleSubNav = toggleSubNav;
 
+  /**
+   * Sets a timeout and closes current desktop navigation submenu if it
+   * does not contain the focused element.
+   *
+   * @param {object} e - event object
+   */
+  function handleBlur(e) {
+    if (!Drupal.olivero.isDesktopNav()) return;
+
+    setTimeout(() => {
+      const menuParentItem = e.target.closest(
+        '.primary-nav__menu-item--has-children',
+      );
+      if (!menuParentItem.contains(document.activeElement)) {
+        toggleSubNav(menuParentItem, false);
+      }
+    }, 200);
+  }
+
   // Add event listeners onto each sub navigation parent and button.
   secondLevelNavMenus.forEach((el) => {
     const button = el.querySelector(
@@ -96,6 +115,8 @@
         toggleSubNav(el, false);
       }
     });
+
+    el.addEventListener('blur', handleBlur, true);
   });
 
   /**

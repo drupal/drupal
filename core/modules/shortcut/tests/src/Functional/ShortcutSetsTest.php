@@ -65,18 +65,15 @@ class ShortcutSetsTest extends ShortcutTestBase {
     $this->assertSession()->titleEquals('List links | Drupal');
 
     // Test for the table.
-    $element = $this->xpath('//div[@class="layout-content"]//table');
-    $this->assertNotEmpty($element, 'Shortcut entity list table found.');
+    $this->assertSession()->elementExists('xpath', '//div[@class="layout-content"]//table');
 
     // Test the table header.
-    $elements = $this->xpath('//div[@class="layout-content"]//table/thead/tr/th');
-    $this->assertCount(3, $elements, 'Correct number of table header cells found.');
+    $this->assertSession()->elementsCount('xpath', '//div[@class="layout-content"]//table/thead/tr/th', 3);
 
     // Test the contents of each th cell.
-    $expected_items = [t('Name'), t('Weight'), t('Operations')];
-    foreach ($elements as $key => $element) {
-      $this->assertEqual($expected_items[$key], $element->getText());
-    }
+    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/thead/tr/th[1]', 'Name');
+    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/thead/tr/th[2]', 'Weight');
+    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/thead/tr/th[3]', 'Operations');
 
     // Look for test shortcuts in the table.
     $weight = count($shortcuts);
