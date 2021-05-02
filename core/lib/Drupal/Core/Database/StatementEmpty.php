@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Database;
 
+@trigger_error('\Drupal\Core\Database\StatementEmpty is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no replacement. Use mocked StatementInterface classes in tests if needed. See https://www.drupal.org/node/3201283', E_USER_DEPRECATED);
+
 /**
  * Empty implementation of a database statement.
  *
@@ -12,6 +14,11 @@ namespace Drupal\Core\Database;
  * result set that happens to contain no records.
  *
  * @see \Drupal\search\SearchQuery
+ *
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no
+ *   replacement. Use mocked StatementInterface classes in tests if needed.
+ *
+ * @see https://www.drupal.org/node/1234567
  */
 class StatementEmpty implements \Iterator, StatementInterface {
 
@@ -44,6 +51,13 @@ class StatementEmpty implements \Iterator, StatementInterface {
       @trigger_error("StatementEmpty::\$allowRowCount should not be written in drupal:9.2.0 and will error in drupal:10.0.0. Enable row counting by passing the appropriate argument to the constructor instead. See https://www.drupal.org/node/3186368", E_USER_DEPRECATED);
       $this->rowCountEnabled = $value;
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConnectionTarget(): string {
+    return 'default';
   }
 
   /**

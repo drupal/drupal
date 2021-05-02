@@ -214,6 +214,7 @@ class DisplayPathTest extends UITestBase {
     $this->drupalPostForm('admin/structure/menu/manage/admin/add', $edit, 'Save');
 
     $menu_items = \Drupal::entityTypeManager()->getStorage('menu_link_content')->getQuery()
+      ->accessCheck(FALSE)
       ->sort('id', 'DESC')
       ->pager(1)
       ->execute();

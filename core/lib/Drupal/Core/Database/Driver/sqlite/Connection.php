@@ -427,11 +427,14 @@ class Connection extends DatabaseConnection {
    * {@inheritdoc}
    */
   public function prepareStatement(string $query, array $options, bool $allow_row_count = FALSE): StatementInterface {
-    $query = $this->prefixTables($query);
-    if (!($options['allow_square_brackets'] ?? FALSE)) {
-      $query = $this->quoteIdentifiers($query);
+    try {
+      $query = $this->preprocessStatement($query, $options);
+      $statement = new Statement($this->connection, $this, $query, $options['pdo'] ?? [], $allow_row_count);
     }
-    return new Statement($this->connection, $this, $query, $options['pdo'] ?? [], $allow_row_count);
+    catch (\Exception $e) {
+      $this->exceptionHandler()->handleStatementException($e, $query, $options);
+    }
+    return $statement;
   }
 
   public function nextId($existing_id = 0) {
@@ -450,8 +453,7 @@ class Connection extends DatabaseConnection {
     catch (\Exception $e) {
       $this->exceptionHandler()->handleExecutionException($e, $stmt, $args, []);
     }
-    $affected = $stmt->rowCount();
-    if (!$affected) {
+    if ($stmt->rowCount() === 0) {
       $this->query('INSERT INTO {sequences} (value) VALUES (:existing_id + 1)', $args);
     }
     // The transaction gets committed when the transaction object gets destroyed

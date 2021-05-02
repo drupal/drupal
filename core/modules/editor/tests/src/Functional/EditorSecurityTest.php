@@ -283,8 +283,8 @@ class EditorSecurityTest extends BrowserTestBase {
       foreach ($case['users'] as $account) {
         $this->drupalLogin($account);
         $this->drupalGet('node/' . $case['node_id'] . '/edit');
-        $dom_node = $this->xpath('//textarea[@id="edit-body-0-value"]');
-        $this->assertSame($case['value'], $dom_node[0]->getText(), 'The value was correctly filtered for XSS attack vectors.');
+        // Verify that the value is correctly filtered for XSS attack vectors.
+        $this->assertSession()->fieldValueEquals('edit-body-0-value', $case['value']);
       }
     }
   }
@@ -396,9 +396,9 @@ class EditorSecurityTest extends BrowserTestBase {
       $this->drupalGet('node/' . $case['node_id'] . '/edit');
 
       // Verify data- attributes.
-      $dom_node = $this->xpath('//textarea[@id="edit-body-0-value"]');
-      $this->assertSame(self::$sampleContent, $dom_node[0]->getAttribute('data-editor-value-original'), 'The data-editor-value-original attribute is correctly set.');
-      $this->assertSame('false', (string) $dom_node[0]->getAttribute('data-editor-value-is-changed'), 'The data-editor-value-is-changed attribute is correctly set.');
+      $body = $this->assertSession()->fieldExists('edit-body-0-value');
+      $this->assertSame(self::$sampleContent, $body->getAttribute('data-editor-value-original'), 'The data-editor-value-original attribute is correctly set.');
+      $this->assertSame('false', (string) $body->getAttribute('data-editor-value-is-changed'), 'The data-editor-value-is-changed attribute is correctly set.');
 
       // Switch to every other text format/editor and verify the results.
       foreach ($case['switch_to'] as $format => $expected_filtered_value) {
@@ -432,8 +432,7 @@ class EditorSecurityTest extends BrowserTestBase {
     // First: the Standard text editor XSS filter.
     $this->drupalLogin($this->normalUser);
     $this->drupalGet('node/2/edit');
-    $dom_node = $this->xpath('//textarea[@id="edit-body-0-value"]');
-    $this->assertSame(self::$sampleContentSecured, $dom_node[0]->getText(), 'The value was filtered by the Standard text editor XSS filter.');
+    $this->assertSession()->fieldValueEquals('edit-body-0-value', self::$sampleContentSecured);
 
     // Enable editor_test.module's hook_editor_xss_filter_alter() implementation
     // to alter the text editor XSS filter class being used.
@@ -441,8 +440,7 @@ class EditorSecurityTest extends BrowserTestBase {
 
     // First: the Insecure text editor XSS filter.
     $this->drupalGet('node/2/edit');
-    $dom_node = $this->xpath('//textarea[@id="edit-body-0-value"]');
-    $this->assertSame(self::$sampleContent, $dom_node[0]->getText(), 'The value was filtered by the Insecure text editor XSS filter.');
+    $this->assertSession()->fieldValueEquals('edit-body-0-value', self::$sampleContent);
   }
 
 }

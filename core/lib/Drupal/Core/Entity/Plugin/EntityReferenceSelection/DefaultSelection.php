@@ -440,6 +440,7 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
     $entity_type = $this->entityTypeManager->getDefinition($target_type);
 
     $query = $this->entityTypeManager->getStorage($target_type)->getQuery();
+    $query->accessCheck(TRUE);
 
     // If 'target_bundles' is NULL, all bundles are referenceable, no further
     // conditions are needed.

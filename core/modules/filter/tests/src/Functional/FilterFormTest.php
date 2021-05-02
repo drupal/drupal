@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\filter\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\BrowserTestBase;
 
@@ -235,12 +234,8 @@ class FilterFormTest extends BrowserTestBase {
    *   TRUE if the assertion passed; FALSE otherwise.
    */
   protected function assertEnabledTextarea($id) {
-    $textarea = $this->xpath('//textarea[@id=:id and not(contains(@disabled, "disabled"))]', [
-      ':id' => $id,
-    ]);
-    $this->assertNotEmpty($textarea, new FormattableMarkup('Enabled field @id exists.', [
-      '@id' => $id,
-    ]));
+    $textarea = $this->assertSession()->fieldEnabled($id);
+    $this->assertSame('textarea', $textarea->getTagName());
   }
 
   /**
@@ -253,15 +248,9 @@ class FilterFormTest extends BrowserTestBase {
    *   TRUE if the assertion passed; FALSE otherwise.
    */
   protected function assertDisabledTextarea($id) {
-    $textarea = $this->xpath('//textarea[@id=:id and contains(@disabled, "disabled")]', [
-      ':id' => $id,
-    ]);
-    $this->assertNotEmpty($textarea, new FormattableMarkup('Disabled field @id exists.', [
-      '@id' => $id,
-    ]));
-    $textarea = reset($textarea);
-    $expected = 'This field has been disabled because you do not have sufficient permissions to edit it.';
-    $this->assertEqual($expected, $textarea->getText(), new FormattableMarkup('Disabled textarea @id hides text in an inaccessible text format.', ['@id' => $id]));
+    $textarea = $this->assertSession()->fieldDisabled($id);
+    $this->assertSame('textarea', $textarea->getTagName());
+    $this->assertSame('This field has been disabled because you do not have sufficient permissions to edit it.', $textarea->getText());
     // Make sure the text format select is not shown.
     $select_id = str_replace('value', 'format--2', $id);
     $this->assertNoSelect($select_id);

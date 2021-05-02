@@ -74,6 +74,8 @@ class MigrateSourceTest extends MigrateTestCase {
    * @param int $status
    *   (optional) The default status for the new rows to be imported. Defaults
    *   to MigrateIdMapInterface::STATUS_NEEDS_UPDATE.
+   * @param int $high_water_value
+   *   (optional) The high water mark to start from, if set.
    *
    * @return \Drupal\migrate\Plugin\MigrateSourceInterface
    *   A mocked source plugin.

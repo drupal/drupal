@@ -554,7 +554,10 @@ class EntityCrudHookTest extends EntityKernelTestBase {
     }
 
     // Check that the block does not exist in the database.
-    $ids = \Drupal::entityQuery('entity_test')->condition('name', 'fail_insert')->execute();
+    $ids = \Drupal::entityQuery('entity_test')
+      ->accessCheck(FALSE)
+      ->condition('name', 'fail_insert')
+      ->execute();
     $this->assertEmpty($ids);
   }
 

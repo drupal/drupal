@@ -57,7 +57,7 @@ class ThemeSettingsFormTest extends WebDriverTestBase {
 
     // Assert the new file is uploaded as temporary. This file should not be
     // saved as permanent if settings are not submitted.
-    $image_field = $this->xpath('//input[@name="custom_logo[fids]"]')[0];
+    $image_field = $this->assertSession()->hiddenFieldExists('custom_logo[fids]');
     $file = File::load($image_field->getValue());
     $this->assertFalse($file->isPermanent());
 
@@ -65,7 +65,7 @@ class ThemeSettingsFormTest extends WebDriverTestBase {
     \Drupal::entityTypeManager()->getStorage('file')->resetCache();
 
     // Assert the uploaded file is saved as permanent.
-    $image_field = $this->xpath('//input[@name="custom_logo[fids]"]')[0];
+    $image_field = $this->assertSession()->hiddenFieldExists('custom_logo[fids]');
     $file = File::load($image_field->getValue());
     $this->assertTrue($file->isPermanent());
   }

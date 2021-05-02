@@ -214,8 +214,11 @@ class EditorLoadingTest extends BrowserTestBase {
     $this->assertTrue($editor_js_present, 'Text Editor JavaScript is present.');
     $this->assertCount(1, $body, 'A body field exists.');
     $this->assertSession()->elementNotExists('css', 'select.js-filter-list');
-    $hidden_input = $this->xpath('//input[@type="hidden" and @value="plain_text" and @data-editor-for="edit-body-0-value"]');
-    $this->assertCount(1, $hidden_input, 'A single text format hidden input exists on the page and has a "data-editor-for" attribute with the correct value.');
+    // Verify that a single text format hidden input exists on the page and has
+    // a "data-editor-for" attribute with the correct value.
+    $hidden_input = $this->assertSession()->hiddenFieldExists('body[0][format]');
+    $this->assertSame('plain_text', $hidden_input->getValue());
+    $this->assertSame('edit-body-0-value', $hidden_input->getAttribute('data-editor-for'));
 
     // Create an "article" node that uses the full_html text format, then try
     // to let the untrusted user edit it.
@@ -237,8 +240,8 @@ class EditorLoadingTest extends BrowserTestBase {
     $this->assertSession()->fieldDisabled("edit-body-0-value");
     $this->assertSession()->fieldValueEquals("edit-body-0-value", 'This field has been disabled because you do not have sufficient permissions to edit it.');
     $this->assertSession()->elementNotExists('css', 'select.js-filter-list');
-    $hidden_input = $this->xpath('//input[@type="hidden" and contains(@class, "editor")]');
-    $this->assertCount(0, $hidden_input, 'A single text format hidden input does not exist on the page.');
+    // Verify that no single text format hidden input exists on the page.
+    $this->assertSession()->elementNotExists('xpath', '//input[@type="hidden" and contains(@class, "editor")]');
   }
 
   /**

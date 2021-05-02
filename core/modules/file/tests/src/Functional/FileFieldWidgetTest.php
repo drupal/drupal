@@ -105,8 +105,8 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $this->assertSession()->buttonNotExists('Remove');
     $this->assertSession()->buttonExists('Upload');
     // Test label has correct 'for' attribute.
-    $input = $this->xpath('//input[@name="files[' . $field_name . '_0]"]');
-    $label = $this->xpath('//label[@for="' . $input[0]->getAttribute('id') . '"]');
+    $input = $this->assertSession()->fieldExists("files[{$field_name}_0]");
+    $label = $this->xpath('//label[@for="' . $input->getAttribute('id') . '"]');
     $this->assertTrue(isset($label[0]), 'Label for upload found.');
 
     // Save the node and ensure it does not have the file.
@@ -186,13 +186,12 @@ class FileFieldWidgetTest extends FileFieldTestBase {
         // Ensure an "Upload" button for the current field is displayed with the
         // correct name.
         $upload_button_name = $current_field_name . '_' . $remaining . '_upload_button';
-        $buttons = $this->xpath('//input[@type="submit" and @value="Upload" and @name=:name]', [':name' => $upload_button_name]);
-        $this->assertCount(1, $buttons, 'The upload button is displayed with the correct name.');
+        $button = $this->assertSession()->buttonExists($upload_button_name);
+        $this->assertSame('Upload', $button->getValue());
 
         // Ensure only at most one button per field is displayed.
-        $buttons = $this->xpath('//input[@type="submit" and @value="Upload"]');
         $expected = $current_field_name == $field_name ? 1 : 2;
-        $this->assertCount($expected, $buttons, 'After removing a file, only one "Upload" button for each possible field is displayed.');
+        $this->assertSession()->elementsCount('xpath', '//input[@type="submit" and @value="Upload"]', $expected);
       }
     }
 

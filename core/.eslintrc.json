@@ -20,7 +20,9 @@
     "Modernizr": true,
     "Popper": true,
     "Sortable": true,
-    "CKEDITOR": true
+    "once": true,
+    "CKEDITOR": true,
+    "tabbable": true
   },
   "settings": {
     "react": {

@@ -162,6 +162,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     $figures = $this->figures;
     $this->queryResults = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->exists($greetings, 'tr')
       ->condition("$figures.color", 'red')
       ->sort('id')
@@ -172,6 +173,7 @@ class EntityQueryTest extends EntityKernelTestBase {
 
     $query = $this->storage
       ->getQuery('OR')
+      ->accessCheck(FALSE)
       ->exists($greetings, 'tr')
       ->condition("$figures.color", 'red')
       ->sort('id');
@@ -185,6 +187,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     // Test cloning of query conditions.
     $query = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition("$figures.color", 'red')
       ->sort('id');
     $cloned_query = clone $query;
@@ -197,7 +200,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->queryResults = $cloned_query->execute();
     $this->assertResult();
 
-    $query = $this->storage->getQuery();
+    $query = $this->storage->getQuery()->accessCheck(FALSE);
     $group = $query->orConditionGroup()
       ->exists($greetings, 'tr')
       ->condition("$figures.color", 'red');
@@ -212,6 +215,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     // No figure has both the colors blue and red at the same time.
     $this->queryResults = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition("$figures.color", 'blue')
       ->condition("$figures.color", 'red')
       ->sort('id')
@@ -219,7 +223,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->assertResult();
 
     // But an entity might have a red and a blue figure both.
-    $query = $this->storage->getQuery();
+    $query = $this->storage->getQuery()->accessCheck(FALSE);
     $group_blue = $query->andConditionGroup()->condition("$figures.color", 'blue');
     $group_red = $query->andConditionGroup()->condition("$figures.color", 'red');
     $this->queryResults = $query
@@ -231,7 +235,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->assertResult(3, 7, 11, 15);
 
     // Do the same test but with IN operator.
-    $query = $this->storage->getQuery();
+    $query = $this->storage->getQuery()->accessCheck(FALSE);
     $group_blue = $query->andConditionGroup()->condition("$figures.color", ['blue'], 'IN');
     $group_red = $query->andConditionGroup()->condition("$figures.color", ['red'], 'IN');
     $this->queryResults = $query
@@ -245,6 +249,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     // An entity might have either red or blue figure.
     $this->queryResults = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition("$figures.color", ['blue', 'red'], 'IN')
       ->sort('id')
       ->execute();
@@ -253,6 +258,7 @@ class EntityQueryTest extends EntityKernelTestBase {
 
     $this->queryResults = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->exists("$figures.color")
       ->notExists("$greetings.value")
       ->sort('id')
@@ -263,6 +269,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     // word but allows us to test revisions and string operations.
     $ids = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition("$greetings.value", 'merhaba')
       ->sort('id')
       ->execute();
@@ -278,6 +285,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     // Test querying all revisions with a condition on the revision ID field.
     $this->queryResults = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('revision_id', $first_entity->getRevisionId())
       ->allRevisions()
       ->execute();
@@ -286,12 +294,14 @@ class EntityQueryTest extends EntityKernelTestBase {
     // We changed the entity names, so the current revision should not match.
     $this->queryResults = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('name.value', $old_name)
       ->execute();
     $this->assertResult();
     // Only if all revisions are queried, we find the old revision.
     $this->queryResults = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('name.value', $old_name)
       ->allRevisions()
       ->sort('revision_id')
@@ -300,11 +310,13 @@ class EntityQueryTest extends EntityKernelTestBase {
     // When querying current revisions, this string is no longer found.
     $this->queryResults = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition("$greetings.value", 'merhaba')
       ->execute();
     $this->assertResult();
     $this->queryResults = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition("$greetings.value", 'merhaba')
       ->allRevisions()
       ->sort('revision_id')
@@ -313,6 +325,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->assertRevisionResult([4, 5, 6, 7, 12, 13, 14, 15], [4, 5, 6, 7, 12, 13, 14, 15]);
     $results = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition("$greetings.value", 'siema', 'CONTAINS')
       ->sort('id')
       ->execute();
@@ -322,6 +335,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->assertSame($assert, $results);
     $results = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition("$greetings.value", 'siema', 'STARTS_WITH')
       ->sort('revision_id')
       ->execute();
@@ -330,6 +344,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->assertSame(array_slice($assert, 4, 8, TRUE), $results);
     $results = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition("$greetings.value", 'a', 'ENDS_WITH')
       ->sort('revision_id')
       ->execute();
@@ -338,6 +353,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->assertSame(array_slice($assert, 4, 8, TRUE), $results);
     $results = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition("$greetings.value", 'a', 'ENDS_WITH')
       ->allRevisions()
       ->sort('id')
@@ -351,6 +367,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     // the correct results.
     $results = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->latestRevision()
       ->sort('id')
       ->sort('revision_id')
@@ -370,16 +387,19 @@ class EntityQueryTest extends EntityKernelTestBase {
     // Order up and down on a number.
     $this->queryResults = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->sort('id')
       ->execute();
     $this->assertResult(range(1, 15));
     $this->queryResults = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->sort('id', 'DESC')
       ->execute();
     $this->assertResult(range(15, 1));
     $query = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->sort("$figures.color")
       ->sort("$greetings.format")
       ->sort('id');
@@ -431,6 +451,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     \Drupal::getContainer()->get('request_stack')->push($request);
     $this->queryResults = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->sort("$figures.color")
       ->sort("$greetings.format")
       ->sort('id')
@@ -441,6 +462,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     // Now test the reversed order.
     $query = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->sort("$figures.color", 'DESC')
       ->sort("$greetings.format", 'DESC')
       ->sort('id', 'DESC');
@@ -471,6 +493,7 @@ class EntityQueryTest extends EntityKernelTestBase {
 
     $this->queryResults = array_values($this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->tableSort($header)
       ->execute());
     $this->assertBundleOrder('asc');
@@ -486,6 +509,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     ];
     $this->queryResults = array_values($this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->tableSort($header)
       ->execute());
     $this->assertBundleOrder('desc');
@@ -497,6 +521,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     \Drupal::getContainer()->get('request_stack')->push($request);
     $this->queryResults = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->tableSort($header)
       ->execute();
     $this->assertResult(range(15, 1));
@@ -534,6 +559,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     $count = $this->container->get('entity_type.manager')
       ->getStorage('entity_test')
       ->getQuery()
+      ->accessCheck(FALSE)
       ->exists("$field_name.color")
       ->count()
       ->execute();
@@ -546,7 +572,7 @@ class EntityQueryTest extends EntityKernelTestBase {
   public function testNestedConditionGroups() {
     // Query for all entities of the first bundle that have either a red
     // triangle as a figure or the Turkish greeting as a greeting.
-    $query = $this->storage->getQuery();
+    $query = $this->storage->getQuery()->accessCheck(FALSE);
 
     $first_and = $query->andConditionGroup()
       ->condition($this->figures . '.color', 'red')
@@ -574,7 +600,7 @@ class EntityQueryTest extends EntityKernelTestBase {
   public function testConditionCount() {
     // Query for all entities of the first bundle that
     // have red as a color AND are triangle shaped.
-    $query = $this->storage->getQuery();
+    $query = $this->storage->getQuery()->accessCheck(FALSE);
 
     // Add an AND condition group with 2 conditions in it.
     $and_condition_group = $query->andConditionGroup()
@@ -601,6 +627,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     // Test numeric delta value in field condition.
     $this->queryResults = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition("$figures.0.color", 'red')
       ->sort('id')
       ->execute();
@@ -609,6 +636,7 @@ class EntityQueryTest extends EntityKernelTestBase {
 
     $this->queryResults = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition("$figures.1.color", 'red')
       ->sort('id')
       ->execute();
@@ -616,7 +644,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->assertResult();
 
     // Test on two different deltas.
-    $query = $this->storage->getQuery();
+    $query = $this->storage->getQuery()->accessCheck(FALSE);
     $or = $query->andConditionGroup()
       ->condition("$figures.0.color", 'red')
       ->condition("$figures.1.color", 'blue');
@@ -629,6 +657,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     // Test the delta range condition.
     $this->queryResults = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition("$figures.%delta.color", ['blue', 'red'], 'IN')
       ->condition("$figures.%delta", [0, 1], 'IN')
       ->sort('id')
@@ -639,6 +668,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     // Test the delta range condition without conditions on the value.
     $this->queryResults = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition("$figures.%delta", 1)
       ->sort('id')
       ->execute();
@@ -649,12 +679,14 @@ class EntityQueryTest extends EntityKernelTestBase {
     // the first item is being targeted.
     $this->queryResults = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition("id.0.value", [1, 3, 5], 'IN')
       ->sort('id')
       ->execute();
     $this->assertResult(1, 3, 5);
     $this->queryResults = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition("id.1.value", [1, 3, 5], 'IN')
       ->sort('id')
       ->execute();
@@ -664,12 +696,14 @@ class EntityQueryTest extends EntityKernelTestBase {
     // only if just the field value is targeted.
     $this->queryResults = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition("id.%delta.value", [1, 3, 5], 'IN')
       ->sort('id')
       ->execute();
     $this->assertResult(1, 3, 5);
     $this->queryResults = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition("id.%delta.value", [1, 3, 5], 'IN')
       ->condition("id.%delta", 0, '=')
       ->sort('id')
@@ -677,6 +711,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->assertResult(1, 3, 5);
     $this->queryResults = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition("id.%delta.value", [1, 3, 5], 'IN')
       ->condition("id.%delta", 1, '=')
       ->sort('id')
@@ -733,7 +768,7 @@ class EntityQueryTest extends EntityKernelTestBase {
    * The tags and metadata should propagate to the SQL query object.
    */
   public function testMetaData() {
-    $query = $this->storage->getQuery();
+    $query = $this->storage->getQuery()->accessCheck(FALSE);
     $query
       ->addTag('efq_metadata_test')
       ->addMetaData('foo', 'bar')
@@ -809,18 +844,21 @@ class EntityQueryTest extends EntityKernelTestBase {
     // Check the case insensitive field, = operator.
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_ci', $fixtures[0]['lowercase'] . $fixtures[1]['lowercase'])
       ->execute();
     $this->assertCount(1, $result, 'Case insensitive, lowercase');
 
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_ci', $fixtures[0]['uppercase'] . $fixtures[1]['uppercase'])
       ->execute();
     $this->assertCount(1, $result, 'Case insensitive, uppercase');
 
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_ci', $fixtures[0]['uppercase'] . $fixtures[1]['lowercase'])
       ->execute();
     $this->assertCount(1, $result, 'Case insensitive, mixed.');
@@ -828,18 +866,21 @@ class EntityQueryTest extends EntityKernelTestBase {
     // Check the case sensitive field, = operator.
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_cs', $fixtures[0]['lowercase'] . $fixtures[1]['lowercase'])
       ->execute();
     $this->assertCount(0, $result, 'Case sensitive, lowercase.');
 
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_cs', $fixtures[0]['uppercase'] . $fixtures[1]['uppercase'])
       ->execute();
     $this->assertCount(0, $result, 'Case sensitive, uppercase.');
 
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_cs', $fixtures[0]['uppercase'] . $fixtures[1]['lowercase'])
       ->execute();
     $this->assertCount(1, $result, 'Case sensitive, exact match.');
@@ -847,17 +888,20 @@ class EntityQueryTest extends EntityKernelTestBase {
     // Check the case insensitive field, IN operator.
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_ci', [$fixtures[0]['lowercase'] . $fixtures[1]['lowercase']], 'IN')
       ->execute();
     $this->assertCount(1, $result, 'Case insensitive, lowercase');
 
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_ci', [$fixtures[0]['uppercase'] . $fixtures[1]['uppercase']], 'IN')->execute();
     $this->assertCount(1, $result, 'Case insensitive, uppercase');
 
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_ci', [$fixtures[0]['uppercase'] . $fixtures[1]['lowercase']], 'IN')
       ->execute();
     $this->assertCount(1, $result, 'Case insensitive, mixed');
@@ -865,18 +909,21 @@ class EntityQueryTest extends EntityKernelTestBase {
     // Check the case sensitive field, IN operator.
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_cs', [$fixtures[0]['lowercase'] . $fixtures[1]['lowercase']], 'IN')
       ->execute();
     $this->assertCount(0, $result, 'Case sensitive, lowercase');
 
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_cs', [$fixtures[0]['uppercase'] . $fixtures[1]['uppercase']], 'IN')
       ->execute();
     $this->assertCount(0, $result, 'Case sensitive, uppercase');
 
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_cs', [$fixtures[0]['uppercase'] . $fixtures[1]['lowercase']], 'IN')
       ->execute();
     $this->assertCount(1, $result, 'Case sensitive, mixed');
@@ -884,12 +931,14 @@ class EntityQueryTest extends EntityKernelTestBase {
     // Check the case insensitive field, STARTS_WITH operator.
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_ci', $fixtures[0]['lowercase'], 'STARTS_WITH')
       ->execute();
     $this->assertCount(1, $result, 'Case sensitive, lowercase.');
 
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_ci', $fixtures[0]['uppercase'], 'STARTS_WITH')
       ->execute();
     $this->assertCount(1, $result, 'Case sensitive, exact match.');
@@ -897,12 +946,14 @@ class EntityQueryTest extends EntityKernelTestBase {
     // Check the case sensitive field, STARTS_WITH operator.
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_cs', $fixtures[0]['lowercase'], 'STARTS_WITH')
       ->execute();
     $this->assertCount(0, $result, 'Case sensitive, lowercase.');
 
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_cs', $fixtures[0]['uppercase'], 'STARTS_WITH')
       ->execute();
     $this->assertCount(1, $result, 'Case sensitive, exact match.');
@@ -910,12 +961,14 @@ class EntityQueryTest extends EntityKernelTestBase {
     // Check the case insensitive field, ENDS_WITH operator.
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_ci', $fixtures[1]['lowercase'], 'ENDS_WITH')
       ->execute();
     $this->assertCount(1, $result, 'Case sensitive, lowercase.');
 
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_ci', $fixtures[1]['uppercase'], 'ENDS_WITH')
       ->execute();
     $this->assertCount(1, $result, 'Case sensitive, exact match.');
@@ -923,12 +976,14 @@ class EntityQueryTest extends EntityKernelTestBase {
     // Check the case sensitive field, ENDS_WITH operator.
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_cs', $fixtures[1]['lowercase'], 'ENDS_WITH')
       ->execute();
     $this->assertCount(1, $result, 'Case sensitive, lowercase.');
 
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_cs', $fixtures[1]['uppercase'], 'ENDS_WITH')
       ->execute();
     $this->assertCount(0, $result, 'Case sensitive, exact match.');
@@ -937,12 +992,14 @@ class EntityQueryTest extends EntityKernelTestBase {
     // characters of the uppercase and lowercase strings.
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_ci', mb_substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8), 'CONTAINS')
       ->execute();
     $this->assertCount(1, $result, 'Case sensitive, lowercase.');
 
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_ci', mb_strtolower(mb_substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8)), 'CONTAINS')
       ->execute();
     $this->assertCount(1, $result, 'Case sensitive, exact match.');
@@ -950,12 +1007,14 @@ class EntityQueryTest extends EntityKernelTestBase {
     // Check the case sensitive field, CONTAINS operator.
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_cs', mb_substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8), 'CONTAINS')
       ->execute();
     $this->assertCount(1, $result, 'Case sensitive, lowercase.');
 
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('field_cs', mb_strtolower(mb_substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8)), 'CONTAINS')
       ->execute();
     $this->assertCount(0, $result, 'Case sensitive, exact match.');
@@ -995,6 +1054,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     $ids = $this->container->get('entity_type.manager')
       ->getStorage('taxonomy_term')
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('description.value', 'description1')
       ->execute();
     $this->assertCount(1, $ids);
@@ -1003,6 +1063,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     $ids = $this->container->get('entity_type.manager')
       ->getStorage('taxonomy_term')
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('description.format', 'format1')
       ->execute();
     $this->assertCount(1, $ids);
@@ -1012,6 +1073,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     $ids = $this->container->get('entity_type.manager')
       ->getStorage('taxonomy_term')
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('description', 'description1')
       ->execute();
     $this->assertCount(1, $ids);
@@ -1025,6 +1087,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     // Ensure entity 14 is returned.
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('id', [14], 'IN')
       ->execute();
     $this->assertCount(1, $result);
@@ -1044,6 +1107,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     // Entity query should still return entity 14.
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('id', [14], 'IN')
       ->execute();
     $this->assertCount(1, $result);
@@ -1052,12 +1116,14 @@ class EntityQueryTest extends EntityKernelTestBase {
     // work as expected.
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('id', [14], 'IN')
       ->condition("$this->figures.color", $current_values[0]['color'])
       ->execute();
     $this->assertEqual([14 => '14'], $result);
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('id', [14], 'IN')
       ->condition("$this->figures.color", 'red')
       ->allRevisions()
@@ -1076,6 +1142,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     // A non-revisioned entity query should still return entity 14.
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('id', [14], 'IN')
       ->execute();
     $this->assertCount(1, $result);
@@ -1084,6 +1151,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     // Now check an entity query on the latest revision.
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('id', [14], 'IN')
       ->latestRevision()
       ->execute();
@@ -1094,6 +1162,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     // work as expected.
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('id', [14], 'IN')
       ->condition("$this->figures.color", $current_values[0]['color'])
       ->execute();
@@ -1102,6 +1171,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     // Now there are two revisions with same value for the figure color.
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('id', [14], 'IN')
       ->condition("$this->figures.color", 'red')
       ->allRevisions()
@@ -1111,6 +1181,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     // Check that querying for the latest revision returns the correct one.
     $result = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('id', [14], 'IN')
       ->condition("$this->figures.color", 'red')
       ->latestRevision()
@@ -1126,6 +1197,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->expectException(\Exception::class);
     $this->queryResults = $this->storage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('1 ; -- ', [0, 1], 'IN')
       ->sort('id')
       ->execute();
@@ -1158,6 +1230,7 @@ class EntityQueryTest extends EntityKernelTestBase {
 
     // Check that works when referring with "{$field_name}".
     $result = $storage->getQuery()
+      ->accessCheck(FALSE)
       ->condition('type', 'entity_test')
       ->condition('ref1', $ref1->id())
       ->condition('ref2', $ref2->id())
@@ -1167,6 +1240,7 @@ class EntityQueryTest extends EntityKernelTestBase {
 
     // Check that works when referring with "{$field_name}.target_id".
     $result = $storage->getQuery()
+      ->accessCheck(FALSE)
       ->condition('type', 'entity_test')
       ->condition('ref1.target_id', $ref1->id())
       ->condition('ref2.target_id', $ref2->id())
@@ -1176,6 +1250,7 @@ class EntityQueryTest extends EntityKernelTestBase {
 
     // Check that works when referring with "{$field_name}.entity.id".
     $result = $storage->getQuery()
+      ->accessCheck(FALSE)
       ->condition('type', 'entity_test')
       ->condition('ref1.entity.id', $ref1->id())
       ->condition('ref2.entity.id', $ref2->id())
@@ -1208,6 +1283,7 @@ class EntityQueryTest extends EntityKernelTestBase {
 
     // Query only the default revision.
     $result = $storage->getQuery()
+      ->accessCheck(FALSE)
       ->condition($revision_created_field_name, $revision_created_timestamp)
       ->execute();
     $this->assertCount(1, $result);
@@ -1215,6 +1291,7 @@ class EntityQueryTest extends EntityKernelTestBase {
 
     // Query all revisions.
     $result = $storage->getQuery()
+      ->accessCheck(FALSE)
       ->condition($revision_created_field_name, $revision_created_timestamp)
       ->allRevisions()
       ->execute();
@@ -1226,7 +1303,7 @@ class EntityQueryTest extends EntityKernelTestBase {
    * Tests __toString().
    */
   public function testToString() {
-    $query = $this->storage->getQuery();
+    $query = $this->storage->getQuery()->accessCheck(FALSE);
     $group_blue = $query->andConditionGroup()->condition("{$this->figures}.color", ['blue'], 'IN');
     $group_red = $query->andConditionGroup()->condition("{$this->figures}.color", ['red'], 'IN');
     $null_group = $query->andConditionGroup()->notExists("{$this->figures}.color");
@@ -1267,6 +1344,16 @@ class EntityQueryTest extends EntityKernelTestBase {
     $expected_string = strtr($expected_string, $quoted);
 
     $this->assertSame($expected_string, (string) $query);
+  }
+
+  /**
+   * Test the accessCheck method is called.
+   *
+   * @group legacy
+   */
+  public function testAccessCheckSpecified() {
+    $this->expectDeprecation('Relying on entity queries to check access by default is deprecated in drupal:9.2.0 and an error will be thrown from drupal:10.0.0. Call \Drupal\Core\Entity\Query\QueryInterface::accessCheck() with TRUE or FALSE to specify whether access should be checked. See https://www.drupal.org/node/3201242');
+    $this->storage->getQuery()->execute();
   }
 
 }

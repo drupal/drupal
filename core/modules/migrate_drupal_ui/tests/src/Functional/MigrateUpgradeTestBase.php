@@ -7,7 +7,6 @@ use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate_drupal\MigrationConfigurationTrait;
 use Drupal\user\Entity\User;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\Tests\migrate_drupal\Traits\CreateTestContentEntitiesTrait;
 
 /**
  * Provides a base class for testing migration upgrades in the UI.
@@ -15,7 +14,6 @@ use Drupal\Tests\migrate_drupal\Traits\CreateTestContentEntitiesTrait;
 abstract class MigrateUpgradeTestBase extends BrowserTestBase {
 
   use MigrationConfigurationTrait;
-  use CreateTestContentEntitiesTrait;
 
   /**
    * Use the Standard profile to test help implementations of many core modules.
@@ -39,6 +37,13 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
   protected $destinationSiteVersion;
 
   /**
+   * Input data for the credential form.
+   *
+   * @var array
+   */
+  protected $edits;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -51,6 +56,20 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
 
     // Log in as user 1. Migrations in the UI can only be performed as user 1.
     $this->drupalLogin($this->rootUser);
+  }
+
+  /**
+   * Navigates to the credential form and submits valid credentials.
+   */
+  public function submitCredentialForm() {
+    $this->drupalGet('/upgrade');
+    $this->submitForm([], 'Continue');
+
+    // Get valid credentials.
+    $this->edits = $this->translatePostValues($this->getCredentials());
+
+    // When the Credential form is submitted the migrate map tables are created.
+    $this->submitForm($this->edits, 'Review upgrade');
   }
 
   /**
@@ -234,7 +253,7 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
     // Assert the correct number of entities exists.
     $actual_entity_counts = [];
     foreach ($entity_definitions as $entity_type) {
-      $actual_entity_counts[$entity_type] = (int) \Drupal::entityQuery($entity_type)->count()->execute();
+      $actual_entity_counts[$entity_type] = (int) \Drupal::entityQuery($entity_type)->accessCheck(FALSE)->count()->execute();
     }
     $this->assertSame($entity_counts, $actual_entity_counts);
 

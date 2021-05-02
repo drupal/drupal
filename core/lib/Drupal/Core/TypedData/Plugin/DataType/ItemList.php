@@ -48,6 +48,9 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
    *
    * @param array|null $values
    *   An array of values of the field items, or NULL to unset the field.
+   * @param bool $notify
+   *   (optional) Whether to notify the parent object of the change. Defaults to
+   *   TRUE.
    */
   public function setValue($values, $notify = TRUE) {
     if (!isset($values) || $values === []) {

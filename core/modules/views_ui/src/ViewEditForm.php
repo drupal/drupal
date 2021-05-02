@@ -391,7 +391,9 @@ class ViewEditForm extends ViewFormBase {
   /**
    * Helper function to get the display details section of the edit UI.
    *
-   * @param $display
+   * @param \Drupal\views_ui\ViewUI $view
+   *   The ViewUI entity.
+   * @param array $display
    *
    * @return array
    *   A renderable page build array.

@@ -86,6 +86,9 @@ class ContentLanguageSettings extends ConfigEntityBase implements ContentLanguag
    *   - target_bundle: The bundle.
    *   Other array elements will be used to set the corresponding properties on
    *   the class; see the class property documentation for details.
+   * @param string $entity_type
+   *   (optional) The entity type ID that is being created. Defaults to
+   *   "language_content_settings".
    */
   public function __construct(array $values, $entity_type = 'language_content_settings') {
     if (empty($values['target_entity_type_id'])) {

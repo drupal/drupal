@@ -149,9 +149,11 @@ class StorageTest extends BrowserTestBase {
   public function testImmutableForm() {
     // Request the form with 'cache' query parameter to enable form caching.
     $this->drupalGet('form_test/form-storage', ['query' => ['cache' => 1, 'immutable' => 1]]);
-    $buildIdFields = $this->xpath('//input[@name="form_build_id"]');
-    $this->assertCount(1, $buildIdFields, 'One form build id field on the page');
-    $buildId = $buildIdFields[0]->getValue();
+
+    // Ensure the hidden 'form_build_id' field is unique.
+    $this->assertSession()->elementsCount('xpath', '//input[@name="form_build_id"]', 1);
+
+    $buildId = $this->assertSession()->hiddenFieldExists('form_build_id')->getValue();
 
     // Trigger validation error by submitting an empty title.
     $edit = ['title' => ''];
@@ -160,10 +162,11 @@ class StorageTest extends BrowserTestBase {
     // Verify that the build-id did change.
     $this->assertSession()->hiddenFieldValueNotEquals('form_build_id', $buildId);
 
+    // Ensure the hidden 'form_build_id' field is unique.
+    $this->assertSession()->elementsCount('xpath', '//input[@name="form_build_id"]', 1);
+
     // Retrieve the new build-id.
-    $buildIdFields = $this->xpath('//input[@name="form_build_id"]');
-    $this->assertCount(1, $buildIdFields, 'One form build id field on the page');
-    $buildId = (string) $buildIdFields[0]->getValue();
+    $buildId = (string) $this->assertSession()->hiddenFieldExists('form_build_id')->getValue();
 
     // Trigger validation error by again submitting an empty title.
     $edit = ['title' => ''];
@@ -178,9 +181,9 @@ class StorageTest extends BrowserTestBase {
    */
   public function testImmutableFormLegacyProtection() {
     $this->drupalGet('form_test/form-storage', ['query' => ['cache' => 1, 'immutable' => 1]]);
-    $build_id_fields = $this->xpath('//input[@name="form_build_id"]');
-    $this->assertCount(1, $build_id_fields, 'One form build id field on the page');
-    $build_id = $build_id_fields[0]->getValue();
+    // Ensure the hidden 'form_build_id' field is unique.
+    $this->assertSession()->elementsCount('xpath', '//input[@name="form_build_id"]', 1);
+    $build_id = $this->assertSession()->hiddenFieldExists('form_build_id')->getValue();
 
     // Try to poison the form cache.
     $response = $this->drupalGet('form-test/form-storage-legacy/' . $build_id, ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']], ['X-Requested-With: XMLHttpRequest']);
