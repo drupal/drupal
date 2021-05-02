@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Tests the Permissions-Policy header event subscriber.
  *
- * @group ContentNegotiation
+ * @group Http
  */
 class InterestCohortBlockerSubscriberTest extends KernelTestBase {
 
