@@ -43,26 +43,4 @@ class EmptyStatementTest extends UnitTestCase {
     $this->assertEquals($result->fetchAll(), [], 'Empty array returned from empty result set.');
   }
 
-  /**
-   * Tests accessing deprecated properties.
-   *
-   * @group legacy
-   */
-  public function testGetDeprecatedProperties(): void {
-    $statement = new StatementEmpty();
-    $this->expectDeprecation('%s$allowRowCount should not be accessed in drupal:9.2.0 and will error in drupal:10.0.0.%s');
-    $this->assertFalse($statement->allowRowCount);
-  }
-
-  /**
-   * Tests writing deprecated properties.
-   *
-   * @group legacy
-   */
-  public function testSetDeprecatedProperties(): void {
-    $statement = new StatementEmpty();
-    $this->expectDeprecation('%s$allowRowCount should not be written in drupal:9.2.0 and will error in drupal:10.0.0.%s');
-    $statement->allowRowCount = TRUE;
-  }
-
 }
