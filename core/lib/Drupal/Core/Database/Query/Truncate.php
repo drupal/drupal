@@ -49,7 +49,13 @@ class Truncate extends Query {
    * Executes the TRUNCATE query.
    *
    * @return
-   *   Return value is dependent on the database type.
+   *   Return value is dependent on whether the executed SQL statement is a
+   *   TRUNCATE or a DELETE. TRUNCATE is DDL and no information on affected
+   *   rows is available. DELETE is DML and will return the number of affected
+   *   rows. In general, do not rely on the value returned by this method in
+   *   calling code.
+   *
+   * @see https://learnsql.com/blog/difference-between-truncate-delete-and-drop-table-in-sql
    */
   public function execute() {
     $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions, TRUE);
