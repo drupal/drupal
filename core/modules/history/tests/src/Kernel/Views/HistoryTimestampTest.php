@@ -94,8 +94,8 @@ class HistoryTimestampTest extends ViewsKernelTestBase {
     $this->assertCount(2, $view->result);
     $output = $view->preview();
     $this->setRawContent(\Drupal::service('renderer')->renderRoot($output));
-    $result = $this->xpath('//span[@class=:class]', [':class' => 'marker']);
-    $this->assertCount(1, $result, 'Just one node is marked as new');
+    // Verify that just one node is marked as new.
+    $this->assertSession()->elementsCount('xpath', "//span[@class='marker']", 1);
 
     // Test the history filter.
     $view = Views::getView('test_history');
