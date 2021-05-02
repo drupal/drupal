@@ -23,7 +23,7 @@ class InterestCohortBlockerSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    if (!Settings::get('interest_cohort_blocker_subscriber', TRUE)) {
+    if (!Settings::get('block_interest_cohort', TRUE)) {
       return;
     }
 

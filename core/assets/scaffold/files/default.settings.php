@@ -610,7 +610,7 @@ $settings['update_free_access'] = FALSE;
 # ini_set('pcre.recursion_limit', 200000);
 
 /**
- * Add Permissions-Policy header to disable Google FLoC:
+ * Add Permissions-Policy header to disable Google FLoC.
  *
  * By default, Drupal sends the 'Permissions-Policy: interest-cohort=()' header
  * to disable Google's Federated Learning of Cohorts feature, introduced in
@@ -621,7 +621,7 @@ $settings['update_free_access'] = FALSE;
  * If you don't wish to disable FLoC in Chrome, you can set this value
  * to FALSE.
  */
-#$settings['interest_cohort_blocker_subscriber'] = TRUE;
+# $settings['block_interest_cohort'] = TRUE;
 
 /**
  * Configuration overrides.
