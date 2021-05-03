@@ -39,4 +39,5 @@ class TipContainerFactory extends ContainerFactory {
     // Otherwise, create the plugin directly.
     return new $plugin_class($configuration, $plugin_id, $plugin_definition);
   }
+
 }
