@@ -1,0 +1,4 @@
+name: 'Semver Test'
+type: module
+description: 'Support module for update module testing.'
+package: Testing
