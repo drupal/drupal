@@ -23,13 +23,14 @@ class TipContainerFactory extends ContainerFactory {
   public function createInstance($plugin_id, array $configuration = []) {
     $plugin_definition = $this->discovery->getDefinition($plugin_id);
 
+    $plugin_class = static::getPluginClass($plugin_id, $plugin_definition, NULL);
+
     // In 9.x, from 9.2 onwards, a tour tip can have one of two interfaces.
     // This is enforced here instead of getPluginClass(), as that can only
     // enforce the adherence to one interface type.
-    if (!in_array($this->interface, ['Drupal\tour\TipPluginInterface', 'Drupal\tour\TourTipPluginInterface'])) {
+    if (!is_subclass_of($plugin_class, 'Drupal\tour\TipPluginInterface') && !is_subclass_of($plugin_class, 'Drupal\tour\TourTipPluginInterface')) {
       throw new PluginException(sprintf('Plugin "%s" must implement interface Drupal\tour\TipPluginInterface or Drupal\tour\TourTipPluginInterface.', $plugin_id));
     }
-    $plugin_class = static::getPluginClass($plugin_id, $plugin_definition, NULL);
 
     // If the plugin provides a factory method, pass the container to it.
     if (is_subclass_of($plugin_class, 'Drupal\Core\Plugin\ContainerFactoryPluginInterface')) {
