@@ -189,7 +189,7 @@ class EntityAutocomplete extends Textfield {
       'selection_settings_key' => $selection_settings_key,
     ];
 
-    // Create attribute that will be used for client-side enforcement of field
+    // Create attribute that will be used for client side enforcement of field
     // cardinality.
     $element_parents_in_form = array_slice($element['#parents'], 0, count($element['#parents']) - 2);
     $element_within_form = NestedArray::getValue($complete_form, $element_parents_in_form, $key_exists);
