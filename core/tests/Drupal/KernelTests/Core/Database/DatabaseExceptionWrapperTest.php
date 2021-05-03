@@ -98,6 +98,26 @@ class DatabaseExceptionWrapperTest extends KernelTestBase {
   }
 
   /**
+   * Tests Connection::prepareStatement with throw_exception option set.
+   *
+   * @group legacy
+   */
+  public function testPrepareStatementFailOnPreparationWithThrowExceptionOption(): void {
+    $driver = Database::getConnection()->driver();
+    if ($driver !== 'mysql') {
+      $this->markTestSkipped("MySql tests can not run for driver '$driver'.");
+    }
+
+    $connection_info = Database::getConnectionInfo('default');
+    $connection_info['default']['pdo'][\PDO::ATTR_EMULATE_PREPARES] = FALSE;
+    Database::addConnectionInfo('default', 'foo', $connection_info['default']);
+    $foo_connection = Database::getConnection('foo', 'default');
+    $this->expectException(DatabaseExceptionWrapper::class);
+    $this->expectDeprecation('Passing a \'throw_exception\' option to %AExceptionHandler::handleStatementException is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Always catch exceptions. See https://www.drupal.org/node/3201187');
+    $stmt = $foo_connection->prepareStatement('bananas', ['throw_exception' => FALSE]);
+  }
+
+  /**
    * Tests the expected database exception thrown for inexistent tables.
    */
   public function testQueryThrowsDatabaseExceptionWrapperException() {
