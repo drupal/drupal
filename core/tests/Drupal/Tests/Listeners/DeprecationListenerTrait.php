@@ -139,8 +139,6 @@ trait DeprecationListenerTrait {
       'The at() matcher has been deprecated. It will be removed in PHPUnit 10. Please refactor your test to not rely on the order in which methods are invoked.',
       // This is needed due to update tests scanning the config of tour.tour.tour-test-legacy, which intentionally uses a deprecated property.
       "The tour.tip 'attributes' config schema property is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead of 'data-class' and 'data-id' attributes, use 'selector' to specify the element a tip attaches to. See https://www.drupal.org/node/3204093",
-      // This is needed due to TipPluginInterface being required by \Drupal\tour\TipPluginManager.
-      'Drupal\tour\TipPluginInterface is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use Drupal\tour\TourTipPluginInterface instead. See https://www.drupal.org/node/3204096',
     ];
   }
 

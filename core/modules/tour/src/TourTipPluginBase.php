@@ -9,15 +9,11 @@ use Drupal\Core\Plugin\PluginBase;
  * Defines a base tour item implementation.
  *
  * @see \Drupal\tour\Annotation\Tip
- * @see \Drupal\tour\TipPluginInterface
  * @see \Drupal\tour\TourTipPluginInterface
  * @see \Drupal\tour\TipPluginManager
  * @see plugin_api
- *
- * @todo remove TourTipInterface implementation in
- *    https://drupal.org/node/3195193
  */
-abstract class TourTipPluginBase extends PluginBase implements TipPluginInterface, TourTipPluginInterface {
+abstract class TourTipPluginBase extends PluginBase implements TourTipPluginInterface {
 
   /**
    * The label which is used for render of this tip.
@@ -179,51 +175,6 @@ abstract class TourTipPluginBase extends PluginBase implements TipPluginInterfac
    */
   public function set($key, $value) {
     $this->configuration[$key] = $value;
-  }
-
-  /**
-   * This method should not actually be used and throws an exception.
-   *
-   * This method exists so the class can implement TipPluginInterface, which is
-   * needed for plugin discovery in Drupal 9. TipPluginInterface is deprecated
-   * and will be replaced with TourTipPluginInterface in Drupal 10.
-   *
-   * @return array
-   *   An empty array.
-   *
-   * @todo remove in https://drupal.org/node/3195193
-   */
-  final public function getAttributes() {
-    throw new \Exception('\Drupal\tour\TourTipPluginBase::getAttributes is not supported. Use getSelector() for the selector of the element the tip is associated with, and get() for other tip config properties.');
-
-    // This is never reached due to the exception above, but is here to meet the
-    // requirements of implementing TipPluginInterface.
-    // phpcs:ignore
-    return [];
-  }
-
-  /**
-   * This method should not actually be used and throws an exception.
-   *
-   * This method exists so the class can implement TipPluginInterface, which is
-   * needed for plugin discovery in Drupal 9. TipPluginInterface is deprecated
-   * and will be replaced with TourTipPluginInterface in Drupal 10.
-   *
-   * @return array
-   *   An empty array, were an exception not intentionally thrown.
-   *
-   * @todo remove in https://drupal.org/node/3195193
-   */
-  final public function getOutput() {
-    // Intentionally return an empty array. This method exists so the class
-    // implements TipPluginInterface, which is needed for plugin discovery in
-    // Drupal 9, but is a deprecated interface.
-    throw new \Exception('\Drupal\tour\TourTipPluginBase::getOutput is not supported. Use getBody() and getTitle() instead. ');
-
-    // This is never reached due to the exception above, but is here to meet the
-    // requirements of implementing TipPluginInterface.
-    // phpcs:ignore
-    return [];
   }
 
 }
