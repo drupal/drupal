@@ -34,7 +34,7 @@ class InterestCohortBlockerSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
-    return [KernelEvents::RESPONSE => ['onKernelResponse']];
+    return [KernelEvents::RESPONSE => 'onKernelResponse'];
   }
 
 }

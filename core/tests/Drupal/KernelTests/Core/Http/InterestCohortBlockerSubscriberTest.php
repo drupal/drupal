@@ -5,6 +5,7 @@ namespace Drupal\KernelTests\Core\Http;
 use Drupal\Core\Site\Settings;
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Tests the Permissions-Policy header event subscriber.
@@ -18,10 +19,21 @@ class InterestCohortBlockerSubscriberTest extends KernelTestBase {
    */
   public function testDefaultBlocking() {
     $request = Request::create('/');
-    $response = \Drupal::getContainer()->get('http_kernel')->handle($request);
+    $response = \Drupal::service('http_kernel')->handle($request);
 
-    $this->assertEquals('interest-cohort=()', $response->headers->get('Permissions-Policy'));
+    $this->assertSame('interest-cohort=()', $response->headers->get('Permissions-Policy'));
   }
+
+  /**
+   * Tests that FLoC blocking is ignored for subrequests.
+   */
+  public function testSubrequestBlocking() {
+    $request = Request::create('/');
+    $response = \Drupal::service('http_kernel')->handle($request, HttpKernelInterface::SUB_REQUEST);
+
+    $this->assertFalse($response->headers->has('Permissions-Policy'));
+  }
+
 
   /**
    * Tests that FLoC blocking can be disabled in settings.php.
@@ -32,7 +44,7 @@ class InterestCohortBlockerSubscriberTest extends KernelTestBase {
     new Settings($settings);
 
     $request = Request::create('/');
-    $response = \Drupal::getContainer()->get('http_kernel')->handle($request);
+    $response = \Drupal::service('http_kernel')->handle($request);
 
     $this->assertFalse($response->headers->has('Permissions-Policy'));
   }
