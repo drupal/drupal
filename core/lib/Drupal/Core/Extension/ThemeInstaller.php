@@ -238,7 +238,12 @@ class ThemeInstaller implements ThemeInstallerInterface {
       $this->logger->info('%theme theme installed.', ['%theme' => $key]);
     }
 
-    $this->cssCollectionOptimizer->deleteAll();
+    try {
+      $this->cssCollectionOptimizer->deleteAll();
+    }
+    catch (NotRegularDirectoryException $e) {
+      // Not fatal.
+    }
     $this->resetSystem();
 
     // Invoke hook_themes_installed() after the themes have been installed.
