@@ -479,7 +479,7 @@ jquery.farbtastic:
 
 jquery.form:
   remote: https://github.com/jquery-form/form
-  version: "4.22"
+  version: "4.3.0"
   license:
     name: GNU-GPL-2.0-or-later
     url: https://raw.githubusercontent.com/jquery-form/form/master/LICENSE
