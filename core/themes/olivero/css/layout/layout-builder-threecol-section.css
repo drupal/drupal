@@ -76,6 +76,6 @@
     .layout--threecol-section--33-34-33 > .layout__region--first,
     .layout--threecol-section--33-34-33 > .layout__region--second,
     .layout--threecol-section--33-34-33 > .layout__region--third {
-      flex-basis: calc(33.33% - 1.4985rem);
+      flex-basis: calc(33.33% - 1.50075rem);
     }
 }

@@ -73,7 +73,7 @@
     & > .layout__region--first,
     & > .layout__region--second,
     & > .layout__region--third {
-      flex-basis: calc(33.33% - (var(--grid-gap--md) * 0.666));
+      flex-basis: calc(33.33% - (var(--grid-gap--md) * 0.667));
     }
   }
 }
