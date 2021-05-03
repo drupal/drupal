@@ -82,13 +82,12 @@ class Upsert extends QueryUpsert {
     try {
       $stmt->execute(NULL, $options);
       $this->connection->releaseSavepoint();
+      return $stmt->rowCount();
     }
     catch (\Exception $e) {
       $this->connection->rollbackSavepoint();
       throw $e;
     }
-
-    return TRUE;
   }
 
   /**

@@ -37,7 +37,7 @@ class UpsertTest extends DatabaseTestBase {
       'name' => 'Meredith',
     ]);
 
-    $upsert->execute();
+    $this->assertSame(2, $upsert->execute(), 'The result of the upsert operation should report that two rows were affected.');
 
     $num_records_after = $connection->query('SELECT COUNT(*) FROM {test_people}')->fetchField();
     $this->assertEqual($num_records_before + 1, $num_records_after, 'Rows were inserted and updated properly.');
