@@ -93,7 +93,7 @@ abstract class Upsert extends Query implements \Countable {
    * @return int
    *   An integer indicating the  number of rows affected by the operation. Do
    *   not rely on this  value as a precise indication of the actual rows
-   *   affected: different RDBMS engines return different values.
+   *   affected: different database engines return different values.
    */
   public function execute() {
     if (!$this->preExecute()) {
