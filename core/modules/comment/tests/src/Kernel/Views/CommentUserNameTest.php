@@ -154,7 +154,10 @@ class CommentUserNameTest extends ViewsKernelTestBase {
     $this->assertLink('Anonymous comment title');
     // Display plugin of the view is showing the name field. When comment
     // belongs to an authenticated user the name field has no value.
-    $this->assertSession()->elementExists('xpath', "//div[contains(@class, 'views-field-subject')]/span[normalize-space(text())='']");
+    $comment_author = $this->xpath('//div[contains(@class, :class)]/span[normalize-space(text())=""]', [
+      ':class' => 'views-field-subject',
+    ]);
+    $this->assertTrue(!empty($comment_author));
     // When comment belongs to an anonymous user the name field has a value and
     // it is rendered correctly.
     $this->assertLink('barry (not verified)');
