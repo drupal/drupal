@@ -13,6 +13,7 @@ use Drupal\Core\Plugin\Factory\ContainerFactory;
  *    https://drupal.org/node/3195193.
  */
 class TipContainerFactory extends ContainerFactory {
+
   /**
    * {@inheritdoc}
    *
@@ -28,7 +29,7 @@ class TipContainerFactory extends ContainerFactory {
     if (!in_array($this->interface, ['Drupal\tour\TipPluginInterface', 'Drupal\tour\TourTipPluginInterface'])) {
       throw new PluginException(sprintf('Plugin "%s" must implement interface Drupal\tour\TipPluginInterface or Drupal\tour\TourTipPluginInterface.', $plugin_id));
     }
-    $plugin_class = static::getPluginClass($plugin_id, $plugin_definition, null);
+    $plugin_class = static::getPluginClass($plugin_id, $plugin_definition, NULL);
 
     // If the plugin provides a factory method, pass the container to it.
     if (is_subclass_of($plugin_class, 'Drupal\Core\Plugin\ContainerFactoryPluginInterface')) {
