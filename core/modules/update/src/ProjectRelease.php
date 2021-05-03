@@ -64,9 +64,9 @@ final class ProjectRelease {
   private $version;
 
   /**
-   * The release date in Unix timestamp format.
+   * The release date as a Unix timestamp or NULL if no date was set.
    *
-   * @var string
+   * @var int|null
    */
   private $date;
 
@@ -77,8 +77,6 @@ final class ProjectRelease {
    *   Whether the release is published.
    * @param string $version
    *   The release version.
-   * @param string $date
-   *   The release date in Unix timestamp format.
    * @param string $release_url
    *   The URL for the release.
    * @param string[]|null $release_types
@@ -89,16 +87,18 @@ final class ProjectRelease {
    *   The core compatibility message or NULL if not set.
    * @param string|null $download_url
    *   The download URL or NULL if not available.
+   * @param int|null $date
+   *   The release date in Unix timestamp format.
    */
-  private function __construct(bool $published, string $version, string $date, string $release_url, ?array $release_types, ?bool $core_compatible, ?string $core_compatibility_message, ?string $download_url) {
+  private function __construct(bool $published, string $version, string $release_url, ?array $release_types, ?bool $core_compatible, ?string $core_compatibility_message, ?string $download_url, ?int $date = NULL) {
     $this->published = $published;
     $this->version = $version;
-    $this->date = $date;
     $this->releaseUrl = $release_url;
     $this->releaseTypes = $release_types;
     $this->coreCompatible = $core_compatible;
     $this->coreCompatibilityMessage = $core_compatibility_message;
     $this->downloadUrl = $download_url;
+    $this->date = $date;
   }
 
   /**
@@ -120,12 +120,12 @@ final class ProjectRelease {
     return new ProjectRelease(
       $release_data['status'] === 'published',
       $release_data['version'],
-      $release_data['date'],
       $release_data['release_link'],
       $release_data['terms']['Release type'] ?? NULL,
       $release_data['core_compatible'] ?? NULL,
       $release_data['core_compatibility_message'] ?? NULL,
-      $release_data['download_link'] ?? NULL
+      $release_data['download_link'] ?? NULL,
+      $release_data['date'] ?? NULL
     );
   }
 
@@ -146,7 +146,7 @@ final class ProjectRelease {
     $collection_constraint = new Collection([
       'fields' => [
         'version' => $not_blank_constraints,
-        'date' => $not_blank_constraints,
+        'date' => new Optional([new Type('numeric')]),
         'core_compatible' => new Optional([
           new Type('boolean'),
         ]),
@@ -187,10 +187,10 @@ final class ProjectRelease {
   /**
    * Gets the release date if set.
    *
-   * @return string
+   * @return int|null
    *   The date of the release or null if no date is available.
    */
-  public function getDate(): string {
+  public function getDate(): ?int {
     return $this->date;
   }
 
