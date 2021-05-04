@@ -367,7 +367,7 @@ drupal.states:
 drupal.string.includes:
   version: VERSION
   js:
-    misc/polyfills/string.includes.js: { weight: -20 }
+    misc/polyfills/string.includes.js: { weight: -20, attributes: { nomodule: "" } }
 
 drupal.tabbingmanager:
   version: VERSION

@@ -11,6 +11,7 @@
  * @see https://developer.mozilla.org/en-US/docs/MDN/About#Code_samples_and_snippets
  */
 if (!Array.prototype.includes) {
+  // eslint-disable-next-line no-extend-native
   Array.prototype.includes = function (searchElement) {
     if (this == null) {
       throw new TypeError(
@@ -18,13 +19,14 @@ if (!Array.prototype.includes) {
       );
     }
 
-    var O = Object(this);
-    var len = parseInt(O.length, 10) || 0;
+    const O = Object(this);
+    const len = parseInt(O.length, 10) || 0;
     if (len === 0) {
       return false;
     }
-    var n = parseInt(arguments[1], 10) || 0;
-    var k;
+    // eslint-disable-next-line prefer-rest-params
+    const n = parseInt(arguments[1], 10) || 0;
+    let k;
     if (n >= 0) {
       k = n;
     } else {
@@ -33,15 +35,18 @@ if (!Array.prototype.includes) {
         k = 0;
       }
     }
-    var currentElement;
+    let currentElement;
     while (k < len) {
       currentElement = O[k];
       if (
         searchElement === currentElement ||
-        (searchElement !== searchElement && currentElement !== currentElement)) { // NaN !== NaN
+        // eslint-disable-next-line no-self-compare
+        (searchElement !== searchElement && currentElement !== currentElement)
+      ) {
+        // NaN !== NaN
         return true;
       }
-      k++;
+      k += 1;
     }
     return false;
   };

@@ -40,7 +40,7 @@ if (!Array.prototype.includes) {
         return true;
       }
 
-      k++;
+      k += 1;
     }
 
     return false;

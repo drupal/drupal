@@ -10,6 +10,7 @@
  * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/includes#Polyfill
  * @see https://developer.mozilla.org/en-US/docs/MDN/About#Code_samples_and_snippets
  */
+/* eslint-disable strict, lines-around-directive, no-extend-native */
 if (!String.prototype.includes) {
   String.prototype.includes = function (search, start) {
     'use strict';
