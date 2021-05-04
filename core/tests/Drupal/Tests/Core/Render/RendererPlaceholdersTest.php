@@ -963,7 +963,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
   }
 
   /**
-   * Tests that an error is thrown if a lazy bulider doesn't return an array.
+   * Tests that an error is thrown if a lazy builder doesn't return an array.
    */
   public function testNonArrayReturnFromLazyBuilder(): void {
     $element = [
