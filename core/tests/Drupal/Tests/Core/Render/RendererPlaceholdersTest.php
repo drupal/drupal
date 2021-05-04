@@ -970,7 +970,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
    */
   public function providerInvalidReturnValueFromLazyBuilder(): array {
     $closure = function () {
-      return FALSE;
+      return NULL;
     };
     return [
       'instance method of object' => [
@@ -1006,8 +1006,9 @@ class RendererPlaceholdersTest extends RendererTestBase {
     $element = [
       '#lazy_builder' => [$lazy_builder, []],
     ];
+    $wrong_type = gettype($lazy_builder());
     $this->expectExceptionMessage('\Drupal\Core\Render\CallbackException');
-    $this->expectExceptionMessage('#lazy_builder callbacks must return a valid renderable array, got boolean from ' . $serialized_callable);
+    $this->expectExceptionMessage("#lazy_builder callbacks must return a valid renderable array, got $wrong_type from $serialized_callable");
     $this->renderer->renderRoot($element);
   }
 
