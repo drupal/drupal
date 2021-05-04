@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\system\Unit\SecurityAdvisories;
+namespace Drupal\Tests\update\Unit;
 
 use Drupal\Tests\UnitTestCase;
 use Drupal\update\ProjectRelease;
@@ -8,7 +8,7 @@ use Drupal\update\ProjectRelease;
 /**
  * @coversDefaultClass \Drupal\update\ProjectRelease
  *
- * @group system
+ * @group update
  */
 class ProjectReleaseTest extends UnitTestCase {
 
