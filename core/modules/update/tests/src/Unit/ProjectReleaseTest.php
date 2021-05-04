@@ -16,9 +16,9 @@ class ProjectReleaseTest extends UnitTestCase {
    * Tests creating with valid data.
    *
    * @param mixed[] $changes
-   *   The changes to the valid data set to test.
+   *   The data to test with. Will be combined with the result of ::getValidData().
    * @param mixed[] $expected
-   *   The expected changes for the object methods.
+   *   The values expected to be returned from the object methods.
    *
    * @covers ::createFromArray
    * @covers ::isInsecure
