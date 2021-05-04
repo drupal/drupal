@@ -12,7 +12,7 @@ use Drupal\Tests\BrowserTestBase;
 class ModeratedContentLocalTaskTest extends BrowserTestBase {
 
   /**
-   * A user with permission to bypass access content.
+   * A user to test with.
    *
    * @var \Drupal\Core\Session\AccountInterface
    */
