@@ -40,10 +40,10 @@
       instance.ul = document.querySelector(`#${listBoxId}`);
     }
 
-    // Use Popper to position the list. This isn't needed with
-    // Drupal Autocomplete, but must be done when the markup matches jQuery UI.
-    Popper.createPopper(instance.input, instance.ul, {
-      placement: 'bottom-start',
+    $(instance.ul).position({
+      of: instance.input,
+      my: 'left top',
+      at: 'left bottom',
     });
 
     /**
@@ -409,7 +409,21 @@
                 });
                 break;
               case 'source':
+                // In jQuery UI autocomplete, 'source' can be one of three
+                // types:
+                // - Function: a callback function that overrides the default
+                //   autocomplete search functionality.
+                // - String: Either a JSON formatted list of items, or a URL
+                //   to an endpoint that returns items.
+                // - Array: An array of list items. Can be an array of stings
+                //   or of objects with `label` and `value` properties.
                 if (typeof optionValue === 'function') {
+                  /**
+                   * A callback function used by the 'source' function override.
+                   *
+                   * @param {String[]|Object[]} newList
+                   *   The data that will be suggested.
+                   */
                   // eslint-disable-next-line func-names
                   const overriddenResponse = function (newList) {
                     instance.options.list = newList;
@@ -418,6 +432,12 @@
                   };
                   // eslint-disable-next-line func-names
                   instance.doSearch = function () {
+                    // This overrides autocomplete search functionality with
+                    // the logic provided in the 'optionValue' function.
+                    // Argument 1 is a 'request' object, with a single 'term'
+                    // property that matches the current search string.
+                    // Argument 2 is a 'response' callback that expects a single
+                    // argument: the data to suggest to the user.
                     optionValue(
                       { term: instance.extractLastInputValue() },
                       overriddenResponse,
@@ -426,7 +446,7 @@
                 } else if (typeof optionValue === 'string') {
                   // When the 'source' option is a string, it can either be a
                   // URL to an endpoint, or a JavaScript array of items. This
-                  // try/catch is implmented to disinguish between the two. If
+                  // try/catch is implemented to distinguish between the two. If
                   // parsing the string as JSON results in an error, it is
                   // assumed the string is a URL.
                   // Unlike jQuery UI autocomplete, which uses the 'source'

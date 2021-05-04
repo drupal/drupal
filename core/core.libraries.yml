@@ -121,7 +121,6 @@ drupal.autocomplete:
     - core/drupal.jquery.position
     - core/a11y_autocomplete
     - core/drupal.announce
-    - core/popperjs
     - core/once
 
 drupal.array.find:

@@ -45,8 +45,10 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       instance.ul = document.querySelector("#".concat(listBoxId));
     }
 
-    Popper.createPopper(instance.input, instance.ul, {
-      placement: 'bottom-start'
+    $(instance.ul).position({
+      of: instance.input,
+      my: 'left top',
+      at: 'left bottom'
     });
 
     function shimmedInputKeyDown(e) {

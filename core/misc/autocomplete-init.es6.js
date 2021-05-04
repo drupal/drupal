@@ -1,4 +1,4 @@
-((Drupal, drupalSettings, A11yAutocomplete, Popper, once) => {
+((Drupal, drupalSettings, A11yAutocomplete, once) => {
   Drupal.Autocomplete = {};
   Drupal.Autocomplete.instances = {};
   Drupal.Autocomplete.defaultOptions = {
@@ -150,4 +150,4 @@
       }
     },
   };
-})(Drupal, drupalSettings, A11yAutocomplete, Popper, once);
+})(Drupal, drupalSettings, A11yAutocomplete, once);
