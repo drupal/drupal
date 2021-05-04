@@ -37,6 +37,8 @@ trait LayoutBuilderContextTrait {
    *
    * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
    *   The section storage.
+   * @param int $delta
+   *   The section delta.
    *
    * @return \Drupal\Core\Plugin\Context\ContextInterface[]
    *   The array of context objects.
