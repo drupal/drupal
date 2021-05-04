@@ -962,7 +962,16 @@ class RendererPlaceholdersTest extends RendererTestBase {
     $this->renderer->renderRoot($element);
   }
 
+  /**
+   * Data provider for ::testInvalidReturnValueFromLazyBuilder().
+   *
+   * @return array
+   *   Sets of arguments to pass to the test method.
+   */
   public function providerInvalidReturnValueFromLazyBuilder(): array {
+    $closure = function () {
+      return FALSE;
+    };
     return [
       'instance method of object' => [
         [new PlaceholdersTest(), 'callbackNonArrayReturn'],
@@ -973,7 +982,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
         'Drupal\Tests\Core\Render\PlaceholdersTest::callbackNonArrayReturn',
       ],
       'closure' => [
-        function () { return FALSE; },
+        $closure,
         '[closure]',
       ],
       'string' => [
@@ -984,8 +993,12 @@ class RendererPlaceholdersTest extends RendererTestBase {
   }
 
   /**
+   * Tests the exception thrown when a lazy builder returns an invalid value.
+   *
    * @param callable $lazy_builder
+   *   The lazy builder callback.
    * @param string $serialized_callable
+   *   The expected human-readable name of the callable.
    *
    * @dataProvider providerInvalidReturnValueFromLazyBuilder
    */
@@ -993,7 +1006,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
     $element = [
       '#lazy_builder' => [$lazy_builder, []],
     ];
-    $this->expectExceptionMessage('LogicException');
+    $this->expectExceptionMessage('\Drupal\Core\Render\CallbackException');
     $this->expectExceptionMessage('#lazy_builder callbacks must return a valid renderable array, got boolean from ' . $serialized_callable);
     $this->renderer->renderRoot($element);
   }
