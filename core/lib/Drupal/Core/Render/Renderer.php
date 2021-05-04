@@ -362,6 +362,9 @@ class Renderer implements RendererInterface {
           $callable_name = '[closure]';
         }
         elseif (is_array($callable)) {
+          if (is_object($callable[0])) {
+            $callable[0] = get_class($callable[0]);
+          }
           $callable_name = implode('::', $callable);
         }
         elseif (is_string($callable)) {

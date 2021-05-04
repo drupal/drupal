@@ -962,51 +962,39 @@ class RendererPlaceholdersTest extends RendererTestBase {
     $this->renderer->renderRoot($element);
   }
 
-  /**
-   * Tests lazy builders (string callable) that do not return a renderable.
-   *
-   * @covers ::render
-   * @covers ::doRender
-   */
-  public function testNonArrayReturnFromLazyBuilderStringCallable() {
-    $element = [];
-    $element['#lazy_builder'] = ['Drupal\Tests\Core\Render\PlaceholdersTest::callbackNonArrayReturn', []];
-
-    $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage('#lazy_builder callbacks must return a valid renderable array, got boolean from Drupal\Tests\Core\Render\PlaceholdersTest::callbackNonArrayReturn');
-    $this->renderer->renderRoot($element);
+  public function providerInvalidReturnValueFromLazyBuilder(): array {
+    return [
+      'instance method of object' => [
+        [new PlaceholdersTest(), 'callbackNonArrayReturn'],
+        'Drupal\Tests\Core\Render\PlaceholdersTest::callbackNonArrayReturn',
+      ],
+      'static method of class' => [
+        ['Drupal\Tests\Core\Render\PlaceholdersTest', 'callbackNonArrayReturn'],
+        'Drupal\Tests\Core\Render\PlaceholdersTest::callbackNonArrayReturn',
+      ],
+      'closure' => [
+        function () { return FALSE; },
+        '[closure]',
+      ],
+      'string' => [
+        'Drupal\Tests\Core\Render\PlaceholdersTest::callbackNonArrayReturn',
+        'Drupal\Tests\Core\Render\PlaceholdersTest::callbackNonArrayReturn',
+      ],
+    ];
   }
 
   /**
-   * Tests lazy builders (array callable) that do not return a renderable.
+   * @param callable $lazy_builder
+   * @param string $serialized_callable
    *
-   * @covers ::render
-   * @covers ::doRender
+   * @dataProvider providerInvalidReturnValueFromLazyBuilder
    */
-  public function testNonArrayReturnFromLazyBuilderArrayCallable() {
-    $element = [];
-    $element['#lazy_builder'] = [['Drupal\Tests\Core\Render\PlaceholdersTest', 'callbackNonArrayReturn'], []];
-
-    $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage('#lazy_builder callbacks must return a valid renderable array, got boolean from Drupal\Tests\Core\Render\PlaceholdersTest::callbackNonArrayReturn');
-    $this->renderer->renderRoot($element);
-  }
-
-  /**
-   * Tests lazy builders (closure) that do not return a renderable.
-   *
-   * @covers ::render
-   * @covers ::doRender
-   */
-  public function testNonArrayReturnFromLazyBuilderClosure() {
-    $element = [];
-    $closure = function () {
-      return NULL;
-    };
-    $element['#lazy_builder'] = [$closure, []];
-
-    $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage('#lazy_builder callbacks must return a valid renderable array, got NULL from [closure]');
+  public function testInvalidReturnValueFromLazyBuilder(callable $lazy_builder, string $serialized_callable): void {
+    $element = [
+      '#lazy_builder' => [$lazy_builder, []],
+    ];
+    $this->expectExceptionMessage('LogicException');
+    $this->expectExceptionMessage('#lazy_builder callbacks must return a valid renderable array, got boolean from ' . $serialized_callable);
     $this->renderer->renderRoot($element);
   }
 
