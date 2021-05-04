@@ -318,20 +318,10 @@ class PlaceholdersTest implements TrustedCallbackInterface {
   }
 
   /**
-   * Returns invalid renderable to #lazy_builder callback.
-   *
-   * @return bool
-   *   TRUE.
-   */
-  public static function callbackNonArrayReturn() {
-    return TRUE;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
-    return ['callbackTagCurrentTemperature', 'callbackPerUser', 'callback', 'callbackNonArrayReturn'];
+    return ['callbackTagCurrentTemperature', 'callbackPerUser', 'callback'];
   }
 
 }

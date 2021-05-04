@@ -963,54 +963,6 @@ class RendererPlaceholdersTest extends RendererTestBase {
   }
 
   /**
-   * Tests lazy builders (string callable) that do not return a renderable.
-   *
-   * @covers ::render
-   * @covers ::doRender
-   */
-  public function testNonArrayReturnFromLazyBuilderStringCallable() {
-    $element = [];
-    $element['#lazy_builder'] = ['Drupal\Tests\Core\Render\PlaceholdersTest::callbackNonArrayReturn', []];
-
-    $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage('#lazy_builder callbacks must return a valid renderable array, got boolean from Drupal\Tests\Core\Render\PlaceholdersTest::callbackNonArrayReturn');
-    $this->renderer->renderRoot($element);
-  }
-
-  /**
-   * Tests lazy builders (array callable) that do not return a renderable.
-   *
-   * @covers ::render
-   * @covers ::doRender
-   */
-  public function testNonArrayReturnFromLazyBuilderArrayCallable() {
-    $element = [];
-    $element['#lazy_builder'] = [['Drupal\Tests\Core\Render\PlaceholdersTest', 'callbackNonArrayReturn'], []];
-
-    $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage('#lazy_builder callbacks must return a valid renderable array, got boolean from Drupal\Tests\Core\Render\PlaceholdersTest::callbackNonArrayReturn');
-    $this->renderer->renderRoot($element);
-  }
-
-  /**
-   * Tests lazy builders (closure) that do not return a renderable.
-   *
-   * @covers ::render
-   * @covers ::doRender
-   */
-  public function testNonArrayReturnFromLazyBuilderClosure() {
-    $element = [];
-    $closure = function () {
-      return NULL;
-    };
-    $element['#lazy_builder'] = [$closure, []];
-
-    $this->expectException(\LogicException::class);
-    $this->expectExceptionMessage('#lazy_builder callbacks must return a valid renderable array, got NULL from [closure]');
-    $this->renderer->renderRoot($element);
-  }
-
-  /**
    * Create an element with a child and subchild. Each element has the same
    * #lazy_builder callback, but with different contexts. They don't modify
    * markup, only attach additional drupalSettings.
