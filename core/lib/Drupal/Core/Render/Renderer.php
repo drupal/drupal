@@ -356,22 +356,8 @@ class Renderer implements RendererInterface {
       // Throw an exception if #lazy_builder callback does not return an array;
       // provide helpful details for troubleshooting.
       if (!is_array($new_elements)) {
-        $callable = $elements['#lazy_builder'][0];
-        $callable_name = '[unknown]';
-        if ($callable instanceof \Closure) {
-          $callable_name = '[closure]';
-        }
-        elseif (is_array($callable)) {
-          if (is_object($callable[0])) {
-            $callable[0] = get_class($callable[0]);
-          }
-          $callable_name = implode('::', $callable);
-        }
-        elseif (is_string($callable)) {
-          $callable_name = $callable;
-        }
         $wrong_type = gettype($new_elements);
-        throw new \LogicException("#lazy_builder callbacks must return a valid renderable array, got $wrong_type from $callable_name");
+        throw new CallbackException($elements['#lazy_builder'][0], "#lazy_builder callbacks must return a valid renderable array, got $wrong_type from @callable");
       }
       // Retain the original cacheability metadata, plus cache keys.
       CacheableMetadata::createFromRenderArray($elements)
