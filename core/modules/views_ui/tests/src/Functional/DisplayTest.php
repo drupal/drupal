@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\views_ui\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
 
@@ -87,18 +86,24 @@ class DisplayTest extends UITestBase {
     $view = $this->randomView();
     $path_prefix = 'admin/structure/views/view/' . $view['id'] . '/edit';
 
+    // Verify that the disabled display css class does not appear after initial
+    // adding of a view.
     $this->drupalGet($path_prefix);
-    $this->assertEmpty($this->xpath('//div[contains(@class, :class)]', [':class' => 'views-display-disabled']), 'Make sure the disabled display css class does not appear after initial adding of a view.');
-
+    $this->assertSession()->elementNotExists('xpath', "//div[contains(@class, 'views-display-disabled')]");
     $this->assertSession()->buttonExists('edit-displays-settings-settings-content-tab-content-details-top-actions-disable');
     $this->assertSession()->buttonNotExists('edit-displays-settings-settings-content-tab-content-details-top-actions-enable');
-    $this->submitForm([], 'Disable Page');
-    $this->assertNotEmpty($this->xpath('//div[contains(@class, :class)]', [':class' => 'views-display-disabled']), 'Make sure the disabled display css class appears once the display is marked as such.');
 
+    // Verify that the disabled display css class appears once the display is
+    // marked as such.
+    $this->submitForm([], 'Disable Page');
+    $this->assertSession()->elementExists('xpath', "//div[contains(@class, 'views-display-disabled')]");
     $this->assertSession()->buttonNotExists('edit-displays-settings-settings-content-tab-content-details-top-actions-disable');
     $this->assertSession()->buttonExists('edit-displays-settings-settings-content-tab-content-details-top-actions-enable');
+
+    // Verify that the disabled display css class does not appears once the
+    // display is enabled again.
     $this->submitForm([], 'Enable Page');
-    $this->assertEmpty($this->xpath('//div[contains(@class, :class)]', [':class' => 'views-display-disabled']), 'Make sure the disabled display css class does not appears once the display is enabled again.');
+    $this->assertSession()->elementNotExists('xpath', "//div[contains(@class, 'views-display-disabled')]");
   }
 
   /**
@@ -140,8 +145,7 @@ class DisplayTest extends UITestBase {
 
     // Assert that the expected text is found in each area category.
     foreach ($areas as $type) {
-      $element = $this->xpath('//div[contains(@class, :class)]/div', [':class' => $type]);
-      $this->assertEqual(new FormattableMarkup('The selected display type does not use @type plugins', ['@type' => $type]), $element[0]->getHtml());
+      $this->assertSession()->elementTextEquals('xpath', "//div[contains(@class, '$type')]/div", "The selected display type does not use $type plugins");
     }
   }
 
@@ -191,15 +195,14 @@ class DisplayTest extends UITestBase {
 
     // The view should initially have the enabled class on its form wrapper.
     $this->drupalGet('admin/structure/views/view/' . $id);
-    $elements = $this->xpath('//div[contains(@class, :edit) and contains(@class, :status)]', [':edit' => 'views-edit-view', ':status' => 'enabled']);
-    $this->assertNotEmpty($elements, 'The enabled class was found on the form wrapper');
+    $this->assertSession()->elementExists('xpath', "//div[contains(@class, 'views-edit-view') and contains(@class, 'enabled')]");
 
     $view = Views::getView($id);
     $view->storage->disable()->save();
 
+    // The view should now have the disabled class on its form wrapper.
     $this->drupalGet('admin/structure/views/view/' . $id);
-    $elements = $this->xpath('//div[contains(@class, :edit) and contains(@class, :status)]', [':edit' => 'views-edit-view', ':status' => 'disabled']);
-    $this->assertNotEmpty($elements, 'The disabled class was found on the form wrapper.');
+    $this->assertSession()->elementExists('xpath', "//div[contains(@class, 'views-edit-view') and contains(@class, 'disabled')]");
   }
 
   /**

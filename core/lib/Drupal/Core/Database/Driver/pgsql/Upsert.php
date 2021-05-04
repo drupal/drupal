@@ -19,7 +19,7 @@ class Upsert extends QueryUpsert {
       return NULL;
     }
 
-    $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions);
+    $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions, TRUE);
 
     // Fetch the list of blobs and sequences used on that table.
     $table_information = $this->connection->schema()->queryTableInformation($this->table);
@@ -82,13 +82,12 @@ class Upsert extends QueryUpsert {
     try {
       $stmt->execute(NULL, $options);
       $this->connection->releaseSavepoint();
+      return $stmt->rowCount();
     }
     catch (\Exception $e) {
       $this->connection->rollbackSavepoint();
       $this->connection->exceptionHandler()->handleExecutionException($e, $stmt, [], $options);
     }
-
-    return TRUE;
   }
 
   /**

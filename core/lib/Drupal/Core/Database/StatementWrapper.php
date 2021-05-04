@@ -56,7 +56,8 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
   /**
    * Implements the magic __get() method.
    *
-   * @todo Remove the method before Drupal 10. https://www.drupal.org/i/3210310
+   * @todo Remove the method before Drupal 10.
+   * @see https://www.drupal.org/i/3210310
    */
   public function __get($name) {
     if ($name === 'queryString') {
@@ -76,7 +77,8 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
   /**
    * Implements the magic __set() method.
    *
-   * @todo Remove the method before Drupal 10. https://www.drupal.org/i/3210310
+   * @todo Remove the method before Drupal 10.
+   * @see https://www.drupal.org/i/3210310
    */
   public function __set($name, $value) {
     if ($name === 'allowRowCount') {
