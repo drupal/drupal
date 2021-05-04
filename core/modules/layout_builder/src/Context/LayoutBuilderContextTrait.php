@@ -56,7 +56,7 @@ trait LayoutBuilderContextTrait {
       $contexts['section_delta'] = new Context(new ContextDefinition('integer'), $delta);
     }
     else {
-      @trigger_error('Calling LayoutBuilderContextTrait::getAvailableContexts() without the $delta argument is deprecated in drupal:9.2.0 and the $delta argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3210520', E_USER_DEPRECATED);
+      @trigger_error('Calling LayoutBuilderContextTrait::getAvailableContexts() without the $delta argument is deprecated in drupal:9.3.0 and the $delta argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3210520', E_USER_DEPRECATED);
     }
 
     return $contexts;
