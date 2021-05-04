@@ -22,7 +22,7 @@ class Variable {
     if ($callable instanceof \Closure) {
       return '[closure]';
     }
-    elseif (is_array($callable)) {
+    elseif (is_array($callable) && $callable) {
       if (is_object($callable[0])) {
         $callable[0] = get_class($callable[0]);
       }

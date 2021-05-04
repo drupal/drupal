@@ -57,9 +57,13 @@ class VariableTest extends TestCase {
         'fake_service:method',
         'fake_service:method',
       ],
-      'too small array' => [
+      'single-item array' => [
         ['some_function'],
         'some_function',
+      ],
+      'empty array' => [
+        [],
+        '[unknown]',
       ],
       'here be dragons' => [
         TRUE,
