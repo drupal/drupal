@@ -314,6 +314,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
     $build = [];
     if ($storage) {
       foreach ($storage->getSections() as $delta => $section) {
+        $contexts['section_delta'] = new Context(new ContextDefinition('integer'), $delta);
         $build[$delta] = $section->toRenderArray($contexts);
       }
     }
