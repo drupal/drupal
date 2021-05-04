@@ -318,10 +318,10 @@ class PlaceholdersTest implements TrustedCallbackInterface {
   }
 
   /**
-   * Returns invalid renderable to #lazy_builder callback.
+   * A lazy builder callback that returns an invalid renderable.
    *
    * @return bool
-   *   TRUE.
+   *   TRUE, which is not a valid return value for a lazy builder.
    */
   public static function callbackNonArrayReturn() {
     return TRUE;
