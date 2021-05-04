@@ -78,7 +78,7 @@ class ModulesUninstallForm extends FormBase {
    * @param \Drupal\Core\Extension\ModuleExtensionList $extension_list_module
    *   The module extension list.
    * @param \Drupal\Core\Update\VersioningUpdateRegistry|null $versioning_update_registry
-   *   Verioning update registry service.
+   *   Versioning update registry service.
    */
   public function __construct(ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, KeyValueStoreExpirableInterface $key_value_expirable, ModuleExtensionList $extension_list_module, VersioningUpdateRegistry $versioning_update_registry = NULL) {
     $this->moduleExtensionList = $extension_list_module;
