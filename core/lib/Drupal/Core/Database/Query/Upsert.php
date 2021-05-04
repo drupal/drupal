@@ -108,7 +108,7 @@ abstract class Upsert extends Query implements \Countable {
 
     $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions, TRUE);
     try {
-      $stmt->execute($values, $options);
+      $stmt->execute($values, $this->queryOptions);
       $affected_rows = $stmt->rowCount();
     }
     catch (\Exception $e) {
