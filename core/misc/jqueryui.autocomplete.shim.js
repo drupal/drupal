@@ -30,8 +30,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     var id = autocompleteInput.getAttribute('id');
     var instance = Drupal.Autocomplete.instances[id];
     var isContentEditable = instance.input.hasAttribute('contenteditable');
-    var isMultiline = instance.input.tagName === 'TEXTAREA' || instance.input.tagName !== 'INPUT' && isContentEditable;
-    instance.options.isMultiline = isMultiline;
+    instance.options.isMultiline = instance.input.tagName === 'TEXTAREA' || instance.input.tagName !== 'INPUT' && isContentEditable;
     instance.options.itemClass = 'ui-menu-item';
 
     if (instance.options.allowRepeatValues === null) {
@@ -42,8 +41,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       var listBoxId = instance.ul.getAttribute('id');
       var uiFront = $(autocompleteInput).closest('.ui-front, dialog');
       var appendTo = uiFront.length > 0 ? uiFront[0] : document.querySelector('body');
-      appendTo.appendChild(Drupal.Autocomplete.instances[id].ul);
-      Drupal.Autocomplete.instances[id].ul = document.querySelector("#".concat(listBoxId));
+      appendTo.appendChild(instance.ul);
+      instance.ul = document.querySelector("#".concat(listBoxId));
     }
 
     Popper.createPopper(instance.input, instance.ul, {

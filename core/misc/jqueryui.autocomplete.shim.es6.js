@@ -16,11 +16,10 @@
     const id = autocompleteInput.getAttribute('id');
     const instance = Drupal.Autocomplete.instances[id];
     const isContentEditable = instance.input.hasAttribute('contenteditable');
-    const isMultiline =
+
+    instance.options.isMultiline =
       instance.input.tagName === 'TEXTAREA' ||
       (instance.input.tagName !== 'INPUT' && isContentEditable);
-
-    instance.options.isMultiline = isMultiline;
     instance.options.itemClass = 'ui-menu-item';
 
     // jQuery UI allows repeat values in multivalue inputs.
@@ -37,10 +36,8 @@
       const uiFront = $(autocompleteInput).closest('.ui-front, dialog');
       const appendTo =
         uiFront.length > 0 ? uiFront[0] : document.querySelector('body');
-      appendTo.appendChild(Drupal.Autocomplete.instances[id].ul);
-      Drupal.Autocomplete.instances[id].ul = document.querySelector(
-        `#${listBoxId}`,
-      );
+      appendTo.appendChild(instance.ul);
+      instance.ul = document.querySelector(`#${listBoxId}`);
     }
 
     // Use Popper to position the list. This isn't needed with
