@@ -963,55 +963,14 @@ class RendererPlaceholdersTest extends RendererTestBase {
   }
 
   /**
-   * Data provider for testNonArrayReturnFromLazyBuilder().
-   *
-   * @return array[]
-   *   Sets of arguments to pass to the test method.
+   * Tests that an error is thrown if a lazy bulider doesn't return an array.
    */
-  public function providerNonArrayReturnFromLazyBuilder(): array {
-    return [
-      'string' => [
-        'Drupal\Tests\Core\Render\PlaceholdersTest::callbackNonArrayReturn',
-        'Drupal\Tests\Core\Render\PlaceholdersTest::callbackNonArrayReturn',
-      ],
-      'static method as array' => [
-        ['Drupal\Tests\Core\Render\PlaceholdersTest', 'callbackNonArrayReturn'],
-        'Drupal\Tests\Core\Render\PlaceholdersTest::callbackNonArrayReturn',
-      ],
-      'closure' => [
-        function () {
-          return NULL;
-        },
-        '[closure]',
-      ],
-      'object method' => [
-        [new PlaceholdersTest(), 'callbackNonArrayReturn'],
-        'Drupal\Tests\Core\Render\PlaceholdersTest::callbackNonArrayReturn',
-      ],
-    ];
-  }
-
-  /**
-   * Tests that an error is raised if a lazy builder does not return an array.
-   *
-   * @param callable $callable
-   *   The lazy builder callback.
-   * @param string $expected_callable_name
-   *   The expected human-readable name of the callback.
-   *
-   * @covers ::renderRoot
-   * @covers \Drupal\Component\Utility\Variable::callableToString
-   *
-   * @dataProvider providerNonArrayReturnFromLazyBuilder
-   */
-  public function testNonArrayReturnFromLazyBuilder(callable $callable, string $expected_callable_name): void {
+  public function testNonArrayReturnFromLazyBuilder(): void {
     $element = [
-      '#lazy_builder' => [$callable, []],
+      '#lazy_builder' => ['\Drupal\Tests\Core\Render\PlaceholdersTest::callbackNonArrayReturn', []],
     ];
-    $wrong_type = gettype($callable());
-
     $this->expectException('AssertionError');
-    $this->expectExceptionMessage("#lazy_builder callbacks must return a valid renderable array, got $wrong_type from $expected_callable_name");
+    $this->expectExceptionMessage("#lazy_builder callbacks must return a valid renderable array, got boolean from \Drupal\Tests\Core\Render\PlaceholdersTest::callbackNonArrayReturn");
     $this->renderer->renderRoot($element);
   }
 
