@@ -18,7 +18,7 @@ class Variable {
    * @return string
    *   A human-readable name for the callable.
    */
-  public static function callableToString(callable $callable): string {
+  public static function callableToString($callable): string {
     if ($callable instanceof \Closure) {
       return '[closure]';
     }
