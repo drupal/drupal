@@ -40,6 +40,7 @@
       instance.ul = document.querySelector(`#${listBoxId}`);
     }
 
+    // Position the list directly under the input.
     $(instance.ul).position({
       of: instance.input,
       my: 'left top',
@@ -118,6 +119,9 @@
      *
      * @param {object} suggestion
      *   An autocomplete suggestion.
+     * @param {Element} li
+     *   The list element displaying the suggestion.
+     *
      * @return {string|HTMLElement}
      *   The contents of the list item.
      */
@@ -136,8 +140,10 @@
     instance.formatSuggestionItem = autocompleteFormatSuggestionItem;
     instance.inputKeyDown = shimmedInputKeyDown;
 
-    // Content editable inputs do not
+    // Elements with the contenteditable attribute require different logic than
+    // the default behavior which expects a text input.
     if (isContentEditable) {
+      // eslint-disable-next-line func-names
       instance.getValue = function () {
         return this.input.textContent;
       };
@@ -203,7 +209,7 @@
 
     // When a result item is highlighted, jQuery UI adds a ui-state-active
     // class to it.
-    instance.input.addEventListener('autocomplete-highlight', (e) => {
+    instance.input.addEventListener('autocomplete-highlight', () => {
       instance.ul
         .querySelectorAll('.ui-menu-item-wrapper.ui-state-active')
         .forEach((element) => {
@@ -214,9 +220,11 @@
         .classList.add('ui-state-active');
     });
 
-    // jQuery UI autocomplete does not have a wrapper
+    // jQuery UI autocomplete does not have a wrapper, so remove the wrapper
+    // added by A11y_Autocomplete.
     $(instance.input).unwrap('[data-drupal-autocomplete-wrapper]');
   };
+
   $.fn.extend({
     autocomplete(...args) {
       Drupal.deprecationError({
@@ -236,26 +244,46 @@
         source: null,
       };
 
+      // If args[0] is a string, the autocomplete instance is already
+      // initialized and the string represents a method the autocomplete should
+      // execute.
       if (typeof args[0] === 'string') {
         const instance = Drupal.Autocomplete.instances[id];
         const method = args[0];
 
         switch (method) {
           case 'search':
+            // The 'search' method performs a search as if the input received
+            // input events.
+
+            // A11y_Autocomplete expects the input to be focused when a search
+            // occurs, even if it's programmatically triggered.
             instance.input.focus();
 
+            // If the args[1] argument is present, it will be the search term.
             if (typeof args[1] === 'string') {
+              // The input's value property must always be set as it's used
+              // internally by A11y_Autocomplete.
+              [, instance.input.value] = args;
+
+              // For contenteditable elements, the textContent property must
+              // also match the provided value for it to be visible.
               if (instance.input.hasAttribute('contenteditable')) {
                 [, instance.input.textContent] = args;
               }
-              [, instance.input.value] = args;
             } else if (instance.input.hasAttribute('contenteditable')) {
+              // The input's value property must always be set as it's used
+              // internally by A11y_Autocomplete.
               instance.input.value = instance.input.textContent;
             }
 
+            // If there is no typed value and no minimum character limit, the
+            // 'search' option will display the results of a predefined list,
+            // when such a list is available.
             if (
               instance.input.value.length === 0 &&
-              instance.options.minChars === 0
+              instance.options.minChars === 0 &&
+              instance.options.list.length > 0
             ) {
               instance.suggestionItems = instance.options.list;
               instance.prepareSuggestionList();
@@ -264,24 +292,14 @@
               } else {
                 instance.open();
               }
-
-              window.clearTimeout(instance.timeOutId);
-              // Delay the results announcement by 1400 milliseconds. This prevents
-              // unnecessary calls when a user is typing quickly, and avoids the results
-              // announcement being cut short by the screenreader stating the just-typed
-              // character.
-              instance.timeOutId = setTimeout(
-                () =>
-                  instance.sendToLiveRegion(
-                    instance.resultsMessage(instance.ul.children.length),
-                  ),
-                1400,
-              );
             } else {
+              // If args[1] isn't a string, just trigger a search using whatever
+              // is currently in the input.
               instance.doSearch($.Event('keydown'));
             }
             break;
           case 'widget':
+            // The widget option returns the autocomplete item list.
             return $(instance.ul);
           case 'instance':
             return {
@@ -322,6 +340,9 @@
         }
 
         if (method === 'option') {
+          // If args[2] doesn't exist, and args[1] is an object, treat each
+          // args[1] object property as an individual autocomplete option that
+          // should be set to the corresponding value.
           if (typeof args[2] === 'undefined' && args[1] === 'object') {
             // Individually set each option specified in the object.
             Object.keys(args[1]).forEach((key) => {
@@ -451,7 +472,7 @@
                   // assumed the string is a URL.
                   // Unlike jQuery UI autocomplete, which uses the 'source'
                   // option for both URLs and predefined lists,
-                  // A11y_autocomplete stores these as individual 'path' and
+                  // A11y_Autocomplete stores these as individual 'path' and
                   // 'list' options.
                   try {
                     // eslint-disable-next-line no-unused-vars

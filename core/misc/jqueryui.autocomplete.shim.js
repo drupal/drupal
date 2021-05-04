@@ -157,7 +157,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
         element.classList.remove('ui-state-active');
       });
     });
-    instance.input.addEventListener('autocomplete-highlight', function (e) {
+    instance.input.addEventListener('autocomplete-highlight', function () {
       instance.ul.querySelectorAll('.ui-menu-item-wrapper.ui-state-active').forEach(function (element) {
         element.classList.remove('ui-state-active');
       });
@@ -197,16 +197,16 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
             instance.input.focus();
 
             if (typeof args[1] === 'string') {
+              instance.input.value = args[1];
+
               if (instance.input.hasAttribute('contenteditable')) {
                 instance.input.textContent = args[1];
               }
-
-              instance.input.value = args[1];
             } else if (instance.input.hasAttribute('contenteditable')) {
               instance.input.value = instance.input.textContent;
             }
 
-            if (instance.input.value.length === 0 && instance.options.minChars === 0) {
+            if (instance.input.value.length === 0 && instance.options.minChars === 0 && instance.options.list.length > 0) {
               instance.suggestionItems = instance.options.list;
               instance.prepareSuggestionList();
 
@@ -215,11 +215,6 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
               } else {
                 instance.open();
               }
-
-              window.clearTimeout(instance.timeOutId);
-              instance.timeOutId = setTimeout(function () {
-                return instance.sendToLiveRegion(instance.resultsMessage(instance.ul.children.length));
-              }, 1400);
             } else {
               instance.doSearch($.Event('keydown'));
             }
