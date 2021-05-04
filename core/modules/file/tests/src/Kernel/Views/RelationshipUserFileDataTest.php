@@ -1,32 +1,37 @@
 <?php
 
-namespace Drupal\Tests\file\Functional\Views;
+namespace Drupal\Tests\file\Kernel\Views;
 
 use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\file\Entity\File;
-use Drupal\Tests\views\Functional\ViewTestBase;
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\user\Traits\UserCreationTrait;
+use Drupal\views\Tests\ViewResultAssertionTrait;
 use Drupal\views\Views;
 use Drupal\views\Tests\ViewTestData;
-use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests file on user relationship handler.
  *
  * @group file
  */
-class RelationshipUserFileDataTest extends ViewTestBase {
+class RelationshipUserFileDataTest extends KernelTestBase {
 
-  /**
-   * Modules to install.
-   *
-   * @var array
-   */
-  protected static $modules = ['file', 'file_test_views', 'user'];
+  use UserCreationTrait;
+  use ViewResultAssertionTrait;
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected static $modules = [
+    'field',
+    'file',
+    'file_test_views',
+    'system',
+    'user',
+    'views',
+  ];
 
   /**
    * Views used by this test.
@@ -35,8 +40,16 @@ class RelationshipUserFileDataTest extends ViewTestBase {
    */
   public static $testViews = ['test_file_user_file_data'];
 
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+
+    $this->installSchema('system', ['sequences']);
+    $this->installSchema('file', ['file_usage']);
+    $this->installEntitySchema('user');
+    $this->installEntitySchema('file');
 
     // Create the user profile field and instance.
     FieldStorageConfig::create([
@@ -75,7 +88,7 @@ class RelationshipUserFileDataTest extends ViewTestBase {
     file_put_contents($file->getFileUri(), file_get_contents('core/tests/fixtures/files/image-1.png'));
     $file->save();
 
-    $account = $this->drupalCreateUser();
+    $account = $this->createUser();
     $account->user_file->target_id = 2;
     $account->save();
 
@@ -88,7 +101,7 @@ class RelationshipUserFileDataTest extends ViewTestBase {
       ],
     ];
     $this->assertSame($expected, $view->getDependencies());
-    $this->executeView($view);
+    $view->preview();
     $expected_result = [
       [
         'file_managed_user__user_file_fid' => '2',
