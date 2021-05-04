@@ -1325,10 +1325,6 @@ services:
     class: Drupal\Core\EventSubscriber\EnforcedFormResponseSubscriber
     tags:
       - { name: event_subscriber }
-  interest_cohort_blocker_subscriber:
-    class: Drupal\Core\EventSubscriber\InterestCohortBlockerSubscriber
-    tags:
-      - { name: event_subscriber }
   route_processor_manager:
     class: Drupal\Core\RouteProcessor\RouteProcessorManager
     tags:
