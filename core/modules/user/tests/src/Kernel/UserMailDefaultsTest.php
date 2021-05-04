@@ -2,11 +2,7 @@
 
 namespace Drupal\Tests\user\Kernel;
 
-use Drupal\Core\Test\AssertMailTrait;
-use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\locale\Locale;
 
 /**
  * Tests that user.mail default settings are parsed correctly.
