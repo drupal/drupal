@@ -65,7 +65,11 @@ class VariableTest extends TestCase {
         [],
         '[unknown]',
       ],
-      'here be dragons' => [
+      'object' => [
+        new \stdClass(),
+        '[unknown]',
+      ],
+      'definitely not callable' => [
         TRUE,
         '[unknown]',
       ],
