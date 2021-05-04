@@ -424,6 +424,15 @@
                     );
                   };
                 } else if (typeof optionValue === 'string') {
+                  // When the 'source' option is a string, it can either be a
+                  // URL to an endpoint, or a JavaScript array of items. This
+                  // try/catch is implmented to disinguish between the two. If
+                  // parsing the string as JSON results in an error, it is
+                  // assumed the string is a URL.
+                  // Unlike jQuery UI autocomplete, which uses the 'source'
+                  // option for both URLs and predefined lists,
+                  // A11y_autocomplete stores these as individual 'path' and
+                  // 'list' options.
                   try {
                     // eslint-disable-next-line no-unused-vars
                     const list = JSON.parse(optionValue);
