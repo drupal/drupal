@@ -963,6 +963,18 @@ class RendererPlaceholdersTest extends RendererTestBase {
   }
 
   /**
+   * Tests that an error is thrown if a lazy builder doesn't return an array.
+   */
+  public function testNonArrayReturnFromLazyBuilder(): void {
+    $element = [
+      '#lazy_builder' => ['\Drupal\Tests\Core\Render\PlaceholdersTest::callbackNonArrayReturn', []],
+    ];
+    $this->expectException('AssertionError');
+    $this->expectExceptionMessage("#lazy_builder callbacks must return a valid renderable array, got boolean from \Drupal\Tests\Core\Render\PlaceholdersTest::callbackNonArrayReturn");
+    $this->renderer->renderRoot($element);
+  }
+
+  /**
    * Create an element with a child and subchild. Each element has the same
    * #lazy_builder callback, but with different contexts. They don't modify
    * markup, only attach additional drupalSettings.
