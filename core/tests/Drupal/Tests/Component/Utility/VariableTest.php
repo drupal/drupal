@@ -53,6 +53,10 @@ class VariableTest extends TestCase {
         [new static(), 'fake'],
         "$self::fake",
       ],
+      'service method' => [
+        'fake_service:method',
+        'fake_service:method',
+      ],
     ];
   }
 
@@ -68,7 +72,7 @@ class VariableTest extends TestCase {
    *
    * @covers ::callableToString
    */
-  public function testCallableToString(callable $callable, string $expected_name): void {
+  public function testCallableToString($callable, string $expected_name): void {
     $this->assertSame($expected_name, Variable::callableToString($callable));
   }
 
