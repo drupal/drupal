@@ -33,10 +33,8 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $field->attachFile($this->container->get('file_system')->realpath($text_file->uri));
     $this->assertSession()->waitForElement('css', '.messages--error');
 
-    $elements = $this->xpath('//div[contains(@class, :class)]', [
-      ':class' => 'messages--error',
-    ]);
-    $this->assertCount(1, $elements, 'Ajax validation messages are displayed once.');
+    // Verify that Ajax validation messages are displayed only once.
+    $this->assertSession()->elementsCount('xpath', '//div[contains(@class, "messages--error")]', 1);
   }
 
   /**
