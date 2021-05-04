@@ -370,7 +370,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
                     instance.options.path = optionValue;
                   }
                 } else {
-                  Drupal.Autocomplete.instances[id].options.list = optionValue;
+                  instance.options.list = optionValue;
                 }
 
                 break;

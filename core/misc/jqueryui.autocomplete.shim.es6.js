@@ -425,13 +425,14 @@
                   };
                 } else if (typeof optionValue === 'string') {
                   try {
+                    // eslint-disable-next-line no-unused-vars
                     const list = JSON.parse(optionValue);
                     instance.options.list = list;
                   } catch (e) {
                     instance.options.path = optionValue;
                   }
                 } else {
-                  Drupal.Autocomplete.instances[id].options.list = optionValue;
+                  instance.options.list = optionValue;
                 }
                 break;
               default:
