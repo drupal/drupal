@@ -2,11 +2,13 @@
 
 namespace Drupal\FunctionalJavascriptTests;
 
+use Behat\Mink\Element\Element;
 use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Exception\ElementHtmlException;
 use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\Mink\Exception\UnsupportedDriverActionException;
 use Drupal\Tests\WebAssert;
+use WebDriver\Exception\CurlExec;
 
 /**
  * Defines a class with methods for asserting presence of elements during tests.
@@ -64,13 +66,9 @@ JS;
    * @see \Behat\Mink\Element\ElementInterface::findAll()
    */
   public function waitForElement($selector, $locator, $timeout = 10000) {
-    $page = $this->session->getPage();
-
-    $result = $page->waitFor($timeout / 1000, function () use ($page, $selector, $locator) {
+    return $this->waitForHelper($timeout, function (Element $page) use ($selector, $locator) {
       return $page->find($selector, $locator);
     });
-
-    return $result;
   }
 
   /**
@@ -90,13 +88,9 @@ JS;
    * @see \Behat\Mink\Element\ElementInterface::findAll()
    */
   public function waitForElementRemoved($selector, $locator, $timeout = 10000) {
-    $page = $this->session->getPage();
-
-    $result = $page->waitFor($timeout / 1000, function () use ($page, $selector, $locator) {
+    return (bool) $this->waitForHelper($timeout, function (Element $page) use ($selector, $locator) {
       return !$page->find($selector, $locator);
     });
-
-    return $result;
   }
 
   /**
@@ -116,17 +110,13 @@ JS;
    * @see \Behat\Mink\Element\ElementInterface::findAll()
    */
   public function waitForElementVisible($selector, $locator, $timeout = 10000) {
-    $page = $this->session->getPage();
-
-    $result = $page->waitFor($timeout / 1000, function () use ($page, $selector, $locator) {
+    return $this->waitForHelper($timeout, function (Element $page) use ($selector, $locator) {
       $element = $page->find($selector, $locator);
       if (!empty($element) && $element->isVisible()) {
         return $element;
       }
       return NULL;
     });
-
-    return $result;
   }
 
   /**
@@ -137,16 +127,41 @@ JS;
    * @param int $timeout
    *   (Optional) Timeout in milliseconds, defaults to 10000.
    *
-   * @return \Behat\Mink\Element\NodeElement|null
-   *   The page element node if found and visible, NULL if not.
+   * @return bool
+   *   TRUE if not found, FALSE if found.
    */
   public function waitForText($text, $timeout = 10000) {
-    $page = $this->session->getPage();
-    return $page->waitFor($timeout / 1000, function () use ($page, $text) {
+    return (bool) $this->waitForHelper($timeout, function (Element $page) use ($text) {
       $actual = preg_replace('/\s+/u', ' ', $page->getText());
       $regex = '/' . preg_quote($text, '/') . '/ui';
       return (bool) preg_match($regex, $actual);
     });
+  }
+
+  /**
+   * Wraps waits in a function to catch curl exceptions to continue waiting.
+   *
+   * @param int $timeout
+   *   Timeout in milliseconds.
+   * @param callable $callback
+   *   Callback, which result is both used as waiting condition and returned.
+   *
+   * @return mixed
+   *   The result of $callback.
+   */
+  private function waitForHelper(int $timeout, callable $callback) {
+    WebDriverCurlService::disableRetry();
+    $wrapper = function (Element $element) use ($callback) {
+      try {
+        return call_user_func($callback, $element);
+      }
+      catch (CurlExec $e) {
+        return NULL;
+      }
+    };
+    $result = $this->session->getPage()->waitFor($timeout / 1000, $wrapper);
+    WebDriverCurlService::enableRetry();
+    return $result;
   }
 
   /**
