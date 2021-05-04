@@ -64,10 +64,10 @@ class StatementTest extends DatabaseTestBase {
    * @group legacy
    */
   public function testSetDeprecatedProperties(): void {
-    $statement = $this->connection->prepareStatement('SELECT * FROM {test}', []);
+    $statement = $this->connection->prepareStatement('UPDATE {test} SET [age] = :age', []);
     $this->expectDeprecation('%s$allowRowCount should not be written in drupal:9.2.0 and will error in drupal:10.0.0. Enable row counting by passing the appropriate argument to the constructor instead. See https://www.drupal.org/node/3186368');
     $statement->allowRowCount = TRUE;
-    $statement->execute();
+    $statement->execute([':age' => 12]);
     $this->assertEquals(4, $statement->rowCount());
   }
 
