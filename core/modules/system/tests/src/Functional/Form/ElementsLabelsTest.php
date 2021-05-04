@@ -65,11 +65,8 @@ class ElementsLabelsTest extends BrowserTestBase {
     $this->assertSession()->elementExists('xpath', '//div[contains(@class, "js-form-item-form-textfield-test-title-invisible") and contains(@class, "form-no-label")]');
 
     // Check #field_prefix and #field_suffix placement.
-    $elements = $this->xpath('//span[@class="field-prefix"]/following-sibling::div[@id="edit-form-radios-test"]');
-    $this->assertTrue(isset($elements[0]), 'Properly placed the #field_prefix element after the label and before the field.');
-
-    $elements = $this->xpath('//span[@class="field-suffix"]/preceding-sibling::div[@id="edit-form-radios-test"]');
-    $this->assertTrue(isset($elements[0]), 'Properly places the #field_suffix element immediately after the form field.');
+    $this->assertSession()->elementExists('xpath', '//span[@class="field-prefix"]/following-sibling::div[@id="edit-form-radios-test"]');
+    $this->assertSession()->elementExists('xpath', '//span[@class="field-suffix"]/preceding-sibling::div[@id="edit-form-radios-test"]');
 
     // Check #prefix and #suffix placement. Both elements placed before the form
     // item.

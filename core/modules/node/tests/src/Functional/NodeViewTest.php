@@ -98,8 +98,8 @@ class NodeViewTest extends NodeTestBase {
     $this->assertLessThan(strlen($title), mb_strlen($title, 'utf-8'));
     $node = $this->drupalCreateNode(['title' => $title]);
     $this->drupalGet($node->toUrl());
-    $result = $this->xpath('//span[contains(@class, "field--name-title")]');
-    $this->assertEqual($title, $result[0]->getText(), 'The passed title was returned.');
+    // Verify that the passed title was returned.
+    $this->assertSession()->elementTextEquals('xpath', '//span[contains(@class, "field--name-title")]', $title);
   }
 
 }
