@@ -15,7 +15,7 @@ use Drupal\Core\Update\VersioningUpdateRegistry;
 /**
  * Indicates that a module has not been installed yet.
  *
- * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
  *   \Drupal\Core\Update\VersioningUpdateRegistry::SCHEMA_UNINSTALLED constant
  *   instead.
  *
@@ -33,14 +33,14 @@ const SCHEMA_UNINSTALLED = VersioningUpdateRegistry::SCHEMA_UNINSTALLED;
  *   If the module has updates, an array of available updates sorted by
  *   version. Otherwise, FALSE.
  *
- * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0.
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0.
  *   Use \Drupal\Core\Update\SchemaDataInterface::getAvailableUpdates() instead.
  *
  * @see https://www.drupal.org/node/2444417
  * @see \Drupal\Core\Update\VersioningUpdateRegistry::getAvailableUpdates()
  */
 function drupal_get_schema_versions($module) {
-  @trigger_error('drupal_get_schema_versions() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Update\VersioningUpdateRegistry::getAvailableUpdates() instead. See https://www.drupal.org/node/2444417', E_USER_DEPRECATED);
+  @trigger_error('drupal_get_schema_versions() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Update\VersioningUpdateRegistry::getAvailableUpdates() instead. See https://www.drupal.org/node/2444417', E_USER_DEPRECATED);
   return \Drupal::service('update.update_registry')->getAvailableUpdates($module);
 }
 
@@ -59,7 +59,7 @@ function drupal_get_schema_versions($module) {
  *   The currently installed schema version, or SCHEMA_UNINSTALLED if the
  *   module is not installed.
  *
- * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0.
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0.
  *   Use \Drupal\Core\Update\VersioningUpdateRegistry::getInstalledVersion() or
  *   \Drupal\Core\Update\VersioningUpdateRegistry::getAllInstalledVersions()
  *   instead.
@@ -68,7 +68,7 @@ function drupal_get_schema_versions($module) {
  * @see \Drupal\Core\Update\VersioningUpdateRegistry::getInstalledVersion()
  */
 function drupal_get_installed_schema_version($module, $reset = FALSE, $array = FALSE) {
-  @trigger_error('drupal_get_installed_schema_version() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Update\VersioningUpdateRegistry::getInstalledVersion() or \Drupal\Core\Update\VersioningUpdateRegistry::getAllInstalledVersions() instead. See https://www.drupal.org/node/2444417', E_USER_DEPRECATED);
+  @trigger_error('drupal_get_installed_schema_version() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Update\VersioningUpdateRegistry::getInstalledVersion() or \Drupal\Core\Update\VersioningUpdateRegistry::getAllInstalledVersions() instead. See https://www.drupal.org/node/2444417', E_USER_DEPRECATED);
   /** @var \Drupal\Core\Update\VersioningUpdateRegistry $service */
   $service = \Drupal::service('update.update_registry');
   if ($array) {
@@ -85,7 +85,7 @@ function drupal_get_installed_schema_version($module, $reset = FALSE, $array = F
  * @param string $version
  *   The new schema version.
  *
- * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0.
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0.
  *   Use \Drupal\Core\Update\VersioningUpdateRegistry::setInstalledVersion()
  *   instead.
  *
@@ -93,7 +93,7 @@ function drupal_get_installed_schema_version($module, $reset = FALSE, $array = F
  * @see \Drupal\Core\Update\VersioningUpdateRegistry::setInstalledVersion()
  */
 function drupal_set_installed_schema_version($module, $version) {
-  @trigger_error('drupal_set_installed_schema_version() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Update\VersioningUpdateRegistry::setInstalledVersion() instead. See https://www.drupal.org/node/2444417', E_USER_DEPRECATED);
+  @trigger_error('drupal_set_installed_schema_version() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Update\VersioningUpdateRegistry::setInstalledVersion() instead. See https://www.drupal.org/node/2444417', E_USER_DEPRECATED);
   \Drupal::service('update.update_registry')->setInstalledVersion($module, $version);
 }
 
