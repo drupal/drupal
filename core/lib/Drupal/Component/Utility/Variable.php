@@ -10,6 +10,33 @@ namespace Drupal\Component\Utility;
 class Variable {
 
   /**
+   * Generates a human-readable name for a callable.
+   *
+   * @param callable $callable
+   *   A callable.
+   *
+   * @return string
+   *   A human-readable name for the callable.
+   */
+  public static function callableToString($callable): string {
+    if ($callable instanceof \Closure) {
+      return '[closure]';
+    }
+    elseif (is_array($callable) && $callable) {
+      if (is_object($callable[0])) {
+        $callable[0] = get_class($callable[0]);
+      }
+      return implode('::', $callable);
+    }
+    elseif (is_string($callable)) {
+      return $callable;
+    }
+    else {
+      return '[unknown]';
+    }
+  }
+
+  /**
    * Drupal-friendly var_export().
    *
    * @param mixed $var
