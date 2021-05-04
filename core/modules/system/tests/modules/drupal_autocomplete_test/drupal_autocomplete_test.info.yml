@@ -1,0 +1,7 @@
+name: 'Drupal Autocomplete Test'
+type: module
+description: 'Provides forms to test the Drupal Autocomplete module'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:form_test

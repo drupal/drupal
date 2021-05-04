@@ -82,7 +82,12 @@ auth's
 authless
 authmap
 authz
+autocompletechange
+autocompleteclose
+autocompletecreate
 autocompletefocus
+autocompleteopen
+autocompleteresponse
 autocompleteresponses
 autocompletesearch
 autocompleteselect
@@ -338,6 +343,7 @@ curle
 curlopt
 currenttime
 currentuser
+customevent
 customly
 customrequest
 cweagans
@@ -393,6 +399,7 @@ denormalizers
 denormalizes
 denormalizing
 denyall
+denylist
 dependee
 dependee's
 dependees
@@ -411,6 +418,7 @@ deserialization
 deserializes
 destid
 destructable
+destructure
 destructured
 desynchronized
 deutsch
@@ -712,6 +720,7 @@ hookname
 horizontalrule
 hosters
 hostnames
+hoverable
 hreflang
 hreflangs
 hrefs
@@ -919,7 +928,9 @@ mdhash
 mediumint
 mediumtext
 membersonly
+menufocus
 menulist
+menuselect
 merhaba
 messagekey
 metainformation

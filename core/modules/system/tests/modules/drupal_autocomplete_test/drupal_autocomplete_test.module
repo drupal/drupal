@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Used in autocomplete tests.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+function drupal_autocomplete_test_form_node_form_alter(&$form, FormStateInterface $form_state) {
+  $form['taxonomy_reference']['#attributes']['data-autocomplete-max-items'] = '10';
+  $form['taxonomy_reference']['widget']['target_id']['#attributes']['data-autocomplete-max-items'] = '10';
+}

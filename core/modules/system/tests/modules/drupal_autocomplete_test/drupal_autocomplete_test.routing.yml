@@ -1,0 +1,23 @@
+drupal_autocomplete.test.form:
+  path: '/drupal_autocomplete/test-form'
+  defaults:
+    _form: '\Drupal\drupal_autocomplete_test\Form\AutocompleteTestForm'
+    _title: 'Autocomplete test form'
+  requirements:
+    _permission: 'access content'
+
+drupal_autocomplete.selective_shim.form:
+  path: '/drupal_autocomplete/selective-shim-form'
+  defaults:
+    _form: '\Drupal\drupal_autocomplete_test\Form\AutocompleteSelectiveShimForm'
+    _title: 'Autocomplete test selective shim form'
+  requirements:
+    _permission: 'access content'
+
+drupal_autocomplete.country_autocomplete:
+  path: '/drupal_autocomplete_countries'
+  defaults:
+    _controller: '\Drupal\drupal_autocomplete_test\Controller\AutocompleteController::autocomplete'
+  requirements:
+    # Explicitly allow access to country autocomplete.
+    _access: 'TRUE'
