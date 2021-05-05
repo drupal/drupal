@@ -458,7 +458,7 @@ class Connection extends DatabaseConnection {
     }
     // The transaction gets committed when the transaction object gets destroyed
     // because it gets out of scope.
-    return $this->query('SELECT value FROM {sequences}')->fetchField();
+    return $this->query('SELECT [value] FROM {sequences}')->fetchField();
   }
 
   /**
