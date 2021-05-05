@@ -3,11 +3,11 @@
 namespace Drupal\Tests\user\Functional\Rest;
 
 use Drupal\Core\Url;
-use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
+use Drupal\Tests\rest\Functional\EntityResource\ContentEntityResourceTestBase;
 use Drupal\user\Entity\User;
 use GuzzleHttp\RequestOptions;
 
-abstract class UserResourceTestBase extends EntityResourceTestBase {
+abstract class UserResourceTestBase extends ContentEntityResourceTestBase {
 
   /**
    * {@inheritdoc}

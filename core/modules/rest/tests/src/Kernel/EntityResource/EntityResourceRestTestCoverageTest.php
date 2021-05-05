@@ -1,9 +1,11 @@
 <?php
 
-namespace Drupal\Tests\rest\Functional\EntityResource;
+namespace Drupal\Tests\rest\Kernel\EntityResource;
 
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\rest\Functional\EntityResource\ContentEntityResourceTestBase;
 
 /**
  * Checks that all core content/config entity types have REST test coverage.
@@ -12,9 +14,16 @@ use Drupal\Tests\BrowserTestBase;
  * - every format in core (json + xml + hal_json)
  * - every authentication provider in core (anon, cookie, basic_auth)
  *
+ * Additionally, every entity type must have the correct parent test class.
+ *
  * @group rest
  */
-class EntityResourceRestTestCoverageTest extends BrowserTestBase {
+class EntityResourceRestTestCoverageTest extends KernelTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['system', 'user'];
 
   /**
    * Entity definitions array.
@@ -22,11 +31,6 @@ class EntityResourceRestTestCoverageTest extends BrowserTestBase {
    * @var array
    */
   protected $definitions;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -46,7 +50,6 @@ class EntityResourceRestTestCoverageTest extends BrowserTestBase {
     });
 
     $this->container->get('module_installer')->install(array_keys($stable_core_modules));
-    $this->rebuildContainer();
 
     $this->definitions = $this->container->get('entity_type.manager')->getDefinitions();
 
@@ -95,13 +98,16 @@ class EntityResourceRestTestCoverageTest extends BrowserTestBase {
       foreach ($tests as $module => $info) {
         $path = $info['path'];
         $missing_tests = [];
+        $bad_tests = [];
         foreach ($info['class suffix'] as $postfix) {
           $class = str_replace(['PROVIDER', 'CLASS'], [$module_name, $class_name], $path . $postfix);
-          $class_alternative = str_replace("\\Drupal\\Tests\\$module_name\\Functional", '\Drupal\FunctionalTests', $class);
-          if (class_exists($class) || class_exists($class_alternative)) {
-            continue;
+          if (!class_exists($class)) {
+            $class = str_replace("\\Drupal\\Tests\\$module_name\\Functional", '\Drupal\FunctionalTests', $class);
+            if (!class_exists($class)) {
+              $missing_tests[] = $postfix;
+              continue;
+            }
           }
-          $missing_tests[] = $postfix;
         }
         if (!empty($missing_tests)) {
           $missing_tests_list = implode(', ', array_map(function ($missing_test) use ($class_name) {
@@ -111,41 +117,17 @@ class EntityResourceRestTestCoverageTest extends BrowserTestBase {
           $problems[] = "$entity_type_id: $class_name ($class_name_full), $which_normalization normalization (expected tests: $missing_tests_list)";
         }
       }
-    }
-    $all = count($this->definitions);
-    $good = $all - count($problems);
-    $this->assertSame([], $problems, $this->getLlamaMessage($good, $all));
-  }
 
-  /**
-   * Message from Llama.
-   *
-   * @param int $g
-   *   A count of entities with test coverage.
-   * @param int $a
-   *   A count of all entities.
-   *
-   * @return string
-   *   An information about progress of REST test coverage.
-   */
-  protected function getLlamaMessage($g, $a) {
-    return "
-☼
-      ________________________
-     /           Hi!          \\
-    |  It's llame to not have  |
-    |   complete REST tests!   |
-    |                          |
-    |     Progress: $g/$a.     |
-    | ________________________/
-    |/
-//  o
-l'>
-ll
-llama
-|| ||
-'' ''
-";
+      $content_entity = is_subclass_of($class_name_full, ContentEntityInterface::class);
+      $content_test = is_subclass_of($class, ContentEntityResourceTestBase::class);
+      if ($content_entity && !$content_test) {
+        $problems[] = "$entity_type_id: $class_name is a content entity, but the test is for config entities.";
+      }
+      elseif (!$content_entity && $content_test) {
+        $problems[] = "$entity_type_id: $class_name is a config entity, but the test is for content entities.";
+      }
+    }
+    $this->assertSame([], $problems);
   }
 
 }

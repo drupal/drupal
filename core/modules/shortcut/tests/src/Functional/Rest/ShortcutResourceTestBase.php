@@ -4,12 +4,12 @@ namespace Drupal\Tests\shortcut\Functional\Rest;
 
 use Drupal\shortcut\Entity\Shortcut;
 use Drupal\shortcut\Entity\ShortcutSet;
-use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
+use Drupal\Tests\rest\Functional\EntityResource\ContentEntityResourceTestBase;
 
 /**
  * ResourceTestBase for Shortcut entity.
  */
-abstract class ShortcutResourceTestBase extends EntityResourceTestBase {
+abstract class ShortcutResourceTestBase extends ContentEntityResourceTestBase {
 
   /**
    * {@inheritdoc}
