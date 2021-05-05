@@ -61,11 +61,11 @@ class Truncate extends Query {
     $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions, TRUE);
     try {
       $stmt->execute([], $this->queryOptions);
+      return $stmt->rowCount();
     }
     catch (\Exception $e) {
       $this->connection->exceptionHandler()->handleExecutionException($e, $stmt, [], $this->queryOptions);
     }
-    return $stmt->rowCount();
   }
 
   /**

@@ -146,12 +146,11 @@ class Update extends Query implements ConditionInterface {
     $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions, TRUE);
     try {
       $stmt->execute($update_values, $this->queryOptions);
+      return $stmt->rowCount();
     }
     catch (\Exception $e) {
       $this->connection->exceptionHandler()->handleExecutionException($e, $stmt, $update_values, $this->queryOptions);
     }
-
-    return $stmt->rowCount();
   }
 
   /**

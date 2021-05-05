@@ -56,9 +56,8 @@ class Delete extends Query implements ConditionInterface {
     }
     catch (\Exception $e) {
       $this->connection->exceptionHandler()->handleExecutionException($e, $stmt, $values, $this->queryOptions);
+      return $stmt->rowCount();
     }
-
-    return $stmt->rowCount();
   }
 
   /**

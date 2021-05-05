@@ -445,7 +445,7 @@ class Connection extends DatabaseConnection {
     // and integers and no known databases require special handling for those
     // simple cases. If another transaction wants to write the same row, it will
     // wait until this transaction commits.
-    $stmt = $this->prepareStatement('UPDATE {sequences} SET value = GREATEST(value, :existing_id) + 1', [], TRUE);
+    $stmt = $this->prepareStatement('UPDATE {sequences} SET [value] = GREATEST([value], :existing_id) + 1', [], TRUE);
     $args = [':existing_id' => $existing_id];
     try {
       $stmt->execute($args);
@@ -454,7 +454,7 @@ class Connection extends DatabaseConnection {
       $this->exceptionHandler()->handleExecutionException($e, $stmt, $args, []);
     }
     if ($stmt->rowCount() === 0) {
-      $this->query('INSERT INTO {sequences} (value) VALUES (:existing_id + 1)', $args);
+      $this->query('INSERT INTO {sequences} ([value]) VALUES (:existing_id + 1)', $args);
     }
     // The transaction gets committed when the transaction object gets destroyed
     // because it gets out of scope.
