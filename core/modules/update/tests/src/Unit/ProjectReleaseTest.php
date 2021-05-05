@@ -65,39 +65,38 @@ class ProjectReleaseTest extends UnitTestCase {
   public function providerCreateFromArray(): array {
     return [
       'default valid' => [
-        [],
+        'changes' => [],
       ],
       'valid with extra field' => [
-        [],
-        ['extra' => 'This value is ignored and will not trigger a validation error.'],
+        'changes' => ['extra' => 'This value is ignored and will not trigger a validation error.'],
       ],
       'no release types' => [
-        [
+        'changes' => [
           'terms' => [
             'Release type' => [],
           ],
         ],
-        [
+        'expected' => [
           'is_unsupported' => FALSE,
           'is_security_release' => FALSE,
           'is_insecure' => FALSE,
         ],
       ],
       'unpublished' => [
-        [
+        'changes' => [
           'status' => 'unpublished',
         ],
-        [
+        'expected' => [
           'is_published' => FALSE,
         ],
       ],
       'core_compatible false' => [
-        [
+        'changes' => [
           'core_compatible' => FALSE,
         ],
       ],
       'core_compatible NULL' => [
-        [
+        'changes' => [
           'core_compatible' => NULL,
         ],
       ],
@@ -166,22 +165,22 @@ class ProjectReleaseTest extends UnitTestCase {
    *   The field to test for an invalid value.
    * @param mixed $invalid_value
    *   The invalid value to use in the field.
-   * @param string $expected_type_message
+   * @param string $expected_message
    *   The expected message for the field.
    *
    * @covers ::createFromArray
    *
    * @dataProvider providerCreateFromArrayInvalidField
    */
-  public function testCreateFromArrayInvalidField(string $invalid_field, $invalid_value, string $expected_type_message): void {
+  public function testCreateFromArrayInvalidField(string $invalid_field, $invalid_value, string $expected_message): void {
     $data = $this->getValidData();
     // Set the field a value that is not valid for any of the fields in the
     // feed.
     $data[$invalid_field] = $invalid_value;
     $this->expectException(\UnexpectedValueException::class);
-    $expected_message = 'Malformed release data:.*' . preg_quote("[$invalid_field]:", '/');
-    $expected_message .= ".*$expected_type_message";
-    $this->expectExceptionMessageMatches("/$expected_message/s");
+    $expected_exception_message = 'Malformed release data:.*' . preg_quote("[$invalid_field]:", '/');
+    $expected_exception_message .= ".*$expected_message";
+    $this->expectExceptionMessageMatches("/$expected_exception_message/s");
     ProjectRelease::createFromArray($data);
   }
 
@@ -191,44 +190,44 @@ class ProjectReleaseTest extends UnitTestCase {
   public function providerCreateFromArrayInvalidField(): array {
     return [
       'status other' => [
-        'status',
-        'other',
-        'The value you selected is not a valid choice.',
+        'invalid_field' => 'status',
+        'invalid_value' => 'other',
+        'expected_message' => 'The value you selected is not a valid choice.',
       ],
       'status non-string' => [
-        'status',
-        new \stdClass(),
-        'The value you selected is not a valid choice.',
+        'invalid_field' => 'status',
+        'invalid_value' => new \stdClass(),
+        'expected_message' => 'The value you selected is not a valid choice.',
       ],
       'terms non-array' => [
-        'terms',
-        'Unsupported',
-        'This value should be of type array.',
+        'invalid_field' => 'terms',
+        'invalid_value' => 'Unsupported',
+        'expected_message' => 'This value should be of type array.',
       ],
       'version blank' => [
-        'version',
-        '',
-        'This value should not be blank.',
+        'invalid_field' => 'version',
+        'invalid_value' => '',
+        'expected_message' => 'This value should not be blank.',
       ],
       'core_compatibility_message blank' => [
-        'core_compatibility_message',
-        '',
-        'This value should not be blank.',
+        'invalid_field' => 'core_compatibility_message',
+        'invalid_value' => '',
+        'expected_message' => 'This value should not be blank.',
       ],
       'download_link blank' => [
-        'download_link',
-        '',
-        'This value should not be blank.',
+        'invalid_field' => 'download_link',
+        'invalid_value' => '',
+        'expected_message' => 'This value should not be blank.',
       ],
       'release_link blank' => [
-        'release_link',
-        '',
-        'This value should not be blank.',
+        'invalid_field' => 'release_link',
+        'invalid_value' => '',
+        'expected_message' => 'This value should not be blank.',
       ],
       'date non-numeric' => [
-        'date',
-        '2 weeks ago',
-        'This value should be of type numeric.',
+        'invalid_field' => 'date',
+        'invalid_value' => '2 weeks ago',
+        'expected_message' => 'This value should be of type numeric.',
       ],
     ];
   }
