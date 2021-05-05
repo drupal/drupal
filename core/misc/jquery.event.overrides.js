@@ -16,20 +16,107 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 (function ($, Drupal) {
   var oldOn = $.fn.on;
 
-  var findHandler = function findHandler(fn, data, selector) {
-    if (typeof fn === 'function') {
-      return fn;
+  var findHandler = function findHandler(arg1, arg2, arg3) {
+    if (typeof arg1 === 'function') {
+      return arg1;
     }
 
-    if (typeof data === 'function') {
-      return data;
+    if (typeof arg2 === 'function') {
+      return arg2;
     }
 
-    if (typeof selector === 'function') {
-      return selector;
+    if (typeof arg3 === 'function') {
+      return arg3;
     }
 
     return null;
+  };
+
+  var processAutocompleteEvents = function processAutocompleteEvents(types, selector, data, fn, one, that) {
+    var eventsToAddListenersTo = {};
+    var autocompleteEvents = {
+      autocompletechange: 'autocomplete-change',
+      autocompleteclose: 'autocomplete-close',
+      autocompletecreate: 'autocomplete-created',
+      autocompletefocus: 'autocomplete-highlight',
+      autocompleteopen: 'autocomplete-open',
+      autocompleteresponse: 'autocomplete-response',
+      autocompletesearch: 'autocomplete-pre-search',
+      autocompleteselect: 'autocomplete-select'
+    };
+    var autocompleteKeys = Object.keys(autocompleteEvents);
+
+    if (typeof types === 'string' && types.indexOf('autocomplete') !== -1) {
+      var handler = findHandler(fn, data, selector);
+      types.split(' ').forEach(function (eventName) {
+        if (autocompleteKeys.includes(eventName.split('.')[0]) && handler) {
+          eventsToAddListenersTo[eventName] = handler;
+        }
+      });
+    } else if (_typeof(types) === 'object') {
+      Object.keys(types).forEach(function (eventName) {
+        if (autocompleteKeys.includes(eventName)) {
+          eventsToAddListenersTo[eventName] = types[eventName];
+        }
+      });
+    }
+
+    var autocompleteEventsToShim = Object.keys(eventsToAddListenersTo);
+
+    if (autocompleteEventsToShim.length) {
+      var id = that.attr('id');
+      var instance = Drupal.Autocomplete.instances[id];
+      var config = {};
+
+      if (one === 1) {
+        config.once = true;
+      }
+
+      autocompleteEventsToShim.forEach(function (eventName) {
+        var eventHandler = eventsToAddListenersTo[eventName];
+
+        var shimmedEventHandler = function shimmedEventHandler(e) {
+          var ui = {};
+
+          if (eventName === 'autocompleteresponse') {
+            ui.content = e.detail.list;
+          }
+
+          if (eventName === 'autocompletechange') {
+            e.originalEvent = $.Event('blur');
+            ui.item = instance.selected;
+          }
+
+          if (eventName === 'autocompletefocus') {
+            ui.item = e.detail.selected;
+            e.originalEvent = $.Event('menufocus');
+          }
+
+          if (eventName === 'autocompleteselect') {
+            ui.item = e.detail.selected;
+            e.originalEvent = $.Event('menuselect');
+          }
+
+          if (eventName === 'autocompleteclose') {
+            e.originalEvent = $.Event('menuselect');
+          }
+
+          e.type = eventName;
+          var handle = eventHandler.bind(that);
+          var eventReturn = handle(_objectSpread(_objectSpread({}, $.Event(eventName, e)), {}, {
+            type: eventName
+          }), ui);
+
+          if (eventReturn === false) {
+            e.preventDefault();
+          }
+
+          return eventReturn;
+        };
+
+        instance.input.addEventListener(autocompleteEvents[eventName], shimmedEventHandler, config);
+      });
+    }
   };
 
   $.fn.extend({
@@ -43,92 +130,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           data = args[2],
           fn = args[3],
           one = args[4];
-      var eventsToAddListenersTo = {};
-      var autocompleteEvents = {
-        autocompletechange: 'autocomplete-change',
-        autocompleteclose: 'autocomplete-close',
-        autocompletecreate: 'autocomplete-created',
-        autocompletefocus: 'autocomplete-highlight',
-        autocompleteopen: 'autocomplete-open',
-        autocompleteresponse: 'autocomplete-response',
-        autocompletesearch: 'autocomplete-pre-search',
-        autocompleteselect: 'autocomplete-select'
-      };
-      var autocompleteKeys = Object.keys(autocompleteEvents);
-
-      if (typeof types === 'string' && types.indexOf('autocomplete') !== -1) {
-        var handler = findHandler(fn, data, selector);
-        types.split(' ').forEach(function (eventName) {
-          if (autocompleteKeys.includes(eventName.split('.')[0])) {
-            eventsToAddListenersTo[eventName] = handler;
-          }
-        });
-      } else if (_typeof(types) === 'object') {
-        Object.keys(types).forEach(function (eventName) {
-          if (autocompleteKeys.includes(eventName)) {
-            eventsToAddListenersTo[eventName] = types[eventName];
-          }
-        });
-      }
-
-      var autocompleteEventsToShim = Object.keys(eventsToAddListenersTo);
-
-      if (autocompleteEventsToShim.length) {
-        var id = this.attr('id');
-        var instance = Drupal.Autocomplete.instances[id];
-        var that = this;
-        var config = {};
-
-        if (one === 1) {
-          config.once = true;
-        }
-
-        autocompleteEventsToShim.forEach(function (eventName) {
-          var eventHandler = eventsToAddListenersTo[eventName];
-
-          var shimmedEventHandler = function shimmedEventHandler(e) {
-            var ui = {};
-
-            if (eventName === 'autocompleteresponse') {
-              ui.content = e.detail.list;
-            }
-
-            if (eventName === 'autocompletechange') {
-              e.originalEvent = $.Event('blur');
-              ui.item = instance.selected;
-            }
-
-            if (eventName === 'autocompletefocus') {
-              ui.item = e.detail.selected;
-              e.originalEvent = $.Event('menufocus');
-            }
-
-            if (eventName === 'autocompleteselect') {
-              ui.item = e.detail.selected;
-              e.originalEvent = $.Event('menuselect');
-            }
-
-            if (eventName === 'autocompleteclose') {
-              e.originalEvent = $.Event('menuselect');
-            }
-
-            e.type = eventName;
-            var handle = eventHandler.bind(that);
-            var eventReturn = handle(_objectSpread(_objectSpread({}, $.Event(eventName, e)), {}, {
-              type: eventName
-            }), ui);
-
-            if (eventReturn === false) {
-              e.preventDefault();
-            }
-
-            return eventReturn;
-          };
-
-          instance.input.addEventListener(autocompleteEvents[eventName], shimmedEventHandler, config);
-        });
-      }
-
+      processAutocompleteEvents(types, selector, data, fn, one, this);
       return oldOn.apply(this, args);
     }
   });
