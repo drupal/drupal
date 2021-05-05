@@ -228,6 +228,11 @@ class ProjectReleaseTest extends UnitTestCase {
         'invalid_value' => '2 weeks ago',
         'expected_message' => 'This value should be of type numeric.',
       ],
+      'core_compatible string' => [
+        'invalid_field' => 'core_compatible',
+        'invalid_value' => 'Nope',
+        'expected_message' => 'This value should be of type boolean.',
+      ],
     ];
   }
 

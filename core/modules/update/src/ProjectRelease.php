@@ -146,9 +146,8 @@ final class ProjectRelease {
     $collection_constraint = new Collection([
       'fields' => [
         'version' => $not_blank_constraints,
-        'date' => new Optional([
-          new Type('numeric'),
-        ]),
+        'date' => new Optional([new Type('numeric')]),
+        'core_compatible' => new Optional([new Type('boolean')]),
         'core_compatibility_message' => new Optional($not_blank_constraints),
         'status' => new Choice(['published', 'unpublished']),
         'download_link' => new Optional($not_blank_constraints),
