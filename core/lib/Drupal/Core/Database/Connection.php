@@ -2036,6 +2036,11 @@ abstract class Connection {
   /**
    * Get the config database storage class.
    *
+   * The class \Drupal\Core\Config\DatabaseStorage should not be overridden by
+   * contrib or custom modules. Only some database drivers need to override the
+   * class. Therefore is the class not part of a backend overridable service and
+   * is this method the only way to override the class.
+   *
    * @param string $table
    *   A database table name to store configuration data in.
    *
