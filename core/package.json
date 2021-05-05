@@ -50,7 +50,7 @@
     "glob": "^7.1.2",
     "minimist": "^1.2.2",
     "mkdirp": "^1.0.4",
-    "nightwatch": "^1.2.1",
+    "nightwatch": "^1.6.3",
     "postcss": "^7.0.18",
     "postcss-calc": "^7.0.1",
     "postcss-header": "^2.0.0",
