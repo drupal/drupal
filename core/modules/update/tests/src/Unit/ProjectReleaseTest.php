@@ -15,7 +15,7 @@ class ProjectReleaseTest extends UnitTestCase {
   /**
    * Tests creating with valid data.
    *
-   * @param mixed[] $changes
+   * @param mixed[] $data
    *   The data to test. It will be combined with ::getValidData() results.
    * @param mixed[] $expected
    *   The values expected to be returned from the object methods.
@@ -29,8 +29,7 @@ class ProjectReleaseTest extends UnitTestCase {
    *
    * @dataProvider providerCreateFromArray
    */
-  public function testCreateFromArray(array $changes, array $expected = []): void {
-    $data = $changes;
+  public function testCreateFromArray(array $data, array $expected = []): void {
     $data += $this->getValidData();
     $expected += $data;
     // If not set provide default values that match ::getValidData().
@@ -65,13 +64,13 @@ class ProjectReleaseTest extends UnitTestCase {
   public function providerCreateFromArray(): array {
     return [
       'default valid' => [
-        'changes' => [],
+        'data' => [],
       ],
       'valid with extra field' => [
-        'changes' => ['extra' => 'This value is ignored and will not trigger a validation error.'],
+        'data' => ['extra' => 'This value is ignored and will not trigger a validation error.'],
       ],
       'no release types' => [
-        'changes' => [
+        'data' => [
           'terms' => [
             'Release type' => [],
           ],
@@ -83,7 +82,7 @@ class ProjectReleaseTest extends UnitTestCase {
         ],
       ],
       'unpublished' => [
-        'changes' => [
+        'data' => [
           'status' => 'unpublished',
         ],
         'expected' => [
@@ -91,12 +90,12 @@ class ProjectReleaseTest extends UnitTestCase {
         ],
       ],
       'core_compatible false' => [
-        'changes' => [
+        'data' => [
           'core_compatible' => FALSE,
         ],
       ],
       'core_compatible NULL' => [
-        'changes' => [
+        'data' => [
           'core_compatible' => NULL,
         ],
       ],
