@@ -23,7 +23,7 @@ class TabbableShimTestController extends ControllerBase {
           'id' => 'tabbable-test-container',
         ],
       ],
-      '#attached' => ['library' => ['core/drupal.tabbingmanager']],
+      '#attached' => ['library' => ['core/jquery.ui']],
     ];
   }
 
