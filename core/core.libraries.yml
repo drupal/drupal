@@ -258,6 +258,7 @@ drupal.dialog.ajax:
     - core/drupalSettings
     - core/drupal.ajax
     - core/drupal.dialog
+    - core/tabbable
 
 drupal.displace:
   version: VERSION
@@ -366,7 +367,6 @@ drupal.tabbingmanager:
     - core/jquery
     - core/drupal
     - core/tabbable
-    - core/tabbable.jquery.shim
 
 drupal.tabledrag:
   version: VERSION
@@ -791,6 +791,7 @@ tabbable.jquery.shim:
   js:
     misc/jquery.tabbable.shim.js: {}
   dependencies:
+    - core/drupal
     - core/tabbable
     - core/jquery
 
