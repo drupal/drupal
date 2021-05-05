@@ -165,7 +165,7 @@ final class ProjectRelease {
       'allowExtraFields' => TRUE,
     ]);
     $violations = Validation::createValidator()->validate($data, $collection_constraint);
-    if ($violations->count()) {
+    if (count($violations)) {
       foreach ($violations as $violation) {
         $violation_messages[] = "Field " . $violation->getPropertyPath() . ": " . $violation->getMessage();
       }
