@@ -524,6 +524,30 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   }
 
   /**
+   * Transforms a normalization: casts all non-string types to strings.
+   *
+   * @param array $normalization
+   *   A normalization to transform.
+   *
+   * @return array
+   *   The transformed normalization.
+   */
+  protected static function castToString(array $normalization) {
+    foreach ($normalization as $key => $value) {
+      if (is_bool($value)) {
+        $normalization[$key] = (string) (int) $value;
+      }
+      elseif (is_int($value) || is_float($value)) {
+        $normalization[$key] = (string) $value;
+      }
+      elseif (is_array($value)) {
+        $normalization[$key] = static::castToString($value);
+      }
+    }
+    return $normalization;
+  }
+
+  /**
    * {@inheritdoc}
    */
   protected function assertNormalizationEdgeCases($method, Url $url, array $request_options) {

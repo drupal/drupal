@@ -153,30 +153,6 @@ abstract class ContentEntityResourceTestBase extends EntityResourceTestBase {
   }
 
   /**
-   * Transforms a normalization: casts all non-string types to strings.
-   *
-   * @param array $normalization
-   *   A normalization to transform.
-   *
-   * @return array
-   *   The transformed normalization.
-   */
-  protected static function castToString(array $normalization) {
-    foreach ($normalization as $key => $value) {
-      if (is_bool($value)) {
-        $normalization[$key] = (string) (int) $value;
-      }
-      elseif (is_int($value) || is_float($value)) {
-        $normalization[$key] = (string) $value;
-      }
-      elseif (is_array($value)) {
-        $normalization[$key] = static::castToString($value);
-      }
-    }
-    return $normalization;
-  }
-
-  /**
    * Tests a POST request for an entity, plus edge cases to ensure good DX.
    */
   public function testPost() {
