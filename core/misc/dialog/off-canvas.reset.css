@@ -454,7 +454,6 @@
 #drupal-off-canvas textarea[disabled] {
   cursor: default;
   -webkit-user-select: none;
-  -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
   box-shadow: none;

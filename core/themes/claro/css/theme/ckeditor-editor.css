@@ -56,20 +56,8 @@
 }
 /* Focus. */
 .cke.cke_chrome.cke_focus {
-  outline: 2px
-dotted
-transparent;
-  box-shadow: 0
-0
-0
-2px
-#fff
-,
-0
-0
-0
-5px
-#26a769;
+  outline: 2px dotted transparent;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 5px #26a769;
 }
 /* Error. */
 .error + .cke.cke_chrome,

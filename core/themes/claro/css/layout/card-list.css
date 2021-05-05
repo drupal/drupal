@@ -41,8 +41,8 @@
 
 @media screen and (min-width: 36.75rem) {
   .card-list--four-cols .card-list__item {
-    flex-basis: calc((99.9% + 1rem)/2 - 1rem);
-    max-width: calc((99.9% + 1rem)/2 - 1rem);
+    flex-basis: calc(49.95% - 0.5rem);
+    max-width: calc(49.95% - 0.5rem);
   }
 
   .card-list--four-cols .card-list__item {
@@ -75,8 +75,8 @@
 
 @media screen and (min-width: 70rem) {
   .card-list--four-cols .card-list__item {
-    flex-basis: calc((99.9% + 1rem)/3 - 1rem);
-    max-width: calc((99.9% + 1rem)/3 - 1rem);
+    flex-basis: calc(33.3% - 0.66667rem);
+    max-width: calc(33.3% - 0.66667rem);
   }
 
   .card-list--four-cols .card-list__item:nth-child(even) {
@@ -98,8 +98,8 @@
 
 @media screen and (min-width: 85.375rem) {
   .card-list--two-cols .card-list__item {
-    flex-basis: calc((99.9% + 1rem)/2 - 1rem);
-    max-width: calc((99.9% + 1rem)/2 - 1rem);
+    flex-basis: calc(49.95% - 0.5rem);
+    max-width: calc(49.95% - 0.5rem);
     margin-right: 1rem;
   }
   [dir="rtl"] .card-list--two-cols .card-list__item {
@@ -116,8 +116,8 @@
   }
 
   .card-list--four-cols .card-list__item {
-    flex-basis: calc((99.9% + 1rem)/4 - 1rem);
-    max-width: calc((99.9% + 1rem)/4 - 1rem);
+    flex-basis: calc(24.975% - 0.75rem);
+    max-width: calc(24.975% - 0.75rem);
   }
 
   .card-list--four-cols .card-list__item:nth-child(even) {
