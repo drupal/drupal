@@ -52,7 +52,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     });
 
     function shimmedInputKeyDown(e) {
-      if (!['INPUT', 'TEXTAREA'].includes(this.input.tagName) && this.input.hasAttribute('contenteditable')) {
+      if (instance.options.isMultiline) {
         this.input.value = this.input.textContent;
       }
 
@@ -81,19 +81,16 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
       if (this.input.nodeName === 'INPUT' && !this.isOpened && this.options.list.length > 0 && (keyCode === this.keyCode.DOWN || keyCode === this.keyCode.UP)) {
         e.preventDefault();
-        this.suggestionItems = this.options.list;
         this.preventCloseOnBlur = true;
         var typed = this.extractLastInputValue();
 
         if (!typed && this.options.minChars < 1) {
           this.ul.innerHTML = '';
+          this.suggestionItems = this.options.list;
           this.prepareSuggestionList();
+          this.open();
         } else {
           this.displayResults();
-        }
-
-        if (this.ul.children.length > 0) {
-          this.open();
         }
 
         if (this.isOpened) {
@@ -106,6 +103,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       this.removeAssistiveHint();
     }
 
+    instance.inputKeyDown = shimmedInputKeyDown;
+
     function autocompleteFormatSuggestionItem(suggestion, li) {
       var propertyToDisplay = this.options.displayLabels ? 'label' : 'value';
       $(li).data('ui-autocomplete-item', suggestion);
@@ -113,7 +112,6 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     }
 
     instance.formatSuggestionItem = autocompleteFormatSuggestionItem;
-    instance.inputKeyDown = shimmedInputKeyDown;
 
     if (isContentEditable) {
       instance.getValue = function () {
@@ -143,14 +141,14 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       }
     };
 
-    instance.ul.addEventListener('mousedown', function (e) {
-      e.preventDefault();
-    });
     instance.input.addEventListener('autocomplete-open', function (e) {
       document.body.addEventListener('mousedown', closeOnClickOutside);
     });
     instance.input.addEventListener('autocomplete-close', function (e) {
       document.body.removeEventListener('mousedown', closeOnClickOutside);
+    });
+    instance.ul.addEventListener('mousedown', function (e) {
+      e.preventDefault();
     });
     instance.input.addEventListener('focus', function () {
       instance.ul.querySelectorAll('.ui-menu-item-wrapper.ui-state-active').forEach(function (element) {

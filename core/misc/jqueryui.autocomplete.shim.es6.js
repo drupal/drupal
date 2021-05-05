@@ -20,6 +20,7 @@
     instance.options.isMultiline =
       instance.input.tagName === 'TEXTAREA' ||
       (instance.input.tagName !== 'INPUT' && isContentEditable);
+
     instance.options.itemClass = 'ui-menu-item';
 
     // jQuery UI allows repeat values in multivalue inputs.
@@ -30,10 +31,14 @@
     }
 
     // If the list was not explicitly appended somewhere else, then it should be
-    // appended to body to match jQuery UI markup.
+    // appended to match jQuery UI markup.
     if (!instance.input.hasAttribute('data-autocomplete-list-appended')) {
       const listBoxId = instance.ul.getAttribute('id');
       const uiFront = $(autocompleteInput).closest('.ui-front, dialog');
+
+      // If the autocomplete is contained by an element with the class
+      // 'ui-front' or a dialog, append the class to that element. Otherwise
+      // append it to the document body.
       const appendTo =
         uiFront.length > 0 ? uiFront[0] : document.querySelector('body');
       appendTo.appendChild(instance.ul);
@@ -54,25 +59,37 @@
      *   The keydown event.
      */
     function shimmedInputKeyDown(e) {
-      if (
-        !['INPUT', 'TEXTAREA'].includes(this.input.tagName) &&
-        this.input.hasAttribute('contenteditable')
-      ) {
+      if (instance.options.isMultiline) {
         this.input.value = this.input.textContent;
       }
       const { keyCode } = e;
       if (this.isOpened) {
+        // Escape behavior is identical to A11y_Autocomplete.
         if (keyCode === this.keyCode.ESC) {
           this.close();
         }
+
+        // In jQuery UI, when the input is focused and a list is open,
+        // the list can be accessed via up or down arrows. Only the down arrow
+        // accomplishes this in A11y_Autocomplete.
         if (keyCode === this.keyCode.DOWN || keyCode === this.keyCode.UP) {
           e.preventDefault();
           this.preventCloseOnBlur = true;
+
+          // Highlight the first or last item, depending on whether the up or
+          // down arrow was pressed.
           const selector =
             keyCode === this.keyCode.DOWN ? 'li' : 'li:last-child';
           this.highlightItem(this.ul.querySelector(selector));
         }
+
+        // jQuery UI explicitly cancels 'return' keydown events when an item is
+        // highlighted, to prevent form submission. This isn't a concern when
+        // shimming A11y_Autocomplete, as the highlighted item also has focus.
+        // This event handling is still present so all jQuery UI autocomplete
+        // tests will also pass with the shimmed autocomplete.
         if (keyCode === this.keyCode.RETURN) {
+          // If this is not null, then an item is highlighted.
           const active = instance.ul.querySelectorAll(
             '.ui-menu-item-wrapper.ui-state-active',
           );
@@ -81,6 +98,10 @@
           }
         }
       }
+
+      // If there is a predefined list, jQuery UI autocomplete allows that list
+      // to be opened via the up/down arrow keys. This differs from
+      // A11y_Autocomplete, only opens lists based on characters being typed.
       if (
         this.input.nodeName === 'INPUT' &&
         !this.isOpened &&
@@ -88,34 +109,57 @@
         (keyCode === this.keyCode.DOWN || keyCode === this.keyCode.UP)
       ) {
         e.preventDefault();
-        this.suggestionItems = this.options.list;
 
+        // This property is always set to true when arrow keys are used to move
+        // into an item list. This prevents the default behavior of the list
+        // closing when the input is blurred.
         this.preventCloseOnBlur = true;
 
+        // See if anything has been typed into the input.
         const typed = this.extractLastInputValue();
+
+        // In instances where nothing is typed and there is no character
+        // minimum, the list must be opened using something other than
+        // displayResults(), as that method requires input to work.
         if (!typed && this.options.minChars < 1) {
+          // Reset the item list to avoid duplication when prepareItemList() is
+          // called.
           this.ul.innerHTML = '';
+
+          // Move the predefined list into suggestionItems, so they can be
+          // processed by prepareSuggestionList().
+          this.suggestionItems = this.options.list;
+
+          // Convert the predefined list into markup.
           this.prepareSuggestionList();
+
+          // Make the markup visible.
+          this.open();
         } else {
           this.displayResults();
         }
-        if (this.ul.children.length > 0) {
-          this.open();
-        }
 
+        // If the arrow key press resulted in the opening of a list, then
+        // highlight the first/last item depending on whether the up/down key
+        // was pressed.
         if (this.isOpened) {
           const selector =
             keyCode === this.keyCode.DOWN ? 'li' : 'li:last-child';
           this.highlightItem(this.ul.querySelector(selector));
         }
       }
+
+      // This call is also made in the A11y_Autocomplete version of this
+      // method. It removes some general assistive hints after the first keydown
+      // event to avoid unnecessary repetition.
       this.removeAssistiveHint();
     }
+    instance.inputKeyDown = shimmedInputKeyDown;
 
     /**
      * Formats an autocomplete suggestion for display in a list item.
      *
-     * This overrides A11yAutocomplete.formatSuggestionItem()
+     * This overrides A11yAutocomplete.formatSuggestionItem().
      *
      * @param {object} suggestion
      *   An autocomplete suggestion.
@@ -129,16 +173,13 @@
       const propertyToDisplay = this.options.displayLabels ? 'label' : 'value';
       $(li).data('ui-autocomplete-item', suggestion);
 
-      // Wrap the item text in an `<a>`, This tag is not added by default
-      // as it's not needed for functionality. However, Claro and Seven
-      // both have styles assuming the presence of this tag.
+      // Wrap the item text in an `<a>`, so the markup matches that provided by
+      // jQuery Ui.
       return `<a tabindex="-1" class="ui-menu-item-wrapper">${suggestion[
         propertyToDisplay
       ].trim()}</a>`;
     }
-
     instance.formatSuggestionItem = autocompleteFormatSuggestionItem;
-    instance.inputKeyDown = shimmedInputKeyDown;
 
     // Elements with the contenteditable attribute require different logic than
     // the default behavior which expects a text input.
@@ -147,6 +188,11 @@
       instance.getValue = function () {
         return this.input.textContent;
       };
+
+      // The replaceInputValue method assumes the autocomplete input has a
+      // `value` property. This is overridden here when there's a need to
+      // accommodate contentEditable elements that don't use that property.
+      // eslint-disable-next-line func-names
       instance.replaceInputValue = function (element) {
         const itemIndex = element
           .closest('[data-drupal-autocomplete-item]')
@@ -182,12 +228,6 @@
         instance.close();
       }
     };
-
-    // jQuery UI has a mousedown listener on the list that prevents default.
-    instance.ul.addEventListener('mousedown', (e) => {
-      e.preventDefault();
-    });
-
     // jQuery UI will close the autocomplete results on any mousedown that lands
     // outside of the autocomplete widget.
     instance.input.addEventListener('autocomplete-open', (e) => {
@@ -197,7 +237,12 @@
       document.body.removeEventListener('mousedown', closeOnClickOutside);
     });
 
-    // If the input receives focus, remove the ui-state-active class from all
+    // jQuery UI has a mousedown listener on the list that prevents default.
+    instance.ul.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+    });
+
+    // If the input receives focus, remove the 'ui-state-active' class from all
     // result items.
     instance.input.addEventListener('focus', () => {
       instance.ul
@@ -207,7 +252,7 @@
         });
     });
 
-    // When a result item is highlighted, jQuery UI adds a ui-state-active
+    // When a result item is highlighted, jQuery UI adds a 'ui-state-active'
     // class to it.
     instance.input.addEventListener('autocomplete-highlight', () => {
       instance.ul

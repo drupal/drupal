@@ -91,7 +91,9 @@
         (autocompleteInput) => {
           // The default cardinality of A11yAutocomplete is 1. Fields in Drupal
           // without explicitly set cardinality should be set to -1, which
-          // provides unlimited cardinality.
+          // provides unlimited cardinality. This setting is applied via the
+          // data-autocomplete-cardinality attribute as it the highest
+          // precedence way to set an option.
           if (
             !autocompleteInput.hasAttribute('data-autocomplete-cardinality')
           ) {
@@ -103,8 +105,8 @@
           Drupal.Autocomplete.initialize(autocompleteInput);
 
           // By default, autocomplete inputs are processed with a backwards
-          // compatible shim that provides jQuery UI autocomplete's markup
-          // structure strucuture and API surface. If the input has the
+          // compatible shim that provides jQuery UI autocomplete markup
+          // structure and API surface. If the input has the
           // 'data-drupal-10-autocomplete' attribute, this shim is not invoked.
           // Without the shim, the markup and API will be what is provided in
           // Drupal 10.
