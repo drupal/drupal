@@ -35,7 +35,7 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
     \Drupal::service('cache.default')->set(__CLASS__, 'Test');
 
     /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
-    $update_registry = \Drupal::service('update.update_registry');
+    $update_registry = \Drupal::service('update.update_hook_registry');
     foreach (['user' => 8100, 'node' => 8700, 'system' => 8901, 'update_test_schema' => 8000] as $module => $schema) {
       $this->assertEqual($schema, $update_registry->getInstalledVersion($module), new FormattableMarkup('Module @module schema is @schema', ['@module' => $module, '@schema' => $schema]));
     }
@@ -103,7 +103,7 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
 
     // Ensure schema has changed.
     /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
-    $update_registry = \Drupal::service('update.update_registry');
+    $update_registry = \Drupal::service('update.update_hook_registry');
     $this->assertEqual(8001, $update_registry->getInstalledVersion('update_test_schema'));
     $this->assertEqual(8001, $update_registry->getInstalledVersion('update_test_semver_update_n'));
     // Ensure the index was added for column a.

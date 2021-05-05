@@ -95,7 +95,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
     $this->connection = $connection;
     if (!$update_registry) {
       @trigger_error('Calling ' . __METHOD__ . '() without the $update_registry argument is deprecated in drupal:9.2.0 and $update_registry argument will be required in drupal:10.0.0. See https://www.drupal.org/node/2124069', E_USER_DEPRECATED);
-      $update_registry = \Drupal::service('update.update_registry');
+      $update_registry = \Drupal::service('update.update_hook_registry');
     }
     $this->updateRegistry = $update_registry;
   }
@@ -537,7 +537,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       \Drupal::logger('system')->info('%module module uninstalled.', ['%module' => $module]);
 
       /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
-      $update_registry = \Drupal::service('update.update_registry');
+      $update_registry = \Drupal::service('update.update_hook_registry');
       $update_registry->deleteInstalledVersion($module);
 
       /** @var \Drupal\Core\Update\UpdateRegistry $post_update_registry */
@@ -616,7 +616,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
     $container = $this->kernel->getContainer();
     $this->moduleHandler = $container->get('module_handler');
     $this->connection = $container->get('database');
-    $this->updateRegistry = $container->get('update.update_registry');
+    $this->updateRegistry = $container->get('update.update_hook_registry');
   }
 
   /**

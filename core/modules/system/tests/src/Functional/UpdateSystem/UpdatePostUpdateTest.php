@@ -28,7 +28,7 @@ class UpdatePostUpdateTest extends BrowserTestBase {
     $connection = Database::getConnection();
 
     // Set the schema version.
-    \Drupal::service('update.update_registry')->setInstalledVersion('update_test_postupdate', 8000);
+    \Drupal::service('update.update_hook_registry')->setInstalledVersion('update_test_postupdate', 8000);
 
     // Update core.extension.
     $extensions = $connection->select('config')

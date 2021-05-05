@@ -56,7 +56,7 @@ class UpdatePathLastRemovedTest extends BrowserTestBase {
    */
   public function testLastRemovedVersion() {
     /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
-    $update_registry = \Drupal::service('update.update_registry');
+    $update_registry = \Drupal::service('update.update_hook_registry');
 
     $update_registry->setInstalledVersion('update_test_last_removed', 8000);
     $update_registry->setInstalledVersion('system', 8804);
@@ -90,7 +90,7 @@ class UpdatePathLastRemovedTest extends BrowserTestBase {
 
     $this->runUpdates();
     /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
-    $update_registry = \Drupal::service('update.update_registry');
+    $update_registry = \Drupal::service('update.update_hook_registry');
     $this->assertEquals(8003, $update_registry->getInstalledVersion('update_test_last_removed'));
   }
 

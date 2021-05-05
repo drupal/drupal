@@ -24,7 +24,7 @@ class UpdateSchemaTest extends KernelTestBase {
   public function testDrupalGetSchemaVersionsInt() {
     \Drupal::state()->set('update_test_schema_version', 8001);
     $this->installSchema('update_test_schema', ['update_test_schema_table']);
-    $schema = \Drupal::service('update.update_registry')->getAvailableUpdates('update_test_schema');
+    $schema = \Drupal::service('update.update_hook_registry')->getAvailableUpdates('update_test_schema');
     foreach ($schema as $version) {
       $this->assertIsInt($version);
     }

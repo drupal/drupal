@@ -41,7 +41,7 @@ const SCHEMA_UNINSTALLED = UpdateHookRegistry::SCHEMA_UNINSTALLED;
  */
 function drupal_get_schema_versions($module) {
   @trigger_error('drupal_get_schema_versions() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Update\UpdateHookRegistry::getAvailableUpdates() instead. See https://www.drupal.org/node/2444417', E_USER_DEPRECATED);
-  return \Drupal::service('update.update_registry')->getAvailableUpdates($module);
+  return \Drupal::service('update.update_hook_registry')->getAvailableUpdates($module);
 }
 
 /**
@@ -70,7 +70,7 @@ function drupal_get_schema_versions($module) {
 function drupal_get_installed_schema_version($module, $reset = FALSE, $array = FALSE) {
   @trigger_error('drupal_get_installed_schema_version() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Update\UpdateHookRegistry::getInstalledVersion() or \Drupal\Core\Update\UpdateHookRegistry::getAllInstalledVersions() instead. See https://www.drupal.org/node/2444417', E_USER_DEPRECATED);
   /** @var \Drupal\Core\Update\UpdateHookRegistry $service */
-  $service = \Drupal::service('update.update_registry');
+  $service = \Drupal::service('update.update_hook_registry');
   if ($array) {
     return $service->getAllInstalledVersions();
   }
@@ -94,7 +94,7 @@ function drupal_get_installed_schema_version($module, $reset = FALSE, $array = F
  */
 function drupal_set_installed_schema_version($module, $version) {
   @trigger_error('drupal_set_installed_schema_version() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Update\UpdateHookRegistry::setInstalledVersion() instead. See https://www.drupal.org/node/2444417', E_USER_DEPRECATED);
-  \Drupal::service('update.update_registry')->setInstalledVersion($module, $version);
+  \Drupal::service('update.update_hook_registry')->setInstalledVersion($module, $version);
 }
 
 /**

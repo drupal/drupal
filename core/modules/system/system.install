@@ -786,7 +786,7 @@ function system_requirements($phase) {
     // Check installed modules.
     $has_pending_updates = FALSE;
     /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
-    $update_registry = \Drupal::service('update.update_registry');
+    $update_registry = \Drupal::service('update.update_hook_registry');
     foreach (\Drupal::moduleHandler()->getModuleList() as $module => $filename) {
       $updates = $update_registry->getAvailableUpdates($module);
       if ($updates) {
@@ -1223,7 +1223,7 @@ function system_requirements($phase) {
   if ($phase == 'update') {
     $module_handler = \Drupal::moduleHandler();
     /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
-    $update_registry = \Drupal::service('update.update_registry');
+    $update_registry = \Drupal::service('update.update_hook_registry');
     $module_list = [];
     foreach ($module_handler->getImplementations('update_last_removed') as $module) {
       $last_removed = $module_handler->invoke($module, 'update_last_removed');

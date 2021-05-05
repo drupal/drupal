@@ -57,7 +57,7 @@ function update_check_incompatibility($name, $type = 'module') {
 function update_system_schema_requirements() {
   $requirements = [];
 
-  $system_schema = \Drupal::service('update.update_registry')->getInstalledVersion('system');
+  $system_schema = \Drupal::service('update.update_hook_registry')->getInstalledVersion('system');
 
   $requirements['minimum schema']['title'] = 'Minimum schema version';
   if ($system_schema >= \Drupal::CORE_MINIMUM_SCHEMA_VERSION) {
@@ -105,7 +105,7 @@ function update_check_requirements() {
  */
 function _update_fix_missing_schema() {
   /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
-  $update_registry = \Drupal::service('update.update_registry');
+  $update_registry = \Drupal::service('update.update_hook_registry');
   $versions = $update_registry->getAllInstalledVersions();
   $module_handler = \Drupal::moduleHandler();
   $enabled_modules = $module_handler->getModuleList();
@@ -163,7 +163,7 @@ function _update_fix_missing_schema() {
  */
 function update_set_schema($module, $schema_version) {
   @trigger_error('update_set_schema() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3210925', E_USER_DEPRECATED);
-  \Drupal::service('update.update_registry')->setInstalledVersion($module, $schema_version);
+  \Drupal::service('update.update_hook_registry')->setInstalledVersion($module, $schema_version);
   \Drupal::service('extension.list.profile')->reset();
   \Drupal::service('extension.list.module')->reset();
   \Drupal::service('extension.list.theme_engine')->reset();
@@ -263,7 +263,7 @@ function update_do_one($module, $number, $dependency_map, &$context) {
 
   // Record the schema update if it was completed successfully.
   if ($context['finished'] == 1 && empty($ret['#abort'])) {
-    \Drupal::service('update.update_registry')->setInstalledVersion($module, $number);
+    \Drupal::service('update.update_hook_registry')->setInstalledVersion($module, $number);
   }
 
   $context['message'] = t('Updating @module', ['@module' => $module]);
@@ -353,7 +353,7 @@ function update_get_update_list() {
   $ret = ['system' => []];
 
   /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
-  $update_registry = \Drupal::service('update.update_registry');
+  $update_registry = \Drupal::service('update.update_hook_registry');
   $modules = $update_registry->getAllInstalledVersions();
   /** @var \Drupal\Core\Extension\ExtensionList $extension_list */
   $extension_list = \Drupal::service('extension.list.module');
@@ -531,7 +531,7 @@ function update_get_update_function_list($starting_updates) {
   // first update that was requested and any updates that run after it).
   $update_functions = [];
   /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
-  $update_registry = \Drupal::service('update.update_registry');
+  $update_registry = \Drupal::service('update.update_hook_registry');
   foreach ($starting_updates as $module => $version) {
     $update_functions[$module] = [];
     $updates = $update_registry->getAvailableUpdates($module);
@@ -664,7 +664,7 @@ function update_is_missing($module, $number, $update_functions) {
  *   performed; FALSE otherwise.
  */
 function update_already_performed($module, $number) {
-  return $number <= \Drupal::service('update.update_registry')->getInstalledVersion($module);
+  return $number <= \Drupal::service('update.update_hook_registry')->getInstalledVersion($module);
 }
 
 /**
@@ -687,7 +687,7 @@ function update_retrieve_dependencies() {
   /** @var \Drupal\Core\Extension\ModuleExtensionList */
   $extension_list = \Drupal::service('extension.list.module');
   /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
-  $update_registry = \Drupal::service('update.update_registry');
+  $update_registry = \Drupal::service('update.update_hook_registry');
   // Get a list of installed modules, arranged so that we invoke their hooks in
   // the same order that \Drupal::moduleHandler()->invokeAll() does.
   foreach ($update_registry->getAllInstalledVersions() as $module => $schema) {

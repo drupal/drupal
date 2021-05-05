@@ -160,7 +160,7 @@ trait UpdatePathTestTrait {
   protected function ensureUpdatesToRun() {
     \Drupal::service('module_installer')->install(['update_script_test']);
     // Reset the schema so there is an update to run.
-    \Drupal::service('update.update_registry')->setInstalledVersion('update_script_test', 8000);
+    \Drupal::service('update.update_hook_registry')->setInstalledVersion('update_script_test', 8000);
   }
 
 }

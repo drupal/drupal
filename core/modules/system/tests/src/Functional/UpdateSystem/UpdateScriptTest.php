@@ -143,7 +143,7 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->drupalLogin($this->updateUser);
     $update_script_test_config->set('requirement_type', REQUIREMENT_WARNING)->save();
     /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
-    $update_registry = \Drupal::service('update.update_registry');
+    $update_registry = \Drupal::service('update.update_hook_registry');
     $update_registry->setInstalledVersion('update_script_test', $update_registry->getInstalledVersion('update_script_test') - 1);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->assertText('This is a requirements warning provided by the update_script_test module.');
@@ -412,7 +412,7 @@ class UpdateScriptTest extends BrowserTestBase {
     // nonexistent module. This replicates what would happen if you had a module
     // installed and then completely remove it from the filesystem and clear it
     // out of the core.extension config list without uninstalling it cleanly.
-    \Drupal::service('update.update_registry')->setInstalledVersion('my_already_removed_module', 8000);
+    \Drupal::service('update.update_hook_registry')->setInstalledVersion('my_already_removed_module', 8000);
 
     // Visit update.php and make sure we can click through to the 'No pending
     // updates' page without errors.
@@ -426,8 +426,8 @@ class UpdateScriptTest extends BrowserTestBase {
 
     // Try again with another orphaned entry, this time for a test module that
     // does exist in the filesystem.
-    \Drupal::service('update.update_registry')->deleteInstalledVersion('my_already_removed_module');
-    \Drupal::service('update.update_registry')->setInstalledVersion('update_test_0', 8000);
+    \Drupal::service('update.update_hook_registry')->deleteInstalledVersion('my_already_removed_module');
+    \Drupal::service('update.update_hook_registry')->setInstalledVersion('update_test_0', 8000);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->updateRequirementsProblem();
     $this->clickLink(t('Continue'));
@@ -437,7 +437,7 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->assertSession()->elementTextEquals('xpath', '//div[@aria-label="Warning message"]', 'Warning message Module update_test_0 has an entry in the system.schema key/value storage, but is not installed. More information about this error.');
 
     // Finally, try with both kinds of orphans and make sure we get both warnings.
-    \Drupal::service('update.update_registry')->setInstalledVersion('my_already_removed_module', 8000);
+    \Drupal::service('update.update_hook_registry')->setInstalledVersion('my_already_removed_module', 8000);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->updateRequirementsProblem();
     $this->clickLink(t('Continue'));
@@ -541,7 +541,7 @@ class UpdateScriptTest extends BrowserTestBase {
     // Reset the static cache to ensure we have the most current setting.
     $this->resetAll();
     /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
-    $update_registry = \Drupal::service('update.update_registry');
+    $update_registry = \Drupal::service('update.update_hook_registry');
     $schema_version = $update_registry->getInstalledVersion('update_script_test');
     $this->assertEqual(8001, $schema_version, 'update_script_test schema version is 8001 after updating.');
 
@@ -608,7 +608,7 @@ class UpdateScriptTest extends BrowserTestBase {
 
     // Reset the static cache to ensure we have the most current setting.
     /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
-    $update_registry = \Drupal::service('update.update_registry');
+    $update_registry = \Drupal::service('update.update_hook_registry');
     $schema_version = $update_registry->getInstalledVersion('update_script_test');
     $this->assertEqual(8001, $schema_version, 'update_script_test schema version is 8001 after updating.');
 
@@ -679,7 +679,7 @@ class UpdateScriptTest extends BrowserTestBase {
    */
   protected function runUpdates($maintenance_mode) {
     /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
-    $update_registry = \Drupal::service('update.update_registry');
+    $update_registry = \Drupal::service('update.update_hook_registry');
     $schema_version = $update_registry->getInstalledVersion('update_script_test');
     $this->assertEqual(8001, $schema_version, 'update_script_test is initially installed with schema version 8001.');
 
