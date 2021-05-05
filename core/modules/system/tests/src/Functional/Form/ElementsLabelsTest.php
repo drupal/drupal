@@ -77,11 +77,13 @@ class ElementsLabelsTest extends BrowserTestBase {
     $this->assertSession()->elementAttributeContains('css', '#edit-form-checkboxes-title-attribute', 'title', 'Checkboxes test (Required)');
     $this->assertSession()->elementAttributeContains('css', '#edit-form-radios-title-attribute', 'title', 'Radios test (Required)');
 
-    $elements = $this->xpath('//fieldset[@id="edit-form-checkboxes-title-invisible--wrapper"]/legend/span[contains(@class, "visually-hidden")]');
-    $this->assertTrue(!empty($elements), "Title/Label not displayed when 'visually-hidden' attribute is set in checkboxes.");
+    // Check Title/Label not displayed when 'visually-hidden' attribute is set
+    // in checkboxes.
+    $this->assertSession()->elementExists('xpath', '//fieldset[@id="edit-form-checkboxes-title-invisible--wrapper"]/legend/span[contains(@class, "visually-hidden")]');
 
-    $elements = $this->xpath('//fieldset[@id="edit-form-radios-title-invisible--wrapper"]/legend/span[contains(@class, "visually-hidden")]');
-    $this->assertTrue(!empty($elements), "Title/Label not displayed when 'visually-hidden' attribute is set in radios.");
+    // Check Title/Label not displayed when 'visually-hidden' attribute is set
+    // in radios.
+    $this->assertSession()->elementExists('xpath', '//fieldset[@id="edit-form-radios-title-invisible--wrapper"]/legend/span[contains(@class, "visually-hidden")]');
   }
 
   /**
