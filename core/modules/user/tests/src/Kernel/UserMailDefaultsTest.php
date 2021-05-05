@@ -16,6 +16,9 @@ class UserMailDefaultsTest extends KernelTestBase {
    */
   protected static $modules = ['user', 'system'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->installConfig(['user']);
@@ -35,6 +38,7 @@ class UserMailDefaultsTest extends KernelTestBase {
    * Data provider for user mail testing.
    *
    * @return array
+   *   Array of arrays containing the set of user mail configuration keys.
    */
   public function userMailsProvider() {
     return [
