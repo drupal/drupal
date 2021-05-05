@@ -24,7 +24,6 @@ class TrackerUserUidTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'comment',
     'filter',
     'node',
     'system',

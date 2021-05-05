@@ -20,7 +20,6 @@ class MigrateTrackerUserTest extends MigrateDrupal7TestBase {
     'node',
     'text',
     'tracker',
-    'comment',
   ];
 
   /**

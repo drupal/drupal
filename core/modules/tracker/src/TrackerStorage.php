@@ -72,9 +72,9 @@ class TrackerStorage implements TrackerStorageInterface {
    * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
    *   The logger channel factory.
    * @param \Drupal\comment\CommentStatisticsInterface $comment_statistics
-   *   The comment statistics.
+   *   (Optional) The comment statistics.
    */
-  public function __construct(StateInterface $state, Connection $connection, EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config, LoggerChannelFactoryInterface $logger_factory, CommentStatisticsInterface $comment_statistics) {
+  public function __construct(StateInterface $state, Connection $connection, EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config, LoggerChannelFactoryInterface $logger_factory, CommentStatisticsInterface $comment_statistics = NULL) {
     $this->state = $state;
     $this->connection = $connection;
     $this->entityTypeManager = $entity_type_manager;
@@ -216,9 +216,11 @@ class TrackerStorage implements TrackerStorageInterface {
    */
   public function calculateChanged($node) {
     $changed = $node->getChangedTime();
-    $latest_comment = $this->commentStatistics->read([$node], 'node', FALSE);
-    if ($latest_comment && $latest_comment->last_comment_timestamp > $changed) {
-      $changed = $latest_comment->last_comment_timestamp;
+    if ($this->commentStatistics) {
+      $latest_comment = $this->commentStatistics->read([$node], 'node', FALSE);
+      if ($latest_comment && $latest_comment->last_comment_timestamp > $changed) {
+        $changed = $latest_comment->last_comment_timestamp;
+      }
     }
     return $changed;
   }
