@@ -347,11 +347,11 @@ abstract class Connection {
    *   - Database::RETURN_NULL: Do not return anything, as there is no
    *     meaningful value to return. That is the case for INSERT queries on
    *     tables that do not contain a serial column.
-   * - throw_exception: By default, the database system will catch any errors
-   *   on a query as an Exception, log it, and then rethrow it so that code
-   *   further up the call chain can take an appropriate action. To suppress
-   *   that behavior and simply return NULL on failure, set this option to
-   *   FALSE.
+   * - throw_exception: (deprecated) By default, the database system will catch
+   *   any errors on a query as an Exception, log it, and then rethrow it so
+   *   that code further up the call chain can take an appropriate action. To
+   *   suppress that behavior and simply return NULL on failure, set this
+   *   option to FALSE.
    * - allow_delimiter_in_query: By default, queries which have the ; delimiter
    *   any place in them will cause an exception. This reduces the chance of SQL
    *   injection attacks that terminate the original query and add one or more
@@ -376,7 +376,6 @@ abstract class Connection {
     return [
       'fetch' => \PDO::FETCH_OBJ,
       'return' => Database::RETURN_STATEMENT,
-      'throw_exception' => TRUE,
       'allow_delimiter_in_query' => FALSE,
       'allow_square_brackets' => FALSE,
       'pdo' => [],
@@ -841,9 +840,7 @@ abstract class Connection {
    *     (not the number matched).
    *   - If $options['return'] === self::RETURN_INSERT_ID,
    *     returns the generated insert ID of the last query as a string.
-   *   - If either $options['return'] === self::RETURN_NULL, or
-   *     an exception occurs and $options['throw_exception'] evaluates to FALSE,
-   *     returns NULL.
+   *   - If $options['return'] === self::RETURN_NULL, returns NULL.
    *
    * @throws \Drupal\Core\Database\DatabaseExceptionWrapper
    * @throws \Drupal\Core\Database\IntegrityConstraintViolationException
@@ -947,7 +944,7 @@ abstract class Connection {
    */
   protected function handleQueryException(\PDOException $e, $query, array $args = [], $options = []) {
     @trigger_error('Connection::handleQueryException() is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Get a handler through $this->exceptionHandler() instead, and use one of its methods. See https://www.drupal.org/node/3187222', E_USER_DEPRECATED);
-    if ($options['throw_exception']) {
+    if ($options['throw_exception'] ?? TRUE) {
       // Wrap the exception in another exception, because PHP does not allow
       // overriding Exception::getMessage(). Its message is the extra database
       // debug information.
