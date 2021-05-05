@@ -719,7 +719,6 @@ var A11yAutocomplete = function () {
         message = this.options.someResultsAssistiveHint;
       }
 
-      console.log('m m m message', message, this);
       return message.replace('@count', count);
     }
   }, {

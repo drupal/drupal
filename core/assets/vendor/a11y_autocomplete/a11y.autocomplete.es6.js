@@ -947,7 +947,7 @@ class A11yAutocomplete {
     } else {
       message = this.options.someResultsAssistiveHint;
     }
-    console.log('m m m message', message, this);
+
     return message.replace('@count', count);
   }
 
