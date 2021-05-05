@@ -195,16 +195,14 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
             return $(instance.ul);
 
           case 'instance':
-            return {
+            var instanceToReturn = {
               document: $(document),
               element: $(instance.input),
               menu: {
                 element: $(instance.ul)
               },
               liveRegion: $(instance.liveRegion),
-              bindings: null,
               classesElementLookup: null,
-              eventNamespace: null,
               focusable: null,
               hoverable: null,
               isMultiLine: instance.options.isMultiLine,
@@ -215,6 +213,14 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
               valueMethod: null,
               window: window
             };
+            ['bindings', 'eventNamespace', 'classesElementLookup', 'focusable', 'hoverable', 'uuid', 'valueMethod'].forEach(function (property) {
+              Object.defineProperty(instanceToReturn, 'fake', {
+                get: function get() {
+                  return console.warn("The ".concat(property, " property is not supported beginning with 9.2, as jQuery UI Autocomplete is no longer part of core. See https://www.drupal.org/node/3083715"));
+                }
+              });
+            });
+            return instanceToReturn;
 
           case 'disable':
             this.autocomplete('option', 'disabled', true);

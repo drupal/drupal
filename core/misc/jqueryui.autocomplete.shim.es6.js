@@ -309,16 +309,15 @@
             // of what jQuery UI would return, as jQuery UI autocomplete
             // returns an object that is very jQuery-integrated. The properties
             // that do not have non-jQuery equivalents are null.
-            return {
+            // eslint-disable-next-line no-case-declarations
+            const instanceToReturn = {
               document: $(document),
               element: $(instance.input),
               menu: {
                 element: $(instance.ul),
               },
               liveRegion: $(instance.liveRegion),
-              bindings: null,
               classesElementLookup: null,
-              eventNamespace: null,
               focusable: null,
               hoverable: null,
               isMultiLine: instance.options.isMultiLine,
@@ -329,6 +328,29 @@
               valueMethod: null,
               window,
             };
+
+            // Add a warning for instance properties that can't be provided via
+            // shim.
+            [
+              'bindings',
+              'eventNamespace',
+              'classesElementLookup',
+              'focusable',
+              'hoverable',
+              'uuid',
+              'valueMethod',
+            ].forEach((property) => {
+              Object.defineProperty(instanceToReturn, 'fake', {
+                get() {
+                  // eslint-disable-next-line no-console
+                  return console.warn(
+                    `The ${property} property is not supported beginning with 9.2, as jQuery UI Autocomplete is no longer part of core. See https://www.drupal.org/node/3083715`,
+                  );
+                },
+              });
+            });
+
+            return instanceToReturn;
           case 'disable':
             this.autocomplete('option', 'disabled', true);
             break;
