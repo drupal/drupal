@@ -12,6 +12,17 @@ a11y_autocomplete:
     - core/drupal.array.includes
     - core/drupal.string.includes
 
+autocomplete.jqueryui.shim:
+  version: VERSION
+  js:
+    misc/jqueryui.autocomplete.shim.js: { }
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/drupal.jquery.position
+    - core/jquery.ui.widget.overrides
+
+
 backbone:
   remote: https://github.com/jashkenas/backbone
   version: "1.4.0"
@@ -110,8 +121,8 @@ drupal.announce:
 drupal.autocomplete:
   version: VERSION
   js:
-    misc/autocomplete-init.js: { }
-    misc/jqueryui.autocomplete.shim.js: { }
+    misc/autocomplete-init.js: {}
+    misc/jqueryui.autocomplete.shim.js: {}
   css:
     component:
       misc/autocomplete.css: {}
@@ -122,6 +133,7 @@ drupal.autocomplete:
     - core/a11y_autocomplete
     - core/drupal.announce
     - core/once
+    - core/autocomplete.jqueryui.shim
 
 drupal.array.find:
   version: VERSION
@@ -723,6 +735,14 @@ jquery.ui.widget:
   dependencies:
     - core/jquery.ui
   deprecated: *jquery_ui_unused_deprecated
+
+jquery.ui.widget.overrides:
+  version: VERSION
+  js:
+    assets/vendor/jquery.ui/ui/widget-min.js: { weight: -11.8, minified: true }
+    misc/jqueryui.widget.overrides.js: { weight: -11.7 }
+  dependencies:
+    - core/jquery.ui
 
 modernizr:
   # Block the page from being loaded until Modernizr is initialized.

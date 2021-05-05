@@ -105,6 +105,68 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
     instance.inputKeyDown = shimmedInputKeyDown;
 
+    function autocompletePrepareSuggestionList(typed) {
+      var _this = this;
+
+      this.normalizeSuggestionItems();
+
+      if (typed) {
+        this.suggestions = this.suggestionItems.filter(function (item) {
+          return _this.filterResults(item, typed);
+        });
+      } else {
+        this.suggestions = this.suggestionItems;
+      }
+
+      if (this.options.sort !== false) {
+        this.sortSuggestions();
+      }
+
+      this.totalSuggestions = this.suggestions.length;
+      this.suggestions = this.suggestions.slice(0, parseInt(this.options.maxItems, 10));
+      this.triggerEvent('autocomplete-response', {
+        list: this.suggestions
+      });
+
+      this._renderMenu(this.ul, this.suggestions);
+
+      this.ul.querySelectorAll('li').forEach(function (li, index) {
+        li.setAttribute('role', 'option');
+        li.setAttribute('tabindex', '-1');
+        li.setAttribute('id', "suggestion-".concat(_this.count, "-").concat(index));
+        li.setAttribute('data-drupal-autocomplete-item', index);
+        li.setAttribute('aria-posinset', index + 1);
+        li.setAttribute('aria-selected', 'false');
+
+        li.onblur = function (e) {
+          return _this.blurHandler(e);
+        };
+      });
+    }
+
+    instance.prepareSuggestionList = autocompletePrepareSuggestionList;
+
+    if (!instance.hasOwnProperty('_renderMenu')) {
+      instance._renderMenu = function (ul, items) {
+        var that = this;
+        $.each(items, function (index, item) {
+          that._renderItemData(ul, item);
+        });
+      };
+    }
+
+    if (!instance.hasOwnProperty('_renderItemData')) {
+      instance._renderItemData = function (ul, item) {
+        return this._renderItem(ul, item).data('ui-autocomplete-item', item);
+      };
+    }
+
+    if (!instance.hasOwnProperty('_renderItem')) {
+      instance._renderItem = function (ul, item) {
+        return $('<li>').append($('<a>').html(item.label)).appendTo(ul);
+      };
+    }
+
     function autocompleteFormatSuggestionItem(suggestion, li) {
       var propertyToDisplay = this.options.displayLabels ? 'label' : 'value';
       $(li).data('ui-autocomplete-item', suggestion);
@@ -162,11 +224,12 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       document.activeElement.querySelector('.ui-menu-item-wrapper').classList.add('ui-state-active');
     });
     $(instance.input).unwrap('[data-drupal-autocomplete-wrapper]');
+    $(instance.input).data('ui-autocomplete', instance);
   };
 
   $.fn.extend({
     autocomplete: function autocomplete() {
-      var _this = this;
+      var _this2 = this;
 
       for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
         args[_key] = arguments[_key];
@@ -261,7 +324,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
           case 'option':
             if (typeof args[2] === 'undefined' && args[1] === 'object') {
               Object.keys(args[1]).forEach(function (key) {
-                _this.autocomplete('option', key, args[1][key]);
+                _this2.autocomplete('option', key, args[1][key]);
               });
             }
 
@@ -397,7 +460,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
         if (_typeof(args[0]) === 'object') {
           Object.keys(args[0]).forEach(function (key) {
-            _this.autocomplete('option', key, args[0][key]);
+            _this2.autocomplete('option', key, args[0][key]);
           });
         }
       }
@@ -405,4 +468,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       return this;
     }
   });
+
+  $.ui.autocomplete = function () {
+    console.warn('$.ui.autocomplete no longer exists due to its removal in Drupal 9.2.0. Existing uses of $().autocomplete() will continue to work. See https://www.drupal.org/node/3083715');
+  };
 })(jQuery, Drupal);

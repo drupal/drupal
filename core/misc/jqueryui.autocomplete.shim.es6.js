@@ -157,6 +157,83 @@
     instance.inputKeyDown = shimmedInputKeyDown;
 
     /**
+     * Creates a suggestion list based on a typed value.
+     *
+     * The majority of this function is identical to A11y_Autocomplete
+     * prepareSuggestionList(). It is changed at the end to be compatible with
+     * jQuery UI extension points.
+     *
+     * @param {string} typed
+     *   The typed value querying autocomplete.
+     */
+    function autocompletePrepareSuggestionList(typed) {
+      this.normalizeSuggestionItems();
+      if (typed) {
+        this.suggestions = this.suggestionItems.filter((item) =>
+          this.filterResults(item, typed),
+        );
+      } else {
+        this.suggestions = this.suggestionItems;
+      }
+      if (this.options.sort !== false) {
+        this.sortSuggestions();
+      }
+      this.totalSuggestions = this.suggestions.length;
+      this.suggestions = this.suggestions.slice(
+        0,
+        parseInt(this.options.maxItems, 10),
+      );
+
+      this.triggerEvent('autocomplete-response', {
+        list: this.suggestions,
+      });
+
+      // Everything up until this point is identical to A11y_Autocomplete
+      // prepareSuggestionList(). This call to _renderMenu is provided instead
+      // of the forEach loop that creates the item list so jQuery UI's
+      // extension points are supported.
+      this._renderMenu(this.ul, this.suggestions);
+
+      // Add the list attributes needed for functionality that would have
+      // been added in suggestionItem() were that function not skipped in order
+      // to support extension points.
+      this.ul.querySelectorAll('li').forEach((li, index) => {
+        li.setAttribute('role', 'option');
+        li.setAttribute('tabindex', '-1');
+        li.setAttribute('id', `suggestion-${this.count}-${index}`);
+        li.setAttribute('data-drupal-autocomplete-item', index);
+        li.setAttribute('aria-posinset', index + 1);
+        li.setAttribute('aria-selected', 'false');
+        li.onblur = (e) => this.blurHandler(e);
+      });
+    }
+    instance.prepareSuggestionList = autocompletePrepareSuggestionList;
+
+    if (!instance.hasOwnProperty('_renderMenu')) {
+      // eslint-disable-next-line func-names
+      instance._renderMenu = function (ul, items) {
+        const that = this;
+        // eslint-disable-next-line func-names
+        $.each(items, function (index, item) {
+          that._renderItemData(ul, item);
+        });
+      };
+    }
+    if (!instance.hasOwnProperty('_renderItemData')) {
+      // eslint-disable-next-line func-names
+      instance._renderItemData = function (ul, item) {
+        return this._renderItem(ul, item).data('ui-autocomplete-item', item);
+      };
+    }
+
+    if (!instance.hasOwnProperty('_renderItem')) {
+      // eslint-disable-next-line func-names
+      instance._renderItem = function (ul, item) {
+        return $('<li>').append($('<a>').html(item.label)).appendTo(ul);
+      };
+    }
+
+    /**
      * Formats an autocomplete suggestion for display in a list item.
      *
      * This overrides A11yAutocomplete.formatSuggestionItem().
@@ -268,6 +345,7 @@
     // jQuery UI autocomplete does not have a wrapper, so remove the wrapper
     // added by A11y_Autocomplete.
     $(instance.input).unwrap('[data-drupal-autocomplete-wrapper]');
+    $(instance.input).data('ui-autocomplete', instance);
   };
 
   // This fully replaces jQuery UI's autocomplete() function. This reproduces
@@ -625,4 +703,10 @@
       return this;
     },
   });
+
+  $.ui.autocomplete = () => {
+    console.warn(
+      '$.ui.autocomplete no longer exists due to its removal in Drupal 9.2.0. Existing uses of $().autocomplete() will continue to work. See https://www.drupal.org/node/3083715',
+    );
+  };
 })(jQuery, Drupal);
