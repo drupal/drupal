@@ -7,7 +7,8 @@
 
 (function ($, Drupal) {
   Drupal.color = {
-    callback: function callback(context, settings, form, farb, height, width) {
+    callback: function callback(context, settings, form, height, width) {
+      console.log('module preview');
       var accum;
       var delta;
       form.find('.color-preview').css('backgroundColor', form.find('.color-palette input[name="palette[base]"]').val());
@@ -18,14 +19,14 @@
         Object.keys(accum || {}).forEach(function (k) {
           accum[k] += delta[k];
         });
-        element.style.backgroundColor = farb.pack(accum);
+        element.style.backgroundColor = Drupal.colorUtils.pack(accum);
       }
 
       var colorStart;
       var colorEnd;
       Object.keys(settings.gradients || {}).forEach(function (i) {
-        colorStart = farb.unpack(form.find(".color-palette input[name=\"palette[".concat(settings.gradients[i].colors[0], "]\"]")).val());
-        colorEnd = farb.unpack(form.find(".color-palette input[name=\"palette[".concat(settings.gradients[i].colors[1], "]\"]")).val());
+        colorStart = Drupal.colorUtils.unpack(form.find(".color-palette input[name=\"palette[".concat(settings.gradients[i].colors[0], "]\"]")).val());
+        colorEnd = Drupal.colorUtils.unpack(form.find(".color-palette input[name=\"palette[".concat(settings.gradients[i].colors[1], "]\"]")).val());
 
         if (colorStart && colorEnd) {
           delta = [];

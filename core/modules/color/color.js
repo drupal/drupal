@@ -5,7 +5,93 @@
 * @preserve
 **/
 
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 (function ($, Drupal) {
+  Drupal.colorUtils = {
+    dec2hex: function dec2hex(dec) {
+      return (dec < 16 ? '0' : '') + dec.toString(16);
+    },
+    pack: function pack(rgb) {
+      var r = Math.round(rgb[0] * 255);
+      var g = Math.round(rgb[1] * 255);
+      var b = Math.round(rgb[2] * 255);
+      return "#".concat(this.dec2hex(r)).concat(this.dec2hex(g)).concat(this.dec2hex(b));
+    },
+    unpack: function unpack(color) {
+      if (color.length === 7) {
+        function x(i) {
+          return parseInt(color.substring(i, i + 2), 16) / 255;
+        }
+
+        return [x(1), x(3), x(5)];
+      }
+
+      if (color.length === 4) {
+        function x(i) {
+          return parseInt(color.substring(i, i + 1), 16) / 15;
+        }
+
+        return [x(1), x(2), x(3)];
+      }
+    },
+    hueToRGB: function hueToRGB(m1, m2, h) {
+      h = (h + 1) % 1;
+      if (h * 6 < 1) return m1 + (m2 - m1) * h * 6;
+      if (h * 2 < 1) return m2;
+      if (h * 3 < 2) return m1 + (m2 - m1) * (0.66666 - h) * 6;
+      return m1;
+    },
+    RGBToHSL: function RGBToHSL(rgb) {
+      var _rgb = _slicedToArray(rgb, 3),
+          r = _rgb[0],
+          g = _rgb[1],
+          b = _rgb[2];
+
+      var min = Math.min(r, g, b);
+      var max = Math.max(r, g, b);
+      var delta = max - min;
+      var h = 0;
+      var s = 0;
+      var l = (min + max) / 2;
+
+      if (l > 0 && l < 1) {
+        s = delta / (l < 0.5 ? 2 * l : 2 - 2 * l);
+      }
+
+      if (delta > 0) {
+        if (max === r && max !== g) h += (g - b) / delta;
+        if (max === g && max !== b) h += 2 + (b - r) / delta;
+        if (max === b && max !== r) h += 4 + (r - g) / delta;
+        h /= 6;
+      }
+
+      return [h, s, l];
+    },
+    HSLToRGB: function HSLToRGB(hsl) {
+      var _hsl = _slicedToArray(hsl, 3),
+          h = _hsl[0],
+          s = _hsl[1],
+          l = _hsl[2];
+
+      var m2 = l <= 0.5 ? l * (s + 1) : l + s - l * s;
+      var m1 = l * 2 - m2;
+      return [this.hueToRGB(m1, m2, h + 0.33333), this.hueToRGB(m1, m2, h), this.hueToRGB(m1, m2, h - 0.33333)];
+    },
+    hexToHSL: function hexToHSL(hex) {
+      return this.RGBToHSL(this.unpack(hex));
+    }
+  };
   Drupal.behaviors.color = {
     attach: function attach(context, settings) {
       var i;
@@ -20,18 +106,20 @@
       var inputs = [];
       var hooks = [];
       var locks = [];
-      var focused = null;
-      $('<div class="color-placeholder"></div>').once('color').prependTo(form);
-      var farb = $.farbtastic('.color-placeholder');
+
+      if (!Modernizr.inputtypes.color) {
+        $("<div class=\"messages messages--warning\">\n          ".concat(Drupal.t('Update colors by changing the hex value in an input. To use a color picker instead, use a browser that supports them natively such as Edge, Chrome, Firefox, Opera or Safari'), ".\n          </div>")).once('color').prependTo(form);
+      }
+
       var reference = settings.color.reference;
       Object.keys(reference || {}).forEach(function (color) {
-        reference[color] = farb.RGBToHSL(farb.unpack(reference[color]));
+        reference[color] = Drupal.colorUtils.hexToHSL(reference[color]);
       });
       var height = [];
       var width = [];
 
       function preview() {
-        Drupal.color.callback(context, settings, form, farb, height, width);
+        Drupal.color.callback(context, settings, form, height, width);
       }
 
       function resetScheme() {
@@ -42,7 +130,7 @@
 
       function shiftColor(given, ref1, ref2) {
         var d;
-        given = farb.RGBToHSL(farb.unpack(given));
+        given = Drupal.colorUtils.hexToHSL(given);
         given[0] += ref2[0] - ref1[0];
 
         if (ref1[1] === 0 || ref2[1] === 0) {
@@ -69,49 +157,43 @@
           }
         }
 
-        return farb.pack(farb.HSLToRGB(given));
+        return Drupal.colorUtils.HSLToRGB(given);
       }
 
-      function callback(input, color, propagate, colorScheme) {
+      function updateLocked(input, color) {
         var matched;
-        $(input).css({
-          backgroundColor: color,
-          color: farb.RGBToHSL(farb.unpack(color))[2] > 0.5 ? '#000' : '#fff'
-        });
+        i = input.i;
 
-        if ($(input).val() && $(input).val() !== color) {
-          $(input).val(color);
-
-          if (propagate) {
-            i = input.i;
-
-            for (j = i + 1;; ++j) {
-              if (!locks[j - 1] || $(locks[j - 1]).is('.is-unlocked')) {
-                break;
-              }
-
-              matched = shiftColor(color, reference[input.key], reference[inputs[j].key]);
-              callback(inputs[j], matched, false);
-            }
-
-            for (j = i - 1;; --j) {
-              if (!locks[j] || $(locks[j]).is('.is-unlocked')) {
-                break;
-              }
-
-              matched = shiftColor(color, reference[input.key], reference[inputs[j].key]);
-              callback(inputs[j], matched, false);
-            }
-
-            preview();
+        for (j = i + 1;; ++j) {
+          if (!locks[j - 1] || $(locks[j - 1]).is('.is-unlocked')) {
+            break;
           }
 
-          if (!colorScheme) {
-            resetScheme();
+          matched = shiftColor(color, reference[input.key], reference[inputs[j].key]);
+          inputs[j].value = Drupal.colorUtils.pack(matched);
+        }
+
+        for (j = i - 1;; --j) {
+          if (!locks[j] || $(locks[j]).is('.is-unlocked')) {
+            break;
           }
+
+          matched = shiftColor(color, reference[input.key], reference[inputs[j].key]);
+          inputs[j].value = Drupal.colorUtils.pack(matched);
         }
       }
 
+      $('.form-color').once('color-inputs').each(function (index, input) {
+        $(input).on('input', function (e) {
+          var value = e.target.value;
+
+          if (/^#([0-9A-F]{3}){1,2}$/i.test(value)) {
+            updateLocked(e.target, value);
+            preview();
+            resetScheme();
+          }
+        });
+      });
       Object.keys(settings.gradients || {}).forEach(function (i) {
         $('.color-preview').once('color').append("<div id=\"gradient-".concat(i, "\"></div>"));
         var gradient = $(".color-preview #gradient-".concat(i));
@@ -129,30 +211,13 @@
         if (colorScheme !== '' && schemes[colorScheme]) {
           colors = schemes[colorScheme];
           Object.keys(colors || {}).forEach(function (fieldName) {
-            callback($("#edit-palette-".concat(fieldName)), colors[fieldName], false, true);
+            $("#edit-palette-".concat(fieldName)).val(colors[fieldName]);
           });
           preview();
         }
       });
-
-      function focus(e) {
-        var input = e.target;
-
-        if (focused) {
-          $(focused).off('keyup', farb.updateValue).off('keyup', preview).off('keyup', resetScheme).parent().removeClass('item-selected');
-        }
-
-        focused = input;
-        farb.linkTo(function (color) {
-          callback(input, color, true, false);
-        });
-        farb.setColor(input.value);
-        $(focused).on('keyup', farb.updateValue).on('keyup', preview).on('keyup', resetScheme).parent().addClass('item-selected');
-      }
-
-      form.find('.js-color-palette input.form-text').each(function () {
+      form.find('.js-color-palette input.form-color').each(function () {
         this.key = this.id.substring(13);
-        farb.linkTo(function () {}).setColor('#000').linkTo(this);
         var i = inputs.length;
 
         if (inputs.length) {
@@ -182,8 +247,7 @@
         $(this).parent().find('.color-palette__lock').trigger('click');
         this.i = i;
         inputs.push(this);
-      }).on('focus', focus);
-      form.find('.js-color-palette label');
+      });
       inputs[0].focus();
       preview();
     }
