@@ -26,19 +26,30 @@ module.exports = {
       .drupalCreateUser({
         name: 'user',
         password: '123',
-        permissions: ['search content'],
+        permissions: ['search content', 'use advanced search'],
       })
       .drupalLogin({ name: 'user', password: '123' });
   },
   after(browser) {
     browser.drupalUninstall();
   },
-  'search wide form is accessible': (browser) => {
+  'search wide form is accessible and altered': (browser) => {
     browser
       .resizeWindow(1400, 800)
       .drupalRelativeURL('/')
       .click(searchButtonSelector)
-      .waitForElementVisible(`${searchWideSelector} ${searchFormSelector}`);
+      .waitForElementVisible(`${searchWideSelector} ${searchFormSelector}`)
+      .assert.attributeContains(
+        `${searchWideSelector} ${searchFormSelector} input[name=keys]`,
+        'placeholder',
+        'Search by keyword or phrase.',
+      )
+      .assert.attributeContains(
+        `${searchWideSelector} ${searchFormSelector} input[name=keys]`,
+        'title',
+        'Enter the terms you wish to search for.',
+      )
+      .assert.elementPresent('button.search-form__submit');
   },
   'search narrow form is accessible': (browser) => {
     browser
@@ -47,5 +58,24 @@ module.exports = {
       .click(mobileNavButtonSelector)
       .waitForElementVisible(headerNavSelector)
       .waitForElementVisible(`${searchNarrowSelector} ${searchFormSelector}`);
+  },
+  'search page is altered': (browser) => {
+    browser
+      .resizeWindow(1400, 800)
+      .drupalRelativeURL('/search')
+      .assert.attributeContains(
+        '.search-form input[name=keys]',
+        'placeholder',
+        'Search by keyword or phrase.',
+      )
+      .assert.attributeContains(
+        '.search-form input[name=keys]',
+        'title',
+        'Enter the terms you wish to search for.',
+      )
+      .assert.elementPresent('#edit-basic input[type=submit].button--primary')
+      .assert.elementPresent(
+        '#edit-advanced input[type=submit].button--primary',
+      );
   },
 };
