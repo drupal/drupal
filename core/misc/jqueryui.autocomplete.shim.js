@@ -191,6 +191,39 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
         var method = args[0];
 
         switch (method) {
+          case 'widget':
+            return $(instance.ul);
+
+          case 'instance':
+            return {
+              document: $(document),
+              element: $(instance.input),
+              menu: {
+                element: $(instance.ul)
+              },
+              liveRegion: $(instance.liveRegion),
+              bindings: null,
+              classesElementLookup: null,
+              eventNamespace: null,
+              focusable: null,
+              hoverable: null,
+              isMultiLine: instance.options.isMultiLine,
+              isNewMenu: null,
+              options: instance.options,
+              source: null,
+              uuid: null,
+              valueMethod: null,
+              window: window
+            };
+
+          case 'disable':
+            this.autocomplete('option', 'disabled', true);
+            break;
+
+          case 'enable':
+            this.autocomplete('option', 'disabled', false);
+            break;
+
           case 'search':
             instance.input.focus();
 
@@ -219,41 +252,130 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
             break;
 
-          case 'widget':
-            return $(instance.ul);
+          case 'option':
+            if (typeof args[2] === 'undefined' && args[1] === 'object') {
+              Object.keys(args[1]).forEach(function (key) {
+                _this.autocomplete('option', key, args[1][key]);
+              });
+            }
 
-          case 'instance':
-            return {
-              document: $(document),
-              element: $(instance.input),
-              menu: {
-                element: $(instance.ul)
-              },
-              liveRegion: $(instance.liveRegion),
-              bindings: null,
-              classesElementLookup: null,
-              eventNamespace: null,
-              focusable: null,
-              hoverable: null,
-              isMultiLine: instance.options.isMultiLine,
-              isNewMenu: null,
-              options: instance.options,
-              source: null,
-              uuid: null,
-              valueMethod: null,
-              window: window
-            };
+            if (typeof args[2] !== 'undefined' && typeof args[1] === 'string') {
+              var optionName = args[1],
+                  optionValue = args[2];
+              var listBoxId = instance.ul.getAttribute('id');
 
-          case 'close':
-            instance.close();
-            break;
+              switch (optionName) {
+                case 'appendTo':
+                  var appendTo = null;
 
-          case 'disable':
-            this.autocomplete('option', 'disabled', true);
-            break;
+                  if (typeof optionValue === 'string') {
+                    appendTo = document.querySelector(optionValue);
+                  } else if (optionValue instanceof jQuery) {
+                    appendTo = optionValue.length > 0 ? optionValue[0] : null;
+                  } else {
+                    appendTo = optionValue;
+                  }
 
-          case 'enable':
-            this.autocomplete('option', 'disabled', false);
+                  if (!appendTo) {
+                    var closestUiFront = $(instance.input).closest('.ui-front, dialog');
+
+                    if (closestUiFront.length > 0) {
+                      var _closestUiFront = _slicedToArray(closestUiFront, 1);
+
+                      appendTo = _closestUiFront[0];
+                    }
+                  }
+
+                  if (appendTo) {
+                    if (!appendTo.contains(instance.ul)) {
+                      appendTo.appendChild(instance.ul);
+                    }
+
+                    instance.ul = appendTo.querySelector("#".concat(listBoxId));
+                  }
+
+                  instance.input.setAttribute('data-autocomplete-list-appended', true);
+                  break;
+
+                case 'classes':
+                  Object.keys(optionValue).forEach(function (key) {
+                    if (key === 'ui-autocomplete' || key === 'ui-autocomplete-input') {
+                      var element = key === 'ui-autocomplete' ? instance.ul : instance.input;
+                      optionValue[key].split(' ').forEach(function (className) {
+                        element.classList.add(className);
+                      });
+                      element.classList.remove(key);
+                    }
+                  });
+                  break;
+
+                case 'classes.ui-autocomplete':
+                  optionValue.split(' ').forEach(function (className) {
+                    instance.ul.classList.add(className);
+                  });
+                  instance.ul.classList.remove('ui-autocomplete');
+                  break;
+
+                case 'classes.ui-autocomplete-input':
+                  optionValue.split(' ').forEach(function (className) {
+                    instance.input.classList.add(className);
+                  });
+                  instance.input.classList.remove('ui-autocomplete-input');
+                  break;
+
+                case 'disabled':
+                  instance.options.disabled = optionValue;
+                  $(instance.ul).toggleClass('ui-autocomplete-disabled', optionValue);
+                  break;
+
+                case 'position':
+                  $(instance.ul).position(_objectSpread({
+                    of: instance.input
+                  }, optionValue));
+                  break;
+
+                case 'source':
+                  if (typeof optionValue === 'function') {
+                    var overriddenResponse = function overriddenResponse(newList) {
+                      instance.options.list = newList;
+                      instance.suggestionItems = instance.options.list;
+                      instance.displayResults();
+                    };
+
+                    instance.doSearch = function () {
+                      optionValue({
+                        term: instance.extractLastInputValue()
+                      }, overriddenResponse);
+                    };
+                  } else if (typeof optionValue === 'string') {
+                    try {
+                      var list = JSON.parse(optionValue);
+                      instance.options.list = list;
+                    } catch (e) {
+                      instance.options.path = optionValue;
+                    }
+                  } else {
+                    instance.options.list = optionValue;
+                  }
+
+                  break;
+
+                default:
+                  if (['change', 'close', 'create', 'focus', 'open', 'response', 'search', 'select'].includes(optionName)) {
+                    this.on("autocomplete".concat(optionName), optionValue);
+                  }
+
+                  if (optionMapping.hasOwnProperty(optionName)) {
+                    instance.options[optionMapping[optionName]] = optionValue;
+                    instance.options[optionName] = optionValue;
+                  }
+
+                  break;
+              }
+            } else if (typeof args[1] === 'string') {
+              return instance.options(args[1]);
+            }
+
             break;
 
           default:
@@ -262,129 +384,6 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
             }
 
             break;
-        }
-
-        if (method === 'option') {
-          if (typeof args[2] === 'undefined' && args[1] === 'object') {
-            Object.keys(args[1]).forEach(function (key) {
-              _this.autocomplete('option', key, args[1][key]);
-            });
-          }
-
-          if (typeof args[2] !== 'undefined' && typeof args[1] === 'string') {
-            var optionName = args[1],
-                optionValue = args[2];
-            var listBoxId = instance.ul.getAttribute('id');
-
-            switch (optionName) {
-              case 'appendTo':
-                var appendTo = null;
-
-                if (typeof optionValue === 'string') {
-                  appendTo = document.querySelector(optionValue);
-                } else if (optionValue instanceof jQuery) {
-                  appendTo = optionValue.length > 0 ? optionValue[0] : null;
-                } else {
-                  appendTo = optionValue;
-                }
-
-                if (!appendTo) {
-                  var closestUiFront = $(instance.input).closest('.ui-front, dialog');
-
-                  if (closestUiFront.length > 0) {
-                    var _closestUiFront = _slicedToArray(closestUiFront, 1);
-
-                    appendTo = _closestUiFront[0];
-                  }
-                }
-
-                if (appendTo) {
-                  if (!appendTo.contains(instance.ul)) {
-                    appendTo.appendChild(instance.ul);
-                  }
-
-                  instance.ul = appendTo.querySelector("#".concat(listBoxId));
-                }
-
-                instance.input.setAttribute('data-autocomplete-list-appended', true);
-                break;
-
-              case 'classes':
-                Object.keys(optionValue).forEach(function (key) {
-                  if (key === 'ui-autocomplete' || key === 'ui-autocomplete-input') {
-                    var element = key === 'ui-autocomplete' ? instance.ul : instance.input;
-                    optionValue[key].split(' ').forEach(function (className) {
-                      element.classList.add(className);
-                    });
-                    element.classList.remove(key);
-                  }
-                });
-                break;
-
-              case 'classes.ui-autocomplete':
-                optionValue.split(' ').forEach(function (className) {
-                  instance.ul.classList.add(className);
-                });
-                break;
-
-              case 'classes.ui-autocomplete-input':
-                optionValue.split(' ').forEach(function (className) {
-                  instance.input.classList.add(className);
-                });
-                break;
-
-              case 'disabled':
-                instance.options.disabled = optionValue;
-                $(instance.ul).toggleClass('ui-autocomplete-disabled', optionValue);
-                break;
-
-              case 'position':
-                $(instance.ul).position(_objectSpread({
-                  of: instance.input
-                }, optionValue));
-                break;
-
-              case 'source':
-                if (typeof optionValue === 'function') {
-                  var overriddenResponse = function overriddenResponse(newList) {
-                    instance.options.list = newList;
-                    instance.suggestionItems = instance.options.list;
-                    instance.displayResults();
-                  };
-
-                  instance.doSearch = function () {
-                    optionValue({
-                      term: instance.extractLastInputValue()
-                    }, overriddenResponse);
-                  };
-                } else if (typeof optionValue === 'string') {
-                  try {
-                    var list = JSON.parse(optionValue);
-                    instance.options.list = list;
-                  } catch (e) {
-                    instance.options.path = optionValue;
-                  }
-                } else {
-                  instance.options.list = optionValue;
-                }
-
-                break;
-
-              default:
-                if (['change', 'close', 'create', 'focus', 'open', 'response', 'search', 'select'].includes(optionName)) {
-                  this.on("autocomplete".concat(optionName), optionValue);
-                }
-
-                if (optionMapping.hasOwnProperty(optionName)) {
-                  instance.options[optionMapping[optionName]] = optionValue;
-                  instance.options[optionName] = optionValue;
-                }
-
-                break;
-            }
-          } else if (typeof args[1] === 'string') {
-            return instance.options(args[1]);
-          }
         }
       } else {
         Drupal.Autocomplete.initialize(this[0]);
