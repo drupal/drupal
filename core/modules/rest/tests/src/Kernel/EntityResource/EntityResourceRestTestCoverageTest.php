@@ -98,16 +98,13 @@ class EntityResourceRestTestCoverageTest extends KernelTestBase {
       foreach ($tests as $module => $info) {
         $path = $info['path'];
         $missing_tests = [];
-        $bad_tests = [];
         foreach ($info['class suffix'] as $postfix) {
           $class = str_replace(['PROVIDER', 'CLASS'], [$module_name, $class_name], $path . $postfix);
-          if (!class_exists($class)) {
-            $class = str_replace("\\Drupal\\Tests\\$module_name\\Functional", '\Drupal\FunctionalTests', $class);
-            if (!class_exists($class)) {
-              $missing_tests[] = $postfix;
-              continue;
-            }
+          $class_alternative = str_replace("\\Drupal\\Tests\\$module_name\\Functional", '\Drupal\FunctionalTests', $class);
+          if (class_exists($class) || class_exists($class_alternative)) {
+            continue;
           }
+          $missing_tests[] = $postfix;
         }
         if (!empty($missing_tests)) {
           $missing_tests_list = implode(', ', array_map(function ($missing_test) use ($class_name) {
