@@ -700,7 +700,10 @@ class A11yAutocomplete {
       this.sortSuggestions();
     }
     this.totalSuggestions = this.suggestions.length;
-    this.suggestions = this.suggestions.slice(0, this.options.maxItems);
+    this.suggestions = this.suggestions.slice(
+      0,
+      parseInt(this.options.maxItems),
+    );
 
     this.triggerEvent('autocomplete-response', {
       list: this.suggestions,
@@ -937,13 +940,14 @@ class A11yAutocomplete {
     let message = '';
     if (count === 0) {
       message = this.options.noResultsAssistiveHint;
-    } else if (maxItems === this.totalSuggestions) {
+    } else if (parseInt(maxItems) === this.totalSuggestions) {
       message = this.options.moreThanMaxResultsAssistiveHint;
     } else if (count === 1) {
       message = this.options.oneResultAssistiveHint;
     } else {
       message = this.options.someResultsAssistiveHint;
     }
+    console.log('m m m message', message, this);
     return message.replace('@count', count);
   }
 

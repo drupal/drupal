@@ -14,42 +14,26 @@
     loadingClass: 'ui-autocomplete-loading',
     itemClass: 'ui-menu-item-wrapper',
     createLiveRegion: false,
-    displayLabels: false
+    displayLabels: false,
+    minCharAssistiveHint: Drupal.t('Type @count or more characters for results'),
+    noResults: Drupal.t('No results found'),
+    moreThanMaxResults: Drupal.t('There are at least @count results available. Type additional characters to refine your search.'),
+    someResults: Drupal.t('There are @count results available.'),
+    oneResult: Drupal.t('There is one result available.'),
+    inputAssistiveHint: Drupal.t('When autocomplete results are available use up and down arrows to review and enter to select.  Touch device users, explore by touch or with swipe gestures.')
   };
 
   Drupal.Autocomplete.initialize = function (autocompleteInput) {
     var options = Drupal.Autocomplete.defaultOptions || {};
-    options.inputAssistiveHint = Drupal.t('When autocomplete results are available use up and down arrows to review and enter to select.  Touch device users, explore by touch or with swipe gestures.');
-    options.liveRegion = false;
     var id = autocompleteInput.getAttribute('id');
     Drupal.Autocomplete.instances[id] = new A11yAutocomplete(autocompleteInput, options);
     var instance = Drupal.Autocomplete.instances[id];
-
-    function autocompleteResultsMessage(count) {
-      var maxItems = this.options.maxItems;
-
-      if (count === 0) {
-        return Drupal.t('No results found');
-      }
-
-      return Drupal.formatPlural(count, 'There is one result available.', maxItems <= this.totalSuggestions ? 'There are at least @count results available. Type additional characters to refine your search.' : 'There are @count results available.');
-    }
-
-    function autocompleteHighlightMessage(item) {
-      return Drupal.t('@item @count of @total is highlighted', {
-        '@item': item.innerText,
-        '@count': item.getAttribute('aria-posinset'),
-        '@total': this.ul.children.length
-      });
-    }
 
     function autocompleteSendToLiveRegion(message) {
       Drupal.announce(message, 'assertive');
     }
 
-    instance.resultsMessage = autocompleteResultsMessage;
     instance.sendToLiveRegion = autocompleteSendToLiveRegion;
-    instance.highlightMessage = autocompleteHighlightMessage;
     instance.input.addEventListener('autocomplete-destroy', function (e) {
       delete Drupal.Autocomplete.instances[e.detail.autocomplete.input.getAttribute('id')];
     });

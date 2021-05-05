@@ -1,6 +1,15 @@
 ((Drupal, drupalSettings, A11yAutocomplete, once) => {
   Drupal.Autocomplete = {};
   Drupal.Autocomplete.instances = {};
+
+  // These are the default options when initializing an autocomplete. These
+  // can be overridden in several ways. These are listed in order of highest
+  // precedence to least:
+  // 1 - An object literal in the input's `data-autocomplete` attribute with the
+  //   structure `{camelCaseOptionName: value}`.
+  // 2 - An input's `data-autocomplete-(hyphen delimited option name)`
+  //   attribute.
+  // 3 - The options object provided to the constructor.
   Drupal.Autocomplete.defaultOptions = {
     // Add jQuery UI classes so the autocomplete is styled the same as its
     // jQuery UI predecessor.
@@ -12,6 +21,22 @@
     // #drupal-live-announce will be used.
     createLiveRegion: false,
     displayLabels: false,
+    // The assistive hint overrides intentionally use placeholders without
+    // having them populated in the Drupal.t() call. These placeholders are
+    // replaced with their expected values in A11y_Autocomplete, which uses
+    // the same placeholder format.
+    minCharAssistiveHint: Drupal.t(
+      'Type @count or more characters for results',
+    ),
+    noResults: Drupal.t('No results found'),
+    moreThanMaxResults: Drupal.t(
+      'There are at least @count results available. Type additional characters to refine your search.',
+    ),
+    someResults: Drupal.t('There are @count results available.'),
+    oneResult: Drupal.t('There is one result available.'),
+    inputAssistiveHint: Drupal.t(
+      'When autocomplete results are available use up and down arrows to review and enter to select.  Touch device users, explore by touch or with swipe gestures.',
+    ),
   };
 
   /**
@@ -22,69 +47,12 @@
    */
   Drupal.Autocomplete.initialize = (autocompleteInput) => {
     const options = Drupal.Autocomplete.defaultOptions || {};
-
-    options.inputAssistiveHint = Drupal.t(
-      'When autocomplete results are available use up and down arrows to review and enter to select.  Touch device users, explore by touch or with swipe gestures.',
-    );
-
-    // Disable the creation of autocomplete-specific live regions.
-    // Drupal.announce() will be used instead by overriding the autocomplete's
-    // sendToLiveRegion() method.
-    options.liveRegion = false;
-
     const id = autocompleteInput.getAttribute('id');
     Drupal.Autocomplete.instances[id] = new A11yAutocomplete(
       autocompleteInput,
       options,
     );
     const instance = Drupal.Autocomplete.instances[id];
-
-    /**
-     * Formats a message reporting the number of results in a search.
-     *
-     * This overrides A11yAutocomplete.resultsMessage(), so the message
-     * contents can be processed by Drupal.t().
-     *
-     * @param {number} count
-     *   The number of results.
-     *
-     * @return {string}
-     *   The message to be announced by assistive technology.
-     */
-    function autocompleteResultsMessage(count) {
-      const { maxItems } = this.options;
-      if (count === 0) {
-        return Drupal.t('No results found');
-      }
-
-      return Drupal.formatPlural(
-        count,
-        'There is one result available.',
-        maxItems <= this.totalSuggestions
-          ? 'There are at least @count results available. Type additional characters to refine your search.'
-          : 'There are @count results available.',
-      );
-    }
-
-    /**
-     * Formats a message reporting a suggestion has been highlighted.
-     *
-     * This overrides A11yAutocomplete.highlightMessage(), so the message
-     * contents can be processed by Drupal.t().
-     *
-     * @param {object} item
-     *   The suggestion item being highlighted.
-     *
-     * @return {string}
-     *   The message to be announced by assistive technology.
-     */
-    function autocompleteHighlightMessage(item) {
-      return Drupal.t('@item @count of @total is highlighted', {
-        '@item': item.innerText,
-        '@count': item.getAttribute('aria-posinset'),
-        '@total': this.ul.children.length,
-      });
-    }
 
     /**
      * Sends a message to assistive technology.
@@ -100,11 +68,7 @@
       Drupal.announce(message, 'assertive');
     }
 
-    // Override these autocomplete methods that relay messages to assistive
-    // technology with the versions defined above.
-    instance.resultsMessage = autocompleteResultsMessage;
     instance.sendToLiveRegion = autocompleteSendToLiveRegion;
-    instance.highlightMessage = autocompleteHighlightMessage;
 
     instance.input.addEventListener('autocomplete-destroy', (e) => {
       delete Drupal.Autocomplete.instances[
@@ -138,6 +102,12 @@
           }
           Drupal.Autocomplete.initialize(autocompleteInput);
 
+          // By default, autocomplete inputs are processed with a backwards
+          // compatible shim that provides jQuery UI autocomplete's markup
+          // structure strucuture and API surface. If the input has the
+          // 'data-drupal-10-autocomplete' attribute, this shim is not invoked.
+          // Without the shim, the markup and API will be what is provided in
+          // Drupal 10.
           // @todo remove this conditional and its contents, in
           //   https://drupal.org/node/3206225, it is not needed in Drupal 10.
           if (!autocompleteInput.hasAttribute('data-drupal-10-autocomplete')) {

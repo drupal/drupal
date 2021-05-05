@@ -546,7 +546,7 @@ var A11yAutocomplete = function () {
       }
 
       this.totalSuggestions = this.suggestions.length;
-      this.suggestions = this.suggestions.slice(0, this.options.maxItems);
+      this.suggestions = this.suggestions.slice(0, parseInt(this.options.maxItems));
       this.triggerEvent('autocomplete-response', {
         list: this.suggestions
       });
@@ -711,7 +711,7 @@ var A11yAutocomplete = function () {
 
       if (count === 0) {
         message = this.options.noResultsAssistiveHint;
-      } else if (maxItems === this.totalSuggestions) {
+      } else if (parseInt(maxItems) === this.totalSuggestions) {
         message = this.options.moreThanMaxResultsAssistiveHint;
       } else if (count === 1) {
         message = this.options.oneResultAssistiveHint;
@@ -719,6 +719,7 @@ var A11yAutocomplete = function () {
         message = this.options.someResultsAssistiveHint;
       }
 
+      console.log('m m m message', message, this);
       return message.replace('@count', count);
     }
   }, {
