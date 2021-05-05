@@ -21,8 +21,8 @@ module.exports = {
           .waitForElementVisible('input[name="modules[search][enable]"]', 1000)
           .click('input[name="modules[search][enable]"]')
           .click('input[type="submit"]'); // Submit module form.
-        // Create user that can search.
       })
+      // Create user that can search.
       .drupalCreateUser({
         name: 'user',
         password: '123',

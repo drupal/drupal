@@ -2,18 +2,11 @@
 
 namespace Drupal\Tests\Theme;
 
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Form\FormState;
-use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\form_test\Form\FormTestValidateRequiredForm;
-use Drupal\search\Form\SearchBlockForm;
-use Drupal\search\Form\SearchPageForm;
-use Drupal\search\Plugin\SearchInterface;
-use Drupal\search\SearchPageInterface;
-use Drupal\search\SearchPageRepositoryInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
