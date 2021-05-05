@@ -32,11 +32,8 @@
 .shortcut-action__message {
   display: inline-block;
   margin-left: 0.75rem; /* LTR */
-  padding: 0.25rem
-1rem;
-  transition: all
-0.2s
-ease-out;
+  padding: 0.25rem 1rem;
+  transition: all 0.2s ease-out;
   transform: translateY(-0.5rem);
   vertical-align: top;
   opacity: 0;
