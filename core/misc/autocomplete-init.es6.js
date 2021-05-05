@@ -28,13 +28,22 @@
     );
 
     // Disable the creation of autocomplete-specific live regions.
-    // Drupal.announce() will be used instead.
+    // Drupal.announce() will be used instead by overriding the autocomplete's
+    // sendToLiveRegion() method.
     options.liveRegion = false;
+
+    const id = autocompleteInput.getAttribute('id');
+    Drupal.Autocomplete.instances[id] = new A11yAutocomplete(
+      autocompleteInput,
+      options,
+    );
+    const instance = Drupal.Autocomplete.instances[id];
 
     /**
      * Formats a message reporting the number of results in a search.
      *
-     * This overrides A11yAutocomplete.suggestionItem()
+     * This overrides A11yAutocomplete.resultsMessage(), so the message
+     * contents can be processed by Drupal.t().
      *
      * @param {number} count
      *   The number of results.
@@ -60,7 +69,8 @@
     /**
      * Formats a message reporting a suggestion has been highlighted.
      *
-     * This overrides A11yAutocomplete.highlightMessage()
+     * This overrides A11yAutocomplete.highlightMessage(), so the message
+     * contents can be processed by Drupal.t().
      *
      * @param {object} item
      *   The suggestion item being highlighted.
@@ -79,7 +89,9 @@
     /**
      * Sends a message to assistive technology.
      *
-     * This overrides A11yAutocomplete.sendToLiveRegion()
+     * This overrides A11yAutocomplete.sendToLiveRegion() so screen reader
+     * announcements are handled by Drupal.announce instead of live regions
+     * provided by A11y_Autocomplete.
      *
      * @param {string} message
      *   The message to be announced.
@@ -88,15 +100,8 @@
       Drupal.announce(message, 'assertive');
     }
 
-    // Several A11yAutocomplete methods are overridden so Drupal.t() and
-    // Drupal.announce() can be used without the class itself requiring
-    // Drupal.
-    const id = autocompleteInput.getAttribute('id');
-    Drupal.Autocomplete.instances[id] = new A11yAutocomplete(
-      autocompleteInput,
-      options,
-    );
-    const instance = Drupal.Autocomplete.instances[id];
+    // Override these autocomplete methods that relay messages to assistive
+    // technology with the versions defined above.
     instance.resultsMessage = autocompleteResultsMessage;
     instance.sendToLiveRegion = autocompleteSendToLiveRegion;
     instance.highlightMessage = autocompleteHighlightMessage;
@@ -117,7 +122,7 @@
    *   Attaches the autocomplete behaviors.
    */
   Drupal.behaviors.autocomplete = {
-    attach(context) {
+    attach() {
       once('autocomplete-init', 'input.form-autocomplete').forEach(
         (autocompleteInput) => {
           // The default cardinality of A11yAutocomplete is 1. Fields in Drupal

@@ -697,12 +697,6 @@ var A11yAutocomplete = function () {
       return RegExp(this.extractLastInputValue().trim().replace(/[-\\^$*+?.()|[\]{}]/g, '\\$&'), 'i').test(suggestionValue);
     }
   }, {
-    key: "announceResults",
-    value: function announceResults(count) {
-      var message = this.resultsMessage(count);
-      this.sendToLiveRegion(message);
-    }
-  }, {
     key: "sendToLiveRegion",
     value: function sendToLiveRegion(message) {
       if (this.liveRegion) {

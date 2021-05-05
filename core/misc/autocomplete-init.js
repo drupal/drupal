@@ -21,6 +21,9 @@
     var options = Drupal.Autocomplete.defaultOptions || {};
     options.inputAssistiveHint = Drupal.t('When autocomplete results are available use up and down arrows to review and enter to select.  Touch device users, explore by touch or with swipe gestures.');
     options.liveRegion = false;
+    var id = autocompleteInput.getAttribute('id');
+    Drupal.Autocomplete.instances[id] = new A11yAutocomplete(autocompleteInput, options);
+    var instance = Drupal.Autocomplete.instances[id];
 
     function autocompleteResultsMessage(count) {
       var maxItems = this.options.maxItems;
@@ -44,9 +47,6 @@
       Drupal.announce(message, 'assertive');
     }
 
-    var id = autocompleteInput.getAttribute('id');
-    Drupal.Autocomplete.instances[id] = new A11yAutocomplete(autocompleteInput, options);
-    var instance = Drupal.Autocomplete.instances[id];
     instance.resultsMessage = autocompleteResultsMessage;
     instance.sendToLiveRegion = autocompleteSendToLiveRegion;
     instance.highlightMessage = autocompleteHighlightMessage;
@@ -56,7 +56,7 @@
   };
 
   Drupal.behaviors.autocomplete = {
-    attach: function attach(context) {
+    attach: function attach() {
       once('autocomplete-init', 'input.form-autocomplete').forEach(function (autocompleteInput) {
         if (!autocompleteInput.hasAttribute('data-autocomplete-cardinality')) {
           autocompleteInput.setAttribute('data-autocomplete-cardinality', '-1');

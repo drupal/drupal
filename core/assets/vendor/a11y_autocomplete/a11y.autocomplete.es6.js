@@ -912,17 +912,6 @@ class A11yAutocomplete {
   }
 
   /**
-   * Announces number of suggestions found to assistive tech.
-   *
-   * @param {number} count
-   *   The number of suggestions.
-   */
-  announceResults(count) {
-    const message = this.resultsMessage(count);
-    this.sendToLiveRegion(message);
-  }
-
-  /**
    * Sends a message to the configured live region.
    *
    * @param {string} message
