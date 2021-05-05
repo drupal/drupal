@@ -140,7 +140,7 @@ final class ProjectRelease {
    */
   private static function validateReleaseData(array $data): void {
     $not_blank_constraints = [
-      new Type(['type' => 'string']),
+      new Type('string'),
       new NotBlank(),
     ];
     $collection_constraint = new Collection([
@@ -154,10 +154,10 @@ final class ProjectRelease {
         'download_link' => new Optional($not_blank_constraints),
         'release_link' => $not_blank_constraints,
         'terms' => new Optional([
-          new Type(['type' => 'array']),
+          new Type('array'),
           new Collection([
             'Release type' => new Optional([
-              new Type(['type' => 'array']),
+              new Type('array'),
             ]),
           ]),
         ]),
