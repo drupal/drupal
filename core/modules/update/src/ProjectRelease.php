@@ -45,7 +45,7 @@ final class ProjectRelease {
   /**
    * The release types or NULL if not set.
    *
-   * @var array|null
+   * @var string[]|null
    */
   private $releaseTypes;
 
@@ -90,7 +90,7 @@ final class ProjectRelease {
    * @param int|null $date
    *   The release date in Unix timestamp format.
    */
-  private function __construct(bool $published, string $version, string $release_url, ?array $release_types, ?bool $core_compatible, ?string $core_compatibility_message, ?string $download_url, ?int $date = NULL) {
+  private function __construct(bool $published, string $version, string $release_url, ?array $release_types, ?bool $core_compatible, ?string $core_compatibility_message, ?string $download_url, ?int $date) {
     $this->published = $published;
     $this->version = $version;
     $this->releaseUrl = $release_url;
@@ -132,7 +132,7 @@ final class ProjectRelease {
   /**
    * Validates the project release data.
    *
-   * @param mixed[] $data
+   * @param array $data
    *   The project release data.
    *
    * @throws \UnexpectedValueException
@@ -146,9 +146,9 @@ final class ProjectRelease {
     $collection_constraint = new Collection([
       'fields' => [
         'version' => $not_blank_constraints,
-        'date' => new Optional([new Type('numeric')]),
-        'core_compatible' => new Optional([
-          new Type('boolean'),
+        'date' => new Optional([
+          new Type('numeric'),
+        ]),
         ]),
         'core_compatibility_message' => new Optional($not_blank_constraints),
         'status' => new Choice(['published', 'unpublished']),
