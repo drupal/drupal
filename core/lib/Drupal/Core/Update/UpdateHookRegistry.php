@@ -7,7 +7,7 @@ use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 /**
  * Provides module updates versions handling.
  */
-class VersioningUpdateRegistry {
+class UpdateHookRegistry {
 
   /**
    * Indicates that a module has not been installed yet.
@@ -45,7 +45,7 @@ class VersioningUpdateRegistry {
    * ```
    *
    * @var int[][]
-   * @see \Drupal\Core\Update\VersioningUpdateRegistry::getAvailableUpdates()
+   * @see \Drupal\Core\Update\UpdateHookRegistry::getAvailableUpdates()
    */
   protected $allAvailableSchemaVersions = [];
 

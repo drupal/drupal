@@ -19,7 +19,7 @@ class UpdateSchemaTest extends KernelTestBase {
   /**
    * Tests the function parses schema updates as integer numbers.
    *
-   * @see \Drupal\Core\Update\VersioningUpdateRegistry::getAvailableUpdates()
+   * @see \Drupal\Core\Update\UpdateHookRegistry::getAvailableUpdates()
    */
   public function testDrupalGetSchemaVersionsInt() {
     \Drupal::state()->set('update_test_schema_version', 8001);

@@ -10,7 +10,7 @@ use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Serialization\Yaml;
-use Drupal\Core\Update\VersioningUpdateRegistry;
+use Drupal\Core\Update\UpdateHookRegistry;
 
 /**
  * Default implementation of the module installer.
@@ -56,7 +56,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
   /**
    * The update registry service.
    *
-   * @var \Drupal\Core\Update\VersioningUpdateRegistry
+   * @var \Drupal\Core\Update\UpdateHookRegistry
    */
   protected $updateRegistry;
 
@@ -78,13 +78,13 @@ class ModuleInstaller implements ModuleInstallerInterface {
    *   The drupal kernel.
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
-   * @param \Drupal\Core\Update\VersioningUpdateRegistry|null $update_registry
+   * @param \Drupal\Core\Update\UpdateHookRegistry|null $update_registry
    *   (Optional) The update registry service.
    *
    * @see \Drupal\Core\DrupalKernel
    * @see \Drupal\Core\CoreServiceProvider
    */
-  public function __construct($root, ModuleHandlerInterface $module_handler, DrupalKernelInterface $kernel, Connection $connection = NULL, VersioningUpdateRegistry $update_registry = NULL) {
+  public function __construct($root, ModuleHandlerInterface $module_handler, DrupalKernelInterface $kernel, Connection $connection = NULL, UpdateHookRegistry $update_registry = NULL) {
     $this->root = $root;
     $this->moduleHandler = $module_handler;
     $this->kernel = $kernel;
@@ -536,7 +536,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
 
       \Drupal::logger('system')->info('%module module uninstalled.', ['%module' => $module]);
 
-      /** @var \Drupal\Core\Update\VersioningUpdateRegistry $update_registry */
+      /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
       $update_registry = \Drupal::service('update.update_registry');
       $update_registry->deleteInstalledVersion($module);
 

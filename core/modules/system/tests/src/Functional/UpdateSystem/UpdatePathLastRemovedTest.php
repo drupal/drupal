@@ -55,7 +55,7 @@ class UpdatePathLastRemovedTest extends BrowserTestBase {
    * Tests that a module with a too old schema version can not be updated.
    */
   public function testLastRemovedVersion() {
-    /** @var \Drupal\Core\Update\VersioningUpdateRegistry $update_registry */
+    /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
     $update_registry = \Drupal::service('update.update_registry');
 
     $update_registry->setInstalledVersion('update_test_last_removed', 8000);
@@ -89,7 +89,7 @@ class UpdatePathLastRemovedTest extends BrowserTestBase {
     $update_registry->setInstalledVersion('update_test_last_removed', 8002);
 
     $this->runUpdates();
-    /** @var \Drupal\Core\Update\VersioningUpdateRegistry $update_registry */
+    /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
     $update_registry = \Drupal::service('update.update_registry');
     $this->assertEquals(8003, $update_registry->getInstalledVersion('update_test_last_removed'));
   }

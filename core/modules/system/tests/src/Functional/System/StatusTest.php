@@ -65,7 +65,7 @@ class StatusTest extends BrowserTestBase {
     // The setting config_sync_directory is not properly formed.
     $this->assertRaw(t("Your %file file must define the %setting setting", ['%file' => $this->siteDirectory . '/settings.php', '%setting' => "\$settings['config_sync_directory']"]));
 
-    /** @var \Drupal\Core\Update\VersioningUpdateRegistry $update_registry */
+    /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
     $update_registry = \Drupal::service('update.update_registry');
 
     // Set the schema version of update_test_postupdate to a lower version, so

@@ -58,7 +58,7 @@ class UpdateSchemaTest extends BrowserTestBase {
   public function testUpdateHooks() {
     $connection = Database::getConnection();
 
-    /** @var \Drupal\Core\Update\VersioningUpdateRegistry $update_registry */
+    /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
     $update_registry = \Drupal::service('update.update_registry');
 
     // Verify that the 8000 schema is in place.
@@ -79,7 +79,7 @@ class UpdateSchemaTest extends BrowserTestBase {
 
     // Ensure schema has changed.
     $this->resetAll();
-    /** @var \Drupal\Core\Update\VersioningUpdateRegistry $update_registry */
+    /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
     $update_registry = \Drupal::service('update.update_registry');
     $this->assertEquals(8001, $update_registry->getInstalledVersion('update_test_schema'));
     // Ensure the index was added for column a.

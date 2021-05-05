@@ -51,7 +51,7 @@ class InstallTest extends BrowserTestBase {
    * Tests recorded schema versions of early installed modules in the installer.
    */
   public function testRequiredModuleSchemaVersions() {
-    /** @var \Drupal\Core\Update\VersioningUpdateRegistry $update_registry */
+    /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
     $update_registry = \Drupal::service('update.update_registry');
     $version = $update_registry->getInstalledVersion('system');
     $this->assertGreaterThan(0, $version);

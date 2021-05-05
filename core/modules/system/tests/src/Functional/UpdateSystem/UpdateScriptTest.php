@@ -142,7 +142,7 @@ class UpdateScriptTest extends BrowserTestBase {
     // successfully.
     $this->drupalLogin($this->updateUser);
     $update_script_test_config->set('requirement_type', REQUIREMENT_WARNING)->save();
-    /** @var \Drupal\Core\Update\VersioningUpdateRegistry $update_registry */
+    /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
     $update_registry = \Drupal::service('update.update_registry');
     $update_registry->setInstalledVersion('update_script_test', $update_registry->getInstalledVersion('update_script_test') - 1);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
@@ -540,7 +540,7 @@ class UpdateScriptTest extends BrowserTestBase {
 
     // Reset the static cache to ensure we have the most current setting.
     $this->resetAll();
-    /** @var \Drupal\Core\Update\VersioningUpdateRegistry $update_registry */
+    /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
     $update_registry = \Drupal::service('update.update_registry');
     $schema_version = $update_registry->getInstalledVersion('update_script_test');
     $this->assertEqual(8001, $schema_version, 'update_script_test schema version is 8001 after updating.');
@@ -607,7 +607,7 @@ class UpdateScriptTest extends BrowserTestBase {
     $config->save();
 
     // Reset the static cache to ensure we have the most current setting.
-    /** @var \Drupal\Core\Update\VersioningUpdateRegistry $update_registry */
+    /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
     $update_registry = \Drupal::service('update.update_registry');
     $schema_version = $update_registry->getInstalledVersion('update_script_test');
     $this->assertEqual(8001, $schema_version, 'update_script_test schema version is 8001 after updating.');
@@ -678,7 +678,7 @@ class UpdateScriptTest extends BrowserTestBase {
    * Helper function to run updates via the browser.
    */
   protected function runUpdates($maintenance_mode) {
-    /** @var \Drupal\Core\Update\VersioningUpdateRegistry $update_registry */
+    /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
     $update_registry = \Drupal::service('update.update_registry');
     $schema_version = $update_registry->getInstalledVersion('update_script_test');
     $this->assertEqual(8001, $schema_version, 'update_script_test is initially installed with schema version 8001.');

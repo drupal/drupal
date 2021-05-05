@@ -8,7 +8,7 @@ use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
-use Drupal\Core\Update\VersioningUpdateRegistry;
+use Drupal\Core\Update\UpdateHookRegistry;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -49,7 +49,7 @@ class ModulesUninstallForm extends FormBase {
   /**
    * The update registry service.
    *
-   * @var \Drupal\Core\Update\VersioningUpdateRegistry
+   * @var \Drupal\Core\Update\UpdateHookRegistry
    */
   protected $updateRegistry;
 
@@ -77,10 +77,10 @@ class ModulesUninstallForm extends FormBase {
    *   The key value expirable factory.
    * @param \Drupal\Core\Extension\ModuleExtensionList $extension_list_module
    *   The module extension list.
-   * @param \Drupal\Core\Update\VersioningUpdateRegistry|null $versioning_update_registry
+   * @param \Drupal\Core\Update\UpdateHookRegistry|null $versioning_update_registry
    *   Versioning update registry service.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, KeyValueStoreExpirableInterface $key_value_expirable, ModuleExtensionList $extension_list_module, VersioningUpdateRegistry $versioning_update_registry = NULL) {
+  public function __construct(ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, KeyValueStoreExpirableInterface $key_value_expirable, ModuleExtensionList $extension_list_module, UpdateHookRegistry $versioning_update_registry = NULL) {
     $this->moduleExtensionList = $extension_list_module;
     $this->moduleHandler = $module_handler;
     $this->moduleInstaller = $module_installer;

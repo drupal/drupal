@@ -104,7 +104,7 @@ function update_check_requirements() {
  * https://www.drupal.org/project/drupal/issues/3130037 has been fixed.
  */
 function _update_fix_missing_schema() {
-  /** @var \Drupal\Core\Update\VersioningUpdateRegistry $update_registry */
+  /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
   $update_registry = \Drupal::service('update.update_registry');
   $versions = $update_registry->getAllInstalledVersions();
   $module_handler = \Drupal::moduleHandler();
@@ -352,7 +352,7 @@ function update_get_update_list() {
   // Make sure that the system module is first in the list of updates.
   $ret = ['system' => []];
 
-  /** @var \Drupal\Core\Update\VersioningUpdateRegistry $update_registry */
+  /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
   $update_registry = \Drupal::service('update.update_registry');
   $modules = $update_registry->getAllInstalledVersions();
   /** @var \Drupal\Core\Extension\ExtensionList $extension_list */
@@ -530,7 +530,7 @@ function update_get_update_function_list($starting_updates) {
   // Go through each module and find all updates that we need (including the
   // first update that was requested and any updates that run after it).
   $update_functions = [];
-  /** @var \Drupal\Core\Update\VersioningUpdateRegistry $update_registry */
+  /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
   $update_registry = \Drupal::service('update.update_registry');
   foreach ($starting_updates as $module => $version) {
     $update_functions[$module] = [];
@@ -686,7 +686,7 @@ function update_retrieve_dependencies() {
   $return = [];
   /** @var \Drupal\Core\Extension\ModuleExtensionList */
   $extension_list = \Drupal::service('extension.list.module');
-  /** @var \Drupal\Core\Update\VersioningUpdateRegistry $update_registry */
+  /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
   $update_registry = \Drupal::service('update.update_registry');
   // Get a list of installed modules, arranged so that we invoke their hooks in
   // the same order that \Drupal::moduleHandler()->invokeAll() does.

@@ -1715,10 +1715,10 @@ services:
   email.validator:
     class: Drupal\Component\Utility\EmailValidator
   update.update_registry:
-    class: Drupal\Core\Update\VersioningUpdateRegistry
+    class: Drupal\Core\Update\UpdateHookRegistry
     factory: ['@update.update_registry_factory', create]
   update.update_registry_factory:
-    class: Drupal\Core\Update\VersioningUpdateRegistryFactory
+    class: Drupal\Core\Update\UpdateHookRegistryFactory
     parent: container.trait
   update.post_update_registry:
     class: Drupal\Core\Update\UpdateRegistry

@@ -4,7 +4,7 @@ namespace Drupal\Tests\Core\Update;
 
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
-use Drupal\Core\Update\VersioningUpdateRegistry;
+use Drupal\Core\Update\UpdateHookRegistry;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -56,10 +56,10 @@ function under_test_update_1234_failed() {
 }
 
 /**
- * @coversDefaultClass \Drupal\Core\Update\VersioningUpdateRegistry
+ * @coversDefaultClass \Drupal\Core\Update\UpdateHookRegistry
  * @group Update
  */
-class VersioningUpdateRegistryTest extends UnitTestCase {
+class UpdateHookRegistryTest extends UnitTestCase {
 
   /**
    * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface|\PHPUnit\Framework\MockObject\MockObject
@@ -91,7 +91,7 @@ class VersioningUpdateRegistryTest extends UnitTestCase {
   public function testGetVersions() {
     $module_name = 'drupal\tests\core\update\under_test';
 
-    $update_registry = new VersioningUpdateRegistry([], $this->keyValueStore);
+    $update_registry = new UpdateHookRegistry([], $this->keyValueStore);
 
     // Only under_test_update_X - passes through the filter.
     $expected = [1, 20, 3000];
@@ -126,7 +126,7 @@ class VersioningUpdateRegistryTest extends UnitTestCase {
     $this->keyValueStore
       ->method('delete')
       ->willReturnCallback(static function ($key) use (&$versions) {
-        $versions[$key] = VersioningUpdateRegistry::SCHEMA_UNINSTALLED;
+        $versions[$key] = UpdateHookRegistry::SCHEMA_UNINSTALLED;
       });
     $this->keyValueStore
       ->method('set')
@@ -134,14 +134,14 @@ class VersioningUpdateRegistryTest extends UnitTestCase {
         $versions[$key] = $value;
       });
 
-    $update_registry = new VersioningUpdateRegistry([], $this->keyValueStore);
+    $update_registry = new UpdateHookRegistry([], $this->keyValueStore);
 
     $this->assertSame(3000, $update_registry->getInstalledVersion('module3'));
     $update_registry->setInstalledVersion('module3', 3001);
     $this->assertSame(3001, $update_registry->getInstalledVersion('module3'));
     $this->assertSame($versions, $update_registry->getAllInstalledVersions());
     $update_registry->deleteInstalledVersion('module3');
-    $this->assertSame(VersioningUpdateRegistry::SCHEMA_UNINSTALLED, $update_registry->getInstalledVersion('module3'));
+    $this->assertSame(UpdateHookRegistry::SCHEMA_UNINSTALLED, $update_registry->getInstalledVersion('module3'));
   }
 
 }

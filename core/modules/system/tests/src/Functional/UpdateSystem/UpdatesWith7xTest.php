@@ -49,7 +49,7 @@ class UpdatesWith7xTest extends BrowserTestBase {
   }
 
   public function testWith7x() {
-    /** @var \Drupal\Core\Update\VersioningUpdateRegistry $update_registry */
+    /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
     $update_registry = \Drupal::service('update.update_registry');
 
     // Ensure that the minimum schema version is 8000, despite 7200 update

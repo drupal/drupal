@@ -125,7 +125,7 @@ class ModuleHandlerTest extends KernelTestBase {
     $result = $this->moduleInstaller()->uninstall(['config', 'help', 'color']);
     $this->assertTrue($result, 'ModuleInstaller::uninstall() returned TRUE.');
 
-    /** @var \Drupal\Core\Update\VersioningUpdateRegistry $update_registry */
+    /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
     $update_registry = \Drupal::service('update.update_registry');
     foreach (['color', 'config', 'help'] as $module) {
       $this->assertEqual($update_registry::SCHEMA_UNINSTALLED, $update_registry->getInstalledVersion($module), "{$module} module was uninstalled.");
@@ -178,7 +178,7 @@ class ModuleHandlerTest extends KernelTestBase {
     $this->assertTrue($this->moduleHandler()->moduleExists($dependency));
 
     // Uninstall the profile module that is not a dependent.
-    /** @var \Drupal\Core\Update\VersioningUpdateRegistry $update_registry */
+    /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
     $update_registry = \Drupal::service('update.update_registry');
     $result = $this->moduleInstaller()->uninstall([$non_dependency]);
     $this->assertTrue($result, 'ModuleInstaller::uninstall() returns TRUE.');
@@ -276,7 +276,7 @@ class ModuleHandlerTest extends KernelTestBase {
     // Deleting the entity.
     $entity->delete();
 
-    /** @var \Drupal\Core\Update\VersioningUpdateRegistry $update_registry */
+    /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
     $update_registry = \Drupal::service('update.update_registry');
     $result = $this->moduleInstaller()->uninstall(['help']);
     $this->assertTrue($result, 'ModuleInstaller::uninstall() returns TRUE.');

@@ -34,7 +34,7 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
     // Set a value in the cache to prove caches are cleared.
     \Drupal::service('cache.default')->set(__CLASS__, 'Test');
 
-    /** @var \Drupal\Core\Update\VersioningUpdateRegistry $update_registry */
+    /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
     $update_registry = \Drupal::service('update.update_registry');
     foreach (['user' => 8100, 'node' => 8700, 'system' => 8901, 'update_test_schema' => 8000] as $module => $schema) {
       $this->assertEqual($schema, $update_registry->getInstalledVersion($module), new FormattableMarkup('Module @module schema is @schema', ['@module' => $module, '@schema' => $schema]));
@@ -102,7 +102,7 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
     $this->assertEqual([], $container_cannot_be_saved_messages);
 
     // Ensure schema has changed.
-    /** @var \Drupal\Core\Update\VersioningUpdateRegistry $update_registry */
+    /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
     $update_registry = \Drupal::service('update.update_registry');
     $this->assertEqual(8001, $update_registry->getInstalledVersion('update_test_schema'));
     $this->assertEqual(8001, $update_registry->getInstalledVersion('update_test_semver_update_n'));
