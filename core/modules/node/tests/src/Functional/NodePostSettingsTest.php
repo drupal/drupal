@@ -44,8 +44,7 @@ class NodePostSettingsTest extends NodeTestBase {
 
     // Check that the post information is displayed.
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
-    $elements = $this->xpath('//div[contains(@class, :class)]', [':class' => 'node__submitted']);
-    $this->assertCount(1, $elements, 'Post information is displayed.');
+    $this->assertSession()->elementsCount('xpath', '//div[contains(@class, "node__submitted")]', 1);
     $node->delete();
 
     // Set "Basic page" content type to display post information.
@@ -59,9 +58,8 @@ class NodePostSettingsTest extends NodeTestBase {
     $edit['body[0][value]'] = $this->randomMachineName(16);
     $this->drupalPostForm('node/add/page', $edit, 'Save');
 
-    // Check that the post information is displayed.
-    $elements = $this->xpath('//div[contains(@class, :class)]', [':class' => 'node__submitted']);
-    $this->assertCount(0, $elements, 'Post information is not displayed.');
+    // Check that the post information is not displayed.
+    $this->assertSession()->elementNotExists('xpath', '//div[contains(@class, "node__submitted")]');
   }
 
 }

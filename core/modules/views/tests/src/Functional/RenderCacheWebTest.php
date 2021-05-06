@@ -14,7 +14,7 @@ class RenderCacheWebTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'block'];
+  protected static $modules = ['node', 'block', 'views_test_render_cache'];
 
   /**
    * {@inheritdoc}
@@ -53,14 +53,13 @@ class RenderCacheWebTest extends ViewTestBase {
     ]);
     $node->save();
     $this->nodes[] = $node;
-
-    $this->placeBlock('views_block:node_id_argument-block_1', ['region' => 'header']);
   }
 
   /**
    * Tests rendering caching of a views block with arguments.
    */
   public function testEmptyView() {
+    $this->placeBlock('views_block:node_id_argument-block_1', ['region' => 'header']);
     $this->drupalGet('<front>');
     $this->assertEqual([], $this->cssSelect('div.region-header div.views-field-title'));
 
@@ -75,6 +74,20 @@ class RenderCacheWebTest extends ViewTestBase {
     $this->drupalGet($this->nodes[0]->toUrl());
     $result = $this->cssSelect('div.region-header div.views-field-title')[0]->getText();
     $this->assertEqual('test title 1', $result);
+  }
+
+  /**
+   * Tests render caching for display rendered with different args on same page.
+   */
+  public function testRepeatedDisplay() {
+    $this->drupalGet("views_test_render_cache/node_id_argument/block_1/{$this->nodes[0]->id()}/{$this->nodes[1]->id()}");
+    // Confirm there are two displays.
+    $displays = $this->cssSelect('.views-element-container .view-id-node_id_argument.view-display-id-block_1');
+    $this->assertCount(2, $displays, 'There are two displays');
+    // First display should only have test title 1.
+    $this->assertSame($this->nodes[0]->getTitle(), $displays[0]->getText());
+    // Second display should only have test title 2.
+    $this->assertSame($this->nodes[1]->getTitle(), $displays[1]->getText());
   }
 
 }

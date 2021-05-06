@@ -45,13 +45,13 @@
 
   function getStickyHeaderStorage() {
     var stickyHeaderState = localStorage.getItem('Drupal.olivero.stickyHeaderState');
-    if (!stickyHeaderState) return null;
+    if (!stickyHeaderState) return false;
     var item = JSON.parse(stickyHeaderState);
     var now = new Date();
 
     if (now.getTime() > item.expiry) {
       localStorage.removeItem('Drupal.olivero.stickyHeaderState');
-      return null;
+      return false;
     }
 
     return item.value;

@@ -27,6 +27,10 @@
     outline: solid 2px var(--color--blue-20);
   }
 
+  &:active {
+    color: inherit; /* Override Safari's default UA styles. */
+  }
+
   @media (--sm) {
     display: inline-flex;
     width: auto;
