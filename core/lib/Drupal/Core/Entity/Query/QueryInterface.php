@@ -29,6 +29,7 @@ interface QueryInterface extends AlterableInterface {
    * and the Polish 'siema' within a 'greetings' text field:
    * @code
    *   $entity_ids = \Drupal::entityQuery($entity_type)
+   *     ->accessCheck(FALSE)
    *     ->condition('greetings', 'merhaba', '=', 'tr')
    *     ->condition('greetings.value', 'siema', '=', 'pl')
    *     ->execute();
@@ -236,7 +237,7 @@ interface QueryInterface extends AlterableInterface {
    * field containing 'shape' and 'color' columns. To find all drawings
    * containing both a red triangle and a blue circle:
    * @code
-   *   $query = \Drupal::entityQuery('drawing');
+   *   $query = \Drupal::entityQuery('drawing')->accessCheck(FALSE);
    *   $group = $query->andConditionGroup()
    *     ->condition('figures.color', 'red')
    *     ->condition('figures.shape', 'triangle');
@@ -260,7 +261,7 @@ interface QueryInterface extends AlterableInterface {
    * containing 'building_type' and 'color' columns. To find all green and
    * red bikesheds:
    * @code
-   *   $query = \Drupal::entityQuery('map');
+   *   $query = \Drupal::entityQuery('map')->accessCheck(FALSE);
    *   $group = $query->orConditionGroup()
    *     ->condition('attributes.color', 'red')
    *     ->condition('attributes.color', 'green');
