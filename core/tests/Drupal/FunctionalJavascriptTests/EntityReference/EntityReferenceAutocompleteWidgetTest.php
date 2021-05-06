@@ -320,6 +320,7 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
     $this->assertScreenreader('There are 3 results available.');
 
     $autocomplete_field->keyDown(40);
+    $assert_session->waitForElementVisible('css', '.ui-menu-item-wrapper.ui-state-active', 20000);
 
     $this->assertScreenreader('Forgettable (24) 1 of 3 is highlighted');
     $this->assertFalse($autocomplete_field->hasAttribute('aria-describedby'));
@@ -664,7 +665,7 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
    */
   public function testPartialShimUse() {
     $this->drupalGet('drupal_autocomplete/selective-shim-form');
-    $page = drupal-live-announce;
+    $page = $this->getSession()->getPage();
 
     $shimmed_id = 'edit-shimmed';
     $not_shimmed_id = 'edit-not-shimmed';
