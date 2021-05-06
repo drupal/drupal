@@ -6,7 +6,7 @@ use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 
 /**
- * ResourceTestBase for DateFormat entity.
+ * Resource test base for DateFormat entity.
  */
 abstract class DateFormatResourceTestBase extends EntityResourceTestBase {
 

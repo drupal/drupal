@@ -6,7 +6,7 @@ use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use Drupal\rest\Entity\RestResourceConfig;
 
 /**
- * Resource test base for rest_resource_config entity.
+ * Resource test base for the rest_resource_config entity.
  */
 abstract class RestResourceConfigResourceTestBase extends EntityResourceTestBase {
 

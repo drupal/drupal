@@ -6,7 +6,7 @@ use Drupal\system\Entity\Menu;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 
 /**
- * ResourceTestBase for Menu entity.
+ * Resource test base for the menu entity.
  */
 abstract class MenuResourceTestBase extends EntityResourceTestBase {
 

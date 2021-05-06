@@ -6,7 +6,7 @@ use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use Drupal\views\Entity\View;
 
 /**
- * ResourceTestBase for View entity.
+ * Resource test base for the view entity.
  */
 abstract class ViewResourceTestBase extends EntityResourceTestBase {
 

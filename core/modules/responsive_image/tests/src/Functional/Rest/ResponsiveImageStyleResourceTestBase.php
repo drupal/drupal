@@ -6,7 +6,7 @@ use Drupal\responsive_image\Entity\ResponsiveImageStyle;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 
 /**
- * ResourceTestBase for ResponsiveImageStyle entity.
+ * Resource test base for ResponsiveImageStyle entity.
  */
 abstract class ResponsiveImageStyleResourceTestBase extends EntityResourceTestBase {
 

@@ -9,7 +9,7 @@ use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use GuzzleHttp\RequestOptions;
 
 /**
- * ResourceTestBase for Term entity.
+ * Resource test base for the taxonomy_term entity.
  */
 abstract class TermResourceTestBase extends EntityResourceTestBase {
 

@@ -8,7 +8,7 @@ use Drupal\user\Entity\User;
 use GuzzleHttp\RequestOptions;
 
 /**
- * ResourceTestBase for User entity.
+ * Resource test base for the user entity.
  */
 abstract class UserResourceTestBase extends EntityResourceTestBase {
 

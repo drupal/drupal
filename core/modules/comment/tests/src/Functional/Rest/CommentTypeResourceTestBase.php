@@ -6,7 +6,7 @@ use Drupal\comment\Entity\CommentType;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 
 /**
- * ResourceTestBase for CommentType entity.
+ * Resource test base for CommentType entity.
  */
 abstract class CommentTypeResourceTestBase extends EntityResourceTestBase {
 

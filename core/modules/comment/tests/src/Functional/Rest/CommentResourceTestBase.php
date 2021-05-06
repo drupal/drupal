@@ -12,7 +12,7 @@ use Drupal\user\Entity\User;
 use GuzzleHttp\RequestOptions;
 
 /**
- * ResourceTestBase for Comment entity.
+ * Resource test base for the comment entity.
  */
 abstract class CommentResourceTestBase extends EntityResourceTestBase {
 

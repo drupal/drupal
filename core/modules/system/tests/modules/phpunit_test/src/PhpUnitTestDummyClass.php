@@ -3,7 +3,7 @@
 namespace Drupal\phpunit_test;
 
 /**
- * Test class.
+ * Dummy test class.
  */
 class PhpUnitTestDummyClass {
 }

@@ -6,7 +6,7 @@ use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use Drupal\tour\Entity\Tour;
 
 /**
- * ResourceTestBase for Tour entity.
+ * Resource test base for the tour entity.
  */
 abstract class TourResourceTestBase extends EntityResourceTestBase {
 

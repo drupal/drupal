@@ -6,7 +6,7 @@ use Drupal\config_test\Entity\ConfigTest;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 
 /**
- * ResourceTestBase for ConfigTest entity.
+ * Resource test base for the config_test entity.
  */
 abstract class ConfigTestResourceTestBase extends EntityResourceTestBase {
 

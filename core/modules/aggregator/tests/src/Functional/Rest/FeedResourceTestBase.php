@@ -6,7 +6,7 @@ use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use Drupal\aggregator\Entity\Feed;
 
 /**
- * ResourceTestBase for Feed entity.
+ * Resource test base for the aggregator_feed entity.
  */
 abstract class FeedResourceTestBase extends EntityResourceTestBase {
 

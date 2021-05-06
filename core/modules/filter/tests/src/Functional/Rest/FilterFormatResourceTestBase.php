@@ -6,7 +6,7 @@ use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 
 /**
- * ResourceTestBase for FilterFormat entity.
+ * Resource test base for the filter_format entity.
  */
 abstract class FilterFormatResourceTestBase extends EntityResourceTestBase {
 

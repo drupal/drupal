@@ -6,7 +6,7 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 
 /**
- * ResourceTestBase for NodeType entity.
+ * Resource test base for NodeType entity.
  */
 abstract class NodeTypeResourceTestBase extends EntityResourceTestBase {
 

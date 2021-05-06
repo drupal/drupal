@@ -8,7 +8,7 @@ use Drupal\Tests\hal\Functional\EntityResource\HalEntityNormalizationTrait;
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 
 /**
- * ResourceTestBase for Item entity.
+ * Resource test base for Item entity.
  */
 abstract class ItemHalJsonTestBase extends ItemResourceTestBase {
 

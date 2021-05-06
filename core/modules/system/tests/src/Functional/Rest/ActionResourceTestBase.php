@@ -7,7 +7,7 @@ use Drupal\system\Entity\Action;
 use Drupal\user\RoleInterface;
 
 /**
- * ResourceTestBase for Action entity.
+ * Resource test base for the action entity.
  */
 abstract class ActionResourceTestBase extends EntityResourceTestBase {
 

@@ -6,7 +6,7 @@ use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 
 /**
- * ResourceTestBase for EntityTestBundle entity.
+ * Resource test base for the entity_test entity.
  */
 abstract class EntityTestBundleResourceTestBase extends EntityResourceTestBase {
 

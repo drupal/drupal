@@ -6,7 +6,7 @@ use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use Drupal\Core\Entity\Entity\EntityViewMode;
 
 /**
- * ResourceTestBase for EntityViewMode entity.
+ * Resource test base for the entity_view_mode entity.
  */
 abstract class EntityViewModeResourceTestBase extends EntityResourceTestBase {
 
