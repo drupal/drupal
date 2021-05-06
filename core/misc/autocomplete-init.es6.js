@@ -48,6 +48,20 @@
   Drupal.Autocomplete.initialize = (autocompleteInput) => {
     const options = Drupal.Autocomplete.defaultOptions || {};
     const id = autocompleteInput.getAttribute('id');
+    if (
+      autocompleteInput.hasAttribute(
+        'data-autocomplete-first-character-blacklist',
+      )
+    ) {
+      options.firstCharacterDenylist = autocompleteInput.getAttribute(
+        'data-autocomplete-first-character-blacklist',
+      );
+      Drupal.deprecationError({
+        message:
+          'The data-autocomplete-first-character-blacklist attribute is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use data-autocomplete-first-character-denylist instead See https://www.drupal.org/node/3083715',
+      });
+    }
+
     Drupal.Autocomplete.instances[id] = new A11yAutocomplete(
       autocompleteInput,
       options,
