@@ -335,7 +335,7 @@ class UserCancellationTest extends KernelTestBase {
        *
        * @var array
        */
-      static $mailCalls = [];
+      public static $mailCalls = [];
 
       /**
        * {@inheritdoc}
