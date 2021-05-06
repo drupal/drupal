@@ -6,7 +6,45 @@ use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
- * Drupal config source from database.
+ * Drupal 8+ configuration source from database.
+ *
+ * Available configuration keys:
+ * - collections: (optional) The collection of configuration storage to retrieve
+ *   from the source - can be a string or an array. If omitted, configuration
+ *   objects of all available collections are retrieved.
+ * - names: (optional) Names of configuration objects to retrieve from the
+ *   source - can be a string or an array. If omitted, all available
+ *   configuration objects are retrieved.
+ *
+ * Examples:
+ *
+ * @code
+ * source:
+ *   plugin: d8_config
+ *   names:
+ *     - node.type.article
+ *     - node.type.page
+ * @endcode
+ *
+ * In this example configuration objects of article and page content types are
+ * retrieved from the source database.
+ *
+ * @code
+ * source:
+ *   plugin: d8_config
+ *   collections: language.fr
+ *   names:
+ *     - node.type.article
+ *     - node.type.page
+ * @endcode
+ *
+ * In this example configuration objects are filtered by language.fr collection.
+ * As a result, French versions of specified configuration objects are retrieved
+ * from the source database.
+ *
+ * For additional configuration keys, refer to the parent classes:
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  *
  * @MigrateSource(
  *   id = "d8_config",

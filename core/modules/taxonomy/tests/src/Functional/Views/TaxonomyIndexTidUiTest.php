@@ -165,12 +165,9 @@ class TaxonomyIndexTidUiTest extends UITestBase {
 
     // Only the nodes with the selected term should be shown.
     $this->drupalGet('test-filter-taxonomy-index-tid');
-    $xpath = $this->xpath('//div[@class="view-content"]//a');
-    $this->assertCount(2, $xpath);
-    $xpath = $this->xpath('//div[@class="view-content"]//a[@href=:href]', [':href' => $node2->toUrl()->toString()]);
-    $this->assertCount(1, $xpath);
-    $xpath = $this->xpath('//div[@class="view-content"]//a[@href=:href]', [':href' => $node3->toUrl()->toString()]);
-    $this->assertCount(1, $xpath);
+    $this->assertSession()->elementsCount('xpath', '//div[@class="view-content"]//a', 2);
+    $this->assertSession()->elementsCount('xpath', "//div[@class='view-content']//a[@href='{$node2->toUrl()->toString()}']", 1);
+    $this->assertSession()->elementsCount('xpath', "//div[@class='view-content']//a[@href='{$node3->toUrl()->toString()}']", 1);
 
     // Expose the filter.
     $this->drupalPostForm('admin/structure/views/nojs/handler/test_filter_taxonomy_index_tid/default/filter/tid', [], 'Expose filter');
@@ -185,10 +182,8 @@ class TaxonomyIndexTidUiTest extends UITestBase {
     // After switching to 'empty' operator, the node without a term should be
     // shown.
     $this->drupalGet('test-filter-taxonomy-index-tid');
-    $xpath = $this->xpath('//div[@class="view-content"]//a');
-    $this->assertCount(1, $xpath);
-    $xpath = $this->xpath('//div[@class="view-content"]//a[@href=:href]', [':href' => $node1->toUrl()->toString()]);
-    $this->assertCount(1, $xpath);
+    $this->assertSession()->elementsCount('xpath', '//div[@class="view-content"]//a', 1);
+    $this->assertSession()->elementsCount('xpath', "//div[@class='view-content']//a[@href='{$node1->toUrl()->toString()}']", 1);
 
     // Set the operator to 'not empty'.
     $this->drupalPostForm('admin/structure/views/nojs/handler/test_filter_taxonomy_index_tid/default/filter/tid', ['options[operator]' => 'not empty'], 'Apply');
@@ -198,14 +193,10 @@ class TaxonomyIndexTidUiTest extends UITestBase {
     // After switching to 'not empty' operator, all nodes with terms should be
     // shown.
     $this->drupalGet('test-filter-taxonomy-index-tid');
-    $xpath = $this->xpath('//div[@class="view-content"]//a');
-    $this->assertCount(3, $xpath);
-    $xpath = $this->xpath('//div[@class="view-content"]//a[@href=:href]', [':href' => $node2->toUrl()->toString()]);
-    $this->assertCount(1, $xpath);
-    $xpath = $this->xpath('//div[@class="view-content"]//a[@href=:href]', [':href' => $node3->toUrl()->toString()]);
-    $this->assertCount(1, $xpath);
-    $xpath = $this->xpath('//div[@class="view-content"]//a[@href=:href]', [':href' => $node4->toUrl()->toString()]);
-    $this->assertCount(1, $xpath);
+    $this->assertSession()->elementsCount('xpath', '//div[@class="view-content"]//a', 3);
+    $this->assertSession()->elementsCount('xpath', "//div[@class='view-content']//a[@href='{$node2->toUrl()->toString()}']", 1);
+    $this->assertSession()->elementsCount('xpath', "//div[@class='view-content']//a[@href='{$node3->toUrl()->toString()}']", 1);
+    $this->assertSession()->elementsCount('xpath', "//div[@class='view-content']//a[@href='{$node4->toUrl()->toString()}']", 1);
 
     // Select 'Term ID' as the field to be displayed.
     $edit = ['name[taxonomy_term_field_data.tid]' => TRUE];
@@ -227,8 +218,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
     $this->drupalPostForm('admin/structure/views/nojs/handler/test_taxonomy_term_name/default/filter/vid', $edit, 'Apply');
     $this->drupalPostForm('admin/structure/views/view/test_taxonomy_term_name/edit/default', [], 'Save');
     $this->submitForm([], 'Update preview');
-    $preview = $this->xpath("//div[@class='view-content']");
-    $this->assertTrue(empty($preview), 'No results.');
+    $this->assertSession()->elementNotExists('xpath', "//div[@class='view-content']");
   }
 
   /**

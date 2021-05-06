@@ -1,0 +1,33 @@
+/**
+ * @file
+ * Visual styles for inline forms.
+ */
+
+.form--inline .form-item {
+  float: left; /* LTR */
+  margin-right: 0.5em; /* LTR */
+}
+[dir="rtl"] .form--inline .form-item {
+  float: right;
+  margin-right: 0;
+  margin-left: 0.5em;
+}
+/* This is required to win over specificity of [dir="rtl"] .form--inline .form-item */
+[dir="rtl"] .views-filterable-options-controls .form-item {
+  margin-right: 2%;
+}
+.form--inline .form-item-separator {
+  margin-top: 2.3em;
+  margin-right: 1em; /* LTR */
+  margin-left: 0.5em; /* LTR */
+}
+[dir="rtl"] .form--inline .form-item-separator {
+  margin-right: 0.5em;
+  margin-left: 1em;
+}
+.form--inline .form-actions {
+  clear: left; /* LTR */
+}
+[dir="rtl"] .form--inline .form-actions {
+  clear: right;
+}

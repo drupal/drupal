@@ -68,4 +68,29 @@ module.exports = {
         'true',
       );
   },
+  'Verify secondary navigation close on blur': (browser) => {
+    browser
+      .drupalRelativeURL('/node')
+      .waitForElementVisible(headerNavSelector)
+      .click(`[aria-controls="${linkSubMenuId}"]`)
+      .assert.attributeEquals(
+        `[aria-controls="${linkSubMenuId}"]`,
+        'aria-expanded',
+        'true',
+      );
+    browser
+      .execute(
+        // eslint-disable-next-line func-names, prefer-arrow-callback, no-shadow
+        function () {
+          document.querySelector('.site-branding__name a').focus();
+        },
+        [],
+      )
+      .pause(400)
+      .assert.attributeEquals(
+        `[aria-controls="${linkSubMenuId}"]`,
+        'aria-expanded',
+        'false',
+      );
+  },
 };
