@@ -294,6 +294,8 @@ module.exports = {
         },
         [iteration],
         (result) => {
+          browser.assert.ok(typeof result.value.actual === 'number');
+          browser.assert.ok(typeof result.value.expected === 'number');
           browser.assert.equal(
             result.value.actual,
             result.value.expected,
@@ -302,6 +304,9 @@ module.exports = {
         },
       );
     });
+    browser.assert.deprecationErrorExists(
+      'The :tabbable selector is deprecated in Drupal 9.2.0 and will be removed in Drupal 10.0.0. Use the core/tabbable library instead. See https://www.drupal.org/node/3183730',
+    );
     browser.drupalLogAndEnd({ onlyOnError: false });
   },
   'test tabbable dialog integration': (browser) => {
@@ -332,7 +337,9 @@ module.exports = {
         },
       );
     });
-
+    browser.assert.deprecationErrorExists(
+      'The :tabbable selector is deprecated in Drupal 9.2.0 and will be removed in Drupal 10.0.0. Use the core/tabbable library instead. See https://www.drupal.org/node/3183730',
+    );
     browser.drupalLogAndEnd({ onlyOnError: false });
   },
 };
