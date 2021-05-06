@@ -595,6 +595,7 @@ fixnull
 flexbox
 flexslider
 flickr
+flipfit
 floatingspace
 foaf
 foat
@@ -656,7 +657,6 @@ giggabyte
 gitattributes
 gitignored
 gloop
-gnomovision
 gnumeric
 goldfinger
 gonner
@@ -1012,9 +1012,6 @@ narf
 navs
 nbaz
 nbchoices
-nblocks
-ncck
-ncontent
 ndash
 ndelay
 ndocs
@@ -1034,7 +1031,6 @@ nids
 nightlies
 nightwatch
 nightwatchjs
-nmenu
 nmsgid
 nmsgstr
 nntp
@@ -1079,12 +1075,7 @@ notnull
 notsimpletest
 nourriture
 nplurals
-npoll
-nprofile
 nresponse
-nstrings
-nsync
-ntaxonomy
 ntfs
 nturn
 nyan
@@ -1483,6 +1474,7 @@ ssess
 ssid
 stardivision
 starrrrr
+starterkit
 startpunt
 starzzzz
 statuscode
@@ -1952,7 +1944,6 @@ yourbackend
 yourmodule
 youtube
 yowser
-yoyodyne
 yygroup
 yyyymm
 zartan
@@ -1968,3 +1959,4 @@ zwei
 zxvf
 zzgroup
 übersetzung
+tuvan

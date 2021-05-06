@@ -4,6 +4,7 @@ namespace Drupal\Core\Render;
 
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\Variable;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Cache\Cache;
@@ -353,6 +354,10 @@ class Renderer implements RendererInterface {
     // Build the element if it is still empty.
     if (isset($elements['#lazy_builder'])) {
       $new_elements = $this->doCallback('#lazy_builder', $elements['#lazy_builder'][0], $elements['#lazy_builder'][1]);
+      // Throw an exception if #lazy_builder callback does not return an array;
+      // provide helpful details for troubleshooting.
+      assert(is_array($new_elements), "#lazy_builder callbacks must return a valid renderable array, got " . gettype($new_elements) . " from " . Variable::callableToString($elements['#lazy_builder'][0]));
+
       // Retain the original cacheability metadata, plus cache keys.
       CacheableMetadata::createFromRenderArray($elements)
         ->merge(CacheableMetadata::createFromRenderArray($new_elements))

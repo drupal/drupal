@@ -215,7 +215,14 @@ class Xss {
           // Attribute name, href for instance.
           if (preg_match('/^([-a-zA-Z][-a-zA-Z0-9]*)/', $attributes, $match)) {
             $attribute_name = strtolower($match[1]);
-            $skip = ($attribute_name == 'style' || substr($attribute_name, 0, 2) == 'on');
+            $skip = (
+              $attribute_name == 'style' ||
+              substr($attribute_name, 0, 2) == 'on' ||
+              substr($attribute_name, 0, 1) == '-' ||
+              // Ignore long attributes to avoid unnecessary processing
+              // overhead.
+              strlen($attribute_name) > 96
+            );
 
             // Values for attributes of type URI should be filtered for
             // potentially malicious protocols (for example, an href-attribute

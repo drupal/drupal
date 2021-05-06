@@ -26,3 +26,10 @@ order-header-js-command:
   header: true
   js:
     header.js: {}
+
+focus.first:
+  js:
+    js/focus-ajax.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
