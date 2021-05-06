@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\node\Entity\Node;
