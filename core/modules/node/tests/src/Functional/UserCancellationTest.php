@@ -8,6 +8,8 @@ use Drupal\user\CancellationHandlerInterface;
 
 /**
  * Tests how nodes react to user cancellation.
+ *
+ * @group node
  */
 class UserCancellationTest extends BrowserTestBase {
 

@@ -7,6 +7,8 @@ use Drupal\user\CancellationHandlerInterface;
 
 /**
  * Tests how media items react to user cancellation.
+ *
+ * @group media
  */
 class UserCancellationTest extends MediaFunctionalTestBase {
 
