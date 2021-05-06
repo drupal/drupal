@@ -78,9 +78,8 @@ class EntityFieldManager implements EntityFieldManagerInterface {
    * An array keyed by field type.
    *
    * Each value is an array whose key are entity types including arrays in the
-   * same form that $fieldMap.
-   *
-   * It helps access the mapping between types and fields by the field type.
+   * same form as $fieldMap. It helps access the mapping between types and
+   * fields by the field type.
    *
    * @var array
    */

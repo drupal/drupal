@@ -56,7 +56,7 @@ class DefaultTableMapping implements TableMappingInterface {
   /**
    * The table that stores revision field data.
    *
-   * Only if the entity supports revisions and has multilingual support.
+   * Only used if the entity supports revisions and has multilingual support.
    *
    * @var string
    */
