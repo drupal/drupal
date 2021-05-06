@@ -19,7 +19,7 @@ use Drupal\views\Plugin\views\row\RssPluginBase;
  * )
  */
 class Rss extends RssPluginBase {
-  
+
   /**
    * The base table for this row plugin.
    *
