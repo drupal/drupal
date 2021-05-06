@@ -5,4 +5,21 @@
 * @preserve
 **/
 
-(function ($) {})(jQuery);
+(function ($) {
+  var oldWidget = $.widget;
+  $.fn.extend({
+    widget: function widget() {
+      var runDefaultWidget = true;
+
+      if ($.ui.hasOwnProperty('autocomplete')) {
+        if ((arguments.length <= 1 ? undefined : arguments[1]) === $.ui.autocomplete) {}
+
+        runDefaultWidget = false;
+      }
+
+      if (runDefaultWidget) {
+        return oldWidget.apply(void 0, arguments);
+      }
+    }
+  });
+})(jQuery);
