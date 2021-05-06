@@ -337,7 +337,7 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
     // to pass before and after the jQuery UI asset changes in
     // http://drupal.org/node/3113400, which, by necessity, results in loading
     // order changes.
-    $this->assertEmpty(array_diff($js_loaded_by_page, $expected_js));
+    $this->assertEmpty(array_diff($js_loaded_by_page, $expected_js), print_r(array_diff($js_loaded_by_page, $expected_js),1));
   }
 
   /**
@@ -426,7 +426,24 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
         'expected_css' => [
           'core/assets/vendor/jquery.ui/themes/base/autocomplete.css',
         ],
-        'expected_js' => [],
+        'expected_js' => [
+          'core/assets/vendor/jquery.ui/ui/version-min.js',
+          'core/assets/vendor/jquery.ui/ui/data-min.js',
+          'core/assets/vendor/jquery.ui/ui/disable-selection-min.js',
+          'core/assets/vendor/jquery.ui/ui/escape-selector-min.js',
+          'core/assets/vendor/jquery.ui/ui/focusable-min.js',
+          'core/assets/vendor/jquery.ui/ui/form-min.js',
+          'core/assets/vendor/jquery.ui/ui/ie-min.js',
+          'core/assets/vendor/jquery.ui/ui/jquery-1-7-min.js',
+          'core/assets/vendor/jquery.ui/ui/keycode-min.js',
+          'core/assets/vendor/jquery.ui/ui/plugin-min.js',
+          'core/assets/vendor/jquery.ui/ui/safe-active-element-min.js',
+          'core/assets/vendor/jquery.ui/ui/safe-blur-min.js',
+          'core/assets/vendor/jquery.ui/ui/scroll-parent-min.js',
+          'core/assets/vendor/jquery.ui/ui/unique-id-min.js',
+          'core/assets/vendor/jquery.ui/ui/widget-min.js',
+          'core/assets/vendor/jquery.ui/ui/labels-min.js',
+        ],
       ],
       'jquery.ui.button' => [
         'library' => 'jquery.ui.button',

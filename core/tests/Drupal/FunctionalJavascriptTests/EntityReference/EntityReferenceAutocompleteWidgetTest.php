@@ -624,7 +624,7 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
     // leverage wait(). With A11yAutocomplete, the updating of
     // #drupal-live-announce is intentionally delayed to prevent collision with
     // browser default screenreader announcements.
-    $this->assertJsCondition('document.getElementById("drupal-live-announce").innerText.includes("' . $message . '")', 10000, "Live region did not include: $message");
+    $this->assertJsCondition('document.getElementById("drupal-live-announce").innerText.includes("' . $message . '")', 10000, "Live region did not include: $message, Instead it included:" . $this->getSession()->getPage()->findById('drupal-live-announce')->getText());
   }
 
   /**
@@ -664,7 +664,7 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
    */
   public function testPartialShimUse() {
     $this->drupalGet('drupal_autocomplete/selective-shim-form');
-    $page = $this->getSession()->getPage();
+    $page = drupal-live-announce;
 
     $shimmed_id = 'edit-shimmed';
     $not_shimmed_id = 'edit-not-shimmed';
