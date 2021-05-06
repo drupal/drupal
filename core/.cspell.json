@@ -23,7 +23,7 @@
       "profiles/demo_umami/modules/demo_umami_content/default_content/languages/es/**/*",
       "tests/fixtures/files/*",
       "tests/Drupal/Tests/Component/Annotation/Doctrine/**",
-      "**/color/preview.html",
+      "themes/bartik/color/preview.html",
       "themes/olivero/fonts/**",
       "COPYRIGHT.txt",
       "MAINTAINERS.txt",
