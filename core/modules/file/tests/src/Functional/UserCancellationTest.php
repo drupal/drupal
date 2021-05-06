@@ -4,6 +4,7 @@ namespace Drupal\Tests\file\Functional;
 
 use Drupal\file\Entity\File;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\user\Traits\UserCancellationTrait;
 use Drupal\user\CancellationHandlerInterface;
 
 /**
@@ -12,6 +13,8 @@ use Drupal\user\CancellationHandlerInterface;
  * @group file
  */
 class UserCancellationTest extends BrowserTestBase {
+
+  use UserCancellationTrait;
 
   /**
    * {@inheritdoc}
@@ -44,24 +47,9 @@ class UserCancellationTest extends BrowserTestBase {
     $bobFile->save();
 
     $this->drupalLogin($this->rootUser);
-    $this->drupalGet('/admin/people');
-    $page = $this->getSession()->getPage();
-    $page->checkField('Update the user ' . $alice->getDisplayName());
-    $page->selectFieldOption('action', 'user_cancel_user_action');
-    $page->pressButton('Apply to selected items');
-    $page->selectFieldOption('user_cancel_method', CancellationHandlerInterface::METHOD_BLOCK_UNPUBLISH);
-    $page->pressButton('Cancel accounts');
-    $this->checkForMetaRefresh();
-    $this->assertSession()->pageTextContains('The update has been performed.');
+    $this->cancelUser($alice, CancellationHandlerInterface::METHOD_BLOCK_UNPUBLISH);
     $this->assertSame($alice->id(), File::load($aliceFile->id())->getOwnerId());
-
-    $page->checkField('Update the user ' . $bob->getDisplayName());
-    $page->selectFieldOption('action', 'user_cancel_user_action');
-    $page->pressButton('Apply to selected items');
-    $page->selectFieldOption('user_cancel_method', CancellationHandlerInterface::METHOD_REASSIGN);
-    $page->pressButton('Cancel accounts');
-    $this->checkForMetaRefresh();
-    $this->assertSession()->pageTextContains('The update has been performed.');
+    $this->cancelUser($bob, CancellationHandlerInterface::METHOD_REASSIGN);
     $this->assertTrue(File::load($bobFile->id())->getOwner()->isAnonymous());
   }
 

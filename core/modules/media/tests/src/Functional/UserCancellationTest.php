@@ -3,6 +3,7 @@
 namespace Drupal\Tests\media\Functional;
 
 use Drupal\media\Entity\Media;
+use Drupal\Tests\user\Traits\UserCancellationTrait;
 use Drupal\user\CancellationHandlerInterface;
 
 /**
@@ -11,6 +12,8 @@ use Drupal\user\CancellationHandlerInterface;
  * @group media
  */
 class UserCancellationTest extends MediaFunctionalTestBase {
+
+  use UserCancellationTrait;
 
   /**
    * {@inheritdoc}
@@ -42,26 +45,12 @@ class UserCancellationTest extends MediaFunctionalTestBase {
     $this->assertTrue($bobMedia->isPublished());
 
     $this->drupalLogin($this->rootUser);
-    $this->drupalGet('/admin/people');
-    $page = $this->getSession()->getPage();
-    $page->checkField('Update the user ' . $alice->getDisplayName());
-    $page->selectFieldOption('action', 'user_cancel_user_action');
-    $page->pressButton('Apply to selected items');
-    $page->selectFieldOption('user_cancel_method', CancellationHandlerInterface::METHOD_BLOCK_UNPUBLISH);
-    $page->pressButton('Cancel accounts');
-    $this->checkForMetaRefresh();
-    $this->assertSession()->pageTextContains('The update has been performed.');
+    $this->cancelUser($alice, CancellationHandlerInterface::METHOD_BLOCK_UNPUBLISH);
     $aliceMedia = Media::load($aliceMedia->id());
     $this->assertFalse($aliceMedia->isPublished());
     $this->assertSame($alice->id(), $aliceMedia->getOwnerId());
 
-    $page->checkField('Update the user ' . $bob->getDisplayName());
-    $page->selectFieldOption('action', 'user_cancel_user_action');
-    $page->pressButton('Apply to selected items');
-    $page->selectFieldOption('user_cancel_method', CancellationHandlerInterface::METHOD_REASSIGN);
-    $page->pressButton('Cancel accounts');
-    $this->checkForMetaRefresh();
-    $this->assertSession()->pageTextContains('The update has been performed.');
+    $this->cancelUser($bob, CancellationHandlerInterface::METHOD_REASSIGN);
     $bobMedia = Media::load($bobMedia->id());
     $this->assertTrue($bobMedia->isPublished());
     $this->assertTrue($bobMedia->getOwner()->isAnonymous());

@@ -4,6 +4,7 @@ namespace Drupal\Tests\node\Functional;
 
 use Drupal\node\Entity\Node;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\user\Traits\UserCancellationTrait;
 use Drupal\user\CancellationHandlerInterface;
 
 /**
@@ -12,6 +13,8 @@ use Drupal\user\CancellationHandlerInterface;
  * @group node
  */
 class UserCancellationTest extends BrowserTestBase {
+
+  use UserCancellationTrait;
 
   /**
    * {@inheritdoc}
@@ -49,26 +52,12 @@ class UserCancellationTest extends BrowserTestBase {
     $this->assertTrue($bobNode->isPublished());
 
     $this->drupalLogin($this->rootUser);
-    $this->drupalGet('/admin/people');
-    $page = $this->getSession()->getPage();
-    $page->checkField('Update the user ' . $alice->getDisplayName());
-    $page->selectFieldOption('action', 'user_cancel_user_action');
-    $page->pressButton('Apply to selected items');
-    $page->selectFieldOption('user_cancel_method', CancellationHandlerInterface::METHOD_BLOCK_UNPUBLISH);
-    $page->pressButton('Cancel accounts');
-    $this->checkForMetaRefresh();
-    $this->assertSession()->pageTextContains('The update has been performed.');
+    $this->cancelUser($alice, CancellationHandlerInterface::METHOD_BLOCK_UNPUBLISH);
     $aliceNode = Node::load($aliceNode->id());
     $this->assertFalse($aliceNode->isPublished());
     $this->assertSame($alice->id(), $aliceNode->getOwnerId());
 
-    $page->checkField('Update the user ' . $bob->getDisplayName());
-    $page->selectFieldOption('action', 'user_cancel_user_action');
-    $page->pressButton('Apply to selected items');
-    $page->selectFieldOption('user_cancel_method', CancellationHandlerInterface::METHOD_REASSIGN);
-    $page->pressButton('Cancel accounts');
-    $this->checkForMetaRefresh();
-    $this->assertSession()->pageTextContains('The update has been performed.');
+    $this->cancelUser($bob, CancellationHandlerInterface::METHOD_REASSIGN);
     $bobNode = Node::load($bobNode->id());
     $this->assertTrue($bobNode->isPublished());
     $this->assertTrue($bobNode->getOwner()->isAnonymous());
