@@ -192,12 +192,18 @@
       // prepareSuggestionList(). This call to _renderMenu is provided instead
       // of the forEach loop that creates the item list so jQuery UI's
       // extension points are supported.
+      this.ul.innerHTML = '';
       this._renderMenu(this.ul, this.suggestions);
 
       // Add the list attributes needed for functionality that would have
       // been added in suggestionItem() were that function not skipped in order
       // to support extension points.
       this.ul.querySelectorAll('li').forEach((li, index) => {
+        if (this.options.itemClass.length > 0) {
+          this.options.itemClass
+            .split(' ')
+            .forEach((className) => li.classList.add(className));
+        }
         li.setAttribute('role', 'option');
         li.setAttribute('tabindex', '-1');
         li.setAttribute('id', `suggestion-${this.count}-${index}`);
@@ -205,6 +211,7 @@
         li.setAttribute('aria-posinset', index + 1);
         li.setAttribute('aria-selected', 'false');
         li.onblur = (e) => this.blurHandler(e);
+        li.querySelector('a').classList.add('ui-menu-item-wrapper');
       });
     }
     instance.prepareSuggestionList = autocompletePrepareSuggestionList;
@@ -232,31 +239,6 @@
         return $('<li>').append($('<a>').html(item.label)).appendTo(ul);
       };
     }
-
-    /**
-     * Formats an autocomplete suggestion for display in a list item.
-     *
-     * This overrides A11yAutocomplete.formatSuggestionItem().
-     *
-     * @param {object} suggestion
-     *   An autocomplete suggestion.
-     * @param {Element} li
-     *   The list element displaying the suggestion.
-     *
-     * @return {string|HTMLElement}
-     *   The contents of the list item.
-     */
-    function autocompleteFormatSuggestionItem(suggestion, li) {
-      const propertyToDisplay = this.options.displayLabels ? 'label' : 'value';
-      $(li).data('ui-autocomplete-item', suggestion);
-
-      // Wrap the item text in an `<a>`, so the markup matches that provided by
-      // jQuery Ui.
-      return `<a tabindex="-1" class="ui-menu-item-wrapper">${suggestion[
-        propertyToDisplay
-      ].trim()}</a>`;
-    }
-    instance.formatSuggestionItem = autocompleteFormatSuggestionItem;
 
     // Elements with the contenteditable attribute require different logic than
     // the default behavior which expects a text input.
@@ -307,10 +289,10 @@
     };
     // jQuery UI will close the autocomplete results on any mousedown that lands
     // outside of the autocomplete widget.
-    instance.input.addEventListener('autocomplete-open', (e) => {
+    instance.input.addEventListener('autocomplete-open', () => {
       document.body.addEventListener('mousedown', closeOnClickOutside);
     });
-    instance.input.addEventListener('autocomplete-close', (e) => {
+    instance.input.addEventListener('autocomplete-close', () => {
       document.body.removeEventListener('mousedown', closeOnClickOutside);
     });
 
@@ -418,7 +400,7 @@
               'uuid',
               'valueMethod',
             ].forEach((property) => {
-              Object.defineProperty(instanceToReturn, 'fake', {
+              Object.defineProperty(instanceToReturn, property, {
                 get() {
                   // eslint-disable-next-line no-console
                   return console.warn(

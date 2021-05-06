@@ -127,10 +127,17 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       this.triggerEvent('autocomplete-response', {
         list: this.suggestions
       });
+      this.ul.innerHTML = '';
 
       this._renderMenu(this.ul, this.suggestions);
 
       this.ul.querySelectorAll('li').forEach(function (li, index) {
+        if (_this.options.itemClass.length > 0) {
+          _this.options.itemClass.split(' ').forEach(function (className) {
+            return li.classList.add(className);
+          });
+        }
+
         li.setAttribute('role', 'option');
         li.setAttribute('tabindex', '-1');
         li.setAttribute('id', "suggestion-".concat(_this.count, "-").concat(index));
@@ -141,6 +148,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
         li.onblur = function (e) {
           return _this.blurHandler(e);
         };
+
+        li.querySelector('a').classList.add('ui-menu-item-wrapper');
       });
     }
 
@@ -166,14 +175,6 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
         return $('<li>').append($('<a>').html(item.label)).appendTo(ul);
       };
     }
-
-    function autocompleteFormatSuggestionItem(suggestion, li) {
-      var propertyToDisplay = this.options.displayLabels ? 'label' : 'value';
-      $(li).data('ui-autocomplete-item', suggestion);
-      return "<a tabindex=\"-1\" class=\"ui-menu-item-wrapper\">".concat(suggestion[propertyToDisplay].trim(), "</a>");
-    }
-
-    instance.formatSuggestionItem = autocompleteFormatSuggestionItem;
 
     if (isContentEditable) {
       instance.getValue = function () {
@@ -203,10 +204,10 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       }
     };
 
-    instance.input.addEventListener('autocomplete-open', function (e) {
+    instance.input.addEventListener('autocomplete-open', function () {
       document.body.addEventListener('mousedown', closeOnClickOutside);
     });
-    instance.input.addEventListener('autocomplete-close', function (e) {
+    instance.input.addEventListener('autocomplete-close', function () {
       document.body.removeEventListener('mousedown', closeOnClickOutside);
     });
     instance.ul.addEventListener('mousedown', function (e) {
@@ -277,7 +278,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
               window: window
             };
             ['bindings', 'eventNamespace', 'classesElementLookup', 'focusable', 'hoverable', 'uuid', 'valueMethod'].forEach(function (property) {
-              Object.defineProperty(instanceToReturn, 'fake', {
+              Object.defineProperty(instanceToReturn, property, {
                 get: function get() {
                   return console.warn("The ".concat(property, " property is not supported beginning with 9.2, as jQuery UI Autocomplete is no longer part of core. See https://www.drupal.org/node/3083715"));
                 }
