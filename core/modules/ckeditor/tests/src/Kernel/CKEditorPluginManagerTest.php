@@ -91,7 +91,7 @@ class CKEditorPluginManagerTest extends KernelTestBase {
     // 2. LlamaContextual: enabled by adding the 'Strike' button, which is
     //    part of another plugin!
     // 3. LlamaButton: automatically enabled by adding its 'Llama' button.
-    // 4. LlamaContextualAndButton: enabled by either b or c.
+    // 4. LlamaContextualAndButton: enabled by either 2 or 3.
     // 5. LlamaCSS: automatically enabled by add its 'LlamaCSS' button.
     // Below, we will first enable the "Llama" button, which will cause the
     // LlamaButton and LlamaContextualAndButton plugins to be enabled. Then we
