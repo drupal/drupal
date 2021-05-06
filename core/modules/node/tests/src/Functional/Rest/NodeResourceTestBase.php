@@ -9,7 +9,7 @@ use Drupal\user\Entity\User;
 use GuzzleHttp\RequestOptions;
 
 /**
- * ResourceTestBase for Node entity.
+ * Resource test base for the node entity.
  */
 abstract class NodeResourceTestBase extends EntityResourceTestBase {
 
