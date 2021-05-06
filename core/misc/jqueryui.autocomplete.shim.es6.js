@@ -45,13 +45,6 @@
       instance.ul = document.querySelector(`#${listBoxId}`);
     }
 
-    // Position the list directly under the input.
-    $(instance.ul).position({
-      of: instance.input,
-      my: 'left top',
-      at: 'left bottom',
-    });
-
     /**
      * Alters input keydown behavior to match jQuery UI.
      *
@@ -291,6 +284,13 @@
     // outside of the autocomplete widget.
     instance.input.addEventListener('autocomplete-open', () => {
       document.body.addEventListener('mousedown', closeOnClickOutside);
+      // Position the list directly under the input.
+      $(instance.ul).position({
+        of: instance.input,
+        my: 'left top',
+        at: 'left bottom',
+        collision: 'none',
+      });
     });
     instance.input.addEventListener('autocomplete-close', () => {
       document.body.removeEventListener('mousedown', closeOnClickOutside);
@@ -561,8 +561,10 @@
                   break;
                 case 'position':
                   $(instance.ul).position({
-                    // The default value of `of:` is the input.
                     of: instance.input,
+                    my: 'left top',
+                    at: 'left bottom',
+                    collision: 'none',
                     ...optionValue,
                   });
                   break;

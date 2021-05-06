@@ -45,12 +45,6 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       instance.ul = document.querySelector("#".concat(listBoxId));
     }
 
-    $(instance.ul).position({
-      of: instance.input,
-      my: 'left top',
-      at: 'left bottom'
-    });
-
     function shimmedInputKeyDown(e) {
       if (instance.options.isMultiline) {
         this.input.value = this.input.textContent;
@@ -206,6 +200,12 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
     instance.input.addEventListener('autocomplete-open', function () {
       document.body.addEventListener('mousedown', closeOnClickOutside);
+      $(instance.ul).position({
+        of: instance.input,
+        my: 'left top',
+        at: 'left bottom',
+        collision: 'none'
+      });
     });
     instance.input.addEventListener('autocomplete-close', function () {
       document.body.removeEventListener('mousedown', closeOnClickOutside);
@@ -400,7 +400,10 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
                 case 'position':
                   $(instance.ul).position(_objectSpread({
-                    of: instance.input
+                    of: instance.input,
+                    my: 'left top',
+                    at: 'left bottom',
+                    collision: 'none'
                   }, optionValue));
                   break;
 

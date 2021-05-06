@@ -337,7 +337,7 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
     // to pass before and after the jQuery UI asset changes in
     // http://drupal.org/node/3113400, which, by necessity, results in loading
     // order changes.
-    $this->assertEmpty(array_diff($js_loaded_by_page, $expected_js), print_r(array_diff($js_loaded_by_page, $expected_js),1));
+    $this->assertEmpty(array_diff($js_loaded_by_page, $expected_js));
   }
 
   /**

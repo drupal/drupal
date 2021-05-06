@@ -327,7 +327,7 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
     $this->assertCount(3, $page->findAll('css', '[data-drupal-autocomplete-list] li'));
     $this->assertCount(2, $page->findAll('css', '[data-drupal-autocomplete-list] li[aria-selected="false"]'));
     $this->assertCount(1, $page->findAll('css', '[data-drupal-autocomplete-list] li[aria-selected="true"]'));
-    $active_item = $page->find('css', 'li:contains("Forgettable (24)")');
+    $active_item = $page->find('css', 'li:contains("Forgettable")');
     $this->assertEquals('true', $active_item->getAttribute('aria-selected'));
     $active_item->keyDown(40);
 
@@ -335,7 +335,7 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
     $this->assertCount(3, $page->findAll('css', '[data-drupal-autocomplete-list] li'));
     $this->assertCount(2, $page->findAll('css', '[data-drupal-autocomplete-list] li[aria-selected="false"]'));
     $this->assertCount(1, $page->findAll('css', '[data-drupal-autocomplete-list] li[aria-selected="true"]'));
-    $active_item = $page->find('css', 'li:contains("Fourteenth (14)")');
+    $active_item = $page->find('css', 'li:contains("Fourteenth")');
     $this->assertEquals('true', $active_item->getAttribute('aria-selected'));
   }
 

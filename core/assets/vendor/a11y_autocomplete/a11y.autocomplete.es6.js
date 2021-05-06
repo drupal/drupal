@@ -53,7 +53,7 @@ class A11yAutocomplete {
       minChars: 1,
       maxItems: 20,
       sort: false,
-      path: false,
+      path: '',
       displayLabels: true,
       disabled: false,
       list: [],
@@ -75,6 +75,8 @@ class A11yAutocomplete {
         'There are at least @count results available. Type additional characters to refine your search.',
       someResultsAssistiveHint: 'There are @count results available.',
       oneResultAssistiveHint: 'There is one result available.',
+      highlightedAssistiveHint:
+        '@selectedItem @position of @count is highlighted',
     };
 
     this.options = {
@@ -339,7 +341,6 @@ class A11yAutocomplete {
     switch (e.keyCode) {
       case this.keyCode.SPACE:
       case this.keyCode.RETURN:
-        // this.replaceInputValue(document.activeElement);
         this.selectItem(document.activeElement, e);
         this.close();
         this.input.focus();
@@ -373,7 +374,7 @@ class A11yAutocomplete {
    * @param {Event} e
    *   The focus event.
    */
-  // eslint-disable-next-line class-methods-use-this
+  // eslint-disable-next-line no-unused-vars, class-methods-use-this
   listFocus(e) {
     // Intentionally empty, can be overridden.
   }
@@ -452,15 +453,20 @@ class A11yAutocomplete {
   /**
    * A message announced when an item is highlighted.
    *
-   * @param {element} item
+   * @param {HTMLElement} item
    *  The list item being highlighted.
    * @return {string}
    *  The message conveying that the item is highlighted
    */
   highlightMessage(item) {
-    return `${item.innerText} ${item.getAttribute('aria-posinset')} of ${
-      this.ul.children.length
-    } is highlighted`;
+    const itemIndex = item
+      .closest('[data-drupal-autocomplete-item]')
+      .getAttribute('data-drupal-autocomplete-item');
+    const selectedItem = this.suggestions[itemIndex].value;
+    return this.options.highlightedAssistiveHint
+      .replace('@selectedItem', selectedItem)
+      .replace('@position', item.getAttribute('aria-posinset'))
+      .replace('@count', this.ul.children.length);
   }
 
   /**
@@ -543,9 +549,9 @@ class A11yAutocomplete {
     const separator = this.separator();
     if (separator.length > 0) {
       const before = this.previousItems(separator);
-      this.input.value = `${before}${element.textContent}`;
+      this.input.value = `${before}${this.selected.value}`;
     } else {
-      this.input.value = element.textContent;
+      this.input.value = this.selected.value;
     }
   }
 
@@ -609,7 +615,7 @@ class A11yAutocomplete {
       if (this.cache[inputId].hasOwnProperty(searchTerm)) {
         this.suggestionItems = this.cache[inputId][searchTerm];
         this.displayResults();
-      } else if (this.options.list.length === 0 && this.options.path) {
+      } else if (this.options.list.length === 0 && this.options.path.length) {
         this.options.loadingClass
           .split(' ')
           .forEach((className) => this.input.classList.add(className));
@@ -702,7 +708,7 @@ class A11yAutocomplete {
     this.totalSuggestions = this.suggestions.length;
     this.suggestions = this.suggestions.slice(
       0,
-      parseInt(this.options.maxItems),
+      parseInt(this.options.maxItems, 10),
     );
 
     this.triggerEvent('autocomplete-response', {
@@ -792,6 +798,7 @@ class A11yAutocomplete {
    * @return {string}
    *   The text and html of a suggestion item.
    */
+  // eslint-disable-next-line no-unused-vars
   formatSuggestionItem(suggestion, li) {
     const propertyToDisplay = this.options.displayLabels ? 'label' : 'value';
     return suggestion[propertyToDisplay].trim();
@@ -940,7 +947,7 @@ class A11yAutocomplete {
     let message = '';
     if (count === 0) {
       message = this.options.noResultsAssistiveHint;
-    } else if (parseInt(maxItems) === this.totalSuggestions) {
+    } else if (parseInt(maxItems, 10) === this.totalSuggestions) {
       message = this.options.moreThanMaxResultsAssistiveHint;
     } else if (count === 1) {
       message = this.options.oneResultAssistiveHint;

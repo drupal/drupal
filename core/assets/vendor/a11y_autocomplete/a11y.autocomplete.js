@@ -48,7 +48,7 @@ var A11yAutocomplete = function () {
       minChars: 1,
       maxItems: 20,
       sort: false,
-      path: false,
+      path: '',
       displayLabels: true,
       disabled: false,
       list: [],
@@ -67,7 +67,8 @@ var A11yAutocomplete = function () {
       noResultsAssistiveHint: 'No results found',
       moreThanMaxResultsAssistiveHint: 'There are at least @count results available. Type additional characters to refine your search.',
       someResultsAssistiveHint: 'There are @count results available.',
-      oneResultAssistiveHint: 'There is one result available.'
+      oneResultAssistiveHint: 'There is one result available.',
+      highlightedAssistiveHint: '@selectedItem @position of @count is highlighted'
     };
     this.options = _objectSpread(_objectSpread(_objectSpread({}, defaultOptions), options), this.attributesToOptions());
 
@@ -353,7 +354,9 @@ var A11yAutocomplete = function () {
   }, {
     key: "highlightMessage",
     value: function highlightMessage(item) {
-      return "".concat(item.innerText, " ").concat(item.getAttribute('aria-posinset'), " of ").concat(this.ul.children.length, " is highlighted");
+      var itemIndex = item.closest('[data-drupal-autocomplete-item]').getAttribute('data-drupal-autocomplete-item');
+      var selectedItem = this.suggestions[itemIndex].value;
+      return this.options.highlightedAssistiveHint.replace('@selectedItem', selectedItem).replace('@position', item.getAttribute('aria-posinset')).replace('@count', this.ul.children.length);
     }
   }, {
     key: "inputKeyDown",
@@ -410,9 +413,9 @@ var A11yAutocomplete = function () {
 
       if (separator.length > 0) {
         var before = this.previousItems(separator);
-        this.input.value = "".concat(before).concat(element.textContent);
+        this.input.value = "".concat(before).concat(this.selected.value);
       } else {
-        this.input.value = element.textContent;
+        this.input.value = this.selected.value;
       }
     }
   }, {
@@ -458,7 +461,7 @@ var A11yAutocomplete = function () {
         if (this.cache[inputId].hasOwnProperty(searchTerm)) {
           this.suggestionItems = this.cache[inputId][searchTerm];
           this.displayResults();
-        } else if (this.options.list.length === 0 && this.options.path) {
+        } else if (this.options.list.length === 0 && this.options.path.length) {
           this.options.loadingClass.split(' ').forEach(function (className) {
             return _this5.input.classList.add(className);
           });
@@ -546,7 +549,7 @@ var A11yAutocomplete = function () {
       }
 
       this.totalSuggestions = this.suggestions.length;
-      this.suggestions = this.suggestions.slice(0, parseInt(this.options.maxItems));
+      this.suggestions = this.suggestions.slice(0, parseInt(this.options.maxItems, 10));
       this.triggerEvent('autocomplete-response', {
         list: this.suggestions
       });
@@ -711,7 +714,7 @@ var A11yAutocomplete = function () {
 
       if (count === 0) {
         message = this.options.noResultsAssistiveHint;
-      } else if (parseInt(maxItems) === this.totalSuggestions) {
+      } else if (parseInt(maxItems, 10) === this.totalSuggestions) {
         message = this.options.moreThanMaxResultsAssistiveHint;
       } else if (count === 1) {
         message = this.options.oneResultAssistiveHint;

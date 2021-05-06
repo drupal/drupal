@@ -37,6 +37,9 @@
     inputAssistiveHint: Drupal.t(
       'When autocomplete results are available use up and down arrows to review and enter to select.  Touch device users, explore by touch or with swipe gestures.',
     ),
+    highlightedAssistiveHint: Drupal.t(
+      '@selectedItem @position of @count is highlighted',
+    ),
   };
 
   /**

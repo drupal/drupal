@@ -20,7 +20,8 @@
     moreThanMaxResults: Drupal.t('There are at least @count results available. Type additional characters to refine your search.'),
     someResults: Drupal.t('There are @count results available.'),
     oneResult: Drupal.t('There is one result available.'),
-    inputAssistiveHint: Drupal.t('When autocomplete results are available use up and down arrows to review and enter to select.  Touch device users, explore by touch or with swipe gestures.')
+    inputAssistiveHint: Drupal.t('When autocomplete results are available use up and down arrows to review and enter to select.  Touch device users, explore by touch or with swipe gestures.'),
+    highlightedAssistiveHint: Drupal.t('@selectedItem @position of @count is highlighted')
   };
 
   Drupal.Autocomplete.initialize = function (autocompleteInput) {
