@@ -861,16 +861,8 @@ class FormTest extends BrowserTestBase {
     }
 
     // Verify special element #type text-format.
-    $element = $this->xpath('//div[contains(@class, :div-class)]/descendant::textarea[@name=:name]', [
-      ':name' => 'text_format[value]',
-      ':div-class' => 'form-disabled',
-    ]);
-    $this->assertTrue(isset($element[0]), new FormattableMarkup('Disabled form element class found for #type %type.', ['%type' => 'text_format[value]']));
-    $element = $this->xpath('//div[contains(@class, :div-class)]/descendant::select[@name=:name]', [
-      ':name' => 'text_format[format]',
-      ':div-class' => 'form-disabled',
-    ]);
-    $this->assertTrue(isset($element[0]), new FormattableMarkup('Disabled form element class found for #type %type.', ['%type' => 'text_format[format]']));
+    $this->assertSession()->elementExists('xpath', "//div[contains(@class, 'form-disabled')]/descendant::textarea[@name='text_format[value]']");
+    $this->assertSession()->elementExists('xpath', "//div[contains(@class, 'form-disabled')]/descendant::select[@name='text_format[format]']");
   }
 
   /**

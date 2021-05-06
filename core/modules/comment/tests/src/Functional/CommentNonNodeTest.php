@@ -488,6 +488,7 @@ class CommentNonNodeTest extends BrowserTestBase {
     entity_test_create_bundle('entity_test', 'Entity Test', 'entity_test_string_id');
     $limited_user = $this->drupalCreateUser([
       'administer entity_test_string_id fields',
+      'administer comment types',
     ]);
     $this->drupalLogin($limited_user);
     // Visit the Field UI field add page.
@@ -496,6 +497,11 @@ class CommentNonNodeTest extends BrowserTestBase {
     $this->assertSession()->optionNotExists('edit-new-storage-type', 'comment');
     // Ensure a core field type shown.
     $this->assertSession()->optionExists('edit-new-storage-type', 'boolean');
+
+    // Attempt to add a comment-type referencing this entity-type.
+    $this->drupalGet('admin/structure/comment/types/add');
+    $this->assertSession()->optionNotExists('edit-target-entity-type-id', 'entity_test_string_id');
+    $this->assertSession()->responseNotContains(t('Test entity with string_id'));
 
     // Create a bundle for entity_test_no_id.
     entity_test_create_bundle('entity_test', 'Entity Test', 'entity_test_no_id');

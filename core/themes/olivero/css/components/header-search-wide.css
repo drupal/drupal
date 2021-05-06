@@ -332,6 +332,7 @@
   width: 3.375rem;
   height: 6.75rem;
   cursor: pointer;
+  color: #0d1214; /* Affects SVG search icon. */
   border: 0;
   background: transparent;
   -webkit-appearance: none
