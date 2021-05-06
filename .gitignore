@@ -1,0 +1,6 @@
+vendor/
+.idea/
+modules/
+sites/default/settings.php
+sites/default/files/
+sites/simpletest/

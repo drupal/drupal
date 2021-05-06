@@ -1,0 +1,21 @@
+diff --git a/core/phpcs.xml.dist b/core/phpcs.xml.dist
+index 7608fb6783c1ee420c88a7f4ee668f6f2445e71e..f8799befe8169f35d852c627734129949341924d 100644
+--- a/core/phpcs.xml.dist
++++ b/core/phpcs.xml.dist
+@@ -224,6 +224,8 @@
+ 
+   <!-- PSR-2 sniffs -->
+   <rule ref="PSR2.Classes.PropertyDeclaration">
++    <!-- Silence method name underscore warning which is covered already in
++      Drupal.Methods.MethodDeclaration.Underscore. -->
+     <exclude name="PSR2.Classes.PropertyDeclaration.Underscore"/>
+   </rule>
+   <rule ref="PSR2.Namespaces.NamespaceDeclaration"/>
+@@ -281,7 +283,6 @@
+     <severity>0</severity>
+   </rule>
+   <rule ref="Squiz.ControlStructures.ForLoopDeclaration"/>
+-  <!-- Disable some error messages that we already cover. -->
+   <rule ref="Squiz.ControlStructures.ForLoopDeclaration.SpacingAfterOpen">
+     <severity>0</severity>
+   </rule>

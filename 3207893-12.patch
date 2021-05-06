@@ -1,0 +1,41 @@
+diff --git a/core/modules/system/system.install b/core/modules/system/system.install
+index 2b1a2a59b3..0c0e653914 100644
+--- a/core/modules/system/system.install
++++ b/core/modules/system/system.install
+@@ -1313,6 +1313,9 @@ function system_install() {
+     $site->set('name', 'Drupal');
+   }
+   $site->save(TRUE);
++
++  // Populate the dummy query string added to all CSS and JavaScript files.
++  _drupal_flush_css_js();
+ }
+ 
+ /**
+diff --git a/core/tests/Drupal/FunctionalTests/Installer/InstallerTest.php b/core/tests/Drupal/FunctionalTests/Installer/InstallerTest.php
+index f1e7587d2e..397ff79211 100644
+--- a/core/tests/Drupal/FunctionalTests/Installer/InstallerTest.php
++++ b/core/tests/Drupal/FunctionalTests/Installer/InstallerTest.php
+@@ -21,6 +21,7 @@ class InstallerTest extends InstallerTestBase {
+    * Ensures that the user page is available after installation.
+    */
+   public function testInstaller() {
++    $this->assertNotNull(\Drupal::state()->get('system.css_js_query_string'), 'The dummy query string should be set during install');
+     $this->assertSession()->addressEquals('user/1');
+     $this->assertSession()->statusCodeEquals(200);
+     // Confirm that we are logged-in after installation.
+diff --git a/core/tests/Drupal/Tests/BrowserTestBase.php b/core/tests/Drupal/Tests/BrowserTestBase.php
+index 24ce2fb7bb..26e827640d 100644
+--- a/core/tests/Drupal/Tests/BrowserTestBase.php
++++ b/core/tests/Drupal/Tests/BrowserTestBase.php
+@@ -566,10 +566,6 @@ public function installDrupal() {
+     // as expected.
+     $this->container->get('cache_tags.invalidator')->resetChecksums();
+ 
+-    // Set the dummy query string added to all CSS and JavaScript files.
+-    // @todo Remove in https://www.drupal.org/project/drupal/issues/3207893.
+-    _drupal_flush_css_js();
+-
+     // Generate a route to prime the url generator with the correct base url.
+     // @todo Remove in https://www.drupal.org/project/drupal/issues/3207896.
+     Url::fromRoute('<front>')->setAbsolute()->toString();

@@ -1,0 +1,68 @@
+diff --git a/core/lib/Drupal/Core/Block/BlockBase.php b/core/lib/Drupal/Core/Block/BlockBase.php
+index ab6948f8ca..f2f971fa61 100644
+--- a/core/lib/Drupal/Core/Block/BlockBase.php
++++ b/core/lib/Drupal/Core/Block/BlockBase.php
+@@ -2,6 +2,7 @@
+ 
+ namespace Drupal\Core\Block;
+ 
++use Drupal\Core\Form\FormStateInterface;
+ use Drupal\Core\Plugin\ContextAwarePluginAssignmentTrait;
+ use Drupal\Core\Plugin\ContextAwarePluginInterface;
+ use Drupal\Core\Plugin\ContextAwarePluginTrait;
+@@ -20,8 +21,23 @@
+  */
+ abstract class BlockBase extends PluginBase implements BlockPluginInterface, PluginWithFormsInterface, PreviewFallbackInterface, ContextAwarePluginInterface {
+ 
+-  use BlockPluginTrait;
++  use BlockPluginTrait {
++    buildConfigurationForm as traitBuildConfigurationForm;
++  }
+   use ContextAwarePluginTrait;
+   use ContextAwarePluginAssignmentTrait;
+ 
++  /**
++   * {@inheritdoc}
++   */
++  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
++    $form = $this->traitBuildConfigurationForm($form, $form_state);
++
++    // Add context mapping UI form elements.
++    $contexts = $form_state->getTemporaryValue('gathered_contexts') ?: [];
++    $form['context_mapping'] = $this->addContextAssignmentElement($this, $contexts);
++
++    return $form;
++  }
++
+ }
+diff --git a/core/lib/Drupal/Core/Block/BlockPluginTrait.php b/core/lib/Drupal/Core/Block/BlockPluginTrait.php
+index c7c47660f9..cd4790e76e 100644
+--- a/core/lib/Drupal/Core/Block/BlockPluginTrait.php
++++ b/core/lib/Drupal/Core/Block/BlockPluginTrait.php
+@@ -177,9 +177,6 @@ public function buildConfigurationForm(array $form, FormStateInterface $form_sta
+       '#return_value' => BlockPluginInterface::BLOCK_LABEL_VISIBLE,
+     ];
+ 
+-    // Add context mapping UI form elements.
+-    $contexts = $form_state->getTemporaryValue('gathered_contexts') ?: [];
+-    $form['context_mapping'] = $this->addContextAssignmentElement($this, $contexts);
+     // Add plugin-specific settings for this block type.
+     $form += $this->blockForm($form, $form_state);
+     return $form;
+diff --git a/core/modules/block/tests/src/Functional/BlockUiTest.php b/core/modules/block/tests/src/Functional/BlockUiTest.php
+index ee857e443f..4baedbc31e 100644
+--- a/core/modules/block/tests/src/Functional/BlockUiTest.php
++++ b/core/modules/block/tests/src/Functional/BlockUiTest.php
+@@ -388,7 +388,11 @@ public function testRouteProtection() {
+   public function testBrokenBlockVisibility() {
+     $assert_session = $this->assertSession();
+ 
+-    $this->drupalPlaceBlock('broken');
++    $block = $this->drupalPlaceBlock('broken');
++
++    // Ensure that broken block configuration can be accessed.
++    $this->drupalGet('admin/structure/block/manage/' . $block->id());
++    $assert_session->statusCodeEquals(200);
+ 
+     // Login as an admin user to the site.
+     $this->drupalLogin($this->adminUser);
