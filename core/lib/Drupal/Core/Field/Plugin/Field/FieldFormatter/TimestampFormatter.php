@@ -165,7 +165,6 @@ class TimestampFormatter extends FormatterBase {
     $date_format = $this->getSetting('date_format');
     $custom_date_format = '';
     $timezone = $this->getSetting('timezone') ?: NULL;
-    $langcode = NULL;
 
     // If an RFC2822 date format is requested, then the month and day have to
     // be in English. @see http://www.faqs.org/rfcs/rfc2822.html
