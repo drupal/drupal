@@ -64,6 +64,11 @@ class UserCancellationTest extends KernelTestBase {
       'entity_type' => 'node',
       'bundle' => 'page',
     ])->save();
+
+    $this->container->get('config.factory')
+      ->getEditable('user.settings')
+      ->set('anonymous', 'Mysterious Stranger')
+      ->save();
   }
 
   /**
@@ -86,6 +91,7 @@ class UserCancellationTest extends KernelTestBase {
     user_cancel([], $user->id(), CancellationHandlerInterface::METHOD_REASSIGN);
     $comment = Comment::load($comment->id());
     $this->assertTrue($comment->getOwner()->isAnonymous());
+    $this->assertSame('Mysterious Stranger', $comment->getAuthorName());
     $this->assertTrue($comment->isPublished());
   }
 
