@@ -106,6 +106,12 @@ class JSWebAssertTest extends WebDriverTestBase {
     $this->assertNotEmpty($result);
     $this->assertInstanceOf(NodeElement::class, $result);
     $this->assertEquals(TRUE, $result->isVisible());
+
+    $this->drupalGet('js_webassert_test_page');
+    $result = $assert_session->waitForElementVisible('named', ['id', 'test_text']);
+    $this->assertSame('test_text', $result->getAttribute('id'));
+    // Ensure that the javascript has replaced the element 1100 times.
+    $assert_session->pageTextContains('New Text!! 1100');
   }
 
 }

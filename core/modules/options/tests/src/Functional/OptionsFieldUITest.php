@@ -372,8 +372,8 @@ class OptionsFieldUITest extends FieldTestBase {
         $output = '1';
       }
 
-      $elements = $this->xpath('//div[text()="' . $output . '"]');
-      $this->assertCount(1, $elements, 'Correct options found.');
+      // Verify that correct options are found.
+      $this->assertSession()->elementsCount('xpath', '//div[text()="' . $output . '"]', 1);
     }
   }
 
