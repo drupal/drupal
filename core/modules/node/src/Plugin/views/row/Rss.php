@@ -19,11 +19,19 @@ use Drupal\views\Plugin\views\row\RssPluginBase;
  * )
  */
 class Rss extends RssPluginBase {
-
+  
   /**
-   * Basic properties that let the row style follow relationships.
+   * The base table for this row plugin.
+   *
+   * @var string
    */
   public $base_table = 'node_field_data';
+
+  /**
+   * The base field for this row plugin.
+   *
+   * @var string
+   */
   public $base_field = 'nid';
 
   /**
