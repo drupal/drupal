@@ -113,7 +113,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     $this->assertTrue($menu->hasLink('Show Type Three media (selected)'));
     // Assert the focus is set to the first tabbable element when a vertical tab
     // is clicked.
-    $this->assertJsCondition('jQuery("#media-library-content :tabbable:first").is(":focus")');
+    $this->assertJsCondition('jQuery(tabbable.tabbable(document.getElementById("media-library-content"))[0]).is(":focus")');
     $assert_session->elementExists('css', '.ui-dialog-titlebar-close')->click();
 
     // Assert that there are no links in the media library view.

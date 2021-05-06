@@ -127,6 +127,7 @@
   <rule ref="Drupal.Semantics.InstallHooks"/>
   <rule ref="Drupal.Semantics.LStringTranslatable"/>
   <rule ref="Drupal.Semantics.PregSecurity"/>
+  <rule ref="Drupal.Semantics.RemoteAddress"/>
   <rule ref="Drupal.Semantics.TInHookMenu"/>
   <rule ref="Drupal.Semantics.TInHookSchema"/>
   <rule ref="Drupal.Strings.UnnecessaryStringConcat"/>
