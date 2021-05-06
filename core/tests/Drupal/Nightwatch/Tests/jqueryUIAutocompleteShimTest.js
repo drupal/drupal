@@ -69,7 +69,6 @@ module.exports = {
             .autocomplete('search');
           const menu = element.autocomplete('widget');
 
-          // let event = jQuery.Event('keydown');
           let event = new KeyboardEvent('keydown', {
             keyCode: jQuery.ui.keyCode.DOWN,
             cancelable: true,
@@ -77,8 +76,6 @@ module.exports = {
           element[0].dispatchEvent(event);
           toReturn.menuItemIsActive =
             menu.find('.ui-menu-item-wrapper.ui-state-active').length === 1;
-
-          // event = jQuery.Event('keydown');
           event = new KeyboardEvent('keydown', {
             keyCode: jQuery.ui.keyCode.ENTER,
             cancelable: true,
@@ -1024,10 +1021,12 @@ module.exports = {
                   toReturn[settings.type].element.simulate('blur');
 
                   if (index === 2) {
+                    // eslint-disable-next-line max-nested-callbacks
                     setTimeout(() => {
                       done(toReturn);
                     }, 1000);
                   } else {
+                    // eslint-disable-next-line max-nested-callbacks
                     setTimeout(() => {
                       createTestingAutocomplete(
                         settingsArray[index + 1],
@@ -1109,6 +1108,7 @@ module.exports = {
       .drupalRelativeURL('/autocomplete-shim-test')
       .waitForElementPresent('#autocomplete-wrap1', 1000)
       .executeAsync(
+        // eslint-disable-next-line func-names
         function (done) {
           const data = [
             'Clojure',
@@ -1220,6 +1220,7 @@ module.exports = {
       .drupalRelativeURL('/autocomplete-shim-test')
       .waitForElementPresent('#autocomplete-wrap1', 1000)
       .executeAsync(
+        // eslint-disable-next-line func-names
         function (done) {
           const data = [
             'Clojure',
@@ -1725,7 +1726,7 @@ module.exports = {
 
           toReturn.menuClosedImmediatelyAfterSearch = menu.is(':hidden');
 
-          setTimeout(function () {
+          setTimeout(() => {
             toReturn.menuIsOpenAfterDelay = menu.is(':visible');
             done(toReturn);
           }, 150);
@@ -1755,9 +1756,6 @@ module.exports = {
         // eslint-disable-next-line func-names
         function (done) {
           const toReturn = {};
-          const usingA11yAutocomplete =
-            Drupal.hasOwnProperty('Autocomplete') &&
-            Drupal.Autocomplete.hasOwnProperty('instances');
           const data = [
             'c++',
             'java',
@@ -1786,9 +1784,8 @@ module.exports = {
           );
           toReturn.noAriaDisabled = !element.attr('aria-disabled');
 
-          setTimeout(function () {
+          setTimeout(() => {
             toReturn.menuStillHidden = menu.is(':hidden');
-
             done(toReturn);
           });
         },
