@@ -256,11 +256,7 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
 }
 
 /**
- * Test class for DrupalDateTime.
- *
- * @see https://github.com/phpspec/prophecy/issues/338
- * @see https://github.com/phpspec/prophecy/issues/34
- * @see https://github.com/phpspec/prophecy/issues/80
+ * DrupalDateTime test class.
  */
 class DateTimeIso8601NormalizerTestDrupalDateTime extends DrupalDateTime {
 
