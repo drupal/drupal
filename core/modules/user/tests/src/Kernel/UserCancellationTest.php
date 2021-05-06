@@ -152,7 +152,7 @@ class UserCancellationTest extends KernelTestBase {
   public function testCancel($userExists, $method, array $options, $assertIsBlocked, $assertIsDeleted, array $expectedEmails, $invokeHooks, array $expectedLogs) {
     $this->user->expects($this->any())
       ->method('getAccountName')
-      ->will($this->returnValue('testusername'));
+      ->will($this->returnValue('test_username'));
     $this->user->expects($this->any())
       ->method('getEmail')
       ->will($this->returnValue('test@email'));
@@ -322,7 +322,7 @@ class UserCancellationTest extends KernelTestBase {
   /**
    * Create a new user cancellation instance for testing.
    *
-   * Remove this override when current non-injectables are converted.
+   * Remove this override when current non-injectable services are converted.
    *
    * @return \Drupal\user\UserCancellation
    *   A new UserCancellation object.
