@@ -90,12 +90,12 @@ class NodeAccessLanguageAwareTest extends NodeAccessTestBase {
     // Create six nodes:
     // 1. Four Hungarian nodes with Catalan translations
     //    - One with neither language marked as private.
-    //   - One with only the Hungarian translation private.
-    //   - One with only the Catalan translation private.
-    //   - One with both the Hungarian and Catalan translations private.
+    //    - One with only the Hungarian translation private.
+    //    - One with only the Catalan translation private.
+    //    - One with both the Hungarian and Catalan translations private.
     // 2. Two nodes with no language specified.
     //    - One public.
-    //   - One private.
+    //    - One private.
     $this->nodes['both_public'] = $node = $this->drupalCreateNode([
       'body' => [[]],
       'langcode' => 'hu',
