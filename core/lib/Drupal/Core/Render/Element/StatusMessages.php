@@ -37,7 +37,7 @@ class StatusMessages extends RenderElement {
   }
 
   /**
-   * #pre_render callback to generate a placeholder.
+   * The #pre_render callback to generate a placeholder.
    *
    * @param array $element
    *   A renderable array.
@@ -68,7 +68,7 @@ class StatusMessages extends RenderElement {
   }
 
   /**
-   * #lazy_builder callback; replaces placeholder with messages.
+   * The #lazy_builder callback; replaces placeholder with messages.
    *
    * @param string|null $type
    *   Limit the messages returned by type. Defaults to NULL, meaning all types.

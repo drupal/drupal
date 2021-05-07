@@ -58,7 +58,7 @@ class Pager extends RenderElement {
   }
 
   /**
-   * #pre_render callback to associate the appropriate cache context.
+   * The #pre_render callback to associate the appropriate cache context.
    *
    *
    * @param array $pager

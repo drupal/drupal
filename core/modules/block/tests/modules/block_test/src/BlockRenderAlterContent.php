@@ -10,7 +10,7 @@ use Drupal\Core\Render\Element\RenderCallbackInterface;
 class BlockRenderAlterContent implements RenderCallbackInterface {
 
   /**
-   * #pre_render callback for a block to alter its content.
+   * The #pre_render callback for a block to alter its content.
    */
   public static function preRender(array $build) {
     $build['#prefix'] = 'Hiya!<br>';

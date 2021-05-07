@@ -98,7 +98,7 @@ abstract class FormElement extends RenderElement implements FormElementInterface
   }
 
   /**
-   * #process callback for #pattern form element property.
+   * The #process callback for #pattern form element property.
    *
    * @param array $element
    *   An associative array containing the properties and children of the
@@ -121,7 +121,7 @@ abstract class FormElement extends RenderElement implements FormElementInterface
   }
 
   /**
-   * #element_validate callback for #pattern form element property.
+   * The #element_validate callback for #pattern form element property.
    *
    * @param $element
    *   An associative array containing the properties and children of the

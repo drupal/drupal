@@ -71,7 +71,7 @@ class DrupalImage extends CKEditorPluginBase implements CKEditorPluginConfigurab
   }
 
   /**
-   * #element_validate handler for the "image_upload" element in settingsForm().
+   * The #element_validate handler for the "image_upload" element in settingsForm().
    *
    * Moves the text editor's image upload settings from the DrupalImage plugin's
    * own settings into $editor->image_upload.

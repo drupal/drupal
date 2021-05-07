@@ -144,7 +144,7 @@ class BlockViewBuilder extends EntityViewBuilder implements TrustedCallbackInter
   }
 
   /**
-   * #lazy_builder callback; builds a #pre_render-able block.
+   * The #lazy_builder callback; builds a #pre_render-able block.
    *
    * @param $entity_id
    *   A block config entity ID.
@@ -159,7 +159,7 @@ class BlockViewBuilder extends EntityViewBuilder implements TrustedCallbackInter
   }
 
   /**
-   * #pre_render callback for building a block.
+   * The #pre_render callback for building a block.
    *
    * Renders the content using the provided block plugin, and then:
    * - if there is no content, aborts rendering, and makes sure the block won't

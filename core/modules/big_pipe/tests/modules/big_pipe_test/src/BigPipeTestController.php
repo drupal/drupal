@@ -83,7 +83,7 @@ class BigPipeTestController implements TrustedCallbackInterface {
   }
 
   /**
-   * #lazy_builder callback; builds <time> markup with current time.
+   * The #lazy_builder callback; builds <time> markup with current time.
    *
    * Note: does not actually use current time, that would complicate testing.
    *
@@ -97,7 +97,7 @@ class BigPipeTestController implements TrustedCallbackInterface {
   }
 
   /**
-   * #lazy_builder callback; says "hello" or "yarhar".
+   * The #lazy_builder callback; says "hello" or "yarhar".
    *
    * @return array
    */
@@ -112,7 +112,7 @@ class BigPipeTestController implements TrustedCallbackInterface {
   }
 
   /**
-   * #lazy_builder callback; throws exception.
+   * The #lazy_builder callback; throws exception.
    *
    * @throws \Exception
    */
@@ -121,7 +121,7 @@ class BigPipeTestController implements TrustedCallbackInterface {
   }
 
   /**
-   * #lazy_builder callback; returns content that will trigger an exception.
+   * The #lazy_builder callback; returns content that will trigger an exception.
    *
    * @see \Drupal\big_pipe_test\EventSubscriber\BigPipeTestSubscriber::onRespondTriggerException()
    *
@@ -132,7 +132,7 @@ class BigPipeTestController implements TrustedCallbackInterface {
   }
 
   /**
-   * #lazy_builder callback; returns the current count.
+   * The #lazy_builder callback; returns the current count.
    *
    * @see \Drupal\Tests\big_pipe\Functional\BigPipeTest::testBigPipeMultiOccurrencePlaceholders()
    *

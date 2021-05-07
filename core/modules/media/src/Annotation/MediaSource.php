@@ -90,7 +90,7 @@ class MediaSource extends Plugin {
   public $thumbnail_uri_metadata_attribute = 'thumbnail_uri';
 
   /**
-   * (optional) The metadata attribute name to provide the thumbnail alt.
+   * The metadata attribute name to provide the thumbnail alt.
    *
    * "Thumbnail" will be used if the attribute name is not provided.
    *
@@ -99,7 +99,7 @@ class MediaSource extends Plugin {
   public $thumbnail_alt_metadata_attribute;
 
   /**
-   * (optional) The metadata attribute name to provide the thumbnail title.
+   * The metadata attribute name to provide the thumbnail title.
    *
    * The name of the media item will be used if the attribute name is not
    * provided.

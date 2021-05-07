@@ -63,7 +63,7 @@ class Actions extends Container {
   }
 
   /**
-   * #pre_render callback for #type 'actions'.
+   * The #pre_render callback for #type 'actions'.
    *
    * This callback iterates over all child elements of the #type 'actions'
    * container to look for elements with a #dropbutton property, so as to group
