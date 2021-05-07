@@ -174,19 +174,6 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       instance.getValue = function () {
         return this.input.textContent;
       };
-
-      instance.replaceInputValue = function (element) {
-        var itemIndex = element.closest('[data-autocomplete-item]').getAttribute('data-autocomplete-item');
-        this.selected = this.suggestions[itemIndex];
-        var separator = this.separator();
-
-        if (separator.length > 0) {
-          var before = this.previousItems(separator);
-          this.input.textContent = "".concat(before).concat(element.textContent);
-        } else {
-          this.input.textContent = element.textContent;
-        }
-      };
     }
 
     var closeOnClickOutside = function closeOnClickOutside(event) {

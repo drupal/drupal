@@ -240,24 +240,6 @@
       instance.getValue = function () {
         return this.input.textContent;
       };
-
-      // The replaceInputValue method assumes the autocomplete input has a
-      // `value` property. This is overridden here when there's a need to
-      // accommodate contentEditable elements that don't use that property.
-      // eslint-disable-next-line func-names
-      instance.replaceInputValue = function (element) {
-        const itemIndex = element
-          .closest('[data-autocomplete-item]')
-          .getAttribute('data-autocomplete-item');
-        this.selected = this.suggestions[itemIndex];
-        const separator = this.separator();
-        if (separator.length > 0) {
-          const before = this.previousItems(separator);
-          this.input.textContent = `${before}${element.textContent}`;
-        } else {
-          this.input.textContent = element.textContent;
-        }
-      };
     }
 
     /**
