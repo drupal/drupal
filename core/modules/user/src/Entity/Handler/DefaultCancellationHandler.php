@@ -13,6 +13,8 @@ use Drupal\Core\Entity\RevisionLogInterface;
 use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\user\CancellationHandlerInterface;
+use Drupal\user\EntityOwnerInterface;
+use Drupal\user\UserInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
