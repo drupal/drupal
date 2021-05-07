@@ -43,3 +43,11 @@
 .skip-link:after {
     content: "\0020	➔";
   }
+
+.skip-link.focusable:focus {
+  position: absolute !important; /* Override position from module file. */
+  z-index: 503;
+  width: 100%;
+  height: 2.5rem;
+  outline: none;
+}
