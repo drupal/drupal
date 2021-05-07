@@ -371,12 +371,12 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
 
     // Only allow the field to target entity types that have an ID key. This
     // is enforced in ::propertyDefinitions().
-    $options = \Drupal::service('entity_type.repository')->getEntityTypeLabels(TRUE);
-    $filter = function (string $entity_type_id): bool {
-      return \Drupal::entityTypeManager()
-        ->getDefinition($entity_type_id)
+    $entity_type_manager = \Drupal::entityTypeManager();
+    $filter = function (string $entity_type_id) use ($entity_type_manager): bool {
+      return $entity_type_manager->getDefinition($entity_type_id)
         ->hasKey('id');
     };
+    $options = \Drupal::service('entity_type.repository')->getEntityTypeLabels(TRUE);
     foreach ($options as $group_name => $group) {
       $element['target_type']['#options'][$group_name] = array_filter($group, $filter, ARRAY_FILTER_USE_KEY);
     }
