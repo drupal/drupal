@@ -124,9 +124,17 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
       this._renderMenu(this.ul, this.suggestions);
 
+      this.prepareListItemAttriibutes();
+    }
+
+    instance.prepareSuggestionList = autocompletePrepareSuggestionList;
+
+    instance.prepareListItemAttriibutes = function () {
+      var _this2 = this;
+
       this.ul.querySelectorAll('li').forEach(function (li, index) {
-        if (_this.options.itemClass.length > 0) {
-          _this.options.itemClass.split(' ').forEach(function (className) {
+        if (_this2.options.itemClass.length > 0) {
+          _this2.options.itemClass.split(' ').forEach(function (className) {
             return li.classList.add(className);
           });
         }
@@ -138,16 +146,14 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
         li.setAttribute('aria-selected', 'false');
 
         li.onblur = function (e) {
-          return _this.blurHandler(e);
+          return _this2.blurHandler(e);
         };
 
         var a = li.querySelector('a');
         a.classList.add('ui-menu-item-wrapper');
         a.setAttribute('id', "ui-id-".concat(index));
       });
-    }
-
-    instance.prepareSuggestionList = autocompletePrepareSuggestionList;
+    };
 
     if (!instance.hasOwnProperty('_renderMenu')) {
       instance._renderMenu = function (ul, items) {
@@ -217,7 +223,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
   $.fn.extend({
     autocomplete: function autocomplete() {
-      var _this2 = this;
+      var _this3 = this;
 
       for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
         args[_key] = arguments[_key];
@@ -312,7 +318,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
           case 'option':
             if (typeof args[2] === 'undefined' && args[1] === 'object') {
               Object.keys(args[1]).forEach(function (key) {
-                _this2.autocomplete('option', key, args[1][key]);
+                _this3.autocomplete('option', key, args[1][key]);
               });
             }
 
@@ -451,7 +457,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
         if (_typeof(args[0]) === 'object') {
           Object.keys(args[0]).forEach(function (key) {
-            _this2.autocomplete('option', key, args[0][key]);
+            _this3.autocomplete('option', key, args[0][key]);
           });
         }
       }

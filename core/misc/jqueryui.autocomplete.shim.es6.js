@@ -188,8 +188,22 @@
       this._renderMenu(this.ul, this.suggestions);
 
       // Add the list attributes needed for functionality that would have
-      // been added in suggestionItem() were that function not skipped in order
-      // to support extension points.
+      // been added in A11y_Autocomplete were the class not overridden to
+      // accommodate the use of extension points such as the above
+      // `this._renderMenu`.
+      this.prepareListItemAttriibutes();
+    }
+    instance.prepareSuggestionList = autocompletePrepareSuggestionList;
+
+    /**
+     * Add list item attributes necessary for accessibility and functionality.
+     *
+     * These are attributes that would usually be added by A11y_Autocomplete,
+     * but need to be explicity added here as the shim overrides bypass the
+     * methods that would typically do this.
+     */
+    // eslint-disable-next-line func-names
+    instance.prepareListItemAttriibutes = function () {
       this.ul.querySelectorAll('li').forEach((li, index) => {
         if (this.options.itemClass.length > 0) {
           this.options.itemClass
@@ -206,8 +220,7 @@
         a.classList.add('ui-menu-item-wrapper');
         a.setAttribute('id', `ui-id-${index}`);
       });
-    }
-    instance.prepareSuggestionList = autocompletePrepareSuggestionList;
+    };
 
     if (!instance.hasOwnProperty('_renderMenu')) {
       // eslint-disable-next-line func-names
