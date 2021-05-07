@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\user;
+namespace Drupal\user\Entity\Handler;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\ContentEntityStorageInterface;
@@ -12,6 +12,7 @@ use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Entity\RevisionLogInterface;
 use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\user\CancellationHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

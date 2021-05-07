@@ -41,7 +41,7 @@ use Drupal\user\EntityOwnerTrait;
  *     },
  *     "list_builder" = "Drupal\node\NodeListBuilder",
  *     "translation" = "Drupal\node\NodeTranslationHandler",
- *     "user_cancel" = "Drupal\user\BatchCancellationHandler",
+ *     "user_cancel" = "Drupal\user\Entity\Handler\BatchCancellationHandler",
  *   },
  *   base_table = "node",
  *   data_table = "node_field_data",

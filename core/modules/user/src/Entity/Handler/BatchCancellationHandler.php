@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\user;
+namespace Drupal\user\Entity\Handler;
 
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Entity\ContentEntityStorageInterface;

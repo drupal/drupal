@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\comment;
+namespace Drupal\comment\Entity\Handler;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\ContentEntityStorageInterface;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\user\DefaultCancellationHandler;
+use Drupal\user\Entity\Handler\DefaultCancellationHandler;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
