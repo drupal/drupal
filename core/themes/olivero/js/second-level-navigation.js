@@ -103,7 +103,7 @@
     }
   });
   document.addEventListener('touchstart', function (e) {
-    if (areAnySubNavsOpen() && !e.target.matches('.primary-nav__menu-item--has-children, .primary-nav__menu-item--has-children *')) {
+    if (areAnySubNavsOpen() && !e.target.matches('.header-nav, .header-nav *')) {
       closeAllSubNav();
     }
   }, {
