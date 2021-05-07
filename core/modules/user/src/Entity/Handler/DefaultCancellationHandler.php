@@ -106,7 +106,7 @@ class DefaultCancellationHandler implements CancellationHandlerInterface, Entity
       ->accessCheck(FALSE)
       ->condition($this->entityType->getKey('owner'), $account->id());
 
-    if ($method === static::METHOD_REASSIGN && $this->entityType->isRevisionable()) {
+    if (($method === self::METHOD_REASSIGN || $method === self::METHOD_DELETE) && $this->entityType->isRevisionable()) {
       $query->allRevisions();
     }
     return $query;
@@ -121,6 +121,16 @@ class DefaultCancellationHandler implements CancellationHandlerInterface, Entity
    *   The user account cancellation method.
    */
   protected function updateEntity(ContentEntityInterface $entity, string $method): void {
+    if ($method === self::METHOD_DELETE) {
+      if ($this->entityType->isRevisionable() && !$entity->isDefaultRevision()) {
+        $this->storage->deleteRevision($entity->getRevisionId());
+      }
+      else {
+        $this->storage->delete([$entity]);
+      }
+      return;
+    }
+
     // For efficiency, manually save the original entity before applying any
     // changes.
     $entity->original = clone $entity;

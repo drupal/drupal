@@ -607,26 +607,6 @@ function node_ranking() {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_predelete() for user entities.
- */
-function node_user_predelete($account) {
-  // Delete nodes (current revisions).
-  // @todo Introduce node_mass_delete() or make node_mass_update() more flexible.
-  $nids = \Drupal::entityQuery('node')
-    ->condition('uid', $account->id())
-    ->accessCheck(FALSE)
-    ->execute();
-  // Delete old revisions.
-  $storage_controller = \Drupal::entityTypeManager()->getStorage('node');
-  $nodes = $storage_controller->loadMultiple($nids);
-  $storage_controller->delete($nodes);
-  $revisions = $storage_controller->userRevisionIds($account);
-  foreach ($revisions as $revision) {
-    node_revision_delete($revision);
-  }
-}
-
-/**
  * Finds the most recently changed nodes that are available to the current user.
  *
  * @param $number
