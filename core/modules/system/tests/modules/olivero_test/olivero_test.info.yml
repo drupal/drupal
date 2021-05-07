@@ -3,3 +3,5 @@ type: module
 description: 'Support module for testing the Olivero theme.'
 package: Testing
 version: VERSION
+dependencies:
+  - drupal:contact
