@@ -40,6 +40,7 @@ class UserCancellationTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    $this->installSchema('comment', 'comment_entity_statistics');
     $this->installSchema('system', 'sequences');
     $this->installEntitySchema('comment');
     $this->installEntitySchema('node');
@@ -93,6 +94,12 @@ class UserCancellationTest extends KernelTestBase {
     $this->assertTrue($comment->getOwner()->isAnonymous());
     $this->assertSame('Mysterious Stranger', $comment->getAuthorName());
     $this->assertTrue($comment->isPublished());
+
+    // The DELETE method should delete the comment outright.
+    $user = $this->createUser();
+    $comment = $this->createComment($user);
+    user_cancel([], $user->id(), CancellationHandlerInterface::METHOD_DELETE);
+    $this->assertNull(Comment::load($comment->id()));
   }
 
   /**

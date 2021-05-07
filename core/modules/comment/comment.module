@@ -443,18 +443,6 @@ function comment_node_search_result(EntityInterface $node) {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_predelete() for user entities.
- */
-function comment_user_predelete($account) {
-  $entity_query = \Drupal::entityQuery('comment')->accessCheck(FALSE);
-  $entity_query->condition('uid', $account->id());
-  $cids = $entity_query->execute();
-  $comment_storage = \Drupal::entityTypeManager()->getStorage('comment');
-  $comments = $comment_storage->loadMultiple($cids);
-  $comment_storage->delete($comments);
-}
-
-/**
  * Generates a comment preview.
  *
  * @param \Drupal\comment\CommentInterface $comment
