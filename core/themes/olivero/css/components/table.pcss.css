@@ -7,7 +7,8 @@
 
 .forum table,
 .text-content table,
-.views-table {
+.views-table,
+.draggable-table {
   margin-block-start: var(--sp2);
   margin-block-end: var(--sp2);
   border-spacing: 0;
@@ -80,6 +81,19 @@
     white-space: normal;
     border-block-end: 2px solid var(--color--gray-40);
   }
+
+  & th.checkbox,
+  & td.checkbox {
+    text-align: center;
+  }
+}
+
+.draggable-table {
+  width: 100%;
+}
+
+.draggable-table .form-item {
+  margin-top: 0;
 }
 
 .tablesort {

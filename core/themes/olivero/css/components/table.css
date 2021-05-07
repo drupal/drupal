@@ -12,7 +12,8 @@
 
 .forum table,
 .text-content table,
-.views-table {
+.views-table,
+.draggable-table {
   margin-top: 2.25rem;
   margin-bottom: 2.25rem;
   border-spacing: 0;
@@ -24,15 +25,15 @@
   line-height: 1.6875rem
 }
 
-[dir="ltr"] .forum table caption,[dir="ltr"]  .text-content table caption,[dir="ltr"]  .views-table caption {
+[dir="ltr"] .forum table caption,[dir="ltr"]  .text-content table caption,[dir="ltr"]  .views-table caption,[dir="ltr"]  .draggable-table caption {
     text-align: left
 }
 
-[dir="rtl"] .forum table caption,[dir="rtl"]  .text-content table caption,[dir="rtl"]  .views-table caption {
+[dir="rtl"] .forum table caption,[dir="rtl"]  .text-content table caption,[dir="rtl"]  .views-table caption,[dir="rtl"]  .draggable-table caption {
     text-align: right
 }
 
-.forum table caption, .text-content table caption, .views-table caption {
+.forum table caption, .text-content table caption, .views-table caption, .draggable-table caption {
     margin-bottom: 1.125rem;
     color: #313637;
     font-family: "Lora", "georgia", serif;
@@ -41,7 +42,7 @@
     line-height: 1.125rem;
   }
 
-.forum table tr:last-child td, .text-content table tr:last-child td, .views-table tr:last-child td {
+.forum table tr:last-child td, .text-content table tr:last-child td, .views-table tr:last-child td, .draggable-table tr:last-child td {
         border-bottom: 0;
       }
 
@@ -50,7 +51,9 @@
   .text-content table td,[dir="ltr"] 
   .text-content table th,[dir="ltr"] 
   .views-table td,[dir="ltr"] 
-  .views-table th {
+  .views-table th,[dir="ltr"] 
+  .draggable-table td,[dir="ltr"] 
+  .draggable-table th {
     padding-left: 0
 }
 
@@ -59,7 +62,9 @@
   .text-content table td,[dir="rtl"] 
   .text-content table th,[dir="rtl"] 
   .views-table td,[dir="rtl"] 
-  .views-table th {
+  .views-table th,[dir="rtl"] 
+  .draggable-table td,[dir="rtl"] 
+  .draggable-table th {
     padding-right: 0
 }
 
@@ -68,7 +73,9 @@
   .text-content table td,[dir="ltr"] 
   .text-content table th,[dir="ltr"] 
   .views-table td,[dir="ltr"] 
-  .views-table th {
+  .views-table th,[dir="ltr"] 
+  .draggable-table td,[dir="ltr"] 
+  .draggable-table th {
     padding-right: 1.125rem
 }
 
@@ -77,7 +84,9 @@
   .text-content table td,[dir="rtl"] 
   .text-content table th,[dir="rtl"] 
   .views-table td,[dir="rtl"] 
-  .views-table th {
+  .views-table th,[dir="rtl"] 
+  .draggable-table td,[dir="rtl"] 
+  .draggable-table th {
     padding-left: 1.125rem
 }
 
@@ -86,37 +95,39 @@
   .text-content table td,
   .text-content table th,
   .views-table td,
-  .views-table th {
+  .views-table th,
+  .draggable-table td,
+  .draggable-table th {
     padding-top: 1.125rem;
     padding-bottom: 1.125rem;
     vertical-align: top;
   }
 
-[dir="ltr"] .forum table th,[dir="ltr"]  .text-content table th,[dir="ltr"]  .views-table th {
+[dir="ltr"] .forum table th,[dir="ltr"]  .text-content table th,[dir="ltr"]  .views-table th,[dir="ltr"]  .draggable-table th {
     margin-left: 0
 }
 
-[dir="rtl"] .forum table th,[dir="rtl"]  .text-content table th,[dir="rtl"]  .views-table th {
+[dir="rtl"] .forum table th,[dir="rtl"]  .text-content table th,[dir="rtl"]  .views-table th,[dir="rtl"]  .draggable-table th {
     margin-right: 0
 }
 
-[dir="ltr"] .forum table th,[dir="ltr"]  .text-content table th,[dir="ltr"]  .views-table th {
+[dir="ltr"] .forum table th,[dir="ltr"]  .text-content table th,[dir="ltr"]  .views-table th,[dir="ltr"]  .draggable-table th {
     margin-right: 0
 }
 
-[dir="rtl"] .forum table th,[dir="rtl"]  .text-content table th,[dir="rtl"]  .views-table th {
+[dir="rtl"] .forum table th,[dir="rtl"]  .text-content table th,[dir="rtl"]  .views-table th,[dir="rtl"]  .draggable-table th {
     margin-left: 0
 }
 
-[dir="ltr"] .forum table th,[dir="ltr"]  .text-content table th,[dir="ltr"]  .views-table th {
+[dir="ltr"] .forum table th,[dir="ltr"]  .text-content table th,[dir="ltr"]  .views-table th,[dir="ltr"]  .draggable-table th {
     text-align: left
 }
 
-[dir="rtl"] .forum table th,[dir="rtl"]  .text-content table th,[dir="rtl"]  .views-table th {
+[dir="rtl"] .forum table th,[dir="rtl"]  .text-content table th,[dir="rtl"]  .views-table th,[dir="rtl"]  .draggable-table th {
     text-align: right
 }
 
-.forum table th, .text-content table th, .views-table th {
+.forum table th, .text-content table th, .views-table th, .draggable-table th {
     margin-top: 0;
     margin-bottom: 0;
     letter-spacing: 0.02em;
@@ -131,34 +142,53 @@
      */
   }
 
-[dir="ltr"] .forum table th.text-align-left,[dir="ltr"]  .text-content table th.text-align-left,[dir="ltr"]  .views-table th.text-align-left {
+[dir="ltr"] .forum table th.text-align-left,[dir="ltr"]  .text-content table th.text-align-left,[dir="ltr"]  .views-table th.text-align-left,[dir="ltr"]  .draggable-table th.text-align-left {
       text-align: left
 }
 
-[dir="rtl"] .forum table th.text-align-left,[dir="rtl"]  .text-content table th.text-align-left,[dir="rtl"]  .views-table th.text-align-left {
+[dir="rtl"] .forum table th.text-align-left,[dir="rtl"]  .text-content table th.text-align-left,[dir="rtl"]  .views-table th.text-align-left,[dir="rtl"]  .draggable-table th.text-align-left {
       text-align: right
 }
 
-[dir="ltr"] .forum table th.text-align-right,[dir="ltr"]  .text-content table th.text-align-right,[dir="ltr"]  .views-table th.text-align-right {
+[dir="ltr"] .forum table th.text-align-right,[dir="ltr"]  .text-content table th.text-align-right,[dir="ltr"]  .views-table th.text-align-right,[dir="ltr"]  .draggable-table th.text-align-right {
       text-align: right
 }
 
-[dir="rtl"] .forum table th.text-align-right,[dir="rtl"]  .text-content table th.text-align-right,[dir="rtl"]  .views-table th.text-align-right {
+[dir="rtl"] .forum table th.text-align-right,[dir="rtl"]  .text-content table th.text-align-right,[dir="rtl"]  .views-table th.text-align-right,[dir="rtl"]  .draggable-table th.text-align-right {
       text-align: left
 }
 
-.forum table th.text-align-center, .text-content table th.text-align-center, .views-table th.text-align-center {
+.forum table th.text-align-center, .text-content table th.text-align-center, .views-table th.text-align-center, .draggable-table th.text-align-center {
       text-align: center;
     }
 
-.forum table th.text-align-justify, .text-content table th.text-align-justify, .views-table th.text-align-justify {
+.forum table th.text-align-justify, .text-content table th.text-align-justify, .views-table th.text-align-justify, .draggable-table th.text-align-justify {
       text-align: justify;
     }
 
-.forum table td, .text-content table td, .views-table td {
+.forum table td, .text-content table td, .views-table td, .draggable-table td {
     white-space: normal;
     border-bottom: 2px solid #98abb9;
   }
+
+.forum table th.checkbox,
+  .forum table td.checkbox,
+  .text-content table th.checkbox,
+  .text-content table td.checkbox,
+  .views-table th.checkbox,
+  .views-table td.checkbox,
+  .draggable-table th.checkbox,
+  .draggable-table td.checkbox {
+    text-align: center;
+  }
+
+.draggable-table {
+  width: 100%;
+}
+
+.draggable-table .form-item {
+  margin-top: 0;
+}
 
 .tablesort {
   vertical-align: middle;
