@@ -13,6 +13,7 @@ use Drupal\Core\Url;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\user\CancellationHandlerInterface;
 use Drupal\user\UserInterface;
 
 /**
@@ -163,7 +164,7 @@ function history_node_delete(EntityInterface $node) {
  */
 function history_user_cancel($edit, UserInterface $account, $method) {
   switch ($method) {
-    case 'user_cancel_reassign':
+    case CancellationHandlerInterface::METHOD_REASSIGN:
       \Drupal::database()->delete('history')
         ->condition('uid', $account->id())
         ->execute();
