@@ -159,7 +159,7 @@ var A11yAutocomplete = function () {
       }
 
       if (!this.input.hasAttribute('id')) {
-        this.input.setAttribute("autocomplete-input-".concat(this.count));
+        this.input.setAttribute('id', "autocomplete-input-".concat(this.count));
       }
 
       var description = document.createElement('span');
@@ -167,7 +167,7 @@ var A11yAutocomplete = function () {
       description.classList.add('visually-hidden');
 
       if (this.inputDescribedBy) {
-        description.setAttribute('data-autocomplete-assistive-hint', this.count);
+        description.setAttribute('data-autocomplete-assistive-hint', "".concat(this.count));
         document.querySelector("[id=\"".concat(this.inputDescribedBy, "\"]")).appendChild(description);
       } else {
         description.setAttribute('id', "assistive-hint-".concat(this.count));

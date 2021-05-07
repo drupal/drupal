@@ -172,27 +172,27 @@ class A11yAutocomplete {
         .forEach((className) => this.input.classList.add(className));
     }
     if (!this.input.hasAttribute('id')) {
-      this.input.setAttribute(`autocomplete-input-${this.count}`);
+      this.input.setAttribute('id', `autocomplete-input-${this.count}`);
     }
 
     const description = document.createElement('span');
     description.textContent =
       this.minCharsMessage() + this.options.inputAssistiveHint;
     description.classList.add('visually-hidden');
+
+    // If the autocomplete input has an pre-existing 'aria-describedby', append
+    // autocomplete-specific descriptions to that existing element. Otherwise,
+    // create a new element with those descriptions and create a new
+    // 'aria-describedby' to associate it with the input.
     if (this.inputDescribedBy) {
-      description.setAttribute(
-        'data-autocomplete-assistive-hint',
-        this.count,
-      );
-      document
-        .querySelector(`[id="${this.inputDescribedBy}"]`)
-        .appendChild(description);
+      // This is content that is appended to an existing description. It's also
+      // content that only needs to be conveyed once. Add an attribute that
+      // allows this content to be targeted for removal after it is read once.
+      description.setAttribute('data-autocomplete-assistive-hint', `${this.count}`);
+      document.querySelector(`[id="${this.inputDescribedBy}"]`).appendChild(description);
     } else {
       description.setAttribute('id', `assistive-hint-${this.count}`);
-      this.input.setAttribute(
-        'aria-describedby',
-        `assistive-hint-${this.count}`,
-      );
+      this.input.setAttribute('aria-describedby', `assistive-hint-${this.count}`);
       this.wrapper.appendChild(description);
     }
   }
