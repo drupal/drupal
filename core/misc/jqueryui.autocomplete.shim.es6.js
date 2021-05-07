@@ -185,7 +185,6 @@
       // prepareSuggestionList(). This call to _renderMenu is provided instead
       // of the forEach loop that creates the item list so jQuery UI's
       // extension points are supported.
-      this.ul.innerHTML = '';
       this._renderMenu(this.ul, this.suggestions);
 
       // Add the list attributes needed for functionality that would have
@@ -199,12 +198,13 @@
         }
         li.setAttribute('role', 'option');
         li.setAttribute('tabindex', '-1');
-        li.setAttribute('id', `suggestion-${this.count}-${index}`);
-        li.setAttribute('data-drupal-autocomplete-item', index);
+        li.setAttribute('data-autocomplete-item', index);
         li.setAttribute('aria-posinset', index + 1);
         li.setAttribute('aria-selected', 'false');
         li.onblur = (e) => this.blurHandler(e);
-        li.querySelector('a').classList.add('ui-menu-item-wrapper');
+        const a = li.querySelector('a');
+        a.classList.add('ui-menu-item-wrapper');
+        a.setAttribute('id', `ui-id-${index}`);
       });
     }
     instance.prepareSuggestionList = autocompletePrepareSuggestionList;
@@ -247,8 +247,8 @@
       // eslint-disable-next-line func-names
       instance.replaceInputValue = function (element) {
         const itemIndex = element
-          .closest('[data-drupal-autocomplete-item]')
-          .getAttribute('data-drupal-autocomplete-item');
+          .closest('[data-autocomplete-item]')
+          .getAttribute('data-autocomplete-item');
         this.selected = this.suggestions[itemIndex];
         const separator = this.separator();
         if (separator.length > 0) {
@@ -326,7 +326,7 @@
 
     // jQuery UI autocomplete does not have a wrapper, so remove the wrapper
     // added by A11y_Autocomplete.
-    $(instance.input).unwrap('[data-drupal-autocomplete-wrapper]');
+    $(instance.input).unwrap('[data-autocomplete-wrapper]');
     $(instance.input).data('ui-autocomplete', instance);
   };
 

@@ -307,14 +307,14 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
     $this->assertEquals('off', $autocomplete_field->getAttribute('autocomplete'));
     $aria_owns = $autocomplete_field->getAttribute('aria-owns');
     $this->assertNotNull($aria_owns);
-    $this->assertNotNull($page->find('css', "[data-drupal-autocomplete-list]#$aria_owns"));
+    $this->assertNotNull($page->find('css', "[data-autocomplete-item-list]#$aria_owns"));
     $hint = $this->getDescription($autocomplete_field)->getText();
     $expected_hint = 'When autocomplete results are available use up and down arrows to review and enter to select. Touch device users, explore by touch or with swipe gestures.';
     $this->assertEquals($expected_hint, $hint);
     $autocomplete_field->setValue('F');
     $assert_session->waitOnAutocomplete();
-    $this->assertCount(10, $page->findAll('css', '[data-drupal-autocomplete-list] li'));
-    $this->assertCount(10, $page->findAll('css', '[data-drupal-autocomplete-list] li[aria-selected="false"]'));
+    $this->assertCount(10, $page->findAll('css', '[data-autocomplete-item-list] li'));
+    $this->assertCount(10, $page->findAll('css', '[data-autocomplete-item-list] li[aria-selected="false"]'));
     $this->assertScreenreader('There are at least 10 results available. Type additional characters to refine your search.');
     $autocomplete_field->setValue('Fo');
     $this->assertScreenreader('There are 3 results available.');
@@ -324,17 +324,17 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
 
     $this->assertScreenreader('Forgettable (24) 1 of 3 is highlighted');
     $this->assertFalse($autocomplete_field->hasAttribute('aria-describedby'));
-    $this->assertCount(3, $page->findAll('css', '[data-drupal-autocomplete-list] li'));
-    $this->assertCount(2, $page->findAll('css', '[data-drupal-autocomplete-list] li[aria-selected="false"]'));
-    $this->assertCount(1, $page->findAll('css', '[data-drupal-autocomplete-list] li[aria-selected="true"]'));
+    $this->assertCount(3, $page->findAll('css', '[data-autocomplete-item-list] li'));
+    $this->assertCount(2, $page->findAll('css', '[data-autocomplete-item-list] li[aria-selected="false"]'));
+    $this->assertCount(1, $page->findAll('css', '[data-autocomplete-item-list] li[aria-selected="true"]'));
     $active_item = $page->find('css', 'li:contains("Forgettable")');
     $this->assertEquals('true', $active_item->getAttribute('aria-selected'));
     $active_item->keyDown(40);
 
     $this->assertScreenreader('Fourteenth (14) 2 of 3 is highlighted');
-    $this->assertCount(3, $page->findAll('css', '[data-drupal-autocomplete-list] li'));
-    $this->assertCount(2, $page->findAll('css', '[data-drupal-autocomplete-list] li[aria-selected="false"]'));
-    $this->assertCount(1, $page->findAll('css', '[data-drupal-autocomplete-list] li[aria-selected="true"]'));
+    $this->assertCount(3, $page->findAll('css', '[data-autocomplete-item-list] li'));
+    $this->assertCount(2, $page->findAll('css', '[data-autocomplete-item-list] li[aria-selected="false"]'));
+    $this->assertCount(1, $page->findAll('css', '[data-autocomplete-item-list] li[aria-selected="true"]'));
     $active_item = $page->find('css', 'li:contains("Fourteenth")');
     $this->assertEquals('true', $active_item->getAttribute('aria-selected'));
   }
@@ -357,6 +357,46 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
+    // Test the list: option, which provides a predefined list instead of a
+    // a dynamic request.
+    foreach ([
+               'edit-preset-list-separate-data-attributes',
+               'edit-preset-list-data-autocomplete',
+             ] as $id) {
+      $input = $page->findById($id);
+      $list = $this->getList($input);
+      $this->setAutocompleteValue($input, $id, 'a');
+
+      $expected = [
+        'Zebra Label',
+        'Rhino Label',
+        'Cheetah Label',
+        'Meerkat Label',
+      ];
+      $list_contents = $list->findAll('css', 'li');
+      $this->assertCount(4, $list_contents, $id);
+      foreach ($list_contents as $index => $list_item) {
+        $this->assertEquals($expected[$index], $list_item->find('css', 'a')->getText(), $id);
+      }
+
+      $this->setAutocompleteValue($input, $id, 'h');
+      $expected = [
+        'Rhino Label',
+        'Cheetah Label',
+      ];
+      $list_id = $list->getAttribute('id');
+
+      // Wait for the new results to populate.
+      $assert_session->assertNoElementAfterWait('css', "#$list_id li:nth-child(4)");
+      $list_contents = $list->findAll('css', 'li');
+      $this->assertCount(2, $list_contents);
+      foreach ($list_contents as $index => $list_item) {
+        $this->assertEquals($expected[$index], $list_item->getText());
+      }
+      // Reset value to ensure the next input isn't obscured.
+      $this->setAutocompleteValue($input, $id, ' ', FALSE);
+    }
+
     // Test the minChar: option.
     /* cspell:disable */
     foreach ([
@@ -373,7 +413,7 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
       // If an input already has a description associated
       // with it. That means the screenreader instructions must be added to the
       // description in a visually-hidden container.
-      $inserted_screenreader_only_description = $description->find('css', '[data-drupal-autocomplete-assistive-hint]');
+      $inserted_screenreader_only_description = $description->find('css', '[data-autocomplete-assistive-hint]');
       /* cspell:disable-next-line */
       if ($id === 'edit-two-minchar-data-autocomplete') {
         // This input has a pre-existing description, so check for the visually
@@ -401,7 +441,7 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
 
       /* cspell:disable-next-line */
       if ($id === 'edit-two-minchar-data-autocomplete') {
-        $inserted_screenreader_only_description = $description->find('css', '[data-drupal-autocomplete-assistive-hint]');
+        $inserted_screenreader_only_description = $description->find('css', '[data-autocomplete-assistive-hint]');
         $this->assertNull($inserted_screenreader_only_description);
         $expected_description = 'This also tests appending minChar screenreader hints to descriptions';
         $this->assertEquals($expected_description, $description->getText());
@@ -496,46 +536,6 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
       $this->setAutocompleteValue($input, $id, ' ', FALSE);
     }
 
-    // Test the list: option, which provides a predefined list instead of a
-    // a dynamic request.
-    foreach ([
-      'edit-preset-list-separate-data-attributes',
-      'edit-preset-list-data-autocomplete',
-    ] as $id) {
-      $input = $page->findById($id);
-      $list = $this->getList($input);
-      $this->setAutocompleteValue($input, $id, 'a');
-
-      $expected = [
-        'Zebra Value',
-        'Rhino Value',
-        'Cheetah Value',
-        'Meerkat Value',
-      ];
-      $list_contents = $list->findAll('css', 'li');
-      $this->assertCount(4, $list_contents);
-      foreach ($list_contents as $index => $list_item) {
-        $this->assertEquals($expected[$index], $list_item->find('css', 'a')->getText(), $id);
-      }
-
-      $this->setAutocompleteValue($input, $id, 'h');
-      $expected = [
-        'Rhino Value',
-        'Cheetah Value',
-      ];
-      $list_id = $list->getAttribute('id');
-
-      // Wait for the new results to populate.
-      $assert_session->assertNoElementAfterWait('css', "#$list_id li:nth-child(4)");
-      $list_contents = $list->findAll('css', 'li');
-      $this->assertCount(2, $list_contents);
-      foreach ($list_contents as $index => $list_item) {
-        $this->assertEquals($expected[$index], $list_item->getText());
-      }
-      // Reset value to ensure the next input isn't obscured.
-      $this->setAutocompleteValue($input, $id, ' ', FALSE);
-    }
-
     // Test the sort: option.
     foreach ([
       'edit-sort-data-autocomplete',
@@ -546,10 +546,10 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
       $this->setAutocompleteValue($input, $id, 'a');
 
       $expected = [
-        'Cheetah Value',
-        'Meerkat Value',
-        'Rhino Value',
-        'Zebra Value',
+        'Cheetah Label',
+        'Meerkat Label',
+        'Rhino Label',
+        'Zebra Label',
       ];
       $list_contents = $list->findAll('css', 'li');
       $this->assertCount(4, $list_contents);
@@ -558,8 +558,8 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
       }
       $this->setAutocompleteValue($input, $id, 'h');
       $expected = [
-        'Cheetah Value',
-        'Rhino Value',
+        'Cheetah Label',
+        'Rhino Label',
       ];
       $list_id = $list->getAttribute('id');
 
@@ -575,7 +575,8 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
       $this->setAutocompleteValue($input, $id, ' ', FALSE);
     }
 
-    // Test the displayLabels: option.
+    // Test the displayLabels: option. It defaults to true so this is changed
+    // to false.
     foreach ([
       'edit-display-labels-data-autocomplete',
       'edit-display-labels-data-attributes',
@@ -585,20 +586,20 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
       $this->setAutocompleteValue($input, $id, 'a');
 
       $expected = [
-        'Zebra Label',
-        'Rhino Label',
-        'Cheetah Label',
-        'Meerkat Label',
+        'Zebra Value',
+        'Rhino Value',
+        'Cheetah Value',
+        'Meerkat Value',
       ];
       $list_contents = $list->findAll('css', 'li');
       $this->assertCount(4, $list_contents, $list->getHtml());
       foreach ($list_contents as $index => $list_item) {
-        $this->assertEquals($expected[$index], $list_item->find('css', 'a')->getText(), $id);
+        $this->assertEquals($expected[$index], $list_item->getText(), $id);
       }
       $this->setAutocompleteValue($input, $id, 'h');
       $expected = [
-        'Rhino Label',
-        'Cheetah Label',
+        'Rhino Value',
+        'Cheetah Value',
       ];
       $list_id = $list->getAttribute('id');
 
@@ -677,7 +678,7 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
     $shimmed_list = $this->getList($shimmed_input);
     $shimmed_list_parent = $shimmed_list->getParent();
     $this->assertEquals('body', $shimmed_list_parent->getTagName());
-    $this->assertFalse($shimmed_list_parent->hasAttribute('data-drupal-autocomplete-wrapper'));
+    $this->assertFalse($shimmed_list_parent->hasAttribute('data-autocomplete-wrapper'));
     /* cspell:disable-next-line */
     $this->assertEquals('Cambodia (KH) Cameroon (CM) Canada (CA) Canary Islands (IC) Cape Verde (CV) Caribbean Netherlands (BQ) Cayman Islands (KY) Central African Republic (CF) Ceuta & Melilla (EA) Chad (TD) Chile (CL) China (CN) Christmas Island (CX) Clipperton Island (CP) Cocos (Keeling) Islands (CC) Colombia (CO) Comoros (KM) Congo - Brazzaville (CG) Congo - Kinshasa (CD) Cook Islands (CK)', $shimmed_list->getText());
     $this->setAutocompleteValue($shimmed_input, $shimmed_id, ' ', FALSE);
@@ -687,7 +688,7 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
     $not_shimmed_list = $this->getList($not_shimmed_input);
     $not_shimmed_list_parent = $not_shimmed_list->getParent();
     $this->assertEquals('div', $not_shimmed_list_parent->getTagName());
-    $this->assertTrue($not_shimmed_list_parent->hasAttribute('data-drupal-autocomplete-wrapper'));
+    $this->assertTrue($not_shimmed_list_parent->hasAttribute('data-autocomplete-wrapper'));
     $this->assertEquals('Falkland Islands (FK) Faroe Islands (FO) Fiji (FJ) Finland (FI) France (FR) French Guiana (GF) French Polynesia (PF) French Southern Territories (TF) Micronesia (FM)', $not_shimmed_list->getText());
   }
 

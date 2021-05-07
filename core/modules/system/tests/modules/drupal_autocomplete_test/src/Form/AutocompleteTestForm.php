@@ -235,9 +235,11 @@ class AutocompleteTestForm extends FormBase {
       '#attributes' => [
         'data-autocomplete' => JSON::encode([
           'list' => $custom_list,
-          'displayLabels' => TRUE,
+          'displayLabels' => FALSE,
         ]),
       ],
+      // This feature will only work on the non-shimmed autocomplete.
+      '#use-drupal-10-autocomplete' => TRUE,
     ];
     $form['display_labels_data_attributes'] = [
       '#type' => 'textfield',
@@ -246,8 +248,10 @@ class AutocompleteTestForm extends FormBase {
       '#autocomplete_route_name' => 'drupal_autocomplete.country_autocomplete',
       '#attributes' => [
         'data-autocomplete-list' => JSON::encode($custom_list),
-        'data-autocomplete-display-labels' => 'true',
+        'data-autocomplete-display-labels' => 'false',
       ],
+      // This feature will only work on the non-shimmed autocomplete.
+      '#use-drupal-10-autocomplete' => TRUE,
     ];
 
     $form['#attached']['library'][] = 'core/drupal.autocomplete';

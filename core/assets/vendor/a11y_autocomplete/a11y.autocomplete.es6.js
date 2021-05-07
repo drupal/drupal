@@ -43,7 +43,7 @@ class A11yAutocomplete {
     this.input = input;
 
     this.count = document.querySelectorAll(
-      '[data-drupal-autocomplete-input]',
+      '[data-autocomplete-input]',
     ).length;
     this.listboxId = `autocomplete-listbox-${this.count}`;
 
@@ -61,7 +61,7 @@ class A11yAutocomplete {
       inputClass: '',
       ulClass: '',
       itemClass: '',
-      loadingClass: 'drupal-autocomplete-loading',
+      loadingClass: '',
       separatorChar: ',',
       createLiveRegion: true,
       listZindex: 100,
@@ -150,7 +150,7 @@ class A11yAutocomplete {
    * Sets attributes to the wrapper and inserts it in the DOM.
    */
   implementWrapper() {
-    this.wrapper.setAttribute('data-drupal-autocomplete-wrapper', '');
+    this.wrapper.setAttribute('data-autocomplete-wrapper', '');
     this.input.parentNode.appendChild(this.wrapper);
     this.wrapper.appendChild(this.input);
   }
@@ -162,7 +162,7 @@ class A11yAutocomplete {
     // Add attributes to the input.
     this.input.setAttribute('aria-autocomplete', 'list');
     this.input.setAttribute('autocomplete', 'off');
-    this.input.setAttribute('data-drupal-autocomplete-input', '');
+    this.input.setAttribute('data-autocomplete-input', '');
     this.input.setAttribute('aria-owns', this.listboxId);
     this.input.setAttribute('role', 'combobox');
     this.input.setAttribute('aria-expanded', 'false');
@@ -181,7 +181,7 @@ class A11yAutocomplete {
     description.classList.add('visually-hidden');
     if (this.inputDescribedBy) {
       description.setAttribute(
-        'data-drupal-autocomplete-assistive-hint',
+        'data-autocomplete-assistive-hint',
         this.count,
       );
       document
@@ -209,7 +209,7 @@ class A11yAutocomplete {
    */
   implementList() {
     this.ul.setAttribute('role', 'listbox');
-    this.ul.setAttribute('data-drupal-autocomplete-list', '');
+    this.ul.setAttribute('data-autocomplete-item-list', '');
     this.ul.setAttribute('id', this.listboxId);
     this.ul.setAttribute('hidden', '');
     if (this.options.ulClass.length > 0) {
@@ -227,7 +227,7 @@ class A11yAutocomplete {
     // insert it in the autocomplete wrapper.
     if (this.options.createLiveRegion === true) {
       this.liveRegion = document.createElement('span');
-      this.liveRegion.setAttribute('data-drupal-autocomplete-live-region', '');
+      this.liveRegion.setAttribute('data-autocomplete-live-region', '');
       this.liveRegion.setAttribute('aria-live', 'assertive');
       this.input.parentNode.appendChild(this.liveRegion);
     }
@@ -307,7 +307,7 @@ class A11yAutocomplete {
     if (!this.inputHintRead) {
       if (this.inputDescribedBy) {
         const appendedHint = document.querySelector(
-          `[data-drupal-autocomplete-assistive-hint="${this.count}"]`,
+          `[data-autocomplete-assistive-hint="${this.count}"]`,
         );
         appendedHint.parentNode.removeChild(appendedHint);
       } else {
@@ -385,11 +385,11 @@ class A11yAutocomplete {
   focusPrev() {
     this.preventCloseOnBlur = true;
     const currentItem = document.activeElement.getAttribute(
-      'data-drupal-autocomplete-item',
+      'data-autocomplete-item',
     );
     const prevIndex = parseInt(currentItem, 10) - 1;
     const previousItem = this.ul.querySelector(
-      `[data-drupal-autocomplete-item="${prevIndex}"]`,
+      `[data-autocomplete-item="${prevIndex}"]`,
     );
 
     if (previousItem) {
@@ -404,11 +404,11 @@ class A11yAutocomplete {
    */
   focusNext() {
     const currentItem = document.activeElement.getAttribute(
-      'data-drupal-autocomplete-item',
+      'data-autocomplete-item',
     );
     const nextIndex = parseInt(currentItem, 10) + 1;
     const nextItem = this.ul.querySelector(
-      `[data-drupal-autocomplete-item="${nextIndex}"]`,
+      `[data-autocomplete-item="${nextIndex}"]`,
     );
     if (nextItem) {
       this.preventCloseOnBlur = true;
@@ -426,8 +426,8 @@ class A11yAutocomplete {
     item.setAttribute('aria-selected', true);
     item.focus();
     const itemIndex = item
-      .closest('[data-drupal-autocomplete-item]')
-      .getAttribute('data-drupal-autocomplete-item');
+      .closest('[data-autocomplete-item]')
+      .getAttribute('data-autocomplete-item');
     this.triggerEvent('autocomplete-highlight', {
       selected: this.suggestions[itemIndex],
     });
@@ -460,8 +460,8 @@ class A11yAutocomplete {
    */
   highlightMessage(item) {
     const itemIndex = item
-      .closest('[data-drupal-autocomplete-item]')
-      .getAttribute('data-drupal-autocomplete-item');
+      .closest('[data-autocomplete-item]')
+      .getAttribute('data-autocomplete-item');
     const selectedItem = this.suggestions[itemIndex].value;
     return this.options.highlightedAssistiveHint
       .replace('@selectedItem', selectedItem)
@@ -514,8 +514,8 @@ class A11yAutocomplete {
    */
   selectItem(elementWithItem, e) {
     const itemIndex = elementWithItem
-      .closest('[data-drupal-autocomplete-item]')
-      .getAttribute('data-drupal-autocomplete-item');
+      .closest('[data-autocomplete-item]')
+      .getAttribute('data-autocomplete-item');
     const toSelect = this.suggestions[itemIndex];
     const selected = this.triggerEvent(
       'autocomplete-select',
@@ -543,8 +543,8 @@ class A11yAutocomplete {
    */
   replaceInputValue(element) {
     const itemIndex = element
-      .closest('[data-drupal-autocomplete-item]')
-      .getAttribute('data-drupal-autocomplete-item');
+      .closest('[data-autocomplete-item]')
+      .getAttribute('data-autocomplete-item');
     this.selected = this.suggestions[itemIndex];
     const separator = this.separator();
     if (separator.length > 0) {
@@ -567,7 +567,7 @@ class A11yAutocomplete {
   separator() {
     const { cardinality } = this.options;
     const numItems = this.splitValues().length - 1;
-    return numItems < cardinality || parseInt(cardinality, 10) <= 0
+    return numItems < parseInt(cardinality, 10) || parseInt(cardinality, 10) <= 0
       ? this.options.separatorChar
       : '';
   }
@@ -626,6 +626,7 @@ class A11yAutocomplete {
               .split(' ')
               .forEach((className) => this.input.classList.remove(className));
             this.suggestionItems = results;
+
             this.displayResults();
             this.cache[inputId][searchTerm] = results;
           });
@@ -779,7 +780,7 @@ class A11yAutocomplete {
     li.setAttribute('role', 'option');
     li.setAttribute('tabindex', '-1');
     li.setAttribute('id', `suggestion-${this.count}-${itemIndex}`);
-    li.setAttribute('data-drupal-autocomplete-item', itemIndex);
+    li.setAttribute('data-autocomplete-item', itemIndex);
     li.setAttribute('aria-posinset', itemIndex + 1);
     li.setAttribute('aria-selected', 'false');
     li.onblur = (e) => this.blurHandler(e);
@@ -817,7 +818,7 @@ class A11yAutocomplete {
     if (this.options.autoFocus) {
       this.preventCloseOnBlur = true;
       this.highlightItem(
-        this.ul.querySelector('[data-drupal-autocomplete-item="0"]'),
+        this.ul.querySelector('[data-autocomplete-item="0"]'),
       );
     }
   }
@@ -900,7 +901,6 @@ class A11yAutocomplete {
     const { firstCharacterDenylist, cardinality } = this.options;
     const suggestionValue = suggestion.value;
     const currentValues = this.splitValues();
-
     // Prevent suggestions if the first input character is in the denylist, if
     // the suggestion has already been added to the field, or if the maximum
     // number of items have been reached.

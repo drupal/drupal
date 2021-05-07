@@ -16,6 +16,11 @@
     inputClass: 'ui-autocomplete-input',
     ulClass: 'ui-menu ui-widget ui-widget-content ui-autocomplete ui-front',
     loadingClass: 'ui-autocomplete-loading',
+    // In jQuery UI autocomplete, the ui-menu-item-wrapper class is added to
+    // the `<a>` tag inside each list item. A11y_Autocomplete does not wrap
+    // items in`<a>` tags, so this class is moved to the `<li>` which provides
+    // a visually identical autocomplete experience to the previous jQuery UI
+    // autocomplete.
     itemClass: 'ui-menu-item-wrapper',
     // Do not create an autocomplete-specific live region since
     // #drupal-live-announce will be used.

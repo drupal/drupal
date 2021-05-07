@@ -625,13 +625,13 @@
 
 .ui-autocomplete .ui-menu-item.ui-state-focus,
 .autocomplete .ui-menu-item.ui-state-hover,
-[data-drupal-autocomplete-list] .ui-menu-item:hover {
+[data-autocomplete-list] .ui-menu-item:hover {
   margin: 0;
   background: #0072b9;
 }
 
 .ui-autocomplete .ui-menu-item-wrapper.ui-state-active,
-[data-drupal-autocomplete-list] .ui-menu-item:focus {
+[data-autocomplete-list] .ui-menu-item:focus {
   margin: 0;
   color: #fff;
   background: #003cc5;
@@ -640,6 +640,6 @@
 
 .ui-autocomplete .ui-state-focus a,
 .autocomplete .ui-state-hover a,
-[data-drupal-autocomplete-list] .ui-menu-item:hover {
+[data-autocomplete-list] .ui-menu-item:hover {
   color: #fff;
 }

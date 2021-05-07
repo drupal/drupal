@@ -40,7 +40,7 @@ var A11yAutocomplete = function () {
       DOWN: 40
     });
     this.input = input;
-    this.count = document.querySelectorAll('[data-drupal-autocomplete-input]').length;
+    this.count = document.querySelectorAll('[data-autocomplete-input]').length;
     this.listboxId = "autocomplete-listbox-".concat(this.count);
     var defaultOptions = {
       autoFocus: false,
@@ -56,7 +56,7 @@ var A11yAutocomplete = function () {
       inputClass: '',
       ulClass: '',
       itemClass: '',
-      loadingClass: 'drupal-autocomplete-loading',
+      loadingClass: '',
       separatorChar: ',',
       createLiveRegion: true,
       listZindex: 100,
@@ -136,7 +136,7 @@ var A11yAutocomplete = function () {
   _createClass(A11yAutocomplete, [{
     key: "implementWrapper",
     value: function implementWrapper() {
-      this.wrapper.setAttribute('data-drupal-autocomplete-wrapper', '');
+      this.wrapper.setAttribute('data-autocomplete-wrapper', '');
       this.input.parentNode.appendChild(this.wrapper);
       this.wrapper.appendChild(this.input);
     }
@@ -147,7 +147,7 @@ var A11yAutocomplete = function () {
 
       this.input.setAttribute('aria-autocomplete', 'list');
       this.input.setAttribute('autocomplete', 'off');
-      this.input.setAttribute('data-drupal-autocomplete-input', '');
+      this.input.setAttribute('data-autocomplete-input', '');
       this.input.setAttribute('aria-owns', this.listboxId);
       this.input.setAttribute('role', 'combobox');
       this.input.setAttribute('aria-expanded', 'false');
@@ -167,7 +167,7 @@ var A11yAutocomplete = function () {
       description.classList.add('visually-hidden');
 
       if (this.inputDescribedBy) {
-        description.setAttribute('data-drupal-autocomplete-assistive-hint', this.count);
+        description.setAttribute('data-autocomplete-assistive-hint', this.count);
         document.querySelector("[id=\"".concat(this.inputDescribedBy, "\"]")).appendChild(description);
       } else {
         description.setAttribute('id', "assistive-hint-".concat(this.count));
@@ -186,7 +186,7 @@ var A11yAutocomplete = function () {
       var _this3 = this;
 
       this.ul.setAttribute('role', 'listbox');
-      this.ul.setAttribute('data-drupal-autocomplete-list', '');
+      this.ul.setAttribute('data-autocomplete-item-list', '');
       this.ul.setAttribute('id', this.listboxId);
       this.ul.setAttribute('hidden', '');
 
@@ -201,7 +201,7 @@ var A11yAutocomplete = function () {
     value: function implementLiveRegion() {
       if (this.options.createLiveRegion === true) {
         this.liveRegion = document.createElement('span');
-        this.liveRegion.setAttribute('data-drupal-autocomplete-live-region', '');
+        this.liveRegion.setAttribute('data-autocomplete-live-region', '');
         this.liveRegion.setAttribute('aria-live', 'assertive');
         this.input.parentNode.appendChild(this.liveRegion);
       }
@@ -252,7 +252,7 @@ var A11yAutocomplete = function () {
     value: function removeAssistiveHint() {
       if (!this.inputHintRead) {
         if (this.inputDescribedBy) {
-          var appendedHint = document.querySelector("[data-drupal-autocomplete-assistive-hint=\"".concat(this.count, "\"]"));
+          var appendedHint = document.querySelector("[data-autocomplete-assistive-hint=\"".concat(this.count, "\"]"));
           appendedHint.parentNode.removeChild(appendedHint);
         } else {
           this.input.removeAttribute('aria-describedby');
@@ -308,9 +308,9 @@ var A11yAutocomplete = function () {
     key: "focusPrev",
     value: function focusPrev() {
       this.preventCloseOnBlur = true;
-      var currentItem = document.activeElement.getAttribute('data-drupal-autocomplete-item');
+      var currentItem = document.activeElement.getAttribute('data-autocomplete-item');
       var prevIndex = parseInt(currentItem, 10) - 1;
-      var previousItem = this.ul.querySelector("[data-drupal-autocomplete-item=\"".concat(prevIndex, "\"]"));
+      var previousItem = this.ul.querySelector("[data-autocomplete-item=\"".concat(prevIndex, "\"]"));
 
       if (previousItem) {
         this.highlightItem(previousItem);
@@ -321,9 +321,9 @@ var A11yAutocomplete = function () {
   }, {
     key: "focusNext",
     value: function focusNext() {
-      var currentItem = document.activeElement.getAttribute('data-drupal-autocomplete-item');
+      var currentItem = document.activeElement.getAttribute('data-autocomplete-item');
       var nextIndex = parseInt(currentItem, 10) + 1;
-      var nextItem = this.ul.querySelector("[data-drupal-autocomplete-item=\"".concat(nextIndex, "\"]"));
+      var nextItem = this.ul.querySelector("[data-autocomplete-item=\"".concat(nextIndex, "\"]"));
 
       if (nextItem) {
         this.preventCloseOnBlur = true;
@@ -335,7 +335,7 @@ var A11yAutocomplete = function () {
     value: function highlightItem(item) {
       item.setAttribute('aria-selected', true);
       item.focus();
-      var itemIndex = item.closest('[data-drupal-autocomplete-item]').getAttribute('data-drupal-autocomplete-item');
+      var itemIndex = item.closest('[data-autocomplete-item]').getAttribute('data-autocomplete-item');
       this.triggerEvent('autocomplete-highlight', {
         selected: this.suggestions[itemIndex]
       });
@@ -354,7 +354,7 @@ var A11yAutocomplete = function () {
   }, {
     key: "highlightMessage",
     value: function highlightMessage(item) {
-      var itemIndex = item.closest('[data-drupal-autocomplete-item]').getAttribute('data-drupal-autocomplete-item');
+      var itemIndex = item.closest('[data-autocomplete-item]').getAttribute('data-autocomplete-item');
       var selectedItem = this.suggestions[itemIndex].value;
       return this.options.highlightedAssistiveHint.replace('@selectedItem', selectedItem).replace('@position', item.getAttribute('aria-posinset')).replace('@count', this.ul.children.length);
     }
@@ -389,7 +389,7 @@ var A11yAutocomplete = function () {
   }, {
     key: "selectItem",
     value: function selectItem(elementWithItem, e) {
-      var itemIndex = elementWithItem.closest('[data-drupal-autocomplete-item]').getAttribute('data-drupal-autocomplete-item');
+      var itemIndex = elementWithItem.closest('[data-autocomplete-item]').getAttribute('data-autocomplete-item');
       var toSelect = this.suggestions[itemIndex];
       var selected = this.triggerEvent('autocomplete-select', {
         selected: toSelect
@@ -407,7 +407,7 @@ var A11yAutocomplete = function () {
   }, {
     key: "replaceInputValue",
     value: function replaceInputValue(element) {
-      var itemIndex = element.closest('[data-drupal-autocomplete-item]').getAttribute('data-drupal-autocomplete-item');
+      var itemIndex = element.closest('[data-autocomplete-item]').getAttribute('data-autocomplete-item');
       this.selected = this.suggestions[itemIndex];
       var separator = this.separator();
 
@@ -423,7 +423,7 @@ var A11yAutocomplete = function () {
     value: function separator() {
       var cardinality = this.options.cardinality;
       var numItems = this.splitValues().length - 1;
-      return numItems < cardinality || parseInt(cardinality, 10) <= 0 ? this.options.separatorChar : '';
+      return numItems < parseInt(cardinality, 10) || parseInt(cardinality, 10) <= 0 ? this.options.separatorChar : '';
     }
   }, {
     key: "previousItems",
@@ -604,7 +604,7 @@ var A11yAutocomplete = function () {
       li.setAttribute('role', 'option');
       li.setAttribute('tabindex', '-1');
       li.setAttribute('id', "suggestion-".concat(this.count, "-").concat(itemIndex));
-      li.setAttribute('data-drupal-autocomplete-item', itemIndex);
+      li.setAttribute('data-autocomplete-item', itemIndex);
       li.setAttribute('aria-posinset', itemIndex + 1);
       li.setAttribute('aria-selected', 'false');
 
@@ -632,7 +632,7 @@ var A11yAutocomplete = function () {
 
       if (this.options.autoFocus) {
         this.preventCloseOnBlur = true;
-        this.highlightItem(this.ul.querySelector('[data-drupal-autocomplete-item="0"]'));
+        this.highlightItem(this.ul.querySelector('[data-autocomplete-item="0"]'));
       }
     }
   }, {
