@@ -13,6 +13,10 @@
    *   The initialized autocomplete input.
    */
   Drupal.Autocomplete.jqueryUiShimInit = (autocompleteInput) => {
+    Drupal.deprecationError({
+      message:
+        'The jQuery UI markup structure is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use the API provided by core/a11y_autocomplete instead. See https://www.drupal.org/node/3083715',
+    });
     const id = autocompleteInput.getAttribute('id');
     const instance = Drupal.Autocomplete.instances[id];
     const isContentEditable = instance.input.hasAttribute('contenteditable');
@@ -195,7 +199,7 @@
       // been added in A11y_Autocomplete were the class not overridden to
       // accommodate the use of extension points such as the above
       // `this._renderMenu`.
-      this.prepareListItemAttriibutes();
+      this.prepareListItemAttributes();
     }
     instance.prepareSuggestionList = autocompletePrepareSuggestionList;
 
@@ -208,7 +212,7 @@
      * points.
      */
     // eslint-disable-next-line func-names
-    instance.prepareListItemAttriibutes = function () {
+    instance.prepareListItemAttributes = function () {
       this.ul.querySelectorAll('li').forEach((li, index) => {
         if (this.options.itemClass.length > 0) {
           this.options.itemClass
