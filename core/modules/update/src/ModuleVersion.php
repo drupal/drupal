@@ -43,6 +43,10 @@ final class ModuleVersion {
    *
    * @return \Drupal\update\ModuleVersion
    *   The module version instance.
+   *
+   * @throws \UnexpectedValueException
+   *   Thrown when a legacy version string has a core prefix other than "8.x-"
+   *   for example, version string such as "7.x-1.0" are not supported.
    */
   public static function createFromVersionString($version_string) {
     $original_version = $version_string;
@@ -100,6 +104,9 @@ final class ModuleVersion {
    *
    * @return \Drupal\update\ModuleVersion
    *   The module version instance.
+   *
+   * @throws \UnexpectedValueException
+   *   Thrown when $branch is not valid because it does not end in ".".
    */
   public static function createFromSupportBranch($branch) {
     if (substr($branch, -1) !== '.') {
