@@ -242,7 +242,7 @@ class ThemeInstaller implements ThemeInstallerInterface {
       $this->cssCollectionOptimizer->deleteAll();
     }
     catch (NotRegularDirectoryException $e) {
-      // Not fatal.
+      // Do not crash and burn if the CSS directory does not exist.
     }
     $this->resetSystem();
 
