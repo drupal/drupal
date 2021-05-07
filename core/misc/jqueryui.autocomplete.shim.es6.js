@@ -21,6 +21,10 @@
       instance.input.tagName === 'TEXTAREA' ||
       (instance.input.tagName !== 'INPUT' && isContentEditable);
 
+    // jQuery UI adds a 'ui-menu-item' class to autocomplete list elements.
+    // This may seem odd as the core jQuery UI autocomplete implementation of
+    // these list items include an `<a>` tag with a 'ui-menu-item-wrapper' class.
+    // This shim reproduces that wrapper inside the item structure.
     instance.options.itemClass = 'ui-menu-item';
 
     // jQuery UI allows repeat values in multivalue inputs.
@@ -199,8 +203,9 @@
      * Add list item attributes necessary for accessibility and functionality.
      *
      * These are attributes that would usually be added by A11y_Autocomplete,
-     * but need to be explicity added here as the shim overrides bypass the
-     * methods that would typically do this.
+     * but need to be explicitly added here as the shim overrides require these
+     * to be added after the list items have been processed by any extension
+     * points.
      */
     // eslint-disable-next-line func-names
     instance.prepareListItemAttriibutes = function () {
@@ -216,6 +221,10 @@
         li.setAttribute('aria-posinset', index + 1);
         li.setAttribute('aria-selected', 'false');
         li.onblur = (e) => this.blurHandler(e);
+
+        // Everything prior to this is logic that also happens in the
+        // A11y_Autocomplete suggestionItems() method. Below is logic specific
+        // to the `<a>` tag added to list items when using this shim.
         const a = li.querySelector('a');
         a.classList.add('ui-menu-item-wrapper');
         a.setAttribute('id', `ui-id-${index}`);
