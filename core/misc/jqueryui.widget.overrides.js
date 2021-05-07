@@ -11,14 +11,24 @@
     widget: function widget() {
       var runDefaultWidget = true;
 
-      if ($.ui.hasOwnProperty('autocomplete')) {
-        if ((arguments.length <= 1 ? undefined : arguments[1]) === $.ui.autocomplete) {}
+      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
 
+      if ($.ui.hasOwnProperty('autocomplete')) {
         runDefaultWidget = false;
+
+        if (args[1] === $.ui.autocomplete) {
+          var widgetOverrides = args[2];
+
+          if (args[0] === 'ui.autocomplete') {} else {
+            var widgetName = args[0].split('.').slice(-1).pop();
+          }
+        }
       }
 
       if (runDefaultWidget) {
-        return oldWidget.apply(void 0, arguments);
+        return oldWidget.apply(void 0, args);
       }
     }
   });
