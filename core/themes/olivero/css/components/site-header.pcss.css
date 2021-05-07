@@ -10,7 +10,7 @@
 
   @media (--nav) {
     /* Necessary to keep the content from jumping up when header transitions to fixed. */
-    min-height: var(--sp10);
+    min-height: var(--site-header-height-wide);
     border-block-end: solid 1px transparent; /* Will show in Windows high contrast mode. */
   }
 }
