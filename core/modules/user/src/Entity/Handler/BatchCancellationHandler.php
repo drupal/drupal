@@ -51,8 +51,8 @@ class BatchCancellationHandler extends DefaultCancellationHandler {
    * {@inheritdoc}
    */
   protected function updateMultiple(array $ids, string $method): void {
-    // Use batch processing to prevent timeout when updating a large number
-    // of entities.
+    // Use batch processing to prevent timeout when updating a large number of
+    // entities.
     if (count($ids) > 10) {
       $batch = $this->buildBatch($ids, $method);
       batch_set($batch->toArray());
@@ -75,8 +75,9 @@ class BatchCancellationHandler extends DefaultCancellationHandler {
    */
   protected function buildBatch(array $ids, string $method): BatchBuilder {
     return (new BatchBuilder())
-      // We use a single multi-pass operation, so the default
-      // 'Remaining x of y operations' message will be confusing here.
+      // Override the default progress message, because we use a single
+      // multi-pass operation and the default 'Remaining x of y operations'
+      // progress message would be confusing here.
       ->setProgressMessage('')
       ->setErrorMessage($this->t('The update has encountered an error.'))
       ->setFinishCallback(static::class . '::batchFinished')
@@ -139,15 +140,15 @@ class BatchCancellationHandler extends DefaultCancellationHandler {
       $context['sandbox']['entities'] = $ids;
     }
 
-    // Process entities by groups of 5.
+    // Process entities in groups of 5.
     $count = min(5, count($context['sandbox']['entities']));
     for ($i = 1; $i <= $count; $i++) {
       // For each ID, load the entity, reset the values, and save it.
-      $entity = array_shift($context['sandbox']['entities']);
+      $entity_id = array_shift($context['sandbox']['entities']);
       /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
       $entity = $this->entityType->isRevisionable()
-        ? $this->storage->loadRevision($entity)
-        : $this->storage->load($entity);
+        ? $this->storage->loadRevision($entity_id)
+        : $this->storage->load($entity_id);
       $this->updateEntity($entity, $method);
 
       // Store result for post-processing in the finished callback.
@@ -157,8 +158,8 @@ class BatchCancellationHandler extends DefaultCancellationHandler {
       $context['sandbox']['progress']++;
     }
 
-    // Inform the batch engine that we are not finished,
-    // and provide an estimation of the completion level we reached.
+    // Inform the batch engine that we are not finished, and provide an
+    // estimation of the completion level we reached.
     if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
       $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
     }
