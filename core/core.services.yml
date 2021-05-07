@@ -198,6 +198,7 @@ services:
     arguments: ['@database']
     tags:
       - { name: cache_tags_invalidator}
+      - { name: backend_overridable }
   cache.backend.chainedfast:
     class: Drupal\Core\Cache\ChainedFastBackendFactory
     arguments: ['@settings']
@@ -206,6 +207,8 @@ services:
   cache.backend.database:
     class: Drupal\Core\Cache\DatabaseBackendFactory
     arguments: ['@database', '@cache_tags.invalidator.checksum', '@settings']
+    tags:
+      - { name: backend_overridable }
   cache.backend.apcu:
     class: Drupal\Core\Cache\ApcuBackendFactory
     arguments: ['%app.root%', '%site.path%', '@cache_tags.invalidator.checksum']
@@ -524,7 +527,7 @@ services:
     class: Drupal\Core\Extension\ModuleInstaller
     tags:
       - { name: service_collector, tag: 'module_install.uninstall_validator', call: addUninstallValidator }
-    arguments: ['%app.root%', '@module_handler', '@kernel']
+    arguments: ['%app.root%', '@module_handler', '@kernel', '@database']
     lazy: true
   extension.list.module:
     class: Drupal\Core\Extension\ModuleExtensionList
