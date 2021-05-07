@@ -65,14 +65,14 @@
       }
       const { keyCode } = e;
       if (this.isOpened) {
-        // Escape behavior is identical to A11y_Autocomplete.
+        // Escape behavior is identical to A11yAutocomplete.
         if (keyCode === this.keyCode.ESC) {
           this.close();
         }
 
         // In jQuery UI, when the input is focused and a list is open,
         // the list can be accessed via up or down arrows. Only the down arrow
-        // accomplishes this in A11y_Autocomplete.
+        // accomplishes this in A11yAutocomplete.
         if (keyCode === this.keyCode.DOWN || keyCode === this.keyCode.UP) {
           e.preventDefault();
           this.preventCloseOnBlur = true;
@@ -86,7 +86,7 @@
 
         // jQuery UI explicitly cancels 'return' keydown events when an item is
         // highlighted, to prevent form submission. This isn't a concern when
-        // shimming A11y_Autocomplete, as the highlighted item also has focus.
+        // shimming A11yAutocomplete, as the highlighted item also has focus.
         // This event handling is still present so all jQuery UI autocomplete
         // tests will also pass with the shimmed autocomplete.
         if (keyCode === this.keyCode.RETURN) {
@@ -102,7 +102,7 @@
 
       // If there is a predefined list, jQuery UI autocomplete allows that list
       // to be opened via the up/down arrow keys. This differs from
-      // A11y_Autocomplete, only opens lists based on characters being typed.
+      // A11yAutocomplete, only opens lists based on characters being typed.
       if (
         this.input.nodeName === 'INPUT' &&
         !this.isOpened &&
@@ -150,7 +150,7 @@
         }
       }
 
-      // This call is also made in the A11y_Autocomplete version of this
+      // This call is also made in the A11yAutocomplete version of this
       // method. It removes some general assistive hints after the first keydown
       // event to avoid unnecessary repetition.
       this.removeAssistiveHint();
@@ -160,7 +160,7 @@
     /**
      * Creates a suggestion list based on a typed value.
      *
-     * The majority of this function is identical to A11y_Autocomplete
+     * The majority of this function is identical to A11yAutocomplete
      * prepareSuggestionList(). It is changed at the end to be compatible with
      * jQuery UI extension points.
      *
@@ -189,14 +189,14 @@
         list: this.suggestions,
       });
 
-      // Everything up until this point is identical to A11y_Autocomplete
+      // Everything up until this point is identical to A11yAutocomplete
       // prepareSuggestionList(). This call to _renderMenu is provided instead
       // of the forEach loop that creates the item list so jQuery UI's
       // extension points are supported.
       this._renderMenu(this.ul, this.suggestions);
 
       // Add the list attributes needed for functionality that would have
-      // been added in A11y_Autocomplete were the class not overridden to
+      // been added in A11yAutocomplete were the class not overridden to
       // accommodate the use of extension points such as the above
       // `this._renderMenu`.
       this.prepareListItemAttributes();
@@ -206,7 +206,7 @@
     /**
      * Add list item attributes necessary for accessibility and functionality.
      *
-     * These are attributes that would usually be added by A11y_Autocomplete,
+     * These are attributes that would usually be added by A11yAutocomplete,
      * but need to be explicitly added here as the shim overrides require these
      * to be added after the list items have been processed by any extension
      * points.
@@ -227,7 +227,7 @@
         li.onblur = (e) => this.blurHandler(e);
 
         // Everything prior to this is logic that also happens in the
-        // A11y_Autocomplete suggestionItems() method. Below is logic specific
+        // A11yAutocomplete suggestionItems() method. Below is logic specific
         // to the `<a>` tag added to list items when using this shim.
         const a = li.querySelector('a');
         a.classList.add('ui-menu-item-wrapper');
@@ -333,13 +333,13 @@
     });
 
     // jQuery UI autocomplete does not have a wrapper, so remove the wrapper
-    // added by A11y_Autocomplete.
+    // added by A11yAutocomplete.
     $(instance.input).unwrap('[data-autocomplete-wrapper]');
     $(instance.input).data('ui-autocomplete', instance);
   };
 
   // This fully replaces jQuery UI's autocomplete() function. This reproduces
-  // the API surface of jQuery UI autocomplete, but uses A11y_Autocomplete for
+  // the API surface of jQuery UI autocomplete, but uses A11yAutocomplete for
   // the functionality.
   $.fn.extend({
     autocomplete(...args) {
@@ -349,7 +349,7 @@
       });
       const id = this.attr('id');
 
-      // Some jQuery UI options can be directly mapped to A11y_Autocomplete
+      // Some jQuery UI options can be directly mapped to A11yAutocomplete
       // options..
       const optionMapping = {
         autoFocus: 'autoFocus',
@@ -429,14 +429,14 @@
             // The 'search' method performs a search as if the input received
             // input events.
 
-            // A11y_Autocomplete expects the input to be focused when a search
+            // A11yAutocomplete expects the input to be focused when a search
             // occurs, even if it's programmatically triggered.
             instance.input.focus();
 
             // If the args[1] argument is present, it will be the search term.
             if (typeof args[1] === 'string') {
               // The input's value property must always be set as it's used
-              // internally by A11y_Autocomplete.
+              // internally by A11yAutocomplete.
               [, instance.input.value] = args;
 
               // For contenteditable elements, the textContent property must
@@ -446,7 +446,7 @@
               }
             } else if (instance.input.hasAttribute('contenteditable')) {
               // The input's value property must always be set as it's used
-              // internally by A11y_Autocomplete.
+              // internally by A11yAutocomplete.
               instance.input.value = instance.input.textContent;
             }
 
@@ -619,7 +619,7 @@
                     // assumed the string is a URL.
                     // Unlike jQuery UI autocomplete, which uses the 'source'
                     // option for both URLs and predefined lists,
-                    // A11y_Autocomplete stores these as individual 'path' and
+                    // A11yAutocomplete stores these as individual 'path' and
                     // 'list' options.
                     try {
                       // The contents of JSON.parse are assigned to a variable
@@ -670,7 +670,7 @@
             }
             break;
           default:
-            // Some jQuery UI methods have identically A11y_Autocomplete methods
+            // Some jQuery UI methods have identically A11yAutocomplete methods
             // that provide the same functionality and can simply be called.
             if (typeof instance[method] === 'function') {
               instance[method]();

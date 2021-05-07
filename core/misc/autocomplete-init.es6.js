@@ -17,7 +17,7 @@
     ulClass: 'ui-menu ui-widget ui-widget-content ui-autocomplete ui-front',
     loadingClass: 'ui-autocomplete-loading',
     // In jQuery UI autocomplete, the ui-menu-item-wrapper class is added to
-    // the `<a>` tag inside each list item. A11y_Autocomplete does not wrap
+    // the `<a>` tag inside each list item. A11yAutocomplete does not wrap
     // items in`<a>` tags, so this class is moved to the `<li>` which provides
     // a visually identical autocomplete experience to the previous jQuery UI
     // autocomplete.
@@ -28,7 +28,7 @@
     displayLabels: false,
     // The assistive hint overrides intentionally use placeholders without
     // having them populated in the Drupal.t() call. These placeholders are
-    // replaced with their expected values in A11y_Autocomplete, which uses
+    // replaced with their expected values in A11yAutocomplete, which uses
     // the same placeholder format.
     minCharAssistiveHint: Drupal.t(
       'Type @count or more characters for results',
@@ -81,7 +81,7 @@
      *
      * This overrides A11yAutocomplete.sendToLiveRegion() so screen reader
      * announcements are handled by Drupal.announce instead of live regions
-     * provided by A11y_Autocomplete.
+     * provided by A11yAutocomplete.
      *
      * @param {string} message
      *   The message to be announced.

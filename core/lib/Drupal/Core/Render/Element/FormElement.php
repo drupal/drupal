@@ -173,7 +173,7 @@ abstract class FormElement extends RenderElement implements FormElementInterface
    *     conjunction with the route name.
    *   - #use-drupal-10-autocomplete: As of Drupal 9.2, jQuery UI Autocomplete
    *     is no longer used by Drupal core. It has been replaced with the core
-   *     library A11y_autocomplete. By default, a shim is present that provides
+   *     library A11yAutocomplete. By default, a shim is present that provides
    *     backwards compatibility with the jQuery UI Autocomplete API and markup.
    *     This shim will be removed in Drupal 10. Set this property to TRUE to
    *     use autocomplete without the jQuery UI shim.
