@@ -129,7 +129,7 @@ class ForumUninstallTest extends BrowserTestBase {
 
     // Double check everything by reinstalling the forum module again.
     $this->drupalPostForm('admin/modules', ['modules[forum][enable]' => 1], 'Install');
-    $this->assertText('Module Forum has been enabled.');
+    $this->assertSession()->responseContains('The selected modules have been installed.');
   }
 
   /**
