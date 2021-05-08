@@ -32,6 +32,8 @@ class ForumUninstallTest extends BrowserTestBase {
    * Tests if forum module uninstallation properly deletes the field.
    */
   public function testForumUninstallWithField() {
+    $assert_session = $this->assertSession();
+
     $this->drupalLogin($this->drupalCreateUser([
       'administer taxonomy',
       'administer nodes',
@@ -77,7 +79,7 @@ class ForumUninstallTest extends BrowserTestBase {
     // Attempt to uninstall forum.
     $this->drupalGet('admin/modules/uninstall');
     // Assert forum is required.
-    $this->assertSession()->fieldDisabled('uninstall[forum]');
+    $assert_session->fieldDisabled('uninstall[forum]');
     $this->assertText('To uninstall Forum, first delete all Forum content');
 
     // Delete the node.
@@ -86,7 +88,7 @@ class ForumUninstallTest extends BrowserTestBase {
     // Attempt to uninstall forum.
     $this->drupalGet('admin/modules/uninstall');
     // Assert forum is still required.
-    $this->assertSession()->fieldDisabled('uninstall[forum]');
+    $assert_session->fieldDisabled('uninstall[forum]');
     $this->assertText('To uninstall Forum, first delete all Forums terms');
 
     // Delete any forum terms.
@@ -97,12 +99,12 @@ class ForumUninstallTest extends BrowserTestBase {
 
     // Ensure that the forum node type can not be deleted.
     $this->drupalGet('admin/structure/types/manage/forum');
-    $this->assertSession()->linkNotExists('Delete');
+    $assert_session->linkNotExists('Delete');
 
     // Now attempt to uninstall forum.
     $this->drupalGet('admin/modules/uninstall');
     // Assert forum is no longer required.
-    $this->assertSession()->fieldExists('uninstall[forum]');
+    $assert_session->fieldExists('uninstall[forum]');
     $this->drupalPostForm('admin/modules/uninstall', [
       'uninstall[forum]' => 1,
     ], 'Uninstall');
@@ -124,12 +126,12 @@ class ForumUninstallTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/types/manage/forum');
     $this->clickLink(t('Delete'));
     $this->submitForm([], 'Delete');
-    $this->assertSession()->statusCodeEquals(200);
+    $assert_session->statusCodeEquals(200);
     $this->assertFalse((bool) NodeType::load('forum'), 'Node type with machine forum deleted.');
 
     // Double check everything by reinstalling the forum module again.
     $this->drupalPostForm('admin/modules', ['modules[forum][enable]' => 1], 'Install');
-    $this->assertSession()->responseContains('The selected modules have been installed.');
+    $assert_session->pageTextContains('The selected modules have been installed.');
   }
 
   /**

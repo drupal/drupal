@@ -143,7 +143,7 @@ BROKEN,
     $edit = ['modules[changing_module][enable]' => 'changing_module'];
     $this->drupalGet('admin/modules');
     $this->drupalPostForm('admin/modules', $edit, 'Install');
-    $this->assertSession()->responseContains('The selected modules have been installed.');
+    $this->assertSession()->pageTextContains('The selected modules have been installed.');
 
     $incompatible_updates = [
       [

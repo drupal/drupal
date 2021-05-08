@@ -48,7 +48,7 @@ class DependencyTest extends ModuleTestBase {
     $this->assertNoModuleConfig('language');
 
     $this->submitForm([], 'Continue');
-    $this->assertSession()->responseContains('The selected modules have been installed.');
+    $this->assertSession()->pageTextContains('The selected modules have been installed.');
 
     // Assert that the language YAML files were created.
     $storage = $this->container->get('config.storage');
