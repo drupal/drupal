@@ -210,7 +210,7 @@ class InstallUninstallTest extends ModuleTestBase {
       $this->assertText('Are you sure you wish to enable experimental modules?');
       $this->submitForm([], 'Continue');
     }
-    $this->assertText(count($all_modules) . ' modules have been enabled: ');
+    $assert_session->pageTextContains('The selected modules have been installed.');
   }
 
   /**
