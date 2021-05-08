@@ -45,6 +45,7 @@ class MainContentFallbackTest extends BrowserTestBase {
    * Test availability of main content: Drupal falls back to SimplePageVariant.
    */
   public function testMainContentFallback() {
+    $assert_session = $this->assertSession();
     $edit = [];
     // Uninstall the block module.
     $edit['uninstall[block]'] = 'block';
@@ -58,7 +59,7 @@ class MainContentFallbackTest extends BrowserTestBase {
     // Drupal should fall back to SimplePageVariant. Both for the admin and the
     // front-end theme.
     $this->drupalGet('admin/config/system/site-information');
-    $this->assertSession()->fieldExists('site_name');
+    $assert_session->fieldExists('site_name');
     $this->drupalGet('system-test/main-content-fallback');
     $this->assertText('Content to test main content fallback');
     // Request a user* page and see if it is displayed.
@@ -71,7 +72,7 @@ class MainContentFallbackTest extends BrowserTestBase {
     $edit = [];
     $edit['modules[block][enable]'] = 'block';
     $this->drupalPostForm('admin/modules', $edit, 'Install');
-    $$this->assertSession()->responseContains(t('The selected modules have been installed.'));
+    $assert_session->pageTextContains(t('The selected modules have been installed.'));
     $this->rebuildContainer();
     $this->assertTrue(\Drupal::moduleHandler()->moduleExists('block'), 'Block module re-enabled.');
   }
