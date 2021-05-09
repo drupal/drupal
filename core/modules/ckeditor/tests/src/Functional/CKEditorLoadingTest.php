@@ -216,45 +216,6 @@ class CKEditorLoadingTest extends BrowserTestBase {
     $this->assertTrue(isset($editor_settings['disallowedContent']));
   }
 
-  /**
-   * Tests loading of theme's CKEditor stylesheets defined in the .info file.
-   */
-  public function testExternalStylesheets() {
-    /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
-    $theme_installer = \Drupal::service('theme_installer');
-    // Case 1: Install theme which has an absolute external CSS URL.
-    $theme_installer->install(['test_ckeditor_stylesheets_external']);
-    $this->config('system.theme')->set('default', 'test_ckeditor_stylesheets_external')->save();
-    $expected = [
-      'https://fonts.googleapis.com/css?family=Open+Sans',
-    ];
-    $this->assertSame($expected, _ckeditor_theme_css('test_ckeditor_stylesheets_external'));
-
-    // Case 2: Install theme which has an external protocol-relative CSS URL.
-    $theme_installer->install(['test_ckeditor_stylesheets_protocol_relative']);
-    $this->config('system.theme')->set('default', 'test_ckeditor_stylesheets_protocol_relative')->save();
-    $expected = [
-      '//fonts.googleapis.com/css?family=Open+Sans',
-    ];
-    $this->assertSame($expected, _ckeditor_theme_css('test_ckeditor_stylesheets_protocol_relative'));
-
-    // Case 3: Install theme which has a relative CSS URL.
-    $theme_installer->install(['test_ckeditor_stylesheets_relative']);
-    $this->config('system.theme')->set('default', 'test_ckeditor_stylesheets_relative')->save();
-    $expected = [
-      'core/modules/system/tests/themes/test_ckeditor_stylesheets_relative/css/yokotsoko.css',
-    ];
-    $this->assertSame($expected, _ckeditor_theme_css('test_ckeditor_stylesheets_relative'));
-
-    // Case 4: Install theme which has a Drupal root CSS URL.
-    $theme_installer->install(['test_ckeditor_stylesheets_drupal_root']);
-    $this->config('system.theme')->set('default', 'test_ckeditor_stylesheets_drupal_root')->save();
-    $expected = [
-      'core/modules/system/tests/themes/test_ckeditor_stylesheets_drupal_root/css/yokotsoko.css',
-    ];
-    $this->assertSame($expected, _ckeditor_theme_css('test_ckeditor_stylesheets_drupal_root'));
-  }
-
   protected function getThingsToCheck() {
     $settings = $this->getDrupalSettings();
     return [
