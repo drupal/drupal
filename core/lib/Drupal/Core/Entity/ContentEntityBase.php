@@ -1135,7 +1135,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     $storage = $entity_type_manager->getStorage($entity_type_repository->getEntityTypeFromClass($class_name));
 
     // Always explicitly specify the bundle if the entity has a bundle class.
-    if ($storage instanceof ContentEntityStorageBase && ($bundle = $storage->getBundleFromClass($class_name))) {
+    if ($storage instanceof BundleEntityStorageInterface && ($bundle = $storage->getBundleFromClass($class_name))) {
       $values[$storage->getBundleKey()] = $bundle;
     }
 

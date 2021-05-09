@@ -361,7 +361,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    *   Associative array of query results, keyed on the entity ID.
    */
   protected function postLoad(array &$entities) {
-    $entity_classes = $this->getEntityClasses($entities);
+    $entity_classes = $this->getEntitiesByClass($entities);
 
     foreach ($entity_classes as $entity_class => &$items) {
       $entity_class::postLoad($this, $entities);
@@ -422,7 +422,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
       return;
     }
 
-    $entity_classes = $this->getEntityClasses($entities);
+    $entity_classes = $this->getEntitiesByClass($entities);
 
     // Allow code to run before deleting.
     foreach ($entity_classes as $entity_class => &$items) {
@@ -627,7 +627,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    * @return \Drupal\Core\Entity\EntityInterface[][]
    *   An array of the passed-in entities, indexed by their class name and ID.
    */
-  protected function getEntityClasses(array $entities) {
+  protected function getEntitiesByClass(array $entities) {
     $entity_classes = [];
 
     foreach ($entities as $entity) {

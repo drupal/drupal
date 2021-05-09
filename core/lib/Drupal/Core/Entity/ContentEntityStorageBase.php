@@ -79,10 +79,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    * {@inheritdoc}
    */
   public function create(array $values = []) {
-    // In some cases the entity bundle may be provided by the ::preCreate()
-    // method in the entity class. If a bundle is truly required an exception
-    // will be thrown in ::doCreate() so there's no need to throw one here.
-    $bundle = $this->getBundleFromValues($values, FALSE);
+    $bundle = $this->getBundleFromValues($values);
     $entity_class = $this->getEntityClass($bundle);
     $entity_class::preCreate($this, $values);
 
@@ -121,6 +118,9 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    */
   protected function doCreate(array $values) {
     $bundle = $this->getBundleFromValues($values);
+    if ($this->bundleKey && !$bundle) {
+      throw new EntityStorageException('Missing bundle for entity type ' . $this->entityTypeId);
+    }
     $entity_class = $this->getEntityClass($bundle);
     $entity = new $entity_class([], $this->entityTypeId, $bundle);
     $this->initFieldValues($entity, $values);
@@ -131,30 +131,27 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    * {@inheritdoc}
    */
   public function getBundleFromClass($class_name) {
-    $class_bundles = array_filter($this->entityTypeBundleInfo->getBundleInfo($this->entityTypeId), function ($bundle_info) use ($class_name) {
-      return !empty($bundle_info['class']) && $bundle_info['class'] === $class_name;
-    });
+    $bundle_for_class = NULL;
 
-    if (empty($class_bundles)) {
-      return NULL;
+    foreach ($this->entityTypeBundleInfo->getBundleInfo($this->entityTypeId) as $bundle => $bundle_info) {
+      if (!empty($bundle_info['class']) && $bundle_info['class'] === $class_name) {
+        if ($bundle_for_class) {
+          throw new AmbiguousBundleClassException($class_name);
+        }
+        else {
+          $bundle_for_class = $bundle;
+        }
+      }
     }
 
-    if (count($class_bundles) > 1) {
-      throw new AmbiguousBundleClassException($class_name);
-    }
-
-    reset($class_bundles);
-    return key($class_bundles);
+    return $bundle_for_class;
   }
 
   /**
    * Retrieves the bundle from an array of values.
    *
    * @param array $values
-   *   An array of values to set, keyed by property name.
-   * @param bool $throw_exception
-   *   Flag indicating whether to throw an exception if corresponding bundle
-   *   cannot be found and is expected.
+   *   An array of values to set, keyed by field name.
    *
    * @return string|null
    *   The bundle or NULL if not set.
@@ -162,7 +159,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    * @throws \Drupal\Core\Entity\EntityStorageException
    *   When a corresponding bundle cannot be found and is expected.
    */
-  protected function getBundleFromValues(array $values, $throw_exception = TRUE) {
+  protected function getBundleFromValues(array $values) {
     $bundle = NULL;
     if ($this->bundleKey) {
       if (isset($values[$this->bundleKey])) {
@@ -183,9 +180,6 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
           // property name.
           $bundle = reset($bundle_value);
         }
-      }
-      elseif ($throw_exception) {
-        throw new EntityStorageException('Missing bundle for entity type ' . $this->entityTypeId);
       }
     }
     return $bundle;

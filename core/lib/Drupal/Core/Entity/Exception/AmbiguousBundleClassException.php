@@ -7,7 +7,7 @@ namespace Drupal\Core\Entity\Exception;
  *
  * @see \Drupal\Core\Entity\ContentEntityStorageBase::getBundleFromClass()
  */
-class AmbiguousBundleClassException extends \Exception {
+class AmbiguousBundleClassException extends AmbiguousEntityClassException {
 
   /**
    * Constructs an AmbiguousBundleClassException.
