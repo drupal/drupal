@@ -120,8 +120,8 @@ drupal.announce:
 drupal.autocomplete:
   version: VERSION
   js:
-    misc/autocomplete-init.js: {}
-    misc/jqueryui.autocomplete.shim.js: {}
+    # Weight is -1 so this loads before the jQuery UI shim.
+    misc/autocomplete-init.js: { weight: -1 }
   css:
     component:
       misc/autocomplete.css: {}
