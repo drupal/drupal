@@ -8,7 +8,9 @@
   Drupal.olivero = {};
 
   function isDesktopNav() {
-    const navButtons = document.querySelector('.mobile-buttons');
+    const navButtons = document.querySelector(
+      '[data-drupal-selector="mobile-buttons"]',
+    );
     return (
       window.getComputedStyle(navButtons).getPropertyValue('display') === 'none'
     );
@@ -17,9 +19,11 @@
   Drupal.olivero.isDesktopNav = isDesktopNav;
 
   const stickyHeaderToggleButton = document.querySelector(
-    '.sticky-header-toggle',
+    '[data-drupal-selector="sticky-header-toggle"]',
   );
-  const siteHeaderFixable = document.querySelector('.site-header__fixable');
+  const siteHeaderFixable = document.querySelector(
+    '[data-drupal-selector="site-header-fixable"]',
+  );
 
   function stickyHeaderIsEnabled() {
     return stickyHeaderToggleButton.getAttribute('aria-checked') === 'true';
@@ -94,7 +98,9 @@
     'IntersectionObserverEntry' in window &&
     'intersectionRatio' in window.IntersectionObserverEntry.prototype
   ) {
-    const fixableElements = document.querySelectorAll('.fixable');
+    const fixableElements = document.querySelectorAll(
+      '[data-drupal-selector="site-header-fixable"], [data-drupal-selector="social-bar-inner"]',
+    );
 
     function toggleDesktopNavVisibility(entries) {
       if (!isDesktopNav()) return;
@@ -129,7 +135,9 @@
     }
 
     function monitorNavPosition() {
-      const primaryNav = document.querySelector('.site-header');
+      const primaryNav = document.querySelector(
+        '[data-drupal-selector="site-header"]',
+      );
       const options = {
         rootMargin: getRootMargin(),
         threshold: [0.999, 1],
@@ -149,11 +157,15 @@
     // If header is pinned open and a header element gains focus, scroll to the
     // top of the page to ensure that the header elements can be seen.
     document
-      .querySelector('#site-header__inner')
+      .querySelector('[data-drupal-selector="site-header-inner"]')
       .addEventListener('focusin', () => {
         if (isDesktopNav() && !stickyHeaderIsEnabled()) {
-          const header = document.querySelector('#header');
-          const headerNav = header.querySelector('#header-nav');
+          const header = document.querySelector(
+            '[data-drupal-selector="site-header"]',
+          );
+          const headerNav = header.querySelector(
+            '[data-drupal-selector="header-nav"]',
+          );
           const headerMargin = header.clientHeight - headerNav.clientHeight;
           if (window.scrollY > headerMargin) {
             window.scrollTo(0, headerMargin);
