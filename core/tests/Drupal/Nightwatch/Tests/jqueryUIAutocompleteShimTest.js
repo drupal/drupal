@@ -2102,7 +2102,7 @@ module.exports = {
         browser.assert.equal(
           result.value,
           'People : Large Penguin',
-          "Live region changed on keydown to announce the highlighted value's aria-label attribute",
+          'Aria attribute updated as a result of extension point override',
         );
       },
     );

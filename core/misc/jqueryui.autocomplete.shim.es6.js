@@ -320,18 +320,18 @@
      * any property, not just 'value' and 'label'.
      */
     // eslint-disable-next-line func-names
-    const autocompleteNormalizeSuggestionItems = function() {
+    const autocompleteNormalizeSuggestionItems = function () {
       this.suggestionItems = this.suggestionItems.map((item) => {
         if (typeof item === 'string') {
           item = { value: item, label: item };
         } else if (item.value && !item.label) {
           // This is a change from the original function, so properties other
           // than value and label can be present.
-          item = { ...item, ...{ value: item.value, label: item.value }};
+          item = { ...item, ...{ value: item.value, label: item.value } };
         } else if (item.label && !item.value) {
           // This is a change from the original function, so properties other
           // than value and label can be present.
-          item = { ...item, ...{ value: item.label, label: item.label }};
+          item = { ...item, ...{ value: item.label, label: item.label } };
         }
 
         return item;
