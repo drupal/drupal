@@ -9,8 +9,6 @@ use Drupal\Tests\BrowserTestBase;
 /**
  * Tests a multistep form using form storage.
  *
- * Also ensures that validation and caching works as expected.
- *
  * The tested form puts data into the storage during the initial form
  * construction. These tests verify that there are no duplicate form
  * constructions, with and without manual form caching activated. Furthermore

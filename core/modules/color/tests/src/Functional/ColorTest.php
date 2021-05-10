@@ -5,8 +5,6 @@ namespace Drupal\Tests\color\Functional;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Modify the Bartik theme colors.
- *
  * Tests that changing the Bartik theme colors are reflected on the frontend.
  *
  * @group color

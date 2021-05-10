@@ -8,7 +8,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Creates additional plugin definitions.
  *
- * Based on an existing definition using service injection.
+ * The created definitions are based on an existing definition using service
+ * injection.
  */
 interface ContainerDeriverInterface extends DeriverInterface {
 

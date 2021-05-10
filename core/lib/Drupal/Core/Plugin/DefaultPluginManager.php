@@ -52,7 +52,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
   /**
    * The subdirectory within a namespace to look for plugins.
    *
-   * Or FALSE if the plugins are in the top level of the namespace.
+   * Set to FALSE if the plugins are in the top level of the namespace.
    *
    * @var string|bool
    */
