@@ -10,6 +10,11 @@ use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Subscriber for Field UI routes.
+ *
+ * Most of the routes that specify a fixed title in the route definition have it
+ * overridden with a dynamic title in the form or controller class, in order to
+ * give clearer context in the UI. The fixed title allows breadcrumbs to use a
+ * more succinct string.
  */
 class RouteSubscriber extends RouteSubscriberBase {
 
@@ -91,16 +96,13 @@ class RouteSubscriber extends RouteSubscriberBase {
           "$path/fields",
           [
             '_controller' => '\Drupal\field_ui\Controller\FieldConfigListController::listing',
-            '_title_callback' => '\Drupal\field_ui\Controller\FieldConfigListController::title',
+            '_title' => 'Manage fields',
           ] + $defaults,
           ['_permission' => 'administer ' . $entity_type_id . ' fields'],
           $options
         );
         $collection->add("entity.{$entity_type_id}.field_ui_fields", $route);
 
-        // This route (and those that follow) specify a fixed title for use
-        // in breadcrumbs, and override this with a dynamic title set in
-        // the form class.
         $route = new Route(
           "$path/fields/add-field",
           [

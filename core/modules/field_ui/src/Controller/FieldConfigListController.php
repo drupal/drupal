@@ -25,7 +25,11 @@ class FieldConfigListController extends EntityListController {
    *   \Drupal\Core\Render\RendererInterface::render().
    */
   public function listing($entity_type_id = NULL, $bundle = NULL, RouteMatchInterface $route_match = NULL) {
-    return $this->entityTypeManager()->getListBuilder('field_config')->render($entity_type_id, $bundle);
+    $build = $this->entityTypeManager()->getListBuilder('field_config')->render($entity_type_id, $bundle);
+
+    $build['#title'] = $this->title($entity_type_id, $bundle);
+
+    return $build;
   }
 
   /**
@@ -34,7 +38,7 @@ class FieldConfigListController extends EntityListController {
    * @return string
    *   The title.
    */
-  public function title($entity_type_id = NULL, $bundle = NULL) {
+  protected function title($entity_type_id, $bundle) {
     $target_entity_type = $this->entityTypeManager()->getDefinition($entity_type_id);
     if ($bundle_entity_type_id = $target_entity_type->getBundleEntityType()) {
       $bundle_entity = $this->entityTypeManager()->getStorage($bundle_entity_type_id)->load($bundle);
