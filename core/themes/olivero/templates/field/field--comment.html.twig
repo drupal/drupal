@@ -29,7 +29,7 @@
 #}
 
 {{ attach_library('olivero/comments') }}
-<section{{ attributes.addClass('comments') }}{{ attributes.setAttribute('id', ' comments') }}>
+<section{{ attributes.addClass('comments').setAttribute('id', ' comments') }}>
 
   {% if comments and not label_hidden %}
     {{ title_prefix }}
