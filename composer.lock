@@ -530,7 +530,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "61e76134960efb386657f10795ee24161b24a560"
+                "reference": "84de0d6ef4eda33dd426005557f64496a2fd02d1"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -565,6 +565,7 @@
                 "symfony/event-dispatcher": "^4.4",
                 "symfony/http-foundation": "^4.4.7",
                 "symfony/http-kernel": "^4.4",
+                "symfony/mime": "^5.2",
                 "symfony/polyfill-iconv": "^1.0",
                 "symfony/process": "^4.4",
                 "symfony/psr-http-message-bridge": "^2.0",
