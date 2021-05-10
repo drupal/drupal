@@ -3,12 +3,40 @@
 namespace Drupal\field_ui\Controller;
 
 use Drupal\Core\Entity\Controller\EntityListController;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a controller to list field instances.
  */
 class FieldConfigListController extends EntityListController {
+
+  /**
+   * The entity type bundle info service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
+   */
+  protected $entityTypeBundleInfo;
+
+  /**
+   * Creates a FieldConfigListController instance.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
+   *   The entity type bundle info service.
+   */
+  public function __construct(EntityTypeBundleInfoInterface $entity_type_bundle_info) {
+    $this->entityTypeBundleInfo = $entity_type_bundle_info;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('entity_type.bundle.info')
+    );
+  }
 
   /**
    * Shows the 'Manage fields' page.
@@ -39,19 +67,11 @@ class FieldConfigListController extends EntityListController {
    *   The title.
    */
   protected function title($entity_type_id, $bundle) {
-    $target_entity_type = $this->entityTypeManager()->getDefinition($entity_type_id);
-    if ($bundle_entity_type_id = $target_entity_type->getBundleEntityType()) {
-      $bundle_entity = $this->entityTypeManager()->getStorage($bundle_entity_type_id)->load($bundle);
+    $bundle_info = $this->entityTypeBundleInfo->getBundleInfo($entity_type_id);
 
-      return $this->t('Manage fields: @bundle-label', [
-        '@bundle-label' => $bundle_entity->label(),
-      ]);
-    }
-    else {
-      return $this->t('Manage fields: @entity-type-label', [
-        '@entity-type-label' => $target_entity_type->getLabel(),
-      ]);
-    }
+    return $this->t('Manage fields: @bundle-label', [
+      '@bundle-label' => $bundle_info[$bundle]['label'],
+    ]);
   }
 
 }
