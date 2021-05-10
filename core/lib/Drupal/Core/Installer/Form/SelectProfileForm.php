@@ -81,11 +81,6 @@ class SelectProfileForm extends FormBase {
     ];
     foreach (array_keys($names) as $profile_name) {
       $form['profile'][$profile_name]['#description'] = isset($profiles[$profile_name]['description']) ? $this->t($profiles[$profile_name]['description']) : '';
-      // @todo Remove hardcoding of 'demo_umami' profile for a generic warning
-      // system in https://www.drupal.org/project/drupal/issues/2822414.
-      if ($profile_name === 'demo_umami') {
-        $this->addUmamiWarning($form);
-      }
     }
 
     $config_sync_directory = Settings::get('config_sync_directory');
@@ -143,30 +138,6 @@ class SelectProfileForm extends FormBase {
       $install_state['parameters']['existing_config'] = TRUE;
     }
     $install_state['parameters']['profile'] = $profile;
-  }
-
-  /**
-   * Show profile warning if 'demo_umami' profile is selected.
-   */
-  protected function addUmamiWarning(array &$form) {
-    // Warning to show when this profile is selected.
-    $description = $form['profile']['demo_umami']['#description'];
-    // Re-defines radio #description to show warning when selected.
-    $form['profile']['demo_umami']['#description'] = [
-      'warning' => [
-        '#type' => 'item',
-        '#markup' => $this->t('This profile is intended for demonstration purposes only.'),
-        '#wrapper_attributes' => [
-          'class' => ['messages', 'messages--warning'],
-        ],
-        '#states' => [
-          'visible' => [
-            ':input[name="profile"]' => ['value' => 'demo_umami'],
-          ],
-        ],
-      ],
-      'description' => ['#markup' => $description],
-    ];
   }
 
 }
