@@ -1,7 +1,7 @@
 {#
 /**
  * @file
- * Olivero's theme implementation for the main menu.
+ * Olivero's theme implementation for the menus in the primary_menu region.
  *
  * Available variables:
  * - menu_name: The machine name of the menu.
@@ -33,6 +33,15 @@
   {% set primary_nav_level = 'primary-nav__menu--level-' ~ (menu_level + 1) %}
   {% import _self as menus %}
   {% if items %}
+
+    {#
+      Place the menu arrow (caret) outside of the submenu because the submenu
+      has the overflow:hidden CSS rule applied.
+    #}
+    {% if menu_level == 1 %}
+      <span class="primary-nav__menu-🥕"></span>
+    {% endif %}
+
     <ul {{ attributes.addClass('primary-nav__menu', primary_nav_level) }}>
       {% set attributes = attributes.removeClass(primary_nav_level) %}
       {% for item in items %}

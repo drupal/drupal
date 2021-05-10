@@ -7,12 +7,13 @@
         "webflo/drupal-core-require-dev": "*"
     },
     "require": {
-        "drupal/core": "9.2.x-dev",
+        "drupal/core": "9.3.x-dev",
         "behat/mink": "v1.8.1",
         "behat/mink-goutte-driver": "v1.2.1",
         "behat/mink-selenium2-driver": "v1.4.0",
         "composer/ca-bundle": "1.2.9",
-        "composer/composer": "2.0.11",
+        "composer/composer": "2.0.13",
+        "composer/metadata-minifier": "1.0.0",
         "composer/spdx-licenses": "1.5.5",
         "composer/xdebug-handler": "1.4.6",
         "doctrine/instantiator": "1.4.0",
@@ -58,8 +59,8 @@
         "symfony/dom-crawler": "v5.3.0-BETA1",
         "symfony/filesystem": "v5.3.0-BETA1",
         "symfony/finder": "v5.3.0-BETA1",
-        "symfony/lock": "v5.3.0-BETA1",
-        "symfony/phpunit-bridge": "v5.3.0-BETA1",
+        "symfony/lock": "v5.3.0-BETA3",
+        "symfony/phpunit-bridge": "v5.3.0-BETA3",
         "theseer/tokenizer": "1.2.0",
         "webmozart/assert": "1.10.0"
     }

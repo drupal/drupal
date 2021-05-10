@@ -21,7 +21,7 @@
         "symfony/console": "^5.3@beta",
         "symfony/dependency-injection": "^5.3@beta",
         "symfony/event-dispatcher": "^5.3@beta",
-        "symfony/http-foundation": "^4.4.7|^5.3@beta",
+        "symfony/http-foundation": "^5.3@beta",
         "symfony/http-kernel": "^5.3@beta",
         "symfony/mime": "^5.3@beta",
         "symfony/routing": "^5.3@beta",
