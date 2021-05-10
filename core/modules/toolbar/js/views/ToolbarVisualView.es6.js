@@ -19,12 +19,30 @@
           event.target.click();
         };
 
+        const SPACE = 32;
+
+        // Prevents scrolling down when space is pressed on a button.
+        const keyDownPreventScroll = function(event) {
+          if (event.which === SPACE) {
+            event.preventDefault();
+          }
+        };
+
+        // Simulates click when space is pressed on a button.
+        const keyUpToClick = function(event) {
+          if (event.which === SPACE) {
+            event.target.click();
+          }
+        };
+
         return {
           'click .toolbar-bar .toolbar-tab .trigger': 'onTabClick',
           'click .toolbar-toggle-orientation button':
             'onOrientationToggleClick',
           'touchend .toolbar-bar .toolbar-tab .trigger': touchEndToClick,
           'touchend .toolbar-toggle-orientation button': touchEndToClick,
+          'keydown .toolbar-bar .toolbar-tab .trigger': keyDownPreventScroll,
+          'keyup .toolbar-bar .toolbar-tab .trigger': keyUpToClick,
         };
       },
 

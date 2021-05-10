@@ -12,6 +12,13 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 class ToolbarIntegrationTest extends WebDriverTestBase {
 
   /**
+   * The character code for the space bar.
+   *
+   * @var int
+   */
+  const SPACE_BAR = 32;
+
+  /**
    * {@inheritdoc}
    */
   protected static $modules = ['toolbar', 'node'];
@@ -42,11 +49,23 @@ class ToolbarIntegrationTest extends WebDriverTestBase {
 
     // Test that it is possible to toggle the toolbar tray.
     $content = $page->findLink('Content');
+    // By clicking.
     $this->assertTrue($content->isVisible(), 'Toolbar tray is open by default.');
     $page->clickLink('Manage');
     $this->assertFalse($content->isVisible(), 'Toolbar tray is closed after clicking the "Manage" link.');
     $page->clickLink('Manage');
     $this->assertTrue($content->isVisible(), 'Toolbar tray is visible again after clicking the "Manage" button a second time.');
+    // By pressing SPACE.
+    $manage = $page->findLink('Manage');
+    $manage->keyDown(self::SPACE_BAR);
+    $manage->keyUp(self::SPACE_BAR);
+    $this->assertFalse($content->isVisible(), 'Toolbar tray is closed after pressing SPACE on the "Manage" link.');
+    $manage->keyDown(self::SPACE_BAR);
+    $manage->keyUp(self::SPACE_BAR);
+    $this->assertTrue($content->isVisible(), 'Toolbar tray is open again after pressing SPACE on the "Manage" link a second time.');
+    // Test that the page did not scroll.
+    $scrollTop = $this->getSession()->evaluateScript('document.documentElement.scrollTop');
+    $this->assertEquals(0, $scrollTop, 'Page did not scroll.');
 
     // Test toggling the toolbar tray between horizontal and vertical.
     $tray = $page->findById('toolbar-item-administration-tray');
