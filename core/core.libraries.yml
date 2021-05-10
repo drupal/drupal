@@ -258,6 +258,7 @@ drupal.dialog.ajax:
     - core/drupalSettings
     - core/drupal.ajax
     - core/drupal.dialog
+    - core/tabbable
 
 drupal.displace:
   version: VERSION
@@ -366,7 +367,6 @@ drupal.tabbingmanager:
     - core/jquery
     - core/drupal
     - core/tabbable
-    - core/tabbable.jquery.shim
 
 drupal.tabledrag:
   version: VERSION
@@ -479,7 +479,7 @@ jquery.farbtastic:
 
 jquery.form:
   remote: https://github.com/jquery-form/form
-  version: "4.22"
+  version: "4.3.0"
   license:
     name: GNU-GPL-2.0-or-later
     url: https://raw.githubusercontent.com/jquery-form/form/master/LICENSE
@@ -712,7 +712,7 @@ modernizr:
     name: MIT
     url: https://modernizr.com/license/
     gpl-compatible: true
-  version: "3.8.0"
+  version: "3.11.7"
   js:
     assets/vendor/modernizr/modernizr.min.js: { preprocess: 0, weight: -21, minified: true }
     misc/modernizr-additional-tests.js: { preprocess: 0, weight: -20 }
@@ -752,10 +752,10 @@ picturefill:
     assets/vendor/picturefill/picturefill.min.js: { weight: -10, minified: true }
 
 popperjs:
-  version: "2.5.4"
+  version: "2.9.2"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/popperjs/popper-core/v2.5.4/LICENSE.md
+    url: https://raw.githubusercontent.com/popperjs/popper-core/v2.9.2/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/popperjs/popper.min.js: { minified: true }
@@ -776,10 +776,10 @@ sortable:
 
 tabbable:
   remote: https://github.com/focus-trap/tabbable
-  version: "5.1.6"
+  version: "5.2.0"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/focus-trap/tabbable/v5.1.6/LICENSE
+    url: https://raw.githubusercontent.com/focus-trap/tabbable/v5.2.0/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/tabbable/index.umd.min.js: { weight: -1, minified: true }
@@ -791,15 +791,16 @@ tabbable.jquery.shim:
   js:
     misc/jquery.tabbable.shim.js: {}
   dependencies:
+    - core/drupal
     - core/tabbable
     - core/jquery
 
 underscore:
   remote: https://github.com/jashkenas/underscore
-  version: "1.11.0"
+  version: "1.13.1"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/jashkenas/underscore/1.11.0/LICENSE
+    url: https://raw.githubusercontent.com/jashkenas/underscore/1.13.1/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/underscore/underscore-min.js: { weight: -20, minified: true }

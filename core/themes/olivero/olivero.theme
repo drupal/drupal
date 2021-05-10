@@ -130,6 +130,9 @@ function olivero_preprocess_block(&$variables) {
           $variables['#attached']['library'][] = 'olivero/search-narrow';
         }
       }
+      elseif ($region === 'secondary_menu' && $variables['base_plugin_id'] === 'system_menu_block') {
+        $variables['content']['#attributes']['region'] = $region;
+      }
       elseif ($region === 'secondary_menu' && $variables['base_plugin_id'] === 'search_form_block') {
         // Attaching library for search block if present at secondary menu
         // region.
@@ -158,7 +161,7 @@ function olivero_preprocess_block(&$variables) {
  * Implements hook_theme_suggestions_HOOK_alter() for menu.
  */
 function olivero_theme_suggestions_menu_alter(&$suggestions, array $variables) {
-  if (isset($variables['attributes']['region']) && $variables['attributes']['region'] === 'primary_menu') {
+  if (isset($variables['attributes']['region'])) {
     $suggestions[] = 'menu__' . $variables['attributes']['region'];
   }
 }
@@ -591,5 +594,24 @@ function olivero_preprocess_search_result(&$variables) {
 function olivero_preprocess_links__comment(&$variables) {
   foreach ($variables['links'] as &$link) {
     $link['link']['#options']['attributes']['class'][] = 'comment__links-link';
+  }
+}
+
+/**
+ * Implements hook_preprocess_table().
+ */
+function olivero_preprocess_table(&$variables) {
+  // Mark the whole table and the first cells if rows are draggable.
+  if (!empty($variables['rows'])) {
+    $draggable_row_found = FALSE;
+    foreach ($variables['rows'] as &$row) {
+      /** @var \Drupal\Core\Template\Attribute $row['attributes'] */
+      if (!empty($row['attributes']) && $row['attributes']->hasClass('draggable')) {
+        if (!$draggable_row_found) {
+          $variables['attributes']['class'][] = 'draggable-table';
+          $draggable_row_found = TRUE;
+        }
+      }
+    }
   }
 }
