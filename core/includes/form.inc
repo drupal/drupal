@@ -343,6 +343,11 @@ function template_preprocess_input(&$variables) {
     unset($variables['attributes']['name']);
   }
   $variables['children'] = $element['#children'];
+
+  // @todo Remove this conditional in https://drupal.org/node/3206225
+  if (isset($element['#attributes']['data-autocomplete-path']) && empty($element['#attributes']['data-drupal-10-autocomplete'])) {
+    @trigger_error('The jQuery UI markup structure is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use the API provided by core/a11y_autocomplete instead. See https://www.drupal.org/node/3083715', E_USER_DEPRECATED);
+  }
 }
 
 /**
