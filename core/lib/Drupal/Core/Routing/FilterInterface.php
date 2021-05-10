@@ -13,8 +13,6 @@ interface FilterInterface {
   /**
    * Filters the route collection against a request.
    *
-   * Returns all matching routes.
-   *
    * @param \Symfony\Component\Routing\RouteCollection $collection
    *   The collection against which to match.
    * @param \Symfony\Component\HttpFoundation\Request $request

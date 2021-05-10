@@ -6,7 +6,7 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Tests Xss filtering.
+ * Tests XSS filtering.
  *
  * @see \Drupal\Component\Utility\Xss::filter()
  * @see \Drupal\Component\Utility\UrlHelper::filterBadProtocol
