@@ -4,6 +4,30 @@
  */
 
 (($, Drupal) => {
+  Drupal.autocompleteShim = {
+    overrides: {},
+  };
+
+  /**
+   * Apply overrides to specific widget properties and functions.
+   *
+   * This is for overrides that are expected due to calling jQuery UI widget().
+   *
+   * @param {A11yAutocomplete} instance
+   *   The autocomplete instance.
+   * @param {string} propertyToOverride
+   *   The A11yAutocomplete class property to override.
+   * @param {*} overrideWith
+   *   What to override the class property with.
+   */
+  const applyWidgetOverrides = (instance, propertyToOverride, overrideWith) => {
+    // @todo this currently overrides extension points, but it may be necessary
+    //   to allow fully overriding everything.
+    if (propertyToOverride.substr(0, 1) === '_') {
+      instance[propertyToOverride] = overrideWith;
+    }
+  };
+
   /**
    * Provides overrides needed for jQuery UIs backwards compatibility.
    *
@@ -16,6 +40,8 @@
     const id = autocompleteInput.getAttribute('id');
     const instance = Drupal.Autocomplete.instances[id];
     const isContentEditable = instance.input.hasAttribute('contenteditable');
+
+    instance.liveRegion = document.querySelector('#drupal-live-announce');
 
     instance.options.isMultiline =
       instance.input.tagName === 'TEXTAREA' ||
@@ -231,29 +257,87 @@
       });
     };
 
-    if (!instance.hasOwnProperty('_renderMenu')) {
+    /**
+     * A copy of jQuery UI autocomplete _renderMenu.
+     *
+     * Copied to the instance so it is available as an extension point.
+     *
+     * @param {Element} ul
+     *   Contains the list items.
+     * @param {Object[]} items
+     *    Suggestions with 'label' and 'value' properties.
+     */
+    // eslint-disable-next-line func-names
+    instance._renderMenu = function (ul, items) {
+      const that = this;
       // eslint-disable-next-line func-names
-      instance._renderMenu = function (ul, items) {
-        const that = this;
-        // eslint-disable-next-line func-names
-        $.each(items, function (index, item) {
-          that._renderItemData(ul, item);
-        });
-      };
-    }
-    if (!instance.hasOwnProperty('_renderItemData')) {
-      // eslint-disable-next-line func-names
-      instance._renderItemData = function (ul, item) {
-        return this._renderItem(ul, item).data('ui-autocomplete-item', item);
-      };
-    }
+      $.each(items, function (index, item) {
+        that._renderItemData(ul, item);
+      });
+    };
 
-    if (!instance.hasOwnProperty('_renderItem')) {
-      // eslint-disable-next-line func-names
-      instance._renderItem = function (ul, item) {
-        return $('<li>').append($('<a>').html(item.label)).appendTo(ul);
-      };
-    }
+    /**
+     * A copy of jQuery UI autocomplete _renderItemData.
+     *
+     * Copied to the instance so it is available as an extension point.
+     *
+     * @param {Element} ul
+     *   Contains the list items.
+     * @param {Object} item
+     *    Suggestion with 'label' and 'value' properties.
+     *
+     * @return {*}
+     *   Typically a jQuery Object for an `<li>` element.
+     */
+    // eslint-disable-next-line func-names
+    instance._renderItemData = function (ul, item) {
+      return this._renderItem(ul, item).data('ui-autocomplete-item', item);
+    };
+
+    /**
+     * A copy of jQuery UI autocomplete _renderItem.
+     *
+     * Copied to the instance so it is available as an extension point.
+     *
+     * @param {Element} ul
+     *   Contains the list items.
+     * @param {Object} item
+     *    Suggestion with 'label' and 'value' properties.
+     *
+     * @return {*}
+     *   Typically a jQuery Object for an `<li>` element.
+     */
+    // eslint-disable-next-line func-names
+    instance._renderItem = function (ul, item) {
+      // Drupal core's implementation of jQuery UI autocomplete added an `<a>`.
+      return $('<li>').append($('<a>').html(item.label)).appendTo(ul);
+    };
+
+    /**
+     * Converts all suggestions into an object with value and label properties.
+     *
+     * Overrides the A11yAutocomplete version so that item objects can have
+     * any property, not just 'value' and 'label'.
+     */
+    // eslint-disable-next-line func-names
+    const autocompleteNormalizeSuggestionItems = function() {
+      this.suggestionItems = this.suggestionItems.map((item) => {
+        if (typeof item === 'string') {
+          item = { value: item, label: item };
+        } else if (item.value && !item.label) {
+          // This is a change from the original function, so properties other
+          // than value and label can be present.
+          item = { ...item, ...{ value: item.value, label: item.value }};
+        } else if (item.label && !item.value) {
+          // This is a change from the original function, so properties other
+          // than value and label can be present.
+          item = { ...item, ...{ value: item.label, label: item.label }};
+        }
+
+        return item;
+      });
+    };
+    instance.normalizeSuggestionItems = autocompleteNormalizeSuggestionItems;
 
     // Elements with the contenteditable attribute require different logic than
     // the default behavior which expects a text input.
@@ -332,6 +416,16 @@
     // added by A11yAutocomplete.
     $(instance.input).unwrap('[data-autocomplete-wrapper]');
     $(instance.input).data('ui-autocomplete', instance);
+
+    // If the widget itself has been overridden via $.widget, map each
+    // overridden property to the autocomplete instance.
+    Object.keys(Drupal.autocompleteShim.overrides).forEach(
+      (propertyToOverride) => {
+        const overrideWith =
+          Drupal.autocompleteShim.overrides[propertyToOverride];
+        applyWidgetOverrides(instance, propertyToOverride, overrideWith);
+      },
+    );
   };
 
   // This fully replaces jQuery UI's autocomplete() function. This reproduces
@@ -678,7 +772,23 @@
         // the newly created autocomplete.
         if (typeof args[0] === 'object') {
           Object.keys(args[0]).forEach((key) => {
-            this.autocomplete('option', key, args[0][key]);
+            // The widgetOverrides key is treated differently as it's not an
+            // option, but a list of instance methods/properties to be
+            // overridden.
+            if (key === 'widgetOverrides') {
+              const { widgetOverrides } = args[0];
+              Object.keys(widgetOverrides).forEach((propertyToOverride) => {
+                const overrideWith = widgetOverrides[propertyToOverride];
+                const instance = Drupal.Autocomplete.instances[this.attr('id')];
+                applyWidgetOverrides(
+                  instance,
+                  propertyToOverride,
+                  overrideWith,
+                );
+              });
+            } else {
+              this.autocomplete('option', key, args[0][key]);
+            }
           });
         }
       }

@@ -184,7 +184,8 @@ class A11yAutocomplete {
         'There are at least @count results available. Type additional characters to refine your search.',
       someResultsAssistiveHint: 'There are @count results available.',
       oneResultAssistiveHint: 'There is one result available.',
-      highlightedAssistiveHint: '@selectedItem @position of @count is highlighted',
+      highlightedAssistiveHint:
+        '@selectedItem @position of @count is highlighted',
     };
 
     this.options = {
@@ -244,7 +245,10 @@ class A11yAutocomplete {
 
     Object.keys(this.events).forEach((elementName) => {
       Object.keys(this.events[elementName]).forEach((eventName) => {
-        this[elementName].addEventListener(eventName, this.events[elementName][eventName]);
+        this[elementName].addEventListener(
+          eventName,
+          this.events[elementName][eventName],
+        );
       });
     });
 
@@ -278,14 +282,17 @@ class A11yAutocomplete {
     this.input.setAttribute('role', 'combobox');
     this.input.setAttribute('aria-expanded', 'false');
     if (this.options.inputClass.length > 0) {
-      this.options.inputClass.split(' ').forEach((className) => this.input.classList.add(className));
+      this.options.inputClass
+        .split(' ')
+        .forEach((className) => this.input.classList.add(className));
     }
     if (!this.input.hasAttribute('id')) {
       this.input.setAttribute('id', `autocomplete-input-${this.count}`);
     }
 
     const description = document.createElement('span');
-    description.textContent = this.minCharsMessage() + this.options.inputAssistiveHint;
+    description.textContent =
+      this.minCharsMessage() + this.options.inputAssistiveHint;
     description.classList.add('visually-hidden');
 
     // If the autocomplete input has an pre-existing 'aria-describedby', append
@@ -296,11 +303,19 @@ class A11yAutocomplete {
       // This is content that is appended to an existing description. It's also
       // content that only needs to be conveyed once. Add an attribute that
       // allows this content to be targeted for removal after it is read once.
-      description.setAttribute('data-autocomplete-assistive-hint', `${this.count}`);
-      document.querySelector(`[id="${this.inputDescribedBy}"]`).appendChild(description);
+      description.setAttribute(
+        'data-autocomplete-assistive-hint',
+        `${this.count}`,
+      );
+      document
+        .querySelector(`[id="${this.inputDescribedBy}"]`)
+        .appendChild(description);
     } else {
       description.setAttribute('id', `assistive-hint-${this.count}`);
-      this.input.setAttribute('aria-describedby', `assistive-hint-${this.count}`);
+      this.input.setAttribute(
+        'aria-describedby',
+        `assistive-hint-${this.count}`,
+      );
       this.wrapper.appendChild(description);
     }
   }
@@ -321,7 +336,9 @@ class A11yAutocomplete {
     this.ul.setAttribute('id', this.listboxId);
     this.ul.setAttribute('hidden', '');
     if (this.options.ulClass.length > 0) {
-      this.options.ulClass.split(' ').forEach((className) => this.ul.classList.add(className));
+      this.options.ulClass
+        .split(' ')
+        .forEach((className) => this.ul.classList.add(className));
     }
   }
 
@@ -355,7 +372,9 @@ class A11yAutocomplete {
     const options = {};
     // Any options provided in the `data-autocomplete` attribute will take
     // precedence over those specified in `data-autocomplete-(x)`.
-    const dataAutocompleteAttributeOptions = this.input.getAttribute('data-autocomplete')
+    const dataAutocompleteAttributeOptions = this.input.getAttribute(
+      'data-autocomplete',
+    )
       ? JSON.parse(this.input.getAttribute('data-autocomplete'))
       : {};
 
@@ -417,7 +436,9 @@ class A11yAutocomplete {
   removeAssistiveHint() {
     if (!this.inputHintRead) {
       if (this.inputDescribedBy) {
-        const appendedHint = document.querySelector(`[data-autocomplete-assistive-hint="${this.count}"]`);
+        const appendedHint = document.querySelector(
+          `[data-autocomplete-assistive-hint="${this.count}"]`,
+        );
         appendedHint.parentNode.removeChild(appendedHint);
       } else {
         this.input.removeAttribute('aria-describedby');
@@ -493,9 +514,13 @@ class A11yAutocomplete {
    */
   focusPrev() {
     this.preventCloseOnBlur = true;
-    const currentItem = document.activeElement.getAttribute('data-autocomplete-item');
+    const currentItem = document.activeElement.getAttribute(
+      'data-autocomplete-item',
+    );
     const prevIndex = parseInt(currentItem, 10) - 1;
-    const previousItem = this.ul.querySelector(`[data-autocomplete-item="${prevIndex}"]`);
+    const previousItem = this.ul.querySelector(
+      `[data-autocomplete-item="${prevIndex}"]`,
+    );
 
     if (previousItem) {
       this.highlightItem(previousItem);
@@ -508,9 +533,13 @@ class A11yAutocomplete {
    * Moves focus to the next list item.
    */
   focusNext() {
-    const currentItem = document.activeElement.getAttribute('data-autocomplete-item');
+    const currentItem = document.activeElement.getAttribute(
+      'data-autocomplete-item',
+    );
     const nextIndex = parseInt(currentItem, 10) + 1;
-    const nextItem = this.ul.querySelector(`[data-autocomplete-item="${nextIndex}"]`);
+    const nextItem = this.ul.querySelector(
+      `[data-autocomplete-item="${nextIndex}"]`,
+    );
     if (nextItem) {
       this.preventCloseOnBlur = true;
       this.highlightItem(nextItem);
@@ -526,7 +555,9 @@ class A11yAutocomplete {
   highlightItem(item) {
     item.setAttribute('aria-selected', true);
     item.focus();
-    const itemIndex = item.closest('[data-autocomplete-item]').getAttribute('data-autocomplete-item');
+    const itemIndex = item
+      .closest('[data-autocomplete-item]')
+      .getAttribute('data-autocomplete-item');
 
     /**
      * Fires when an item is highlighted.
@@ -552,7 +583,10 @@ class A11yAutocomplete {
     window.clearTimeout(this.announceTimeOutId);
     // Delay the announcement by 500 milliseconds. This prevents unnecessary
     // calls when a user is navigating quickly.
-    this.announceTimeOutId = setTimeout(() => this.sendToLiveRegion(this.highlightMessage(item)), 500);
+    this.announceTimeOutId = setTimeout(
+      () => this.sendToLiveRegion(this.highlightMessage(item)),
+      500,
+    );
   }
 
   /**
@@ -564,7 +598,9 @@ class A11yAutocomplete {
    *  The message conveying that the item is highlighted
    */
   highlightMessage(item) {
-    const itemIndex = item.closest('[data-autocomplete-item]').getAttribute('data-autocomplete-item');
+    const itemIndex = item
+      .closest('[data-autocomplete-item]')
+      .getAttribute('data-autocomplete-item');
     const selectedItem = this.suggestions[itemIndex].value;
     return this.options.highlightedAssistiveHint
       .replace('@selectedItem', selectedItem)
@@ -616,7 +652,9 @@ class A11yAutocomplete {
    *  The event that triggered te selection.
    */
   selectItem(elementWithItem, e) {
-    const itemIndex = elementWithItem.closest('[data-autocomplete-item]').getAttribute('data-autocomplete-item');
+    const itemIndex = elementWithItem
+      .closest('[data-autocomplete-item]')
+      .getAttribute('data-autocomplete-item');
     const toSelect = this.suggestions[itemIndex];
 
     /**
@@ -660,7 +698,9 @@ class A11yAutocomplete {
    *   The element with the item to be added.
    */
   replaceInputValue(element) {
-    const itemIndex = element.closest('[data-autocomplete-item]').getAttribute('data-autocomplete-item');
+    const itemIndex = element
+      .closest('[data-autocomplete-item]')
+      .getAttribute('data-autocomplete-item');
     this.selected = this.suggestions[itemIndex];
     const separator = this.separator();
     if (separator.length > 0) {
@@ -683,7 +723,10 @@ class A11yAutocomplete {
   separator() {
     const { cardinality } = this.options;
     const numItems = this.splitValues().length - 1;
-    return numItems < parseInt(cardinality, 10) || parseInt(cardinality, 10) <= 0 ? this.options.separatorChar : '';
+    return numItems < parseInt(cardinality, 10) ||
+      parseInt(cardinality, 10) <= 0
+      ? this.options.separatorChar
+      : '';
   }
 
   /**
@@ -732,15 +775,21 @@ class A11yAutocomplete {
     }
 
     if (searchTerm && searchTerm.length > 0) {
-      if (Object.prototype.hasOwnProperty.call(this.cache[inputId], searchTerm)) {
+      if (
+        Object.prototype.hasOwnProperty.call(this.cache[inputId], searchTerm)
+      ) {
         this.suggestionItems = this.cache[inputId][searchTerm];
         this.displayResults();
       } else if (this.options.list.length === 0 && this.options.path.length) {
-        this.options.loadingClass.split(' ').forEach((className) => this.input.classList.add(className));
+        this.options.loadingClass
+          .split(' ')
+          .forEach((className) => this.input.classList.add(className));
         fetch(this.queryUrl(searchTerm))
           .then((response) => response.json())
           .then((results) => {
-            this.options.loadingClass.split(' ').forEach((className) => this.input.classList.remove(className));
+            this.options.loadingClass
+              .split(' ')
+              .forEach((className) => this.input.classList.remove(className));
             this.suggestionItems = results;
 
             this.displayResults();
@@ -813,7 +862,9 @@ class A11yAutocomplete {
   prepareSuggestionList(typed) {
     this.normalizeSuggestionItems();
     if (typed) {
-      this.suggestions = this.suggestionItems.filter((item) => this.filterResults(item, typed));
+      this.suggestions = this.suggestionItems.filter((item) =>
+        this.filterResults(item, typed),
+      );
     } else {
       this.suggestions = this.suggestionItems;
     }
@@ -821,7 +872,10 @@ class A11yAutocomplete {
       this.sortSuggestions();
     }
     this.totalSuggestions = this.suggestions.length;
-    this.suggestions = this.suggestions.slice(0, parseInt(this.options.maxItems, 10));
+    this.suggestions = this.suggestions.slice(
+      0,
+      parseInt(this.options.maxItems, 10),
+    );
 
     /**
      * Fires after suggestion items are retrieved, but before they are added to the DOM.
@@ -871,7 +925,9 @@ class A11yAutocomplete {
    * Sorts the array of suggestions.
    */
   sortSuggestions() {
-    this.suggestions.sort((prior, current) => (prior.label.toUpperCase() > current.label.toUpperCase() ? 1 : -1));
+    this.suggestions.sort((prior, current) =>
+      prior.label.toUpperCase() > current.label.toUpperCase() ? 1 : -1,
+    );
   }
 
   /**
@@ -890,7 +946,9 @@ class A11yAutocomplete {
     const li = document.createElement('li');
     li.innerHTML = this.formatSuggestionItem(suggestion, li);
     if (this.options.itemClass.length > 0) {
-      this.options.itemClass.split(' ').forEach((className) => li.classList.add(className));
+      this.options.itemClass
+        .split(' ')
+        .forEach((className) => li.classList.add(className));
     }
     li.setAttribute('role', 'option');
     li.setAttribute('tabindex', '-1');
@@ -1035,7 +1093,8 @@ class A11yAutocomplete {
     if (
       firstCharacterDenylist.indexOf(typed[0]) !== -1 ||
       (cardinality > 0 && currentValues.length > cardinality) ||
-      (currentValues.indexOf(suggestionValue) !== -1 && !this.options.allowRepeatValues)
+      (currentValues.indexOf(suggestionValue) !== -1 &&
+        !this.options.allowRepeatValues)
     ) {
       return false;
     }
@@ -1093,7 +1152,10 @@ class A11yAutocomplete {
    */
   minCharsMessage() {
     if (this.options.minChars > 1) {
-      return `${this.options.minCharAssistiveHint.replace('@count', this.options.minChars)}. `;
+      return `${this.options.minCharAssistiveHint.replace(
+        '@count',
+        this.options.minChars,
+      )}. `;
     }
     return '';
   }
@@ -1104,7 +1166,10 @@ class A11yAutocomplete {
   destroy() {
     Object.keys(this.events).forEach((elementName) => {
       Object.keys(this.events[elementName]).forEach((eventName) => {
-        this[elementName].removeEventListener(eventName, this.events[elementName][eventName]);
+        this[elementName].removeEventListener(
+          eventName,
+          this.events[elementName][eventName],
+        );
       });
     });
     this.ul.remove();

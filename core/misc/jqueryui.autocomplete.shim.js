@@ -7,12 +7,6 @@
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -25,11 +19,28 @@ function _iterableToArrayLimit(arr, i) { var _i = arr && (typeof Symbol !== "und
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 (function ($, Drupal) {
+  Drupal.autocompleteShim = {
+    overrides: {}
+  };
+
+  var applyWidgetOverrides = function applyWidgetOverrides(instance, propertyToOverride, overrideWith) {
+    if (propertyToOverride.substr(0, 1) === '_') {
+      instance[propertyToOverride] = overrideWith;
+    }
+  };
+
   Drupal.Autocomplete.jqueryUiShimInit = function (autocompleteInput) {
     var id = autocompleteInput.getAttribute('id');
     var instance = Drupal.Autocomplete.instances[id];
     var isContentEditable = instance.input.hasAttribute('contenteditable');
+    instance.liveRegion = document.querySelector('#drupal-live-announce');
     instance.options.isMultiline = instance.input.tagName === 'TEXTAREA' || instance.input.tagName !== 'INPUT' && isContentEditable;
     instance.options.itemClass = 'ui-menu-item';
 
@@ -155,26 +166,45 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       });
     };
 
-    if (!instance.hasOwnProperty('_renderMenu')) {
-      instance._renderMenu = function (ul, items) {
-        var that = this;
-        $.each(items, function (index, item) {
-          that._renderItemData(ul, item);
-        });
-      };
-    }
+    instance._renderMenu = function (ul, items) {
+      var that = this;
+      $.each(items, function (index, item) {
+        that._renderItemData(ul, item);
+      });
+    };
 
-    if (!instance.hasOwnProperty('_renderItemData')) {
-      instance._renderItemData = function (ul, item) {
-        return this._renderItem(ul, item).data('ui-autocomplete-item', item);
-      };
-    }
+    instance._renderItemData = function (ul, item) {
+      return this._renderItem(ul, item).data('ui-autocomplete-item', item);
+    };
 
-    if (!instance.hasOwnProperty('_renderItem')) {
-      instance._renderItem = function (ul, item) {
-        return $('<li>').append($('<a>').html(item.label)).appendTo(ul);
-      };
-    }
+    instance._renderItem = function (ul, item) {
+      return $('<li>').append($('<a>').html(item.label)).appendTo(ul);
+    };
+
+    var autocompleteNormalizeSuggestionItems = function autocompleteNormalizeSuggestionItems() {
+      this.suggestionItems = this.suggestionItems.map(function (item) {
+        if (typeof item === 'string') {
+          item = {
+            value: item,
+            label: item
+          };
+        } else if (item.value && !item.label) {
+          item = _objectSpread(_objectSpread({}, item), {
+            value: item.value,
+            label: item.value
+          });
+        } else if (item.label && !item.value) {
+          item = _objectSpread(_objectSpread({}, item), {
+            value: item.label,
+            label: item.label
+          });
+        }
+
+        return item;
+      });
+    };
+
+    instance.normalizeSuggestionItems = autocompleteNormalizeSuggestionItems;
 
     if (isContentEditable) {
       instance.getValue = function () {
@@ -219,6 +249,10 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     });
     $(instance.input).unwrap('[data-autocomplete-wrapper]');
     $(instance.input).data('ui-autocomplete', instance);
+    Object.keys(Drupal.autocompleteShim.overrides).forEach(function (propertyToOverride) {
+      var overrideWith = Drupal.autocompleteShim.overrides[propertyToOverride];
+      applyWidgetOverrides(instance, propertyToOverride, overrideWith);
+    });
   };
 
   $.fn.extend({
@@ -451,7 +485,18 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
         if (_typeof(args[0]) === 'object') {
           Object.keys(args[0]).forEach(function (key) {
-            _this3.autocomplete('option', key, args[0][key]);
+            if (key === 'widgetOverrides') {
+              var widgetOverrides = args[0].widgetOverrides;
+              Object.keys(widgetOverrides).forEach(function (propertyToOverride) {
+                var overrideWith = widgetOverrides[propertyToOverride];
+
+                var instance = Drupal.Autocomplete.instances[_this3.attr('id')];
+
+                applyWidgetOverrides(instance, propertyToOverride, overrideWith);
+              });
+            } else {
+              _this3.autocomplete('option', key, args[0][key]);
+            }
           });
         }
       }

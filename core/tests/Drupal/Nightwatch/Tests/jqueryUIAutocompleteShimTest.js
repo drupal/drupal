@@ -2073,6 +2073,40 @@ module.exports = {
       },
     );
   },
+  'ARIA, aria-label announcement': (browser) => {
+    browser.execute(
+      // eslint-disable-next-line func-names, prefer-arrow-callback
+      function () {
+        const $ = jQuery;
+        $.widget('custom.categoryComplete', $.ui.autocomplete, {
+          // eslint-disable-next-line object-shorthand
+          _renderMenu(ul, items) {
+            const that = this;
+            // eslint-disable-next-line func-names
+            $.each(items, function (index, item) {
+              that
+                ._renderItemData(ul, item)
+                .attr('aria-label', `${item.category} : ${item.label}`);
+            });
+          },
+        });
+        const element = $('#autocomplete').categoryComplete({
+          source: [{ label: 'Large Penguin', category: 'People' }],
+        });
+        element.categoryComplete('search', 'a');
+
+        return element.autocomplete('widget').find('li').attr('aria-label');
+      },
+      [],
+      (result) => {
+        browser.assert.equal(
+          result.value,
+          'People : Large Penguin',
+          "Live region changed on keydown to announce the highlighted value's aria-label attribute",
+        );
+      },
+    );
+  },
 };
 
 function arrowsInvokeSearch(id, isKeyUp, shouldMove) {

@@ -5,31 +5,63 @@
 * @preserve
 **/
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 (function ($) {
   var oldWidget = $.widget;
-  $.fn.extend({
-    widget: function widget() {
-      var runDefaultWidget = true;
+  var oldWidgetExtend = $.widget.extend;
+  var oldWidgetBridge = $.widget.bridge;
 
-      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-        args[_key] = arguments[_key];
-      }
+  $.widget = function () {
+    var runDefaultWidget = true;
 
-      if ($.ui.hasOwnProperty('autocomplete')) {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    if ($.ui.hasOwnProperty('autocomplete')) {
+      if (args[1] === $.ui.autocomplete && _typeof(args[2]) === 'object') {
         runDefaultWidget = false;
 
-        if (args[1] === $.ui.autocomplete) {
-          var widgetOverrides = args[2];
+        if (args[0] === 'ui.autocomplete') {
+          Drupal.autocompleteShim.overrides = args[2];
+        } else {
+          var widgetName = args[0].split('.').slice(-1).pop();
 
-          if (args[0] === 'ui.autocomplete') {} else {
-            var widgetName = args[0].split('.').slice(-1).pop();
-          }
+          var _ref = args[2].hasOwnProperty('options') ? args[2] : {
+            options: {}
+          },
+              options = _ref.options;
+
+          delete args[2].options;
+          options.widgetOverrides = args[2];
+          var toExtend = {};
+
+          toExtend[widgetName] = function () {
+            if (_typeof(arguments.length <= 0 ? undefined : arguments[0]) === 'object') {
+              this.autocomplete(_objectSpread(_objectSpread({}, options), arguments.length <= 0 ? undefined : arguments[0]));
+              return this;
+            }
+
+            return this.autocomplete.apply(this, arguments);
+          };
+
+          $.fn.extend(toExtend);
         }
       }
-
-      if (runDefaultWidget) {
-        return oldWidget.apply(void 0, args);
-      }
     }
-  });
+
+    if (runDefaultWidget) {
+      return oldWidget.apply(void 0, args);
+    }
+  };
+
+  $.widget.extend = oldWidgetExtend;
+  $.widget.bridge = oldWidgetBridge;
 })(jQuery);
