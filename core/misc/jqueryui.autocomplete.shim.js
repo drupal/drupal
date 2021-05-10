@@ -27,9 +27,6 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 (function ($, Drupal) {
   Drupal.Autocomplete.jqueryUiShimInit = function (autocompleteInput) {
-    Drupal.deprecationError({
-      message: 'The jQuery UI markup structure is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use the API provided by core/a11y_autocomplete instead. See https://www.drupal.org/node/3083715'
-    });
     var id = autocompleteInput.getAttribute('id');
     var instance = Drupal.Autocomplete.instances[id];
     var isContentEditable = instance.input.hasAttribute('contenteditable');
@@ -262,18 +259,12 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
                 element: $(instance.ul)
               },
               liveRegion: $(instance.liveRegion),
-              classesElementLookup: null,
-              focusable: null,
-              hoverable: null,
               isMultiLine: instance.options.isMultiLine,
               isNewMenu: null,
               options: instance.options,
-              source: null,
-              uuid: null,
-              valueMethod: null,
               window: window
             };
-            ['bindings', 'eventNamespace', 'classesElementLookup', 'focusable', 'hoverable', 'uuid', 'valueMethod'].forEach(function (property) {
+            ['bindings', 'eventNamespace', 'classesElementLookup', 'focusable', 'hoverable', 'uuid', 'source', 'valueMethod'].forEach(function (property) {
               Object.defineProperty(instanceToReturn, property, {
                 get: function get() {
                   return console.warn("The ".concat(property, " property is not supported beginning with 9.2, as jQuery UI Autocomplete is no longer part of core. See https://www.drupal.org/node/3083715"));

@@ -13,10 +13,6 @@
    *   The initialized autocomplete input.
    */
   Drupal.Autocomplete.jqueryUiShimInit = (autocompleteInput) => {
-    Drupal.deprecationError({
-      message:
-        'The jQuery UI markup structure is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use the API provided by core/a11y_autocomplete instead. See https://www.drupal.org/node/3083715',
-    });
     const id = autocompleteInput.getAttribute('id');
     const instance = Drupal.Autocomplete.instances[id];
     const isContentEditable = instance.input.hasAttribute('contenteditable');
@@ -385,15 +381,9 @@
                 element: $(instance.ul),
               },
               liveRegion: $(instance.liveRegion),
-              classesElementLookup: null,
-              focusable: null,
-              hoverable: null,
               isMultiLine: instance.options.isMultiLine,
               isNewMenu: null,
               options: instance.options,
-              source: null,
-              uuid: null,
-              valueMethod: null,
               window,
             };
 
@@ -406,6 +396,7 @@
               'focusable',
               'hoverable',
               'uuid',
+              'source',
               'valueMethod',
             ].forEach((property) => {
               Object.defineProperty(instanceToReturn, property, {
