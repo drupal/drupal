@@ -458,7 +458,7 @@ var A11yAutocomplete = function () {
       }
 
       if (searchTerm && searchTerm.length > 0) {
-        if (this.cache[inputId].hasOwnProperty(searchTerm)) {
+        if (Object.prototype.hasOwnProperty.call(this.cache[inputId], searchTerm)) {
           this.suggestionItems = this.cache[inputId][searchTerm];
           this.displayResults();
         } else if (this.options.list.length === 0 && this.options.path.length) {
