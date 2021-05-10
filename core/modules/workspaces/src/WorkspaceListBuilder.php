@@ -261,16 +261,18 @@ class WorkspaceListBuilder extends EntityListBuilder {
         ],
       ];
       if (!$active_workspace->hasParent()) {
+        $publish_form_url = Url::fromRoute('entity.workspace.publish_form',
+          ['workspace' => $active_workspace->id()],
+          ['query' => ['destination' => $active_workspace->toUrl('collection')->toString()]]
+        );
         $build['active_workspace']['actions']['publish'] = [
           '#type' => 'link',
           '#title' => $this->t('Publish content'),
-          '#url' => Url::fromRoute('entity.workspace.publish_form',
-            ['workspace' => $active_workspace->id()],
-            ['query' => ['destination' => $active_workspace->toUrl('collection')->toString()]]
-          ),
+          '#url' => $publish_form_url,
           '#attributes' => [
             'class' => ['button', 'active-workspace__button'],
           ],
+          '#access' => $publish_form_url->access(),
         ];
       }
       else {
