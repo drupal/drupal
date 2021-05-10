@@ -25,7 +25,12 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'taxonomy', 'field_ui', 'drupal_autocomplete_test'];
+  protected static $modules = [
+    'node',
+    'taxonomy',
+    'field_ui',
+    'drupal_autocomplete_test',
+  ];
 
   /**
    * The test vocabulary.
@@ -357,46 +362,6 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
-    // Test the list: option, which provides a predefined list instead of a
-    // a dynamic request.
-    foreach ([
-               'edit-preset-list-separate-data-attributes',
-               'edit-preset-list-data-autocomplete',
-             ] as $id) {
-      $input = $page->findById($id);
-      $list = $this->getList($input);
-      $this->setAutocompleteValue($input, $id, 'a');
-
-      $expected = [
-        'Zebra Label',
-        'Rhino Label',
-        'Cheetah Label',
-        'Meerkat Label',
-      ];
-      $list_contents = $list->findAll('css', 'li');
-      $this->assertCount(4, $list_contents, $id);
-      foreach ($list_contents as $index => $list_item) {
-        $this->assertEquals($expected[$index], $list_item->find('css', 'a')->getText(), $id);
-      }
-
-      $this->setAutocompleteValue($input, $id, 'h');
-      $expected = [
-        'Rhino Label',
-        'Cheetah Label',
-      ];
-      $list_id = $list->getAttribute('id');
-
-      // Wait for the new results to populate.
-      $assert_session->assertNoElementAfterWait('css', "#$list_id li:nth-child(4)");
-      $list_contents = $list->findAll('css', 'li');
-      $this->assertCount(2, $list_contents);
-      foreach ($list_contents as $index => $list_item) {
-        $this->assertEquals($expected[$index], $list_item->getText());
-      }
-      // Reset value to ensure the next input isn't obscured.
-      $this->setAutocompleteValue($input, $id, ' ', FALSE);
-    }
-
     // Test the minChar: option.
     /* cspell:disable */
     foreach ([
@@ -532,6 +497,46 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
       $this->setAutocompleteValue($input, $id, 'a');
       $this->assertCount(10, $list->findAll('css', 'li'));
 
+      // Reset value to ensure the next input isn't obscured.
+      $this->setAutocompleteValue($input, $id, ' ', FALSE);
+    }
+
+    // Test the list: option, which provides a predefined list instead of a
+    // a dynamic request.
+    foreach ([
+      'edit-preset-list-separate-data-attributes',
+      'edit-preset-list-data-autocomplete',
+    ] as $id) {
+      $input = $page->findById($id);
+      $list = $this->getList($input);
+      $this->setAutocompleteValue($input, $id, 'a');
+
+      $expected = [
+        'Zebra Label',
+        'Rhino Label',
+        'Cheetah Label',
+        'Meerkat Label',
+      ];
+      $list_contents = $list->findAll('css', 'li');
+      $this->assertCount(4, $list_contents, $id);
+      foreach ($list_contents as $index => $list_item) {
+        $this->assertEquals($expected[$index], $list_item->find('css', 'a')->getText(), $id);
+      }
+
+      $this->setAutocompleteValue($input, $id, 'h');
+      $expected = [
+        'Rhino Label',
+        'Cheetah Label',
+      ];
+      $list_id = $list->getAttribute('id');
+
+      // Wait for the new results to populate.
+      $assert_session->assertNoElementAfterWait('css', "#$list_id li:nth-child(4)");
+      $list_contents = $list->findAll('css', 'li');
+      $this->assertCount(2, $list_contents);
+      foreach ($list_contents as $index => $list_item) {
+        $this->assertEquals($expected[$index], $list_item->getText());
+      }
       // Reset value to ensure the next input isn't obscured.
       $this->setAutocompleteValue($input, $id, ' ', FALSE);
     }
