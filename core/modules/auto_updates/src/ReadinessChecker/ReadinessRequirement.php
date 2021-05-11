@@ -129,22 +129,20 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
     $severity_messages = [];
     $results = $this->getResultsBySeverity($results, $severity);
     foreach ($results as $result) {
-      if ($severity === $result->getSeverity()) {
-        $checker_messages = $result->getMessages();
-        if (count($checker_messages) === 1) {
-          $severity_messages[] = ['#markup' => array_pop($checker_messages)];
-        }
-        else {
-          $severity_messages[] = [
-            '#type' => 'details',
-            '#title' => $result->getSummary(),
-            '#open' => FALSE,
-            'messages' => [
-              '#theme' => 'item_list',
-              '#items' => $checker_messages,
-            ],
-          ];
-        }
+      $checker_messages = $result->getMessages();
+      if (count($checker_messages) === 1) {
+        $severity_messages[] = ['#markup' => array_pop($checker_messages)];
+      }
+      else {
+        $severity_messages[] = [
+          '#type' => 'details',
+          '#title' => $result->getSummary(),
+          '#open' => FALSE,
+          'messages' => [
+            '#theme' => 'item_list',
+            '#items' => $checker_messages,
+          ],
+        ];
       }
     }
     if ($severity_messages) {
