@@ -149,15 +149,17 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
       $requirement = [
         'title' => $this->t('Update readiness checks'),
         'severity' => $severity,
+        'value' => $this->getFailureMessageForSeverity($severity),
         'description' => [
           'messages' => $severity_messages,
-          'run_link' => [
-            '#type' => 'container',
-            '#markup' => $this->createRunLink(),
-          ],
         ],
       ];
-      $requirement['value'] = $this->getFailureMessageForSeverity($severity);
+      if ($run_link = $this->createRunLink()) {
+        $requirement['description']['run_link'] = [
+          '#type' => 'container',
+          '#markup' => $this->createRunLink(),
+        ];
+      }
       return $requirement;
     }
     return NULL;
