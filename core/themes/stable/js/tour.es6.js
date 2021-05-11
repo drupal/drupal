@@ -31,8 +31,6 @@
     };
 
     // Create variables for the elements that will be rearranged.
-    const joyrideContentContainerName =
-      shepherdTour.currentStep.options.joyride_content_container_name;
     const shepherdElement = shepherdTour.currentStep.el;
     const shepherdContent = shepherdElement.querySelector('.shepherd-content');
     const shepherdCancel = shepherdElement.querySelector(

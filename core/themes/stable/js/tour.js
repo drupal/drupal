@@ -32,7 +32,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }
     };
 
-    var joyrideContentContainerName = shepherdTour.currentStep.options.joyride_content_container_name;
     var shepherdElement = shepherdTour.currentStep.el;
     var shepherdContent = shepherdElement.querySelector('.shepherd-content');
     var shepherdCancel = shepherdElement.querySelector('.shepherd-cancel-icon');

@@ -81,7 +81,6 @@
               },
               buttons: [Drupal.tour.nextButton(shepherdTour, step)],
               classes: step.classes,
-              joyride_content_container_name: step.joyride_content_container_name,
               index: index
             };
             tourItemOptions.when = {

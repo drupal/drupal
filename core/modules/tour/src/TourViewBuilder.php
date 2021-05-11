@@ -46,60 +46,59 @@ class TourViewBuilder extends EntityViewBuilder {
           $output = [
             'body' => $body,
             'title' => $tip->getTitle(),
-            // @todo this property can be removed when the Stable9 theme is
-            //   removed from core. It only exists to provide Joyride backwards
-            //   compatibility.
-            'joyride_content_container_name' => $tip->getJoyrideContentContainerName(),
           ];
 
           $location = $tip->getLocation();
           $selector = $tip->getSelector();
-
         }
-        elseif ($tour_render_array = $tip->getOutput()) {
-          $attributes = $tip->getAttributes();
-          $output = [
-            'body' => \Drupal::service('renderer')->renderPlain($tour_render_array)->__toString(),
-          ];
-          // Add a class so JavaScript in Stable themes can identify deprecated
-          // tip plugins. The logic used by Stable to make the markup backwards
-          // compatible with Joyride is different depending on the type of
-          // plugin used.
-          $classes[] = 'tip-uses-getoutput';
-
-          $selector = $tip->get('selector');
-
-          // If a tour using the deprecated TipPluginInterface was installed
-          // after tour_update_9200() ran, it may attributes instead of the
-          // `selector` property to associate the tip with an element.
-          // @see tour_update_9200()
-          if (!$selector) {
-            if (!empty($attributes['data-class'])) {
-              $selector = ".{$attributes['data-class']}";
-            }
-            elseif (!empty($attributes['data-id'])) {
-              $selector = "#{$attributes['data-id']}";
-            }
-          }
-
-          // If this tip uses the deprecated TipPluginInterface but installed
-          // after If the tip has been updated with tour_update_9200(), the
-          // value will still be provided by `location`. This should only be
-          // checked for if `position` does not return a value.
-          // @see tour_update_9200()
-          $location = $tip->get('position');
-          if (!$location && $location = $tip->get('location')) {
-            // If the `location` property still has a value, this means the tip
-            // is configured for Joyride. The position value must be inverted
-            // to work with Shepherd.
-            $location_swap = [
-              'top' => 'bottom',
-              'bottom' => 'top',
-              'left' => 'right',
-              'right' => 'left',
+        else {
+          $tour_render_array = $tip->getOutput();
+          if (!empty($tour_render_array)) {
+            $output = [
+              'body' => \Drupal::service('renderer')->renderPlain($tour_render_array)->__toString(),
             ];
-            $location = $location_swap[$location];
+            // Add a class so JavaScript in Stable themes can identify deprecated
+            // tip plugins. The logic used by Stable to make the markup backwards
+            // compatible with Joyride is different depending on the type of
+            // plugin used.
+            $classes[] = 'tip-uses-getoutput';
+
+            $selector = $tip->get('selector');
+
+            // If a tour using the deprecated TipPluginInterface was installed
+            // after tour_update_9200() ran, it may attributes instead of the
+            // `selector` property to associate the tip with an element.
+            // @see tour_update_9200()
+            if (!$selector) {
+              $attributes = $tip->getAttributes();
+              if (!empty($attributes['data-class'])) {
+                $selector = ".{$attributes['data-class']}";
+              }
+              elseif (!empty($attributes['data-id'])) {
+                $selector = "#{$attributes['data-id']}";
+              }
+            }
+
+            // If this tip uses the deprecated TipPluginInterface but installed
+            // after If the tip has been updated with tour_update_9200(), the
+            // value will still be provided by `location`. This should only be
+            // checked for if `position` does not return a value.
+            // @see tour_update_9200()
+            $location = $tip->get('position');
+            if (!$location && $location = $tip->get('location')) {
+              // If the `location` property still has a value, this means the tip
+              // is configured for Joyride. The position value must be inverted
+              // to work with Shepherd.
+              $location_swap = [
+                'top' => 'bottom',
+                'bottom' => 'top',
+                'left' => 'right',
+                'right' => 'left',
+              ];
+              $location = $location_swap[$location];
+            }
           }
+
         }
 
         if ($output) {
@@ -114,7 +113,6 @@ class TourViewBuilder extends EntityViewBuilder {
                 '@total' => $totalTips,
               ]),
               'classes' => implode(' ', $classes),
-              'joyride_content_container_name' => $output['joyride_content_container_name'] ?? NULL,
             ] + $output;
         }
       }

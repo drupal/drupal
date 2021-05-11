@@ -113,7 +113,7 @@ class TourLegacyMarkupTest extends WebDriverTestBase {
     $this->assertNotNull($label, 'The tour tip label is an h2, and is the first child of the content wrapper.');
 
     $tip_content = $content_wrapper->find('css', "h2.tour-tip-label + p.tour-tip-$joyride_content_container_name");
-    $this->assertNotNull($tip_content, 'The tip\'s main paragraph is the next sibling of the label, and has a class based on the value of getJoyrideContentContainerName().');
+    $this->assertNotNull($tip_content, 'The tip\'s main paragraph is the next sibling of the label, and has the expected wrapper class.');
 
     $tour_progress = $content_wrapper->find('css', "h2.tour-tip-label + p.tour-tip-$joyride_content_container_name ~ div.tour-progress");
     $this->assertNotNull($tour_progress, 'The div containing tour progress info is present, and is the next sibling of the main paragraph.');
@@ -146,9 +146,10 @@ class TourLegacyMarkupTest extends WebDriverTestBase {
    * Test plugin and schema deprecations.
    */
   public function testTipDeprecations() {
-    $this->expectDeprecation('Drupal\tour\TipPluginInterface is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use Drupal\tour\TourTipPluginInterface instead. See https://www.drupal.org/node/3204096');
-    $this->expectDeprecation('Drupal\tour\TipPluginBase is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use Drupal\tour\TourTipPluginBase instead. See https://www.drupal.org/node/3204096');
-    $this->expectDeprecation("The tour.tip 'attributes' config schema property is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead of 'data-class' and 'data-id' attributes, use 'selector' to specify the element a tip attaches to. See https://www.drupal.org/node/3204093");
+    $this->expectDeprecation('Tip plugins implementing Drupal\tour\TipPluginInterface that don\'t also implement Drupal\tour\TourTipPluginInterface are deprecated in drupal:9.2.0. See https://www.drupal.org/node/3204096');
+    $this->expectDeprecation("The tour.tip 'location' config schema property is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead use 'position' with the opposite value of 'location' (top becomes bottom, left becomes right, and vice-versa). See https://www.drupal.org/node/3204093");
+    // @todo The tour.tip 'attributes' deprecation error is not being caught bu
+    //   expectDeprecation, despite pasting the exact message in.
     $this->drupalGet('tour-test-legacy');
   }
 

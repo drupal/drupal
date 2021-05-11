@@ -4,7 +4,8 @@ namespace Drupal\tour\Plugin\tour\tip;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Utility\Token;
-use Drupal\tour\TourTipPluginBase;
+use Drupal\tour\TipPluginBase;
+use Drupal\tour\TourTipPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -15,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   title = @Translation("Text")
  * )
  */
-class TipPluginText extends TourTipPluginBase implements ContainerFactoryPluginInterface {
+class TipPluginText extends TipPluginBase implements ContainerFactoryPluginInterface, TourTipPluginInterface {
 
   /**
    * The body text which is used for render of this Text Tip.
@@ -72,8 +73,11 @@ class TipPluginText extends TourTipPluginBase implements ContainerFactoryPluginI
   /**
    * {@inheritdoc}
    */
-  public function getJoyrideContentContainerName() {
-    return 'body';
+  public function getOutput() {
+    // Call parent to trigger error this is a deprecated function.
+    parent::getOutput();
+    $output = '<p class="tour-tip-body">' . $this->token->replace($this->get('body')) . '</p>';
+    return ['#markup' => $output];
   }
 
 }

@@ -4,7 +4,7 @@ namespace Drupal\tour_test\Plugin\tour\tip;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Utility\Token;
-use Drupal\tour\TourTipPluginBase;
+use Drupal\tour\TipPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   title = @Translation("Image")
  * )
  */
-class TipPluginImage extends TourTipPluginBase implements ContainerFactoryPluginInterface {
+class TipPluginImage extends TipPluginBase implements ContainerFactoryPluginInterface {
 
   /**
    * The url which is used for the image in this Tip.
@@ -75,6 +75,20 @@ class TipPluginImage extends TourTipPluginBase implements ContainerFactoryPlugin
     ];
 
     return $image;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOutput() {
+    $prefix = '<p class="tour-tip-image">';
+    return [
+      '#prefix' => $prefix,
+      '#theme' => 'image',
+      '#uri' => $this->get('url'),
+      '#alt' => $this->get('alt'),
+      '#suffix' => '</p>',
+    ];
   }
 
 }

@@ -173,11 +173,6 @@
                 },
                 buttons: [Drupal.tour.nextButton(shepherdTour, step)],
                 classes: step.classes,
-                // @todo joyride_content_container_name can be removed when the Stable9
-                //   theme is removed from core. This only exists to provide Joyride
-                //   backwards compatibility.
-                joyride_content_container_name:
-                  step.joyride_content_container_name,
                 index,
               };
 
