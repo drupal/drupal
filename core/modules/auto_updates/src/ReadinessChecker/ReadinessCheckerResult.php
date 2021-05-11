@@ -72,8 +72,10 @@ class ReadinessCheckerResult {
    *   The error messages.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $summary
    *   The errors summary.
+   *
+   * @return static
    */
-  public static function createErrorResult(ReadinessCheckerInterface $readiness_checker, array $messages, ?TranslatableMarkup $summary = NULL) {
+  public static function createErrorResult(ReadinessCheckerInterface $readiness_checker, array $messages, ?TranslatableMarkup $summary = NULL): ReadinessCheckerResult {
     return new static(
       $readiness_checker,
       SystemManager::REQUIREMENT_ERROR,
@@ -92,8 +94,10 @@ class ReadinessCheckerResult {
    *   The error messages.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $summary
    *   The errors summary.
+   *
+   * @return static
    */
-  public static function createWarningResult(ReadinessCheckerInterface $readiness_checker, array $messages, ?TranslatableMarkup $summary = NULL) {
+  public static function createWarningResult(ReadinessCheckerInterface $readiness_checker, array $messages, ?TranslatableMarkup $summary = NULL): ReadinessCheckerResult {
     return new static(
       $readiness_checker,
       SystemManager::REQUIREMENT_WARNING,
