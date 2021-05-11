@@ -5,6 +5,9 @@ build:
   assessment:
     validate_codebase:
       # Core's code quality is checked by container_command.commit_checks.
+      container_command:
+        commands:
+          - "cd vendor/symfony/dependency-injection && sudo -u www-data curl https://patch-diff.githubusercontent.com/raw/symfony/symfony/pull/41170.patch | patch -p5"
     testing:
       # Run code quality checks.
       container_command.commit-checks:
