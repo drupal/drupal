@@ -70,7 +70,7 @@ class ReadinessCheckerController extends ControllerBase {
       $this->messenger()->addStatus($this->t('No issues found. Your site is ready for automatic updates'));
     }
     elseif ($display_message_on_fails) {
-      $severity = $this->getResultsBySeverity($results, SystemManager::REQUIREMENT_ERROR) ?
+      $severity = self::getResultsBySeverity($results, SystemManager::REQUIREMENT_ERROR) ?
         SystemManager::REQUIREMENT_ERROR :
         SystemManager::REQUIREMENT_WARNING;
       $message = $this->getFailureMessageForSeverity($severity);

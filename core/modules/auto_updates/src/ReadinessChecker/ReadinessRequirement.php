@@ -127,7 +127,7 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
    */
   protected function createRequirementForSeverity(array $results, int $severity): ?array {
     $severity_messages = [];
-    $results = $this->getResultsBySeverity($results, $severity);
+    $results = self::getResultsBySeverity($results, $severity);
     foreach ($results as $result) {
       $checker_messages = $result->getMessages();
       if (count($checker_messages) === 1) {

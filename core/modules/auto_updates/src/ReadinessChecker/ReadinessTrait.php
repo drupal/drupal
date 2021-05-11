@@ -36,7 +36,7 @@ trait ReadinessTrait {
    * @return \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[]
    *   The readiness checker results by category.
    */
-  protected function getResultsBySeverity(array $results, int $severity): array {
+  protected static function getResultsBySeverity(array $results, int $severity): array {
     return array_filter(
       $results,
       function (ReadinessCheckerResult $result) use ($severity) {

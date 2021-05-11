@@ -164,7 +164,7 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
    *   Whether any results were displayed.
    */
   protected function displayResultsForSeverity(array $results, int $severity): bool {
-    $filtered_results = $this->getResultsBySeverity($results, $severity);
+    $filtered_results = self::getResultsBySeverity($results, $severity);
     if (empty($filtered_results)) {
       return FALSE;
     }
