@@ -766,10 +766,10 @@ popperjs:
 
 sortable:
   remote: https://github.com/SortableJS/Sortable
-  version: "1.10.2"
+  version: "1.13.0"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/SortableJS/Sortable/1.10.2/LICENSE
+    url: https://raw.githubusercontent.com/SortableJS/Sortable/1.13.0/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/sortable/Sortable.min.js: { minified: true }
