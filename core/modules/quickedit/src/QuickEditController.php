@@ -116,7 +116,7 @@ class QuickEditController extends ControllerBase {
    *   The JSON response.
    */
   public function metadata(Request $request) {
-    if (!$request->request->has('fields') || !$request->request->has('entities')) {
+    if (!$request->request->has('fields')) {
       throw new NotFoundHttpException();
     }
     $fields = $request->request->all('fields');
@@ -147,7 +147,7 @@ class QuickEditController extends ControllerBase {
 
       // If the entity information for this field is requested, include it.
       $entity_id = $entity->getEntityTypeId() . '/' . $entity_id;
-      if (in_array($entity_id, $entities) && !isset($metadata[$entity_id])) {
+      if (in_array($entity_id, $entities, TRUE) && !isset($metadata[$entity_id])) {
         $metadata[$entity_id] = $this->metadataGenerator->generateEntityMetadata($entity);
       }
 
