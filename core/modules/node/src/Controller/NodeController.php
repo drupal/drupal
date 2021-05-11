@@ -115,33 +115,33 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
   /**
    * Displays a node revision.
    *
-   * @param int $node_revision
-   *   The node revision ID.
+   * @param \Drupal\node\NodeInterface $node_revision
+   *   The node revision.
    *
    * @return array
    *   An array suitable for \Drupal\Core\Render\RendererInterface::render().
    */
-  public function revisionShow($node_revision) {
-    $node = $this->entityTypeManager()->getStorage('node')->loadRevision($node_revision);
-    $node = $this->entityRepository->getTranslationFromContext($node);
+  public function revisionShow(NodeInterface $node_revision) {
     $node_view_controller = new NodeViewController($this->entityTypeManager(), $this->renderer, $this->currentUser(), $this->entityRepository);
-    $page = $node_view_controller->view($node);
-    unset($page['nodes'][$node->id()]['#cache']);
+    $page = $node_view_controller->view($node_revision);
+    unset($page['nodes'][$node_revision->id()]['#cache']);
     return $page;
   }
 
   /**
    * Page title callback for a node revision.
    *
-   * @param int $node_revision
-   *   The node revision ID.
+   * @param \Drupal\node\NodeInterface $node_revision
+   *   The node revision.
    *
    * @return string
    *   The page title.
    */
-  public function revisionPageTitle($node_revision) {
-    $node = $this->entityTypeManager()->getStorage('node')->loadRevision($node_revision);
-    return $this->t('Revision of %title from %date', ['%title' => $node->label(), '%date' => $this->dateFormatter->format($node->getRevisionCreationTime())]);
+  public function revisionPageTitle(NodeInterface $node_revision) {
+    return $this->t('Revision of %title from %date', [
+      '%title' => $node_revision->label(),
+      '%date' => $this->dateFormatter->format($node_revision->getRevisionCreationTime()),
+    ]);
   }
 
   /**

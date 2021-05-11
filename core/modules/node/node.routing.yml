@@ -60,6 +60,9 @@ entity.node.version_history:
     node: \d+
   options:
     _node_operation_route: TRUE
+    parameters:
+      node:
+        type: entity:node
 
 entity.node.revision:
   path: '/node/{node}/revisions/{node_revision}/view'
@@ -69,6 +72,12 @@ entity.node.revision:
   requirements:
     _access_node_revision: 'view'
     node: \d+
+  options:
+    parameters:
+      node:
+        type: entity:node
+      node_revision:
+        type: entity_revision:node
 
 node.revision_revert_confirm:
   path: '/node/{node}/revisions/{node_revision}/revert'
@@ -80,6 +89,11 @@ node.revision_revert_confirm:
     node: \d+
   options:
     _node_operation_route: TRUE
+    parameters:
+      node:
+        type: entity:node
+      node_revision:
+        type: entity_revision:node
 
 node.revision_revert_translation_confirm:
   path: '/node/{node}/revisions/{node_revision}/revert/{langcode}'
@@ -91,6 +105,11 @@ node.revision_revert_translation_confirm:
     node: \d+
   options:
     _node_operation_route: TRUE
+    parameters:
+      node:
+        type: entity:node
+      node_revision:
+        type: entity_revision:node
 
 node.revision_delete_confirm:
   path: '/node/{node}/revisions/{node_revision}/delete'
@@ -102,6 +121,11 @@ node.revision_delete_confirm:
     node: \d+
   options:
     _node_operation_route: TRUE
+    parameters:
+      node:
+        type: entity:node
+      node_revision:
+        type: entity_revision:node
 
 entity.node_type.collection:
   path: '/admin/structure/types'
