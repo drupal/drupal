@@ -4,6 +4,7 @@ namespace Drupal\auto_updates\ReadinessChecker;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Routing\AdminContext;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\Core\Routing\RedirectDestinationTrait;
@@ -23,6 +24,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 final class ReadinessCheckerMessages implements ContainerInjectionInterface {
 
+  use MessengerTrait;
   use StringTranslationTrait;
   use RedirectDestinationTrait;
   use ReadinessTrait;
@@ -33,13 +35,6 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
    * @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager
    */
   protected $readinessCheckerManager;
-
-  /**
-   * The messenger service.
-   *
-   * @var \Drupal\Core\Messenger\MessengerInterface
-   */
-  protected $messenger;
 
   /**
    * The admin context service.
@@ -80,7 +75,7 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
    */
   public function __construct(ReadinessCheckerManager $readiness_checker_manager, MessengerInterface $messenger, AdminContext $admin_context, AccountProxyInterface $current_user, TranslationInterface $translation, CurrentRouteMatch $current_route) {
     $this->readinessCheckerManager = $readiness_checker_manager;
-    $this->messenger = $messenger;
+    $this->setMessenger($messenger);
     $this->adminContext = $admin_context;
     $this->currentUser = $current_user;
     $this->setStringTranslation($translation);
