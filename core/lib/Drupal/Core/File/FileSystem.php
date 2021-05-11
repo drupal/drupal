@@ -214,7 +214,10 @@ class FileSystem implements FileSystemInterface {
         $recursive_path .= $component;
 
         if (!file_exists($recursive_path)) {
-          if (!$this->mkdirCall($recursive_path, $mode, FALSE, $context)) {
+          $success = $this->mkdirCall($recursive_path, $mode, FALSE, $context);
+          // If the operation failed, check again if the directory was created
+          // by another process/server, only report a failure if not.
+          if (!$success && !file_exists($recursive_path)) {
             return FALSE;
           }
           // Not necessary to use self::chmod() as there is no scheme.
