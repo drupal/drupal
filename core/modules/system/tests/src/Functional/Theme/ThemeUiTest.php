@@ -89,11 +89,6 @@ class ThemeUiTest extends BrowserTestBase {
     $page = $this->getSession()->getPage();
     $all_dependent_modules = array_merge($first_modules, $second_modules);
     $this->drupalGet('admin/appearance');
-    $assert_module_enabled_message = function ($enabled_modules) {
-      $count = count($enabled_modules);
-      $module_enabled_text = $count === 1 ? "{$this->testModules[$enabled_modules[0]]} has been enabled." : $count . " modules have been enabled:";
-      $this->assertSession()->pageTextContains($module_enabled_text);
-    };
     // All the modules should be listed as disabled.
     foreach ($all_dependent_modules as $module) {
       $expected_required_list_items[$module] = $this->testModules[$module] . " (disabled)";
@@ -106,7 +101,7 @@ class ThemeUiTest extends BrowserTestBase {
       $first_module_form_post["modules[$module][enable]"] = 1;
     }
     $this->drupalPostForm('admin/modules', $first_module_form_post, 'Install');
-    $assert_module_enabled_message($first_modules);
+    $this->assertSession()->responseContains('The selected modules have been installed.');
 
     $this->drupalGet('admin/appearance');
 
@@ -125,7 +120,7 @@ class ThemeUiTest extends BrowserTestBase {
       $second_module_form_post["modules[$module][enable]"] = 1;
     }
     $this->drupalPostForm('admin/modules', $second_module_form_post, 'Install');
-    $assert_module_enabled_message($second_modules);
+    $this->assertSession()->responseContains('The selected modules have been installed.');
 
     // The theme should now be installable, so install it.
     $this->drupalGet('admin/appearance');

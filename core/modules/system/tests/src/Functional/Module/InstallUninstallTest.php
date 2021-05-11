@@ -67,13 +67,15 @@ class InstallUninstallTest extends ModuleTestBase {
       return TRUE;
     });
 
+    $assert_session = $this->assertSession();
+
     // Install the Help module, and verify it installed successfully.
     unset($all_modules['help']);
     $this->assertModuleNotInstalled('help');
     $edit = [];
     $edit["modules[help][enable]"] = TRUE;
     $this->drupalPostForm('admin/modules', $edit, 'Install');
-    $this->assertText('has been enabled');
+    $assert_session->pageTextContains('The selected modules have been installed.');
     $this->assertText('hook_modules_installed fired for help');
     $this->assertModuleSuccessfullyInstalled('help');
 
@@ -127,18 +129,7 @@ class InstallUninstallTest extends ModuleTestBase {
         $this->assertText('You must enable');
         $this->submitForm([], 'Continue');
       }
-
-      // List the module display names to check the confirmation message.
-      $module_names = [];
-      foreach ($modules_to_install as $module_to_install) {
-        $module_names[] = $all_modules[$module_to_install]->info['name'];
-      }
-      if (count($modules_to_install) > 1) {
-        $this->assertText(count($module_names) . ' modules have been enabled: ' . implode(', ', $module_names));
-      }
-      else {
-        $this->assertText('Module ' . $module_names[0] . ' has been enabled.');
-      }
+      $assert_session->pageTextContains('The selected modules have been installed.');
 
       // Check that hook_modules_installed() was invoked with the expected list
       // of modules, that each module's database tables now exist, and that
@@ -174,7 +165,7 @@ class InstallUninstallTest extends ModuleTestBase {
           // See if we can currently uninstall this module (if its dependencies
           // have been uninstalled), and do so if we can.
           $this->drupalGet('admin/modules/uninstall');
-          $checkbox = $this->assertSession()->fieldExists("uninstall[$to_uninstall]");
+          $checkbox = $assert_session->fieldExists("uninstall[$to_uninstall]");
           if (!$checkbox->hasAttribute('disabled')) {
             // This one is eligible for being uninstalled.
             $package = $all_modules[$to_uninstall]->info['package'];
@@ -219,7 +210,7 @@ class InstallUninstallTest extends ModuleTestBase {
       $this->assertText('Are you sure you wish to enable experimental modules?');
       $this->submitForm([], 'Continue');
     }
-    $this->assertText(count($all_modules) . ' modules have been enabled: ');
+    $assert_session->pageTextContains('The selected modules have been installed.');
   }
 
   /**

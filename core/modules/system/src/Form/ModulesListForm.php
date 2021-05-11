@@ -471,11 +471,7 @@ class ModulesListForm extends FormBase {
     if (!empty($modules['install'])) {
       try {
         $this->moduleInstaller->install(array_keys($modules['install']));
-        $module_names = array_values($modules['install']);
-        $this->messenger()->addStatus($this->formatPlural(count($module_names), 'Module %name has been enabled.', '@count modules have been enabled: %names.', [
-          '%name' => $module_names[0],
-          '%names' => implode(', ', $module_names),
-        ]));
+        $this->messenger()->addStatus($this->t('The selected modules have been installed.'));
       }
       catch (PreExistingConfigException $e) {
         $config_objects = $e->flattenConfigObjects($e->getConfigObjects());

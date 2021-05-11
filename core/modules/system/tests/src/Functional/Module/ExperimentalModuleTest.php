@@ -40,13 +40,14 @@ class ExperimentalModuleTest extends BrowserTestBase {
    * Tests installing experimental modules and dependencies in the UI.
    */
   public function testExperimentalConfirmForm() {
+    $assert_session = $this->assertSession();
 
     // First, test installing a non-experimental module with no dependencies.
     // There should be no confirmation form and no experimental module warning.
     $edit = [];
     $edit["modules[test_page_test][enable]"] = TRUE;
     $this->drupalPostForm('admin/modules', $edit, 'Install');
-    $this->assertText('Module Test page has been enabled.');
+    $assert_session->pageTextContains('The selected modules have been installed.');
     $this->assertNoText('Experimental modules are provided for testing purposes only.');
 
     // Uninstall the module.
@@ -61,7 +62,7 @@ class ExperimentalModuleTest extends BrowserTestBase {
 
     // The module should not be enabled and there should be a warning and a
     // list of the experimental modules with only this one.
-    $this->assertNoText('Experimental Test has been enabled.');
+    $assert_session->pageTextNotContains('The selected modules have been installed.');
     $this->assertText('Experimental modules are provided for testing purposes only.');
     $this->assertText('The following modules are experimental: Experimental Test');
 
@@ -70,7 +71,7 @@ class ExperimentalModuleTest extends BrowserTestBase {
 
     // Enable the module and confirm that it worked.
     $this->submitForm([], 'Continue');
-    $this->assertText('Experimental Test has been enabled.');
+    $assert_session->pageTextContains('The selected modules have been installed.');
 
     // Uninstall the module.
     \Drupal::service('module_installer')->uninstall(['experimental_module_test']);
@@ -83,7 +84,7 @@ class ExperimentalModuleTest extends BrowserTestBase {
 
     // The module should not be enabled and there should be a warning and a
     // list of the experimental modules with only this one.
-    $this->assertNoText('2 modules have been enabled: Experimental Dependency Test, Experimental Test');
+    $assert_session->pageTextNotContains('The selected modules have been installed.');
     $this->assertText('Experimental modules are provided for testing purposes only.');
 
     $this->assertText('The following modules are experimental: Experimental Test');
@@ -97,7 +98,7 @@ class ExperimentalModuleTest extends BrowserTestBase {
 
     // Enable the module and confirm that it worked.
     $this->submitForm([], 'Continue');
-    $this->assertText('2 modules have been enabled: Experimental Dependency Test, Experimental Test');
+    $assert_session->pageTextContains('The selected modules have been installed.');
 
     // Uninstall the modules.
     \Drupal::service('module_installer')->uninstall(['experimental_module_test', 'experimental_module_dependency_test']);
@@ -112,7 +113,7 @@ class ExperimentalModuleTest extends BrowserTestBase {
 
     // The module should not be enabled and there should be a warning and a
     // list of the experimental modules with only this one.
-    $this->assertNoText('2 modules have been enabled: Experimental Dependency Test, Experimental Test');
+    $assert_session->pageTextNotContains('The selected modules have been installed.');
     $this->assertText('Experimental modules are provided for testing purposes only.');
 
     $this->assertText('The following modules are experimental: Experimental Test');
@@ -126,7 +127,7 @@ class ExperimentalModuleTest extends BrowserTestBase {
 
     // Enable the module and confirm that it worked.
     $this->submitForm([], 'Continue');
-    $this->assertText('2 modules have been enabled: Experimental Dependency Test, Experimental Test');
+    $assert_session->pageTextContains('The selected modules have been installed.');
 
     // Try to enable an experimental module that can not be due to
     // hook_requirements().

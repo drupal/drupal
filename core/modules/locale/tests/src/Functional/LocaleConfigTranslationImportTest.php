@@ -138,7 +138,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
 
     // Install any module.
     $this->drupalPostForm('admin/modules', ['modules[dblog][enable]' => 'dblog'], 'Install');
-    $this->assertText('Module Database Logging has been enabled.');
+    $this->assertSession()->pageTextContains('The selected modules have been installed.');
 
     // Get the front page and ensure that the translated configuration still
     // appears.
