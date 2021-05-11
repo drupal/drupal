@@ -128,6 +128,9 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
   protected function createRequirementForSeverity(array $results, int $severity): ?array {
     $severity_messages = [];
     $results = self::getResultsBySeverity($results, $severity);
+    if (!$results) {
+      return NULL;
+    }
     foreach ($results as $result) {
       $checker_messages = $result->getMessages();
       if (count($checker_messages) === 1) {
@@ -145,24 +148,21 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
         ];
       }
     }
-    if ($severity_messages) {
-      $requirement = [
-        'title' => $this->t('Update readiness checks'),
-        'severity' => $severity,
-        'value' => $this->getFailureMessageForSeverity($severity),
-        'description' => [
-          'messages' => $severity_messages,
-        ],
+    $requirement = [
+      'title' => $this->t('Update readiness checks'),
+      'severity' => $severity,
+      'value' => $this->getFailureMessageForSeverity($severity),
+      'description' => [
+        'messages' => $severity_messages,
+      ],
+    ];
+    if ($run_link = $this->createRunLink()) {
+      $requirement['description']['run_link'] = [
+        '#type' => 'container',
+        '#markup' => $this->createRunLink(),
       ];
-      if ($run_link = $this->createRunLink()) {
-        $requirement['description']['run_link'] = [
-          '#type' => 'container',
-          '#markup' => $this->createRunLink(),
-        ];
-      }
-      return $requirement;
     }
-    return NULL;
+    return $requirement;
   }
 
   /**
