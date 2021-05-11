@@ -5,3 +5,4 @@ package: Testing
 version: VERSION
 dependencies:
   - drupal:contact
+  - drupal:form_test

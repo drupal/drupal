@@ -295,6 +295,8 @@ function olivero_preprocess_input(&$variables) {
     $variables['attributes']['class'][] = Html::getClass('form-element--type-' . $type_html);
     $variables['attributes']['class'][] = Html::getClass('form-element--api-' . $type_api);
 
+    // This logic is functioning as expected, but there is nothing in the theme that renders the result.
+    // As a result it can't currently be covered by a functional test.
     if (!empty($variables['element']['#autocomplete_route_name'])) {
       $variables['autocomplete_message'] = t('Loading…');
     }
