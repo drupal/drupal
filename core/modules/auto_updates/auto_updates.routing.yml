@@ -3,6 +3,6 @@ auto_updates.update_readiness:
   defaults:
     _controller: '\Drupal\auto_updates\Controller\ReadinessCheckerController::run'
     _title: 'Update readiness checking'
-    display_message_on_fails: false
+    display_message_on_fails: true
   requirements:
     _permission: 'administer software updates'

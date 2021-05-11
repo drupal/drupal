@@ -60,7 +60,7 @@ class ReadinessCheckerController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   A redirect to the status report page.
    */
-  public function run(bool $display_message_on_fails = FALSE): RedirectResponse {
+  public function run(bool $display_message_on_fails = TRUE): RedirectResponse {
     $results = $this->readinessCheckerManager->run()->getResults();
     if (!$results) {
       // @todo Link "automatic updates" to documentation in

@@ -173,7 +173,7 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
    *   NULL.
    */
   protected function createRunLink(): ?TranslatableMarkup {
-    $readiness_check_url = Url::fromRoute('auto_updates.update_readiness', ['display_message_on_fails' => TRUE]);
+    $readiness_check_url = Url::fromRoute('auto_updates.update_readiness');
     if ($readiness_check_url->access()) {
       return $this->t(
         '<a href=":link">Run readiness checks</a> now.',
