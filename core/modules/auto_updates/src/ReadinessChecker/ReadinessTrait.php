@@ -11,7 +11,7 @@ use Drupal\system\SystemManager;
 trait ReadinessTrait {
 
   /**
-   * Gets a message when readiness checkers not pass passed on severity.
+   * Gets a message, based on severity, when readiness checkers fail.
    *
    * @param int $severity
    *   The severity. Should be one of the SystemManager::REQUIREMENT_* constants.
