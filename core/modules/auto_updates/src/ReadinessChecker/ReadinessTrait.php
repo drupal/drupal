@@ -21,6 +21,8 @@ trait ReadinessTrait {
    */
   protected function getFailureMessageForSeverity(int $severity): TranslatableMarkup {
     return $severity === SystemManager::REQUIREMENT_WARNING ?
+      // @todo Link "automatic updates" to documentation in
+      //   https://www.drupal.org/node/3168405.
       $this->t('Your site does not pass some readiness checks for automatic updates. Depending on the nature of the failures, it might affect the eligibility for automatic updates.') :
       $this->t('Your site does not pass some readiness checks for automatic updates. It cannot be automatically updated until further action is performed.');
   }
