@@ -7,6 +7,7 @@
  * FunctionalJavaScript tests.
  *
  * @see https://github.com/jquery/jquery/issues/4755
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/which
  */
 
 (($) => {
