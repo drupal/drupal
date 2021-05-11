@@ -14,10 +14,14 @@ trait ReadinessTrait {
    * Gets a message, based on severity, when readiness checkers fail.
    *
    * @param int $severity
-   *   The severity. Should be one of the SystemManager::REQUIREMENT_* constants.
+   *   The severity. Should be one of the SystemManager::REQUIREMENT_*
+   *   constants.
    *
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup
    *   The message.
+   *
+   * @see \Drupal\system\SystemManager::REQUIREMENT_ERROR
+   * @see \Drupal\system\SystemManager::REQUIREMENT_WARNING
    */
   protected function getFailureMessageForSeverity(int $severity): TranslatableMarkup {
     return $severity === SystemManager::REQUIREMENT_WARNING ?
@@ -33,10 +37,14 @@ trait ReadinessTrait {
    * @param \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[] $results
    *   The results to filter.
    * @param int $severity
-   *   The severity.
+   *   The severity. Should be one of the SystemManager::REQUIREMENT_*
+   *   constants.
    *
    * @return \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[]
    *   The readiness checker results by category.
+   *
+   * @see \Drupal\system\SystemManager::REQUIREMENT_ERROR
+   * @see \Drupal\system\SystemManager::REQUIREMENT_WARNING
    */
   protected static function getResultsBySeverity(array $results, int $severity): array {
     return array_filter(
