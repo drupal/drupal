@@ -5,6 +5,7 @@ namespace Drupal\KernelTests\Core\File;
 use Drupal\Component\FileSecurity\FileSecurity;
 use Drupal\Component\FileSystem\FileSystem;
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Database\Database;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 
@@ -194,6 +195,53 @@ class DirectoryTest extends FileTestBase {
     $dir = $this->siteDirectory . '/files';
     $this->assertTrue($file_system->mkdir($dir . '/foo/bar', 0775, TRUE));
     $this->assertTrue($file_system->mkdir($dir . '/foo/baz/', 0775, TRUE));
+  }
+
+  /**
+   * Tests asynchronous directory creation.
+   *
+   * Image style generation can result in many calls to create similar directory
+   * paths. This test forks the process to create the same situation.
+   */
+  public function testMultiplePrepareDirectory() {
+    if (!function_exists('pcntl_fork')) {
+      $this->markTestSkipped('Requires the pcntl_fork() function');
+    }
+    $directories = [];
+    for ($i = 1; $i <= 10; $i++) {
+      $directories[] = 'public://a/b/c/d/e/f/g/h/' . $i;
+    }
+
+    $file_system = $this->container->get('file_system');
+
+    $time_to_start = microtime(TRUE) + 0.1;
+    // This loop creates a new fork to create each directory.
+    foreach ($directories as $directory) {
+      $pid = pcntl_fork();
+      if ($pid == -1) {
+        $this->fail("Error forking");
+      }
+      elseif ($pid == 0) {
+        // Sleep so that all the forks start preparing the directory at the same
+        // time.
+        usleep(($time_to_start - microtime(TRUE)) * 1000000);
+        $file_system->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY);
+        exit();
+      }
+    }
+
+    // This while loop holds the parent process until all the child threads
+    // are complete - at which point the script continues to execute.
+    while (pcntl_waitpid(0, $status) != -1);
+
+    foreach ($directories as $directory) {
+      $this->assertDirectoryExists($directory);
+    }
+
+    // Remove the database connection because it will have been destroyed when
+    // the forks exited. This allows
+    // \Drupal\KernelTests\KernelTestBase::tearDown() to reopen it.
+    Database::removeConnection('default');
   }
 
 }
