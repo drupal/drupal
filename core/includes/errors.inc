@@ -268,7 +268,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
           '#title' => 'Error',
           '#markup' => $message,
         ];
-        install_display_output($output, $GLOBALS['install_state'], $response->headers->all());
+        install_display_output($output, $GLOBALS['install_state']);
         exit;
       }
 

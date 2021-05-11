@@ -208,7 +208,7 @@ class Node extends WizardPluginBase {
   /**
    * Set the row style and row style plugins to the display_options.
    */
-  protected  function display_options_row(&$display_options, $row_plugin, $row_options) {
+  protected function display_options_row(&$display_options, $row_plugin, $row_options) {
     switch ($row_plugin) {
       case 'full_posts':
         $display_options['row']['type'] = 'entity:node';

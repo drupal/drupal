@@ -13,7 +13,6 @@
  <release>
   <name>update_test_new_module 8.x-1.1</name>
   <version>8.x-1.1</version>
-  <tag>DRUPAL-8--1-1</tag>
   <status>published</status>
   <release_link>http://example.com/update_test_new_module-8-x-1-1-release</release_link>
   <download_link>core/modules/update/tests/update_test_new_module/8.x-1.1/update_test_new_module.tar.gz</download_link>

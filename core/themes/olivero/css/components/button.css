@@ -152,6 +152,11 @@
     background-color: #d7e1e8;
   }
 
+.button--icon-back {
+  display: inline-flex;
+  align-items: center
+}
+
 [dir="ltr"] .button--icon-back:before {
     margin-right: 0.5em
 }

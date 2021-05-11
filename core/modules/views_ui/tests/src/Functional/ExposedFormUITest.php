@@ -274,8 +274,8 @@ class ExposedFormUITest extends UITestBase {
   }
 
   /**
-  * Tests the configuration of grouped exposed filters.
-  */
+   * Tests the configuration of grouped exposed filters.
+   */
   public function testExposedGroupedFilter() {
     // Click the Expose filter button.
     $this->drupalPostForm('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/filter/type', [], 'Expose filter');
