@@ -1094,6 +1094,14 @@ function system_cron() {
  * Implements hook_mail().
  */
 function system_mail($key, &$message, $params) {
+  if ($key === 'advisory_notify') {
+    $renderer = \Drupal::service('renderer');
+
+    $message['subject'] = $params['subject'];
+    $message['body'][] = $renderer->render($params['body']);
+    return;
+  }
+
   $token_service = \Drupal::token();
 
   $context = $params['context'];

@@ -231,12 +231,21 @@ class SecurityAdvisoryTest extends BrowserTestBase {
       ])
       ->save();
 
+    $mixed_advisory_links = [
+      'Critical Release - SA-2019-02-19',
+      'Critical Release - PSA-Really Old',
+      // The info for the test modules 'generic_module1_test' and
+      // 'generic_module2_test' are altered for this test so match the items in
+      // the test json feeds.
+      // @see advisory_feed_test_system_info_alter()
+      'Generic Module1 Project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02',
+      'Generic Module2 project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02',
+    ];
+
     // Confirm that security advisory cache does not exist.
     $this->assertNull($this->tempStore->get('advisories_response'));
 
-    // Test security advisories on admin pages.
-    $this->drupalGet(Url::fromRoute('system.admin'));
-    $this->assertSession()->linkExists('Critical Release - SA-2019-02-19');
+    $this->assertStatusReportLinks($mixed_advisory_links, REQUIREMENT_ERROR);
     // Confirm that the security advisory cache has been set.
     $this->assertNotEmpty($this->tempStore->get('advisories_response'));
 
@@ -265,15 +274,12 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     // Deleting the security advisory tempstore item will result in another
     // email if the messages have changed.
     $this->container->get('state')->set('system.test_mail_collector', []);
-    AdvisoriesTestHttpClient::setTestEndpoint($this->workingEndpointPlus1, TRUE);
+    AdvisoriesTestHttpClient::setTestEndpoint($this->workingEndpointPsaOnly, TRUE);
     $this->cronRun();
     $this->assertAdvisoryEmailCount(2);
-    $this->assertMailString('subject', '5 urgent security announcements require your attention', 1);
-    $this->assertMailString('body', 'Critical Release - SA-2019-02-19', 1);
+    $this->assertMailString('subject', '2 urgent security announcements require your attention', 1);
     $this->assertMailString('body', 'Critical Release - PSA-Really Old', 1);
-    $this->assertMailString('body', 'Generic Module1 Project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02', 1);
-    $this->assertMailString('body', 'Generic Module1 Project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02', 1);
-    $this->assertMailString('body', 'Critical Release - PSA because 2020', 1);
+    $this->assertMailString('body', 'Generic Module2 project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02', 1);
   }
 
   /**
@@ -289,16 +295,15 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     $this->assertAdvisoryEmailCount(0);
   }
 
-/**
- * Assert the count of the 'system_advisory_notify' emails during the test.
- *
- * @param int $expected_count
- *   The expected count.
- */
-protected function assertAdvisoryEmailCount(int $expected_count): void {
+  /**
+   * Assert the count of the 'system_advisory_notify' emails during the test.
+   *
+   * @param int $expected_count
+   *   The expected count.
+   */
+  protected function assertAdvisoryEmailCount(int $expected_count): void {
     $this->assertCount($expected_count, $this->getMails(['id' => 'system_advisory_notify']));
   }
-
 
   /**
    * Asserts the correct links appear on an admin page.
