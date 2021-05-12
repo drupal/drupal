@@ -107,7 +107,7 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
     if ($results === NULL) {
       $checker_url = Url::fromRoute('auto_updates.update_readiness')->setOption('query', $this->getDestinationArray());
       if ($checker_url->access()) {
-        $this->messenger->addError($this->t('Your site has not recently run an update readiness check. <a href=":url">Run readiness checks now.</a>', [
+        $this->messenger()->addError($this->t('Your site has not recently run an update readiness check. <a href=":url">Run readiness checks now.</a>', [
           ':url' => $checker_url->toString(),
         ]));
       }
@@ -165,15 +165,15 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
     }
     $failure_message = $this->getFailureMessageForSeverity($severity);
     $severity === SystemManager::REQUIREMENT_ERROR ?
-      $this->messenger->addError($failure_message) :
-      $this->messenger->addWarning($failure_message);
+      $this->messenger()->addError($failure_message) :
+      $this->messenger()->addWarning($failure_message);
 
     foreach ($filtered_results as $result) {
       $messages = $result->getMessages();
       $message = count($messages) === 1 ? $messages[0] : $result->getSummary();
       $severity === SystemManager::REQUIREMENT_ERROR ?
-        $this->messenger->addError($message) :
-        $this->messenger->addWarning($message);
+        $this->messenger()->addError($message) :
+        $this->messenger()->addWarning($message);
     }
     return TRUE;
   }
