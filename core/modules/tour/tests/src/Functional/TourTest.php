@@ -285,4 +285,39 @@ class TourTest extends TourTestBasic {
     return $elements;
   }
 
+  /**
+   * Test that warnings are triggered.
+   */
+  public function testDeprecatedMethodWarningsErrors() {
+    $previous_error_handler = set_error_handler(function ($severity, $message, $file, $line) use (&$previous_error_handler) {
+      // Convert deprecation error into a catchable exception.
+      if ($severity === E_USER_WARNING) {
+        throw new \ErrorException($message, 0, $severity, $file, $line);
+      }
+      if ($previous_error_handler) {
+        return $previous_error_handler($severity, $message, $file, $line);
+      }
+    });
+
+    $tip = Tour::load('tour-test')->getTips()[0];
+
+    try {
+      $tip->getOutput();
+      $this->fail('No getOutput() warning triggered.');
+    }
+    catch (\ErrorException $e) {
+      $this->assertSame('Drupal\tourTipPluginInterface::getOutput is deprecated. Use getBody() instead. See https://www.drupal.org/node/3204096', $e->getMessage());
+    }
+
+    try {
+      $tip->getAttributes();
+      $this->fail('No getAttributes() warning triggered.');
+    }
+    catch (\ErrorException $e) {
+      $this->assertSame('Drupal\tour\TipPluginInterface::getAttributes is deprecated. Tour tip plugins should implement Drupal\tour\TourTipPluginInterface and Tour configs should use the \'selector\' property instead of \'attributes\' to target an element.', $e->getMessage());
+    }
+
+    restore_error_handler();
+  }
+
 }

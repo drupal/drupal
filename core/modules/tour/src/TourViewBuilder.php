@@ -70,7 +70,7 @@ class TourViewBuilder extends EntityViewBuilder {
             // `selector` property to associate the tip with an element.
             // @see tour_update_9200()
             if (!$selector) {
-              $attributes = $tip->getAttributes();
+              $attributes = $tip->get('attributes');
               if (!empty($attributes['data-class'])) {
                 $selector = ".{$attributes['data-class']}";
               }

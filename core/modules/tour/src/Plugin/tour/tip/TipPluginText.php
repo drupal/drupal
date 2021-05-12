@@ -74,7 +74,7 @@ class TipPluginText extends TipPluginBase implements ContainerFactoryPluginInter
    * {@inheritdoc}
    */
   public function getOutput() {
-    // Call parent to trigger error this is a deprecated function.
+    // Call parent to trigger error when calling this function.
     parent::getOutput();
     $output = '<p class="tour-tip-body">' . $this->token->replace($this->get('body')) . '</p>';
     return ['#markup' => $output];

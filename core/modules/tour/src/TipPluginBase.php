@@ -3,6 +3,7 @@
 namespace Drupal\tour;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Plugin\PluginBase;
 
 /**
@@ -14,6 +15,9 @@ use Drupal\Core\Plugin\PluginBase;
  * @see plugin_api
  */
 abstract class TipPluginBase extends PluginBase implements TipPluginInterface {
+
+  use DeprecatedServicePropertyTrait;
+
   /**
    * The label which is used for render of this tip.
    *
@@ -29,18 +33,15 @@ abstract class TipPluginBase extends PluginBase implements TipPluginInterface {
   protected $weight;
 
   /**
-   * The attributes that will be applied to the markup of this tip.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  protected $attributes;
+  protected $deprecatedProperties = ['attributes' => 'attributes'];
 
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     if (!$this instanceof TourTipPluginInterface) {
       @trigger_error('Tip plugins implementing ' . __NAMESPACE__ . '\TipPluginInterface that don\'t also implement ' . __NAMESPACE__ . '\TourTipPluginInterface are deprecated in drupal:9.2.0. See https://www.drupal.org/node/3204096', E_USER_DEPRECATED);
     }
-
   }
 
   /**
@@ -69,6 +70,20 @@ abstract class TipPluginBase extends PluginBase implements TipPluginInterface {
    */
   public function getAttributes() {
     trigger_error(__NAMESPACE__ . '\TipPluginInterface::getAttributes is deprecated. Tour tip plugins should implement ' . __NAMESPACE__ . '\TourTipPluginInterface and Tour configs should use the \'selector\' property instead of \'attributes\' to target an element.', E_USER_WARNING);
+
+    // Use the selector property to return an array in the format that would
+    // be expected.
+    if ($selector = $this->get('selector')) {
+      $first_char = substr($selector, 0, 1);
+      $other_chars = substr($selector, 1);
+      if ($first_char === '#') {
+        return ['data-id' => $other_chars];
+      }
+      if ($first_char === '.') {
+        return ['data-class' => $other_chars];
+      }
+    }
+
     return $this->get('attributes') ?: [];
   }
 
@@ -89,19 +104,21 @@ abstract class TipPluginBase extends PluginBase implements TipPluginInterface {
   }
 
   /**
-   * This method should not actually be used and throws an exception.
+   * This method should not be used. It is deprecated from TipPluginInterface.
    *
-   * This method exists so the class can implement TipPluginInterface, which is
-   * needed for plugin discovery in Drupal 9. TipPluginInterface is deprecated
-   * and will be replaced with TourTipPluginInterface in Drupal 10.
+   * The getOutput() method was a requirement of TipPluginInterface, but was not
+   * part of TipPluginBase prior to it being deprecated. As a result, all tip
+   * plugins have their own implementations of getOutput(), making it unlikely
+   * that this implementation will be called. If it is, called however, the
+   * caller is not likely expecting an empty array, so a warning is triggered.
    *
    * @return array
-   *   An intentionally.
+   *   An intentionally empty array.
    *
    * @todo remove in https://drupal.org/node/3195193
    */
   public function getOutput() {
-    trigger_error(__NAMESPACE__ . 'TipPluginInterface::getOutput is deprecated. Use getBody() instead.', E_USER_WARNING);
+    trigger_error(__NAMESPACE__ . 'TipPluginInterface::getOutput is deprecated. Use getBody() instead. See https://www.drupal.org/node/3204096', E_USER_WARNING);
 
     // This class must implement TipPluginInterface, but this method is
     // deprecated. An empty array is returned to meet interface requirements.

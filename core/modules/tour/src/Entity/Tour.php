@@ -189,4 +189,37 @@ class Tour extends ConfigEntityBase implements TourInterface {
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   *
+   * @todo Remove method in https://drupal.org/node/3195193
+   */
+  public function set($property_name, $value) {
+    // If a tip is being set via a config form that is based on deprecated
+    // properties, map those properties to their replacements.
+    if ($property_name === 'tips') {
+      foreach ($value as &$tip) {
+        if (isset($tip['attributes'])) {
+          if (!empty($tip['attributes']['data-class'])) {
+            $tip['selector'] = ".{$tip['attributes']['data-class']}";
+          }
+          if (!empty($tip['attributes']['data-id'])) {
+            $tip['selector'] = "#{$tip['attributes']['data-id']}";
+          }
+          if (!empty($tip['location'])) {
+            $location_swap = [
+              'top' => 'bottom',
+              'bottom' => 'top',
+              'left' => 'right',
+              'right' => 'left',
+            ];
+            $tip['position'] = $location_swap[$tip['attributes']['location']];
+          }
+        }
+      }
+    }
+
+    parent::set($property_name, $value);
+  }
+
 }
