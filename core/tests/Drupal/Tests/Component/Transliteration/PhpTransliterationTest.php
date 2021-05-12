@@ -124,58 +124,96 @@ class PhpTransliterationTest extends TestCase {
     return [
       // Each test case is language code, input, output, unknown character, max
       // length.
-      // Test ASCII in English.
-      ['en', $random, $random],
-      // Test ASCII in some other language with no overrides.
-      ['fr', $random, $random],
-      // Test 3 and 4-byte characters in a language without overrides.
-      // Note: if the data tables change, these will need to change too! They
-      // are set up to test that data table loading works, so values come
-      // directly from the data files.
-      ['fr', $three_byte, 'c'],
-      ['fr', $four_byte, 'wii'],
-      // Test 5-byte characters.
-      ['en', $five_byte, '??'],
-      // Test a language with no overrides.
-      ['en', $two_byte, 'A O U A O aouaohello'],
-      // Test language overrides provided by core.
-      ['de', $two_byte, 'Ae Oe Ue A O aeoeueaohello'],
-      ['de', $random, $random],
-      ['da', $two_byte, 'A O U Aa Oe aouaaoehello'],
-      ['da', $random, $random],
-      ['kg', $three_byte, 'ts'],
-      // Test strings in some other languages.
-      // Ukrainian pangram.
-      ['uk', 'На подушечці форми любої є й ґудзик щоб пірʼя геть жовте сховати.', 'Na podushechtsi formy lyuboyi ye y gudzyk shchob pirya het zhovte skhovaty.'],
-      // Turkish, provided by drupal.org user Kartagis.
-      ['tr', 'Abayı serdiler bize. Söyleyeceğim yüzlerine. Sanırım hepimiz aynı şeyi düşünüyoruz.', 'Abayi serdiler bize. Soyleyecegim yuzlerine. Sanirim hepimiz ayni seyi dusunuyoruz.'],
-      // Max length.
-      ['de', $two_byte, 'Ae Oe Ue A O aeoe', '?', 17],
-      // Do not split up the transliteration of a single character.
-      ['de', $two_byte, 'Ae Oe Ue A O aeoe', '?', 18],
-      // Illegal/unknown unicode.
-      ['en', chr(0xF8) . chr(0x80) . chr(0x80) . chr(0x80) . chr(0x80), '?????'],
-      ['en', chr(0xF8) . chr(0x80) . chr(0x80) . chr(0x80) . chr(0x80), '-----', '-'],
-      ['en', 'Hel' . chr(0x80) . 'o World', 'Hel?o World'],
-      ['en', 'Hell' . chr(0x80) . ' World', 'Hell? World'],
-      // Non default replacement.
-      ['en', chr(0x80) . 'ello World', '_ello World', '_'],
-      // Keep the original question marks.
-      ['en', chr(0xF8) . '?' . chr(0x80), '???'],
-      ['en', chr(0x80) . 'ello ? World?', '_ello ? World?', '_'],
-      ['pl', 'aąeę' . chr(0x80) . 'oółżźz ?', 'aaee?oolzzz ?'],
-      // Non-US-ASCII replacement.
-      ['en', chr(0x80) . 'ello World?', 'Oello World?', 'Ö'],
-      ['pl', chr(0x80) . 'óóść', 'ooosc', 'ó'],
-      // Ensure question marks are replaced when max length used.
-      ['en', chr(0x80) . 'ello ? World?', '_ello ?', '_', 7],
-      // Empty replacement.
-      ['en', chr(0x80) . 'ello World' . chr(0xF8), 'ello World', ''],
-      // Not affecting spacing from the beginning and end of a string.
-      ['en', ' Hello Abventor! ', ' Hello Abventor! '],
-      ['pl', ' Drupal Kraków Community', ' Drupal Krakow ', '?', 15],
-      // Keep many spaces between words.
-      ['en', 'Too    many    spaces between words !', 'Too    many    spaces between words !'],
+      'Test ASCII in English' => [
+        'en', $random, $random,
+      ],
+      'Test ASCII in some other language with no overrides' => [
+        'fr', $random, $random,
+      ],
+      'Test 3-byte characters from data table in a language without overrides' => [
+        'fr', $three_byte, 'c',
+      ],
+      'Test 4-byte characters from data table in a language without overrides' => [
+        'fr', $four_byte, 'wii',
+      ],
+      'Test 5-byte characters not existing in the data table' => [
+        'en', $five_byte, '??',
+      ],
+      'Test a language with no overrides' => [
+        'en', $two_byte, 'A O U A O aouaohello',
+      ],
+      'Test language overrides in German' => [
+        'de', $two_byte, 'Ae Oe Ue A O aeoeueaohello',
+      ],
+      'Test ASCII in German language with overrides' => [
+        'de', $random, $random,
+      ],
+      'Test language overrides in Danish' => [
+        'da', $two_byte, 'A O U Aa Oe aouaaoehello',
+      ],
+      'Test ASCII in Danish language with overrides' => [
+        'da', $random, $random,
+      ],
+      'Test language overrides in Kyrgyz' => [
+        'kg', $three_byte, 'ts',
+      ],
+      'Test language overrides in Turkish' => [
+        'tr', 'Abayı serdiler bize. Söyleyeceğim yüzlerine. Sanırım hepimiz aynı şeyi düşünüyoruz.', 'Abayi serdiler bize. Soyleyecegim yuzlerine. Sanirim hepimiz ayni seyi dusunuyoruz.',
+      ],
+      'Test language overrides in Ukrainian' => [
+        'uk', 'На подушечці форми любої є й ґудзик щоб пірʼя геть жовте сховати.', 'Na podushechtsi formy lyuboyi ye y gudzyk shchob pirya het zhovte skhovaty.',
+      ],
+      'Max length' => [
+        'de', $two_byte, 'Ae Oe Ue A O aeoe', '?', 17,
+      ],
+      'Do not split up the transliteration of a single character' => [
+        'de', $two_byte, 'Ae Oe Ue A O aeoe', '?', 18,
+      ],
+      'Illegal/unknown unicode' => [
+        'en', chr(0xF8) . chr(0x80) . chr(0x80) . chr(0x80) . chr(0x80), '?????',
+      ],
+      'Illegal/unknown unicode with non default replacement' => [
+        'en', chr(0xF8) . chr(0x80) . chr(0x80) . chr(0x80) . chr(0x80), '-----', '-',
+      ],
+      'Contains Illegal/unknown unicode' => [
+        'en', 'Hel' . chr(0x80) . 'o World', 'Hel?o World',
+      ],
+      'Illegal/unknown unicode at end' => [
+        'en', 'Hell' . chr(0x80) . ' World', 'Hell? World',
+      ],
+      'Non default replacement' => [
+        'en', chr(0x80) . 'ello World', '_ello World', '_',
+      ],
+      'Keep the original question marks' => [
+        'en', chr(0xF8) . '?' . chr(0x80), '???',
+      ],
+      'Keep the original question marks when non default replacement' => [
+        'en', chr(0x80) . 'ello ? World?', '_ello ? World?', '_',
+      ],
+      'Keep the original question marks in some other language' => [
+        'pl', 'aąeę' . chr(0x80) . 'oółżźz ?', 'aaee?oolzzz ?',
+      ],
+      'Non-US-ASCII replacement in English' => [
+        'en', chr(0x80) . 'ello World?', 'Oello World?', 'Ö',
+      ],
+      'Non-US-ASCII replacement in some other language' => [
+        'pl', chr(0x80) . 'óóść', 'ooosc', 'ó',
+      ],
+      'Ensure question marks are replaced when max length used' => [
+        'en', chr(0x80) . 'ello ? World?', '_ello ?', '_', 7,
+      ],
+      'Empty replacement' => [
+        'en', chr(0x80) . 'ello World' . chr(0xF8), 'ello World', '',
+      ],
+      'Not affecting spacing from the beginning and end of a string' => [
+        'en', ' Hello Abventor! ', ' Hello Abventor! ',
+      ],
+      'Not affecting spacing from the beginning and end of a string when max length used' => [
+        'pl', ' Drupal Kraków Community', ' Drupal Krakow ', '?', 15,
+      ],
+      'Keep many spaces between words' => [
+        'en', 'Too    many    spaces between words !', 'Too    many    spaces between words !',
+      ],
     ];
     // cSpell:enable
   }
