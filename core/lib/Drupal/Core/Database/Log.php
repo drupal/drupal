@@ -122,7 +122,7 @@ class Log {
       $this->queryLog[$key][] = [
         'query' => $statement->getQueryString(),
         'args' => $args,
-        'target' => method_exists([$statement, 'getConnectionTarget']) ? $statement->getConnectionTarget() : $statement->dbh->getTarget(),
+        'target' => method_exists($statement, 'getConnectionTarget') ? $statement->getConnectionTarget() : $statement->dbh->getTarget(),
         'caller' => $this->findCaller(),
         'time' => $time,
         'start' => $start,
