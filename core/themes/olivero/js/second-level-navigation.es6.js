@@ -30,17 +30,26 @@
           el.querySelector('.primary-nav__menu--level-2').classList.remove(
             'is-active-menu-parent',
           );
+          el.querySelector('.primary-nav__menu-🥕').classList.remove(
+            'is-active-menu-parent',
+          );
         });
       }
       button.setAttribute('aria-expanded', 'true');
       topLevelMenuItem
         .querySelector('.primary-nav__menu--level-2')
         .classList.add('is-active-menu-parent');
+      topLevelMenuItem
+        .querySelector('.primary-nav__menu-🥕')
+        .classList.add('is-active-menu-parent');
     } else {
       button.setAttribute('aria-expanded', 'false');
       topLevelMenuItem.classList.remove('is-touch-event');
       topLevelMenuItem
         .querySelector('.primary-nav__menu--level-2')
+        .classList.remove('is-active-menu-parent');
+      topLevelMenuItem
+        .querySelector('.primary-nav__menu-🥕')
         .classList.remove('is-active-menu-parent');
     }
   }
@@ -166,9 +175,7 @@
     (e) => {
       if (
         areAnySubNavsOpen() &&
-        !e.target.matches(
-          '.primary-nav__menu-item--has-children, .primary-nav__menu-item--has-children *',
-        )
+        !e.target.matches('.header-nav, .header-nav *')
       ) {
         closeAllSubNav();
       }

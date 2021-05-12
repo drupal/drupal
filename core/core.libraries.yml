@@ -14,10 +14,10 @@ backbone:
 
 ckeditor:
   remote: https://github.com/ckeditor/ckeditor4
-  version: "4.15.1"
+  version: "4.16.0"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://raw.githubusercontent.com/ckeditor/ckeditor4/4.15.1/LICENSE.md
+    url: https://raw.githubusercontent.com/ckeditor/ckeditor4/4.16.0/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor/ckeditor.js: { preprocess: false, minified: true }
@@ -258,6 +258,7 @@ drupal.dialog.ajax:
     - core/drupalSettings
     - core/drupal.ajax
     - core/drupal.dialog
+    - core/tabbable
 
 drupal.displace:
   version: VERSION
@@ -366,7 +367,6 @@ drupal.tabbingmanager:
     - core/jquery
     - core/drupal
     - core/tabbable
-    - core/tabbable.jquery.shim
 
 drupal.tabledrag:
   version: VERSION
@@ -766,10 +766,10 @@ popperjs:
 
 sortable:
   remote: https://github.com/SortableJS/Sortable
-  version: "1.10.2"
+  version: "1.13.0"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/SortableJS/Sortable/1.10.2/LICENSE
+    url: https://raw.githubusercontent.com/SortableJS/Sortable/1.13.0/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/sortable/Sortable.min.js: { minified: true }
@@ -791,6 +791,7 @@ tabbable.jquery.shim:
   js:
     misc/jquery.tabbable.shim.js: {}
   dependencies:
+    - core/drupal
     - core/tabbable
     - core/jquery
 
