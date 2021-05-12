@@ -36,6 +36,12 @@ class DbDumpCommandTest extends KernelTestBase {
     /** @var \Drupal\Core\Database\Connection $connection */
     $connection = $this->container->get('database');
     $connection->insert('router')->fields(['name', 'path', 'pattern_outline'])->values(['test', 'test', 'test'])->execute();
+
+    // Create a table with a field type not defined in
+    // \Drupal\Core\Database\Schema::getFieldTypeMap.
+    $table_name = $connection->tablePrefix() . 'foo';
+    $sql = "create table if not exists `$table_name` (`test` datetime NOT NULL);";
+    $connection->query($sql)->execute();
   }
 
   /**
