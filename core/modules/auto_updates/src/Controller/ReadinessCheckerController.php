@@ -67,17 +67,16 @@ class ReadinessCheckerController extends ControllerBase {
     }
     else {
       // Determine if any of the results are errors.
-      $error_results = self::getResultsBySeverity($results, SystemManager::REQUIREMENT_ERROR);
+      $error_results = $this->readinessCheckerManager->getResults(SystemManager::REQUIREMENT_ERROR);
       // If there are any errors, display a failure message as an error.
       // Otherwise, display it as a warning.
       $severity = $error_results ? SystemManager::REQUIREMENT_ERROR : SystemManager::REQUIREMENT_WARNING;
-      $message = $this->getFailureMessageForSeverity($severity);
       $failure_message = $this->getFailureMessageForSeverity($severity);
       if ($severity === SystemManager::REQUIREMENT_ERROR) {
-        $this->messenger()->addError($message);
+        $this->messenger()->addError($failure_message);
       }
       else {
-        $this->messenger()->addWarning($message);
+        $this->messenger()->addWarning($failure_message);
       }
     }
     // Set a redirect to the status report page. Any other page that provides a

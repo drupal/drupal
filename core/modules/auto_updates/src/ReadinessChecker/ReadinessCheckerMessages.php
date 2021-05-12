@@ -103,8 +103,7 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
     if (!$this->displayResultsOnCurrentPage()) {
       return;
     }
-    $results = $this->readinessCheckerManager->getResults();
-    if ($results === NULL) {
+    if ($this->readinessCheckerManager->getResults() === NULL) {
       $checker_url = Url::fromRoute('auto_updates.update_readiness')->setOption('query', $this->getDestinationArray());
       if ($checker_url->access()) {
         $this->messenger()->addError($this->t('Your site has not recently run an update readiness check. <a href=":url">Run readiness checks now.</a>', [
@@ -114,8 +113,8 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
     }
     else {
       // Warnings are not displayed if there are any errors.
-      if (!$this->displayResultsForSeverity($results, SystemManager::REQUIREMENT_ERROR)) {
-        !$this->displayResultsForSeverity($results, SystemManager::REQUIREMENT_WARNING);
+      if (!$this->displayResultsForSeverity(SystemManager::REQUIREMENT_ERROR)) {
+        !$this->displayResultsForSeverity(SystemManager::REQUIREMENT_WARNING);
       }
     }
   }
@@ -149,8 +148,6 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
   /**
    * Displays the results for severity.
    *
-   * @param \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[] $results
-   *   The checker results.
    * @param int $severity
    *   The severity for the results to display. Should be one of the
    *   SystemManager::REQUIREMENT_* constants.
@@ -158,9 +155,9 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
    * @return bool
    *   Whether any results were displayed.
    */
-  protected function displayResultsForSeverity(array $results, int $severity): bool {
-    $filtered_results = self::getResultsBySeverity($results, $severity);
-    if (empty($filtered_results)) {
+  protected function displayResultsForSeverity(int $severity): bool {
+    $results = $this->readinessCheckerManager->getResults($severity);
+    if (empty($results)) {
       return FALSE;
     }
     $failure_message = $this->getFailureMessageForSeverity($severity);
@@ -168,7 +165,7 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
       $this->messenger()->addError($failure_message) :
       $this->messenger()->addWarning($failure_message);
 
-    foreach ($filtered_results as $result) {
+    foreach ($results as $result) {
       $messages = $result->getMessages();
       $message = count($messages) === 1 ? $messages[0] : $result->getSummary();
       $severity === SystemManager::REQUIREMENT_ERROR ?

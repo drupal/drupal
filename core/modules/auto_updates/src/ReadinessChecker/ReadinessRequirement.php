@@ -104,7 +104,7 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
       }
       else {
         foreach ([SystemManager::REQUIREMENT_WARNING, SystemManager::REQUIREMENT_ERROR] as $severity) {
-          if ($requirement = $this->createRequirementForSeverity($results, $severity)) {
+          if ($requirement = $this->createRequirementForSeverity($severity)) {
             $requirements["auto_updates_readiness_$severity"] = $requirement;
           }
         }
@@ -116,8 +116,6 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
   /**
    * Creates a requirements section for readiness checker results.
    *
-   * @param \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[] $results
-   *   The results.
    * @param int $severity
    *   The severity for requirement section.
    *
@@ -125,9 +123,9 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
    *   Requirements array as specified by hook_requirements(), or NULL
    *   if no requirements can be determined.
    */
-  protected function createRequirementForSeverity(array $results, int $severity): ?array {
+  protected function createRequirementForSeverity(int $severity): ?array {
     $severity_messages = [];
-    $results = self::getResultsBySeverity($results, $severity);
+    $results = $this->readinessCheckerManager->getResults($severity);
     if (!$results) {
       return NULL;
     }

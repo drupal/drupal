@@ -114,18 +114,31 @@ class ReadinessCheckerManager {
   /**
    * Gets the readiness checker results from the last run.
    *
+   * @param int|null $severity
+   *   (optional) The severity for the results to return. Should be one of the
+   *   SystemManager::REQUIREMENT_* constants.
+   *
    * @return \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[]|
    *   The result objects for the readiness checkers or NULL if no results are
    *   available or if the stored results are no longer valid. The stored
    *   results are not considered valid if the currently available readiness
    *   checkers are no longer the same as the last time the checkers were run.
    */
-  public function getResults(): ?array {
+  public function getResults(?int $severity = NULL): ?array {
     $last_run = $this->keyValueExpirable->get('readiness_check_last_run');
 
     // If the checkers have not changed return the results.
     if ($last_run && $last_run['checkers'] === $this->getCurrentCheckerIds()) {
-      return $last_run['results'];
+      /** @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[] $results */
+      $results = $last_run['results'];
+      if ($severity !== NULL) {
+        foreach (array_keys($results) as $index) {
+          if ($results[$index]->getSeverity() !== $severity) {
+            unset($results[$index]);
+          }
+        }
+      }
+      return $results;
     }
     return NULL;
   }

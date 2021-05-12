@@ -31,28 +31,4 @@ trait ReadinessTrait {
       $this->t('Your site does not pass some readiness checks for automatic updates. It cannot be automatically updated until further action is performed.');
   }
 
-  /**
-   * Gets readiness checker results by severity.
-   *
-   * @param \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[] $results
-   *   The results to filter.
-   * @param int $severity
-   *   The severity. Should be one of the SystemManager::REQUIREMENT_*
-   *   constants.
-   *
-   * @return \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[]
-   *   The readiness checker results by category.
-   *
-   * @see \Drupal\system\SystemManager::REQUIREMENT_ERROR
-   * @see \Drupal\system\SystemManager::REQUIREMENT_WARNING
-   */
-  protected static function getResultsBySeverity(array $results, int $severity): array {
-    return array_filter(
-      $results,
-      function (ReadinessCheckerResult $result) use ($severity) {
-        return $result->getSeverity() === $severity;
-      }
-    );
-  }
-
 }
