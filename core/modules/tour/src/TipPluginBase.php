@@ -37,6 +37,9 @@ abstract class TipPluginBase extends PluginBase implements TipPluginInterface {
    */
   protected $deprecatedProperties = ['attributes' => 'attributes'];
 
+  /**
+   * {@inheritdoc}
+   */
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     if (!$this instanceof TourTipPluginInterface) {
