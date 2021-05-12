@@ -85,6 +85,10 @@ class EntityConverterTest extends KernelTestBase {
     $converted = $converter->convert($entity3->id(), $definition, 'qux', []);
     $this->assertNull($converted);
 
+    // A non-existing entity returns NULL.
+    $converted = $converter->convert('some-non-existing-entity-id', $definition, 'qux', []);
+    $this->assertNull($converted);
+
     $definition = [
       'type' => 'entity:entity_test',
     ];
@@ -96,6 +100,8 @@ class EntityConverterTest extends KernelTestBase {
     $this->assertSame($entity2->id(), $converted->id());
     $converted = $converter->convert($entity3->id(), $definition, 'qux', []);
     $this->assertSame($entity3->id(), $converted->id());
+    $converted = $converter->convert('some-non-existing-entity-id', $definition, 'qux', []);
+    $this->assertNull($converted);
   }
 
 }
