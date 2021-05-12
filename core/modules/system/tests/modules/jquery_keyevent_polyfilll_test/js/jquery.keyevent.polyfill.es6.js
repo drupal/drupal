@@ -6,6 +6,9 @@
  * any supported browsers, but is still necessary to trigger keyboard events in
  * FunctionalJavaScript tests.
  *
+ * @todo: This polyfill may be removed if MinkSelenium2Driver updates its use of
+ * syn.js, https://github.com/minkphp/MinkSelenium2Driver/pull/333
+ *
  * @see https://github.com/jquery/jquery/issues/4755
  * @see https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/which
  */
