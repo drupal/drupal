@@ -81,8 +81,8 @@ abstract class TipPluginBase extends PluginBase implements TipPluginInterface {
     // does not stop page execution, but will be logged.
     trigger_error(__NAMESPACE__ . '\TipPluginInterface::getAttributes is deprecated. Tour tip plugins should implement ' . __NAMESPACE__ . '\TourTipPluginInterface and Tour configs should use the \'selector\' property instead of \'attributes\' to target an element.', E_USER_WARNING);
 
-    // For backwards compatibility, use the selector property (when available)
-    // to return an array with the expected structure.
+    // When available, use the selector property to return an array with the
+    // expected structure.
     if ($selector = $this->get('selector')) {
       $first_char = substr($selector, 0, 1);
       $other_chars = substr($selector, 1);
@@ -97,7 +97,8 @@ abstract class TipPluginBase extends PluginBase implements TipPluginInterface {
     // The tour_update_9200() update hook converts all uses of the deprecated
     // 'attributes' property to the current 'selector' property. It's possible
     // for tour config with this deprecated property to be installed after this
-    // update hook ran. Return the attributes value in those instances.
+    // update hook ran. Return the attributes value in those instances. If
+    // attributes has no value, return an empty array.
     return $this->get('attributes') ?: [];
   }
 
