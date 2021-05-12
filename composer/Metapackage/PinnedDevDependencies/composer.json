@@ -34,7 +34,7 @@
         "phpdocumentor/reflection-docblock": "5.2.2",
         "phpdocumentor/type-resolver": "1.4.0",
         "phpspec/prophecy": "1.13.0",
-        "phpstan/phpstan": "0.12.82",
+        "phpstan/phpstan": "0.12.86",
         "phpunit/php-code-coverage": "7.0.14",
         "phpunit/php-file-iterator": "2.0.3",
         "phpunit/php-text-template": "1.2.1",
