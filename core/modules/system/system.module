@@ -252,6 +252,11 @@ function system_theme() {
       'file' => 'system.theme.inc',
       'variables' => ['error_message' => []],
     ],
+    'system_advisory_notification' => [
+      'variables' => [
+      'advisories' => [],
+      ],
+    ],
   ]);
 }
 
@@ -1075,6 +1080,13 @@ function system_cron() {
     /** @var \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher $fetcher */
     $fetcher = \Drupal::service('system.sa_fetcher');
     $fetcher->getSecurityAdvisories();
+
+    /** @var \Drupal\system\SecurityAdvisories\EmailNotifier $notify */
+    $notify = \Drupal::service('system.sa_notifier');
+    // Any exceptions encountered retrieving advisories will be caught and
+    // logged.
+    // @see \Drupal\Core\Cron::invokeCronHandlers()
+    $notify->send();
   }
 }
 

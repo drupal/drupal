@@ -64,3 +64,6 @@ services:
     arguments: ['@system.sa_fetcher']
     tags:
       - { name: event_subscriber }
+  system.sa_notifier:
+    class: Drupal\system\SecurityAdvisories\EmailNotifier
+    arguments: [ '@plugin.manager.mail', '@system.sa_fetcher', '@config.factory', '@state', '@entity_type.manager', '@string_translation', '@language_manager' ]
