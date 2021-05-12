@@ -9,6 +9,9 @@ namespace Drupal\tour;
  * @see \Drupal\tour\TipPluginBase
  * @see \Drupal\tour\TipPluginManager
  * @see plugin_api
+ *
+ * @todo move all methods to TipPluginInterface and deprecate this interface in
+ *   https://drupal.org/node/3195193
  */
 interface TourTipPluginInterface extends TipPluginInterface {
 

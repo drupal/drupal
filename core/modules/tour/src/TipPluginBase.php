@@ -67,12 +67,19 @@ abstract class TipPluginBase extends PluginBase implements TipPluginInterface {
 
   /**
    * {@inheritdoc}
+   *
+   * @todo remove in https://drupal.org/node/3195193
    */
   public function getAttributes() {
+    // This method is deprecated and rewritten to be as backwards compatible as
+    // possible with pre-existing uses. Due to the flexibility of tip plugins,
+    // this backwards compatibility can't be fully guaranteed. Because of this,
+    // we trigger a warning to caution the use of this function. This warning
+    // does not stop page execution, but will be logged.
     trigger_error(__NAMESPACE__ . '\TipPluginInterface::getAttributes is deprecated. Tour tip plugins should implement ' . __NAMESPACE__ . '\TourTipPluginInterface and Tour configs should use the \'selector\' property instead of \'attributes\' to target an element.', E_USER_WARNING);
 
-    // Use the selector property to return an array in the format that would
-    // be expected.
+    // For backwards compatibility, use the selector property (when available)
+    // to return an array with the expected structure.
     if ($selector = $this->get('selector')) {
       $first_char = substr($selector, 0, 1);
       $other_chars = substr($selector, 1);
@@ -84,6 +91,10 @@ abstract class TipPluginBase extends PluginBase implements TipPluginInterface {
       }
     }
 
+    // The tour_update_9200() update hook converts all uses of the deprecated
+    // 'attributes' property to the current 'selector' property. It's possible
+    // for tour config with thia deprecated property to be installed after this
+    // update hook ran. Return the attributes value in those instances.
     return $this->get('attributes') ?: [];
   }
 
@@ -106,18 +117,19 @@ abstract class TipPluginBase extends PluginBase implements TipPluginInterface {
   /**
    * This method should not be used. It is deprecated from TipPluginInterface.
    *
-   * The getOutput() method was a requirement of TipPluginInterface, but was not
-   * part of TipPluginBase prior to it being deprecated. As a result, all tip
-   * plugins have their own implementations of getOutput(), making it unlikely
-   * that this implementation will be called. If it is, called however, the
-   * caller is not likely expecting an empty array, so a warning is triggered.
-   *
    * @return array
    *   An intentionally empty array.
    *
    * @todo remove in https://drupal.org/node/3195193
    */
   public function getOutput() {
+    // The getOutput() method was a requirement of TipPluginInterface, but was
+    // not part of TipPluginBase prior to it being deprecated. As a result, all
+    // tip plugins have their own implementations of getOutput() making it
+    // unlikely that this implementation will be called. If it does get called,
+    // however, the return value of an empty array is not likely the desired
+    // result, so a warning is triggered. This warning does not stop page
+    // execution, but will be logged.
     trigger_error(__NAMESPACE__ . 'TipPluginInterface::getOutput is deprecated. Use getBody() instead. See https://www.drupal.org/node/3204096', E_USER_WARNING);
 
     // This class must implement TipPluginInterface, but this method is
