@@ -1858,6 +1858,80 @@ function hook_entity_form_display_alter(\Drupal\Core\Entity\Display\EntityFormDi
 }
 
 /**
+ * Alter the revisions overview table for an entity.
+ *
+ * @param array $build
+ *   The renderable array.
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The default revision of the entity.
+ * @param array $context
+ *   An associative array containing:
+ *   - all_revisions: An array of all the revisions of the entity, keyed by
+ *     the revision ID.
+ *   - displayed_revisions: An array of the revisions of the entity that are
+ *     shown in the build array, keyed by the revision ID and in the same order
+ *     as the rows in the build array.
+ *
+ * @see hook_entity_ENTITY_TYPE_revision_overview_alter()
+ */
+function hook_entity_revision_overview_alter(array &$build, \Drupal\Core\Entity\EntityInterface $entity, array $context) {
+  array_splice($build['entity_revisions_table']['#header'], 1, 0, [$this->t('Revision author ID')]);
+
+  foreach ($build['entity_revisions_table']['#rows'] as $index => &$row) {
+    // The table rows are keyed numerically, whereas the array of revisions is
+    // keyed by the vid. So the only way to get the revision for a row is to
+    // rely on the two arrays being in the same order.
+    $row_revision = array_shift($displayed_revisions);
+
+    // A table row either is an array of cells, or has a 'data' array which
+    // is the array of cells.
+    if (isset($row['data'])) {
+      array_splice($row['data'], 1, 0, [$row_revision->uid->target_id]);
+    }
+    else {
+      array_splice($row, 1, 0, [$row_revision->uid->target_id]);
+    }
+  }
+}
+
+/**
+ * Alter the revisions overview table for an entity of a particular entity type.
+ *
+ * @param array $build
+ *   The renderable array.
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The default revision of the entity.
+ * @param array $context
+ *   An associative array containing:
+ *   - all_revisions: An array of all the revisions of the entity, keyed by
+ *     the revision ID.
+ *   - displayed_revisions: An array of the revisions of the entity that are
+ *     shown in the build array, keyed by the revision ID and in the same order
+ *     as the rows in the build array.
+ *
+ * @see hook_entity_revision_overview_alter()
+ */
+function hook_entity_ENTITY_TYPE_revision_overview_alter(array &$build, \Drupal\Core\Entity\EntityInterface $entity, array $context) {
+  array_splice($build['entity_revisions_table']['#header'], 1, 0, [$this->t('Revision author ID')]);
+
+  foreach ($build['entity_revisions_table']['#rows'] as $index => &$row) {
+    // The table rows are keyed numerically, whereas the array of revisions is
+    // keyed by the vid. So the only way to get the revision for a row is to
+    // rely on the two arrays being in the same order.
+    $row_revision = array_shift($displayed_revisions);
+
+    // A table row either is an array of cells, or has a 'data' array which
+    // is the array of cells.
+    if (isset($row['data'])) {
+      array_splice($row['data'], 1, 0, [$row_revision->uid->target_id]);
+    }
+    else {
+      array_splice($row, 1, 0, [$row_revision->uid->target_id]);
+    }
+  }
+}
+
+/**
  * Provides custom base field definitions for a content entity type.
  *
  * Field (storage) definitions returned by this hook must run through the
