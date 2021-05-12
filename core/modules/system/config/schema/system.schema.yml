@@ -303,6 +303,17 @@ system.theme.global:
   type: theme_settings
   label: 'Theme global settings'
 
+system.advisories:
+  type: config_object
+  label: 'Security advisory settings'
+  mapping:
+    enabled:
+      type: boolean
+      label: 'Display critical security advisories'
+    interval_hours:
+      type: integer
+      label: 'How often to check for security advisories, in hours'
+
 block.settings.system_branding_block:
   type: block_settings
   label: 'Branding block'

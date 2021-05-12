@@ -1,0 +1,7 @@
+advisory_feed_test.json_test:
+  path: '/advisory-feed-json/{json_name}'
+  defaults:
+    _title: 'Update test'
+    _controller: '\Drupal\advisory_feed_test\Controller\AdvisoryTestController::getPsaJson'
+  requirements:
+    _access: 'TRUE'
