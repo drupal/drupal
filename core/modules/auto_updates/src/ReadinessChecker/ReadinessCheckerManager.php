@@ -98,13 +98,13 @@ class ReadinessCheckerManager {
   }
 
   /**
-   * Runs the readiness checkers if there are no valid results.
+   * Runs the readiness checkers if there no stored valid results.
    *
    * @return $this
    *
    * @see self::getResults()
    */
-  public function runIfNeeded(): self {
+  public function runIfNoStoredValidResults(): self {
     if ($this->getResults() === NULL) {
       $this->run();
     }

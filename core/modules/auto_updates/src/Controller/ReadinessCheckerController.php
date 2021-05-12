@@ -66,13 +66,19 @@ class ReadinessCheckerController extends ControllerBase {
       $this->messenger()->addStatus($this->t('No issues found. Your site is ready for automatic updates'));
     }
     else {
-      $severity = self::getResultsBySeverity($results, SystemManager::REQUIREMENT_ERROR) ?
-        SystemManager::REQUIREMENT_ERROR :
-        SystemManager::REQUIREMENT_WARNING;
+      // Determine if any of the results are errors.
+      $error_results = self::getResultsBySeverity($results, SystemManager::REQUIREMENT_ERROR);
+      // If there are any errors, display a failure message as an error.
+      // Otherwise, display it as a warning.
+      $severity = $error_results ? SystemManager::REQUIREMENT_ERROR : SystemManager::REQUIREMENT_WARNING;
       $message = $this->getFailureMessageForSeverity($severity);
-      $severity === SystemManager::REQUIREMENT_ERROR ?
-        $this->messenger()->addError($message) :
+      $failure_message = $this->getFailureMessageForSeverity($severity);
+      if ($severity === SystemManager::REQUIREMENT_ERROR) {
+        $this->messenger()->addError($message);
+      }
+      else {
         $this->messenger()->addWarning($message);
+      }
     }
     // Set a redirect to the status report page. Any other page that provides a
     // link to this controller should include 'destination' in the query string

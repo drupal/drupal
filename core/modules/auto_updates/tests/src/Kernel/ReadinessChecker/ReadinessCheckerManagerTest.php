@@ -132,7 +132,7 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::runIfNeeded
+   * @covers ::runIfNoStoredValidResults
    */
   public function testRunIfNeeded(): void {
     $expected_results = array_pop($this->testResults['checker_1']);
@@ -145,7 +145,7 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
     $manager = $this->container->get('auto_updates.readiness_checker_manager');
     // Confirm that the new results will not be returned because the checkers
     // will not be run.
-    $manager->runIfNeeded();
+    $manager->runIfNoStoredValidResults();
     $this->assertCheckerResultsEqual($expected_results);
 
     // Confirm that the new results will be returned because the checkers will
@@ -154,7 +154,7 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
     $key_value = $this->container->get('keyvalue.expirable')->get('auto_updates');
     $key_value->delete('readiness_check_last_run');
     $expected_results = $unexpected_results;
-    $manager->runIfNeeded();
+    $manager->runIfNoStoredValidResults();
     $this->assertCheckerResultsEqual($expected_results);
 
     // Confirm that the results are the same after rebuilding the container.
