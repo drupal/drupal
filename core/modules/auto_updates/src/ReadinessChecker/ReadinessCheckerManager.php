@@ -117,7 +117,7 @@ class ReadinessCheckerManager {
    * @return \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[]|
    *   The result objects for the readiness checkers or NULL if no results are
    *   available or if the stored results are no longer valid. The stored
-   *   results are not consider valid if the currently available readiness
+   *   results are not considered valid if the currently available readiness
    *   checkers are no longer the same as the last time the checkers were run.
    */
   public function getResults(): ?array {
