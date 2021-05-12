@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\ParamConverter;
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\Context\Context;
@@ -142,7 +143,11 @@ class EntityConverter implements ParamConverterInterface {
     }
     $entity = $this->entityRepository->getCanonical($entity_type_id, $value, $contexts);
 
-    if (!empty($definition['bundle']) && !in_array($entity->bundle(), $definition['bundle'], TRUE)) {
+    if (
+      !empty($definition['bundle']) &&
+      $entity instanceof EntityInterface &&
+      !in_array($entity->bundle(), $definition['bundle'], TRUE)
+    ) {
       return NULL;
     }
 
