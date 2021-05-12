@@ -2010,7 +2010,7 @@ function drupal_common_theme() {
       'render element' => 'element',
     ],
     'status_messages' => [
-      'variables' => ['status_headings' => [], 'message_list' => NULL],
+      'variables' => ['status_headings' => [], 'message_list' => NULL, 'attributes' => []],
     ],
     'links' => [
       'variables' => ['links' => [], 'attributes' => ['class' => ['links']], 'heading' => [], 'set_active_class' => FALSE],
