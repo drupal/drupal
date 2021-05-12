@@ -124,11 +124,7 @@ class FormTest extends BrowserTestBase {
           \Drupal::formBuilder()->prepareForm($form_id, $form, $form_state);
           \Drupal::formBuilder()->processForm($form_id, $form, $form_state);
           $errors = $form_state->getErrors();
-          // Form elements of type 'radios' throw all sorts of PHP notices
-          // when you try to render them like this, so we ignore those for
-          // testing the required marker.
-          // @todo Fix this work-around (https://www.drupal.org/node/588438).
-          $form_output = ($type == 'radios') ? '' : \Drupal::service('renderer')->renderRoot($form);
+          $form_output = \Drupal::service('renderer')->renderRoot($form);
           if ($required) {
             // Make sure we have a form error for this element.
             $this->assertTrue(isset($errors[$element]), "Check empty($key) '$type' field '$element'");
