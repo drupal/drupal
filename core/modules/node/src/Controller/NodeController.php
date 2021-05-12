@@ -275,7 +275,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
       }
     }
 
-    $build['node_revisions_table'] = [
+    $build['entity_revisions_table'] = [
       '#theme' => 'table',
       '#rows' => $rows,
       '#header' => $header,
