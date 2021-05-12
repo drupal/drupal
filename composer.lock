@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "Auto-merged! Run `composer update --lock` to regenerate",
+    "content-hash": "87420a757208fe32c9a4aceeb0c03d96",
     "packages": [
         {
             "name": "asm89/stack-cors",
