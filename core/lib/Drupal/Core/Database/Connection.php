@@ -347,11 +347,11 @@ abstract class Connection {
    *   - Database::RETURN_NULL: Do not return anything, as there is no
    *     meaningful value to return. That is the case for INSERT queries on
    *     tables that do not contain a serial column.
-   * - throw_exception: By default, the database system will catch any errors
-   *   on a query as an Exception, log it, and then rethrow it so that code
-   *   further up the call chain can take an appropriate action. To suppress
-   *   that behavior and simply return NULL on failure, set this option to
-   *   FALSE.
+   * - throw_exception: (deprecated) By default, the database system will catch
+   *   any errors on a query as an Exception, log it, and then rethrow it so
+   *   that code further up the call chain can take an appropriate action. To
+   *   suppress that behavior and simply return NULL on failure, set this
+   *   option to FALSE.
    * - allow_delimiter_in_query: By default, queries which have the ; delimiter
    *   any place in them will cause an exception. This reduces the chance of SQL
    *   injection attacks that terminate the original query and add one or more
@@ -376,7 +376,6 @@ abstract class Connection {
     return [
       'fetch' => \PDO::FETCH_OBJ,
       'return' => Database::RETURN_STATEMENT,
-      'throw_exception' => TRUE,
       'allow_delimiter_in_query' => FALSE,
       'allow_square_brackets' => FALSE,
       'pdo' => [],
@@ -538,7 +537,8 @@ abstract class Connection {
    * identifiers enclosed in square brackets.
    *
    * @param string $query
-   *   The query string as SQL, with curly braces surrounding the table names.
+   *   The query string as SQL, with curly braces surrounding the table names,
+   *   and square brackets surrounding identifiers.
    * @param array $options
    *   An associative array of options to control how the query is run. See
    *   the documentation for self::defaultOptions() for details. The content of
@@ -547,14 +547,15 @@ abstract class Connection {
    * @return \Drupal\Core\Database\StatementInterface
    *   A PDO prepared statement ready for its execute() method.
    *
+   * @throws \InvalidArgumentException
+   *   If multiple statements are included in the string, and delimiters are
+   *   not allowed in the query.
    * @throws \Drupal\Core\Database\DatabaseExceptionWrapper
    */
   public function prepareStatement(string $query, array $options): StatementInterface {
-    $query = $this->prefixTables($query);
-    if (!($options['allow_square_brackets'] ?? FALSE)) {
-      $query = $this->quoteIdentifiers($query);
-    }
     try {
+      $query = $this->preprocessStatement($query, $options);
+
       // @todo in Drupal 10, only return the StatementWrapper.
       // @see https://www.drupal.org/node/3177490
       $statement = $this->statementWrapperClass ?
@@ -572,6 +573,52 @@ abstract class Connection {
       throw new DatabaseExceptionWrapper("Statement preparation failure for query: $query");
     }
     return $statement;
+  }
+
+  /**
+   * Returns a string SQL statement ready for preparation.
+   *
+   * This method replaces table names in curly braces and identifiers in square
+   * brackets with platform specific replacements, appropriately escaping them
+   * and wrapping them with platform quote characters.
+   *
+   * @param string $query
+   *   The query string as SQL, with curly braces surrounding the table names,
+   *   and square brackets surrounding identifiers.
+   * @param array $options
+   *   An associative array of options to control how the query is run. See
+   *   the documentation for self::defaultOptions() for details.
+   *
+   * @return string
+   *   A string SQL statement ready for preparation.
+   *
+   * @throws \InvalidArgumentException
+   *   If multiple statements are included in the string, and delimiters are
+   *   not allowed in the query.
+   */
+  protected function preprocessStatement(string $query, array $options): string {
+    // To protect against SQL injection, Drupal only supports executing one
+    // statement at a time.  Thus, the presence of a SQL delimiter (the
+    // semicolon) is not allowed unless the option is set.  Allowing semicolons
+    // should only be needed for special cases like defining a function or
+    // stored procedure in SQL. Trim any trailing delimiter to minimize false
+    // positives unless delimiter is allowed.
+    $trim_chars = " \xA0\t\n\r\0\x0B";
+    if (empty($options['allow_delimiter_in_query'])) {
+      $trim_chars .= ';';
+    }
+    $query = rtrim($query, $trim_chars);
+    if (strpos($query, ';') !== FALSE && empty($options['allow_delimiter_in_query'])) {
+      throw new \InvalidArgumentException('; is not supported in SQL strings. Use only one statement at a time.');
+    }
+
+    // Resolve {tables} and [identifiers] to the platform specific syntax.
+    $query = $this->prefixTables($query);
+    if (!($options['allow_square_brackets'] ?? FALSE)) {
+      $query = $this->quoteIdentifiers($query);
+    }
+
+    return $query;
   }
 
   /**
@@ -793,9 +840,7 @@ abstract class Connection {
    *     (not the number matched).
    *   - If $options['return'] === self::RETURN_INSERT_ID,
    *     returns the generated insert ID of the last query as a string.
-   *   - If either $options['return'] === self::RETURN_NULL, or
-   *     an exception occurs and $options['throw_exception'] evaluates to FALSE,
-   *     returns NULL.
+   *   - If $options['return'] === self::RETURN_NULL, returns NULL.
    *
    * @throws \Drupal\Core\Database\DatabaseExceptionWrapper
    * @throws \Drupal\Core\Database\IntegrityConstraintViolationException
@@ -813,20 +858,6 @@ abstract class Connection {
     // object, which we pass to StatementInterface::execute.
     if (is_string($query)) {
       $this->expandArguments($query, $args);
-      // To protect against SQL injection, Drupal only supports executing one
-      // statement at a time.  Thus, the presence of a SQL delimiter (the
-      // semicolon) is not allowed unless the option is set.  Allowing
-      // semicolons should only be needed for special cases like defining a
-      // function or stored procedure in SQL. Trim any trailing delimiter to
-      // minimize false positives unless delimiter is allowed.
-      $trim_chars = " \xA0\t\n\r\0\x0B";
-      if (empty($options['allow_delimiter_in_query'])) {
-        $trim_chars .= ';';
-      }
-      $query = rtrim($query, $trim_chars);
-      if (strpos($query, ';') !== FALSE && empty($options['allow_delimiter_in_query'])) {
-        throw new \InvalidArgumentException('; is not supported in SQL strings. Use only one statement at a time.');
-      }
       $stmt = $this->prepareStatement($query, $options);
     }
     elseif ($query instanceof StatementInterface) {
@@ -913,7 +944,7 @@ abstract class Connection {
    */
   protected function handleQueryException(\PDOException $e, $query, array $args = [], $options = []) {
     @trigger_error('Connection::handleQueryException() is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Get a handler through $this->exceptionHandler() instead, and use one of its methods. See https://www.drupal.org/node/3187222', E_USER_DEPRECATED);
-    if ($options['throw_exception']) {
+    if ($options['throw_exception'] ?? TRUE) {
       // Wrap the exception in another exception, because PHP does not allow
       // overriding Exception::getMessage(). Its message is the extra database
       // debug information.
@@ -1639,8 +1670,14 @@ abstract class Connection {
    *
    * @return string
    *   A table name.
+   *
+   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/3211781
    */
   protected function generateTemporaryTableName() {
+    @trigger_error('Connection::generateTemporaryTableName() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3211781', E_USER_DEPRECATED);
     return "db_temporary_" . $this->temporaryNameIndex++;
   }
 
@@ -1668,6 +1705,11 @@ abstract class Connection {
    *
    * @return string
    *   The name of the temporary table.
+   *
+   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/3211781
    */
   abstract public function queryTemporary($query, array $args = [], array $options = []);
 
