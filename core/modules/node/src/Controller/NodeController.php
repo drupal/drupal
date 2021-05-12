@@ -282,8 +282,11 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
     return $build;
   }
 
-  public function alter($callback, $build, $context) {
-    $this->getModuleHandler()->invokeAll($callback, $build, $context);
+  public function alter($callback, &$build, $context) {
+    $args = [
+      &$build, $context
+    ];
+    $this->getModuleHandler()->invokeAll($callback, $args);
   }
 
   public function getModuleHandler() {
