@@ -1,0 +1,30 @@
+diff a/core/modules/system/system.module b/core/modules/system/system.module	(rejected hunks)
+@@ -249,11 +249,6 @@ function system_theme() {
+     'off_canvas_page_wrapper' => [
+       'variables' => ['children' => NULL],
+     ],
+-    'system_advisory_notification' => [
+-      'variables' => [
+-        'advisories' => [],
+-      ],
+-    ],
+     'system_fetch_error_message' => [
+       'file' => 'system.theme.inc',
+       'render element' => 'element',
+@@ -1075,16 +1070,6 @@ function system_cron() {
+   // Ensure that all of Drupal's standard directories (e.g., the public files
+   // directory and config directory) have appropriate .htaccess files.
+   \Drupal::service('file.htaccess_writer')->ensure();
+-
+-  if (\Drupal::hasService('system.sa_notifier')) {
+-    /** @var \Drupal\system\SecurityAdvisories\EmailNotifier $notify */
+-    $notify = \Drupal::service('system.sa_notifier');
+-    // Any exceptions encountered retrieving advisories will be caught and
+-    // logged.
+-    // @see \Drupal\Core\Cron::invokeCronHandlers()
+-    $notify->send();
+-  }
+-
+ }
+ 
+ /**

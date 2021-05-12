@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\SecurityAdvisories;
 
+use Drupal\Core\Test\AssertMailTrait;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\CronRunTrait;
@@ -14,6 +15,7 @@ use Drupal\advisory_feed_test\AdvisoriesTestHttpClient;
  */
 class SecurityAdvisoryTest extends BrowserTestBase {
 
+  use AssertMailTrait;
   use CronRunTrait;
 
   /**
@@ -28,6 +30,8 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     'system',
     'generic_module1_test',
     'advisory_feed_test',
+    // @todo Requires update until email setting is added to system module.
+    'update',
   ];
 
   /**

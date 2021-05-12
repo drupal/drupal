@@ -1,0 +1,90 @@
+diff a/core/modules/system/tests/src/Functional/SecurityAdvisories/SecurityAdvisoryTest.php b/core/modules/system/tests/src/Functional/SecurityAdvisories/SecurityAdvisoryTest.php	(rejected hunks)
+@@ -180,88 +176,6 @@ public function testPsa(): void {
+     $this->assertStatusReportLinks($expected_links, REQUIREMENT_ERROR);
+   }
+ 
+-  /**
+-   * Tests sending security advisory email notifications.
+-   */
+-  public function testPsaMail(): void {
+-    // Set up test PSA endpoint.
+-    AdvisoriesTestHttpClient::setTestEndpoint($this->workingEndpointMixed);
+-    // Set two notification email addresses. One is associated with a user and
+-    // and is not.
+-    // @todo Email setting still come from update module. Add a new settings and
+-    // form element to system module?
+-    $this->config('update.settings')
+-      ->set('notification.emails', ['admin@example.com', 'GracieDog@example.com'])
+-      ->save();
+-
+-    // Confirm that security advisory cache does not exist.
+-    $this->assertNull($this->tempStore->get('advisories_response'));
+-
+-    // Test security advisories on admin pages.
+-    $this->drupalGet(Url::fromRoute('system.admin'));
+-    $this->assertSession()->linkExists('Critical Release - SA-2019-02-19');
+-    // Confirm that the security advisory cache has been set.
+-    $this->assertNotEmpty($this->tempStore->get('advisories_response'));
+-
+-    // Email should be sent.
+-    $this->cronRun();
+-    $this->assertAdvisoryEmailCount(2);
+-    $this->assertMailString('subject', '4 urgent security announcements require your attention', 1);
+-    $this->assertMailString('body', 'Critical Release - SA-2019-02-19', 1);
+-    $this->assertMailString('body', 'Critical Release - PSA-Really Old', 1);
+-    $this->assertMailString('body', 'Generic Module1 Project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02', 1);
+-    $this->assertMailString('body', 'Generic Module1 Project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02', 1);
+-    $this->assertMailString('body', 'To see all public service announcements, visit https://www.drupal.org/security/psa', 1);
+-    $this->assertMailString('body', 'To change how you are notified, you may configure email notifications', 1);
+-    $this->assertMailString('body', $this->baseUrl . '/admin/reports/updates/settings', 1);
+-
+-    // Deleting the security advisory cache will not result in another email if
+-    // the messages have not changed.
+-    // @todo Replace deleting the cache directly in the test with faking a later
+-    //   date and letting the cache item expire in
+-    //   https://www.drupal.org/node/3113971.
+-    $this->tempStore->delete('advisories_response');
+-    $this->container->get('state')->set('system.test_mail_collector', []);
+-    $this->cronRun();
+-    $this->assertAdvisoryEmailCount(0);
+-
+-    // Deleting the security advisory tempstore item will result in another
+-    // email if the messages have changed.
+-    $this->container->get('state')->set('system.test_mail_collector', []);
+-    AdvisoriesTestHttpClient::setTestEndpoint($this->workingEndpointPlus1, TRUE);
+-    $this->cronRun();
+-    $this->assertAdvisoryEmailCount(2);
+-    $this->assertMailString('subject', '5 urgent security announcements require your attention', 1);
+-    $this->assertMailString('body', 'Critical Release - SA-2019-02-19', 1);
+-    $this->assertMailString('body', 'Critical Release - PSA-Really Old', 1);
+-    $this->assertMailString('body', 'Generic Module1 Project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02', 1);
+-    $this->assertMailString('body', 'Generic Module1 Project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02', 1);
+-    $this->assertMailString('body', 'Critical Release - PSA because 2020', 1);
+-  }
+-
+-  /**
+-   * Tests that an email is not sent when the PSA JSON is invalid.
+-   */
+-  public function testInvalidJsonEmail(): void {
+-    // Setup a default destination email address.
+-    $this->config('update.settings')
+-      ->set('notification.emails', ['admin@example.com'])
+-      ->save();
+-    AdvisoriesTestHttpClient::setTestEndpoint($this->invalidJsonEndpoint);
+-    $this->cronRun();
+-    $this->assertAdvisoryEmailCount(0);
+-  }
+-
+-  /**
+-   * Assert the count of the 'system_advisory_notify' emails during the test.
+-   *
+-   * @param int $expected_count
+-   *   The expected count.
+-   */
+-  protected function assertAdvisoryEmailCount(int $expected_count): void {
+-    $this->assertCount($expected_count, $this->getMails(['id' => 'system_advisory_notify']));
+-  }
+-
+   /**
+    * Asserts the correct links appear on an admin page.
+    *

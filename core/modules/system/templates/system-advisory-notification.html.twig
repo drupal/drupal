@@ -1,0 +1,34 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the security advisories email notification.
+ *
+ * Available variables:
+ * - advisories: An array of advisory links.
+ *
+ * @ingroup themeable
+ */
+#}
+
+<p>
+  {% trans %}
+    An important security announcement is available for your Drupal site. You should read the announcement immediately and follow its instructions.
+  {%- plural advisories -%}
+    Important security announcements are available for your Drupal site. You should read the announcements immediately and follow their instructions.
+  {% endtrans %}
+</p>
+<p>{{ 'Critical security announcements:'|t }}</p>
+<ul>
+  {% for advisory in advisories %}
+    <li>{{ advisory }}</li>
+  {% endfor %}
+</ul>
+<p>
+  {{ 'To see all public service announcements, visit <a href=":uri">:uri</a>.'|t({':uri': 'https://www.drupal.org/security/psa'}) }}
+</p>
+<p>
+  {% set settings_link = path('update.settings') %}
+  {% trans %}
+    To change how you are notified, you may <a href="{{ settings_link }}">configure email notifications</a>.
+  {% endtrans %}
+</p>

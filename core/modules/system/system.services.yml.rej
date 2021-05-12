@@ -1,0 +1,11 @@
+diff a/core/modules/system/system.services.yml b/core/modules/system/system.services.yml	(rejected hunks)
+@@ -54,9 +54,6 @@ services:
+   system.sa_fetcher:
+     class: Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher
+     arguments: [ '@config.factory', '@keyvalue.expirable', '@http_client', '@extension.list.module', '@extension.list.theme', '@extension.list.profile', '@logger.channel.system' ]
+-  system.sa_notifier:
+-    class: Drupal\system\SecurityAdvisories\EmailNotifier
+-    arguments: [ '@plugin.manager.mail', '@system.sa_fetcher', '@config.factory', '@state', '@entity_type.manager', '@string_translation', '@language_manager' ]
+   update.config_subscriber:
+     class: Drupal\system\EventSubscriber\AdvisoriesConfigSubscriber
+     arguments: [ '@system.sa_fetcher' ]
