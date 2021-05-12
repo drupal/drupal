@@ -277,9 +277,17 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
       'node' => $node,
       'revisions' => $all_revisions,
     ];
-    $this->alter('node_revision_overview', $build, $context);
+    $this->alter('node_revision_overview_alter', $build, $context);
 
     return $build;
+  }
+
+  public function alter($callback, $build, $context) {
+    $this->getModuleHandler()->invokeAll($callback, $build, $context);
+  }
+
+  public function getModuleHandler() {
+    return $this->moduleHandler ?: \Drupal::moduleHandler();
   }
 
   /**
