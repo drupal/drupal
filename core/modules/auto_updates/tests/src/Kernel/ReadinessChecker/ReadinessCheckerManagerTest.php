@@ -174,8 +174,9 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
     $kernel = $this->container->get('kernel');
     $this->container = $kernel->rebuildContainer();
     $expected_results = $unexpected_results;
+    /** @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager $manager */
     $manager = $this->container->get('auto_updates.readiness_checker_manager');
-    $manager->runIfNeeded();
+    $manager->runIfNoStoredValidResults();
     $this->assertCheckerResultsEqual($expected_results);
   }
 
