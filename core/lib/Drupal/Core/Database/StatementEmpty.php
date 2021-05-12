@@ -32,13 +32,6 @@ class StatementEmpty implements \Iterator, StatementInterface {
   /**
    * {@inheritdoc}
    */
-  public function getConnectionTarget(): string {
-    return 'default';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function execute($args = [], $options = []) {
     return FALSE;
   }

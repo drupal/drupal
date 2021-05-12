@@ -48,7 +48,9 @@ interface StatementInterface extends \Traversable {
    * @return string
    *   The target connection string of this statement.
    */
-  public function getConnectionTarget(): string;
+  // @todo Include this method in the interface in Drupal 10.
+  // @see https://www.drupal.org/project/drupal/issues/3210310
+  // public function getConnectionTarget(): string;
 
   /**
    * Returns the number of rows affected by the last SQL statement.

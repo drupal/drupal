@@ -3,6 +3,7 @@
 namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Database;
 
 /**
  * General class for an abstracted "Upsert" (UPDATE or INSERT) query operation.
@@ -34,6 +35,7 @@ abstract class Upsert extends Query implements \Countable {
    *   (optional) An array of database options.
    */
   public function __construct(Connection $connection, $table, array $options = []) {
+    $options['return'] = Database::RETURN_AFFECTED;
     parent::__construct($connection, $options);
     $this->table = $table;
   }
