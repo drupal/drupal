@@ -93,7 +93,7 @@ abstract class TipPluginBase extends PluginBase implements TipPluginInterface {
 
     // The tour_update_9200() update hook converts all uses of the deprecated
     // 'attributes' property to the current 'selector' property. It's possible
-    // for tour config with thia deprecated property to be installed after this
+    // for tour config with this deprecated property to be installed after this
     // update hook ran. Return the attributes value in those instances.
     return $this->get('attributes') ?: [];
   }
