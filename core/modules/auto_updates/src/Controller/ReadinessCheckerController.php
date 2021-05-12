@@ -53,14 +53,10 @@ class ReadinessCheckerController extends ControllerBase {
   /**
    * Run the readiness checkers.
    *
-   * @param bool $display_message_on_fails
-   *   (optional) Determines whether a failure message should be displayed if
-   *   there are any messages from the checkers.
-   *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   A redirect to the status report page.
    */
-  public function run(bool $display_message_on_fails = TRUE): RedirectResponse {
+  public function run(): RedirectResponse {
     $results = $this->readinessCheckerManager->run()->getResults();
     if (!$results) {
       // @todo Link "automatic updates" to documentation in
@@ -69,7 +65,7 @@ class ReadinessCheckerController extends ControllerBase {
       // that site is ready. If there are messages the page will display them.
       $this->messenger()->addStatus($this->t('No issues found. Your site is ready for automatic updates'));
     }
-    elseif ($display_message_on_fails) {
+    else {
       $severity = self::getResultsBySeverity($results, SystemManager::REQUIREMENT_ERROR) ?
         SystemManager::REQUIREMENT_ERROR :
         SystemManager::REQUIREMENT_WARNING;
