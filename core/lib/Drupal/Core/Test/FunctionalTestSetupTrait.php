@@ -102,6 +102,16 @@ trait FunctionalTestSetupTrait {
       'value' => $this->apcuEnsureUniquePrefix,
       'required' => TRUE,
     ];
+    // Disable fetching of advisories during tests to avoid outbound calls. This
+    // cannot be set in ::initConfig() because it would not stop these calls
+    // during install. Tests that need to have the security advisories
+    // functionality enabled should override this method and unset this
+    // variable.
+    // @see \Drupal\Tests\system\Functional\SecurityAdvisories\SecurityAdvisoryTest::writeSettings()
+    $settings['config']['system.advisories']['enabled'] = (object) [
+      'value' => FALSE,
+      'required' => TRUE,
+    ];
     $this->writeSettings($settings);
     // Allow for test-specific overrides.
     $settings_testing_file = DRUPAL_ROOT . '/' . $this->originalSite . '/settings.testing.php';

@@ -1,0 +1,11 @@
+services:
+  http_client.advisory_feed_test:
+    public: false
+    class: Drupal\advisory_feed_test\AdvisoriesTestHttpClient
+    decorates: http_client
+    arguments: ['@http_client.advisory_feed_test.inner']
+  logger.advisory_feed_test:
+    public: false
+    class: Drupal\advisory_feed_test\TestSystemLoggerChannel
+    decorates: logger.channel.system
+    arguments: ['@logger.advisory_feed_test.inner', '@state']
