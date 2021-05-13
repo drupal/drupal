@@ -59,6 +59,14 @@ module.exports = {
       .waitForElementVisible(headerNavSelector)
       .waitForElementVisible(`${searchNarrowSelector} ${searchFormSelector}`);
   },
+  'submit button styled as primary on forms with <= 2 actions': (browser) => {
+    browser
+      .resizeWindow(1400, 800)
+      .drupalRelativeURL('/form-test/object-controller-builder')
+      .assert.elementPresent(
+        '#edit-actions input[type=submit].button--primary'
+      );
+  },
   'search page is altered': (browser) => {
     browser
       .resizeWindow(1400, 800)
