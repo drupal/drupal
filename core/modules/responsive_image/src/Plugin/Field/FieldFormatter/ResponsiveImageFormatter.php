@@ -36,7 +36,7 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
    */
   protected $responsiveImageStyleStorage;
 
-  /*
+  /**
    * The image style entity storage.
    *
    * @var \Drupal\Core\Entity\EntityStorageInterface
