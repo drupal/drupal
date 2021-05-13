@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Defines the Migration plugin.
  *
- * The migration process plugin represents one single migration and acts like a
+ * The migration plugin represents one single migration and acts like a
  * container for the information about a single migration such as the source,
  * process and destination plugins.
  */
