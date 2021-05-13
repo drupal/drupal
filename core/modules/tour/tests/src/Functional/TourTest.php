@@ -24,7 +24,6 @@ class TourTest extends TourTestBasic {
     'locale',
     'language',
     'tour_test',
-    'tour_legacy_test',
   ];
 
   /**
@@ -283,6 +282,7 @@ class TourTest extends TourTestBasic {
    * @group legacy
    */
   public function testDeprecatedMethodWarningsErrors() {
+    \Drupal::service('module_installer')->install(['tour_legacy_test']);
     $previous_error_handler = set_error_handler(function ($severity, $message, $file, $line) use (&$previous_error_handler) {
       // Convert deprecation error into a catchable exception.
       if ($severity === E_USER_WARNING) {
