@@ -82,13 +82,13 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       shepherdArrow.classList.add('joyride-nub');
 
       if (shepherdTour.currentStep.options.attachTo.on) {
-        var shepherdToJoyridePosition = {
+        var stepToTipPosition = {
           bottom: 'top',
           top: 'bottom',
           left: 'right',
           right: 'left'
         };
-        shepherdArrow.classList.add(shepherdToJoyridePosition[shepherdTour.currentStep.options.attachTo.on.split('-')[0]]);
+        shepherdArrow.classList.add(stepToTipPosition[shepherdTour.currentStep.options.attachTo.on.split('-')[0]]);
       }
 
       changeTag(shepherdArrow, 'span');

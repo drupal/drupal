@@ -28,13 +28,7 @@ function tour_update_9200() {
       }
       if (isset($tip['location'])) {
         $save = TRUE;
-        $location_swap = [
-          'top' => 'bottom-start',
-          'bottom' => 'top-start',
-          'left' => 'right-start',
-          'right' => 'left-start',
-        ];
-        $tip['position'] = $location_swap[$tip['location']];
+        $tip['position'] = $tip['location'] . '-start';
         unset($tip['location']);
       }
     }

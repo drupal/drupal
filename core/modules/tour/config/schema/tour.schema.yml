@@ -43,7 +43,8 @@ tour.tip:
       type: integer
       label: 'Weight'
     location:
-      deprecated: "The tour.tip 'location' config schema property is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead use 'position' with the opposite value of 'location' (top becomes bottom, left becomes right, and vice-versa). See https://www.drupal.org/node/3204093"
+      deprecated: "The tour.tip 'location' config schema property is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead use 'position' with the opposite value of 'location' (top becomes bottom, left becomes right, and vice-versa). See https://www.drupal.org/node/3204093
+"
       type: string
       label: 'Location'
     position:

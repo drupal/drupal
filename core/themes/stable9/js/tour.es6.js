@@ -120,14 +120,17 @@
         // Shepherd's positions are opposite of Joyride's as they specify the
         // tip location relative to the corresponding element as opposed to
         // their location on the tip itself.
-        const shepherdToJoyridePosition = {
+        const stepToTipPosition = {
           bottom: 'top',
           top: 'bottom',
           left: 'right',
           right: 'left',
         };
         shepherdArrow.classList.add(
-          shepherdToJoyridePosition[
+          // Split at '-' as shepherd positioning accommodates dash-delimited
+          // secondary axis positioning.
+          // shepherdTour.currentStep.options.attachTo.on.split('-')[0]
+          stepToTipPosition[
             // Split at '-' as shepherd positioning accommodates dash-delimited
             // secondary axis positioning.
             shepherdTour.currentStep.options.attachTo.on.split('-')[0]

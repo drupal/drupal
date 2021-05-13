@@ -46,15 +46,9 @@ class TourViewBuilder extends EntityViewBuilder {
         // @see tour_update_9200()
         if (!$location && $location = $tip->get('location')) {
           // If the `location` property still has a value, this means the tip
-          // is configured for Joyride. The position value must be inverted
-          // to work with Shepherd.
-          $location_swap = [
-            'top' => 'bottom-start',
-            'bottom' => 'top-start',
-            'left' => 'right-start',
-            'right' => 'left-start',
-          ];
-          $location = $location_swap[$location];
+          // is configured for Joyride. The position value must be appended with
+          // '-start' to provide the same experience as Joyride.
+          $location = $location . '-start';
         }
 
         // @todo remove conditional in https://drupal.org/node/3195193, as all

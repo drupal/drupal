@@ -75,13 +75,13 @@ class TourTipDeprecatedConfigUpdateTest extends UpdatePathTestBase {
     $updated_legacy_location_tour_config = $this->container->get('config.factory')->get('tour.tour.tour-test-legacy-location');
     $updated_location_tips = $updated_legacy_location_tour_config->get('tips');
 
-    $this->assertSame('bottom-start', $updated_location_tips['location-test-top']['position']);
+    $this->assertSame('top-start', $updated_location_tips['location-test-top']['position']);
     $this->assertArrayNotHasKey('location', $updated_location_tips['location-test-top']);
-    $this->assertEquals('top-start', $updated_location_tips['location-test-bottom']['position']);
+    $this->assertEquals('bottom-start', $updated_location_tips['location-test-bottom']['position']);
     $this->assertArrayNotHasKey('location', $updated_location_tips['location-test-bottom']);
-    $this->assertEquals('left-start', $updated_location_tips['location-test-right']['position']);
+    $this->assertEquals('right-start', $updated_location_tips['location-test-right']['position']);
     $this->assertArrayNotHasKey('location', $updated_location_tips['location-test-right']);
-    $this->assertEquals('right-start', $updated_location_tips['location-test-left']['position']);
+    $this->assertEquals('left-start', $updated_location_tips['location-test-left']['position']);
     $this->assertArrayNotHasKey('location', $updated_location_tips['location-test-left']);
   }
 
