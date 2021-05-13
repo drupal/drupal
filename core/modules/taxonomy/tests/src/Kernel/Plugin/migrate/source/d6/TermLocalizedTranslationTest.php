@@ -181,6 +181,70 @@ class TermLocalizedTranslationTest extends MigrateSqlSourceTestBase {
     // Empty configuration will return terms for all vocabularies.
     $tests[0]['configuration'] = [];
 
+    // Test that only i18n_strings of type 'term' are returned.
+    $tests[1] = $tests[0];
+    $tests[0]['source_data']['i18n_strings'] = [
+      [
+        'lid' => 6,
+        'objectid' => 1,
+        'type' => 'term',
+        'property' => 'name',
+        'objectindex' => '1',
+        'format' => 0,
+      ],
+      [
+        'lid' => 7,
+        'objectid' => 1,
+        'type' => 'term',
+        'property' => 'description',
+        'objectindex' => '1',
+        'format' => 0,
+      ],
+      [
+        'lid' => 8,
+        'objectid' => 3,
+        'type' => 'not term',
+        'property' => 'name',
+        'objectindex' => '3',
+        'format' => 0,
+      ],
+      [
+        'lid' => 9,
+        'objectid' => 4,
+        'type' => 'term',
+        'property' => 'description',
+        'objectindex' => '4',
+        'format' => 0,
+      ],
+    ];
+    // The expected results.
+    $tests[0]['expected_data'] = [
+      [
+        'tid' => 1,
+        'vid' => 5,
+        'name' => 'name value 1',
+        'description' => 'description value 1',
+        'weight' => 0,
+        'parent' => [0],
+        'property' => 'name',
+        'language' => 'fr',
+        'name_translated' => 'fr - name value 1 translation',
+        'description_translated' => 'fr - description value 1 translation',
+      ],
+      [
+        'tid' => 1,
+        'vid' => 5,
+        'name' => 'name value 1',
+        'description' => 'description value 1',
+        'weight' => 0,
+        'parent' => [0],
+        'property' => 'description',
+        'language' => 'fr',
+        'name_translated' => 'fr - name value 1 translation',
+        'description_translated' => 'fr - description value 1 translation',
+      ],
+    ];
+
     return $tests;
   }
 
