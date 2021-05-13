@@ -42,10 +42,10 @@ class TourViewBuilder extends EntityViewBuilder {
         //   instances will already be instances of TourTipPluginInterface.
         if ($tip instanceof TourTipPluginInterface) {
           $body_render_array = $tip->getBody();
-          $body = \Drupal::service('renderer')->renderPlain($body_render_array)->__toString();
+          $body = (string) \Drupal::service('renderer')->renderPlain($body_render_array);
           $output = [
             'body' => $body,
-            'title' => $tip->getTitle(),
+            'title' => Html::escape($tip->getLabel()),
           ];
 
           $location = $tip->getLocation();

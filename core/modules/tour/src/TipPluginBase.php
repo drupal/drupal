@@ -142,20 +142,6 @@ abstract class TipPluginBase extends PluginBase implements TipPluginInterface {
   }
 
   /**
-   * The title of the tour tip.
-   *
-   * This is what is displayed in the tip's header. It may differ from the tip
-   * label, which is defined in the tip's configuration.
-   * This is mapped to the `title` property of the Shepherd tooltip options.
-   *
-   * @return string
-   *   The title.
-   */
-  public function getTitle() {
-    return Html::escape($this->getLabel());
-  }
-
-  /**
    * Determines the placement of the tip relative to the element.
    *
    * If null, the tip will automatically determine the best position based on

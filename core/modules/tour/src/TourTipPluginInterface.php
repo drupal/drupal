@@ -16,32 +16,43 @@ namespace Drupal\tour;
 interface TourTipPluginInterface extends TipPluginInterface {
 
   /**
-   * The selector the tour tip will attach to.
+   * Returns the selector the tour tip will attach to.
+   *
+   * This typically maps to the Shepherd Step options `attachTo.element`
+   * property.
    *
    * @return null|string
    *   A selector string, or null for an unattached tip.
+   *
+   * @see https://shepherdjs.dev/docs/Step.html
    */
   public function getSelector();
 
   /**
-   * Provides the body content of the tooltip.
+   * Returns the body content of the tooltip.
    *
-   * This is mapped to the `text` property of the Shepherd tooltip options.
+   * This typically maps to the Shepherd Step options `text` property.
    *
    * @return array
    *   A render array.
+   *
+   * @see https://shepherdjs.dev/docs/Step.html
    */
   public function getBody();
 
   /**
-   * The title of the tour tip.
+   * Returns the configured placement of the tip relative to the element.
    *
-   * This is what is displayed in the tip's header. It may differ from the tip
-   * label, which is defined in the tip's configuration.
+   * If null, the tip will automatically determine the best position based on
+   * the element's position in the viewport.
    *
-   * @return string
-   *   The title.
+   * This typically maps to the Shepherd Step options `attachTo.on` property.
+   *
+   * @return string|null
+   *   The tip placement relative to the element.
+   *
+   * @see https://shepherdjs.dev/docs/Step.html
    */
-  public function getTitle();
+  public function getLocation();
 
 }
