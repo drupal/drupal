@@ -64,7 +64,7 @@ module.exports = {
       .resizeWindow(1400, 800)
       .drupalRelativeURL('/form-test/object-controller-builder')
       .assert.elementPresent(
-        '#edit-actions input[type=submit].button--primary'
+        '#edit-actions input[type=submit].button--primary',
       );
   },
   'search page is altered': (browser) => {
