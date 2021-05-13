@@ -202,6 +202,10 @@ abstract class TipPluginBase extends PluginBase implements TipPluginInterface {
       return $selector;
     }
 
+    // If a tour using the deprecated TipPluginInterface was installed
+    // after tour_update_9200() ran, it may attributes instead of the
+    // `selector` property to associate the tip with an element.
+    // @see tour_update_9200()
     $attributes = $this->get('attributes');
     if (isset($attributes['data-id'])) {
       $selector = "#{$attributes['data-id']}";

@@ -128,7 +128,9 @@
         };
         shepherdArrow.classList.add(
           shepherdToJoyridePosition[
-            shepherdTour.currentStep.options.attachTo.on
+            // Split at '-' as shepherd positioning accommodates dash-delimited
+            // secondary axis positioning.
+            shepherdTour.currentStep.options.attachTo.on.split('-')[0]
           ],
         );
       }

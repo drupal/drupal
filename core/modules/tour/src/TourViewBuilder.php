@@ -36,8 +36,26 @@ class TourViewBuilder extends EntityViewBuilder {
           'tip-' . Html::getClass($tip->id()),
         ];
 
-        $selector = NULL;
-        $location = NULL;
+        $selector = $tip->getSelector();
+        $location = $tip->getLocation();
+
+        // If $location is null, it's possible that a value is available
+        // by directly accessing the `location` property. This can occur if
+        // a tour with the deprecated `location` property was installed
+        // after tour_update_9200() ran.
+        // @see tour_update_9200()
+        if (!$location && $location = $tip->get('location')) {
+          // If the `location` property still has a value, this means the tip
+          // is configured for Joyride. The position value must be inverted
+          // to work with Shepherd.
+          $location_swap = [
+            'top' => 'bottom-start',
+            'bottom' => 'top-start',
+            'left' => 'right-start',
+            'right' => 'left-start',
+          ];
+          $location = $location_swap[$location];
+        }
 
         // @todo remove conditional in https://drupal.org/node/3195193, as all
         //   instances will already be instances of TourTipPluginInterface.
@@ -49,7 +67,6 @@ class TourViewBuilder extends EntityViewBuilder {
             'title' => Html::escape($tip->getLabel()),
           ];
 
-          $location = $tip->getLocation();
           $selector = $tip->getSelector();
         }
         else {
@@ -80,70 +97,26 @@ class TourViewBuilder extends EntityViewBuilder {
             // with Joyride is different depending on the type of
             // plugin used.
             $classes[] = 'tip-uses-getoutput';
-
-            // `Selector` is a newer property that replaces `attributes`. It was
-            // introduced alongside TourTipPluginInterface, but should be
-            // present in most tip plugins, even those not implementing
-            // TourTipPluginInterface, as tour_update_9200() converts this
-            // property for all existing tours.
-            // @see tour_update_9200()
-            $selector = $tip->get('selector');
-
-            // If a tour using the deprecated TipPluginInterface was installed
-            // after tour_update_9200() ran, it may attributes instead of the
-            // `selector` property to associate the tip with an element.
-            // @see tour_update_9200()
-            if (!$selector) {
-              $attributes = $tip->get('attributes');
-              if (!empty($attributes['data-class'])) {
-                $selector = ".{$attributes['data-class']}";
-              }
-              elseif (!empty($attributes['data-id'])) {
-                $selector = "#{$attributes['data-id']}";
-              }
-            }
-
-            // If this tip uses the deprecated TipPluginInterface but installed
-            // after If the tip has been updated with tour_update_9200(), the
-            // value will still be provided by `location`. This should only be
-            // checked for if `position` does not return a value.
-            // @see tour_update_9200()
-            $location = $tip->getLocation();
-
-            // If $location is null, it's possible that a value is available
-            // by directly accessing the `location` property. This can occur if
-            // a tour with the deprecated `location` property was installed
-            // after tour_update_9200() ran.
-            // @see tour_update_9200()
-            if (!$location && $location = $tip->get('location')) {
-              // If the `location` property still has a value, this means the tip
-              // is configured for Joyride. The position value must be inverted
-              // to work with Shepherd.
-              $location_swap = [
-                'top' => 'bottom',
-                'bottom' => 'top',
-                'left' => 'right',
-                'right' => 'left',
-              ];
-              $location = $location_swap[$location];
-            }
           }
         }
 
         if ($output) {
           $items[] = [
-              'id' => $tip->id(),
-              'selector' => $selector,
-              'location' => $location,
-              'module' => $tourEntity->getModule(),
-              'type' => $tip->getPluginId(),
-              'counter' => $this->t('@tour_item of @total', [
-                '@tour_item' => $index + 1,
-                '@total' => $total_tips,
-              ]),
-              // Shepherd expects classes to be provided as a string.
-              'classes' => implode(' ', $classes),
-            ] + $output;
+            'id' => $tip->id(),
+            'selector' => $selector,
+            'module' => $tourEntity->getModule(),
+            'type' => $tip->getPluginId(),
+            'counter' => $this->t('@tour_item of @total', [
+              '@tour_item' => $index + 1,
+              '@total' => $total_tips,
+            ]),
+            'attachTo' => [
+               'element' => $selector,
+               'on' => $location ?? 'bottom-start',
+            ],
+            // Shepherd expects classes to be provided as a string.
+            'classes' => implode(' ', $classes),
+          ] + $output;
         }
       }
     }
@@ -177,10 +150,18 @@ class TourViewBuilder extends EntityViewBuilder {
           ],
           'popperOptions' => [
             'modifiers' => [
+              // Prevent overlap with the element being highlighted.
               [
                 'name' => 'offset',
                 'options' => [
-                  'offset' => [10, 20],
+                  'offset' => [-10, 20],
+                ],
+              ],
+              // Pad the arrows so they don't hit the edge of rounded corners.
+              [
+                'name' => 'arrow',
+                'options' => [
+                  'padding' => 12,
                 ],
               ],
               // Disable Shepherd's focusAfterRender modifier, which results in
@@ -190,6 +171,7 @@ class TourViewBuilder extends EntityViewBuilder {
                 'name' => 'focusAfterRender',
                 'enabled' => FALSE,
               ],
+
             ],
           ],
         ],

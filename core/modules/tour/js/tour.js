@@ -62,6 +62,22 @@
         var that = this;
 
         if (tourItems.length) {
+          settings.tourShepherdConfig.defaultStepOptions.popperOptions.modifiers.push({
+            name: 'moveArrowJoyridePosition',
+            enabled: true,
+            phase: 'write',
+            fn: function fn(_ref) {
+              var state = _ref.state;
+              var arrow = state.elements.arrow;
+              var placement = state.placement;
+
+              if (arrow && /^top|bottom/.test(placement) && /-start|-end$/.test(placement)) {
+                var horizontalPosition = placement.split('-')[1];
+                var offset = horizontalPosition === 'start' ? 28 : state.elements.popper.clientWidth - 56;
+                arrow.style.transform = "translate3d(".concat(offset, "px, 0px, 0px)");
+              }
+            }
+          });
           var shepherdTour = new Shepherd.Tour(settings.tourShepherdConfig);
           shepherdTour.on('cancel', function () {
             that.model.set('isActive', false);
@@ -75,10 +91,7 @@
               text: function text() {
                 return Drupal.theme('tourItemContent', step);
               },
-              attachTo: {
-                element: step.selector,
-                on: step.location ? step.location : 'bottom'
-              },
+              attachTo: step.attachTo,
               buttons: [Drupal.tour.nextButton(shepherdTour, step)],
               classes: step.classes,
               index: index

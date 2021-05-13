@@ -155,6 +155,36 @@
           const that = this;
 
           if (tourItems.length) {
+            // If joyride is positioned relative to the top or bottom of an
+            // element, and its secondary position is right or left, then the
+            // arrow is also positioned right or left. Shepherd defaults to
+            // center positioning the arrow, so this modifier is provided to
+            // replicate Joyride's behavior. It is provided here instead of
+            // TourViewBuilder (where most Popper modifications are) because
+            // it includes adding a JavaScript callback function.
+            settings.tourShepherdConfig.defaultStepOptions.popperOptions.modifiers.push(
+              {
+                name: 'moveArrowJoyridePosition',
+                enabled: true,
+                phase: 'write',
+                fn({ state }) {
+                  const { arrow } = state.elements;
+                  const { placement } = state;
+                  if (
+                    arrow &&
+                    /^top|bottom/.test(placement) &&
+                    /-start|-end$/.test(placement)
+                  ) {
+                    const horizontalPosition = placement.split('-')[1];
+                    const offset =
+                      horizontalPosition === 'start'
+                        ? 28
+                        : state.elements.popper.clientWidth - 56;
+                    arrow.style.transform = `translate3d(${offset}px, 0px, 0px)`;
+                  }
+                },
+              },
+            );
             const shepherdTour = new Shepherd.Tour(settings.tourShepherdConfig);
             shepherdTour.on('cancel', () => {
               that.model.set('isActive', false);
@@ -167,10 +197,7 @@
               const tourItemOptions = {
                 title: step.title ? Drupal.checkPlain(step.title) : null,
                 text: () => Drupal.theme('tourItemContent', step),
-                attachTo: {
-                  element: step.selector,
-                  on: step.location ? step.location : 'bottom',
-                },
+                attachTo: step.attachTo,
                 buttons: [Drupal.tour.nextButton(shepherdTour, step)],
                 classes: step.classes,
                 index,

@@ -88,7 +88,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           left: 'right',
           right: 'left'
         };
-        shepherdArrow.classList.add(shepherdToJoyridePosition[shepherdTour.currentStep.options.attachTo.on]);
+        shepherdArrow.classList.add(shepherdToJoyridePosition[shepherdTour.currentStep.options.attachTo.on.split('-')[0]]);
       }
 
       changeTag(shepherdArrow, 'span');
