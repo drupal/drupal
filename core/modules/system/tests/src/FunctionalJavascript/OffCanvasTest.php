@@ -77,10 +77,10 @@ class OffCanvasTest extends OffCanvasTestBase {
 
       $style = $page->find('css', '.ui-dialog-off-canvas')->getAttribute('style');
       if ($link_index === 1) {
-        $this->assertTrue((bool) strstr($style, 'height: auto;'));
+        $this->assertStringContainsString('height: auto;', $style);
       }
       else {
-        $this->assertTrue((bool) strstr($style, 'height: 421px;'));
+        $this->assertStringContainsString('height: 421px;', $style);
       }
     }
 
