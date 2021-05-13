@@ -13,9 +13,7 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 class TourLegacyMarkupTest extends WebDriverTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'tour',
@@ -51,19 +49,19 @@ class TourLegacyMarkupTest extends WebDriverTestBase {
    *
    * @dataProvider providerTestTourTipMarkup
    */
-  public function testTourTipMarkup($path, $theme = 'stable') {
+  public function testTourTipMarkup($path, $theme = NULL) {
     // Install the specified theme and make it default if that is not already
     // the case.
-    if ($theme !== $this->defaultTheme) {
+    if ($theme) {
       $theme_manager = $this->container->get('theme.manager');
-      $this->container->get('theme_installer')->install(['stable9'], TRUE);
+      $this->container->get('theme_installer')->install([$theme], TRUE);
 
       $system_theme_config = $this->container->get('config.factory')->getEditable('system.theme');
       $system_theme_config
-        ->set('default', 'stable9')
+        ->set('default', $theme)
         ->save();
       $this->rebuildAll();
-      $this->assertSame('stable9', $theme_manager->getActiveTheme()->getName());
+      $this->assertSame($theme, $theme_manager->getActiveTheme()->getName());
     }
 
     $page = $this->getSession()->getPage();
@@ -98,7 +96,7 @@ class TourLegacyMarkupTest extends WebDriverTestBase {
   private function assertToolTipMarkup($index, $nub_position, $joyride_content_container_name = 'body') {
     $assert_session = $this->assertSession();
     $tip = $assert_session->waitForElementVisible('css', ".joyride-tip-guide[data-index=\"$index\"]");
-    $this->assertNotNull($tip, 'The tour tip element is present.' . "index: $index");
+    $this->assertNotNull($tip, 'The tour tip element is present.');
 
     $nub = $tip->find('css', ".joyride-tip-guide[data-index=\"$index\"] > .joyride-nub");
     $this->assertNotNull($nub, 'The nub element is present.');
@@ -140,17 +138,6 @@ class TourLegacyMarkupTest extends WebDriverTestBase {
       'Using the the deprecated TipPlugin with Stable 9 theme' => ['tour-test-legacy', 'stable9'],
       'Using current TourTipPlugin with Stable 9 theme' => ['tour-test-1', 'stable9'],
     ];
-  }
-
-  /**
-   * Test plugin and schema deprecations.
-   */
-  public function testTipDeprecations() {
-    $this->expectDeprecation('Tip plugins implementing Drupal\tour\TipPluginInterface that don\'t also implement Drupal\tour\TourTipPluginInterface are deprecated in drupal:9.2.0. See https://www.drupal.org/node/3204096');
-    $this->expectDeprecation("The tour.tip 'location' config schema property is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead use 'position' with the opposite value of 'location' (top becomes bottom, left becomes right, and vice-versa). See https://www.drupal.org/node/3204093");
-    // @todo The tour.tip 'attributes' deprecation error is not being caught bu
-    //   expectDeprecation, despite pasting the exact message in.
-    $this->drupalGet('tour-test-legacy');
   }
 
 }

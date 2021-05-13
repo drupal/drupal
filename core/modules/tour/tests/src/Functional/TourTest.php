@@ -24,6 +24,7 @@ class TourTest extends TourTestBasic {
     'locale',
     'language',
     'tour_test',
+    'tour_legacy_test',
   ];
 
   /**
@@ -86,19 +87,19 @@ class TourTest extends TourTestBasic {
     }
     $this->assertCount(1, $elements, 'Found Token replacement.');
 
-    $elements = $this->findTip($tips, [
+    $elements = $this->findTip([
       'id' => 'tour-test-1',
       'title' => 'The first tip',
     ]);
     $this->assertCount(1, $elements, 'Found English variant of tip 1.');
 
-    $elements = $this->findTip($tips, [
+    $elements = $this->findTip([
       'id' => 'tour-test-2',
       'title' => 'The quick brown fox',
     ]);
     $this->assertNotCount(1, $elements, 'Did not find English variant of tip 2.');
 
-    $elements = $this->findTip($tips, [
+    $elements = $this->findTip([
       'id' => 'tour-test-1',
       'title' => 'La pioggia cade in spagna',
     ]);
@@ -115,14 +116,14 @@ class TourTest extends TourTestBasic {
 
     // Navigate to tour-test-2/subpath and verify the tour_test_2 tip is found.
     $this->drupalGet('tour-test-2/subpath');
-    $tips = $this->getTourTips();
-    $elements = $this->findTip($tips, [
+
+    $elements = $this->findTip([
       'id' => 'tour-test-2',
       'title' => 'The quick brown fox',
     ]);
     $this->assertCount(1, $elements, 'Found English variant of tip 2.');
 
-    $elements = $this->findTip($tips, [
+    $elements = $this->findTip([
       'id' => 'tour-test-1',
       'title' => 'The first tip',
     ]);
@@ -133,15 +134,13 @@ class TourTest extends TourTestBasic {
     ConfigurableLanguage::createFromLangcode('it')->save();
     $this->drupalGet('it/tour-test-1');
 
-    $tips = $this->getTourTips();
-
-    $elements = $this->findTip($tips, [
+    $elements = $this->findTip([
       'id' => 'tour-test-1',
       'title' => 'La pioggia cade in spagna',
     ]);
     $this->assertCount(1, $elements, 'Found Italian variant of tip 1.');
 
-    $elements = $this->findTip($tips, [
+    $elements = $this->findTip([
       'id' => 'tour-test-2',
       'title' => 'The quick brown fox',
     ]);
@@ -194,9 +193,7 @@ class TourTest extends TourTestBasic {
     // Navigate to tour-test-1 and verify the new tip is found.
     $this->drupalGet('tour-test-1');
 
-    $tips = $this->getTourTips();
-
-    $elements = $this->findTip($tips, [
+    $elements = $this->findTip([
       'id' => 'tour-code-test-1',
       'title' => 'The rain in spain',
     ]);
@@ -204,7 +201,7 @@ class TourTest extends TourTestBasic {
 
     // Verify that the weight sorting works by ensuring the lower weight item
     // (tip 4) has the 'End tour' button.
-    $elements = $this->findTip($tips, [
+    $elements = $this->findTip([
       'id' => 'tour-code-test-1',
       'text' => 'End tour',
     ]);
@@ -217,9 +214,7 @@ class TourTest extends TourTestBasic {
     // appropriate classes.
     $this->drupalGet('tour-test-3/foo');
 
-    $tips = $this->getTourTips();
-
-    $elements = $this->findTip($tips, [
+    $elements = $this->findTip([
       'id' => 'tour-test-1',
       'module' => 'tour_test',
       'type' => 'text',
@@ -231,9 +226,7 @@ class TourTest extends TourTestBasic {
     // appropriate classes.
     $this->drupalGet('tour-test-3/bar');
 
-    $tips = $this->getTourTips();
-
-    $elements = $this->findTip($tips, [
+    $elements = $this->findTip([
       'id' => 'tour-test-1',
       'module' => 'tour_test',
       'type' => 'text',
@@ -263,15 +256,14 @@ class TourTest extends TourTestBasic {
   /**
    * Find specific tips by their parameters in the list of tips.
    *
-   * @param array $tips
-   *   The list of tips to search in.
    * @param array $params
    *   The list of search parameters and their values.
    *
    * @return array
    *   A list of tips which match the parameters.
    */
-  protected function findTip(array $tips, array $params) {
+  protected function findTip(array $params) {
+    $tips = $this->getTourTips();
     $elements = [];
     foreach ($tips as $tip) {
       foreach ($params as $param => $value) {
@@ -286,7 +278,9 @@ class TourTest extends TourTestBasic {
   }
 
   /**
-   * Test that warnings are triggered.
+   * Test that warnings and deprecations are triggered.
+   *
+   * @group legacy
    */
   public function testDeprecatedMethodWarningsErrors() {
     $previous_error_handler = set_error_handler(function ($severity, $message, $file, $line) use (&$previous_error_handler) {
@@ -301,6 +295,10 @@ class TourTest extends TourTestBasic {
 
     $tip = Tour::load('tour-test')->getTips()[0];
 
+    // These are E_USER_WARNING severity errors that supplement existing
+    // deprecation errors. These warnings are triggered when methods are called
+    // that are designed to be backwards compatible, but aren't able to 100%
+    // promise this due to the many ways that tip plugins can be extended.
     try {
       $tip->getOutput();
       $this->fail('No getOutput() warning triggered.');
@@ -316,6 +314,15 @@ class TourTest extends TourTestBasic {
     catch (\ErrorException $e) {
       $this->assertSame('Drupal\tour\TipPluginInterface::getAttributes is deprecated. Tour tip plugins should implement Drupal\tour\TourTipPluginInterface and Tour configs should use the \'selector\' property instead of \'attributes\' to target an element.', $e->getMessage());
     }
+
+    $this->expectDeprecation('Tip plugins implementing Drupal\tour\TipPluginInterface that don\'t also implement Drupal\tour\TourTipPluginInterface are deprecated in drupal:9.2.0. See https://www.drupal.org/node/3204096');
+    $this->expectDeprecation("The tour.tip 'location' config schema property is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead use 'position' with the opposite value of 'location' (top becomes bottom, left becomes right, and vice-versa). See https://www.drupal.org/node/3204093");
+    // @codingStandardsIgnoreStart
+    // @todo determine why the following assertion is not working despite the
+    //   deprecation being triggered.
+     $this->expectDeprecation("The tour.tip 'attributes' config schema property is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead of 'data-class' and 'data-id' attributes, use 'selector' to specify the element a tip attaches to. See https://www.drupal.org/node/3204093");
+    // @codingStandardsIgnoreEnd
+    $this->drupalGet('tour-test-legacy');
 
     restore_error_handler();
   }

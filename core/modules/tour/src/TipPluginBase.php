@@ -2,7 +2,6 @@
 
 namespace Drupal\tour;
 
-use Drupal\Component\Utility\Html;
 use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Plugin\PluginBase;
 

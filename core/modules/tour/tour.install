@@ -20,6 +20,9 @@ function tour_update_9200() {
         $selector = isset($tip['attributes']['data-class']) ? ".{$tip['attributes']['data-class']}" : NULL;
         $selector = isset($tip['attributes']['data-id']) ? "#{$tip['attributes']['data-id']}" : $selector;
         $tip['selector'] = $selector;
+
+        // Although the attributes property is deprecated, only the properties
+        // with 1:1 equivalents are unset.
         unset($tip['attributes']['data-class']);
         unset($tip['attributes']['data-id']);
       }

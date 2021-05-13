@@ -50,14 +50,14 @@ class TourTipSelectorConfigUpdateTest extends UpdatePathTestBase {
     $legacy_location_tour_config = $this->container->get('config.factory')->get('tour.tour.tour-test-legacy-location');
     $tips = $legacy_location_tour_config->get('tips');
 
-    $this->assertEquals('top', $tips['location-test-top']['location']);
-    $this->assertFalse(isset($tips['location-test-top']['position']));
-    $this->assertEquals('bottom', $tips['location-test-bottom']['location']);
-    $this->assertFalse(isset($tips['location-test-bottom']['position']));
-    $this->assertEquals('right', $tips['location-test-right']['location']);
-    $this->assertFalse(isset($tips['location-test-right']['position']));
-    $this->assertEquals('left', $tips['location-test-left']['location']);
-    $this->assertFalse(isset($tips['location-test-left']['position']));
+    $this->assertSame('top', $tips['location-test-top']['location']);
+    $this->assertArrayNotHasKey('position', $tips['location-test-top']);
+    $this->assertSame('bottom', $tips['location-test-bottom']['location']);
+    $this->assertArrayNotHasKey('position', $tips['location-test-bottom']);
+    $this->assertSame('right', $tips['location-test-right']['location']);
+    $this->assertArrayNotHasKey('position', $tips['location-test-right']);
+    $this->assertSame('left', $tips['location-test-left']['location']);
+    $this->assertArrayNotHasKey('position', $tips['location-test-left']);
 
     $this->runUpdates();
 
@@ -65,24 +65,24 @@ class TourTipSelectorConfigUpdateTest extends UpdatePathTestBase {
     $updated_tips = $updated_legacy_tour_config->get('tips');
 
     // Confirm that tour-test-1 uses `selector` instead of `data-id`.
-    $this->assertEquals('#tour-test-1', $updated_tips['tour-test-legacy-1']['selector']);
-    $this->assertFalse(isset($updated_tips['tour-test-legacy-1']['attributes']['data-id']));
+    $this->assertSame('#tour-test-1', $updated_tips['tour-test-legacy-1']['selector']);
+    $this->assertArrayNotHasKey('data-id', $updated_tips['tour-test-legacy-1']['attributes']);
 
     // Confirm that tour-test-5 uses `selector` instead of `data-class`.
-    $this->assertEquals('.tour-test-5', $updated_tips['tour-test-legacy-6']['selector']);
-    $this->assertFalse(isset($updated_tips['tour-test-legacy-6']['attributes']['data-class']));
+    $this->assertSame('.tour-test-5', $updated_tips['tour-test-legacy-6']['selector']);
+    $this->assertArrayNotHasKey('data-class', $updated_tips['tour-test-legacy-6']['attributes']);
 
     $updated_legacy_location_tour_config = $this->container->get('config.factory')->get('tour.tour.tour-test-legacy-location');
     $updated_location_tips = $updated_legacy_location_tour_config->get('tips');
 
-    $this->assertEquals('bottom', $updated_location_tips['location-test-top']['position']);
-    $this->assertFalse(isset($updated_location_tips['location-test-top']['location']));
+    $this->assertSame('bottom', $updated_location_tips['location-test-top']['position']);
+    $this->assertArrayNotHasKey('location', $updated_location_tips['location-test-top']);
     $this->assertEquals('top', $updated_location_tips['location-test-bottom']['position']);
-    $this->assertFalse(isset($updated_location_tips['location-test-bottom']['location']));
+    $this->assertArrayNotHasKey('location', $updated_location_tips['location-test-bottom']);
     $this->assertEquals('left', $updated_location_tips['location-test-right']['position']);
-    $this->assertFalse(isset($updated_location_tips['location-test-right']['location']));
+    $this->assertArrayNotHasKey('location', $updated_location_tips['location-test-right']);
     $this->assertEquals('right', $updated_location_tips['location-test-left']['position']);
-    $this->assertFalse(isset($updated_location_tips['location-test-left']['location']));
+    $this->assertArrayNotHasKey('location', $updated_location_tips['location-test-left']);
   }
 
 }
