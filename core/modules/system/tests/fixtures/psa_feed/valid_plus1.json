@@ -1,0 +1,92 @@
+[
+  {
+    "title":"Critical Release - SA-2019-02-19",
+    "link":"https:\/\/www.drupal.org\/sa-2019-02-19",
+    "project":"drupal",
+    "type":"core",
+    "insecure":[
+      "7.65",
+      "8.5.14",
+      "8.6.13",
+      "8.7.0-alpha2",
+      "8.7.0-beta1",
+      "8.7.0-beta2",
+      "8.6.14",
+      "8.6.15",
+      "7.66",
+      "8.7.0",
+      "[CORE_VERSION]"
+    ],
+    "is_psa":"0",
+    "pubDate":"Tue, 19 Feb 2019 14:11:01 +0000"
+  },
+  {
+    "title":"Critical Release - PSA-Really Old",
+    "link":"https:\/\/www.drupal.org\/psa",
+    "project":"drupal",
+    "type":"core",
+    "is_psa":"1",
+    "insecure":[
+
+    ],
+    "pubDate":"Tue, 19 Feb 2017 14:11:01 +0000"
+  },
+  {
+    "title":"Generic Module1 Project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02",
+    "link":"https:\/\/www.drupal.org\/SA-CONTRIB-2019-02-02",
+    "project":"generic_module1_project",
+    "type":"module",
+    "is_psa":"0",
+    "insecure":[
+      "8.x-1.1",
+      "8.x-8.7.0"
+    ],
+    "pubDate":"Tue, 19 Mar 2019 12:50:00 +0000"
+  },
+  {
+    "title":"Generic Module1 Test - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02",
+    "link":"https:\/\/www.drupal.org\/SA-CONTRIB-2019-02-02",
+    "project":"generic_module1_test",
+    "type":"module",
+    "is_psa":"0",
+    "insecure":[
+      "8.x-1.1",
+      "8.x-8.7.0"
+    ],
+    "pubDate":"Tue, 19 Mar 2019 12:50:00 +0000"
+  },
+  {
+    "title":"Generic Module2 project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02",
+    "link":"https:\/\/www.drupal.org\/SA-CONTRIB-2019-02-02",
+    "project":"generic_module2_project",
+    "type":"module",
+    "is_psa":"1",
+    "insecure":[
+
+    ],
+    "pubDate":"Tue, 19 Mar 2019 12:50:00 +0000"
+  },
+  {
+    "title":"Missing Project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02",
+    "link":"https:\/\/www.drupal.org\/SA-CONTRIB-2019-02-02",
+    "project":"missing_project",
+    "type":"module",
+    "is_psa":"1",
+    "insecure":[
+      "7.x-1.7",
+      "8.x-1.4"
+    ],
+    "pubDate":"Tue, 19 Mar 2019 12:50:00 +0000"
+  },
+  {
+    "title":"Critical Release - PSA because 2020",
+    "link":"https:\/\/www.drupal.org\/psa",
+    "project":"drupal",
+    "type":"core",
+    "is_psa":"1",
+    "insecure":[
+
+    ],
+    "pubDate":"Tue, 19 Feb 2020 14:11:01 +0000"
+  }
+]
