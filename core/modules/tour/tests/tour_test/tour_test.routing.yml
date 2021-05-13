@@ -28,12 +28,3 @@ tour_test.3:
     _controller: '\Drupal\tour_test\Controller\TourTestController::tourTest1'
   requirements:
     _access: 'TRUE'
-
-tour_test.legacy:
-  path: '/tour-test-legacy'
-  defaults:
-    _controller: '\Drupal\tour_test\Controller\TourTestController::tourTest1'
-  options:
-    _admin_route: TRUE
-  requirements:
-    _access: 'TRUE'

@@ -5,14 +5,14 @@ namespace Drupal\Tests\tour\Functional\Update;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 
 /**
- * Confirms tour tip `selector` config was updated properly.
+ * Confirms tour tip deprecated config is updated properly.
  *
  * @group Update
  * @group legacy
  *
  * @see tour_update_9200()
  */
-class TourTipSelectorConfigUpdateTest extends UpdatePathTestBase {
+class TourTipDeprecatedConfigUpdateTest extends UpdatePathTestBase {
 
   /**
    * {@inheritdoc}
@@ -75,13 +75,13 @@ class TourTipSelectorConfigUpdateTest extends UpdatePathTestBase {
     $updated_legacy_location_tour_config = $this->container->get('config.factory')->get('tour.tour.tour-test-legacy-location');
     $updated_location_tips = $updated_legacy_location_tour_config->get('tips');
 
-    $this->assertSame('bottom', $updated_location_tips['location-test-top']['position']);
+    $this->assertSame('bottom-start', $updated_location_tips['location-test-top']['position']);
     $this->assertArrayNotHasKey('location', $updated_location_tips['location-test-top']);
-    $this->assertEquals('top', $updated_location_tips['location-test-bottom']['position']);
+    $this->assertEquals('top-start', $updated_location_tips['location-test-bottom']['position']);
     $this->assertArrayNotHasKey('location', $updated_location_tips['location-test-bottom']);
-    $this->assertEquals('left', $updated_location_tips['location-test-right']['position']);
+    $this->assertEquals('left-start', $updated_location_tips['location-test-right']['position']);
     $this->assertArrayNotHasKey('location', $updated_location_tips['location-test-right']);
-    $this->assertEquals('right', $updated_location_tips['location-test-left']['position']);
+    $this->assertEquals('right-start', $updated_location_tips['location-test-left']['position']);
     $this->assertArrayNotHasKey('location', $updated_location_tips['location-test-left']);
   }
 
