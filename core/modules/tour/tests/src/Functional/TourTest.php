@@ -316,8 +316,7 @@ class TourTest extends TourTestBasic {
     }
 
     $this->expectDeprecation('Tip plugins implementing Drupal\tour\TipPluginInterface that don\'t also implement Drupal\tour\TourTipPluginInterface are deprecated in drupal:9.2.0. See https://www.drupal.org/node/3204096');
-    $this->expectDeprecation("The tour.tip 'location' config schema property is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead use 'position' with the opposite value of 'location' (top becomes bottom, left becomes right, and vice-versa). See https://www.drupal.org/node/3204093
-");
+    $this->expectDeprecation("The tour.tip 'location' config schema property is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead use 'position'. The value must be a valid placement accepted by PopperJS. See https://www.drupal.org/node/3204093");
     // @codingStandardsIgnoreStart
     // @todo determine why the following assertion is not working despite the
     //   deprecation being triggered.
