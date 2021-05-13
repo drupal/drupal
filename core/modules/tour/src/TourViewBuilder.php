@@ -2,6 +2,7 @@
 
 namespace Drupal\tour;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityViewBuilder;
 use Drupal\Component\Utility\Html;
 
@@ -16,12 +17,12 @@ class TourViewBuilder extends EntityViewBuilder {
   public function viewMultiple(array $entities = [], $view_mode = 'full', $langcode = NULL) {
     /** @var \Drupal\tour\TourInterface[] $entities */
     $tour = [];
-    $cacheTags = [];
-    $totalTips = 0;
+    $cache_tags = [];
+    $total_tips = 0;
     foreach ($entities as $entity_id => $entity) {
       $tour[$entity_id] = $entity->getTips();
-      $totalTips += count($tour[$entity_id]);
-      $cacheTags = array_merge($cacheTags, $entity->getCacheTags());
+      $total_tips += count($tour[$entity_id]);
+      $cache_tags = Cache::mergeTags($cache_tags, $entity->getCacheTags());
     }
 
     $items = [];
@@ -138,7 +139,7 @@ class TourViewBuilder extends EntityViewBuilder {
               'type' => $tip->getPluginId(),
               'counter' => $this->t('@tour_item of @total', [
                 '@tour_item' => $index + 1,
-                '@total' => $totalTips,
+                '@total' => $total_tips,
               ]),
               // Shepherd expects classes to be provided as a string.
               'classes' => implode(' ', $classes),
@@ -156,7 +157,7 @@ class TourViewBuilder extends EntityViewBuilder {
 
     $build = [
       '#cache' => [
-        'tags' => $cacheTags,
+        'tags' => $cache_tags,
       ],
     ];
 
