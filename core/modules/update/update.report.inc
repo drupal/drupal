@@ -42,6 +42,10 @@ function template_preprocess_update_report(&$variables) {
 
   $rows = [];
 
+  if (!is_array($data)) {
+    return;
+  }
+
   foreach ($data as $project) {
     $project_status = [
       '#theme' => 'update_project_status',
