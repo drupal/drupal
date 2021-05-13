@@ -36,7 +36,7 @@ abstract class TranslateFormBase extends FormBase {
    */
   protected $languageManager;
 
-  /*
+  /**
    * Filter values. Shared between objects that inherit this class.
    *
    * @var array|null
