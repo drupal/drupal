@@ -85,15 +85,15 @@
           shepherdTour.on('complete', function () {
             that.model.set('isActive', false);
           });
-          tourItems.forEach(function (step, index) {
+          tourItems.forEach(function (tourStepConfig, index) {
             var tourItemOptions = {
-              title: step.title ? Drupal.checkPlain(step.title) : null,
+              title: tourStepConfig.title ? Drupal.checkPlain(tourStepConfig.title) : null,
               text: function text() {
-                return Drupal.theme('tourItemContent', step);
+                return Drupal.theme('tourItemContent', tourStepConfig);
               },
-              attachTo: step.attachTo,
-              buttons: [Drupal.tour.nextButton(shepherdTour, step)],
-              classes: step.classes,
+              attachTo: tourStepConfig.attachTo,
+              buttons: [Drupal.tour.nextButton(shepherdTour, tourStepConfig)],
+              classes: tourStepConfig.classes,
               index: index
             };
             tourItemOptions.when = {
@@ -133,7 +133,7 @@
     _removeIrrelevantTourItems: function _removeIrrelevantTourItems(tourItems) {
       var tips = /tips=([^&]+)/.exec(queryString);
       var filteredTour = tourItems.filter(function (tourItem) {
-        if (tips && tourItem.class.indexOf(tips[1]) === -1) {
+        if (tips && tourItem.hasOwnProperty('classes') && tourItem.classes.indexOf(tips[1]) === -1) {
           return false;
         }
 
@@ -156,15 +156,15 @@
     }
   });
 
-  Drupal.tour.nextButton = function (shepherdTour, step) {
+  Drupal.tour.nextButton = function (shepherdTour, tourStepConfig) {
     return {
       classes: 'button button--primary',
-      text: step.cancelText ? step.cancelText : Drupal.t('Next'),
-      action: step.cancelText ? shepherdTour.cancel : shepherdTour.next
+      text: tourStepConfig.cancelText ? tourStepConfig.cancelText : Drupal.t('Next'),
+      action: tourStepConfig.cancelText ? shepherdTour.cancel : shepherdTour.next
     };
   };
 
-  Drupal.theme.tourItemContent = function (step) {
-    return "".concat(step.body, "<div class=\"tour-progress\">").concat(step.counter, "</div>");
+  Drupal.theme.tourItemContent = function (tourStepConfig) {
+    return "".concat(tourStepConfig.body, "<div class=\"tour-progress\">").concat(tourStepConfig.counter, "</div>");
   };
 })(jQuery, Backbone, Drupal, drupalSettings, document, window.Shepherd);
