@@ -1304,3 +1304,13 @@ function system_theme_registry_alter(array &$theme_registry) {
     claro_system_module_invoked_theme_registry_alter($theme_registry);
   }
 }
+
+/**
+ * Implements hook_archiver_info_alter().
+ */
+function system_archiver_info_alter(&$info) {
+  if (!class_exists(\ZipArchive::class)) {
+    // PHP Zip extension could be missing.
+    unset($info['zip']);
+  }
+}
