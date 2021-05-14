@@ -41,7 +41,7 @@ class JSWebAssert extends WebAssert {
           (typeof jQuery === 'undefined' || (jQuery.active === 0 && jQuery(':animated').length === 0)) &&
           (typeof Drupal === 'undefined' || typeof Drupal.ajax === 'undefined' || !Drupal.ajax.instances.some(isAjaxing))
         );
-      }());
+      }())
 JS;
     $result = $this->session->wait($timeout, $condition);
     if (!$result) {

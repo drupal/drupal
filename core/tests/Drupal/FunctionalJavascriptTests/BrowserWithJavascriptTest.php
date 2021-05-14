@@ -37,7 +37,7 @@ class BrowserWithJavascriptTest extends WebDriverTestBase {
         x = w.innerWidth || e.clientWidth || g.clientWidth,
         y = w.innerHeight || e.clientHeight|| g.clientHeight;
         return x == 400 && y == 300;
-    }());
+    }())
 JS;
     $this->assertJsCondition($javascript);
 
@@ -60,7 +60,7 @@ JS;
         x = w.innerWidth || e.clientWidth || g.clientWidth,
         y = w.innerHeight || e.clientHeight|| g.clientHeight;
         return x == 400 && y == 300;
-    }());
+    }())
 JS;
 
     // We expected the following assertion to fail because the window has been
