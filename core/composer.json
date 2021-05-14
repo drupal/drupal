@@ -206,6 +206,9 @@
     "config": {
         "preferred-install": "dist"
     },
+    "suggest": {
+        "ext-zip": "Needed to support plugin.manager.archiver service"
+    },
     "extra": {
         "drupal-scaffold": {
             "file-mapping": {

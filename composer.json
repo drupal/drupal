@@ -51,9 +51,6 @@
             "php": "7.3.0"
         }
     },
-    "suggest": {
-        "ext-zip": "Needed to support plugin.manager.archiver service"
-    },
     "extra": {
         "_readme": [
             "By default Drupal loads the autoloader from ./vendor/autoload.php.",

@@ -694,9 +694,6 @@
                 "drupal/workflows": "self.version",
                 "drupal/workspaces": "self.version"
             },
-            "suggest": {
-                "ext-zip": "Needed to support plugin.manager.archiver service"
-            },
             "type": "drupal-core",
             "extra": {
                 "drupal-scaffold": {
