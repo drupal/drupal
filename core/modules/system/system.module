@@ -1363,3 +1363,13 @@ function system_page_top() {
     }
   }
 }
+
+/**
+ * Implements hook_archiver_info_alter().
+ */
+function system_archiver_info_alter(&$info) {
+  if (!class_exists(\ZipArchive::class)) {
+    // PHP Zip extension could be missing.
+    unset($info['zip']);
+  }
+}
