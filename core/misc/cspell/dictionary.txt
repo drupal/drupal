@@ -294,8 +294,6 @@ commenter's
 commenters
 commontest
 complote
-compositionend
-compositionstart
 config's
 configentity
 configtranslation
