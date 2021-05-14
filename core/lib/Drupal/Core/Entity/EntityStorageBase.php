@@ -361,9 +361,9 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    *   Associative array of query results, keyed on the entity ID.
    */
   protected function postLoad(array &$entities) {
-    $entity_classes = $this->getEntitiesByClass($entities);
+    $entities_by_class = $this->getEntitiesByClass($entities);
 
-    foreach ($entity_classes as $entity_class => &$items) {
+    foreach ($entities_by_class as $entity_class => &$items) {
       $entity_class::postLoad($this, $entities);
 
       // Call hook_entity_load().
@@ -422,10 +422,10 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
       return;
     }
 
-    $entity_classes = $this->getEntitiesByClass($entities);
+    $entities_by_class = $this->getEntitiesByClass($entities);
 
     // Allow code to run before deleting.
-    foreach ($entity_classes as $entity_class => &$items) {
+    foreach ($entities_by_class as $entity_class => &$items) {
       $entity_class::preDelete($this, $items);
       foreach ($items as $entity) {
         $this->invokeHook('predelete', $entity);
