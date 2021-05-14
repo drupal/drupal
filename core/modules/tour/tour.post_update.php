@@ -2,21 +2,24 @@
 
 /**
  * @file
- * Update functions for the tour module.
+ * Post update functions for Tour.
  */
 
+use Drupal\Core\Config\Entity\ConfigEntityUpdater;
+use Drupal\tour\Entity\Tour;
+
 /**
- * Add convert Joyride selectors to `selector` property.
+ * Convert Joyride selectors to `selector` property.
  */
-function tour_update_9200() {
-  $config_factory = \Drupal::configFactory();
-  foreach ($config_factory->listAll('tour.tour') as $tip_config_name) {
-    $tour = $config_factory->getEditable($tip_config_name);
-    $save = FALSE;
+function tour_post_update_joyride_selectors_to_selector_property(&$sandbox = NULL) {
+  $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
+
+  $update_selector = function (Tour $tour) {
+    $needs_save = FALSE;
     $tips = $tour->get('tips');
     foreach ($tips as &$tip) {
       if (isset($tip['attributes']['data-class']) || isset($tip['attributes']['data-id'])) {
-        $save = TRUE;
+        $needs_save = TRUE;
         $selector = isset($tip['attributes']['data-class']) ? ".{$tip['attributes']['data-class']}" : NULL;
         $selector = isset($tip['attributes']['data-id']) ? "#{$tip['attributes']['data-id']}" : $selector;
         $tip['selector'] = $selector;
@@ -27,15 +30,18 @@ function tour_update_9200() {
         unset($tip['attributes']['data-id']);
       }
       if (isset($tip['location'])) {
-        $save = TRUE;
+        $needs_save = TRUE;
         $tip['position'] = $tip['location'] . '-start';
         unset($tip['location']);
       }
     }
 
-    if ($save) {
+    if ($needs_save) {
       $tour->set('tips', $tips);
-      $tour->save();
     }
-  }
+
+    return $needs_save;
+  };
+
+  $config_entity_updater->update($sandbox, 'tour', $update_selector);
 }

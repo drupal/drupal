@@ -10,7 +10,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * @group Update
  * @group legacy
  *
- * @see tour_update_9200()
+ * @see tour_post_update_joyride_selectors_to_selector_property()
  */
 class TourTipDeprecatedConfigUpdateTest extends UpdatePathTestBase {
 
@@ -24,12 +24,16 @@ class TourTipDeprecatedConfigUpdateTest extends UpdatePathTestBase {
   }
 
   /**
-   * Confirm that tour_update_9200() populates the `selector` property.
+   * Tests tour_post_update_joyride_selectors_to_selector_property().
+   *
+   * Confirms that tour_post_update_joyride_selectors_to_selector_property()
+   * populates the `selector` property.
    *
    * Joyride-based tours used the `data-id` and `data-class` attributes to
    * associate a tour tip with an element. This was changed to a `selector`
-   * property. Existing tours are refactored to use this new property via
-   * tour_update_9200(), and this test confirms it is done properly.
+   * property. Existing tours are updated to use this new property via
+   * tour_post_update_joyride_selectors_to_selector_property(), and this test
+   * confirms it is done properly.
    */
   public function testSelectorUpdate() {
     $this->container->get('module_installer')->install(['tour', 'tour_test', 'tour_legacy_test']);
