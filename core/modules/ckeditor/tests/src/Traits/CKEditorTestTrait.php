@@ -25,7 +25,7 @@ trait CKEditorTestTrait {
           && typeof CKEDITOR.instances["{$instance_id}"] !== 'undefined'
           && CKEDITOR.instances["{$instance_id}"].instanceReady
         );
-      }());
+      }())
 JS;
     $this->assertJsCondition($condition, $timeout);
   }
