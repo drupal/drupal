@@ -101,7 +101,7 @@ class QuickEditJavascriptTestBase extends WebDriverTestBase {
 
     // Assert the Quick Edit internal state is correct.
     $js_condition = <<<JS
-Drupal.quickedit.collections.entities.where({isActive: true}).length === 1 && Drupal.quickedit.collections.entities.where({isActive: true})[0].get('entityID') === '$entity_type_id/$entity_id';
+Drupal.quickedit.collections.entities.where({isActive: true}).length === 1 && Drupal.quickedit.collections.entities.where({isActive: true})[0].get('entityID') === '$entity_type_id/$entity_id'
 JS;
     $this->assertJsCondition($js_condition);
   }
@@ -149,7 +149,7 @@ JS;
   protected function awaitEntityInstanceFieldState($entity_type_id, $entity_id, $entity_instance_id, $field_name, $langcode, $awaited_state) {
     $entity_page_id = $entity_type_id . '/' . $entity_id . '[' . $entity_instance_id . ']';
     $logical_field_id = $entity_type_id . '/' . $entity_id . '/' . $field_name . '/' . $langcode;
-    $this->assertJsCondition("Drupal.quickedit.collections.entities.get('$entity_page_id').get('fields').findWhere({logicalFieldID: '$logical_field_id'}).get('state') === '$awaited_state';");
+    $this->assertJsCondition("Drupal.quickedit.collections.entities.get('$entity_page_id').get('fields').findWhere({logicalFieldID: '$logical_field_id'}).get('state') === '$awaited_state'");
   }
 
   /**
