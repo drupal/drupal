@@ -20,6 +20,7 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\KeyValueStore\KeyValueDatabaseExpirableFactory;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\PageCache\RequestPolicyInterface;
 use Drupal\Core\Queue\QueueGarbageCollectionInterface;
@@ -89,6 +90,11 @@ function system_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dd>' . t('Your site has several file directories, which are used to store and process uploaded and generated files. The <em>public</em> file directory, which is configured in your settings.php file, is the default place for storing uploaded files. Links to files in this directory contain the direct file URL, so when the files are requested, the web server will send them directly without invoking your site code. This means that the files can be downloaded by anyone with the file URL, so requests are not access-controlled but they are efficient. The <em>private</em> file directory, also configured in your settings.php file and ideally located outside the site web root, is access controlled. Links to files in this directory are not direct, so requests to these files are mediated by your site code. This means that your site can check file access permission for each file before deciding to fulfill the request, so the requests are more secure, but less efficient. You should only use the private storage for files that need access control, not for files like your site logo and background images used on every page. The <em>temporary</em> file directory is used internally by your site code for various operations, and is configured on the <a href=":file-system">File system settings</a> page. You can also see the configured public and private file directories on this page, and choose whether public or private should be the default for uploaded files.', [':file-system' => Url::fromRoute('system.file_system_settings')->toString()]) . '</dd>';
       $output .= '<dt>' . t('Configuring the image toolkit') . '</dt>';
       $output .= '<dd>' . t('On the <a href=":toolkit">Image toolkit page</a>, you can select and configure the PHP toolkit used to manipulate images. Depending on which distribution or installation profile you choose when you install your site, the GD2 toolkit and possibly others are included; other toolkits may be provided by contributed modules.', [':toolkit' => Url::fromRoute('system.image_toolkit_settings')->toString()]) . '</dd>';
+      if (\Drupal::currentUser()->hasPermission('administer site configuration')) {
+        $output .= '<dt id="security-advisories">' . t('Critical security advisories') . '</dt>';
+        $output .= '<dd>' . t('The System module displays highly critical and time-sensitive security announcements to site administrators. Some security announcements will be displayed until a critical security update is installed. Announcements that are not associated with a specific release will appear for a fixed period of time. <a href=":handbook">More information on critical security advisories</a>.', [':handbook' => 'https://www.drupal.org/docs/updating-drupal/responding-to-critical-security-update-advisories']) . '</dd>';
+        $output .= '<dd>' . t('Only the most highly critical security announcements will be shown. <a href=":advisories-list">View all security announcements</a>.', [':advisories-list' => 'https://www.drupal.org/security']) . '</dd>';
+      }
       $output .= '</dl>';
       return $output;
 
@@ -241,6 +247,10 @@ function system_theme() {
     ],
     'off_canvas_page_wrapper' => [
       'variables' => ['children' => NULL],
+    ],
+    'system_security_advisories_fetch_error_message' => [
+      'file' => 'system.theme.inc',
+      'variables' => ['error_message' => []],
     ],
   ]);
 }
@@ -1058,6 +1068,14 @@ function system_cron() {
   // Ensure that all of Drupal's standard directories (e.g., the public files
   // directory and config directory) have appropriate .htaccess files.
   \Drupal::service('file.htaccess_writer')->ensure();
+
+  if (\Drupal::config('system.advisories')->get('enabled')) {
+    // Fetch the security advisories so that they will be pre-fetched during
+    // _system_advisories_requirements() and system_page_top().
+    /** @var \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher $fetcher */
+    $fetcher = \Drupal::service('system.sa_fetcher');
+    $fetcher->getSecurityAdvisories();
+  }
 }
 
 /**
@@ -1302,5 +1320,46 @@ function system_theme_registry_alter(array &$theme_registry) {
   if (_system_is_claro_admin_and_not_active()) {
     require_once DRUPAL_ROOT . '/core/themes/claro/claro.theme';
     claro_system_module_invoked_theme_registry_alter($theme_registry);
+  }
+}
+
+/**
+ * Implements hook_page_top().
+ */
+function system_page_top() {
+  /** @var \Drupal\Core\Routing\AdminContext $admin_context */
+  $admin_context = \Drupal::service('router.admin_context');
+  if ($admin_context->isAdminRoute() && \Drupal::currentUser()->hasPermission('administer site configuration')) {
+    $route_match = \Drupal::routeMatch();
+    $route_name = $route_match->getRouteName();
+    if ($route_name !== 'system.status' && \Drupal::config('system.advisories')->get('enabled')) {
+      /** @var \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher $fetcher */
+      $fetcher = \Drupal::service('system.sa_fetcher');
+      $advisories = $fetcher->getSecurityAdvisories(FALSE);
+      if ($advisories) {
+        $messenger = \Drupal::messenger();
+        $display_as_errors = FALSE;
+        $links = [];
+        foreach ($advisories as $advisory) {
+          // To ensure that all the advisory messages are grouped together on
+          // the page, they must all be warnings or all be errors. If any
+          // advisories are not public service announcements, then display all
+          // the messages as errors because security advisories already tied to
+          // a specific release are immediately actionable by upgrading to a
+          // secure version of a project.
+          $display_as_errors = $display_as_errors ? TRUE : !$advisory->isPsa();
+          $links[] = new Link($advisory->getTitle(), Url::fromUri($advisory->getUrl()));
+        }
+        foreach ($links as $link) {
+          $display_as_errors ? $messenger->addError($link) : $messenger->addWarning($link);
+        }
+        if (\Drupal::moduleHandler()->moduleExists('help')) {
+          $help_link = t('(<a href=":system-help">What are critical security announcements?</a>)', [
+            ':system-help' => Url::fromRoute('help.page', ['name' => 'system'], ['fragment' => 'security-advisories'])->toString(),
+          ]);
+          $display_as_errors ? $messenger->addError($help_link) : $messenger->addWarning($help_link);
+        }
+      }
+    }
   }
 }

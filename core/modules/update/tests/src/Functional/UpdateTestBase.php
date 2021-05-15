@@ -264,6 +264,16 @@ abstract class UpdateTestBase extends BrowserTestBase {
   }
 
   /**
+   * Asserts that the update table text does not contain the specified text.
+   *
+   * @param string $text
+   *   The expected text.
+   */
+  protected function assertUpdateTableTextNotContains($text) {
+    $this->assertSession()->elementTextNotContains('css', $this->updateTableLocator, $text);
+  }
+
+  /**
    * Asserts that the update table element HTML contains the specified text.
    *
    * @param string $text
@@ -274,6 +284,19 @@ abstract class UpdateTestBase extends BrowserTestBase {
   protected function assertUpdateTableElementContains($text) {
     $this->assertSession()
       ->elementContains('css', $this->updateTableLocator, $text);
+  }
+
+  /**
+   * Asserts that the update table element HTML contains the specified text.
+   *
+   * @param string $text
+   *   The expected text.
+   *
+   * @see \Behat\Mink\WebAssert::elementNotContains()
+   */
+  protected function assertUpdateTableElementNotContains($text) {
+    $this->assertSession()
+      ->elementNotContains('css', $this->updateTableLocator, $text);
   }
 
   /**
