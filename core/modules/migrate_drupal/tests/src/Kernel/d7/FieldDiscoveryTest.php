@@ -213,6 +213,16 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
                 ],
                 'link_field' => [
                   'link_default' => 'link',
+                  'link_title_plain' => 'link',
+                  'link_host' => 'link',
+                  'link_url' => 'link',
+                  'link_plain' => 'link',
+                  'link_absolute' => 'link',
+                  'link_domain' => 'link',
+                  'link_no_protocol' => 'link',
+                  'link_short' => 'link',
+                  'link_label' => 'link',
+                  'link_separate' => 'link_separate',
                 ],
                 'entityreference' => [
                   'entityreference_label' => 'entity_reference_label',

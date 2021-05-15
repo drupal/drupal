@@ -8,6 +8,7 @@ use Drupal\Core\Database\Database;
  * Tests the temporary query functionality.
  *
  * @group Database
+ * @group legacy
  */
 class TemporaryQueryTest extends DatabaseTestBase {
 
@@ -32,6 +33,9 @@ class TemporaryQueryTest extends DatabaseTestBase {
    * Confirms that temporary tables work and are limited to one request.
    */
   public function testTemporaryQuery() {
+    $this->expectDeprecation('Connection::queryTemporary() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3211781');
+    $this->expectDeprecation('Connection::generateTemporaryTableName() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3211781');
+
     $connection = Database::getConnection();
     $this->drupalGet('database_test/db_query_temporary');
     $data = json_decode($this->getSession()->getPage()->getContent());

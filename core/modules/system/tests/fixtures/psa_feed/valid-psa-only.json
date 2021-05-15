@@ -1,0 +1,47 @@
+[
+  {
+    "title":"Critical Release - PSA-Really Old",
+    "link":"https:\/\/www.drupal.org\/psa",
+    "project":"drupal",
+    "type":"core",
+    "is_psa":"1",
+    "insecure":[
+
+    ],
+    "pubDate":"Tue, 19 Feb 2017 14:11:01 +0000"
+  },
+  {
+    "title":"Generic Module1 Test - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02",
+    "link":"https:\/\/www.drupal.org\/SA-CONTRIB-2019-02-02",
+    "project":"generic_module1_test",
+    "type":"module",
+    "is_psa":"0",
+    "insecure":[
+      "8.x-1.1"
+    ],
+    "pubDate":"Tue, 19 Mar 2019 12:50:00 +0000"
+  },
+  {
+    "title":"Generic Module2 project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02",
+    "link":"https:\/\/www.drupal.org\/SA-CONTRIB-2019-02-02",
+    "project":"generic_module2_project",
+    "type":"module",
+    "is_psa":"1",
+    "insecure":[
+
+    ],
+    "pubDate":"Tue, 19 Mar 2019 12:50:00 +0000"
+  },
+  {
+    "title":"Missing Project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02",
+    "link":"https:\/\/www.drupal.org\/SA-CONTRIB-2019-02-02",
+    "project":"missing_project",
+    "type":"module",
+    "is_psa":"1",
+    "insecure":[
+      "7.x-1.7",
+      "8.x-1.4"
+    ],
+    "pubDate":"Tue, 19 Mar 2019 12:50:00 +0000"
+  }
+]

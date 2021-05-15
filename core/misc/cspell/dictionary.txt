@@ -16,10 +16,8 @@ adminforms
 adminlabel
 aewesome
 aflopend
-afterbegin
 afterclose
 aftercreate
-afterend
 ahah
 aimez
 ajaxcallback
@@ -28,7 +26,6 @@ ajaxing
 akiko
 aliasable
 aliquet
-alle
 allowtransparency
 allwords
 alphadecimal
@@ -42,7 +39,6 @@ andif
 anding
 annot
 anonyme
-anonymize
 anothermodule
 anotherwordenglish
 anotherwordgerman
@@ -50,7 +46,6 @@ antilop
 anyall
 api's
 apng
-apos
 applix
 archiver
 archivers
@@ -77,7 +72,6 @@ atomrendererfeed
 atsign
 attrval
 attrvals
-auditable
 auth's
 authless
 authmap
@@ -145,7 +139,6 @@ bazs
 beatle
 beforeclose
 beforecreate
-beforeend
 behat
 bergmann
 berne
@@ -155,7 +148,6 @@ bgred
 bigpipe
 bikeshed
 bikesheds
-bing
 bistromathic
 bitmask
 bkmgtpezy
@@ -231,7 +223,6 @@ catchable
 ccyy
 ccyymm
 ccyymmdd
-cdns
 cette
 cfield
 chainable
@@ -296,17 +287,14 @@ configentity
 configtranslation
 configurability
 configurator
-conformant
 conneg
 contaynz
 contentblock
-contenteditable
 contententry
 contentrendererentry
 contextual's
 contextuals
 contrained
-contribs
 controlgroup
 coord
 corefake
@@ -319,7 +307,6 @@ createkey
 createrole
 createuser
 crema
-crossorigin
 crossout
 crudui
 crypted
@@ -411,8 +398,6 @@ deserialization
 deserializes
 destid
 destructable
-destructured
-desynchronized
 deutsch
 deutscher
 devel
@@ -436,12 +421,10 @@ dnumber
 docblock
 docroot
 docroots
-docx
 dolore
 dotenv
 doubleclick
 downcasting
-downlevel
 doxygen
 drag'n'drop
 draggable
@@ -484,7 +467,6 @@ dublincorerendererentry
 dublincorerendererfeed
 défaut
 détruire
-eacute
 easyrdf
 ecmascript
 editables
@@ -529,7 +511,6 @@ errmode
 errored
 errrf
 eslintignore
-eslinting
 espagnol
 estraven
 etag
@@ -544,7 +525,6 @@ extlink
 extraday
 extrasmall
 extraspace
-exts
 fabpot
 faible
 failonerror
@@ -599,7 +579,6 @@ flipfit
 floatingspace
 foaf
 foat
-focusable
 focusring
 fodg
 fodp
@@ -715,11 +694,9 @@ hostnames
 hreflang
 hreflangs
 hrefs
-htaccess
 htkey
 htmlcorrector
 htmlto
-httpd
 httpheader
 httpkernel
 httponly
@@ -727,8 +704,6 @@ huhuu
 hurlant
 hustlin
 hwldf
-iacute
-iana
 icann
 ichars
 iconwrap
@@ -771,6 +746,7 @@ isdst
 isid
 isinstallable
 items's
+iteratable
 itoa
 itok
 itunesentry
@@ -809,6 +785,7 @@ kakec
 kangarookitten
 kerneltest
 kernighan
+keyevent
 keyframes
 keyname
 keypresses
@@ -836,7 +813,6 @@ layouted
 lazybuilder
 lazyload
 lcode
-ldquo
 leftjoin
 libc
 libellé
@@ -845,7 +821,6 @@ libmysqlclient
 libyaml
 licious
 lified
-lightbulb
 lightdiamond
 lightninggreen
 linebreak
@@ -880,7 +855,6 @@ lowlevel
 lowline
 lrdd
 lspeak
-lsquo
 lstitle
 ltitle
 ltlanguage
@@ -927,7 +901,7 @@ metapackage
 metapackages
 metatag
 metatags
-meφω
+meΦΩ
 miaus
 middlewares
 midgardmvc
@@ -955,7 +929,6 @@ mocky
 moderatable
 modernizr
 modernizr's
-modulename
 modulenarrow
 modules's
 mojito
@@ -1048,7 +1021,6 @@ nodo
 noemptytag
 noevent
 nofields
-nofollow
 noindex
 nojs
 nolink
@@ -1077,7 +1049,6 @@ nourriture
 nplurals
 nresponse
 ntfs
-nturn
 nyan
 nyancat
 nyans
@@ -1098,7 +1069,6 @@ onetwo
 onewidgetfield
 onoff
 opendocument
-openid
 openxmlformats
 oplopend
 opmls
@@ -1156,7 +1126,6 @@ phpcs
 phpdoc
 phpdocumentor
 phpfile
-phplint
 phpserialize
 phpspec
 phpunit
@@ -1194,11 +1163,9 @@ postgresql
 postorder
 postprocess
 postupdate
-potx
 poweredby
 powerpoint
 powriter
-pptx
 prebar
 precache
 precompiled
@@ -1282,10 +1249,8 @@ rbaz
 rdfa
 rdfs
 rdftype
-rdquo
 readmore
 readonlydir
-readwrite
 readystate
 realelement
 realpaths
@@ -1338,7 +1303,6 @@ restripe
 restriped
 restui
 rethrown
-retrigger
 returntransfer
 reuploading
 revisionability
@@ -1387,7 +1351,6 @@ scorewords
 screenreader
 screenreaders
 scriptable
-scrollable
 scrollbars
 sdeeeee
 searchdirs
@@ -1397,7 +1360,6 @@ sebe
 secondcolumn
 seld
 selectbox
-semver
 sendmail
 serializer's
 serviceform
@@ -1407,7 +1369,6 @@ sharedspace
 shatner
 shorterthan
 shortlink
-shortname
 shortnames
 showblocks
 sidebarborders
@@ -1501,7 +1462,6 @@ subcondition
 subcontainer
 subdir
 subelements
-subfolder
 subform
 subform's
 subforms
@@ -1511,7 +1471,6 @@ subkeys
 submenu
 submenus
 subparse
-subpath
 subpatterns
 subplugins
 subproject
@@ -1528,7 +1487,6 @@ subsequentially
 subseven
 subshell
 substrategies
-subsub
 subsubtheme
 subtheme
 subtheme's
@@ -1550,15 +1508,12 @@ svgz
 svibanj
 swcf
 symfony's
-symlinked
 symlinking
-symlinks
 synchronizable
 syrop
 tabarnak
 tabbable
 tabbingmanager
-tabindex
 tabledrag
 tableheader
 tableinfo
@@ -1644,7 +1599,6 @@ themename
 themer
 themers
 themey
-theming
 theseer
 theseparator
 thingie
@@ -1691,9 +1645,7 @@ tparams
 trackback
 trailingslash
 transferthick
-transitionend
 translatables
-transpiled
 trayblock
 trex
 trgm
@@ -1703,6 +1655,7 @@ truecolor
 tsid
 tspan
 turbolinks
+tuvan
 twistie
 twocol
 txtzzzz
@@ -1730,7 +1683,6 @@ unbundleable
 unbustable
 uncacheable
 uncategorized
-uncheck
 unchecking
 unclickable
 uncollapsible
@@ -1813,16 +1765,13 @@ updateing
 updateprogress
 updatetype
 upload's
-uploader
 uploaders
 uploadprogress
 uploadsize
 uppercased
 upscaling
 upsert
-upto
 urandom
-uri's
 url's
 urlalias
 urldecoding
@@ -1835,7 +1784,6 @@ userspace
 usuario
 uuid's
 validatable
-valign
 vals
 vampirize
 vancode
@@ -1868,7 +1816,6 @@ wcprops
 wcsrefsdf
 webassert
 webcal
-webconfig
 webdriver
 webflo
 webfonts
@@ -1894,13 +1841,11 @@ wimoids
 windir
 winnt
 wmlscript
-woff
 wonkiness
 wontmatter
 wordprocessingml
 wordsafe
 wordword
-workspace's
 workspaceswitcher
 wqkcy
 writability
@@ -1918,8 +1863,6 @@ xhr's
 xjkm
 xlen
 xlgp
-xlink
-xlsx
 xmlhttp
 xmlhttprequest
 xmlurl
@@ -1958,5 +1901,4 @@ zoomout
 zwei
 zxvf
 zzgroup
-übersetzung
-tuvan
+Übersetzung

@@ -5,9 +5,9 @@
  * Code required only when comparing available updates to existing data.
  */
 
+use Drupal\Core\Extension\ExtensionVersion;
 use Drupal\update\UpdateFetcherInterface;
 use Drupal\update\UpdateManagerInterface;
-use Drupal\update\ModuleVersion;
 use Drupal\update\ProjectCoreCompatibility;
 
 /**
@@ -275,7 +275,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
     return;
   }
   try {
-    $existing_major = ModuleVersion::createFromVersionString($project_data['existing_version'])->getMajorVersion();
+    $existing_major = ExtensionVersion::createFromVersionString($project_data['existing_version'])->getMajorVersion();
   }
   catch (UnexpectedValueException $exception) {
     // If the version has an unexpected value we can't determine updates.
@@ -307,7 +307,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
     $project_data['status'] = UpdateManagerInterface::NOT_SUPPORTED;
     foreach ($supported_branches as $supported_branch) {
       try {
-        $target_major = ModuleVersion::createFromSupportBranch($supported_branch)->getMajorVersion();
+        $target_major = ExtensionVersion::createFromSupportBranch($supported_branch)->getMajorVersion();
 
       }
       catch (UnexpectedValueException $exception) {
@@ -357,7 +357,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
 
   foreach ($available['releases'] as $version => $release) {
     try {
-      $release_module_version = ModuleVersion::createFromVersionString($release['version']);
+      $release_module_version = ExtensionVersion::createFromVersionString($release['version']);
     }
     catch (UnexpectedValueException $exception) {
       continue;

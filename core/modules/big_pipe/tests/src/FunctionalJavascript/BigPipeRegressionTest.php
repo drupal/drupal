@@ -114,7 +114,7 @@ class BigPipeRegressionTest extends WebDriverTestBase {
     $javascript = <<<JS
     (function(){
       return Object.keys(CKEDITOR.instances).length > 0;
-    }());
+    }())
 JS;
     $this->assertJsCondition($javascript);
   }
@@ -135,7 +135,7 @@ JS;
     $javascript = <<<JS
     (function(){
       return Object.keys(Drupal.ajax.instances).length > 0;
-    }());
+    }())
 JS;
     $this->assertJsCondition($javascript);
 
