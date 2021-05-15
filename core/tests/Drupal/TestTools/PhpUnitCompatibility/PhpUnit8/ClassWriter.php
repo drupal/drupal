@@ -51,23 +51,13 @@ final class ClassWriter {
     if (class_exists('PHPUnit\Framework\Assert', FALSE)) {
       return;
     }
-    // Inspired by Symfony's simple-phpunit remove typehints from Assert.
+    // Mutate Assert code to make it forward compatible with different PhpUnit
+    // versions, by adding Symfony's PHPUnit-bridge PolyfillAssertTrait.
     $alteredFile = $autoloader->findFile('PHPUnit\Framework\Assert');
     $phpunit_dir = dirname($alteredFile, 3);
-    // Mutate TestCase code to make it compatible with Drupal 8 and 9 tests.
     $alteredCode = file_get_contents($alteredFile);
     $alteredCode = preg_replace('/abstract class Assert[^\{]+\{/', '$0 ' . \PHP_EOL . "    use \Symfony\Bridge\PhpUnit\Legacy\PolyfillAssertTrait;" . \PHP_EOL, $alteredCode, 1);
-    $simpletest_directory = __DIR__ . '/../../../../../../sites/simpletest';
-    // Only write when necessary.
-    $filename = $simpletest_directory . '/Assert.php';
-    if (!file_exists($filename) || md5_file($filename) !== md5($alteredCode)) {
-      // Create directory when necessary.
-      if (!file_exists($simpletest_directory)) {
-        mkdir($simpletest_directory, 0777, TRUE);
-      }
-      file_put_contents($filename, $alteredCode);
-    }
-    include $filename;
+    include $this->flushAlteredCodeToFile('Assert.php', $alteredCode);
   }
 
   /**
@@ -86,25 +76,45 @@ final class ClassWriter {
     if (class_exists('PHPUnit\Framework\TestCase', FALSE)) {
       return;
     }
-    // Inspired by Symfony's simple-phpunit remove typehints from TestCase.
+    // Mutate TestCase code to make it forward compatible with different PhpUnit
+    // versions, by adding Symfony's PHPUnit-bridge PolyfillAssertTrait.
     $alteredFile = $autoloader->findFile('PHPUnit\Framework\TestCase');
     $phpunit_dir = dirname($alteredFile, 3);
-    // Mutate TestCase code to make it compatible with Drupal 8 and 9 tests.
     $alteredCode = file_get_contents($alteredFile);
-    $alteredCode = preg_replace('/^    ((?:protected|public)(?: static)? function \w+\(\)): void/m', '    $1', $alteredCode);
     $alteredCode = preg_replace('/abstract class TestCase[^\{]+\{/', '$0 ' . \PHP_EOL . "    use \Symfony\Bridge\PhpUnit\Legacy\PolyfillTestCaseTrait;" . \PHP_EOL, $alteredCode, 1);
     $alteredCode = str_replace("__DIR__ . '/../Util/", "'$phpunit_dir/src/Util/", $alteredCode);
-    $simpletest_directory = __DIR__ . '/../../../../../../sites/simpletest';
-    // Only write when necessary.
-    $filename = $simpletest_directory . '/TestCase.php';
-    if (!file_exists($filename) || md5_file($filename) !== md5($alteredCode)) {
-      // Create directory when necessary.
-      if (!file_exists($simpletest_directory)) {
-        mkdir($simpletest_directory, 0777, TRUE);
-      }
-      file_put_contents($filename, $alteredCode);
-    }
-    include $filename;
+    // While Drupal still allows methods in test base classes that inherit from
+    // TestCase with no void return typehints specified, we also alter TestCase
+    // to remove the typehints.
+    // @see https://www.drupal.org/project/drupal/issues/3182103
+    $alteredCode = preg_replace('/^    ((?:protected|public)(?: static)? function \w+\(\)): void/m', '    $1', $alteredCode);
+    include $this->flushAlteredCodeToFile('TestCase.php', $alteredCode);
   }
 
+  /**
+   * Flushes altered class code to file when necessary.
+   *
+   * @param string $file_name
+   *   The file name.
+   * @param string $altered_code
+   *   The altered code.
+   *
+   * @return string
+   *   The full path of the file to be included.
+   */
+  private static function flushAlteredCodeToFile(string $file_name, string $altered_code): string {
+    $directory = __DIR__ . '/../../../../../../sites/simpletest';
+    $full_path = $directory . '/' . $file_name;
+
+    // Only write when necessary.
+    if (!file_exists($full_path) || md5_file($full_path) !== md5($altered_code)) {
+      // Create directory when necessary.
+      if (!file_exists($directory)) {
+        mkdir($directory, 0777, TRUE);
+      }
+      file_put_contents($full_path, $altered_code);
+    }
+
+    return $full_path;
+  }
 }
