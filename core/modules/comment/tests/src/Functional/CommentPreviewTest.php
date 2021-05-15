@@ -183,7 +183,7 @@ class CommentPreviewTest extends CommentTestBase {
     // Submit the form using the displayed values.
     $displayed = [];
     $displayed['subject[0][value]'] = $this->assertSession()->fieldExists('edit-subject-0-value')->getValue();
-    $displayed['comment_body[0][value]'] = current($this->xpath("//textarea[@id='edit-comment-body-0-value']"))->getValue();
+    $displayed['comment_body[0][value]'] = $this->assertSession()->fieldExists('edit-comment-body-0-value')->getValue();
     $displayed['uid'] = $this->assertSession()->fieldExists('edit-uid')->getValue();
     $displayed['date[date]'] = $this->assertSession()->fieldExists('edit-date-date')->getValue();
     $displayed['date[time]'] = $this->assertSession()->fieldExists('edit-date-time')->getValue();

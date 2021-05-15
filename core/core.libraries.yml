@@ -14,10 +14,10 @@ backbone:
 
 ckeditor:
   remote: https://github.com/ckeditor/ckeditor4
-  version: "4.15.1"
+  version: "4.16.0"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://raw.githubusercontent.com/ckeditor/ckeditor4/4.15.1/LICENSE.md
+    url: https://raw.githubusercontent.com/ckeditor/ckeditor4/4.16.0/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor/ckeditor.js: { preprocess: false, minified: true }
@@ -85,6 +85,7 @@ drupal.ajax:
     - core/drupalSettings
     - core/drupal.progress
     - core/jquery.once
+    - core/tabbable
 
 drupal.announce:
   version: VERSION
@@ -114,7 +115,6 @@ drupal.autocomplete:
     assets/vendor/jquery.ui/ui/jquery-1-7-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/keycode-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/plugin-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/position-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/safe-active-element-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/safe-blur-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/scroll-parent-min.js: { weight: -11.8, minified: true }
@@ -136,6 +136,8 @@ drupal.autocomplete:
     - core/drupalSettings
     - core/drupal.ajax
     - core/tabbable.jquery.shim
+    - core/drupal.jquery.position
+
 
 drupal.array.find:
   version: VERSION
@@ -221,7 +223,6 @@ drupal.dialog:
     assets/vendor/jquery.ui/ui/ie-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/keycode-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/plugin-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/position-min.js: { weight: -11.8,  minified: true }
     assets/vendor/jquery.ui/ui/safe-active-element-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/safe-blur-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/widget-min.js: { weight: -11.8, minified: true }
@@ -245,6 +246,7 @@ drupal.dialog:
     - core/drupal.debounce
     - core/drupal.displace
     - core/tabbable.jquery.shim
+    - core/drupal.jquery.position
 
 drupal.dialog.ajax:
   version: VERSION
@@ -256,6 +258,7 @@ drupal.dialog.ajax:
     - core/drupalSettings
     - core/drupal.ajax
     - core/drupal.dialog
+    - core/tabbable
 
 drupal.displace:
   version: VERSION
@@ -278,6 +281,13 @@ drupal.dropbutton:
     - core/drupal
     - core/drupalSettings
     - core/jquery.once
+
+drupal.element.closest:
+  version: VERSION
+  js:
+    misc/polyfills/element.closest.js: { weight: -20 }
+  dependencies:
+    - core/drupal.element.matches
 
 drupal.element.matches:
   version: VERSION
@@ -357,7 +367,6 @@ drupal.tabbingmanager:
     - core/jquery
     - core/drupal
     - core/tabbable
-    - core/tabbable.jquery.shim
 
 drupal.tabledrag:
   version: VERSION
@@ -434,10 +443,10 @@ es6-promise:
 
 jquery:
   remote: https://github.com/jquery/jquery
-  version: "3.5.1"
+  version: "3.6.0"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/jquery/jquery/3.5.1/LICENSE.txt
+    url: https://raw.githubusercontent.com/jquery/jquery/3.6.0/LICENSE.txt
     gpl-compatible: true
   js:
     assets/vendor/jquery/jquery.min.js: { minified: true, weight: -20 }
@@ -470,7 +479,7 @@ jquery.farbtastic:
 
 jquery.form:
   remote: https://github.com/jquery-form/form
-  version: "4.22"
+  version: "4.3.0"
   license:
     name: GNU-GPL-2.0-or-later
     url: https://raw.githubusercontent.com/jquery-form/form/master/LICENSE
@@ -596,7 +605,6 @@ jquery.ui.dialog:
     assets/vendor/jquery.ui/ui/jquery-1-7-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/keycode-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/plugin-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/position-min.js: { weight: -11.8,  minified: true }
     assets/vendor/jquery.ui/ui/safe-active-element-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/safe-blur-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/scroll-parent-min.js: { weight: -11.8, minified: true }
@@ -616,6 +624,7 @@ jquery.ui.dialog:
   dependencies:
     - core/jquery
     - core/tabbable.jquery.shim
+    - core/drupal.jquery.position
   deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.draggable:
@@ -653,13 +662,23 @@ jquery.ui.mouse:
     - core/jquery.ui.widget
   deprecated: *jquery_ui_unused_deprecated
 
+drupal.jquery.position:
+  # For most positioning needs, the core/popperjs library should be used. This
+  # is a modified version of jQuery UI position for that does not require any
+  # jQuery UI assets, only jQuery. It is provided by core for use with
+  # pre-existing libraries that expect the jQuery UI position API. Popperjs is
+  # recommended for any new uses.
+  version: VERSION
+  js:
+    misc/position.js: {}
+  dependencies:
+    - core/jquery
+
 jquery.ui.position:
   version: *jquery_ui_version
   license: *jquery_ui_license
-  js:
-    assets/vendor/jquery.ui/ui/position-min.js: { weight: -11.8, minified: true }
   dependencies:
-    - core/jquery.ui
+    - core/drupal.jquery.position
   deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.resizable:
@@ -693,7 +712,7 @@ modernizr:
     name: MIT
     url: https://modernizr.com/license/
     gpl-compatible: true
-  version: "3.8.0"
+  version: "3.11.7"
   js:
     assets/vendor/modernizr/modernizr.min.js: { preprocess: 0, weight: -21, minified: true }
     misc/modernizr-additional-tests.js: { preprocess: 0, weight: -20 }
@@ -733,10 +752,10 @@ picturefill:
     assets/vendor/picturefill/picturefill.min.js: { weight: -10, minified: true }
 
 popperjs:
-  version: "2.5.4"
+  version: "2.9.2"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/popperjs/popper-core/v2.5.4/LICENSE.md
+    url: https://raw.githubusercontent.com/popperjs/popper-core/v2.9.2/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/popperjs/popper.min.js: { minified: true }
@@ -747,20 +766,20 @@ popperjs:
 
 sortable:
   remote: https://github.com/SortableJS/Sortable
-  version: "1.10.2"
+  version: "1.13.0"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/SortableJS/Sortable/1.10.2/LICENSE
+    url: https://raw.githubusercontent.com/SortableJS/Sortable/1.13.0/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/sortable/Sortable.min.js: { minified: true }
 
 tabbable:
   remote: https://github.com/focus-trap/tabbable
-  version: "5.1.6"
+  version: "5.2.0"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/focus-trap/tabbable/v5.1.6/LICENSE
+    url: https://raw.githubusercontent.com/focus-trap/tabbable/v5.2.0/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/tabbable/index.umd.min.js: { weight: -1, minified: true }
@@ -772,15 +791,16 @@ tabbable.jquery.shim:
   js:
     misc/jquery.tabbable.shim.js: {}
   dependencies:
+    - core/drupal
     - core/tabbable
     - core/jquery
 
 underscore:
   remote: https://github.com/jashkenas/underscore
-  version: "1.11.0"
+  version: "1.13.1"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/jashkenas/underscore/1.11.0/LICENSE
+    url: https://raw.githubusercontent.com/jashkenas/underscore/1.13.1/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/underscore/underscore-min.js: { weight: -20, minified: true }

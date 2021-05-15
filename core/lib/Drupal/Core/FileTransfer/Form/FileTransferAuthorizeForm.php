@@ -20,7 +20,7 @@ class FileTransferAuthorizeForm extends FormBase {
    *
    * @var string
    */
-  protected  $root;
+  protected $root;
 
   /**
    * Constructs a new FileTransferAuthorizeForm object.

@@ -41,6 +41,10 @@ class FieldStorageConfigEditForm extends EntityForm {
   /**
    * {@inheritdoc}
    *
+   * @param array $form
+   *   A nested array form elements comprising the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    * @param string $field_config
    *   The ID of the field config whose field storage config is being edited.
    */
@@ -194,6 +198,7 @@ class FieldStorageConfigEditForm extends EntityForm {
       // one selected. Deltas start with 0, so the selected value does not
       // need to be incremented.
       $entities_with_higher_delta = \Drupal::entityQuery($this->entity->getTargetEntityTypeId())
+        ->accessCheck(FALSE)
         ->condition($this->entity->getName() . '.%delta', $form_state->getValue('cardinality'))
         ->count()
         ->execute();

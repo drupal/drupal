@@ -34,7 +34,7 @@
 
   @media (--nav) {
     min-width: calc((2 * var(--grid-col-width--nav)) + (2 * var(--grid-gap--nav)) + var(--container-padding-nav));
-    height: var(--sp10);
+    height: var(--site-header-height-wide);
     margin-inline-start: calc(-1 * var(--container-padding-nav));
     padding-block: 0;
     padding-inline-start: var(--container-padding-nav);

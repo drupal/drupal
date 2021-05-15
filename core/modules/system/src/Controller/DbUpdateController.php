@@ -510,6 +510,10 @@ class DbUpdateController extends ControllerBase {
   /**
    * Renders a list of requirement errors or warnings.
    *
+   * @param $severity
+   *   The severity of the message, as per RFC 3164.
+   * @param array $requirements
+   *   The array of requirement values.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The current request.
    *

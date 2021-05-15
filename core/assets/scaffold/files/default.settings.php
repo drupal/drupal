@@ -308,16 +308,18 @@ $settings['hash_salt'] = '';
 $settings['update_free_access'] = FALSE;
 
 /**
- * Fallback to HTTP for Update Manager.
+ * Fallback to HTTP for Update Manager and for fetching security advisories.
  *
- * If your Drupal site fails to connect to updates.drupal.org using HTTPS to
- * fetch Drupal core, module and theme update status, you may uncomment this
- * setting and set it to TRUE to allow an insecure fallback to HTTP. Note that
- * doing so will open your site up to a potential man-in-the-middle attack. You
- * should instead attempt to resolve the issues before enabling this option.
+ * If your site fails to connect to updates.drupal.org over HTTPS (either when
+ * fetching data on available updates, or when fetching the feed of critical
+ * security announcements), you may uncomment this setting and set it to TRUE to
+ * allow an insecure fallback to HTTP. Note that doing so will open your site up
+ * to a potential man-in-the-middle attack. You should instead attempt to
+ * resolve the issues before enabling this option.
  * @see https://www.drupal.org/docs/system-requirements/php-requirements#openssl
  * @see https://en.wikipedia.org/wiki/Man-in-the-middle_attack
  * @see \Drupal\update\UpdateFetcher
+ * @see \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher
  */
 # $settings['update_fetch_with_http_fallback'] = TRUE;
 
@@ -608,6 +610,21 @@ $settings['update_free_access'] = FALSE;
  */
 # ini_set('pcre.backtrack_limit', 200000);
 # ini_set('pcre.recursion_limit', 200000);
+
+/**
+ * Add Permissions-Policy header to disable Google FLoC.
+ *
+ * By default, Drupal sends the 'Permissions-Policy: interest-cohort=()' header
+ * to disable Google's Federated Learning of Cohorts feature, introduced in
+ * Chrome 89.
+ *
+ * See https://en.wikipedia.org/wiki/Federated_Learning_of_Cohorts for more
+ * information about FLoC.
+ *
+ * If you don't wish to disable FLoC in Chrome, you can set this value
+ * to FALSE.
+ */
+# $settings['block_interest_cohort'] = TRUE;
 
 /**
  * Configuration overrides.

@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * @file
+ * Module for testing the display of security advisories.
+ */
+
+use Drupal\Core\Extension\Extension;
+
+/**
+ * Implements hook_system_info_alter().
+ */
+function advisory_feed_test_system_info_alter(&$info, Extension $file) {
+  // Alter the 'generic_module1_test' module to use the 'generic_module1_project'
+  // project name.  This ensures that for an extension where the 'name' and
+  // the 'project' properties do not match, 'project' is used for matching
+  // 'project' in the JSON feed.
+  $system_info = [
+    'generic_module1_test' => [
+      'project' => 'generic_module1_project',
+      'version' => '8.x-1.1',
+      'hidden' => FALSE,
+    ],
+    'generic_module2_test' => [
+      'project' => 'generic_module2_project',
+      'version' => '8.x-1.1',
+      'hidden' => FALSE,
+    ],
+  ];
+  if (!empty($system_info[$file->getName()])) {
+    foreach ($system_info[$file->getName()] as $key => $value) {
+      $info[$key] = $value;
+    }
+  }
+}

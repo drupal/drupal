@@ -10,7 +10,7 @@
 
   @media (--nav) {
     /* Necessary to keep the content from jumping up when header transitions to fixed. */
-    min-height: var(--sp10);
+    min-height: var(--site-header-height-wide);
     border-block-end: solid 1px transparent; /* Will show in Windows high contrast mode. */
   }
 }
@@ -73,17 +73,17 @@
  */
 html.js body:not(.is-always-mobile-nav) .site-header__inner {
   @media (--nav) {
-    transition: opacity 0.3s, transform 0.3s;
+    transition: opacity 0.3s, transform 0.3s, box-shadow 0.3s;
   }
 }
 
-.site-header__fixable.js-fixed .site-header__inner {
+.site-header__fixable.is-expanded .site-header__inner {
   @media (--nav) {
     box-shadow: -36px 1px 36px rgba(0, 0, 0, 0.08); /* LTR */
   }
 }
 
-[dir="rtl"] .site-header__fixable.js-fixed .site-header__inner {
+[dir="rtl"] .site-header__fixable.is-expanded .site-header__inner {
   @media (--nav) {
     box-shadow: 36px 1px 36px rgba(0, 0, 0, 0.08);
   }

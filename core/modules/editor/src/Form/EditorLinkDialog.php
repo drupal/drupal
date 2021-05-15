@@ -27,8 +27,14 @@ class EditorLinkDialog extends FormBase {
   /**
    * {@inheritdoc}
    *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    * @param \Drupal\editor\Entity\Editor $editor
    *   The text editor to which this dialog corresponds.
+   *
+   * @return array
    */
   public function buildForm(array $form, FormStateInterface $form_state, Editor $editor = NULL) {
     // The default values are set directly from \Drupal::request()->request,

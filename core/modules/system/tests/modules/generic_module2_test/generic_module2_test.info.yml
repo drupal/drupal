@@ -1,0 +1,4 @@
+name: 'Generic Module1 test'
+type: module
+description: 'A another testing module with no special functionality. It just exists. Can we say anymore about ourselves? 🤯'
+package: Testing

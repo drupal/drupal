@@ -165,17 +165,17 @@ class ContentEntityChangedTest extends EntityKernelTestBase {
     // At this point the changed time of the original language (en) is newer
     // than the changed time of the German translation. Now test that entity
     // queries work as expected.
-    $query = $this->mulChangedStorage->getQuery();
+    $query = $this->mulChangedStorage->getQuery()->accessCheck(FALSE);
     $ids = $query->condition('changed', $changed_en)->execute();
 
     $this->assertEqual($entity->id(), reset($ids), 'Entity query can access changed time of original language.');
 
-    $query = $this->mulChangedStorage->getQuery();
+    $query = $this->mulChangedStorage->getQuery()->accessCheck(FALSE);
     $ids = $query->condition('changed', $changed_en, '=', 'en')->execute();
 
     $this->assertEqual($entity->id(), reset($ids), 'Entity query can access changed time of original language by setting the original language as condition.');
 
-    $query = $this->mulChangedStorage->getQuery();
+    $query = $this->mulChangedStorage->getQuery()->accessCheck(FALSE);
     $ids = $query->condition('changed', $changed_de, '=', 'en')->execute();
 
     $this->assertEmpty(
@@ -183,12 +183,12 @@ class ContentEntityChangedTest extends EntityKernelTestBase {
       'There\'s no original entity stored having the changed time of the German translation.'
     );
 
-    $query = $this->mulChangedStorage->getQuery();
+    $query = $this->mulChangedStorage->getQuery()->accessCheck(FALSE);
     $ids = $query->condition('changed', $changed_en)->condition('default_langcode', '1')->execute();
 
     $this->assertEqual($entity->id(), reset($ids), 'Entity query can access changed time of default language.');
 
-    $query = $this->mulChangedStorage->getQuery();
+    $query = $this->mulChangedStorage->getQuery()->accessCheck(FALSE);
     $ids = $query->condition('changed', $changed_de)->condition('default_langcode', '1')->execute();
 
     $this->assertEmpty(
@@ -196,17 +196,17 @@ class ContentEntityChangedTest extends EntityKernelTestBase {
       'There\'s no entity stored using the default language having the changed time of the German translation.'
     );
 
-    $query = $this->mulChangedStorage->getQuery();
+    $query = $this->mulChangedStorage->getQuery()->accessCheck(FALSE);
     $ids = $query->condition('changed', $changed_de)->execute();
 
     $this->assertEqual($entity->id(), reset($ids), 'Entity query can access changed time of the German translation.');
 
-    $query = $this->mulChangedStorage->getQuery();
+    $query = $this->mulChangedStorage->getQuery()->accessCheck(FALSE);
     $ids = $query->condition('changed', $changed_de, '=', 'de')->execute();
 
     $this->assertEqual($entity->id(), reset($ids), 'Entity query can access changed time of the German translation.');
 
-    $query = $this->mulChangedStorage->getQuery();
+    $query = $this->mulChangedStorage->getQuery()->accessCheck(FALSE);
     $ids = $query->condition('changed', $changed_en, '=', 'de')->execute();
 
     $this->assertEmpty(
@@ -214,22 +214,22 @@ class ContentEntityChangedTest extends EntityKernelTestBase {
       'There\'s no German translation stored having the changed time of the original language.'
     );
 
-    $query = $this->mulChangedStorage->getQuery();
+    $query = $this->mulChangedStorage->getQuery()->accessCheck(FALSE);
     $ids = $query->condition('changed', $changed_de, '>')->execute();
 
     $this->assertEqual($entity->id(), reset($ids), 'Entity query can access changed time regardless of translation.');
 
-    $query = $this->mulChangedStorage->getQuery();
+    $query = $this->mulChangedStorage->getQuery()->accessCheck(FALSE);
     $ids = $query->condition('changed', $changed_en, '<')->execute();
 
     $this->assertEqual($entity->id(), reset($ids), 'Entity query can access changed time regardless of translation.');
 
-    $query = $this->mulChangedStorage->getQuery();
+    $query = $this->mulChangedStorage->getQuery()->accessCheck(FALSE);
     $ids = $query->condition('changed', 0, '>')->execute();
 
     $this->assertEqual($entity->id(), reset($ids), 'Entity query can access changed time regardless of translation.');
 
-    $query = $this->mulChangedStorage->getQuery();
+    $query = $this->mulChangedStorage->getQuery()->accessCheck(FALSE);
     $ids = $query->condition('changed', $changed_en, '>')->execute();
 
     $this->assertEmpty(
@@ -482,7 +482,7 @@ class ContentEntityChangedTest extends EntityKernelTestBase {
    *   The flag value.
    */
   protected function getRevisionTranslationAffectedFlag(EntityTestMulRevChanged $entity) {
-    $query = $this->mulRevChangedStorage->getQuery();
+    $query = $this->mulRevChangedStorage->getQuery()->accessCheck(FALSE);
     $ids = $query->condition('revision_translation_affected', 1, '=', $entity->language()->getId())->execute();
     $id = reset($ids);
     return (bool) ($id == $entity->id());
