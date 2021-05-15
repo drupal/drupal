@@ -301,15 +301,17 @@ class NodeEditFormTest extends NodeTestBase {
   public function testNodeAuthorDisplayName() {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('node/add/page');
+
     // Create node to edit.
     $edit['title[0][value]'] = $this->randomMachineName(8);
     $edit['body[0][value]'] = $this->randomMachineName(16);
     $this->submitForm($edit, 'Save');
+
     // Check that the default value in user name field
     // is the raw value and not a formatted one.
+    \Drupal::state()->set('user_hooks_test_user_format_name_alter', TRUE);
     \Drupal::service('module_installer')->install(['user_hooks_test']);
     Cache::invalidateTags(['rendered']);
-    \Drupal::state()->set('user_hooks_test_user_format_name_alter', TRUE);
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->drupalGet("node/" . $node->id() . "/edit");
     $this->assertSession()->responseContains('<em>' . $this->adminUser->id() . '</em>');
