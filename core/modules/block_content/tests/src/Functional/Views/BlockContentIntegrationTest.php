@@ -61,8 +61,9 @@ class BlockContentIntegrationTest extends BlockContentTestBase {
    *   An array of block_content IDs.
    */
   protected function assertIds(array $expected_ids = []) {
+    $result = $this->xpath('//span[@class="field-content"]');
     $ids = [];
-    foreach ($this->xpath('//span[@class="field-content"]') as $element) {
+    foreach ($result as $element) {
       $ids[] = $element->getText();
     }
     $this->assertEqual($expected_ids, $ids);
