@@ -57,7 +57,7 @@ final class ClassWriter {
     $phpunit_dir = dirname($alteredFile, 3);
     $alteredCode = file_get_contents($alteredFile);
     $alteredCode = preg_replace('/abstract class Assert[^\{]+\{/', '$0 ' . \PHP_EOL . "    use \Symfony\Bridge\PhpUnit\Legacy\PolyfillAssertTrait;" . \PHP_EOL, $alteredCode, 1);
-    include $this->flushAlteredCodeToFile('Assert.php', $alteredCode);
+    include static::flushAlteredCodeToFile('Assert.php', $alteredCode);
   }
 
   /**
@@ -88,7 +88,7 @@ final class ClassWriter {
     // to remove the typehints.
     // @see https://www.drupal.org/project/drupal/issues/3182103
     $alteredCode = preg_replace('/^    ((?:protected|public)(?: static)? function \w+\(\)): void/m', '    $1', $alteredCode);
-    include $this->flushAlteredCodeToFile('TestCase.php', $alteredCode);
+    include static::flushAlteredCodeToFile('TestCase.php', $alteredCode);
   }
 
   /**
@@ -117,4 +117,5 @@ final class ClassWriter {
 
     return $full_path;
   }
+
 }
