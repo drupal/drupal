@@ -222,7 +222,7 @@ class HelpTopicTest extends BrowserTestBase {
       'invalid params' => FALSE,
       'valid link' => TRUE,
       'Additional topic' => TRUE,
-      'Missing help topic' => FALSE,
+      'Missing help topic not_a_topic' => FALSE,
     ];
     foreach ($links as $text => $should_be_link) {
       if ($should_be_link) {
