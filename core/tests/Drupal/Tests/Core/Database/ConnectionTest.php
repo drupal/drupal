@@ -75,6 +75,7 @@ class ConnectionTest extends UnitTestCase {
    *   - Expected result.
    *   - Table prefix.
    *   - Query to be prefixed.
+   *   - Quote identifier.
    */
   public function providerTestPrefixTables() {
     return [
@@ -85,23 +86,23 @@ class ConnectionTest extends UnitTestCase {
         ['', ''],
       ],
       [
-        'SELECT * FROM "first_table" JOIN "second"."thingie"',
-        [
-          'table' => 'first_',
-          'thingie' => 'second.',
-        ],
-        'SELECT * FROM {table} JOIN {thingie}',
+        'SELECT * FROM "test_table"',
+        'test_',
+        'SELECT * FROM {table}',
+        ['"', '"'],
       ],
       [
-        'SELECT * FROM [first_table] JOIN [second].[thingie]',
-        [
-          'table' => 'first_',
-          'thingie' => 'second.',
-        ],
-        'SELECT * FROM {table} JOIN {thingie}',
+        "SELECT * FROM 'test_table'",
+        'test_',
+        'SELECT * FROM {table}',
+        ["'", "'"],
+      ],
+      [
+        "SELECT * FROM [test_table]",
+        'test_',
+        'SELECT * FROM {table}',
         ['[', ']'],
       ],
-
     ];
   }
 
@@ -112,6 +113,90 @@ class ConnectionTest extends UnitTestCase {
    */
   public function testPrefixTables($expected, $prefix_info, $query, array $quote_identifier = ['"', '"']) {
     $mock_pdo = $this->createMock('Drupal\Tests\Core\Database\Stub\StubPDO');
+    $connection = new StubConnection($mock_pdo, ['prefix' => $prefix_info], $quote_identifier);
+    $this->assertEquals($expected, $connection->prefixTables($query));
+  }
+
+  /**
+   * Dataprovider for testLegacyPerTablePrefixTables().
+   *
+   * @return array
+   *   Array of arrays with the following elements:
+   *   - Expected result.
+   *   - Table prefix.
+   *   - Query to be prefixed.
+   *   - Quote identifier.
+   */
+  public function providerLegacyTestPerTablePrefixTables() {
+    return [
+      [
+        'SELECT * FROM "first_table" JOIN "second"."thingie" JOIN "golden_buzzer"',
+        [
+          'default' => 'golden_',
+          'table' => 'first_',
+          'thingie' => 'second.',
+        ],
+        'SELECT * FROM {table} JOIN {thingie} JOIN {buzzer}',
+        ['"', '"'],
+      ],
+      [
+        'SELECT * FROM [first_table] JOIN [second].[thingie] JOIN [golden_buzzer]',
+        [
+          'default' => 'golden_',
+          'table' => 'first_',
+          'thingie' => 'second.',
+        ],
+        'SELECT * FROM {table} JOIN {thingie} JOIN {buzzer}',
+        ['[', ']'],
+      ],
+    ];
+  }
+
+  /**
+   * Tests deprecation of per-table prefixes.
+   *
+   * @dataProvider providerLegacyTestPerTablePrefixTables
+   *
+   * @todo deprecate the 'prefix' option as an array in 9.3.x.
+   */
+  public function testLegacyPerTablePrefixTables($expected, $prefix_info, $query, array $quote_identifier = ['"', '"']) {
+    $mock_pdo = $this->createMock(StubPDO::class);
+    $connection = new StubConnection($mock_pdo, ['prefix' => $prefix_info], $quote_identifier);
+    $this->assertEquals($expected, $connection->prefixTables($query));
+  }
+
+  /**
+   * Dataprovider for testLegacyArrayPrefixTables().
+   *
+   * @return array
+   *   Array of arrays with the following elements:
+   *   - Expected result.
+   *   - Table prefix.
+   *   - Query to be prefixed.
+   *   - Quote identifier.
+   */
+  public function providerLegacyTestArrayPrefixTables() {
+    return [
+      [
+        'SELECT * FROM "golden_table" JOIN "golden_thingie" JOIN "golden_buzzer"',
+        [
+          'default' => 'golden_',
+        ],
+        'SELECT * FROM {table} JOIN {thingie} JOIN {buzzer}',
+        ['"', '"'],
+      ],
+    ];
+  }
+
+  /**
+   * Tests deprecation of table prefix in array form.
+   *
+   * @dataProvider providerLegacyTestArrayPrefixTables
+   *
+   * @todo deprecate the 'prefix' option as an array in 9.3.x.
+   */
+  public function testLegacyArrayPrefixTables($expected, $prefix_info, $query, array $quote_identifier = ['"', '"']) {
+    $mock_pdo = $this->createMock(StubPDO::class);
     $connection = new StubConnection($mock_pdo, ['prefix' => $prefix_info], $quote_identifier);
     $this->assertEquals($expected, $connection->prefixTables($query));
   }

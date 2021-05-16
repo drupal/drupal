@@ -90,14 +90,16 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
     }
     $connection_info = Database::getConnectionInfo('default');
     foreach ($connection_info as $target => $value) {
-      $prefix = is_array($value['prefix']) ? $value['prefix']['default'] : $value['prefix'];
+      $prefix = $value['prefix'];
       // Simpletest uses 7 character prefixes at most so this can't cause
       // collisions.
-      $connection_info[$target]['prefix']['default'] = $prefix . '0';
+      $connection_info[$target]['prefix'] = $prefix . '0';
 
       // Add the original simpletest prefix so SQLite can attach its database.
       // @see \Drupal\Core\Database\Driver\sqlite\Connection::init()
-      $connection_info[$target]['prefix'][$value['prefix']['default']] = $value['prefix']['default'];
+      // @todo https://www.drupal.org/project/drupal/issues/3124674 remove the
+      // use of per-table prefixing.
+      $connection_info[$target]['extra_prefix'][$prefix] = $prefix;
     }
     Database::addConnectionInfo('migrate', 'default', $connection_info['default']);
   }
