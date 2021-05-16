@@ -118,7 +118,7 @@ class ConnectionTest extends UnitTestCase {
   }
 
   /**
-   * Dataprovider for testLegacyPerTablePrefixTables().
+   * Data provider for testLegacyPerTablePrefixTables().
    *
    * @return array
    *   Array of arrays with the following elements:
@@ -166,7 +166,7 @@ class ConnectionTest extends UnitTestCase {
   }
 
   /**
-   * Dataprovider for testLegacyArrayPrefixTables().
+   * Data provider for testLegacyArrayPrefixTables().
    *
    * @return array
    *   Array of arrays with the following elements:
