@@ -114,6 +114,7 @@
       Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps. -->
     <exclude name="Drupal.Methods.MethodDeclaration.Underscore"/>
   </rule>
+  <rule ref="Drupal.NamingConventions.ValidClassName"/>
   <rule ref="Drupal.NamingConventions.ValidVariableName">
     <!-- Sniff for: LowerStart -->
     <exclude name="Drupal.NamingConventions.ValidVariableName.LowerCamelName"/>
@@ -161,7 +162,6 @@
       <property name="checkClosures" value="true"/>
     </properties>
   </rule>
-  <rule ref="Drupal.NamingConventions.ValidClassName"/>
   <rule ref="Generic.NamingConventions.ConstructorName"/>
   <rule ref="Generic.NamingConventions.UpperCaseConstantName"/>
   <rule ref="Generic.PHP.DeprecatedFunctions"/>
