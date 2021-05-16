@@ -295,7 +295,6 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
     $connection_options = $this->sourceDatabase->getConnectionOptions();
     $version = $this->getLegacyDrupalVersion($this->sourceDatabase);
     $driver = $connection_options['driver'];
-    $connection_options['prefix'] = $connection_options['prefix']['default'];
 
     // Use the driver connection form to get the correct options out of the
     // database settings. This supports all of the databases we test against.

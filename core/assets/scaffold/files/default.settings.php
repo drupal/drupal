@@ -141,8 +141,8 @@ $databases = [];
  * You can optionally set a prefix for all database table names by using the
  * 'prefix' setting. If a prefix is specified, the table name will be prepended
  * with its value. Be sure to use valid database characters only, usually
- * alphanumeric and underscore. If no prefix is desired, leave it as an empty
- * string ''.
+ * alphanumeric and underscore. If no prefix is desired, do not set the 'prefix'
+ * key or set its value to an empty string ''.
  *
  * For example, to have all database table prefixed with 'main_', set:
  * @code
