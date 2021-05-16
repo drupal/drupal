@@ -70,7 +70,7 @@ class LanguageRequestSubscriber implements EventSubscriberInterface {
    *   The Event to process.
    */
   public function onKernelRequestLanguage(RequestEvent $event) {
-    if ($event->isMasterRequest()) {
+    if ($event->isMainRequest()) {
       $this->setLanguageOverrides();
     }
   }
