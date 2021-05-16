@@ -222,7 +222,7 @@ abstract class Connection {
    *   - prefix
    *   - namespace
    *   - Other driver-specific options.
-   *   An 'extra_prefix' opion may be present to allow BC for attaching
+   *   An 'extra_prefix' option may be present to allow BC for attaching
    *   per-table prefixes, but it is meant for internal use only.
    */
   public function __construct(\PDO $connection, array $connection_options) {
