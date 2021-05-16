@@ -136,13 +136,6 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
       if (!$response->headers->has('Permissions-Policy')) {
         $response->headers->set('Permissions-Policy', 'interest-cohort=()');
       }
-      else {
-        // Only add interest-cohort if the header does not contain it already.
-        $permissions_policy = $response->headers->get('Permissions-Policy');
-        if (strpos($permissions_policy, 'interest-cohort') === FALSE) {
-          $response->headers->set('Permissions-Policy', $permissions_policy . ', interest-cohort=()');
-        }
-      }
     }
 
     // If the current response isn't an implementation of the
