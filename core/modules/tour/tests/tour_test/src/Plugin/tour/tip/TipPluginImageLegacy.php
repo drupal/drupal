@@ -42,7 +42,7 @@ class TipPluginImageLegacy extends TipPluginBase implements ContainerFactoryPlug
   protected $token;
 
   /**
-   * Constructs a \Drupal\tour\Plugin\tour\tip\TipPluginText object.
+   * Constructs a TipPluginImageLegacy object.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.

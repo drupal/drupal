@@ -47,7 +47,7 @@ class TipPluginTextLegacy extends TipPluginBase implements ContainerFactoryPlugi
   protected $ariaId;
 
   /**
-   * Constructs a \Drupal\tour\Plugin\tour\tip\TipPluginText object.
+   * Constructs a TipPluginTextLegacy object.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.

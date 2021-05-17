@@ -39,7 +39,7 @@ class TourJavaScriptTest extends WebDriverTestBase {
   }
 
   /**
-   * Confirm the 'tips' query argument works.
+   * Confirm the 'tips' and 'tour 'query arguments.
    */
   public function testQueryArg() {
     $assert_session = $this->assertSession();
@@ -47,14 +47,24 @@ class TourJavaScriptTest extends WebDriverTestBase {
     $this->drupalGet('tour-test-1');
     $assert_session->assertNoElementAfterWait('css', '.tip-tour-test-1');
     $assert_session->pageTextContains('Where does the rain in Spain fail?');
+    $assert_session->pageTextNotContains('Im all these things');
+    $assert_session->pageTextNotContains('The first tip');
 
     $this->drupalGet('tour-test-1', [
       'query' => [
-        'tips' => 'tip-tour-test-1',
+        'tips' => 'tip-tour-test-6',
+      ],
+    ]);
+    $this->assertNotNull($assert_session->waitForElementVisible('css', '.tip-tour-test-6'));
+    $assert_session->pageTextContains('Im all these things');
+
+    $this->drupalGet('tour-test-1', [
+      'query' => [
+        'tour' => '1',
       ],
     ]);
     $this->assertNotNull($assert_session->waitForElementVisible('css', '.tip-tour-test-1'));
-    $assert_session->pageTextContains('Where does the rain in Spain fail?');
+    $assert_session->pageTextContains('The first tip');
   }
 
   /**
