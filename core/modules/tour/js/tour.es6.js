@@ -210,9 +210,8 @@
 
               tourItemOptions.when = {
                 show() {
-                  const nextButton = shepherdTour.currentStep.el.querySelector(
-                    'footer button',
-                  );
+                  const nextButton =
+                    shepherdTour.currentStep.el.querySelector('footer button');
 
                   // Drupal disables Shepherd's built in focus after item
                   // creation functionality due to focus being set on the tour
@@ -316,9 +315,8 @@
             );
 
             if (filteredTourItemId === filteredTour.length - 1) {
-              filteredTour[filteredTourItemId].cancelText = Drupal.t(
-                'End tour',
-              );
+              filteredTour[filteredTourItemId].cancelText =
+                Drupal.t('End tour');
             }
           });
           this.model.set('tour', filteredTour);
