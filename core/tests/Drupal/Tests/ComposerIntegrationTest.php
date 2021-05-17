@@ -205,7 +205,7 @@ class ComposerIntegrationTest extends UnitTestCase {
     $this->assertFileEquals($this->root . '/core/' . $sourceRelPath, $this->root . '/' . $destRelPath, 'Scaffold source and destination files must have the same contents.');
   }
 
-  // @codingStandardsIgnoreStart
+  // phpcs:disable
   /**
    * The following method is copied from \Composer\Package\Locker.
    *
@@ -249,7 +249,7 @@ class ComposerIntegrationTest extends UnitTestCase {
 
     return md5(json_encode($relevantContent));
   }
-  // @codingStandardsIgnoreEnd
+  // phpcs:enable
 
   /**
    * Tests the vendor cleanup utilities do not have obsolete packages listed.

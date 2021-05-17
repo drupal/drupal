@@ -399,7 +399,7 @@ class DbDumpCommand extends DbCommandBase {
     // irrelevant.
     $script = <<<'ENDOFSCRIPT'
 <?php
-// @codingStandardsIgnoreFile
+// phpcs:ignoreFile
 /**
  * @file
  * A database agnostic dump for testing purposes.
