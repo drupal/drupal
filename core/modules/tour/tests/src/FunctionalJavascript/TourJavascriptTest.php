@@ -9,7 +9,7 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
  *
  * @group tour
  */
-class TourJavaScriptTest extends WebDriverTestBase {
+class TourJavascriptTest extends WebDriverTestBase {
 
   /**
    * {@inheritdoc}
