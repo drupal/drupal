@@ -1,5 +1,5 @@
 <?php
-// @codingStandardsIgnoreFile
+// phpcs:ignoreFile
 /**
  * @file
  * A database agnostic dump for testing purposes.

@@ -1,5 +1,4 @@
 <?php
-// @codingStandardsIgnoreFile
 
 // Some class named Entity in the global namespace
 /**

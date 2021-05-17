@@ -11,6 +11,8 @@
 
   <!--Exclude third party code.-->
   <exclude-pattern>./assets/vendor/*</exclude-pattern>
+  <exclude-pattern>./core/tests/Drupal/Tests/Component/Annotation/Doctrine/</exclude-pattern>
+
   <!--Exclude folders used by common frontend tools. These folders match the file_scan_ignore_directories setting in default.settings.php-->
   <exclude-pattern>*/node_modules/*</exclude-pattern>
   <exclude-pattern>*/bower_components/*</exclude-pattern>
