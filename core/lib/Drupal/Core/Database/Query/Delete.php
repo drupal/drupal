@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Database\Query;
 
-use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Connection;
 
 /**

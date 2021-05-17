@@ -3,7 +3,6 @@
 namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\Database;
 
 /**
  * General class for an abstracted "Upsert" (UPDATE or INSERT) query operation.
