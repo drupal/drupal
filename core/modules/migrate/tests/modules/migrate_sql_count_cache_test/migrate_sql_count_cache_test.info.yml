@@ -1,0 +1,4 @@
+type: module
+name: Migrate SqlBase count cache test
+description: Provides a source plugin to test that counts are cached in SQL sources.
+package: Testing
