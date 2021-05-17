@@ -76,7 +76,7 @@ module.exports = {
     browser.drupalInstall({
       setupFile:
         'core/tests/Drupal/TestSite/TestSiteOliveroInstallTestScript.php',
-      installProfile: 'standard',
+      installProfile: 'minimal',
     });
   },
   after(browser) {
