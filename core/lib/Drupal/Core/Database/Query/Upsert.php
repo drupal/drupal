@@ -35,7 +35,6 @@ abstract class Upsert extends Query implements \Countable {
    *   (optional) An array of database options.
    */
   public function __construct(Connection $connection, $table, array $options = []) {
-    $options['return'] = Database::RETURN_AFFECTED;
     parent::__construct($connection, $options);
     $this->table = $table;
   }
