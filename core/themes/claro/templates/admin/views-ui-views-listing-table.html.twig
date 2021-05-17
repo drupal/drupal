@@ -11,6 +11,7 @@
  *   - description: The description of the view.
  *   - displays: List of displays attached to the view.
  *   - operations: List of available operations.
+ * - scrollable: A boolean indicating the table is horizontally scrollable.
  *
  * @see template_preprocess_views_ui_views_listing_table()
  *
@@ -18,33 +19,37 @@
  *   https://www.drupal.org/project/drupal/issues/3059872 is fixed.
  */
 #}
-<table{{ attributes.addClass('responsive-enabled') }}>
-  <thead>
-    <tr>
-      {% for header in headers %}
-        <th{{ header.attributes }}>{{ header.data }}</th>
-      {% endfor %}
-    </tr>
-  </thead>
-  <tbody>
-    {% for row in rows %}
-      <tr{{ row.attributes }}>
-        <td class="views-ui-view-name">
-          <strong data-drupal-selector="views-table-filter-text-source">{{ row.data.view_name.data }}</strong>
-        </td>
-        <td class="views-ui-view-machine-name" data-drupal-selector="views-table-filter-text-source">
-          {{ row.data.machine_name.data }}
-        </td>
-        <td class="views-ui-view-description" data-drupal-selector="views-table-filter-text-source">
-          {{ row.data.description.data }}
-        </td>
-        <td class="views-ui-view-displays">
-          {{ row.data.displays.data }}
-        </td>
-        <td class="views-ui-view-operations">
-          {{ row.data.operations.data }}
-        </td>
+{% extends '@claro/dataset/table-scrollable.html.twig' %}
+
+{% block table %}
+  <table{{ attributes }}>
+    <thead>
+      <tr>
+        {% for header in headers %}
+          <th{{ header.attributes }}>{{ header.data }}</th>
+        {% endfor %}
       </tr>
-    {% endfor %}
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+        <tr{{ row.attributes }}>
+          <td class="views-ui-view-name">
+            <strong data-drupal-selector="views-table-filter-text-source">{{ row.data.view_name.data }}</strong>
+          </td>
+          <td class="views-ui-view-machine-name" data-drupal-selector="views-table-filter-text-source">
+            {{ row.data.machine_name.data }}
+          </td>
+          <td class="views-ui-view-description" data-drupal-selector="views-table-filter-text-source">
+            {{ row.data.description.data }}
+          </td>
+          <td class="views-ui-view-displays">
+            {{ row.data.displays.data }}
+          </td>
+          <td class="views-ui-view-operations">
+            {{ row.data.operations.data }}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock table %}

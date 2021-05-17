@@ -257,28 +257,66 @@ tfoot tr:first-child td {
 }
 
 /**
- * Responsive table cells.
+ * Make tables horizontally scrollable.
  */
 
-th.priority-low,
-th.priority-medium,
-td.priority-low,
-td.priority-medium {
-  display: none;
+.scrollable-table-wrapper {
+  position: relative;
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  -ms-scroll-snap-type: x mandatory;
+  scroll-snap-type: x mandatory;
 }
 
-@media screen and (min-width: 38em) {
-  th.priority-medium,
-  td.priority-medium {
-    display: table-cell;
-  }
+.scrollable-table-wrapper > table {
+  margin: 0;
 }
 
-@media screen and (min-width: 60em) {
-  th.priority-low,
-  td.priority-low {
-    display: table-cell;
-  }
+.scrollable-table-wrapper label.visually-hidden {
+  /* Fixes the hidden label causing in incorrect width calculations. */
+  left: 0;
+}
+
+/* Container for drop shadow signifying the table can be scrolled. */
+
+.scrollable-table-outline {
+  position: relative;
+}
+
+.scrollable-table-outline--scroll::after,
+.scrollable-table-outline--scroll::before {
+  position: absolute;
+  /* Set z-index so this continues to be visible with sticky header */
+  z-index: 501;
+  top: 0;
+  width: 0.5rem;
+  height: 100%;
+  content: "";
+  transition: opacity 0.8s;
+  opacity: 0;
+}
+
+.scrollable-table-outline--scroll::before {
+  left: 0;
+  border-top-right-radius: 6em 80%;
+  border-bottom-right-radius: 6em 80%;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.1) 20%, rgba(0, 0, 0, 0.01) 100%);
+}
+
+.scrollable-table-outline--scroll::after {
+  right: 0;
+  border-top-left-radius: 6em 80%;
+  border-bottom-left-radius: 6em 80%;
+  background: linear-gradient(to left, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.1) 20%, rgba(0, 0, 0, 0.01) 100%);
+}
+
+.scrollable-table-outline--scroll-left::before {
+  opacity: 1;
+}
+
+.scrollable-table-outline--scroll-right::after {
+  opacity: 1;
 }
 
 .tabledrag-toggle-weight-wrapper {

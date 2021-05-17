@@ -1,0 +1,19 @@
+{#
+/**
+ * @file
+ * A utility template for tables that don't need to extend another template.
+ *
+ * Horizontally scrollable tables extend the table-scrollable template. If a
+ * table is not scrollable, there is no need to extend any template. However,
+ * Twig only provides the ability to conditionally choose the template that
+ * should be extended. It is not possible to conditionally extend or not-extend.
+ *
+ * This template is for tables that don't actually need to extend a template.
+ * Extending this will have the same end result as not exending a template at
+ * all.
+ *
+ * @see https://twig.symfony.com/doc/3.x/tags/extends.html#conditional-inheritance
+ */
+#}
+{% block table %}
+{% endblock %}

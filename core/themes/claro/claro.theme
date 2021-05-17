@@ -271,6 +271,13 @@ function claro_element_info_alter(&$type) {
   if (isset($type['status_messages'])) {
     $type['status_messages']['#pre_render'][] = [ClaroPreRender::class, 'messagePlaceholder'];
   }
+
+  // Add a pre-render to tables to replace #responsive with #scrollable.
+  foreach (['table', 'field_ui_table', 'tableselect'] as $element_type) {
+    $container_pre_renders = !empty($type[$element_type]['#pre_render']) ? $type[$element_type]['#pre_render'] : [];
+    array_unshift($container_pre_renders, [ClaroPreRender::class, 'table']);
+    $type[$element_type]['#pre_render'] = $container_pre_renders;
+  }
 }
 
 /**
@@ -308,6 +315,14 @@ function claro_theme_registry_alter(&$theme_registry) {
   // @todo Remove when https://www.drupal.org/node/3016346 is fixed.
   if (!empty($theme_registry['text_format_wrapper'])) {
     $theme_registry['text_format_wrapper']['variables']['disabled'] = FALSE;
+  }
+
+  // Add the `scrollable` property, which is used instead of `responsive` in
+  // Claro.
+  foreach (['table', 'field_ui_table', 'tableselect'] as $element_type) {
+    if (!empty($theme_registry[$element_type])) {
+      $theme_registry[$element_type]['variables']['scrollable'] = TRUE;
+    }
   }
 }
 
@@ -1027,6 +1042,8 @@ function claro_preprocess_table(&$variables) {
       }
     }
   }
+
+  _claro_preprocess_scrollable_table($variables);
 }
 
 /**
@@ -1054,6 +1071,37 @@ function claro_preprocess_views_view_table(&$variables) {
         }
       }
     }
+  }
+  _claro_preprocess_scrollable_table($variables);
+}
+
+/**
+ * Implements template_preprocess_HOOK() for views_ui_views_listing_table.
+ */
+function claro_preprocess_views_ui_views_listing_table(array &$variables) {
+  _claro_preprocess_scrollable_table($variables);
+}
+
+/**
+ * Prepares a table to be horizontally scrollable.
+ *
+ * @param array $variables
+ *   The render array of the table.
+ */
+function _claro_preprocess_scrollable_table(array &$variables) {
+  // The `responsive` property, which conditionally hides table columns at
+  // narrower widths, is not used in Claro. Instead Claro addresses tables wider
+  // than their viewport by making them horizontally scrollable.
+  unset($variables['responsive']);
+
+  // Tables are assumed horizontally scrollable unless explicitly flagged
+  // otherwise.
+  $variables['scrollable'] = $variables['scrollable'] ?? TRUE;
+  if ($variables['scrollable']) {
+    // Add the attribute that triggers initialization of horizontally
+    // scrollable tables.
+    // @see tablescroll-init.js
+    $variables['attributes']['data-drupal-scrollable-table'] = '';
   }
 }
 

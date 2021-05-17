@@ -205,6 +205,8 @@
 
       /**
        * Create the duplicate header.
+       *
+       * @fires event:tableheaderCreateSticky
        */
       createSticky() {
         // Clone the table header so it inherits original jQuery properties.
@@ -223,6 +225,9 @@
 
         // Initialize all computations.
         this.recalculateSticky();
+
+        // Trigger event after the sticky header has been created.
+        $(document).trigger('tableheaderCreateSticky');
       },
 
       /**
@@ -244,6 +249,17 @@
         if (typeof offsetLeft === 'number') {
           css.left = `${this.tableOffset.left - offsetLeft}px`;
         }
+
+        const stickyParent = this.$stickyTable[0].parentElement;
+
+        // The left offset may be different in a scrollable table.
+        if (stickyParent.hasAttribute('data-drupal-scrollable-table-wrapper')) {
+          // Get the left offset of the scrollable table container.
+          const containerLeftOffset = stickyParent.getBoundingClientRect().left;
+          const containerAmountScrolled = stickyParent.scrollLeft;
+          css.left = `${containerLeftOffset - containerAmountScrolled}px`;
+        }
+
         return this.$stickyTable.css(css);
       },
 

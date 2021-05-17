@@ -98,6 +98,7 @@
       }).append($stickyHeader).insertBefore(this.$originalTable);
       this.$stickyHeaderCells = $stickyHeader.find('> tr > th');
       this.recalculateSticky();
+      $(document).trigger('tableheaderCreateSticky');
     },
     stickyPosition: function stickyPosition(offsetTop, offsetLeft) {
       var css = {};
@@ -108,6 +109,14 @@
 
       if (typeof offsetLeft === 'number') {
         css.left = "".concat(this.tableOffset.left - offsetLeft, "px");
+      }
+
+      var stickyParent = this.$stickyTable[0].parentElement;
+
+      if (stickyParent.hasAttribute('data-drupal-scrollable-table-wrapper')) {
+        var containerLeftOffset = stickyParent.getBoundingClientRect().left;
+        var containerAmountScrolled = stickyParent.scrollLeft;
+        css.left = "".concat(containerLeftOffset - containerAmountScrolled, "px");
       }
 
       return this.$stickyTable.css(css);

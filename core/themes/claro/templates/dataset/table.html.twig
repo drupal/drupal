@@ -35,79 +35,84 @@
  *   any rows.
  * - no_striping: A boolean indicating that the row should receive no striping.
  * - header_columns: The number of columns in the header.
+ * - scrollable: A boolean indicating the table is horizontally scrollable.
  *
  * @see template_preprocess_table()
  */
 #}
-<table{{ attributes }}>
-  {% if caption %}
-    <caption>{{ caption }}</caption>
-  {% endif %}
+{% extends scrollable ? '@claro/dataset/table-scrollable.html.twig' : '@claro/dataset/table-no-wrapper.html.twig' %}
 
-  {% for colgroup in colgroups %}
-    {% if colgroup.cols %}
-      <colgroup{{ colgroup.attributes }}>
-        {% for col in colgroup.cols %}
-          <col{{ col.attributes }} />
-        {% endfor %}
-      </colgroup>
-    {% else %}
-      <colgroup{{ colgroup.attributes }} />
+{% block table %}
+  <table{{ attributes }}>
+    {% if caption %}
+      <caption>{{ caption }}</caption>
     {% endif %}
-  {% endfor %}
 
-  {% if header %}
-    <thead>
-      <tr>
-        {% for cell in header %}
+    {% for colgroup in colgroups %}
+      {% if colgroup.cols %}
+        <colgroup{{ colgroup.attributes }}>
+          {% for col in colgroup.cols %}
+            <col{{ col.attributes }} />
+          {% endfor %}
+        </colgroup>
+      {% else %}
+        <colgroup{{ colgroup.attributes }} />
+      {% endif %}
+    {% endfor %}
+
+    {% if header %}
+      <thead>
+        <tr>
+          {% for cell in header %}
+            {%
+              set cell_classes = [
+                cell.active_table_sort ? 'is-active',
+              ]
+            %}
+            <{{ cell.tag }}{{ cell.attributes.addClass(cell_classes) }}>
+              {{- cell.content -}}
+            </{{ cell.tag }}>
+          {% endfor %}
+        </tr>
+      </thead>
+    {% endif %}
+
+    {% if rows %}
+      <tbody>
+        {% for row in rows %}
           {%
-            set cell_classes = [
-              cell.active_table_sort ? 'is-active',
+            set row_classes = [
+              not no_striping ? cycle(['odd', 'even'], loop.index0),
             ]
           %}
-          <{{ cell.tag }}{{ cell.attributes.addClass(cell_classes) }}>
-            {{- cell.content -}}
-          </{{ cell.tag }}>
+          <tr{{ row.attributes.addClass(row_classes) }}>
+            {% for cell in row.cells %}
+              <{{ cell.tag }}{{ cell.attributes }}>
+                {{- cell.content -}}
+              </{{ cell.tag }}>
+            {% endfor %}
+          </tr>
         {% endfor %}
-      </tr>
-    </thead>
-  {% endif %}
-
-  {% if rows %}
-    <tbody>
-      {% for row in rows %}
-        {%
-          set row_classes = [
-            not no_striping ? cycle(['odd', 'even'], loop.index0),
-          ]
-        %}
-        <tr{{ row.attributes.addClass(row_classes) }}>
-          {% for cell in row.cells %}
-            <{{ cell.tag }}{{ cell.attributes }}>
-              {{- cell.content -}}
-            </{{ cell.tag }}>
-          {% endfor %}
+      </tbody>
+    {% elseif empty %}
+      <tbody>
+        <tr class="odd">
+          <td colspan="{{ header_columns }}" class="empty message">{{ empty }}</td>
         </tr>
-      {% endfor %}
-    </tbody>
-  {% elseif empty %}
-    <tbody>
-      <tr class="odd">
-        <td colspan="{{ header_columns }}" class="empty message">{{ empty }}</td>
-      </tr>
-    </tbody>
-  {% endif %}
-  {% if footer %}
-    <tfoot>
-      {% for row in footer %}
-        <tr{{ row.attributes }}>
-          {% for cell in row.cells %}
-            <{{ cell.tag }}{{ cell.attributes }}>
-              {{- cell.content -}}
-            </{{ cell.tag }}>
-          {% endfor %}
-        </tr>
-      {% endfor %}
-    </tfoot>
-  {% endif %}
-</table>
+      </tbody>
+    {% endif %}
+    {% if footer %}
+      <tfoot>
+        {% for row in footer %}
+          <tr{{ row.attributes }}>
+            {% for cell in row.cells %}
+              <{{ cell.tag }}{{ cell.attributes }}>
+                {{- cell.content -}}
+              </{{ cell.tag }}>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tfoot>
+    {% endif %}
+  </table>
+{% endblock table %}
