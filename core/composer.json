@@ -202,7 +202,6 @@
             "lib/Drupal/Core/Site/Settings.php"
         ],
         "files": [
-            "class_aliases.php",
             "includes/bootstrap.inc"
         ]
     },
