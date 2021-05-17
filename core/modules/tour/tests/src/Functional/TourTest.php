@@ -318,7 +318,17 @@ class TourTest extends TourTestBasic {
     $this->expectDeprecation('Tip plugins implementing Drupal\tour\TipPluginInterface that don\'t also implement Drupal\tour\TourTipPluginInterface are deprecated in drupal:9.2.0. See https://www.drupal.org/node/3204096');
     $this->expectDeprecation("The tour.tip 'attributes' config schema property is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead of 'data-class' and 'data-id' attributes, use 'selector' to specify the element a tip attaches to. See https://www.drupal.org/node/3204093");
     $this->expectDeprecation("The tour.tip 'location' config schema property is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead use 'position'. The value must be a valid placement accepted by PopperJS. See https://www.drupal.org/node/3204093");
-    $this->drupalGet('tour-test-legacy');
+
+    try {
+      $deprecated_tour =
+        \Drupal::entityTypeManager()
+          ->getViewBuilder('tour')
+          ->viewMultiple([Tour::load('tour-test-legacy')], 'full');
+      $this->fail('No deprecated interface warning triggered.');
+    }
+    catch (\ErrorException $e) {
+      $this->assertSame('Tip plugins implementing Drupal\tour\TipPluginInterface that don\'t also implement Drupal\tour\TourTipPluginInterface are deprecated in drupal:9.2.0. See https://www.drupal.org/node/3204096', $e->getMessage());
+    }
 
     restore_error_handler();
   }
