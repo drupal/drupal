@@ -10,7 +10,7 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
  * @group tour
  * @group legacy
  */
-class TourLegacyMarkupTest extends WebDriverTestBase {
+class TourLegacyTest extends WebDriverTestBase {
 
   /**
    * {@inheritdoc}
