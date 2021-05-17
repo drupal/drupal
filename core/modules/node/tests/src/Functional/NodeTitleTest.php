@@ -74,8 +74,8 @@ class NodeTitleTest extends NodeTestBase {
     $xpath = '//nav[@class="breadcrumb"]/ol/li[last()]/a';
     $this->assertEqual($this->xpath($xpath)[0]->getText(), $node->label(), 'Node breadcrumb is equal to node title.', 'Node');
 
-    // Test node title in comment preview.
-    $this->assertEqual($this->xpath('//article[contains(concat(" ", normalize-space(@class), " "), :node-class)]/h2/a/span', [':node-class' => ' node--type-' . $node->bundle() . ' '])[0]->getText(), $node->label(), 'Node preview title is equal to node title.', 'Node');
+    // Verify that node preview title is equal to node title.
+    $this->assertSession()->elementTextEquals('xpath', "//article[contains(concat(' ', normalize-space(@class), ' '), ' node--type-{$node->bundle()} ')]/h2/a/span", $node->label());
 
     // Test node title is clickable on teaser list (/node).
     $this->drupalGet('node');
