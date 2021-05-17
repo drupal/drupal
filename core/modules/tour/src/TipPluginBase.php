@@ -93,11 +93,13 @@ abstract class TipPluginBase extends PluginBase implements TipPluginInterface {
       }
     }
 
-    // The tour_update_9200() update hook converts all uses of the deprecated
-    // 'attributes' property to the current 'selector' property. It's possible
-    // for tour config with this deprecated property to be installed after this
-    // update hook ran. Return the attributes value in those instances. If
-    // attributes has no value, return an empty array.
+    // The tour_post_update_joyride_selectors_to_selector_property() post_update
+    // hook converts all uses of the deprecated 'attributes' property to the
+    // current 'selector' property. It's possible for tour config with this
+    // deprecated property to be installed without this hook having run. Return
+    // the attributes value in those instances. If attributes has no value,
+    // return an empty array.
+    // @see tour_post_update_joyride_selectors_to_selector_property()
     return $this->get('attributes') ?: [];
   }
 
@@ -202,10 +204,13 @@ abstract class TipPluginBase extends PluginBase implements TipPluginInterface {
       return $selector;
     }
 
-    // If a tour using the deprecated TipPluginInterface was installed
-    // after tour_update_9200() ran, it may attributes instead of the
-    // `selector` property to associate the tip with an element.
-    // @see tour_update_9200()
+    // The tour_post_update_joyride_selectors_to_selector_property() post_update
+    // hook converts all uses of the deprecated 'attributes' property to the
+    // current 'selector' property. It's possible for tour config with this
+    // deprecated property to be installed without this hook having run. In
+    // those instance it may use `attributes` instead of the `selector` property
+    // to associate the tip with an element.
+    // @see tour_post_update_joyride_selectors_to_selector_property()
     $attributes = $this->get('attributes');
     if (isset($attributes['data-id'])) {
       $selector = "#{$attributes['data-id']}";

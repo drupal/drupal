@@ -41,9 +41,11 @@ class TourViewBuilder extends EntityViewBuilder {
 
         // If $location is null, it's possible that a value is available
         // by directly accessing the `location` property. This can occur if
-        // a tour with the deprecated `location` property was installed
-        // after tour_update_9200() ran.
-        // @see tour_update_9200()
+        // a tour with the deprecated `location` property was installed and
+        // tour_post_update_joyride_selectors_to_selector_property() has not run
+        // with it installed.
+        // @see tour_post_update_joyride_selectors_to_selector_property()
+
         if (!$location && $location = $tip->get('location')) {
           // If the `location` property still has a value, this means the tip
           // is configured for Joyride. The position value must be appended with
