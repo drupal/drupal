@@ -65,7 +65,7 @@ class MediaUiJavascriptTest extends MediaJavascriptTestBase {
     $machine_name = strtolower($name);
     $this->assertJsCondition("jQuery('.machine-name-value').html() == '$machine_name'");
     $page->selectFieldOption('source', 'test');
-    $this->assertJsCondition("jQuery('.form-item-source-configuration-test-config-value').length > 0;");
+    $this->assertJsCondition("jQuery('.form-item-source-configuration-test-config-value').length > 0");
     $page->fillField('description', $description);
     $page->pressButton('Save');
     // The wait prevents intermittent test failures.

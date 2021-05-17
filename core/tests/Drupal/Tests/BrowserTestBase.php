@@ -12,6 +12,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Test\FunctionalTestSetupTrait;
 use Drupal\Core\Test\TestSetupTrait;
+use Drupal\Core\Url;
 use Drupal\Core\Utility\Error;
 use Drupal\FunctionalTests\AssertLegacyTrait;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
@@ -140,7 +141,7 @@ abstract class BrowserTestBase extends TestCase {
    */
   protected $customTranslations;
 
-  /*
+  /**
    * Mink class for the default driver to use.
    *
    * Should be a fully-qualified class name that implements
@@ -152,7 +153,7 @@ abstract class BrowserTestBase extends TestCase {
    */
   protected $minkDefaultDriverClass = BrowserKitDriver::class;
 
-  /*
+  /**
    * Mink default driver params.
    *
    * If it's an array its contents are used as constructor params when default
@@ -161,7 +162,6 @@ abstract class BrowserTestBase extends TestCase {
    * Can be overridden using the environment variable MINK_DRIVER_ARGS. In this
    * case that variable should be a JSON array, for example:
    * '["firefox", null, "http://localhost:4444/wd/hub"]'.
-   *
    *
    * @var array
    */
@@ -556,11 +556,24 @@ abstract class BrowserTestBase extends TestCase {
     $this->prepareSettings();
     $this->doInstall();
     $this->initSettings();
-    $container = $this->initKernel(\Drupal::request());
+    $this->container = $container = $this->initKernel(\Drupal::request());
     $this->initConfig($container);
     $this->installDefaultThemeFromClassProperty($container);
     $this->installModulesFromClassProperty($container);
-    $this->rebuildAll();
+
+    // Clear the static cache so that subsequent cache invalidations will work
+    // as expected.
+    $this->container->get('cache_tags.invalidator')->resetChecksums();
+
+    // Generate a route to prime the url generator with the correct base url.
+    // @todo Remove in https://www.drupal.org/project/drupal/issues/3207896.
+    Url::fromRoute('<front>')->setAbsolute()->toString();
+
+    // Explicitly call register() again on the container registered in \Drupal.
+    // @todo This should already be called through
+    //   DrupalKernel::prepareLegacyRequest() -> DrupalKernel::boot() but that
+    //   appears to be calling a different container.
+    $this->container->get('stream_wrapper_manager')->register();
   }
 
   /**
