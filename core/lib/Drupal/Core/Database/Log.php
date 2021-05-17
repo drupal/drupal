@@ -116,10 +116,13 @@ class Log {
    */
   public function log(StatementInterface $statement, $args, $time, float $start = NULL) {
     foreach (array_keys($this->queryLog) as $key) {
+      // @todo Remove the method_exists check for getConnectionTarget in
+      //   Drupal 10.
+      // @see https://www.drupal.org/project/drupal/issues/3210310
       $this->queryLog[$key][] = [
         'query' => $statement->getQueryString(),
         'args' => $args,
-        'target' => $statement->dbh->getTarget(),
+        'target' => method_exists($statement, 'getConnectionTarget') ? $statement->getConnectionTarget() : $statement->dbh->getTarget(),
         'caller' => $this->findCaller(),
         'time' => $time,
         'start' => $start,

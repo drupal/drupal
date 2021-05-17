@@ -2,6 +2,9 @@
 
 namespace Drupal\KernelTests\Core\Database;
 
+use Drupal\Core\Database\DatabaseExceptionWrapper;
+use Drupal\Core\Database\IntegrityConstraintViolationException;
+
 /**
  * Tests the update query builder.
  *
@@ -141,6 +144,30 @@ class UpdateTest extends DatabaseTestBase {
 
     $saved_value = $this->connection->query('SELECT [update] FROM {select} WHERE [id] = :id', [':id' => 1])->fetchField();
     $this->assertEquals('New update value', $saved_value);
+  }
+
+  /**
+   * Updating a not existing table throws a DatabaseExceptionWrapper.
+   */
+  public function testUpdateNonExistingTable(): void {
+    $this->expectException(DatabaseExceptionWrapper::class);
+    $this->connection->update('a-table-that-does-not-exist')
+      ->fields([
+        'update' => 'New update value',
+      ])
+      ->condition('id', 1)
+      ->execute();
+  }
+
+  /**
+   * Updating a serial field throws a IntegrityConstraintViolationException.
+   */
+  public function testUpdateValueInSerial(): void {
+    $this->expectException(IntegrityConstraintViolationException::class);
+    $this->connection->update('test')
+      ->fields(['id' => 2])
+      ->condition('id', 1)
+      ->execute();
   }
 
 }

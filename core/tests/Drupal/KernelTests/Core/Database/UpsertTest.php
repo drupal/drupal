@@ -3,6 +3,7 @@
 namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\DatabaseExceptionWrapper;
 
 /**
  * Tests the Upsert query builder.
@@ -89,6 +90,21 @@ class UpsertTest extends DatabaseTestBase {
 
     $record = $this->connection->query('SELECT * FROM {select} WHERE [id] = :id', [':id' => 2])->fetch();
     $this->assertEquals('Update value 2', $record->update);
+  }
+
+  /**
+   * Upsert on a not existing table throws a DatabaseExceptionWrapper.
+   */
+  public function testUpsertNonExistingTable(): void {
+    $this->expectException(DatabaseExceptionWrapper::class);
+    $upsert = $this->connection->upsert('a-table-that-does-not-exist')
+      ->key('id')
+      ->fields(['id', 'update']);
+    $upsert->values([
+      'id' => 1,
+      'update' => 'Update value 1 updated',
+    ]);
+    $upsert->execute();
   }
 
 }
