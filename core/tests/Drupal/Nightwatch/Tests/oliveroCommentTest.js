@@ -8,7 +8,7 @@ module.exports = {
       .drupalInstall({
         setupFile:
           'core/tests/Drupal/TestSite/TestSiteOliveroInstallTestScript.php',
-        installProfile: 'standard',
+        installProfile: 'minimal',
       })
       .drupalCreateUser({
         name: 'user',
