@@ -37,6 +37,7 @@ class TermLocalizedTranslation extends Term {
     // Add in the property, which is either name or description.
     // Cast td.tid as char for PostgreSQL compatibility.
     $query->leftJoin('i18n_strings', 'i18n', 'CAST([td].[tid] AS CHAR(255)) = [i18n].[objectid]');
+    $query->condition('i18n.type', 'term');
     $query->addField('i18n', 'lid');
     $query->addField('i18n', 'property');
 
@@ -69,6 +70,7 @@ class TermLocalizedTranslation extends Term {
     $other_property = ($property == 'name') ? 'description' : 'name';
     $query = $this->select('i18n_strings', 'i18n')
       ->fields('i18n', ['lid'])
+      ->condition('i18n.type', 'term')
       ->condition('i18n.property', $other_property)
       ->condition('i18n.objectid', $tid);
     $query->leftJoin('locales_target', 'lt', '[i18n].[lid] = [lt].[lid]');

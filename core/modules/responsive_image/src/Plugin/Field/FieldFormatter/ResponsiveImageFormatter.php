@@ -36,7 +36,7 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
    */
   protected $responsiveImageStyleStorage;
 
-  /*
+  /**
    * The image style entity storage.
    *
    * @var \Drupal\Core\Entity\EntityStorageInterface
@@ -127,6 +127,7 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $responsive_image_options = [];
     $responsive_image_styles = $this->responsiveImageStyleStorage->loadMultiple();
+    uasort($responsive_image_styles, '\Drupal\responsive_image\Entity\ResponsiveImageStyle::sort');
     if ($responsive_image_styles && !empty($responsive_image_styles)) {
       foreach ($responsive_image_styles as $machine_name => $responsive_image_style) {
         if ($responsive_image_style->hasImageStyleMappings()) {

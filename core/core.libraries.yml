@@ -14,10 +14,10 @@ backbone:
 
 ckeditor:
   remote: https://github.com/ckeditor/ckeditor4
-  version: "4.15.1"
+  version: "4.16.0"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://raw.githubusercontent.com/ckeditor/ckeditor4/4.15.1/LICENSE.md
+    url: https://raw.githubusercontent.com/ckeditor/ckeditor4/4.16.0/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor/ckeditor.js: { preprocess: false, minified: true }
@@ -443,10 +443,10 @@ es6-promise:
 
 jquery:
   remote: https://github.com/jquery/jquery
-  version: "3.5.1"
+  version: "3.6.0"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/jquery/jquery/3.5.1/LICENSE.txt
+    url: https://raw.githubusercontent.com/jquery/jquery/3.6.0/LICENSE.txt
     gpl-compatible: true
   js:
     assets/vendor/jquery/jquery.min.js: { minified: true, weight: -20 }

@@ -543,6 +543,9 @@ abstract class Connection {
    *   An associative array of options to control how the query is run. See
    *   the documentation for self::defaultOptions() for details. The content of
    *   the 'pdo' key will be passed to the prepared statement.
+   * @param bool $allow_row_count
+   *   (optional) A flag indicating if row count is allowed on the statement
+   *   object. Defaults to FALSE.
    *
    * @return \Drupal\Core\Database\StatementInterface
    *   A PDO prepared statement ready for its execute() method.
@@ -552,14 +555,14 @@ abstract class Connection {
    *   not allowed in the query.
    * @throws \Drupal\Core\Database\DatabaseExceptionWrapper
    */
-  public function prepareStatement(string $query, array $options): StatementInterface {
+  public function prepareStatement(string $query, array $options, bool $allow_row_count = FALSE): StatementInterface {
     try {
       $query = $this->preprocessStatement($query, $options);
 
       // @todo in Drupal 10, only return the StatementWrapper.
       // @see https://www.drupal.org/node/3177490
       $statement = $this->statementWrapperClass ?
-        new $this->statementWrapperClass($this, $this->connection, $query, $options['pdo'] ?? []) :
+        new $this->statementWrapperClass($this, $this->connection, $query, $options['pdo'] ?? [], $allow_row_count) :
         $this->connection->prepare($query, $options['pdo'] ?? []);
     }
     catch (\Exception $e) {
@@ -887,6 +890,9 @@ abstract class Connection {
         case Database::RETURN_STATEMENT:
           return $stmt;
 
+        // Database::RETURN_AFFECTED should not be used; enable row counting
+        // by passing the appropriate argument to the constructor instead.
+        // @see https://www.drupal.org/node/3186368
         case Database::RETURN_AFFECTED:
           $stmt->allowRowCount = TRUE;
           return $stmt->rowCount();
@@ -1670,8 +1676,14 @@ abstract class Connection {
    *
    * @return string
    *   A table name.
+   *
+   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/3211781
    */
   protected function generateTemporaryTableName() {
+    @trigger_error('Connection::generateTemporaryTableName() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3211781', E_USER_DEPRECATED);
     return "db_temporary_" . $this->temporaryNameIndex++;
   }
 
@@ -1699,6 +1711,11 @@ abstract class Connection {
    *
    * @return string
    *   The name of the temporary table.
+   *
+   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/3211781
    */
   abstract public function queryTemporary($query, array $args = [], array $options = []);
 

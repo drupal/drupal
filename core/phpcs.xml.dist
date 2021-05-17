@@ -76,12 +76,11 @@
   <rule ref="Drupal.Commenting.HookComment"/>
   <rule ref="Drupal.Commenting.GenderNeutralComment" />
   <rule ref="Drupal.Commenting.VariableComment">
-    <!-- Sniff for: DuplicateVar, EmptyVar, InlineVariableName -->
+    <!-- Sniff for: DuplicateVar, EmptyVar, InlineVariableName, WrongStyle -->
     <exclude name="Drupal.Commenting.VariableComment.IncorrectVarType"/>
     <exclude name="Drupal.Commenting.VariableComment.Missing"/>
     <exclude name="Drupal.Commenting.VariableComment.MissingVar"/>
     <exclude name="Drupal.Commenting.VariableComment.VarOrder"/>
-    <exclude name="Drupal.Commenting.VariableComment.WrongStyle"/>
   </rule>
   <rule ref="Drupal.Commenting.InlineComment">
     <!-- Sniff for: NoSpaceBefore, WrongStyle -->
@@ -226,6 +225,8 @@
 
   <!-- PSR-2 sniffs -->
   <rule ref="PSR2.Classes.PropertyDeclaration">
+     <!-- Silence method name underscore warning which is covered already in
+       Drupal.Classes.PropertyDeclaration. -->
     <exclude name="PSR2.Classes.PropertyDeclaration.Underscore"/>
   </rule>
   <rule ref="PSR2.Namespaces.NamespaceDeclaration"/>
