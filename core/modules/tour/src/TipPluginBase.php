@@ -132,8 +132,9 @@ abstract class TipPluginBase extends PluginBase implements TipPluginInterface {
     // not part of TipPluginBase prior to it being deprecated. As a result, all
     // tip plugins have their own implementations of getOutput() making it
     // unlikely that this implementation will be called. If it does get called,
-    // however, the return value of an empty array is not likely the desired
-    // result, so a warning is triggered. This warning does not stop page
+    // however, the tour tip will have no content due to this method returning
+    // an empty array. To help tour tips from unexpectedly having no content, a
+    // warning is triggered. This warning does not stop page
     // execution, but will be logged.
     trigger_error(__NAMESPACE__ . 'TipPluginInterface::getOutput is deprecated. Use getBody() instead. See https://www.drupal.org/node/3204096', E_USER_WARNING);
 

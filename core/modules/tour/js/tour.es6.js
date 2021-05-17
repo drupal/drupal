@@ -155,7 +155,6 @@
           const that = this;
 
           if (tourItems.length) {
-
             // If Joyride is positioned relative to the top or bottom of an
             // element, and its secondary position is right or left, then the
             // arrow is also positioned right or left. Shepherd defaults to
