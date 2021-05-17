@@ -11,7 +11,13 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
  */
 class MigrateForumSettingsTest extends MigrateDrupal7TestBase {
 
-  // Don't alphabetize these. They're in dependency order.
+  /**
+   * Modules to enable.
+   *
+   * Don't alphabetize these. They're in dependency order.
+   *
+   * @var array
+   */
   protected static $modules = [
     'comment',
     'field',

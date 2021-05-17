@@ -119,7 +119,7 @@ class AjaxCssTest extends WebDriverTestBase {
           && typeof CKEDITOR.instances["$instance_id"] !== 'undefined'
           && CKEDITOR.instances["$instance_id"].instanceReady
         );
-      }());
+      }())
 JS;
 
     $this->getSession()->wait($timeout, $condition);

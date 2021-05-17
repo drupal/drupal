@@ -71,7 +71,7 @@ class AuthenticationSubscriber implements EventSubscriberInterface {
    * @see \Drupal\Core\Authentication\AuthenticationProviderInterface::authenticate()
    */
   public function onKernelRequestAuthenticate(RequestEvent $event) {
-    if ($event->isMasterRequest()) {
+    if ($event->isMainRequest()) {
       $request = $event->getRequest();
       if ($this->authenticationProvider->applies($request)) {
         $account = $this->authenticationProvider->authenticate($request);
@@ -90,7 +90,7 @@ class AuthenticationSubscriber implements EventSubscriberInterface {
    *   The request event.
    */
   public function onKernelRequestFilterProvider(RequestEvent $event) {
-    if (isset($this->filter) && $event->isMasterRequest()) {
+    if (isset($this->filter) && $event->isMainRequest()) {
       $request = $event->getRequest();
       if ($this->authenticationProvider->applies($request) && !$this->filter->appliesToRoutedRequest($request, TRUE)) {
         throw new AccessDeniedHttpException('The used authentication method is not allowed on this route.');
@@ -109,7 +109,7 @@ class AuthenticationSubscriber implements EventSubscriberInterface {
    *   The exception event.
    */
   public function onExceptionSendChallenge(ExceptionEvent $event) {
-    if (isset($this->challengeProvider) && $event->isMasterRequest()) {
+    if (isset($this->challengeProvider) && $event->isMainRequest()) {
       $request = $event->getRequest();
       $exception = $event->getThrowable();
       if ($exception instanceof AccessDeniedHttpException && !$this->authenticationProvider->applies($request) && (!isset($this->filter) || $this->filter->appliesToRoutedRequest($request, FALSE))) {
@@ -127,7 +127,7 @@ class AuthenticationSubscriber implements EventSubscriberInterface {
    * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
    */
   public function onExceptionAccessDenied(ExceptionEvent $event) {
-    if (isset($this->filter) && $event->isMasterRequest()) {
+    if (isset($this->filter) && $event->isMainRequest()) {
       $request = $event->getRequest();
       $exception = $event->getThrowable();
       if ($exception instanceof AccessDeniedHttpException && $this->authenticationProvider->applies($request) && !$this->filter->appliesToRoutedRequest($request, TRUE)) {

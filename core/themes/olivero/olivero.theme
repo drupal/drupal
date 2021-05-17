@@ -596,3 +596,22 @@ function olivero_preprocess_links__comment(&$variables) {
     $link['link']['#options']['attributes']['class'][] = 'comment__links-link';
   }
 }
+
+/**
+ * Implements hook_preprocess_table().
+ */
+function olivero_preprocess_table(&$variables) {
+  // Mark the whole table and the first cells if rows are draggable.
+  if (!empty($variables['rows'])) {
+    $draggable_row_found = FALSE;
+    foreach ($variables['rows'] as &$row) {
+      /** @var \Drupal\Core\Template\Attribute $row['attributes'] */
+      if (!empty($row['attributes']) && $row['attributes']->hasClass('draggable')) {
+        if (!$draggable_row_found) {
+          $variables['attributes']['class'][] = 'draggable-table';
+          $draggable_row_found = TRUE;
+        }
+      }
+    }
+  }
+}
