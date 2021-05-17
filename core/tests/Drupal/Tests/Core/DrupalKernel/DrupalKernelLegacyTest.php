@@ -19,7 +19,7 @@ class DrupalKernelLegacyTest extends UnitTestCase {
    * @covers ::isMasterRequest
    */
   public function testKernelEventDeprecation() {
-    $kernel = new DrupalKernel('test', NULL);
+    $kernel = $this->createMock(DrupalKernel::class);
     $request = $this->createMock(Request::class);
     $event = new KernelEvent($kernel, $request, $kernel::MASTER_REQUEST);
 
