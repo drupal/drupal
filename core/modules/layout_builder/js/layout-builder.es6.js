@@ -324,9 +324,8 @@
       const $layoutBuilderContentPreview = $('#layout-builder-content-preview');
 
       // data-content-preview-id specifies the layout being edited.
-      const contentPreviewId = $layoutBuilderContentPreview.data(
-        'content-preview-id',
-      );
+      const contentPreviewId =
+        $layoutBuilderContentPreview.data('content-preview-id');
 
       /**
        * Tracks if content preview is enabled for this layout. Defaults to true

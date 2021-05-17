@@ -82,26 +82,23 @@
             );
           });
 
-          Drupal.toolbar.views.toolbarVisualView = new Drupal.toolbar.ToolbarVisualView(
-            {
+          Drupal.toolbar.views.toolbarVisualView =
+            new Drupal.toolbar.ToolbarVisualView({
               el: this,
               model,
               strings: options.strings,
-            },
-          );
-          Drupal.toolbar.views.toolbarAuralView = new Drupal.toolbar.ToolbarAuralView(
-            {
+            });
+          Drupal.toolbar.views.toolbarAuralView =
+            new Drupal.toolbar.ToolbarAuralView({
               el: this,
               model,
               strings: options.strings,
-            },
-          );
-          Drupal.toolbar.views.bodyVisualView = new Drupal.toolbar.BodyVisualView(
-            {
+            });
+          Drupal.toolbar.views.bodyVisualView =
+            new Drupal.toolbar.BodyVisualView({
               el: this,
               model,
-            },
-          );
+            });
 
           // Force layout render to fix mobile view. Only needed on load, not
           // for every media query match.
@@ -111,13 +108,12 @@
           // Render collapsible menus.
           const menuModel = new Drupal.toolbar.MenuModel();
           Drupal.toolbar.models.menuModel = menuModel;
-          Drupal.toolbar.views.menuVisualView = new Drupal.toolbar.MenuVisualView(
-            {
+          Drupal.toolbar.views.menuVisualView =
+            new Drupal.toolbar.MenuVisualView({
               el: $(this).find('.toolbar-menu-administration').get(0),
               model: menuModel,
               strings: options.strings,
-            },
-          );
+            });
 
           // Handle the resolution of Drupal.toolbar.setSubtrees.
           // This is handled with a deferred so that the function may be invoked
