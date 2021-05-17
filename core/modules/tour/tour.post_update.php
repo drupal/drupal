@@ -31,6 +31,15 @@ function tour_post_update_joyride_selectors_to_selector_property(&$sandbox = NUL
       }
       if (isset($tip['location'])) {
         $needs_save = TRUE;
+
+        // Joyride only supports four location options: 'top', 'bottom',
+        // 'left', and 'right'. Shepherd also accepts these as options, but they
+        // result in different behavior. A given Joyride location option will
+        // provide the same results in Shepherd if '-start' is appended to it (
+        // e.g. the 'left-start' option in Shepherd positions the element the
+        // same way that 'left' does in Joyride.
+        //
+        // @see https://shepherdjs.dev/docs/Step.html
         $tip['position'] = $tip['location'] . '-start';
         unset($tip['location']);
       }

@@ -155,13 +155,23 @@
           const that = this;
 
           if (tourItems.length) {
-            // If joyride is positioned relative to the top or bottom of an
+
+            // If Joyride is positioned relative to the top or bottom of an
             // element, and its secondary position is right or left, then the
             // arrow is also positioned right or left. Shepherd defaults to
-            // center positioning the arrow, so this modifier is provided to
-            // replicate Joyride's behavior. It is provided here instead of
-            // TourViewBuilder (where most Popper modifications are) because
-            // it includes adding a JavaScript callback function.
+            // center positioning the arrow.
+            //
+            // In most cases, this arrow positioning difference has
+            // little impact. However, tours built with Joyride may have tips
+            // using a higher level selector than the element the tip is
+            // expected to point to, and relied on Joyride's arrow positioning
+            // to align the arrow with the expected reference element. Joyride's
+            // arrow positioning behavior is replicated here to prevent those
+            // use cases from causing UI regressions.
+            //
+            // This modifier is provided here instead of TourViewBuilder (where
+            // most position modifications are) because it includes adding a
+            // JavaScript callback function.
             settings.tourShepherdConfig.defaultStepOptions.popperOptions.modifiers.push(
               {
                 name: 'moveArrowJoyridePosition',
@@ -225,6 +235,8 @@
                   // facilitating the use of the Shepherd library that is
                   // backwards compatible with customizations intended for
                   // Joyride.
+                  // The Drupal.tour.convertToJoyrideMarkup() function is
+                  // internal, and will eventually be removed from Drupal core.
                   if (Drupal.tour.hasOwnProperty('convertToJoyrideMarkup')) {
                     Drupal.tour.convertToJoyrideMarkup(shepherdTour);
                   }

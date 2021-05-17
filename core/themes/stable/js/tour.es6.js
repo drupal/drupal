@@ -9,6 +9,8 @@
    *
    * @param {Tour} shepherdTour
    *   A ShepherdJS tour object.
+   *
+   * @internal
    */
   Drupal.tour.convertToJoyrideMarkup = (shepherdTour) => {
     /**
