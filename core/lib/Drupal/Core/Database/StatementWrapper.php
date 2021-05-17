@@ -221,6 +221,7 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
    */
   public function fetchObject(string $class_name = NULL, array $constructor_arguments = NULL) {
     if ($class_name) {
+dump([$class_name, $constructor_arguments]);
       return $this->clientStatement->fetchObject($class_name, $constructor_arguments);
     }
     return $this->clientStatement->fetchObject();
