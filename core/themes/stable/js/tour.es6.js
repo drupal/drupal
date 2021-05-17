@@ -5,7 +5,7 @@
 
 ((Drupal) => {
   /**
-   * Converts the markup of a Shepherd tour tip to match Joyride._
+   * Converts the markup of a Shepherd tour tip to match Joyride.
    *
    * @param {Tour} shepherdTour
    *   A ShepherdJS tour object.
