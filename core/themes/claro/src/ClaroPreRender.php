@@ -201,9 +201,9 @@ class ClaroPreRender implements TrustedCallbackInterface {
     $element['#scrollable'] = $element['#scrollable'] ?? TRUE;
 
     // The #responsive property is not used in Claro, but should be FALSE
-    // instead of removed as this overrides the default value of #reponsive from
-    // being used in \Drupal\Core\Render\Element\Table::preRenderTable(). This
-    // prevents unnecessary responsive table classes from being added.
+    // instead of removed as this overrides the default value of #responsive
+    // from being used in \Drupal\Core\Render\Element\Table::preRenderTable().
+    // This prevents unnecessary responsive table classes from being added.
     $element['#responsive'] = FALSE;
 
     return $element;

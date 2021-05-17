@@ -116,8 +116,9 @@
 
         // The value of top is calculated so the sticky header remains in the
         // same position despite having its position style changed.
-        this.stickyHeader.style.top = `${Math.abs(wrapperTopOffset) +
-          stickyTopOffset}px`;
+        this.stickyHeader.style.top = `${
+          Math.abs(wrapperTopOffset) + stickyTopOffset
+        }px`;
 
         // No clipping is needed when absolutely positioned as overflow is
         // contained.
@@ -166,8 +167,9 @@
       // clipping is needed, and left offset is only determined by container
       // offset.
       if (wrapperWidth < this.stickyHeader.clientWidth) {
-        this.stickyHeader.style.clip = `rect(auto,  ${wrapperWidth +
-          scrollLeft}px, auto, ${scrollLeft - 1}px)`;
+        this.stickyHeader.style.clip = `rect(auto,  ${
+          wrapperWidth + scrollLeft
+        }px, auto, ${scrollLeft - 1}px)`;
       } else {
         this.stickyHeader.style.clip = 'unset';
       }
