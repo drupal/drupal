@@ -20,9 +20,8 @@
         const currentValue = $(
           '#edit-filters-filter-html-settings-allowed-html',
         ).val();
-        const rules = Drupal.behaviors.filterFilterHtmlUpdating._parseSetting(
-          currentValue,
-        );
+        const rules =
+          Drupal.behaviors.filterFilterHtmlUpdating._parseSetting(currentValue);
 
         // Build a FilterHTMLRule that reflects the hard-coded behavior that
         // strips all "style" attribute and all "on*" attributes.
@@ -181,12 +180,10 @@
               //   always disallows the "style" attribute, so we only need to
               //   support "class" attribute value restrictions. Fix once
               //   https://www.drupal.org/node/2567801 lands.
-              filterRule.restrictedTags.allowed.attributes = featureRule.required.attributes.slice(
-                0,
-              );
-              filterRule.restrictedTags.allowed.classes = featureRule.required.classes.slice(
-                0,
-              );
+              filterRule.restrictedTags.allowed.attributes =
+                featureRule.required.attributes.slice(0);
+              filterRule.restrictedTags.allowed.classes =
+                featureRule.required.classes.slice(0);
               editorRequiredTags[tag] = filterRule;
             }
             // The tag is already allowed, add any additionally allowed
@@ -362,9 +359,8 @@
    */
   Drupal.theme.filterFilterHTMLUpdateMessage = function (tags) {
     let html = '';
-    const tagList = Drupal.behaviors.filterFilterHtmlUpdating._generateSetting(
-      tags,
-    );
+    const tagList =
+      Drupal.behaviors.filterFilterHtmlUpdating._generateSetting(tags);
     html += '<p class="editor-update-message">';
     html += Drupal.t(
       'Based on the text editor configuration, these tags have automatically been added: <strong>@tag-list</strong>.',

@@ -218,9 +218,8 @@
       const $context = $(context);
       const contextIsForm = $context.is('form');
       if (trigger === 'unload') {
-        const $forms = (contextIsForm
-          ? $context
-          : $context.find('form')
+        const $forms = (
+          contextIsForm ? $context : $context.find('form')
         ).removeOnce('form-updated');
         if ($forms.length) {
           $.makeArray($forms).forEach((form) => {
