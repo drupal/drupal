@@ -80,6 +80,9 @@ class ContextDefinition implements ContextDefinitionInterface {
    *   The created context definition object.
    */
   public static function create($data_type = 'any') {
+    if (strpos($data_type, 'entity:') === 0) {
+      return new EntityContextDefinition($data_type);
+    }
     return new static(
       $data_type
     );
