@@ -21,7 +21,7 @@ class TestSiteOliveroInstallTestScript implements TestSetupInterface {
     // Install required module for the Olivero front page.
     $module_installer = \Drupal::service('module_installer');
     assert($module_installer instanceof ModuleInstallerInterface);
-    $module_installer->install(['views', 'olivero_test']);
+    $module_installer->install(['olivero_test']);
 
     // Install Olivero and set it as the default theme.
     $theme_installer = \Drupal::service('theme_installer');
