@@ -376,7 +376,7 @@
   /**
    * Theme function for tour item content.
    *
-   * @param {Object[]} tourStepConfig
+   * @param {Object} tourStepConfig
    *   An object generated in TourViewBuilder used for creating the options
    *   passed to `Tour.addStep(options)`.
    *   Contains the following properties:
