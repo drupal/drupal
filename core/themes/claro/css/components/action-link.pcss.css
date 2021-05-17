@@ -41,7 +41,7 @@
  */
 .action-link {
   display: inline-block;
-  padding: calc(var(--space-m) - ((var(--space-l) - var(--space-m)) / 2)) var(--space-m);
+  padding: var(--input-padding-vertical) var(--space-m);
   cursor: pointer;
   text-decoration: none;
   color: var(--color-davysgray);
@@ -53,13 +53,25 @@
   -webkit-font-smoothing: antialiased;
 }
 
-/* Small variant. */
-.no-touchevents .action-link--small {
+/**
+ * Small and extrasmall variants.
+ *
+ * Extrasmall variant styling can only be achieved by adding the class
+ * .action-link--small to the action link.
+ *
+ * Small variant styles can be applied in one of two ways:
+ * 1) Adding the .action-link--small class directly to the action link.
+ * 2) A parent element of the action link has the .claro-form-elements-small
+ *    class.
+ *
+ * @see form--text.pcss.css, in the comment labeled "Small variants", for
+ * additional information on using .claro-form-elements-(variant) classes.
+ */
+.no-touchevents .action-link--small,
+.no-touchevents .claro-form-elements-small .action-link {
   padding: calc(var(--space-s) - ((var(--space-l) - var(--space-s)) / 2)) var(--space-s);
   font-size: var(--font-size-s);
 }
-
-/* Extra small variant. */
 .no-touchevents .action-link--extrasmall {
   padding: 0 var(--space-xs);
   font-size: var(--font-size-s);

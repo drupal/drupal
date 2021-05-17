@@ -38,7 +38,7 @@
 .button {
   display: inline-block;
   margin: 1rem 0.75rem 1rem 0; /* LTR */
-  padding: calc(1rem - 1px) calc(1.5rem - 1px); /* 1 */
+  padding: calc(1rem - 2px) calc(1.5rem - 1px); /* 1 */
   cursor: pointer;
   text-align: center;
   text-decoration: none;
@@ -76,24 +76,26 @@
   background-color: #adaeb3;
 }
 
-/* Common styles for small buttons */
+/**
+ * Small variant.
+ *
+ * A select input can receive small variant styling in two ways:
+ * 1) Adding the .button--small class directly to the button.
+ * 2) A parent element of the button has the .claro-form-elements-small class.
+ *
+ * @see form--text.pcss.css, in the comment labeled "Small variants", for
+ * additional information on using .claro-form-elements-(variant) classes.
+ */
 
-.no-touchevents .button--small {
+.button--small,
+.claro-form-elements-small .button {
   margin: 0.75rem 0.5rem 0.75rem 0; /* LTR */
-  padding: calc(0.5rem - 1px) calc(1rem - 1px); /* 1 */
+  padding: calc(0.5rem - 2px) calc(1rem - 1px); /* 1 */
   font-size: 0.79rem;
 }
 
-/* Common styles for extra small buttons */
-
-.no-touchevents .button--extrasmall {
-  margin: 0.5rem 0.5rem 0.5rem 0; /* LTR */
-  padding: calc(0.25rem - 1px) calc(0.75rem - 1px); /* 1 */
-  font-size: 0.79rem;
-}
-
-[dir="rtl"].no-touchevents .button--small,
-[dir="rtl"].no-touchevents .button--extrasmall {
+[dir="rtl"] .button--small,
+[dir="rtl"] .claro-form-elements-small .button {
   margin-right: 0;
   margin-left: 0.5rem;
 }

@@ -61,7 +61,7 @@
 
 .views-exposed-form__item--actions.views-exposed-form__item--actions .button {
   margin-top: 0;
-  margin-bottom: 0;
+  margin-bottom: 1px;
 }
 
 .views-exposed-form__item--actions.views-exposed-form__item--actions .button:last-child {

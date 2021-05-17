@@ -56,4 +56,10 @@
   .layout-region--node-secondary {
     margin-top: var(--space-l);
   }
+
+  .layout-region-node-footer__content .form-actions .button {
+    margin-top: var(--space-m);
+    margin-bottom: var(--space-m);
+  }
+
 }
