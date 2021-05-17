@@ -124,7 +124,7 @@ _:-ms-fullscreen,
 @media screen and (max-width: 37.5rem) {
   /**
    * Under 600px, all form element widths are 100%, so it is not necessary to
-   * have `.claro-autocomplete` disply as inline-block. Setting it to block
+   * have `.claro-autocomplete` display as inline-block. Setting it to block
    * ensures the autocomplete input will assume the same width as other fields.
    */
   .claro-autocomplete {
