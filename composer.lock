@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "32af6ba7e80cd9503592966d1f071c63",
+    "content-hash": "5e658e150305bd8c42a49e766211d9c0",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -534,7 +534,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "874a51210b265aa07599dc966748e43cf31a0321"
+                "reference": "8d19de4587f2e384aad845327980c8793690bbc6"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -763,7 +763,6 @@
                     "lib/Drupal/Core/Site/Settings.php"
                 ],
                 "files": [
-                    "class_aliases.php",
                     "includes/bootstrap.inc"
                 ]
             },
