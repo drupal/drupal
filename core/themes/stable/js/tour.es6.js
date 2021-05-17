@@ -129,6 +129,9 @@
           right: 'left',
         };
         shepherdArrow.classList.add(
+          // Split at '-' as shepherd positioning accommodates dash-delimited
+          // secondary axis positioning.
+          // shepherdTour.currentStep.options.attachTo.on.split('-')[0]
           stepToTipPosition[
             // Split at '-' as shepherd positioning accommodates dash-delimited
             // secondary axis positioning.
