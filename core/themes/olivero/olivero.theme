@@ -179,7 +179,7 @@ function olivero_theme_suggestions_form_alter(array &$suggestions, array $variab
  * Implements hook_form_alter() for adding classes and placeholder text to the search forms.
  */
 function olivero_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  if (isset($form['actions']) && (count($form['actions'])) <= 2) {
+  if (isset($form['actions']['submit']) && (count($form['actions'])) <= 2) {
     $form['actions']['submit']['#attributes']['class'][] = 'button--primary';
   }
 
