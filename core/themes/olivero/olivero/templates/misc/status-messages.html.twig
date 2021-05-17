@@ -1,0 +1,68 @@
+{#
+/**
+ * @file
+ * Theme override for status messages.
+ *
+ * Displays status, error, and warning messages, grouped by type.
+ *
+ * An invisible heading identifies the messages for assistive technology.
+ * Sighted users see a colored box. See http://www.w3.org/TR/WCAG-TECHS/H69.html
+ * for info.
+ *
+ * Add an ARIA label to the contentinfo area so that assistive technology
+ * user agents will better describe this landmark.
+ *
+ * Available variables:
+ * - message_list: List of messages to be displayed, grouped by type.
+ * - status_headings: List of all status types.
+ * - attributes: HTML attributes for the element, including:
+ *   - class: HTML classes.
+ */
+#}
+{{ attach_library('olivero/messages') }}
+
+<div data-drupal-messages class="messages-list">
+  {% for type, messages in message_list %}
+    {%
+      set classes = [
+      'messages-list__item',
+      'messages',
+      'messages--' ~ type,
+    ]
+    %}
+
+    <div role="contentinfo" aria-label="{{ status_headings[type] }}"{{ attributes.addClass(classes)|without('role', 'aria-label') }}>
+      <div class="messages__container"{% if type == 'error' %} role="alert"{% endif %}>
+        {% if status_headings[type] %}
+          <div class="messages__header">
+           <h2 class="visually-hidden">{{ status_headings[type] }}</h2>
+            <div class="messages__icon">
+              {% if type == 'error' %}
+                {% include "@olivero/../images/error.svg" %}
+              {% elseif type == 'warning' %}
+                {% include "@olivero/../images/warning.svg" %}
+              {% elseif type == 'status' %}
+                {% include "@olivero/../images/status.svg" %}
+              {% elseif type == 'info' %}
+                {% include "@olivero/../images/info.svg" %}
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+        <div class="messages__content">
+          {% if messages|length > 1 %}
+            <ul class="messages__list">
+              {% for message in messages %}
+                <li class="messages__item">{{ message }}</li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            {{ messages|first }}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {# Remove type specific classes. #}
+    {% set attributes = attributes.removeClass(classes) %}
+  {% endfor %}
+</div>

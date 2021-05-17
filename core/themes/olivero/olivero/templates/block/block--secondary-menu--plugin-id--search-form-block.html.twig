@@ -1,0 +1,51 @@
+{#
+/**
+ * @file
+ * Theme implementation for a search form block in the Secondary Menu region.
+ *
+ * Available variables:
+ * - content: The content of this block.
+ * - content_attributes: A list of HTML attributes applied to the main content
+ *   tag that appears in the template.
+ * - label: The configured label of the block if visible.
+ * - attributes: HTML attributes for the wrapper.
+ * - title_attributes: Same as attributes, except applied to the main title
+ *   tag that appears in the template.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the main title tag that appears in the template.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the main title tag that appears in the template.
+ *
+ * @see template_preprocess_block()
+ * @see search_preprocess_block()
+ *
+ * @ingroup themeable
+ */
+#}
+{%
+  set classes = [
+    'block',
+    'block-search',
+  ]
+%}
+<div{{ attributes.addClass(classes) }}>
+  {{ title_prefix }}
+  {% if label %}
+    <h2{{ title_attributes }}>{{ label }}</h2>
+  {% endif %}
+  {{ title_suffix }}
+  {% block content %}
+    <button class="header-nav__search-button" aria-label="{{ 'Toggle Search Form'|t }}">
+      {% include "@olivero/../images/search.svg" %}
+      <div class="header-nav__search-button__close"></div>
+    </button>
+
+    <div{{ content_attributes.addClass('search-wide__wrapper') }}>
+      <div class="search-wide__container">
+        <div class="search-wide__grid">
+          {{ content }}
+        </div>
+      </div>
+    </div>
+  {% endblock %}
+</div>

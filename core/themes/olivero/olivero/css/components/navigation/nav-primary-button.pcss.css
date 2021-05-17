@@ -1,0 +1,131 @@
+/**
+ * @file
+ * Button that expands second level nav when clicked.
+ */
+
+@import "../../base/variables.pcss.css";
+
+.primary-nav__button-toggle {
+  position: relative;
+  overflow: hidden;
+  width: var(--sp2);
+  height: var(--sp2);
+  margin-block-start: 2px; /* Visually align button with menu link text. */
+  padding-block: 0;
+  padding-inline-start: 0;
+  padding-inline-end: 0;
+  cursor: pointer;
+  text-indent: -999px;
+  border: 0;
+  background: transparent;
+  -webkit-appearance: none;
+
+  &:focus {
+    outline: auto 2px var(--color--blue-50);
+    outline-offset: 2px;
+  }
+
+  & .icon--menu-toggle {
+    position: absolute;
+    /* stylelint-disable csstools/use-logical */
+    top: 50%;
+    left: 50%;
+    /* stylelint-enable csstools/use-logical */
+    width: 16px;
+    height: 16px;
+    transition: background-color 0.2s;
+    transform: translate(-50%, -50%);
+    border-radius: 2px;
+
+    &:before,
+    &:after {
+      position: absolute;
+      /* stylelint-disable csstools/use-logical */
+      top: 50%;
+      left: 50%;
+      /* stylelint-enable csstools/use-logical */
+      width: var(--sp);
+      height: 0;
+      content: "";
+      transform: translate(-50%, -50%);
+      /* Intentionally not using CSS logical properties. */
+      border-top: solid 3px var(--color--blue-50);
+    }
+
+    &:after {
+      transition: opacity 0.2s;
+      transform: translate(-50%, -50%) rotate(90deg);
+    }
+  }
+
+  &[aria-expanded="true"] .icon--menu-toggle:after {
+    opacity: 0;
+  }
+
+  /* aria-hidden attribute is removed by JS. Button is non-functional
+     until JS is enabled.
+  */
+  &[aria-hidden="true"] {
+    pointer-events: none;
+  }
+}
+
+body:not(.is-always-mobile-nav) {
+  @media (--nav) {
+    & .primary-nav__button-toggle {
+      flex-shrink: 0;
+      align-self: stretch;
+      width: calc(var(--sp2) + 8px);
+      height: auto;
+      margin-block-start: 0;
+      margin-inline-end: calc(-1 * var(--sp2));
+
+      &:focus {
+        border: 0;
+        outline: 0;
+
+        & .icon--menu-toggle {
+          border: solid 2px var(--color--blue-20);
+        }
+      }
+
+      &:active {
+        /* Necessary for Safari. */
+        color: currentColor;
+      }
+
+      &[aria-expanded="true"] .icon--menu-toggle:after {
+        opacity: 0.8;
+      }
+
+      & .icon--menu-toggle {
+        inset-inline-start: 3px;
+        width: 18px;
+        transform: translateY(-50%);
+        border-radius: 4px;
+        background-color: var(--color--white);
+
+        &:before {
+          content: none;
+        }
+
+        &:after {
+          /* stylelint-disable csstools/use-logical */
+          top: calc(50% - 2px);
+          left: 3px;
+          /* stylelint-enable csstools/use-logical */
+          width: 8px;
+          height: 8px;
+          content: "";
+          transform: translateY(-50%) rotate(45deg);
+          opacity: 0.8;
+          /* Intentionally not using CSS logical properties. */
+          border-top: none;
+          border-right: solid 2px currentColor;
+          border-bottom: solid 2px currentColor;
+          background: transparent;
+        }
+      }
+    }
+  }
+}

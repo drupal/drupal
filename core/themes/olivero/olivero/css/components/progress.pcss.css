@@ -1,0 +1,18 @@
+/**
+ * @file
+ * Progress bar specific styles.
+ */
+
+@import "../base/variables.pcss.css";
+
+.progress__track {
+  overflow: hidden;
+  height: var(--sp);
+  border: 1px solid var(--color--blue-20);
+  border-radius: var(--border-radius);
+}
+
+.progress__bar {
+  height: var(--sp);
+  background-color: var(--color--blue-20);
+}
