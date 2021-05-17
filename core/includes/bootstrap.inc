@@ -124,6 +124,13 @@ define('REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
 define('DRUPAL_ROOT', dirname(__DIR__, 2));
 
 /**
+ * Declare class aliases that will be added by the autoloader.
+ */
+// @todo https://www.drupal.org/project/drupal/issues/3197482 Remove this class
+//   alias once Drupal is running Symfony 5.3 or higher.
+class_alias('Drupal\Core\Http\KernelEvent', 'Symfony\Component\HttpKernel\Event\KernelEvent', TRUE);
+
+/**
  * Returns and optionally sets the filename for a system resource.
  *
  * The filename, whether provided, cached, or retrieved from the database, is
