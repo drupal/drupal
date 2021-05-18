@@ -37,7 +37,8 @@ class NodeActionsConfigurationTest extends BrowserTestBase {
     // Make a POST request to admin/config/system/actions.
     $edit = [];
     $edit['action'] = 'node_assign_owner_action';
-    $this->drupalPostForm('admin/config/system/actions', $edit, 'Create');
+    $this->drupalGet('admin/config/system/actions');
+    $this->submitForm($edit, 'Create');
     $this->assertSession()->statusCodeEquals(200);
 
     // Make a POST request to the individual action configuration page.
@@ -46,7 +47,8 @@ class NodeActionsConfigurationTest extends BrowserTestBase {
     $edit['label'] = $action_label;
     $edit['id'] = strtolower($action_label);
     $edit['owner_uid'] = $user->id();
-    $this->drupalPostForm('admin/config/system/actions/add/node_assign_owner_action', $edit, 'Save');
+    $this->drupalGet('admin/config/system/actions/add/node_assign_owner_action');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
 
     $action_id = $edit['id'];
@@ -111,7 +113,8 @@ class NodeActionsConfigurationTest extends BrowserTestBase {
     // not be able to reference the anonymous user.
     $this->drupalLogin($this->drupalCreateUser(['administer actions', 'administer users']));
     // Create AssignOwnerNode action.
-    $this->drupalPostForm('admin/config/system/actions', ['action' => 'node_assign_owner_action'], 'Create');
+    $this->drupalGet('admin/config/system/actions');
+    $this->submitForm(['action' => 'node_assign_owner_action'], 'Create');
 
     // Get the autocomplete URL of the owner_uid textfield.
     $autocomplete_field = $this->getSession()->getPage()->findField('owner_uid');

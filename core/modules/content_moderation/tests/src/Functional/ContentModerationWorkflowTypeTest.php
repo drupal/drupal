@@ -48,11 +48,8 @@ class ContentModerationWorkflowTypeTest extends BrowserTestBase {
 
     $entity_bundle_info = \Drupal::service('entity_type.bundle.info');
 
-    $this->drupalPostForm('admin/config/workflow/workflows/add', [
-      'label' => 'Test',
-      'id' => 'test',
-      'workflow_type' => 'content_moderation',
-    ], 'Save');
+    $this->drupalGet('admin/config/workflow/workflows/add');
+    $this->submitForm(['label' => 'Test', 'id' => 'test', 'workflow_type' => 'content_moderation'], 'Save');
 
     $session = $this->assertSession();
     // Make sure the test workflow includes the default states and transitions.

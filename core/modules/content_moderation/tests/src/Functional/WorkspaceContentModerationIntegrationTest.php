@@ -47,14 +47,10 @@ class WorkspaceContentModerationIntegrationTest extends ModerationStateTestBase 
     $this->switchToWorkspace($stage);
 
     // Create two nodes, a published and a draft one.
-    $this->drupalPostForm('node/add/article', [
-      'title[0][value]' => 'First article - published',
-      'moderation_state[0][state]' => 'published',
-    ], 'Save');
-    $this->drupalPostForm('node/add/article', [
-      'title[0][value]' => 'Second article - draft',
-      'moderation_state[0][state]' => 'draft',
-    ], 'Save');
+    $this->drupalGet('node/add/article');
+    $this->submitForm(['title[0][value]' => 'First article - published', 'moderation_state[0][state]' => 'published'], 'Save');
+    $this->drupalGet('node/add/article');
+    $this->submitForm(['title[0][value]' => 'Second article - draft', 'moderation_state[0][state]' => 'draft'], 'Save');
 
     $first_article = $this->drupalGetNodeByTitle('First article - published', TRUE);
     $this->assertEquals('published', $first_article->moderation_state->value);
@@ -91,20 +87,16 @@ class WorkspaceContentModerationIntegrationTest extends ModerationStateTestBase 
       'moderation_state[0][state]' => 'published',
     ], 'Save');
 
-    $this->drupalPostForm('/node/1/edit', [
-      'title[0][value]' => 'First article - archived',
-      'moderation_state[0][state]' => 'archived',
-    ], 'Save');
+    $this->drupalGet('/node/1/edit');
+    $this->submitForm(['title[0][value]' => 'First article - archived', 'moderation_state[0][state]' => 'archived'], 'Save');
 
     $this->drupalGet('/node/1');
     $this->assertText('First article - archived');
 
     // Get the second node to a default revision state and publish the
     // workspace.
-    $this->drupalPostForm('/node/2/edit', [
-      'title[0][value]' => 'Second article - published',
-      'moderation_state[0][state]' => 'published',
-    ], 'Save');
+    $this->drupalGet('/node/2/edit');
+    $this->submitForm(['title[0][value]' => 'Second article - published', 'moderation_state[0][state]' => 'published'], 'Save');
 
     $stage->publish();
 

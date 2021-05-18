@@ -171,7 +171,8 @@ class UserLoginTest extends BrowserTestBase {
       'name' => $account->getAccountName(),
       'pass' => $account->passRaw,
     ];
-    $this->drupalPostForm('user/login', $edit, 'Log in');
+    $this->drupalGet('user/login');
+    $this->submitForm($edit, 'Log in');
     if (isset($flood_trigger)) {
       $this->assertSession()->statusCodeEquals(403);
       $this->assertSession()->fieldNotExists('pass');

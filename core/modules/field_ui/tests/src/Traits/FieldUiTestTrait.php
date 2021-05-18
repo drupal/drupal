@@ -89,7 +89,8 @@ trait FieldUiTestTrait {
     ];
 
     // First step: 'Re-use existing field' on the 'Add field' page.
-    $this->drupalPostForm("$bundle_path/fields/add-field", $initial_edit, 'Save and continue');
+    $this->drupalGet("{$bundle_path}/fields/add-field");
+    $this->submitForm($initial_edit, 'Save and continue');
     // Set the main content to only the content region because the label can
     // contain HTML which will be auto-escaped by Twig.
     $this->assertRaw('field-config-edit-form');

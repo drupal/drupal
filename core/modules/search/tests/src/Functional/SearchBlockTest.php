@@ -68,7 +68,8 @@ class SearchBlockTest extends BrowserTestBase {
 
     // Test a normal search via the block form, from the front page.
     $terms = ['keys' => 'test'];
-    $this->drupalPostForm('', $terms, 'Search');
+    $this->drupalGet('');
+    $this->submitForm($terms, 'Search');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertText('Your search yielded no results');
 
@@ -83,7 +84,8 @@ class SearchBlockTest extends BrowserTestBase {
     $visibility['request_path']['pages'] = 'search';
     $block->setVisibilityConfig('request_path', $visibility['request_path']);
 
-    $this->drupalPostForm('', $terms, 'Search');
+    $this->drupalGet('');
+    $this->submitForm($terms, 'Search');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertText('Your search yielded no results');
 
@@ -99,7 +101,8 @@ class SearchBlockTest extends BrowserTestBase {
 
     // Test an empty search via the block form, from the front page.
     $terms = ['keys' => ''];
-    $this->drupalPostForm('', $terms, 'Search');
+    $this->drupalGet('');
+    $this->submitForm($terms, 'Search');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertText('Please enter some keywords');
 
@@ -113,7 +116,8 @@ class SearchBlockTest extends BrowserTestBase {
 
     // Test that after entering a too-short keyword in the form, you can then
     // search again with a longer keyword. First test using the block form.
-    $this->drupalPostForm('node', ['keys' => $this->randomMachineName(1)], 'Search');
+    $this->drupalGet('node');
+    $this->submitForm(['keys' => $this->randomMachineName(1)], 'Search');
     $this->assertText('You must include at least one keyword to match in the content');
     $this->assertNoText('Please enter some keywords');
     $this->submitForm(['keys' => $this->randomMachineName()], 'Search', 'search-block-form');
@@ -121,7 +125,8 @@ class SearchBlockTest extends BrowserTestBase {
 
     // Same test again, using the search page form for the second search this
     // time.
-    $this->drupalPostForm('node', ['keys' => $this->randomMachineName(1)], 'Search');
+    $this->drupalGet('node');
+    $this->submitForm(['keys' => $this->randomMachineName(1)], 'Search');
     $this->submitForm(['keys' => $this->randomMachineName()], 'Search', 'search-form');
     $this->assertNoText('You must include at least one keyword to match in the content');
 
@@ -132,7 +137,8 @@ class SearchBlockTest extends BrowserTestBase {
         'settings[page_id]' => 'user_search',
       ], 'Save block');
     $name = $this->adminUser->getAccountName();
-    $this->drupalPostForm('node', ['keys' => $name], 'Search');
+    $this->drupalGet('node');
+    $this->submitForm(['keys' => $name], 'Search');
     $this->assertSession()->linkExists($name);
   }
 

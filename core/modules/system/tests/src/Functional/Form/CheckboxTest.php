@@ -61,7 +61,8 @@ class CheckboxTest extends BrowserTestBase {
 
     // Ensure that $form_state->getValues() is populated correctly for a
     // checkboxes group that includes a 0-indexed array of options.
-    $this->drupalPostForm('form-test/checkboxes-zero/1', [], 'Save');
+    $this->drupalGet('form-test/checkboxes-zero/1');
+    $this->submitForm([], 'Save');
     $results = json_decode($this->getSession()->getPage()->getContent());
     $this->assertSame([0, 0, 0], $results->checkbox_off, 'All three in checkbox_off are zeroes: off.');
     $this->assertSame(['0', 0, 0], $results->checkbox_zero_default, 'The first choice is on in checkbox_zero_default');
@@ -77,7 +78,8 @@ class CheckboxTest extends BrowserTestBase {
 
     // Ensure that each checkbox is rendered correctly for a checkboxes group
     // that includes a 0-indexed array of options.
-    $this->drupalPostForm('form-test/checkboxes-zero/0', [], 'Save');
+    $this->drupalGet('form-test/checkboxes-zero/0');
+    $this->submitForm([], 'Save');
     $checkboxes = $this->xpath('//input[@type="checkbox"]');
 
     $this->assertCount(9, $checkboxes, 'Correct number of checkboxes found.');

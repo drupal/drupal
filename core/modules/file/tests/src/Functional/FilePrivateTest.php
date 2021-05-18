@@ -83,7 +83,8 @@ class FilePrivateTest extends FileFieldTestBase {
     // Attempt to reuse the file when editing a node.
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName();
-    $this->drupalPostForm('node/add/' . $type_name, $edit, 'Save');
+    $this->drupalGet('node/add/' . $type_name);
+    $this->submitForm($edit, 'Save');
     $new_node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
 
     // Can't use drupalPostForm() to set hidden fields.

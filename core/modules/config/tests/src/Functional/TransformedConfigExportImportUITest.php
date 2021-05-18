@@ -73,13 +73,15 @@ class TransformedConfigExportImportUITest extends BrowserTestBase {
     $this->assertText(Html::escape("slogan: $newSlogan"));
 
     // Export the configuration.
-    $this->drupalPostForm('admin/config/development/configuration/full/export', [], 'Export');
+    $this->drupalGet('admin/config/development/configuration/full/export');
+    $this->submitForm([], 'Export');
     $tarball = $this->getSession()->getPage()->getContent();
 
     // Import the configuration from the tarball.
     $filename = 'temporary://' . $this->randomMachineName();
     file_put_contents($filename, $tarball);
-    $this->drupalPostForm('admin/config/development/configuration/full/import', ['files[import_tarball]' => $filename], 'Upload');
+    $this->drupalGet('admin/config/development/configuration/full/import');
+    $this->submitForm(['files[import_tarball]' => $filename], 'Upload');
 
     // Assert the new name and slogan.
     $this->drupalGet('admin/config/development/configuration/sync/diff/system.site');
@@ -89,7 +91,8 @@ class TransformedConfigExportImportUITest extends BrowserTestBase {
     $this->assertEqual($newSlogan, $this->config('system.site')->get('slogan'));
 
     // Sync the configuration.
-    $this->drupalPostForm('admin/config/development/configuration', [], 'Import all');
+    $this->drupalGet('admin/config/development/configuration');
+    $this->submitForm([], 'Import all');
     $this->assertEqual('Drupal Arrr', $this->config('system.site')->get('name'));
     $this->assertEqual($originalSlogan . " Arrr", $this->config('system.site')->get('slogan'));
 

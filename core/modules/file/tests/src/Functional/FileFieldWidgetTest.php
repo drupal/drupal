@@ -258,7 +258,8 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
     // Change the field setting to make its files private, and upload a file.
     $edit = ['settings[uri_scheme]' => 'private'];
-    $this->drupalPostForm("admin/structure/types/manage/$type_name/fields/$field_id/storage", $edit, 'Save field settings');
+    $this->drupalGet("admin/structure/types/manage/{$type_name}/fields/{$field_id}/storage");
+    $this->submitForm($edit, 'Save field settings');
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
     $node = $node_storage->loadUnchanged($nid);
     $node_file = File::load($node->{$field_name}->target_id);
@@ -309,7 +310,8 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $edit = [
       'title[0][value]' => $this->randomMachineName(),
     ];
-    $this->drupalPostForm('node/add/article', $edit, 'Save');
+    $this->drupalGet('node/add/article');
+    $this->submitForm($edit, 'Save');
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
 
     // Add a comment with a file.
@@ -318,7 +320,8 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       'files[field_' . $name . '_' . 0 . ']' => \Drupal::service('file_system')->realpath($text_file->getFileUri()),
       'comment_body[0][value]' => $comment_body = $this->randomMachineName(),
     ];
-    $this->drupalPostForm('node/' . $node->id(), $edit, 'Save');
+    $this->drupalGet('node/' . $node->id());
+    $this->submitForm($edit, 'Save');
 
     // Get the comment ID.
     preg_match('/comment-([0-9]+)/', $this->getUrl(), $matches);
@@ -344,7 +347,8 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     // Unpublishes node.
     $this->drupalLogin($this->adminUser);
     $edit = ['status[value]' => FALSE];
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm($edit, 'Save');
 
     // Ensures normal user can no longer download the file.
     $this->drupalLogin($user);
@@ -555,7 +559,8 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
     // Attach a file to a node.
     $edit['files[' . $field_name . '_0]'] = $this->container->get('file_system')->realpath($test_file->getFileUri());
-    $this->drupalPostForm(Url::fromRoute('node.add', ['node_type' => $type_name]), $edit, 'Save');
+    $this->drupalGet(Url::fromRoute('node.add', ['node_type' => $type_name]));
+    $this->submitForm($edit, 'Save');
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
 
     /** @var \Drupal\file\FileInterface $node_file */

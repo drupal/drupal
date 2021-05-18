@@ -331,12 +331,14 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
       'label' => "Media (cardinality $cardinality)",
       'field_name' => 'media_reference',
     ];
-    $this->drupalPostForm("admin/structure/types/manage/{$content_type->id()}/fields/add-field", $edit, 'Save and continue');
+    $this->drupalGet("admin/structure/types/manage/{$content_type->id()}/fields/add-field");
+    $this->submitForm($edit, 'Save and continue');
     $edit = [];
     foreach ($media_types as $type) {
       $edit["settings[handler_settings][target_bundles][$type]"] = TRUE;
     }
-    $this->drupalPostForm("admin/structure/types/manage/{$content_type->id()}/fields/node.{$content_type->id()}.field_media_reference", $edit, "Save settings");
+    $this->drupalGet("admin/structure/types/manage/{$content_type->id()}/fields/node.{$content_type->id()}.field_media_reference");
+    $this->submitForm($edit, "Save settings");
     \Drupal::entityTypeManager()
       ->getStorage('entity_form_display')
       ->load('node.' . $content_type->id() . '.default')
