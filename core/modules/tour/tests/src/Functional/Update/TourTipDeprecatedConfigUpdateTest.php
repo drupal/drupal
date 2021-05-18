@@ -7,10 +7,11 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 /**
  * Confirms tour tip deprecated config is updated properly.
  *
- * @group Update
+ * @group tour
  * @group legacy
  *
  * @see tour_post_update_joyride_selectors_to_selector_property()
+ * @see tour_tour_presave()
  */
 class TourTipDeprecatedConfigUpdateTest extends UpdatePathTestBase {
 
@@ -27,66 +28,47 @@ class TourTipDeprecatedConfigUpdateTest extends UpdatePathTestBase {
    * Tests tour_post_update_joyride_selectors_to_selector_property().
    *
    * Confirms that tour_post_update_joyride_selectors_to_selector_property()
-   * populates the `selector` property.
+   * populates the `selector` and `location` properties.
    *
    * Joyride-based tours used the `data-id` and `data-class` attributes to
    * associate a tour tip with an element. This was changed to a `selector`
-   * property. Existing tours are updated to use this new property via
+   * property.
+   *
+   * Joyride-based tours also used the `location` to configure the positioning
+   * of the tour tip.
+   *
+   * Existing tours are updated to use this new property via
    * tour_post_update_joyride_selectors_to_selector_property(), and this test
    * confirms it is done properly.
+   *
+   * @see tour_tour_presave()
    */
-  public function testSelectorUpdate() {
-    $this->container->get('module_installer')->install(['tour', 'tour_test', 'tour_legacy_test']);
-
-    $legacy_tour_config = $this->container->get('config.factory')->get('tour.tour.tour-test-legacy');
+  public function testUpdate() {
+    $legacy_tour_config = $this->container->get('config.factory')->get('tour.tour.views-ui');
     $tips = $legacy_tour_config->get('tips');
 
-    // Confirm the existing tours do not have the `selector` property.
-    $this->assertFalse(isset($tips['tour-test-legacy-1']['selector']));
-    $this->assertFalse(isset($tips['tour-test-legacy-6']['selector']));
-
-    // Confirm the value of the tour-test-1 `data-id` attribute.
-    $this->assertEquals('tour-test-1', $tips['tour-test-legacy-1']['attributes']['data-id']);
-
-    // Confirm the value of the tour-test-5 `data-class` attribute.
-    $this->assertEquals('tour-test-5', $tips['tour-test-legacy-6']['attributes']['data-class']);
-
-    $legacy_location_tour_config = $this->container->get('config.factory')->get('tour.tour.tour-test-legacy-location');
-    $tips = $legacy_location_tour_config->get('tips');
-
-    $this->assertSame('top', $tips['location-test-top']['location']);
-    $this->assertArrayNotHasKey('position', $tips['location-test-top']);
-    $this->assertSame('bottom', $tips['location-test-bottom']['location']);
-    $this->assertArrayNotHasKey('position', $tips['location-test-bottom']);
-    $this->assertSame('right', $tips['location-test-right']['location']);
-    $this->assertArrayNotHasKey('position', $tips['location-test-right']);
-    $this->assertSame('left', $tips['location-test-left']['location']);
-    $this->assertArrayNotHasKey('position', $tips['location-test-left']);
+    // Confirm the existing tour tip configurations match expectations.
+    $this->assertFalse(isset($tips['views-ui-view-admin']['selector']));
+    $this->assertEquals('views-display-extra-actions', $tips['views-ui-view-admin']['attributes']['data-id']);
+    $this->assertEquals('views-ui-display-tab-bucket.format', $tips['views-ui-format']['attributes']['data-class']);
+    $this->assertSame('left', $tips['views-ui-view-admin']['location']);
+    $this->assertArrayNotHasKey('position', $tips['views-ui-view-admin']);
 
     $this->runUpdates();
 
-    $updated_legacy_tour_config = $this->container->get('config.factory')->get('tour.tour.tour-test-legacy');
+    $updated_legacy_tour_config = $this->container->get('config.factory')->get('tour.tour.views-ui');
     $updated_tips = $updated_legacy_tour_config->get('tips');
 
-    // Confirm that tour-test-1 uses `selector` instead of `data-id`.
-    $this->assertSame('#tour-test-1', $updated_tips['tour-test-legacy-1']['selector']);
-    $this->assertArrayNotHasKey('data-id', $updated_tips['tour-test-legacy-1']['attributes']);
+    // Confirm that views-ui-view-admin uses `selector` instead of `data-id`.
+    $this->assertSame('#views-display-extra-actions', $updated_tips['views-ui-view-admin']['selector']);
+    $this->assertArrayNotHasKey('data-id', $updated_tips['views-ui-view-admin']['attributes']);
 
-    // Confirm that tour-test-5 uses `selector` instead of `data-class`.
-    $this->assertSame('.tour-test-5', $updated_tips['tour-test-legacy-6']['selector']);
-    $this->assertArrayNotHasKey('data-class', $updated_tips['tour-test-legacy-6']['attributes']);
+    // Confirm that views-ui-format uses `selector` instead of `data-class`.
+    $this->assertSame('.views-ui-display-tab-bucket.format', $updated_tips['views-ui-format']['selector']);
+    $this->assertArrayNotHasKey('data-class', $updated_tips['views-ui-format']['attributes']);
 
-    $updated_legacy_location_tour_config = $this->container->get('config.factory')->get('tour.tour.tour-test-legacy-location');
-    $updated_location_tips = $updated_legacy_location_tour_config->get('tips');
-
-    $this->assertSame('top-start', $updated_location_tips['location-test-top']['position']);
-    $this->assertArrayNotHasKey('location', $updated_location_tips['location-test-top']);
-    $this->assertEquals('bottom-start', $updated_location_tips['location-test-bottom']['position']);
-    $this->assertArrayNotHasKey('location', $updated_location_tips['location-test-bottom']);
-    $this->assertEquals('right-start', $updated_location_tips['location-test-right']['position']);
-    $this->assertArrayNotHasKey('location', $updated_location_tips['location-test-right']);
-    $this->assertEquals('left-start', $updated_location_tips['location-test-left']['position']);
-    $this->assertArrayNotHasKey('location', $updated_location_tips['location-test-left']);
+    $this->assertSame('left-start', $updated_tips['views-ui-view-admin']['position']);
+    $this->assertArrayNotHasKey('location', $updated_tips['views-ui-view-admin']);
   }
 
 }

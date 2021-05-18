@@ -189,38 +189,4 @@ class Tour extends ConfigEntityBase implements TourInterface {
     return $this;
   }
 
-  /**
-   * {@inheritdoc}
-   *
-   * @todo Remove method in https://drupal.org/node/3195193
-   */
-  public function set($property_name, $value) {
-    // If a tip is being set via a config form that is based on deprecated
-    // properties, map those properties to their replacements. This is provided
-    // to ensure the tour_ui module continues to work in 9.x without having to
-    // make changes, as the UI it provides gets/sets the deprecated 'location'
-    // and 'attributes' properties. Backwards compatibility support for getting
-    // properties is provided in TipPluginBase, and the support for setting is
-    // provided here.
-    if ($property_name === 'tips') {
-      foreach ($value as &$tip) {
-        if (isset($tip['attributes'])) {
-          @trigger_error("The tour.tip 'attributes' config schema property is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead of 'data-class' and 'data-id' attributes, use 'selector' to specify the element a tip attaches to. See https://www.drupal.org/node/3204093", E_USER_DEPRECATED);
-          if (!empty($tip['attributes']['data-class'])) {
-            $tip['selector'] = ".{$tip['attributes']['data-class']}";
-          }
-          if (!empty($tip['attributes']['data-id'])) {
-            $tip['selector'] = "#{$tip['attributes']['data-id']}";
-          }
-          if (!empty($tip['location'])) {
-            @trigger_error("The tour.tip 'location' config schema property is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead use 'position'. The value must be a valid placement accepted by PopperJS. See https://www.drupal.org/node/3204093", E_USER_DEPRECATED);
-            $tip['position'] = $tip['location'] . '-start';
-          }
-        }
-      }
-    }
-
-    parent::set($property_name, $value);
-  }
-
 }
