@@ -52,7 +52,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     shepherdElement.setAttribute('data-index', shepherdTour.currentStep.options.index);
     shepherdElement.querySelector('footer').remove();
 
-    if (shepherdElement.classList.contains('tip-uses-getoutput')) {
+    if (shepherdElement.classList.contains('tip-uses-get-output')) {
       shepherdText.appendChild(shepherdNext);
       shepherdText.appendChild(shepherdCancel);
       shepherdContent.querySelector('.shepherd-header').remove();

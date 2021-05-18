@@ -93,7 +93,7 @@ class TourViewBuilder extends EntityViewBuilder {
             // tip plugins. The logic used to make markup backwards compatible
             // with Joyride is different depending on the type of
             // plugin used.
-            $classes[] = 'tip-uses-getoutput';
+            $classes[] = 'tip-uses-get-output';
           }
         }
 

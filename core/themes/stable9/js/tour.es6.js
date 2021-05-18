@@ -61,12 +61,12 @@
     );
     shepherdElement.querySelector('footer').remove();
 
-    // If the class list includes `tip-uses-getoutput`, then the tip was created
+    // If the class list includes `tip-uses-get-output`, then the tip was created
     // by a deprecated tip plugin. This means the markup has some differences
     // that require some different steps to rebuild it as Joyride BC markup.
     // @todo remove the contents of the 'if' in this conditional in
     //   https://drupal.org/node/3195193.
-    if (shepherdElement.classList.contains('tip-uses-getoutput')) {
+    if (shepherdElement.classList.contains('tip-uses-get-output')) {
       // Move the next button.
       shepherdText.appendChild(shepherdNext);
 
