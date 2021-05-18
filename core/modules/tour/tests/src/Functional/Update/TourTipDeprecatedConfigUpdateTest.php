@@ -61,11 +61,13 @@ class TourTipDeprecatedConfigUpdateTest extends UpdatePathTestBase {
 
     // Confirm that views-ui-view-admin uses `selector` instead of `data-id`.
     $this->assertSame('#views-display-extra-actions', $updated_tips['views-ui-view-admin']['selector']);
-    $this->assertArrayNotHasKey('data-id', $updated_tips['views-ui-view-admin']['attributes']);
 
     // Confirm that views-ui-format uses `selector` instead of `data-class`.
     $this->assertSame('.views-ui-display-tab-bucket.format', $updated_tips['views-ui-format']['selector']);
-    $this->assertArrayNotHasKey('data-class', $updated_tips['views-ui-format']['attributes']);
+
+    // Assert that the deprecated attributes key has been removed now that it is
+    // empty.
+    $this->assertArrayNotHasKey('attributes', $updated_tips['views-ui-view-admin']);
 
     $this->assertSame('left-start', $updated_tips['views-ui-view-admin']['position']);
     $this->assertArrayNotHasKey('location', $updated_tips['views-ui-view-admin']);

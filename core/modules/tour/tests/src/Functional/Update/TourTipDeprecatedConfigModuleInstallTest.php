@@ -35,11 +35,15 @@ class TourTipDeprecatedConfigModuleInstallTest extends BrowserTestBase {
 
     // Confirm that tour-test-1 uses `selector` instead of `data-id`.
     $this->assertSame('#tour-test-1', $updated_tips['tour-test-legacy-1']['selector']);
-    $this->assertArrayNotHasKey('data-id', $updated_tips['tour-test-legacy-1']['attributes']);
+    $this->assertArrayNotHasKey('attributes', $updated_tips['tour-test-legacy-1']);
 
     // Confirm that tour-test-5 uses `selector` instead of `data-class`.
     $this->assertSame('.tour-test-5', $updated_tips['tour-test-legacy-6']['selector']);
-    $this->assertArrayNotHasKey('data-class', $updated_tips['tour-test-legacy-6']['attributes']);
+    $this->assertArrayNotHasKey('attributes', $updated_tips['tour-test-legacy-6']);
+
+    // Confirm that tour-test-legacy-7 uses `selector` instead of `data-class`.
+    $this->assertSame('.tour-test-7', $updated_tips['tour-test-legacy-7']['selector']);
+    $this->assertSame(['foo' => 'bar'], $updated_tips['tour-test-legacy-7']['attributes']);
 
     $updated_legacy_location_tour_config = $this->container->get('config.factory')->get('tour.tour.tour-test-legacy-location');
     $updated_location_tips = $updated_legacy_location_tour_config->get('tips');
