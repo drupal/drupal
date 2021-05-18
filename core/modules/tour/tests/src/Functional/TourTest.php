@@ -327,7 +327,7 @@ class TourTest extends TourTestBasic {
       $this->fail('No deprecated interface warning triggered.');
     }
     catch (\ErrorException $e) {
-      $this->assertSame('Tip plugins implementing Drupal\tour\TipPluginInterface that don\'t also implement Drupal\tour\TourTipPluginInterface are deprecated in drupal:9.2.0. See https://www.drupal.org/node/3204096', $e->getMessage());
+      $this->assertSame('The tour tips only support data-class and data-id attributes and they will have to be upgraded manually. See https://www.drupal.org/node/3204093', $e->getMessage());
     }
 
     restore_error_handler();
