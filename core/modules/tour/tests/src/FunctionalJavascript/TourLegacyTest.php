@@ -3,9 +3,10 @@
 namespace Drupal\Tests\tour\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\tour\Entity\Tour;
 
 /**
- * Tests Tour's backwards compatible markup.
+ * Tests Tour's backwards compatible markup and legacy config.
  *
  * @group tour
  * @group legacy
@@ -37,6 +38,38 @@ class TourLegacyTest extends WebDriverTestBase {
       'access tour',
     ]);
     $this->drupalLogin($admin_user);
+  }
+
+  /**
+   * Ensures logging happens when tips with unsupported attributes are rendered.
+   */
+  public function testLegacyConfig() {
+    $previous_error_handler = set_error_handler(function ($severity, $message, $file, $line) use (&$previous_error_handler) {
+      // Convert deprecation error into a catchable exception.
+      if ($severity === E_USER_WARNING) {
+        throw new \ErrorException($message, 0, $severity, $file, $line);
+      }
+      if ($previous_error_handler) {
+        return $previous_error_handler($severity, $message, $file, $line);
+      }
+    });
+
+    $results = \Drupal::entityQuery('tour')
+      ->condition('routes.*.route_name', 'tour_test.legacy')
+      ->execute();
+    $this->assertNotEmpty($results);
+    $tours = Tour::loadMultiple(array_keys($results));
+    try {
+      \Drupal::entityTypeManager()
+        ->getViewBuilder('tour')
+        ->viewMultiple($tours, 'full');
+      $this->fail('No warning triggered.');
+    }
+    catch (\ErrorException $e) {
+      $this->assertSame('The tour tips only support data-class and data-id attributes and they will have to be upgraded manually. See https://www.drupal.org/node/3204093', $e->getMessage());
+    }
+
+    restore_error_handler();
   }
 
   /**

@@ -79,7 +79,10 @@ class TourViewBuilder extends EntityViewBuilder {
           //     instead of Joyride. Themes extending Stable or Stable 9 will
           //     not experience these changes as a script is provided that
           //     reconstructs each tip to match Joyride's markup structure.
-          trigger_error('Tip plugins implementing ' . __NAMESPACE__ . '\TipPluginInterface that don\'t also implement ' . __NAMESPACE__ . '\TourTipPluginInterface are deprecated in drupal:9.2.0. See https://www.drupal.org/node/3204096', E_USER_WARNING);
+          $attributes = (array) $tip->get('attributes');
+          if (array_diff(['data-class', 'data-id'], array_keys($attributes + ['data-class', 'data-id']))) {
+            trigger_error('The tour tips only support data-class and data-id attributes and they will have to be upgraded manually. See https://www.drupal.org/node/3204093', E_USER_WARNING);
+          }
           $tour_render_array = $tip->getOutput();
           if (!empty($tour_render_array)) {
             // The output render array intentionally omits title. The deprecated
