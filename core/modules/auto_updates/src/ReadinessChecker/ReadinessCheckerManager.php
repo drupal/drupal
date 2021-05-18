@@ -132,11 +132,9 @@ class ReadinessCheckerManager {
       /** @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[] $results */
       $results = $last_run['results'];
       if ($severity !== NULL) {
-        foreach (array_keys($results) as $index) {
-          if ($results[$index]->getSeverity() !== $severity) {
-            unset($results[$index]);
-          }
-        }
+        $results = array_filter($results, function ($result) use ($severity) {
+          return $result->getSeverity() === $severity;
+        });
       }
       return $results;
     }
