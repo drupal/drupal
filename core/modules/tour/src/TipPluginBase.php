@@ -34,7 +34,7 @@ abstract class TipPluginBase extends PluginBase implements TipPluginInterface {
    * @var array
    *
    * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no
-   *   direct replacement. Note that this was never actually used
+   *   direct replacement. Note that this was never actually used.
    *
    * @see https://www.drupal.org/node/3204096
    */
