@@ -6,11 +6,12 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 
 /**
- * Tests that phpcs.xml.dist sorted.
+ * Tests that phpcs.xml.dist is properly sorted.
  *
  * @group phpcs
  */
 class SortTest extends TestCase {
+
   /**
    * The path of phpcs.xml.dist file.
    *
@@ -33,7 +34,7 @@ class SortTest extends TestCase {
   }
 
   /**
-   * Tests that the phpcs.xml.dist file sorted.
+   * Tests that the phpcs.xml.dist file is properly sorted.
    */
   public function testSorted() {
     $content = file_get_contents($this->filePath);
@@ -65,7 +66,6 @@ class SortTest extends TestCase {
         $this->assertSorted($excluded, '@name');
       }
     }
-
   }
 
   /**
@@ -79,7 +79,7 @@ class SortTest extends TestCase {
    * @param null|string $column
    *   The column of the value or NULL.
    */
-  private function assertSorted(array $input, $column = NULL) {
+  private function assertSorted(array $input, string $column = NULL) {
     $input_sorted = $input;
 
     if ($column === NULL) {
