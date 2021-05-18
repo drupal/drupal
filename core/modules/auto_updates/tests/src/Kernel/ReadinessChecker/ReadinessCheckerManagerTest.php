@@ -137,7 +137,7 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
   public function testRunIfNeeded(): void {
     $expected_results = array_pop($this->testResults['checker_1']);
     TestChecker1::setTestResult($expected_results);
-    $this->container->get('module_installer')->install(['auto_updates']);
+    $this->container->get('module_installer')->install(['auto_updates', 'auto_updates_test2']);
     $this->assertCheckerResultsEqual($expected_results);
 
     $unexpected_results = array_pop($this->testResults['checker_1']);
@@ -160,15 +160,19 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
     // Confirm that the results are the same after rebuilding the container.
     $unexpected_results = array_pop($this->testResults['checker_1']);
     TestChecker1::setTestResult($unexpected_results);
-    /** @var \Drush\Drupal\DrupalKernel $kernel */
+    /** @var \Drupal\Core\DrupalKernel $kernel */
     $kernel = $this->container->get('kernel');
     $this->container = $kernel->rebuildContainer();
     $this->assertCheckerResultsEqual($expected_results);
 
     // Define a constant flag that will cause the readiness checker
-    // service priority to be altered.
+    // service priority to be altered. This will cause the priority of
+    // 'auto_updates_test.checker' to change from 2 to 4 which will be now
+    // higher than 'auto_updates_test2.checker' which has a priority of 3.
+    // Because the list of checker IDs is not identical to the previous checker
+    // run runIfNoStoredValidResults() will run the checkers again.
     // @see \Drupal\auto_updates_test\AutoUpdatesTestServiceProvider::alter().
-    define('AUTO_UPDATES_TEST_SET_PRIORITY', -1);
+    define('AUTO_UPDATES_TEST_SET_PRIORITY', 4);
 
     // Rebuild the container to trigger the service to be duplicated.
     $kernel = $this->container->get('kernel');
