@@ -1,10 +1,14 @@
 <?php
 
+namespace Drupal\Tests\tour\Unit;
+
 use Drupal\Tests\UnitTestCase;
 use Drupal\tour\TipPluginBase;
 
 /**
  * @coversDefaultClass \Drupal\tour\TipPluginBase
+ *
+ * @group tour
  */
 class TipPluginBaseTest extends UnitTestCase {
 
