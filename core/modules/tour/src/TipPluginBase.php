@@ -193,33 +193,9 @@ abstract class TipPluginBase extends PluginBase implements TipPluginInterface {
    *   A selector string, or null for an unattached tip.
    *
    * @see https://shepherdjs.dev/docs/Step.html
-   *
-   * @todo this can probably be simplified in https://drupal.org/node/3195193
-   *    to `$this->get('selector')`.
    */
   public function getSelector() {
-    // If selector isn't null, return immediately. If it is null, it may be
-    // intentional, but it may also be due to the selector value being provided
-    // in deprecated Joyride config. Check for that before returning a value.
-    if ($selector = $this->get('selector')) {
-      return $selector;
-    }
-
-    // The tour_post_update_joyride_selectors_to_selector_property() post_update
-    // hook converts all uses of the deprecated 'attributes' property to the
-    // current 'selector' property. It's possible for tour config with this
-    // deprecated property to be installed without this hook having run. In
-    // those instance it may use `attributes` instead of the `selector` property
-    // to associate the tip with an element.
-    // @see tour_post_update_joyride_selectors_to_selector_property()
-    $attributes = $this->get('attributes');
-    if (isset($attributes['data-id'])) {
-      $selector = "#{$attributes['data-id']}";
-    }
-    elseif (isset($attributes['data-class'])) {
-      $selector = ".{$attributes['data-class']}";
-    }
-    return $selector;
+    return $this->get('selector');
   }
 
 }
