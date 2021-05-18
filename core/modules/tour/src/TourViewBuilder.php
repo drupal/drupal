@@ -174,7 +174,10 @@ class TourViewBuilder extends EntityViewBuilder {
         ],
         'useModalOverlay' => TRUE,
       ];
-      $build['#attached']['drupalSettings']['tour'] = $items;
+      // This property is used for storing the tour items. It may change without
+      // notice and should not be extended or modified in contrib.
+      // see: https://www.drupal.org/project/drupal/issues/3214593
+      $build['#attached']['drupalSettings']['_tour_internal'] = $items;
       $build['#attached']['library'][] = 'tour/tour';
     }
     return $build;

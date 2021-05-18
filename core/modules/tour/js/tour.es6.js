@@ -44,8 +44,8 @@
             });
           // Initialization: check whether a tour is available on the current
           // page.
-          if (settings.tour) {
-            model.set('tour', settings.tour);
+          if (settings._tour_internal) {
+            model.set('tour', settings._tour_internal);
           }
 
           // Start the tour immediately if toggled via query string.

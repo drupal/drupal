@@ -243,8 +243,8 @@ class TourTest extends TourTestBasic {
   protected function getTourTips() {
     $tips = [];
     $drupalSettings = $this->getDrupalSettings();
-    if (isset($drupalSettings['tour'])) {
-      foreach ($drupalSettings['tour'] as $tip) {
+    if (isset($drupalSettings['_tour_internal'])) {
+      foreach ($drupalSettings['_tour_internal'] as $tip) {
         $tips[] = $tip;
       }
     }

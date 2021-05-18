@@ -35,8 +35,8 @@ abstract class TourTestBase extends BrowserTestBase {
     if (empty($tips)) {
       // Tips are rendered as drupalSettings values.
       $drupalSettings = $this->getDrupalSettings();
-      if (isset($drupalSettings['tour'])) {
-        foreach ($drupalSettings['tour'] as $tip) {
+      if (isset($drupalSettings['_tour_internal'])) {
+        foreach ($drupalSettings['_tour_internal'] as $tip) {
           $tips[] = [
             'selector' => $tip['selector'] ?? NULL,
           ];

@@ -19,8 +19,8 @@
           $(document).trigger(isActive ? 'drupalTourStarted' : 'drupalTourStopped');
         });
 
-        if (settings.tour) {
-          model.set('tour', settings.tour);
+        if (settings._tour_internal) {
+          model.set('tour', settings._tour_internal);
         }
 
         if (/tour=?/i.test(queryString)) {
