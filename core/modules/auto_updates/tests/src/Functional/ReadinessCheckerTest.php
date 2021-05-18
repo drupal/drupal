@@ -147,10 +147,10 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/status');
     // Confirm that on the status page if there is only 1 warning or error the
     // the summaries will not be displayed.
-    $this->assertReadinessReportMatches($expected_results[0]->getMessages()[0], 'error', static::ERRORS_EXPLANATION);
-    $this->assertReadinessReportMatches($expected_results[1]->getMessages()[0], 'warning', static::WARNINGS_EXPLANATION);
-    $assert->pageTextNotContains($expected_results[0]->getSummary());
-    $assert->pageTextNotContains($expected_results[1]->getSummary());
+    $this->assertReadinessReportMatches($expected_results['1:error']->getMessages()[0], 'error', static::ERRORS_EXPLANATION);
+    $this->assertReadinessReportMatches($expected_results['1:warning']->getMessages()[0], 'warning', static::WARNINGS_EXPLANATION);
+    $assert->pageTextNotContains($expected_results['1:error']->getSummary());
+    $assert->pageTextNotContains($expected_results['1:warning']->getSummary());
 
     $key_value->delete('readiness_check_last_run');
     $expected_results = $this->testResults['checker_1']['2 errors 2 warnings'];
@@ -158,8 +158,8 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/status');
     // Confirm that both messages and summaries will be displayed on status
     // report when there multiple messages.
-    $this->assertReadinessReportMatches($expected_results[0]->getSummary() . ' ' . implode('', $expected_results[0]->getMessages()), 'error', static::ERRORS_EXPLANATION);
-    $this->assertReadinessReportMatches($expected_results[1]->getSummary() . ' ' . implode('', $expected_results[1]->getMessages()), 'warning', static::WARNINGS_EXPLANATION);
+    $this->assertReadinessReportMatches($expected_results['1:errors']->getSummary() . ' ' . implode('', $expected_results['1:errors']->getMessages()), 'error', static::ERRORS_EXPLANATION);
+    $this->assertReadinessReportMatches($expected_results['1:warnings']->getSummary() . ' ' . implode('', $expected_results['1:warnings']->getMessages()), 'warning', static::WARNINGS_EXPLANATION);
 
     $key_value->delete('readiness_check_last_run');
     $expected_results = $this->testResults['checker_1']['2 warnings'];
@@ -232,13 +232,13 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $assert->pageTextContainsOnce(static::ERRORS_EXPLANATION);
     // Confirm on admin pages that a single error will be displayed instead of a
     // summary.
-    $this->assertSame(SystemManager::REQUIREMENT_ERROR, $expected_results[0]->getSeverity());
-    $assert->pageTextContainsOnce($expected_results[0]->getMessages()[0]);
-    $assert->pageTextNotContains($expected_results[0]->getSummary());
+    $this->assertSame(SystemManager::REQUIREMENT_ERROR, $expected_results['1:error']->getSeverity());
+    $assert->pageTextContainsOnce($expected_results['1:error']->getMessages()[0]);
+    $assert->pageTextNotContains($expected_results['1:error']->getSummary());
     // Warnings are not displayed on admin pages if there are any errors.
-    $this->assertSame(SystemManager::REQUIREMENT_WARNING, $expected_results[1]->getSeverity());
-    $assert->pageTextNotContains($expected_results[1]->getMessages()[0]);
-    $assert->pageTextNotContains($expected_results[1]->getSummary());
+    $this->assertSame(SystemManager::REQUIREMENT_WARNING, $expected_results['1:warning']->getSeverity());
+    $assert->pageTextNotContains($expected_results['1:warning']->getMessages()[0]);
+    $assert->pageTextNotContains($expected_results['1:warning']->getSummary());
 
     // Confirm that if cron runs less than hour after it previously ran it will
     // not run the checkers again.
@@ -247,10 +247,10 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $this->delayRequestTime(30);
     $this->cronRun();
     $this->drupalGet('admin/structure');
-    $assert->pageTextNotContains($unexpected_results[0]->getSummary());
-    $assert->pageTextContainsOnce($expected_results[0]->getMessages()[0]);
-    $assert->pageTextNotContains($unexpected_results[1]->getSummary());
-    $assert->pageTextNotContains($expected_results[1]->getMessages()[0]);
+    $assert->pageTextNotContains($unexpected_results['1:errors']->getSummary());
+    $assert->pageTextContainsOnce($expected_results['1:error']->getMessages()[0]);
+    $assert->pageTextNotContains($unexpected_results['1:warnings']->getSummary());
+    $assert->pageTextNotContains($expected_results['1:warning']->getMessages()[0]);
 
     // Confirm that is if cron is run over an hour after the checkers were
     // previously run the checkers will be run again.
@@ -260,16 +260,16 @@ class ReadinessCheckerTest extends BrowserTestBase {
     $this->drupalGet('admin/structure');
     // Confirm on admin pages only the error summary will be displayed if there
     // is more than 1 error.
-    $this->assertSame(SystemManager::REQUIREMENT_ERROR, $expected_results[0]->getSeverity());
-    $assert->pageTextNotContains($expected_results[0]->getMessages()[0]);
-    $assert->pageTextNotContains($expected_results[0]->getMessages()[1]);
-    $assert->pageTextContainsOnce($expected_results[0]->getSummary());
+    $this->assertSame(SystemManager::REQUIREMENT_ERROR, $expected_results['1:errors']->getSeverity());
+    $assert->pageTextNotContains($expected_results['1:errors']->getMessages()[0]);
+    $assert->pageTextNotContains($expected_results['1:errors']->getMessages()[1]);
+    $assert->pageTextContainsOnce($expected_results['1:errors']->getSummary());
     $assert->pageTextContainsOnce(static::ERRORS_EXPLANATION);
     // Warnings are not displayed on admin pages if there are any errors.
-    $this->assertSame(SystemManager::REQUIREMENT_WARNING, $expected_results[1]->getSeverity());
-    $assert->pageTextNotContains($expected_results[1]->getMessages()[0]);
-    $assert->pageTextNotContains($expected_results[1]->getMessages()[1]);
-    $assert->pageTextNotContains($expected_results[1]->getSummary());
+    $this->assertSame(SystemManager::REQUIREMENT_WARNING, $expected_results['1:warnings']->getSeverity());
+    $assert->pageTextNotContains($expected_results['1:warnings']->getMessages()[0]);
+    $assert->pageTextNotContains($expected_results['1:warnings']->getMessages()[1]);
+    $assert->pageTextNotContains($expected_results['1:warnings']->getSummary());
 
     $expected_results = $this->testResults['checker_1']['2 warnings'];
     TestChecker1::setTestResult($expected_results);
@@ -330,8 +330,8 @@ class ReadinessCheckerTest extends BrowserTestBase {
     // Confirm that new checker message is not displayed because the checker was
     // not run again.
     $assert->pageTextContainsOnce($expected_results[0]->getMessages()[0]);
-    $assert->pageTextNotContains($unexpected_results[1]->getMessages()[0]);
-    $assert->pageTextNotContains($unexpected_results[1]->getSummary());
+    $assert->pageTextNotContains($unexpected_results['1:errors']->getMessages()[0]);
+    $assert->pageTextNotContains($unexpected_results['1:errors']->getSummary());
   }
 
   /**

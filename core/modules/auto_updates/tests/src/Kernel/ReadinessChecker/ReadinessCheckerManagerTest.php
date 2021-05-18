@@ -5,6 +5,7 @@ namespace Drupal\Tests\auto_updates\Kernel\ReadinessChecker;
 use Drupal\auto_updates_test\ReadinessChecker\TestChecker1;
 use Drupal\auto_updates_test2\ReadinessChecker\TestChecker2;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\system\SystemManager;
 use Drupal\Tests\auto_updates\Traits\ReadinessCheckerTestTrait;
 
 /**
@@ -56,8 +57,30 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
     // because the readiness checker services order has been altered.
     $this->assertNull($this->getResultsFromManager());
     // Confirm that after calling run() the expected results order has changed.
-    $expected_results_all = array_reverse($expected_results_all);
+    $expected_results_all_reversed = array_reverse($expected_results_all);
+    $this->assertCheckerResultsEqual($expected_results_all_reversed, TRUE);
+
+    $expected_results = [
+      $this->testResults['checker_1']['2 errors 2 warnings'],
+      $this->testResults['checker_2']['2 errors 2 warnings'],
+    ];
+    TestChecker1::setTestResult($expected_results[0]);
+    TestChecker2::setTestResult($expected_results[1]);
+    $expected_results_all = array_merge($expected_results[1], $expected_results[0]);
     $this->assertCheckerResultsEqual($expected_results_all, TRUE);
+
+    // Confirm that filtering by severity works.
+    $warnings_only_results = [
+      $expected_results[1]['2:warnings'],
+      $expected_results[0]['1:warnings'],
+    ];
+    $this->assertCheckerResultsEqual($warnings_only_results, FALSE, SystemManager::REQUIREMENT_WARNING);
+
+    $errors_only_results = [
+      $expected_results[1]['2:errors'],
+      $expected_results[0]['1:errors'],
+    ];
+    $this->assertCheckerResultsEqual($errors_only_results, FALSE, SystemManager::REQUIREMENT_ERROR);
   }
 
   /**
@@ -185,32 +208,18 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
   }
 
   /**
-   * Gets the messages of a particular type from the manager.
-   *
-   * @param bool $call_run
-   *   Whether to run the checkers.
-   *
-   * @return \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[]|null
-   *   The messages of the type.
-   */
-  protected function getResultsFromManager(bool $call_run = FALSE): ?array {
-    $manager = $this->container->get('auto_updates.readiness_checker_manager');
-    if ($call_run) {
-      $manager->run();
-    }
-    return $manager->getResults();
-  }
-
-  /**
    * Asserts expected readiness checker results from the manager.
    *
    * @param \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[] $expected_results
    *   The expected results.
    * @param bool $call_run
    *   (Optional) Whether to call ::run() on the manager. Defaults to FALSE.
+   * @param int|null $severity
+   *   (optional) The severity for the results to return. Should be one of the
+   *   SystemManager::REQUIREMENT_* constants.
    */
-  private function assertCheckerResultsEqual(array $expected_results, bool $call_run = FALSE): void {
-    $actual_results = $this->getResultsFromManager($call_run);
+  private function assertCheckerResultsEqual(array $expected_results, bool $call_run = FALSE, ?int $severity = NULL): void {
+    $actual_results = $this->getResultsFromManager($call_run, $severity);
     $this->assertCount(count($expected_results), $actual_results);
 
     foreach ($expected_results as $expected_result) {
@@ -222,6 +231,26 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
         array_map('strval', $actual_result->getMessages())
       );
     }
+  }
+
+  /**
+   * Gets the messages of a particular type from the manager.
+   *
+   * @param bool $call_run
+   *   Whether to run the checkers.
+   * @param int|null $severity
+   *   (optional) The severity for the results to return. Should be one of the
+   *   SystemManager::REQUIREMENT_* constants.
+   *
+   * @return \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[]|null
+   *   The messages of the type.
+   */
+  protected function getResultsFromManager(bool $call_run = FALSE, ?int $severity = NULL): ?array {
+    $manager = $this->container->get('auto_updates.readiness_checker_manager');
+    if ($call_run) {
+      $manager->run();
+    }
+    return $manager->getResults($severity);
   }
 
 }

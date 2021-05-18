@@ -38,19 +38,19 @@ trait ReadinessCheckerTestTrait {
         ),
       ];
       $this->testResults["checker_$checker_number"]['1 error 1 warning'] = [
-        ReadinessCheckerResult::createErrorResult(
+        "$checker_number:error" => ReadinessCheckerResult::createErrorResult(
           $test_checker,
           [t("$checker_number:OMG 🔌. Some one unplugged the server! How is this site even running?")],
           t("$checker_number:Summary: 🔥"),
         ),
-        ReadinessCheckerResult::createWarningResult(
+        "$checker_number:warning" => ReadinessCheckerResult::createWarningResult(
           $test_checker,
           [t("$checker_number:It looks like it going to rain and your server is outside.")],
           t("$checker_number:Warnings summary not displayed because only 1 warning message.")
         ),
       ];
       $this->testResults["checker_$checker_number"]['2 errors 2 warnings'] = [
-        ReadinessCheckerResult::createErrorResult(
+        "$checker_number:errors" => ReadinessCheckerResult::createErrorResult(
           $test_checker,
           [
             t("$checker_number:😬Your server is in a cloud, a literal cloud!☁️."),
@@ -58,7 +58,7 @@ trait ReadinessCheckerTestTrait {
           ],
           t("$checker_number:Errors summary displayed because more than 1 error message")
         ),
-        ReadinessCheckerResult::createWarningResult(
+        "$checker_number:warnings" => ReadinessCheckerResult::createWarningResult(
           $test_checker,
           [
             t("$checker_number:Your server is a smart fridge. Will this work?"),
