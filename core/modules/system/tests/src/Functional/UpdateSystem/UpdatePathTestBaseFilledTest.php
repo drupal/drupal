@@ -12,6 +12,7 @@ use Drupal\user\Entity\User;
  *
  * @group #slow
  * @group Update
+ * @group legacy
  */
 class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
 

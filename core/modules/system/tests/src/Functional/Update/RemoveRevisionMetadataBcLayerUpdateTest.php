@@ -10,6 +10,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * @see https://www.drupal.org/node/3099789
  *
  * @group Update
+ * @group legacy
  */
 class RemoveRevisionMetadataBcLayerUpdateTest extends UpdatePathTestBase {
 

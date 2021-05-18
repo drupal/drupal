@@ -8,6 +8,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Tests that migrate_drupal_multilingual is uninstalled.
  *
  * @group migrate_drupal
+ * @group legacy
  */
 class MigrateDrupalUpdateTest extends UpdatePathTestBase {
 

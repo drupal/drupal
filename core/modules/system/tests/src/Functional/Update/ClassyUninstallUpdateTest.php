@@ -8,6 +8,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Ensures that update hook uninstalls Classy when it's no longer needed.
  *
  * @group Update
+ * @group legacy
  * @see system_post_update_uninstall_classy()
  */
 class ClassyUninstallUpdateTest extends UpdatePathTestBase {

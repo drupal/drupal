@@ -8,6 +8,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Ensures that update hook is run properly for deleting obsolete serialization settings.
  *
  * @group serialization
+ * @group legacy
  */
 class SerializationSettingsDeletionUpdateTest extends UpdatePathTestBase {
 
