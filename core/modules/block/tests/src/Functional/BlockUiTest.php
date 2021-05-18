@@ -93,8 +93,7 @@ class BlockUiTest extends BrowserTestBase {
     $this->drupalPlaceBlock('help_block', ['region' => 'help']);
     $this->drupalGet('admin/structure/block');
     $this->clickLink(t('Demonstrate block regions (@theme)', ['@theme' => 'Classy']));
-    $elements = $this->xpath('//div[contains(@class, "region-highlighted")]/div[contains(@class, "block-region") and contains(text(), :title)]', [':title' => 'Highlighted']);
-    $this->assertTrue(!empty($elements), 'Block demo regions are shown.');
+    $this->assertSession()->elementExists('xpath', '//div[contains(@class, "region-highlighted")]/div[contains(@class, "block-region") and contains(text(), "Highlighted")]');
 
     // Ensure that other themes can use the block demo page.
     \Drupal::service('theme_installer')->install(['test_theme']);
@@ -201,16 +200,10 @@ class BlockUiTest extends BrowserTestBase {
    * Tests the behavior of unsatisfied context-aware blocks.
    */
   public function testContextAwareUnsatisfiedBlocks() {
-    $arguments = [
-      ':category' => 'Block test',
-      ':href' => 'admin/structure/block/add/test_context_aware_unsatisfied/classy',
-      ':text' => 'Test context-aware unsatisfied block',
-    ];
-
     $this->drupalGet('admin/structure/block');
     $this->clickLink('Place block');
-    $elements = $this->xpath('//tr[.//td/div[text()=:text] and .//td[text()=:category] and .//td//a[contains(@href, :href)]]', $arguments);
-    $this->assertTrue(empty($elements), 'The context-aware test block does not appear.');
+    // Verify that the context-aware test block does not appear.
+    $this->assertSession()->elementNotExists('xpath', '//tr[.//td/div[text()="Test context-aware unsatisfied block"] and .//td[text()="Block test"] and .//td//a[contains(@href, "admin/structure/block/add/test_context_aware_unsatisfied/classy")]]');
 
     $definition = \Drupal::service('plugin.manager.block')->getDefinition('test_context_aware_unsatisfied');
     $this->assertTrue(!empty($definition), 'The context-aware test block does not exist.');

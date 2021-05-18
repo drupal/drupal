@@ -166,6 +166,7 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
 
     // Don't call aggregate to test the implicit aggregate call.
     $this->queryResult = $this->entityStorage->getAggregateQuery()
+      ->accessCheck(FALSE)
       ->groupBy('id')
       ->conditionAggregate('id', 'COUNT', 8)
       ->execute();

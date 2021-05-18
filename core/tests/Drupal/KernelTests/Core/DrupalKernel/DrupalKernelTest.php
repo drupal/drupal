@@ -9,6 +9,7 @@ use Drupal\KernelTests\KernelTestBase;
 use org\bovigo\vfs\vfsStream;
 use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\KernelEvent;
 
 /**
  * Tests DIC compilation to disk.
@@ -56,6 +57,19 @@ class DrupalKernelTest extends KernelTestBase {
     $kernel->boot();
 
     return $kernel;
+  }
+
+  /**
+   * Tests KernelEvent class_alias() override.
+   *
+   * @todo https://www.drupal.org/project/drupal/issues/3197482 Remove this test
+   *   once Drupal is using Symfony 5.3 or higher.
+   */
+  public function testKernelEvent() {
+    $request = Request::createFromGlobals();
+    $kernel = $this->getTestKernel($request);
+    $event = new KernelEvent($kernel, $request, $kernel::MASTER_REQUEST);
+    $this->assertTrue($event->isMainRequest());
   }
 
   /**
