@@ -8,7 +8,6 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Tests that updates clean-up non-integer schema version.
  *
  * @group Update
- * @group legacy
  * @see system_post_update_schema_version_int()
  */
 class SchemaVersionUpdateTest extends UpdatePathTestBase {

@@ -8,7 +8,6 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Tests that 'all' index is dropped from the 'key_value_expire' table.
  *
  * @group Update
- * @group legacy
  * @see system_post_update_remove_key_value_expire_all_index()
  */
 class DropIndexAllOnKeyValueExpireTableUpdateTest extends UpdatePathTestBase {

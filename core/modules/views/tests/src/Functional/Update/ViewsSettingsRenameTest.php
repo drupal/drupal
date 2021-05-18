@@ -8,7 +8,6 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Tests renaming views module's configuration.
  *
  * @group Update
- * @group legacy
  */
 class ViewsSettingsRenameTest extends UpdatePathTestBase {
 

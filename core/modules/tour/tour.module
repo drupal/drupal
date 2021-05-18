@@ -141,8 +141,11 @@ function _tour_update_joyride(Tour $tour, $trigger_deprecation = TRUE) {
 
       // Although the attributes property is deprecated, only the properties
       // with 1:1 equivalents are unset.
-      unset($tip['attributes']['data-class']);
-      unset($tip['attributes']['data-id']);
+      unset($tip['attributes']['data-class'], $tip['attributes']['data-id']);
+      // Remove attributes if it is now empty.
+      if (empty($tip['attributes'])) {
+        unset($tip['attributes']);
+      }
     }
     if (isset($tip['location'])) {
       if ($trigger_deprecation) {

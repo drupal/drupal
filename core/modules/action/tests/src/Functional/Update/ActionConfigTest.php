@@ -8,7 +8,6 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Tests removing action module's configuration.
  *
  * @group Update
- * @group legacy
  */
 class ActionConfigTest extends UpdatePathTestBase {
 

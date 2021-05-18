@@ -11,7 +11,6 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * @see layout_builder_post_update_section_storage_context_mapping()
  *
  * @group layout_builder
- * @group legacy
  */
 class LayoutBuilderContextMappingUpdatePathTest extends UpdatePathTestBase {
 

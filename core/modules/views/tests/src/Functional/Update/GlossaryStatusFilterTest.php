@@ -9,7 +9,6 @@ use Drupal\views\Entity\View;
  * Tests that the status filter is added to the glossary view.
  *
  * @group Update
- * @group legacy
  */
 class GlossaryStatusFilterTest extends UpdatePathTestBase {
 

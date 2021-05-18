@@ -9,7 +9,6 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Tests Locale's update path.
  *
  * @group locale
- * @group legacy
  */
 class LocaleUpdatePathTest extends UpdatePathTestBase {
 
