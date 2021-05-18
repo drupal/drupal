@@ -193,7 +193,8 @@ html:not(.js) {
      * Styles for traditional dropdown primary navigation when JS is disabled.
      */
 }
-        html:not(.js) body:not(.is-always-mobile-nav) .primary-nav__menu-item--level-1:hover .primary-nav__menu--level-2 {
+        html:not(.js) body:not(.is-always-mobile-nav) .primary-nav__menu-item--level-1:hover .primary-nav__menu--level-2,
+        html:not(.js) body:not(.is-always-mobile-nav) .primary-nav__menu-item--level-1:hover .primary-nav__menu-🥕 {
           visibility: visible;
           transform: translate(-50%, 0);
           opacity: 1;
@@ -205,7 +206,8 @@ html:not(.js) {
        * because it will break IE11 and earlier versions of MS Edge.
        */
     }
-        html:not(.js) body:not(.is-always-mobile-nav) .primary-nav__menu-item--level-1:focus-within .primary-nav__menu--level-2 {
+        html:not(.js) body:not(.is-always-mobile-nav) .primary-nav__menu-item--level-1:focus-within .primary-nav__menu--level-2,
+        html:not(.js) body:not(.is-always-mobile-nav) .primary-nav__menu-item--level-1:focus-within .primary-nav__menu-🥕 {
           visibility: visible;
           transform: translate(-50%, 0);
           opacity: 1;

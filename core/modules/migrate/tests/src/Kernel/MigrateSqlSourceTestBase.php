@@ -2,12 +2,22 @@
 
 namespace Drupal\Tests\migrate\Kernel;
 
+use Drupal\Core\Cache\MemoryCounterBackendFactory;
 use Drupal\Core\Database\Driver\sqlite\Connection;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 
 /**
  * Base class for tests of Migrate source plugins that use a database.
  */
 abstract class MigrateSqlSourceTestBase extends MigrateSourceTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function register(ContainerBuilder $container) {
+    parent::register($container);
+    $container->register('cache_factory', MemoryCounterBackendFactory::class);
+  }
 
   /**
    * Builds an in-memory SQLite database from a set of source data.
@@ -67,12 +77,14 @@ abstract class MigrateSqlSourceTestBase extends MigrateSourceTestBase {
    *   (optional) Configuration for the source plugin.
    * @param mixed $high_water
    *   (optional) The value of the high water field.
+   * @param string|null $expected_cache_key
+   *   (optional) The expected cache key.
    *
    * @dataProvider providerSource
    *
    * @requires extension pdo_sqlite
    */
-  public function testSource(array $source_data, array $expected_data, $expected_count = NULL, array $configuration = [], $high_water = NULL) {
+  public function testSource(array $source_data, array $expected_data, $expected_count = NULL, array $configuration = [], $high_water = NULL, $expected_cache_key = NULL) {
     $plugin = $this->getPlugin($configuration);
 
     // Since we don't yet inject the database connection, we need to use a
@@ -81,6 +93,33 @@ abstract class MigrateSqlSourceTestBase extends MigrateSourceTestBase {
     $property = $reflector->getProperty('database');
     $property->setAccessible(TRUE);
     $property->setValue($plugin, $this->getDatabase($source_data));
+
+    /** @var MemoryCounterBackend $cache **/
+    $cache = \Drupal::cache('migrate');
+    if ($expected_cache_key) {
+      // Verify the the computed cache key.
+      $property = $reflector->getProperty('cacheKey');
+      $property->setAccessible(TRUE);
+      $this->assertSame($expected_cache_key, $property->getValue($plugin));
+
+      // Cache miss prior to calling ::count().
+      $this->assertFalse($cache->get($expected_cache_key, 'cache'));
+
+      $this->assertSame([], $cache->getCounter('set'));
+      $count = $plugin->count();
+      $this->assertSame($expected_count, $count);
+      $this->assertSame([$expected_cache_key => 1], $cache->getCounter('set'));
+
+      // Cache hit afterwards.
+      $cache_item = $cache->get($expected_cache_key, 'cache');
+      $this->assertNotSame(FALSE, $cache_item, 'This is not a cache hit.');
+      $this->assertSame($expected_count, $cache_item->data);
+    }
+    else {
+      $this->assertSame([], $cache->getCounter('set'));
+      $plugin->count();
+      $this->assertSame([], $cache->getCounter('set'));
+    }
 
     parent::testSource($source_data, $expected_data, $expected_count, $configuration, $high_water);
   }
