@@ -80,6 +80,10 @@
 
   function closeAllSubNav() {
     secondLevelNavMenus.forEach(function (el) {
+      if (el.contains(document.activeElement)) {
+        el.querySelector('.primary-nav__button-toggle, .primary-nav__menu-link--button').focus();
+      }
+
       toggleSubNav(el, false);
     });
   }
