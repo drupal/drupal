@@ -7,7 +7,7 @@ namespace Drupal\Core\Extension;
  *
  * The lifecycle of a core module can go through the following progression:
  * 1. Starts "experimental".
- * 2. Stabilizes and goes "normal".
+ * 2. Stabilizes and goes "stable".
  * 3. Eventually (maybe), becomes "deprecated" on the way out of core.
  * 4. Finally (maybe), becomes "obsolete" and can't be enabled anymore.
  */
@@ -19,9 +19,9 @@ final class ExtensionLifecycle {
   const EXPERIMENTAL = 'experimental';
 
   /**
-   * Extension is normal. This is the default value of any extension.
+   * Extension is stable. This is the default value of any extension.
    */
-  const NORMAL = 'normal';
+  const STABLE = 'stable';
 
   /**
    * Extension is deprecated. Warnings will be shown if still installed.
@@ -45,7 +45,7 @@ final class ExtensionLifecycle {
   public static function isValid($lifecycle) : bool {
     $valid_lifecycles = [
       self::EXPERIMENTAL,
-      self::NORMAL,
+      self::STABLE,
       self::DEPRECATED,
       self::OBSOLETE,
     ];

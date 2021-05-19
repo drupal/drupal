@@ -727,15 +727,15 @@ INFO;
     return [
       'empty' => [
         '',
-        'normal',
+        'stable',
       ],
       'experimental' => [
         'experimental',
         'experimental',
       ],
-      'normal' => [
-        'normal',
-        'normal',
+      'stable' => [
+        'stable',
+        'stable',
       ],
       'deprecated' => [
         'deprecated',

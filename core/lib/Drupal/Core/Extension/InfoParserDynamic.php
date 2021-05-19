@@ -108,7 +108,7 @@ class InfoParserDynamic implements InfoParserInterface {
         $parsed_info['version'] = \Drupal::VERSION;
       }
       if (!isset($parsed_info['lifecycle'])) {
-        $parsed_info['lifecycle'] = ExtensionLifecycle::NORMAL;
+        $parsed_info['lifecycle'] = ExtensionLifecycle::STABLE;
       }
       if (!ExtensionLifecycle::isValid($parsed_info['lifecycle'])) {
         throw new InfoParserException("'lifecycle: {$parsed_info['lifecycle']}' is not valid in $filename");
