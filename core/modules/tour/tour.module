@@ -122,6 +122,21 @@ function tour_tour_presave(Tour $tour) {
   _tour_update_joyride($tour);
 }
 
+/**
+ * Updates a tour to make it compatible with the Shepherd library.
+ *
+ * @param \Drupal\tour\Entity\Tour $tour
+ *   The tour to update to make it compatible with the Shepherd library.
+ * @param bool $trigger_deprecation
+ *   Whether to trigger deprecations.
+ *
+ * @return bool
+ *   Whether or not the entity needs saving.
+ *
+ * @see tour_post_update_joyride_selectors_to_selector_property()
+ *
+ * @internal
+ */
 function _tour_update_joyride(Tour $tour, $trigger_deprecation = TRUE) {
   $needs_save = FALSE;
 
