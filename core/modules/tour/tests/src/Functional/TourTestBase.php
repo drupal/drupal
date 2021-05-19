@@ -33,13 +33,14 @@ abstract class TourTestBase extends BrowserTestBase {
   public function assertTourTips($tips = []) {
     // Get the rendered tips and their data-id and data-class attributes.
     if (empty($tips)) {
-      // Tips are rendered as <li> elements inside <ol id="tour">.
-      $rendered_tips = $this->xpath('//ol[@id = "tour"]//li[starts-with(@class, "tip")]');
-      foreach ($rendered_tips as $rendered_tip) {
-        $tips[] = [
-          'data-id' => $rendered_tip->getAttribute('data-id'),
-          'data-class' => $rendered_tip->getAttribute('data-class'),
-        ];
+      // Tips are rendered as drupalSettings values.
+      $drupalSettings = $this->getDrupalSettings();
+      if (isset($drupalSettings['_tour_internal'])) {
+        foreach ($drupalSettings['_tour_internal'] as $tip) {
+          $tips[] = [
+            'selector' => $tip['selector'] ?? NULL,
+          ];
+        }
       }
     }
 
