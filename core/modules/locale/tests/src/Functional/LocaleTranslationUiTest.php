@@ -118,7 +118,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     $this->drupalPostForm('admin/config/regional/translate', $edit, 'Save translations');
     $this->assertText('The strings have been saved.');
     $url_bits = explode('?', $this->getUrl());
-    $this->assertEqual(Url::fromRoute('locale.translate_page', [], ['absolute' => TRUE])->toString(), $url_bits[0], 'Correct page redirection.');
+    $this->assertEquals(Url::fromRoute('locale.translate_page', [], ['absolute' => TRUE])->toString(), $url_bits[0], 'Correct page redirection.');
     $search = [
       'string' => $name,
       'langcode' => $langcode,

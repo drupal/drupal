@@ -60,7 +60,7 @@ class HandlerFieldUserNameTest extends UserTestBase {
     $render = $renderer->executeInRenderContext(new RenderContext(), function () use ($view, $new_user) {
       return $view->field['name']->advancedRender($view->result[$new_user->id()]);
     });
-    $this->assertEqual($new_user->getDisplayName(), $render, 'If the user is not linked the username should be printed out for a normal user.');
+    $this->assertEquals($new_user->getDisplayName(), $render, 'If the user is not linked the username should be printed out for a normal user.');
 
   }
 

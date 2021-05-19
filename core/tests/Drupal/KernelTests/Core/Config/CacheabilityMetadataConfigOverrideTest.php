@@ -46,12 +46,12 @@ class CacheabilityMetadataConfigOverrideTest extends KernelTestBase {
 
     // Check that we are using the Pirate theme.
     $theme = $config->get('default');
-    $this->assertEqual('pirate', $theme);
+    $this->assertEquals('pirate', $theme);
 
     // Check that the cacheability metadata is correct.
-    $this->assertEqual(['pirate_day'], $config->getCacheContexts());
-    $this->assertEqual(['config:system.theme', 'pirate-day-tag'], $config->getCacheTags());
-    $this->assertEqual(PirateDayCacheContext::PIRATE_DAY_MAX_AGE, $config->getCacheMaxAge());
+    $this->assertEquals(['pirate_day'], $config->getCacheContexts());
+    $this->assertEquals(['config:system.theme', 'pirate-day-tag'], $config->getCacheTags());
+    $this->assertEquals(PirateDayCacheContext::PIRATE_DAY_MAX_AGE, $config->getCacheMaxAge());
   }
 
   /**
@@ -69,23 +69,23 @@ class CacheabilityMetadataConfigOverrideTest extends KernelTestBase {
     $block = $entity_type_manager->getStorage('block')->load('call_to_action');
 
     // Check that our call to action message is appealing to filibusters.
-    $this->assertEqual('Draw yer cutlasses!', $block->label());
+    $this->assertEquals('Draw yer cutlasses!', $block->label());
 
     // Check that the cacheability metadata is correct.
-    $this->assertEqual(['pirate_day'], $block->getCacheContexts());
-    $this->assertEqual(['config:block.block.call_to_action', 'pirate-day-tag'], $block->getCacheTags());
-    $this->assertEqual(PirateDayCacheContext::PIRATE_DAY_MAX_AGE, $block->getCacheMaxAge());
+    $this->assertEquals(['pirate_day'], $block->getCacheContexts());
+    $this->assertEquals(['config:block.block.call_to_action', 'pirate-day-tag'], $block->getCacheTags());
+    $this->assertEquals(PirateDayCacheContext::PIRATE_DAY_MAX_AGE, $block->getCacheMaxAge());
 
     // Check that duplicating a config entity does not have the original config
     // entity's cache tag.
-    $this->assertEqual(['config:block.block.', 'pirate-day-tag'], $block->createDuplicate()->getCacheTags());
+    $this->assertEquals(['config:block.block.', 'pirate-day-tag'], $block->createDuplicate()->getCacheTags());
 
     // Check that renaming a config entity does not have the original config
     // entity's cache tag.
     $block->set('id', 'call_to_looting')->save();
-    $this->assertEqual(['pirate_day'], $block->getCacheContexts());
-    $this->assertEqual(['config:block.block.call_to_looting', 'pirate-day-tag'], $block->getCacheTags());
-    $this->assertEqual(PirateDayCacheContext::PIRATE_DAY_MAX_AGE, $block->getCacheMaxAge());
+    $this->assertEquals(['pirate_day'], $block->getCacheContexts());
+    $this->assertEquals(['config:block.block.call_to_looting', 'pirate-day-tag'], $block->getCacheTags());
+    $this->assertEquals(PirateDayCacheContext::PIRATE_DAY_MAX_AGE, $block->getCacheMaxAge());
   }
 
 }

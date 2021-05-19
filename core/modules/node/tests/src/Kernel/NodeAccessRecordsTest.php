@@ -36,8 +36,8 @@ class NodeAccessRecordsTest extends NodeAccessTestBase {
       ->execute()
       ->fetchAll();
     $this->assertCount(1, $records, 'Returned the correct number of rows.');
-    $this->assertEqual('test_article_realm', $records[0]->realm, 'Grant with article_realm acquired for node without alteration.');
-    $this->assertEqual(1, $records[0]->gid, 'Grant with gid = 1 acquired for node without alteration.');
+    $this->assertEquals('test_article_realm', $records[0]->realm, 'Grant with article_realm acquired for node without alteration.');
+    $this->assertEquals(1, $records[0]->gid, 'Grant with gid = 1 acquired for node without alteration.');
 
     // Create an unpromoted "Basic page" node.
     $node2 = $this->drupalCreateNode(['type' => 'page', 'promote' => 0]);
@@ -50,8 +50,8 @@ class NodeAccessRecordsTest extends NodeAccessTestBase {
       ->execute()
       ->fetchAll();
     $this->assertCount(1, $records, 'Returned the correct number of rows.');
-    $this->assertEqual('test_page_realm', $records[0]->realm, 'Grant with page_realm acquired for node without alteration.');
-    $this->assertEqual(1, $records[0]->gid, 'Grant with gid = 1 acquired for node without alteration.');
+    $this->assertEquals('test_page_realm', $records[0]->realm, 'Grant with page_realm acquired for node without alteration.');
+    $this->assertEquals(1, $records[0]->gid, 'Grant with gid = 1 acquired for node without alteration.');
 
     // Create an unpromoted, unpublished "Basic page" node.
     $node3 = $this->drupalCreateNode(['type' => 'page', 'promote' => 0, 'status' => 0]);
@@ -64,8 +64,8 @@ class NodeAccessRecordsTest extends NodeAccessTestBase {
       ->execute()
       ->fetchAll();
     $this->assertCount(1, $records, 'Returned the correct number of rows.');
-    $this->assertEqual('test_page_realm', $records[0]->realm, 'Grant with page_realm acquired for node without alteration.');
-    $this->assertEqual(1, $records[0]->gid, 'Grant with gid = 1 acquired for node without alteration.');
+    $this->assertEquals('test_page_realm', $records[0]->realm, 'Grant with page_realm acquired for node without alteration.');
+    $this->assertEquals(1, $records[0]->gid, 'Grant with gid = 1 acquired for node without alteration.');
 
     // Create a promoted "Basic page" node.
     $node4 = $this->drupalCreateNode(['type' => 'page', 'promote' => 1]);
@@ -79,8 +79,8 @@ class NodeAccessRecordsTest extends NodeAccessTestBase {
       ->execute()
       ->fetchAll();
     $this->assertCount(1, $records, 'Returned the correct number of rows.');
-    $this->assertEqual('test_alter_realm', $records[0]->realm, 'Altered grant with alter_realm acquired for node.');
-    $this->assertEqual(2, $records[0]->gid, 'Altered grant with gid = 2 acquired for node.');
+    $this->assertEquals('test_alter_realm', $records[0]->realm, 'Altered grant with alter_realm acquired for node.');
+    $this->assertEquals(2, $records[0]->gid, 'Altered grant with gid = 2 acquired for node.');
 
     // Check to see if we can alter grants with hook_node_grants_alter().
     $operations = ['view', 'update', 'delete'];

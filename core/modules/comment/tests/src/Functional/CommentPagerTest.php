@@ -224,7 +224,7 @@ class CommentPagerTest extends CommentTestBase {
     foreach ($comment_anchors as $anchor) {
       $result_order[] = substr($anchor->getAttribute('id'), 8);
     }
-    return $this->assertEqual($expected_cids, $result_order, new FormattableMarkup('Comment order: expected @expected, returned @returned.', ['@expected' => implode(',', $expected_cids), '@returned' => implode(',', $result_order)]));
+    return $this->assertEquals($expected_cids, $result_order, new FormattableMarkup('Comment order: expected @expected, returned @returned.', ['@expected' => implode(',', $expected_cids), '@returned' => implode(',', $result_order)]));
   }
 
   /**
@@ -315,7 +315,7 @@ class CommentPagerTest extends CommentTestBase {
     foreach ($expected_pages as $new_replies => $expected_page) {
       $returned_page = \Drupal::entityTypeManager()->getStorage('comment')
         ->getNewCommentPageNumber($node->get('comment')->comment_count, $new_replies, $node, 'comment');
-      $this->assertEqual($expected_page, $returned_page, new FormattableMarkup('Threaded mode, @new replies: expected page @expected, returned page @returned.', ['@new' => $new_replies, '@expected' => $expected_page, '@returned' => $returned_page]));
+      $this->assertEquals($expected_page, $returned_page, new FormattableMarkup('Threaded mode, @new replies: expected page @expected, returned page @returned.', ['@new' => $new_replies, '@expected' => $expected_page, '@returned' => $returned_page]));
     }
   }
 

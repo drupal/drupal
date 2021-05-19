@@ -56,8 +56,8 @@ class StyleUITest extends UITestBase {
     $view = Views::getView($view_name);
     $view->initDisplay();
     $style = $view->display_handler->getOption('style');
-    $this->assertEqual('test_style', $style['type'], 'Make sure that the test_style got saved as used style plugin.');
-    $this->assertEqual($random_name, $style['options']['test_option'], 'Make sure that the custom settings field got saved as expected.');
+    $this->assertEquals('test_style', $style['type'], 'Make sure that the test_style got saved as used style plugin.');
+    $this->assertEquals($random_name, $style['options']['test_option'], 'Make sure that the custom settings field got saved as expected.');
 
     // Test that fields are working correctly in the UI for style plugins when
     // a field row plugin is selected.

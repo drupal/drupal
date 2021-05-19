@@ -71,7 +71,7 @@ abstract class BlockContentTestBase extends ViewTestBase {
     if ($block_content = BlockContent::create($values)) {
       $status = $block_content->save();
     }
-    $this->assertEqual(SAVED_NEW, $status, new FormattableMarkup('Created block content %info.', ['%info' => $block_content->label()]));
+    $this->assertEquals(SAVED_NEW, $status, new FormattableMarkup('Created block content %info.', ['%info' => $block_content->label()]));
     return $block_content;
   }
 
@@ -103,7 +103,7 @@ abstract class BlockContentTestBase extends ViewTestBase {
     $status = $bundle->save();
     block_content_add_body_field($bundle->id());
 
-    $this->assertEqual(SAVED_NEW, $status, new FormattableMarkup('Created block content type %bundle.', ['%bundle' => $bundle->id()]));
+    $this->assertEquals(SAVED_NEW, $status, new FormattableMarkup('Created block content type %bundle.', ['%bundle' => $bundle->id()]));
     return $bundle;
   }
 

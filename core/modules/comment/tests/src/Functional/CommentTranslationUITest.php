@@ -189,8 +189,8 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
     $entity = $storage->load($this->entityId);
     foreach ($this->langcodes as $langcode) {
       $metadata = $this->manager->getTranslationMetadata($entity->getTranslation($langcode));
-      $this->assertEqual($values[$langcode]['uid'], $metadata->getAuthor()->id(), 'Translation author correctly stored.');
-      $this->assertEqual($values[$langcode]['created'], $metadata->getCreatedTime(), 'Translation date correctly stored.');
+      $this->assertEquals($values[$langcode]['uid'], $metadata->getAuthor()->id(), 'Translation author correctly stored.');
+      $this->assertEquals($values[$langcode]['created'], $metadata->getCreatedTime(), 'Translation date correctly stored.');
     }
   }
 

@@ -38,9 +38,9 @@ class RetrieveFileTest extends BrowserTestBase {
     // has to be encoded.
     $encoded_filename = rawurlencode($filename);
 
-    $this->assertEqual('public://' . $encoded_filename, $retrieved_file, 'Sane path for downloaded file returned (public:// scheme).');
+    $this->assertEquals('public://' . $encoded_filename, $retrieved_file, 'Sane path for downloaded file returned (public:// scheme).');
     $this->assertFileExists($retrieved_file);
-    $this->assertEqual(7, filesize($retrieved_file), 'File size of downloaded file is correct (public:// scheme).');
+    $this->assertEquals(7, filesize($retrieved_file), 'File size of downloaded file is correct (public:// scheme).');
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
     $file_system->delete($retrieved_file);
@@ -48,9 +48,9 @@ class RetrieveFileTest extends BrowserTestBase {
     // Test downloading file to a different location.
     $file_system->mkdir($targetdir = 'temporary://' . $this->randomMachineName());
     $retrieved_file = system_retrieve_file($url, $targetdir);
-    $this->assertEqual("{$targetdir}/{$encoded_filename}", $retrieved_file, 'Sane path for downloaded file returned (temporary:// scheme).');
+    $this->assertEquals("{$targetdir}/{$encoded_filename}", $retrieved_file, 'Sane path for downloaded file returned (temporary:// scheme).');
     $this->assertFileExists($retrieved_file);
-    $this->assertEqual(7, filesize($retrieved_file), 'File size of downloaded file is correct (temporary:// scheme).');
+    $this->assertEquals(7, filesize($retrieved_file), 'File size of downloaded file is correct (temporary:// scheme).');
     $file_system->delete($retrieved_file);
 
     $file_system->deleteRecursive($sourcedir);

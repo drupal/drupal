@@ -60,7 +60,7 @@ class DisplayTest extends UITestBase {
 
     // Ensure the view displays are in the expected order in configuration.
     $expected_display_order = ['default', 'block_1', 'page_1'];
-    $this->assertEqual($expected_display_order, array_keys(Views::getView($view['id'])->storage->get('display')), 'The correct display names are present.');
+    $this->assertEquals($expected_display_order, array_keys(Views::getView($view['id'])->storage->get('display')), 'The correct display names are present.');
     // Put the block display in front of the page display.
     $edit = [
       'displays[page_1][weight]' => 2,
@@ -71,12 +71,12 @@ class DisplayTest extends UITestBase {
 
     $view = Views::getView($view['id']);
     $displays = $view->storage->get('display');
-    $this->assertEqual(0, $displays['default']['position'], 'Make sure the default display comes first.');
-    $this->assertEqual(1, $displays['block_1']['position'], 'Make sure the block display comes before the page display.');
-    $this->assertEqual(2, $displays['page_1']['position'], 'Make sure the page display comes after the block display.');
+    $this->assertEquals(0, $displays['default']['position'], 'Make sure the default display comes first.');
+    $this->assertEquals(1, $displays['block_1']['position'], 'Make sure the block display comes before the page display.');
+    $this->assertEquals(2, $displays['page_1']['position'], 'Make sure the page display comes after the block display.');
 
     // Ensure the view displays are in the expected order in configuration.
-    $this->assertEqual($expected_display_order, array_keys($view->storage->get('display')), 'The correct display names are present.');
+    $this->assertEquals($expected_display_order, array_keys($view->storage->get('display')), 'The correct display names are present.');
   }
 
   /**
@@ -160,7 +160,7 @@ class DisplayTest extends UITestBase {
     // Test the link text displays 'None' and not 'Block 1'
     $this->drupalGet($path);
     $result = $this->xpath("//a[contains(@href, :path)]", [':path' => $link_display_path]);
-    $this->assertEqual(t('None'), $result[0]->getHtml(), 'Make sure that the link option summary shows "None" by default.');
+    $this->assertEquals(t('None'), $result[0]->getHtml(), 'Make sure that the link option summary shows "None" by default.');
 
     $this->drupalGet($link_display_path);
     $this->assertSession()->checkboxChecked('edit-link-display-0');
@@ -171,7 +171,7 @@ class DisplayTest extends UITestBase {
     $this->drupalGet($path);
 
     $result = $this->xpath("//a[contains(@href, :path)]", [':path' => $link_display_path]);
-    $this->assertEqual('Page', $result[0]->getHtml(), 'Make sure that the link option summary shows the right linked display.');
+    $this->assertEquals('Page', $result[0]->getHtml(), 'Make sure that the link option summary shows the right linked display.');
 
     $this->drupalPostForm($link_display_path, ['link_display' => 'custom_url', 'link_url' => 'a-custom-url'], 'Apply');
     // The form redirects to the default display.

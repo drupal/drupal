@@ -124,7 +124,7 @@ class Stable9LibraryOverrideTest extends KernelTestBase {
           $expected_path = strtr($expected_path, $replacements);
           $assert_path = str_replace("core/modules/$extension/", '', $clean_path);
 
-          $this->assertEqual($expected_path, $stable_path, "$assert_path from the $extension/$library_name library is overridden in Stable 9.");
+          $this->assertEquals($expected_path, $stable_path, "$assert_path from the $extension/$library_name library is overridden in Stable 9.");
           $this->assertFileExists("{$this->root}/$clean_path");
           $this->assertFileExists("{$this->root}/$stable_path");
         }
@@ -176,7 +176,7 @@ class Stable9LibraryOverrideTest extends KernelTestBase {
     $modules = \Drupal::moduleHandler()->getModuleList();
     $module_list = array_keys($modules);
     sort($module_list);
-    $this->assertEqual($this->allModules, $module_list, 'All core modules are installed.');
+    $this->assertEquals($this->allModules, $module_list, 'All core modules are installed.');
 
     $libraries['core'] = $this->libraryDiscovery->getLibrariesByExtension('core');
 

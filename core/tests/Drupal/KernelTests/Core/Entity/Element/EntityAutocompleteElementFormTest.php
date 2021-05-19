@@ -225,48 +225,48 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
     $this->assertCount(0, $form_state->getErrors());
 
     // Test the 'single' element.
-    $this->assertEqual($this->referencedEntities[0]->id(), $form_state->getValue('single'));
+    $this->assertEquals($this->referencedEntities[0]->id(), $form_state->getValue('single'));
 
     // Test the 'single_autocreate' element.
     $value = $form_state->getValue('single_autocreate');
-    $this->assertEqual('single - autocreated entity label', $value['entity']->label());
-    $this->assertEqual('entity_test', $value['entity']->bundle());
-    $this->assertEqual($this->testUser->id(), $value['entity']->getOwnerId());
+    $this->assertEquals('single - autocreated entity label', $value['entity']->label());
+    $this->assertEquals('entity_test', $value['entity']->bundle());
+    $this->assertEquals($this->testUser->id(), $value['entity']->getOwnerId());
 
     // Test the 'single_autocreate_specific_uid' element.
     $value = $form_state->getValue('single_autocreate_specific_uid');
-    $this->assertEqual('single - autocreated entity label with specific uid', $value['entity']->label());
-    $this->assertEqual('entity_test', $value['entity']->bundle());
-    $this->assertEqual($this->testAutocreateUser->id(), $value['entity']->getOwnerId());
+    $this->assertEquals('single - autocreated entity label with specific uid', $value['entity']->label());
+    $this->assertEquals('entity_test', $value['entity']->bundle());
+    $this->assertEquals($this->testAutocreateUser->id(), $value['entity']->getOwnerId());
 
     // Test the 'tags' element.
     $expected = [
       ['target_id' => $this->referencedEntities[0]->id()],
       ['target_id' => $this->referencedEntities[1]->id()],
     ];
-    $this->assertEqual($expected, $form_state->getValue('tags'));
+    $this->assertEquals($expected, $form_state->getValue('tags'));
 
     // Test the 'single_autocreate' element.
     $value = $form_state->getValue('tags_autocreate');
     // First value is an existing entity.
-    $this->assertEqual($this->referencedEntities[0]->id(), $value[0]['target_id']);
+    $this->assertEquals($this->referencedEntities[0]->id(), $value[0]['target_id']);
     // Second value is an autocreated entity.
     $this->assertTrue(!isset($value[1]['target_id']));
-    $this->assertEqual('tags - autocreated entity label', $value[1]['entity']->label());
-    $this->assertEqual($this->testUser->id(), $value[1]['entity']->getOwnerId());
+    $this->assertEquals('tags - autocreated entity label', $value[1]['entity']->label());
+    $this->assertEquals($this->testUser->id(), $value[1]['entity']->getOwnerId());
     // Third value is an existing entity.
-    $this->assertEqual($this->referencedEntities[1]->id(), $value[2]['target_id']);
+    $this->assertEquals($this->referencedEntities[1]->id(), $value[2]['target_id']);
 
     // Test the 'tags_autocreate_specific_uid' element.
     $value = $form_state->getValue('tags_autocreate_specific_uid');
     // First value is an existing entity.
-    $this->assertEqual($this->referencedEntities[0]->id(), $value[0]['target_id']);
+    $this->assertEquals($this->referencedEntities[0]->id(), $value[0]['target_id']);
     // Second value is an autocreated entity.
     $this->assertTrue(!isset($value[1]['target_id']));
-    $this->assertEqual('tags - autocreated entity label with specific uid', $value[1]['entity']->label());
-    $this->assertEqual($this->testAutocreateUser->id(), $value[1]['entity']->getOwnerId());
+    $this->assertEquals('tags - autocreated entity label with specific uid', $value[1]['entity']->label());
+    $this->assertEquals($this->testAutocreateUser->id(), $value[1]['entity']->getOwnerId());
     // Third value is an existing entity.
-    $this->assertEqual($this->referencedEntities[1]->id(), $value[2]['target_id']);
+    $this->assertEquals($this->referencedEntities[1]->id(), $value[2]['target_id']);
 
     // Test the 'single_string_id' element.
     $this->assertEquals($this->referencedEntities[2]->id(), $form_state->getValue('single_string_id'));
@@ -292,7 +292,7 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
       ]);
     $form_builder->submitForm($this, $form_state);
     $this->assertCount(1, $form_state->getErrors());
-    $this->assertEqual(t('There are no test entity entities matching "%value".', ['%value' => 'single - non-existent label']), $form_state->getErrors()['single']);
+    $this->assertEquals(t('There are no test entity entities matching "%value".', ['%value' => 'single - non-existent label']), $form_state->getErrors()['single']);
 
     // Test 'single' with an entity ID that doesn't exist.
     $form_state = (new FormState())
@@ -301,7 +301,7 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
       ]);
     $form_builder->submitForm($this, $form_state);
     $this->assertCount(1, $form_state->getErrors());
-    $this->assertEqual(t('The referenced entity (%type: %id) does not exist.', ['%type' => 'entity_test', '%id' => 42]), $form_state->getErrors()['single']);
+    $this->assertEquals(t('The referenced entity (%type: %id) does not exist.', ['%type' => 'entity_test', '%id' => 42]), $form_state->getErrors()['single']);
 
     // Do the same tests as above but on an element with '#validate_reference'
     // set to FALSE.
@@ -315,7 +315,7 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
     // The element without 'autocreate' support still has to emit a warning when
     // the input doesn't end with an entity ID enclosed in parentheses.
     $this->assertCount(1, $form_state->getErrors());
-    $this->assertEqual(t('There are no test entity entities matching "%value".', ['%value' => 'single - non-existent label']), $form_state->getErrors()['single_no_validate']);
+    $this->assertEquals(t('There are no test entity entities matching "%value".', ['%value' => 'single - non-existent label']), $form_state->getErrors()['single_no_validate']);
 
     $form_state = (new FormState())
       ->setValues([
@@ -338,10 +338,10 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
 
     // Check that the current user has proper access to view entity labels.
     $expected = $this->referencedEntities[0]->label() . ' (' . $this->referencedEntities[0]->id() . ')';
-    $this->assertEqual($expected, $form['single_access']['#value']);
+    $this->assertEquals($expected, $form['single_access']['#value']);
 
     $expected .= ', ' . $this->referencedEntities[1]->label() . ' (' . $this->referencedEntities[1]->id() . ')';
-    $this->assertEqual($expected, $form['tags_access']['#value']);
+    $this->assertEquals($expected, $form['tags_access']['#value']);
 
     // Set up a non-admin user that is *not* allowed to view test entities.
     \Drupal::currentUser()->setAccount($this->createUser([], []));

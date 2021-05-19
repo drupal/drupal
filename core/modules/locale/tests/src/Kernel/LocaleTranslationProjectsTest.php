@@ -52,12 +52,12 @@ class LocaleTranslationProjectsTest extends KernelTestBase {
 
     $this->projectStorage->set('foo', []);
     $expected['foo'] = new \stdClass();
-    $this->assertEqual($expected, locale_translation_get_projects());
+    $this->assertEquals($expected, locale_translation_get_projects());
 
     $this->projectStorage->set('bar', []);
     locale_translation_clear_cache_projects();
     $expected['bar'] = new \stdClass();
-    $this->assertEqual($expected, locale_translation_get_projects());
+    $this->assertEquals($expected, locale_translation_get_projects());
   }
 
 }

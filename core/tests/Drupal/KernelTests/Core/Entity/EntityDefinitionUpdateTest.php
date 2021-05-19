@@ -125,7 +125,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
         t('The %field_name field needs to be installed.', ['%field_name' => 'Default revision']),
       ],
     ];
-    $this->assertEqual($expected, $this->entityDefinitionUpdateManager->getChangeSummary(), 'EntityDefinitionUpdateManager reports the expected change summary.');
+    $this->assertEquals($expected, $this->entityDefinitionUpdateManager->getChangeSummary(), 'EntityDefinitionUpdateManager reports the expected change summary.');
 
     // Run the update and ensure the revision table is created.
     $this->updateEntityTypeToRevisionable(TRUE);
@@ -867,7 +867,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
         t('The %entity_type entity type needs to be updated.', ['%entity_type' => $this->entityTypeManager->getDefinition('entity_test_update')->getLabel()]),
       ],
     ];
-    $this->assertEqual($expected, $this->entityDefinitionUpdateManager->getChangeSummary(), 'EntityDefinitionUpdateManager reports the expected change summary.');
+    $this->assertEquals($expected, $this->entityDefinitionUpdateManager->getChangeSummary(), 'EntityDefinitionUpdateManager reports the expected change summary.');
 
     // Run the update and ensure the new index is created.
     $entity_type = \Drupal::entityTypeManager()->getDefinition('entity_test_update');
@@ -884,7 +884,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
         t('The %entity_type entity type needs to be updated.', ['%entity_type' => $this->entityTypeManager->getDefinition('entity_test_update')->getLabel()]),
       ],
     ];
-    $this->assertEqual($expected, $this->entityDefinitionUpdateManager->getChangeSummary(), 'EntityDefinitionUpdateManager reports the expected change summary.');
+    $this->assertEquals($expected, $this->entityDefinitionUpdateManager->getChangeSummary(), 'EntityDefinitionUpdateManager reports the expected change summary.');
 
     // Run the update and ensure the index is deleted.
     $entity_type = \Drupal::entityTypeManager()->getDefinition('entity_test_update');
@@ -1093,7 +1093,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     // Check index size in for MySQL.
     if (Database::getConnection()->driver() == 'mysql') {
       $result = Database::getConnection()->query('SHOW INDEX FROM {entity_test_update} WHERE key_name = \'entity_test_update_field__new_base_field\' and column_name = \'new_base_field\'')->fetchObject();
-      $this->assertEqual(191, $result->Sub_part, 'The index length has been restricted to 191 characters for UTF8MB4 compatibility.');
+      $this->assertEquals(191, $result->Sub_part, 'The index length has been restricted to 191 characters for UTF8MB4 compatibility.');
     }
   }
 
@@ -1122,7 +1122,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     // Check index size in for MySQL.
     if (Database::getConnection()->driver() == 'mysql') {
       $result = Database::getConnection()->query('SHOW INDEX FROM {entity_test_update} WHERE key_name = \'entity_test_update__type_index\' and column_name = \'type\'')->fetchObject();
-      $this->assertEqual(191, $result->Sub_part, 'The index length has been restricted to 191 characters for UTF8MB4 compatibility.');
+      $this->assertEquals(191, $result->Sub_part, 'The index length has been restricted to 191 characters for UTF8MB4 compatibility.');
     }
   }
 

@@ -129,7 +129,7 @@ class RdfaAttributesTest extends KernelTestBase {
     $attributes = rdf_rdfa_attributes($mapping, $data);
     ksort($expected_attributes);
     ksort($attributes);
-    $this->assertEqual($expected_attributes, $attributes);
+    $this->assertEquals($expected_attributes, $attributes);
   }
 
 }

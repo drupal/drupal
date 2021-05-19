@@ -77,20 +77,20 @@ class ContentTranslationMetadataFieldsTest extends ContentTranslationTestBase {
     $published = $metadata_source_translation->isPublished();
     $author = $metadata_source_translation->getAuthor();
 
-    $this->assertEqual($created_time, $metadata_target_translation->getCreatedTime(), 'Metadata created field has the same value for both translations.');
-    $this->assertEqual($changed_time, $metadata_target_translation->getChangedTime(), 'Metadata changed field has the same value for both translations.');
-    $this->assertEqual($published, $metadata_target_translation->isPublished(), 'Metadata published field has the same value for both translations.');
-    $this->assertEqual($author->id(), $metadata_target_translation->getAuthor()->id(), 'Metadata author field has the same value for both translations.');
+    $this->assertEquals($created_time, $metadata_target_translation->getCreatedTime(), 'Metadata created field has the same value for both translations.');
+    $this->assertEquals($changed_time, $metadata_target_translation->getChangedTime(), 'Metadata changed field has the same value for both translations.');
+    $this->assertEquals($published, $metadata_target_translation->isPublished(), 'Metadata published field has the same value for both translations.');
+    $this->assertEquals($author->id(), $metadata_target_translation->getAuthor()->id(), 'Metadata author field has the same value for both translations.');
 
     $metadata_target_translation->setCreatedTime(time() + 50);
     $metadata_target_translation->setChangedTime(time() + 50);
     $metadata_target_translation->setPublished(TRUE);
     $metadata_target_translation->setAuthor($this->editor);
 
-    $this->assertEqual($created_time, $metadata_target_translation->getCreatedTime(), 'Metadata created field correctly not updated');
-    $this->assertEqual($changed_time, $metadata_target_translation->getChangedTime(), 'Metadata changed field correctly not updated');
-    $this->assertEqual($published, $metadata_target_translation->isPublished(), 'Metadata published field correctly not updated');
-    $this->assertEqual($author->id(), $metadata_target_translation->getAuthor()->id(), 'Metadata author field correctly not updated');
+    $this->assertEquals($created_time, $metadata_target_translation->getCreatedTime(), 'Metadata created field correctly not updated');
+    $this->assertEquals($changed_time, $metadata_target_translation->getChangedTime(), 'Metadata changed field correctly not updated');
+    $this->assertEquals($published, $metadata_target_translation->isPublished(), 'Metadata published field correctly not updated');
+    $this->assertEquals($author->id(), $metadata_target_translation->getAuthor()->id(), 'Metadata author field correctly not updated');
   }
 
   /**

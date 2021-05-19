@@ -683,7 +683,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
     $entity->save();
 
     $expected[] = $entity->getConfigDependencyName();
-    $this->assertEqual($expected, $key_value->get('style:test'));
+    $this->assertEquals($expected, $key_value->get('style:test'));
 
     $entity = $storage->create([
       'label' => 'entity_2',
@@ -694,7 +694,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
     $entity->enforceIsNew();
     $entity->save();
     $expected[] = $entity->getConfigDependencyName();
-    $this->assertEqual($expected, $key_value->get('style:test'));
+    $this->assertEquals($expected, $key_value->get('style:test'));
 
     $entity = $storage->create([
       'label' => 'entity_3',
@@ -705,8 +705,8 @@ class ConfigEntityQueryTest extends KernelTestBase {
     $entity->save();
     // Do not add this entity to the list of expected result as it has a
     // different value.
-    $this->assertEqual($expected, $key_value->get('style:test'));
-    $this->assertEqual([$entity->getConfigDependencyName()], $key_value->get('style:blah'));
+    $this->assertEquals($expected, $key_value->get('style:test'));
+    $this->assertEquals([$entity->getConfigDependencyName()], $key_value->get('style:blah'));
 
     // Ensure that a delete clears a key.
     $entity->delete();
@@ -715,7 +715,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
     // Ensure that delete only clears one key.
     $entity_id = array_pop($expected);
     $test_entities[$entity_id]->delete();
-    $this->assertEqual($expected, $key_value->get('style:test'));
+    $this->assertEquals($expected, $key_value->get('style:test'));
     $entity_id = array_pop($expected);
     $test_entities[$entity_id]->delete();
     $this->assertNull($key_value->get('style:test'));

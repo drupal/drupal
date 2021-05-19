@@ -54,7 +54,7 @@ class MigrateDependenciesTest extends MigrateDrupal6TestBase {
     $executable = new MigrateExecutable($migration, $this);
     $this->startCollectingMessages();
     $executable->import();
-    $this->assertEqual([new FormattableMarkup('Migration @id did not meet the requirements. Missing migrations d6_aggregator_feed. requirements: d6_aggregator_feed.', ['@id' => $migration->id()])], $this->migrateMessages['error']);
+    $this->assertEquals([new FormattableMarkup('Migration @id did not meet the requirements. Missing migrations d6_aggregator_feed. requirements: d6_aggregator_feed.', ['@id' => $migration->id()])], $this->migrateMessages['error']);
     $this->collectMessages = FALSE;
   }
 

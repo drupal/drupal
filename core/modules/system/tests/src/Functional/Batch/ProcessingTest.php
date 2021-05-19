@@ -31,7 +31,7 @@ class ProcessingTest extends BrowserTestBase {
     // Displaying the page triggers batch 1.
     $this->drupalGet('batch-test/no-form');
     $this->assertBatchMessages($this->_resultMessages('batch_1'), 'Batch for step 2 performed successfully.');
-    $this->assertEqual($this->_resultStack('batch_1'), batch_test_stack(), 'Execution order was correct.');
+    $this->assertEquals($this->_resultStack('batch_1'), batch_test_stack(), 'Execution order was correct.');
     $this->assertText('Redirection successful.');
   }
 
@@ -42,7 +42,7 @@ class ProcessingTest extends BrowserTestBase {
     // Displaying the page triggers batch 1.
     $this->drupalGet('batch-test/finish-redirect');
     $this->assertBatchMessages($this->_resultMessages('batch_1'), 'Batch for step 2 performed successfully.');
-    $this->assertEqual($this->_resultStack('batch_1'), batch_test_stack(), 'Execution order was correct.');
+    $this->assertEquals($this->_resultStack('batch_1'), batch_test_stack(), 'Execution order was correct.');
     // Verify that the custom redirection after batch execution displays the
     // correct page.
     $this->assertText('Test page text.');
@@ -68,7 +68,7 @@ class ProcessingTest extends BrowserTestBase {
     $this->drupalPostForm('batch-test', $edit, 'Submit');
     $this->assertSession()->assertNoEscaped('<');
     $this->assertBatchMessages($this->_resultMessages('batch_1'), 'Batch with simple operations performed successfully.');
-    $this->assertEqual($this->_resultStack('batch_1'), batch_test_stack(), 'Execution order was correct.');
+    $this->assertEquals($this->_resultStack('batch_1'), batch_test_stack(), 'Execution order was correct.');
     $this->assertText('Redirection successful.');
 
     // Batch 2: one multistep operation.
@@ -76,7 +76,7 @@ class ProcessingTest extends BrowserTestBase {
     $this->drupalPostForm('batch-test', $edit, 'Submit');
     $this->assertSession()->assertNoEscaped('<');
     $this->assertBatchMessages($this->_resultMessages('batch_2'), 'Batch with multistep operation performed successfully.');
-    $this->assertEqual($this->_resultStack('batch_2'), batch_test_stack(), 'Execution order was correct.');
+    $this->assertEquals($this->_resultStack('batch_2'), batch_test_stack(), 'Execution order was correct.');
     $this->assertText('Redirection successful.');
 
     // Batch 3: simple + multistep combined.
@@ -84,7 +84,7 @@ class ProcessingTest extends BrowserTestBase {
     $this->drupalPostForm('batch-test', $edit, 'Submit');
     $this->assertSession()->assertNoEscaped('<');
     $this->assertBatchMessages($this->_resultMessages('batch_3'), 'Batch with simple and multistep operations performed successfully.');
-    $this->assertEqual($this->_resultStack('batch_3'), batch_test_stack(), 'Execution order was correct.');
+    $this->assertEquals($this->_resultStack('batch_3'), batch_test_stack(), 'Execution order was correct.');
     $this->assertText('Redirection successful.');
 
     // Batch 4: nested batch.
@@ -92,7 +92,7 @@ class ProcessingTest extends BrowserTestBase {
     $this->drupalPostForm('batch-test', $edit, 'Submit');
     $this->assertSession()->assertNoEscaped('<');
     $this->assertBatchMessages($this->_resultMessages('batch_4'), 'Nested batch performed successfully.');
-    $this->assertEqual($this->_resultStack('batch_4'), batch_test_stack(), 'Execution order was correct.');
+    $this->assertEquals($this->_resultStack('batch_4'), batch_test_stack(), 'Execution order was correct.');
     $this->assertText('Redirection successful.');
 
     // Submit batches 4 and 7. Batch 4 will trigger batch 2. Batch 7 will
@@ -132,14 +132,14 @@ class ProcessingTest extends BrowserTestBase {
     // First step triggers batch 1.
     $this->submitForm([], 'Submit');
     $this->assertBatchMessages($this->_resultMessages('batch_1'), 'Batch for step 1 performed successfully.');
-    $this->assertEqual($this->_resultStack('batch_1'), batch_test_stack(), 'Execution order was correct.');
+    $this->assertEquals($this->_resultStack('batch_1'), batch_test_stack(), 'Execution order was correct.');
     $this->assertText('step 2');
     $this->assertSession()->assertNoEscaped('<');
 
     // Second step triggers batch 2.
     $this->submitForm([], 'Submit');
     $this->assertBatchMessages($this->_resultMessages('batch_2'), 'Batch for step 2 performed successfully.');
-    $this->assertEqual($this->_resultStack('batch_2'), batch_test_stack(), 'Execution order was correct.');
+    $this->assertEquals($this->_resultStack('batch_2'), batch_test_stack(), 'Execution order was correct.');
     $this->assertText('Redirection successful.');
     $this->assertSession()->assertNoEscaped('<');
 
@@ -164,7 +164,7 @@ class ProcessingTest extends BrowserTestBase {
     $this->assertBatchMessages($this->_resultMessages('chained'), 'Batches defined in separate submit handlers performed successfully.');
     // The stack contains execution order of batch callbacks and submit
     // handlers and logging of corresponding $form_state->getValues().
-    $this->assertEqual($this->_resultStack('chained', $value), batch_test_stack(), 'Execution order was correct, and $form_state is correctly persisted.');
+    $this->assertEquals($this->_resultStack('chained', $value), batch_test_stack(), 'Execution order was correct, and $form_state is correctly persisted.');
     $this->assertText('Redirection successful.');
   }
 
@@ -182,7 +182,7 @@ class ProcessingTest extends BrowserTestBase {
     $this->assertBatchMessages($this->_resultMessages('chained'), 'Batches defined in separate submit handlers performed successfully.');
     // The stack contains execution order of batch callbacks and submit
     // handlers and logging of corresponding $form_state->getValues().
-    $this->assertEqual($this->_resultStack('chained', $value), batch_test_stack(), 'Execution order was correct, and $form_state is correctly persisted.');
+    $this->assertEquals($this->_resultStack('chained', $value), batch_test_stack(), 'Execution order was correct, and $form_state is correctly persisted.');
     $this->assertText('Got out of a programmatic batched form.');
   }
 
@@ -194,7 +194,7 @@ class ProcessingTest extends BrowserTestBase {
     // form.
     $value = rand(0, 255);
     $this->drupalGet('batch-test/nested-programmatic/' . $value);
-    $this->assertEqual(['mock form submitted with value = ' . $value], batch_test_stack(), '\\Drupal::formBuilder()->submitForm() ran successfully within a batch operation.');
+    $this->assertEquals(['mock form submitted with value = ' . $value], batch_test_stack(), '\\Drupal::formBuilder()->submitForm() ran successfully within a batch operation.');
   }
 
   /**
@@ -206,7 +206,7 @@ class ProcessingTest extends BrowserTestBase {
     // Displaying the page triggers batch 5.
     $this->drupalGet('batch-test/large-percentage');
     $this->assertBatchMessages($this->_resultMessages('batch_5'), 'Batch for step 2 performed successfully.');
-    $this->assertEqual($this->_resultStack('batch_5'), batch_test_stack(), 'Execution order was correct.');
+    $this->assertEquals($this->_resultStack('batch_5'), batch_test_stack(), 'Execution order was correct.');
     $this->assertText('Redirection successful.');
   }
 

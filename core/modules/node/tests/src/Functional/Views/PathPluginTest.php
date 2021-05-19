@@ -73,7 +73,7 @@ class PathPluginTest extends NodeTestBase {
     // The configured deprecated node path plugin should be converted to the
     // entity link plugin.
     $field = $view->getHandler('page_1', 'field', 'path');
-    $this->assertEqual('entity_link', $field['plugin_id']);
+    $this->assertEquals('entity_link', $field['plugin_id']);
 
     $view->initDisplay();
     $view->setDisplay('page_1');

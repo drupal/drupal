@@ -40,7 +40,7 @@ class UpdateDeprecationTest extends KernelTestBase {
     $this->expectDeprecation('update_set_schema() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3210925');
     update_set_schema('update_test_schema', 8003);
     // Ensure schema has changed.
-    $this->assertEqual(8003, \Drupal::keyValue('system.schema')->get('update_test_schema'));
+    $this->assertEquals(8003, \Drupal::keyValue('system.schema')->get('update_test_schema'));
   }
 
 }

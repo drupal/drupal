@@ -57,7 +57,7 @@ class ThemeTokenTest extends BrowserTestBase {
     $this->assertNotNull($settings['ajaxPageState']['theme_token']);
     // The CSRF token is a 43 length string.
     $this->assertIsString($settings['ajaxPageState']['theme_token']);
-    $this->assertEqual(43, strlen($settings['ajaxPageState']['theme_token']));
+    $this->assertEquals(43, strlen($settings['ajaxPageState']['theme_token']));
   }
 
 }

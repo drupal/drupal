@@ -55,10 +55,10 @@ class CommentStatisticsTest extends CommentTestBase {
 
     // Checks the initial values of node comment statistics with no comment.
     $node = $node_storage->load($this->node->id());
-    $this->assertEqual($this->node->getCreatedTime(), $node->get('comment')->last_comment_timestamp, 'The initial value of node last_comment_timestamp is the node created date.');
+    $this->assertEquals($this->node->getCreatedTime(), $node->get('comment')->last_comment_timestamp, 'The initial value of node last_comment_timestamp is the node created date.');
     $this->assertNull($node->get('comment')->last_comment_name, 'The initial value of node last_comment_name is NULL.');
-    $this->assertEqual($this->webUser->id(), $node->get('comment')->last_comment_uid, 'The initial value of node last_comment_uid is the node uid.');
-    $this->assertEqual(0, $node->get('comment')->comment_count, 'The initial value of node comment_count is zero.');
+    $this->assertEquals($this->webUser->id(), $node->get('comment')->last_comment_uid, 'The initial value of node last_comment_uid is the node uid.');
+    $this->assertEquals(0, $node->get('comment')->comment_count, 'The initial value of node comment_count is zero.');
 
     // Post comment #1 as web_user2.
     $this->drupalLogin($this->webUser2);
@@ -70,8 +70,8 @@ class CommentStatisticsTest extends CommentTestBase {
     $node_storage->resetCache([$this->node->id()]);
     $node = $node_storage->load($this->node->id());
     $this->assertSame('', $node->get('comment')->last_comment_name, 'The value of node last_comment_name should be an empty string.');
-    $this->assertEqual($this->webUser2->id(), $node->get('comment')->last_comment_uid, 'The value of node last_comment_uid is the comment #1 uid.');
-    $this->assertEqual(1, $node->get('comment')->comment_count, 'The value of node comment_count is 1.');
+    $this->assertEquals($this->webUser2->id(), $node->get('comment')->last_comment_uid, 'The value of node last_comment_uid is the comment #1 uid.');
+    $this->assertEquals(1, $node->get('comment')->comment_count, 'The value of node comment_count is 1.');
 
     // Prepare for anonymous comment submission (comment approval enabled).
     $this->drupalLogin($this->adminUser);
@@ -94,8 +94,8 @@ class CommentStatisticsTest extends CommentTestBase {
     $node_storage->resetCache([$this->node->id()]);
     $node = $node_storage->load($this->node->id());
     $this->assertSame('', $node->get('comment')->last_comment_name, 'The value of node last_comment_name should be an empty string.');
-    $this->assertEqual($this->webUser2->id(), $node->get('comment')->last_comment_uid, 'The value of node last_comment_uid is still the comment #1 uid.');
-    $this->assertEqual(1, $node->get('comment')->comment_count, 'The value of node comment_count is still 1.');
+    $this->assertEquals($this->webUser2->id(), $node->get('comment')->last_comment_uid, 'The value of node last_comment_uid is still the comment #1 uid.');
+    $this->assertEquals(1, $node->get('comment')->comment_count, 'The value of node comment_count is still 1.');
 
     // Prepare for anonymous comment submission (no approval required).
     $this->drupalLogin($this->adminUser);
@@ -115,9 +115,9 @@ class CommentStatisticsTest extends CommentTestBase {
     // The node needs to be reloaded with the cache reset.
     $node_storage->resetCache([$this->node->id()]);
     $node = $node_storage->load($this->node->id());
-    $this->assertEqual($comment_loaded->getAuthorName(), $node->get('comment')->last_comment_name, 'The value of node last_comment_name is the name of the anonymous user.');
-    $this->assertEqual(0, $node->get('comment')->last_comment_uid, 'The value of node last_comment_uid is zero.');
-    $this->assertEqual(2, $node->get('comment')->comment_count, 'The value of node comment_count is 2.');
+    $this->assertEquals($comment_loaded->getAuthorName(), $node->get('comment')->last_comment_name, 'The value of node last_comment_name is the name of the anonymous user.');
+    $this->assertEquals(0, $node->get('comment')->last_comment_uid, 'The value of node last_comment_uid is zero.');
+    $this->assertEquals(2, $node->get('comment')->comment_count, 'The value of node comment_count is 2.');
   }
 
 }

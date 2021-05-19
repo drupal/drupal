@@ -77,7 +77,7 @@ class EntityAddUITest extends BrowserTestBase {
 
     $this->submitForm(['name[0][value]' => 'test name'], 'Save');
     $entity = EntityTestWithBundle::load(1);
-    $this->assertEqual('test name', $entity->label());
+    $this->assertEquals('test name', $entity->label());
 
     // Create a new user that only has bundle specific permissions.
     $user = $this->drupalCreateUser([
@@ -149,7 +149,7 @@ class EntityAddUITest extends BrowserTestBase {
 
     $this->submitForm(['name[0][value]' => 'test name'], 'Save');
     $entity = EntityTestMul::load(1);
-    $this->assertEqual('test name', $entity->label());
+    $this->assertEquals('test name', $entity->label());
   }
 
 }

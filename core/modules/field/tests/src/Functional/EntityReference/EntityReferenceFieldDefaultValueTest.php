@@ -95,17 +95,17 @@ class EntityReferenceFieldDefaultValueTest extends BrowserTestBase {
     // Check if the ID has been converted to UUID in config entity.
     $config_entity = $this->config('field.field.node.reference_content.' . $field_name)->get();
     $this->assertTrue(isset($config_entity['default_value'][0]['target_uuid']), 'Default value contains target_uuid property');
-    $this->assertEqual($referenced_node->uuid(), $config_entity['default_value'][0]['target_uuid'], 'Content uuid and config entity uuid are the same');
+    $this->assertEquals($referenced_node->uuid(), $config_entity['default_value'][0]['target_uuid'], 'Content uuid and config entity uuid are the same');
     // Ensure the configuration has the expected dependency on the entity that
     // is being used a default value.
-    $this->assertEqual([$referenced_node->getConfigDependencyName()], $config_entity['dependencies']['content']);
+    $this->assertEquals([$referenced_node->getConfigDependencyName()], $config_entity['dependencies']['content']);
 
     // Clear field definitions cache in order to avoid stale cache values.
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 
     // Create a new node to check that UUID has been converted to numeric ID.
     $new_node = Node::create(['type' => 'reference_content']);
-    $this->assertEqual($new_node->get($field_name)->offsetGet(0)->target_id, $referenced_node->id());
+    $this->assertEquals($new_node->get($field_name)->offsetGet(0)->target_id, $referenced_node->id());
 
     // Ensure that the entity reference config schemas are correct.
     $field_config = $this->config('field.field.node.reference_content.' . $field_name);

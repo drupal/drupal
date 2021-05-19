@@ -60,7 +60,7 @@ class NodeImportChangeTest extends KernelTestBase {
 
     // Check that the updated config was correctly imported.
     $node_type = NodeType::load($node_type_id);
-    $this->assertEqual($new_label, $node_type->label(), 'Node type name has been updated.');
+    $this->assertEquals($new_label, $node_type->label(), 'Node type name has been updated.');
   }
 
 }

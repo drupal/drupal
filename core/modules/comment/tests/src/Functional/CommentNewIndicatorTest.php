@@ -99,8 +99,8 @@ class CommentNewIndicatorTest extends CommentTestBase {
     // The data will be pre-seeded on this particular page in drupalSettings, to
     // avoid the need for the client to make a separate request to the server.
     $settings = $this->getDrupalSettings();
-    $this->assertEqual(['lastReadTimestamps' => [1 => 0]], $settings['history']);
-    $this->assertEqual([
+    $this->assertEquals(['lastReadTimestamps' => [1 => 0]], $settings['history']);
+    $this->assertEquals([
       'newCommentsLinks' => [
         'node' => [
           'comment' => [

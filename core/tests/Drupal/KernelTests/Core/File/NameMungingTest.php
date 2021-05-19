@@ -77,7 +77,7 @@ class NameMungingTest extends FileTestBase {
   public function testMungeNullByte() {
     $prefix = $this->randomMachineName();
     $filename = $prefix . '.' . $this->badExtension . "\0.txt";
-    $this->assertEqual($prefix . '.' . $this->badExtension . '_.txt', file_munge_filename($filename, ''), 'A filename with a null byte is correctly munged to remove the null byte.');
+    $this->assertEquals($prefix . '.' . $this->badExtension . '_.txt', file_munge_filename($filename, ''), 'A filename with a null byte is correctly munged to remove the null byte.');
   }
 
   /**

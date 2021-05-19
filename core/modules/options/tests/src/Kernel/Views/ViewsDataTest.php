@@ -64,8 +64,8 @@ class ViewsDataTest extends OptionsTestBase {
 
     // Check that the options module has properly overridden default views data.
     $test_options_field = $field_data['test_options_value'];
-    $this->assertEqual('string_list_field', $test_options_field['argument']['id'], 'Argument handler is properly set for fields with allowed value callbacks.');
-    $this->assertEqual('list_field', $test_options_field['filter']['id'], 'Filter handler is properly set for fields with allowed value callbacks.');
+    $this->assertEquals('string_list_field', $test_options_field['argument']['id'], 'Argument handler is properly set for fields with allowed value callbacks.');
+    $this->assertEquals('list_field', $test_options_field['filter']['id'], 'Filter handler is properly set for fields with allowed value callbacks.');
   }
 
 }

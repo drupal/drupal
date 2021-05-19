@@ -75,12 +75,12 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     // Get status of translation sources at local file system.
     $this->drupalGet('admin/reports/translations/check');
     $result = locale_translation_get_status();
-    $this->assertEqual(LOCALE_TRANSLATION_LOCAL, $result['contrib_module_one']['de']->type, 'Translation of contrib_module_one found');
-    $this->assertEqual($this->timestampOld, $result['contrib_module_one']['de']->timestamp, 'Translation timestamp found');
-    $this->assertEqual(LOCALE_TRANSLATION_LOCAL, $result['contrib_module_two']['de']->type, 'Translation of contrib_module_two found');
-    $this->assertEqual($this->timestampNew, $result['contrib_module_two']['de']->timestamp, 'Translation timestamp found');
-    $this->assertEqual(LOCALE_TRANSLATION_LOCAL, $result['locale_test']['de']->type, 'Translation of locale_test found');
-    $this->assertEqual(LOCALE_TRANSLATION_LOCAL, $result['custom_module_one']['de']->type, 'Translation of custom_module_one found');
+    $this->assertEquals(LOCALE_TRANSLATION_LOCAL, $result['contrib_module_one']['de']->type, 'Translation of contrib_module_one found');
+    $this->assertEquals($this->timestampOld, $result['contrib_module_one']['de']->timestamp, 'Translation timestamp found');
+    $this->assertEquals(LOCALE_TRANSLATION_LOCAL, $result['contrib_module_two']['de']->type, 'Translation of contrib_module_two found');
+    $this->assertEquals($this->timestampNew, $result['contrib_module_two']['de']->timestamp, 'Translation timestamp found');
+    $this->assertEquals(LOCALE_TRANSLATION_LOCAL, $result['locale_test']['de']->type, 'Translation of locale_test found');
+    $this->assertEquals(LOCALE_TRANSLATION_LOCAL, $result['custom_module_one']['de']->type, 'Translation of custom_module_one found');
 
     // Set the test conditions.
     $edit = [
@@ -91,14 +91,14 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     // Get status of translation sources at both local and remote locations.
     $this->drupalGet('admin/reports/translations/check');
     $result = locale_translation_get_status();
-    $this->assertEqual(LOCALE_TRANSLATION_REMOTE, $result['contrib_module_one']['de']->type, 'Translation of contrib_module_one found');
-    $this->assertEqual($this->timestampNew, $result['contrib_module_one']['de']->timestamp, 'Translation timestamp found');
-    $this->assertEqual(LOCALE_TRANSLATION_LOCAL, $result['contrib_module_two']['de']->type, 'Translation of contrib_module_two found');
-    $this->assertEqual($this->timestampNew, $result['contrib_module_two']['de']->timestamp, 'Translation timestamp found');
-    $this->assertEqual(LOCALE_TRANSLATION_LOCAL, $result['contrib_module_three']['de']->type, 'Translation of contrib_module_three found');
-    $this->assertEqual($this->timestampOld, $result['contrib_module_three']['de']->timestamp, 'Translation timestamp found');
-    $this->assertEqual(LOCALE_TRANSLATION_LOCAL, $result['locale_test']['de']->type, 'Translation of locale_test found');
-    $this->assertEqual(LOCALE_TRANSLATION_LOCAL, $result['custom_module_one']['de']->type, 'Translation of custom_module_one found');
+    $this->assertEquals(LOCALE_TRANSLATION_REMOTE, $result['contrib_module_one']['de']->type, 'Translation of contrib_module_one found');
+    $this->assertEquals($this->timestampNew, $result['contrib_module_one']['de']->timestamp, 'Translation timestamp found');
+    $this->assertEquals(LOCALE_TRANSLATION_LOCAL, $result['contrib_module_two']['de']->type, 'Translation of contrib_module_two found');
+    $this->assertEquals($this->timestampNew, $result['contrib_module_two']['de']->timestamp, 'Translation timestamp found');
+    $this->assertEquals(LOCALE_TRANSLATION_LOCAL, $result['contrib_module_three']['de']->type, 'Translation of contrib_module_three found');
+    $this->assertEquals($this->timestampOld, $result['contrib_module_three']['de']->timestamp, 'Translation timestamp found');
+    $this->assertEquals(LOCALE_TRANSLATION_LOCAL, $result['locale_test']['de']->type, 'Translation of locale_test found');
+    $this->assertEquals(LOCALE_TRANSLATION_LOCAL, $result['custom_module_one']['de']->type, 'Translation of custom_module_one found');
   }
 
   /**
@@ -139,9 +139,9 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Check if the translation has been updated, using the status cache.
     $status = locale_translation_get_status();
-    $this->assertEqual(LOCALE_TRANSLATION_CURRENT, $status['contrib_module_one']['de']->type, 'Translation of contrib_module_one found');
-    $this->assertEqual(LOCALE_TRANSLATION_CURRENT, $status['contrib_module_two']['de']->type, 'Translation of contrib_module_two found');
-    $this->assertEqual(LOCALE_TRANSLATION_CURRENT, $status['contrib_module_three']['de']->type, 'Translation of contrib_module_three found');
+    $this->assertEquals(LOCALE_TRANSLATION_CURRENT, $status['contrib_module_one']['de']->type, 'Translation of contrib_module_one found');
+    $this->assertEquals(LOCALE_TRANSLATION_CURRENT, $status['contrib_module_two']['de']->type, 'Translation of contrib_module_two found');
+    $this->assertEquals(LOCALE_TRANSLATION_CURRENT, $status['contrib_module_three']['de']->type, 'Translation of contrib_module_three found');
 
     // Check the new translation status.
     // The static cache needs to be flushed first to get the most recent data
@@ -152,21 +152,21 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     // updated.
     $this->assertGreaterThanOrEqual($this->timestampNow, $history['contrib_module_one']['de']->timestamp);
     $this->assertGreaterThanOrEqual($this->timestampNow, $history['contrib_module_one']['de']->last_checked);
-    $this->assertEqual($this->timestampNew, $history['contrib_module_two']['de']->timestamp, 'Translation of contrib_module_two is imported');
+    $this->assertEquals($this->timestampNew, $history['contrib_module_two']['de']->timestamp, 'Translation of contrib_module_two is imported');
     // Verify that the translation of contrib_module_two is updated.
     $this->assertGreaterThanOrEqual($this->timestampNow, $history['contrib_module_two']['de']->last_checked);
-    $this->assertEqual($this->timestampMedium, $history['contrib_module_three']['de']->timestamp, 'Translation of contrib_module_three is not imported');
-    $this->assertEqual($this->timestampMedium, $history['contrib_module_three']['de']->last_checked, 'Translation of contrib_module_three is not updated');
+    $this->assertEquals($this->timestampMedium, $history['contrib_module_three']['de']->timestamp, 'Translation of contrib_module_three is not imported');
+    $this->assertEquals($this->timestampMedium, $history['contrib_module_three']['de']->last_checked, 'Translation of contrib_module_three is not updated');
 
     // Check whether existing translations have (not) been overwritten.
     // cSpell:disable
-    $this->assertEqual('Januar_1', t('January', [], ['langcode' => 'de']), 'Translation of January');
-    $this->assertEqual('Februar_2', t('February', [], ['langcode' => 'de']), 'Translation of February');
-    $this->assertEqual('Marz_2', t('March', [], ['langcode' => 'de']), 'Translation of March');
-    $this->assertEqual('April_2', t('April', [], ['langcode' => 'de']), 'Translation of April');
-    $this->assertEqual('Mai_customized', t('May', [], ['langcode' => 'de']), 'Translation of May');
-    $this->assertEqual('Juni', t('June', [], ['langcode' => 'de']), 'Translation of June');
-    $this->assertEqual('Montag', t('Monday', [], ['langcode' => 'de']), 'Translation of Monday');
+    $this->assertEquals('Januar_1', t('January', [], ['langcode' => 'de']), 'Translation of January');
+    $this->assertEquals('Februar_2', t('February', [], ['langcode' => 'de']), 'Translation of February');
+    $this->assertEquals('Marz_2', t('March', [], ['langcode' => 'de']), 'Translation of March');
+    $this->assertEquals('April_2', t('April', [], ['langcode' => 'de']), 'Translation of April');
+    $this->assertEquals('Mai_customized', t('May', [], ['langcode' => 'de']), 'Translation of May');
+    $this->assertEquals('Juni', t('June', [], ['langcode' => 'de']), 'Translation of June');
+    $this->assertEquals('Montag', t('Monday', [], ['langcode' => 'de']), 'Translation of Monday');
     // cSpell:enable
   }
 
@@ -198,9 +198,9 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Check if the translation has been updated, using the status cache.
     $status = locale_translation_get_status();
-    $this->assertEqual(LOCALE_TRANSLATION_CURRENT, $status['contrib_module_one']['de']->type, 'Translation of contrib_module_one found');
-    $this->assertEqual(LOCALE_TRANSLATION_CURRENT, $status['contrib_module_two']['de']->type, 'Translation of contrib_module_two found');
-    $this->assertEqual(LOCALE_TRANSLATION_CURRENT, $status['contrib_module_three']['de']->type, 'Translation of contrib_module_three found');
+    $this->assertEquals(LOCALE_TRANSLATION_CURRENT, $status['contrib_module_one']['de']->type, 'Translation of contrib_module_one found');
+    $this->assertEquals(LOCALE_TRANSLATION_CURRENT, $status['contrib_module_two']['de']->type, 'Translation of contrib_module_two found');
+    $this->assertEquals(LOCALE_TRANSLATION_CURRENT, $status['contrib_module_three']['de']->type, 'Translation of contrib_module_three found');
 
     // Check the new translation status.
     // The static cache needs to be flushed first to get the most recent data
@@ -209,22 +209,22 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $history = locale_translation_get_file_history();
     // Verify that the translation of contrib_module_one is imported.
     $this->assertGreaterThanOrEqual($this->timestampMedium, $history['contrib_module_one']['de']->timestamp);
-    $this->assertEqual($this->timestampMedium, $history['contrib_module_one']['de']->last_checked, 'Translation of contrib_module_one is updated');
-    $this->assertEqual($this->timestampNew, $history['contrib_module_two']['de']->timestamp, 'Translation of contrib_module_two is imported');
+    $this->assertEquals($this->timestampMedium, $history['contrib_module_one']['de']->last_checked, 'Translation of contrib_module_one is updated');
+    $this->assertEquals($this->timestampNew, $history['contrib_module_two']['de']->timestamp, 'Translation of contrib_module_two is imported');
     // Verify that the translation of contrib_module_two is updated.
     $this->assertGreaterThanOrEqual($this->timestampNow, $history['contrib_module_two']['de']->last_checked);
-    $this->assertEqual($this->timestampMedium, $history['contrib_module_three']['de']->timestamp, 'Translation of contrib_module_three is not imported');
-    $this->assertEqual($this->timestampMedium, $history['contrib_module_three']['de']->last_checked, 'Translation of contrib_module_three is not updated');
+    $this->assertEquals($this->timestampMedium, $history['contrib_module_three']['de']->timestamp, 'Translation of contrib_module_three is not imported');
+    $this->assertEquals($this->timestampMedium, $history['contrib_module_three']['de']->last_checked, 'Translation of contrib_module_three is not updated');
 
     // Check whether existing translations have (not) been overwritten.
     // cSpell:disable
-    $this->assertEqual('Januar_customized', t('January', [], ['langcode' => 'de']), 'Translation of January');
-    $this->assertEqual('Februar_2', t('February', [], ['langcode' => 'de']), 'Translation of February');
-    $this->assertEqual('Marz_2', t('March', [], ['langcode' => 'de']), 'Translation of March');
-    $this->assertEqual('April_2', t('April', [], ['langcode' => 'de']), 'Translation of April');
-    $this->assertEqual('Mai_customized', t('May', [], ['langcode' => 'de']), 'Translation of May');
-    $this->assertEqual('Juni', t('June', [], ['langcode' => 'de']), 'Translation of June');
-    $this->assertEqual('Montag', t('Monday', [], ['langcode' => 'de']), 'Translation of Monday');
+    $this->assertEquals('Januar_customized', t('January', [], ['langcode' => 'de']), 'Translation of January');
+    $this->assertEquals('Februar_2', t('February', [], ['langcode' => 'de']), 'Translation of February');
+    $this->assertEquals('Marz_2', t('March', [], ['langcode' => 'de']), 'Translation of March');
+    $this->assertEquals('April_2', t('April', [], ['langcode' => 'de']), 'Translation of April');
+    $this->assertEquals('Mai_customized', t('May', [], ['langcode' => 'de']), 'Translation of May');
+    $this->assertEquals('Juni', t('June', [], ['langcode' => 'de']), 'Translation of June');
+    $this->assertEquals('Montag', t('Monday', [], ['langcode' => 'de']), 'Translation of Monday');
     // cSpell:enable
   }
 
@@ -256,13 +256,13 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Check whether existing translations have (not) been overwritten.
     // cSpell:disable
-    $this->assertEqual('Januar_customized', t('January', [], ['langcode' => 'de']), 'Translation of January');
-    $this->assertEqual('Februar_customized', t('February', [], ['langcode' => 'de']), 'Translation of February');
-    $this->assertEqual('Marz_2', t('March', [], ['langcode' => 'de']), 'Translation of March');
-    $this->assertEqual('April_2', t('April', [], ['langcode' => 'de']), 'Translation of April');
-    $this->assertEqual('Mai_customized', t('May', [], ['langcode' => 'de']), 'Translation of May');
-    $this->assertEqual('Juni', t('June', [], ['langcode' => 'de']), 'Translation of June');
-    $this->assertEqual('Montag', t('Monday', [], ['langcode' => 'de']), 'Translation of Monday');
+    $this->assertEquals('Januar_customized', t('January', [], ['langcode' => 'de']), 'Translation of January');
+    $this->assertEquals('Februar_customized', t('February', [], ['langcode' => 'de']), 'Translation of February');
+    $this->assertEquals('Marz_2', t('March', [], ['langcode' => 'de']), 'Translation of March');
+    $this->assertEquals('April_2', t('April', [], ['langcode' => 'de']), 'Translation of April');
+    $this->assertEquals('Mai_customized', t('May', [], ['langcode' => 'de']), 'Translation of May');
+    $this->assertEquals('Juni', t('June', [], ['langcode' => 'de']), 'Translation of June');
+    $this->assertEquals('Montag', t('Monday', [], ['langcode' => 'de']), 'Translation of Monday');
     // cSpell:enable
   }
 

@@ -20,7 +20,7 @@ class RangeQueryTest extends DatabaseTestBase {
     // Test if return target data.
     $raw_rows = $this->connection->query('SELECT [name] FROM {test} ORDER BY [name]')->fetchAll();
     $raw_rows = array_slice($raw_rows, 1, 3);
-    $this->assertEqual($range_rows, $raw_rows);
+    $this->assertEquals($range_rows, $raw_rows);
   }
 
 }

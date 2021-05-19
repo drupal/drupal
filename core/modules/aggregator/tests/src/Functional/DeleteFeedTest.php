@@ -41,7 +41,7 @@ class DeleteFeedTest extends AggregatorTestBase {
     $this->assertText($feed2->label());
     $block_storage = $this->container->get('entity_type.manager')->getStorage('block');
     $this->assertNull($block_storage->load($block->id()), 'Block for the deleted feed was deleted.');
-    $this->assertEqual($block2->id(), $block_storage->load($block2->id())->id(), 'Block for not deleted feed still exists.');
+    $this->assertEquals($block2->id(), $block_storage->load($block2->id())->id(), 'Block for not deleted feed still exists.');
 
     // Check feed source.
     $this->drupalGet('aggregator/sources/' . $feed1->id());

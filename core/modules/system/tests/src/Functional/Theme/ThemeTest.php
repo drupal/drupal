@@ -189,7 +189,7 @@ class ThemeTest extends BrowserTestBase {
         'Flamingo',
       ];
       foreach ($expected_values as $key => $value) {
-        $this->assertEqual((string) $value, $items[$key]->getText());
+        $this->assertEquals((string) $value, $items[$key]->getText());
       }
     }
   }

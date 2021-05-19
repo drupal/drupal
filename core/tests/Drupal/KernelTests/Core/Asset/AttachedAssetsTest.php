@@ -55,10 +55,10 @@ class AttachedAssetsTest extends KernelTestBase {
    */
   public function testDefault() {
     $assets = new AttachedAssets();
-    $this->assertEqual([], $this->assetResolver->getCssAssets($assets, FALSE), 'Default CSS is empty.');
+    $this->assertEquals([], $this->assetResolver->getCssAssets($assets, FALSE), 'Default CSS is empty.');
     list($js_assets_header, $js_assets_footer) = $this->assetResolver->getJsAssets($assets, FALSE);
-    $this->assertEqual([], $js_assets_header, 'Default header JavaScript is empty.');
-    $this->assertEqual([], $js_assets_footer, 'Default footer JavaScript is empty.');
+    $this->assertEquals([], $js_assets_header, 'Default header JavaScript is empty.');
+    $this->assertEquals([], $js_assets_footer, 'Default footer JavaScript is empty.');
   }
 
   /**
@@ -100,15 +100,15 @@ class AttachedAssetsTest extends KernelTestBase {
     $build['#attached']['library'][] = 'core/drupalSettings';
     $assets = AttachedAssets::createFromRenderArray($build);
 
-    $this->assertEqual([], $assets->getSettings(), 'JavaScript settings on $assets are empty.');
+    $this->assertEquals([], $assets->getSettings(), 'JavaScript settings on $assets are empty.');
     $javascript = $this->assetResolver->getJsAssets($assets, FALSE)[1];
     $this->assertArrayHasKey('currentPath', $javascript['drupalSettings']['data']['path']);
     $this->assertArrayHasKey('currentPath', $assets->getSettings()['path']);
 
     $assets->setSettings(['drupal' => 'rocks', 'dries' => 280342800]);
     $javascript = $this->assetResolver->getJsAssets($assets, FALSE)[1];
-    $this->assertEqual(280342800, $javascript['drupalSettings']['data']['dries'], 'JavaScript setting is set correctly.');
-    $this->assertEqual('rocks', $javascript['drupalSettings']['data']['drupal'], 'The other JavaScript setting is set correctly.');
+    $this->assertEquals(280342800, $javascript['drupalSettings']['data']['dries'], 'JavaScript setting is set correctly.');
+    $this->assertEquals('rocks', $javascript['drupalSettings']['data']['drupal'], 'The other JavaScript setting is set correctly.');
   }
 
   /**
@@ -174,10 +174,10 @@ class AttachedAssetsTest extends KernelTestBase {
     $this->assertCount(1, $this->assetResolver->getCssAssets($assets, TRUE), 'There is a sole aggregated CSS asset.');
 
     list($header_js, $footer_js) = $this->assetResolver->getJsAssets($assets, TRUE);
-    $this->assertEqual([], \Drupal::service('asset.js.collection_renderer')->render($header_js), 'There are 0 JavaScript assets in the header.');
+    $this->assertEquals([], \Drupal::service('asset.js.collection_renderer')->render($header_js), 'There are 0 JavaScript assets in the header.');
     $rendered_footer_js = \Drupal::service('asset.js.collection_renderer')->render($footer_js);
     $this->assertCount(2, $rendered_footer_js, 'There are 2 JavaScript assets in the footer.');
-    $this->assertEqual('drupal-settings-json', $rendered_footer_js[0]['#attributes']['data-drupal-selector'], 'The first of the two JavaScript assets in the footer has drupal settings.');
+    $this->assertEquals('drupal-settings-json', $rendered_footer_js[0]['#attributes']['data-drupal-selector'], 'The first of the two JavaScript assets in the footer has drupal settings.');
     $this->assertStringStartsWith(base_path(), $rendered_footer_js[1]['#attributes']['src'], 'The second of the two JavaScript assets in the footer has the sole aggregated JavaScript asset.');
   }
 
@@ -415,7 +415,7 @@ class AttachedAssetsTest extends KernelTestBase {
     /** @var \Drupal\Core\Asset\LibraryDiscoveryInterface $library_discovery */
     $library_discovery = \Drupal::service('library.discovery');
     $library = $library_discovery->getLibraryByName('core', 'jquery.farbtastic');
-    $this->assertEqual('0.0', $library['version'], 'Registered libraries were altered.');
+    $this->assertEquals('0.0', $library['version'], 'Registered libraries were altered.');
 
     // common_test_library_info_alter() also added a dependency on jQuery Form.
     $build['#attached']['library'][] = 'core/jquery.farbtastic';
@@ -455,7 +455,7 @@ class AttachedAssetsTest extends KernelTestBase {
     /** @var \Drupal\Core\Asset\LibraryDiscoveryInterface $library_discovery */
     $library_discovery = \Drupal::service('library.discovery');
     $farbtastic = $library_discovery->getLibraryByName('common_test', 'jquery.farbtastic');
-    $this->assertEqual('0.1', $farbtastic['version'], 'Alternative libraries can be added to the page.');
+    $this->assertEquals('0.1', $farbtastic['version'], 'Alternative libraries can be added to the page.');
   }
 
   /**

@@ -100,7 +100,7 @@ class DisplayPageWebTest extends ViewTestBase {
       ':ul_class' => 'tabs primary',
       ':a_class' => 'is-active',
     ]);
-    $this->assertEqual(t('Test default tab'), $element[0]->getText());
+    $this->assertEquals(t('Test default tab'), $element[0]->getText());
     $this->assertSession()->titleEquals('Test default page | Drupal');
 
     $this->drupalGet('test_page_display_menu/default');
@@ -112,7 +112,7 @@ class DisplayPageWebTest extends ViewTestBase {
       ':ul_class' => 'tabs primary',
       ':a_class' => 'is-active',
     ]);
-    $this->assertEqual(t('Test local tab'), $element[0]->getText());
+    $this->assertEquals(t('Test local tab'), $element[0]->getText());
     $this->assertSession()->titleEquals('Test local page | Drupal');
 
     // Check an ordinary menu link.
@@ -122,7 +122,7 @@ class DisplayPageWebTest extends ViewTestBase {
     $this->drupalGet('<front>');
 
     $menu_link = $this->cssSelect('nav.block-menu ul.menu a');
-    $this->assertEqual('Test menu link', $menu_link[0]->getText());
+    $this->assertEquals('Test menu link', $menu_link[0]->getText());
 
     // Update the menu link.
     $this->drupalPostForm("admin/structure/menu/link/views_view:views.test_page_display_menu.page_3/edit", [
@@ -131,7 +131,7 @@ class DisplayPageWebTest extends ViewTestBase {
 
     $this->drupalGet('<front>');
     $menu_link = $this->cssSelect('nav.block-menu ul.menu a');
-    $this->assertEqual('New title', $menu_link[0]->getText());
+    $this->assertEquals('New title', $menu_link[0]->getText());
   }
 
   /**

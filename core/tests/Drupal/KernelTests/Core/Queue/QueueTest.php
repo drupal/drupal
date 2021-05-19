@@ -70,7 +70,7 @@ class QueueTest extends KernelTestBase {
     $new_items[] = $item->data;
 
     // First two dequeued items should match the first two items we queued.
-    $this->assertEqual(2, $this->queueScore($data, $new_items), 'Two items matched');
+    $this->assertEquals(2, $this->queueScore($data, $new_items), 'Two items matched');
 
     // Add two more items.
     $queue1->createItem($data[2]);
@@ -87,10 +87,10 @@ class QueueTest extends KernelTestBase {
 
     // All dequeued items should match the items we queued exactly once,
     // therefore the score must be exactly 4.
-    $this->assertEqual(4, $this->queueScore($data, $new_items), 'Four items matched');
+    $this->assertEquals(4, $this->queueScore($data, $new_items), 'Four items matched');
 
     // There should be no duplicate items.
-    $this->assertEqual(4, $this->queueScore($new_items, $new_items), 'Four items matched');
+    $this->assertEquals(4, $this->queueScore($new_items, $new_items), 'Four items matched');
 
     // Delete all items from queue1.
     foreach ($items as $item) {

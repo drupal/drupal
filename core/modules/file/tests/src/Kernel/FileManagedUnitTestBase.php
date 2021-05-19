@@ -96,7 +96,7 @@ abstract class FileManagedUnitTestBase extends KernelTestBase {
         $message = new FormattableMarkup('hook_file_@name was expected to be called %expected times but was called %actual times.', ['@name' => $hook, '%expected' => $expected_count, '%actual' => $actual_count]);
       }
     }
-    $this->assertEqual($expected_count, $actual_count, $message);
+    $this->assertEquals($expected_count, $actual_count, $message);
   }
 
   /**
@@ -108,13 +108,13 @@ abstract class FileManagedUnitTestBase extends KernelTestBase {
    *   File object to compare.
    */
   public function assertFileUnchanged(FileInterface $before, FileInterface $after) {
-    $this->assertEqual($before->id(), $after->id(), t('File id is the same: %file1 == %file2.', ['%file1' => $before->id(), '%file2' => $after->id()]), 'File unchanged');
-    $this->assertEqual($before->getOwner()->id(), $after->getOwner()->id(), t('File owner is the same: %file1 == %file2.', ['%file1' => $before->getOwner()->id(), '%file2' => $after->getOwner()->id()]), 'File unchanged');
-    $this->assertEqual($before->getFilename(), $after->getFilename(), t('File name is the same: %file1 == %file2.', ['%file1' => $before->getFilename(), '%file2' => $after->getFilename()]), 'File unchanged');
-    $this->assertEqual($before->getFileUri(), $after->getFileUri(), t('File path is the same: %file1 == %file2.', ['%file1' => $before->getFileUri(), '%file2' => $after->getFileUri()]), 'File unchanged');
-    $this->assertEqual($before->getMimeType(), $after->getMimeType(), t('File MIME type is the same: %file1 == %file2.', ['%file1' => $before->getMimeType(), '%file2' => $after->getMimeType()]), 'File unchanged');
-    $this->assertEqual($before->getSize(), $after->getSize(), t('File size is the same: %file1 == %file2.', ['%file1' => $before->getSize(), '%file2' => $after->getSize()]), 'File unchanged');
-    $this->assertEqual($before->isPermanent(), $after->isPermanent(), t('File status is the same: %file1 == %file2.', ['%file1' => $before->isPermanent(), '%file2' => $after->isPermanent()]), 'File unchanged');
+    $this->assertEquals($before->id(), $after->id(), t('File id is the same: %file1 == %file2.', ['%file1' => $before->id(), '%file2' => $after->id()]));
+    $this->assertEquals($before->getOwner()->id(), $after->getOwner()->id(), t('File owner is the same: %file1 == %file2.', ['%file1' => $before->getOwner()->id(), '%file2' => $after->getOwner()->id()]));
+    $this->assertEquals($before->getFilename(), $after->getFilename(), t('File name is the same: %file1 == %file2.', ['%file1' => $before->getFilename(), '%file2' => $after->getFilename()]));
+    $this->assertEquals($before->getFileUri(), $after->getFileUri(), t('File path is the same: %file1 == %file2.', ['%file1' => $before->getFileUri(), '%file2' => $after->getFileUri()]));
+    $this->assertEquals($before->getMimeType(), $after->getMimeType(), t('File MIME type is the same: %file1 == %file2.', ['%file1' => $before->getMimeType(), '%file2' => $after->getMimeType()]));
+    $this->assertEquals($before->getSize(), $after->getSize(), t('File size is the same: %file1 == %file2.', ['%file1' => $before->getSize(), '%file2' => $after->getSize()]));
+    $this->assertEquals($before->isPermanent(), $after->isPermanent(), t('File status is the same: %file1 == %file2.', ['%file1' => $before->isPermanent(), '%file2' => $after->isPermanent()]));
   }
 
   /**
@@ -139,8 +139,8 @@ abstract class FileManagedUnitTestBase extends KernelTestBase {
    *   File object to compare.
    */
   public function assertSameFile(FileInterface $file1, FileInterface $file2) {
-    $this->assertEqual($file1->id(), $file2->id(), t('Files have the same ids: %file1 == %file2.', ['%file1' => $file1->id(), '%file2-fid' => $file2->id()]), 'Same file');
-    $this->assertEqual($file1->getFileUri(), $file2->getFileUri(), t('Files have the same path: %file1 == %file2.', ['%file1' => $file1->getFileUri(), '%file2' => $file2->getFileUri()]), 'Same file');
+    $this->assertEquals($file1->id(), $file2->id(), t('Files have the same ids: %file1 == %file2.', ['%file1' => $file1->id(), '%file2-fid' => $file2->id()]));
+    $this->assertEquals($file1->getFileUri(), $file2->getFileUri(), t('Files have the same path: %file1 == %file2.', ['%file1' => $file1->getFileUri(), '%file2' => $file2->getFileUri()]));
   }
 
   /**

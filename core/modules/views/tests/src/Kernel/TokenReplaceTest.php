@@ -65,7 +65,7 @@ class TokenReplaceTest extends ViewsKernelTestBase {
       $bubbleable_metadata = new BubbleableMetadata();
       $output = $token_handler->replace($token, ['view' => $view], [], $bubbleable_metadata);
       $this->assertSame($expected_output, $output, new FormattableMarkup('Token %token replaced correctly.', ['%token' => $token]));
-      $this->assertEqual($metadata_tests[$token], $bubbleable_metadata);
+      $this->assertEquals($metadata_tests[$token], $bubbleable_metadata);
     }
   }
 

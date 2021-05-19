@@ -79,7 +79,7 @@ class InstallerExistingSettingsTest extends InstallerTestBase {
   public function testInstaller() {
     $this->assertSession()->addressEquals('user/1');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertEqual('testing', \Drupal::installProfile());
+    $this->assertEquals('testing', \Drupal::installProfile());
   }
 
 }

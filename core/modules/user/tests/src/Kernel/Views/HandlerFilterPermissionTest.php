@@ -108,7 +108,7 @@ class HandlerFilterPermissionTest extends UserKernelTestBase {
         return Html::escape(strip_tags($permission['title']));
       }, $permission_by_module[$module]);
 
-      $this->assertEqual($expected, $value_options[$title], 'Ensure the all permissions are available');
+      $this->assertEquals($expected, $value_options[$title], 'Ensure the all permissions are available');
     }
   }
 

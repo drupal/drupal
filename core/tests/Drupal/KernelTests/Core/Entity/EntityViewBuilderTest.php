@@ -203,7 +203,7 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
     $renderer->renderRoot($view);
 
     // Check that the weight is respected.
-    $this->assertEqual(20, $view['label']['#weight'], 'The weight of a display component is respected.');
+    $this->assertEquals(20, $view['label']['#weight'], 'The weight of a display component is respected.');
   }
 
   /**

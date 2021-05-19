@@ -297,7 +297,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
 
     $dependencies = \Drupal::service('config.manager')->findConfigEntityDependentsAsEntities('content', [$block->getConfigDependencyName()]);
     $block_placement = reset($dependencies);
-    $this->assertEqual($block_placement_id, $block_placement->id(), "The block placement config entity has a dependency on the block content entity.");
+    $this->assertEquals($block_placement_id, $block_placement->id(), "The block placement config entity has a dependency on the block content entity.");
   }
 
 }
