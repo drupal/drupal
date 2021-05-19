@@ -707,7 +707,7 @@ type: module
 name: Module for That
 INFO;
     if (!empty($lifecycle)) {
-      $info .= "\lifecycle: $lifecycle\n";
+      $info .= "\nlifecycle: $lifecycle\n";
     }
     vfsStream::setup('modules');
     $filename = "lifecycle-$lifecycle.info.txt";
@@ -763,7 +763,7 @@ version: VERSION
 type: module
 name: Module for That
 INFO;
-    $info .= "\lifecycle: $lifecycle\n";
+    $info .= "\nlifecycle: $lifecycle\n";
     vfsStream::setup('modules');
     $filename = "lifecycle-$lifecycle.info.txt";
     vfsStream::create([
