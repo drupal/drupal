@@ -1471,7 +1471,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
   }
 
   /**
-   * ::onEntityTypeUpdate
+   * ::onEntityTypeUpdate.
    */
   public function testonEntityTypeUpdateWithNewIndex() {
     $this->entityType = $original_entity_type = new ContentEntityType([

@@ -32,23 +32,23 @@ class MigrateAggregatorFeedTest extends MigrateDrupal7TestBase {
   public function testAggregatorFeedImport() {
     /** @var \Drupal\aggregator\FeedInterface $feed */
     $feed = Feed::load(1);
-    $this->assertIdentical('Know Your Meme', $feed->label());
-    $this->assertIdentical('en', $feed->language()->getId());
-    $this->assertIdentical('http://knowyourmeme.com/newsfeed.rss', $feed->getUrl());
-    $this->assertIdentical('900', $feed->getRefreshRate());
+    $this->assertSame('Know Your Meme', $feed->label());
+    $this->assertSame('en', $feed->language()->getId());
+    $this->assertSame('http://knowyourmeme.com/newsfeed.rss', $feed->getUrl());
+    $this->assertSame('900', $feed->getRefreshRate());
     // The feed's last checked time can change as the fixture is updated, so
     // assert that its format is correct.
     $checked_time = $feed->getLastCheckedTime();
     $this->assertIsNumeric($checked_time);
-    $this->assertTrue($checked_time > 1000000000);
-    $this->assertIdentical('0', $feed->getQueuedTime());
-    $this->assertIdentical('http://knowyourmeme.com', $feed->link->value);
-    $this->assertIdentical('New items added to the News Feed', $feed->getDescription());
+    $this->assertGreaterThan(1000000000, $checked_time);
+    $this->assertSame('0', $feed->getQueuedTime());
+    $this->assertSame('http://knowyourmeme.com', $feed->link->value);
+    $this->assertSame('New items added to the News Feed', $feed->getDescription());
     $this->assertNull($feed->getImage());
     // As with getLastCheckedTime(), the etag can change as the fixture is
     // updated normally, so assert that its format is correct.
     $this->assertRegExp('/^"[a-z0-9]{32}"$/', $feed->getEtag());
-    $this->assertIdentical('0', $feed->getLastModified());
+    $this->assertSame('0', $feed->getLastModified());
   }
 
 }

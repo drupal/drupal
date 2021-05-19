@@ -20,7 +20,7 @@ class UpdateManager implements UpdateManagerInterface {
   use StringTranslationTrait;
 
   /**
-   * The update settings
+   * The update settings.
    *
    * @var \Drupal\Core\Config\Config
    */

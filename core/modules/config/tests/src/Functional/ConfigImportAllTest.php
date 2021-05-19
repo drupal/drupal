@@ -122,7 +122,7 @@ class ConfigImportAllTest extends ModuleTestBase {
     $this->rebuildContainer();
 
     // Check that there are no errors.
-    $this->assertIdentical($this->configImporter()->getErrors(), []);
+    $this->assertSame([], $this->configImporter()->getErrors());
 
     // Check that all modules that were uninstalled are now reinstalled.
     $this->assertModules(array_keys($modules_to_uninstall), TRUE);
@@ -136,7 +136,7 @@ class ConfigImportAllTest extends ModuleTestBase {
       $this->container->get('config.storage.sync'),
       $this->container->get('config.storage')
     );
-    $this->assertIdentical($storage_comparer->createChangelist()->getChangelist(), $storage_comparer->getEmptyChangelist());
+    $this->assertSame($storage_comparer->getEmptyChangelist(), $storage_comparer->createChangelist()->getChangelist());
 
     // Now we have all configuration imported, test all of them for schema
     // conformance. Ensures all imported default configuration is valid when

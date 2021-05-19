@@ -64,7 +64,10 @@ class FeedParserTest extends AggregatorTestBase {
     $this->assertText('Atom-Powered Robots Run Amok');
     $this->assertSession()->linkByHrefExists('http://example.org/2003/12/13/atom03');
     $this->assertText('Some text.');
-    $item_ids = \Drupal::entityQuery('aggregator_item')->condition('link', 'http://example.org/2003/12/13/atom03')->execute();
+    $item_ids = \Drupal::entityQuery('aggregator_item')
+      ->accessCheck(FALSE)
+      ->condition('link', 'http://example.org/2003/12/13/atom03')
+      ->execute();
     $item = Item::load(array_values($item_ids)[0]);
     $this->assertEqual('urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a', $item->getGuid(), 'Atom entry id element is parsed correctly.');
 
@@ -72,7 +75,10 @@ class FeedParserTest extends AggregatorTestBase {
     $this->assertText('We tried to stop them, but we failed.');
     $this->assertSession()->linkByHrefExists('http://example.org/2003/12/14/atom03');
     $this->assertText('Some other text.');
-    $item_ids = \Drupal::entityQuery('aggregator_item')->condition('link', 'http://example.org/2003/12/14/atom03')->execute();
+    $item_ids = \Drupal::entityQuery('aggregator_item')
+      ->accessCheck(FALSE)
+      ->condition('link', 'http://example.org/2003/12/14/atom03')
+      ->execute();
     $item = Item::load(array_values($item_ids)[0]);
     $this->assertEqual('urn:uuid:1225c695-cfb8-4ebb-bbbb-80da344efa6a', $item->getGuid(), 'Atom entry id element is parsed correctly.');
   }
@@ -98,7 +104,7 @@ class FeedParserTest extends AggregatorTestBase {
     $feed->refreshItems();
 
     // Make sure that the feed URL was updated correctly.
-    $this->assertEqual($feed->getUrl(), Url::fromRoute('aggregator_test.feed', [], ['absolute' => TRUE])->toString());
+    $this->assertEqual(Url::fromRoute('aggregator_test.feed', [], ['absolute' => TRUE])->toString(), $feed->getUrl());
   }
 
   /**

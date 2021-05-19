@@ -48,11 +48,11 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
       $input = $test['prefix'] . '[site:name]' . $test['suffix'];
       $expected = $test['prefix'] . 'Drupal' . $test['suffix'];
       $output = $this->tokenService->replace($input, [], ['langcode' => $this->interfaceLanguage->getId()]);
-      $this->assertTrue($output == $expected, new FormattableMarkup('Token recognized in string %string', ['%string' => $input]));
+      $this->assertSame($expected, $output, new FormattableMarkup('Token recognized in string %string', ['%string' => $input]));
     }
 
     // Test token replacement when the string contains no tokens.
-    $this->assertEqual($this->tokenService->replace('No tokens here.'), 'No tokens here.');
+    $this->assertEqual('No tokens here.', $this->tokenService->replace('No tokens here.'));
   }
 
   /**
@@ -123,8 +123,8 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
     foreach ($tests as $input => $expected) {
       $bubbleable_metadata = new BubbleableMetadata();
       $output = $this->tokenService->replace($input, [], ['langcode' => $this->interfaceLanguage->getId()], $bubbleable_metadata);
-      $this->assertEqual($output, $expected, new FormattableMarkup('System site information token %token replaced.', ['%token' => $input]));
-      $this->assertEqual($bubbleable_metadata, $metadata_tests[$input]);
+      $this->assertEqual($expected, $output, new FormattableMarkup('System site information token %token replaced.', ['%token' => $input]));
+      $this->assertEqual($metadata_tests[$input], $bubbleable_metadata);
     }
   }
 
@@ -150,7 +150,7 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
 
     foreach ($tests as $input => $expected) {
       $output = $this->tokenService->replace($input, ['date' => $date], ['langcode' => $this->interfaceLanguage->getId()]);
-      $this->assertEqual($output, $expected, new FormattableMarkup('Date token %token replaced.', ['%token' => $input]));
+      $this->assertEqual($expected, $output, new FormattableMarkup('Date token %token replaced.', ['%token' => $input]));
     }
   }
 

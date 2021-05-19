@@ -121,7 +121,7 @@ class ConfigEntityListTest extends BrowserTestBase {
     ]);
     $entity->save();
     $list = $controller->load();
-    $this->assertIdentical(array_keys($list), ['beta', 'dotted.default', 'alpha', 'omega']);
+    $this->assertSame(['beta', 'dotted.default', 'alpha', 'omega'], array_keys($list));
 
     // Test that config entities that do not support status, do not have
     // enable/disable operations.
@@ -168,29 +168,25 @@ class ConfigEntityListTest extends BrowserTestBase {
     $this->assertSession()->titleEquals('Test configuration | Drupal');
 
     // Test for the table.
-    $element = $this->xpath('//div[@class="layout-content"]//table');
-    $this->assertCount(1, $element, 'Configuration entity list table found.');
+    $this->assertSession()->elementsCount('xpath', '//div[@class="layout-content"]//table', 1);
 
     // Test the table header.
-    $elements = $this->xpath('//div[@class="layout-content"]//table/thead/tr/th');
-    $this->assertCount(3, $elements, 'Correct number of table header cells found.');
+    $this->assertSession()->elementsCount('xpath', '//div[@class="layout-content"]//table/thead/tr/th', 3);
 
     // Test the contents of each th cell.
-    $expected_items = ['Label', 'Machine name', 'Operations'];
-    foreach ($elements as $key => $element) {
-      $this->assertIdentical($element->getText(), $expected_items[$key]);
-    }
+    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/thead/tr/th[1]', 'Label');
+    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/thead/tr/th[2]', 'Machine name');
+    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/thead/tr/th[3]', 'Operations');
 
     // Check the number of table row cells.
-    $elements = $this->xpath('//div[@class="layout-content"]//table/tbody/tr[@class="odd"]/td');
-    $this->assertCount(3, $elements, 'Correct number of table row cells found.');
+    $this->assertSession()->elementsCount('xpath', '//div[@class="layout-content"]//table/tbody/tr[@class="odd"]/td', 3);
 
     // Check the contents of each row cell. The first cell contains the label,
     // the second contains the machine name, and the third contains the
     // operations list.
-    $this->assertIdentical($elements[0]->getText(), 'Default');
-    $this->assertIdentical($elements[1]->getText(), 'dotted.default');
-    $this->assertNotEmpty($elements[2]->find('xpath', '//ul'), 'Operations list found.');
+    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/tbody/tr[@class="odd"]/td[1]', 'Default');
+    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/tbody/tr[@class="odd"]/td[2]', 'dotted.default');
+    $this->assertSession()->elementExists('xpath', '//div[@class="layout-content"]//table/tbody/tr[@class="odd"]/td[3]//ul');
 
     // Add a new entity using the operations link.
     $this->assertSession()->linkExists('Add test configuration');
@@ -201,7 +197,7 @@ class ConfigEntityListTest extends BrowserTestBase {
       'id' => 'antelope',
       'weight' => 1,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
 
     // Ensure that the entity's sort method was called.
     $this->assertTrue(\Drupal::state()->get('config_entity_sort'), 'ConfigTest::sort() was called.');
@@ -218,7 +214,7 @@ class ConfigEntityListTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->titleEquals('Edit Antelope | Drupal');
     $edit = ['label' => 'Albatross', 'id' => 'albatross'];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
 
     // Confirm that the user is returned to the listing, and verify that the
     // text of the label and machine name appears in the list (versus elsewhere
@@ -231,7 +227,7 @@ class ConfigEntityListTest extends BrowserTestBase {
     $this->clickLink('Delete', 1);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->titleEquals('Are you sure you want to delete the test configuration Albatross? | Drupal');
-    $this->drupalPostForm(NULL, [], 'Delete');
+    $this->submitForm([], 'Delete');
 
     // Verify that the text of the label and machine name does not appear in
     // the list (though it may appear elsewhere on the page).
@@ -242,7 +238,7 @@ class ConfigEntityListTest extends BrowserTestBase {
     $this->clickLink('Delete');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->titleEquals('Are you sure you want to delete the test configuration Default? | Drupal');
-    $this->drupalPostForm(NULL, [], 'Delete');
+    $this->submitForm([], 'Delete');
 
     // Verify that the text of the label and machine name does not appear in
     // the list (though it may appear elsewhere on the page).

@@ -100,7 +100,7 @@ class BlockStorageUnitTest extends KernelTestBase {
       'visibility' => [],
     ];
 
-    $this->assertIdentical($actual_properties, $expected_properties);
+    $this->assertSame($expected_properties, $actual_properties);
 
     $this->assertInstanceOf(TestHtmlBlock::class, $entity->getPlugin());
   }
@@ -116,7 +116,7 @@ class BlockStorageUnitTest extends KernelTestBase {
     // Verify several properties of the block.
     $this->assertSame('content', $entity->getRegion());
     $this->assertTrue($entity->status());
-    $this->assertEqual($entity->getTheme(), 'stark');
+    $this->assertEqual('stark', $entity->getTheme());
     $this->assertNotEmpty($entity->uuid());
   }
 
@@ -152,7 +152,7 @@ class BlockStorageUnitTest extends KernelTestBase {
 
     $entities = $this->controller->loadMultiple();
     $entity = reset($entities);
-    $this->assertEqual($entity->id(), 'test_block', 'The default test block was loaded.');
+    $this->assertEqual('test_block', $entity->id(), 'The default test block was loaded.');
   }
 
 }

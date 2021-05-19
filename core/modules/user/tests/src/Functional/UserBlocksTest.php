@@ -55,12 +55,11 @@ class UserBlocksTest extends BrowserTestBase {
     ];
     foreach ($paths as $path => $expected_visibility) {
       $this->drupalGet($path);
-      $elements = $this->xpath('//div[contains(@class,"block-user-login-block") and @role="form"]');
       if ($expected_visibility) {
-        $this->assertTrue(!empty($elements), 'User login block in path "' . $path . '" should be visible');
+        $this->assertSession()->elementExists('xpath', '//div[contains(@class,"block-user-login-block") and @role="form"]');
       }
       else {
-        $this->assertTrue(empty($elements), 'User login block in path "' . $path . '" should not be visible');
+        $this->assertSession()->elementNotExists('xpath', '//div[contains(@class,"block-user-login-block") and @role="form"]');
       }
     }
   }
@@ -77,7 +76,7 @@ class UserBlocksTest extends BrowserTestBase {
     $edit['name'] = $user->getAccountName();
     $edit['pass'] = $user->passRaw;
     $this->drupalPostForm('admin/people/permissions', $edit, 'Log in');
-    $this->assertNoText('User login', 'Logged in.');
+    $this->assertNoText('User login');
 
     // Check that we are still on the same page.
     $this->assertSession()->addressEquals(Url::fromRoute('user.admin_permissions'));
@@ -86,8 +85,8 @@ class UserBlocksTest extends BrowserTestBase {
     $this->drupalLogout();
     $this->drupalGet('filter/tips');
     $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'MISS');
-    $this->drupalPostForm(NULL, $edit, 'Log in');
-    $this->assertNoText('User login', 'Logged in.');
+    $this->submitForm($edit, 'Log in');
+    $this->assertNoText('User login');
     // Verify that we are still on the same page after login for allowed page.
     $this->assertSession()->responseMatches('!<title.*?Compose tips.*?</title>!');
 
@@ -95,8 +94,8 @@ class UserBlocksTest extends BrowserTestBase {
     $this->drupalLogout();
     $this->drupalGet('filter/tips', ['query' => ['foo' => 'bar']]);
     $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'HIT');
-    $this->drupalPostForm(NULL, $edit, 'Log in');
-    $this->assertNoText('User login', 'Logged in.');
+    $this->submitForm($edit, 'Log in');
+    $this->assertNoText('User login');
     // Verify that we are still on the same page after login for allowed page.
     $this->assertSession()->responseMatches('!<title.*?Compose tips.*?</title>!');
     $this->assertStringContainsString('/filter/tips?foo=bar', $this->getUrl(), 'Correct query arguments are displayed after login');
@@ -105,8 +104,8 @@ class UserBlocksTest extends BrowserTestBase {
     $this->drupalLogout();
     $this->drupalGet('filter/tips', ['query' => ['foo' => 'baz']]);
     $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'HIT');
-    $this->drupalPostForm(NULL, $edit, 'Log in');
-    $this->assertNoText('User login', 'Logged in.');
+    $this->submitForm($edit, 'Log in');
+    $this->assertNoText('User login');
     // Verify that we are still on the same page after login for allowed page.
     $this->assertSession()->responseMatches('!<title.*?Compose tips.*?</title>!');
     $this->assertStringContainsString('/filter/tips?foo=baz', $this->getUrl(), 'Correct query arguments are displayed after login');

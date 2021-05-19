@@ -141,7 +141,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $test_file = $this->getTestFile('text');
     $this->drupalGet('node/add/' . $type_name);
     $edit = ['files[' . $field_name . '_0]' => $file_system->realpath($test_file->getFileUri())];
-    $this->drupalPostForm(NULL, $edit, 'Upload');
+    $this->submitForm($edit, 'Upload');
     /** @var \Drupal\file\FileStorageInterface $file_storage */
     $file_storage = $this->container->get('entity_type.manager')->getStorage('file');
     $files = $file_storage->loadByProperties(['uid' => 0]);
@@ -168,7 +168,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName();
     $edit['files[' . $field_name . '_0]'] = $file_system->realpath($test_file->getFileUri());
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $new_node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $file_id = $new_node->{$field_name}->target_id;
     $file = File::load($file_id);
@@ -197,7 +197,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName();
     $edit['files[' . $field_name . '_0]'] = $file_system->realpath($test_file->getFileUri());
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $new_node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $file = File::load($new_node->{$field_name}->target_id);
     $this->assertTrue($file->isPermanent(), 'File is permanent.');
@@ -222,7 +222,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName();
     $edit['files[' . $field_name . '_0]'] = $file_system->realpath($test_file->getFileUri());
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $new_node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $new_node->setUnpublished();
     $new_node->save();

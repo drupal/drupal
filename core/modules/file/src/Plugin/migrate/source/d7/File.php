@@ -30,19 +30,12 @@ class File extends DrupalSqlBase {
   protected $privatePath;
 
   /**
-   * The temporary file directory path.
-   *
-   * @var string
-   */
-  protected $temporaryPath;
-
-  /**
    * {@inheritdoc}
    */
   public function query() {
     $query = $this->select('file_managed', 'f')
       ->fields('f')
-      ->condition('uri', 'temporary://%', 'NOT LIKE')
+      ->condition('f.uri', 'temporary://%', 'NOT LIKE')
       ->orderBy('f.timestamp');
 
     // Filter by scheme(s), if configured.
@@ -59,7 +52,7 @@ class File extends DrupalSqlBase {
       // Add conditions, uri LIKE 'public://%' OR uri LIKE 'private://%'.
       $conditions = $this->getDatabase()->condition('OR');
       foreach ($schemes as $scheme) {
-        $conditions->condition('uri', $scheme . '%', 'LIKE');
+        $conditions->condition('f.uri', $scheme . '%', 'LIKE');
       }
       $query->condition($conditions);
     }
@@ -73,7 +66,6 @@ class File extends DrupalSqlBase {
   protected function initializeIterator() {
     $this->publicPath = $this->variableGet('file_public_path', 'sites/default/files');
     $this->privatePath = $this->variableGet('file_private_path', NULL);
-    $this->temporaryPath = $this->variableGet('file_temporary_path', '/tmp');
     return parent::initializeIterator();
   }
 
@@ -83,7 +75,7 @@ class File extends DrupalSqlBase {
   public function prepareRow(Row $row) {
     // Compute the filepath property, which is a physical representation of
     // the URI relative to the Drupal root.
-    $path = str_replace(['public:/', 'private:/', 'temporary:/'], [$this->publicPath, $this->privatePath, $this->temporaryPath], $row->getSourceProperty('uri'));
+    $path = str_replace(['public:/', 'private:/'], [$this->publicPath, $this->privatePath], $row->getSourceProperty('uri'));
     // At this point, $path could be an absolute path or a relative path,
     // depending on how the scheme's variable was set. So we need to shear out
     // the source_base_path in order to make them all relative.
@@ -112,6 +104,7 @@ class File extends DrupalSqlBase {
    */
   public function getIds() {
     $ids['fid']['type'] = 'integer';
+    $ids['fid']['alias'] = 'f';
     return $ids;
   }
 

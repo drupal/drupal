@@ -6,6 +6,7 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Query\Condition;
+use Drupal\Core\Database\StatementWrapper;
 
 /**
  * Tests of the core database system.
@@ -29,7 +30,7 @@ class ConnectionTest extends DatabaseTestBase {
 
     $this->assertNotNull($db1, 'default connection is a real connection object.');
     $this->assertNotNull($db2, 'replica connection is a real connection object.');
-    $this->assertNotIdentical($db1, $db2, 'Each target refers to a different connection.');
+    $this->assertNotSame($db1, $db2, 'Each target refers to a different connection.');
 
     // Try to open those targets another time, that should return the same objects.
     $db1b = Database::getConnection('default', 'default');
@@ -78,7 +79,7 @@ class ConnectionTest extends DatabaseTestBase {
     $db2 = Database::getConnection('default', 'default');
 
     // Opening a connection after closing it should yield an object different than the original.
-    $this->assertNotIdentical($db1, $db2, 'Opening the default connection after it is closed returns a new object.');
+    $this->assertNotSame($db1, $db2, 'Opening the default connection after it is closed returns a new object.');
   }
 
   /**
@@ -105,7 +106,7 @@ class ConnectionTest extends DatabaseTestBase {
 
     // Get a fresh copy of the default connection options.
     $connectionOptions = $db->getConnectionOptions();
-    $this->assertIdentical($connectionOptions, $connectionOptions2, 'The default and replica connection options are identical.');
+    $this->assertSame($connectionOptions2, $connectionOptions, 'The default and replica connection options are identical.');
 
     // Set up a new connection with different connection info.
     $test = $connection_info['default'];
@@ -115,7 +116,7 @@ class ConnectionTest extends DatabaseTestBase {
 
     // Get a fresh copy of the default connection options.
     $connectionOptions = $db->getConnectionOptions();
-    $this->assertNotEqual($connection_info['default']['database'], $connectionOptions['database'], 'The test connection info database does not match the current connection options database.');
+    $this->assertNotEquals($connection_info['default']['database'], $connectionOptions['database'], 'The test connection info database does not match the current connection options database.');
   }
 
   /**
@@ -135,6 +136,36 @@ class ConnectionTest extends DatabaseTestBase {
   }
 
   /**
+   * Tests the deprecation of passing a statement object to ::query.
+   *
+   * @group legacy
+   */
+  public function testStatementQueryDeprecation(): void {
+    $this->expectDeprecation('Passing a StatementInterface object as a $query argument to Drupal\Core\Database\Connection::query is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Call the execute method from the StatementInterface object directly instead. See https://www.drupal.org/node/3154439');
+    $db = Database::getConnection();
+    $stmt = $db->prepareStatement('SELECT * FROM {test}', []);
+    $this->assertNotNull($db->query($stmt));
+  }
+
+  /**
+   * Tests the deprecation of passing a PDOStatement object to ::query.
+   *
+   * @group legacy
+   */
+  public function testPDOStatementQueryDeprecation(): void {
+    $db = Database::getConnection();
+    $stmt = $db->prepareStatement('SELECT * FROM {test}', []);
+    if (!$stmt instanceof StatementWrapper) {
+      $this->markTestSkipped("This test only runs for db drivers using StatementWrapper.");
+    }
+    if (!$stmt->getClientStatement() instanceof \PDOStatement) {
+      $this->markTestSkipped("This test only runs for PDO-based db drivers.");
+    }
+    $this->expectDeprecation('Passing a \\PDOStatement object as a $query argument to Drupal\Core\Database\Connection::query is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Call the execute method from the StatementInterface object directly instead. See https://www.drupal.org/node/3154439');
+    $this->assertNotNull($db->query($stmt->getClientStatement()));
+  }
+
+  /**
    * Ensure that you cannot execute multiple statements on MySQL.
    */
   public function testMultipleStatementsForNewPhp() {
@@ -150,11 +181,19 @@ class ConnectionTest extends DatabaseTestBase {
   }
 
   /**
-   * Ensure that you cannot execute multiple statements.
+   * Ensure that you cannot execute multiple statements in a query.
+   */
+  public function testMultipleStatementsQuery() {
+    $this->expectException(\InvalidArgumentException::class);
+    Database::getConnection('default', 'default')->query('SELECT * FROM {test}; SELECT * FROM {test_people}');
+  }
+
+  /**
+   * Ensure that you cannot prepare multiple statements.
    */
   public function testMultipleStatements() {
     $this->expectException(\InvalidArgumentException::class);
-    Database::getConnection('default', 'default')->query('SELECT * FROM {test}; SELECT * FROM {test_people}');
+    Database::getConnection('default', 'default')->prepareStatement('SELECT * FROM {test}; SELECT * FROM {test_people}', []);
   }
 
   /**

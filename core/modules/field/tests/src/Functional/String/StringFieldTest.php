@@ -99,10 +99,10 @@ class StringFieldTest extends BrowserTestBase {
     $edit = [
       "{$field_name}[0][value]" => $value,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText('entity_test ' . $id . ' has been created.', 'Entity was created');
+    $this->assertText('entity_test ' . $id . ' has been created.');
 
     // Display the entity.
     $entity = EntityTest::load($id);

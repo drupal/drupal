@@ -201,7 +201,7 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
 
     $editors = ['editor'];
     $attachments = $this->editorSelector->getEditorAttachments($editors);
-    $this->assertIdentical($attachments, ['library' => ['editor/quickedit.inPlaceEditor.formattedText']], "Expected attachments for Editor module's in-place editor found.");
+    $this->assertSame(['library' => ['editor/quickedit.inPlaceEditor.formattedText']], $attachments, "Expected attachments for Editor module's in-place editor found.");
   }
 
   /**

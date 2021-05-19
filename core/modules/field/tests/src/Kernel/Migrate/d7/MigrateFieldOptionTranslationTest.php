@@ -80,13 +80,13 @@ class MigrateFieldOptionTranslationTest extends MigrateDrupal7TestBase {
 
     $config_translation = $language_manager->getLanguageConfigOverride('fr', 'field.storage.node.field_rating');
     $allowed_values = [
-      1 => [
+      0 => [
         'label' => 'Haute',
       ],
-      2 => [
+      1 => [
         'label' => 'Moyenne',
       ],
-      3 => [
+      2 => [
         'label' => 'Faible',
       ],
     ];
@@ -94,13 +94,13 @@ class MigrateFieldOptionTranslationTest extends MigrateDrupal7TestBase {
 
     $config_translation = $language_manager->getLanguageConfigOverride('is', 'field.storage.node.field_rating');
     $allowed_values = [
-      1 => [
+      0 => [
         'label' => 'Hár',
       ],
-      2 => [
+      1 => [
         'label' => 'Miðlungs',
       ],
-      3 => [
+      2 => [
         'label' => 'Lágt',
       ],
     ];

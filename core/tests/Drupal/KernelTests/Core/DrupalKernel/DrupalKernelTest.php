@@ -9,6 +9,7 @@ use Drupal\KernelTests\KernelTestBase;
 use org\bovigo\vfs\vfsStream;
 use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\KernelEvent;
 
 /**
  * Tests DIC compilation to disk.
@@ -56,6 +57,19 @@ class DrupalKernelTest extends KernelTestBase {
     $kernel->boot();
 
     return $kernel;
+  }
+
+  /**
+   * Tests KernelEvent class_alias() override.
+   *
+   * @todo https://www.drupal.org/project/drupal/issues/3197482 Remove this test
+   *   once Drupal is using Symfony 5.3 or higher.
+   */
+  public function testKernelEvent() {
+    $request = Request::createFromGlobals();
+    $kernel = $this->getTestKernel($request);
+    $event = new KernelEvent($kernel, $request, $kernel::MASTER_REQUEST);
+    $this->assertTrue($event->isMainRequest());
   }
 
   /**
@@ -131,11 +145,7 @@ class DrupalKernelTest extends KernelTestBase {
 
     // Check that the location of the new module is registered.
     $modules = $container->getParameter('container.modules');
-    $this->assertEqual($modules['service_provider_test'], [
-      'type' => 'module',
-      'pathname' => drupal_get_filename('module', 'service_provider_test'),
-      'filename' => NULL,
-    ]);
+    $this->assertEqual(['type' => 'module', 'pathname' => drupal_get_filename('module', 'service_provider_test'), 'filename' => NULL], $modules['service_provider_test']);
 
     // Check that the container itself is not among the persist IDs because it
     // does not make sense to persist the container itself.
@@ -193,7 +203,7 @@ class DrupalKernelTest extends KernelTestBase {
   }
 
   /**
-   * Data provider for self::testClassLoaderAutoDetect
+   * Data provider for self::testClassLoaderAutoDetect.
    * @return array
    */
   public function providerClassLoaderAutoDetect() {

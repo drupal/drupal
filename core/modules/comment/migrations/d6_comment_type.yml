@@ -4,7 +4,7 @@ migration_tags:
   - Drupal 6
   - Configuration
 source:
-  plugin: d6_node_type
+  plugin: comment_type
   constants:
     entity_type: node
     id_prefix: 'comment_node_'
@@ -24,6 +24,12 @@ process:
       # want to reuse if it exists.
       map:
         comment_node_forum: comment_forum
+    -
+      plugin: make_unique_entity_field
+      entity_type: comment_type
+      field: id
+      length: 30
+      migrated: true
   label:
     plugin: concat
     source:

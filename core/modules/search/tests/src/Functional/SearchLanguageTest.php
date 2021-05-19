@@ -104,13 +104,13 @@ class SearchLanguageTest extends BrowserTestBase {
     // Add predefined language.
     $edit = ['predefined_langcode' => 'fr'];
     $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
-    $this->assertText('French', 'Language added successfully.');
+    $this->assertText('French');
 
     // Now we should have languages displayed.
     $this->drupalGet('search/node');
-    $this->assertText('Languages', 'Languages displayed to choose from.');
-    $this->assertText('English', 'English is a possible choice.');
-    $this->assertText('French', 'French is a possible choice.');
+    $this->assertText('Languages');
+    $this->assertText('English');
+    $this->assertText('French');
 
     // Ensure selecting no language does not make the query different.
     $this->drupalPostForm('search/node', [], 'edit-submit--2');
@@ -146,6 +146,29 @@ class SearchLanguageTest extends BrowserTestBase {
     $this->drupalPostForm($path, $edit, 'Save configuration');
     $this->assertSession()->checkboxNotChecked('edit-site-default-language-en');
     $this->drupalPostForm('admin/config/regional/language/delete/en', [], 'Delete');
+  }
+
+  /**
+   * Test language attribute "lang" for the search results.
+   */
+  public function testLanguageAttributes() {
+    $this->drupalGet('search/node');
+    $this->submitForm(['keys' => 'the Spanish title'], 'Search');
+
+    $node = $this->searchableNodes[1]->getTranslation('es');
+    $this->assertSession()->elementExists('xpath', '//div[@class="layout-content"]//ol/li/h3[contains(@lang, "es")]');
+    $result = $this->xpath('//div[@class="layout-content"]//ol/li/h3[contains(@lang, "es")]/a');
+    $this->assertEquals($node->getTitle(), $result[0]->getText());
+    $this->assertSession()->elementExists('xpath', '//div[@class="layout-content"]//ol/li/p[contains(@lang, "es")]');
+
+    // Visit the search form in Spanish language.
+    $this->drupalGet('es/search/node');
+    $this->submitForm(['keys' => 'First node'], 'Search');
+    $this->assertSession()->elementExists('xpath', '//div[@class="layout-content"]//ol/li/h3[contains(@lang, "en")]');
+    $node = $this->searchableNodes[0]->getTranslation('en');
+    $result = $this->xpath('//div[@class="layout-content"]//ol/li/h3[contains(@lang, "en")]/a');
+    $this->assertEquals($node->getTitle(), $result[0]->getText());
+    $this->assertSession()->elementExists('xpath', '//div[@class="layout-content"]//ol/li/p[contains(@lang, "en")]');
   }
 
 }

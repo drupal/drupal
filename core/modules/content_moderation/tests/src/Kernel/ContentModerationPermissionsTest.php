@@ -43,7 +43,7 @@ class ContentModerationPermissionsTest extends KernelTestBase {
   }
 
   /**
-   * Test cases for ::testPermissions
+   * Test cases for ::testPermissions.
    *
    * @return array
    *   Content moderation permissions based test cases.

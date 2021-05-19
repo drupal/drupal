@@ -20,7 +20,9 @@ class ContextualUnitTest extends KernelTestBase {
   protected static $modules = ['contextual'];
 
   /**
-   * Provides testcases for testContextualLinksToId() and
+   * Provides testcases for both test functions.
+   *
+   * Used in testContextualLinksToId() and testContextualIdToLinks().
    */
   public function _contextual_links_id_testcases() {
     // Test branch conditions:
@@ -113,7 +115,7 @@ class ContextualUnitTest extends KernelTestBase {
   public function testContextualLinksToId() {
     $tests = $this->_contextual_links_id_testcases();
     foreach ($tests as $test) {
-      $this->assertIdentical(_contextual_links_to_id($test['links']), $test['id']);
+      $this->assertSame($test['id'], _contextual_links_to_id($test['links']));
     }
   }
 
@@ -123,7 +125,7 @@ class ContextualUnitTest extends KernelTestBase {
   public function testContextualIdToLinks() {
     $tests = $this->_contextual_links_id_testcases();
     foreach ($tests as $test) {
-      $this->assertIdentical(_contextual_id_to_links($test['id']), $test['links']);
+      $this->assertSame($test['links'], _contextual_id_to_links($test['id']));
     }
   }
 

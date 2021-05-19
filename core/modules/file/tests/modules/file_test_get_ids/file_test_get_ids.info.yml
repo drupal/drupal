@@ -1,0 +1,7 @@
+name: 'File test getIds'
+type: module
+description: 'Provides file source plugin restricted to used files.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:file

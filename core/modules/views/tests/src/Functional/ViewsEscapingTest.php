@@ -22,13 +22,13 @@ class ViewsEscapingTest extends ViewTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Used by WebTestBase::setUp()
+   * {@inheritdoc}
    *
    * We need theme_test for testing against test_basetheme and test_subtheme.
    *
    * @var array
    *
-   * @see \Drupal\simpletest\WebTestBase::setUp()
+   * {@inheritdoc}
    */
   protected static $modules = ['views', 'theme_test'];
 
@@ -58,12 +58,12 @@ class ViewsEscapingTest extends ViewTestBase {
     $this->config('system.theme')
       ->set('default', 'views_test_theme')
       ->save();
-    $this->assertEqual($this->config('system.theme')->get('default'), 'views_test_theme');
+    $this->assertEqual('views_test_theme', $this->config('system.theme')->get('default'));
 
     $this->drupalGet('test_page_display_200');
 
     // Assert that we are using the correct template.
-    $this->assertText('force', 'The force is strong with this one');
+    $this->assertText('force');
 
     // Assert that there are no escaped '<'s characters.
     $this->assertSession()->assertNoEscaped('<');

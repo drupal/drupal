@@ -28,7 +28,7 @@
   top: 0;
   left: 0.6667em; /* LTR */
   display: block;
-  width: 20px;
+  width: 1.25rem;
   height: 100%;
   content: "";
   background-color: transparent;
@@ -195,7 +195,7 @@
     margin-left: 0;
     padding-right: 0;
     padding-left: 0;
-    text-indent: -9999px;
+    text-indent: -624.9375rem;
   }
   .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon:before {
     left: 0; /* LTR */
@@ -226,7 +226,7 @@
   }
   .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon:before {
     left: 0.6667em; /* LTR */
-    width: 20px;
+    width: 1.25rem;
     background-size: 100% auto;
   }
   .no-svg .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon:before {
@@ -272,7 +272,7 @@
 
 .toolbar .toolbar-icon.toolbar-handle {
   width: 4em;
-  text-indent: -9999px;
+  text-indent: -624.9375rem;
 }
 
 .toolbar .toolbar-icon.toolbar-handle:before {
@@ -315,8 +315,8 @@
  */
 
 .toolbar .toolbar-toggle-orientation button {
-  width: 39px;
-  height: 39px;
+  width: 2.4375rem;
+  height: 2.4375rem;
   padding: 0;
   text-indent: -999em;
 }

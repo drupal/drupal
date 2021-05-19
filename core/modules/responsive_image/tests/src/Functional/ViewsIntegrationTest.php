@@ -98,10 +98,10 @@ class ViewsIntegrationTest extends ViewTestBase {
     $this->drupalGet('admin/structure/views/nojs/add-handler/entity_test_row/default/field');
     $this->drupalPostForm('admin/structure/views/nojs/add-handler/entity_test_row/default/field', ['name[entity_test__bar.bar]' => TRUE], 'Add and configure field');
     // Set the formatter to 'Responsive image'.
-    $this->drupalPostForm(NULL, ['options[type]' => 'responsive_image'], 'Apply');
+    $this->submitForm(['options[type]' => 'responsive_image'], 'Apply');
     $this->assertSession()
       ->responseContains('Responsive image style field is required.');
-    $this->drupalPostForm(NULL, ['options[settings][responsive_image_style]' => self::RESPONSIVE_IMAGE_STYLE_ID], 'Apply');
+    $this->submitForm(['options[settings][responsive_image_style]' => self::RESPONSIVE_IMAGE_STYLE_ID], 'Apply');
     $this->drupalGet('admin/structure/views/nojs/handler/entity_test_row/default/field/bar');
     // Make sure the selected value is set.
     $this->assertSession()

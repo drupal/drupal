@@ -121,18 +121,18 @@ class NodeLanguageTest extends NodeTestBase {
     foreach ($this->nodeTitles as $langcode => $list) {
       foreach ($list as $title) {
         if ($langcode == 'en') {
-          $this->assertNoText($title, $title . ' does not appear on ' . $message);
+          $this->assertNoText($title);
         }
         else {
-          $this->assertText($title, $title . ' does appear on ' . $message);
+          $this->assertText($title);
         }
       }
     }
 
     // Test that the language field value is shown.
-    $this->assertNoText('English', 'English language is not shown on ' . $message);
-    $this->assertText('French', 'French language is shown on ' . $message);
-    $this->assertText('Spanish', 'Spanish language is shown on ' . $message);
+    $this->assertNoText('English');
+    $this->assertText('French');
+    $this->assertText('Spanish');
 
     // Test page sorting, which is by language code, ascending. So the
     // Spanish nodes should appear before the French nodes.
@@ -145,15 +145,15 @@ class NodeLanguageTest extends NodeTestBase {
     foreach ($this->nodeTitles['fr'] as $title) {
       $pos_fr_min = min($pos_fr_min, strpos($page, $title));
     }
-    $this->assertTrue($pos_es_max < $pos_fr_min, 'Spanish translations appear before French on ' . $message);
+    $this->assertLessThan($pos_fr_min, $pos_es_max, "The Spanish translation should appear before the French one on $message.");
 
     // Test the argument -- filter to just Spanish.
     $this->drupalGet('test-language/es');
     // This time, test just the language field.
     $message = 'Spanish argument page';
-    $this->assertNoText('English', 'English language is not shown on ' . $message);
-    $this->assertNoText('French', 'French language is not shown on ' . $message);
-    $this->assertText('Spanish', 'Spanish language is shown on ' . $message);
+    $this->assertNoText('English');
+    $this->assertNoText('French');
+    $this->assertText('Spanish');
 
     // Test the front page view filter. Only node titles in the current language
     // should be displayed on the front page by default.
@@ -211,10 +211,10 @@ class NodeLanguageTest extends NodeTestBase {
       foreach ($this->nodeTitles as $control_langcode => $control_titles) {
         foreach ($control_titles as $title) {
           if ($control_langcode == 'en') {
-            $this->assertText($title, 'English title is shown when filtering is site default');
+            $this->assertText($title);
           }
           else {
-            $this->assertNoText($title, 'Non-English title is not shown when filtering is site default');
+            $this->assertNoText($title);
           }
         }
       }
@@ -239,10 +239,10 @@ class NodeLanguageTest extends NodeTestBase {
     foreach ($this->nodeTitles as $control_langcode => $control_titles) {
       foreach ($control_titles as $title) {
         if ($control_langcode == 'es') {
-          $this->assertText($title, 'Spanish title is shown when filtering is fixed UI language');
+          $this->assertText($title);
         }
         else {
-          $this->assertNoText($title, 'Non-Spanish title is not shown when filtering is fixed UI language');
+          $this->assertNoText($title);
         }
       }
     }
@@ -285,16 +285,16 @@ class NodeLanguageTest extends NodeTestBase {
   protected function assertLanguageNames($native = FALSE) {
     $this->drupalGet('test-language');
     if ($native) {
-      $this->assertText('Français', 'French language shown in native form.');
-      $this->assertText('Español', 'Spanish language shown in native form.');
-      $this->assertNoText('French', 'French language not shown in English.');
-      $this->assertNoText('Spanish', 'Spanish language not shown in English.');
+      $this->assertText('Français');
+      $this->assertText('Español');
+      $this->assertNoText('French');
+      $this->assertNoText('Spanish');
     }
     else {
-      $this->assertNoText('Français', 'French language not shown in native form.');
-      $this->assertNoText('Español', 'Spanish language not shown in native form.');
-      $this->assertText('French', 'French language shown in English.');
-      $this->assertText('Spanish', 'Spanish language shown in English.');
+      $this->assertNoText('Français');
+      $this->assertNoText('Español');
+      $this->assertText('French');
+      $this->assertText('Spanish');
     }
   }
 

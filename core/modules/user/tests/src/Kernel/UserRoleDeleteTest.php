@@ -6,7 +6,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
 
 /**
- * Tests the handling of user_role entity from the user module
+ * Tests the handling of user_role entity from the user module.
  *
  * @group user
  */

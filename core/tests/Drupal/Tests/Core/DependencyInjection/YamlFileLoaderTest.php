@@ -26,8 +26,9 @@ class YamlFileLoaderTest extends UnitTestCase {
   public function testParseDefinitionsWithProvider() {
     $yml = <<<YAML
 services:
-  example_service:
+  example_service_1:
     class: \Drupal\Core\ExampleClass
+  example_service_2: '@example_service_1'
   example_private_service:
     class: \Drupal\Core\ExampleClass
     public: false
@@ -45,11 +46,12 @@ YAML;
     $yaml_file_loader = new YamlFileLoader($builder);
     $yaml_file_loader->load('vfs://drupal/modules/example/example.yml');
 
-    $this->assertEquals(['_provider' => [['provider' => 'example']]], $builder->getDefinition('example_service')->getTags());
-    $this->assertTrue($builder->getDefinition('example_service')->isPublic());
+    $this->assertEquals(['_provider' => [['provider' => 'example']]], $builder->getDefinition('example_service_1')->getTags());
+    $this->assertEquals('example_service_1', $builder->getAlias('example_service_2')->__toString());
+    $this->assertTrue($builder->getDefinition('example_service_1')->isPublic());
     $this->assertFalse($builder->getDefinition('example_private_service')->isPublic());
     $builder->compile();
-    $this->assertTrue($builder->has('example_service'));
+    $this->assertTrue($builder->has('example_service_1'));
     $this->assertFalse($builder->has('example_private_service'));
   }
 

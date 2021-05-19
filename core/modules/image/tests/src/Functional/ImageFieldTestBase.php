@@ -108,7 +108,7 @@ abstract class ImageFieldTestBase extends BrowserTestBase {
     $this->drupalPostForm('node/add/' . $type, $edit, 'Save');
     if ($alt) {
       // Add alt text.
-      $this->drupalPostForm(NULL, [$field_name . '[0][alt]' => $alt], 'Save');
+      $this->submitForm([$field_name . '[0][alt]' => $alt], 'Save');
     }
 
     // Retrieve ID of the newly created node from the current URL.
@@ -121,7 +121,10 @@ abstract class ImageFieldTestBase extends BrowserTestBase {
    * Retrieves the fid of the last inserted file.
    */
   protected function getLastFileId() {
-    return (int) \Drupal::entityQueryAggregate('file')->aggregate('fid', 'max')->execute()[0]['fid_max'];
+    return (int) \Drupal::entityQueryAggregate('file')
+      ->accessCheck(FALSE)
+      ->aggregate('fid', 'max')
+      ->execute()[0]['fid_max'];
   }
 
 }

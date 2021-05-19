@@ -62,7 +62,7 @@ class CommentFieldsTest extends CommentTestBase {
     // Test adding a field that defaults to CommentItemInterface::CLOSED.
     $this->addDefaultCommentField('node', 'test_node_type', 'who_likes_ponies', CommentItemInterface::CLOSED, 'who_likes_ponies');
     $field = FieldConfig::load('node.test_node_type.who_likes_ponies');
-    $this->assertEqual($field->getDefaultValueLiteral()[0]['status'], CommentItemInterface::CLOSED);
+    $this->assertEqual(CommentItemInterface::CLOSED, $field->getDefaultValueLiteral()[0]['status']);
   }
 
   /**
@@ -137,8 +137,8 @@ class CommentFieldsTest extends CommentTestBase {
     $this->drupalGet('node');
 
     $link_info = $this->getDrupalSettings()['comment']['newCommentsLinks']['node']['comment2']['2'];
-    $this->assertIdentical($link_info['new_comment_count'], 1);
-    $this->assertIdentical($link_info['first_new_comment_link'], $node->toUrl('canonical', ['fragment' => 'new'])->toString());
+    $this->assertSame(1, $link_info['new_comment_count']);
+    $this->assertSame($node->toUrl('canonical', ['fragment' => 'new'])->toString(), $link_info['first_new_comment_link']);
   }
 
   /**
@@ -208,7 +208,7 @@ class CommentFieldsTest extends CommentTestBase {
     $edit = [];
     $edit['uninstall[comment]'] = TRUE;
     $this->drupalPostForm('admin/modules/uninstall', $edit, 'Uninstall');
-    $this->drupalPostForm(NULL, [], 'Uninstall');
+    $this->submitForm([], 'Uninstall');
     $this->rebuildContainer();
     $this->assertFalse($this->container->get('module_handler')->moduleExists('comment'), 'Comment module uninstalled.');
 

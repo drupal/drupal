@@ -7,6 +7,10 @@ use Drupal\block\Plugin\migrate\source\Block;
 /**
  * Gets i18n block data from source database.
  *
+ * For available configuration keys, refer to the parent classes:
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
  * @MigrateSource(
  *   id = "d7_block_translation",
  *   source_module = "i18n_block"
@@ -47,8 +51,8 @@ class BlockTranslation extends Block {
         'plural',
       ])
       ->condition('i18n_mode', 1);
-    $query->leftjoin($this->blockTable, 'b', ('b.delta = i18n.objectid'));
-    $query->innerJoin('locales_target', 'lt', 'lt.lid = i18n.lid');
+    $query->leftjoin($this->blockTable, 'b', ('[b].[delta] = [i18n].[objectid]'));
+    $query->innerJoin('locales_target', 'lt', '[lt].[lid] = [i18n].[lid]');
 
     // The i18n_string module adds a status column to locale_target. It was
     // originally 'status' in a later revision it was named 'i18n_status'.

@@ -7,20 +7,29 @@
 
 .mobile-nav-button {
   position: relative;
-  z-index: 10; /* appear above mobile nav */
+  z-index: 110; /* Appear above mobile nav. */
   display: flex;
   align-items: center;
   align-self: center;
   width: var(--sp2);
   height: var(--sp2);
   margin-inline-start: auto;
+  margin-inline-end: -6px;
   padding-block: 0;
-  padding-inline-start: 0;
-  padding-inline-end: 0;
+  padding-inline-start: 6px;
+  padding-inline-end: 6px;
   cursor: pointer;
   border: none;
   background: transparent;
-  -webkit-appearance: none;
+  appearance: none;
+
+  &:focus {
+    outline: solid 2px var(--color--blue-20);
+  }
+
+  &:active {
+    color: inherit; /* Override Safari's default UA styles. */
+  }
 
   @media (--sm) {
     display: inline-flex;
@@ -29,7 +38,7 @@
   }
 }
 
-/* Text that says "menu" */
+/* Text that says "menu". */
 .mobile-nav-button__label {
   position: absolute;
   display: block;

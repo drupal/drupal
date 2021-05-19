@@ -99,7 +99,7 @@ class RedirectTest extends BrowserTestBase {
     $expected = Url::fromRoute('form_test.route1', [], ['query' => ['test1' => 'test2'], 'absolute' => TRUE])->toString();
     $this->drupalGet('foo');
     $this->assertSession()->statusCodeEquals(404);
-    $this->drupalPostForm(NULL, [], 'Submit');
+    $this->submitForm([], 'Submit');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->addressEquals($expected);
 
@@ -107,7 +107,7 @@ class RedirectTest extends BrowserTestBase {
     // ends up at the right URL.
     $this->drupalGet('admin/structure/block');
     $this->assertSession()->statusCodeEquals(403);
-    $this->drupalPostForm(NULL, [], 'Submit');
+    $this->submitForm([], 'Submit');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->addressEquals($expected);
   }

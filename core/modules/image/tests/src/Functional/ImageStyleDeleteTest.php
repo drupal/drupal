@@ -40,7 +40,7 @@ class ImageStyleDeleteTest extends ImageFieldTestBase {
 
     // Delete 'medium' image style but replace it with 'thumbnail'. This style
     // is involved in 'node.page.default' display view and form.
-    $this->drupalPostForm(NULL, ['replacement' => 'thumbnail'], 'Delete');
+    $this->submitForm(['replacement' => 'thumbnail'], 'Delete');
 
     /** @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface $view_display */
     $view_display = EntityViewDisplay::load('node.page.default');
@@ -62,7 +62,7 @@ class ImageStyleDeleteTest extends ImageFieldTestBase {
     $this->assertNoRaw(t('All images that have been generated for this style will be permanently deleted. The dependent configurations might need manual reconfiguration.'));
 
     // Delete 'thumbnail' image style. Provide no replacement.
-    $this->drupalPostForm(NULL, [], 'Delete');
+    $this->submitForm([], 'Delete');
 
     $view_display = EntityViewDisplay::load('node.page.default');
     // Checks that the formatter setting is disabled.
@@ -71,7 +71,7 @@ class ImageStyleDeleteTest extends ImageFieldTestBase {
     // Checks that widget setting is preserved with the image preview disabled.
     $form_display = EntityFormDisplay::load('node.page.default');
     $this->assertNotNull($widget = $form_display->getComponent('foo'));
-    $this->assertIdentical($widget['settings']['preview_image_style'], '');
+    $this->assertSame('', $widget['settings']['preview_image_style']);
 
     $this->drupalGet('admin/config/media/image-styles/manage/wide/delete');
     // Checks that the 'replacement' select element is displayed.
@@ -80,7 +80,7 @@ class ImageStyleDeleteTest extends ImageFieldTestBase {
     $this->assertRaw(t('If this style is in use on the site, you may select another style to replace it. All images that have been generated for this style will be permanently deleted. If no replacement style is selected, the dependent configurations might need manual reconfiguration.'));
     $this->assertNoRaw(t('All images that have been generated for this style will be permanently deleted. The dependent configurations might need manual reconfiguration.'));
     // Delete 'wide' image style. Provide no replacement.
-    $this->drupalPostForm(NULL, [], 'Delete');
+    $this->submitForm([], 'Delete');
 
     // Now, there's only one image style configured on the system: 'large'.
     $this->drupalGet('admin/config/media/image-styles/manage/large/delete');

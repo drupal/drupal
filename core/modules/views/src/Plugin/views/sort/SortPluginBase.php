@@ -55,7 +55,7 @@ abstract class SortPluginBase extends HandlerBase implements CacheableDependency
   }
 
   /**
-   * Display whether or not the sort order is ascending or descending
+   * Display whether or not the sort order is ascending or descending.
    */
   public function adminSummary() {
     if (!empty($this->options['exposed'])) {
@@ -74,7 +74,7 @@ abstract class SortPluginBase extends HandlerBase implements CacheableDependency
   }
 
   /**
-   * Basic options for all sort criteria
+   * Basic options for all sort criteria.
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
@@ -139,7 +139,7 @@ abstract class SortPluginBase extends HandlerBase implements CacheableDependency
   }
 
   /**
-   * Simple validate handler
+   * Simple validate handler.
    */
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     $this->sortValidate($form, $form_state);
@@ -150,7 +150,7 @@ abstract class SortPluginBase extends HandlerBase implements CacheableDependency
   }
 
   /**
-   * Simple submit handler
+   * Simple submit handler.
    */
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {
     // Do not store this values.
@@ -183,6 +183,7 @@ abstract class SortPluginBase extends HandlerBase implements CacheableDependency
 
   /**
    * Provide a list of options for the default sort form.
+   *
    * Should be overridden by classes that don't override sort_form
    */
   protected function sortOptions() {

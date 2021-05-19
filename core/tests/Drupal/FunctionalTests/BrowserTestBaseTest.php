@@ -8,7 +8,9 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\StreamCapturer;
 use Drupal\Tests\Traits\Core\CronRunTrait;
+use Drupal\user\Entity\Role;
 use PHPUnit\Framework\ExpectationFailedException;
 
 /**
@@ -129,43 +131,41 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $value = $config_factory->get('form_test.object')->get('bananas');
     $this->assertSame('green', $value);
 
-    // Test drupalPostForm().
-    $edit = ['bananas' => 'red'];
+    // Test submitForm().
+    $this->drupalGet('form-test/object-builder');
+
     // Submit the form using the button label.
-    $result = $this->drupalPostForm('form-test/object-builder', $edit, 'Save');
-    $this->assertSame($this->getSession()->getPage()->getContent(), $result);
+    $this->submitForm(['bananas' => 'red'], 'Save');
     $value = $config_factory->get('form_test.object')->get('bananas');
     $this->assertSame('red', $value);
 
-    $this->drupalPostForm('form-test/object-builder', [], 'Save');
+    $this->submitForm([], 'Save');
     $value = $config_factory->get('form_test.object')->get('bananas');
     $this->assertSame('', $value);
 
     // Submit the form using the button id.
-    $edit = ['bananas' => 'blue'];
-    $result = $this->drupalPostForm('form-test/object-builder', $edit, 'edit-submit');
-    $this->assertSame($this->getSession()->getPage()->getContent(), $result);
+    $this->submitForm(['bananas' => 'blue'], 'edit-submit');
     $value = $config_factory->get('form_test.object')->get('bananas');
     $this->assertSame('blue', $value);
 
     // Submit the form using the button name.
-    $edit = ['bananas' => 'purple'];
-    $result = $this->drupalPostForm('form-test/object-builder', $edit, 'op');
-    $this->assertSame($this->getSession()->getPage()->getContent(), $result);
+    $this->submitForm(['bananas' => 'purple'], 'op');
     $value = $config_factory->get('form_test.object')->get('bananas');
     $this->assertSame('purple', $value);
 
-    // Test drupalPostForm() with no-html response.
-    $values = Json::decode($this->drupalPostForm('form_test/form-state-values-clean', [], 'Submit'));
+    // Test submitForm() with no-html response.
+    $this->drupalGet('form_test/form-state-values-clean');
+    $this->submitForm([], 'Submit');
+    $values = Json::decode($this->getSession()->getPage()->getContent());
     $this->assertSame(1000, $values['beer']);
 
-    // Test drupalPostForm() with form by HTML id.
+    // Test submitForm() with form by HTML id.
     $this->drupalCreateContentType(['type' => 'page']);
     $this->drupalLogin($this->drupalCreateUser(['create page content']));
     $this->drupalGet('form-test/two-instances-of-same-form');
     $this->getSession()->getPage()->fillField('edit-title-0-value', 'form1');
     $this->getSession()->getPage()->fillField('edit-title-0-value--2', 'form2');
-    $this->drupalPostForm(NULL, [], 'Save', [], 'node-page-form--2');
+    $this->submitForm([], 'Save', 'node-page-form--2');
     $this->assertSession()->pageTextContains('Page form2 has been created.');
   }
 
@@ -312,6 +312,30 @@ class BrowserTestBaseTest extends BrowserTestBase {
   }
 
   /**
+   * Tests deprecated assertText.
+   *
+   * @group legacy
+   */
+  public function testAssertText() {
+    $this->expectDeprecation('Calling AssertLegacyTrait::assertText() with more than one argument is deprecated in drupal:8.2.0 and the method is removed from drupal:10.0.0. Use $this->assertSession()->responseContains() or $this->assertSession()->pageTextContains() instead. See https://www.drupal.org/node/3129738');
+    $this->drupalGet('test-encoded');
+    $dangerous = 'Bad html <script>alert(123);</script>';
+    $this->assertText(Html::escape($dangerous), 'Sanitized text should be present.');
+  }
+
+  /**
+   * Tests deprecated assertNoText.
+   *
+   * @group legacy
+   */
+  public function testAssertNoText() {
+    $this->expectDeprecation('Calling AssertLegacyTrait::assertNoText() with more than one argument is deprecated in drupal:8.2.0 and the method is removed from drupal:10.0.0. Use $this->assertSession()->responseNotContains() or $this->assertSession()->pageTextNotContains() instead. See https://www.drupal.org/node/3129738');
+    $this->drupalGet('test-encoded');
+    $dangerous = 'Bad html <script>alert(123);</script>';
+    $this->assertNoText($dangerous, 'Dangerous text should not be present.');
+  }
+
+  /**
    * Tests legacy getRawContent().
    *
    * @group legacy
@@ -333,17 +357,24 @@ class BrowserTestBaseTest extends BrowserTestBase {
   }
 
   /**
+   * Tests legacy assertFieldsByValue().
+   *
+   * @group legacy
+   */
+  public function testAssertFieldsByValue() {
+    $this->expectDeprecation('AssertLegacyTrait::assertFieldsByValue() is deprecated in drupal:8.3.0 and is removed from drupal:10.0.0. Use iteration over the fields yourself instead and directly check the values in the test. See https://www.drupal.org/node/3129738');
+    $this->drupalGet('test-field-xpath');
+    $this->assertFieldsByValue($this->xpath("//h1[@class = 'page-title']"), NULL);
+  }
+
+  /**
    * Tests legacy field asserts which use xpath directly.
    */
   public function testXpathAsserts() {
     $this->drupalGet('test-field-xpath');
-    $this->assertFieldsByValue($this->xpath("//h1[@class = 'page-title']"), NULL);
-    $this->assertFieldsByValue($this->xpath('//table/tbody/tr[2]/td[1]'), 'one');
     $this->assertSession()->elementTextContains('xpath', '//table/tbody/tr[2]/td[1]', 'one');
 
-    $this->assertFieldsByValue($this->xpath("//input[@id = 'edit-name']"), 'Test name');
     $this->assertSession()->fieldValueEquals('edit-name', 'Test name');
-    $this->assertFieldsByValue($this->xpath("//select[@id = 'edit-options']"), '2');
     $this->assertSession()->fieldValueEquals('edit-options', '2');
 
     $this->assertSession()->elementNotExists('xpath', '//notexisting');
@@ -363,14 +394,6 @@ class BrowserTestBaseTest extends BrowserTestBase {
       $this->fail('The "edit-name" field was not found.');
     }
     catch (ExpectationException $e) {
-      // Expected exception; just continue testing.
-    }
-
-    try {
-      $this->assertFieldsByValue($this->xpath("//input[@id = 'edit-name']"), 'not the value');
-      $this->fail('The "edit-name" field is found with the value "not the value".');
-    }
-    catch (ExpectationFailedException $e) {
       // Expected exception; just continue testing.
     }
   }
@@ -513,7 +536,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
     }
 
     // Test that text areas can contain new lines.
-    $this->assertFieldsByValue($this->xpath("//textarea[@id = 'edit-test-textarea-with-newline']"), "Test text with\nnewline");
+    $this->assertSession()->fieldValueEquals('edit-test-textarea-with-newline', "Test text with\nnewline");
   }
 
   /**
@@ -869,6 +892,8 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->expectDeprecation('Calling Drupal\Tests\UiHelperTrait::drupalPostForm() with $submit as an object is deprecated in drupal:9.2.0 and the method is removed in drupal:10.0.0. Use $this->submitForm() instead. See https://www.drupal.org/node/3168858');
     $this->expectDeprecation('Calling Drupal\Tests\UiHelperTrait::drupalPostForm() with $edit set to NULL is deprecated in drupal:9.1.0 and the method is removed in drupal:10.0.0. Use $this->submitForm() instead. See https://www.drupal.org/node/3168858');
     $this->drupalPostForm('form-test/object-builder', NULL, t('Save'));
+    $this->expectDeprecation('Calling Drupal\Tests\UiHelperTrait::drupalPostForm() with $path set to NULL is deprecated in drupal:9.2.0 and the method is removed in drupal:10.0.0. Use $this->submitForm() instead. See https://www.drupal.org/node/3168858');
+    $this->drupalPostForm(NULL, [], 'Save');
   }
 
   /**
@@ -885,8 +910,6 @@ class BrowserTestBaseTest extends BrowserTestBase {
     foreach ($this->getSession()->getResponseHeaders() as $name => $values) {
       if (preg_match('/^X-Drupal-Assertion-[0-9]+$/', $name, $matches)) {
         foreach ($values as $value) {
-          // Call \Drupal\simpletest\WebTestBase::error() with the parameters from
-          // the header.
           $parameters = unserialize(urldecode($value));
           if (count($parameters) === 3) {
             if ($parameters[1] === 'User deprecated function') {
@@ -915,6 +938,63 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->drupalGet('test-field-xpath');
     $this->assertFieldByName('checkbox_enabled', TRUE);
     $this->assertNoFieldByName('checkbox_enabled', FALSE);
+  }
+
+  /**
+   * Tests legacy drupalGetHeader().
+   *
+   * @group legacy
+   */
+  public function testDrupalGetHeader() {
+    $this->expectDeprecation('BrowserTestBase::drupalGetHeader() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use $this->getSession()->getResponseHeader() instead. See https://www.drupal.org/node/3168383');
+    $this->drupalGet('test-page');
+    $this->drupalGetHeader('Content-Type');
+  }
+
+  /**
+   * Tests legacy debug().
+   *
+   * @group legacy
+   */
+  public function testDebug() {
+    $this->expectDeprecation('debug() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use dump() instead. See https://www.drupal.org/node/3192283');
+    $this->expectError();
+    debug("There's a star man waiting in the sky");
+  }
+
+  /**
+   * Tests the dump() function provided by the var-dumper Symfony component.
+   */
+  public function testVarDump() {
+    // Append the stream capturer to the STDOUT stream, so that we can test the
+    // dump() output and also prevent it from actually outputting in this
+    // particular test.
+    stream_filter_register("capture", StreamCapturer::class);
+    stream_filter_append(STDOUT, "capture");
+
+    // Dump some variables to check that dump() in test code produces output
+    // on the command line that is running the test.
+    $role = Role::load('authenticated');
+    dump($role);
+    dump($role->id());
+
+    $this->assertStringContainsString('Drupal\user\Entity\Role', StreamCapturer::$cache);
+    $this->assertStringContainsString('authenticated', StreamCapturer::$cache);
+
+    // Visit a Drupal page with call to the dump() function to check that dump()
+    // in site code produces output in the requested web page's HTML.
+    $body = $this->drupalGet('test-page-var-dump');
+    $this->assertSession()->statusCodeEquals(200);
+
+    // It is too strict to assert all properties of the Role and it is easy to
+    // break if one of these properties gets removed or gets a new default
+    // value. It should be sufficient to test just a couple of properties.
+    $this->assertStringContainsString('<span class=sf-dump-note>', $body);
+    $this->assertStringContainsString('  #<span class=sf-dump-protected title="Protected property">id</span>: "<span class=sf-dump-str title="9 characters">test_role</span>"', $body);
+    $this->assertStringContainsString('  #<span class=sf-dump-protected title="Protected property">label</span>: <span class=sf-dump-const>null</span>', $body);
+    $this->assertStringContainsString('  #<span class=sf-dump-protected title="Protected property">permissions</span>: []', $body);
+    $this->assertStringContainsString('  #<span class=sf-dump-protected title="Protected property">uuid</span>: "', $body);
+    $this->assertStringContainsString('</samp>}', $body);
   }
 
 }

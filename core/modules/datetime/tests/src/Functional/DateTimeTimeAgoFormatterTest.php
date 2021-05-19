@@ -109,16 +109,16 @@ class DateTimeTimeAgoFormatterTest extends BrowserTestBase {
       'fields[field_datetime][region]' => 'content',
       'fields[field_datetime][type]' => 'datetime_time_ago',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
 
-    $this->drupalPostForm(NULL, [], 'field_datetime_settings_edit');
+    $this->submitForm([], 'field_datetime_settings_edit');
     $edit = [
       'fields[field_datetime][settings_edit_form][settings][future_format]' => 'ends in @interval',
       'fields[field_datetime][settings_edit_form][settings][past_format]' => 'started @interval ago',
       'fields[field_datetime][settings_edit_form][settings][granularity]' => 1,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Update');
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm($edit, 'Update');
+    $this->submitForm([], 'Save');
 
     $this->assertSession()->pageTextContains('ends in 1 year');
     $this->assertSession()->pageTextContains('started 1 year ago');

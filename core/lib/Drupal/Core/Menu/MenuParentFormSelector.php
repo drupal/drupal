@@ -31,7 +31,7 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
   protected $entityTypeManager;
 
   /**
-   * Constructs a \Drupal\Core\Menu\MenuParentFormSelector
+   * Constructs a \Drupal\Core\Menu\MenuParentFormSelector.
    *
    * @param \Drupal\Core\Menu\MenuLinkTreeInterface $menu_link_tree
    *   The menu link tree service.

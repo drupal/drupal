@@ -28,7 +28,7 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Drupal\simpletest\WebTestBase\setUp().
+   * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
@@ -94,13 +94,7 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
 
       foreach ($image_styles as $image_style_name) {
         // Check if the image styles are available in the dropdowns.
-        $this->assertNotEmpty($this->xpath(
-          '//select[@name=:name]//option[@value=:style]',
-          [
-            ':name' => 'keyed_styles[responsive_image_test_module.' . $case[0] . '][' . $case[1] . '][image_style]',
-            ':style' => $image_style_name,
-          ]
-        ));
+        $this->assertSession()->optionExists('keyed_styles[responsive_image_test_module.' . $case[0] . '][' . $case[1] . '][image_style]', $image_style_name);
         // Check if the image styles checkboxes are present.
         $this->assertSession()->fieldExists('keyed_styles[responsive_image_test_module.' . $case[0] . '][' . $case[1] . '][sizes_image_styles][' . $image_style_name . ']');
       }
@@ -144,7 +138,7 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
 
     // Delete the style.
     $this->drupalGet('admin/config/media/responsive-image-style/style_one/delete');
-    $this->drupalPostForm(NULL, [], 'Delete');
+    $this->submitForm([], 'Delete');
     $this->drupalGet('admin/config/media/responsive-image-style');
     $this->assertText('There are no responsive image styles yet.');
   }

@@ -32,7 +32,6 @@
 .primary-nav__menu-link {
   flex-grow: 1;
   text-decoration: none;
-  letter-spacing: -1px;
   color: var(--color--gray-0);
   font-size: 28px;
   font-weight: bold;
@@ -40,6 +39,11 @@
 
   &:hover {
     color: inherit;
+  }
+
+  &:focus {
+    outline: auto 2px var(--color--blue-50);
+    outline-offset: 2px;
   }
 }
 
@@ -135,6 +139,7 @@
 .primary-nav__menu-link--level-1 {
   position: relative;
   display: flex;
+  letter-spacing: -1px;
 }
 
 /*
@@ -151,7 +156,7 @@
   opacity: 0;
   border-inline-start: solid var(--sp) var(--color--blue-50);
 
-  &.is-active {
+  &.is-active-menu-parent {
     visibility: visible;
     max-height: none;
     margin-block-start: var(--sp1-5);

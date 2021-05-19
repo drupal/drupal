@@ -80,6 +80,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
    *   type.
    */
   public function addPage() {
+    $definition = $this->entityTypeManager()->getDefinition('node_type');
     $build = [
       '#theme' => 'node_add_list',
       '#cache' => [
@@ -89,8 +90,10 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
 
     $content = [];
 
+    $types = $this->entityTypeManager()->getStorage('node_type')->loadMultiple();
+    uasort($types, [$definition->getClass(), 'sort']);
     // Only use node types the user has access to.
-    foreach ($this->entityTypeManager()->getStorage('node_type')->loadMultiple() as $type) {
+    foreach ($types as $type) {
       $access = $this->entityTypeManager()->getAccessControlHandler('node')->createAccess($type->id(), NULL, [], TRUE);
       if ($access->isAllowed()) {
         $content[$type->id()] = $type;
@@ -297,6 +300,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
    */
   protected function getRevisionIds(NodeInterface $node, NodeStorageInterface $node_storage) {
     $result = $node_storage->getQuery()
+      ->accessCheck(TRUE)
       ->allRevisions()
       ->condition($node->getEntityType()->getKey('id'), $node->id())
       ->sort($node->getEntityType()->getKey('revision'), 'DESC')

@@ -22,8 +22,8 @@
 }
 
 .views-admin .icon {
-  width: 16px;
-  height: 16px;
+  width: 1rem;
+  height: 1rem;
 }
 
 .views-admin .icon,
@@ -41,7 +41,7 @@
 
 .views-admin a.icon {
   border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: 0.25rem;
   background: linear-gradient(-90deg, #fff 0, #e8e8e8 100%) no-repeat, repeat-y;
   box-shadow: 0 0 0 rgba(0, 0, 0, 0.3333) inset;
 }
@@ -67,18 +67,18 @@
 .views-admin .icon.compact {
   display: block;
   overflow: hidden;
-  text-indent: -9999px;
+  text-indent: -624.9375rem;
   direction: ltr;
 }
 
 /* Targets any element with an icon -> text combo */
 
 .views-admin .icon-text {
-  padding-left: 19px; /* LTR */
+  padding-left: 1.1875rem; /* LTR */
 }
 
 [dir="rtl"] .views-admin .icon-text {
-  padding-right: 19px;
+  padding-right: 1.1875rem;
   padding-left: 0;
 }
 
@@ -123,13 +123,13 @@ details.box-padding {
 }
 
 .form-item {
-  margin-top: 9px;
+  margin-top: 0.5625rem;
   padding-top: 0;
   padding-bottom: 0;
 }
 
 .form-type-checkbox {
-  margin-top: 6px;
+  margin-top: 0.375rem;
 }
 
 .form-checkbox,
@@ -140,11 +140,11 @@ details.box-padding {
 /* Indent form elements so they're directly underneath the label of the checkbox that reveals them */
 
 .views-admin .form-type-checkbox + .form-wrapper {
-  margin-left: 16px; /* LTR */
+  margin-left: 1rem; /* LTR */
 }
 
 [dir="rtl"] .views-admin .form-type-checkbox + .form-wrapper {
-  margin-right: 16px;
+  margin-right: 1rem;
   margin-left: 0;
 }
 
@@ -162,8 +162,8 @@ details.box-padding {
 }
 
 .views-admin-dependent .form-item {
-  margin-top: 6px;
-  margin-bottom: 6px;
+  margin-top: 0.375rem;
+  margin-bottom: 0.375rem;
 }
 
 .views-ui-view-name h3 {
@@ -172,13 +172,13 @@ details.box-padding {
 }
 
 .view-changed {
-  margin-bottom: 21px;
+  margin-bottom: 1.3125rem;
 }
 
 .views-admin .unit-title {
-  margin-top: 18px;
+  margin-top: 1.125rem;
   margin-bottom: 0;
-  font-size: 15px;
+  font-size: 0.9375rem;
   line-height: 1.6154;
 }
 
@@ -231,7 +231,7 @@ details.box-padding {
 
 .form-item-page-create,
 .form-item-block-create {
-  margin-top: 13px;
+  margin-top: 0.8125rem;
 }
 
 .form-item-page-create label,
@@ -289,8 +289,8 @@ td.group-title {
 .views-operator-label {
   position: absolute;
   z-index: 1;
-  bottom: -13px;
-  padding: 0.5px 6px;
+  bottom: -0.8125rem;
+  padding: 0.5px 0.375rem;
   text-transform: uppercase;
   border: 1px solid #d4d4d8;
   background: #fff;
@@ -301,19 +301,19 @@ td.group-title {
 .grouped-description,
 .exposed-description {
   float: left; /* LTR */
-  padding-top: 3px;
-  padding-right: 10px; /* LTR */
+  padding-top: 0.1875rem;
+  padding-right: 0.625rem; /* LTR */
 }
 
 [dir="rtl"] .grouped-description,
 [dir="rtl"] .exposed-description {
   float: right;
   padding-right: 0;
-  padding-left: 10px;
+  padding-left: 0.625rem;
 }
 
 .views-displays {
-  padding-bottom: 36px;
+  padding-bottom: 2.25rem;
   border-top: 1px solid rgba(212, 212, 218, 0.8);
   border-right: 1px solid rgba(212, 212, 218, 0.8);
   border-left: 1px solid rgba(212, 212, 218, 0.8);
@@ -324,7 +324,7 @@ td.group-title {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  padding: 0.75rem 0.75rem calc(0.75rem - 5px);
+  padding: 0.75rem 0.75rem calc(0.75rem - 0.3125rem);
   border-bottom: 1px solid rgba(212, 212, 218, 0.8);
   background-color: #f3f4f9;
 }
@@ -350,7 +350,7 @@ td.group-title {
   margin: 0 0 1.5rem;
   padding: 0;
   border-bottom: none;
-  line-height: 20px;
+  line-height: 1.25rem;
 }
 
 .edit-display-settings-top.views-ui-display-tab-bucket .views-display-setting {
@@ -369,7 +369,7 @@ td.group-title {
 
 .view-preview-form .form-item--view-args,
 .view-preview-form .form-actions {
-  margin-top: 5px;
+  margin-top: 0.3125rem;
 }
 
 .view-preview-form .arguments-preview {
@@ -409,7 +409,7 @@ td.group-title {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   border-bottom: 1px solid rgba(212, 212, 218, 0.8);
-  line-height: 20px;
+  line-height: 1.25rem;
 }
 
 .views-ui-display-tab-bucket:last-of-type {
@@ -469,8 +469,8 @@ td.group-title {
 }
 
 .views-ui-display-tab-bucket .views-group-text {
-  margin-top: 6px;
-  margin-bottom: 6px;
+  margin-top: 0.375rem;
+  margin-bottom: 0.375rem;
 }
 
 .views-ui-display-tab-bucket__actions {
@@ -498,13 +498,13 @@ td.group-title {
 }
 
 .views-edit-view {
-  margin-bottom: 15px;
+  margin-bottom: 0.9375rem;
 }
 
 /* The contents of the popup dialog on the views edit form. */
 
 .views-filterable-options .form-type-checkbox {
-  padding: 5px 8px;
+  padding: 0.3125rem 0.5rem;
   border-top: none;
 }
 
@@ -537,7 +537,7 @@ td.group-title {
 }
 
 .views-ui-dialog .views-filterable-options {
-  margin-bottom: 10px;
+  margin-bottom: 0.625rem;
 }
 
 [id^="views-ui-add-handler-form"] .scroll {
@@ -560,7 +560,7 @@ td.group-title {
 
 .views-ui-dialog .form-item-selected {
   margin: 0;
-  padding: 6px 16px;
+  padding: 0.375rem 1rem;
 }
 
 .views-ui-dialog .views-add-form-selected .views-selected-options {
@@ -582,7 +582,7 @@ td.group-title {
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 3px;
+  height: 0.1875rem;
   content: "";
   background: linear-gradient(to bottom, rgba(80, 81, 86, 0.11) 0%, rgba(18, 19, 20, 0.02) 49%, rgba(18, 19, 20, 0) 100%);
 }
@@ -664,15 +664,15 @@ td.group-title {
 .form-item-options-expose-required,
 .form-item-options-expose-label,
 .form-item-options-expose-description {
-  margin-top: 6px;
-  margin-bottom: 6px;
-  margin-left: 18px; /* LTR */
+  margin-top: 0.375rem;
+  margin-bottom: 0.375rem;
+  margin-left: 1.125rem; /* LTR */
 }
 
 [dir="rtl"] .form-item-options-expose-required,
 [dir="rtl"] .form-item-options-expose-label,
 [dir="rtl"] .form-item-options-expose-description {
-  margin-right: 18px;
+  margin-right: 1.125rem;
   margin-left: 0;
 }
 
@@ -686,7 +686,7 @@ td.group-title {
 
 .view-preview-form__title {
   margin-top: 0;
-  padding: 8px 12px;
+  padding: 0.5rem 0.75rem;
   border-bottom: 1px solid #ccc;
   background-color: #f3f4f9;
 }
@@ -719,7 +719,7 @@ td.group-title {
   margin-top: 0;
   margin-bottom: 0;
   color: #818181;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: normal;
   line-height: 1.6154;
 }
@@ -729,23 +729,23 @@ td.group-title {
 }
 
 .views-live-preview .preview-section {
-  margin: 0 -5px;
-  padding: 3px 5px;
+  margin: 0 -0.3125rem;
+  padding: 0.1875rem 0.3125rem;
   border: 1px dashed #dedede;
 }
 
 .views-live-preview li.views-row + li.views-row {
-  margin-top: 18px;
+  margin-top: 1.125rem;
 }
 
 /* The div.views-row is intentional and excludes li.views-row, for example */
 
 .views-live-preview div.views-row + div.views-row {
-  margin-top: 36px;
+  margin-top: 2.25rem;
 }
 
 .views-query-info table {
-  margin: 10px 0;
+  margin: 0.625rem 0;
   border-spacing: 0;
   border-collapse: separate;
   border-color: #fff;
@@ -762,7 +762,7 @@ td.group-title {
 }
 
 .messages {
-  margin-bottom: 18px;
+  margin-bottom: 1.125rem;
   line-height: 1.4555;
 }
 
@@ -770,12 +770,12 @@ td.group-title {
   position: absolute;
   z-index: 2;
   top: -1px;
-  right: -5px; /* LTR */
+  right: -0.3125rem; /* LTR */
 }
 
 [dir="rtl"].js .dropbutton-wrapper .dropbutton .dropbutton-action > .ajax-progress-throbber {
   right: auto;
-  left: -5px;
+  left: -0.3125rem;
 }
 
 /**

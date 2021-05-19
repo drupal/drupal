@@ -40,6 +40,7 @@ global:
       css/components/regions/header/header.css: {}
       css/components/regions/highlighted/highlighted.css: {}
       css/components/regions/pre-header/pre-header.css: {}
+      css/components/regions/tabs/tabs.css: {}
       css/components/toolbar/toolbar.css: {}
       css/components/layout_builder/layout-builder.css: {}
     layout:

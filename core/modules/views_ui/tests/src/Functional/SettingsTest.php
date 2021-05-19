@@ -45,9 +45,9 @@ class SettingsTest extends UITestBase {
     $this->drupalPostForm('admin/structure/views/settings', [], 'Save configuration');
     $this->assertText('The configuration options have been saved.');
 
-    // Configure to always show the master display.
+    // Configure to always show the default display.
     $edit = [
-      'ui_show_master_display' => TRUE,
+      'ui_show_default_display' => TRUE,
     ];
     $this->drupalPostForm('admin/structure/views/settings', $edit, 'Save configuration');
 
@@ -60,23 +60,23 @@ class SettingsTest extends UITestBase {
     $view['page[path]'] = $this->randomMachineName(16);
     $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
 
-    // Configure to not always show the master display.
-    // If you have a view without a page or block the master display should be
+    // Configure to not always show the default display.
+    // If you have a view without a page or block the default display should be
     // still shown.
     $edit = [
-      'ui_show_master_display' => FALSE,
+      'ui_show_default_display' => FALSE,
     ];
     $this->drupalPostForm('admin/structure/views/settings', $edit, 'Save configuration');
 
     $view['page[create]'] = FALSE;
     $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
 
-    // Create a view with an additional display, so master should be hidden.
+    // Create a view with an additional display, so default should be hidden.
     $view['page[create]'] = TRUE;
     $view['id'] = strtolower($this->randomMachineName());
     $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
 
-    $this->assertSession()->linkNotExists('Master');
+    $this->assertSession()->linkNotExists('Default');
 
     // Configure to always show the advanced settings.
     // @todo It doesn't seem to be a way to test this as this works just on js.
@@ -108,9 +108,9 @@ class SettingsTest extends UITestBase {
     $view['id'] = strtolower($this->randomMachineName());
     $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
 
-    $this->drupalPostForm(NULL, [], 'Update preview');
-    $xpath = $this->xpath('//div[@class="views-query-info"]/pre');
-    $this->assertCount(0, $xpath, 'The views sql is hidden.');
+    // Verify that the views sql is hidden.
+    $this->submitForm([], 'Update preview');
+    $this->assertSession()->elementNotExists('xpath', '//div[@class="views-query-info"]/pre');
 
     $edit = [
       'ui_show_sql_query_enabled' => TRUE,
@@ -120,11 +120,14 @@ class SettingsTest extends UITestBase {
     $view['id'] = strtolower($this->randomMachineName());
     $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
 
-    $this->drupalPostForm(NULL, [], 'Update preview');
-    $xpath = $this->xpath('//div[@class="views-query-info"]//pre');
-    $this->assertCount(1, $xpath, 'The views sql is shown.');
-    $this->assertStringNotContainsString('db_condition_placeholder', $xpath[0]->getText(), 'No placeholders are shown in the views sql.');
-    $this->assertStringContainsString(Database::getConnection()->escapeField("node_field_data.status") . " = '1'", $xpath[0]->getText(), 'The placeholders in the views sql is replace by the actual value.');
+    // Verify that the views sql is shown.
+    $this->submitForm([], 'Update preview');
+    $this->assertSession()->elementExists('xpath', '//div[@class="views-query-info"]//pre');
+    // Verify that no placeholders are shown in the views sql.
+    $this->assertSession()->elementTextNotContains('xpath', '//div[@class="views-query-info"]//pre', 'db_condition_placeholder');
+    // Verify that the placeholders in the views sql are replaced by the actual
+    // values.
+    $this->assertSession()->elementTextContains('xpath', '//div[@class="views-query-info"]//pre', Database::getConnection()->escapeField("node_field_data.status") . " = '1'");
 
     // Test the advanced settings form.
 

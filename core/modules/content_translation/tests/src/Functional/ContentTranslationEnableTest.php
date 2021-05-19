@@ -54,7 +54,7 @@ class ContentTranslationEnableTest extends BrowserTestBase {
       'entity_types[entity_test_mul]' => TRUE,
       'settings[entity_test_mul][entity_test_mul][translatable]' => TRUE,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save configuration');
+    $this->submitForm($edit, 'Save configuration');
 
     // No pending updates should be available.
     $this->drupalGet('admin/reports/status');

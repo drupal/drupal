@@ -118,7 +118,7 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
   protected $strictConfigSchema = FALSE;
 
   /**
-   * Overrides WebTestBase::setUp() for update testing.
+   * Overrides BrowserTestBase::setUp() for update testing.
    *
    * The main difference in this method is that rather than performing the
    * installation via the installer, a database is loaded. Additional work is

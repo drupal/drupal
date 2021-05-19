@@ -105,7 +105,7 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
     // Test a specific theme call similar to '#theme' => 'node__article'.
     $this->drupalGet('theme-test/specific-suggestion-alter');
     $this->assertText('Template matching the specific theme call.');
-    $this->assertText('theme_test_specific_suggestions__variant', 'Specific theme call is added to the suggestions array.');
+    $this->assertText('theme_test_specific_suggestions__variant');
 
     // Ensure that the base hook is used to determine the suggestion alter hook.
     \Drupal::service('module_installer')->install(['theme_suggestions_test']);
@@ -113,7 +113,9 @@ class ThemeSuggestionsAlterTest extends BrowserTestBase {
     $this->drupalGet('theme-test/specific-suggestion-alter');
     $this->assertText('Template overridden based on suggestion alter hook determined by the base hook.');
     $raw_content = $this->getSession()->getPage()->getContent();
-    $this->assertTrue(strpos($raw_content, 'theme_test_specific_suggestions__variant') < strpos($raw_content, 'theme_test_specific_suggestions__variant__foo'), 'Specific theme call is added to the suggestions array before the suggestions alter hook.');
+    // Verify that a specific theme call is added to the suggestions array
+    // before the suggestions alter hook.
+    $this->assertLessThan(strpos($raw_content, 'theme_test_specific_suggestions__variant__foo'), strpos($raw_content, 'theme_test_specific_suggestions__variant'));
   }
 
   /**

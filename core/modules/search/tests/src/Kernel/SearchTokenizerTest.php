@@ -101,7 +101,7 @@ class SearchTokenizerTest extends KernelTestBase {
     $expected = mb_strtolower(implode(' ', $chars));
 
     // Verify that the output matches what we expect.
-    $this->assertEqual($out, $expected, 'CJK tokenizer worked on all supplied CJK characters');
+    $this->assertEqual($expected, $out, 'CJK tokenizer worked on all supplied CJK characters');
   }
 
   /**

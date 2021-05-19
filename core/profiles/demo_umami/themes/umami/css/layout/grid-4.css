@@ -5,19 +5,17 @@
 
 .grid--4 .views-row {
   margin-bottom: 28px;
-  padding: 0 14px;
 }
-
-@media screen and (min-width: 30em) {
+/* Small */
+@media screen and (min-width: 30em) { /* 480px */
   .grid--4 {
     overflow-x: hidden;
   }
   .grid--4 .view-content {
     display: flex;
     flex-wrap: wrap;
-    margin: 0;
+    margin: 0 -14px;
   }
-
   .grid--4 .views-row {
     display: flex;
     flex-basis: calc(50% - 28px);
@@ -27,19 +25,11 @@
     padding: 0;
   }
 }
-
-@media screen and (min-width: 60em) {
+/* Large */
+@media screen and (min-width: 60em) { /* 960px */
   .grid--4 .views-row {
     flex-basis: calc(25% - 28px);
     flex-grow: 0;
     flex-shrink: 0;
-  }
-}
-
-/* 77em == the max width of .container + 1em either side */
-@media screen and (min-width: 77em) {
-  .grid--4 .view-content {
-    margin-right: -14px;
-    margin-left: -14px;
   }
 }

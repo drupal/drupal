@@ -40,9 +40,9 @@ class InstallUninstallTest extends ModuleTestBase {
     // Install and uninstall module_test to ensure hook_preinstall_module and
     // hook_preuninstall_module are fired as expected.
     $this->container->get('module_installer')->install(['module_test']);
-    $this->assertEqual($this->container->get('state')->get('system_test_preinstall_module'), 'module_test');
+    $this->assertEqual('module_test', $this->container->get('state')->get('system_test_preinstall_module'));
     $this->container->get('module_installer')->uninstall(['module_test']);
-    $this->assertEqual($this->container->get('state')->get('system_test_preuninstall_module'), 'module_test');
+    $this->assertEqual('module_test', $this->container->get('state')->get('system_test_preuninstall_module'));
     $this->resetAll();
 
     $all_modules = $this->container->get('extension.list.module')->getList();
@@ -73,7 +73,7 @@ class InstallUninstallTest extends ModuleTestBase {
     $edit = [];
     $edit["modules[help][enable]"] = TRUE;
     $this->drupalPostForm('admin/modules', $edit, 'Install');
-    $this->assertText('has been enabled', 'Modules status has been updated.');
+    $this->assertText('has been enabled');
     $this->assertText('hook_modules_installed fired for help');
     $this->assertModuleSuccessfullyInstalled('help');
 
@@ -116,7 +116,7 @@ class InstallUninstallTest extends ModuleTestBase {
           // indicating they need to be enabled.
           $this->assertText('You must enable');
         }
-        $this->drupalPostForm(NULL, [], 'Continue');
+        $this->submitForm([], 'Continue');
       }
       // Handle the case where modules were installed along with this one and
       // where we therefore hit a confirmation screen.
@@ -125,7 +125,7 @@ class InstallUninstallTest extends ModuleTestBase {
         // about enabling dependencies appears.
         $this->assertText('Some required modules must be enabled');
         $this->assertText('You must enable');
-        $this->drupalPostForm(NULL, [], 'Continue');
+        $this->submitForm([], 'Continue');
       }
 
       // List the module display names to check the confirmation message.
@@ -174,11 +174,8 @@ class InstallUninstallTest extends ModuleTestBase {
           // See if we can currently uninstall this module (if its dependencies
           // have been uninstalled), and do so if we can.
           $this->drupalGet('admin/modules/uninstall');
-          $field_name = "uninstall[$to_uninstall]";
-          $has_checkbox = $this->xpath('//input[@type="checkbox" and @name="' . $field_name . '"]');
-          $disabled = $this->xpath('//input[@type="checkbox" and @name="' . $field_name . '" and @disabled="disabled"]');
-
-          if (!empty($has_checkbox) && empty($disabled)) {
+          $checkbox = $this->assertSession()->fieldExists("uninstall[$to_uninstall]");
+          if (!$checkbox->hasAttribute('disabled')) {
             // This one is eligible for being uninstalled.
             $package = $all_modules[$to_uninstall]->info['package'];
             $this->assertSuccessfulUninstall($to_uninstall, $package);
@@ -220,9 +217,9 @@ class InstallUninstallTest extends ModuleTestBase {
     // If there are experimental modules, click the confirm form.
     if ($experimental) {
       $this->assertText('Are you sure you wish to enable experimental modules?');
-      $this->drupalPostForm(NULL, [], 'Continue');
+      $this->submitForm([], 'Continue');
     }
-    $this->assertText(count($all_modules) . ' modules have been enabled: ', 'Modules status has been updated.');
+    $this->assertText(count($all_modules) . ' modules have been enabled: ');
   }
 
   /**
@@ -261,8 +258,8 @@ class InstallUninstallTest extends ModuleTestBase {
     $edit = [];
     $edit['uninstall[' . $module . ']'] = TRUE;
     $this->drupalPostForm('admin/modules/uninstall', $edit, 'Uninstall');
-    $this->drupalPostForm(NULL, [], 'Uninstall');
-    $this->assertText('The selected modules have been uninstalled.', 'Modules status has been updated.');
+    $this->submitForm([], 'Uninstall');
+    $this->assertText('The selected modules have been uninstalled.');
     $this->assertModules([$module], FALSE);
 
     // Check that the appropriate hook was fired and the appropriate log
@@ -352,7 +349,7 @@ class InstallUninstallTest extends ModuleTestBase {
   protected function assertHelp($module, $name) {
     $this->drupalGet('admin/help/' . $module);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText($name . ' module', "'$name module' is on the help page for $module");
+    $this->assertText($name . ' module');
     $this->assertSession()->linkExists('online documentation for the ' . $name . ' module', 0, "Correct online documentation link is in the help page for $module");
   }
 
@@ -362,7 +359,7 @@ class InstallUninstallTest extends ModuleTestBase {
   protected function preUninstallForum() {
     // There only should be a 'General discussion' term in the 'forums'
     // vocabulary, but just delete any terms there in case the name changes.
-    $query = \Drupal::entityQuery('taxonomy_term');
+    $query = \Drupal::entityQuery('taxonomy_term')->accessCheck(FALSE);
     $query->condition('vid', 'forums');
     $ids = $query->execute();
     $storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');

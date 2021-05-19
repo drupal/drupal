@@ -1,0 +1,20 @@
+---
+label: 'Exporting a single configuration item'
+related:
+- core.config_overview
+- config.export_full
+- config.import_full
+- config.import_single
+---
+{% set single_export = render_var(url('config.export_single')) %}
+{% set config_overview = render_var(url('help.help_topic', {'id': 'core.config_overview'})) %}
+<h2>{% trans %}Goal{% endtrans %}</h2>
+<p>{% trans %}Export a single configuration item to a file. See <a href="{{ config_overview }}">Managing and deploying configuration</a> for more information about configuration.{% endtrans %}</p>
+<h2>{% trans %}Steps{% endtrans %}</h2>
+<ol>
+  <li>{% trans %}In the <em>Manage</em> administrative menu, navigate to <em>Configuration</em> &gt; <em>Development</em> &gt; <em>Configuration synchronization</em> &gt; <em>Export</em> &gt; <em><a href="{{ single_export }}">Single item</a></em>.{% endtrans %}</li>
+  <li>{% trans %}Select the <em>Configuration type</em> that you want to export, and then select the specific <em>Configuration name</em> to export.{% endtrans %}</li>
+  <li>{% trans %}Use your browser to copy the text in the box marked <em>Here is your configuration</em> to the clipboard.{% endtrans %}</li>
+  <li>{% trans %}Paste the copied text into a plain-text editor on your computer or other device, and save it using the suggested file name below the text box.{% endtrans %}
+  </li>
+</ol>

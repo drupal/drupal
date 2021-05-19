@@ -117,8 +117,8 @@ class SearchIntegrationTest extends ViewTestBase {
     $xpath = '//div[@class="views-row"]//a';
     /** @var \Behat\Mink\Element\NodeElement[] $results */
     $results = $this->xpath($xpath);
-    $this->assertEqual($results[0]->getText(), "Drupal's search rocks <em>really</em> rocks!");
-    $this->assertEqual($results[1]->getText(), "Drupal's search rocks.");
+    $this->assertEqual("Drupal's search rocks <em>really</em> rocks!", $results[0]->getText());
+    $this->assertEqual("Drupal's search rocks.", $results[1]->getText());
     $this->assertSession()->assertEscaped("Drupal's search rocks <em>really</em> rocks!");
 
     // Test sorting with another set of titles.
@@ -134,8 +134,8 @@ class SearchIntegrationTest extends ViewTestBase {
     $xpath = '//div[@class="views-row"]//a';
     /** @var \SimpleXMLElement[] $results */
     $results = $this->xpath($xpath);
-    $this->assertEqual($results[0]->getText(), "Testing one one one");
-    $this->assertEqual($results[1]->getText(), "Testing one two two two");
+    $this->assertEqual("Testing one one one", $results[0]->getText());
+    $this->assertEqual("Testing one two two two", $results[1]->getText());
   }
 
   /**

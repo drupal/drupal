@@ -95,7 +95,6 @@ function taxonomy_tokens($type, $tokens, array $data, array $options, Bubbleable
   $token_service = \Drupal::token();
 
   $replacements = [];
-  $taxonomy_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
   if ($type == 'term' && !empty($data['term'])) {
     $term = $data['term'];
 
@@ -134,6 +133,7 @@ function taxonomy_tokens($type, $tokens, array $data, array $options, Bubbleable
           break;
 
         case 'parent':
+          $taxonomy_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
           if ($parents = $taxonomy_storage->loadParents($term->id())) {
             $parent = array_pop($parents);
             $bubbleable_metadata->addCacheableDependency($parent);
@@ -148,9 +148,12 @@ function taxonomy_tokens($type, $tokens, array $data, array $options, Bubbleable
       $replacements += $token_service->generate('vocabulary', $vocabulary_tokens, ['vocabulary' => $vocabulary], $options, $bubbleable_metadata);
     }
 
-    if (($vocabulary_tokens = $token_service->findWithPrefix($tokens, 'parent')) && $parents = $taxonomy_storage->loadParents($term->id())) {
-      $parent = array_pop($parents);
-      $replacements += $token_service->generate('term', $vocabulary_tokens, ['term' => $parent], $options, $bubbleable_metadata);
+    if (($vocabulary_tokens = $token_service->findWithPrefix($tokens, 'parent'))) {
+      $taxonomy_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+      if ($parents = $taxonomy_storage->loadParents($term->id())) {
+        $parent = array_pop($parents);
+        $replacements += $token_service->generate('term', $vocabulary_tokens, ['term' => $parent], $options, $bubbleable_metadata);
+      }
     }
   }
 
@@ -175,6 +178,7 @@ function taxonomy_tokens($type, $tokens, array $data, array $options, Bubbleable
 
         case 'term-count':
           $replacements[$original] = \Drupal::entityQuery('taxonomy_term')
+            ->accessCheck(TRUE)
             ->condition('vid', $vocabulary->id())
             ->addTag('vocabulary_term_count')
             ->count()
@@ -182,6 +186,7 @@ function taxonomy_tokens($type, $tokens, array $data, array $options, Bubbleable
           break;
 
         case 'node-count':
+          $taxonomy_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
           $replacements[$original] = $taxonomy_storage->nodeCount($vocabulary->id());
           break;
       }

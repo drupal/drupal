@@ -118,10 +118,10 @@ class MediaTypeCreationTest extends MediaJavascriptTestBase {
     $vertical_tabs = $assert_session->elementExists('css', '.vertical-tabs', $form)->getOuterHtml();
     $date_field = $assert_session->fieldExists('Date', $form)->getOuterHtml();
     $published_checkbox = $assert_session->fieldExists('Published', $form)->getOuterHtml();
-    $this->assertTrue(strpos($form_html, $test_source_field) > strpos($form_html, $name_field));
-    $this->assertTrue(strpos($form_html, $vertical_tabs) > strpos($form_html, $test_source_field));
+    $this->assertGreaterThan(strpos($form_html, $name_field), strpos($form_html, $test_source_field));
+    $this->assertGreaterThan(strpos($form_html, $test_source_field), strpos($form_html, $vertical_tabs));
     // The "Published" checkbox should be the last element.
-    $this->assertTrue(strpos($form_html, $published_checkbox) > strpos($form_html, $date_field));
+    $this->assertGreaterThan(strpos($form_html, $date_field), strpos($form_html, $published_checkbox));
 
     // Check that a new type with the same machine name cannot be created.
     $this->drupalGet('admin/structure/media/add');

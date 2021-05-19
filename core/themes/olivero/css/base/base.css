@@ -16,17 +16,12 @@
   box-sizing: border-box;
 }
 
-::selection {
-  color: white;
-  background-color: #0d77b5;
-}
-
 html {
   font-family: "metropolis", sans-serif;
   font-size: 100%;
   font-weight: normal;
   font-style: normal;
-  line-height: 27px;
+  line-height: 1.6875rem;
 }
 
 body {
@@ -55,53 +50,71 @@ a:hover {
     color: #2494db;
   }
 
+a:focus {
+    outline: solid 2px currentColor;
+    outline-offset: 2px;
+  }
+
 img,
-audio,
 video {
   display: block;
   max-width: 100%;
   height: auto;
 }
 
-h1 {
-  margin-top: 18px;
-  margin-bottom: 18px;
-  letter-spacing: -0.01em;
-  color: #0d1214;
-  font-size: 24px;
-  font-weight: bold;
-  line-height: 27px
+audio {
+  display: block;
+  max-width: 100%;
 }
 
-@media (min-width: 700px) {
+h1 {
+  margin-top: 1.125rem;
+  margin-bottom: 1.125rem;
+  letter-spacing: -0.01em;
+  color: #0d1214;
+  font-size: 1.5rem;
+  font-weight: bold;
+  line-height: 1.6875rem
+}
+
+@media (min-width: 43.75rem) {
 
 h1 {
-    margin-top: 36px;
-    margin-bottom: 36px;
-    font-size: 60px;
-    line-height: 72px
+    margin-top: 2.25rem;
+    margin-bottom: 2.25rem;
+    font-size: 3.75rem;
+    line-height: 4.5rem
 }
   }
 
 h2 {
-  margin-top: 18px;
-  margin-bottom: 18px;
+  margin-top: 1.125rem;
+  margin-bottom: 1.125rem;
   letter-spacing: -0.01em;
   color: #0d1214;
-  font-size: 24px;
+  font-size: 1.5rem;
   font-weight: bold;
-  line-height: 27px
+  line-height: 1.6875rem
 }
 
-@media (min-width: 700px) {
+@media (min-width: 43.75rem) {
 
 h2 {
-    margin-top: 36px;
-    margin-bottom: 36px;
-    font-size: 36px;
-    line-height: 54px
+    margin-top: 2.25rem;
+    margin-bottom: 2.25rem;
+    font-size: 2.25rem;
+    line-height: 3.375rem
 }
   }
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "metropolis", sans-serif;
+}
 
 [dir="ltr"] ul {
   margin-left: 1.5em;

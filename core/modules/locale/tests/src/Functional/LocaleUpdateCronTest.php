@@ -81,7 +81,7 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
 
     // Check whether no tasks are added to the queue.
     $queue = \Drupal::queue('locale_translation', TRUE);
-    $this->assertEqual($queue->numberOfItems(), 0, 'Queue is empty');
+    $this->assertEqual(0, $queue->numberOfItems(), 'Queue is empty');
 
     // Test: Enable cron update and check if update tasks are added to the
     // queue.
@@ -96,10 +96,10 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
 
     // Check whether tasks are added to the queue.
     $queue = \Drupal::queue('locale_translation', TRUE);
-    $this->assertEqual($queue->numberOfItems(), 2, 'Queue holds tasks for one project.');
+    $this->assertEqual(2, $queue->numberOfItems(), 'Queue holds tasks for one project.');
     $item = $queue->claimItem();
     $queue->releaseItem($item);
-    $this->assertEqual($item->data[1][0], 'contrib_module_two', 'Queue holds tasks for contrib module one.');
+    $this->assertEqual('contrib_module_two', $item->data[1][0], 'Queue holds tasks for contrib module one.');
 
     // Test: Run cron for a second time and check if tasks are not added to
     // the queue twice.
@@ -107,7 +107,7 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
 
     // Check whether no more tasks are added to the queue.
     $queue = \Drupal::queue('locale_translation', TRUE);
-    $this->assertEqual($queue->numberOfItems(), 2, 'Queue holds tasks for one project.');
+    $this->assertEqual(2, $queue->numberOfItems(), 'Queue holds tasks for one project.');
 
     // Ensure last checked is updated to a greater time than the initial value.
     sleep(1);
@@ -119,8 +119,10 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
     $history = locale_translation_get_file_history();
     $initial = $initial_history['contrib_module_two']['de'];
     $current = $history['contrib_module_two']['de'];
-    $this->assertTrue($current->timestamp > $initial->timestamp, 'Timestamp is updated');
-    $this->assertTrue($current->last_checked > $initial->last_checked, 'Last checked is updated');
+    // Verify that the translation of contrib_module_one is imported and
+    // updated.
+    $this->assertGreaterThan($initial->timestamp, $current->timestamp);
+    $this->assertGreaterThan($initial->last_checked, $current->last_checked);
   }
 
 }

@@ -174,12 +174,12 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface {
     $revision_id_field = $table_mapping->getColumnNames($entity_type->getKey('revision'))['value'];
 
     $query = $this->database->select($entity_type->getRevisionTable(), 'revision');
-    $query->leftJoin($entity_type->getBaseTable(), 'base', "revision.$id_field = base.$id_field");
+    $query->leftJoin($entity_type->getBaseTable(), 'base', "[revision].[$id_field] = [base].[$id_field]");
 
     $query
       ->fields('revision', [$revision_id_field, $id_field])
       ->condition("revision.$workspace_field", $workspace_id)
-      ->where("revision.$revision_id_field > base.$revision_id_field")
+      ->where("[revision].[$revision_id_field] > [base].[$revision_id_field]")
       ->orderBy("revision.$revision_id_field", 'ASC');
 
     // Restrict the result to a set of entity ID's if provided.

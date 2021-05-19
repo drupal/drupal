@@ -5,12 +5,12 @@ namespace Drupal\Core\Database\Driver\mysql;
 use Drupal\Core\Database\DatabaseAccessDeniedException;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
+use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Database\StatementWrapper;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Database\Connection as DatabaseConnection;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\TransactionNoActiveException;
 
 /**
@@ -66,6 +66,15 @@ class Connection extends DatabaseConnection {
   protected $needsCleanup = FALSE;
 
   /**
+   * Stores the server version after it has been retrieved from the database.
+   *
+   * @var string
+   *
+   * @see \Drupal\Core\Database\Driver\mysql\Connection::version
+   */
+  private $serverVersion;
+
+  /**
    * The minimal possible value for the max_allowed_packet setting of MySQL.
    *
    * @link https://mariadb.com/kb/en/mariadb/server-system-variables/#max_allowed_packet
@@ -83,25 +92,6 @@ class Connection extends DatabaseConnection {
   /**
    * {@inheritdoc}
    */
-  public function query($query, array $args = [], $options = []) {
-    try {
-      return parent::query($query, $args, $options);
-    }
-    catch (DatabaseException $e) {
-      if ($e->getPrevious()->errorInfo[1] == 1153) {
-        // If a max_allowed_packet error occurs the message length is truncated.
-        // This should prevent the error from recurring if the exception is
-        // logged to the database using dblog or the like.
-        $message = Unicode::truncateBytes($e->getMessage(), self::MIN_MAX_ALLOWED_PACKET);
-        $e = new DatabaseExceptionWrapper($message, $e->getCode(), $e->getPrevious());
-      }
-      throw $e;
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function handleQueryException(\PDOException $e, $query, array $args = [], $options = []) {
     // In case of attempted INSERT of a record with an undefined column and no
     // default value indicated in schema, MySql returns a 1364 error code.
@@ -109,6 +99,7 @@ class Connection extends DatabaseConnection {
     // drivers do, to avoid the parent class to throw a generic
     // DatabaseExceptionWrapper instead.
     if (!empty($e->errorInfo[1]) && $e->errorInfo[1] === 1364) {
+      @trigger_error('Connection::handleQueryException() is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Get a handler through $this->exceptionHandler() instead, and use one of its methods. See https://www.drupal.org/node/3187222', E_USER_DEPRECATED);
       $query_string = ($query instanceof StatementInterface) ? $query->getQueryString() : $query;
       $message = $e->getMessage() . ": " . $query_string . "; " . print_r($args, TRUE);
       throw new IntegrityConstraintViolationException($message, is_int($e->getCode()) ? $e->getCode() : 0, $e);
@@ -197,15 +188,8 @@ class Connection extends DatabaseConnection {
       'init_commands' => [],
     ];
 
-    $sql_mode = 'ANSI,STRICT_TRANS_TABLES,STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,ONLY_FULL_GROUP_BY';
-    // NO_AUTO_CREATE_USER is removed in MySQL 8.0.11
-    // https://dev.mysql.com/doc/relnotes/mysql/8.0/en/news-8-0-11.html#mysqld-8-0-11-deprecation-removal
-    $version_server = $pdo->getAttribute(\PDO::ATTR_SERVER_VERSION);
-    if (version_compare($version_server, '8.0.11', '<')) {
-      $sql_mode .= ',NO_AUTO_CREATE_USER';
-    }
     $connection_options['init_commands'] += [
-      'sql_mode' => "SET sql_mode = '$sql_mode'",
+      'sql_mode' => "SET sql_mode = 'ANSI,TRADITIONAL'",
     ];
 
     // Execute initial commands.
@@ -214,19 +198,6 @@ class Connection extends DatabaseConnection {
     }
 
     return $pdo;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function serialize() {
-    // Cleanup the connection, much like __destruct() does it as well.
-    if ($this->needsCleanup) {
-      $this->nextIdDelete();
-    }
-    $this->needsCleanup = FALSE;
-
-    return parent::serialize();
   }
 
   /**
@@ -297,7 +268,10 @@ class Connection extends DatabaseConnection {
    *   The PDO server version.
    */
   protected function getServerVersion(): string {
-    return $this->connection->getAttribute(\PDO::ATTR_SERVER_VERSION);
+    if (!$this->serverVersion) {
+      $this->serverVersion = $this->connection->query('SELECT VERSION()')->fetchColumn();
+    }
+    return $this->serverVersion;
   }
 
   public function databaseType() {

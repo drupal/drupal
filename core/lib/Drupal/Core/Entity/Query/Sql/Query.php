@@ -136,6 +136,10 @@ class Query extends QueryBase implements QueryInterface {
       $this->sqlQuery->isNull("base_table_2.$id_field");
     }
 
+    if (is_null($this->accessCheck)) {
+      $this->accessCheck = TRUE;
+      @trigger_error('Relying on entity queries to check access by default is deprecated in drupal:9.2.0 and an error will be thrown from drupal:10.0.0. Call \Drupal\Core\Entity\Query\QueryInterface::accessCheck() with TRUE or FALSE to specify whether access should be checked. See https://www.drupal.org/node/3201242', E_USER_DEPRECATED);
+    }
     if ($this->accessCheck) {
       $this->sqlQuery->addTag($this->entityTypeId . '_access');
     }

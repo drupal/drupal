@@ -46,6 +46,7 @@ function views_views_data() {
     'help' => t('Provide custom text or link.'),
     'field' => [
       'id' => 'custom',
+      'click sortable' => FALSE,
     ],
   ];
 
@@ -59,7 +60,7 @@ function views_views_data() {
 
   $data['views']['area'] = [
     'title' => t('Text area'),
-    'help' => t('Provide markup text for the area.'),
+    'help' => t('Provide markup for the area using any available text format.'),
     'area' => [
       'id' => 'text',
     ],
@@ -67,7 +68,7 @@ function views_views_data() {
 
   $data['views']['area_text_custom'] = [
     'title' => t('Unfiltered text'),
-    'help' => t('Add unrestricted, custom text or markup. This is similar to the custom text field.'),
+    'help' => t('Provide markup for the area with minimal filtering.'),
     'area' => [
       'id' => 'text_custom',
     ],

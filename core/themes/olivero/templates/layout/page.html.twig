@@ -50,13 +50,13 @@
   <div id="page">
 
     {% if page.header or page.primary_menu or page.secondary_menu %}
-      <header id="header" class="header site-header" role="banner">
+      <header id="header" class="site-header" data-drupal-selector="site-header" role="banner">
 
-        {# Gets fixed by JS at wide widths. #}
-        <div class="site-header__fixable fixable">
-          <div class="header__left">
-            <button class="nav-primary__button" aria-controls="site-header__inner" aria-label="Toggle navigation" aria-expanded="false">
-              <span class="nav-primary__icon">
+        {# Gets fixed by JavaScript at wide widths. #}
+        <div class="site-header__fixable" data-drupal-selector="site-header-fixable">
+          <div class="site-header__initial">
+            <button class="sticky-header-toggle" data-drupal-selector="sticky-header-toggle" role="switch" aria-controls="site-header__inner" aria-label="{{ 'Sticky header'|t }}" aria-checked="false">
+              <span class="sticky-header-toggle__icon">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -65,28 +65,22 @@
           </div>
 
           {# Needs to extend full width so box shadow will also extend. #}
-          <div id="site-header__inner" class="site-header__inner">
+          <div id="site-header__inner" class="site-header__inner" data-drupal-selector="site-header-inner">
             <div class="container site-header__inner__container">
 
               {{ page.header }}
 
               {% if page.primary_menu or page.secondary_menu %}
-                <div class="mobile-buttons">
+                <div class="mobile-buttons" data-drupal-selector="mobile-buttons">
                   <button class="mobile-nav-button" aria-label="{{ 'Toggle Main Menu'|t }}" aria-controls="header-nav" aria-expanded="false">
                     <span class="mobile-nav-button__label">{{ 'Menu'|t }}</span>
                     <span class="mobile-nav-button__icon"></span>
                   </button>
                 </div>
 
-                <div id="header-nav" class="header-nav" data-menu-open="false">
-
+                <div id="header-nav" class="header-nav" data-drupal-selector="header-nav">
                   {{ page.primary_menu }}
-
-                  {% if page.secondary_menu %}
-                    <div class="secondary-nav__wrapper">
-                      {{ page.secondary_menu }}
-                    </div>
-                  {% endif %}
+                  {{ page.secondary_menu }}
                 </div>
               {% endif %}
             </div>

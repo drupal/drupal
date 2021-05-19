@@ -62,7 +62,7 @@ class PhpUnitWarningsTest extends UnitTestCase {
     if (RunnerVersion::getMajor() > 8) {
       $this->markTestSkipped("In PHPUnit 9+, assertInternalType() is removed.");
     }
-    $this->expectDeprecation('assertInternalType() is deprecated and will be removed in PHPUnit 9. Refactor your test to use assertIsArray(), assertIsBool(), assertIsFloat(), assertIsInt(), assertIsNumeric(), assertIsObject(), assertIsResource(), assertIsString(), assertIsScalar(), assertIsCallable(), or assertIsIterable() instead.');
+    $this->expectDeprecation('assertInternalType() is deprecated and will be removed in PHPUnit 9. Refactor your test to use assertIsString() instead.');
     $this->assertInternalType('string', 'string');
   }
 
@@ -113,7 +113,7 @@ class PhpUnitWarningsTest extends UnitTestCase {
     if (RunnerVersion::getMajor() > 8) {
       $this->markTestSkipped("In PHPUnit 9+, expectExceptionMessageRegExp() is removed.");
     }
-    $this->expectDeprecation('expectExceptionMessageRegExp() is deprecated in PHPUnit 8 and will be removed in PHPUnit 9.');
+    $this->expectDeprecation('expectExceptionMessageRegExp() is deprecated in PHPUnit 8 and will be removed in PHPUnit 9. Use expectExceptionMessageMatches() instead.');
     $this->expectException(\Exception::class);
     $this->expectExceptionMessageRegExp('/An exception .*/');
     throw new \Exception('An exception has been triggered');

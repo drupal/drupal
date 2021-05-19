@@ -4,6 +4,9 @@ namespace Drupal\KernelTests;
 
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Core\Database\Database;
+use GuzzleHttp\Exception\GuzzleException;
+use Drupal\Tests\StreamCapturer;
+use Drupal\user\Entity\Role;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\visitor\vfsStreamStructureVisitor;
 use PHPUnit\Framework\SkippedTestError;
@@ -162,6 +165,21 @@ class KernelTestBaseTest extends KernelTestBase {
   public function testSubsequentContainerIsolation() {
     $this->enableModules(['system', 'user']);
     $this->assertNull($this->installConfig('user'));
+  }
+
+  /**
+   * Tests that an outbound HTTP request can be performed inside of a test.
+   */
+  public function testOutboundHttpRequest() {
+    // The middleware test.http_client.middleware calls drupal_generate_test_ua
+    // which checks the DRUPAL_TEST_IN_CHILD_SITE constant, that is not defined
+    // in Kernel tests.
+    try {
+      $this->container->get('http_client')->get('http://example.com');
+    }
+    catch (GuzzleException $e) {
+      // Ignore any HTTP errors.
+    }
   }
 
   /**
@@ -332,22 +350,82 @@ class KernelTestBaseTest extends KernelTestBase {
    * Tests the deprecation of AssertLegacyTrait::assertIdenticalObject.
    *
    * @group legacy
-    */
+   */
   public function testAssertIdenticalObject() {
     $this->expectDeprecation('AssertLegacyTrait::assertIdenticalObject() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertEquals() instead. See https://www.drupal.org/node/3129738');
     $this->assertIdenticalObject((object) ['foo' => 'bar'], (object) ['foo' => 'bar']);
   }
 
   /**
+   * Tests the deprecation of AssertLegacyTrait::assertNotEqual.
+   *
+   * @group legacy
+   */
+  public function testAssertNotEqual() {
+    $this->expectDeprecation('AssertLegacyTrait::assertNotEqual() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertNotEquals() instead. See https://www.drupal.org/node/3129738');
+    $this->assertNotEqual('foo', 'bar');
+  }
+
+  /**
+   * Tests the deprecation of AssertLegacyTrait::assertIdentical.
+   *
+   * @group legacy
+   */
+  public function testAssertIdentical() {
+    $this->expectDeprecation('AssertLegacyTrait::assertIdentical() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertSame() instead. See https://www.drupal.org/node/3129738');
+    $this->assertIdentical('foo', 'foo');
+  }
+
+  /**
+   * Tests the deprecation of AssertLegacyTrait::assertNotIdentical.
+   *
+   * @group legacy
+   */
+  public function testAssertNotIdentical() {
+    $this->expectDeprecation('AssertLegacyTrait::assertNotIdentical() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertNotSame() instead. See https://www.drupal.org/node/3129738');
+    $this->assertNotIdentical('foo', 'bar');
+  }
+
+  /**
+   * Tests the deprecation of AssertLegacyTrait::verbose().
+   *
+   * @group legacy
+   */
+  public function testVerbose() {
+    $this->expectDeprecation('AssertLegacyTrait::verbose() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use dump() instead. See https://www.drupal.org/node/3197514');
+    $this->verbose('The show must go on');
+  }
+
+  /**
    * Tests the deprecation of ::installSchema with the tables key_value(_expire).
    *
    * @group legacy
-    */
+   */
   public function testKernelTestBaseInstallSchema() {
     $this->expectDeprecation('Installing the tables key_value and key_value_expire with the method KernelTestBase::installSchema() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. The tables are now lazy loaded and therefore will be installed automatically when used. See https://www.drupal.org/node/3143286');
     $this->enableModules(['system']);
     $this->installSchema('system', ['key_value', 'key_value_expire']);
     $this->assertFalse(Database::getConnection()->schema()->tableExists('key_value'));
+  }
+
+  /**
+   * Tests the dump() function provided by the var-dumper Symfony component.
+   */
+  public function testVarDump() {
+    // Append the stream capturer to the STDOUT stream, so that we can test the
+    // dump() output and also prevent it from actually outputting in this
+    // particular test.
+    stream_filter_register("capture", StreamCapturer::class);
+    stream_filter_append(STDOUT, "capture");
+
+    // Dump some variables.
+    $this->enableModules(['system', 'user']);
+    $role = Role::create(['id' => 'test_role']);
+    dump($role);
+    dump($role->id());
+
+    $this->assertStringContainsString('Drupal\user\Entity\Role', StreamCapturer::$cache);
+    $this->assertStringContainsString('test_role', StreamCapturer::$cache);
   }
 
 }

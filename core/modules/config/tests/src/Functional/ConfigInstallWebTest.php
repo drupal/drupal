@@ -70,10 +70,10 @@ class ConfigInstallWebTest extends BrowserTestBase {
     \Drupal::configFactory()->reset($default_configuration_entity);
     $config_static = $this->config($default_config);
     $this->assertFalse($config_static->isNew());
-    $this->assertIdentical($config_static->get('foo'), 'default setting');
+    $this->assertSame('default setting', $config_static->get('foo'));
     $config_entity = $this->config($default_configuration_entity);
     $this->assertFalse($config_entity->isNew());
-    $this->assertIdentical($config_entity->get('label'), 'Default integration config label');
+    $this->assertSame('Default integration config label', $config_entity->get('label'));
 
     // Customize both configuration objects.
     $config_static->set('foo', 'customized setting')->save();
@@ -95,7 +95,7 @@ class ConfigInstallWebTest extends BrowserTestBase {
     // Verify the integration config still exists.
     $config_entity = $this->config($default_configuration_entity);
     $this->assertFalse($config_entity->isNew());
-    $this->assertIdentical($config_entity->get('label'), 'Customized integration config label');
+    $this->assertSame('Customized integration config label', $config_entity->get('label'));
 
     // Reinstall the integration module.
     try {
@@ -117,12 +117,12 @@ class ConfigInstallWebTest extends BrowserTestBase {
     \Drupal::configFactory()->reset($default_configuration_entity);
     $config_static = $this->config($default_config);
     $this->assertFalse($config_static->isNew());
-    $this->assertIdentical($config_static->get('foo'), 'default setting');
+    $this->assertSame('default setting', $config_static->get('foo'));
 
     // Verify the integration config is using the default.
     $config_entity = \Drupal::config($default_configuration_entity);
     $this->assertFalse($config_entity->isNew());
-    $this->assertIdentical($config_entity->get('label'), 'Default integration config label');
+    $this->assertSame('Default integration config label', $config_entity->get('label'));
   }
 
   /**
@@ -140,14 +140,14 @@ class ConfigInstallWebTest extends BrowserTestBase {
 
     // Uninstall the config_test module to test the confirm form.
     $this->drupalPostForm('admin/modules/uninstall', ['uninstall[config_test]' => TRUE], 'Uninstall');
-    $this->drupalPostForm(NULL, [], 'Uninstall');
+    $this->submitForm([], 'Uninstall');
 
     // Try to install config_install_fail_test without selecting config_test.
     // The user is shown a confirm form because the config_test module is a
     // dependency.
     // @see \Drupal\system\Form\ModulesListConfirmForm::submitForm()
     $this->drupalPostForm('admin/modules', ['modules[config_install_fail_test][enable]' => TRUE], 'Install');
-    $this->drupalPostForm(NULL, [], 'Continue');
+    $this->submitForm([], 'Continue');
     $this->assertRaw('Unable to install Configuration install fail test, <em class="placeholder">config_test.dynamic.dotted.default</em> already exists in active configuration.');
 
     // Test that collection configuration clashes during a module install are

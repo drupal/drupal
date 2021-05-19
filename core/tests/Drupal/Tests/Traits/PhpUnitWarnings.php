@@ -35,6 +35,7 @@ trait PhpUnitWarnings {
     'The optional $ignoreCase parameter of assertContains() is deprecated and will be removed in PHPUnit 9.',
     'The optional $ignoreCase parameter of assertNotContains() is deprecated and will be removed in PHPUnit 9.',
     'expectExceptionMessageRegExp() is deprecated in PHPUnit 8 and will be removed in PHPUnit 9.',
+    'expectExceptionMessageRegExp() is deprecated in PHPUnit 8 and will be removed in PHPUnit 9. Use expectExceptionMessageMatches() instead.',
     // Warning for testing.
     'Test warning for \Drupal\Tests\PhpUnitWarningsTest::testAddWarning()',
     // PHPUnit 9.
@@ -63,6 +64,12 @@ trait PhpUnitWarnings {
     if (in_array($warning, self::$deprecationWarnings, TRUE)) {
       // Convert listed PHPUnit deprecations into E_USER_DEPRECATED and prevent
       // each from being raised as a test warning.
+      @trigger_error($warning, E_USER_DEPRECATED);
+      return;
+    }
+
+    // assertInternalType() has many similar deprecation warnings.
+    if (preg_match('/^assertInternalType\(\) is deprecated and will be removed in PHPUnit 9. Refactor your test to use assert.*\(\) instead.$/', $warning)) {
       @trigger_error($warning, E_USER_DEPRECATED);
       return;
     }

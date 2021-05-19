@@ -12,7 +12,7 @@ use Drupal\Tests\views\Functional\ViewTestBase;
 class ViewsBulkTest extends ViewTestBase {
 
   /**
-   * An admin user
+   * An admin user.
    *
    * @var \Drupal\user\UserInterface
    */
@@ -63,7 +63,7 @@ class ViewsBulkTest extends ViewTestBase {
 
     // Now click 'Apply to selected items' and assert the first node is selected
     // on the confirm form.
-    $this->drupalPostForm(NULL, ['node_bulk_form[0]' => TRUE], 'Apply to selected items');
+    $this->submitForm(['node_bulk_form[0]' => TRUE], 'Apply to selected items');
     $this->assertText($node_1->getTitle());
     $this->assertNoText($node_2->getTitle());
 
@@ -81,7 +81,7 @@ class ViewsBulkTest extends ViewTestBase {
 
     // Now click 'Apply to selected items' and assert the second node is
     // selected on the confirm form.
-    $this->drupalPostForm(NULL, ['node_bulk_form[1]' => TRUE], 'Apply to selected items');
+    $this->submitForm(['node_bulk_form[1]' => TRUE], 'Apply to selected items');
     $this->assertText($node_1->getTitle());
     $this->assertNoText($node_3->getTitle());
   }

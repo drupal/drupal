@@ -74,7 +74,7 @@ class TwigTransTest extends BrowserTestBase {
     $this->rebuildContainer();
 
     // Check that lolspeak is the default language for the site.
-    $this->assertEqual(\Drupal::languageManager()->getDefaultLanguage()->getId(), 'xx', 'Lolspeak is the default language');
+    $this->assertEqual('xx', \Drupal::languageManager()->getDefaultLanguage()->getId(), 'Lolspeak is the default language');
   }
 
   /**
@@ -125,35 +125,26 @@ class TwigTransTest extends BrowserTestBase {
    * Asserts Twig trans tags.
    */
   protected function assertTwigTransTags() {
-    $this->assertText(
-      'OH HAI SUNZ',
-      '{% trans "Hello sun." %} was successfully translated.'
-    );
+    // Assert that {% trans "Hello sun." %} is translated correctly.
+    $this->assertText('OH HAI SUNZ');
 
-    $this->assertText(
-      'O HAI SUNZZZZZZZ',
-      '{% trans "Hello sun." with {"context": "Lolspeak"} %} was successfully translated.'
-    );
+    // Assert that {% trans "Hello sun." %} with {"context": "Lolspeak"} is
+    // translated correctly.
+    $this->assertText('O HAI SUNZZZZZZZ');
 
-    $this->assertText(
-      'O HERRO ERRRF.',
-      '{{ "Hello Earth."|trans }} was successfully translated.'
-    );
+    // Assert that {{ "Hello Earth."|trans }} is translated correctly.
+    $this->assertText('O HERRO ERRRF.');
 
-    $this->assertText(
-      'OH HAI TEH MUUN',
-      '{% trans %}Hello moon.{% endtrans %} was successfully translated.'
-    );
+    // Assert that {% trans %}Hello moon.{% endtrans %} is translated correctly.
+    $this->assertText('OH HAI TEH MUUN');
 
-    $this->assertText(
-      'O HAI STARRRRR',
-      '{% trans %} with {% plural count = 1 %} was successfully translated.'
-    );
+    // Assert that {% trans %} with {% plural count = 1 %} is translated
+    // correctly.
+    $this->assertText('O HAI STARRRRR');
 
-    $this->assertText(
-      'O HAI 2 STARZZZZ',
-      '{% trans %} with {% plural count = 2 %} was successfully translated.'
-    );
+    // Assert that {% trans %} with {% plural count = 2 %} is translated
+    // correctly.
+    $this->assertText('O HAI 2 STARZZZZ');
 
     // Assert that {{ token }} was successfully translated and prefixed
     // with "@".
@@ -167,28 +158,26 @@ class TwigTransTest extends BrowserTestBase {
     // appropriate prefixes.
     $this->assertRaw('DIS complex token HAZ LENGTH OV: 3. IT CONTAYNZ: <em class="placeholder">12345</em> AN &amp;&quot;&lt;&gt;.');
 
-    $this->assertText(
-      'I have context.',
-      '{% trans %} with a context only msgid was excluded from translation.'
-    );
+    // Assert that {% trans %} with a context only msgid is excluded from
+    // translation.
+    $this->assertText('I have context.');
 
-    $this->assertText(
-      'I HAZ KONTEX.',
-      '{% trans with {"context": "Lolspeak"} %} was successfully translated with context.'
-    );
+    // Assert that {% trans with {"context": "Lolspeak"} %} was successfully
+    // translated with context.
+    $this->assertText('I HAZ KONTEX.');
 
-    $this->assertText(
-      'O HAI NU TXT.',
-      '{% trans with {"langcode": "zz"} %} was successfully translated in specified language.'
-    );
+    // Assert that {% trans with {"langcode": "zz"} %} is successfully
+    // translated in specified language.
+    $this->assertText('O HAI NU TXT.');
 
-    $this->assertText(
-      'O HAI NU TXTZZZZ.',
-      '{% trans with {"context": "Lolspeak", "langcode": "zz"} %} was successfully translated with context in specified language.'
-    );
+    // Assert that {% trans with {"context": "Lolspeak", "langcode": "zz"} %}
+    // is successfully translated with context in specified language.
+    $this->assertText('O HAI NU TXTZZZZ.');
+
     // Makes sure https://www.drupal.org/node/2489024 doesn't happen without
     // twig debug.
-    $this->assertNoText(pi(), 'Running php code inside a Twig trans is not possible.');
+    // Ensure that running php code inside a Twig trans is not possible.
+    $this->assertNoText(pi());
   }
 
   /**

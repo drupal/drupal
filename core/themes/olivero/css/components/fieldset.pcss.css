@@ -14,8 +14,8 @@
   padding-inline-start: 0;
   padding-inline-end: 0;
   color: inherit;
-  border: var(--form-element-border-size-base) solid var(--color--gray-30);
-  border-radius: var(--border-radius-base);
+  border: solid 2px var(--color--gray-30);
+  border-radius: var(--border-radius);
   background-color: var(--color--white);
 }
 
@@ -37,14 +37,19 @@ _:-ms-fullscreen,
 }
 
 .fieldset__legend {
-  float: inline-start;
+  float: left; /* Prevent sticking out of top of fieldset. */
   width: 100%;
-  margin-block-end: var(--sp1);
   color: inherit;
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
   background-color: var(--color--gray-30);
   font-size: var(--font-size-l);
   font-weight: 700;
   line-height: var(--line-height-base);
+
+  & + * {
+    clear: left;
+  }
 
   & .fieldset__label {
     &.form-required {
@@ -111,16 +116,19 @@ _:-ms-fullscreen,
   background-position: left top;
 }
 
-.fieldset__legend--visible ~ .fieldset__wrapper {
+.fieldset__wrapper {
+  padding: var(--sp);
+}
+
+.fieldset__legend--invisible ~ .fieldset__wrapper {
   margin-block-start: 0;
-  padding-block: var(--sp);
-  padding-inline-start: var(--sp);
-  padding-inline-end: var(--sp);
+  padding: 0;
 }
 
 .fieldset--group .fieldset__legend--visible ~ .fieldset__wrapper {
-  border: var(--form-element-border-size-base) solid var(--color--gray-30);
-  border-radius: var(--border-radius-base);
+  border: solid 2px var(--color--gray-30);
+  border-bottom-right-radius: var(--border-radius);
+  border-bottom-left-radius: var(--border-radius);
 }
 
 .fieldset__wrapper--group {

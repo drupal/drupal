@@ -23,7 +23,7 @@ use Drupal\media\MediaTypeInterface;
 use Drupal\media\OEmbed\ResourceFetcherInterface;
 use Drupal\media\OEmbed\UrlResolverInterface;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Exception\TransferException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -421,7 +421,7 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
         return $local_thumbnail_uri;
       }
     }
-    catch (RequestException $e) {
+    catch (TransferException $e) {
       $this->logger->warning($e->getMessage());
     }
     catch (FileException $e) {

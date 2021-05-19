@@ -63,7 +63,7 @@ class BlockExposedFilterAJAXTest extends WebDriverTestBase {
     $this->assertStringContainsString('Article A', $html);
 
     // Filter by page type.
-    $this->submitForm(['type' => 'page'], t('Apply'));
+    $this->submitForm(['type' => 'page'], 'Apply');
     $this->assertSession()->waitForElementRemoved('xpath', '//*[text()="Article A"]');
 
     // Verify that only the page nodes are present.
@@ -73,7 +73,7 @@ class BlockExposedFilterAJAXTest extends WebDriverTestBase {
     $this->assertStringNotContainsString('Article A', $html);
 
     // Reset the form.
-    $this->submitForm([], t('Reset'));
+    $this->submitForm([], 'Reset');
     // Assert we are still on the node page.
     $html = $page->getHtml();
     // Repeat the original tests.
@@ -87,9 +87,9 @@ class BlockExposedFilterAJAXTest extends WebDriverTestBase {
     // is redirected to the page display.
     $this->drupalPlaceBlock('views_block:test_block_exposed_ajax_with_page-block_1');
     $this->drupalGet($node->toUrl());
-    $this->submitForm(['type' => 'page'], t('Apply'));
+    $this->submitForm(['type' => 'page'], 'Apply');
     $this->assertSession()->waitForElementRemoved('xpath', '//*[text()="Article A"]');
-    $this->submitForm([], t('Reset'));
+    $this->submitForm([], 'Reset');
     $this->assertSession()->addressEquals('some-path');
   }
 

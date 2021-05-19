@@ -5,6 +5,7 @@ namespace Drupal\config_translation\Form;
 use Drupal\config_translation\ConfigMapperManagerInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\Form\BaseFormIdInterface;
 use Drupal\Core\Form\FormBase;
@@ -211,9 +212,11 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
       $saved_config = $config_translation->get();
       if (empty($saved_config)) {
         $config_translation->delete();
+        $this->messenger()->addStatus($this->t('@language translation was not added. To add a translation, you must modify the configuration.', ['@language' => $this->language->getName()]));
       }
       else {
         $config_translation->save();
+        $this->messenger()->addStatus($this->t('Successfully saved @language translation.', ['@language' => $this->language->getName()]));
       }
     }
 
@@ -239,7 +242,7 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
     // Sequence schema elements.
     if (isset($definition['form_element_class'])) {
       if (!$definition->getLabel()) {
-        $definition->setLabel(t('n/a'));
+        $definition->setLabel(new TranslatableMarkup('n/a'));
       }
       $class = $definition['form_element_class'];
       return $class::create($schema);

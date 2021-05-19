@@ -9,6 +9,8 @@ parameters:
     gc_divisor: 100
     gc_maxlifetime: 200000
     cookie_lifetime: 2000000
+    sid_length: 48
+    sid_bits_per_character: 6
   twig.config:
     debug: false
     auto_reload: null
@@ -196,6 +198,7 @@ services:
     arguments: ['@database']
     tags:
       - { name: cache_tags_invalidator}
+      - { name: backend_overridable }
   cache.backend.chainedfast:
     class: Drupal\Core\Cache\ChainedFastBackendFactory
     arguments: ['@settings']
@@ -204,6 +207,8 @@ services:
   cache.backend.database:
     class: Drupal\Core\Cache\DatabaseBackendFactory
     arguments: ['@database', '@cache_tags.invalidator.checksum', '@settings']
+    tags:
+      - { name: backend_overridable }
   cache.backend.apcu:
     class: Drupal\Core\Cache\ApcuBackendFactory
     arguments: ['%app.root%', '%site.path%', '@cache_tags.invalidator.checksum']
@@ -522,7 +527,7 @@ services:
     class: Drupal\Core\Extension\ModuleInstaller
     tags:
       - { name: service_collector, tag: 'module_install.uninstall_validator', call: addUninstallValidator }
-    arguments: ['%app.root%', '@module_handler', '@kernel']
+    arguments: ['%app.root%', '@module_handler', '@kernel', '@database']
     lazy: true
   extension.list.module:
     class: Drupal\Core\Extension\ModuleExtensionList
@@ -554,6 +559,12 @@ services:
       - { name: module_install.uninstall_validator }
     arguments: ['@string_translation', '@extension.list.module', '@extension.list.theme']
     lazy: true
+  database_driver_uninstall_validator:
+    class: Drupal\Core\Extension\DatabaseDriverUninstallValidator
+    tags:
+      - { name: module_install.uninstall_validator }
+    arguments: ['@string_translation', '@extension.list.module', '@database']
+    lazy: true
   theme_handler:
     class: Drupal\Core\Extension\ThemeHandler
     arguments: ['%app.root%', '@config.factory', '@extension.list.theme']
@@ -582,7 +593,7 @@ services:
     arguments: ['@entity_type.manager', '@module_handler', '@cache.discovery', '@language_manager']
   entity_field.manager:
     class: Drupal\Core\Entity\EntityFieldManager
-    arguments: ['@entity_type.manager', '@entity_type.bundle.info', '@entity_display.repository', '@typed_data_manager', '@language_manager', '@keyvalue', '@module_handler', '@cache.discovery']
+    arguments: ['@entity_type.manager', '@entity_type.bundle.info', '@entity_display.repository', '@typed_data_manager', '@language_manager', '@keyvalue', '@module_handler', '@cache.discovery', '@entity.last_installed_schema.repository']
   entity_type.listener:
     class: Drupal\Core\Entity\EntityTypeListener
     arguments: ['@entity_type.manager', '@entity_field.manager', '@event_dispatcher', '@entity.last_installed_schema.repository']
@@ -599,7 +610,7 @@ services:
     arguments: ['@entity_type.manager', '@entity.last_installed_schema.repository', '@entity_field.manager', '@entity_type.listener', '@field_storage_definition.listener']
   entity.last_installed_schema.repository:
     class: Drupal\Core\Entity\EntityLastInstalledSchemaRepository
-    arguments: ['@keyvalue']
+    arguments: ['@keyvalue', '@cache.discovery']
   entity_field.deleted_fields_repository:
     class: Drupal\Core\Field\DeletedFieldsRepository
     arguments: ['@state']
@@ -1162,6 +1173,9 @@ services:
     tags:
       - { name: access_check, applies_to: _entity_access }
   access_check.entity_bundles:
+    # Deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Specify the
+    # list of bundles in the entity parameter, under "bundle" key as a sequence,
+    # instead. See https://www.drupal.org/node/3155569.
     class: Drupal\Core\Entity\EntityBundleAccessCheck
     tags:
       - { name: access_check, applies_to: _entity_bundles }
@@ -1534,6 +1548,9 @@ services:
     arguments: ['@session_manager', '@session.attribute_bag', '@session.flash_bag']
     tags:
       - { name: service_collector, tag: session_bag, call: registerBag }
+  # session.flash_bag has special treatment: it is passed to the session
+  # service as an argument. Other services using FlashBag should be tagged
+  # with the session_bag tag, so that they will persist across page loads.
   session.flash_bag:
     class: Symfony\Component\HttpFoundation\Session\Flash\FlashBag
     public: false
@@ -1724,7 +1741,7 @@ services:
       - { name: backend_overridable }
   tempstore.shared:
     class: Drupal\Core\TempStore\SharedTempStoreFactory
-    arguments: ['@keyvalue.expirable', '@lock', '@request_stack', '%tempstore.expire%']
+    arguments: ['@keyvalue.expirable', '@lock', '@request_stack', '@current_user', '%tempstore.expire%']
     tags:
       - { name: backend_overridable }
   pager.manager:

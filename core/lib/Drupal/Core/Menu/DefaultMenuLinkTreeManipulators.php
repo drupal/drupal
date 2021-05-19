@@ -136,6 +136,7 @@ class DefaultMenuLinkTreeManipulators {
       $nids = array_keys($node_links);
 
       $query = $this->entityTypeManager->getStorage('node')->getQuery();
+      $query->accessCheck(TRUE);
       $query->condition('nid', $nids, 'IN');
 
       // Allows admins to view all nodes, by both disabling node_access
@@ -169,9 +170,6 @@ class DefaultMenuLinkTreeManipulators {
    *   The menu link tree to manipulate.
    * @param array $node_links
    *   Stores references to menu link elements to effectively set access.
-   *
-   * @return \Drupal\Core\Menu\MenuLinkTreeElement[]
-   *   The manipulated menu link tree.
    */
   protected function collectNodeLinks(array &$tree, array &$node_links) {
     foreach ($tree as $key => &$element) {

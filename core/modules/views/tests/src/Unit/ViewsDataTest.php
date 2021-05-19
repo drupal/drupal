@@ -92,8 +92,8 @@ class ViewsDataTest extends UnitTestCase {
     $data['views_test_data']['job']['area']['id'] = 'text';
     $data['views_test_data']['job']['area']['sub_type'] = ['header', 'footer'];
 
-    // Duplicate the example views test data for different weight, different title,
-    // and matching data.
+    // Duplicate the example views test data for different weight, different
+    // title and matching data.
     $data['views_test_data_2'] = $data['views_test_data'];
     $data['views_test_data_2']['table']['base']['weight'] = 50;
 
@@ -386,7 +386,7 @@ class ViewsDataTest extends UnitTestCase {
   }
 
   /**
-   * Tests the cache backend behavior with requesting the same table multiple
+   * Tests the cache backend behavior with requesting the same table multiple.
    */
   public function testCacheCallsWithSameTableMultipleTimes() {
     $expected_views_data = $this->viewsDataWithProvider();
@@ -419,7 +419,9 @@ class ViewsDataTest extends UnitTestCase {
   }
 
   /**
-   * Tests the cache calls for a single table and warm cache for:
+   * Tests the cache calls for a single table and warm cache.
+   *
+   * Warm cache:
    *   - all tables
    *   - views_test_data
    */
@@ -445,7 +447,7 @@ class ViewsDataTest extends UnitTestCase {
   }
 
   /**
-   * Tests the cache calls for a different table than the one in cache:
+   * Tests the cache calls for a different table than the one in cache.
    *
    * Warm cache:
    *   - all tables
@@ -480,7 +482,7 @@ class ViewsDataTest extends UnitTestCase {
   }
 
   /**
-   * Tests the cache calls for a non-existent table:
+   * Tests the cache calls for a non-existent table.
    *
    * Warm cache:
    *   - all tables
@@ -518,7 +520,7 @@ class ViewsDataTest extends UnitTestCase {
   }
 
   /**
-   * Tests the cache calls for a non-existent table:
+   * Tests the cache calls for a non-existent table.
    *
    * Warm cache:
    *   - all tables

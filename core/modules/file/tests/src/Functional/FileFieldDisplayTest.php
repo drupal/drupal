@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\file\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\file\Entity\File;
 use Drupal\node\Entity\Node;
@@ -56,7 +55,8 @@ class FileFieldDisplayTest extends FileFieldTestBase {
       }
       $this->drupalPostForm("admin/structure/types/manage/$type_name/display", $edit, 'Save');
       $this->drupalGet('node/' . $node->id());
-      $this->assertNoText($field_name, new FormattableMarkup('Field label is hidden when no file attached for formatter %formatter', ['%formatter' => $formatter]));
+      // Verify that the field label is hidden when no file is attached.
+      $this->assertNoText($field_name);
     }
 
     $this->generateFile('escaped-&-text', 64, 10, 'text');
@@ -108,7 +108,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     // Uncheck the display checkboxes and go to the preview.
     $edit[$field_name . '[0][display]'] = FALSE;
     $edit[$field_name . '[1][display]'] = FALSE;
-    $this->drupalPostForm(NULL, $edit, 'Preview');
+    $this->submitForm($edit, 'Preview');
     $this->clickLink(t('Back to content editing'));
     // First file.
     $this->assertRaw($field_name . '[0][display]');
@@ -166,13 +166,13 @@ class FileFieldDisplayTest extends FileFieldTestBase {
       'label' => $this->randomString(),
     ];
     $this->drupalPostForm('/admin/structure/types/manage/' . $type_name . '/fields/add-field', $edit, 'Save and continue');
-    $this->drupalPostForm(NULL, [], 'Save field settings');
+    $this->submitForm([], 'Save field settings');
     // Ensure the description field is selected on the field instance settings
     // form. That's what this test is all about.
     $edit = [
       'settings[description_field]' => TRUE,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save settings');
+    $this->submitForm($edit, 'Save settings');
     // Add a node of our new type and upload a file to it.
     $file = current($this->drupalGetTestFiles('text'));
     $title = $this->randomString();

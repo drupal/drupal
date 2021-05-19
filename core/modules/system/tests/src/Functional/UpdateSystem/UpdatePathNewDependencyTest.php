@@ -40,7 +40,7 @@ class UpdatePathNewDependencyTest extends BrowserTestBase {
       $this->fail('The container has services with unmet dependencies and should have failed to rebuild.');
     }
     catch (ServiceNotFoundException $exception) {
-      $this->assertEquals('The service "new_dependency_test.dependent" has a dependency on a non-existent service "new_dependency_test_with_service.service".', $exception->getMessage());
+      $this->assertStringContainsString('The service "new_dependency_test.dependent" has a dependency on a non-existent service "new_dependency_test_with_service.service".', $exception->getMessage());
     }
 
     // Running the updates enables the dependency.

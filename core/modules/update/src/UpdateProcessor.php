@@ -15,7 +15,7 @@ use Drupal\Core\Queue\QueueFactory;
 class UpdateProcessor implements UpdateProcessorInterface {
 
   /**
-   * The update settings
+   * The update settings.
    *
    * @var \Drupal\Core\Config\Config
    */
@@ -36,28 +36,28 @@ class UpdateProcessor implements UpdateProcessorInterface {
   protected $fetchQueue;
 
   /**
-   * Update key/value store
+   * Update key/value store.
    *
    * @var \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface
    */
   protected $tempStore;
 
   /**
-   * Update Fetch Task Store
+   * Update Fetch Task Store.
    *
    * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
    */
   protected $fetchTaskStore;
 
   /**
-   * Update available releases store
+   * Update available releases store.
    *
    * @var \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface
    */
   protected $availableReleasesTempStore;
 
   /**
-   * Array of release history URLs that we have failed to fetch
+   * Array of release history URLs that we have failed to fetch.
    *
    * @var array
    */

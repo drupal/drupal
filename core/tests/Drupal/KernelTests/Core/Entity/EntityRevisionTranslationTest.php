@@ -51,8 +51,11 @@ class EntityRevisionTranslationTest extends EntityKernelTestBase {
     $translation->setNewRevision();
     $translation->save();
 
-    $this->assertTrue($translation->getRevisionId() > $old_rev_id, 'The saved translation in new revision has a newer revision id.');
-    $this->assertTrue($this->reloadEntity($entity)->getRevisionId() > $old_rev_id, 'The entity from the storage has a newer revision id.');
+    // Verify that the saved translation for the new translation has a newer
+    // revision ID.
+    $this->assertGreaterThan($old_rev_id, $translation->getRevisionId());
+    // Verify that the entity from the storage has a newer revision ID.
+    $this->assertGreaterThan($old_rev_id, $this->reloadEntity($entity)->getRevisionId());
   }
 
   /**

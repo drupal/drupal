@@ -31,7 +31,7 @@ interface ContextAwarePluginInterface extends PluginInspectionInterface {
    * @return \Drupal\Component\Plugin\Context\ContextDefinitionInterface
    *   The definition against which the context value must validate.
    *
-   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   * @throws \Drupal\Component\Plugin\Exception\ContextException
    *   If the requested context is not defined.
    */
   public function getContextDefinition($name);
@@ -42,7 +42,7 @@ interface ContextAwarePluginInterface extends PluginInspectionInterface {
    * @return array
    *   The set context objects.
    *
-   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   * @throws \Drupal\Component\Plugin\Exception\ContextException
    *   If contexts are defined but not set.
    */
   public function getContexts();
@@ -56,7 +56,7 @@ interface ContextAwarePluginInterface extends PluginInspectionInterface {
    * @return \Drupal\Component\Plugin\Context\ContextInterface
    *   The context object.
    *
-   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   * @throws \Drupal\Component\Plugin\Exception\ContextException
    *   If the requested context is not set.
    */
   public function getContext($name);
@@ -79,7 +79,7 @@ interface ContextAwarePluginInterface extends PluginInspectionInterface {
    * @return mixed
    *   The currently set context value.
    *
-   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   * @throws \Drupal\Component\Plugin\Exception\ContextException
    *   If the requested context is not set.
    */
   public function getContextValue($name);
@@ -106,7 +106,7 @@ interface ContextAwarePluginInterface extends PluginInspectionInterface {
    * @return $this
    *   A context aware plugin object for chaining.
    *
-   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   * @throws \Drupal\Component\Plugin\Exception\ContextException
    *   If the value does not pass validation.
    */
   public function setContextValue($name, $value);

@@ -44,7 +44,7 @@ class RequestHandlerTest extends KernelTestBase {
     parent::setUp();
     $serializer = $this->prophesize(SerializerInterface::class);
     $serializer->willImplement(DecoderInterface::class);
-    $serializer->decode(Json::encode(['this is an array']), NULL, Argument::type('array'))
+    $serializer->decode(Json::encode(['this is an array']), 'json', Argument::type('array'))
       ->willReturn(['this is an array']);
     $this->requestHandler = new RequestHandler($serializer->reveal());
   }
@@ -53,7 +53,7 @@ class RequestHandlerTest extends KernelTestBase {
    * @covers ::handle
    */
   public function testHandle() {
-    $request = new Request([], [], [], [], [], [], Json::encode(['this is an array']));
+    $request = new Request([], [], [], [], [], ['CONTENT_TYPE' => 'application/json'], Json::encode(['this is an array']));
     $route_match = new RouteMatch('test', (new Route('/rest/test', ['_rest_resource_config' => 'restplugin', 'example' => ''], ['_format' => 'json']))->setMethods(['GET']));
 
     $resource = $this->prophesize(StubRequestHandlerResourcePlugin::class);

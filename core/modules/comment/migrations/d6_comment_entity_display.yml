@@ -4,7 +4,7 @@ migration_tags:
   - Drupal 6
   - Configuration
 source:
-  plugin: d6_node_type
+  plugin: comment_type
   constants:
     entity_type: node
     view_mode: default

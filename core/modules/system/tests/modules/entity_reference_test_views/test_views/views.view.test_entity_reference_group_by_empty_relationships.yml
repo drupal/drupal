@@ -122,6 +122,6 @@ display:
           required: false
       group_by: true
     display_plugin: block
-    display_title: Master
+    display_title: Default
     id: default
     position: 0

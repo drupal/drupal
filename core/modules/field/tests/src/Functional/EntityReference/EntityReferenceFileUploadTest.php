@@ -135,7 +135,7 @@ class EntityReferenceFileUploadTest extends BrowserTestBase {
       'title[0][value]' => $this->randomMachineName(),
       'test_field[0][target_id]' => $this->nodeId,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
   }
 

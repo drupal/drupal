@@ -189,7 +189,7 @@ class CredentialForm extends MigrateUpgradeFormBase {
       '#type' => 'textfield',
       '#title' => $this->t('Document root for private files'),
       '#default_value' => '',
-      '#description' => $this->t('To import private files from your current Drupal site, enter a local file directory containing your site (e.g. /var/www/docroot).'),
+      '#description' => $this->t('To import private files from your current Drupal site, enter a local file directory containing your site (e.g. /var/www/docroot). Leave blank to use the same value as Public files directory.'),
       '#states' => [
         'visible' => [
           ':input[name="version"]' => ['value' => '7'],

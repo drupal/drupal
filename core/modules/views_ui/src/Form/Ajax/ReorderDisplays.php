@@ -106,7 +106,7 @@ class ReorderDisplays extends ViewsFormBase {
 
       $form['displays'][$id]['removed'] = [
         'checkbox' => [
-          '#title' => t('Remove @id', ['@id' => $id]),
+          '#title' => $this->t('Remove @id', ['@id' => $id]),
           '#title_display' => 'invisible',
           '#type' => 'checkbox',
           '#id' => 'display-removed-' . $id,

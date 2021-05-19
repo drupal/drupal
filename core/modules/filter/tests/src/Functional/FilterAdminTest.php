@@ -134,7 +134,7 @@ class FilterAdminTest extends BrowserTestBase {
       'format' => $format_id,
       'name' => $name,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save configuration');
+    $this->submitForm($edit, 'Save configuration');
 
     // Verify default weight of the text format.
     $this->drupalGet('admin/config/content/formats');
@@ -153,7 +153,7 @@ class FilterAdminTest extends BrowserTestBase {
     $edit_href = Url::fromRoute('entity.filter_format.edit_form', ['filter_format' => $format_id], ['query' => ['destination' => $destination]])->toString();
     $this->assertSession()->linkByHrefExists($edit_href);
     $this->drupalGet('admin/config/content/formats/manage/' . $format_id);
-    $this->drupalPostForm(NULL, [], 'Save configuration');
+    $this->submitForm([], 'Save configuration');
 
     // Verify that the custom weight of the text format has been retained.
     $this->drupalGet('admin/config/content/formats');
@@ -162,7 +162,7 @@ class FilterAdminTest extends BrowserTestBase {
     // Disable text format.
     $this->assertSession()->linkByHrefExists('admin/config/content/formats/manage/' . $format_id . '/disable');
     $this->drupalGet('admin/config/content/formats/manage/' . $format_id . '/disable');
-    $this->drupalPostForm(NULL, [], 'Disable');
+    $this->submitForm([], 'Disable');
 
     // Verify that disabled text format no longer exists.
     $this->drupalGet('admin/config/content/formats/manage/' . $format_id);
@@ -202,7 +202,7 @@ class FilterAdminTest extends BrowserTestBase {
     $plain = 'plain_text';
 
     // Check that the fallback format exists and cannot be disabled.
-    $this->assertTrue($plain == filter_fallback_format(), 'The fallback format is set to plain text.');
+    $this->assertSame($plain, filter_fallback_format(), 'The fallback format is set to plain text.');
     $this->drupalGet('admin/config/content/formats');
     $this->assertNoRaw('admin/config/content/formats/manage/' . $plain . '/disable');
     $this->drupalGet('admin/config/content/formats/manage/' . $plain . '/disable');
@@ -232,7 +232,7 @@ class FilterAdminTest extends BrowserTestBase {
     $edit = [];
     $edit['filters[' . $second_filter . '][weight]'] = 1;
     $edit['filters[' . $first_filter . '][weight]'] = 2;
-    $this->drupalPostForm(NULL, $edit, 'Save configuration');
+    $this->submitForm($edit, 'Save configuration');
     $this->assertSession()->addressEquals('admin/config/content/formats/manage/' . $restricted);
     $this->drupalGet('admin/config/content/formats/manage/' . $restricted);
     $this->assertSession()->fieldValueEquals('filters[' . $second_filter . '][weight]', 1);
@@ -302,11 +302,10 @@ class FilterAdminTest extends BrowserTestBase {
     $edit['body[0][value]'] = $text;
     $edit['body[0][format]'] = $basic;
     $this->drupalPostForm('node/add/page', $edit, 'Save');
-    $this->assertText('Basic page ' . $edit['title[0][value]'] . ' has been created.', 'Filtered node created.');
+    $this->assertText('Basic page ' . $edit['title[0][value]'] . ' has been created.');
 
     // Verify that the creation message contains a link to a node.
-    $view_link = $this->xpath('//div[contains(@class, "messages")]//a[contains(@href, :href)]', [':href' => 'node/']);
-    $this->assertNotEmpty($view_link, 'The message area contains a link to a node');
+    $this->assertSession()->elementExists('xpath', '//div[contains(@class, "messages")]//a[contains(@href, "node/")]');
 
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->assertNotEmpty($node, 'Node found in database.');

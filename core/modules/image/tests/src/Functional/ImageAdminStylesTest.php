@@ -138,7 +138,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       // Add the effect.
       $this->drupalPostForm($style_path, ['new' => $effect], 'Add');
       if (!empty($edit)) {
-        $this->drupalPostForm(NULL, $edit_data, 'Add effect');
+        $this->submitForm($edit_data, 'Add effect');
       }
     }
 
@@ -162,7 +162,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       $uuids[$effect->getPluginId()] = $uuid;
       $effect_configuration = $effect->getConfiguration();
       foreach ($effect_edits[$effect->getPluginId()] as $field => $value) {
-        $this->assertEqual($value, $effect_configuration['data'][$field], new FormattableMarkup('The %field field in the %effect effect has the correct value of %value.', ['%field' => $field, '%effect' => $effect->getPluginId(), '%value' => $value]));
+        $this->assertEqual($effect_configuration['data'][$field], $value, new FormattableMarkup('The %field field in the %effect effect has the correct value of %value.', ['%field' => $field, '%effect' => $effect->getPluginId(), '%value' => $value]));
       }
     }
 
@@ -207,7 +207,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Create an image to make sure it gets flushed after saving.
     $image_path = $this->createSampleImage($style);
-    $this->assertEqual($this->getImageCount($style), 1, new FormattableMarkup('Image style %style image %file successfully generated.', ['%style' => $style->label(), '%file' => $image_path]));
+    $this->assertEqual(1, $this->getImageCount($style), new FormattableMarkup('Image style %style image %file successfully generated.', ['%style' => $style->label(), '%file' => $image_path]));
 
     $this->drupalPostForm($style_path, $edit, 'Save');
 
@@ -219,13 +219,13 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->assertSession()->titleEquals("Edit style $style_label | Drupal");
 
     // Check that the available image effects are properly sorted.
-    $option = $this->xpath('//select[@id=:id]//option', [':id' => 'edit-new--2']);
+    $option = $this->assertSession()->selectExists('edit-new--2')->findAll('css', 'option');
     $this->assertEquals('Ajax test', $option[1]->getText(), '"Ajax test" is the first selectable effect.');
 
     // Check that the image was flushed after updating the style.
     // This is especially important when renaming the style. Make sure that
     // the old image directory has been deleted.
-    $this->assertEqual($this->getImageCount($style), 0, new FormattableMarkup('Image style %style was flushed after renaming the style and updating the order of effects.', ['%style' => $style->label()]));
+    $this->assertEqual(0, $this->getImageCount($style), new FormattableMarkup('Image style %style was flushed after renaming the style and updating the order of effects.', ['%style' => $style->label()]));
 
     // Load the style by the new name with the new weights.
     $style = ImageStyle::load($style_name);
@@ -246,7 +246,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Create an image to make sure it gets flushed after deleting an effect.
     $image_path = $this->createSampleImage($style);
-    $this->assertEqual($this->getImageCount($style), 1, new FormattableMarkup('Image style %style image %file successfully generated.', ['%style' => $style->label(), '%file' => $image_path]));
+    $this->assertEqual(1, $this->getImageCount($style), new FormattableMarkup('Image style %style image %file successfully generated.', ['%style' => $style->label(), '%file' => $image_path]));
 
     // Delete the 'image_crop' effect from the style.
     $this->drupalPostForm($style_path . '/effects/' . $uuids['image_crop'] . '/delete', [], 'Delete');
@@ -274,7 +274,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       'data[bgcolor]' => '',
     ];
     $this->drupalPostForm($style_path, ['new' => 'image_rotate'], 'Add');
-    $this->drupalPostForm(NULL, $edit, 'Add effect');
+    $this->submitForm($edit, 'Add effect');
     $entity_type_manager = $this->container->get('entity_type.manager');
     $style = $entity_type_manager->getStorage('image_style')->loadUnchanged($style_name);
     $this->assertCount(6, $style->getEffects(), 'Rotate effect with transparent background was added.');
@@ -348,7 +348,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       'label' => $new_style_label,
     ];
     $this->drupalPostForm($style_path . $style_name, $edit, 'Save');
-    $this->assertText('Changes to the style have been saved.', new FormattableMarkup('Style %name was renamed to %new_name.', ['%name' => $style_name, '%new_name' => $new_style_name]));
+    $this->assertText('Changes to the style have been saved.');
     $this->drupalGet('node/' . $nid);
 
     // Reload the image style using the new name.
@@ -375,14 +375,14 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     // Add a scale effect.
     $style_name = 'test_style_effect_edit';
     $this->drupalGet('admin/config/media/image-styles/add');
-    $this->drupalPostForm(NULL, ['label' => 'Test style effect edit', 'name' => $style_name], 'Create new style');
-    $this->drupalPostForm(NULL, ['new' => 'image_scale_and_crop'], 'Add');
-    $this->drupalPostForm(NULL, ['data[width]' => '300', 'data[height]' => '200'], 'Add effect');
+    $this->submitForm(['label' => 'Test style effect edit', 'name' => $style_name], 'Create new style');
+    $this->submitForm(['new' => 'image_scale_and_crop'], 'Add');
+    $this->submitForm(['data[width]' => '300', 'data[height]' => '200'], 'Add effect');
     $this->assertText('Scale and crop 300×200');
 
     // There should normally be only one edit link on this page initially.
     $this->clickLink(t('Edit'));
-    $this->drupalPostForm(NULL, ['data[width]' => '360', 'data[height]' => '240'], 'Update effect');
+    $this->submitForm(['data[width]' => '360', 'data[height]' => '240'], 'Update effect');
     $this->assertText('Scale and crop 360×240');
 
     // Check that the previous effect is replaced.
@@ -390,13 +390,13 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Add another scale effect.
     $this->drupalGet('admin/config/media/image-styles/add');
-    $this->drupalPostForm(NULL, ['label' => 'Test style scale edit scale', 'name' => 'test_style_scale_edit_scale'], 'Create new style');
-    $this->drupalPostForm(NULL, ['new' => 'image_scale'], 'Add');
-    $this->drupalPostForm(NULL, ['data[width]' => '12', 'data[height]' => '19'], 'Add effect');
+    $this->submitForm(['label' => 'Test style scale edit scale', 'name' => 'test_style_scale_edit_scale'], 'Create new style');
+    $this->submitForm(['new' => 'image_scale'], 'Add');
+    $this->submitForm(['data[width]' => '12', 'data[height]' => '19'], 'Add effect');
 
     // Edit the scale effect that was just added.
     $this->clickLink(t('Edit'));
-    $this->drupalPostForm(NULL, ['data[width]' => '24', 'data[height]' => '19'], 'Update effect');
+    $this->submitForm(['data[width]' => '24', 'data[height]' => '19'], 'Update effect');
 
     // Add another scale effect and make sure both exist. Click through from
     // the overview to make sure that it is possible to add new effect then.
@@ -410,8 +410,8 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       }
       $i++;
     }
-    $this->drupalPostForm(NULL, ['new' => 'image_scale'], 'Add');
-    $this->drupalPostForm(NULL, ['data[width]' => '12', 'data[height]' => '19'], 'Add effect');
+    $this->submitForm(['new' => 'image_scale'], 'Add');
+    $this->submitForm(['data[width]' => '12', 'data[height]' => '19'], 'Add effect');
     $this->assertText('Scale 24×19');
     $this->assertText('Scale 12×19');
 
@@ -437,7 +437,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $image_uri = $files[0]->uri;
     $derivative_uri = $style->buildUri($image_uri);
     $this->assertTrue($style->createDerivative($image_uri, $derivative_uri));
-    $this->assertEqual($this->getImageCount($style), 1);
+    $this->assertEqual(1, $this->getImageCount($style));
 
     // Go to image styles list page and check if the flush operation link
     // exists.
@@ -449,7 +449,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->drupalPostForm($flush_path, [], 'Flush');
 
     // The derivative image file should have been deleted.
-    $this->assertEqual($this->getImageCount($style), 0);
+    $this->assertEqual(0, $this->getImageCount($style));
   }
 
   /**
@@ -499,7 +499,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->configImporter()->import();
 
     $this->assertNull(ImageStyle::load($style_name), 'Style deleted after config import.');
-    $this->assertEqual($this->getImageCount($style), 0, 'Image style was flushed after being deleted by config import.');
+    $this->assertEqual(0, $this->getImageCount($style), 'Image style was flushed after being deleted by config import.');
   }
 
   /**

@@ -30,7 +30,7 @@ class ConfirmFormTest extends BrowserTestBase {
     $this->drupalGet('form-test/confirm-form');
     $site_name = $this->config('system.site')->get('name');
     $this->assertSession()->titleEquals("ConfirmFormTestForm::getQuestion(). | $site_name");
-    $this->assertText('ConfirmFormTestForm::getDescription().', 'The description was used.');
+    $this->assertText('ConfirmFormTestForm::getDescription().');
     $this->assertSession()->buttonExists('ConfirmFormTestForm::getConfirmText().');
 
     // Test cancelling the form.
@@ -79,14 +79,11 @@ class ConfirmFormTest extends BrowserTestBase {
    *   The assert message.
    * @param string $group
    *   The assertion group.
-   *
-   * @return bool
-   *   Result of the assertion.
    */
   public function assertCancelLinkUrl(Url $url, $message = '', $group = 'Other') {
     $links = $this->xpath('//a[@href=:url]', [':url' => $url->toString()]);
     $message = ($message ? $message : new FormattableMarkup('Cancel link with URL %url found.', ['%url' => $url->toString()]));
-    return $this->assertTrue(isset($links[0]), $message, $group);
+    $this->assertTrue(isset($links[0]), $message, $group);
   }
 
 }

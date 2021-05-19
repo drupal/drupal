@@ -88,7 +88,7 @@ class RssTest extends TaxonomyTestBase {
     $edit = [
       "display_modes_custom[rss]" => '1',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
 
     // Change the format to 'RSS category'.
     $this->drupalGet("admin/structure/types/manage/article/display/rss");
@@ -96,7 +96,7 @@ class RssTest extends TaxonomyTestBase {
       "fields[taxonomy_" . $this->vocabulary->id() . "][type]" => 'entity_reference_rss_category',
       "fields[taxonomy_" . $this->vocabulary->id() . "][region]" => 'content',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
 
     // Post an article.
     $edit = [];

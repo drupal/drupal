@@ -47,6 +47,7 @@
   --font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   --line-height: 1.5;
   --line-height-heading: 1.3;
+  --line-height-form-label: calc(18rem / 16); /* 18px */
   --font-size-base: 1rem; /* 1rem = 16px if font root is 100% ands browser defaults are used. */
   --font-size-h1: 2.027rem; /* ~32px */
   --font-size-h2: 1.802rem; /* ~29px */
@@ -121,7 +122,7 @@
    * Details.
    */
   --details-bg-color: rgba(243, 244, 249, 0.4);
-  --details-border-color: rgba(216, 217, 224, 0.8);
+  --details-border-color: var(--color-lightdiamond);
   --details-summary-shadow-color: var(--color-focus);
   --details-summary-focus-border-size: var(--focus-border-size);
   --details-desktop-wrapper-padding-start: calc(var(--space-m) + var(--space-s) + var(--space-xs));

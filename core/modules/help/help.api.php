@@ -38,7 +38,7 @@ use Drupal\Core\Url;
  *   For page-specific help, use the route name as identified in the
  *   module's routing.yml file. For module overview help, the route name
  *   will be in the form of "help.page.$modulename".
- * @param Drupal\Core\Routing\RouteMatchInterface $route_match
+ * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
  *   The current route match. This can be used to generate different help
  *   output for different pages that share the same route.
  *

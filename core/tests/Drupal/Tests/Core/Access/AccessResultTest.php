@@ -890,10 +890,10 @@ class AccessResultTest extends UnitTestCase {
       $b->setCacheMaxAge(86400)->cachePerPermissions();
 
       $r1 = $a->orIf($b);
-      $this->assertTrue($r1->getCacheMaxAge() === 3600);
+      $this->assertSame(3600, $r1->getCacheMaxAge());
       $this->assertSame(['user.permissions'], $r1->getCacheContexts());
       $r2 = $b->orIf($a);
-      $this->assertTrue($r2->getCacheMaxAge() === 3600);
+      $this->assertSame(3600, $r2->getCacheMaxAge());
       $this->assertSame(['user.permissions'], $r2->getCacheContexts());
     };
 

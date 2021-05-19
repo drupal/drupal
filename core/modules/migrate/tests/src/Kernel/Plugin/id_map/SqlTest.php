@@ -7,7 +7,7 @@ use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Tests\migrate\Kernel\MigrateTestBase;
 use Drupal\Tests\migrate\Unit\TestSqlIdMap;
 use Drupal\migrate\MigrateException;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Tests that the migrate map table is created.
@@ -26,7 +26,7 @@ class SqlTest extends MigrateTestBase {
   /**
    * Prophesized event dispatcher.
    *
-   * @var object|\Prophecy\Prophecy\ProphecySubjectInterface|\Symfony\Component\EventDispatcher\EventDispatcherInterface
+   * @var object|\Prophecy\Prophecy\ProphecySubjectInterface|\Symfony\Contracts\EventDispatcher\EventDispatcherInterface
    */
   protected $eventDispatcher;
 

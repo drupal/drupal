@@ -64,7 +64,6 @@ _:-ms-fullscreen,
   position: relative;
   display: inline-block;
   max-width: 100%;
-  margin: 0.25rem 0;
 }
 .claro-autocomplete__message {
   position: absolute;

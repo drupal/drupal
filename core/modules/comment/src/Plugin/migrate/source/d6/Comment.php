@@ -24,7 +24,7 @@ class Comment extends DrupalSqlBase {
       'comment', 'hostname', 'timestamp', 'status', 'thread', 'name',
       'mail', 'homepage', 'format',
     ]);
-    $query->innerJoin('node', 'n', 'c.nid = n.nid');
+    $query->innerJoin('node', 'n', '[c].[nid] = [n].[nid]');
     $query->fields('n', ['type', 'language']);
     $query->orderBy('c.timestamp');
     return $query;

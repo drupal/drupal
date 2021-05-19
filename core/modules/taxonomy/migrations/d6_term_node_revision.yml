@@ -12,7 +12,7 @@ process:
     -
       plugin: migration_lookup
       migration:
-        - d6_node_copmplete
+        - d6_node_complete
         - d6_node_revision
       source: vid
     -

@@ -117,10 +117,11 @@ class TermParentsTest extends BrowserTestBase {
   protected function submitAddTermForm($name) {
     $this->getSession()->getPage()->fillField('Name', $name);
 
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
 
     $result = $this->termStorage
       ->getQuery()
+      ->accessCheck(FALSE)
       ->condition('name', $name)
       ->execute();
     /* @var \Drupal\taxonomy\TermInterface $term_1 */
@@ -151,7 +152,7 @@ class TermParentsTest extends BrowserTestBase {
     $this->assertParentOption('--Test term 5', TRUE);
     $this->assertParentOption('Test term 2');
     $this->assertParentOption('-Test term 4', TRUE);
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
     $this->assertParentsUnchanged($term_6);
   }
 
@@ -182,12 +183,12 @@ class TermParentsTest extends BrowserTestBase {
     $this->assertParentOption('--Test term 5', TRUE);
     $this->assertParentOption('Test term 2');
     $this->assertParentOption('-Test term 4', TRUE);
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
     $this->assertParentsUnchanged($term_6);
   }
 
   /**
-   * Performs tests that edit terms with a single parent
+   * Performs tests that edit terms with a single parent.
    *
    * @return \Drupal\taxonomy\TermInterface[]
    *   A list of terms created for testing.
@@ -199,7 +200,7 @@ class TermParentsTest extends BrowserTestBase {
     $term_1 = $this->createTerm('Test term 1');
     $this->drupalGet($term_1->toUrl('edit-form'));
     $this->assertParentOption('<root>', TRUE);
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
     $this->assertParentsUnchanged($term_1);
     $terms[] = $term_1;
 
@@ -207,7 +208,7 @@ class TermParentsTest extends BrowserTestBase {
     $this->drupalGet($term_2->toUrl('edit-form'));
     $this->assertParentOption('<root>', TRUE);
     $this->assertParentOption('Test term 1');
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
     $this->assertParentsUnchanged($term_2);
     $terms[] = $term_2;
 
@@ -218,7 +219,7 @@ class TermParentsTest extends BrowserTestBase {
     $this->assertParentOption('<root>');
     $this->assertParentOption('Test term 1', TRUE);
     $this->assertParentOption('Test term 2');
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
     $this->assertParentsUnchanged($term_3);
     $terms[] = $term_3;
 
@@ -228,7 +229,7 @@ class TermParentsTest extends BrowserTestBase {
     $this->assertParentOption('Test term 1');
     $this->assertParentOption('-Test term 3');
     $this->assertParentOption('Test term 2', TRUE);
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
     $this->assertParentsUnchanged($term_4);
     $terms[] = $term_4;
 
@@ -240,7 +241,7 @@ class TermParentsTest extends BrowserTestBase {
     $this->assertParentOption('-Test term 3', TRUE);
     $this->assertParentOption('Test term 2');
     $this->assertParentOption('-Test term 4');
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
     $this->assertParentsUnchanged($term_5);
     $terms[] = $term_5;
 

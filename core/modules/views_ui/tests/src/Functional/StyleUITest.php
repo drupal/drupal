@@ -40,13 +40,13 @@ class StyleUITest extends UITestBase {
     $edit = [
       'style[type]' => 'test_style',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Apply');
+    $this->submitForm($edit, 'Apply');
     $this->assertSession()->fieldExists('style_options[test_option]');
     $random_name = $this->randomMachineName();
     $edit = [
       'style_options[test_option]' => $random_name,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Apply');
+    $this->submitForm($edit, 'Apply');
     $this->drupalGet($style_options_url);
     $this->assertSession()->fieldValueEquals('style_options[test_option]', $random_name);
 
@@ -56,8 +56,8 @@ class StyleUITest extends UITestBase {
     $view = Views::getView($view_name);
     $view->initDisplay();
     $style = $view->display_handler->getOption('style');
-    $this->assertEqual($style['type'], 'test_style', 'Make sure that the test_style got saved as used style plugin.');
-    $this->assertEqual($style['options']['test_option'], $random_name, 'Make sure that the custom settings field got saved as expected.');
+    $this->assertEqual('test_style', $style['type'], 'Make sure that the test_style got saved as used style plugin.');
+    $this->assertEqual($random_name, $style['options']['test_option'], 'Make sure that the custom settings field got saved as expected.');
 
     // Test that fields are working correctly in the UI for style plugins when
     // a field row plugin is selected.

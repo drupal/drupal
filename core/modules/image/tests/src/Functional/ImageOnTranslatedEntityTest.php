@@ -109,7 +109,7 @@ class ImageOnTranslatedEntityTest extends ImageFieldTestBase {
     $edit[$name] = \Drupal::service('file_system')->realpath($this->drupalGetTestFiles('image')[0]->uri);
     $this->drupalPostForm('node/' . $default_language_node->id() . '/edit', $edit, 'Save');
     $edit = [$this->fieldName . '[0][alt]' => 'Lost in translation image', $this->fieldName . '[0][title]' => 'Lost in translation image title'];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $first_fid = $this->getLastFileId();
 
     // Translate the node into French: remove the existing file.
@@ -120,9 +120,9 @@ class ImageOnTranslatedEntityTest extends ImageFieldTestBase {
     $edit['title[0][value]'] = 'Scarlett Johansson';
     $name = 'files[' . $this->fieldName . '_0]';
     $edit[$name] = \Drupal::service('file_system')->realpath($this->drupalGetTestFiles('image')[1]->uri);
-    $this->drupalPostForm(NULL, $edit, 'Save (this translation)');
+    $this->submitForm($edit, 'Save (this translation)');
     $edit = [$this->fieldName . '[0][alt]' => 'Scarlett Johansson image', $this->fieldName . '[0][title]' => 'Scarlett Johansson image title'];
-    $this->drupalPostForm(NULL, $edit, 'Save (this translation)');
+    $this->submitForm($edit, 'Save (this translation)');
     // This inspects the HTML after the post of the translation, the image
     // should be displayed on the original node.
     $this->assertRaw('alt="Lost in translation image"');
@@ -152,9 +152,9 @@ class ImageOnTranslatedEntityTest extends ImageFieldTestBase {
     $edit['title[0][value]'] = 'Akiko Takeshita';
     $name = 'files[' . $this->fieldName . '_0]';
     $edit[$name] = \Drupal::service('file_system')->realpath($this->drupalGetTestFiles('image')[2]->uri);
-    $this->drupalPostForm(NULL, $edit, 'Save (this translation)');
+    $this->submitForm($edit, 'Save (this translation)');
     $edit = [$this->fieldName . '[0][alt]' => 'Akiko Takeshita image', $this->fieldName . '[0][title]' => 'Akiko Takeshita image title'];
-    $this->drupalPostForm(NULL, $edit, 'Save (this translation)');
+    $this->submitForm($edit, 'Save (this translation)');
     $third_fid = $this->getLastFileId();
 
     \Drupal::entityTypeManager()->getStorage('file')->resetCache();
@@ -187,11 +187,11 @@ class ImageOnTranslatedEntityTest extends ImageFieldTestBase {
     $edit['title[0][value]'] = 'Giovanni Ribisi';
     $name = 'files[' . $this->fieldName . '_0]';
     $edit[$name] = \Drupal::service('file_system')->realpath($this->drupalGetTestFiles('image')[3]->uri);
-    $this->drupalPostForm(NULL, $edit, 'Save (this translation)');
+    $this->submitForm($edit, 'Save (this translation)');
     $name = $this->fieldName . '[0][alt]';
 
     $edit = [$name => 'Giovanni Ribisi image'];
-    $this->drupalPostForm(NULL, $edit, 'Save (this translation)');
+    $this->submitForm($edit, 'Save (this translation)');
     $replaced_second_fid = $this->getLastFileId();
 
     \Drupal::entityTypeManager()->getStorage('file')->resetCache();

@@ -42,7 +42,7 @@
   color: #595959;
   font-size: 0.5em;
 }
-@media all and (max-width: 1010px) and (min-width: 48em) {
+@media all and (max-width: 63.125rem) and (min-width: 48em) {
   .install-page .password-strength,
   .install-page .confirm-parent {
     width: 100%;

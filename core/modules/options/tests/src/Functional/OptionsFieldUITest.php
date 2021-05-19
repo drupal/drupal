@@ -322,11 +322,11 @@ class OptionsFieldUITest extends FieldTestBase {
     $this->assertNoRaw('&amp;lt;');
 
     if (is_string($result)) {
-      $this->assertText($result, $message);
+      $this->assertText($result);
     }
     else {
       $field_storage = FieldStorageConfig::loadByName('node', $this->fieldName);
-      $this->assertIdentical($field_storage->getSetting('allowed_values'), $result, $message);
+      $this->assertSame($field_storage->getSetting('allowed_values'), $result, $message);
     }
   }
 
@@ -347,7 +347,7 @@ class OptionsFieldUITest extends FieldTestBase {
     ];
 
     $this->drupalPostForm($this->adminPath, $edit, 'Save field settings');
-    $this->assertText('Updated field ' . $this->fieldName . ' field settings.', "The 'On' and 'Off' form fields work for boolean fields.");
+    $this->assertText('Updated field ' . $this->fieldName . ' field settings.');
 
     // Select a default value.
     $edit = [
@@ -372,8 +372,8 @@ class OptionsFieldUITest extends FieldTestBase {
         $output = '1';
       }
 
-      $elements = $this->xpath('//div[text()="' . $output . '"]');
-      $this->assertCount(1, $elements, 'Correct options found.');
+      // Verify that correct options are found.
+      $this->assertSession()->elementsCount('xpath', '//div[text()="' . $output . '"]', 1);
     }
   }
 

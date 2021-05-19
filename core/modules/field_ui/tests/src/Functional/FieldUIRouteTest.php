@@ -55,7 +55,7 @@ class FieldUIRouteTest extends BrowserTestBase {
     $this->assertLocalTasks();
 
     $edit = ['display_modes_custom[compact]' => TRUE];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $this->drupalGet('admin/config/people/accounts/display/compact');
     $this->assertSession()->titleEquals('Manage display | Drupal');
     $this->assertLocalTasks();
@@ -69,7 +69,7 @@ class FieldUIRouteTest extends BrowserTestBase {
     $this->assertLocalTasks();
 
     $edit = ['display_modes_custom[register]' => TRUE];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet('admin/config/people/accounts/form-display/register');
     $this->assertSession()->titleEquals('Manage form display | Drupal');

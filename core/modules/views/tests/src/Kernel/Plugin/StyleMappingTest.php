@@ -70,7 +70,7 @@ class StyleMappingTest extends StyleTestBase {
         // separated by ':'.
         $expected_result = $name . ':' . $data_set[$count][$field_id];
         $actual_result = (string) $field;
-        $this->assertIdentical($expected_result, $actual_result, new FormattableMarkup('The fields were mapped successfully: %name => %field_id', ['%name' => $name, '%field_id' => $field_id]));
+        $this->assertSame($expected_result, $actual_result, new FormattableMarkup('The fields were mapped successfully: %name => %field_id', ['%name' => $name, '%field_id' => $field_id]));
       }
 
       $count++;

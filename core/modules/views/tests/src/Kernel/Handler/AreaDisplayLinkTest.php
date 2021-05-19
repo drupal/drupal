@@ -413,22 +413,22 @@ class AreaDisplayLinkTest extends ViewsKernelTestBase {
 
     $messenger->deleteAll();
 
-    // If the master display is shown in the UI, warnings should be shown for
+    // If the default display is shown in the UI, warnings should be shown for
     // this display as well.
-    $this->config('views.settings')->set('ui.show.master_display', TRUE)->save();
+    $this->config('views.settings')->set('ui.show.default_display', TRUE)->save();
 
     $errors = $view->validate();
     $messages = $messenger->messagesByType(MessengerInterface::TYPE_WARNING);
 
     $this->assertCount(0, $errors);
     $this->assertCount(4, $messages);
-    $this->assertSame('<em class="placeholder">Master</em>: The link in the <em class="placeholder">header</em> area points to the <em class="placeholder">Page 1</em> display which uses different settings than the <em class="placeholder">Master</em> display for: <em class="placeholder">' . $unequal_options_text . '</em>. To make sure users see the exact same result when clicking the link, please check that the settings are the same.', $messages[0]->__toString());
+    $this->assertSame('<em class="placeholder">Default</em>: The link in the <em class="placeholder">header</em> area points to the <em class="placeholder">Page 1</em> display which uses different settings than the <em class="placeholder">Default</em> display for: <em class="placeholder">' . $unequal_options_text . '</em>. To make sure users see the exact same result when clicking the link, please check that the settings are the same.', $messages[0]->__toString());
     $this->assertSame('<em class="placeholder">Block 1</em>: The link in the <em class="placeholder">header</em> area points to the <em class="placeholder">Page 1</em> display which uses different settings than the <em class="placeholder">Block 1</em> display for: <em class="placeholder">' . $unequal_options_text . '</em>. To make sure users see the exact same result when clicking the link, please check that the settings are the same.', $messages[1]->__toString());
     $this->assertSame('<em class="placeholder">Page 1</em>: The link in the <em class="placeholder">header</em> area points to the <em class="placeholder">Page 2</em> display which uses different settings than the <em class="placeholder">Page 1</em> display for: <em class="placeholder">' . $unequal_options_text . '</em>. To make sure users see the exact same result when clicking the link, please check that the settings are the same.', $messages[2]->__toString());
     $this->assertSame('<em class="placeholder">Page 2</em>: The link in the <em class="placeholder">header</em> area points to the <em class="placeholder">Page 1</em> display which uses different settings than the <em class="placeholder">Page 2</em> display for: <em class="placeholder">' . $unequal_options_text . '</em>. To make sure users see the exact same result when clicking the link, please check that the settings are the same.', $messages[3]->__toString());
 
     $messenger->deleteAll();
-    $this->config('views.settings')->set('ui.show.master_display', FALSE)->save();
+    $this->config('views.settings')->set('ui.show.default_display', FALSE)->save();
   }
 
 }

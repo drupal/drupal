@@ -37,7 +37,10 @@ class PageEditTest extends BlockContentTestBase {
     $this->drupalPostForm('block/add/basic', $edit, 'Save');
 
     // Check that the block exists in the database.
-    $blocks = \Drupal::entityQuery('block_content')->condition('info', $edit['info[0][value]'])->execute();
+    $blocks = \Drupal::entityQuery('block_content')
+      ->accessCheck(FALSE)
+      ->condition('info', $edit['info[0][value]'])
+      ->execute();
     $block = BlockContent::load(reset($blocks));
     $this->assertNotEmpty($block, 'Custom block found in database.');
 
@@ -51,7 +54,7 @@ class PageEditTest extends BlockContentTestBase {
     $edit[$title_key] = $this->randomMachineName(8);
     $edit[$body_key] = $this->randomMachineName(16);
     // Stay on the current page, without reloading.
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
 
     // Edit the same block, creating a new revision.
     $this->drupalGet("block/" . $block->id());
@@ -59,12 +62,12 @@ class PageEditTest extends BlockContentTestBase {
     $edit['info[0][value]'] = $this->randomMachineName(8);
     $edit[$body_key] = $this->randomMachineName(16);
     $edit['revision'] = TRUE;
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
 
     // Ensure that the block revision has been created.
     \Drupal::entityTypeManager()->getStorage('block_content')->resetCache([$block->id()]);
     $revised_block = BlockContent::load($block->id());
-    $this->assertNotIdentical($block->getRevisionId(), $revised_block->getRevisionId(), 'A new revision has been created.');
+    $this->assertNotSame($block->getRevisionId(), $revised_block->getRevisionId(), 'A new revision has been created.');
 
     // Test deleting the block.
     $this->drupalGet("block/" . $revised_block->id());

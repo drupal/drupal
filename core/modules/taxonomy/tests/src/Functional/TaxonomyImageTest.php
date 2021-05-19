@@ -93,7 +93,7 @@ class TaxonomyImageTest extends TaxonomyTestBase {
     $edit['name[0][value]'] = $this->randomMachineName();
     $edit['files[field_test_0]'] = \Drupal::service('file_system')->realpath($image->uri);
     $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add', $edit, 'Save');
-    $this->drupalPostForm(NULL, ['field_test[0][alt]' => $this->randomMachineName()], 'Save');
+    $this->submitForm(['field_test[0][alt]' => $this->randomMachineName()], 'Save');
     $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadByProperties(['name' => $edit['name[0][value]']]);
     $term = reset($terms);
     $this->assertText('Created new term ' . $term->getName() . '.');

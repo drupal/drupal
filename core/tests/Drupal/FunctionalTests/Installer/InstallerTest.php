@@ -21,6 +21,7 @@ class InstallerTest extends InstallerTestBase {
    * Ensures that the user page is available after installation.
    */
   public function testInstaller() {
+    $this->assertNotNull(\Drupal::state()->get('system.css_js_query_string'), 'The dummy query string should be set during install');
     $this->assertSession()->addressEquals('user/1');
     $this->assertSession()->statusCodeEquals(200);
     // Confirm that we are logged-in after installation.
@@ -34,7 +35,7 @@ class InstallerTest extends InstallerTestBase {
 
     // Ensure that the timezone is correct for sites under test after installing
     // interactively.
-    $this->assertEqual($this->config('system.date')->get('timezone.default'), 'Australia/Sydney');
+    $this->assertEqual('Australia/Sydney', $this->config('system.date')->get('timezone.default'));
 
     // Ensure the profile has a weight of 1000.
     $module_extension_list = \Drupal::service('extension.list.module');
@@ -71,8 +72,9 @@ class InstallerTest extends InstallerTestBase {
     PerformanceTestRecorder::registerService($this->siteDirectory . '/services.yml', TRUE);
     // Assert that the expected title is present.
     $this->assertEqual('Select an installation profile', $this->cssSelect('main h2')[0]->getText());
-    $result = $this->xpath('//span[contains(@class, :class) and contains(text(), :text)]', [':class' => 'visually-hidden', ':text' => 'Select an installation profile']);
-    $this->assertCount(1, $result, "Title/Label not displayed when '#title_display' => 'invisible' attribute is set");
+    // Verify that Title/Label are not displayed when '#title_display' =>
+    // 'invisible' attribute is set.
+    $this->assertSession()->elementsCount('xpath', "//span[contains(@class, 'visually-hidden') and contains(text(), 'Select an installation profile')]", 1);
 
     parent::setUpProfile();
   }
@@ -87,9 +89,9 @@ class InstallerTest extends InstallerTestBase {
     // Assert that we use the by core supported database drivers by default and
     // not the ones from the driver_test module.
     $elements = $this->xpath('//label[@for="edit-driver-mysql"]');
-    $this->assertEqual(current($elements)->getText(), 'MySQL, MariaDB, Percona Server, or equivalent');
+    $this->assertEqual('MySQL, MariaDB, Percona Server, or equivalent', current($elements)->getText());
     $elements = $this->xpath('//label[@for="edit-driver-pgsql"]');
-    $this->assertEqual(current($elements)->getText(), 'PostgreSQL');
+    $this->assertEqual('PostgreSQL', current($elements)->getText());
 
     parent::setUpSettings();
   }

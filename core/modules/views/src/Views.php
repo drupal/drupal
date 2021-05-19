@@ -127,7 +127,7 @@ class Views {
   }
 
   /**
-   * Fetches a list of all base tables available
+   * Fetches a list of all base tables available.
    *
    * @param string $type
    *   Either 'display', 'style' or 'row'.
@@ -196,6 +196,7 @@ class Views {
    *
    * @return array
    *   A list of arrays containing the $view_id and $display_id.
+   *
    * @code
    * array(
    *   array($view_id, $display_id),

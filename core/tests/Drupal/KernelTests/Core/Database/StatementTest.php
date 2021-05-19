@@ -41,8 +41,8 @@ class StatementTest extends DatabaseTestBase {
 
     $num_records_after = $this->connection->select('test')->countQuery()->execute()->fetchField();
     $this->assertEquals($num_records_before + 2, $num_records_after);
-    $this->assertSame('30', $this->connection->query('SELECT age FROM {test} WHERE name = :name', [':name' => 'Larry'])->fetchField());
-    $this->assertSame('31', $this->connection->query('SELECT age FROM {test} WHERE name = :name', [':name' => 'Curly'])->fetchField());
+    $this->assertSame('30', $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Larry'])->fetchField());
+    $this->assertSame('31', $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Curly'])->fetchField());
   }
 
 }

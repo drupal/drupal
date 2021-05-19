@@ -54,11 +54,11 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
     /** @var \Drupal\file\FileInterface $file */
     $file = File::load($fid);
     $this->assertInstanceOf(FileInterface::class, $file);
-    $this->assertIdentical($name, $file->getFilename());
-    $this->assertIdentical($size, $file->getSize());
-    $this->assertIdentical($uri, $file->getFileUri());
-    $this->assertIdentical($type, $file->getMimeType());
-    $this->assertIdentical($uid, $file->getOwnerId());
+    $this->assertSame($name, $file->getFilename());
+    $this->assertSame($size, $file->getSize());
+    $this->assertSame($uri, $file->getFileUri());
+    $this->assertSame($type, $file->getMimeType());
+    $this->assertSame($uid, $file->getOwnerId());
   }
 
   /**
@@ -107,7 +107,7 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
     // File 2, when migrated for the second time, is treated as a different file
     // (due to having a different uri this time) and is given fid 6.
     $file = File::load(6);
-    $this->assertIdentical('public://core/tests/fixtures/files/image-2.jpg', $file->getFileUri());
+    $this->assertSame('public://core/tests/fixtures/files/image-2.jpg', $file->getFileUri());
 
     $map_table = $this->getMigration('d6_file')->getIdMap()->mapTableName();
     $map = \Drupal::database()

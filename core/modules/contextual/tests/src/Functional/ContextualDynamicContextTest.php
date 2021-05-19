@@ -115,10 +115,10 @@ class ContextualDynamicContextTest extends BrowserTestBase {
     $response = $this->renderContextualLinks($ids, 'node');
     $this->assertSame(200, $response->getStatusCode());
     $json = Json::decode((string) $response->getBody());
-    $this->assertIdentical($json[$ids[0]], '<ul class="contextual-links"><li class="entitynodeedit-form"><a href="' . base_path() . 'node/1/edit">Edit</a></li></ul>');
-    $this->assertIdentical($json[$ids[1]], '');
-    $this->assertIdentical($json[$ids[2]], '<ul class="contextual-links"><li class="entitynodeedit-form"><a href="' . base_path() . 'node/3/edit">Edit</a></li></ul>');
-    $this->assertIdentical($json[$ids[3]], '');
+    $this->assertSame('<ul class="contextual-links"><li class="entitynodeedit-form"><a href="' . base_path() . 'node/1/edit">Edit</a></li></ul>', $json[$ids[0]]);
+    $this->assertSame('', $json[$ids[1]]);
+    $this->assertSame('<ul class="contextual-links"><li class="entitynodeedit-form"><a href="' . base_path() . 'node/3/edit">Edit</a></li></ul>', $json[$ids[2]]);
+    $this->assertSame('', $json[$ids[3]]);
 
     // Verify that link language is properly handled.
     $node3->addTranslation('it')->set('title', $this->randomString())->save();
@@ -138,10 +138,10 @@ class ContextualDynamicContextTest extends BrowserTestBase {
     $response = $this->renderContextualLinks($ids, 'node');
     $this->assertSame(200, $response->getStatusCode());
     $json = Json::decode((string) $response->getBody());
-    $this->assertIdentical($json[$ids[0]], '');
-    $this->assertIdentical($json[$ids[1]], '');
-    $this->assertIdentical($json[$ids[2]], '');
-    $this->assertIdentical($json[$ids[3]], '');
+    $this->assertSame('', $json[$ids[0]]);
+    $this->assertSame('', $json[$ids[1]]);
+    $this->assertSame('', $json[$ids[2]]);
+    $this->assertSame('', $json[$ids[3]]);
 
     // Anonymous user: cannot access contextual links.
     $this->drupalLogin($this->anonymousUser);

@@ -89,14 +89,6 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
     $this->connection = $connection;
 
     parent::__construct($options, $handler, $metadata_bag);
-
-    // @todo When not using the Symfony Session object, the list of bags in the
-    //   NativeSessionStorage will remain uninitialized. This will lead to
-    //   errors in NativeSessionHandler::loadSession. Remove this after
-    //   https://www.drupal.org/node/2229145, when we will be using the Symfony
-    //   session object (which registers an attribute bag with the
-    //   manager upon instantiation).
-    $this->bags = [];
   }
 
   /**
@@ -119,17 +111,6 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
     }
 
     if (empty($result)) {
-      // Randomly generate a session identifier for this request. This is
-      // necessary because \Drupal\Core\TempStore\SharedTempStoreFactory::get()
-      // wants to know the future session ID of a lazily started session in
-      // advance.
-      //
-      // @todo: With current versions of PHP there is little reason to generate
-      //   the session id from within application code. Consider using the
-      //   default php session id instead of generating a custom one:
-      //   https://www.drupal.org/node/2238561
-      $this->setId(Crypt::randomBytesBase64());
-
       // Initialize the session global and attach the Symfony session bags.
       $_SESSION = [];
       $this->loadSession();
@@ -143,6 +124,23 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
     }
 
     return $result;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getId() {
+    $id = parent::getId();
+
+    if (empty($id)) {
+      // Legacy code might rely on the existence of a session ID before a real
+      // session exists. In this case, generate a random session ID to provide
+      // backwards compatibility.
+      @trigger_error('Calling ' . __METHOD__ . '() outside of an actual existing session is deprecated in drupal:9.2.0 and will be removed in drupal:10.0.0. This is often used for anonymous users. See https://www.drupal.org/node/3006306', E_USER_DEPRECATED);
+      $id = Crypt::randomBytesBase64();
+      $this->setId($id);
+    }
+    return $id;
   }
 
   /**
@@ -210,34 +208,21 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
       return;
     }
 
-    // We do not support the optional $destroy and $lifetime parameters as long
-    // as #2238561 remains open.
-    if ($destroy || isset($lifetime)) {
-      throw new \InvalidArgumentException('The optional parameters $destroy and $lifetime of SessionManager::regenerate() are not supported currently');
+    // Drupal will always destroy the existing session when regenerating a
+    // session. This is inline with the recommendations of @link https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html#renew-the-session-id-after-any-privilege-level-change
+    // OWASP session management cheat sheet. @endlink
+    $destroy = TRUE;
+
+    // Cannot regenerate the session ID for non-active sessions.
+    if (\PHP_SESSION_ACTIVE !== session_status()) {
+      // Ensure the metadata bag has been stamped. If the parent::regenerate()
+      // is called prior to the session being started it will not refresh the
+      // metadata as expected.
+      $this->getMetadataBag()->stampNew($lifetime);
+      return FALSE;
     }
 
-    if ($this->isStarted()) {
-      $old_session_id = $this->getId();
-      // Save and close the old session. Call the parent method to avoid issue
-      // with session destruction due to the session being considered obsolete.
-      parent::save();
-      // Ensure the session is reloaded correctly.
-      $this->startedLazy = TRUE;
-    }
-    session_id(Crypt::randomBytesBase64());
-
-    // We set token seed immediately to avoid race condition between two
-    // simultaneous requests without a seed.
-    $this->getMetadataBag()->setCsrfTokenSeed(Crypt::randomBytesBase64());
-
-    if (isset($old_session_id)) {
-      $params = session_get_cookie_params();
-      $expire = $params['lifetime'] ? REQUEST_TIME + $params['lifetime'] : 0;
-      setcookie($this->getName(), $this->getId(), $expire, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
-      $this->migrateStoredSession($old_session_id);
-    }
-
-    $this->startNow();
+    return parent::regenerate($destroy, $lifetime);
   }
 
   /**
@@ -257,6 +242,16 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
    * {@inheritdoc}
    */
   public function destroy() {
+    if ($this->isCli()) {
+      return;
+    }
+
+    // Symfony suggests using Session::invalidate() instead of session_destroy()
+    // however the former calls session_regenerate_id(TRUE), which while
+    // destroying the current session creates a new ID; Drupal has historically
+    // decided to only set sessions when absolutely necessary (e.g., to increase
+    // anonymous user cache hit rates) and as such we cannot use the Symfony
+    // convenience method here.
     session_destroy();
 
     // Unset the session cookies.
@@ -326,20 +321,6 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
     }
 
     return array_intersect_key($mask, $_SESSION);
-  }
-
-  /**
-   * Migrates the current session to a new session id.
-   *
-   * @param string $old_session_id
-   *   The old session ID. The new session ID is $this->getId().
-   */
-  protected function migrateStoredSession($old_session_id) {
-    $fields = ['sid' => Crypt::hashBase64($this->getId())];
-    $this->connection->update('sessions')
-      ->fields($fields)
-      ->condition('sid', Crypt::hashBase64($old_session_id))
-      ->execute();
   }
 
 }

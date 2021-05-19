@@ -111,13 +111,18 @@ class MigrateUpgradeImportBatch {
     $definition = \Drupal::service('plugin.manager.migration')->getDefinition($migration_id);
     $configuration = [];
 
-    // @todo Find a way to avoid this in https://www.drupal.org/node/2804611.
+    // Set the source plugin constant, source_base_path, for all migrations with
+    // a file entity destination.
+    // @todo https://www.drupal.org/node/2804611.
+    //   Find a way to avoid having to set configuration here.
     if ($definition['destination']['plugin'] === 'entity:file') {
-      // Make sure we have a single trailing slash.
-      if ($definition['source']['plugin'] === 'd7_file_private') {
-        $configuration['source']['constants']['source_base_path'] = rtrim($config['source_private_file_path'], '/') . '/';
-      }
-      $configuration['source']['constants']['source_base_path'] = rtrim($config['source_base_path'], '/') . '/';
+      // Use the private file path if the scheme property is set in the source
+      // plugin definition and is 'private' otherwise use the public file path.
+      $scheme = $definition['source']['scheme'] ?? NULL;
+      $base_path = ($scheme === 'private' && $config['source_private_file_path'])
+        ? $config['source_private_file_path']
+        : $config['source_base_path'];
+      $configuration['source']['constants']['source_base_path'] = rtrim($base_path, '/');
     }
 
     /** @var \Drupal\migrate\Plugin\Migration $migration */

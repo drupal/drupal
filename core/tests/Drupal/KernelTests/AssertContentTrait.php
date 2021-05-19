@@ -817,7 +817,7 @@ trait AssertContentTrait {
           '@expected' => var_export($title, TRUE),
         ]);
       }
-      return $this->assertEqual($actual, $title, $message, $group);
+      return $this->assertEqual($title, $actual, $message, $group);
     }
     return $this->fail('No title element found on the page.');
   }
@@ -837,9 +837,6 @@ trait AssertContentTrait {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
-   *
-   * @return bool
-   *   TRUE on pass, FALSE on fail.
    */
   protected function assertNoTitle($title, $message = '', $group = 'Other') {
     $actual = (string) current($this->xpath('//title'));
@@ -849,7 +846,7 @@ trait AssertContentTrait {
         '@unexpected' => var_export($title, TRUE),
       ]);
     }
-    return $this->assertNotEqual($actual, $title, $message, $group);
+    $this->assertNotEquals($title, $actual, $message, $group);
   }
 
   /**
@@ -857,7 +854,7 @@ trait AssertContentTrait {
    *
    * @param string $callback
    *   The name of the theme hook to invoke; e.g. 'links' for links.html.twig.
-   * @param string $variables
+   * @param array $variables
    *   An array of variables to pass to the theme function.
    * @param string $expected
    *   The expected themed output string.
@@ -871,9 +868,6 @@ trait AssertContentTrait {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
-   *
-   * @return bool
-   *   TRUE on pass, FALSE on fail.
    */
   protected function assertThemeOutput($callback, array $variables = [], $expected = '', $message = '', $group = 'Other') {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
@@ -885,16 +879,11 @@ trait AssertContentTrait {
     $output = (string) $renderer->executeInRenderContext(new RenderContext(), function () use ($callback, $variables) {
       return \Drupal::theme()->render($callback, $variables);
     });
-    $this->verbose(
-      '<hr />' . 'Result:' . '<pre>' . Html::escape(var_export($output, TRUE)) . '</pre>'
-      . '<hr />' . 'Expected:' . '<pre>' . Html::escape(var_export($expected, TRUE)) . '</pre>'
-      . '<hr />' . $output
-    );
     if (!$message) {
       $message = '%callback rendered correctly.';
     }
     $message = new FormattableMarkup($message, ['%callback' => 'theme_' . $callback . '()']);
-    return $this->assertIdentical($output, $expected, $message, $group);
+    $this->assertSame($expected, $output, $message, $group);
   }
 
   /**
@@ -988,7 +977,7 @@ trait AssertContentTrait {
   /**
    * Get the selected value from a select field.
    *
-   * @param \SimpleXmlElement $element
+   * @param \SimpleXMLElement $element
    *   SimpleXMLElement select element.
    *
    * @return bool
@@ -1250,13 +1239,10 @@ trait AssertContentTrait {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Browser'; most tests do not override
    *   this default.
-   *
-   * @return bool
-   *   TRUE on pass, FALSE on fail.
    */
   protected function assertOption($id, $option, $message = '', $group = 'Browser') {
     $options = $this->xpath('//select[@id=:id]//option[@value=:option]', [':id' => $id, ':option' => $option]);
-    return $this->assertTrue(isset($options[0]), $message ? $message : new FormattableMarkup('Option @option for field @id exists.', ['@option' => $option, '@id' => $id]), $group);
+    $this->assertTrue(isset($options[0]), $message ? $message : new FormattableMarkup('Option @option for field @id exists.', ['@option' => $option, '@id' => $id]), $group);
   }
 
   /**
@@ -1268,13 +1254,10 @@ trait AssertContentTrait {
    *   The text for the option tag to assert.
    * @param string $message
    *   (optional) A message to display with the assertion.
-   *
-   * @return bool
-   *   TRUE on pass, FALSE on fail.
    */
   protected function assertOptionByText($id, $text, $message = '') {
     $options = $this->xpath('//select[@id=:id]//option[normalize-space(text())=:text]', [':id' => $id, ':text' => $text]);
-    return $this->assertTrue(isset($options[0]), $message ?: 'Option with text label ' . $text . ' for select field ' . $id . ' exits.');
+    $this->assertTrue(isset($options[0]), $message ?: 'Option with text label ' . $text . ' for select field ' . $id . ' exits.');
   }
 
   /**
@@ -1294,13 +1277,10 @@ trait AssertContentTrait {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Browser'; most tests do not override
    *   this default.
-   *
-   * @return bool
-   *   TRUE on pass, FALSE on fail.
    */
   protected function assertOptionWithDrupalSelector($drupal_selector, $option, $message = '', $group = 'Browser') {
     $options = $this->xpath('//select[@data-drupal-selector=:data_drupal_selector]//option[@value=:option]', [':data_drupal_selector' => $drupal_selector, ':option' => $option]);
-    return $this->assertTrue(isset($options[0]), $message ? $message : new FormattableMarkup('Option @option for field @data_drupal_selector exists.', ['@option' => $option, '@data_drupal_selector' => $drupal_selector]), $group);
+    $this->assertTrue(isset($options[0]), $message ? $message : new FormattableMarkup('Option @option for field @data_drupal_selector exists.', ['@option' => $option, '@data_drupal_selector' => $drupal_selector]), $group);
   }
 
   /**

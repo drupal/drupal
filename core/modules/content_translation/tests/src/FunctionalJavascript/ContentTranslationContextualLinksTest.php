@@ -48,7 +48,7 @@ class ContentTranslationContextualLinksTest extends WebDriverTestBase {
       'entity_types[node]' => TRUE,
       'settings[node][page][translatable]' => TRUE,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save configuration');
+    $this->submitForm($edit, 'Save configuration');
     $this->drupalLogout();
 
     // Create a translator user.

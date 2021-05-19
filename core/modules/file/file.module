@@ -18,17 +18,22 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
+use Drupal\Core\File\Event\FileUploadSanitizeNameEvent;
 use Drupal\file\FileInterface;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Template\Attribute;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
 /**
  * The regex pattern used when checking for insecure file types.
+ *
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\Core\File\FileSystemInterface::INSECURE_EXTENSION_REGEX.
+ *
+ * @see https://www.drupal.org/node/3032541
  */
-define('FILE_INSECURE_EXTENSION_REGEX', '/\.(phar|php|pl|py|cgi|asp|js)(\.|$)/i');
+define('FILE_INSECURE_EXTENSION_REGEX', FileSystemInterface::INSECURE_EXTENSION_REGEX);
 
 // Load all Field module hooks for File.
 require_once __DIR__ . '/file.field.inc';
@@ -288,7 +293,7 @@ function file_validate(FileInterface $file, $validators = []) {
   // a malicious extension. Contributed and custom code that calls this method
   // needs to take similar steps if they need to permit files with malicious
   // extensions to be uploaded.
-  if (empty($errors) && !\Drupal::config('system.file')->get('allow_insecure_uploads') && preg_match(FILE_INSECURE_EXTENSION_REGEX, $file->getFilename())) {
+  if (empty($errors) && !\Drupal::config('system.file')->get('allow_insecure_uploads') && preg_match(FileSystemInterface::INSECURE_EXTENSION_REGEX, $file->getFilename())) {
     $errors[] = t('For security reasons, your upload has been rejected.');
   }
   return $errors;
@@ -588,10 +593,8 @@ function file_save_data($data, $destination = NULL, $replace = FileSystemInterfa
  *   \Symfony\Component\HttpFoundation\StreamedResponse.
  */
 function file_get_content_headers(FileInterface $file) {
-  $type = Unicode::mimeHeaderEncode($file->getMimeType());
-
   return [
-    'Content-Type' => $type,
+    'Content-Type' => $file->getMimeType(),
     'Content-Length' => $file->getSize(),
     'Cache-Control' => 'private',
   ];
@@ -698,6 +701,7 @@ function file_cron() {
   // is disabled if $age set to 0.
   if ($age) {
     $fids = Drupal::entityQuery('file')
+      ->accessCheck(FALSE)
       ->condition('status', FILE_STATUS_PERMANENT, '<>')
       ->condition('changed', REQUEST_TIME - $age, '<')
       ->range(0, 100)
@@ -921,7 +925,8 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
  */
 function _file_save_upload_single(\SplFileInfo $file_info, $form_field_name, $validators = [], $destination = FALSE, $replace = FileSystemInterface::EXISTS_REPLACE) {
   $user = \Drupal::currentUser();
-  $original_file_name = trim($file_info->getClientOriginalName(), '.');
+  // Remember the original filename so we can print a message if it changes.
+  $original_file_name = $file_info->getClientOriginalName();
   // Check for file upload errors and return FALSE for this file if a lower
   // level system error occurred. For a complete list of errors:
   // See http://php.net/manual/features.file-upload.errors.php.
@@ -949,24 +954,8 @@ function _file_save_upload_single(\SplFileInfo $file_info, $form_field_name, $va
       return FALSE;
 
   }
-  // Begin building file entity.
-  $values = [
-    'uid' => $user->id(),
-    'status' => 0,
-    'filename' => $original_file_name,
-    'uri' => $file_info->getRealPath(),
-    'filesize' => $file_info->getSize(),
-  ];
-  $guesser = \Drupal::service('file.mime_type.guesser');
-  if ($guesser instanceof MimeTypeGuesserInterface) {
-    $values['filemime'] = $guesser->guessMimeType($values['filename']);
-  }
-  else {
-    $values['filemime'] = $guesser->guess($values['filename']);
-    @trigger_error('\Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Implement \Symfony\Component\Mime\MimeTypeGuesserInterface instead. See https://www.drupal.org/node/3133341', E_USER_DEPRECATED);
-  }
-  $file = File::create($values);
 
+  // Build a list of allowed extensions.
   $extensions = '';
   if (isset($validators['file_validate_extensions'])) {
     if (isset($validators['file_validate_extensions'][0])) {
@@ -982,43 +971,11 @@ function _file_save_upload_single(\SplFileInfo $file_info, $form_field_name, $va
   }
   else {
     // No validator was provided, so add one using the default list.
-    // Build a default non-munged safe list for file_munge_filename().
+    // Build a default non-munged safe list for
+    // \Drupal\system\EventSubscriber\SecurityFileUploadEventSubscriber::sanitizeName().
     $extensions = 'jpg jpeg gif png txt doc xls pdf ppt pps odt ods odp';
     $validators['file_validate_extensions'] = [];
     $validators['file_validate_extensions'][0] = $extensions;
-  }
-
-  //  Don't rename if 'allow_insecure_uploads' evaluates to TRUE.
-  if (!\Drupal::config('system.file')->get('allow_insecure_uploads')) {
-    if (!empty($extensions)) {
-      // Munge the filename to protect against possible malicious extension
-      // hiding within an unknown file type (ie: filename.html.foo).
-      $file->setFilename(file_munge_filename($file->getFilename(), $extensions));
-    }
-
-    // Rename potentially executable files, to help prevent exploits (i.e. will
-    // rename filename.php.foo and filename.php to filename.php_.foo_.txt and
-    // filename.php_.txt, respectively).
-    if (preg_match(FILE_INSECURE_EXTENSION_REGEX, $file->getFilename())) {
-      // If the file will be rejected anyway due to a disallowed extension, it
-      // should not be renamed; rather, we'll let file_validate_extensions()
-      // reject it below.
-      if (!isset($validators['file_validate_extensions']) || empty(file_validate_extensions($file, $extensions))) {
-        $file->setMimeType('text/plain');
-        $filename = $file->getFilename();
-        if (substr($filename, -4) != '.txt') {
-          // The destination filename will also later be used to create the URI.
-          $filename .= '.txt';
-        }
-        $file->setFilename(file_munge_filename($filename, $extensions));
-        \Drupal::messenger()->addStatus(t('For security reasons, your upload has been renamed to %filename.', ['%filename' => $file->getFilename()]));
-        // The .txt extension may not be in the allowed list of extensions. We
-        // have to add it here or else the file upload will fail.
-        if (!empty($validators['file_validate_extensions'][0])) {
-          $validators['file_validate_extensions'][0] .= ' txt';
-        }
-      }
-    }
   }
 
   // If the destination is not provided, use the temporary directory.
@@ -1036,22 +993,50 @@ function _file_save_upload_single(\SplFileInfo $file_info, $form_field_name, $va
     return FALSE;
   }
 
-  $file->source = $form_field_name;
   // A file URI may already have a trailing slash or look like "public://".
   if (substr($destination, -1) != '/') {
     $destination .= '/';
   }
+
+  // Call an event to sanitize the filename and to attempt to address security
+  // issues caused by common server setups.
+  $event = new FileUploadSanitizeNameEvent($original_file_name, $extensions);
+  \Drupal::service('event_dispatcher')->dispatch($event);
+
+  // Begin building the file entity.
+  $values = [
+    'uid' => $user->id(),
+    'status' => 0,
+    // This will be replaced later with a filename based on the destination.
+    'filename' => $event->getFilename(),
+    'uri' => $file_info->getRealPath(),
+    'filesize' => $file_info->getSize(),
+  ];
+  $file = File::create($values);
+
   /** @var \Drupal\Core\File\FileSystemInterface $file_system */
   $file_system = \Drupal::service('file_system');
   try {
-    $file->destination = $file_system->getDestinationFilename($destination . $file->getFilename(), $replace);
+    // Use the result of the sanitization event as the destination name.
+    $file->destination = $file_system->getDestinationFilename($destination . $event->getFilename(), $replace);
   }
   catch (FileException $e) {
     \Drupal::messenger()->addError(t('The file %filename could not be uploaded because the name is invalid.', ['%filename' => $file->getFilename()]));
     return FALSE;
   }
-  // If the destination is FALSE then there is an existing file and $replace is
-  // set to return an error, so we need to exit.
+
+  $guesser = \Drupal::service('file.mime_type.guesser');
+  if ($guesser instanceof MimeTypeGuesserInterface) {
+    $file->setMimeType($guesser->guessMimeType($values['filename']));
+  }
+  else {
+    $file->setMimeType($guesser->guess($values['filename']));
+    @trigger_error('\Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Implement \Symfony\Component\Mime\MimeTypeGuesserInterface instead. See https://www.drupal.org/node/3133341', E_USER_DEPRECATED);
+  }
+  $file->source = $form_field_name;
+
+  // If the destination is FALSE then $replace === FILE_EXISTS_ERROR and
+  // there's an existing file, so we need to bail.
   if ($file->destination === FALSE) {
     \Drupal::messenger()->addError(t('The file %source could not be uploaded because a file by that name already exists in the destination %directory.', ['%source' => $form_field_name, '%directory' => $destination]));
     return FALSE;
@@ -1086,6 +1071,21 @@ function _file_save_upload_single(\SplFileInfo $file_info, $form_field_name, $va
     \Drupal::messenger()->addError(t('File upload error. Could not move uploaded file.'));
     \Drupal::logger('file')->notice('Upload error. Could not move uploaded file %file to destination %destination.', ['%file' => $file->getFilename(), '%destination' => $file->getFileUri()]);
     return FALSE;
+  }
+
+  // Update the filename with any changes as a result of the renaming due to an
+  // existing file.
+  $file->setFilename(\Drupal::service('file_system')->basename($file->destination));
+
+  // If the filename has been modified, let the user know.
+  if ($file->getFilename() !== $original_file_name) {
+    if ($event->isSecurityRename()) {
+      $message = t('For security reasons, your upload has been renamed to %filename.', ['%filename' => $file->getFilename()]);
+    }
+    else {
+      $message = t('Your upload has been renamed to %filename.', ['%filename' => $file->getFilename()]);
+    }
+    \Drupal::messenger()->addStatus($message);
   }
 
   // Set the permissions on the new file.

@@ -7,7 +7,7 @@ use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 
 /**
- * Simple filter to handle matching of boolean values
+ * Simple filter to handle matching of boolean values.
  *
  * Definition items:
  * - label: (REQUIRED) The label for the checkbox.
@@ -40,9 +40,18 @@ class BooleanOperator extends FilterPluginBase {
    */
   const NOT_EQUAL = '<>';
 
-  // exposed filter options
+  /**
+   * Exposed filter options.
+   *
+   * @var bool
+   */
   protected $alwaysMultiple = TRUE;
-  // Whether to accept NULL as a false value or not
+
+  /**
+   * Whether to accept NULL as a false value or not.
+   *
+   * @var bool
+   */
   public $accept_null = FALSE;
 
   /**

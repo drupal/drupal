@@ -67,7 +67,7 @@ class DatabaseBackend implements FloodInterface {
   }
 
   /**
-   * Inserts an event into the flood table
+   * Inserts an event into the flood table.
    *
    * @param string $name
    *   The name of an event.

@@ -65,13 +65,6 @@ class FrameworkTest extends BrowserTestBase {
     $expected_commands[3] = new AppendCommand('body', $js_footer_render_array);
     $expected_commands[4] = new HtmlCommand('body', 'Hello, world!');
 
-    // Load any page with at least one CSS file, at least one JavaScript file
-    // and at least one #ajax-powered element. The latter is an assumption of
-    // drupalPostAjaxForm(), the two former are assumptions of the Ajax
-    // renderer.
-    // @todo refactor AJAX Framework + tests to make less assumptions.
-    $this->drupalGet('ajax_forms_test_lazy_load_form');
-
     // Verify AJAX command order — this should always be the order:
     // 1. CSS files
     // 2. JavaScript files in the header

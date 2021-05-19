@@ -166,7 +166,7 @@ class GraphTest extends TestCase {
     foreach ($expected_orders as $order) {
       $previous_vertex = array_shift($order);
       foreach ($order as $vertex) {
-        $this->assertTrue($graph[$previous_vertex]['weight'] < $graph[$vertex]['weight'], sprintf('Weights of %s and %s are correct relative to each other', $previous_vertex, $vertex));
+        $this->assertLessThan($graph[$vertex]['weight'], $graph[$previous_vertex]['weight'], sprintf("Weight of vertex %s should be less than vertex %s.", $previous_vertex, $vertex));
       }
     }
   }

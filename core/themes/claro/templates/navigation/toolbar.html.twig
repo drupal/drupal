@@ -24,7 +24,7 @@
  */
 #}
 <div{{ attributes.addClass('toolbar', 'claro-toolbar') }}>
-  <nav{{ toolbar_attributes.addClass('toolbar-bar') }}>
+  <nav{{ toolbar_attributes.addClass('toolbar-bar', 'clearfix') }}>
     <h2 class="visually-hidden">{{ toolbar_heading }}</h2>
     {% for key, tab in tabs %}
       {% set tray = trays[key] %}

@@ -6,7 +6,7 @@ use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
 
 /**
- * Provides a test filter to attach assets
+ * Provides a test filter to attach assets.
  *
  * @Filter(
  *   id = "filter_test_assets",

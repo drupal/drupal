@@ -44,8 +44,7 @@ class BulkFormTest extends UserTestBase {
     // Create a user which actually can change users.
     $this->drupalLogin($this->drupalCreateUser(['administer users']));
     $this->drupalGet('test-user-bulk-form');
-    $result = $this->cssSelect('#edit-action option');
-    $this->assertTrue(count($result) > 0);
+    $this->assertNotEmpty($this->cssSelect('#edit-action option'));
 
     // Test submitting the page with no selection.
     $edit = [
@@ -65,7 +64,7 @@ class BulkFormTest extends UserTestBase {
       'user_bulk_form[1]' => TRUE,
       'action' => 'user_add_role_action.' . $role,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Apply to selected items');
+    $this->submitForm($edit, 'Apply to selected items');
     // Re-load the user and check their roles.
     $user_storage->resetCache([$account->id()]);
     $account = $user_storage->load($account->id());
@@ -75,7 +74,7 @@ class BulkFormTest extends UserTestBase {
       'user_bulk_form[1]' => TRUE,
       'action' => 'user_remove_role_action.' . $role,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Apply to selected items');
+    $this->submitForm($edit, 'Apply to selected items');
     // Re-load the user and check their roles.
     $user_storage->resetCache([$account->id()]);
     $account = $user_storage->load($account->id());
@@ -88,7 +87,7 @@ class BulkFormTest extends UserTestBase {
       'user_bulk_form[1]' => TRUE,
       'action' => 'user_block_user_action',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Apply to selected items');
+    $this->submitForm($edit, 'Apply to selected items');
     // Re-load the user and check their status.
     $user_storage->resetCache([$account->id()]);
     $account = $user_storage->load($account->id());
@@ -109,7 +108,7 @@ class BulkFormTest extends UserTestBase {
       'user_bulk_form[0]' => TRUE,
       'action' => 'user_block_user_action',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Apply to selected items');
+    $this->submitForm($edit, 'Apply to selected items');
     $anonymous_account = $user_storage->load(0);
     $this->assertTrue($anonymous_account->isBlocked(), 'Ensure the anonymous user got blocked.');
 
@@ -125,12 +124,12 @@ class BulkFormTest extends UserTestBase {
       "options[selected_actions][$action_id]" => $action_id,
     ];
     $this->drupalPostForm('admin/structure/views/nojs/handler/test_user_bulk_form/default/field/user_bulk_form', $edit, 'Apply');
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
     $this->drupalGet('test-user-bulk-form');
     $this->assertSession()->optionNotExists('edit-action', $action_id);
     $edit['options[include_exclude]'] = 'include';
     $this->drupalPostForm('admin/structure/views/nojs/handler/test_user_bulk_form/default/field/user_bulk_form', $edit, 'Apply');
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
     $this->drupalGet('test-user-bulk-form');
     $this->assertSession()->optionExists('edit-action', $action_id);
   }
@@ -143,7 +142,7 @@ class BulkFormTest extends UserTestBase {
     User::load($this->users[0]->id());
     $view = Views::getView('test_user_bulk_form_combine_filter');
     $errors = $view->validate();
-    $this->assertEqual(reset($errors['default']), t('Field %field set in %filter is not usable for this filter type. Combined field filter only works for simple fields.', ['%field' => 'User: Bulk update', '%filter' => 'Global: Combine fields filter']));
+    $this->assertEqual(t('Field %field set in %filter is not usable for this filter type. Combined field filter only works for simple fields.', ['%field' => 'User: Bulk update', '%filter' => 'Global: Combine fields filter']), reset($errors['default']));
   }
 
 }

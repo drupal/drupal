@@ -12,6 +12,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Test\FunctionalTestSetupTrait;
 use Drupal\Core\Test\TestSetupTrait;
+use Drupal\Core\Url;
 use Drupal\Core\Utility\Error;
 use Drupal\FunctionalTests\AssertLegacyTrait;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
@@ -20,12 +21,11 @@ use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\Tests\Traits\PhpUnitWarnings;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\TestTools\Comparator\MarkupInterfaceComparator;
+use Drupal\TestTools\TestVarDumper;
 use GuzzleHttp\Cookie\CookieJar;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
-use Symfony\Component\CssSelector\CssSelectorConverter;
+use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * Provides a test case for functional Drupal tests.
@@ -37,6 +37,11 @@ use Symfony\Component\CssSelector\CssSelectorConverter;
  * Tests extending this base class should only translate text when testing
  * translation functionality. For example, avoid wrapping test text with t()
  * or TranslatableMarkup().
+ *
+ * Using Symfony's dump() function in functional test test code will produce
+ * output on the command line; using dump() in site code will produce output in
+ * the requested web page, which can then be inspected in the HTML output from
+ * the test.
  *
  * @ingroup testing
  */
@@ -136,7 +141,7 @@ abstract class BrowserTestBase extends TestCase {
    */
   protected $customTranslations;
 
-  /*
+  /**
    * Mink class for the default driver to use.
    *
    * Should be a fully-qualified class name that implements
@@ -148,7 +153,7 @@ abstract class BrowserTestBase extends TestCase {
    */
   protected $minkDefaultDriverClass = BrowserKitDriver::class;
 
-  /*
+  /**
    * Mink default driver params.
    *
    * If it's an array its contents are used as constructor params when default
@@ -157,7 +162,6 @@ abstract class BrowserTestBase extends TestCase {
    * Can be overridden using the environment variable MINK_DRIVER_ARGS. In this
    * case that variable should be a JSON array, for example:
    * '["firefox", null, "http://localhost:4444/wd/hub"]'.
-   *
    *
    * @var array
    */
@@ -215,6 +219,14 @@ abstract class BrowserTestBase extends TestCase {
    * @var \Symfony\Component\DependencyInjection\ContainerInterface
    */
   protected $originalContainer;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function setUpBeforeClass() {
+    parent::setUpBeforeClass();
+    VarDumper::setHandler(TestVarDumper::class . '::cliHandler');
+  }
 
   /**
    * Initializes Mink sessions.
@@ -329,52 +341,11 @@ abstract class BrowserTestBase extends TestCase {
    * be overridden in a derived class so it is possible to use a different
    * value for a subset of tests, e.g. the JavaScript tests.
    *
-   *  @return string|false
+   * @return string|false
    *   The JSON-encoded argument string. False if it is not set.
    */
   protected function getMinkDriverArgs() {
     return getenv('MINK_DRIVER_ARGS');
-  }
-
-  /**
-   * Provides a Guzzle middleware handler to log every response received.
-   *
-   * @return callable
-   *   The callable handler that will do the logging.
-   */
-  protected function getResponseLogHandler() {
-    return function (callable $handler) {
-      return function (RequestInterface $request, array $options) use ($handler) {
-        return $handler($request, $options)
-          ->then(function (ResponseInterface $response) use ($request) {
-            if ($this->htmlOutputEnabled) {
-
-              $caller = $this->getTestMethodCaller();
-              $html_output = 'Called from ' . $caller['function'] . ' line ' . $caller['line'];
-              $html_output .= '<hr />' . $request->getMethod() . ' request to: ' . $request->getUri();
-
-              // Get the response body as a string. Any errors are silenced as
-              // tests should not fail if there is a problem. On PHP 7.4
-              // \Drupal\Tests\migrate\Functional\process\DownloadFunctionalTest
-              // fails without the usage of a silence operator.
-              $body = @(string) $response->getBody();
-              // On redirect responses (status code starting with '3') we need
-              // to remove the meta tag that would do a browser refresh. We
-              // don't want to redirect developers away when they look at the
-              // debug output file in their browser.
-              $status_code = (string) $response->getStatusCode();
-              if ($status_code[0] === '3') {
-                $body = preg_replace('#<meta http-equiv="refresh" content=.+/>#', '', $body, 1);
-              }
-              $html_output .= '<hr />' . $body;
-              $html_output .= $this->formatHtmlOutputHeaders($response->getHeaders());
-
-              $this->htmlOutput($html_output);
-            }
-            return $response;
-          });
-      };
-    };
   }
 
   /**
@@ -585,11 +556,24 @@ abstract class BrowserTestBase extends TestCase {
     $this->prepareSettings();
     $this->doInstall();
     $this->initSettings();
-    $container = $this->initKernel(\Drupal::request());
+    $this->container = $container = $this->initKernel(\Drupal::request());
     $this->initConfig($container);
     $this->installDefaultThemeFromClassProperty($container);
     $this->installModulesFromClassProperty($container);
-    $this->rebuildAll();
+
+    // Clear the static cache so that subsequent cache invalidations will work
+    // as expected.
+    $this->container->get('cache_tags.invalidator')->resetChecksums();
+
+    // Generate a route to prime the url generator with the correct base url.
+    // @todo Remove in https://www.drupal.org/project/drupal/issues/3207896.
+    Url::fromRoute('<front>')->setAbsolute()->toString();
+
+    // Explicitly call register() again on the container registered in \Drupal.
+    // @todo This should already be called through
+    //   DrupalKernel::prepareLegacyRequest() -> DrupalKernel::boot() but that
+    //   appears to be calling a different container.
+    $this->container->get('stream_wrapper_manager')->register();
   }
 
   /**
@@ -608,25 +592,6 @@ abstract class BrowserTestBase extends TestCase {
    */
   public function __sleep() {
     return [];
-  }
-
-  /**
-   * Translates a CSS expression to its XPath equivalent.
-   *
-   * The search is relative to the root element (HTML tag normally) of the page.
-   *
-   * @param string $selector
-   *   CSS selector to use in the search.
-   * @param bool $html
-   *   (optional) Enables HTML support. Disable it for XML documents.
-   * @param string $prefix
-   *   (optional) The prefix for the XPath expression.
-   *
-   * @return string
-   *   The equivalent XPath of a CSS expression.
-   */
-  protected function cssSelectToXpath($selector, $html = TRUE, $prefix = 'descendant-or-self::') {
-    return (new CssSelectorConverter($html))->toXPath($selector, $prefix);
   }
 
   /**
@@ -674,8 +639,14 @@ abstract class BrowserTestBase extends TestCase {
    *
    * @return string|null
    *   The HTTP header value or NULL if not found.
+   *
+   * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+   *   $this->getSession()->getResponseHeader() instead.
+   *
+   * @see https://www.drupal.org/node/3168383
    */
   protected function drupalGetHeader($name) {
+    @trigger_error('BrowserTestBase::drupalGetHeader() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use $this->getSession()->getResponseHeader() instead. See https://www.drupal.org/node/3168383', E_USER_DEPRECATED);
     return $this->getSession()->getResponseHeader($name);
   }
 

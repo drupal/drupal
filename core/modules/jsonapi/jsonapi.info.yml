@@ -2,6 +2,7 @@ name: JSON:API
 type: module
 description: Exposes entities as a JSON:API-specification-compliant web API.
 package: Web services
+version: VERSION
 configure: jsonapi.settings
 dependencies:
   - drupal:serialization

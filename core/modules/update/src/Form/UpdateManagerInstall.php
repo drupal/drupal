@@ -107,7 +107,7 @@ class UpdateManagerInstall extends FormBase {
 
     $form['project_url'] = [
       '#type' => 'url',
-      '#title' => $this->t('Install from a URL'),
+      '#title' => $this->t('Add from a URL'),
       '#description' => $this->t('For example: %url', ['%url' => 'https://ftp.drupal.org/files/projects/name.tar.gz']),
     ];
 
@@ -119,7 +119,7 @@ class UpdateManagerInstall extends FormBase {
 
     $form['project_upload'] = [
       '#type' => 'file',
-      '#title' => $this->t('Upload a module or theme archive to install'),
+      '#title' => $this->t('Upload a module or theme archive'),
       '#description' => $this->t('For example: %filename from your local computer', ['%filename' => 'name.tar.gz']),
     ];
 
@@ -127,7 +127,7 @@ class UpdateManagerInstall extends FormBase {
     $form['actions']['submit'] = [
       '#type' => 'submit',
       '#button_type' => 'primary',
-      '#value' => $this->t('Install'),
+      '#value' => $this->t('Continue'),
     ];
 
     return $form;
@@ -139,7 +139,7 @@ class UpdateManagerInstall extends FormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $all_files = $this->getRequest()->files->get('files', []);
     if (!($form_state->getValue('project_url') xor !empty($all_files['project_upload']))) {
-      $form_state->setErrorByName('project_url', $this->t('You must either provide a URL or upload an archive file to install.'));
+      $form_state->setErrorByName('project_url', $this->t('You must either provide a URL or upload an archive file.'));
     }
   }
 
@@ -224,7 +224,7 @@ class UpdateManagerInstall extends FormBase {
     }
 
     if ($updater->isInstalled()) {
-      $this->messenger()->addError($this->t('%project is already installed.', ['%project' => $project_title]));
+      $this->messenger()->addError($this->t('%project is already present.', ['%project' => $project_title]));
       return;
     }
 

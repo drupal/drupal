@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class RolesRid extends ManyToOne {
 
   /**
-   * The role entity storage
+   * The role entity storage.
    *
    * @var \Drupal\user\RoleStorage
    */

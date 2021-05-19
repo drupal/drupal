@@ -8,6 +8,10 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 /**
  * Drupal 6 field source from database.
  *
+ * For available configuration keys, refer to the parent classes:
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
  * @MigrateSource(
  *   id = "d6_field",
  *   source_module = "content"
@@ -34,7 +38,7 @@ class Field extends DrupalSqlBase {
       ])
       ->distinct();
     // Only import fields which are actually being used.
-    $query->innerJoin('content_node_field_instance', 'cnfi', 'cnfi.field_name = cnf.field_name');
+    $query->innerJoin('content_node_field_instance', 'cnfi', '[cnfi].[field_name] = [cnf].[field_name]');
 
     return $query;
   }

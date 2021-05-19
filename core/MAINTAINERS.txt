@@ -10,7 +10,7 @@ https://www.drupal.org/core/maintainers/past
 Core committers
 ---------------
 
-The Drupal Core committers oversee the development of Drupal as a whole. The
+The Drupal core committers oversee the development of Drupal as a whole. The
 core committers for Drupal are (in alphabetical order):
 
 BDFL
@@ -27,7 +27,6 @@ Framework managers
   Backend
   - Alex Bronstein 'effulgentsia' https://www.drupal.org/u/effulgentsia
   - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
-  - Francesco Placella 'plach' https://www.drupal.org/u/plach
   - Alex Pott 'alexpott' https://www.drupal.org/u/alexpott
   - Lee Rowlands 'larowlan' https://www.drupal.org/u/larowlan
 
@@ -38,16 +37,20 @@ Release managers
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
 - Jess Myrbo 'xjm' https://www.drupal.org/u/xjm
 
+Core JavaScript packages
+ - (provisional) Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
+ - (provisional) Sally Young 'justafish' https://www.drupal.org/u/justafish
+
 Committer team facilitators
 - Pamela Barone 'pameeela' https://www.drupal.org/u/pameeela
 
 Subsystem maintainers
 ---------------------
 
-The Drupal Core subsystem maintainers oversee the development of Drupal
+The Drupal core subsystem maintainers oversee the development of Drupal
 subsystems. See https://www.drupal.org/contribute/core-maintainers for more
 information on their responsibilities, and to find out how to become a subsystem
-maintainer. Current subsystem maintainers for Drupal 8:
+maintainer. Current subsystem maintainers:
 
 Actions
 - ?
@@ -112,6 +115,12 @@ CKEditor
 - Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
 - Marek 'mlewand' Lewandowski https://www.drupal.org/u/mlewand
 
+Claro
+- Cristina Chumillas 'ckrina' https://www.drupal.org/u/ckrina
+- Sascha Eggenberger 'saschaeggi' https://www.drupal.org/u/saschaeggi
+- Lauri Eskola 'lauriii' https://www.drupal.org/u/lauriii
+- Ben Mullins 'bnjmnm' https://www.drupal.org/u/bnjmnm
+
 Classy
 - David Hernandez 'davidhernandez' https://www.drupal.org/u/davidhernandez
 
@@ -147,7 +156,7 @@ Content Moderation
 - Sam Becker 'Sam152' https://www.drupal.org/u/sam152
 
 Content Translation
-- Francesco Placella 'plach' https://www.drupal.org/u/plach
+- ?
 
 Contextual
 - ?
@@ -196,7 +205,6 @@ Entity API
 - Nathaniel Catchpole 'catch' https://www.drupal.org/u/catch
 - Hristo Chonov 'hchonov' https://www.drupal.org/u/hchonov
 - Sascha Grossenbacher 'Berdir' https://www.drupal.org/u/berdir
-- Francesco Placella 'plach' https://www.drupal.org/u/plach
 - Tobias Zimmermann 'tstoeckler' https://www.drupal.org/u/tstoeckler
 
 Extension API
@@ -257,7 +265,6 @@ JSON:API
 - Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
 
 Language
-- Francesco Placella 'plach' https://www.drupal.org/u/plach
 - Daniel F. Kudwien 'sun' https://www.drupal.org/u/sun
 
 Layout Builder
@@ -462,6 +469,11 @@ Workflows
 Topic maintainers
 -----------------
 
+The Drupal Core topic maintainers are subject-matter experts in a topic that
+spans multiple subsystems. These correspond to the core gates which all
+proposed changes must pass. https://www.drupal.org/contribute/core/maintainers
+provides more information on their responsibilities.
+
 Accessibility
 - Rain Breaw Michaels 'rainbreaw' https://www.drupal.org/u/rainbreaw
 - Mike Gifford 'mgifford' https://www.drupal.org/u/mgifford
@@ -482,8 +494,6 @@ Usability
 - Roy Scholten 'yoroy' https://www.drupal.org/u/yoroy
 - Bojhan Somers 'Bojhan' https://www.drupal.org/u/bojhan
 
-Provisional membership: None at this time.
-
 
 Security team
 -------------
@@ -502,37 +512,23 @@ The security team lead is:
 Initiative coordinators
 -----------------------
 
-The Drupal Core Initiative coordinators oversee approved projects that
+The Drupal core initiative coordinators oversee approved projects that
 re-architect or otherwise improve large areas of Drupal core. See
-https://www.drupal.org/community-initiatives/drupal-core for more information on
-their responsibilities. The initiative coordinators for Drupal 8 are:
+https://www.drupal.org/contribute/core/maintainers for more information on
+their responsibilities. The initiative coordinators are:
 
-Admin UI & JavaScript Modernisation Initiative
-- Cristina Chumillas 'ckrina' https://www.drupal.org/u/ckrina
-- Sally Young 'justafish' https://www.drupal.org/u/justafish
-
-Layout Initiative
-- Tim Plunkett 'tim.plunkett' https://www.drupal.org/u/tim.plunkett
-- Emilie Nouveau 'DyanneNova' https://www.drupal.org/u/dyannenova
+Decoupled Menus Initiative
+- Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
+- Gabe Sullice 'gabesullice' https://www.drupal.org/u/gabesullice
 
 Media Initiative
 - Janez Urevc 'slashrsm' https://www.drupal.org/u/slashrsm
-
-PHPUnit Initiative
-- Daniel Wehner 'dawehner' https://www.drupal.org/u/dawehner
-- (provisional) Michiel Nugter 'michielnugter' https://www.drupal.org/u/michielnugter
-- (provisional) Len Swaneveld 'Lendude' https://www.drupal.org/u/lendude
-
-Workflow Initiative
-- Dick Olsson 'dixon_' https://www.drupal.org/u/dixon_
-
-Provisional membership: None at this time.
 
 
 Core mentoring coordinators
 ---------------------------
 
-The Drupal Core mentors inspire, enable, and encourage new core contributors.
+The Drupal core mentors inspire, enable, and encourage new core contributors.
 See https://www.drupal.org/core-mentoring for more information about mentoring.
 
 Mentoring coordinators recruit and coach other mentors. They work on contributor
@@ -544,9 +540,9 @@ participate in mentoring.
 - Lucas Hedding 'heddn' https://www.drupal.org/u/heddn
 - Tara King 'sparklingrobots' https://www.drupal.org/u/sparklingrobots
 - Rachel Lawson 'rachel_norfolk' https://www.drupal.org/u/rachel_norfolk
-- Valery Lourie 'valthebald' https://www.drupal.org/u/valthebald
 - Elli Ludwigson 'ekl1773' https://www.drupal.org/u/ekl1773
 - Jess Myrbo 'xjm' https://www.drupal.org/u/xjm
 - Matthew Radcliffe 'mradcliffe' https://www.drupal.org/u/mradcliffe
-
-Provisional membership: None at this time.
+- (provisional) Chris Darke 'chrisdarke' https://www.drupal.org/u/chrisdarke
+- (provisional) Brian Gilbert 'realityloop' https://www.drupal.org/u/realityloop
+- (provisional) AmyJune Hineline 'volkswagenchick' https://www.drupal.org/u/volkswagenchick

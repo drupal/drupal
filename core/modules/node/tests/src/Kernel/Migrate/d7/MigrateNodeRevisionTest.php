@@ -102,7 +102,7 @@ class MigrateNodeRevisionTest extends MigrateDrupal7TestBase {
     $this->assertSame($title, $revision->getTitle());
     $this->assertSame($langcode, $revision->language()->getId());
     $this->assertSame($log, $revision->revision_log->value);
-    $this->assertIdentical($timestamp, $revision->getRevisionCreationTime());
+    $this->assertSame($timestamp, $revision->getRevisionCreationTime());
   }
 
   /**
@@ -122,6 +122,14 @@ class MigrateNodeRevisionTest extends MigrateDrupal7TestBase {
     foreach ($ids as $id) {
       $this->assertNull($this->nodeStorage->loadRevision($id));
     }
+
+    // Test the migration of node and user reference fields.
+    $revision = $this->nodeStorage->loadRevision(2);
+    $this->assertCount(1, $revision->field_node_reference);
+    $this->assertSame('5', $revision->field_node_reference->target_id);
+
+    $this->assertCount(1, $revision->field_user_reference);
+    $this->assertSame('Bob', $revision->field_user_reference[0]->entity->getAccountName());
   }
 
 }

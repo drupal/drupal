@@ -74,7 +74,7 @@ class DateTimeFieldTest extends DateTestBase {
       $edit = [
         "{$field_name}[0][value][date]" => $date->format($date_format),
       ];
-      $this->drupalPostForm(NULL, $edit, 'Save');
+      $this->submitForm($edit, 'Save');
       preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
       $id = $match[1];
       $this->assertText('entity_test ' . $id . ' has been created.');
@@ -86,11 +86,11 @@ class DateTimeFieldTest extends DateTestBase {
       $entity = EntityTest::load($id);
       $this->assertEqual('2012-12-31', $entity->{$field_name}->value);
       $this->drupalGet('entity_test/manage/' . $id . '/edit');
-      $this->drupalPostForm(NULL, [], 'Save');
+      $this->submitForm([], 'Save');
       $this->drupalGet('entity_test/manage/' . $id . '/edit');
-      $this->drupalPostForm(NULL, [], 'Save');
+      $this->submitForm([], 'Save');
       $this->drupalGet('entity_test/manage/' . $id . '/edit');
-      $this->drupalPostForm(NULL, [], 'Save');
+      $this->submitForm([], 'Save');
       $entity = EntityTest::load($id);
       $this->assertEqual('2012-12-31', $entity->{$field_name}->value);
 
@@ -269,7 +269,7 @@ class DateTimeFieldTest extends DateTestBase {
       "{$field_name}[0][value][date]" => $date->format($date_format),
       "{$field_name}[0][value][time]" => $date->format($time_format),
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertText('entity_test ' . $id . ' has been created.');
@@ -427,7 +427,7 @@ class DateTimeFieldTest extends DateTestBase {
     $this->drupalGet($fieldEditUrl);
 
     // Click on the widget settings button to open the widget settings form.
-    $this->drupalPostForm(NULL, [], $field_name . "_settings_edit");
+    $this->submitForm([], $field_name . "_settings_edit");
     $xpathIncr = "//select[starts-with(@id, \"edit-fields-$field_name-settings-edit-form-settings-increment\")]";
     $this->assertSession()->elementNotExists('xpath', $xpathIncr);
 
@@ -453,7 +453,7 @@ class DateTimeFieldTest extends DateTestBase {
     $this->drupalGet($fieldEditUrl);
 
     // Click on the widget settings button to open the widget settings form.
-    $this->drupalPostForm(NULL, [], $field_name . "_settings_edit");
+    $this->submitForm([], $field_name . "_settings_edit");
     $this->assertSession()->elementExists('xpath', $xpathIncr);
 
     // Display creation form.
@@ -496,7 +496,7 @@ class DateTimeFieldTest extends DateTestBase {
       $edit["{$field_name}[0][value][$part]"] = $value;
     }
 
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertText('entity_test ' . $id . ' has been created.');
@@ -536,7 +536,7 @@ class DateTimeFieldTest extends DateTestBase {
       $edit["{$field_name}[0][value][$part]"] = $value;
     }
 
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertText('entity_test ' . $id . ' has been created.');
@@ -573,7 +573,7 @@ class DateTimeFieldTest extends DateTestBase {
         $edit["{$field_name}[0][value][$part]"] = $value;
       }
 
-      $this->drupalPostForm(NULL, $edit, 'Save');
+      $this->submitForm($edit, 'Save');
       $this->assertSession()->statusCodeEquals(200);
       foreach ($expected as $expected_text) {
         $this->assertText($expected_text);
@@ -589,7 +589,7 @@ class DateTimeFieldTest extends DateTestBase {
       $edit["{$field_name}[0][value][$part]"] = $value;
     }
 
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
@@ -604,7 +604,7 @@ class DateTimeFieldTest extends DateTestBase {
       $edit["{$field_name}[0][value][$part]"] = $value;
     }
 
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-minute", '0')->isSelected());
   }
@@ -711,10 +711,7 @@ class DateTimeFieldTest extends DateTestBase {
       // Check if default_date has been stored successfully.
       $config_entity = $this->config('field.field.node.date_content.' . $field_name)
         ->get();
-      $this->assertEqual($config_entity['default_value'][0], [
-        'default_date_type' => 'now',
-        'default_date' => 'now',
-      ], 'Default value has been stored successfully');
+      $this->assertEqual(['default_date_type' => 'now', 'default_date' => 'now'], $config_entity['default_value'][0], 'Default value has been stored successfully');
 
       // Clear field cache in order to avoid stale cache values.
       \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
@@ -722,8 +719,7 @@ class DateTimeFieldTest extends DateTestBase {
       // Create a new node to check that datetime field default value is today.
       $new_node = Node::create(['type' => 'date_content']);
       $expected_date = new DrupalDateTime('now', date_default_timezone_get());
-      $this->assertEqual($new_node->get($field_name)
-        ->offsetGet(0)->value, $expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT));
+      $this->assertEqual($expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT), $new_node->get($field_name)->offsetGet(0)->value);
 
       // Set an invalid relative default_value to test validation.
       $field_edit = [
@@ -750,10 +746,7 @@ class DateTimeFieldTest extends DateTestBase {
       // Check if default_date has been stored successfully.
       $config_entity = $this->config('field.field.node.date_content.' . $field_name)
         ->get();
-      $this->assertEqual($config_entity['default_value'][0], [
-        'default_date_type' => 'relative',
-        'default_date' => '+90 days',
-      ], 'Default value has been stored successfully');
+      $this->assertEqual(['default_date_type' => 'relative', 'default_date' => '+90 days'], $config_entity['default_value'][0], 'Default value has been stored successfully');
 
       // Clear field cache in order to avoid stale cache values.
       \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
@@ -762,8 +755,7 @@ class DateTimeFieldTest extends DateTestBase {
       // days.
       $new_node = Node::create(['type' => 'date_content']);
       $expected_date = new DrupalDateTime('+90 days', date_default_timezone_get());
-      $this->assertEqual($new_node->get($field_name)
-        ->offsetGet(0)->value, $expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT));
+      $this->assertEqual($expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT), $new_node->get($field_name)->offsetGet(0)->value);
 
       // Remove default value.
       $field_edit = [
@@ -812,68 +804,75 @@ class DateTimeFieldTest extends DateTestBase {
       "{$field_name}[0][value][date]" => $date_value,
       "{$field_name}[0][value][time]" => '12:00:00',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
-    $this->assertText('date is invalid', 'Empty date value has been caught.');
+    $this->submitForm($edit, 'Save');
+    $this->assertText('date is invalid');
 
+    // Invalid year value.
     $date_value = 'aaaa-12-01';
     $edit = [
       "{$field_name}[0][value][date]" => $date_value,
       "{$field_name}[0][value][time]" => '00:00:00',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
-    $this->assertText('date is invalid', new FormattableMarkup('Invalid year value %date has been caught.', ['%date' => $date_value]));
+    $this->submitForm($edit, 'Save');
+    $this->assertText('date is invalid');
 
+    // Invalid month value.
     $date_value = '2012-75-01';
     $edit = [
       "{$field_name}[0][value][date]" => $date_value,
       "{$field_name}[0][value][time]" => '00:00:00',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
-    $this->assertText('date is invalid', new FormattableMarkup('Invalid month value %date has been caught.', ['%date' => $date_value]));
+    $this->submitForm($edit, 'Save');
+    $this->assertText('date is invalid');
 
+    // Invalid day value.
     $date_value = '2012-12-99';
     $edit = [
       "{$field_name}[0][value][date]" => $date_value,
       "{$field_name}[0][value][time]" => '00:00:00',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
-    $this->assertText('date is invalid', new FormattableMarkup('Invalid day value %date has been caught.', ['%date' => $date_value]));
+    $this->submitForm($edit, 'Save');
+    $this->assertText('date is invalid');
 
+    // Invalid time value.
     $date_value = '2012-12-01';
     $time_value = '';
     $edit = [
       "{$field_name}[0][value][date]" => $date_value,
       "{$field_name}[0][value][time]" => $time_value,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
-    $this->assertText('date is invalid', 'Empty time value has been caught.');
+    $this->submitForm($edit, 'Save');
+    $this->assertText('date is invalid');
 
+    // Invalid hour value.
     $date_value = '2012-12-01';
     $time_value = '49:00:00';
     $edit = [
       "{$field_name}[0][value][date]" => $date_value,
       "{$field_name}[0][value][time]" => $time_value,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
-    $this->assertText('date is invalid', new FormattableMarkup('Invalid hour value %time has been caught.', ['%time' => $time_value]));
+    $this->submitForm($edit, 'Save');
+    $this->assertText('date is invalid');
 
+    // Invalid minutes value.
     $date_value = '2012-12-01';
     $time_value = '12:99:00';
     $edit = [
       "{$field_name}[0][value][date]" => $date_value,
       "{$field_name}[0][value][time]" => $time_value,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
-    $this->assertText('date is invalid', new FormattableMarkup('Invalid minute value %time has been caught.', ['%time' => $time_value]));
+    $this->submitForm($edit, 'Save');
+    $this->assertText('date is invalid');
 
+    // Invalid seconds value.
     $date_value = '2012-12-01';
     $time_value = '12:15:99';
     $edit = [
       "{$field_name}[0][value][date]" => $date_value,
       "{$field_name}[0][value][time]" => $time_value,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
-    $this->assertText('date is invalid', new FormattableMarkup('Invalid second value %time has been caught.', ['%time' => $time_value]));
+    $this->submitForm($edit, 'Save');
+    $this->assertText('date is invalid');
   }
 
   /**

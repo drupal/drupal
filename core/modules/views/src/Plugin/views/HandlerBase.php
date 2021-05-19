@@ -24,7 +24,7 @@ use Drupal\views\ViewsData;
 abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
 
   /**
-   * Where the $query object will reside:
+   * Where the $query object will reside.
    *
    * @var \Drupal\views\Plugin\views\query\QueryPluginBase
    */
@@ -401,17 +401,17 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
   public function exposedInfo() {}
 
   /**
-   * Render our chunk of the exposed handler form when selecting
+   * Render our chunk of the exposed handler form when selecting.
    */
   public function buildExposedForm(&$form, FormStateInterface $form_state) {}
 
   /**
-   * Validate the exposed handler form
+   * Validate the exposed handler form.
    */
   public function validateExposed(&$form, FormStateInterface $form_state) {}
 
   /**
-   * Submit the exposed handler form
+   * Submit the exposed handler form.
    */
   public function submitExposed(&$form, FormStateInterface $form_state) {}
 
@@ -838,7 +838,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
   }
 
   /**
-   * Calculates options stored on the handler
+   * Calculates options stored on the handler.
    *
    * @param array $options
    *   The options stored in the handler

@@ -48,7 +48,7 @@ class VocabularyTranslationTest extends TaxonomyTestBase {
     $edit['langcode'] = 'en';
     $edit['vid'] = $vid;
     $edit['default_language[content_translation]'] = TRUE;
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
 
     // Check if content translation is enabled on the edit page.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $vid);

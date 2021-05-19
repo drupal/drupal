@@ -73,8 +73,8 @@ class LayoutBuilderNestedFormUiTest extends WebDriverTestBase {
     // From the manage display page, enable Layout Builder.
     $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
     $this->drupalGet("$field_ui_prefix/display/default");
-    $this->drupalPostForm(NULL, ['layout[enabled]' => TRUE], 'Save');
-    $this->drupalPostForm(NULL, ['layout[allow_custom]' => TRUE], 'Save');
+    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
+    $this->submitForm(['layout[allow_custom]' => TRUE], 'Save');
 
     // Save the entity view display so that it can be reverted to later.
     /** @var \Drupal\Core\Config\StorageInterface $active_config_storage */
@@ -107,8 +107,8 @@ class LayoutBuilderNestedFormUiTest extends WebDriverTestBase {
     // From the manage display page, enable Layout Builder.
     $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
     $this->drupalGet("$field_ui_prefix/display/default");
-    $this->drupalPostForm(NULL, ['layout[enabled]' => TRUE], 'Save');
-    $this->drupalPostForm(NULL, ['layout[allow_custom]' => TRUE], 'Save');
+    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
+    $this->submitForm(['layout[allow_custom]' => TRUE], 'Save');
 
     $expected_save_message = 'The layout override has been saved.';
     $nid = 1;

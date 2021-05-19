@@ -86,7 +86,7 @@ class ConfigDiffTest extends KernelTestBase {
     $diff = \Drupal::service('config.manager')->diff($active, $sync, $config_name, $config_name);
     // Prove the fields match.
     $edits = $diff->getEdits();
-    $this->assertEqual($edits[0]->type, 'copy', 'The first item in the diff is a copy.');
+    $this->assertEqual('copy', $edits[0]->type, 'The first item in the diff is a copy.');
     $this->assertCount(1, $edits, 'There is one item in the diff');
 
     // Rename the entity.
@@ -101,7 +101,7 @@ class ConfigDiffTest extends KernelTestBase {
       ['id: ' . $new_test_entity_id],
       ['id: ' . $test_entity_id]);
     $this->assertYamlEdit($edits, 'label', 'copy');
-    $this->assertEqual($edits[2]->type, 'copy', 'The third item in the diff is a copy.');
+    $this->assertEqual('copy', $edits[2]->type, 'The third item in the diff is a copy.');
     $this->assertCount(3, $edits, 'There are three items in the diff.');
   }
 
@@ -127,7 +127,7 @@ class ConfigDiffTest extends KernelTestBase {
     // Test the fields match in the default collection diff.
     $diff = \Drupal::service('config.manager')->diff($active, $sync, $config_name);
     $edits = $diff->getEdits();
-    $this->assertEqual($edits[0]->type, 'copy', 'The first item in the diff is a copy.');
+    $this->assertEqual('copy', $edits[0]->type, 'The first item in the diff is a copy.');
     $this->assertCount(1, $edits, 'There is one item in the diff');
 
     // Test that the differences are detected when diffing the collection.
@@ -163,14 +163,14 @@ class ConfigDiffTest extends KernelTestBase {
           if (strpos($item, $field . ':') === 0) {
             $match = TRUE;
             // Assert that the edit is of the type specified.
-            $this->assertEqual($edit->type, $type, "The $field item in the diff is a $type");
+            $this->assertEqual($type, $edit->type, "The {$field} item in the diff is a {$type}");
             // If an original value was given, assert that it matches.
             if (isset($orig)) {
-              $this->assertIdentical($edit->orig, $orig, "The original value for key '$field' is correct.");
+              $this->assertSame($orig, $edit->orig, "The original value for key '{$field}' is correct.");
             }
             // If a closing value was given, assert that it matches.
             if (isset($closing)) {
-              $this->assertIdentical($edit->closing, $closing, "The closing value for key '$field' is correct.");
+              $this->assertSame($closing, $edit->closing, "The closing value for key '{$field}' is correct.");
             }
             // Break out of the search entirely.
             break 2;

@@ -29,7 +29,7 @@ class CommentEditTest extends CommentBrowserTestBase {
     $edit = [
       'comment_body[0][value]' => $this->randomMachineName(),
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $this->drupalGet('admin/content/comment');
     $this->assertText($this->adminUser->label());
   }

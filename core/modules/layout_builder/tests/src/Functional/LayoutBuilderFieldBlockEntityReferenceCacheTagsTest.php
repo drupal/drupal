@@ -130,7 +130,7 @@ class LayoutBuilderFieldBlockEntityReferenceCacheTagsTest extends BrowserTestBas
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', $hit_or_miss);
 
     if ($hit_or_miss === 'HIT' && is_array($tags)) {
-      $cache_tags = explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Tags'));
+      $cache_tags = explode(' ', $this->getSession()->getResponseHeader('X-Drupal-Cache-Tags'));
       $tags = array_unique($tags);
       $this->assertEmpty(array_diff($tags, $cache_tags), 'Page cache tags contains all expected tags.');
     }

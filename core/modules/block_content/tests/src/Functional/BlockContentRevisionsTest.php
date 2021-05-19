@@ -76,9 +76,7 @@ class BlockContentRevisionsTest extends BlockContentTestBase {
         ->getStorage('block_content')
         ->loadRevision($revision_id);
       // Verify revision log is the same.
-      $this->assertEqual($loaded->getRevisionLogMessage(), $logs[$delta], new FormattableMarkup('Correct log message found for revision @revision', [
-        '@revision' => $loaded->getRevisionId(),
-      ]));
+      $this->assertEqual($logs[$delta], $loaded->getRevisionLogMessage(), new FormattableMarkup('Correct log message found for revision @revision', ['@revision' => $loaded->getRevisionId()]));
       if ($delta > 0) {
         $this->assertInstanceOf(UserInterface::class, $loaded->getRevisionUser());
         $this->assertIsNumeric($loaded->getRevisionUserId());
@@ -97,13 +95,16 @@ class BlockContentRevisionsTest extends BlockContentTestBase {
     $loaded->body = $this->randomMachineName(8);
     $loaded->save();
 
+    // Confirm that revision body text is not present on default version of
+    // block.
     $this->drupalGet('block/' . $loaded->id());
-    $this->assertNoText($loaded->body->value, 'Revision body text is not present on default version of block.');
+    $this->assertNoText($loaded->body->value);
 
     // Verify that the non-default revision id is greater than the default
     // revision id.
     $default_revision = BlockContent::load($loaded->id());
-    $this->assertTrue($loaded->getRevisionId() > $default_revision->getRevisionId(), 'Revision id is greater than default revision id.');
+    // Verify that the revision ID is greater than the default revision ID.
+    $this->assertGreaterThan($default_revision->getRevisionId(), $loaded->getRevisionId());
   }
 
 }

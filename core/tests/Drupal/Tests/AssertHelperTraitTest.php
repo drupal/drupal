@@ -12,12 +12,18 @@ use Drupal\Core\Render\Markup;
  */
 class AssertHelperTraitTest extends UnitTestCase {
 
+  public function testTraitDeprecation(): void {
+    $this->expectDeprecation('Drupal\Tests\AssertHelperTrait is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3123638');
+    require_once __DIR__ . '/../../fixtures/AssertHelperTestClass.php';
+    $class = new AssertHelperTestClass();
+  }
+
   /**
    * @covers ::castSafeStrings
    * @dataProvider providerCastSafeStrings
    */
   public function testCastSafeStrings($expected, $value) {
-    $this->expectDeprecation('AssertHelperTrait::castSafeStrings() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. There is no replacement; assertEquals() will automatically cast MarkupInterface to strings when needed. See https://www.drupal.org/node/3123638');
+    $this->expectDeprecation('AssertHelperTrait::castSafeStrings() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no replacement; assertEquals() will automatically cast MarkupInterface to strings when needed. See https://www.drupal.org/node/3123638');
     $class = new AssertHelperTestClass();
     $this->assertSame($expected, $class->testMethod($value));
   }
@@ -31,15 +37,6 @@ class AssertHelperTraitTest extends UnitTestCase {
       [['test safe string', 'test safe string'], [$safe_string, $safe_string]],
       [['test safe string', 'mixed array', 'test safe string'], [$safe_string, 'mixed array', $safe_string]],
     ];
-  }
-
-}
-
-class AssertHelperTestClass {
-  use AssertHelperTrait;
-
-  public function testMethod($value) {
-    return $this->castSafeStrings($value);
   }
 
 }

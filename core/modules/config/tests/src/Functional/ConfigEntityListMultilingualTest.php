@@ -57,7 +57,7 @@ class ConfigEntityListMultilingualTest extends BrowserTestBase {
       'id' => 'antilop',
       'langcode' => 'hu',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     // Ensure that operations for editing the Hungarian entity appear in English.
     $this->assertSession()->linkByHrefExists('admin/structure/config_test/manage/antilop');
 

@@ -6,7 +6,6 @@
 .contact-form {
   max-width: 600px;
   margin: auto auto 1rem;
-  padding: 0 1rem;
 }
 
 @media screen and (min-width: 30rem) { /* 480px */

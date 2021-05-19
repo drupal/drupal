@@ -3,10 +3,10 @@
 namespace Drupal\Tests\options\Functional;
 
 /**
-* Tests the options allowed values api.
+ * Tests the options allowed values api.
  *
  * @group options
-*/
+ */
 class OptionsDynamicValuesApiTest extends OptionsDynamicValuesTestBase {
 
   /**

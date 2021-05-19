@@ -38,23 +38,23 @@ class CredentialFormTest extends MigrateUpgradeTestBase {
     $this->drupalGet('/upgrade');
     $session->responseContains("Upgrade a site by importing its files and the data from its database into a clean and empty new install of Drupal $this->destinationSiteVersion.");
 
-    $this->drupalPostForm(NULL, [], 'Continue');
+    $this->submitForm([], 'Continue');
     $session->pageTextContains('Provide credentials for the database of the Drupal site you want to upgrade.');
     $session->fieldExists('mysql[host]');
 
     // Ensure submitting the form with invalid database credentials gives us a
     // nice warning.
-    $this->drupalPostForm(NULL, [$edit['driver'] . '[database]' => 'wrong'] + $edits, 'Review upgrade');
+    $this->submitForm([$edit['driver'] . '[database]' => 'wrong'] + $edits, 'Review upgrade');
     $session->pageTextContains('Resolve all issues below to continue the upgrade.');
 
     // Resubmit with correct credentials.
-    $this->drupalPostForm(NULL, $edits, 'Review upgrade');
-    $this->drupalPostForm(NULL, [], 'I acknowledge I may lose data. Continue anyway.');
+    $this->submitForm($edits, 'Review upgrade');
+    $this->submitForm([], 'I acknowledge I may lose data. Continue anyway.');
     $session->statusCodeEquals(200);
 
     // Restart the upgrade and test the file source paths.
     $this->drupalGet('/upgrade');
-    $this->drupalPostForm(NULL, [], 'Continue');
+    $this->submitForm([], 'Continue');
     if ($version == 6) {
       $paths['d6_source_base_path'] = DRUPAL_ROOT . '/wrong-path';
     }
@@ -62,7 +62,7 @@ class CredentialFormTest extends MigrateUpgradeTestBase {
       $paths['source_base_path'] = 'https://example.com/wrong-path';
       $paths['source_private_file_path'] = DRUPAL_ROOT . '/wrong-path';
     }
-    $this->drupalPostForm(NULL, $paths + $edits, 'Review upgrade');
+    $this->submitForm($paths + $edits, 'Review upgrade');
     if ($version == 6) {
       $session->responseContains('Failed to read from Document root for files.');
     }

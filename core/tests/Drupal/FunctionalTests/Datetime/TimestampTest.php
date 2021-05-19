@@ -115,8 +115,7 @@ class TimestampTest extends BrowserTestBase {
     $this->drupalGet('entity_test/add');
 
     // Make sure the "datetime_timestamp" widget is on the page.
-    $fields = $this->xpath('//div[contains(@class, "field--widget-datetime-timestamp") and @id="edit-field-timestamp-wrapper"]');
-    $this->assertCount(1, $fields);
+    $this->assertSession()->elementsCount('xpath', '//div[contains(@class, "field--widget-datetime-timestamp") and @id="edit-field-timestamp-wrapper"]', 1);
 
     // Look for the widget elements and make sure they are empty.
     $this->assertSession()->fieldExists('field_timestamp[0][value][date]');
@@ -132,7 +131,7 @@ class TimestampTest extends BrowserTestBase {
       'field_timestamp[0][value][date]' => $date->format($date_format),
       'field_timestamp[0][value][time]' => $date->format($time_format),
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
 
     // Make sure the submitted date is set as the default in the widget.
     $this->assertSession()->fieldExists('field_timestamp[0][value][date]');

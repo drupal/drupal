@@ -12,7 +12,7 @@ use Drupal\Tests\BrowserTestBase;
 class UserCreateFailMailTest extends BrowserTestBase {
 
   /**
-   * Modules to enable
+   * Modules to enable.
    *
    * @var array
    */

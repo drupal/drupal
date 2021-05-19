@@ -179,3 +179,21 @@ function system_post_update_delete_rss_settings() {
     ->clear('langcode')
     ->save();
 }
+
+/**
+ * Drop the 'all' index on the 'key_value_expire' table.
+ */
+function system_post_update_remove_key_value_expire_all_index() {
+  $schema = \Drupal::database()->schema();
+  if ($schema->tableExists('key_value_expire')) {
+    $schema->dropIndex('key_value_expire', 'all');
+  }
+}
+
+/**
+ * Add new security advisory retrieval settings.
+ */
+function system_post_update_service_advisory_settings() {
+  $config = \Drupal::configFactory()->getEditable('system.advisories');
+  $config->set('interval_hours', 6)->set('enabled', TRUE)->save();
+}

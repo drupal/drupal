@@ -4,6 +4,8 @@ namespace Drupal\Tests\migrate_drupal_ui\Functional\d7;
 
 use Drupal\Tests\migrate_drupal_ui\Functional\MultilingualReviewPageTestBase;
 
+// cspell:ignore Multiupload Imagefield
+
 /**
  * Tests migrate upgrade review page for Drupal 7.
  *
@@ -92,12 +94,16 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Forum',
       'Help',
       'Image',
+      'Internationalization',
       'Link',
       'List',
       'Locale',
       'Menu',
       'Menu translation',
+      'Multiupload Filefield Widget',
+      'Multiupload Imagefield Widget',
       'Node',
+      'Node Reference',
       'Number',
       'OpenID',
       'Options',
@@ -113,11 +119,14 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Search embedded form',
       'Shortcut',
       'Statistics',
+      'String translation',
       'Stylizer',
       'Synchronize translations',
       'Syslog',
       'System',
+      'Taxonomy translation',
       'Taxonomy',
+      'Telephone',
       'Term Depth access',
       'Test search node tags',
       'Test search type',
@@ -129,6 +138,7 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Trigger',
       'Update manager',
       'User',
+      'User Reference',
       'Views content panes',
       'Views UI',
     ];
@@ -152,14 +162,13 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       // Flexslider_picture is a sub module of Picture module. Only the
       // styles from picture are migrated.
       'FlexSlider Picture',
-      'Internationalization',
       'Multilingual content',
       'Multilingual forum',
       'Multilingual select',
       'Path translation',
       'Picture',
-      'String translation',
-      'Taxonomy translation',
+      'References',
+      'References UUID',
       'Translation redirect',
       'Translation sets',
       'User mail translation',

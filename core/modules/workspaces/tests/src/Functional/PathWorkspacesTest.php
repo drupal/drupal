@@ -171,7 +171,7 @@ class PathWorkspacesTest extends BrowserTestBase {
       'status[value]' => TRUE,
       'path[0][alias]' => '/' . $this->randomMachineName(),
     ];
-    $this->drupalPostForm(NULL, $edit_translation, 'Save (this translation)');
+    $this->submitForm($edit_translation, 'Save (this translation)');
     // Confirm that the alias works.
     $this->drupalGet('ro' . $edit_translation['path[0][alias]']);
     $this->assertSession()->pageTextContains($edit_translation['body[0][value]']);

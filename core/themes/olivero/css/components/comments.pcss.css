@@ -10,13 +10,11 @@
   --comment-indentation--md: var(--sp4);
 }
 
-.comments {
-  & > .comment {
-    border-block-start: 2px solid var(--color--gray-80);
+.comment--level-1 {
+  border-block-start: 2px solid var(--color--gray-80);
 
-    & ~ .comment {
-      margin-block-start: var(--sp2);
-    }
+  & ~ .comment--level-1 {
+    margin-block-start: var(--sp2);
   }
 }
 
@@ -61,11 +59,7 @@
 }
 
 .add-comment__form {
-  padding-inline-start: var(--sp3);
-
-  @media (--grid-md) {
-    padding-inline-start: 0;
-  }
+  padding-inline-start: 0;
 }
 
 .comment {
@@ -73,53 +67,46 @@
   padding-block-start: var(--sp2);
   padding-inline-start: var(--sp3);
 
-  & .text-content {
-    padding-block-end: 0;
-    font-size: 16px;
-
-    & blockquote {
-      font-size: 21px;
-      line-height: var(--sp2);
-    }
-  }
-
-  & .links {
-    margin-block: var(--sp) 0;
-    margin-inline-start: 0;
-    margin-inline-end: 0;
-    padding-block: 0;
-    padding-inline-start: 0;
-    padding-inline-end: 0;
-
-    & a {
-      text-decoration: none;
-      color: var(--color--blue-20);
-      font-size: 14px;
-      font-weight: bold;
-      line-height: var(--sp);
-
-      &:hover,
-      &:focus {
-        text-decoration: underline;
-      }
-    }
-
-    & li {
-      display: inline-block;
-      margin-inline-end: var(--sp);
-    }
-  }
-
   @media (--grid-md) {
     padding-inline-start: 0;
   }
 }
 
-.add-comment__picture-wrapper.comment-picture {
+.comment__text-content {
+  font-size: 16px;
+
+  & blockquote {
+    font-size: 21px;
+    line-height: var(--sp2);
+  }
+
+  /* Override for .field:not(:last-child) */
+  &:not(:last-child) {
+    margin-block-end: 0;
+  }
+}
+
+.comment__links {
+  margin-block: var(--sp) 0;
+}
+
+.comment__links-link {
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: var(--sp);
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.add-comment__picture-wrapper {
   inset-block-start: calc(var(--line-height-base) + var(--sp0-5));
 }
 
-.comment-picture__image {
+.add-comment__picture,
+.comment__picture {
   position: absolute;
   inset-inline-start: 0;
   overflow: hidden;
@@ -163,7 +150,7 @@
   }
 }
 
-.indented .comment-picture__image {
+.indented .comment__picture {
   @media (--grid-md) {
     inset-inline-start: calc(-1 * var(--sp4));
     width: var(--sp2);

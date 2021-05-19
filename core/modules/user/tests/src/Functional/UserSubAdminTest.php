@@ -55,7 +55,7 @@ class UserSubAdminTest extends BrowserTestBase {
     $this->assertSession()->responseContains('Disable the account and keep its content. This action cannot be undone.');
 
     // Test that cancel confirmation gives an admin style message.
-    $this->drupalPostForm(NULL, [], 'Cancel account');
+    $this->submitForm([], 'Cancel account');
     $this->assertSession()->pageTextContains($cancel_user->getAccountName() . ' has been disabled.');
 
     // Repeat with permission to select account cancellation method.

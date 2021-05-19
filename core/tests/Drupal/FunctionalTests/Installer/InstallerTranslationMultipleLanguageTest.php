@@ -114,14 +114,14 @@ ENDPO;
     if ($this->langcode == 'de') {
       // Active configuration should be in German and no German override should
       // exist.
-      $this->assertEqual($config->get('anonymous'), 'Anonymous de');
-      $this->assertEqual($config->get('langcode'), 'de');
+      $this->assertEqual('Anonymous de', $config->get('anonymous'));
+      $this->assertEqual('de', $config->get('langcode'));
       $this->assertTrue($override_de->isNew());
 
       if ($this->profile == 'testing_multilingual_with_english') {
         // English is already added in this profile. Should make the override
         // available.
-        $this->assertEqual($override_en->get('anonymous'), 'Anonymous');
+        $this->assertEqual('Anonymous', $override_en->get('anonymous'));
       }
       else {
         // English is not yet available.
@@ -131,7 +131,7 @@ ENDPO;
         $edit = ['predefined_langcode' => 'en'];
         $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
         $override_en = $language_manager->getLanguageConfigOverride('en', 'user.settings');
-        $this->assertEqual($override_en->get('anonymous'), 'Anonymous');
+        $this->assertEqual('Anonymous', $override_en->get('anonymous'));
       }
 
       // Activate a module, to make sure that config is not overridden by module
@@ -147,16 +147,16 @@ ENDPO;
     }
     else {
       // Active configuration should be English.
-      $this->assertEqual($config->get('anonymous'), 'Anonymous');
-      $this->assertEqual($config->get('langcode'), 'en');
+      $this->assertEqual('Anonymous', $config->get('anonymous'));
+      $this->assertEqual('en', $config->get('langcode'));
       // There should not be an English override.
       $this->assertTrue($override_en->isNew());
       // German should be an override.
-      $this->assertEqual($override_de->get('anonymous'), 'Anonymous de');
+      $this->assertEqual('Anonymous de', $override_de->get('anonymous'));
     }
 
     // Spanish is always an override (never used as installation language).
-    $this->assertEqual($override_es->get('anonymous'), 'Anonymous es');
+    $this->assertEqual('Anonymous es', $override_es->get('anonymous'));
 
   }
 

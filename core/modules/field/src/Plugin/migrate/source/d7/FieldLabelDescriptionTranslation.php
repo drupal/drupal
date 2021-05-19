@@ -5,7 +5,11 @@ namespace Drupal\field\Plugin\migrate\source\d7;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
- * Gets field label and description translations.
+ * Drupal 7 i18n field label and description source from database.
+ *
+ * For available configuration keys, refer to the parent classes:
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  *
  * @MigrateSource(
  *   id = "d7_field_instance_label_description_translation",
@@ -43,9 +47,9 @@ class FieldLabelDescriptionTranslation extends DrupalSqlBase {
       ->condition('textgroup', 'field')
       ->condition('objectid', '#allowed_values', '!=');
     $query->condition($condition);
-    $query->innerJoin('locales_target', 'lt', 'lt.lid = i18n.lid');
+    $query->innerJoin('locales_target', 'lt', '[lt].[lid] = [i18n].[lid]');
 
-    $query->leftjoin('field_config_instance', 'fci', 'fci.bundle = i18n.objectid AND fci.field_name = i18n.type');
+    $query->leftjoin('field_config_instance', 'fci', '[fci].[bundle] = [i18n].[objectid] AND [fci].[field_name] = [i18n].[type]');
     return $query;
   }
 

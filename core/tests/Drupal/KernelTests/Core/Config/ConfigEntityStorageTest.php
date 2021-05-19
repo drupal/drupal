@@ -48,7 +48,7 @@ class ConfigEntityStorageTest extends KernelTestBase {
 
     // Ensure that the config entity was not corrupted.
     $entity = $storage->loadUnchanged($entity->id());
-    $this->assertIdentical($entity->toArray(), $original_properties);
+    $this->assertSame($original_properties, $entity->toArray());
   }
 
   /**

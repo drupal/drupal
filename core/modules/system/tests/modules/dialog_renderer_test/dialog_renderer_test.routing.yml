@@ -13,3 +13,19 @@ dialog_renderer_test.modal_content:
     _title: 'Thing 1'
   requirements:
     _access: 'TRUE'
+
+dialog_renderer_test.modal_content_link:
+  path: '/dialog_renderer-content-link'
+  defaults:
+    _controller: '\Drupal\dialog_renderer_test\Controller\TestController::modalContentLink'
+    _title: 'Thing 2'
+  requirements:
+    _access: 'TRUE'
+
+dialog_renderer_test.modal_content_input:
+  path: '/dialog_renderer-content-input'
+  defaults:
+    _controller: '\Drupal\dialog_renderer_test\Controller\TestController::modalContentInput'
+    _title: 'Thing 3'
+  requirements:
+    _access: 'TRUE'

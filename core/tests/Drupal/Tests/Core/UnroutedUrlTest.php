@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 class UnroutedUrlTest extends UnitTestCase {
 
   /**
-   * The URL assembler
+   * The URL assembler.
    *
    * @var \Drupal\Core\Utility\UnroutedUrlAssemblerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
@@ -124,7 +124,6 @@ class UnroutedUrlTest extends UnitTestCase {
       // Disallowed characters in the authority (host name) that are valid
       // elsewhere in the path.
       ['base://(:;2&+h^'],
-      ['base://AKI@&hO@'],
     ];
   }
 

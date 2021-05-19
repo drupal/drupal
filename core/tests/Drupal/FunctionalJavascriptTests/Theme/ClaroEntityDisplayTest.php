@@ -46,7 +46,7 @@ class ClaroEntityDisplayTest extends EntityDisplayTest {
 
     $this->drupalGet('entity_test/structure/entity_test/form-display');
     $this->assertTrue($this->assertSession()->optionExists('fields[field_test_text][region]', 'content')->isSelected());
-    $this->getSession()->getPage()->clickLink('Show row weights');
+    $this->getSession()->getPage()->pressButton('Show row weights');
     $this->assertSession()->waitForElementVisible('css', '[name="fields[field_test_text][region]"]');
     $this->getSession()->getPage()->selectFieldOption('fields[field_test_text][region]', 'hidden');
     $this->assertSession()->assertWaitOnAjaxRequest();
@@ -73,7 +73,7 @@ class ClaroEntityDisplayTest extends EntityDisplayTest {
 
     $this->drupalGet('entity_test/structure/entity_test/display');
     $this->assertSession()->elementExists('css', '.region-content-message.region-empty');
-    $this->getSession()->getPage()->clickLink('Show row weights');
+    $this->getSession()->getPage()->pressButton('Show row weights');
     $this->assertSession()->waitForElementVisible('css', '[name="fields[field_test_text][region]"]');
     $this->assertTrue($this->assertSession()->optionExists('fields[field_test_text][region]', 'hidden')->isSelected());
 

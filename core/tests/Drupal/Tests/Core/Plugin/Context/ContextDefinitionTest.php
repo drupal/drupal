@@ -158,7 +158,7 @@ class ContextDefinitionTest extends UnitTestCase {
   }
 
   /**
-   * Data provider for testGetConstraint
+   * Data provider for testGetConstraint.
    */
   public function providerGetConstraint() {
     return [

@@ -83,7 +83,7 @@ class EntityCrudHookTest extends EntityKernelTestBase {
     // Sort the positions and ensure they remain in the same order.
     $sorted = $positions;
     sort($sorted);
-    $this->assertTrue($sorted == $positions, 'The hook messages appear in the correct order.');
+    $this->assertSame($positions, $sorted, 'The hook messages appear in the correct order.');
   }
 
   /**
@@ -554,7 +554,10 @@ class EntityCrudHookTest extends EntityKernelTestBase {
     }
 
     // Check that the block does not exist in the database.
-    $ids = \Drupal::entityQuery('entity_test')->condition('name', 'fail_insert')->execute();
+    $ids = \Drupal::entityQuery('entity_test')
+      ->accessCheck(FALSE)
+      ->condition('name', 'fail_insert')
+      ->execute();
     $this->assertEmpty($ids);
   }
 

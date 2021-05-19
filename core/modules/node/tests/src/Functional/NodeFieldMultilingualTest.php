@@ -93,7 +93,7 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
       $title_key => $this->randomMachineName(8),
       'langcode[0][value]' => $langcode,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $node = $this->drupalGetNodeByTitle($edit[$title_key], TRUE);
     $this->assertNotEmpty($node, 'Node found in database.');
     $this->assertSame($langcode, $node->language()->getId());
@@ -136,11 +136,7 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
 
     // Check if node body is showed.
     $this->drupalGet('node/' . $node->id());
-    $body = $this->xpath('//article[contains(concat(" ", normalize-space(@class), " "), :node-class)]//div[contains(concat(" ", normalize-space(@class), " "), :content-class)]/descendant::p', [
-      ':node-class' => ' node ',
-      ':content-class' => 'node__content',
-    ]);
-    $this->assertEqual($body[0]->getText(), $node->body->value, 'Node body found.');
+    $this->assertSession()->elementTextEquals('xpath', "//article[contains(concat(' ', normalize-space(@class), ' '), ' node ')]//div[contains(concat(' ', normalize-space(@class), ' '), 'node__content')]/descendant::p", $node->body->value);
   }
 
 }

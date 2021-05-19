@@ -9,7 +9,7 @@ namespace Drupal\views\Plugin\views\display;
  *
  * @ViewsDisplay(
  *   id = "default",
- *   title = @Translation("Master"),
+ *   title = @Translation("Default"),
  *   help = @Translation("Default settings for this view."),
  *   theme = "views_view",
  *   no_ui = TRUE
@@ -25,8 +25,7 @@ class DefaultDisplay extends DisplayPluginBase {
   protected $usesAttachments = TRUE;
 
   /**
-   * Determine if this display is the 'default' display which contains
-   * fallback settings
+   * Determine if this display is the default which contains fallback settings.
    */
   public function isDefaultDisplay() {
     return TRUE;

@@ -17,10 +17,10 @@ class UpdateTest extends DatabaseTestBase {
       ->fields(['name' => 'Tiffany'])
       ->condition('id', 1)
       ->execute();
-    $this->assertIdentical($num_updated, 1, 'Updated 1 record.');
+    $this->assertSame(1, $num_updated, 'Updated 1 record.');
 
     $saved_name = $this->connection->query('SELECT [name] FROM {test} WHERE [id] = :id', [':id' => 1])->fetchField();
-    $this->assertIdentical($saved_name, 'Tiffany', 'Updated name successfully.');
+    $this->assertSame('Tiffany', $saved_name, 'Updated name successfully.');
   }
 
   /**
@@ -32,7 +32,7 @@ class UpdateTest extends DatabaseTestBase {
       ->fields(['age' => NULL])
       ->condition('name', 'Kermit')
       ->execute();
-    $this->assertIdentical($num_updated, 1, 'Updated 1 record.');
+    $this->assertSame(1, $num_updated, 'Updated 1 record.');
 
     $saved_age = $this->connection->query('SELECT [age] FROM {test_null} WHERE [name] = :name', [':name' => 'Kermit'])->fetchField();
     $this->assertNull($saved_age, 'Updated name successfully.');
@@ -46,10 +46,10 @@ class UpdateTest extends DatabaseTestBase {
       ->fields(['job' => 'Musician'])
       ->condition('job', 'Singer')
       ->execute();
-    $this->assertIdentical($num_updated, 2, 'Updated 2 records.');
+    $this->assertSame(2, $num_updated, 'Updated 2 records.');
 
     $num_matches = $this->connection->query('SELECT COUNT(*) FROM {test} WHERE [job] = :job', [':job' => 'Musician'])->fetchField();
-    $this->assertIdentical($num_matches, '2', 'Updated fields successfully.');
+    $this->assertSame('2', $num_matches, 'Updated fields successfully.');
   }
 
   /**
@@ -60,10 +60,10 @@ class UpdateTest extends DatabaseTestBase {
       ->fields(['job' => 'Musician'])
       ->condition('age', 26, '>')
       ->execute();
-    $this->assertIdentical($num_updated, 2, 'Updated 2 records.');
+    $this->assertSame(2, $num_updated, 'Updated 2 records.');
 
     $num_matches = $this->connection->query('SELECT COUNT(*) FROM {test} WHERE [job] = :job', [':job' => 'Musician'])->fetchField();
-    $this->assertIdentical($num_matches, '2', 'Updated fields successfully.');
+    $this->assertSame('2', $num_matches, 'Updated fields successfully.');
   }
 
   /**
@@ -72,12 +72,12 @@ class UpdateTest extends DatabaseTestBase {
   public function testWhereUpdate() {
     $num_updated = $this->connection->update('test')
       ->fields(['job' => 'Musician'])
-      ->where('age > :age', [':age' => 26])
+      ->where('[age] > :age', [':age' => 26])
       ->execute();
-    $this->assertIdentical($num_updated, 2, 'Updated 2 records.');
+    $this->assertSame(2, $num_updated, 'Updated 2 records.');
 
     $num_matches = $this->connection->query('SELECT COUNT(*) FROM {test} WHERE [job] = :job', [':job' => 'Musician'])->fetchField();
-    $this->assertIdentical($num_matches, '2', 'Updated fields successfully.');
+    $this->assertSame('2', $num_matches, 'Updated fields successfully.');
   }
 
   /**
@@ -86,13 +86,13 @@ class UpdateTest extends DatabaseTestBase {
   public function testWhereAndConditionUpdate() {
     $update = $this->connection->update('test')
       ->fields(['job' => 'Musician'])
-      ->where('age > :age', [':age' => 26])
+      ->where('[age] > :age', [':age' => 26])
       ->condition('name', 'Ringo');
     $num_updated = $update->execute();
-    $this->assertIdentical($num_updated, 1, 'Updated 1 record.');
+    $this->assertSame(1, $num_updated, 'Updated 1 record.');
 
     $num_matches = $this->connection->query('SELECT COUNT(*) FROM {test} WHERE [job] = :job', [':job' => 'Musician'])->fetchField();
-    $this->assertIdentical($num_matches, '1', 'Updated fields successfully.');
+    $this->assertSame('1', $num_matches, 'Updated fields successfully.');
   }
 
   /**
@@ -102,12 +102,12 @@ class UpdateTest extends DatabaseTestBase {
     // Ensure that expressions are handled properly. This should set every
     // record's age to a square of itself.
     $num_rows = $this->connection->update('test')
-      ->expression('age', 'age * age')
+      ->expression('age', '[age] * [age]')
       ->execute();
-    $this->assertIdentical($num_rows, 4, 'Updated 4 records.');
+    $this->assertSame(4, $num_rows, 'Updated 4 records.');
 
     $saved_name = $this->connection->query('SELECT [name] FROM {test} WHERE [age] = :age', [':age' => pow(26, 2)])->fetchField();
-    $this->assertIdentical($saved_name, 'Paul', 'Successfully updated values using an algebraic expression.');
+    $this->assertSame('Paul', $saved_name, 'Successfully updated values using an algebraic expression.');
   }
 
   /**
@@ -124,7 +124,7 @@ class UpdateTest extends DatabaseTestBase {
       ->condition('priority', 1, '<>')
       ->fields(['task' => 'sleep'])
       ->execute();
-    $this->assertIdentical($num_rows, 5, 'Correctly returned 5 affected rows.');
+    $this->assertSame(5, $num_rows, 'Correctly returned 5 affected rows.');
   }
 
   /**
@@ -137,7 +137,7 @@ class UpdateTest extends DatabaseTestBase {
       ])
       ->condition('id', 1)
       ->execute();
-    $this->assertIdentical($num_updated, 1, 'Updated 1 special column record.');
+    $this->assertSame(1, $num_updated, 'Updated 1 special column record.');
 
     $saved_value = $this->connection->query('SELECT [update] FROM {select} WHERE [id] = :id', [':id' => 1])->fetchField();
     $this->assertEquals('New update value', $saved_value);

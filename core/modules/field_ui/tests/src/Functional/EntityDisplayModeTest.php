@@ -68,7 +68,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
       'id' => strtolower($this->randomMachineName()) . '.' . strtolower($this->randomMachineName()),
       'label' => $this->randomString(),
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $this->assertRaw('The machine-readable name must contain only lowercase letters, numbers, and underscores.');
 
     // Test adding a view mode.
@@ -76,7 +76,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
       'id' => strtolower($this->randomMachineName()),
       'label' => $this->randomString(),
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $this->assertRaw(t('Saved the %label view mode.', ['%label' => $edit['label']]));
 
     // Test editing the view mode.
@@ -93,7 +93,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
     // Test deleting the view mode.
     $this->clickLink(t('Delete'));
     $this->assertRaw(t('Are you sure you want to delete the view mode %label?', ['%label' => $edit['label']]));
-    $this->drupalPostForm(NULL, [], 'Delete');
+    $this->submitForm([], 'Delete');
     $this->assertRaw(t('The view mode %label has been deleted.', ['%label' => $edit['label']]));
   }
 
@@ -122,7 +122,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
       'id' => strtolower($this->randomMachineName()) . '.' . strtolower($this->randomMachineName()),
       'label' => $this->randomString(),
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $this->assertRaw('The machine-readable name must contain only lowercase letters, numbers, and underscores.');
 
     // Test adding a form mode.
@@ -130,7 +130,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
       'id' => strtolower($this->randomMachineName()),
       'label' => $this->randomString(),
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $this->assertRaw(t('Saved the %label form mode.', ['%label' => $edit['label']]));
 
     // Test editing the form mode.
@@ -147,7 +147,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
     // Test deleting the form mode.
     $this->clickLink(t('Delete'));
     $this->assertRaw(t('Are you sure you want to delete the form mode %label?', ['%label' => $edit['label']]));
-    $this->drupalPostForm(NULL, [], 'Delete');
+    $this->submitForm([], 'Delete');
     $this->assertRaw(t('The form mode %label has been deleted.', ['%label' => $edit['label']]));
   }
 
@@ -179,9 +179,10 @@ class EntityDisplayModeTest extends BrowserTestBase {
     $start = strpos($page_text, 'view modes');
     $pos = $start;
     $list = ['Full content', 'RSS', 'Search index', 'Search result', 'Teaser'];
+    // Verify that the order of the view modes is correct on the page.
     foreach ($list as $name) {
       $new_pos = strpos($page_text, $name, $start);
-      $this->assertTrue($new_pos > $pos, 'Order of ' . $name . ' is correct on page');
+      $this->assertGreaterThan($pos, $new_pos);
       $pos = $new_pos;
     }
     // Now that we have verified the original display order, we can change the
@@ -202,9 +203,10 @@ class EntityDisplayModeTest extends BrowserTestBase {
     $start = strpos($page_text, 'view modes');
     $pos = $start;
     $list = ['Breezer', 'Full content'];
+    // Verify that the order of the view modes is correct on the page.
     foreach ($list as $name) {
       $new_pos = strpos($page_text, $name, $start);
-      $this->assertTrue($new_pos > $pos, 'Order of ' . $name . ' is correct on page');
+      $this->assertGreaterThan($pos, $new_pos);
       $pos = $new_pos;
     }
   }

@@ -30,15 +30,15 @@ class FilterBooleanWebTest extends UITestBase {
 
     // Check the field widget label. 'title' should be used as a fallback.
     $result = $this->cssSelect('#edit-options-value--wrapper legend span');
-    $this->assertEqual($result[0]->getHtml(), 'Status');
+    $this->assertEqual('Status', $result[0]->getHtml());
 
     // Ensure that the operator and the filter value are displayed using correct
     // layout.
     $this->assertSession()->elementExists('css', '.views-left-30 .form-item-options-operator');
     $this->assertSession()->elementExists('css', '.views-right-70 .form-item-options-value');
 
-    $this->drupalPostForm(NULL, [], 'Expose filter');
-    $this->drupalPostForm(NULL, [], 'Grouped filters');
+    $this->submitForm([], 'Expose filter');
+    $this->submitForm([], 'Grouped filters');
 
     $edit = [];
     $edit['options[group_info][group_items][1][title]'] = 'Published';
@@ -51,16 +51,16 @@ class FilterBooleanWebTest extends UITestBase {
     $edit['options[group_info][group_items][3][operator]'] = '!=';
     $edit['options[group_info][group_items][3][value]'] = 1;
 
-    $this->drupalPostForm(NULL, $edit, 'Apply');
+    $this->submitForm($edit, 'Apply');
 
     $this->drupalGet('admin/structure/views/nojs/handler/test_view/default/filter/status');
 
     $result = $this->xpath('//input[@name="options[group_info][group_items][1][value]"]');
-    $this->assertEqual($result[1]->getAttribute('checked'), 'checked');
+    $this->assertEqual('checked', $result[1]->getAttribute('checked'));
     $result = $this->xpath('//input[@name="options[group_info][group_items][2][value]"]');
-    $this->assertEqual($result[2]->getAttribute('checked'), 'checked');
+    $this->assertEqual('checked', $result[2]->getAttribute('checked'));
     $result = $this->xpath('//input[@name="options[group_info][group_items][3][value]"]');
-    $this->assertEqual($result[1]->getAttribute('checked'), 'checked');
+    $this->assertEqual('checked', $result[1]->getAttribute('checked'));
 
     // Test that there is a remove link for each group.
     $this->assertCount(3, $this->cssSelect('a.views-remove-link'));
@@ -69,7 +69,7 @@ class FilterBooleanWebTest extends UITestBase {
     $edit = [];
     $edit['options[group_info][default_group]'] = 2;
     $edit['options[group_info][group_items][3][remove]'] = 1;
-    $this->drupalPostForm(NULL, $edit, 'Apply');
+    $this->submitForm($edit, 'Apply');
     $this->drupalGet('admin/structure/views/nojs/handler/test_view/default/filter/status');
     $this->assertSession()->fieldValueEquals('options[group_info][default_group]', 2);
     $this->assertSession()->fieldNotExists('options[group_info][group_items][3][remove]');

@@ -8,7 +8,7 @@ use Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 
 /**
- * Tests \Drupal\views\EventSubscriber\ViewsEntitySchemaSubscriber
+ * Tests \Drupal\views\EventSubscriber\ViewsEntitySchemaSubscriber.
  *
  * @group Views
  */
@@ -43,7 +43,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
   /**
    * The event dispatcher.
    *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
    */
   protected $eventDispatcher;
 

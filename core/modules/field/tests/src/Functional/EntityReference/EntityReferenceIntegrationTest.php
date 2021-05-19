@@ -104,7 +104,7 @@ class EntityReferenceIntegrationTest extends BrowserTestBase {
       $this->assertSession()->fieldValueEquals($this->fieldName . '[0][target_id]', $referenced_entities[0]->label() . ' (' . $referenced_entities[0]->id() . ')');
       $this->assertSession()->fieldValueEquals($this->fieldName . '[1][target_id]', $referenced_entities[1]->label() . ' (' . $referenced_entities[1]->id() . ')');
 
-      $this->drupalPostForm(NULL, [], 'Save');
+      $this->submitForm([], 'Save');
       $this->assertFieldValues($entity_name, $referenced_entities);
 
       // Test the 'entity_reference_autocomplete_tags' widget.
@@ -130,7 +130,7 @@ class EntityReferenceIntegrationTest extends BrowserTestBase {
       $this->drupalGet($this->entityType . '/manage/' . $entity->id() . '/edit');
       $this->assertSession()->fieldValueEquals($this->fieldName . '[target_id]', $target_id . ' (' . $referenced_entities[1]->id() . ')');
 
-      $this->drupalPostForm(NULL, [], 'Save');
+      $this->submitForm([], 'Save');
       $this->assertFieldValues($entity_name, $referenced_entities);
 
       // Test all the other widgets supported by the entity reference field.
@@ -199,13 +199,13 @@ class EntityReferenceIntegrationTest extends BrowserTestBase {
 
     $this->assertNotEmpty($entity, new FormattableMarkup('%entity_type: Entity found in the database.', ['%entity_type' => $this->entityType]));
 
-    $this->assertEqual($entity->{$this->fieldName}->target_id, $referenced_entities[0]->id());
-    $this->assertEqual($entity->{$this->fieldName}->entity->id(), $referenced_entities[0]->id());
-    $this->assertEqual($entity->{$this->fieldName}->entity->label(), $referenced_entities[0]->label());
+    $this->assertEqual($referenced_entities[0]->id(), $entity->{$this->fieldName}->target_id);
+    $this->assertEqual($referenced_entities[0]->id(), $entity->{$this->fieldName}->entity->id());
+    $this->assertEqual($referenced_entities[0]->label(), $entity->{$this->fieldName}->entity->label());
 
-    $this->assertEqual($entity->{$this->fieldName}[1]->target_id, $referenced_entities[1]->id());
-    $this->assertEqual($entity->{$this->fieldName}[1]->entity->id(), $referenced_entities[1]->id());
-    $this->assertEqual($entity->{$this->fieldName}[1]->entity->label(), $referenced_entities[1]->label());
+    $this->assertEqual($referenced_entities[1]->id(), $entity->{$this->fieldName}[1]->target_id);
+    $this->assertEqual($referenced_entities[1]->id(), $entity->{$this->fieldName}[1]->entity->id());
+    $this->assertEqual($referenced_entities[1]->label(), $entity->{$this->fieldName}[1]->entity->label());
   }
 
   /**

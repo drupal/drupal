@@ -183,6 +183,11 @@ body.drag {
   text-align: left;
 }
 
+/* Hide nested weight toggles as they are redundant. */
+.draggable-table .tabledrag-toggle-weight-wrapper {
+  display: none;
+}
+
 /**
  * Keep crowded tabledrag cells vertically centered.
  */

@@ -15,7 +15,7 @@ display:
   default:
     display_plugin: default
     id: default
-    display_title: Master
+    display_title: Default
     position: 0
     display_options:
       access:
@@ -83,8 +83,6 @@ display:
             link: link
           info:
             nothing:
-              sortable: false
-              default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false

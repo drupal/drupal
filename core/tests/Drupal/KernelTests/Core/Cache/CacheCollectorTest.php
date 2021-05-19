@@ -32,7 +32,7 @@ class CacheCollectorTest extends KernelTestBase {
   }
 
   /**
-   * Tests setting and invalidating
+   * Tests setting and invalidating.
    *
    * @dataProvider providerTestInvalidCharacters
    */

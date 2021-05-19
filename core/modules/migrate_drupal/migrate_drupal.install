@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains install and update functions for Migrate Drupal
+ * Contains install and update functions for Migrate Drupal.
  */
 
 use Drupal\Core\Database\Database;

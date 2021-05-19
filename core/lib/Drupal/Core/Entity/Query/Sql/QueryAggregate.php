@@ -75,7 +75,8 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
     if ($this->aggregate) {
       foreach ($this->aggregate as $aggregate) {
         $sql_field = $this->getSqlField($aggregate['field'], $aggregate['langcode']);
-        $this->sqlExpressions[$aggregate['alias']] = $aggregate['function'] . "($sql_field)";
+        $sql_field_escaped = '[' . str_replace('.', '].[', $sql_field) . ']';
+        $this->sqlExpressions[$aggregate['alias']] = $aggregate['function'] . "($sql_field_escaped)";
       }
     }
     return $this;

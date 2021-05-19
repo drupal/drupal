@@ -74,12 +74,16 @@ class BlockRenderOrderTest extends BrowserTestBase {
     foreach ($controller->loadMultiple() as $return_block) {
       $id = $return_block->id();
       if ($return_block_weight = $return_block->getWeight()) {
-        $this->assertTrue($test_blocks[$id]['weight'] == $return_block_weight, 'Block weight is set as "' . $return_block_weight . '" for ' . $id . ' block.');
+        $this->assertSame((int) $test_blocks[$id]['weight'], $return_block_weight, 'Block weight is set as "' . $return_block_weight . '" for ' . $id . ' block.');
         $position[$id] = strpos($test_content, Html::getClass('block-' . $test_blocks[$id]['id']));
       }
     }
-    $this->assertTrue($position['stark_powered'] < $position['stark_by'], 'Blocks with different weight are rendered in the correct order.');
-    $this->assertTrue($position['stark_drupal'] < $position['stark_by'], 'Blocks with identical weight are rendered in alphabetical order.');
+    // Verify that blocks with different weight are rendered in the correct
+    // order.
+    $this->assertLessThan($position['stark_by'], $position['stark_powered']);
+    // Verify that blocks with identical weight are rendered in alphabetical
+    // order.
+    $this->assertLessThan($position['stark_by'], $position['stark_drupal']);
   }
 
 }

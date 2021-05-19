@@ -30,7 +30,7 @@ class NodeComplete extends NodeRevision {
     // Get any entity translation revision data.
     if ($this->getDatabase()->schema()
       ->tableExists('entity_translation_revision')) {
-      $query->leftJoin('entity_translation_revision', 'etr', 'nr.nid = etr.entity_id AND nr.vid=etr.revision_id');
+      $query->leftJoin('entity_translation_revision', 'etr', '[nr].[nid] = [etr].[entity_id] AND [nr].[vid] = [etr].[revision_id]');
       $query->fields('etr', [
         'entity_type',
         'entity_id',
@@ -42,7 +42,7 @@ class NodeComplete extends NodeRevision {
       $conditions->condition('etr.entity_type', 'node');
       $conditions->isNull('etr.entity_type');
       $query->condition($conditions);
-      $query->addExpression("COALESCE(etr.language, n.language)", 'language');
+      $query->addExpression("COALESCE([etr].[language], [n].[language])", 'language');
       $query->addField('etr', 'uid', 'etr_uid');
       $query->addField('etr', 'status', 'etr_status');
       $query->addField('etr', 'created', 'etr_created');
@@ -67,7 +67,7 @@ class NodeComplete extends NodeRevision {
       $row->setSourceProperty('revision_uid', $row->getSourceProperty('etr_uid'));
       $row->setSourceProperty('source_langcode', $row->getSourceProperty('source'));
     }
-    parent::prepareRow($row);
+    return parent::prepareRow($row);
   }
 
   /**

@@ -170,7 +170,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
   }
 
   /**
-   * Display the filter on the administrative summary
+   * Display the filter on the administrative summary.
    */
   public function adminSummary() {
     return $this->operator . ' ' . $this->value;
@@ -243,7 +243,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
   }
 
   /**
-   * Simple validate handler
+   * Simple validate handler.
    */
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     $this->operatorValidate($form, $form_state);
@@ -257,7 +257,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
   }
 
   /**
-   * Simple submit handler
+   * Simple submit handler.
    */
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {
     // Do not store these values.
@@ -307,7 +307,8 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
 
   /**
    * Provide a list of options for the default operator form.
-   * Should be overridden by classes that don't override operatorForm
+   *
+   * Should be overridden by classes that don't override operatorForm.
    */
   public function operatorOptions() {
     return [];
@@ -320,6 +321,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
 
   /**
    * Perform any necessary changes to the form values prior to storage.
+   *
    * There is no need for this function to actually store the data.
    */
   public function operatorSubmit($form, FormStateInterface $form_state) {}
@@ -354,6 +356,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
 
   /**
    * Perform any necessary changes to the form values prior to storage.
+   *
    * There is no need for this function to actually store the data.
    */
   protected function valueSubmit($form, FormStateInterface $form_state) {}
@@ -887,7 +890,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
   }
 
   /**
-   * Render our chunk of the exposed filter form when selecting
+   * Render our chunk of the exposed filter form when selecting.
    *
    * You can override this if it doesn't do what you expect.
    */
@@ -960,31 +963,32 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
    *
    * @param array $form
    *   The form.
-   * @param string $wrapper_identifer
+   * @param string $wrapper_identifier
    *   The key to use for the wrapper element.
    */
-  protected function buildValueWrapper(&$form, $wrapper_identifer) {
+  protected function buildValueWrapper(&$form, $wrapper_identifier) {
     // If both the field and the operator are exposed, this will end up being
     // called twice. We don't want to wipe out what's already there, so if it
     // exists already, do nothing.
-    if (!isset($form[$wrapper_identifer])) {
-      $form[$wrapper_identifer] = [
+    if (!isset($form[$wrapper_identifier])) {
+      $form[$wrapper_identifier] = [
         '#type' => 'fieldset',
       ];
 
       $exposed_info = $this->exposedInfo();
       if (!empty($exposed_info['label'])) {
-        $form[$wrapper_identifer]['#title'] = $exposed_info['label'];
+        $form[$wrapper_identifier]['#title'] = $exposed_info['label'];
       }
       if (!empty($exposed_info['description'])) {
-        $form[$wrapper_identifer]['#description'] = $exposed_info['description'];
+        $form[$wrapper_identifier]['#description'] = $exposed_info['description'];
       }
     }
   }
 
   /**
    * Build the form to let users create the group of exposed filters.
-   * This form is displayed when users click on button 'Build group'
+   *
+   * This form is displayed when users click on button 'Build group'.
    */
   protected function buildExposedFiltersGroupForm(&$form, FormStateInterface $form_state) {
     if (empty($this->options['exposed']) || empty($this->options['is_grouped'])) {

@@ -53,7 +53,7 @@ class StandardTest extends BrowserTestBase {
     $this->drupalLogin($this->adminUser);
     // Configure the block.
     $this->drupalGet('admin/structure/block/add/system_menu_block:main/bartik');
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'region' => 'sidebar_first',
       'id' => 'main_navigation',
     ], 'Save block');
@@ -63,12 +63,7 @@ class StandardTest extends BrowserTestBase {
 
     // Verify we have role = complementary on help_block blocks.
     $this->drupalGet('admin/structure/block');
-    $elements = $this->xpath('//div[@role=:role and @id=:id]', [
-      ':role' => 'complementary',
-      ':id' => 'block-bartik-help',
-    ]);
-
-    $this->assertCount(1, $elements, 'Found complementary role on help block.');
+    $this->assertSession()->elementAttributeContains('xpath', "//div[@id='block-bartik-help']", 'role', 'complementary');
 
     // Verify anonymous user can see the block.
     $this->drupalLogout();
@@ -89,7 +84,7 @@ class StandardTest extends BrowserTestBase {
     $this->drupalGet('node/1');
     // Verify that a line break is present.
     $this->assertRaw('Then she picked out two somebodies,<br />Sally and me');
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'subject[0][value]' => 'Barfoo',
       'comment_body[0][value]' => 'Then she picked out two somebodies, Sally and me',
     ], 'Save');
@@ -251,11 +246,11 @@ class StandardTest extends BrowserTestBase {
       // The source field should be shown before the vertical tabs.
       $test_source_field = $assert_session->fieldExists($media_type->getSource()->getSourceFieldDefinition($media_type)->getLabel(), $form)->getOuterHtml();
       $vertical_tabs = $assert_session->elementExists('css', '.form-type-vertical-tabs', $form)->getOuterHtml();
-      $this->assertTrue(strpos($form_html, $vertical_tabs) > strpos($form_html, $test_source_field));
+      $this->assertGreaterThan(strpos($form_html, $test_source_field), strpos($form_html, $vertical_tabs));
       // The "Published" checkbox should be the last element.
       $date_field = $assert_session->fieldExists('Date', $form)->getOuterHtml();
       $published_checkbox = $assert_session->fieldExists('Published', $form)->getOuterHtml();
-      $this->assertTrue(strpos($form_html, $published_checkbox) > strpos($form_html, $date_field));
+      $this->assertGreaterThan(strpos($form_html, $date_field), strpos($form_html, $published_checkbox));
       if (is_a($media_type->getSource(), Image::class, TRUE)) {
         // Assert the default entity view display is configured with an image
         // style.

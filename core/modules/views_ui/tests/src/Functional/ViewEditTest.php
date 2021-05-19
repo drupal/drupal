@@ -35,7 +35,7 @@ class ViewEditTest extends UITestBase {
     $this->assertInstanceOf(View::class, $view);
     $this->clickLink(t('Delete view'));
     $this->assertSession()->addressEquals('admin/structure/views/view/test_view/delete');
-    $this->drupalPostForm(NULL, [], 'Delete');
+    $this->submitForm([], 'Delete');
     $this->assertRaw(t('The view %name has been deleted.', ['%name' => $view->label()]));
 
     $this->assertSession()->addressEquals('admin/structure/views');
@@ -49,7 +49,7 @@ class ViewEditTest extends UITestBase {
   public function testOtherOptions() {
     $this->drupalGet('admin/structure/views/view/test_view');
     // Add a new attachment display.
-    $this->drupalPostForm(NULL, [], 'Add Attachment');
+    $this->submitForm([], 'Add Attachment');
 
     // Test that a long administrative comment is truncated.
     $edit = ['display_comment' => 'one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen'];
@@ -62,17 +62,17 @@ class ViewEditTest extends UITestBase {
     $this->assertSession()->linkExists('test_1');
 
     // Save the view, and test the new ID has been saved.
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
     $view = \Drupal::entityTypeManager()->getStorage('view')->load('test_view');
     $displays = $view->get('display');
     $this->assertTrue(!empty($displays['test_1']), 'Display data found for new display ID key.');
-    $this->assertIdentical($displays['test_1']['id'], 'test_1', 'New display ID matches the display ID key.');
+    $this->assertSame('test_1', $displays['test_1']['id'], 'New display ID matches the display ID key.');
     $this->assertArrayNotHasKey('attachment_1', $displays);
 
     // Set to the same machine name and save the View.
     $edit = ['display_id' => 'test_1'];
     $this->drupalPostForm('admin/structure/views/nojs/display/test_view/test_1/display_id', $edit, 'Apply');
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
     $this->assertSession()->linkExists('test_1');
 
     // Test the form validation with invalid IDs.
@@ -113,8 +113,8 @@ class ViewEditTest extends UITestBase {
     $fields['fields[id][removed]'] = 1;
     $fields['fields[name][removed]'] = 1;
     $this->drupalPostForm('admin/structure/views/nojs/rearrange/test_view/default/field', $fields, 'Apply');
-    $this->drupalPostForm(NULL, [], 'Save');
-    $this->drupalPostForm(NULL, [], 'Cancel');
+    $this->submitForm([], 'Save');
+    $this->submitForm([], 'Cancel');
     // Verify that no error message is displayed.
     $this->assertSession()->elementNotExists('xpath', '//div[contains(@class, "error")]');
     // Verify page was redirected to the view listing.
@@ -180,11 +180,11 @@ class ViewEditTest extends UITestBase {
           'en',
           'hu',
         ];
-        $elements = $this->xpath('//select[@id="edit-rendering-language"]/option');
-        // Compare values inside the option elements with expected values.
-        for ($i = 0; $i < count($elements); $i++) {
-          $this->assertEqual($elements[$i]->getAttribute('value'), $expected_elements[$i]);
-        }
+        $elements = $this->assertSession()->selectExists('edit-rendering-language')->findAll('css', 'option');
+        $elements = array_map(function ($element) {
+          return $element->getValue();
+        }, $elements);
+        $this->assertSame($expected_elements, $elements);
 
         // Check that the selected values are respected even we they are not
         // supposed to be listed.
@@ -214,8 +214,7 @@ class ViewEditTest extends UITestBase {
 
         // Check that the previous selection is listed and selected.
         $this->drupalGet($langcode_url);
-        $element = $this->xpath('//select[@id="edit-rendering-language"]/option[@value="***LANGUAGE_language_content***" and @selected="selected"]');
-        $this->assertFalse(empty($element), 'Current selection is not lost');
+        $this->assertTrue($this->assertSession()->optionExists('edit-rendering-language', '***LANGUAGE_language_content***')->isSelected());
 
         // Check the order for the langcode filter.
         $langcode_url = 'admin/structure/views/nojs/handler/' . $view_name . '/' . $display . '/filter/langcode';
@@ -235,7 +234,7 @@ class ViewEditTest extends UITestBase {
         $elements = $this->xpath('//div[@id="edit-options-value"]//input');
         // Compare values inside the option elements with expected values.
         for ($i = 0; $i < count($elements); $i++) {
-          $this->assertEqual($elements[$i]->getAttribute('value'), $expected_elements[$i]);
+          $this->assertEqual($expected_elements[$i], $elements[$i]->getAttribute('value'));
         }
       }
     }

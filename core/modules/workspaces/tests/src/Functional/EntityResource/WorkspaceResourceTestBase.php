@@ -181,7 +181,7 @@ abstract class WorkspaceResourceTestBase extends EntityResourceTestBase {
         return "The 'view any workspace' permission is required.";
 
       case 'POST':
-        return "The 'create workspace' permission is required.";
+        return "The following permissions are required: 'administer workspaces' OR 'create workspace'.";
 
       case 'PATCH':
         return "The 'edit any workspace' permission is required.";

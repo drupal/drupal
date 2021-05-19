@@ -31,13 +31,8 @@ trait AssertPageCacheContextsAndTagsTrait {
    *   The header value, potentially exploded by spaces.
    */
   protected function getCacheHeaderValues($header_name) {
-    $header_value = $this->drupalGetHeader($header_name);
-    if (empty($header_value)) {
-      return [];
-    }
-    else {
-      return explode(' ', $header_value);
-    }
+    $header_value = $this->getSession()->getResponseHeader($header_name);
+    return empty($header_value) ? [] : explode(' ', $header_value);
   }
 
   /**
@@ -47,7 +42,7 @@ trait AssertPageCacheContextsAndTagsTrait {
    *   The expected cache context.
    */
   protected function assertCacheContext($expected_cache_context) {
-    $cache_contexts = explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Contexts'));
+    $cache_contexts = explode(' ', $this->getSession()->getResponseHeader('X-Drupal-Cache-Contexts'));
     $this->assertContains($expected_cache_context, $cache_contexts, "'" . $expected_cache_context . "' is present in the X-Drupal-Cache-Contexts header.");
   }
 
@@ -58,7 +53,7 @@ trait AssertPageCacheContextsAndTagsTrait {
    *   The expected cache context.
    */
   protected function assertNoCacheContext($not_expected_cache_context) {
-    $cache_contexts = explode(' ', $this->drupalGetHeader('X-Drupal-Cache-Contexts'));
+    $cache_contexts = explode(' ', $this->getSession()->getResponseHeader('X-Drupal-Cache-Contexts'));
     $this->assertNotContains($not_expected_cache_context, $cache_contexts, "'" . $not_expected_cache_context . "' is not present in the X-Drupal-Cache-Contexts header.");
   }
 
@@ -93,7 +88,7 @@ trait AssertPageCacheContextsAndTagsTrait {
     $cid = implode(':', $cid_parts);
     $cache_entry = \Drupal::cache('page')->get($cid);
     sort($cache_entry->tags);
-    $this->assertEqual($cache_entry->tags, $expected_tags);
+    $this->assertEqual($expected_tags, $cache_entry->tags);
   }
 
   /**
@@ -116,7 +111,7 @@ trait AssertPageCacheContextsAndTagsTrait {
     $expected_tags = array_unique($expected_tags);
     sort($expected_tags);
     sort($actual_tags);
-    $this->assertIdentical($actual_tags, $expected_tags);
+    $this->assertSame($expected_tags, $actual_tags);
   }
 
   /**
@@ -146,7 +141,7 @@ trait AssertPageCacheContextsAndTagsTrait {
     $actual_contexts = $this->getCacheHeaderValues('X-Drupal-Cache-Contexts');
     sort($expected_contexts);
     sort($actual_contexts);
-    $this->assertIdentical($actual_contexts, $expected_contexts, $message);
+    $this->assertSame($expected_contexts, $actual_contexts, $message ?? '');
     return $actual_contexts === $expected_contexts;
   }
 

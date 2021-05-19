@@ -109,7 +109,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
       'third_party_settings[content_translation][translation_sync][alt]' => FALSE,
       'third_party_settings[content_translation][translation_sync][title]' => FALSE,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save settings');
+    $this->submitForm($edit, 'Save settings');
 
     // Check that the content translation settings page reflects the changes
     // performed in the field edit page.
@@ -122,8 +122,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
       'settings[entity_test_mul][entity_test_mul][columns][field_test_et_ui_image][title]' => TRUE,
     ];
     $this->drupalPostForm('admin/config/regional/content-language', $edit, 'Save configuration');
-    $errors = $this->xpath('//div[contains(@class, "messages--error")]');
-    $this->assertEmpty($errors, 'Settings correctly stored.');
+    $this->assertSession()->elementNotExists('xpath', '//div[contains(@class, "messages--error")]');
     $this->assertSession()->checkboxChecked('edit-settings-entity-test-mul-entity-test-mul-columns-field-test-et-ui-image-alt');
     $this->assertSession()->checkboxChecked('edit-settings-entity-test-mul-entity-test-mul-columns-field-test-et-ui-image-title');
     $this->drupalLogin($this->translator);

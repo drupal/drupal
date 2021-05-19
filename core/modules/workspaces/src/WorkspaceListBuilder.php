@@ -51,6 +51,8 @@ class WorkspaceListBuilder extends EntityListBuilder {
    *   The entity storage class.
    * @param \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager
    *   The workspace manager service.
+   * @param \Drupal\workspaces\WorkspaceRepositoryInterface $workspace_repository
+   *   The workspace repository service.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
    */
@@ -150,12 +152,15 @@ class WorkspaceListBuilder extends EntityListBuilder {
     }
 
     if (!$entity->hasParent()) {
-      $operations['deploy'] = [
-        'title' => $this->t('Deploy content'),
-        // The 'Deploy' operation should be the default one for the currently
+      $operations['publish'] = [
+        'title' => $this->t('Publish content'),
+        // The 'Publish' operation should be the default one for the currently
         // active workspace.
         'weight' => ($active_workspace && $entity->id() == $active_workspace->id()) ? 0 : 20,
-        'url' => $entity->toUrl('deploy-form', ['query' => ['destination' => $entity->toUrl('collection')->toString()]]),
+        'url' => Url::fromRoute('entity.workspace.publish_form',
+          ['workspace' => $entity->id()],
+          ['query' => ['destination' => $entity->toUrl('collection')->toString()]]
+        ),
       ];
     }
     else {
@@ -256,10 +261,13 @@ class WorkspaceListBuilder extends EntityListBuilder {
         ],
       ];
       if (!$active_workspace->hasParent()) {
-        $build['active_workspace']['actions']['deploy'] = [
+        $build['active_workspace']['actions']['publish'] = [
           '#type' => 'link',
-          '#title' => $this->t('Deploy content'),
-          '#url' => $active_workspace->toUrl('deploy-form', ['query' => ['destination' => $active_workspace->toUrl('collection')->toString()]]),
+          '#title' => $this->t('Publish content'),
+          '#url' => Url::fromRoute('entity.workspace.publish_form',
+            ['workspace' => $active_workspace->id()],
+            ['query' => ['destination' => $active_workspace->toUrl('collection')->toString()]]
+          ),
           '#attributes' => [
             'class' => ['button', 'active-workspace__button'],
           ],

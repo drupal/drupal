@@ -90,7 +90,7 @@ class MenuLinkTest extends ViewTestBase {
     ], 'Apply');
 
     // Save view which has pending changes.
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
 
     // Test if the node as parent menu item is selected in our views settings.
     $this->drupalGet('admin/structure/views/nojs/display/test_menu_link/page_1/menu');

@@ -16,12 +16,14 @@ use Drupal\Core\DrupalKernel;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PrivateStream;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
+use GuzzleHttp\Exception\TransferException;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -91,6 +93,7 @@ function system_requirements($phase) {
         'severity' => REQUIREMENT_WARNING,
       ];
     }
+    _system_advisories_requirements($requirements);
   }
 
   // Web server information.
@@ -161,7 +164,7 @@ function system_requirements($phase) {
         'title' => t('Apache version'),
         'value' => $apache_version_string,
         'severity' => REQUIREMENT_ERROR,
-        'description' => t('The minimum version of Apache needed to run Drupal without mod_rewrite enabled is 2.2.16. See the <a href=":link">enabling clean URLs</a> page for more information on mod_rewrite.', [':link' => 'http://drupal.org/docs/8/clean-urls-in-drupal-8']),
+        'description' => t('The minimum version of Apache needed to run Drupal without mod_rewrite enabled is 2.2.16. See the <a href=":link">enabling clean URLs</a> page for more information on mod_rewrite.', [':link' => 'https://www.drupal.org/docs/8/clean-urls-in-drupal-8']),
       ];
     }
 
@@ -170,7 +173,7 @@ function system_requirements($phase) {
         'title' => t('Clean URLs'),
         'value' => t('Disabled'),
         'severity' => REQUIREMENT_WARNING,
-        'description' => t('Your server is capable of using clean URLs, but it is not enabled. Using clean URLs gives an improved user experience and is recommended. <a href=":link">Enable clean URLs</a>', [':link' => 'http://drupal.org/docs/8/clean-urls-in-drupal-8']),
+        'description' => t('Your server is capable of using clean URLs, but it is not enabled. Using clean URLs gives an improved user experience and is recommended. <a href=":link">Enable clean URLs</a>', [':link' => 'https://www.drupal.org/docs/8/clean-urls-in-drupal-8']),
       ];
     }
   }
@@ -1126,6 +1129,24 @@ function system_requirements($phase) {
     }
   }
 
+  // When the database driver is provided by a module, then check that the
+  // providing module is enabled.
+  if ($phase === 'runtime' || $phase === 'update') {
+    $connection = Database::getConnection();
+    $provider = $connection->getProvider();
+    if ($provider !== 'core' && !\Drupal::moduleHandler()->moduleExists($provider)) {
+      $autoload = $connection->getConnectionOptions()['autoload'] ?? '';
+      if (($pos = strpos($autoload, 'src/Driver/Database/')) !== FALSE) {
+        $requirements['database_driver_provided_by_module'] = [
+          'title' => t('Database driver provided by module'),
+          'value' => t('Not enabled'),
+          'description' => t('The current database driver is provided by the module: %module. The module is currently not enabled. You should immediately <a href=":enable">enable</a> the module.', ['%module' => $provider, ':enable' => Url::fromRoute('system.modules_list')->toString()]),
+          'severity' => REQUIREMENT_ERROR,
+        ];
+      }
+    }
+  }
+
   // Check xdebug.max_nesting_level, as some pages will not work if it is too
   // low.
   if (extension_loaded('xdebug')) {
@@ -1139,34 +1160,6 @@ function system_requirements($phase) {
         'title' => t('Xdebug settings'),
         'value' => t('xdebug.max_nesting_level is set to %value.', ['%value' => $current_nesting_level]),
         'description' => t('Set <code>xdebug.max_nesting_level=@level</code> in your PHP configuration as some pages in your Drupal site will not work when this setting is too low.', ['@level' => $minimum_nesting_level]),
-        'severity' => REQUIREMENT_ERROR,
-      ];
-    }
-  }
-
-  // Warning for httpoxy on IIS with affected PHP versions
-  // @see https://www.drupal.org/node/2783079
-  if (strpos($software, 'Microsoft-IIS') !== FALSE && version_compare(PHP_VERSION, '7.0.9', '<')) {
-    $dom = new \DOMDocument('1.0', 'UTF-8');
-    $webconfig = file_get_contents('web.config');
-    // If you are here the web.config file must - of course - be well formed.
-    // But the PHP DOM component will throw warnings on some XML compliant
-    // stuff, so silently parse the configuration file.
-    @$dom->loadHTML($webconfig);
-    $httpoxy_rewrite = FALSE;
-    foreach ($dom->getElementsByTagName('rule') as $rule) {
-      foreach ($rule->attributes as $attr) {
-        if (@$attr->name == 'name' && @$attr->nodeValue == 'Erase HTTP_PROXY') {
-          $httpoxy_rewrite = TRUE;
-          break 2;
-        }
-      }
-    }
-    if (!$httpoxy_rewrite) {
-      $requirements['iis_httpoxy_protection'] = [
-        'title' => t('IIS httpoxy protection'),
-        'value' => t('Your PHP runtime version is affected by the httpoxy vulnerability.'),
-        'description' => t('Either update your PHP runtime version or uncomment the "Erase HTTP_PROXY" rule in your web.config file and add HTTP_PROXY to the allowed headers list. See more details in the <a href=":link">security advisory</a>.', [':link' => 'https://www.drupal.org/SA-CORE-2016-003']),
         'severity' => REQUIREMENT_ERROR,
       ];
     }
@@ -1323,6 +1316,9 @@ function system_install() {
     $site->set('name', 'Drupal');
   }
   $site->save(TRUE);
+
+  // Populate the dummy query string added to all CSS and JavaScript files.
+  _drupal_flush_css_js();
 }
 
 /**
@@ -1454,6 +1450,57 @@ function system_update_8901() {
 
         $installed_storage_schema->set($entity_type_id . '.field_schema_data.' . $field_storage_definition->getName(), $field_schema_data);
       }
+    }
+  }
+}
+
+/**
+ * Display requirements from security advisories.
+ *
+ * @param array[] $requirements
+ *   The requirements array as specified in hook_requirements().
+ */
+function _system_advisories_requirements(array &$requirements): void {
+  if (!\Drupal::config('system.advisories')->get('enabled')) {
+    return;
+  }
+
+  /** @var \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher $fetcher */
+  $fetcher = \Drupal::service('system.sa_fetcher');
+  try {
+    $advisories = $fetcher->getSecurityAdvisories(TRUE, 5);
+  }
+  catch (TransferException $exception) {
+    $requirements['system_advisories']['title'] = t('Critical security announcements');
+    $requirements['system_advisories']['severity'] = REQUIREMENT_WARNING;
+    $requirements['system_advisories']['description'] = ['#theme' => 'system_security_advisories_fetch_error_message'];
+    watchdog_exception('system', $exception, 'Failed to retrieve security advisory data.');
+    return;
+  }
+
+  if (!empty($advisories)) {
+    $advisory_links = [];
+    $severity = REQUIREMENT_WARNING;
+    foreach ($advisories as $advisory) {
+      if (!$advisory->isPsa()) {
+        $severity = REQUIREMENT_ERROR;
+      }
+      $advisory_links[] = new Link($advisory->getTitle(), Url::fromUri($advisory->getUrl()));
+    }
+    $requirements['system_advisories']['title'] = t('Critical security announcements');
+    $requirements['system_advisories']['severity'] = $severity;
+    $requirements['system_advisories']['description'] = [
+      'list' => [
+        '#theme' => 'item_list',
+        '#items' => $advisory_links,
+      ],
+    ];
+    if (\Drupal::moduleHandler()->moduleExists('help')) {
+      $requirements['system_advisories']['description']['help_link'] = Link::createFromRoute(
+        'What are critical security announcements?',
+        'help.page', ['name' => 'system'],
+        ['fragment' => 'security-advisories']
+      )->toRenderable();
     }
   }
 }

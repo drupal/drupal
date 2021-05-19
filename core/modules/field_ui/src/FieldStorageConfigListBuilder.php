@@ -56,6 +56,8 @@ class FieldStorageConfigListBuilder extends ConfigEntityListBuilder {
    *   The entity type manager.
    * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_manager
    *   The 'field type' plugin manager.
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $bundle_info_service
+   *   The bundle info service.
    */
   public function __construct(EntityTypeInterface $entity_type, EntityTypeManagerInterface $entity_type_manager, FieldTypePluginManagerInterface $field_type_manager, EntityTypeBundleInfoInterface $bundle_info_service) {
     parent::__construct($entity_type, $entity_type_manager->getStorage($entity_type->id()));

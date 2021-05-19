@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface as RouteProviderBaseInterface;
 
 /**
- * Extends the router provider interface
+ * Extends the router provider interface.
  *
  * @see \Symfony\Cmf\Component\Routing
  */

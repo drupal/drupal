@@ -50,12 +50,12 @@ class StorageTest extends UITestBase {
     ];
 
     $this->drupalPostForm("admin/structure/views/nojs/edit-details/$view_name/default", $edit, 'Apply');
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm([], 'Save');
 
     $view = Views::getView($view_name);
 
     foreach (['label', 'tag', 'description', 'langcode'] as $property) {
-      $this->assertEqual($view->storage->get($property), $edit[$property], new FormattableMarkup('Make sure the property @property got probably saved.', ['@property' => $property]));
+      $this->assertEqual($edit[$property], $view->storage->get($property), new FormattableMarkup('Make sure the property @property got probably saved.', ['@property' => $property]));
     }
   }
 

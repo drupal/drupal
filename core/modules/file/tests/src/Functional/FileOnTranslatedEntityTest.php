@@ -107,7 +107,7 @@ class FileOnTranslatedEntityTest extends FileFieldTestBase {
     $edit['title[0][value]'] = 'Bill Murray';
     $name = 'files[' . $this->fieldName . '_0]';
     $edit[$name] = \Drupal::service('file_system')->realpath($this->drupalGetTestFiles('text')[1]->uri);
-    $this->drupalPostForm(NULL, $edit, 'Save (this translation)');
+    $this->submitForm($edit, 'Save (this translation)');
     // This inspects the HTML after the post of the translation, the file
     // should be displayed on the original node.
     $this->assertRaw('file--mime-text-plain');
@@ -133,7 +133,7 @@ class FileOnTranslatedEntityTest extends FileFieldTestBase {
     $edit['title[0][value]'] = 'Scarlett Johansson';
     $name = 'files[' . $this->fieldName . '_0]';
     $edit[$name] = \Drupal::service('file_system')->realpath($this->drupalGetTestFiles('text')[2]->uri);
-    $this->drupalPostForm(NULL, $edit, 'Save (this translation)');
+    $this->submitForm($edit, 'Save (this translation)');
     $third_fid = $this->getLastFileId();
 
     \Drupal::entityTypeManager()->getStorage('file')->resetCache();
@@ -161,7 +161,7 @@ class FileOnTranslatedEntityTest extends FileFieldTestBase {
     $edit['title[0][value]'] = 'David Bowie';
     $name = 'files[' . $this->fieldName . '_0]';
     $edit[$name] = \Drupal::service('file_system')->realpath($this->drupalGetTestFiles('text')[3]->uri);
-    $this->drupalPostForm(NULL, $edit, 'Save (this translation)');
+    $this->submitForm($edit, 'Save (this translation)');
     $replaced_second_fid = $this->getLastFileId();
 
     \Drupal::entityTypeManager()->getStorage('file')->resetCache();

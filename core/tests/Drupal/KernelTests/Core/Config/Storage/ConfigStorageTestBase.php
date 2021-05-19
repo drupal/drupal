@@ -49,7 +49,7 @@ abstract class ConfigStorageTestBase extends KernelTestBase {
     $this->assertTrue($result);
 
     $raw_data = $this->read($name);
-    $this->assertIdentical($raw_data, $data);
+    $this->assertSame($data, $raw_data);
 
     // Checking whether an existing name exists returns TRUE.
     $this->assertTrue($this->storage->exists($name));
@@ -72,7 +72,7 @@ abstract class ConfigStorageTestBase extends KernelTestBase {
     $new_name = 'config_test.storage_rename';
     $this->storage->rename($name, $new_name);
     $raw_data = $this->read($new_name);
-    $this->assertIdentical($raw_data, $data);
+    $this->assertSame($data, $raw_data);
     // Rename it back so further tests work.
     $this->storage->rename($new_name, $name);
 
@@ -102,7 +102,7 @@ abstract class ConfigStorageTestBase extends KernelTestBase {
     $result = $this->storage->deleteAll('config_test.');
     $names = $this->storage->listAll('config_test.');
     $this->assertTrue($result);
-    $this->assertIdentical($names, []);
+    $this->assertSame([], $names);
 
     // Test renaming an object that does not exist returns FALSE.
     $this->assertFalse($this->storage->rename('config_test.storage_does_not_exist', 'config_test.storage_does_not_exist_rename'));
@@ -126,7 +126,7 @@ abstract class ConfigStorageTestBase extends KernelTestBase {
     $this->assertTrue($result);
 
     $raw_data = $this->read($name);
-    $this->assertIdentical($raw_data, $data);
+    $this->assertSame($data, $raw_data);
 
     // Reading from a non-existing storage bin returns FALSE.
     $result = $this->invalidStorage->read($name);
@@ -143,7 +143,7 @@ abstract class ConfigStorageTestBase extends KernelTestBase {
 
     // Listing on a non-existing storage bin returns an empty array.
     $result = $this->invalidStorage->listAll();
-    $this->assertIdentical($result, []);
+    $this->assertSame([], $result);
 
     // Getting all collections on a non-existing storage bin return an empty
     // array.
@@ -152,7 +152,7 @@ abstract class ConfigStorageTestBase extends KernelTestBase {
     // Writing to a non-existing storage bin creates the bin.
     $this->invalidStorage->write($name, ['foo' => 'bar']);
     $result = $this->invalidStorage->read($name);
-    $this->assertIdentical($result, ['foo' => 'bar']);
+    $this->assertSame(['foo' => 'bar'], $result);
   }
 
   /**
@@ -176,7 +176,7 @@ abstract class ConfigStorageTestBase extends KernelTestBase {
     $this->assertTrue($result);
 
     $read_data = $this->storage->read($name);
-    $this->assertIdentical($read_data, $data);
+    $this->assertSame($data, $read_data);
   }
 
   /**

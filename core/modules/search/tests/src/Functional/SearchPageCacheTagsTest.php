@@ -158,14 +158,14 @@ class SearchPageCacheTagsTest extends BrowserTestBase {
 
     // First step: 'Add new field' on the 'Manage fields' page.
     $this->drupalGet($bundle_path . '/fields/add-field');
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'label' => 'Test label',
       'field_name' => 'test__ref',
       'new_storage_type' => 'entity_reference',
     ], 'Save and continue');
 
     // Second step: 'Field settings' form.
-    $this->drupalPostForm(NULL, [], 'Save field settings');
+    $this->submitForm([], 'Save field settings');
 
     // Create a new node of our newly created node type and fill in the entity
     // reference field.

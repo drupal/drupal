@@ -168,7 +168,7 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
     $this->drupalGet('node/add/moderated_content');
     $session_assert->statusCodeEquals(200);
     $session_assert->fieldNotExists('moderation_state[0][state]');
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'title[0][value]' => 'moderated content',
     ], 'Save');
     $session_assert->pageTextContains('You do not have access to transition from Draft to Draft');

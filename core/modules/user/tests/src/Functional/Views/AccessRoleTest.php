@@ -46,7 +46,7 @@ class AccessRoleTest extends AccessTestBase {
       'config' => ['user.role.' . $this->normalRole],
       'module' => ['user', 'views_test_data'],
     ];
-    $this->assertIdentical($expected, $view->calculateDependencies()->getDependencies());
+    $this->assertSame($expected, $view->calculateDependencies()->getDependencies());
 
     $executable = Views::executableFactory()->get($view);
     $executable->setDisplay('page_1');
@@ -86,7 +86,7 @@ class AccessRoleTest extends AccessTestBase {
       'config' => $roles,
       'module' => ['user', 'views_test_data'],
     ];
-    $this->assertIdentical($expected, $view->calculateDependencies()->getDependencies());
+    $this->assertSame($expected, $view->calculateDependencies()->getDependencies());
     $this->drupalLogin($this->webUser);
     $this->drupalGet('test-role');
     $this->assertSession()->statusCodeEquals(403);
@@ -127,7 +127,7 @@ class AccessRoleTest extends AccessTestBase {
     $this->assertContains('user.roles', $build['#cache']['contexts']);
     $this->assertEqual(['config:views.view.test_access_role'], $build['#cache']['tags']);
     $this->assertEqual(Cache::PERMANENT, $build['#cache']['max-age']);
-    $this->assertNotEqual($result, '');
+    $this->assertNotSame('', $result);
 
     // Then without access.
     $build = DisplayPluginBase::buildBasicRenderable('test_access_role', 'default');
@@ -139,7 +139,7 @@ class AccessRoleTest extends AccessTestBase {
     // $this->assertContains('user.roles', $build['#cache']['contexts']);
     // $this->assertEqual([], $build['#cache']['tags']);
     $this->assertEqual(Cache::PERMANENT, $build['#cache']['max-age']);
-    $this->assertEqual($result, '');
+    $this->assertEqual('', $result);
   }
 
 }

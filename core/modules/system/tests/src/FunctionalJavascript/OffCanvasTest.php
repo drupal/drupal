@@ -58,11 +58,11 @@ class OffCanvasTest extends OffCanvasTestBase {
         $this->assertEquals(' ', $header_text);
 
         $style = $page->find('css', '.ui-dialog-off-canvas')->getAttribute('style');
-        $this->assertTrue(strstr($style, 'width: 555px;') !== FALSE, 'Dialog width respected.');
+        $this->assertStringContainsString('width: 555px;', $style, 'Dialog width respected.');
         $page->clickLink("Open side panel 1");
         $this->waitForOffCanvasToOpen();
         $style = $page->find('css', '.ui-dialog-off-canvas')->getAttribute('style');
-        $this->assertTrue(strstr($style, 'width: 555px;') === FALSE, 'Dialog width reset to default.');
+        $this->assertStringNotContainsString('width: 555px;', $style, 'Dialog width reset to default.');
       }
       else {
         // Check that header is correct.
@@ -77,10 +77,10 @@ class OffCanvasTest extends OffCanvasTestBase {
 
       $style = $page->find('css', '.ui-dialog-off-canvas')->getAttribute('style');
       if ($link_index === 1) {
-        $this->assertTrue((bool) strstr($style, 'height: auto;'));
+        $this->assertStringContainsString('height: auto;', $style);
       }
       else {
-        $this->assertTrue((bool) strstr($style, 'height: 421px;'));
+        $this->assertStringContainsString('height: 421px;', $style);
       }
     }
 

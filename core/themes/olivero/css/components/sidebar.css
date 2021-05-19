@@ -37,10 +37,10 @@
 .region--sidebar .menu__link {
     position: relative;
     display: block;
-    padding-top: 13.5px;
-    padding-bottom: 13.5px;
+    padding-top: 0.84375rem;
+    padding-bottom: 0.84375rem;
     font-family: "Lora", "georgia", serif;
-    font-size: 18px
+    font-size: 1.125rem
 
     /* Bottom divider line. */
   }
@@ -56,7 +56,7 @@
 .region--sidebar .menu__link:after {
       position: absolute;
       bottom: 0;
-      width: 72px;
+      width: 4.5rem;
       height: 0;
       content: "";
       border-top: solid 2px #e7edf1;

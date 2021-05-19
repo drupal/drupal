@@ -272,7 +272,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
       foreach ($permutations as $set) {
         $may_view = $set['comment']->{$field}->access('view', $set['user']);
         $may_update = $set['comment']->{$field}->access('edit', $set['user']);
-        $this->assertEqual($may_view, TRUE, new FormattableMarkup('User @user can view field @field on comment @comment', [
+        $this->assertTrue($may_view, new FormattableMarkup('User @user can view field @field on comment @comment', [
           '@user' => $set['user']->getAccountName(),
           '@comment' => $set['comment']->getSubject(),
           '@field' => $field,

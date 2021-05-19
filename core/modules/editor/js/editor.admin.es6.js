@@ -173,8 +173,6 @@
               // property rule. i.e. will become true if >=1 filter rule has >=1
               // allowed property rule.
               touchedByAllowedPropertyRule: false,
-              // Analogous, but for forbidden property rule.
-              touchedBytouchedByForbiddenPropertyRule: false,
             };
           }
 
@@ -651,13 +649,12 @@
       // If any filter's current status forbids the editor feature, return
       // false.
       Drupal.filterConfiguration.update();
-      return Object.keys(
-        Drupal.filterConfiguration.statuses,
-      ).every((filterID) =>
-        filterStatusAllowsFeature(
-          Drupal.filterConfiguration.statuses[filterID],
-          feature,
-        ),
+      return Object.keys(Drupal.filterConfiguration.statuses).every(
+        (filterID) =>
+          filterStatusAllowsFeature(
+            Drupal.filterConfiguration.statuses[filterID],
+            feature,
+          ),
       );
     },
   };
@@ -922,24 +919,18 @@
     clone.tags = this.tags.slice(0);
     clone.allow = this.allow;
     clone.restrictedTags.tags = this.restrictedTags.tags.slice(0);
-    clone.restrictedTags.allowed.attributes = this.restrictedTags.allowed.attributes.slice(
-      0,
-    );
-    clone.restrictedTags.allowed.styles = this.restrictedTags.allowed.styles.slice(
-      0,
-    );
-    clone.restrictedTags.allowed.classes = this.restrictedTags.allowed.classes.slice(
-      0,
-    );
-    clone.restrictedTags.forbidden.attributes = this.restrictedTags.forbidden.attributes.slice(
-      0,
-    );
-    clone.restrictedTags.forbidden.styles = this.restrictedTags.forbidden.styles.slice(
-      0,
-    );
-    clone.restrictedTags.forbidden.classes = this.restrictedTags.forbidden.classes.slice(
-      0,
-    );
+    clone.restrictedTags.allowed.attributes =
+      this.restrictedTags.allowed.attributes.slice(0);
+    clone.restrictedTags.allowed.styles =
+      this.restrictedTags.allowed.styles.slice(0);
+    clone.restrictedTags.allowed.classes =
+      this.restrictedTags.allowed.classes.slice(0);
+    clone.restrictedTags.forbidden.attributes =
+      this.restrictedTags.forbidden.attributes.slice(0);
+    clone.restrictedTags.forbidden.styles =
+      this.restrictedTags.forbidden.styles.slice(0);
+    clone.restrictedTags.forbidden.classes =
+      this.restrictedTags.forbidden.classes.slice(0);
     return clone;
   };
 
@@ -991,11 +982,10 @@
 
           // Update current rules.
           if (Drupal.filterConfiguration.liveSettingParsers[filterID]) {
-            Drupal.filterConfiguration.statuses[
-              filterID
-            ].rules = Drupal.filterConfiguration.liveSettingParsers[
-              filterID
-            ].getRules();
+            Drupal.filterConfiguration.statuses[filterID].rules =
+              Drupal.filterConfiguration.liveSettingParsers[
+                filterID
+              ].getRules();
           }
         },
       );
@@ -1031,9 +1021,8 @@
 
           // Create a Drupal.FilterStatus object to track the state (whether it's
           // active or not and its current settings, if any) of each filter.
-          Drupal.filterConfiguration.statuses[
-            filterID
-          ] = new Drupal.FilterStatus(filterID);
+          Drupal.filterConfiguration.statuses[filterID] =
+            new Drupal.FilterStatus(filterID);
         });
     },
   };

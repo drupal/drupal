@@ -47,17 +47,20 @@ class Connection extends DatabaseConnection {
   ];
 
   /**
-   * All databases attached to the current database. This is used to allow
-   * prefixes to be safely handled without locking the table
+   * All databases attached to the current database.
+   *
+   * This is used to allow prefixes to be safely handled without locking the
+   * table.
    *
    * @var array
    */
   protected $attachedDatabases = [];
 
   /**
-   * Whether or not a table has been dropped this request: the destructor will
-   * only try to get rid of unnecessary databases if there is potential of them
-   * being empty.
+   * Whether or not a table has been dropped this request.
+   *
+   * The destructor will only try to get rid of unnecessary databases if there
+   * is potential of them being empty.
    *
    * This variable is set to public because Schema needs to
    * access it. However, it should not be manually set.
@@ -370,6 +373,7 @@ class Connection extends DatabaseConnection {
     // @see http://www.sqlite.org/faq.html#q15
     // @see http://www.sqlite.org/rescode.html#schema
     if (!empty($e->errorInfo[1]) && $e->errorInfo[1] === 17) {
+      @trigger_error('Connection::handleQueryException() is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Get a handler through $this->exceptionHandler() instead, and use one of its methods. See https://www.drupal.org/node/3187222', E_USER_DEPRECATED);
       return $this->query($query, $args, $options);
     }
 
@@ -424,11 +428,14 @@ class Connection extends DatabaseConnection {
    * {@inheritdoc}
    */
   public function prepareStatement(string $query, array $options): StatementInterface {
-    $query = $this->prefixTables($query);
-    if (!($options['allow_square_brackets'] ?? FALSE)) {
-      $query = $this->quoteIdentifiers($query);
+    try {
+      $query = $this->preprocessStatement($query, $options);
+      $statement = new Statement($this->connection, $this, $query, $options['pdo'] ?? []);
     }
-    return new Statement($this->connection, $this, $query, $options['pdo'] ?? []);
+    catch (\Exception $e) {
+      $this->exceptionHandler()->handleStatementException($e, $query, $options);
+    }
+    return $statement;
   }
 
   public function nextId($existing_id = 0) {

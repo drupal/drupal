@@ -112,7 +112,7 @@ class EntityReferenceSelectionSortTest extends EntityKernelTestBase {
       $nodes['published2']->id() => $node_labels['published2'],
       $nodes['published1']->id() => $node_labels['published1'],
     ];
-    $this->assertIdentical($result['article'], $expected_result, 'Query sorted by field returned expected values.');
+    $this->assertSame($expected_result, $result['article'], 'Query sorted by field returned expected values.');
 
     // Assert sort by base field.
     $selection_options['sort'] = [
@@ -125,7 +125,7 @@ class EntityReferenceSelectionSortTest extends EntityKernelTestBase {
       $nodes['published1']->id() => $node_labels['published1'],
       $nodes['published2']->id() => $node_labels['published2'],
     ];
-    $this->assertIdentical($result['article'], $expected_result, 'Query sorted by property returned expected values.');
+    $this->assertSame($expected_result, $result['article'], 'Query sorted by property returned expected values.');
   }
 
 }

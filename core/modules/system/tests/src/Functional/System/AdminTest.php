@@ -13,7 +13,7 @@ use Drupal\Tests\BrowserTestBase;
 class AdminTest extends BrowserTestBase {
 
   /**
-   * User account with all available permissions
+   * User account with all available permissions.
    *
    * @var \Drupal\Core\Session\AccountInterface
    */

@@ -69,7 +69,7 @@ class PathAdminTest extends PathTestBase {
     $edit = [
       'filter' => $alias1,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Filter');
+    $this->submitForm($edit, 'Filter');
     $this->assertSession()->linkByHrefExists($alias1);
     $this->assertSession()->linkByHrefNotExists($alias2);
     $this->assertSession()->linkByHrefNotExists($alias3);
@@ -78,7 +78,7 @@ class PathAdminTest extends PathTestBase {
     $edit = [
       'filter' => $alias2,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Filter');
+    $this->submitForm($edit, 'Filter');
     $this->assertSession()->linkByHrefNotExists($alias1);
     $this->assertSession()->linkByHrefExists($alias2);
     $this->assertSession()->linkByHrefNotExists($alias3);
@@ -87,7 +87,7 @@ class PathAdminTest extends PathTestBase {
     $edit = [
       'filter' => $alias3,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Filter');
+    $this->submitForm($edit, 'Filter');
     $this->assertSession()->linkByHrefNotExists($alias1);
     $this->assertSession()->linkByHrefNotExists($alias2);
     $this->assertSession()->linkByHrefExists($alias3);
@@ -96,13 +96,13 @@ class PathAdminTest extends PathTestBase {
     $edit = [
       'filter' => $this->randomMachineName(10),
     ];
-    $this->drupalPostForm(NULL, $edit, 'Filter');
+    $this->submitForm($edit, 'Filter');
     $this->assertSession()->linkByHrefNotExists($alias1);
     $this->assertSession()->linkByHrefNotExists($alias2);
 
     // Reset the filter.
     $edit = [];
-    $this->drupalPostForm(NULL, $edit, 'Reset');
+    $this->submitForm($edit, 'Reset');
     $this->assertSession()->linkByHrefExists($alias1);
     $this->assertSession()->linkByHrefExists($alias2);
   }

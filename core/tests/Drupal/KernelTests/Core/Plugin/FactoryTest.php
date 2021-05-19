@@ -22,8 +22,8 @@ class FactoryTest extends PluginTestBase {
   public function testDefaultFactory() {
     // Ensure a non-derivative plugin can be instantiated.
     $plugin = $this->testPluginManager->createInstance('user_login', ['title' => 'Please enter your login name and password']);
-    $this->assertIdentical(get_class($plugin), 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockUserLoginBlock', 'Correct plugin class instantiated with default factory.');
-    $this->assertIdentical($plugin->getTitle(), 'Please enter your login name and password', 'Plugin instance correctly configured.');
+    $this->assertSame('Drupal\\plugin_test\\Plugin\\plugin_test\\mock_block\\MockUserLoginBlock', get_class($plugin), 'Correct plugin class instantiated with default factory.');
+    $this->assertSame('Please enter your login name and password', $plugin->getTitle(), 'Plugin instance correctly configured.');
 
     // Ensure that attempting to instantiate non-existing plugins throws a
     // PluginException.
@@ -49,12 +49,12 @@ class FactoryTest extends PluginTestBase {
   public function testReflectionFactory() {
     // Ensure a non-derivative plugin can be instantiated.
     $plugin = $this->mockBlockManager->createInstance('user_login', ['title' => 'Please enter your login name and password']);
-    $this->assertIdentical(get_class($plugin), 'Drupal\plugin_test\Plugin\plugin_test\mock_block\MockUserLoginBlock', 'Correct plugin class instantiated.');
-    $this->assertIdentical($plugin->getTitle(), 'Please enter your login name and password', 'Plugin instance correctly configured.');
+    $this->assertSame('Drupal\\plugin_test\\Plugin\\plugin_test\\mock_block\\MockUserLoginBlock', get_class($plugin), 'Correct plugin class instantiated.');
+    $this->assertSame('Please enter your login name and password', $plugin->getTitle(), 'Plugin instance correctly configured.');
 
     // Ensure a derivative plugin can be instantiated.
     $plugin = $this->mockBlockManager->createInstance('menu:main_menu', ['depth' => 2]);
-    $this->assertIdentical($plugin->getContent(), '<ul><li>1<ul><li>1.1</li></ul></li></ul>', 'Derived plugin instance correctly instantiated and configured.');
+    $this->assertSame('<ul><li>1<ul><li>1.1</li></ul></li></ul>', $plugin->getContent(), 'Derived plugin instance correctly instantiated and configured.');
 
     // Ensure that attempting to instantiate non-existing plugins throws a
     // PluginException. Test this for a non-existing base plugin, a non-existing

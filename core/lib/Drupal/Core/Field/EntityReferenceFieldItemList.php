@@ -73,6 +73,7 @@ class EntityReferenceFieldItemList extends FieldItemList implements EntityRefere
       if ($uuids) {
         $target_type = $definition->getSetting('target_type');
         $entity_ids = \Drupal::entityQuery($target_type)
+          ->accessCheck(TRUE)
           ->condition('uuid', $uuids, 'IN')
           ->execute();
         $entities = \Drupal::entityTypeManager()

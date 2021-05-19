@@ -116,7 +116,7 @@ class MigrateUpgradeFormStepsTest extends BrowserTestBase {
     $store->set('step', 'overview');
     $this->drupalGet('/upgrade');
     $session->pageTextContains("An upgrade has already been performed on this site. To perform a new migration, create a clean and empty new install of Drupal $destination_site_version. Rollbacks are not yet supported through the user interface.");
-    $this->drupalPostForm(NULL, [], 'Import new configuration and content from old site');
+    $this->submitForm([], 'Import new configuration and content from old site');
     $session->pageTextContains('Provide credentials for the database of the Drupal site you want to upgrade.');
   }
 

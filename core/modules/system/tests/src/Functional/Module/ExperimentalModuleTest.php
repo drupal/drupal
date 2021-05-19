@@ -69,7 +69,7 @@ class ExperimentalModuleTest extends BrowserTestBase {
     $this->assertNoText('You must enable');
 
     // Enable the module and confirm that it worked.
-    $this->drupalPostForm(NULL, [], 'Continue');
+    $this->submitForm([], 'Continue');
     $this->assertText('Experimental Test has been enabled.');
 
     // Uninstall the module.
@@ -96,7 +96,7 @@ class ExperimentalModuleTest extends BrowserTestBase {
     $this->assertText('You must enable the Experimental Test module to install Experimental Dependency Test');
 
     // Enable the module and confirm that it worked.
-    $this->drupalPostForm(NULL, [], 'Continue');
+    $this->submitForm([], 'Continue');
     $this->assertText('2 modules have been enabled: Experimental Dependency Test, Experimental Test');
 
     // Uninstall the modules.
@@ -125,7 +125,7 @@ class ExperimentalModuleTest extends BrowserTestBase {
     $this->assertNoText('You must enable');
 
     // Enable the module and confirm that it worked.
-    $this->drupalPostForm(NULL, [], 'Continue');
+    $this->submitForm([], 'Continue');
     $this->assertText('2 modules have been enabled: Experimental Dependency Test, Experimental Test');
 
     // Try to enable an experimental module that can not be due to

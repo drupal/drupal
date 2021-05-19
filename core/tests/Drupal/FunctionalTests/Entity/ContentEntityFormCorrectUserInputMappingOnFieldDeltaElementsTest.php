@@ -106,8 +106,8 @@ class ContentEntityFormCorrectUserInputMappingOnFieldDeltaElementsTest extends B
     // This is how currently the form building process works and this test
     // ensures the correct behavior no matter what changes would be made to the
     // form builder or the content entity forms.
-    $this->drupalPostForm(NULL, $edit, 'Add another item');
-    $this->drupalPostForm(NULL, [], 'Save');
+    $this->submitForm($edit, 'Add another item');
+    $this->submitForm([], 'Save');
 
     // Reload the entity.
     $entity = $storage->load($entity->id());

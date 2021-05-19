@@ -18,7 +18,7 @@ class TermNode extends DrupalSqlBase {
   /**
    * The join options between the node and the term node table.
    */
-  const JOIN = 'tn.vid = n.vid';
+  const JOIN = '[tn].[vid] = [n].[vid]';
 
   /**
    * {@inheritdoc}
@@ -29,7 +29,7 @@ class TermNode extends DrupalSqlBase {
       ->fields('tn', ['nid', 'vid'])
       ->fields('n', ['type']);
     // Because this is an inner join it enforces the current revision.
-    $query->innerJoin('term_data', 'td', 'td.tid = tn.tid AND td.vid = :vid', [':vid' => $this->configuration['vid']]);
+    $query->innerJoin('term_data', 'td', '[td].[tid] = [tn].[tid] AND [td].[vid] = :vid', [':vid' => $this->configuration['vid']]);
     $query->innerJoin('node', 'n', static::JOIN);
     return $query;
   }
@@ -54,7 +54,7 @@ class TermNode extends DrupalSqlBase {
       ->fields('tn', ['tid'])
       ->condition('n.nid', $row->getSourceProperty('nid'));
     $query->join('node', 'n', static::JOIN);
-    $query->innerJoin('term_data', 'td', 'td.tid = tn.tid AND td.vid = :vid', [':vid' => $this->configuration['vid']]);
+    $query->innerJoin('term_data', 'td', '[td].[tid] = [tn].[tid] AND [td].[vid] = :vid', [':vid' => $this->configuration['vid']]);
     $row->setSourceProperty('tid', $query->execute()->fetchCol());
     return parent::prepareRow($row);
   }

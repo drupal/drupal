@@ -50,8 +50,8 @@ class BigPipeTest extends BrowserTestBase {
     parent::setUp();
 
     // Ignore the <meta> refresh that big_pipe.module sets. It causes a redirect
-    // to a page that sets another cookie, which causes WebTestBase to lose the
-    // session cookie. To avoid this problem, tests should first call
+    // to a page that sets another cookie, which causes BrowserTestBase to lose
+    // the session cookie. To avoid this problem, tests should first call
     // drupalGet() and then call checkForMetaRefresh() manually, and then reset
     // $this->maximumMetaRefreshCount and $this->metaRefreshCount.
     // @see doMetaRefresh()
@@ -311,7 +311,7 @@ class BigPipeTest extends BrowserTestBase {
     $this->assertNoRaw('The count is 2.');
     $this->assertNoRaw('The count is 3.');
     $raw_content = $this->getSession()->getPage()->getContent();
-    $this->assertTrue(substr_count($raw_content, $expected_placeholder_replacement) == 1, 'Only one placeholder replacement was found for the duplicate #lazy_builder arrays.');
+    $this->assertSame(1, substr_count($raw_content, $expected_placeholder_replacement), 'Only one placeholder replacement was found for the duplicate #lazy_builder arrays.');
 
     // By calling performMetaRefresh() here, we simulate JavaScript being
     // disabled, because as far as the BigPipe module is concerned, it is
@@ -341,7 +341,7 @@ class BigPipeTest extends BrowserTestBase {
    *   markup.
    */
   protected function assertBigPipeNoJsPlaceholders(array $expected_big_pipe_nojs_placeholders) {
-    $this->assertSetsEqual(array_keys($expected_big_pipe_nojs_placeholders), array_map('rawurldecode', explode(' ', $this->drupalGetHeader('BigPipe-Test-No-Js-Placeholders'))));
+    $this->assertSetsEqual(array_keys($expected_big_pipe_nojs_placeholders), array_map('rawurldecode', explode(' ', $this->getSession()->getResponseHeader('BigPipe-Test-No-Js-Placeholders'))));
     foreach ($expected_big_pipe_nojs_placeholders as $big_pipe_nojs_placeholder => $expected_replacement) {
       // Checking whether the replacement for the BigPipe no-JS placeholder
       // $big_pipe_nojs_placeholder is present.
@@ -362,7 +362,7 @@ class BigPipeTest extends BrowserTestBase {
    *   defined in the order that they are expected to be rendered & streamed.
    */
   protected function assertBigPipePlaceholders(array $expected_big_pipe_placeholders, array $expected_big_pipe_placeholder_stream_order) {
-    $this->assertSetsEqual(array_keys($expected_big_pipe_placeholders), explode(' ', $this->drupalGetHeader('BigPipe-Test-Placeholders')));
+    $this->assertSetsEqual(array_keys($expected_big_pipe_placeholders), explode(' ', $this->getSession()->getResponseHeader('BigPipe-Test-Placeholders')));
     $placeholder_positions = [];
     $placeholder_replacement_positions = [];
     foreach ($expected_big_pipe_placeholders as $big_pipe_placeholder_id => $expected_ajax_response) {

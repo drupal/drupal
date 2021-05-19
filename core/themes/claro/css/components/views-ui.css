@@ -145,8 +145,8 @@ details.fieldset-no-legend {
 .form-item-options-expose-required,
 .form-item-options-expose-label,
 .form-item-options-expose-description {
-  margin-top: 6px;
-  margin-bottom: 6px;
+  margin-top: 0.375rem;
+  margin-bottom: 0.375rem;
 }
 
 .views-admin-dependent .form-type-radio,
@@ -173,11 +173,11 @@ details.fieldset-no-legend {
 }
 
 .views-admin .button .links li {
-  padding-right: 12px; /* LTR */
+  padding-right: 0.75rem; /* LTR */
 }
 
 [dir="rtl"] .views-admin .button .links li {
-  padding-left: 12px;
+  padding-left: 0.75rem;
 }
 
 .views-display-top__extra-actions-wrapper {
@@ -246,12 +246,12 @@ details.fieldset-no-legend {
 }
 
 .views-tabs li {
-  margin: 0 5px 5px 6px; /* LTR */
+  margin: 0 0.3125rem 0.3125rem 0.375rem; /* LTR */
 }
 
 [dir="rtl"] .views-tabs li {
-  margin-right: 6px;
-  margin-left: 5px;
+  margin-right: 0.375rem;
+  margin-left: 0.3125rem;
 }
 
 .views-tabs li + li {
@@ -269,9 +269,9 @@ details.fieldset-no-legend {
 
 .views-tabs a {
   display: inline-block;
-  padding: 10px;
+  padding: 0.625rem;
   border: 1px solid #cbcbcb;
-  border-radius: 7px;
+  border-radius: 0.4375rem;
   font-size: small;
   line-height: 1.3333;
 }
@@ -280,7 +280,7 @@ details.fieldset-no-legend {
 
 .views-tabs li.is-active a.is-active.error,
 .views-tabs .error {
-  padding: 8px;
+  padding: 0.5rem;
   border: 2px solid #ed541d;
 }
 
@@ -305,7 +305,7 @@ details.fieldset-no-legend {
 }
 
 .views-tabs .add a {
-  padding: 9px 13px 9px 9px;
+  padding: 0.5625rem 0.8125rem 0.5625rem 0.5625rem;
   color: #545560;
   border: none;
   border-radius: 2px;
@@ -356,7 +356,7 @@ details.fieldset-no-legend {
 .views-tabs .action-list {
   position: absolute;
   z-index: 50;
-  top: 38px;
+  top: 2.375rem;
   left: -2px; /* LTR */
   margin: 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -432,15 +432,15 @@ details.fieldset-no-legend {
  */
 
 .views-ui-display-tab-bucket .links {
-  padding: 2px 6px 4px;
+  padding: 2px 0.375rem 0.25rem;
 }
 
 .views-ui-display-tab-bucket .links li + li {
-  margin-left: 3px; /* LTR */
+  margin-left: 0.1875rem; /* LTR */
 }
 
 [dir="rtl"] .views-ui-display-tab-bucket .links li + li {
-  margin-right: 3px;
+  margin-right: 0.1875rem;
   margin-left: 0;
 }
 
@@ -517,7 +517,7 @@ details.fieldset-no-legend {
 /* @group Query info table */
 
 .views-query-info table {
-  border-radius: 7px;
+  border-radius: 0.4375rem;
   -webkit-border-horizontal-spacing: 1px;
   -webkit-border-vertical-spacing: 1px;
 }
@@ -541,7 +541,7 @@ details.fieldset-no-legend {
 
 .form-item-page-create,
 .form-item-block-create {
-  margin-top: 13px;
+  margin-top: 0.8125rem;
 }
 
 /* @end */
@@ -552,15 +552,15 @@ details.fieldset-no-legend {
  */
 
 .filterable-option .form-item.form-type-checkbox {
-  padding-top: 4px;
+  padding-top: 0.25rem;
   /* This selector is aggressive because Claro's reset for .form-items is aggressive. */
-  padding-bottom: 4px;
-  padding-left: 4px; /* LTR */
+  padding-bottom: 0.25rem;
+  padding-left: 0.25rem; /* LTR */
 }
 
 [dir="rtl"] .filterable-option .form-item.form-type-checkbox {
-  padding-right: 4px;
-  padding-left: 8px;
+  padding-right: 0.25rem;
+  padding-left: 0.5rem;
 }
 
 /* @end */

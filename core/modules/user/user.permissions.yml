@@ -11,6 +11,9 @@ administer users:
   restrict access: true
 access user profiles:
   title: 'View user information'
+view user email addresses:
+  title: 'View user email addresses'
+  description: 'Users without this permission will not have access to email addresses on user pages or other places where they might be shown, such as Views and JSON:API responses.'
 change own username:
   title: 'Change own username'
 select account cancellation method:

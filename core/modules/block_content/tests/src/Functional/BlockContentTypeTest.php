@@ -51,6 +51,17 @@ class BlockContentTypeTest extends BlockContentTestBase {
   }
 
   /**
+   * Tests the order of the block content types on the add page.
+   */
+  public function testBlockContentAddPageOrder() {
+    $this->createBlockContentType(['id' => 'bundle_1', 'label' => 'Bundle 1']);
+    $this->createBlockContentType(['id' => 'bundle_2', 'label' => 'Aaa Bundle 2']);
+    $this->drupalLogin($this->adminUser);
+    $this->drupalGet('block/add');
+    $this->assertSession()->pageTextMatches('/Aaa Bundle 2(.*)Bundle 1/');
+  }
+
+  /**
    * Tests creating a block type programmatically and via a form.
    */
   public function testBlockContentTypeCreation() {
@@ -68,7 +79,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
       'id' => 'foo',
       'label' => 'title for foo',
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $block_type = BlockContentType::load('foo');
     $this->assertInstanceOf(BlockContentType::class, $block_type);
 
@@ -121,7 +132,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     ];
     $this->drupalGet('admin/structure/block/block-content/manage/basic');
     $this->assertSession()->titleEquals('Edit basic custom block type | Drupal');
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $front_page_path = Url::fromRoute('<front>')->toString();
     $this->assertBreadcrumb('admin/structure/block/block-content/manage/basic/fields', [
       $front_page_path => 'Home',
@@ -165,7 +176,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $this->assertRaw(
       t('%label is used by 1 custom block on your site. You can not remove this block type until you have removed all of the %label blocks.', ['%label' => $type->label()])
     );
-    $this->assertNoText('This action cannot be undone.', 'The block type deletion confirmation form is not available.');
+    $this->assertNoText('This action cannot be undone.');
 
     // Delete the block.
     $block->delete();
@@ -174,7 +185,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $this->assertRaw(
       t('Are you sure you want to delete the custom block type %type?', ['%type' => $type->id()])
     );
-    $this->assertText('This action cannot be undone.', 'The custom block type deletion confirmation form is available.');
+    $this->assertText('This action cannot be undone.');
   }
 
   /**
@@ -221,12 +232,12 @@ class BlockContentTypeTest extends BlockContentTestBase {
         }
         // Create a new block.
         $edit = ['info[0][value]' => $this->randomMachineName(8)];
-        $this->drupalPostForm(NULL, $edit, 'Save');
+        $this->submitForm($edit, 'Save');
         $blocks = $storage->loadByProperties(['info' => $edit['info[0][value]']]);
         if (!empty($blocks)) {
           $block = reset($blocks);
           $this->assertSession()->addressEquals(Url::fromRoute('block.admin_add', ['plugin_id' => 'block_content:' . $block->uuid(), 'theme' => $theme]));
-          $this->drupalPostForm(NULL, ['region' => 'content'], 'Save block');
+          $this->submitForm(['region' => 'content'], 'Save block');
           $this->assertSession()->addressEquals(Url::fromRoute('block.admin_display_theme', ['theme' => $theme], ['query' => ['block-placement' => Html::getClass($edit['info[0][value]'])]]));
         }
         else {
@@ -241,7 +252,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $this->clickLink(t('Add custom block'));
     $this->clickLink('foo');
     $edit = ['info[0][value]' => $this->randomMachineName(8)];
-    $this->drupalPostForm(NULL, $edit, 'Save');
+    $this->submitForm($edit, 'Save');
     $blocks = $storage->loadByProperties(['info' => $edit['info[0][value]']]);
     if (!empty($blocks)) {
       $this->assertSession()->addressEquals(Url::fromRoute('entity.block_content.collection'));

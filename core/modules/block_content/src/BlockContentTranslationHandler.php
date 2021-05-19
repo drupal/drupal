@@ -16,7 +16,7 @@ class BlockContentTranslationHandler extends ContentTranslationHandler {
    */
   protected function entityFormTitle(EntityInterface $entity) {
     $block_type = BlockContentType::load($entity->bundle());
-    return t('<em>Edit @type</em> @title', ['@type' => $block_type->label(), '@title' => $entity->label()]);
+    return $this->t('<em>Edit @type</em> @title', ['@type' => $block_type->label(), '@title' => $entity->label()]);
   }
 
 }

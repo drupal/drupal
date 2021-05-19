@@ -11,11 +11,6 @@
   box-sizing: border-box;
 }
 
-::selection {
-  color: white;
-  background-color: var(--color--blue-20);
-}
-
 html {
   font-family: var(--font-sans);
   font-size: 100%;
@@ -48,14 +43,23 @@ a {
   &:hover {
     color: var(--color--blue-50);
   }
+
+  &:focus {
+    outline: solid 2px currentColor;
+    outline-offset: 2px;
+  }
 }
 
 img,
-audio,
 video {
   display: block;
   max-width: 100%;
   height: auto;
+}
+
+audio {
+  display: block;
+  max-width: 100%;
 }
 
 h1 {
@@ -86,6 +90,15 @@ h2 {
     font-size: 36px;
     line-height: var(--sp3);
   }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-sans);
 }
 
 ul {

@@ -13,41 +13,41 @@
 .node__meta {
   display: flex;
   align-items: center;
-  margin-bottom: 18px;
+  margin-bottom: 1.125rem;
   color: #6e7172;
-  font-size: 14px;
-  line-height: 18px
+  font-size: 0.875rem;
+  line-height: 1.125rem
 }
-
-[dir="ltr"] .node__meta .field--name-user-picture img {
-    margin-right: 9px
-}
-
-[dir="rtl"] .node__meta .field--name-user-picture img {
-    margin-left: 9px
-}
-
-.node__meta .field--name-user-picture img {
-    width: 45px;
-    height: 45px;
-    -o-object-fit: cover;
-    object-fit: cover;
-    border-radius: 50%;
-  }
 
 .node__meta a {
     font-weight: bold;
   }
 
-@media (min-width: 500px) {
+@media (min-width: 31.25rem) {
 
 .node__meta {
-    margin-bottom: 36px
+    margin-bottom: 2.25rem
 }
   }
 
+[dir="ltr"] .node__author-image img {
+  margin-right: 0.5625rem
+}
+
+[dir="rtl"] .node__author-image img {
+  margin-left: 0.5625rem
+}
+
+.node__author-image img {
+  width: 2.8125rem;
+  height: 2.8125rem;
+  -o-object-fit: cover;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
 .node__title a {
-    padding-bottom: 3px;
+    padding-bottom: 0.1875rem;
     transition: background-size 0.2s, color 0.2s;
     text-decoration: none;
     color: #0d1214;
@@ -55,39 +55,26 @@
     background-image: linear-gradient(#2494db, #2494db); /* Two values are needed for IE11 support. */
     background-repeat: no-repeat;
     background-position: bottom left; /* LTR */
-    background-size: 0 3px
+    background-size: 0 0.1875rem
   }
 
-.node__title a:hover {
+.node__title a:hover,
+    .node__title a:focus {
       color: #0d77b5;
     }
-
-.node__title a:focus {
-      color: #0d77b5;
-      background-size: 100% 3px
-    }
-
-@media screen and (-ms-high-contrast: active) {
-
-.node__title a:focus {
-        text-decoration: underline;
-        outline: medium none invert;
-        outline: initial
-    }
-      }
 
 [dir="rtl"] .node__title {
   background-position: bottom right;
 }
 
 .node__content {
-  padding-bottom: 27px
+  padding-bottom: 1.6875rem
 }
 
-@media (min-width: 1000px) {
+@media (min-width: 62.5rem) {
 
 .node__content {
-    padding-bottom: 54px
+    padding-bottom: 3.375rem
 }
   }
 

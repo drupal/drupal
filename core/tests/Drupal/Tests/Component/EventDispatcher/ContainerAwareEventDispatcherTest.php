@@ -593,7 +593,7 @@ class TestEventListener {
   public $postFooInvoked = FALSE;
 
   /**
-   * Listener methods
+   * Listener methods.
    */
   public function preFoo(Event $e) {
     $this->preFooInvoked = TRUE;

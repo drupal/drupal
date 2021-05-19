@@ -23,8 +23,8 @@
 }
 
 .filter-wrapper {
-  margin-top: 18px;
-  margin-bottom: 9px;
+  margin-top: 1.125rem;
+  margin-bottom: 0.5625rem;
 }
 
 .filter-wrapper .form-item {
@@ -40,9 +40,9 @@
 }
 
 .filter-help {
-  padding-top: 9px;
-  padding-bottom: 9px;
-  font-size: 12px;
+  padding-top: 0.5625rem;
+  padding-bottom: 0.5625rem;
+  font-size: 0.75rem;
 }
 
 /**
@@ -52,8 +52,8 @@
  */
 
 .compose-tips__item {
-  margin-top: 27px;
-  margin-bottom: 27px;
+  margin-top: 1.6875rem;
+  margin-bottom: 1.6875rem;
 }
 
 /**
@@ -61,13 +61,13 @@
  */
 
 .filter-guidelines__item {
-  margin-top: 18px;
-  font-size: 14px;
-  line-height: 18px;
+  margin-top: 1.125rem;
+  font-size: 0.875rem;
+  line-height: 1.125rem;
 }
 
 .filter-guidelines p {
-  margin-top: 4.5px;
+  margin-top: 0.28125rem;
   margin-bottom: 0;
 }
 
@@ -79,16 +79,16 @@
  */
 
 .filter-tips--long {
-  margin-bottom: 27px;
+  margin-bottom: 1.6875rem;
 }
 
 .filter-tips__item,
 .filter-tips--long p {
-  margin-top: 13.5px;
-  margin-bottom: 13.5px;
+  margin-top: 0.84375rem;
+  margin-bottom: 0.84375rem;
 }
 
 .filter-tips__item--short {
-  margin-top: 4.5px;
+  margin-top: 0.28125rem;
   margin-bottom: 0;
 }

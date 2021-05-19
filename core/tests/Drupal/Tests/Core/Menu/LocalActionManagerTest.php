@@ -97,7 +97,7 @@ class LocalActionManagerTest extends UnitTestCase {
   protected $discovery;
 
   /**
-   * The tested local action manager
+   * The tested local action manager.
    *
    * @var \Drupal\Tests\Core\Menu\TestLocalActionManager
    */

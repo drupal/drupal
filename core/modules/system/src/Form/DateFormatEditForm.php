@@ -17,7 +17,7 @@ class DateFormatEditForm extends DateFormatFormBase {
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
-    $now = t('Displayed as %date', ['%date' => $this->dateFormatter->format(REQUEST_TIME, $this->entity->id())]);
+    $now = $this->t('Displayed as %date', ['%date' => $this->dateFormatter->format(REQUEST_TIME, $this->entity->id())]);
     $form['date_format_pattern']['#field_suffix'] = ' <small data-drupal-date-formatter="preview">' . $now . '</small>';
     $form['date_format_pattern']['#default_value'] = $this->entity->getPattern();
 
@@ -29,7 +29,7 @@ class DateFormatEditForm extends DateFormatFormBase {
    */
   protected function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
-    $actions['submit']['#value'] = t('Save format');
+    $actions['submit']['#value'] = $this->t('Save format');
     unset($actions['delete']);
     return $actions;
   }

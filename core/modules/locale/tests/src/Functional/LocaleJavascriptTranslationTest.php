@@ -155,9 +155,9 @@ class LocaleJavascriptTranslationTest extends BrowserTestBase {
       ]);
     $string = $strings[0];
 
-    $this->drupalPostForm(NULL, ['string' => 'Show description'], 'Filter');
+    $this->submitForm(['string' => 'Show description'], 'Filter');
     $edit = ['strings[' . $string->lid . '][translations][0]' => 'Mostrar descripcion'];
-    $this->drupalPostForm(NULL, $edit, 'Save translations');
+    $this->submitForm($edit, 'Save translations');
 
     // Calculate the filename of the JS including the translations.
     $js_translation_files = \Drupal::state()->get('locale.translation.javascript');
@@ -167,7 +167,7 @@ class LocaleJavascriptTranslationTest extends BrowserTestBase {
     $this->assertRaw('core/misc/drupal.js');
     $this->assertRaw($js_filename);
     // Assert translations JS is included before drupal.js.
-    $this->assertTrue(strpos($content, $js_filename) < strpos($content, 'core/misc/drupal.js'), 'Translations are included before Drupal.t.');
+    $this->assertLessThan(strpos($content, 'core/misc/drupal.js'), strpos($content, $js_filename));
   }
 
 }

@@ -1,4 +1,4 @@
-# cspell:ignore imagefield optionwidgets userreference
+# cspell:ignore imagefield optionwidgets
 id: d6_field
 label: Field configuration
 migration_tags:

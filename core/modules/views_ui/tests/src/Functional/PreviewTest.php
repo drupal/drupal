@@ -30,18 +30,18 @@ class PreviewTest extends UITestBase {
 
     $this->drupalGet('admin/structure/views/view/test_preview/edit');
     $this->assertSession()->statusCodeEquals(200);
-    $this->drupalPostForm(NULL, $edit = [], 'Update preview');
+    $this->submitForm($edit = [], 'Update preview');
 
-    $elements = $this->xpath('//div[@id="views-live-preview"]//ul[contains(@class, :ul-class)]/li[contains(@class, :li-class)]', [':ul-class' => 'contextual-links', ':li-class' => 'filter-add']);
-    $this->assertCount(1, $elements, 'The contextual link to add a new field is shown.');
+    // Verify that the contextual link to add a new field is shown.
+    $this->assertSession()->elementsCount('xpath', '//div[@id="views-live-preview"]//ul[contains(@class, "contextual-links")]/li[contains(@class, "filter-add")]', 1);
 
-    $this->drupalPostForm(NULL, $edit = ['view_args' => '100'], 'Update preview');
+    $this->submitForm($edit = ['view_args' => '100'], 'Update preview');
 
     // Test that area text and exposed filters are present and rendered.
     $this->assertSession()->fieldExists('id');
-    $this->assertText('Test header text', 'Rendered header text found');
-    $this->assertText('Test footer text', 'Rendered footer text found.');
-    $this->assertText('Test empty text', 'Rendered empty text found.');
+    $this->assertText('Test header text');
+    $this->assertText('Test footer text');
+    $this->assertText('Test empty text');
   }
 
   /**
@@ -51,28 +51,23 @@ class PreviewTest extends UITestBase {
     $this->drupalGet('admin/structure/views/view/test_preview/edit');
     $this->assertSession()->statusCodeEquals(200);
 
-    $this->drupalPostForm(NULL, $edit = [], 'Update preview');
+    $this->submitForm($edit = [], 'Update preview');
 
-    $elements = $this->xpath('//div[@class = "view-content"]/div[contains(@class, views-row)]');
-    $this->assertCount(5, $elements);
+    $this->assertSession()->elementsCount('xpath', '//div[@class = "view-content"]/div[contains(@class, views-row)]', 5);
 
     // Filter just the first result.
-    $this->drupalPostForm(NULL, $edit = ['view_args' => '1'], 'Update preview');
-
-    $elements = $this->xpath('//div[@class = "view-content"]/div[contains(@class, views-row)]');
-    $this->assertCount(1, $elements);
+    $this->submitForm($edit = ['view_args' => '1'], 'Update preview');
+    $this->assertSession()->elementsCount('xpath', '//div[@class = "view-content"]/div[contains(@class, views-row)]', 1);
 
     // Filter for no results.
-    $this->drupalPostForm(NULL, $edit = ['view_args' => '100'], 'Update preview');
-
-    $elements = $this->xpath('//div[@class = "view-content"]/div[contains(@class, views-row)]');
-    $this->assertCount(0, $elements);
+    $this->submitForm($edit = ['view_args' => '100'], 'Update preview');
+    $this->assertSession()->elementNotExists('xpath', '//div[@class = "view-content"]/div[contains(@class, views-row)]');
 
     // Test that area text and exposed filters are present and rendered.
     $this->assertSession()->fieldExists('id');
-    $this->assertText('Test header text', 'Rendered header text found');
-    $this->assertText('Test footer text', 'Rendered footer text found.');
-    $this->assertText('Test empty text', 'Rendered empty text found.');
+    $this->assertText('Test header text');
+    $this->assertText('Test footer text');
+    $this->assertText('Test empty text');
 
     // Test feed preview.
     $view = [];
@@ -85,16 +80,15 @@ class PreviewTest extends UITestBase {
     $view['page[feed_properties][path]'] = $this->randomMachineName(16);
     $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
     $this->clickLink(t('Feed'));
-    $this->drupalPostForm(NULL, [], 'Update preview');
-    $result = $this->xpath('//div[@id="views-live-preview"]/pre');
-    $this->assertStringContainsString('<title>' . $view['page[title]'] . '</title>', $result[0]->getText(), 'The Feed RSS preview was rendered.');
+    $this->submitForm([], 'Update preview');
+    $this->assertSession()->elementTextContains('xpath', '//div[@id="views-live-preview"]/pre', '<title>' . $view['page[title]'] . '</title>');
 
     // Test the non-default UI display options.
     // Statistics only, no query.
     $settings = \Drupal::configFactory()->getEditable('views.settings');
     $settings->set('ui.show.performance_statistics', TRUE)->save();
     $this->drupalGet('admin/structure/views/view/test_preview/edit');
-    $this->drupalPostForm(NULL, $edit = ['view_args' => '100'], 'Update preview');
+    $this->submitForm($edit = ['view_args' => '100'], 'Update preview');
     $this->assertText('Query build time');
     $this->assertText('Query execute time');
     $this->assertText('View render time');
@@ -102,7 +96,7 @@ class PreviewTest extends UITestBase {
 
     // Statistics and query.
     $settings->set('ui.show.sql_query.enabled', TRUE)->save();
-    $this->drupalPostForm(NULL, $edit = ['view_args' => '100'], 'Update preview');
+    $this->submitForm($edit = ['view_args' => '100'], 'Update preview');
     $this->assertText('Query build time');
     $this->assertText('Query execute time');
     $this->assertText('View render time');
@@ -116,18 +110,17 @@ SQL;
     $this->assertSession()->assertEscaped($query_string);
 
     // Test that the statistics and query are rendered above the preview.
-    $this->assertTrue(strpos($this->getSession()->getPage()->getContent(), 'views-query-info') < strpos($this->getSession()->getPage()->getContent(), 'view-test-preview'), 'Statistics shown above the preview.');
+    $this->assertLessThan(strpos($this->getSession()->getPage()->getContent(), 'view-test-preview'), strpos($this->getSession()->getPage()->getContent(), 'views-query-info'));
 
     // Test that statistics and query rendered below the preview.
     $settings->set('ui.show.sql_query.where', 'below')->save();
-    $this->drupalPostForm(NULL, $edit = ['view_args' => '100'], 'Update preview');
-    $this->assertTrue(strpos($this->getSession()->getPage()->getContent(), 'view-test-preview') < strpos($this->getSession()->getPage()->getContent(), 'views-query-info'), 'Statistics shown below the preview.');
+    $this->submitForm($edit = ['view_args' => '100'], 'Update preview');
+    $this->assertLessThan(strpos($this->getSession()->getPage()->getContent(), 'views-query-info'), strpos($this->getSession()->getPage()->getContent(), 'view-test-preview'), 'Statistics shown below the preview.');
 
     // Test that the preview title isn't double escaped.
     $this->drupalPostForm("admin/structure/views/nojs/display/test_preview/default/title", $edit = ['title' => 'Double & escaped'], 'Apply');
-    $this->drupalPostForm(NULL, [], 'Update preview');
-    $elements = $this->xpath('//div[@id="views-live-preview"]/div[contains(@class, views-query-info)]//td[text()=:text]', [':text' => 'Double & escaped']);
-    $this->assertCount(1, $elements);
+    $this->submitForm([], 'Update preview');
+    $this->assertSession()->elementsCount('xpath', '//div[@id="views-live-preview"]/div[contains(@class, views-query-info)]//td[text()="Double & escaped"]', 1);
   }
 
   /**
@@ -140,12 +133,12 @@ SQL;
     $this->drupalGet('admin/structure/views/view/test_preview/edit');
     $this->assertSession()->statusCodeEquals(200);
 
-    $this->drupalPostForm(NULL, $edit = [], 'Update preview');
+    $this->submitForm($edit = [], 'Update preview');
 
     // Check for implementation of hook_views_preview_info_alter().
     // @see views_ui_test.module
-    $elements = $this->xpath('//div[@id="views-live-preview"]/div[contains(@class, views-query-info)]//td[text()=:text]', [':text' => 'Test row count']);
-    $this->assertCount(1, $elements, 'Views Query Preview Info area altered.');
+    // Verify that Views Query Preview Info area was altered.
+    $this->assertSession()->elementsCount('xpath', '//div[@id="views-live-preview"]/div[contains(@class, views-query-info)]//td[text()="Test row count"]', 1);
     // Check that additional assets are attached.
     $this->assertStringContainsString('views_ui_test/views_ui_test.test', $this->getDrupalSettings()['ajaxPageState']['libraries'], 'Attached library found.');
     $this->assertRaw('css/views_ui_test.test.css');
@@ -158,9 +151,9 @@ SQL;
     $this->drupalGet('admin/structure/views/view/test_preview_error/edit');
     $this->assertSession()->statusCodeEquals(200);
 
-    $this->drupalPostForm(NULL, $edit = [], 'Update preview');
+    $this->submitForm($edit = [], 'Update preview');
 
-    $this->assertText('Unable to preview due to validation errors.', 'Preview error text found.');
+    $this->assertText('Unable to preview due to validation errors.');
   }
 
 }

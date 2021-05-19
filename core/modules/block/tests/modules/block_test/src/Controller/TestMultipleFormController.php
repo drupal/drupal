@@ -6,7 +6,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Form\FormState;
 
 /**
- * Controller for block_test module
+ * Controller for block_test module.
  */
 class TestMultipleFormController extends ControllerBase {
 

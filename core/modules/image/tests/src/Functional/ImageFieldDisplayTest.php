@@ -69,7 +69,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->drupalGet("admin/structure/types/manage/article/display");
 
     // Test for existence of link to image styles configuration.
-    $this->drupalPostForm(NULL, [], "{$field_name}_settings_edit");
+    $this->submitForm([], "{$field_name}_settings_edit");
     $this->assertSession()->linkByHrefExists(Url::fromRoute('entity.image_style.collection')->toString(), 0, 'Link to image styles configuration is found');
 
     // Remove 'administer image styles' permission from testing admin user.
@@ -80,7 +80,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->drupalGet("admin/structure/types/manage/article/display");
 
     // Test for absence of link to image styles configuration.
-    $this->drupalPostForm(NULL, [], "{$field_name}_settings_edit");
+    $this->submitForm([], "{$field_name}_settings_edit");
     $this->assertSession()->linkByHrefNotExists(Url::fromRoute('entity.image_style.collection')->toString(), 'Link to image styles configuration is absent when permissions are insufficient');
 
     // Restore 'administer image styles' permission to testing admin user
@@ -262,9 +262,9 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->assertSession()->fieldValueEquals('settings[min_resolution][y]', '10');
 
     $this->drupalGet('node/add/article');
-    $this->assertText('50 KB limit.', 'Image widget max file size is displayed on article form.');
-    $this->assertText('Allowed types: ' . $test_image_extension . '.', 'Image widget allowed file types displayed on article form.');
-    $this->assertText('Images must be larger than 10x10 pixels. Images larger than 100x100 pixels will be resized.', 'Image widget allowed resolution displayed on article form.');
+    $this->assertText('50 KB limit.');
+    $this->assertText('Allowed types: ' . $test_image_extension . '.');
+    $this->assertText('Images must be larger than 10x10 pixels. Images larger than 100x100 pixels will be resized.');
 
     // We have to create the article first and then edit it because the alt
     // and title fields do not display until the image has been attached.
@@ -335,7 +335,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     ];
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
     // Add the required alt text.
-    $this->drupalPostForm(NULL, [$field_name . '[1][alt]' => $alt], 'Save');
+    $this->submitForm([$field_name . '[1][alt]' => $alt], 'Save');
     $this->assertText('Article ' . $node->getTitle() . ' has been updated.');
 
     // Assert ImageWidget::process() calls FieldWidget::process().
@@ -343,7 +343,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $edit = [
       'files[' . $field_name . '_2][]' => \Drupal::service('file_system')->realpath($test_image->uri),
     ];
-    $this->drupalPostForm(NULL, $edit, $field_name . '_2_upload_button');
+    $this->submitForm($edit, $field_name . '_2_upload_button');
     $this->assertSession()->elementNotExists('css', 'input[name="files[' . $field_name . '_2][]"]');
     $this->assertSession()->elementExists('css', 'input[name="files[' . $field_name . '_3][]"]');
   }

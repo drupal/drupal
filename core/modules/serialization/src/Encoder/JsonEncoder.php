@@ -7,7 +7,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder as BaseJsonEncoder;
 
 /**
- * Adds 'ajax to the supported content types of the JSON encoder'
+ * Adds 'ajax' to the supported content types of the JSON encoder.
  *
  * @internal
  *   This encoder should not be used directly. Rather, use the `serializer`

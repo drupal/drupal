@@ -5,6 +5,7 @@ dependencies:
     - field.field.node.article.body
     - field.field.node.article.field_media_image
     - field.field.node.article.field_tags
+    - field.field.node.article.layout_builder__layout
     - node.type.article
     - workflows.workflow.editorial
   module:
@@ -113,4 +114,5 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  layout_builder__layout: true

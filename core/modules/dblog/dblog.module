@@ -30,6 +30,8 @@ function dblog_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dd>' . t('The Database Logging module allows you to view an event log on the <a href=":dblog">Recent log messages</a> page. The log is a chronological list of recorded events containing usage data, performance data, errors, warnings and operational information. Administrators should check the log on a regular basis to ensure their site is working properly.', [':dblog' => Url::fromRoute('dblog.overview')->toString()]) . '</dd>';
       $output .= '<dt>' . t('Debugging site problems') . '</dt>';
       $output .= '<dd>' . t('In case of errors or problems with the site, the <a href=":dblog">Recent log messages</a> page can be useful for debugging, since it shows the sequence of events. The log messages include usage information, warnings, and errors.', [':dblog' => Url::fromRoute('dblog.overview')->toString()]) . '</dd>';
+      $output .= '<dt>' . t('This log is not persistent') . '</dt>';
+      $output .= '<dd>' . t('The Database Logging module logs may be cleared by administrators and automated cron tasks, so they should not be used for <a href=":audit_trail_wiki">forensic logging</a>. For forensic purposes, use the Syslog module.', [':audit_trail_wiki' => 'https://en.wikipedia.org/wiki/Audit_trail']) . '</dd>';
       $output .= '</dl>';
       return $output;
 
@@ -90,7 +92,7 @@ function dblog_cron() {
  *   List of uniquely defined database log message types.
  */
 function _dblog_get_message_types() {
-  return \Drupal::database()->query('SELECT DISTINCT(type) FROM {watchdog} ORDER BY type')
+  return \Drupal::database()->query('SELECT DISTINCT([type]) FROM {watchdog} ORDER BY [type]')
     ->fetchAllKeyed(0, 0);
 }
 

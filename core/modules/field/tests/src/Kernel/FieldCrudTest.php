@@ -87,9 +87,9 @@ class FieldCrudTest extends FieldKernelTestBase {
     unset($config['settings']['config_data_from_field_setting']);
 
     // Check that default values are set.
-    $this->assertEqual($config['required'], FALSE, 'Required defaults to false.');
-    $this->assertIdentical($config['label'], $this->fieldDefinition['field_name'], 'Label defaults to field name.');
-    $this->assertIdentical($config['description'], '', 'Description defaults to empty string.');
+    $this->assertFalse($config['required'], 'Required defaults to false.');
+    $this->assertSame($config['label'], $this->fieldDefinition['field_name'], 'Label defaults to field name.');
+    $this->assertSame('', $config['description'], 'Description defaults to empty string.');
 
     // Check that default settings are set.
     $this->assertEqual($config['settings'], $field_type_manager->getDefaultFieldSettings($this->fieldStorageDefinition['type']), 'Default field settings have been written.');
@@ -224,7 +224,7 @@ class FieldCrudTest extends FieldKernelTestBase {
     // Save an entity with a value in the custom storage field and verify no
     // data is retrieved on load.
     $entity = EntityTest::create(['name' => $this->randomString(), $field_name => 'Test value']);
-    $this->assertIdentical('Test value', $entity->{$field_name}->value, 'The test value is set on the field.');
+    $this->assertSame('Test value', $entity->{$field_name}->value, 'The test value is set on the field.');
 
     $entity->save();
     $entity = EntityTest::load($entity->id());
@@ -240,9 +240,9 @@ class FieldCrudTest extends FieldKernelTestBase {
 
     // Read the field back.
     $field = FieldConfig::load('entity_test.' . $this->fieldDefinition['bundle'] . '.' . $this->fieldDefinition['field_name']);
-    $this->assertTrue($this->fieldDefinition['field_name'] == $field->getName(), 'The field was properly read.');
-    $this->assertTrue($this->fieldDefinition['entity_type'] == $field->getTargetEntityTypeId(), 'The field was properly read.');
-    $this->assertTrue($this->fieldDefinition['bundle'] == $field->getTargetBundle(), 'The field was properly read.');
+    $this->assertSame($this->fieldDefinition['field_name'], $field->getName(), 'The field was properly read.');
+    $this->assertSame($this->fieldDefinition['entity_type'], $field->getTargetEntityTypeId(), 'The field was properly read.');
+    $this->assertSame($this->fieldDefinition['bundle'], $field->getTargetBundle(), 'The field was properly read.');
   }
 
   /**

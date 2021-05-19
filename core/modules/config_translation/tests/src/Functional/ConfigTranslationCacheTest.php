@@ -157,7 +157,7 @@ class ConfigTranslationCacheTest extends BrowserTestBase {
     $edit = [
       "translation[config_names][field.field.entity_test.$bundle.$field_name][label]" => $field_label_fr,
     ];
-    $this->drupalPostForm(NULL, $edit, 'Save translation');
+    $this->submitForm($edit, 'Save translation');
     $this->drupalLogout();
 
     // Check if the translated label appears.

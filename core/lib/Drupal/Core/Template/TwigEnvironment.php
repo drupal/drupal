@@ -66,7 +66,7 @@ class TwigEnvironment extends Environment {
    * @param array $options
    *   The options for the Twig environment.
    */
-  public function __construct($root, CacheBackendInterface $cache, $twig_extension_hash, StateInterface $state, LoaderInterface $loader = NULL, array $options = []) {
+  public function __construct($root, CacheBackendInterface $cache, $twig_extension_hash, StateInterface $state, LoaderInterface $loader, array $options = []) {
     $this->state = $state;
 
     $this->templateClasses = [];
@@ -144,7 +144,7 @@ class TwigEnvironment extends Environment {
   }
 
   /**
-   * Get the cache prefixed used by \Drupal\Core\Template\TwigPhpStorageCache
+   * Get the cache prefixed used by \Drupal\Core\Template\TwigPhpStorageCache.
    *
    * @return string
    *   The file cache prefix, or empty string if the cache is disabled.

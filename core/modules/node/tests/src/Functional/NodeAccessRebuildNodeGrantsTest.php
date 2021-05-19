@@ -80,7 +80,7 @@ class NodeAccessRebuildNodeGrantsTest extends NodeTestBase {
     // Rebuild permissions.
     $this->drupalGet('admin/reports/status');
     $this->clickLink(t('Rebuild permissions'));
-    $this->drupalPostForm(NULL, [], 'Rebuild permissions');
+    $this->submitForm([], 'Rebuild permissions');
     $this->assertText('The content access permissions have been rebuilt.');
 
     // Test if the rebuild by user that cannot bypass node access and does not
@@ -116,7 +116,7 @@ class NodeAccessRebuildNodeGrantsTest extends NodeTestBase {
     // Rebuild permissions.
     $this->drupalGet('admin/reports/status');
     $this->clickLink(t('Rebuild permissions'));
-    $this->drupalPostForm(NULL, [], 'Rebuild permissions');
+    $this->submitForm([], 'Rebuild permissions');
     $this->assertText('Content permissions have been rebuilt.');
     $this->assertNull(\Drupal::state()->get('node.node_access_needs_rebuild'), 'Node access permissions have been rebuilt');
 

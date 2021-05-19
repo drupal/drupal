@@ -38,7 +38,7 @@ class AnonymousUserResponseSubscriber implements EventSubscriberInterface {
    *   The event to process.
    */
   public function onRespond(ResponseEvent $event) {
-    if (!$event->isMasterRequest()) {
+    if (!$event->isMainRequest()) {
       return;
     }
 

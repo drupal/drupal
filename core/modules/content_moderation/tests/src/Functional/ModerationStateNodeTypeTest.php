@@ -27,7 +27,7 @@ class ModerationStateNodeTypeTest extends ModerationStateTestBase {
     $this->grantUserPermissionToCreateContentOfType($this->adminUser, 'not_moderated');
     $this->drupalGet('node/add/not_moderated');
     $this->assertRaw('Save');
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'title[0][value]' => 'Test',
     ], 'Save');
     $this->assertText('Not moderated Test has been created.');
@@ -62,7 +62,7 @@ class ModerationStateNodeTypeTest extends ModerationStateTestBase {
 
     // Create content.
     $this->drupalGet('node/add/not_moderated');
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'title[0][value]' => 'Test',
     ], 'Save');
     $this->assertText('Not moderated Test has been created.');

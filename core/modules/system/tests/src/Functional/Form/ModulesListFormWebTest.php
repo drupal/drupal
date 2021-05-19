@@ -167,7 +167,7 @@ BROKEN,
     // displayed for modules that are not installed.
     $edit = ['uninstall[changing_module]' => 'changing_module'];
     $this->drupalPostForm('admin/modules/uninstall', $edit, 'Uninstall');
-    $this->drupalPostForm(NULL, [], 'Uninstall');
+    $this->submitForm([], 'Uninstall');
     $this->assertText('The selected modules have been uninstalled.');
     foreach ($incompatible_updates as $incompatible_update) {
       $incompatible_info = $info + $incompatible_update;

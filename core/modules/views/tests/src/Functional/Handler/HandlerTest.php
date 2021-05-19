@@ -217,7 +217,7 @@ class HandlerTest extends ViewTestBase {
 
     foreach ($handler_types as $type) {
       $loaded_order = array_keys($view->display_handler->getOption($type));
-      $this->assertIdentical($original_order[$type], $loaded_order);
+      $this->assertSame($original_order[$type], $loaded_order);
     }
   }
 
@@ -275,7 +275,7 @@ class HandlerTest extends ViewTestBase {
       }
     }
     $expected_options = ['none', 'nid'];
-    $this->assertEqual($options, $expected_options);
+    $this->assertEqual($expected_options, $options);
 
     // Remove the relationship and make sure no relationship option appears.
     $this->drupalPostForm('admin/structure/views/nojs/handler/test_handler_relationships/default/relationship/nid', [], 'Remove');
@@ -285,11 +285,11 @@ class HandlerTest extends ViewTestBase {
     // Create a view of comments with node relationship.
     View::create(['base_table' => 'comment_field_data', 'id' => 'test_get_entity_type'])->save();
     $this->drupalPostForm('admin/structure/views/nojs/add-handler/test_get_entity_type/default/relationship', ['name[comment_field_data.node]' => 'comment_field_data.node'], 'Add and configure relationships');
-    $this->drupalPostForm(NULL, [], 'Apply');
+    $this->submitForm([], 'Apply');
     // Add a content type filter.
     $this->drupalPostForm('admin/structure/views/nojs/add-handler/test_get_entity_type/default/filter', ['name[node_field_data.type]' => 'node_field_data.type'], 'Add and configure filter criteria');
     $this->assertTrue($this->assertSession()->optionExists('edit-options-relationship', 'node')->isSelected());
-    $this->drupalPostForm(NULL, ['options[value][page]' => 'page'], 'Apply');
+    $this->submitForm(['options[value][page]' => 'page'], 'Apply');
     // Check content type filter options.
     $this->drupalGet('admin/structure/views/nojs/handler/test_get_entity_type/default/filter/type');
     $this->assertTrue($this->assertSession()->optionExists('edit-options-relationship', 'node')->isSelected());
@@ -349,9 +349,9 @@ class HandlerTest extends ViewTestBase {
     $string = ':' . $table . '_' . $field;
 
     // Make sure the placeholder variables are like expected.
-    $this->assertEqual($handler->getPlaceholder(), $string);
-    $this->assertEqual($handler->getPlaceholder(), $string . 1);
-    $this->assertEqual($handler->getPlaceholder(), $string . 2);
+    $this->assertEqual($string, $handler->getPlaceholder());
+    $this->assertEqual($string . 1, $handler->getPlaceholder());
+    $this->assertEqual($string . 2, $handler->getPlaceholder());
 
     // Set another table/field combination and make sure there are new
     // placeholders.
@@ -360,9 +360,9 @@ class HandlerTest extends ViewTestBase {
     $string = ':' . $table . '_' . $field;
 
     // Make sure the placeholder variables are like expected.
-    $this->assertEqual($handler->getPlaceholder(), $string);
-    $this->assertEqual($handler->getPlaceholder(), $string . 1);
-    $this->assertEqual($handler->getPlaceholder(), $string . 2);
+    $this->assertEqual($string, $handler->getPlaceholder());
+    $this->assertEqual($string . 1, $handler->getPlaceholder());
+    $this->assertEqual($string . 2, $handler->getPlaceholder());
   }
 
   /**

@@ -11,7 +11,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Tests the raw string formatter
+ * Tests the raw string formatter.
  *
  * @group field
  */

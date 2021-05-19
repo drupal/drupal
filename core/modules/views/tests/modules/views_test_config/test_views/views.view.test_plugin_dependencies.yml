@@ -47,6 +47,6 @@ display:
       row:
         type: test_row
     display_plugin: default
-    display_title: Master
+    display_title: Default
     id: default
     position: 0

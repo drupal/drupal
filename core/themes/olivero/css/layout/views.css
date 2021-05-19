@@ -11,16 +11,16 @@
  */
 
 .view > * {
-    margin-bottom: 36px
+    margin-bottom: 2.25rem
   }
 
 .view > *:last-child {
       margin-bottom: 0;
     }
 
-@media (min-width: 700px) {
+@media (min-width: 43.75rem) {
 
 .view > * {
-      margin-bottom: 54px
+      margin-bottom: 3.375rem
   }
     }

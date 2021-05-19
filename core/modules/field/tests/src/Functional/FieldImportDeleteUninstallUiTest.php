@@ -85,8 +85,8 @@ class FieldImportDeleteUninstallUiTest extends FieldTestBase {
     // Verify entity has been created properly.
     $id = $entity->id();
     $entity = EntityTest::load($id);
-    $this->assertEqual($entity->field_tel->value, $value);
-    $this->assertEqual($entity->field_tel[0]->value, $value);
+    $this->assertEqual($value, $entity->field_tel->value);
+    $this->assertEqual($value, $entity->field_tel[0]->value);
 
     $active = $this->container->get('config.storage');
     $sync = $this->container->get('config.storage.sync');
@@ -116,7 +116,7 @@ class FieldImportDeleteUninstallUiTest extends FieldTestBase {
 
     // This will purge all the data, delete the field and uninstall the
     // Telephone and Text modules.
-    $this->drupalPostForm(NULL, [], 'Import all');
+    $this->submitForm([], 'Import all');
     $this->assertNoText('Field data will be deleted by this synchronization.');
     $this->rebuildContainer();
     $this->assertFalse(\Drupal::moduleHandler()->moduleExists('telephone'));
