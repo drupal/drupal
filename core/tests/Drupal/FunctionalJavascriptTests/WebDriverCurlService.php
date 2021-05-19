@@ -15,6 +15,31 @@ use WebDriver\Exception as WebDriverException;
 class WebDriverCurlService extends CurlService {
 
   /**
+   * Flag that indicates if retries are enabled.
+   *
+   * @var bool
+   */
+  private static $retry = TRUE;
+
+  /**
+   * Enables retries.
+   *
+   * This is useful if the caller is implementing it's own waiting process.
+   */
+  public static function enableRetry() {
+    static::$retry = TRUE;
+  }
+
+  /**
+   * Disables retries.
+   *
+   * This is useful if the caller is implementing it's own waiting process.
+   */
+  public static function disableRetry() {
+    static::$retry = FALSE;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function execute($requestMethod, $url, $parameters = NULL, $extraOptions = []) {
@@ -22,7 +47,8 @@ class WebDriverCurlService extends CurlService {
       CURLOPT_FAILONERROR => TRUE,
     ];
     $retries = 0;
-    while ($retries < 10) {
+    $max_retries = static::$retry ? 10 : 1;
+    while ($retries < $max_retries) {
       try {
         $customHeaders = [
           'Content-Type: application/json;charset=UTF-8',

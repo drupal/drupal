@@ -142,7 +142,8 @@
      *
      * @ignore
      */
-    'columnschange.TableHeader drupalToolbarTrayChange': tableHeaderResizeHandler,
+    'columnschange.TableHeader drupalToolbarTrayChange':
+      tableHeaderResizeHandler,
 
     /**
      * Recalculate TableHeader.topOffset when viewport is resized.

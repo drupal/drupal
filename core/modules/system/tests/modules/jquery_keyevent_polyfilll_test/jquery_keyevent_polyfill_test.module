@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * Helper module for jQuery 3.6 FunctionalJavascript test compatibility.
+ */
+
+/**
+ * Implements hook_library_info_alter().
+ */
+function jquery_keyevent_polyfill_test_library_info_alter(&$libraries, $module) {
+  if ($module == 'core' && isset($libraries['jquery'])) {
+    $libraries['jquery']['dependencies'][] = 'jquery_keyevent_polyfill_test/jquery.keyevent.polyfill';
+  }
+}

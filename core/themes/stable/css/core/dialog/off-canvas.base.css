@@ -273,7 +273,14 @@
 #drupal-off-canvas ul li,
 #drupal-off-canvas ol li {
   display: block;
+  padding: 0.3125rem 0;
+  border-bottom: 1px solid #333
 }
+
+#drupal-off-canvas ul li:last-child, #drupal-off-canvas ol li:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+  }
 
 #drupal-off-canvas blockquote,
 #drupal-off-canvas code {

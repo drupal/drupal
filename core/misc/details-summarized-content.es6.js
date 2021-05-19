@@ -76,7 +76,7 @@
         once('details', 'details', context).map(
           (details) => new DetailsSummarizedContent(details),
         ),
-      );
+        );
     },
   };
 

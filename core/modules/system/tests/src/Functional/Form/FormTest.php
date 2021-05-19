@@ -124,11 +124,7 @@ class FormTest extends BrowserTestBase {
           \Drupal::formBuilder()->prepareForm($form_id, $form, $form_state);
           \Drupal::formBuilder()->processForm($form_id, $form, $form_state);
           $errors = $form_state->getErrors();
-          // Form elements of type 'radios' throw all sorts of PHP notices
-          // when you try to render them like this, so we ignore those for
-          // testing the required marker.
-          // @todo Fix this work-around (https://www.drupal.org/node/588438).
-          $form_output = ($type == 'radios') ? '' : \Drupal::service('renderer')->renderRoot($form);
+          $form_output = \Drupal::service('renderer')->renderRoot($form);
           if ($required) {
             // Make sure we have a form error for this element.
             $this->assertTrue(isset($errors[$element]), "Check empty($key) '$type' field '$element'");
@@ -861,16 +857,8 @@ class FormTest extends BrowserTestBase {
     }
 
     // Verify special element #type text-format.
-    $element = $this->xpath('//div[contains(@class, :div-class)]/descendant::textarea[@name=:name]', [
-      ':name' => 'text_format[value]',
-      ':div-class' => 'form-disabled',
-    ]);
-    $this->assertTrue(isset($element[0]), new FormattableMarkup('Disabled form element class found for #type %type.', ['%type' => 'text_format[value]']));
-    $element = $this->xpath('//div[contains(@class, :div-class)]/descendant::select[@name=:name]', [
-      ':name' => 'text_format[format]',
-      ':div-class' => 'form-disabled',
-    ]);
-    $this->assertTrue(isset($element[0]), new FormattableMarkup('Disabled form element class found for #type %type.', ['%type' => 'text_format[format]']));
+    $this->assertSession()->elementExists('xpath', "//div[contains(@class, 'form-disabled')]/descendant::textarea[@name='text_format[value]']");
+    $this->assertSession()->elementExists('xpath', "//div[contains(@class, 'form-disabled')]/descendant::select[@name='text_format[format]']");
   }
 
   /**

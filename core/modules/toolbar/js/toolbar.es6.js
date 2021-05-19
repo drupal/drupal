@@ -92,8 +92,7 @@
           {
             el: toolbar,
             model,
-          },
-        );
+            });
 
         // Force layout render to fix mobile view. Only needed on load, not
         // for every media query match.
@@ -108,8 +107,7 @@
             el: $(toolbar).find('.toolbar-menu-administration').get(0),
             model: menuModel,
             strings: options.strings,
-          },
-        );
+            });
 
         // Handle the resolution of Drupal.toolbar.setSubtrees.
         // This is handled with a deferred so that the function may be invoked
