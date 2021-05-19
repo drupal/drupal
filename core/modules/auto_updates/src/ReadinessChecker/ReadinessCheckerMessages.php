@@ -16,7 +16,7 @@ use Drupal\system\SystemManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class for displaying messages on admin pages.
+ * Class for displaying readiness messages on admin pages.
  *
  * @internal
  *   This class implements logic to output the messages from readiness checkers

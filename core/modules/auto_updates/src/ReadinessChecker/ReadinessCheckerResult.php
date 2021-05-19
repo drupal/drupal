@@ -11,12 +11,11 @@ use Drupal\system\SystemManager;
 class ReadinessCheckerResult {
 
   /**
-   * The summary of errors.
+   * A succinct summary of the results.
    *
    * @var \Drupal\Core\StringTranslation\TranslatableMarkup
    */
   protected $summary;
-
 
   /**
    * The error messages.
@@ -54,7 +53,7 @@ class ReadinessCheckerResult {
    */
   private function __construct(ReadinessCheckerInterface $readiness_checker, int $severity, array $messages, ?TranslatableMarkup $summary = NULL) {
     if (count($messages) > 1 && !$summary) {
-      throw new \InvalidArgumentException('If more than 1 messages is provided the summary is required.');
+      throw new \InvalidArgumentException('If more than one message is provided, a summary is required.');
     }
     $this->checkerId = $readiness_checker->_serviceId;
     $this->summary = $summary;
@@ -85,7 +84,7 @@ class ReadinessCheckerResult {
   }
 
   /**
-   * Creates an error ReadinessCheckerResult object.
+   * Creates a warning ReadinessCheckerResult object.
    *
    * @param \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerInterface $readiness_checker
    *   The readiness checker that produced this result.
@@ -120,7 +119,7 @@ class ReadinessCheckerResult {
    * Gets the messages.
    *
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup[]
-   *   The error messages.
+   *   The error or warning messages.
    */
   public function getMessages(): array {
     return $this->messages;

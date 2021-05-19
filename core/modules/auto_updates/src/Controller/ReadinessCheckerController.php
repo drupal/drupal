@@ -62,7 +62,7 @@ class ReadinessCheckerController extends ControllerBase {
       // @todo Link "automatic updates" to documentation in
       //   https://www.drupal.org/node/3168405.
       // If there are no messages from the readiness checkers display a message
-      // that site is ready. If there are messages the page will display them.
+      // that the site is ready. If there are messages, the status report will display them.
       $this->messenger()->addStatus($this->t('No issues found. Your site is ready for automatic updates'));
     }
     else {

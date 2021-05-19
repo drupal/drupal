@@ -72,14 +72,14 @@ class ReadinessCheckerManager {
   }
 
   /**
-   * Runs the result checkers and stores the results.
+   * Runs all readiness checkers and stores the results.
    *
    * @return $this
    */
   public function run(): self {
     $sorted_checkers = $this->getSortedCheckers();
     $results = [];
-    foreach ($sorted_checkers as $checker) {
+    foreach ($this->getSortedCheckers() as $checker) {
       if ($checker_results = $checker->getResults()) {
         $results = array_merge($results, $checker_results);
       }

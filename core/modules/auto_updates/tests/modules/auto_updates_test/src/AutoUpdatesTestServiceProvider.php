@@ -14,7 +14,7 @@ class AutoUpdatesTestServiceProvider implements ServiceModifierInterface {
    * {@inheritdoc}
    */
   public function alter(ContainerBuilder $container): void {
-    // Check if the specified constant is defined. We cannot use the state
+    // We cannot use the state
     // service here because the container is still being built.
     if (defined('AUTO_UPDATES_TEST_DUPLICATE_SERVICE')) {
       $definition = $container->getDefinition('auto_updates_test.checker');
