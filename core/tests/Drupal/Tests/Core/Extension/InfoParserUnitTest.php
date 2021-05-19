@@ -691,4 +691,110 @@ INFO;
     }
   }
 
+  /**
+   * Tests an info file with valid lifecycle values.
+   *
+   * @covers ::parse
+   *
+   * @dataProvider providerValidLifecycle
+   */
+  public function testValidLifecycle($lifecycle, $expected) {
+    $info = <<<INFO
+package: Core
+core: 8.x
+version: VERSION
+type: module
+name: Module for That
+INFO;
+    if (!empty($lifecycle)) {
+      $info .= "\lifecycle: $lifecycle\n";
+    }
+    vfsStream::setup('modules');
+    $filename = "lifecycle-$lifecycle.info.txt";
+    vfsStream::create([
+      'fixtures' => [
+        $filename => $info,
+      ],
+    ]);
+    $info_values = $this->infoParser->parse(vfsStream::url("modules/fixtures/$filename"));
+    $this->assertSame($expected, $info_values['lifecycle']);
+  }
+
+  /**
+   * Data provider for testValidLifecycle().
+   */
+  public function providerValidLifecycle() {
+    return [
+      'empty' => [
+        '',
+        'normal',
+      ],
+      'experimental' => [
+        'experimental',
+        'experimental',
+      ],
+      'normal' => [
+        'normal',
+        'normal',
+      ],
+      'deprecated' => [
+        'deprecated',
+        'deprecated',
+      ],
+      'obsolete' => [
+        'obsolete',
+        'obsolete',
+      ],
+    ];
+  }
+
+  /**
+   * Tests an info file with invalid lifecycle values.
+   *
+   * @covers ::parse
+   *
+   * @dataProvider providerInvalidlLifecycle
+   */
+  public function testInvalidLifecycle($lifecycle, $exception_message) {
+    $info = <<<INFO
+package: Core
+core: 8.x
+version: VERSION
+type: module
+name: Module for That
+INFO;
+    $info .= "\lifecycle: $lifecycle\n";
+    vfsStream::setup('modules');
+    $filename = "lifecycle-$lifecycle.info.txt";
+    vfsStream::create([
+      'fixtures' => [
+        $filename => $info,
+      ],
+    ]);
+    $this->expectException('\Drupal\Core\Extension\InfoParserException');
+    $this->expectExceptionMessage($exception_message);
+    $info_values = $this->infoParser->parse(vfsStream::url("modules/fixtures/$filename"));
+    $this->assertEmpty($info_values);
+  }
+
+  /**
+   * Data provider for testInvalidLifecycle().
+   */
+  public function providerInvalidLifecycle() {
+    return [
+      'bogus' => [
+        'bogus',
+        "'lifecycle: bogus' is not valid",
+      ],
+      'two words' => [
+        'deprecated obsolete',
+        "'lifecycle: deprecated obsolete' is not valid",
+      ],
+      'wrong case' => [
+        'Experimental',
+        "'lifecycle: Experimental' is not valid",
+      ],
+    ];
+  }
+
 }
