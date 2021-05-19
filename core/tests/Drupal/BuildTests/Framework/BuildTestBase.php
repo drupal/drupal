@@ -430,7 +430,7 @@ abstract class BuildTestBase extends TestCase {
       if (!$this->checkPortIsAvailable($port)) {
         return $ps;
       }
-      usleep(1000);
+      usleep(2000);
     }
     throw new \RuntimeException(sprintf("Unable to start the web server.\nERROR OUTPUT:\n%s", $ps->getErrorOutput()));
   }
