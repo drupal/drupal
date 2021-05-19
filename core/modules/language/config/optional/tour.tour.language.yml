@@ -21,32 +21,28 @@ tips:
     label: 'Adding languages'
     body: '<p>To add more languages to your site, click the "Add language" button.</p><p>Added languages will be displayed in the language list and can then be edited or deleted.</p>'
     weight: 2
-    attributes:
-      data-class: button-action
+    selector: '.button-action'
   language-reorder:
     id: language-reorder
     plugin: text
     label: 'Reordering languages'
     body: '<p>To reorder the languages on your site, use the drag icons next to each language.</p><p>The order shown here is the display order for language lists on the site such as in the language switcher blocks provided by the Interface Translation and Content Translation modules.</p><p>When you are done with reordering the languages, click the "Save configuration" button for the changes to take effect.</p>'
     weight: 3
-    attributes:
-      data-class: draggable
+    selector: '.draggable'
   language-default:
     id: language-default
     plugin: text
     label: 'Set a language as default'
     body: '<p>You can change the default language of the site by choosing one of your configured languages as default. The site will use the default language in situations where no choice is made but a language should be set, for example as the language of the displayed interface.</p>'
     weight: 4
-    attributes:
-      data-class: js-form-item-site-default-language
+    selector: '.js-form-item-site-default-language'
   language-operations:
     id: language-operations
     plugin: text
     label: 'Modifying languages'
     body: '<p>Operations are provided for editing and deleting your languages.</p><p>You can edit the name and the direction of the language.</p><p>Deleted languages can be added back at a later time. Deleting a language will remove all interface translations associated with it, and content in this language will be set to be language neutral. Note that you cannot delete the default language of the site.</p>'
     weight: 5
-    attributes:
-      data-class: dropbutton-wrapper
+    selector: '.dropbutton-wrapper'
   language-continue:
     id: language-continue
     plugin: text
