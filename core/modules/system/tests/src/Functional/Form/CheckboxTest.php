@@ -68,7 +68,7 @@ class CheckboxTest extends BrowserTestBase {
     $this->assertSame(['0', 0, 0], $results->checkbox_zero_default, 'The first choice is on in checkbox_zero_default');
     $this->assertSame(['0', 0, 0], $results->checkbox_string_zero_default, 'The first choice is on in checkbox_string_zero_default');
     // Due to Mink driver differences, we cannot submit an empty checkbox value
-    // to drupalPostForm(), even if that empty value is the 'true' value for
+    // to submitForm(), even if that empty value is the 'true' value for
     // the checkbox.
     $this->drupalGet('form-test/checkboxes-zero/1');
     $this->assertSession()->fieldExists('checkbox_off[0]')->check();
@@ -89,7 +89,7 @@ class CheckboxTest extends BrowserTestBase {
       $this->assertSame($checked, $name == 'checkbox_zero_default[0]' || $name == 'checkbox_string_zero_default[0]', new FormattableMarkup('Checkbox %name correctly checked', ['%name' => $name]));
     }
     // Due to Mink driver differences, we cannot submit an empty checkbox value
-    // to drupalPostForm(), even if that empty value is the 'true' value for
+    // to submitForm(), even if that empty value is the 'true' value for
     // the checkbox.
     $this->drupalGet('form-test/checkboxes-zero/0');
     $this->assertSession()->fieldExists('checkbox_off[0]')->check();

@@ -132,10 +132,9 @@ class SearchBlockTest extends BrowserTestBase {
 
     // Edit the block configuration so that it searches users instead of nodes,
     // and test.
-    $this->drupalPostForm('admin/structure/block/manage/' . $block->id(),
-      [
-        'settings[page_id]' => 'user_search',
-      ], 'Save block');
+    $this->drupalGet('admin/structure/block/manage/' . $block->id());
+    $this->submitForm(['settings[page_id]' => 'user_search'], 'Save block');
+
     $name = $this->adminUser->getAccountName();
     $this->drupalGet('node');
     $this->submitForm(['keys' => $name], 'Search');

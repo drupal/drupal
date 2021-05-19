@@ -551,7 +551,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
 
-    // Can't use drupalPostForm() for set nonexistent fields.
+    // Can't use submitForm() for set nonexistent fields.
     $this->drupalGet('file-test/save_upload_from_form_test');
     $client = $this->getSession()->getDriver()->getClient();
     $submit_xpath = $this->assertSession()->buttonExists('Submit')->getXpath();

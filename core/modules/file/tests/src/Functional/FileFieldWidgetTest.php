@@ -122,7 +122,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $type_name = 'article';
     // Use explicit names instead of random names for those fields, because of a
-    // bug in drupalPostForm() with multiple file uploads in one form, where the
+    // bug in submitForm() with multiple file uploads in one form, where the
     // order of uploads depends on the order in which the upload elements are
     // added to the $form (which, in the current implementation of
     // FileStorage::listAll(), comes down to the alphabetical order on field
@@ -144,7 +144,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     foreach ([$field_name2, $field_name] as $each_field_name) {
       for ($delta = 0; $delta < 3; $delta++) {
         $edit = ['files[' . $each_field_name . '_' . $delta . '][]' => \Drupal::service('file_system')->realpath($test_file->getFileUri())];
-        // If the Upload button doesn't exist, drupalPostForm() will
+        // If the Upload button doesn't exist, submitForm() will
         // automatically fail with an assertion message.
         $this->submitForm($edit, 'Upload');
       }

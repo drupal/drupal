@@ -758,7 +758,7 @@ class FormTest extends BrowserTestBase {
     $returned_values['normal'] = Json::decode($this->getSession()->getPage()->getContent());
 
     // Do the same with input, as could happen if JavaScript un-disables an
-    // element. drupalPostForm() emulates a browser by not submitting input for
+    // element. submitForm() emulates a browser by not submitting input for
     // disabled elements, so we need to un-disable those elements first.
     $this->drupalGet('form-test/disabled-elements');
     $disabled_elements = [];

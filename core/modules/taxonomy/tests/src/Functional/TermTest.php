@@ -448,7 +448,7 @@ class TermTest extends TaxonomyTestBase {
       $node = $assert->hiddenFieldExists($field);
       $node->setValue($value);
     }
-    // Edit non-hidden elements within drupalPostForm().
+    // Edit non-hidden elements within submitForm().
     $edit = [
       'terms[tid:' . $term2->id() . ':0][weight]' => 0,
       'terms[tid:' . $term3->id() . ':0][weight]' => 1,
