@@ -1278,14 +1278,15 @@
       const $context = $(context);
       // Handle handler deletion by looking for the hidden checkbox and hiding
       // the row.
-      $(once('views', 'a.views-remove-link', context)).on('click', function (
-        event,
-      ) {
-        const id = $(this).attr('id').replace('views-remove-link-', '');
-        $context.find(`#views-row-${id}`).hide();
-        $context.find(`#views-removed-${id}`).prop('checked', true);
-        event.preventDefault();
-      });
+      $(once('views', 'a.views-remove-link', context)).on(
+        'click',
+        function (event) {
+          const id = $(this).attr('id').replace('views-remove-link-', '');
+          $context.find(`#views-row-${id}`).hide();
+          $context.find(`#views-removed-${id}`).prop('checked', true);
+          event.preventDefault();
+        },
+      );
 
       // Handle display deletion by looking for the hidden checkbox and hiding
       // the row.

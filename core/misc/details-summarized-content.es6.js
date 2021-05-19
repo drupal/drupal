@@ -72,10 +72,11 @@
    */
   Drupal.behaviors.detailsSummary = {
     attach(context) {
-      DetailsSummarizedContent.instances = DetailsSummarizedContent.instances.concat(
-        once('details', 'details', context).map(
-          (details) => new DetailsSummarizedContent(details),
-        ),
+      DetailsSummarizedContent.instances =
+        DetailsSummarizedContent.instances.concat(
+          once('details', 'details', context).map(
+            (details) => new DetailsSummarizedContent(details),
+          ),
         );
     },
   };

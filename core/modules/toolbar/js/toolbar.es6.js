@@ -74,25 +74,24 @@
           Drupal.toolbar.mediaQueryChangeHandler.call(null, model, label, mql);
         });
 
-        Drupal.toolbar.views.toolbarVisualView = new Drupal.toolbar.ToolbarVisualView(
-          {
+        Drupal.toolbar.views.toolbarVisualView =
+          new Drupal.toolbar.ToolbarVisualView({
             el: toolbar,
             model,
             strings: options.strings,
-          },
-        );
-        Drupal.toolbar.views.toolbarAuralView = new Drupal.toolbar.ToolbarAuralView(
-          {
+          });
+        Drupal.toolbar.views.toolbarAuralView =
+          new Drupal.toolbar.ToolbarAuralView({
             el: toolbar,
             model,
             strings: options.strings,
-          },
-        );
+          });
         Drupal.toolbar.views.bodyVisualView = new Drupal.toolbar.BodyVisualView(
           {
             el: toolbar,
             model,
-            });
+          },
+        );
 
         // Force layout render to fix mobile view. Only needed on load, not
         // for every media query match.
@@ -107,7 +106,8 @@
             el: $(toolbar).find('.toolbar-menu-administration').get(0),
             model: menuModel,
             strings: options.strings,
-            });
+          },
+        );
 
         // Handle the resolution of Drupal.toolbar.setSubtrees.
         // This is handled with a deferred so that the function may be invoked
