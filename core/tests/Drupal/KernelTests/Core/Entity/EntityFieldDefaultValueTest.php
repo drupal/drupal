@@ -47,9 +47,9 @@ class EntityFieldDefaultValueTest extends EntityKernelTestBase {
       ->create();
     $definition = $this->entityTypeManager->getDefinition($entity_type_id);
     $langcode_key = $definition->getKey('langcode');
-    $this->assertEqual('en', $entity->{$langcode_key}->value, new FormattableMarkup('%entity_type: Default language', ['%entity_type' => $entity_type_id]));
+    $this->assertEquals('en', $entity->{$langcode_key}->value, new FormattableMarkup('%entity_type: Default language', ['%entity_type' => $entity_type_id]));
     $this->assertTrue(Uuid::isValid($entity->uuid->value), new FormattableMarkup('%entity_type: Default UUID', ['%entity_type' => $entity_type_id]));
-    $this->assertEqual([], $entity->name->getValue(), 'Field has one empty value by default.');
+    $this->assertEquals([], $entity->name->getValue(), 'Field has one empty value by default.');
   }
 
   /**
@@ -70,7 +70,7 @@ class EntityFieldDefaultValueTest extends EntityKernelTestBase {
         'color' => "color:1:$string",
       ],
     ];
-    $this->assertEqual($expected, $entity->description->getValue());
+    $this->assertEquals($expected, $entity->description->getValue());
   }
 
 }

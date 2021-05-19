@@ -33,8 +33,8 @@ class LocaleUpdateDevelopmentReleaseTest extends BrowserTestBase {
 
   public function testLocaleUpdateDevelopmentRelease() {
     $projects = locale_translation_build_projects();
-    $this->assertEqual('8.0.x', $projects['drupal']->info['version'], 'The branch of the core dev release.');
-    $this->assertEqual('12.x-10.x', $projects['contrib']->info['version'], 'The branch of the contrib module dev release.');
+    $this->assertEquals('8.0.x', $projects['drupal']->info['version'], 'The branch of the core dev release.');
+    $this->assertEquals('12.x-10.x', $projects['contrib']->info['version'], 'The branch of the contrib module dev release.');
   }
 
 }

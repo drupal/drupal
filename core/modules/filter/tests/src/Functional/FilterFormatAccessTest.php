@@ -128,11 +128,11 @@ class FilterFormatAccessTest extends BrowserTestBase {
     $fallback_format = FilterFormat::load(filter_fallback_format());
     $disallowed_format_name = $this->disallowedFormat->getPermissionName();
     $this->assertTrue($this->allowedFormat->access('use', $this->webUser), 'A regular user has access to use a text format they were granted access to.');
-    $this->assertEqual(AccessResult::allowed()->addCacheContexts(['user.permissions']), $this->allowedFormat->access('use', $this->webUser, TRUE), 'A regular user has access to use a text format they were granted access to.');
+    $this->assertEquals(AccessResult::allowed()->addCacheContexts(['user.permissions']), $this->allowedFormat->access('use', $this->webUser, TRUE), 'A regular user has access to use a text format they were granted access to.');
     $this->assertFalse($this->disallowedFormat->access('use', $this->webUser), 'A regular user does not have access to use a text format they were not granted access to.');
-    $this->assertEqual(AccessResult::neutral("The '$disallowed_format_name' permission is required.")->cachePerPermissions(), $this->disallowedFormat->access('use', $this->webUser, TRUE), 'A regular user does not have access to use a text format they were not granted access to.');
+    $this->assertEquals(AccessResult::neutral("The '$disallowed_format_name' permission is required.")->cachePerPermissions(), $this->disallowedFormat->access('use', $this->webUser, TRUE), 'A regular user does not have access to use a text format they were not granted access to.');
     $this->assertTrue($fallback_format->access('use', $this->webUser), 'A regular user has access to use the fallback format.');
-    $this->assertEqual(AccessResult::allowed(), $fallback_format->access('use', $this->webUser, TRUE), 'A regular user has access to use the fallback format.');
+    $this->assertEquals(AccessResult::allowed(), $fallback_format->access('use', $this->webUser, TRUE), 'A regular user has access to use the fallback format.');
 
     // Perform similar checks as above, but now against the entire list of
     // available formats for this user.
@@ -195,7 +195,7 @@ class FilterFormatAccessTest extends BrowserTestBase {
     $this->assertNotContains($this->disallowedFormat->id(), array_keys(filter_get_formats_by_role($rid)), 'A text format which a role does not have access to does not appear in the list of formats available to that role.');
 
     // Check that the fallback format is always allowed.
-    $this->assertEqual(filter_get_roles_by_format(FilterFormat::load(filter_fallback_format())), user_role_names(), 'All roles have access to the fallback format.');
+    $this->assertEquals(filter_get_roles_by_format(FilterFormat::load(filter_fallback_format())), user_role_names(), 'All roles have access to the fallback format.');
     $this->assertContains(filter_fallback_format(), array_keys(filter_get_formats_by_role($rid)), 'The fallback format appears in the list of allowed formats for any role.');
   }
 

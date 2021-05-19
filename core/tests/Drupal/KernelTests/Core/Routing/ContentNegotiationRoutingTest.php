@@ -107,7 +107,7 @@ class ContentNegotiationRoutingTest extends KernelTestBase {
       // Verbose message since simpletest doesn't let us provide a message and
       // see the error.
       $this->assertTrue(TRUE, $message);
-      $this->assertEqual(Response::HTTP_OK, $response->getStatusCode());
+      $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
       $this->assertStringContainsString($content_type, $response->headers->get('Content-type'));
     }
   }
@@ -141,7 +141,7 @@ class ContentNegotiationRoutingTest extends KernelTestBase {
       /** @var \Symfony\Component\HttpKernel\HttpKernelInterface $kernel */
       $kernel = \Drupal::getContainer()->get('http_kernel');
       $response = $kernel->handle($request);
-      $this->assertEqual(Response::HTTP_OK, $response->getStatusCode(), "Testing path:{$path} Accept:{$accept_header} Content-type:{$content_type}");
+      $this->assertEquals(Response::HTTP_OK, $response->getStatusCode(), "Testing path:{$path} Accept:{$accept_header} Content-type:{$content_type}");
     }
   }
 

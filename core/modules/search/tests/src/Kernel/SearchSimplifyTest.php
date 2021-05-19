@@ -87,7 +87,7 @@ class SearchSimplifyTest extends KernelTestBase {
     assert($text_processor instanceof SearchTextProcessorInterface);
     foreach ($cases as $case) {
       $out = trim($text_processor->analyze($case[0]));
-      $this->assertEqual($case[1], $out, $case[2]);
+      $this->assertEquals($case[1], $out, $case[2]);
     }
   }
 

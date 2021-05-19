@@ -169,10 +169,10 @@ class RevisionableContentEntityBaseTest extends EntityKernelTestBase {
    */
   protected function assertItemsTableCount($count, EntityTypeInterface $definition) {
     $connection = Database::getConnection();
-    $this->assertEqual(1, (int) $connection->select($definition->getBaseTable())->countQuery()->execute()->fetchField());
-    $this->assertEqual(1, (int) $connection->select($definition->getDataTable())->countQuery()->execute()->fetchField());
-    $this->assertEqual($count, (int) $connection->select($definition->getRevisionTable())->countQuery()->execute()->fetchField());
-    $this->assertEqual($count, (int) $connection->select($definition->getRevisionDataTable())->countQuery()->execute()->fetchField());
+    $this->assertEquals(1, (int) $connection->select($definition->getBaseTable())->countQuery()->execute()->fetchField());
+    $this->assertEquals(1, (int) $connection->select($definition->getDataTable())->countQuery()->execute()->fetchField());
+    $this->assertEquals($count, (int) $connection->select($definition->getRevisionTable())->countQuery()->execute()->fetchField());
+    $this->assertEquals($count, (int) $connection->select($definition->getRevisionDataTable())->countQuery()->execute()->fetchField());
 
   }
 

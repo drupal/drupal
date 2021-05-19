@@ -294,14 +294,14 @@ class CKEditorTest extends KernelTestBase {
     $expected = $this->getDefaultInternalConfig();
     $expected['disallowedContent'] = $this->getDefaultDisallowedContentConfig();
     $expected['allowedContent'] = $this->getDefaultAllowedContentConfig();
-    $this->assertEqual($expected, $internal_plugin->getConfig($editor), '"Internal" plugin configuration built correctly for default toolbar.');
+    $this->assertEquals($expected, $internal_plugin->getConfig($editor), '"Internal" plugin configuration built correctly for default toolbar.');
 
     // Format dropdown/button enabled: new setting should be present.
     $settings = $editor->getSettings();
     $settings['toolbar']['rows'][0][0]['items'][] = 'Format';
     $editor->setSettings($settings);
     $expected['format_tags'] = 'p;h2;h3;h4;h5;h6';
-    $this->assertEqual($expected, $internal_plugin->getConfig($editor), '"Internal" plugin configuration built correctly for customized toolbar.');
+    $this->assertEquals($expected, $internal_plugin->getConfig($editor), '"Internal" plugin configuration built correctly for customized toolbar.');
   }
 
   /**
@@ -479,7 +479,7 @@ class CKEditorTest extends KernelTestBase {
     // Test that we now get the expected language.
     $editor = Editor::load('filtered_html');
     $settings = $this->ckeditor->getJSSettings($editor);
-    $this->assertEqual($langcode, $settings['language']);
+    $this->assertEquals($langcode, $settings['language']);
   }
 
   protected function getDefaultInternalConfig() {

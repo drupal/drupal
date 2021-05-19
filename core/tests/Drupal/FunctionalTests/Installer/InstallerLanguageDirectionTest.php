@@ -37,7 +37,7 @@ class InstallerLanguageDirectionTest extends InstallerTestBase {
 
     // Verify that language direction is right-to-left.
     $direction = current($this->xpath('/@dir'))->getText();
-    $this->assertEqual('rtl', $direction);
+    $this->assertEquals('rtl', $direction);
   }
 
   /**

@@ -191,11 +191,11 @@ class ModuleTest extends ViewsKernelTestBase {
 
     views_enable_view($view);
     $this->assertTrue($view->status(), 'A view has been enabled.');
-    $this->assertEqual(views_view_is_enabled($view), $view->status(), 'views_view_is_enabled is correct.');
+    $this->assertEquals(views_view_is_enabled($view), $view->status(), 'views_view_is_enabled is correct.');
 
     views_disable_view($view);
     $this->assertFalse($view->status(), 'A view has been disabled.');
-    $this->assertEqual(views_view_is_disabled($view), !$view->status(), 'views_view_is_disabled is correct.');
+    $this->assertEquals(views_view_is_disabled($view), !$view->status(), 'views_view_is_disabled is correct.');
   }
 
   /**
@@ -235,9 +235,9 @@ class ModuleTest extends ViewsKernelTestBase {
       $this->assertTrue(isset($plugin_list[$key]), new FormattableMarkup('The expected @key plugin list key was found.', ['@key' => $key]));
       $plugin_details = $plugin_list[$key];
 
-      $this->assertEqual($plugin_type, $plugin_details['type'], 'The expected plugin type was found.');
-      $this->assertEqual($plugin_def['title'], $plugin_details['title'], 'The expected plugin title was found.');
-      $this->assertEqual($plugin_def['provider'], $plugin_details['provider'], 'The expected plugin provider was found.');
+      $this->assertEquals($plugin_type, $plugin_details['type'], 'The expected plugin type was found.');
+      $this->assertEquals($plugin_def['title'], $plugin_details['title'], 'The expected plugin title was found.');
+      $this->assertEquals($plugin_def['provider'], $plugin_details['provider'], 'The expected plugin provider was found.');
       $this->assertContains('test_view', $plugin_details['views'], 'The test_view View was found in the list of views using this plugin.');
     }
   }
@@ -340,7 +340,7 @@ class ModuleTest extends ViewsKernelTestBase {
     $table_data = $this->container->get('views.views_data')->get($table);
     $field_data = $table_data[$field][$id];
 
-    $this->assertEqual($handler->getPluginId(), $field_data['id']);
+    $this->assertEquals($handler->getPluginId(), $field_data['id']);
   }
 
 }

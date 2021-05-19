@@ -37,14 +37,14 @@ class NodeWizardTest extends WizardTestBase {
     $display_options = $view->getDisplay('default')['display_options'];
     // Ensure that the 'entity_table' and 'entity_field' properties are set
     // property.
-    $this->assertEqual('node', $display_options['fields']['title']['entity_type']);
-    $this->assertEqual('title', $display_options['fields']['title']['entity_field']);
+    $this->assertEquals('node', $display_options['fields']['title']['entity_type']);
+    $this->assertEquals('title', $display_options['fields']['title']['entity_field']);
 
-    $this->assertEqual('node', $display_options['filters']['status']['entity_type']);
-    $this->assertEqual('status', $display_options['filters']['status']['entity_field']);
+    $this->assertEquals('node', $display_options['filters']['status']['entity_type']);
+    $this->assertEquals('status', $display_options['filters']['status']['entity_field']);
 
-    $this->assertEqual('node', $display_options['sorts']['created']['entity_type']);
-    $this->assertEqual('created', $display_options['sorts']['created']['entity_field']);
+    $this->assertEquals('node', $display_options['sorts']['created']['entity_type']);
+    $this->assertEquals('created', $display_options['sorts']['created']['entity_field']);
   }
 
 }

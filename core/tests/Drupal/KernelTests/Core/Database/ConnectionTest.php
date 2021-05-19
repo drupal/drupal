@@ -94,8 +94,8 @@ class ConnectionTest extends DatabaseTestBase {
 
     // In the MySQL driver, the port can be different, so check individual
     // options.
-    $this->assertEqual($connection_info['default']['driver'], $connectionOptions['driver'], 'The default connection info driver matches the current connection options driver.');
-    $this->assertEqual($connection_info['default']['database'], $connectionOptions['database'], 'The default connection info database matches the current connection options database.');
+    $this->assertEquals($connection_info['default']['driver'], $connectionOptions['driver'], 'The default connection info driver matches the current connection options driver.');
+    $this->assertEquals($connection_info['default']['database'], $connectionOptions['database'], 'The default connection info database matches the current connection options database.');
 
     // Set up identical replica and confirm connection options are identical.
     Database::addConnectionInfo('default', 'replica', $connection_info['default']);

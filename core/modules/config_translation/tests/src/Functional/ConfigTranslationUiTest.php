@@ -257,7 +257,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       'name' => 'FR ' . $site_name,
       'slogan' => 'FR ' . $site_slogan,
     ];
-    $this->assertEqual($expected, $override->get());
+    $this->assertEquals($expected, $override->get());
 
     // Case 2: Update new value for site slogan and default value for site name.
     $this->drupalGet("$translation_base_url/fr/edit");
@@ -275,7 +275,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
     // Expect only slogan in language specific file.
     $expected = 'FR ' . $site_slogan;
-    $this->assertEqual($expected, $override->get('slogan'));
+    $this->assertEquals($expected, $override->get('slogan'));
 
     // Case 3: Keep default value for site name and slogan.
     $this->drupalGet("$translation_base_url/fr/edit");
@@ -364,7 +364,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
         'label' => 'Website feedback - ' . $langcode,
         'reply' => 'Thank you for your mail - ' . $langcode,
       ];
-      $this->assertEqual($expected, $override->get());
+      $this->assertEquals($expected, $override->get());
 
       // Check for edit, delete links (and no 'add' link) for $langcode.
       $this->assertSession()->linkByHrefNotExists("$translation_base_url/$langcode/add");
@@ -402,7 +402,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     foreach ($captured_emails as $email) {
       if ($email['id'] == 'contact_page_autoreply') {
         // Trim because we get an added newline for the body.
-        $this->assertEqual('Thank you for your mail - ' . $email['langcode'], trim($email['body']));
+        $this->assertEquals('Thank you for your mail - ' . $email['langcode'], trim($email['body']));
       }
     }
 
@@ -496,12 +496,12 @@ class ConfigTranslationUiTest extends BrowserTestBase {
         'label' => $id . ' - FR',
         'pattern' => 'D',
       ];
-      $this->assertEqual($expected, $override->get());
+      $this->assertEquals($expected, $override->get());
 
       // Formatting the date 8 / 27 / 1985 @ 13:37 EST with pattern D should
       // display "Tue".
       $formatted_date = $this->container->get('date.formatter')->format(494015820, $id, NULL, 'America/New_York', 'fr');
-      $this->assertEqual('Tue', $formatted_date, 'Got the right formatted date using the date format translation pattern.');
+      $this->assertEquals('Tue', $formatted_date, 'Got the right formatted date using the date format translation pattern.');
     }
   }
 
@@ -839,7 +839,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     // Make sure translation stored in locale storage after saved language
     // specific configuration translation.
     $translation = $this->getTranslation('user.settings', 'anonymous', 'fr');
-    $this->assertEqual('Anonyme', $translation->getString());
+    $this->assertEquals('Anonyme', $translation->getString());
 
     // revert custom translations to base translation.
     $edit = [
@@ -849,7 +849,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
     // Make sure there is no translation stored in locale storage after revert.
     $translation = $this->getTranslation('user.settings', 'anonymous', 'fr');
-    $this->assertEqual('Anonymous', $translation->getString());
+    $this->assertEquals('Anonymous', $translation->getString());
   }
 
   /**
@@ -911,7 +911,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $actual = $config_factory
       ->getEditable('config_translation_test.content')
       ->get('animals');
-    $this->assertEqual($expected, $actual);
+    $this->assertEquals($expected, $actual);
 
     $edit = [
       'translation[config_names][config_translation_test.content][content][value]' => '<p><strong>Hello World</strong> - FR</p>',
@@ -932,7 +932,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $actual = $config_factory
       ->get('config_translation_test.content')
       ->get('animals');
-    $this->assertEqual($expected, $actual);
+    $this->assertEquals($expected, $actual);
   }
 
   /**
@@ -950,7 +950,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $actual = $config_factory
       ->get('config_translation_test.content')
       ->getOriginal('content', FALSE);
-    $this->assertEqual($expected, $actual);
+    $this->assertEquals($expected, $actual);
 
     $translation_base_url = 'admin/config/media/file-system/translate';
     $this->drupalGet($translation_base_url);
@@ -983,7 +983,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $actual = $config_factory
       ->get('config_translation_test.content')
       ->get('content');
-    $this->assertEqual($expected, $actual);
+    $this->assertEquals($expected, $actual);
 
     // Change the text format of the source configuration and verify that the
     // text format of the translation does not change because that could lead to
@@ -997,7 +997,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       ->get('config_translation_test.content')
       ->get('content');
     // The translation should not have changed, so re-use $expected.
-    $this->assertEqual($expected, $actual);
+    $this->assertEquals($expected, $actual);
 
     // Because the text is now in a text format that the translator does not
     // have access to, the translator should not be able to translate it.
@@ -1011,7 +1011,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $actual = $config_factory
       ->get('config_translation_test.content')
       ->get('content');
-    $this->assertEqual($expected, $actual);
+    $this->assertEquals($expected, $actual);
 
     // The administrator must explicitly change the text format.
     $this->drupalLogin($this->adminUser);
@@ -1026,7 +1026,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $actual = $config_factory
       ->get('config_translation_test.content')
       ->get('content');
-    $this->assertEqual($expected, $actual);
+    $this->assertEquals($expected, $actual);
   }
 
   /**

@@ -102,7 +102,7 @@ class SearchPageTextTest extends BrowserTestBase {
     $edit['keys'] = $search_terms;
     $this->drupalPostForm('search/node', $edit, 'Search');
     $actual_title = $this->xpath('//title')[0]->getText();
-    $this->assertEqual(Html::decodeEntities(t($title_source, ['@keywords' => Unicode::truncate($search_terms, 60, TRUE, TRUE)])), $actual_title, 'Search page title is correct');
+    $this->assertEquals(Html::decodeEntities(t($title_source, ['@keywords' => Unicode::truncate($search_terms, 60, TRUE, TRUE)])), $actual_title, 'Search page title is correct');
 
     $edit['keys'] = $this->searchingUser->getAccountName();
     $this->drupalPostForm('search/user', $edit, 'Search');

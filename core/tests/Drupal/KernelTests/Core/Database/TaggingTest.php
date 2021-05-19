@@ -121,7 +121,7 @@ class TaggingTest extends DatabaseTestBase {
     $query->addMetaData('test', $data);
 
     $return = $query->getMetaData('test');
-    $this->assertEqual($data, $return, 'Correct metadata returned.');
+    $this->assertEquals($data, $return, 'Correct metadata returned.');
 
     $return = $query->getMetaData('nothere');
     $this->assertNull($return, 'Non-existent key returned NULL.');

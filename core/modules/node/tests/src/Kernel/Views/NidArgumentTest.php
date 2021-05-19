@@ -72,10 +72,10 @@ class NidArgumentTest extends ViewsKernelTestBase {
     $view->destroy();
     $view->preview('default', [$node2->id()]);
     // Verify that the title is overridden.
-    $this->assertEqual($node2->getTitle(), $view->getTitle());
+    $this->assertEquals($node2->getTitle(), $view->getTitle());
     // Verify that the argument filtering works.
     $this->assertCount(1, $view->result, 'Found the expected number of results.');
-    $this->assertEqual($node2->id(), (string) $view->style_plugin->getField(0, 'nid'), 'Found the correct nid.');
+    $this->assertEquals($node2->id(), (string) $view->style_plugin->getField(0, 'nid'), 'Found the correct nid.');
 
     // Verify that setting a non-existing id as argument results in no nodes
     // being shown.

@@ -81,7 +81,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
     // Check if configuration translations have been imported.
     $override = \Drupal::languageManager()->getLanguageConfigOverride('af', 'system.maintenance');
     // cSpell:disable-next-line
-    $this->assertEqual('Ons is tans besig met onderhoud op @site. Wees asseblief geduldig, ons sal binnekort weer terug wees.', $override->get('message'));
+    $this->assertEquals('Ons is tans besig met onderhoud op @site. Wees asseblief geduldig, ons sal binnekort weer terug wees.', $override->get('message'));
   }
 
   /**
@@ -127,7 +127,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
     $this->assertText('Test site slogan in Afrikaans');
 
     $override = \Drupal::languageManager()->getLanguageConfigOverride('af', 'locale_test_translate.settings');
-    $this->assertEqual('Locale can translate Afrikaans', $override->get('translatable_default_with_translation'));
+    $this->assertEquals('Locale can translate Afrikaans', $override->get('translatable_default_with_translation'));
 
     // Update test configuration.
     $override
@@ -152,7 +152,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
       'translatable_default_with_translation' => 'This translation is preserved',
       'translatable_default_with_no_translation' => 'This translation is preserved',
     ];
-    $this->assertEqual($expected, $override->get());
+    $this->assertEquals($expected, $override->get());
   }
 
   /**
@@ -184,7 +184,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
     $this->drupalPostForm('admin/config/regional/language/add', ['predefined_langcode' => 'af'], 'Add language');
 
     $override = \Drupal::languageManager()->getLanguageConfigOverride('af', 'locale_test_translate.settings');
-    $this->assertEqual(['translatable_default_with_translation' => 'Locale can translate Afrikaans'], $override->get());
+    $this->assertEquals(['translatable_default_with_translation' => 'Locale can translate Afrikaans'], $override->get());
 
     // Remove the string from translation to simulate a Locale removal. Note
     // that is no current way of doing this in the UI.
@@ -193,10 +193,10 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
     \Drupal::service('locale.storage')->delete($string);
     // Force a rebuild of config translations.
     $count = Locale::config()->updateConfigTranslations(['locale_test_translate.settings'], ['af']);
-    $this->assertEqual(1, $count, 'Correct count of updated translations');
+    $this->assertEquals(1, $count, 'Correct count of updated translations');
 
     $override = \Drupal::languageManager()->getLanguageConfigOverride('af', 'locale_test_translate.settings');
-    $this->assertEqual([], $override->get());
+    $this->assertEquals([], $override->get());
     $this->assertTrue($override->isNew(), 'The configuration override was deleted when the Locale string was deleted.');
   }
 
@@ -239,7 +239,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
       'translatable_no_default' => 'This translation is preserved',
       'translatable_default_with_no_translation' => 'This translation is preserved',
     ];
-    $this->assertEqual($expected, $override->get());
+    $this->assertEquals($expected, $override->get());
 
     // Set the translated string to empty.
     $search = [
@@ -260,7 +260,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
       'translatable_no_default' => 'This translation is preserved',
       'translatable_default_with_no_translation' => 'This translation is preserved',
     ];
-    $this->assertEqual($expected, $override->get());
+    $this->assertEquals($expected, $override->get());
   }
 
 }

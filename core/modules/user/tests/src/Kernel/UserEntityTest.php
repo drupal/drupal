@@ -50,27 +50,27 @@ class UserEntityTest extends KernelTestBase {
 
     $this->assertTrue($user->hasRole('test_role_one'));
     $this->assertFalse($user->hasRole('test_role_two'));
-    $this->assertEqual([RoleInterface::AUTHENTICATED_ID, 'test_role_one'], $user->getRoles());
+    $this->assertEquals([RoleInterface::AUTHENTICATED_ID, 'test_role_one'], $user->getRoles());
 
     $user->addRole('test_role_one');
     $this->assertTrue($user->hasRole('test_role_one'));
     $this->assertFalse($user->hasRole('test_role_two'));
-    $this->assertEqual([RoleInterface::AUTHENTICATED_ID, 'test_role_one'], $user->getRoles());
+    $this->assertEquals([RoleInterface::AUTHENTICATED_ID, 'test_role_one'], $user->getRoles());
 
     $user->addRole('test_role_two');
     $this->assertTrue($user->hasRole('test_role_one'));
     $this->assertTrue($user->hasRole('test_role_two'));
-    $this->assertEqual([RoleInterface::AUTHENTICATED_ID, 'test_role_one', 'test_role_two'], $user->getRoles());
+    $this->assertEquals([RoleInterface::AUTHENTICATED_ID, 'test_role_one', 'test_role_two'], $user->getRoles());
 
     $user->removeRole('test_role_three');
     $this->assertTrue($user->hasRole('test_role_one'));
     $this->assertTrue($user->hasRole('test_role_two'));
-    $this->assertEqual([RoleInterface::AUTHENTICATED_ID, 'test_role_one', 'test_role_two'], $user->getRoles());
+    $this->assertEquals([RoleInterface::AUTHENTICATED_ID, 'test_role_one', 'test_role_two'], $user->getRoles());
 
     $user->removeRole('test_role_one');
     $this->assertFalse($user->hasRole('test_role_one'));
     $this->assertTrue($user->hasRole('test_role_two'));
-    $this->assertEqual([RoleInterface::AUTHENTICATED_ID, 'test_role_two'], $user->getRoles());
+    $this->assertEquals([RoleInterface::AUTHENTICATED_ID, 'test_role_two'], $user->getRoles());
   }
 
   /**

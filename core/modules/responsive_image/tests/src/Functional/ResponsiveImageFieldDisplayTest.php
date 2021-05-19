@@ -261,7 +261,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
 
     $this->assertSession()->responseMatches('/<a(.*?)href="' . preg_quote(file_url_transform_relative(file_create_url($image_uri)), '/') . '"(.*?)>\s*<picture/');
     // Verify that the image can be downloaded.
-    $this->assertEqual(file_get_contents($test_image->uri), $this->drupalGet(file_create_url($image_uri)), 'File was downloaded successfully.');
+    $this->assertEquals(file_get_contents($test_image->uri), $this->drupalGet(file_create_url($image_uri)), 'File was downloaded successfully.');
     if ($scheme == 'private') {
       // Only verify HTTP headers when using private scheme and the headers are
       // sent by Drupal.

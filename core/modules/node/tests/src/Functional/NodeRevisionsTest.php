@@ -343,7 +343,7 @@ class NodeRevisionsTest extends NodeTestBase {
     $this->assertText($new_title);
     $node_storage->resetCache([$node->id()]);
     $node_revision = $node_storage->load($node->id());
-    $this->assertEqual($revision_log, $node_revision->revision_log->value, 'After an existing node revision is re-saved without a log message, the original log message is preserved.');
+    $this->assertEquals($revision_log, $node_revision->revision_log->value, 'After an existing node revision is re-saved without a log message, the original log message is preserved.');
 
     // Create another node with an initial revision log message.
     $node = $this->drupalCreateNode(['revision_log' => $revision_log]);
@@ -428,8 +428,8 @@ class NodeRevisionsTest extends NodeTestBase {
     /** @var \Drupal\node\NodeInterface $node */
     $node = $node_storage->load($node->id());
     $this->assertGreaterThan($translation_revision_id, $node->getRevisionId());
-    $this->assertEqual($default_translation_title, $node->label());
-    $this->assertEqual($translated_title, $node->getTranslation('it')->label());
+    $this->assertEquals($default_translation_title, $node->label());
+    $this->assertEquals($translated_title, $node->getTranslation('it')->label());
     $this->assertNotEquals($untranslatable_string, $node->untranslatable_string_field->value);
 
     $latest_revision_id = $translation->getRevisionId();
@@ -443,9 +443,9 @@ class NodeRevisionsTest extends NodeTestBase {
     /** @var \Drupal\node\NodeInterface $node */
     $node = $node_storage->load($node->id());
     $this->assertGreaterThan($latest_revision_id, $node->getRevisionId());
-    $this->assertEqual($default_translation_title, $node->label());
-    $this->assertEqual($translated_title, $node->getTranslation('it')->label());
-    $this->assertEqual($untranslatable_string, $node->untranslatable_string_field->value);
+    $this->assertEquals($default_translation_title, $node->label());
+    $this->assertEquals($translated_title, $node->getTranslation('it')->label());
+    $this->assertEquals($untranslatable_string, $node->untranslatable_string_field->value);
 
     $latest_revision_id = $translation->getRevisionId();
 
@@ -460,7 +460,7 @@ class NodeRevisionsTest extends NodeTestBase {
     /** @var \Drupal\node\NodeInterface $node */
     $node = $node_storage->load($node->id());
     $this->assertGreaterThan($latest_revision_id, $node->getRevisionId());
-    $this->assertEqual($initial_title, $node->label());
+    $this->assertEquals($initial_title, $node->label());
     $this->assertFalse($node->hasTranslation('it'));
   }
 

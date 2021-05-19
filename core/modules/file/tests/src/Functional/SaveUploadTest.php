@@ -107,7 +107,7 @@ class SaveUploadTest extends FileManagedTestBase {
     $file1 = File::load($max_fid_after);
     $this->assertInstanceOf(File::class, $file1);
     // MIME type of the uploaded image may be either image/jpeg or image/png.
-    $this->assertEqual('image', substr($file1->getMimeType(), 0, 5), 'A MIME type was set.');
+    $this->assertEquals('image', substr($file1->getMimeType(), 0, 5), 'A MIME type was set.');
 
     // Reset the hook counters to get rid of the 'load' we just called.
     file_test_reset();
@@ -129,7 +129,7 @@ class SaveUploadTest extends FileManagedTestBase {
     $file2 = File::load($max_fid_after);
     $this->assertInstanceOf(File::class, $file2);
     // MIME type of the uploaded image may be either image/jpeg or image/png.
-    $this->assertEqual('image', substr($file2->getMimeType(), 0, 5), 'A MIME type was set.');
+    $this->assertEquals('image', substr($file2->getMimeType(), 0, 5), 'A MIME type was set.');
 
     // Load both files using File::loadMultiple().
     $files = File::loadMultiple([$file1->id(), $file2->id()]);
@@ -182,7 +182,7 @@ class SaveUploadTest extends FileManagedTestBase {
       ->accessCheck(FALSE)
       ->aggregate('fid', 'max')
       ->execute()[0]['fid_max'];
-    $this->assertEqual($max_fid_before_duplicate, $max_fid_after, 'A new managed file was not created.');
+    $this->assertEquals($max_fid_before_duplicate, $max_fid_after, 'A new managed file was not created.');
   }
 
   /**

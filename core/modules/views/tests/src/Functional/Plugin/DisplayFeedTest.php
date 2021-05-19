@@ -101,9 +101,9 @@ class DisplayFeedTest extends ViewTestBase {
     $this->drupalGet('test-feed-icon/' . $node->id());
     $page_url = $this->getUrl();
     $icon_href = $this->cssSelect('a.feed-icon[href *= "test-feed-icon"]')[0]->getAttribute('href');
-    $this->assertEqual($page_url . '/feed', $icon_href, 'The feed icon was found.');
+    $this->assertEquals($page_url . '/feed', $icon_href, 'The feed icon was found.');
     $link_href = $this->cssSelect('link[type = "application/rss+xml"][href *= "test-feed-icon"]')[0]->getAttribute('href');
-    $this->assertEqual($page_url . '/feed', $link_href, 'The RSS link was found.');
+    $this->assertEquals($page_url . '/feed', $link_href, 'The RSS link was found.');
     $this->drupalGet($icon_href);
     $this->assertEquals($frontpage_url, $this->getSession()->getDriver()->getText('//channel/link'));
   }
@@ -166,7 +166,7 @@ class DisplayFeedTest extends ViewTestBase {
     // Check that the rss header is output on the page display.
     $this->drupalGet('/test-attached-disabled');
     $feed_header = $this->xpath('//link[@rel="alternate"]');
-    $this->assertEqual('application/rss+xml', $feed_header[0]->getAttribute('type'), 'The feed link has the type application/rss+xml.');
+    $this->assertEquals('application/rss+xml', $feed_header[0]->getAttribute('type'), 'The feed link has the type application/rss+xml.');
     $this->assertStringContainsString('test-attached-disabled.xml', $feed_header[0]->getAttribute('href'), 'Page display contains the correct feed URL.');
 
     // Disable the feed display.

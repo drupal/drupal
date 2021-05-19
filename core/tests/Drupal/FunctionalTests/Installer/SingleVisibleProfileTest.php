@@ -61,7 +61,7 @@ class SingleVisibleProfileTest extends InstallerTestBase {
     // Confirm that we are logged-in after installation.
     $this->assertText($this->rootUser->getAccountName());
     // Confirm that the minimal profile was installed.
-    $this->assertEqual('minimal', \Drupal::installProfile());
+    $this->assertEquals('minimal', \Drupal::installProfile());
   }
 
 }

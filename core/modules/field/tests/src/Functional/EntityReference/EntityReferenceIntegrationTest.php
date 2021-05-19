@@ -199,13 +199,13 @@ class EntityReferenceIntegrationTest extends BrowserTestBase {
 
     $this->assertNotEmpty($entity, new FormattableMarkup('%entity_type: Entity found in the database.', ['%entity_type' => $this->entityType]));
 
-    $this->assertEqual($referenced_entities[0]->id(), $entity->{$this->fieldName}->target_id);
-    $this->assertEqual($referenced_entities[0]->id(), $entity->{$this->fieldName}->entity->id());
-    $this->assertEqual($referenced_entities[0]->label(), $entity->{$this->fieldName}->entity->label());
+    $this->assertEquals($referenced_entities[0]->id(), $entity->{$this->fieldName}->target_id);
+    $this->assertEquals($referenced_entities[0]->id(), $entity->{$this->fieldName}->entity->id());
+    $this->assertEquals($referenced_entities[0]->label(), $entity->{$this->fieldName}->entity->label());
 
-    $this->assertEqual($referenced_entities[1]->id(), $entity->{$this->fieldName}[1]->target_id);
-    $this->assertEqual($referenced_entities[1]->id(), $entity->{$this->fieldName}[1]->entity->id());
-    $this->assertEqual($referenced_entities[1]->label(), $entity->{$this->fieldName}[1]->entity->label());
+    $this->assertEquals($referenced_entities[1]->id(), $entity->{$this->fieldName}[1]->target_id);
+    $this->assertEquals($referenced_entities[1]->id(), $entity->{$this->fieldName}[1]->entity->id());
+    $this->assertEquals($referenced_entities[1]->label(), $entity->{$this->fieldName}[1]->entity->label());
   }
 
   /**

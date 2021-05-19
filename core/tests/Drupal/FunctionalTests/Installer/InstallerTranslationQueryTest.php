@@ -42,7 +42,7 @@ class InstallerTranslationQueryTest extends InstallerTestBase {
 
     // Check the language direction.
     $direction = current($this->xpath('/@dir'))->getText();
-    $this->assertEqual('ltr', $direction);
+    $this->assertEquals('ltr', $direction);
   }
 
   /**

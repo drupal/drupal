@@ -46,21 +46,21 @@ class DisplayAttachmentTest extends UITestBase {
     $this->assertSession()->assertEscaped('<em>Page</em>');
     $this->assertNoRaw('<em>Page</em>');
     $result = $this->xpath('//a[@id = :id]', [':id' => 'views-attachment-1-displays']);
-    $this->assertEqual(t('Page'), $result[0]->getAttribute('title'));
+    $this->assertEquals(t('Page'), $result[0]->getAttribute('title'));
     $this->submitForm([], 'Save');
 
     $view = Views::getView('test_attachment_ui');
     $view->initDisplay();
-    $this->assertEqual(['page_1'], array_keys(array_filter($view->displayHandlers->get('attachment_1')->getOption('displays'))), 'The attached displays got saved as expected');
+    $this->assertEquals(['page_1'], array_keys(array_filter($view->displayHandlers->get('attachment_1')->getOption('displays'))), 'The attached displays got saved as expected');
 
     $this->drupalPostForm($attachment_display_url, ['displays[default]' => 1, 'displays[page_1]' => 1], 'Apply');
     $result = $this->xpath('//a[@id = :id]', [':id' => 'views-attachment-1-displays']);
-    $this->assertEqual(t('Multiple displays'), $result[0]->getAttribute('title'));
+    $this->assertEquals(t('Multiple displays'), $result[0]->getAttribute('title'));
     $this->submitForm([], 'Save');
 
     $view = Views::getView('test_attachment_ui');
     $view->initDisplay();
-    $this->assertEqual(['default', 'page_1'], array_keys($view->displayHandlers->get('attachment_1')->getOption('displays')), 'The attached displays got saved as expected');
+    $this->assertEquals(['default', 'page_1'], array_keys($view->displayHandlers->get('attachment_1')->getOption('displays')), 'The attached displays got saved as expected');
   }
 
   /**

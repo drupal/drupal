@@ -125,7 +125,7 @@ class ValidatorTest extends FileManagedUnitTestBase {
 
     // Add a filename with an allowed length and test it.
     $file->setFilename(str_repeat('x', 240));
-    $this->assertEqual(240, strlen($file->getFilename()));
+    $this->assertEquals(240, strlen($file->getFilename()));
     $errors = file_validate_name_length($file);
     $this->assertCount(0, $errors, 'No errors reported for 240 length filename.');
 

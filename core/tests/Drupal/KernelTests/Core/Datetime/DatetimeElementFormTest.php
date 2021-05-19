@@ -105,7 +105,7 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface {
     $form = \Drupal::formBuilder()->getForm($this);
     $this->render($form);
 
-    $this->assertEqual(t('Date time callback called.'), $this->flag);
+    $this->assertEquals(t('Date time callback called.'), $this->flag);
   }
 
   /**

@@ -100,8 +100,8 @@ class ShortcutLinksTest extends ShortcutTestBase {
       // Test the node routes with parameters.
       $entity->save();
       $loaded = Shortcut::load($entity->id());
-      $this->assertEqual($entity->link->uri, $loaded->link->uri);
-      $this->assertEqual($entity->link->options, $loaded->link->options);
+      $this->assertEquals($entity->link->uri, $loaded->link->uri);
+      $this->assertEquals($entity->link->options, $loaded->link->options);
     }
 
     // Log in as non admin user, to check that access is checked when creating
@@ -387,15 +387,15 @@ class ShortcutLinksTest extends ShortcutTestBase {
     ]));
     $this->drupalGet(Url::fromRoute('<front>'));
     $shortcuts = $this->cssSelect('#toolbar-item-shortcuts-tray .toolbar-menu a');
-    $this->assertEqual('Add content', $shortcuts[0]->getText());
-    $this->assertEqual('All content', $shortcuts[1]->getText());
+    $this->assertEquals('Add content', $shortcuts[0]->getText());
+    $this->assertEquals('All content', $shortcuts[1]->getText());
     foreach ($this->set->getShortcuts() as $shortcut) {
       $shortcut->setWeight($shortcut->getWeight() * -1)->save();
     }
     $this->drupalGet(Url::fromRoute('<front>'));
     $shortcuts = $this->cssSelect('#toolbar-item-shortcuts-tray .toolbar-menu a');
-    $this->assertEqual('All content', $shortcuts[0]->getText());
-    $this->assertEqual('Add content', $shortcuts[1]->getText());
+    $this->assertEquals('All content', $shortcuts[0]->getText());
+    $this->assertEquals('Add content', $shortcuts[1]->getText());
   }
 
   /**

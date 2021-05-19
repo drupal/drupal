@@ -420,19 +420,19 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
       'name' => 'bbb_update_test',
     ];
     $queue = \Drupal::queue('update_fetch_tasks');
-    $this->assertEqual(0, $queue->numberOfItems(), 'Queue is empty');
+    $this->assertEquals(0, $queue->numberOfItems(), 'Queue is empty');
     update_create_fetch_task($projecta);
-    $this->assertEqual(1, $queue->numberOfItems(), 'Queue contains one item');
+    $this->assertEquals(1, $queue->numberOfItems(), 'Queue contains one item');
     update_create_fetch_task($projectb);
-    $this->assertEqual(2, $queue->numberOfItems(), 'Queue contains two items');
+    $this->assertEquals(2, $queue->numberOfItems(), 'Queue contains two items');
     // Try to add a project again.
     update_create_fetch_task($projecta);
-    $this->assertEqual(2, $queue->numberOfItems(), 'Queue still contains two items');
+    $this->assertEquals(2, $queue->numberOfItems(), 'Queue still contains two items');
 
     // Clear storage and try again.
     update_storage_clear();
     update_create_fetch_task($projecta);
-    $this->assertEqual(2, $queue->numberOfItems(), 'Queue contains two items');
+    $this->assertEquals(2, $queue->numberOfItems(), 'Queue contains two items');
   }
 
   /**

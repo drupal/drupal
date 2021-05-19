@@ -49,7 +49,7 @@ class GroupByTest extends UITestBase {
     $view = $this->container->get('entity_type.manager')->getStorage('view')->load('test_views_groupby_save');
     $display = $view->getDisplay('default');
     $this->assertTrue($display['display_options']['group_by'], 'The groupby setting was saved on the view.');
-    $this->assertEqual('count', $display['display_options']['fields']['id']['group_type'], 'Count groupby_type was saved on the view.');
+    $this->assertEquals('count', $display['display_options']['fields']['id']['group_type'], 'Count groupby_type was saved on the view.');
   }
 
 }

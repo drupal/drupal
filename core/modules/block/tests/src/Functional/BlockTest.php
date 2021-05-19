@@ -162,11 +162,11 @@ class BlockTest extends BlockTestBase {
       ]);
       $links = $this->xpath('//a[contains(@href, :href)]', [':href' => $add_url->toString()]);
       $this->assertCount(1, $links, 'Found one matching link.');
-      $this->assertEqual(t('Place block'), $links[0]->getText(), 'Found the expected link text.');
+      $this->assertEquals(t('Place block'), $links[0]->getText(), 'Found the expected link text.');
 
       list($path, $query_string) = explode('?', $links[0]->getAttribute('href'), 2);
       parse_str($query_string, $query_parts);
-      $this->assertEqual($weight, $query_parts['weight'], 'Found the expected weight query string.');
+      $this->assertEquals($weight, $query_parts['weight'], 'Found the expected weight query string.');
 
       // Create a random title for the block.
       $title = $this->randomMachineName(8);
@@ -181,7 +181,7 @@ class BlockTest extends BlockTestBase {
       // Ensure that the block was created with the expected weight.
       /** @var \Drupal\block\BlockInterface $block */
       $block = Block::load($block_id);
-      $this->assertEqual($weight, $block->getWeight(), 'Found the block with expected weight.');
+      $this->assertEquals($weight, $block->getWeight(), 'Found the block with expected weight.');
     }
   }
 
@@ -210,7 +210,7 @@ class BlockTest extends BlockTestBase {
     // Check to see if the block was created by checking its configuration.
     $instance = Block::load($block['id']);
 
-    $this->assertEqual($block['settings[label]'], $instance->label(), 'Stored block title found.');
+    $this->assertEquals($block['settings[label]'], $instance->label(), 'Stored block title found.');
 
     // Check whether the block can be moved to all available regions.
     foreach ($this->regions as $region) {
@@ -444,7 +444,7 @@ class BlockTest extends BlockTestBase {
       'rendered',
     ];
     sort($expected_cache_tags);
-    $this->assertEqual($expected_cache_tags, $cache_entry->tags);
+    $this->assertEquals($expected_cache_tags, $cache_entry->tags);
     $expected_cache_tags = [
       'block_view',
       'config:block.block.powered',
@@ -550,12 +550,12 @@ class BlockTest extends BlockTestBase {
 
     $block->save();
 
-    $this->assertEqual([$role1->id() => $role1->id(), $role2->id() => $role2->id()], $block->getVisibility()['user_role']['roles']);
+    $this->assertEquals([$role1->id() => $role1->id(), $role2->id() => $role2->id()], $block->getVisibility()['user_role']['roles']);
 
     $role1->delete();
 
     $block = Block::load($block->id());
-    $this->assertEqual([$role2->id() => $role2->id()], $block->getVisibility()['user_role']['roles']);
+    $this->assertEquals([$role2->id() => $role2->id()], $block->getVisibility()['user_role']['roles']);
   }
 
 }

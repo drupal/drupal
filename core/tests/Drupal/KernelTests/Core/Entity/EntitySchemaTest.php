@@ -96,7 +96,7 @@ class EntitySchemaTest extends EntityKernelTestBase {
     // Initially only the base table and the dedicated field data table should
     // exist.
     foreach ($tables as $index => $table) {
-      $this->assertEqual(!$index, $schema_handler->tableExists($table), new FormattableMarkup('Entity schema correct for the @table table.', ['@table' => $table]));
+      $this->assertEquals(!$index, $schema_handler->tableExists($table), new FormattableMarkup('Entity schema correct for the @table table.', ['@table' => $table]));
     }
     $this->assertTrue($schema_handler->tableExists($dedicated_tables[0]), new FormattableMarkup('Field schema correct for the @table table.', ['@table' => $table]));
 
@@ -114,7 +114,7 @@ class EntitySchemaTest extends EntityKernelTestBase {
     // neither translations nor revisions.
     $this->updateEntityType(FALSE);
     foreach ($tables as $index => $table) {
-      $this->assertEqual(!$index, $schema_handler->tableExists($table), new FormattableMarkup('Entity schema correct for the @table table.', ['@table' => $table]));
+      $this->assertEquals(!$index, $schema_handler->tableExists($table), new FormattableMarkup('Entity schema correct for the @table table.', ['@table' => $table]));
     }
     $this->assertTrue($schema_handler->tableExists($dedicated_tables[0]), new FormattableMarkup('Field schema correct for the @table table.', ['@table' => $table]));
   }
@@ -365,7 +365,7 @@ class EntitySchemaTest extends EntityKernelTestBase {
     }
 
     // Ensure that all storage definitions have been removed from the schema.
-    $this->assertEqual(0, $entity_type_id_count, 'After uninstalling entity_test module the schema should not contains fields from entities provided by the module.');
+    $this->assertEquals(0, $entity_type_id_count, 'After uninstalling entity_test module the schema should not contains fields from entities provided by the module.');
   }
 
   /**

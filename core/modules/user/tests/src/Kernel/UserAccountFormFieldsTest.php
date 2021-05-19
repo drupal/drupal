@@ -109,7 +109,7 @@ class UserAccountFormFieldsTest extends KernelTestBase {
       }
       $index++;
     }
-    $this->assertEqual($pass_index - 1, $name_index, "'name' field ({$name_index}) appears before 'pass' field ({$pass_index}).");
+    $this->assertEquals($pass_index - 1, $name_index, "'name' field ({$name_index}) appears before 'pass' field ({$pass_index}).");
     $this->assertLessThan($pass_weight, $name_weight, "'name' field weight ($name_weight) should be smaller than 'pass' field weight ($pass_weight).");
   }
 
