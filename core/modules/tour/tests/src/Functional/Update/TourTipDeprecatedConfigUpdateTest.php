@@ -8,7 +8,6 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Confirms tour tip deprecated config is updated properly.
  *
  * @group tour
- * @group legacy
  *
  * @see tour_post_update_joyride_selectors_to_selector_property()
  * @see tour_tour_presave()
