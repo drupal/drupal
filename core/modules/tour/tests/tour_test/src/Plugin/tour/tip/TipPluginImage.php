@@ -68,7 +68,7 @@ class TipPluginImage extends TipPluginBase implements ContainerFactoryPluginInte
   /**
    * {@inheritdoc}
    */
-  public function getBody() {
+  public function getBody(): array {
     $image = [
       '#theme' => 'image',
       '#uri' => $this->get('url'),

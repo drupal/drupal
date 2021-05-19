@@ -158,7 +158,7 @@ abstract class TipPluginBase extends PluginBase implements TipPluginInterface {
    *
    * @see https://shepherdjs.dev/docs/Step.html
    */
-  public function getLocation() {
+  public function getLocation(): ?string {
     $location = $this->get('position');
 
     // The location values accepted by PopperJS, the library used for
@@ -196,7 +196,7 @@ abstract class TipPluginBase extends PluginBase implements TipPluginInterface {
    *
    * @see https://shepherdjs.dev/docs/Step.html
    */
-  public function getSelector() {
+  public function getSelector(): ?string {
     return $this->get('selector');
   }
 

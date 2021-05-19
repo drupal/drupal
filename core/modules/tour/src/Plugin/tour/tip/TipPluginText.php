@@ -59,7 +59,7 @@ class TipPluginText extends TipPluginBase implements ContainerFactoryPluginInter
   /**
    * {@inheritdoc}
    */
-  public function getBody() {
+  public function getBody(): array {
     return [
       '#type' => 'html_tag',
       '#tag' => 'p',

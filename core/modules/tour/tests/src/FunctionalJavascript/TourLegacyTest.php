@@ -49,7 +49,7 @@ class TourLegacyTest extends WebDriverTestBase {
    *
    * @dataProvider providerTestTourTipMarkup
    */
-  public function testTourTipMarkup($path, $theme = NULL) {
+  public function testTourTipMarkup(string $path, string $theme = NULL) {
     // Install the specified theme and make it default if that is not already
     // the case.
     if ($theme) {

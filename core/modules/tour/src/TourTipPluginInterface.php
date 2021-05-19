@@ -26,7 +26,7 @@ interface TourTipPluginInterface extends TipPluginInterface {
    *
    * @see https://shepherdjs.dev/docs/Step.html
    */
-  public function getSelector();
+  public function getSelector() : ?string;
 
   /**
    * Returns the body content of the tooltip.
@@ -38,7 +38,7 @@ interface TourTipPluginInterface extends TipPluginInterface {
    *
    * @see https://shepherdjs.dev/docs/Step.html
    */
-  public function getBody();
+  public function getBody(): array;
 
   /**
    * Returns the configured placement of the tip relative to the element.
@@ -53,6 +53,6 @@ interface TourTipPluginInterface extends TipPluginInterface {
    *
    * @see https://shepherdjs.dev/docs/Step.html
    */
-  public function getLocation();
+  public function getLocation(): ?string;
 
 }

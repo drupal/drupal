@@ -13,7 +13,7 @@ use Drupal\tour\Entity\Tour;
  *
  * @see tour_tour_presave()
  */
-function tour_post_update_joyride_selectors_to_selector_property(&$sandbox = NULL) {
+function tour_post_update_joyride_selectors_to_selector_property(array &$sandbox = NULL) {
   $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
   $config_entity_updater->update($sandbox, 'tour', function (Tour $tour) {
     return _tour_update_joyride($tour, FALSE);

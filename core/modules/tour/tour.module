@@ -137,7 +137,7 @@ function tour_tour_presave(Tour $tour) {
  *
  * @internal
  */
-function _tour_update_joyride(Tour $tour, bool $trigger_deprecation = TRUE) {
+function _tour_update_joyride(Tour $tour, bool $trigger_deprecation = TRUE): bool {
   $needs_save = FALSE;
 
   // Update jQuery Joyride based plugins into a new, more structured format that
