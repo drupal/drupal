@@ -753,7 +753,7 @@ INFO;
    *
    * @covers ::parse
    *
-   * @dataProvider providerInvalidlLifecycle
+   * @dataProvider providerInvalidLifecycle
    */
   public function testInvalidLifecycle($lifecycle, $exception_message) {
     $info = <<<INFO
