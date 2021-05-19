@@ -62,7 +62,8 @@
           );
 
           // Override requiredContent & allowedContent.
-          const requiredContent = widgetDefinition.requiredContent.getDefinition();
+          const requiredContent =
+            widgetDefinition.requiredContent.getDefinition();
           requiredContent.attributes['data-image-style'] = '';
           widgetDefinition.requiredContent = new CKEDITOR.style(
             requiredContent,
@@ -82,9 +83,8 @@
               this.data.hasOwnProperty('data-image-style') &&
               this.data['data-image-style'] !== ''
             ) {
-              img.attributes['data-image-style'] = this.data[
-                'data-image-style'
-              ];
+              img.attributes['data-image-style'] =
+                this.data['data-image-style'];
             }
             return img;
           };
