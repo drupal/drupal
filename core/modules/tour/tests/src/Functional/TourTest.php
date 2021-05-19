@@ -75,33 +75,57 @@ class TourTest extends TourTestBasic {
     $this->assertTourTips($tips);
     $this->assertTourTips();
 
-    $elements = $this->xpath('//li[@data-id=:data_id and @class=:classes and ./p//a[@href=:href and contains(., :text)]]', [
-      ':classes' => 'tip-module-tour-test tip-type-text tip-tour-test-1',
-      ':data_id' => 'tour-test-1',
-      ':href' => Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString(),
-      ':text' => 'Drupal',
-    ]);
+    $tips = $this->getTourTips();
+
+    $href = Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString();
+    $elements = [];
+    foreach ($tips as $tip) {
+      if ($tip['id'] == 'tour-test-1' && $tip['module'] == 'tour_test' && $tip['type'] == 'text' && strpos($tip['body'], $href) !== FALSE && strpos($tip['body'], 'Drupal') !== FALSE) {
+        $elements[] = $tip;
+      }
+    }
     $this->assertCount(1, $elements, 'Found Token replacement.');
 
-    $elements = $this->cssSelect("li[data-id=tour-test-1] h2:contains('The first tip')");
+    $elements = $this->findTip([
+      'id' => 'tour-test-1',
+      'title' => 'The first tip',
+    ]);
     $this->assertCount(1, $elements, 'Found English variant of tip 1.');
 
-    $elements = $this->cssSelect("li[data-id=tour-test-2] h2:contains('The quick brown fox')");
+    $elements = $this->findTip([
+      'id' => 'tour-test-2',
+      'title' => 'The quick brown fox',
+    ]);
     $this->assertNotCount(1, $elements, 'Did not find English variant of tip 2.');
 
-    $elements = $this->cssSelect("li[data-id=tour-test-1] h2:contains('La pioggia cade in spagna')");
+    $elements = $this->findTip([
+      'id' => 'tour-test-1',
+      'title' => 'La pioggia cade in spagna',
+    ]);
     $this->assertNotCount(1, $elements, 'Did not find Italian variant of tip 1.');
 
     // Ensure that plugins work.
-    $elements = $this->xpath('//img[@src="http://local/image.png"]');
+    $elements = [];
+    foreach ($tips as $tip) {
+      if (strpos($tip['body'], 'http://local/image.png') !== FALSE) {
+        $elements[] = $tip;
+      }
+    }
     $this->assertCount(1, $elements, 'Image plugin tip found.');
 
     // Navigate to tour-test-2/subpath and verify the tour_test_2 tip is found.
     $this->drupalGet('tour-test-2/subpath');
-    $elements = $this->cssSelect("li[data-id=tour-test-2] h2:contains('The quick brown fox')");
+
+    $elements = $this->findTip([
+      'id' => 'tour-test-2',
+      'title' => 'The quick brown fox',
+    ]);
     $this->assertCount(1, $elements, 'Found English variant of tip 2.');
 
-    $elements = $this->cssSelect("li[data-id=tour-test-1] h2:contains('The first tip')");
+    $elements = $this->findTip([
+      'id' => 'tour-test-1',
+      'title' => 'The first tip',
+    ]);
     $this->assertNotCount(1, $elements, 'Did not find English variant of tip 1.');
 
     // Enable Italian language and navigate to it/tour-test1 and verify italian
@@ -109,10 +133,16 @@ class TourTest extends TourTestBasic {
     ConfigurableLanguage::createFromLangcode('it')->save();
     $this->drupalGet('it/tour-test-1');
 
-    $elements = $this->cssSelect("li[data-id=tour-test-1] h2:contains('La pioggia cade in spagna')");
+    $elements = $this->findTip([
+      'id' => 'tour-test-1',
+      'title' => 'La pioggia cade in spagna',
+    ]);
     $this->assertCount(1, $elements, 'Found Italian variant of tip 1.');
 
-    $elements = $this->cssSelect("li[data-id=tour-test-2] h2:contains('The quick brown fox')");
+    $elements = $this->findTip([
+      'id' => 'tour-test-2',
+      'title' => 'The quick brown fox',
+    ]);
     $this->assertNotCount(1, $elements, 'Did not find English variant of tip 1.');
 
     // Programmatically create a tour for use through the remainder of the test.
@@ -131,9 +161,7 @@ class TourTest extends TourTestBasic {
           'label' => 'The rain in spain',
           'body' => 'Falls mostly on the plain.',
           'weight' => '100',
-          'attributes' => [
-            'data-id' => 'tour-code-test-1',
-          ],
+          'selector' => '#tour-code-test-1',
         ],
         'tour-code-test-2' => [
           'id' => 'tour-code-test-2',
@@ -141,9 +169,7 @@ class TourTest extends TourTestBasic {
           'label' => 'The awesome image',
           'url' => 'http://local/image.png',
           'weight' => 1,
-          'attributes' => [
-            'data-id' => 'tour-code-test-2',
-          ],
+          'selector' => '#tour-code-test-2',
         ],
       ],
     ]);
@@ -165,12 +191,19 @@ class TourTest extends TourTestBasic {
 
     // Navigate to tour-test-1 and verify the new tip is found.
     $this->drupalGet('tour-test-1');
-    $elements = $this->cssSelect("li[data-id=tour-code-test-1] h2:contains('The rain in spain')");
+
+    $elements = $this->findTip([
+      'id' => 'tour-code-test-1',
+      'title' => 'The rain in spain',
+    ]);
     $this->assertCount(1, $elements, 'Found the required tip markup for tip 4');
 
     // Verify that the weight sorting works by ensuring the lower weight item
     // (tip 4) has the 'End tour' button.
-    $elements = $this->cssSelect("li[data-id=tour-code-test-1][data-text='End tour']");
+    $elements = $this->findTip([
+      'id' => 'tour-code-test-1',
+      'text' => 'End tour',
+    ]);
     $this->assertCount(1, $elements, 'Found code tip was weighted last and had "End tour".');
 
     // Test hook_tour_alter().
@@ -179,22 +212,68 @@ class TourTest extends TourTestBasic {
     // Navigate to tour-test-3 and verify the tour_test_1 tip is found with
     // appropriate classes.
     $this->drupalGet('tour-test-3/foo');
-    $elements = $this->xpath('//li[@data-id=:data_id and @class=:classes and ./h2[contains(., :text)]]', [
-      ':classes' => 'tip-module-tour-test tip-type-text tip-tour-test-1',
-      ':data_id' => 'tour-test-1',
-      ':text' => 'The first tip',
+
+    $elements = $this->findTip([
+      'id' => 'tour-test-1',
+      'module' => 'tour_test',
+      'type' => 'text',
+      'title' => 'The first tip',
     ]);
     $this->assertCount(1, $elements, 'Found English variant of tip 1.');
 
     // Navigate to tour-test-3 and verify the tour_test_1 tip is not found with
     // appropriate classes.
     $this->drupalGet('tour-test-3/bar');
-    $elements = $this->xpath('//li[@data-id=:data_id and @class=:classes and ./h2[contains(., :text)]]', [
-      ':classes' => 'tip-module-tour-test tip-type-text tip-tour-test-1',
-      ':data_id' => 'tour-test-1',
-      ':text' => 'The first tip',
+
+    $elements = $this->findTip([
+      'id' => 'tour-test-1',
+      'module' => 'tour_test',
+      'type' => 'text',
+      'title' => 'The first tip',
     ]);
     $this->assertCount(0, $elements, 'Did not find English variant of tip 1.');
+  }
+
+  /**
+   * Gets tour tips from the JavaScript drupalSettings variable.
+   *
+   * @return array
+   *   A list of tips and their data.
+   */
+  protected function getTourTips() {
+    $tips = [];
+    $drupalSettings = $this->getDrupalSettings();
+    if (isset($drupalSettings['_tour_internal'])) {
+      foreach ($drupalSettings['_tour_internal'] as $tip) {
+        $tips[] = $tip;
+      }
+    }
+
+    return $tips;
+  }
+
+  /**
+   * Find specific tips by their parameters in the list of tips.
+   *
+   * @param array $params
+   *   The list of search parameters and their values.
+   *
+   * @return array
+   *   A list of tips which match the parameters.
+   */
+  protected function findTip(array $params) {
+    $tips = $this->getTourTips();
+    $elements = [];
+    foreach ($tips as $tip) {
+      foreach ($params as $param => $value) {
+        if (isset($tip[$param]) && $tip[$param] != $value) {
+          continue 2;
+        }
+      }
+      $elements[] = $tip;
+    }
+
+    return $elements;
   }
 
 }

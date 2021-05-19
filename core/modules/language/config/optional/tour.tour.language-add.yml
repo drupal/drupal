@@ -21,8 +21,7 @@ tips:
     label: 'Select language'
     body: '<p>Choose a language from the list, or choose "Custom language..." at the end of the list.</p><p>Click the "Add language" button when you are done choosing your language.</p><p>When adding a custom language, you will get an additional form where you can provide the name, code, and direction of the language.</p>'
     weight: 2
-    attributes:
-      data-id: edit-predefined-langcode
+    selector: '#edit-predefined-langcode'
   language-add-continue:
     id: language-add-continue
     plugin: text

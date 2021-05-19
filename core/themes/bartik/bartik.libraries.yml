@@ -114,6 +114,11 @@ classy.base:
       css/classy/components/tabs.css: { weight: -10 }
       css/classy/components/textarea.css: { weight: -10 }
       css/classy/components/ui-dialog.css: { weight: -10 }
+tour:
+  version: VERSION
+  css:
+    component:
+      css/components/tour.css: {}
 
 user:
   version: VERSION

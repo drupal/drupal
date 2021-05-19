@@ -21,24 +21,21 @@ tips:
     label: 'Language code'
     body: '<p>You cannot change the code of a language on the site, since it is used by the system to keep track of the language.</p>'
     weight: 2
-    attributes:
-      data-id: edit-langcode-view
+    selector: '#edit-langcode-view'
   language-edit-label:
     id: language-edit-label
     plugin: text
     label: 'Language name'
     body: '<p>The language name is used throughout the site for all users and is written in English. Names of built-in languages can be translated using the Interface Translation module, and names of both built-in and custom languages can be translated using the Configuration Translation module.</p>'
     weight: 3
-    attributes:
-      data-id: edit-label
+    selector: '#edit-label'
   language-edit-direction:
     id: language-edit-direction
     plugin: text
     label: 'Language direction'
     body: '<p>Choose if the language is a "Left to right" or "Right to left" language.</p><p>Note that not all themes support "Right to left" layouts, so test your theme if you are using "Right to left".</p>'
     weight: 4
-    attributes:
-      data-id: edit-direction--wrapper--description
+    selector: '#edit-direction--wrapper--description'
   language-edit-continue:
     id: language-edit-continue
     plugin: text

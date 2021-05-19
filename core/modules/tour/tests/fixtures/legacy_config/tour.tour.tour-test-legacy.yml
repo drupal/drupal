@@ -1,0 +1,29 @@
+id: tour-test-legacy
+module: tour_test
+label: 'Tour test Legacy'
+langcode: en
+routes:
+  - route_name: tour_test.legacy
+tips:
+  tour-test-legacy-1:
+    id: tour-test-legacy-1
+    plugin: text_legacy
+    label: 'The first tip'
+    body: 'Is <a href="[site:url]">[site:name]</a> always the best dressed?'
+    weight: 1
+    attributes:
+      data-id: tour-test-1
+  tour-test-legacy-3:
+    id: tour-test-legacy-3
+    plugin: image_legacy
+    label: 'The awesome image'
+    url: 'http://local/image.png'
+    weight: 1
+  tour-test-legacy-6:
+    id: tour-test-legacy-6
+    plugin: text_legacy
+    label: 'Im a list'
+    body: '<p>Im all these things:</p><ul><li>Modal</li><li>Awesome</li></ul>'
+    weight: 6
+    attributes:
+      data-class: tour-test-5
