@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\auto_updates\Functional;
+namespace Drupal\Tests\auto_updates\Unit;
 
 use Drupal\auto_updates\ReadinessChecker\ReadinessCheckerInterface;
 use Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult;
