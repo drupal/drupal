@@ -7,7 +7,6 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use JsonSchema\Validator;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -15,14 +14,13 @@ use Symfony\Component\HttpKernel\KernelEvents;
 /**
  * Response subscriber that validates a JSON:API response.
  *
- * This must run after ResourceResponseSubscriber.
- *
  * @internal JSON:API maintains no PHP API. The API is the HTTP API. This class
  *   may change at any time and could break any dependencies on it.
  *
  * @see https://www.drupal.org/project/drupal/issues/3032787
  * @see jsonapi.api.php
  *
+ * @see \Drupal\jsonapi\JsonapiServiceProvider::registerResourceResponseValidator()
  * @see \Drupal\rest\EventSubscriber\ResourceResponseSubscriber
  */
 class ResourceResponseValidator implements EventSubscriberInterface {
@@ -77,7 +75,8 @@ class ResourceResponseValidator implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
-    $events[KernelEvents::RESPONSE][] = ['onResponse'];
+    // This must run after ResourceResponseSubscriber.
+    $events[KernelEvents::RESPONSE][] = ['onResponse', 1000];
     return $events;
   }
 
@@ -101,11 +100,9 @@ class ResourceResponseValidator implements EventSubscriberInterface {
    */
   public function onResponse(ResponseEvent $event) {
     $response = $event->getResponse();
-    if (strpos($response->headers->get('Content-Type'), 'application/vnd.api+json') === FALSE) {
-      return;
+    if (strpos($response->headers->get('Content-Type'), 'application/vnd.api+json') === 0) {
+      $this->doValidateResponse($response);
     }
-
-    $this->doValidateResponse($response, $event->getRequest());
   }
 
   /**
@@ -113,8 +110,8 @@ class ResourceResponseValidator implements EventSubscriberInterface {
    *
    * @see self::validateResponse
    */
-  public function doValidateResponse(Response $response, Request $request) {
-    assert($this->validateResponse($response, $request), 'A JSON:API response failed validation (see the logs for details). Please report this in the issue queue on drupal.org');
+  public function doValidateResponse(Response $response) {
+    assert($this->validateResponse($response), 'A JSON:API response failed validation (see the logs for details). Please report this in the issue queue on drupal.org');
   }
 
   /**
@@ -122,13 +119,11 @@ class ResourceResponseValidator implements EventSubscriberInterface {
    *
    * @param \Symfony\Component\HttpFoundation\Response $response
    *   The response to validate.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request containing info about what to validate.
    *
    * @return bool
    *   FALSE if the response failed validation, otherwise TRUE.
    */
-  protected function validateResponse(Response $response, Request $request) {
+  protected function validateResponse(Response $response) {
     // If the validator isn't set, then the validation library is not installed.
     if (!$this->validator) {
       return TRUE;
