@@ -520,21 +520,6 @@ function image_form_editor_image_dialog_alter(array &$form, FormStateInterface $
     '#parents' => ['attributes', 'data-image-style'],
   ];
 
-  // Check the access to link for configuring allowed image styles.
-  $url = $editor->getFilterFormat()->toUrl('edit-form');
-  if ($url->access()) {
-    // Add a link to the configuration of the image styles.
-    $url->setOptions(['fragment' => 'edit-filters-filter-image-style-settings']);
-    $form['image_style']['configure_link'] = [
-      '#title' => t('Configure allowed image styles'),
-      '#type' => 'link',
-      '#url' => $url,
-      '#attributes' => [
-        'target' => '_blank',
-      ],
-    ];
-  }
-
   $form['actions']['save_modal']['#validate'][] = 'image_form_editor_image_dialog_validate';
 }
 

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types = 1);
-
 namespace Drupal\image\Plugin\CKEditorPlugin;
 
 use Drupal\ckeditor\CKEditorPluginBase;
@@ -57,7 +55,7 @@ class DrupalImageStyle extends CKEditorPluginBase implements CKEditorPluginConte
     $format = $editor->getFilterFormat();
     if ($format->filters('filter_image_style')->status) {
       $toolbarButtons = CKEditorPluginManager::getEnabledButtons($editor);
-      return in_array('DrupalImage', $toolbarButtons);
+      return in_array('DrupalImage', $toolbarButtons, TRUE);
     }
 
     return FALSE;

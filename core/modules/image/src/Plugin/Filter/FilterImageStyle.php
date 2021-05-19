@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types = 1);
-
 namespace Drupal\image\Plugin\Filter;
 
 use Drupal\Component\Render\MarkupInterface;

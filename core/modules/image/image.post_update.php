@@ -24,7 +24,7 @@ function image_removed_post_updates() {
 function image_post_update_enable_filter_image_style(array &$sandbox): void {
   \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'filter_format', function (FilterFormatInterface $format): bool {
     /** @var \Drupal\filter\Plugin\FilterInterface $filter */
-    if (!($filter = $format->filters('filter_html')) || !$filter->status) {
+    if (!($filter = $format->filters('filter_html'))) {
       return FALSE;
     }
 
