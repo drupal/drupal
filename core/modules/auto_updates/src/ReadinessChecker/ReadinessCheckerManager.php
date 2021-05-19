@@ -77,7 +77,6 @@ class ReadinessCheckerManager {
    * @return $this
    */
   public function run(): self {
-    $sorted_checkers = $this->getSortedCheckers();
     $results = [];
     foreach ($this->getSortedCheckers() as $checker) {
       if ($checker_results = $checker->getResults()) {

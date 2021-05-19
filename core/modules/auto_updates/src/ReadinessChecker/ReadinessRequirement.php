@@ -117,7 +117,8 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
    * Creates a requirement for checker results of a specific severity.
    *
    * @param int $severity
-   *   The severity for requirement. Should be one of the SystemManager::REQUIREMENT_* constants.
+   *   The severity for requirement. Should be one of the
+   *   SystemManager::REQUIREMENT_* constants.
    *
    * @return mixed[]|null
    *   Requirements array as specified by hook_requirements(), or NULL
