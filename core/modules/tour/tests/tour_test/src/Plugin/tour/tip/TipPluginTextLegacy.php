@@ -94,16 +94,6 @@ class TipPluginTextLegacy extends TipPluginBase implements ContainerFactoryPlugi
   }
 
   /**
-   * Returns location of the text tip.
-   *
-   * @return string
-   *   The tip location.
-   */
-  public function getLocation() {
-    return $this->get('location');
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function getAttributes() {

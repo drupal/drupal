@@ -27,6 +27,9 @@ class TourPluginTest extends KernelTestBase {
    */
   protected $pluginManager;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
