@@ -61,7 +61,7 @@ class BlockStorageUnitTest extends KernelTestBase {
       $this->fail('A block without a plugin was created with no exception thrown.');
     }
     catch (PluginException $e) {
-      $this->assertEqual('The block \'\' did not specify a plugin.', $e->getMessage(), 'An exception was thrown when a block was created without a plugin.');
+      $this->assertEquals('The block \'\' did not specify a plugin.', $e->getMessage(), 'An exception was thrown when a block was created without a plugin.');
     }
 
     // Create a block with only required values.
@@ -116,7 +116,7 @@ class BlockStorageUnitTest extends KernelTestBase {
     // Verify several properties of the block.
     $this->assertSame('content', $entity->getRegion());
     $this->assertTrue($entity->status());
-    $this->assertEqual('stark', $entity->getTheme());
+    $this->assertEquals('stark', $entity->getTheme());
     $this->assertNotEmpty($entity->uuid());
   }
 
@@ -152,7 +152,7 @@ class BlockStorageUnitTest extends KernelTestBase {
 
     $entities = $this->controller->loadMultiple();
     $entity = reset($entities);
-    $this->assertEqual('test_block', $entity->id(), 'The default test block was loaded.');
+    $this->assertEquals('test_block', $entity->id(), 'The default test block was loaded.');
   }
 
 }

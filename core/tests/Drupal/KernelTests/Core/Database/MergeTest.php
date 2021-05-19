@@ -26,15 +26,15 @@ class MergeTest extends DatabaseTestBase {
       ])
       ->execute();
 
-    $this->assertEqual(Merge::STATUS_INSERT, $result, 'Insert status returned.');
+    $this->assertEquals(Merge::STATUS_INSERT, $result, 'Insert status returned.');
 
     $num_records_after = $this->connection->query('SELECT COUNT(*) FROM {test_people}')->fetchField();
-    $this->assertEqual($num_records_before + 1, $num_records_after, 'Merge inserted properly.');
+    $this->assertEquals($num_records_before + 1, $num_records_after, 'Merge inserted properly.');
 
     $person = $this->connection->query('SELECT * FROM {test_people} WHERE [job] = :job', [':job' => 'Presenter'])->fetch();
-    $this->assertEqual('Tiffany', $person->name, 'Name set correctly.');
-    $this->assertEqual(31, $person->age, 'Age set correctly.');
-    $this->assertEqual('Presenter', $person->job, 'Job set correctly.');
+    $this->assertEquals('Tiffany', $person->name, 'Name set correctly.');
+    $this->assertEquals(31, $person->age, 'Age set correctly.');
+    $this->assertEquals('Presenter', $person->job, 'Job set correctly.');
   }
 
   /**
@@ -51,15 +51,15 @@ class MergeTest extends DatabaseTestBase {
       ])
       ->execute();
 
-    $this->assertEqual(Merge::STATUS_UPDATE, $result, 'Update status returned.');
+    $this->assertEquals(Merge::STATUS_UPDATE, $result, 'Update status returned.');
 
     $num_records_after = $this->connection->query('SELECT COUNT(*) FROM {test_people}')->fetchField();
-    $this->assertEqual($num_records_before, $num_records_after, 'Merge updated properly.');
+    $this->assertEquals($num_records_before, $num_records_after, 'Merge updated properly.');
 
     $person = $this->connection->query('SELECT * FROM {test_people} WHERE [job] = :job', [':job' => 'Speaker'])->fetch();
-    $this->assertEqual('Tiffany', $person->name, 'Name set correctly.');
-    $this->assertEqual(31, $person->age, 'Age set correctly.');
-    $this->assertEqual('Speaker', $person->job, 'Job set correctly.');
+    $this->assertEquals('Tiffany', $person->name, 'Name set correctly.');
+    $this->assertEquals(31, $person->age, 'Age set correctly.');
+    $this->assertEquals('Speaker', $person->job, 'Job set correctly.');
   }
 
   /**
@@ -78,12 +78,12 @@ class MergeTest extends DatabaseTestBase {
       ->execute();
 
     $num_records_after = $this->connection->query('SELECT COUNT(*) FROM {test_people}')->fetchField();
-    $this->assertEqual($num_records_before, $num_records_after, 'Merge updated properly.');
+    $this->assertEquals($num_records_before, $num_records_after, 'Merge updated properly.');
 
     $person = $this->connection->query('SELECT * FROM {test_people} WHERE [job] = :job', [':job' => 'Speaker'])->fetch();
-    $this->assertEqual('Tiffany', $person->name, 'Name set correctly.');
-    $this->assertEqual(30, $person->age, 'Age skipped correctly.');
-    $this->assertEqual('Speaker', $person->job, 'Job set correctly.');
+    $this->assertEquals('Tiffany', $person->name, 'Name set correctly.');
+    $this->assertEquals(30, $person->age, 'Age skipped correctly.');
+    $this->assertEquals('Speaker', $person->job, 'Job set correctly.');
   }
 
   /**
@@ -104,12 +104,12 @@ class MergeTest extends DatabaseTestBase {
       ->execute();
 
     $num_records_after = $this->connection->query('SELECT COUNT(*) FROM {test_people}')->fetchField();
-    $this->assertEqual($num_records_before, $num_records_after, 'Merge updated properly.');
+    $this->assertEquals($num_records_before, $num_records_after, 'Merge updated properly.');
 
     $person = $this->connection->query('SELECT * FROM {test_people} WHERE [job] = :job', [':job' => 'Speaker'])->fetch();
-    $this->assertEqual('Joe', $person->name, 'Name set correctly.');
-    $this->assertEqual(30, $person->age, 'Age skipped correctly.');
-    $this->assertEqual('Speaker', $person->job, 'Job set correctly.');
+    $this->assertEquals('Joe', $person->name, 'Name set correctly.');
+    $this->assertEquals(30, $person->age, 'Age skipped correctly.');
+    $this->assertEquals('Speaker', $person->job, 'Job set correctly.');
   }
 
   /**
@@ -133,12 +133,12 @@ class MergeTest extends DatabaseTestBase {
       ->execute();
 
     $num_records_after = $this->connection->query('SELECT COUNT(*) FROM {test_people}')->fetchField();
-    $this->assertEqual($num_records_before, $num_records_after, 'Merge updated properly.');
+    $this->assertEquals($num_records_before, $num_records_after, 'Merge updated properly.');
 
     $person = $this->connection->query('SELECT * FROM {test_people} WHERE [job] = :job', [':job' => 'Speaker'])->fetch();
-    $this->assertEqual('Tiffany', $person->name, 'Name set correctly.');
-    $this->assertEqual($age_before + 4, $person->age, 'Age updated correctly.');
-    $this->assertEqual('Speaker', $person->job, 'Job set correctly.');
+    $this->assertEquals('Tiffany', $person->name, 'Name set correctly.');
+    $this->assertEquals($age_before + 4, $person->age, 'Age updated correctly.');
+    $this->assertEquals('Speaker', $person->job, 'Job set correctly.');
   }
 
   /**
@@ -152,12 +152,12 @@ class MergeTest extends DatabaseTestBase {
       ->execute();
 
     $num_records_after = $this->connection->query('SELECT COUNT(*) FROM {test_people}')->fetchField();
-    $this->assertEqual($num_records_before + 1, $num_records_after, 'Merge inserted properly.');
+    $this->assertEquals($num_records_before + 1, $num_records_after, 'Merge inserted properly.');
 
     $person = $this->connection->query('SELECT * FROM {test_people} WHERE [job] = :job', [':job' => 'Presenter'])->fetch();
-    $this->assertEqual('', $person->name, 'Name set correctly.');
-    $this->assertEqual(0, $person->age, 'Age set correctly.');
-    $this->assertEqual('Presenter', $person->job, 'Job set correctly.');
+    $this->assertEquals('', $person->name, 'Name set correctly.');
+    $this->assertEquals(0, $person->age, 'Age set correctly.');
+    $this->assertEquals('Presenter', $person->job, 'Job set correctly.');
   }
 
   /**
@@ -171,12 +171,12 @@ class MergeTest extends DatabaseTestBase {
       ->execute();
 
     $num_records_after = $this->connection->query('SELECT COUNT(*) FROM {test_people}')->fetchField();
-    $this->assertEqual($num_records_before, $num_records_after, 'Merge skipped properly.');
+    $this->assertEquals($num_records_before, $num_records_after, 'Merge skipped properly.');
 
     $person = $this->connection->query('SELECT * FROM {test_people} WHERE [job] = :job', [':job' => 'Speaker'])->fetch();
-    $this->assertEqual('Meredith', $person->name, 'Name skipped correctly.');
-    $this->assertEqual(30, $person->age, 'Age skipped correctly.');
-    $this->assertEqual('Speaker', $person->job, 'Job skipped correctly.');
+    $this->assertEquals('Meredith', $person->name, 'Name skipped correctly.');
+    $this->assertEquals(30, $person->age, 'Age skipped correctly.');
+    $this->assertEquals('Speaker', $person->job, 'Job skipped correctly.');
 
     $this->connection->merge('test_people')
       ->key('job', 'Speaker')
@@ -184,12 +184,12 @@ class MergeTest extends DatabaseTestBase {
       ->execute();
 
     $num_records_after = $this->connection->query('SELECT COUNT(*) FROM {test_people}')->fetchField();
-    $this->assertEqual($num_records_before, $num_records_after, 'Merge skipped properly.');
+    $this->assertEquals($num_records_before, $num_records_after, 'Merge skipped properly.');
 
     $person = $this->connection->query('SELECT * FROM {test_people} WHERE [job] = :job', [':job' => 'Speaker'])->fetch();
-    $this->assertEqual('Meredith', $person->name, 'Name skipped correctly.');
-    $this->assertEqual(30, $person->age, 'Age skipped correctly.');
-    $this->assertEqual('Speaker', $person->job, 'Job skipped correctly.');
+    $this->assertEquals('Meredith', $person->name, 'Name skipped correctly.');
+    $this->assertEquals(30, $person->age, 'Age skipped correctly.');
+    $this->assertEquals('Speaker', $person->job, 'Job skipped correctly.');
   }
 
   /**

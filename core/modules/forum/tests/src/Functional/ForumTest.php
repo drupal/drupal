@@ -293,7 +293,7 @@ class ForumTest extends BrowserTestBase {
       ->accessCheck(FALSE)
       ->count()
       ->execute();
-    $this->assertEqual(0, $nid_count, 'A forum node was not created when missing a forum vocabulary.');
+    $this->assertEquals(0, $nid_count, 'A forum node was not created when missing a forum vocabulary.');
 
     // Reset the defaults for future tests.
     \Drupal::service('module_installer')->install(['forum']);
@@ -402,8 +402,8 @@ class ForumTest extends BrowserTestBase {
     $current_vocabulary = Vocabulary::load($vid);
 
     // Make sure we actually edited the vocabulary properly.
-    $this->assertEqual($edit['name'], $current_vocabulary->label(), 'The name was updated');
-    $this->assertEqual($edit['description'], $current_vocabulary->getDescription(), 'The description was updated');
+    $this->assertEquals($edit['name'], $current_vocabulary->label(), 'The name was updated');
+    $this->assertEquals($edit['description'], $current_vocabulary->getDescription(), 'The description was updated');
 
     // Restore the original vocabulary's name and description.
     $current_vocabulary->set('name', $original_vocabulary->label());
@@ -411,7 +411,7 @@ class ForumTest extends BrowserTestBase {
     $current_vocabulary->save();
     // Reload vocabulary to make sure changes are saved.
     $current_vocabulary = Vocabulary::load($vid);
-    $this->assertEqual($original_vocabulary->label(), $current_vocabulary->label(), 'The original vocabulary settings were restored');
+    $this->assertEquals($original_vocabulary->label(), $current_vocabulary->label(), 'The original vocabulary settings were restored');
   }
 
   /**
@@ -464,7 +464,7 @@ class ForumTest extends BrowserTestBase {
     $this->assertSame($parent, $parent_tid, 'The ' . $type . ' is linked to its container');
 
     $forum = $taxonomy_term_storage->load($tid);
-    $this->assertEqual(($type == 'forum container'), (bool) $forum->forum_container->value);
+    $this->assertEquals(($type == 'forum container'), (bool) $forum->forum_container->value);
     return [
       'tid' => $tid,
       'name' => $term->getName(),
@@ -590,7 +590,7 @@ class ForumTest extends BrowserTestBase {
     // Retrieve node object, ensure that the topic was created and in the proper forum.
     $node = $this->drupalGetNodeByTitle($title);
     $this->assertNotNull($node, new FormattableMarkup('Node @title was loaded', ['@title' => $title]));
-    $this->assertEqual($tid, $node->taxonomy_forums->target_id, 'Saved forum topic was in the expected forum');
+    $this->assertEquals($tid, $node->taxonomy_forums->target_id, 'Saved forum topic was in the expected forum');
 
     // View forum topic.
     $this->drupalGet('node/' . $node->id());

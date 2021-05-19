@@ -292,10 +292,10 @@ class CacheTest extends ViewsKernelTestBase {
     });
 
     $this->assertContains('views_test_data/test', $output['#attached']['library'], 'Make sure libraries are added for cached views.');
-    $this->assertEqual(['foo' => 'bar'], $output['#attached']['drupalSettings'], 'Make sure drupalSettings are added for cached views.');
+    $this->assertEquals(['foo' => 'bar'], $output['#attached']['drupalSettings'], 'Make sure drupalSettings are added for cached views.');
     // Note: views_test_data_views_pre_render() adds some cache tags.
-    $this->assertEqual(['config:views.view.test_cache_header_storage', 'views_test_data:1'], $output['#cache']['tags']);
-    $this->assertEqual(['non-existing-placeholder-just-for-testing-purposes' => ['#lazy_builder' => ['Drupal\views_test_data\Controller\ViewsTestDataController::placeholderLazyBuilder', ['bar']]]], $output['#attached']['placeholders']);
+    $this->assertEquals(['config:views.view.test_cache_header_storage', 'views_test_data:1'], $output['#cache']['tags']);
+    $this->assertEquals(['non-existing-placeholder-just-for-testing-purposes' => ['#lazy_builder' => ['Drupal\views_test_data\Controller\ViewsTestDataController::placeholderLazyBuilder', ['bar']]]], $output['#attached']['placeholders']);
     $this->assertFalse(!empty($view->build_info['pre_render_called']), 'Make sure hook_views_pre_render is not called for the cached view.');
   }
 
@@ -310,7 +310,7 @@ class CacheTest extends ViewsKernelTestBase {
     // Request for the cache.
     $cid = 'views_relationship_groupwise_max:test_groupwise_term_ui:default:tid_representative';
     $cache = \Drupal::cache('data')->get($cid);
-    $this->assertEqual($cid, $cache->cid, 'Subquery String cached as expected.');
+    $this->assertEquals($cid, $cache->cid, 'Subquery String cached as expected.');
   }
 
   /**

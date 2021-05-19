@@ -59,7 +59,7 @@ class SitesDirectoryHardeningTest extends BrowserTestBase {
 
     // Manually trigger the requirements check.
     $requirements = $this->checkSystemRequirements();
-    $this->assertEqual(REQUIREMENT_WARNING, $requirements['configuration_files']['severity'], 'Warning severity is properly set.');
+    $this->assertEquals(REQUIREMENT_WARNING, $requirements['configuration_files']['severity'], 'Warning severity is properly set.');
     $this->assertEquals('Protection disabled', (string) $requirements['configuration_files']['value']);
     $description = strip_tags(\Drupal::service('renderer')->renderPlain($requirements['configuration_files']['description']));
     $this->assertStringContainsString('settings.php is not protected from modifications and poses a security risk.', $description);

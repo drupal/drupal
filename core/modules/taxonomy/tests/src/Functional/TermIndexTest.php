@@ -123,7 +123,7 @@ class TermIndexTest extends TaxonomyTestBase {
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertEqual(1, $index_count, 'Term 1 is indexed once.');
+    $this->assertEquals(1, $index_count, 'Term 1 is indexed once.');
 
     // Update the article to change one term.
     $edit["{$this->fieldName1}[]"] = $term_2->id();
@@ -136,14 +136,14 @@ class TermIndexTest extends TaxonomyTestBase {
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertEqual(1, $index_count, 'Term 1 is indexed.');
+    $this->assertEquals(1, $index_count, 'Term 1 is indexed.');
     $index_count = $connection->select('taxonomy_index')
       ->condition('nid', $node->id())
       ->condition('tid', $term_2->id())
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertEqual(1, $index_count, 'Term 2 is indexed.');
+    $this->assertEquals(1, $index_count, 'Term 2 is indexed.');
 
     // Update the article to change another term.
     $edit["{$this->fieldName2}[]"] = $term_2->id();
@@ -156,14 +156,14 @@ class TermIndexTest extends TaxonomyTestBase {
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertEqual(0, $index_count, 'Term 1 is not indexed.');
+    $this->assertEquals(0, $index_count, 'Term 1 is not indexed.');
     $index_count = $connection->select('taxonomy_index')
       ->condition('nid', $node->id())
       ->condition('tid', $term_2->id())
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertEqual(1, $index_count, 'Term 2 is indexed once.');
+    $this->assertEquals(1, $index_count, 'Term 2 is indexed once.');
 
     // Redo the above tests without interface.
     $node_storage->resetCache([$node->id()]);
@@ -180,14 +180,14 @@ class TermIndexTest extends TaxonomyTestBase {
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertEqual(0, $index_count, 'Term 1 is not indexed.');
+    $this->assertEquals(0, $index_count, 'Term 1 is not indexed.');
     $index_count = $connection->select('taxonomy_index')
       ->condition('nid', $node->id())
       ->condition('tid', $term_2->id())
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertEqual(1, $index_count, 'Term 2 is indexed once.');
+    $this->assertEquals(1, $index_count, 'Term 2 is indexed once.');
 
     // Update the article to change one term.
     $node->{$this->fieldName1} = [['target_id' => $term_1->id()]];
@@ -200,14 +200,14 @@ class TermIndexTest extends TaxonomyTestBase {
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertEqual(1, $index_count, 'Term 1 is indexed.');
+    $this->assertEquals(1, $index_count, 'Term 1 is indexed.');
     $index_count = $connection->select('taxonomy_index')
       ->condition('nid', $node->id())
       ->condition('tid', $term_2->id())
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertEqual(1, $index_count, 'Term 2 is indexed.');
+    $this->assertEquals(1, $index_count, 'Term 2 is indexed.');
 
     // Update the article to change another term.
     $node->{$this->fieldName2} = [['target_id' => $term_1->id()]];
@@ -220,14 +220,14 @@ class TermIndexTest extends TaxonomyTestBase {
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertEqual(1, $index_count, 'Term 1 is indexed once.');
+    $this->assertEquals(1, $index_count, 'Term 1 is indexed once.');
     $index_count = $connection->select('taxonomy_index')
       ->condition('nid', $node->id())
       ->condition('tid', $term_2->id())
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertEqual(0, $index_count, 'Term 2 is not indexed.');
+    $this->assertEquals(0, $index_count, 'Term 2 is not indexed.');
   }
 
   /**
