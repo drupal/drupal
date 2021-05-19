@@ -73,6 +73,18 @@ class TourPluginTest extends KernelTestBase {
       $this->assertSame('Drupal\tour\TipPluginInterface::getAttributes is deprecated. Tour tip plugins should implement Drupal\tour\TourTipPluginInterface and Tour configs should use the \'selector\' property instead of \'attributes\' to target an element.', $e->getMessage());
     }
 
+    // Remove PHPUnits conversion of warning to exceptions.
+    set_error_handler(function () {});
+    $tip = Tour::load('tour-test-legacy')->getTips()[3];
+    $attributes = $tip->getAttributes();
+    restore_error_handler();
+    $this->assertSame([
+      'foo' => 'bar',
+      'data-class' => 'tour-test-7',
+      'data-aria-describedby' => 'tour-tip-tour-test-legacy-7-contents',
+      'data-aria-labelledby' => 'tour-tip-tour-test-legacy-7-label',
+    ], $attributes);
+
     $this->expectDeprecation('Implementing Drupal\tour\TipPluginInterface without also implementing Drupal\tour\TourTipPluginInterface is deprecated in drupal:9.2.0. See https://www.drupal.org/node/3204096');
     $this->expectDeprecation("The tour.tip 'attributes' config schema property is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead of 'data-class' and 'data-id' attributes, use 'selector' to specify the element a tip attaches to. See https://www.drupal.org/node/3204093");
     $this->expectDeprecation("The tour.tip 'location' config schema property is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Instead use 'position'. The value must be a valid placement accepted by PopperJS. See https://www.drupal.org/node/3204093");

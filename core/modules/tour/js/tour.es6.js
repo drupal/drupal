@@ -314,7 +314,7 @@
           );
         });
 
-        // If there tours filtered, we'll have to update model.
+        // If there are tours filtered, we'll have to update model.
         if (tourItems.length !== filteredTour.length) {
           filteredTour.forEach((filteredTourItem, filteredTourItemId) => {
             filteredTour[filteredTourItemId].counter = Drupal.t(

@@ -84,27 +84,23 @@ abstract class TipPluginBase extends PluginBase implements TipPluginInterface {
     // does not stop page execution, but will be logged.
     trigger_error(__NAMESPACE__ . '\TipPluginInterface::getAttributes is deprecated. Tour tip plugins should implement ' . __NAMESPACE__ . '\TourTipPluginInterface and Tour configs should use the \'selector\' property instead of \'attributes\' to target an element.', E_USER_WARNING);
 
-    // When available, use the selector property to return an array with the
-    // expected structure.
-    if ($selector = $this->get('selector')) {
-      $first_char = substr($selector, 0, 1);
-      $other_chars = substr($selector, 1);
-      if ($first_char === '#') {
-        return ['data-id' => $other_chars];
-      }
-      if ($first_char === '.') {
-        return ['data-class' => $other_chars];
-      }
+    // The _tour_update_joyride() updates the deprecated 'attributes' property
+    // to the current 'selector' property. It's possible that additional
+    // attributes not supported by Drupal core exist and these need to merged
+    // in.
+    $attributes = $this->get('attributes') ?: [];
+
+    // Convert the selector property to the expected structure.
+    $selector = $this->get('selector');
+    $first_char = substr($selector, 0, 1);
+    if ($first_char === '#') {
+      $attributes['data-id'] = substr($selector, 1);
+    }
+    elseif ($first_char === '.') {
+      $attributes['data-class'] = substr($selector, 1);
     }
 
-    // The tour_post_update_joyride_selectors_to_selector_property() post_update
-    // hook converts all uses of the deprecated 'attributes' property to the
-    // current 'selector' property. It's possible for tour config with this
-    // deprecated property to be installed without this hook having run. Return
-    // the attributes value in those instances. If attributes has no value,
-    // return an empty array.
-    // @see tour_post_update_joyride_selectors_to_selector_property()
-    return $this->get('attributes') ?: [];
+    return $attributes;
   }
 
   /**

@@ -117,6 +117,9 @@ function tour_tour_update($entity) {
 
 /**
  * Implements hook_ENTITY_TYPE_presave() for tour entities.
+ *
+ * @todo https://www.drupal.org/i/3195823 Remove once deprecated properties are
+ *   no longer supported.
  */
 function tour_tour_presave(Tour $tour) {
   _tour_update_joyride($tour);
@@ -126,7 +129,7 @@ function tour_tour_presave(Tour $tour) {
  * Updates a tour to make it compatible with the Shepherd library.
  *
  * @param \Drupal\tour\Entity\Tour $tour
- *   The tour to update to make it compatible with the Shepherd library.
+ *   The tour to update.
  * @param bool $trigger_deprecation
  *   (optional) Whether to trigger deprecations. Defaults to TRUE.
  *
@@ -136,6 +139,9 @@ function tour_tour_presave(Tour $tour) {
  * @see tour_post_update_joyride_selectors_to_selector_property()
  *
  * @internal
+ *
+ * @todo https://www.drupal.org/i/3195823 Remove once deprecated properties are
+ *   no longer supported.
  */
 function _tour_update_joyride(Tour $tour, bool $trigger_deprecation = TRUE): bool {
   $needs_save = FALSE;
