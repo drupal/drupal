@@ -140,8 +140,8 @@ class DisplayEntityReferenceTest extends ViewTestBase {
 
     // Test that the right fields are shown on the display settings form.
     $this->drupalGet('admin/structure/views/nojs/display/test_display_entity_reference/entity_reference_1/style_options');
-    $this->assertText('Test entity: Name');
-    $this->assertText('Test entity: ' . $this->field->label());
+    $this->assertSession()->pageTextContains('Test entity: Name');
+    $this->assertSession()->pageTextContains('Test entity: ' . $this->field->label());
 
     // Add the new field to the search fields.
     $this->submitForm(['style_options[search_fields][' . $this->fieldName . ']' => $this->fieldName], 'Apply');

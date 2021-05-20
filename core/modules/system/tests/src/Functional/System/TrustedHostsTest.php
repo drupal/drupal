@@ -77,7 +77,7 @@ class TrustedHostsTest extends BrowserTestBase {
     $this->writeSettings($settings);
 
     $this->drupalGet('trusted-hosts-test/fake-request');
-    $this->assertText('Host: ' . $host);
+    $this->assertSession()->pageTextContains('Host: ' . $host);
   }
 
   /**

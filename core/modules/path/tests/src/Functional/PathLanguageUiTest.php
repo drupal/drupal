@@ -59,7 +59,7 @@ class PathLanguageUiTest extends PathTestBase {
     $this->drupalPostForm('admin/config/search/path/add', $edit, 'Save');
 
     $this->drupalGet($name);
-    $this->assertText('Filter aliases');
+    $this->assertSession()->pageTextContains('Filter aliases');
   }
 
   /**
@@ -74,7 +74,7 @@ class PathLanguageUiTest extends PathTestBase {
     $this->drupalPostForm('admin/config/search/path/add', $edit, 'Save');
 
     $this->drupalGet($name);
-    $this->assertText('Filter aliases');
+    $this->assertSession()->pageTextContains('Filter aliases');
   }
 
   /**
@@ -89,7 +89,7 @@ class PathLanguageUiTest extends PathTestBase {
     $this->drupalPostForm('admin/config/search/path/add', $edit, 'Save');
 
     $this->drupalGet('fr/' . $name);
-    $this->assertText('Filter aliases');
+    $this->assertSession()->pageTextContains('Filter aliases');
   }
 
   /**

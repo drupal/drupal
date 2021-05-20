@@ -234,13 +234,13 @@ class FilterFormatAccessTest extends BrowserTestBase {
     $new_edit = [];
     $new_edit['title[0][value]'] = $this->randomMachineName(8);
     $this->submitForm($new_edit, 'Preview');
-    $this->assertText($edit[$body_value_key]);
+    $this->assertSession()->pageTextContains($edit[$body_value_key]);
 
     // Save and verify that only the title was changed.
     $this->drupalPostForm('node/' . $node->id() . '/edit', $new_edit, 'Save');
     $this->assertNoText($edit['title[0][value]']);
-    $this->assertText($new_edit['title[0][value]']);
-    $this->assertText($edit[$body_value_key]);
+    $this->assertSession()->pageTextContains($new_edit['title[0][value]']);
+    $this->assertSession()->pageTextContains($edit[$body_value_key]);
 
     // Check that even an administrator with "administer filters" permission
     // cannot edit the body field if they do not have specific permission to
@@ -278,16 +278,16 @@ class FilterFormatAccessTest extends BrowserTestBase {
     $edit = [];
     $edit['title[0][value]'] = $new_title;
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
-    $this->assertText('Text format field is required.');
+    $this->assertSession()->pageTextContains('Text format field is required.');
     $this->drupalGet('node/' . $node->id());
-    $this->assertText($old_title);
+    $this->assertSession()->pageTextContains($old_title);
     $this->assertNoText($new_title);
 
     // Now select a new text format and make sure the node can be saved.
     $edit[$body_format_key] = filter_fallback_format();
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
     $this->assertSession()->addressEquals('node/' . $node->id());
-    $this->assertText($new_title);
+    $this->assertSession()->pageTextContains($new_title);
     $this->assertNoText($old_title);
 
     // Switch the text format to a new one, then disable that format and all
@@ -313,14 +313,14 @@ class FilterFormatAccessTest extends BrowserTestBase {
     $edit = [];
     $edit['title[0][value]'] = $new_title;
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
-    $this->assertText('Text format field is required.');
+    $this->assertSession()->pageTextContains('Text format field is required.');
     $this->drupalGet('node/' . $node->id());
-    $this->assertText($old_title);
+    $this->assertSession()->pageTextContains($old_title);
     $this->assertNoText($new_title);
     $edit[$body_format_key] = filter_fallback_format();
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
     $this->assertSession()->addressEquals('node/' . $node->id());
-    $this->assertText($new_title);
+    $this->assertSession()->pageTextContains($new_title);
     $this->assertNoText($old_title);
   }
 

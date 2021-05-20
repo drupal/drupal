@@ -66,7 +66,7 @@ class FilterSecurityTest extends BrowserTestBase {
     $body_raw = $node->body->value;
     $format_id = $node->body->format;
     $this->drupalGet('node/' . $node->id());
-    $this->assertText($body_raw);
+    $this->assertSession()->pageTextContains($body_raw);
 
     // Enable the filter_test_replace filter.
     $edit = [
@@ -77,7 +77,7 @@ class FilterSecurityTest extends BrowserTestBase {
     // Verify that filter_test_replace filter replaced the content.
     $this->drupalGet('node/' . $node->id());
     $this->assertNoText($body_raw);
-    $this->assertText('Filter: Testing filter');
+    $this->assertSession()->pageTextContains('Filter: Testing filter');
 
     // Disable the text format entirely.
     $this->drupalPostForm('admin/config/content/formats/manage/' . $format_id . '/disable', [], 'Disable');

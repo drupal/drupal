@@ -68,8 +68,8 @@ class NodeAccessPagerTest extends BrowserTestBase {
     // View the node page. With the default 50 comments per page there should
     // be two pages (0, 1) but no third (2) page.
     $this->drupalGet('node/' . $node->id());
-    $this->assertText($node->label());
-    $this->assertText('Comments');
+    $this->assertSession()->pageTextContains($node->label());
+    $this->assertSession()->pageTextContains('Comments');
     $this->assertRaw('page=1');
     $this->assertNoRaw('page=2');
   }

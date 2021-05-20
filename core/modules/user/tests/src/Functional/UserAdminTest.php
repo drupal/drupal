@@ -56,10 +56,10 @@ class UserAdminTest extends BrowserTestBase {
     $admin_user->save();
     $this->drupalLogin($admin_user);
     $this->drupalGet('admin/people');
-    $this->assertText($user_a->getAccountName());
-    $this->assertText($user_b->getAccountName());
-    $this->assertText($user_c->getAccountName());
-    $this->assertText($admin_user->getAccountName());
+    $this->assertSession()->pageTextContains($user_a->getAccountName());
+    $this->assertSession()->pageTextContains($user_b->getAccountName());
+    $this->assertSession()->pageTextContains($user_c->getAccountName());
+    $this->assertSession()->pageTextContains($admin_user->getAccountName());
 
     // Test for existence of edit link in table.
     $link = $user_a->toLink(t('Edit'), 'edit-form', ['query' => ['destination' => $user_a->toUrl('collection')->toString()]])->toString();
@@ -89,8 +89,8 @@ class UserAdminTest extends BrowserTestBase {
 
     // Check if the correct users show up.
     $this->assertNoText($user_a->getAccountName());
-    $this->assertText($user_b->getAccountName());
-    $this->assertText($user_c->getAccountName());
+    $this->assertSession()->pageTextContains($user_b->getAccountName());
+    $this->assertSession()->pageTextContains($user_c->getAccountName());
 
     // Filter the users by role. Grab the system-generated role name for User C.
     $roles = $user_c->getRoles();
@@ -100,7 +100,7 @@ class UserAdminTest extends BrowserTestBase {
     // Check if the correct users show up when filtered by role.
     $this->assertNoText($user_a->getAccountName());
     $this->assertNoText($user_b->getAccountName());
-    $this->assertText($user_c->getAccountName());
+    $this->assertSession()->pageTextContains($user_c->getAccountName());
 
     // Test blocking of a user.
     $account = $user_storage->load($user_c->id());
@@ -126,7 +126,7 @@ class UserAdminTest extends BrowserTestBase {
     $this->drupalGet('admin/people', ['query' => ['status' => 2]]);
     $this->assertNoText($user_a->getAccountName());
     $this->assertNoText($user_b->getAccountName());
-    $this->assertText($user_c->getAccountName());
+    $this->assertSession()->pageTextContains($user_c->getAccountName());
 
     // Test unblocking of a user from /admin/people page and sending of activation mail
     $editunblock = [];

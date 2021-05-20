@@ -70,13 +70,13 @@ class AreaTest extends ViewTestBase {
 
       // First setup an empty label.
       $this->drupalPostForm($edit_path, [], 'Apply');
-      $this->assertText('Test Example area');
+      $this->assertSession()->pageTextContains('Test Example area');
 
       // Then setup a no empty label.
       $labels[$type] = $this->randomMachineName();
       $this->drupalPostForm($edit_path, ['options[admin_label]' => $labels[$type]], 'Apply');
       // Make sure that the new label appears on the site.
-      $this->assertText($labels[$type]);
+      $this->assertSession()->pageTextContains($labels[$type]);
 
       // Test that the settings (empty/admin_label) are accessible.
       $this->drupalGet($edit_path);
@@ -186,7 +186,7 @@ class AreaTest extends ViewTestBase {
 
       // Test that each item exists in the list.
       foreach ($available[$type] as $token => $info) {
-        $this->assertText("[$type:$token]");
+        $this->assertSession()->pageTextContains("[$type:$token]");
       }
     }
 
@@ -223,7 +223,7 @@ class AreaTest extends ViewTestBase {
     $view->storage->enable()->save();
 
     $this->drupalGet('node');
-    $this->assertText('Overridden title');
+    $this->assertSession()->pageTextContains('Overridden title');
   }
 
 }

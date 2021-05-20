@@ -95,8 +95,8 @@ class SearchCommentCountToggleTest extends BrowserTestBase {
 
     // Test comment count display for nodes with comment status set to Open
     $this->submitForm($edit, 'Search');
-    $this->assertText('0 comments');
-    $this->assertText('1 comment');
+    $this->assertSession()->pageTextContains('0 comments');
+    $this->assertSession()->pageTextContains('1 comment');
 
     // Test comment count display for nodes with comment status set to Closed
     $this->searchableNodes['0 comments']->set('comment', CommentItemInterface::CLOSED);
@@ -106,7 +106,7 @@ class SearchCommentCountToggleTest extends BrowserTestBase {
 
     $this->submitForm($edit, 'Search');
     $this->assertNoText('0 comments');
-    $this->assertText('1 comment');
+    $this->assertSession()->pageTextContains('1 comment');
 
     // Test comment count display for nodes with comment status set to Hidden
     $this->searchableNodes['0 comments']->set('comment', CommentItemInterface::HIDDEN);

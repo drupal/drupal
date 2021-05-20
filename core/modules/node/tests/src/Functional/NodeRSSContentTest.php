@@ -52,7 +52,7 @@ class NodeRSSContentTest extends NodeTestBase {
 
     // Check that content added in 'rss' view mode appear in RSS feed.
     $rss_only_content = 'Extra data that should appear only in the RSS feed for node ' . $node->id() . '.';
-    $this->assertText($rss_only_content);
+    $this->assertSession()->responseContains($rss_only_content);
 
     // Check that content added in view modes other than 'rss' doesn't
     // appear in RSS feed.

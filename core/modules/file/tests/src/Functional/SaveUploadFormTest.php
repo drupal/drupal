@@ -485,7 +485,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
 
     // Ensure the expected error message is present and the counts before and
     // after calling _file_save_upload_from_form() are correct.
-    $this->assertText($error);
+    $this->assertSession()->pageTextContains($error);
     $this->assertRaw('Number of error messages before _file_save_upload_from_form(): 1');
     $this->assertRaw('Number of error messages after _file_save_upload_from_form(): 1');
 
@@ -501,7 +501,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
 
     // Ensure the expected error message is present and the counts before and
     // after calling _file_save_upload_from_form() are correct.
-    $this->assertText($error);
+    $this->assertSession()->pageTextContains($error);
     $this->assertRaw('Number of error messages before _file_save_upload_from_form(): 1');
     $this->assertRaw('Number of error messages after _file_save_upload_from_form(): 1');
 

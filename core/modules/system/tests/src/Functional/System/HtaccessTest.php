@@ -122,14 +122,14 @@ class HtaccessTest extends BrowserTestBase {
     $node->save();
     $this->drupalGet('test.php');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('This is a node');
+    $this->assertSession()->pageTextContains('This is a node');
 
     // Update node's alias to test.php/test.
     $node->path = '/test.php/test';
     $node->save();
     $this->drupalGet('test.php/test');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('This is a node');
+    $this->assertSession()->pageTextContains('This is a node');
   }
 
   /**

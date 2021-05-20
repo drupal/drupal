@@ -56,7 +56,7 @@ class AggregatorRenderingTest extends AggregatorTestBase {
 
     // Confirm that the block is now being displayed on pages.
     $this->drupalGet('test-page');
-    $this->assertText($block->label());
+    $this->assertSession()->pageTextContains($block->label());
 
     // Confirm items appear as links.
     $items = $this->container->get('entity_type.manager')->getStorage('aggregator_item')->loadByFeed($feed->id(), 1);

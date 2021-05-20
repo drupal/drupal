@@ -84,7 +84,7 @@ class OliveroTest extends BrowserTestBase {
     $this->drupalGet('admin/appearance');
     $this->cssSelect('a[title="Install Bartik as default theme"]')[0]->click();
     $this->cssSelect('a[title="Uninstall Olivero theme"]')[0]->click();
-    $this->assertText('The Olivero theme has been uninstalled.');
+    $this->assertSession()->pageTextContains('The Olivero theme has been uninstalled.');
   }
 
 }

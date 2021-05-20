@@ -128,7 +128,7 @@ class CommentCacheTagsTest extends EntityWithUriCacheTagsTestBase {
     // Ensure that a new comment only invalidates the commented entity.
     $this->verifyPageCache($this->entityTestCamelid->toUrl(), 'HIT');
     $this->verifyPageCache($this->entityTestHippopotamidae->toUrl(), 'MISS');
-    $this->assertText($hippo_comment->getSubject());
+    $this->assertSession()->pageTextContains($hippo_comment->getSubject());
 
     // Ensure that updating an existing comment only invalidates the commented
     // entity.

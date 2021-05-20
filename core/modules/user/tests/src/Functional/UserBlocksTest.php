@@ -124,7 +124,7 @@ class UserBlocksTest extends BrowserTestBase {
     $edit['name'] = 'foo';
     $edit['pass'] = 'invalid password';
     $this->drupalPostForm('filter/tips', $edit, 'Log in');
-    $this->assertText('Unrecognized username or password. Forgot your password?');
+    $this->assertSession()->pageTextContains('Unrecognized username or password. Forgot your password?');
     $this->drupalGet('filter/tips');
     $this->assertNoText('Unrecognized username or password. Forgot your password?');
   }

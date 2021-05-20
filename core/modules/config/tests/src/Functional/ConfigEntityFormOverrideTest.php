@@ -47,7 +47,7 @@ class ConfigEntityFormOverrideTest extends BrowserTestBase {
 
     // Test that the original label on the listing page is intact.
     $this->drupalGet('admin/structure/config_test');
-    $this->assertText($original_label);
+    $this->assertSession()->pageTextContains($original_label);
     $this->assertNoText($overridden_label);
 
     // Test that the original label on the editing page is intact.
@@ -62,7 +62,7 @@ class ConfigEntityFormOverrideTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save');
     $this->drupalGet('admin/structure/config_test');
     $this->assertNoText($overridden_label);
-    $this->assertText($edited_label);
+    $this->assertSession()->pageTextContains($edited_label);
 
     // Test that the editing page now has the edited label.
     $this->drupalGet('admin/structure/config_test/manage/dotted.default');

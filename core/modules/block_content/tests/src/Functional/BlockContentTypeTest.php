@@ -71,7 +71,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     // Test the page with no block-types.
     $this->drupalGet('block/add');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('You have not created any block types yet');
+    $this->assertSession()->pageTextContains('You have not created any block types yet');
     $this->clickLink('block type creation page');
 
     // Create a block type via the user interface.
@@ -185,7 +185,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $this->assertRaw(
       t('Are you sure you want to delete the custom block type %type?', ['%type' => $type->id()])
     );
-    $this->assertText('This action cannot be undone.');
+    $this->assertSession()->pageTextContains('This action cannot be undone.');
   }
 
   /**

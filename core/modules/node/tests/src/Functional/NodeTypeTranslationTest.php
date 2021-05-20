@@ -144,7 +144,7 @@ class NodeTypeTranslationTest extends BrowserTestBase {
 
     // Assert that the title label is displayed on the translation form with the right value.
     $this->drupalGet("admin/structure/types/manage/$type/translate/$langcode/add");
-    $this->assertText('Edited title');
+    $this->assertSession()->pageTextContains('Edited title');
 
     // Translate the title label.
     $this->submitForm(["translation[config_names][core.base_field_override.node.$type.title][label]" => 'Translated title'], 'Save translation');
@@ -154,9 +154,9 @@ class NodeTypeTranslationTest extends BrowserTestBase {
     // use t(). If t() were used then the correct langcodes would need to be
     // provided.
     $this->drupalGet("node/add/$type");
-    $this->assertText('Edited title');
+    $this->assertSession()->pageTextContains('Edited title');
     $this->drupalGet("$langcode/node/add/$type");
-    $this->assertText('Translated title');
+    $this->assertSession()->pageTextContains('Translated title');
 
     // Add an e-mail field.
     $this->drupalPostForm("admin/structure/types/manage/$type/fields/add-field", ['new_storage_type' => 'email', 'label' => 'Email', 'field_name' => 'email'], 'Save and continue');
@@ -179,7 +179,7 @@ class NodeTypeTranslationTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet("es/admin/structure/types/manage/$type/fields/node.$type.field_email/translate");
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText("The configuration objects have different language codes so they cannot be translated");
+    $this->assertSession()->pageTextContains("The configuration objects have different language codes so they cannot be translated");
   }
 
 }

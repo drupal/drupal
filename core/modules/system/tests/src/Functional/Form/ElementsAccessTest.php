@@ -34,7 +34,7 @@ class ElementsAccessTest extends BrowserTestBase {
     $this->assertNoText('This checkbox inside a container does not have its default value.');
     $this->assertNoText('This checkbox inside a nested container does not have its default value.');
     $this->assertNoText('This checkbox inside a vertical tab whose fieldset access is allowed does not have its default value.');
-    $this->assertText('The form submitted correctly.');
+    $this->assertSession()->pageTextContains('The form submitted correctly.');
   }
 
 }

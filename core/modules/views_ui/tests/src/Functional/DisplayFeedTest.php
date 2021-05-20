@@ -51,7 +51,7 @@ class DisplayFeedTest extends UITestBase {
     // Regression test: ViewListBuilder::getDisplayPaths() did not properly
     // check whether a DisplayPluginCollection was returned in iterating over
     // all displays.
-    $this->assertText($view_name);
+    $this->assertSession()->pageTextContains($view_name);
 
     // Check the attach TO interface.
     $this->drupalGet('admin/structure/views/nojs/display/' . $view_name . '/feed_1/displays');

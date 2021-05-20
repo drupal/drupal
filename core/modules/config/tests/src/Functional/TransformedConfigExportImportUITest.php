@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\config\Functional;
 
-use Drupal\Component\Utility\Html;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -54,8 +53,8 @@ class TransformedConfigExportImportUITest extends BrowserTestBase {
 
     // Tests changes of system.site.
     $this->drupalGet('admin/config/development/configuration/sync/diff/system.site');
-    $this->assertText('name: Drupal');
-    $this->assertText(Html::escape("name: 'Drupal Arrr'"));
+    $this->assertSession()->pageTextContains('name: Drupal');
+    $this->assertSession()->pageTextContains("name: 'Drupal Arrr'");
 
     // Add a slogan.
     $originalSlogan = $this->config('system.site')->get('slogan');
@@ -69,8 +68,8 @@ class TransformedConfigExportImportUITest extends BrowserTestBase {
 
     // Tests changes of system.site.
     $this->drupalGet('admin/config/development/configuration/sync/diff/system.site');
-    $this->assertText(Html::escape("slogan: ''"));
-    $this->assertText(Html::escape("slogan: $newSlogan"));
+    $this->assertSession()->pageTextContains("slogan: ''");
+    $this->assertSession()->pageTextContains("slogan: $newSlogan");
 
     // Export the configuration.
     $this->drupalPostForm('admin/config/development/configuration/full/export', [], 'Export');
@@ -83,8 +82,8 @@ class TransformedConfigExportImportUITest extends BrowserTestBase {
 
     // Assert the new name and slogan.
     $this->drupalGet('admin/config/development/configuration/sync/diff/system.site');
-    $this->assertText(Html::escape("name: 'Drupal Arrr'"));
-    $this->assertText(Html::escape("slogan: '$originalSlogan Arrr'"));
+    $this->assertSession()->pageTextContains("name: 'Drupal Arrr'");
+    $this->assertSession()->pageTextContains("slogan: '$originalSlogan Arrr'");
     $this->assertEquals('Drupal', $this->config('system.site')->get('name'));
     $this->assertEquals($newSlogan, $this->config('system.site')->get('slogan'));
 
@@ -95,7 +94,7 @@ class TransformedConfigExportImportUITest extends BrowserTestBase {
 
     // Assert that the event was dispatched again on the new config.
     $this->drupalGet('admin/config/development/configuration/sync/diff/system.site');
-    $this->assertText(Html::escape("name: 'Drupal Arrr Arrr'"));
+    $this->assertSession()->pageTextContains("name: 'Drupal Arrr Arrr'");
   }
 
 }

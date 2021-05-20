@@ -51,7 +51,7 @@ class BulkFormTest extends UserTestBase {
       'action' => 'user_block_user_action',
     ];
     $this->drupalPostForm('test-user-bulk-form', $edit, 'Apply to selected items');
-    $this->assertText('No users selected.');
+    $this->assertSession()->pageTextContains('No users selected.');
 
     // Assign a role to a user.
     $account = $user_storage->load($this->users[0]->id());
@@ -101,7 +101,7 @@ class BulkFormTest extends UserTestBase {
 
     // Ensure the anonymous user is found.
     $this->drupalGet('test-user-bulk-form');
-    $this->assertText($this->config('user.settings')->get('anonymous'));
+    $this->assertSession()->pageTextContains($this->config('user.settings')->get('anonymous'));
 
     // Attempt to block the anonymous user.
     $edit = [

@@ -134,7 +134,7 @@ class TextFieldTest extends StringFieldTest {
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet('entity_test/1');
-    $this->assertText('Long text');
+    $this->assertSession()->pageTextContains('Long text');
   }
 
   /**
@@ -207,7 +207,7 @@ class TextFieldTest extends StringFieldTest {
     $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText('entity_test ' . $id . ' has been created.');
+    $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
 
     // Display the entity.
     $entity = EntityTest::load($id);
@@ -245,7 +245,7 @@ class TextFieldTest extends StringFieldTest {
       "{$field_name}[0][format]" => $format_id,
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('entity_test ' . $id . ' has been updated.');
+    $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been updated.');
 
     // Display the entity.
     $this->container->get('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);

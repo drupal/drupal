@@ -88,8 +88,8 @@ class ForumNodeAccessTest extends BrowserTestBase {
     $this->drupalGet('');
 
     // Ensure private node and public node are found.
-    $this->assertText($private_node->getTitle());
-    $this->assertText($public_node->getTitle());
+    $this->assertSession()->pageTextContains($private_node->getTitle());
+    $this->assertSession()->pageTextContains($public_node->getTitle());
 
     // Test for $no_access_user.
     $this->drupalLogin($no_access_user);
@@ -97,7 +97,7 @@ class ForumNodeAccessTest extends BrowserTestBase {
 
     // Ensure private node is not found but public is found.
     $this->assertNoText($private_node->getTitle());
-    $this->assertText($public_node->getTitle());
+    $this->assertSession()->pageTextContains($public_node->getTitle());
   }
 
 }

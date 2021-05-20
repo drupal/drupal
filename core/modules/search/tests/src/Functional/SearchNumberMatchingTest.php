@@ -84,7 +84,7 @@ class SearchNumberMatchingTest extends BrowserTestBase {
     // Run cron to ensure the content is indexed.
     $this->cronRun();
     $this->drupalGet('admin/reports/dblog');
-    $this->assertText('Cron run completed');
+    $this->assertSession()->pageTextContains('Cron run completed');
   }
 
   /**
@@ -108,7 +108,7 @@ class SearchNumberMatchingTest extends BrowserTestBase {
         $number = ltrim($number, '-');
 
         $this->drupalPostForm('search/node', ['keys' => $number], 'Search');
-        $this->assertText($node->label());
+        $this->assertSession()->pageTextContains($node->label());
       }
     }
 

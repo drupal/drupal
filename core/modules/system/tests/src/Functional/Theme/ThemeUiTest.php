@@ -357,7 +357,7 @@ class ThemeUiTest extends BrowserTestBase {
       $incompatible_info = $info + $incompatible_update;
       file_put_contents($file_path, Yaml::encode($incompatible_info));
       $this->drupalGet('admin/appearance');
-      $this->assertText($incompatible_themes_message);
+      $this->assertSession()->pageTextContains($incompatible_themes_message);
 
       file_put_contents($file_path, Yaml::encode($compatible_info));
       $this->drupalGet('admin/appearance');

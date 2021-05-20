@@ -40,7 +40,7 @@ class FieldUIRouteTest extends BrowserTestBase {
    */
   public function testFieldUIRoutes() {
     $this->drupalGet('entity_test_no_id/structure/entity_test/fields');
-    $this->assertText('No fields are present yet.');
+    $this->assertSession()->pageTextContains('No fields are present yet.');
 
     $this->drupalGet('admin/config/people/accounts/fields');
     $this->assertSession()->titleEquals('Manage fields | Drupal');
