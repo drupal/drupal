@@ -68,7 +68,7 @@ function system_requirements($phase) {
     $enabled_modules = \Drupal::moduleHandler()->getModuleList();
     foreach ($enabled_modules as $module => $data) {
       $info = \Drupal::service('extension.list.module')->getExtensionInfo($module);
-      if (isset($info['lifecycle']) && $info['lifecycle'] === ExtensionLifecycle::EXPERIMENTAL) {
+      if (isset($info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER]) && $info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::EXPERIMENTAL) {
         $experimental_modules[$module] = $info['name'];
       }
     }

@@ -104,7 +104,7 @@ class InstallUninstallTest extends ModuleTestBase {
 
       // Install the module.
       $edit = [];
-      $lifecycle = $module->info['lifecycle'];
+      $lifecycle = $module->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER];
       $edit['modules[' . $name . '][enable]'] = TRUE;
       $this->drupalPostForm('admin/modules', $edit, 'Install');
 
@@ -209,7 +209,7 @@ class InstallUninstallTest extends ModuleTestBase {
     foreach ($all_modules as $name => $module) {
       $edit['modules[' . $name . '][enable]'] = TRUE;
       // Track whether there is at least one experimental module.
-      if ($module->info['lifecycle'] === ExtensionLifecycle::EXPERIMENTAL) {
+      if ($module->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::EXPERIMENTAL) {
         $experimental = TRUE;
       }
     }

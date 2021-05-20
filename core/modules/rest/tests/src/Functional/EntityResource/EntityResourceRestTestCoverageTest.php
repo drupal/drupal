@@ -43,7 +43,7 @@ class EntityResourceRestTestCoverageTest extends BrowserTestBase {
         empty($module->info['hidden']) &&
         $module->status == FALSE &&
         $module->info['package'] !== 'Testing' &&
-        $module->info['lifecycle'] !== ExtensionLifecycle::EXPERIMENTAL;
+        $module->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] !== ExtensionLifecycle::EXPERIMENTAL;
     });
 
     $this->container->get('module_installer')->install(array_keys($stable_core_modules));

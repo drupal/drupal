@@ -405,7 +405,7 @@ class ModulesListForm extends FormBase {
       elseif (($checkbox = $form_state->getValue(['modules', $name], FALSE)) && $checkbox['enable']) {
         $modules['install'][$name] = $data[$name]->info['name'];
         // Identify experimental modules.
-        if ($data[$name]->info['lifecycle'] === ExtensionLifecycle::EXPERIMENTAL) {
+        if ($data[$name]->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::EXPERIMENTAL) {
           $modules['experimental'][$name] = $data[$name]->info['name'];
         }
       }
@@ -419,7 +419,7 @@ class ModulesListForm extends FormBase {
           $modules['install'][$dependency] = $data[$dependency]->info['name'];
 
           // Identify experimental modules.
-          if ($data[$dependency]->info['lifecycle'] === ExtensionLifecycle::EXPERIMENTAL) {
+          if ($data[$dependency]->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::EXPERIMENTAL) {
             $modules['experimental'][$dependency] = $data[$dependency]->info['name'];
           }
         }

@@ -5,13 +5,19 @@ namespace Drupal\Core\Extension;
 /**
  * Extension lifecycle.
  *
- * The lifecycle of a core module can go through the following progression:
+ * The lifecycle of an extension (module/theme etc) can go through the following
+ * progression:
  * 1. Starts "experimental".
  * 2. Stabilizes and goes "stable".
- * 3. Eventually (maybe), becomes "deprecated" on the way out of core.
+ * 3. Eventually (maybe), becomes "deprecated" when being phased out.
  * 4. Finally (maybe), becomes "obsolete" and can't be enabled anymore.
  */
 final class ExtensionLifecycle {
+
+  /**
+   * The string used to identify the lifecycle in an .info.yml file.
+   */
+  const LIFECYCLE_IDENTIFIER = 'lifecycle';
 
   /**
    * Extension is experimental. Warnings will be shown if installed.
@@ -43,13 +49,13 @@ final class ExtensionLifecycle {
    *   TRUE if the lifecycle is valid, otherwise FALSE.
    */
   public static function isValid($lifecycle) : bool {
-    $valid_lifecycles = [
+    $valid_values = [
       self::EXPERIMENTAL,
       self::STABLE,
       self::DEPRECATED,
       self::OBSOLETE,
     ];
-    return in_array($lifecycle, $valid_lifecycles, TRUE);
+    return in_array($lifecycle, $valid_values, TRUE);
   }
 
 }

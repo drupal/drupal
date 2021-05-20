@@ -820,7 +820,6 @@ libicu
 libmysqlclient
 libyaml
 licious
-lifecycles
 lified
 lightdiamond
 lightninggreen

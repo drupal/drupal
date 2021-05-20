@@ -166,7 +166,7 @@ class DefaultConfigTest extends KernelTestBase {
       }
       else {
         $info = $this->container->get('extension.list.module')->getExtensionInfo($module);
-        if (!isset($info['lifecycle']) || $info['lifecycle'] !== ExtensionLifecycle::EXPERIMENTAL) {
+        if (!isset($info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER]) || $info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] !== ExtensionLifecycle::EXPERIMENTAL) {
           $this->fail("$config_name provided by $module does not exist after installing all dependencies");
         }
       }

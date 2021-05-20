@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\Core\Extension;
 
+use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\Core\Extension\InfoParser;
 use Drupal\Core\Extension\InfoParserException;
 use Drupal\Tests\UnitTestCase;
@@ -586,7 +587,7 @@ CORE_INCOMPATIBILITY;
    * Data provider for testCoreIncompatibility().
    */
   public function providerCoreIncompatibility() {
-    list($major, $minor) = explode('.', \Drupal::VERSION);
+    [$major, $minor] = explode('.', \Drupal::VERSION);
 
     $next_minor = $minor + 1;
     $next_major = $major + 1;
@@ -710,14 +711,14 @@ INFO;
       $info .= "\nlifecycle: $lifecycle\n";
     }
     vfsStream::setup('modules');
-    $filename = "lifecycle-$lifecycle.info.txt";
+    $filename = "lifecycle-$lifecycle.info.yml";
     vfsStream::create([
       'fixtures' => [
         $filename => $info,
       ],
     ]);
     $info_values = $this->infoParser->parse(vfsStream::url("modules/fixtures/$filename"));
-    $this->assertSame($expected, $info_values['lifecycle']);
+    $this->assertSame($expected, $info_values[ExtensionLifecycle::LIFECYCLE_IDENTIFIER]);
   }
 
   /**
@@ -727,23 +728,23 @@ INFO;
     return [
       'empty' => [
         '',
-        'stable',
+        ExtensionLifecycle::STABLE,
       ],
       'experimental' => [
-        'experimental',
-        'experimental',
+        ExtensionLifecycle::EXPERIMENTAL,
+        ExtensionLifecycle::EXPERIMENTAL,
       ],
       'stable' => [
-        'stable',
-        'stable',
+        ExtensionLifecycle::STABLE,
+        ExtensionLifecycle::STABLE,
       ],
       'deprecated' => [
-        'deprecated',
-        'deprecated',
+        ExtensionLifecycle::DEPRECATED,
+        ExtensionLifecycle::DEPRECATED,
       ],
       'obsolete' => [
-        'obsolete',
-        'obsolete',
+        ExtensionLifecycle::OBSOLETE,
+        ExtensionLifecycle::OBSOLETE,
       ],
     ];
   }

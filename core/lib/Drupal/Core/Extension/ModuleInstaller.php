@@ -107,7 +107,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       if (!empty($module_data[$module]->info['core_incompatible'])) {
         throw new MissingDependencyException("Unable to install modules: module '$module' is incompatible with this version of Drupal core.");
       }
-      if ($module_data[$module]->info['lifecycle'] === ExtensionLifecycle::OBSOLETE) {
+      if ($module_data[$module]->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::OBSOLETE) {
         throw new ObsoleteExtensionException("Unable to install modules: module '$module' is obsolete.");
       }
     }
