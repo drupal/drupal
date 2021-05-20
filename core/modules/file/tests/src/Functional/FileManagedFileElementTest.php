@@ -188,7 +188,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
     $this->submitForm([], 'Save');
 
     $fid = $this->getLastFileId();
-    /** @var $file \Drupal\file\FileInterface */
+    /** @var \Drupal\file\FileInterface $file */
     $file = $this->container->get('entity_type.manager')->getStorage('file')->load($fid);
     $file->setPermanent();
     $file->save();

@@ -24,10 +24,10 @@ class CurrentThemeConditionTest extends KernelTestBase {
     \Drupal::service('theme_installer')->install(['test_theme']);
 
     $manager = \Drupal::service('plugin.manager.condition');
-    /** @var $condition \Drupal\Core\Condition\ConditionInterface */
+    /** @var \Drupal\Core\Condition\ConditionInterface $condition */
     $condition = $manager->createInstance('current_theme');
     $condition->setConfiguration(['theme' => 'test_theme']);
-    /** @var $condition_negated \Drupal\Core\Condition\ConditionInterface */
+    /** @var \Drupal\Core\Condition\ConditionInterface $condition_negated */
     $condition_negated = $manager->createInstance('current_theme');
     $condition_negated->setConfiguration(['theme' => 'test_theme', 'negate' => TRUE]);
 

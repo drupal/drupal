@@ -215,7 +215,7 @@ class LanguageConfigurationTest extends BrowserTestBase {
     $storage = $this->container->get('entity_type.manager')
       ->getStorage('configurable_language');
     $storage->resetCache();
-    /* @var $languages \Drupal\Core\Language\LanguageInterface[] */
+    /** @var \Drupal\Core\Language\LanguageInterface[] $languages */
     $languages = $storage->loadMultiple();
     foreach ($languages as $language) {
       if (!$language->isLocked()) {

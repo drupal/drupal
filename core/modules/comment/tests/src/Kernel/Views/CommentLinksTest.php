@@ -72,7 +72,7 @@ class CommentLinksTest extends CommentViewsKernelTestBase {
     ]);
     $view->save();
 
-    /* @var \Drupal\Core\Session\AccountSwitcherInterface $account_switcher */
+    /** @var \Drupal\Core\Session\AccountSwitcherInterface $account_switcher */
     $account_switcher = \Drupal::service('account_switcher');
     $account_switcher->switchTo($this->adminUser);
 
@@ -159,7 +159,7 @@ class CommentLinksTest extends CommentViewsKernelTestBase {
     ]);
     $view->save();
 
-    /* @var \Drupal\Core\Session\AccountSwitcherInterface $account_switcher */
+    /** @var \Drupal\Core\Session\AccountSwitcherInterface $account_switcher */
     $account_switcher = \Drupal::service('account_switcher');
     $account_switcher->switchTo($this->adminUser);
     $view->preview();

@@ -44,7 +44,7 @@ class FeedValidationTest extends EntityKernelTestBase {
     $feed->save();
 
     // Add another feed.
-    /* @var \Drupal\aggregator\FeedInterface $feed */
+    /** @var \Drupal\aggregator\FeedInterface $feed */
     $feed = Feed::create([
       'title' => 'Feed 1',
       'url' => 'https://www.drupal.org/planet/rss.xml',
