@@ -147,7 +147,7 @@ class BookRelationshipTest extends ViewTestBase {
   public function testRelationship() {
 
     // Create new book.
-    // @var \Drupal\node\NodeInterface[] $nodes
+    /** @var \Drupal\node\NodeInterface[] $nodes */
     $nodes = $this->createBook();
     for ($i = 0; $i < 8; $i++) {
       $this->drupalGet('test-book/' . $nodes[$i]->id());

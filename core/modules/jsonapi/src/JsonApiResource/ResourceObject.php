@@ -348,7 +348,7 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
     });
     // Return a sub-array of $output containing the keys in $enabled_fields.
     $input = array_intersect_key($fields, array_flip($enabled_field_names));
-    /* @var \Drupal\Core\Config\Entity\ConfigEntityInterface $entity */
+    /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface $entity */
     foreach ($input as $field_name => $field_value) {
       $public_field_name = $resource_type->getPublicName($field_name);
       $enabled_public_fields[$public_field_name] = $field_value;

@@ -75,7 +75,7 @@ function config_translation_themes_uninstalled() {
  * Implements hook_entity_type_alter().
  */
 function config_translation_entity_type_alter(array &$entity_types) {
-  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   foreach ($entity_types as $entity_type_id => $entity_type) {
     if ($entity_type->entityClassImplements(ConfigEntityInterface::class)) {
       if ($entity_type_id == 'block') {

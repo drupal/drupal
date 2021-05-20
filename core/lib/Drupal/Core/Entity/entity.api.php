@@ -785,7 +785,7 @@ function hook_ENTITY_TYPE_create_access(\Drupal\Core\Session\AccountInterface $a
  * @see hook_entity_type_alter()
  */
 function hook_entity_type_build(array &$entity_types) {
-  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   // Add a form for a custom node form without overriding the default
   // node form. To override the default node form, use hook_entity_type_alter().
   $entity_types['node']->setFormClass('mymodule_foo', 'Drupal\mymodule\NodeFooForm');
@@ -814,7 +814,7 @@ function hook_entity_type_build(array &$entity_types) {
  * @see \Drupal\Core\Entity\EntityTypeInterface
  */
 function hook_entity_type_alter(array &$entity_types) {
-  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   // Set the controller class for nodes to an alternate implementation of the
   // Drupal\Core\Entity\EntityStorageInterface interface.
   $entity_types['node']->setStorageClass('Drupal\mymodule\MyCustomNodeStorage');

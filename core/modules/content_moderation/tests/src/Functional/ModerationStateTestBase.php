@@ -158,7 +158,7 @@ abstract class ModerationStateTestBase extends BrowserTestBase {
    */
   protected function grantUserPermissionToCreateContentOfType(AccountInterface $account, $content_type_id) {
     $role_ids = $account->getRoles(TRUE);
-    /* @var \Drupal\user\RoleInterface $role */
+    /** @var \Drupal\user\RoleInterface $role */
     $role_id = reset($role_ids);
     $role = Role::load($role_id);
     $role->grantPermission(sprintf('create %s content', $content_type_id));

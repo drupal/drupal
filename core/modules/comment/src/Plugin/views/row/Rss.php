@@ -73,7 +73,7 @@ class Rss extends RssPluginBase {
     }
 
     // Load the specified comment and its associated node:
-    /** @var $comment \Drupal\comment\CommentInterface */
+    /** @var \Drupal\comment\CommentInterface $comment */
     $comment = $this->comments[$cid];
     if (empty($comment)) {
       return;

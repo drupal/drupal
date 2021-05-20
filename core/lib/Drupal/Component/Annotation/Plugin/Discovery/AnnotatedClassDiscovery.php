@@ -141,7 +141,7 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
               $finder = MockFileFinder::create($fileinfo->getPathName());
               $parser = new StaticReflectionParser($class, $finder, TRUE);
 
-              /** @var $annotation \Drupal\Component\Annotation\AnnotationInterface */
+              /** @var \Drupal\Component\Annotation\AnnotationInterface $annotation */
               if ($annotation = $reader->getClassAnnotation($parser->getReflectionClass(), $this->pluginDefinitionAnnotationName)) {
                 $this->prepareAnnotationDefinition($annotation, $class);
 

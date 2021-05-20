@@ -200,7 +200,7 @@ class SystemManager {
         continue;
       }
 
-      /** @var $link \Drupal\Core\Menu\MenuLinkInterface */
+      /** @var \Drupal\Core\Menu\MenuLinkInterface $link */
       $link = $element->link;
       $content[$key]['title'] = $link->getTitle();
       $content[$key]['options'] = $link->getOptions();

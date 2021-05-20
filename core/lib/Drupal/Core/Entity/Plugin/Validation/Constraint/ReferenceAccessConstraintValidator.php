@@ -14,7 +14,7 @@ class ReferenceAccessConstraintValidator extends ConstraintValidator {
    * {@inheritdoc}
    */
   public function validate($value, Constraint $constraint) {
-    /* @var \Drupal\Core\Field\FieldItemInterface $value */
+    /** @var \Drupal\Core\Field\FieldItemInterface $value */
     if (!isset($value)) {
       return;
     }
@@ -23,7 +23,7 @@ class ReferenceAccessConstraintValidator extends ConstraintValidator {
     if (empty($id)) {
       return;
     }
-    /* @var \Drupal\Core\Entity\FieldableEntityInterface $referenced_entity */
+    /** @var \Drupal\Core\Entity\FieldableEntityInterface $referenced_entity */
     $referenced_entity = $value->entity;
     if ($referenced_entity) {
       $entity = $value->getEntity();

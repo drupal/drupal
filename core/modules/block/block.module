@@ -274,7 +274,7 @@ function template_preprocess_block(&$variables) {
  */
 function block_user_role_delete($role) {
   foreach (Block::loadMultiple() as $block) {
-    /** @var $block \Drupal\block\BlockInterface */
+    /** @var \Drupal\block\BlockInterface $block */
     $visibility = $block->getVisibility();
     if (isset($visibility['user_role']['roles'][$role->id()])) {
       unset($visibility['user_role']['roles'][$role->id()]);
@@ -305,7 +305,7 @@ function block_menu_delete(Menu $menu) {
 function block_configurable_language_delete(ConfigurableLanguageInterface $language) {
   // Remove the block visibility settings for the deleted language.
   foreach (Block::loadMultiple() as $block) {
-    /** @var $block \Drupal\block\BlockInterface */
+    /** @var \Drupal\block\BlockInterface $block */
     $visibility = $block->getVisibility();
     if (isset($visibility['language']['langcodes'][$language->id()])) {
       unset($visibility['language']['langcodes'][$language->id()]);

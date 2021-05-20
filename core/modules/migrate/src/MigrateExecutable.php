@@ -367,7 +367,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
   public function processRow(Row $row, array $process = NULL, $value = NULL) {
     foreach ($this->migration->getProcessPlugins($process) as $destination => $plugins) {
       $multiple = FALSE;
-      /** @var $plugin \Drupal\migrate\Plugin\MigrateProcessInterface */
+      /** @var \Drupal\migrate\Plugin\MigrateProcessInterface $plugin */
       foreach ($plugins as $plugin) {
         $definition = $plugin->getPluginDefinition();
         // Many plugins expect a scalar value but the current value of the

@@ -48,7 +48,7 @@ class MigrateNodeRevisionTest extends MigrateNodeTestBase {
    *   The revision's time stamp.
    */
   protected function assertRevision($id, $langcode, $title, $log, $timestamp) {
-    /* @var  \Drupal\node\NodeInterface $revision */
+    /** @var  \Drupal\node\NodeInterface $revision */
     $revision = $this->nodeStorage->loadRevision($id)
       ->getTranslation($langcode);
     $this->assertInstanceOf(NodeInterface::class, $revision);

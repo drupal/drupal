@@ -211,7 +211,7 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
           return !$field_definition->isComputed();
         });
         foreach ($bundle_fields as $field_name => $field_definition) {
-          /* @var \Drupal\Core\Field\FieldDefinitionInterface $field_definition */
+          /** @var \Drupal\Core\Field\FieldDefinitionInterface $field_definition */
           $columns = $field_definition->getFieldStorageDefinition()->getColumns();
           // If there is more than one column, display them all, otherwise just
           // display the field label.

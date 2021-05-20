@@ -354,7 +354,7 @@ function file_test_file_scan_callback_reset() {
  */
 function file_test_entity_type_alter(&$entity_types) {
   if (\Drupal::state()->get('file_test_alternate_access_handler', FALSE)) {
-    /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+    /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
     $entity_types['file']
       ->setAccessClass('Drupal\file_test\FileTestAccessControlHandler');
   }
