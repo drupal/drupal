@@ -57,7 +57,7 @@ class HtmlToTextTest extends BrowserTestBase {
     $tested_tags = implode(', ', array_unique($matches[1]));
     $message .= ' (' . $tested_tags . ')';
     $result = MailFormatHelper::htmlToText($html, $allowed_tags);
-    $this->assertEqual($text, $result, Html::escape($message));
+    $this->assertEquals($text, $result, Html::escape($message));
     $verbose = 'html = <pre>' . $this->stringToHtml($html)
       . '</pre><br />result = <pre>' . $this->stringToHtml($result)
       . '</pre><br />expected = <pre>' . $this->stringToHtml($text)
@@ -246,7 +246,7 @@ EOT;
     $output_upper = mb_strtoupper($output);
     $upper_input = mb_strtoupper($input);
     $upper_output = MailFormatHelper::htmlToText($upper_input);
-    $pass = $this->assertEqual(
+    $pass = $this->assertEquals(
       $upper_output,
       $output_upper,
       'Tag recognition should be case-insensitive'

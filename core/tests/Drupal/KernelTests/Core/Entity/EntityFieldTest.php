@@ -283,9 +283,9 @@ class EntityFieldTest extends EntityKernelTestBase {
     $entity2->user_id = $entity->user_id;
     $entity2->field_test_text = $entity->field_test_text;
     $this->assertFalse($entity->name === $entity2->name, new FormattableMarkup('%entity_type: Copying properties results in a different field object.', ['%entity_type' => $entity_type]));
-    $this->assertEqual($entity->name->value, $entity2->name->value, new FormattableMarkup('%entity_type: Name field copied.', ['%entity_type' => $entity_type]));
-    $this->assertEqual($entity->user_id->target_id, $entity2->user_id->target_id, new FormattableMarkup('%entity_type: User id field copied.', ['%entity_type' => $entity_type]));
-    $this->assertEqual($entity->field_test_text->value, $entity2->field_test_text->value, new FormattableMarkup('%entity_type: Text field copied.', ['%entity_type' => $entity_type]));
+    $this->assertEquals($entity->name->value, $entity2->name->value, new FormattableMarkup('%entity_type: Name field copied.', ['%entity_type' => $entity_type]));
+    $this->assertEquals($entity->user_id->target_id, $entity2->user_id->target_id, new FormattableMarkup('%entity_type: User id field copied.', ['%entity_type' => $entity_type]));
+    $this->assertEquals($entity->field_test_text->value, $entity2->field_test_text->value, new FormattableMarkup('%entity_type: Text field copied.', ['%entity_type' => $entity_type]));
 
     // Tests that assigning TypedData objects to non-field properties keeps the
     // assigned value as is.

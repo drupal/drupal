@@ -187,7 +187,7 @@ class DisplayTest extends ViewTestBase {
     $view->setDisplay('default');
     $errors = $view->validate();
     $this->assertTrue(!empty($errors), 'More link validation has some errors.');
-    $this->assertEqual('Display "Master" uses a "more" link but there are no displays it can link to. You need to specify a custom URL.', $errors['default'][0], 'More link validation has the right error.');
+    $this->assertEquals('Display "Master" uses a "more" link but there are no displays it can link to. You need to specify a custom URL.', $errors['default'][0], 'More link validation has the right error.');
 
     // Confirm that the view does not validate when the page display does not exist.
     $view = Views::getView('test_view');
@@ -195,7 +195,7 @@ class DisplayTest extends ViewTestBase {
     $view->display_handler->setOption('use_more', 1);
     $errors = $view->validate();
     $this->assertTrue(!empty($errors), 'More link validation has some errors.');
-    $this->assertEqual('Display "Master" uses a "more" link but there are no displays it can link to. You need to specify a custom URL.', $errors['default'][0], 'More link validation has the right error.');
+    $this->assertEquals('Display "Master" uses a "more" link but there are no displays it can link to. You need to specify a custom URL.', $errors['default'][0], 'More link validation has the right error.');
   }
 
   /**

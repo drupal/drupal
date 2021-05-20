@@ -31,7 +31,7 @@ class LoggingTest extends DatabaseTestBase {
     $this->assertCount(3, $queries, 'Correct number of queries recorded.');
 
     foreach ($queries as $query) {
-      $this->assertEqual(__FUNCTION__, $query['caller']['function'], 'Correct function in query log.');
+      $this->assertEquals(__FUNCTION__, $query['caller']['function'], 'Correct function in query log.');
     }
   }
 

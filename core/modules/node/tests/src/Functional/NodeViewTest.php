@@ -99,7 +99,7 @@ class NodeViewTest extends NodeTestBase {
     $node = $this->drupalCreateNode(['title' => $title]);
     $this->drupalGet($node->toUrl());
     $result = $this->xpath('//span[contains(@class, "field--name-title")]');
-    $this->assertEqual($title, $result[0]->getText(), 'The passed title was returned.');
+    $this->assertEquals($title, $result[0]->getText(), 'The passed title was returned.');
   }
 
 }

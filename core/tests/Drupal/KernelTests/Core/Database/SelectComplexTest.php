@@ -260,11 +260,11 @@ class SelectComplexTest extends DatabaseTestBase {
     // records in the {test} table).
     $query = $this->connection->select('test');
     $query->fields('test', ['fail']);
-    $this->assertEqual(4, $query->countQuery()->execute()->fetchField(), 'Count Query removed fields');
+    $this->assertEquals(4, $query->countQuery()->execute()->fetchField(), 'Count Query removed fields');
 
     $query = $this->connection->select('test');
     $query->addExpression('fail');
-    $this->assertEqual(4, $query->countQuery()->execute()->fetchField(), 'Count Query removed expressions');
+    $this->assertEquals(4, $query->countQuery()->execute()->fetchField(), 'Count Query removed expressions');
   }
 
   /**

@@ -217,17 +217,17 @@ class ContentEntityChangedTest extends EntityKernelTestBase {
     $query = $this->mulChangedStorage->getQuery();
     $ids = $query->condition('changed', $changed_de, '>')->execute();
 
-    $this->assertEqual($entity->id(), reset($ids), 'Entity query can access changed time regardless of translation.');
+    $this->assertEquals($entity->id(), reset($ids), 'Entity query can access changed time regardless of translation.');
 
     $query = $this->mulChangedStorage->getQuery();
     $ids = $query->condition('changed', $changed_en, '<')->execute();
 
-    $this->assertEqual($entity->id(), reset($ids), 'Entity query can access changed time regardless of translation.');
+    $this->assertEquals($entity->id(), reset($ids), 'Entity query can access changed time regardless of translation.');
 
     $query = $this->mulChangedStorage->getQuery();
     $ids = $query->condition('changed', 0, '>')->execute();
 
-    $this->assertEqual($entity->id(), reset($ids), 'Entity query can access changed time regardless of translation.');
+    $this->assertEquals($entity->id(), reset($ids), 'Entity query can access changed time regardless of translation.');
 
     $query = $this->mulChangedStorage->getQuery();
     $ids = $query->condition('changed', $changed_en, '>')->execute();

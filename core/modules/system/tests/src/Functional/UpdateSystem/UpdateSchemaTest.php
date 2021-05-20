@@ -83,7 +83,7 @@ class UpdateSchemaTest extends BrowserTestBase {
     require_once $this->root . '/core/includes/update.inc';
     update_set_schema('update_test_schema', 8003);
     // Ensure schema has changed.
-    $this->assertEqual(8003, drupal_get_installed_schema_version('update_test_schema'));
+    $this->assertEquals(8003, drupal_get_installed_schema_version('update_test_schema'));
 
   }
 

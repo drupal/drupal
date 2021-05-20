@@ -106,12 +106,12 @@ class ToolkitGdTest extends KernelTestBase {
   public function testManipulations() {
 
     // Test that the image factory is set to use the GD toolkit.
-    $this->assertEqual('gd', $this->imageFactory->getToolkitId(), 'The image factory is set to use the \'gd\' image toolkit.');
+    $this->assertEquals('gd', $this->imageFactory->getToolkitId(), 'The image factory is set to use the \'gd\' image toolkit.');
 
     // Test the list of supported extensions.
     $expected_extensions = ['png', 'gif', 'jpeg', 'jpg', 'jpe'];
     $supported_extensions = $this->imageFactory->getSupportedExtensions();
-    $this->assertEqual($expected_extensions, array_intersect($expected_extensions, $supported_extensions));
+    $this->assertEquals($expected_extensions, array_intersect($expected_extensions, $supported_extensions));
 
     // Test that the supported extensions map to correct internal GD image
     // types.

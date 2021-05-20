@@ -71,7 +71,7 @@ class InstallerTest extends InstallerTestBase {
     copy($settings_services_file, $this->siteDirectory . '/services.yml');
     PerformanceTestRecorder::registerService($this->siteDirectory . '/services.yml', TRUE);
     // Assert that the expected title is present.
-    $this->assertEqual('Select an installation profile', $this->cssSelect('main h2')[0]->getText());
+    $this->assertEquals('Select an installation profile', $this->cssSelect('main h2')[0]->getText());
     $result = $this->xpath('//span[contains(@class, :class) and contains(text(), :text)]', [':class' => 'visually-hidden', ':text' => 'Select an installation profile']);
     $this->assertCount(1, $result, "Title/Label not displayed when '#title_display' => 'invisible' attribute is set");
 
