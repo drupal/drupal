@@ -24,10 +24,10 @@ class SaveDataTest extends FileManagedUnitTestBase {
 
     $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
     assert($stream_wrapper_manager instanceof StreamWrapperManagerInterface);
-    $this->assertEqual(\Drupal::config('system.file')->get('default_scheme'), $stream_wrapper_manager::getScheme($result->getFileUri()), "File was placed in Drupal's files directory.");
-    $this->assertEqual(\Drupal::service('file_system')->basename($result->getFileUri()), $result->getFilename(), "Filename was set to the file's basename.");
-    $this->assertEqual($contents, file_get_contents($result->getFileUri()), 'Contents of the file are correct.');
-    $this->assertEqual('application/octet-stream', $result->getMimeType(), 'A MIME type was set.');
+    $this->assertEquals(\Drupal::config('system.file')->get('default_scheme'), $stream_wrapper_manager::getScheme($result->getFileUri()), "File was placed in Drupal's files directory.");
+    $this->assertEquals(\Drupal::service('file_system')->basename($result->getFileUri()), $result->getFilename(), "Filename was set to the file's basename.");
+    $this->assertEquals($contents, file_get_contents($result->getFileUri()), 'Contents of the file are correct.');
+    $this->assertEquals('application/octet-stream', $result->getMimeType(), 'A MIME type was set.');
     $this->assertTrue($result->isPermanent(), "The file's status was set to permanent.");
 
     // Check that the correct hooks were called.
@@ -52,10 +52,10 @@ class SaveDataTest extends FileManagedUnitTestBase {
 
     $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
     assert($stream_wrapper_manager instanceof StreamWrapperManagerInterface);
-    $this->assertEqual('public', $stream_wrapper_manager::getScheme($result->getFileUri()), "File was placed in Drupal's files directory.");
-    $this->assertEqual($filename, \Drupal::service('file_system')->basename($result->getFileUri()), 'File was named correctly.');
-    $this->assertEqual($contents, file_get_contents($result->getFileUri()), 'Contents of the file are correct.');
-    $this->assertEqual('text/plain', $result->getMimeType(), 'A MIME type was set.');
+    $this->assertEquals('public', $stream_wrapper_manager::getScheme($result->getFileUri()), "File was placed in Drupal's files directory.");
+    $this->assertEquals($filename, \Drupal::service('file_system')->basename($result->getFileUri()), 'File was named correctly.');
+    $this->assertEquals($contents, file_get_contents($result->getFileUri()), 'Contents of the file are correct.');
+    $this->assertEquals('text/plain', $result->getMimeType(), 'A MIME type was set.');
     $this->assertTrue($result->isPermanent(), "The file's status was set to permanent.");
 
     // Check that the correct hooks were called.
@@ -78,10 +78,10 @@ class SaveDataTest extends FileManagedUnitTestBase {
 
     $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
     assert($stream_wrapper_manager instanceof StreamWrapperManagerInterface);
-    $this->assertEqual('public', $stream_wrapper_manager::getScheme($result->getFileUri()), "File was placed in Drupal's files directory.");
-    $this->assertEqual($existing->getFilename(), $result->getFilename(), 'Filename was set to the basename of the source, rather than that of the renamed file.');
-    $this->assertEqual($contents, file_get_contents($result->getFileUri()), 'Contents of the file are correct.');
-    $this->assertEqual('application/octet-stream', $result->getMimeType(), 'A MIME type was set.');
+    $this->assertEquals('public', $stream_wrapper_manager::getScheme($result->getFileUri()), "File was placed in Drupal's files directory.");
+    $this->assertEquals($existing->getFilename(), $result->getFilename(), 'Filename was set to the basename of the source, rather than that of the renamed file.');
+    $this->assertEquals($contents, file_get_contents($result->getFileUri()), 'Contents of the file are correct.');
+    $this->assertEquals('application/octet-stream', $result->getMimeType(), 'A MIME type was set.');
     $this->assertTrue($result->isPermanent(), "The file's status was set to permanent.");
 
     // Check that the correct hooks were called.
@@ -108,10 +108,10 @@ class SaveDataTest extends FileManagedUnitTestBase {
 
     $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
     assert($stream_wrapper_manager instanceof StreamWrapperManagerInterface);
-    $this->assertEqual('public', $stream_wrapper_manager::getScheme($result->getFileUri()), "File was placed in Drupal's files directory.");
-    $this->assertEqual($existing->getFilename(), $result->getFilename(), 'Filename was set to the basename of the existing file, rather than preserving the original name.');
-    $this->assertEqual($contents, file_get_contents($result->getFileUri()), 'Contents of the file are correct.');
-    $this->assertEqual('application/octet-stream', $result->getMimeType(), 'A MIME type was set.');
+    $this->assertEquals('public', $stream_wrapper_manager::getScheme($result->getFileUri()), "File was placed in Drupal's files directory.");
+    $this->assertEquals($existing->getFilename(), $result->getFilename(), 'Filename was set to the basename of the existing file, rather than preserving the original name.');
+    $this->assertEquals($contents, file_get_contents($result->getFileUri()), 'Contents of the file are correct.');
+    $this->assertEquals('application/octet-stream', $result->getMimeType(), 'A MIME type was set.');
     $this->assertTrue($result->isPermanent(), "The file's status was set to permanent.");
 
     // Check that the correct hooks were called.
@@ -134,7 +134,7 @@ class SaveDataTest extends FileManagedUnitTestBase {
     // Check the overwrite error.
     $result = file_save_data('asdf', $existing->getFileUri(), FileSystemInterface::EXISTS_ERROR);
     $this->assertFalse($result, 'Overwriting a file fails when FileSystemInterface::EXISTS_ERROR is specified.');
-    $this->assertEqual($contents, file_get_contents($existing->getFileUri()), 'Contents of existing file were unchanged.');
+    $this->assertEquals($contents, file_get_contents($existing->getFileUri()), 'Contents of existing file were unchanged.');
 
     // Check that no hooks were called while failing.
     $this->assertFileHooksCalled([]);

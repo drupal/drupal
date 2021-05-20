@@ -15,7 +15,14 @@
 
 html.js .form-autocomplete {
   padding-inline-end: var(--sp3);
-  background: var(--autocomplete-search-icon-url) no-repeat right var(--autocomplete-icon-right-offset) center;
+  background-color: var(--color--white);
+  background-image: var(--autocomplete-search-icon-url);
+  background-repeat: no-repeat;
+  background-position: right var(--autocomplete-icon-right-offset) center;  /* LTR */
+
+  &:disabled {
+    background-color: var(--color--gray-90);
+  }
 
   &.ui-autocomplete-loading {
     background: var(--autocomplete-throbber-icon-url) no-repeat right var(--autocomplete-icon-right-offset) center;
@@ -23,7 +30,14 @@ html.js .form-autocomplete {
 }
 
 html.js[dir="rtl"] .form-autocomplete {
-  background: var(--autocomplete-search-icon-url) no-repeat left var(--autocomplete-icon-right-offset) center;
+  background-color: var(--color--white);
+  background-image: var(--autocomplete-search-icon-url);
+  background-repeat: no-repeat;
+  background-position: left var(--autocomplete-icon-right-offset) center;
+
+  &:disabled {
+    background-color: var(--color--gray-90);
+  }
 
   &.ui-autocomplete-loading {
     background: var(--autocomplete-throbber-icon-url) no-repeat left var(--autocomplete-icon-right-offset) center;

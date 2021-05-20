@@ -84,6 +84,7 @@ class MenuUiTest extends BrowserTestBase {
     parent::setUp();
 
     $this->drupalPlaceBlock('page_title_block');
+    $this->drupalPlaceBlock('system_menu_block:main');
 
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
 
@@ -164,7 +165,7 @@ class MenuUiTest extends BrowserTestBase {
     $menu_link_manager->resetDefinitions();
 
     $instance = $menu_link_manager->createInstance($instance->getPluginId());
-    $this->assertEqual($edit['weight'], $instance->getWeight(), 'Saving an existing link updates the weight.');
+    $this->assertEquals($edit['weight'], $instance->getWeight(), 'Saving an existing link updates the weight.');
     $this->resetMenuLink($instance, $old_weight);
   }
 
@@ -493,6 +494,28 @@ class MenuUiTest extends BrowserTestBase {
   }
 
   /**
+   * Test logout link isn't displayed when the user is logged out.
+   */
+  public function testLogoutLinkVisibility() {
+    $adminUserWithLinkAnyPage = $this->drupalCreateUser([
+      'access administration pages',
+      'administer blocks',
+      'administer menu',
+      'create article content',
+      'link to any page',
+    ]);
+    $this->drupalLogin($adminUserWithLinkAnyPage);
+    $this->addMenuLink('', '/user/logout', 'main');
+    $assert = $this->assertSession();
+    // Verify that any link with logout URL is displayed.
+    $assert->linkByHrefExists('user/logout');
+
+    // Verify that any link with logout URL is not displayed.
+    $this->drupalLogout();
+    $assert->linkByHrefNotExists('user/logout');
+  }
+
+  /**
    * Ensures that the proper default values are set when adding a menu link.
    */
   protected function doMenuLinkFormDefaultsTest() {
@@ -793,7 +816,7 @@ class MenuUiTest extends BrowserTestBase {
 
     // Verify menu link.
     $instance = \Drupal::service('plugin.manager.menu.link')->createInstance($menu_link->getPluginId());
-    $this->assertEqual($old_weight, $instance->getWeight(), 'Resets to the old weight.');
+    $this->assertEquals($old_weight, $instance->getWeight(), 'Resets to the old weight.');
   }
 
   /**
@@ -997,8 +1020,8 @@ class MenuUiTest extends BrowserTestBase {
     ], 'Save block');
     $block = Block::load($block_id);
     $settings = $block->getPlugin()->getConfiguration();
-    $this->assertEqual(3, $settings['depth']);
-    $this->assertEqual(2, $settings['level']);
+    $this->assertEquals(3, $settings['depth']);
+    $this->assertEquals(2, $settings['level']);
     // Reset settings.
     $block->getPlugin()->setConfigurationValue('depth', 0);
     $block->getPlugin()->setConfigurationValue('level', 1);

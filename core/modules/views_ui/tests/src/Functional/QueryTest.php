@@ -53,7 +53,7 @@ class QueryTest extends UITestBase {
     $view = Views::getView('test_view');
     $view->initDisplay();
     $view->initQuery();
-    $this->assertEqual($random_value, $view->query->options['test_setting'], 'Query settings got saved');
+    $this->assertEquals($random_value, $view->query->options['test_setting'], 'Query settings got saved');
   }
 
 }

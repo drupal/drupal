@@ -45,7 +45,7 @@ class PageTest extends BrowserTestBase {
     $this->drupalGet('admin/batch-test/test-theme');
     // The stack should contain the name of the theme used on the progress
     // page.
-    $this->assertEqual(['seven'], batch_test_stack(), 'A progressive batch correctly uses the theme of the page that started the batch.');
+    $this->assertEquals(['seven'], batch_test_stack(), 'A progressive batch correctly uses the theme of the page that started the batch.');
   }
 
   /**
@@ -65,7 +65,7 @@ class PageTest extends BrowserTestBase {
     $this->drupalGet('batch-test/test-title');
 
     // The stack should contain the title shown on the progress page.
-    $this->assertEqual(['Batch Test'], batch_test_stack(), 'The batch title is shown on the batch page.');
+    $this->assertEquals(['Batch Test'], batch_test_stack(), 'The batch title is shown on the batch page.');
     $this->assertText('Redirection successful.');
   }
 

@@ -1,5 +1,7 @@
 <?php
-// @codingStandardsIgnoreFile
+
+// phpcs:ignoreFile Portions of this file are a direct copy of
+// \Symfony\Component\DependencyInjection\Loader\YamlFileLoader.
 
 namespace Drupal\Core\DependencyInjection;
 

@@ -36,11 +36,11 @@ global-styling:
       css/components/header-buttons-mobile.css: {}
       css/components/header-navigation.css: {}
       css/components/header-site-branding.css: {}
+      css/components/header-sticky-toggle.css: {}
       css/components/hero.css: {}
       css/components/links.css: {}
       css/components/messages.css: {}
       css/components/navigation/nav-button-mobile.css: {}
-      css/components/navigation/wide-nav-expand.css: {}
       css/components/navigation/nav-primary-button.css: {}
       css/components/navigation/nav-primary.css: {}
       css/components/navigation/nav-primary-wide.css: {}
@@ -61,9 +61,12 @@ global-styling:
     js/navigation.js: {}
     js/second-level-navigation.js: {}
   dependencies:
+    - core/drupal.element.closest
     - core/drupal.element.matches
     - core/drupal.nodelist.foreach
     - core/drupal
+    - core/once
+    - core/tabbable
 
 book:
   css:

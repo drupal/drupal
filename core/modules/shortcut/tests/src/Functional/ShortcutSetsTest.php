@@ -65,18 +65,15 @@ class ShortcutSetsTest extends ShortcutTestBase {
     $this->assertSession()->titleEquals('List links | Drupal');
 
     // Test for the table.
-    $element = $this->xpath('//div[@class="layout-content"]//table');
-    $this->assertNotEmpty($element, 'Shortcut entity list table found.');
+    $this->assertSession()->elementExists('xpath', '//div[@class="layout-content"]//table');
 
     // Test the table header.
-    $elements = $this->xpath('//div[@class="layout-content"]//table/thead/tr/th');
-    $this->assertCount(3, $elements, 'Correct number of table header cells found.');
+    $this->assertSession()->elementsCount('xpath', '//div[@class="layout-content"]//table/thead/tr/th', 3);
 
     // Test the contents of each th cell.
-    $expected_items = [t('Name'), t('Weight'), t('Operations')];
-    foreach ($elements as $key => $element) {
-      $this->assertEqual($expected_items[$key], $element->getText());
-    }
+    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/thead/tr/th[1]', 'Name');
+    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/thead/tr/th[2]', 'Weight');
+    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/thead/tr/th[3]', 'Operations');
 
     // Look for test shortcuts in the table.
     $weight = count($shortcuts);
@@ -141,7 +138,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
     $this->drupalPostForm('user/' . $this->adminUser->id() . '/shortcuts', $edit, 'Change set');
     $current_set = shortcut_current_displayed_set($this->adminUser);
     $this->assertNotEquals($this->set->id(), $current_set->id(), 'A shortcut set can be switched to at the same time as it is created.');
-    $this->assertEqual($edit['label'], $current_set->label(), 'The new set is correctly assigned to the user.');
+    $this->assertEquals($edit['label'], $current_set->label(), 'The new set is correctly assigned to the user.');
   }
 
   /**
@@ -152,7 +149,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
     $this->drupalPostForm('user/' . $this->adminUser->id() . '/shortcuts', $edit, 'Change set');
     $this->assertText('The new set label is required.');
     $current_set = shortcut_current_displayed_set($this->adminUser);
-    $this->assertEqual($this->set->id(), $current_set->id(), 'Attempting to switch to a new shortcut set without providing a set name does not succeed.');
+    $this->assertEquals($this->set->id(), $current_set->id(), 'Attempting to switch to a new shortcut set without providing a set name does not succeed.');
     $field = $this->assertSession()->fieldExists('label');
     $this->assertTrue($field->hasClass('error'));
   }

@@ -5,7 +5,11 @@ namespace Drupal\field\Plugin\migrate\source\d6;
 use Drupal\node\Plugin\migrate\source\d6\ViewModeBase;
 
 /**
- * The field instance per view mode source class.
+ * Drupal 6 field instance per view mode source from database.
+ *
+ * For available configuration keys, refer to the parent classes:
+ * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
+ * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  *
  * @MigrateSource(
  *   id = "d6_field_instance_per_view_mode",

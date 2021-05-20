@@ -142,6 +142,10 @@ class MigrateFieldInstanceWidgetSettingsTest extends MigrateDrupal7TestBase {
 
     $this->assertEntity('taxonomy_term.test_vocabulary.default', 'taxonomy_term', 'test_vocabulary');
     $this->assertComponent('comment.comment_node_test_content_type.default', 'field_integer', 'number', 2);
+
+    $this->assertEntity('node.blog.default', 'node', 'blog');
+    $this->assertComponent('node.blog.default', 'field_file_mfw', 'file_generic', 17);
+    $this->assertComponent('node.blog.default', 'field_image_miw', 'image_image', 18);
   }
 
 }

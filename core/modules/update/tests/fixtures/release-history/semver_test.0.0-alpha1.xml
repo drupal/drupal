@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project xmlns:dc="http://purl.org/dc/elements/1.1/">
+<title>Semver Test</title>
+<short_name>semver_test</short_name>
+<dc:creator>Drupal</dc:creator>
+<supported_branches>8.0.,8.1.</supported_branches>
+<project_status>published</project_status>
+<link>http://example.com/project/semver_test</link>
+  <terms>
+   <term><name>Projects</name><value>Semver Test project</value></term>
+  </terms>
+<releases>
+  <release>
+    <!-- This release is not in a supported branch; therefore it should not be recommended. -->
+    <name>Semver Test 8.2.0</name>
+    <version>8.2.0</version>
+    <tag>8.2.0</tag>
+    <status>published</status>
+    <release_link>http://example.com/semver_test-8-2-0-release</release_link>
+    <download_link>http://example.com/semver_test-8-2-0.tar.gz</download_link>
+    <date>1584195300</date>
+    <terms>
+      <term><name>Release type</name><value>New features</value></term>
+      <term><name>Release type</name><value>Bug fixes</value></term>
+    </terms>
+ </release>
+ <release>
+   <name>Semver Test 8.0.0-alpha1</name>
+   <version>8.0.0-alpha1</version>
+   <tag>8.0.0-alpha1</tag>
+   <status>published</status>
+   <release_link>http://example.com/semver_test-8-0-0-alpha1-release</release_link>
+   <download_link>http://example.com/semver_test-8-0-0-alpha1.tar.gz</download_link>
+   <date>1581603300</date>
+   <terms>
+     <term><name>Release type</name><value>New features</value></term>
+     <term><name>Release type</name><value>Bug fixes</value></term>
+   </terms>
+ </release>
+</releases>
+</project>

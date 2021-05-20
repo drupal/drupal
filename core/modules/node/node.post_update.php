@@ -47,3 +47,10 @@ function node_post_update_glossary_view_published() {
     }
   }
 }
+
+/**
+ * Rebuild the node revision routes.
+ */
+function node_post_update_rebuild_node_revision_routes() {
+  // Empty update to rebuild routes.
+}

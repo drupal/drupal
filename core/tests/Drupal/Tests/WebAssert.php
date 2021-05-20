@@ -15,6 +15,7 @@ use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Constraint\ArrayHasKey;
 use PHPUnit\Framework\Constraint\IsIdentical;
+use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\Constraint\LogicalNot;
 
 /**
@@ -964,6 +965,22 @@ class WebAssert extends MinkWebAssert {
       @trigger_error('Calling ' . __METHOD__ . ' with more than three arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::elementNotExists($selectorType, $selector, $container);
+  }
+
+  /**
+   * Asserts a specific element's text equals an expected text.
+   *
+   * @param string $selectorType
+   *   Element selector type (css, xpath).
+   * @param string|array $selector
+   *   Element selector.
+   * @param string $text
+   *   Expected text.
+   */
+  public function elementTextEquals(string $selectorType, $selector, string $text): void {
+    $message = "Failed asserting that the text of the element identified by '$selector' equals '$text'.";
+    $constraint = new IsEqual($text);
+    Assert::assertThat($this->elementExists($selectorType, $selector)->getText(), $constraint, $message);
   }
 
   /**
