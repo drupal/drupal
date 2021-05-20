@@ -1,0 +1,41 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a single Drupal page while offline.
+ *
+ * @see template_preprocess_maintenance_page()
+ *
+ * @ingroup themeable
+ */
+#}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>
+    {% if title %}
+      {{ title }}
+    {% else %}
+      Service Unavailable
+    {% endif %}
+  </title>
+</head>
+<body class="maintenance-page layout-no-sidebars path-frontpage">
+  <div id="page-wrapper">
+    <div id="page">
+      <div id="main-wrapper">
+        <div id="main" class="clearfix">
+          <main id="content" class="column" role="main">
+            <section class="section">
+              <a id="main-content"></a>
+              {% if title %}
+                <h1 class="title test-theme" id="page-title">{{ title }}</h1>
+              {% endif %}
+              {{ content|striptags('<p>,<br>,<em>,<pre>')|raw }}
+            </section>
+          </main>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
