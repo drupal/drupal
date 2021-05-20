@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 
 /**
@@ -8,11 +9,7 @@
  * - The functions in this file are NOT SECURE, because they use PHP functions
  *   like eval(). Absolutely do not run this script unless you trust the data
  *   files used for input.
- * - You will need to change the name of this file to remove the .txt extension
- *   before running it (it has been given this name so that you cannot run it
- *   by mistake). When you do that, move it out of your web root as well so
- *   that it cannot be run via a URL, and run the script via the PHP command
- *   at a command prompt.
+ * - Run the script via the PHP command at a command prompt.
  * - This script, depending on which portions of it you run, depends on having
  *   input data from various sources in sub-directories below where this file
  *   is located. The data inputs are as follows:
@@ -54,6 +51,10 @@
  *   are defined. Many have parameters that you can use to change the output.
  */
 
+if (PHP_SAPI !== 'cli') {
+  return;
+}
+
 // Commands to read various data sources:
 // $data = read_drupal_data();
 // $data = read_midgard_data();
@@ -72,7 +73,7 @@
 
 // Command to patch Drupal Core data, using the intl data set, and put the
 // resulting changed data files in the 'outdata' directory:
-patch_drupal('outdata');
+// patch_drupal('outdata');
 
 /**
  * Reads in all transliteration data and outputs differences in CSV format.
