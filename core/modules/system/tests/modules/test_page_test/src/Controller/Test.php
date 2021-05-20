@@ -233,4 +233,15 @@ class Test {
     ];
   }
 
+  /**
+   * Renders a page with strings in a specific order.
+   *
+   * @return array
+   *   A render array as expected by
+   *   \Drupal\Core\Render\RendererInterface::render().
+   */
+  public function renderPageWithOrderedContent() {
+    return ['#markup' => 'item3<p class="item1 item2 item3">item2</p>item1'];
+  }
+
 }

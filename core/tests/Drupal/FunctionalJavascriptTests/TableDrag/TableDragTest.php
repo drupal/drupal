@@ -3,7 +3,6 @@
 namespace Drupal\FunctionalJavascriptTests\TableDrag;
 
 use Behat\Mink\Element\NodeElement;
-use Behat\Mink\Exception\ExpectationException;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
@@ -110,7 +109,7 @@ class TableDragTest extends WebDriverTestBase {
     $weight_select3 = $page->findField("table[3][weight]");
 
     // Check that initially the rows are in the correct order.
-    $this->assertOrder(['Row with id 1', 'Row with id 2', 'Row with id 3']);
+    $this->assertSession()->pageTextHasOrder(['Row with id 1', 'Row with id 2', 'Row with id 3']);
 
     // Check that the 'unsaved changes' text is not present in the message area.
     $this->assertSession()->pageTextNotContains('You have unsaved changes.');
@@ -126,7 +125,7 @@ class TableDragTest extends WebDriverTestBase {
     $this->assertSession()->waitForText('You have unsaved changes.');
 
     // Check that row1 and row2 were swapped.
-    $this->assertOrder(['Row with id 2', 'Row with id 1', 'Row with id 3']);
+    $this->assertSession()->pageTextHasOrder(['Row with id 2', 'Row with id 1', 'Row with id 3']);
 
     // Check that weights were changed.
     $this->assertGreaterThan($weight_select2->getValue(), $weight_select1->getValue());
@@ -137,7 +136,7 @@ class TableDragTest extends WebDriverTestBase {
     $row3->dragTo($row1);
 
     // Check that the order is: row2, row3 and row1.
-    $this->assertOrder(['Row with id 2', 'Row with id 3', 'Row with id 1']);
+    $this->assertSession()->pageTextHasOrder(['Row with id 2', 'Row with id 3', 'Row with id 1']);
   }
 
   /**
@@ -309,31 +308,6 @@ class TableDragTest extends WebDriverTestBase {
     // Make another change, the text will stay visible and appear only once.
     $this->moveRowWithKeyboard($this->findRowById(2), 'up');
     $this->assertSession()->pageTextContainsOnce('You have unsaved changes.');
-  }
-
-  /**
-   * Asserts that several pieces of markup are in a given order in the page.
-   *
-   * @param string[] $items
-   *   An ordered list of strings.
-   *
-   * @throws \Behat\Mink\Exception\ExpectationException
-   *   When any of the given string is not found.
-   *
-   * @todo Remove this and use the WebAssert method when #2817657 is done.
-   */
-  protected function assertOrder(array $items) {
-    $session = $this->getSession();
-    $text = $session->getPage()->getHtml();
-    $strings = [];
-    foreach ($items as $item) {
-      if (($pos = strpos($text, $item)) === FALSE) {
-        throw new ExpectationException("Cannot find '$item' in the page", $session->getDriver());
-      }
-      $strings[$pos] = $item;
-    }
-    ksort($strings);
-    $this->assertSame($items, array_values($strings), "Strings found on the page but incorrectly ordered.");
   }
 
   /**

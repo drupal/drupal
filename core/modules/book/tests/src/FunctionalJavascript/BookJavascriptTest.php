@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\book\FunctionalJavascript;
 
-use Behat\Mink\Exception\ExpectationException;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\node\Entity\Node;
@@ -64,7 +63,7 @@ class BookJavascriptTest extends WebDriverTestBase {
     $this->assertGreaterThan($weight_select1->getValue(), $weight_select2->getValue());
 
     // Check that '1st page' precedes the '2nd page'.
-    $this->assertOrderInPage(['1st page', '2nd page']);
+    $this->assertSession()->responseContentHasOrder(['1st page', '2nd page']);
 
     // Check that the 'unsaved changes' text is not present in the message area.
     $this->assertSession()->pageTextNotContains('You have unsaved changes.');
@@ -84,7 +83,7 @@ class BookJavascriptTest extends WebDriverTestBase {
     $this->assertSession()->pageTextContains('You have unsaved changes.');
 
     // Check that '2nd page' page precedes the '1st page'.
-    $this->assertOrderInPage(['2nd page', '1st page']);
+    $this->assertSession()->responseContentHasOrder(['2nd page', '1st page']);
 
     $this->submitForm([], 'Save book pages');
     $this->assertSession()->pageTextContains(new FormattableMarkup('Updated book @book.', ['@book' => $book->getTitle()]));
@@ -95,7 +94,7 @@ class BookJavascriptTest extends WebDriverTestBase {
     $this->assertGreaterThan($page2->book['weight'], $page1->book['weight']);
 
     // Check again that '2nd page' is on top after form submit in the UI.
-    $this->assertOrderInPage(['2nd page', '1st page']);
+    $this->assertSession()->responseContentHasOrder(['2nd page', '1st page']);
 
     // Toggle row weight selects as visible.
     $page->findButton('Show row weights')->click();
@@ -125,41 +124,13 @@ class BookJavascriptTest extends WebDriverTestBase {
     $this->assertSession()->pageTextContains(new FormattableMarkup('Updated book @book.', ['@book' => $book->getTitle()]));
 
     // Check that the '1st page' is first again.
-    $this->assertOrderInPage(['1st page', '2nd page']);
+    $this->assertSession()->responseContentHasOrder(['1st page', '2nd page']);
 
     // Check that page reordering was done in the backend for manual weight
     // field usage.
     $page1 = Node::load($page1->id());
     $page2 = Node::load($page2->id());
     $this->assertGreaterThan($page2->book['weight'], $page1->book['weight']);
-  }
-
-  /**
-   * Asserts that several pieces of markup are in a given order in the page.
-   *
-   * @param string[] $items
-   *   An ordered list of strings.
-   *
-   * @throws \Behat\Mink\Exception\ExpectationException
-   *   When any of the given string is not found.
-   *
-   * @todo Remove this once https://www.drupal.org/node/2817657 is committed.
-   */
-  protected function assertOrderInPage(array $items) {
-    $session = $this->getSession();
-    $text = $session->getPage()->getHtml();
-    $strings = [];
-    foreach ($items as $item) {
-      if (($pos = strpos($text, $item)) === FALSE) {
-        throw new ExpectationException("Cannot find '$item' in the page", $session->getDriver());
-      }
-      $strings[$pos] = $item;
-    }
-    ksort($strings);
-    $ordered = implode(', ', array_map(function ($item) {
-      return "'$item'";
-    }, $items));
-    $this->assertSame($items, array_values($strings), "Found strings, ordered as: $ordered.");
   }
 
   /**

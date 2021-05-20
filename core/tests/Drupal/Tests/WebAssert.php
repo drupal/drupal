@@ -1096,4 +1096,80 @@ class WebAssert extends MinkWebAssert {
     return parent::checkboxNotChecked($field, $container);
   }
 
+  /**
+   * Asserts that several strings are in a given order inside a string.
+   *
+   * @param string[] $expected_order
+   *   An ordered list of strings.
+   * @param string $string
+   *   The string to be searched.
+   *
+   * @throws \Behat\Mink\Exception\ElementNotFoundException
+   *   When one or more strings from the list are not found in $string.
+   * @throws \PHPUnit\Framework\ExpectationFailedException
+   *   When the strings from list are ordered incorrectly in $string.
+   */
+  public function orderInString(array $expected_order, $string) {
+    $not_found = [];
+    foreach ($expected_order as $substring) {
+      if (strpos($string, $substring) === FALSE) {
+        $not_found[] = "'$substring'";
+      }
+    }
+    if ($not_found) {
+      throw new ElementNotFoundException($this->session->getDriver(), sprintf('Substring(s): %s', implode(', ', array_unique($not_found))));
+    }
+
+    $actual_order = [];
+    $offset = 0;
+    foreach ($expected_order as $substring) {
+      if (($pos = strpos($string, $substring, $offset)) !== FALSE) {
+        $actual_order[$pos] = $substring;
+        $offset = $pos + strlen($substring);
+      }
+    }
+    ksort($actual_order);
+
+    Assert::assertSame(array_values($expected_order), array_values($actual_order), 'Strings found but incorrectly ordered');
+  }
+
+  /**
+   * Asserts that several strings are in a given order in the response content.
+   *
+   * @param string[] $expected_order
+   *   An ordered list of strings.
+   *
+   * @throws \Behat\Mink\Exception\ElementNotFoundException
+   *   When one or more strings from the list are not found in page HTML.
+   * @throws \Behat\Mink\Exception\ExpectationException
+   *   When the strings from list are ordered incorrectly in page HTML.
+   */
+  public function responseContentHasOrder(array $expected_order) {
+    $this->orderInString($expected_order, $this->session->getPage()->getContent());
+  }
+
+  /**
+   * Asserts that multiple strings are in a given order in the page text.
+   *
+   * @param string[] $expected_order
+   *   An ordered list of strings.
+   *
+   * @throws \Behat\Mink\Exception\ElementNotFoundException
+   *   When one or more strings from the list are not found in page text.
+   * @throws \Behat\Mink\Exception\ExpectationException
+   *   When the strings from list are ordered incorrectly in page text.
+   */
+  public function pageTextHasOrder(array $expected_order) {
+    try {
+      $this->orderInString($expected_order, $this->session->getPage()
+        ->getText());
+    }
+    catch (ExpectationException $exception) {
+      // When checking the order in page text we throw ResponseTextException
+      // rather than ExpectationException, since ResponseTextException is more
+      // specialized and fitting.
+      throw new ResponseTextException($exception->getMessage(), $this->session->getDriver(), $exception);
+    }
+  }
+
 }

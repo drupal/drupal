@@ -997,4 +997,55 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->assertStringContainsString('</samp>}', $body);
   }
 
+  /**
+   * Tests assertion of a substring sequence in a string, page content or text.
+   *
+   * @covers \Drupal\Tests\WebAssert::orderInString
+   * @covers \Drupal\Tests\WebAssert::responseContentHasOrder
+   * @covers \Drupal\Tests\WebAssert::pageTextHasOrder
+   */
+  public function testSubstringsOrder() {
+    // Check that asserting order in an arbitrary string works.
+    $this->assertSession()->orderInString(['item3', 'item1', 'item2'], '(*&^^ item3.,.><> item1@...... item2');
+
+    // Check again with a repeating substring.
+    $this->assertSession()->orderInString([
+      'item1',
+      'item2',
+      'item1',
+      'item1',
+      'item2',
+    ], 'item1.item2.item1.item1.item2');
+
+    // Check that passing existing substrings in the wrong order fails.
+    try {
+      $this->assertSession()->orderInString(['item2', 'item1', 'item3'], 'item1item3item2');
+      $this->fail('Expected ExpectationFailedException exception has not been thrown.');
+    }
+    catch (ExpectationFailedException $exception) {
+      // Expected exception; just continue testing.
+    }
+
+    // Check that passing empty array of substrings works.
+    $this->assertSession()->orderInString([], 'item1item3item2');
+
+    // Check that passing array with one substring works.
+    $this->assertSession()->orderInString(['item1'], 'item1item3item2');
+
+    $this->drupalGet('test-order-in-page');
+
+    // Check that asserting order in page markup and page text works.
+    $this->assertSession()->responseContentHasOrder(['item3', 'item1', 'item2']);
+    $this->assertSession()->pageTextHasOrder(['item3', 'item2', 'item1']);
+
+    // Check that passing non-existent substrings throws an exception.
+    try {
+      $this->assertSession()->responseContentHasOrder(['item5', 'item1', 'item8']);
+      $this->fail('Expected ElementNotFoundException exception has not been thrown.');
+    }
+    catch (ElementNotFoundException $exception) {
+      $this->assertSame("Substring(s): 'item5', 'item8' not found.", $exception->getMessage());
+    }
+  }
+
 }

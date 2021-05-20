@@ -152,3 +152,11 @@ test_page_test.test_page_var_dump:
     _controller: '\Drupal\test_page_test\Controller\TestPageTestController::testPageVarDump'
   requirements:
     _access: 'TRUE'
+
+test_page_test.order_in_page:
+  path: '/test-order-in-page'
+  defaults:
+    _title: 'Page with strings in a given order'
+    _controller: '\Drupal\test_page_test\Controller\Test::renderPageWithOrderedContent'
+  requirements:
+    _access: 'TRUE'
