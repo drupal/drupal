@@ -105,7 +105,7 @@ class FieldGroupRowsWebTest extends ViewTestBase {
     foreach ($result as $row) {
       $rendered_value[] = $row->getText();
     }
-    $this->assertEqual(['a, b, c'], $rendered_value);
+    $this->assertEquals(['a, b, c'], $rendered_value);
   }
 
   /**
@@ -118,7 +118,7 @@ class FieldGroupRowsWebTest extends ViewTestBase {
     foreach ($result as $row) {
       $rendered_value[] = $row->getText();
     }
-    $this->assertEqual(['a', 'b', 'c'], $rendered_value);
+    $this->assertEquals(['a', 'b', 'c'], $rendered_value);
   }
 
 }

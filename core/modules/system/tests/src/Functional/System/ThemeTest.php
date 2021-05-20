@@ -145,7 +145,7 @@ class ThemeTest extends BrowserTestBase {
           ':rel' => 'home',
         ]
       );
-      $this->assertEqual($expected['src'], $elements[0]->getAttribute('src'));
+      $this->assertEquals($expected['src'], $elements[0]->getAttribute('src'));
     }
     $unsupported_paths = [
       // Stream wrapper URI to non-existing file.
@@ -196,7 +196,7 @@ class ThemeTest extends BrowserTestBase {
         ':rel' => 'home',
       ]
     );
-    $this->assertEqual(file_url_transform_relative(file_create_url($uploaded_filename)), $elements[0]->getAttribute('src'));
+    $this->assertEquals(file_url_transform_relative(file_create_url($uploaded_filename)), $elements[0]->getAttribute('src'));
 
     $this->container->get('theme_installer')->install(['bartik']);
 
@@ -358,7 +358,7 @@ class ThemeTest extends BrowserTestBase {
     $theme_installer->install(['bartik']);
     $this->drupalGet('admin/appearance');
     $this->clickLink(t('Set as default'));
-    $this->assertEqual('bartik', $this->config('system.theme')->get('default'));
+    $this->assertEquals('bartik', $this->config('system.theme')->get('default'));
 
     // Test the default theme on the secondary links (blocks admin page).
     $this->drupalGet('admin/structure/block');
@@ -468,7 +468,7 @@ class ThemeTest extends BrowserTestBase {
       // Test the confirmation message.
       $this->assertText("$theme_name is now the default theme.");
       // Make sure the theme is now set as the default theme in config.
-      $this->assertEqual($theme_machine_name, $this->config('system.theme')->get('default'));
+      $this->assertEquals($theme_machine_name, $this->config('system.theme')->get('default'));
 
       // This checks for a regression. See https://www.drupal.org/node/2498691.
       $this->assertNoText("The $theme_machine_name theme was not found.");

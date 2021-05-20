@@ -123,19 +123,19 @@ class IntegrationTest extends ViewsKernelTestBase {
       $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($view, $row) {
         return $view->field['title']->advancedRender($row);
       });
-      $this->assertEqual($expected_link->getGeneratedLink(), $output, 'Ensure the right link is generated');
+      $this->assertEquals($expected_link->getGeneratedLink(), $output, 'Ensure the right link is generated');
 
       $expected_author = Xss::filter($items[$iid]->getAuthor(), _aggregator_allowed_tags());
       $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($view, $row) {
         return $view->field['author']->advancedRender($row);
       });
-      $this->assertEqual($expected_author, $output, 'Ensure the author got filtered');
+      $this->assertEquals($expected_author, $output, 'Ensure the author got filtered');
 
       $expected_description = Xss::filter($items[$iid]->getDescription(), _aggregator_allowed_tags());
       $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($view, $row) {
         return $view->field['description']->advancedRender($row);
       });
-      $this->assertEqual($expected_description, $output, 'Ensure the author got filtered');
+      $this->assertEquals($expected_description, $output, 'Ensure the author got filtered');
     }
   }
 

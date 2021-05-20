@@ -33,7 +33,7 @@ class FormatterPluginManagerTest extends FieldKernelTestBase {
     ];
 
     $instance = $formatter_plugin_manager->getInstance($formatter_options);
-    $this->assertEqual('field_test_applicable', $instance->getPluginId());
+    $this->assertEquals('field_test_applicable', $instance->getPluginId());
 
     // Now set name to something that makes isApplicable() return FALSE.
     $base_field_definition->setName('deny_applicable');
@@ -41,7 +41,7 @@ class FormatterPluginManagerTest extends FieldKernelTestBase {
 
     // Instance should be default widget.
     $this->assertNotSame('field_test_applicable', $instance->getPluginId());
-    $this->assertEqual('field_test_default', $instance->getPluginId());
+    $this->assertEquals('field_test_default', $instance->getPluginId());
   }
 
 }

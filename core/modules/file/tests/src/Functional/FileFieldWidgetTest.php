@@ -545,7 +545,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $victim_tmp_file = File::load($victim_tmp_file->id());
     $this->assertTrue($victim_tmp_file->isTemporary(), 'New file saved to disk is temporary.');
     $this->assertFalse(empty($victim_tmp_file->id()), 'New file has an fid.');
-    $this->assertEqual($victim_user->id(), $victim_tmp_file->getOwnerId(), 'New file belongs to the victim.');
+    $this->assertEquals($victim_user->id(), $victim_tmp_file->getOwnerId(), 'New file belongs to the victim.');
 
     // Have attacker create a new node with a different uploaded file and
     // ensure it got uploaded successfully.
@@ -561,7 +561,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     /** @var \Drupal\file\FileInterface $node_file */
     $node_file = File::load($node->{$field_name}->target_id);
     $this->assertFileExists($node_file->getFileUri());
-    $this->assertEqual($attacker_user->id(), $node_file->getOwnerId(), 'New file belongs to the attacker.');
+    $this->assertEquals($attacker_user->id(), $node_file->getOwnerId(), 'New file belongs to the attacker.');
 
     // Ensure the file can be downloaded.
     $this->drupalGet($node_file->createFileUrl());
