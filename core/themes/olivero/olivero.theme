@@ -500,7 +500,7 @@ function olivero_preprocess_filter_caption(&$variables) {
 function olivero_form_comment_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   $comment = $form_state->getFormObject()
     ->getEntity();
-  /* @var \Drupal\comment\Entity\Comment $comment */
+  /** @var \Drupal\comment\Entity\Comment $comment */
   if ($comment->hasParentComment()) {
     $form['actions']['submit']['#value'] = t('Reply to comment');
   }

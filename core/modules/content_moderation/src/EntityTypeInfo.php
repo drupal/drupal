@@ -395,7 +395,7 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    *   The current state of the form.
    */
   public static function bundleFormRedirect(array &$form, FormStateInterface $form_state) {
-    /* @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $form_state->getFormObject()->getEntity();
 
     $moderation_info = \Drupal::getContainer()->get('content_moderation.moderation_information');

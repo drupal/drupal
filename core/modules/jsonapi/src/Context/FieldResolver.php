@@ -277,7 +277,7 @@ class FieldResolver {
     $parts = explode('.', $external_field_name);
     $unresolved_path_parts = $parts;
     $reference_breadcrumbs = [];
-    /* @var \Drupal\jsonapi\ResourceType\ResourceType[] $resource_types */
+    /** @var \Drupal\jsonapi\ResourceType\ResourceType[] $resource_types */
     $resource_types = [$resource_type];
     // This complex expression is needed to handle the string, "0", which would
     // otherwise be evaluated as FALSE.
@@ -471,7 +471,7 @@ class FieldResolver {
    */
   protected function getFieldItemDefinitions(array $resource_types, $field_name) {
     return array_reduce($resource_types, function ($result, ResourceType $resource_type) use ($field_name) {
-      /* @var \Drupal\jsonapi\ResourceType\ResourceType $resource_type */
+      /** @var \Drupal\jsonapi\ResourceType\ResourceType $resource_type */
       $entity_type = $resource_type->getEntityTypeId();
       $bundle = $resource_type->getBundle();
       $definitions = $this->fieldManager->getFieldDefinitions($entity_type, $bundle);

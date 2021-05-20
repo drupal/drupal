@@ -78,7 +78,7 @@ function book_theme() {
  * Implements hook_entity_type_build().
  */
 function book_entity_type_build(array &$entity_types) {
-  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   $entity_types['node']
     ->setFormClass('book_outline', 'Drupal\book\Form\BookOutlineForm')
     ->setLinkTemplate('book-outline-form', '/node/{node}/outline')

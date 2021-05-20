@@ -34,7 +34,7 @@ function field_layout_help($route_name, RouteMatchInterface $route_match) {
  * Implements hook_entity_type_alter().
  */
 function field_layout_entity_type_alter(array &$entity_types) {
-  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   $entity_types['entity_view_display']->setClass(FieldLayoutEntityViewDisplay::class);
   $entity_types['entity_form_display']->setClass(FieldLayoutEntityFormDisplay::class);
 

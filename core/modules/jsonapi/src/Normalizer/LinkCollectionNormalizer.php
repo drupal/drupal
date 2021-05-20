@@ -93,7 +93,7 @@ class LinkCollectionNormalizer extends NormalizerBase {
   public function normalize($object, $format = NULL, array $context = []) {
     assert($object instanceof LinkCollection);
     $normalized = [];
-    /* @var \Drupal\jsonapi\JsonApiResource\Link $link */
+    /** @var \Drupal\jsonapi\JsonApiResource\Link $link */
     foreach ($object as $key => $links) {
       $is_multiple = count($links) > 1;
       foreach ($links as $link) {

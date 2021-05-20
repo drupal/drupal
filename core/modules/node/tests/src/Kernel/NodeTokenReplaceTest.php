@@ -47,7 +47,7 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
 
     // Create a user and a node.
     $account = $this->createUser();
-    /* @var $node \Drupal\node\NodeInterface */
+    /** @var \Drupal\node\NodeInterface $node */
     $node = Node::create([
       'type' => 'article',
       'tnid' => 0,

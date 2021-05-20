@@ -21,7 +21,7 @@ class ModuleHandlerDeprecatedHookTest extends KernelTestBase {
    */
   public function testInvokeDeprecated() {
     $this->expectDeprecation('The deprecated hook hook_deprecated_hook() is implemented in these functions: deprecation_test_deprecated_hook(). Use something else.');
-    /* @var $module_handler \Drupal\Core\Extension\ModuleHandlerInterface */
+    /** @var \Drupal\Core\Extension\ModuleHandlerInterface $module_handler */
     $module_handler = $this->container->get('module_handler');
     $arg = 'an_arg';
     $this->assertEquals(
@@ -35,7 +35,7 @@ class ModuleHandlerDeprecatedHookTest extends KernelTestBase {
    */
   public function testInvokeAllDeprecated() {
     $this->expectDeprecation('The deprecated hook hook_deprecated_hook() is implemented in these functions: deprecation_test_deprecated_hook(). Use something else.');
-    /* @var $module_handler \Drupal\Core\Extension\ModuleHandlerInterface */
+    /** @var \Drupal\Core\Extension\ModuleHandlerInterface $module_handler */
     $module_handler = $this->container->get('module_handler');
     $arg = 'an_arg';
     $this->assertEquals(
@@ -49,7 +49,7 @@ class ModuleHandlerDeprecatedHookTest extends KernelTestBase {
    */
   public function testAlterDeprecated() {
     $this->expectDeprecation('The deprecated alter hook hook_deprecated_alter_alter() is implemented in these functions: deprecation_test_deprecated_alter_alter. Alter something else.');
-    /* @var $module_handler \Drupal\Core\Extension\ModuleHandlerInterface */
+    /** @var \Drupal\Core\Extension\ModuleHandlerInterface $module_handler */
     $module_handler = $this->container->get('module_handler');
     $data = [];
     $context1 = 'test1';

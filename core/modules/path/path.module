@@ -49,7 +49,7 @@ function path_help($route_name, RouteMatchInterface $route_match) {
 function path_entity_type_alter(array &$entity_types) {
   // @todo Remove the conditional once core fully supports "path_alias" as an
   //   optional module. See https://drupal.org/node/3092090.
-  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   if (isset($entity_types['path_alias'])) {
     $entity_types['path_alias']->setFormClass('default', PathAliasForm::class);
     $entity_types['path_alias']->setFormClass('delete', ContentEntityDeleteForm::class);

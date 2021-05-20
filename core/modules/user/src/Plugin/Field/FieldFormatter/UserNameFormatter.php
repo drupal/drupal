@@ -53,7 +53,7 @@ class UserNameFormatter extends FormatterBase {
     $elements = [];
 
     foreach ($items as $delta => $item) {
-      /** @var $user \Drupal\user\UserInterface */
+      /** @var \Drupal\user\UserInterface $user */
       if ($user = $item->getEntity()) {
         if ($this->getSetting('link_to_entity')) {
           $elements[$delta] = [

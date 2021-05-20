@@ -34,7 +34,7 @@ class LanguageConfigOverrideImportTest extends BrowserTestBase {
    */
   public function testConfigOverrideImport() {
     ConfigurableLanguage::createFromLangcode('fr')->save();
-    /* @var \Drupal\Core\Config\StorageInterface $sync */
+    /** @var \Drupal\Core\Config\StorageInterface $sync */
     $sync = \Drupal::service('config.storage.sync');
     $this->copyConfig(\Drupal::service('config.storage'), $sync);
 
@@ -46,7 +46,7 @@ class LanguageConfigOverrideImportTest extends BrowserTestBase {
     // ConfigFactory.
     $this->rebuildContainer();
 
-    /* @var \Drupal\Core\Config\StorageInterface $override_sync */
+    /** @var \Drupal\Core\Config\StorageInterface $override_sync */
     $override_sync = $sync->createCollection('language.fr');
     // Create some overrides in sync.
     $override_sync->write('system.site', ['name' => 'FR default site name']);
@@ -75,11 +75,11 @@ class LanguageConfigOverrideImportTest extends BrowserTestBase {
 
     ConfigurableLanguage::createFromLangcode('fr')->save();
 
-    /* @var \Drupal\Core\Config\StorageInterface $sync */
+    /** @var \Drupal\Core\Config\StorageInterface $sync */
     $sync = \Drupal::service('config.storage.sync');
     $this->copyConfig(\Drupal::service('config.storage'), $sync);
 
-    /* @var \Drupal\Core\Config\StorageInterface $override_sync */
+    /** @var \Drupal\Core\Config\StorageInterface $override_sync */
     $override_sync = $sync->createCollection('language.fr');
     // Create some overrides in sync.
     $override_sync->write('system.site', ['name' => 'FR default site name']);

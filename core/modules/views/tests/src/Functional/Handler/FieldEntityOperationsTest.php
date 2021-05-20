@@ -74,7 +74,7 @@ class FieldEntityOperationsTest extends ViewTestBase {
     ]);
     $this->drupalLogin($admin_user);
     $this->drupalGet('test-entity-operations');
-    /** @var $entity \Drupal\entity_test\Entity\EntityTest */
+    /** @var \Drupal\entity_test\Entity\EntityTest $entity */
     foreach ($entities as $entity) {
       /** @var \Drupal\Core\Language\LanguageInterface $language */
       foreach ($entity->getTranslationLanguages() as $language) {

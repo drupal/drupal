@@ -340,7 +340,7 @@ class OverviewTerms extends FormBase {
         'operations' => [],
         'weight' => $update_tree_access->isAllowed() ? [] : NULL,
       ];
-      /** @var $term \Drupal\Core\Entity\EntityInterface */
+      /** @var \Drupal\Core\Entity\EntityInterface $term */
       $term = $this->entityRepository->getTranslationFromContext($term);
       $form['terms'][$key]['#term'] = $term;
       $indentation = [];
@@ -593,7 +593,7 @@ class OverviewTerms extends FormBase {
    * Redirects to confirmation form for the reset action.
    */
   public function submitReset(array &$form, FormStateInterface $form_state) {
-    /** @var $vocabulary \Drupal\taxonomy\VocabularyInterface */
+    /** @var \Drupal\taxonomy\VocabularyInterface $vocabulary */
     $vocabulary = $form_state->get(['taxonomy', 'vocabulary']);
     $form_state->setRedirectUrl($vocabulary->toUrl('reset-form'));
   }

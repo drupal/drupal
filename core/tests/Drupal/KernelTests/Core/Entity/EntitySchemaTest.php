@@ -136,7 +136,7 @@ class EntitySchemaTest extends EntityKernelTestBase {
       $this->installEntitySchema($entity_type_id);
     }
 
-    /* @var \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface $update_manager */
+    /** @var \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface $update_manager */
     $update_manager = $this->container->get('entity.definition_update_manager');
     $entity_type = $update_manager->getEntityType($entity_type_id);
 
@@ -214,7 +214,7 @@ class EntitySchemaTest extends EntityKernelTestBase {
     $this->assertSame($expected, $this->findPrimaryKeys($entity_type));
 
     // Now test updating a field with data.
-    /* @var \Drupal\Core\Entity\FieldableEntityStorageInterface $storage */
+    /** @var \Drupal\Core\Entity\FieldableEntityStorageInterface $storage */
     $storage = $this->entityTypeManager->getStorage($entity_type_id);
     $storage->create()->save();
     $this->assertTrue($storage->countFieldData($field, TRUE));

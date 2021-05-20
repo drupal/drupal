@@ -167,7 +167,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
       ],
     ];
     $plugins = array_keys($plugin_info);
-    /** @var $entities \Drupal\search\SearchPageInterface[] */
+    /** @var \Drupal\search\SearchPageInterface[] $entities */
     $entities = SearchPage::loadMultiple();
     // Disable all of the search pages.
     foreach ($entities as $entity) {
@@ -405,7 +405,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
    *   (optional) The group this message is in.
    */
   protected function assertDefaultSearch($expected, $message = '', $group = 'Other') {
-    /** @var $search_page_repository \Drupal\search\SearchPageRepositoryInterface */
+    /** @var \Drupal\search\SearchPageRepositoryInterface $search_page_repository */
     $search_page_repository = \Drupal::service('search.search_page_repository');
     $this->assertSame($expected, $search_page_repository->getDefaultSearchPage(), $message, $group);
   }
