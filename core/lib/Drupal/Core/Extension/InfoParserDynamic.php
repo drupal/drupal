@@ -109,7 +109,13 @@ class InfoParserDynamic implements InfoParserInterface {
       }
       $parsed_info += [ExtensionLifecycle::LIFECYCLE_IDENTIFIER => ExtensionLifecycle::STABLE];
       if (!ExtensionLifecycle::isValid($parsed_info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER])) {
-        throw new InfoParserException("'lifecycle: {$parsed_info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER]}' is not valid in $filename.");
+        $valid_values = [
+          ExtensionLifecycle::EXPERIMENTAL,
+          ExtensionLifecycle::STABLE,
+          ExtensionLifecycle::DEPRECATED,
+          ExtensionLifecycle::OBSOLETE,
+        ];
+        throw new InfoParserException("'lifecycle: {$parsed_info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER]}' is not valid in $filename. Valid values are: '" . implode("', '", $valid_values) . "'.");
       }
     }
     return $parsed_info;
