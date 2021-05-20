@@ -53,7 +53,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
           $this->submitForm($edit, 'Save');
           $this->assertText('The form has become outdated.');
           $last_fid = $this->getLastFileId();
-          $this->assertEqual($last_fid_prior, $last_fid, 'File was not saved when uploaded with an invalid form token.');
+          $this->assertEquals($last_fid_prior, $last_fid, 'File was not saved when uploaded with an invalid form token.');
 
           // Submit a new file, without using the Upload button.
           $last_fid_prior = $this->getLastFileId();

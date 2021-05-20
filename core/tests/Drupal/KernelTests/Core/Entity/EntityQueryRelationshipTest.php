@@ -230,7 +230,7 @@ class EntityQueryRelationshipTest extends EntityKernelTestBase {
     $this->assertCount($expected_count, $this->queryResults);
     foreach ($expected as $key) {
       $id = $this->entities[$key]->id();
-      $this->assertEqual($id, $this->queryResults[$id]);
+      $this->assertEquals($id, $this->queryResults[$id]);
     }
   }
 

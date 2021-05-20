@@ -51,9 +51,9 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
 
       // Make sure our English nodes still exist.
       $node = Node::load($id);
-      $this->assertEqual($langcode, $node->language()->getId());
-      $this->assertEqual($type, $node->getType());
-      $this->assertEqual($title, $node->getTitle());
+      $this->assertEquals($langcode, $node->language()->getId());
+      $this->assertEquals($type, $node->getType());
+      $this->assertEquals($title, $node->getTitle());
       // Assert that nodes are all published.
       $this->assertTrue($node->isPublished());
       $this->drupalGet('node/' . $id);
@@ -62,7 +62,7 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
 
     // Make sure the translated node still exists.
     $translation = Node::load(8)->getTranslation('es');
-    $this->assertEqual('Test title Spanish', $translation->getTitle());
+    $this->assertEquals('Test title Spanish', $translation->getTitle());
 
     // Make sure our alias still works.
     $this->drupalGet('test-article');
@@ -422,7 +422,7 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
     // dependencies.
     // @see system_post_update_fix_enforced_dependencies()
     $book_node_type = NodeType::load('book');
-    $this->assertEqual(['enforced' => ['module' => ['book']]], $book_node_type->get('dependencies'));
+    $this->assertEquals(['enforced' => ['module' => ['book']]], $book_node_type->get('dependencies'));
   }
 
   /**

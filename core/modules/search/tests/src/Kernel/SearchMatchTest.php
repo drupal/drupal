@@ -233,7 +233,7 @@ class SearchMatchTest extends KernelTestBase {
     // Compare $results and $found.
     sort($found);
     sort($results);
-    $this->assertEqual($found, $results, "Query matching '$query'");
+    $this->assertEquals($found, $results, "Query matching '$query'");
   }
 
   /**
@@ -251,7 +251,7 @@ class SearchMatchTest extends KernelTestBase {
     // Check order.
     $sorted = $scores;
     sort($sorted);
-    $this->assertEqual($scores, array_reverse($sorted), "Query order '$query'");
+    $this->assertEquals($scores, array_reverse($sorted), "Query order '$query'");
 
     // Check range.
     $this->assertTrue(!count($scores) || (min($scores) > 0.0 && max($scores) <= 1.0001), "Query scoring '$query'");

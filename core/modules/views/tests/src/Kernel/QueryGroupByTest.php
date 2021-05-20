@@ -111,8 +111,8 @@ class QueryGroupByTest extends ViewsKernelTestBase {
     foreach ($view->result as $item) {
       $results[$item->entity_test_name] = $item->id;
     }
-    $this->assertEqual($values[0], $results['name1'], new FormattableMarkup('Aggregation with @aggregation_function and groupby name: name1 returned the expected amount of results', ['@aggregation_function' => $aggregation_function]));
-    $this->assertEqual($values[1], $results['name2'], new FormattableMarkup('Aggregation with @aggregation_function and groupby name: name2 returned the expected amount of results', ['@aggregation_function' => $aggregation_function]));
+    $this->assertEquals($values[0], $results['name1'], new FormattableMarkup('Aggregation with @aggregation_function and groupby name: name1 returned the expected amount of results', ['@aggregation_function' => $aggregation_function]));
+    $this->assertEquals($values[1], $results['name2'], new FormattableMarkup('Aggregation with @aggregation_function and groupby name: name2 returned the expected amount of results', ['@aggregation_function' => $aggregation_function]));
   }
 
   /**
@@ -254,10 +254,10 @@ class QueryGroupByTest extends ViewsKernelTestBase {
     $this->executeView($view);
     $this->assertCount(2, $view->result);
 
-    $this->assertEqual('3', $view->getStyle()->getField(0, 'id'));
-    $this->assertEqual('1', $view->getStyle()->getField(0, 'field_test'));
-    $this->assertEqual('6', $view->getStyle()->getField(1, 'id'));
-    $this->assertEqual('2', $view->getStyle()->getField(1, 'field_test'));
+    $this->assertEquals('3', $view->getStyle()->getField(0, 'id'));
+    $this->assertEquals('1', $view->getStyle()->getField(0, 'field_test'));
+    $this->assertEquals('6', $view->getStyle()->getField(1, 'id'));
+    $this->assertEquals('2', $view->getStyle()->getField(1, 'field_test'));
 
     $entities[2]->field_test[0]->value = 3;
     $entities[2]->field_test[1]->value = 4;
@@ -268,16 +268,16 @@ class QueryGroupByTest extends ViewsKernelTestBase {
     $this->executeView($view);
     $this->assertCount(5, $view->result);
 
-    $this->assertEqual('3', $view->getStyle()->getField(0, 'id'));
-    $this->assertEqual('1', $view->getStyle()->getField(0, 'field_test'));
-    $this->assertEqual('3', $view->getStyle()->getField(1, 'id'));
-    $this->assertEqual('2', $view->getStyle()->getField(1, 'field_test'));
-    $this->assertEqual('1', $view->getStyle()->getField(2, 'id'));
-    $this->assertEqual('3', $view->getStyle()->getField(2, 'field_test'));
-    $this->assertEqual('1', $view->getStyle()->getField(3, 'id'));
-    $this->assertEqual('4', $view->getStyle()->getField(3, 'field_test'));
-    $this->assertEqual('1', $view->getStyle()->getField(4, 'id'));
-    $this->assertEqual('5', $view->getStyle()->getField(4, 'field_test'));
+    $this->assertEquals('3', $view->getStyle()->getField(0, 'id'));
+    $this->assertEquals('1', $view->getStyle()->getField(0, 'field_test'));
+    $this->assertEquals('3', $view->getStyle()->getField(1, 'id'));
+    $this->assertEquals('2', $view->getStyle()->getField(1, 'field_test'));
+    $this->assertEquals('1', $view->getStyle()->getField(2, 'id'));
+    $this->assertEquals('3', $view->getStyle()->getField(2, 'field_test'));
+    $this->assertEquals('1', $view->getStyle()->getField(3, 'id'));
+    $this->assertEquals('4', $view->getStyle()->getField(3, 'field_test'));
+    $this->assertEquals('1', $view->getStyle()->getField(4, 'id'));
+    $this->assertEquals('5', $view->getStyle()->getField(4, 'field_test'));
 
     // Check that translated values are correctly retrieved and are not grouped
     // into the original entity.
@@ -289,8 +289,8 @@ class QueryGroupByTest extends ViewsKernelTestBase {
     $this->executeView($view);
 
     $this->assertCount(6, $view->result);
-    $this->assertEqual('3', $view->getStyle()->getField(5, 'id'));
-    $this->assertEqual('6', $view->getStyle()->getField(5, 'field_test'));
+    $this->assertEquals('3', $view->getStyle()->getField(5, 'id'));
+    $this->assertEquals('6', $view->getStyle()->getField(5, 'field_test'));
   }
 
   /**
@@ -331,10 +331,10 @@ class QueryGroupByTest extends ViewsKernelTestBase {
     $this->assertCount(2, $view->result);
     // The first result is coming from entity_test_mul2, so no field could be
     // rendered.
-    $this->assertEqual('', $view->getStyle()->getField(0, 'field_test'));
+    $this->assertEquals('', $view->getStyle()->getField(0, 'field_test'));
     // The second result is coming from entity_test_mul, so its field value
     // could be rendered.
-    $this->assertEqual('1', $view->getStyle()->getField(1, 'field_test'));
+    $this->assertEquals('1', $view->getStyle()->getField(1, 'field_test'));
   }
 
 }
