@@ -35,8 +35,8 @@ class TwigEnvironmentTest extends KernelTestBase {
     $renderer = $this->container->get('renderer');
     /** @var \Drupal\Core\Template\TwigEnvironment $environment */
     $environment = \Drupal::service('twig');
-    $this->assertEqual('test-no-context', $environment->renderInline('test-no-context'));
-    $this->assertEqual('test-with-context muuh', $environment->renderInline('test-with-context {{ llama }}', ['llama' => 'muuh']));
+    $this->assertEquals('test-no-context', $environment->renderInline('test-no-context'));
+    $this->assertEquals('test-with-context muuh', $environment->renderInline('test-with-context {{ llama }}', ['llama' => 'muuh']));
 
     $element = [];
     $unsafe_string = '<script>alert(\'Danger! High voltage!\');</script>';
@@ -45,7 +45,7 @@ class TwigEnvironmentTest extends KernelTestBase {
       '#template' => 'test-with-context <label>{{ unsafe_content }}</label>',
       '#context' => ['unsafe_content' => $unsafe_string],
     ];
-    $this->assertEqual('test-with-context <label>' . Html::escape($unsafe_string) . '</label>', $renderer->renderRoot($element));
+    $this->assertEquals('test-with-context <label>' . Html::escape($unsafe_string) . '</label>', $renderer->renderRoot($element));
 
     // Enable twig_auto_reload and twig_debug.
     $settings = Settings::getAll();
@@ -64,8 +64,8 @@ class TwigEnvironmentTest extends KernelTestBase {
     ];
     $element_copy = $element;
     // Render it twice so that twig caching is triggered.
-    $this->assertEqual('test-with-context muuh', $renderer->renderRoot($element));
-    $this->assertEqual('test-with-context muuh', $renderer->renderRoot($element_copy));
+    $this->assertEquals('test-with-context muuh', $renderer->renderRoot($element));
+    $this->assertEquals('test-with-context muuh', $renderer->renderRoot($element_copy));
 
     // Tests caching of inline templates with long content to ensure the
     // generated cache key can be used as a filename.
@@ -85,8 +85,8 @@ class TwigEnvironmentTest extends KernelTestBase {
     $element_copy = $element;
 
     // Render it twice so that twig caching is triggered.
-    $this->assertEqual($expected, $renderer->renderRoot($element));
-    $this->assertEqual($expected, $renderer->renderRoot($element_copy));
+    $this->assertEquals($expected, $renderer->renderRoot($element));
+    $this->assertEquals($expected, $renderer->renderRoot($element_copy));
 
     $name = '{# inline_template_start #}' . $element['test']['#template'];
     $prefix = $environment->getTwigCachePrefix();
@@ -94,7 +94,7 @@ class TwigEnvironmentTest extends KernelTestBase {
     $cache = $environment->getCache();
     $class = $environment->getTemplateClass($name);
     $expected = $prefix . '_inline-template_' . substr(Crypt::hashBase64($class), 0, TwigPhpStorageCache::SUFFIX_SUBSTRING_LENGTH);
-    $this->assertEqual($expected, $cache->generateKey($name, $class));
+    $this->assertEquals($expected, $cache->generateKey($name, $class));
   }
 
   /**
@@ -136,10 +136,10 @@ class TwigEnvironmentTest extends KernelTestBase {
     $key_direct = $environment->getCache()->generateKey($name_direct, $class_direct);
 
     // All three should be equal for both cases.
-    $this->assertEqual($class_include, $class_namespaced);
-    $this->assertEqual($class_namespaced, $class_direct);
-    $this->assertEqual($key_include, $key_namespaced);
-    $this->assertEqual($key_namespaced, $key_direct);
+    $this->assertEquals($class_include, $class_namespaced);
+    $this->assertEquals($class_namespaced, $class_direct);
+    $this->assertEquals($key_include, $key_namespaced);
+    $this->assertEquals($key_namespaced, $key_direct);
   }
 
   /**

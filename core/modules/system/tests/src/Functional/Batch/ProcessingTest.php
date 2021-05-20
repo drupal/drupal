@@ -42,7 +42,7 @@ class ProcessingTest extends BrowserTestBase {
     // Displaying the page triggers batch 1.
     $this->drupalGet('batch-test/finish-redirect');
     $this->assertBatchMessages($this->_resultMessages('batch_1'), 'Batch for step 2 performed successfully.');
-    $this->assertEqual($this->_resultStack('batch_1'), batch_test_stack(), 'Execution order was correct.');
+    $this->assertEquals($this->_resultStack('batch_1'), batch_test_stack(), 'Execution order was correct.');
     // Verify that the custom redirection after batch execution displays the
     // correct page.
     $this->assertSession()->pageTextContains('Test page text.');
@@ -194,7 +194,7 @@ class ProcessingTest extends BrowserTestBase {
     // form.
     $value = rand(0, 255);
     $this->drupalGet('batch-test/nested-programmatic/' . $value);
-    $this->assertEqual(['mock form submitted with value = ' . $value], batch_test_stack(), '\\Drupal::formBuilder()->submitForm() ran successfully within a batch operation.');
+    $this->assertEquals(['mock form submitted with value = ' . $value], batch_test_stack(), '\\Drupal::formBuilder()->submitForm() ran successfully within a batch operation.');
   }
 
   /**

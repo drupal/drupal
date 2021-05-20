@@ -149,17 +149,17 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
     $entity->save();
 
     // Editor selection w/ cardinality 1, text format w/o associated text editor.
-    $this->assertEqual('form', $this->getSelectedEditor($entity->id(), $this->fieldName), "With cardinality 1, and the filtered_html text format, the 'form' editor is selected.");
+    $this->assertEquals('form', $this->getSelectedEditor($entity->id(), $this->fieldName), "With cardinality 1, and the filtered_html text format, the 'form' editor is selected.");
 
     // Editor selection w/ cardinality 1, text format w/ associated text editor.
     $entity->{$this->fieldName}->format = 'full_html';
     $entity->save();
-    $this->assertEqual('editor', $this->getSelectedEditor($entity->id(), $this->fieldName), "With cardinality 1, and the full_html text format, the 'editor' editor is selected.");
+    $this->assertEquals('editor', $this->getSelectedEditor($entity->id(), $this->fieldName), "With cardinality 1, and the full_html text format, the 'editor' editor is selected.");
 
     // Editor selection with text processing, cardinality >1
     $this->fields->field_textarea_field_storage->setCardinality(2);
     $this->fields->field_textarea_field_storage->save();
-    $this->assertEqual('form', $this->getSelectedEditor($entity->id(), $this->fieldName), "With cardinality >1, and both items using the full_html text format, the 'form' editor is selected.");
+    $this->assertEquals('form', $this->getSelectedEditor($entity->id(), $this->fieldName), "With cardinality >1, and both items using the full_html text format, the 'form' editor is selected.");
   }
 
   /**
@@ -190,7 +190,7 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
         'formatHasTransformations' => FALSE,
       ],
     ];
-    $this->assertEqual($expected, $metadata, 'The correct metadata (including custom metadata) is generated.');
+    $this->assertEquals($expected, $metadata, 'The correct metadata (including custom metadata) is generated.');
   }
 
   /**
@@ -236,7 +236,7 @@ class QuickEditIntegrationTest extends QuickEditTestBase {
     );
     $subscriber->onResponse($event);
 
-    $this->assertEqual(Json::encode($expected), $response->getContent(), 'The GetUntransformedTextCommand AJAX command works correctly.');
+    $this->assertEquals(Json::encode($expected), $response->getContent(), 'The GetUntransformedTextCommand AJAX command works correctly.');
   }
 
 }

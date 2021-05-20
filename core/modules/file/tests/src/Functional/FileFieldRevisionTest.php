@@ -68,7 +68,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     // Check that the original file is still in place on the first revision.
     $node = node_revision_load($node_vid_r1);
     $current_file = File::load($node->{$field_name}->target_id);
-    $this->assertEqual($node_file_r1->id(), $current_file->id(), 'Original file still in place after replacing file in new revision.');
+    $this->assertEquals($node_file_r1->id(), $current_file->id(), 'Original file still in place after replacing file in new revision.');
     $this->assertFileExists($node_file_r1->getFileUri());
     $this->assertFileEntryExists($node_file_r1, 'Original file entry still in place after replacing file in new revision');
     $this->assertFileIsPermanent($node_file_r1, 'Original file is still permanent.');
@@ -80,7 +80,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     $node = $node_storage->load($nid);
     $node_file_r3 = File::load($node->{$field_name}->target_id);
     $node_vid_r3 = $node->getRevisionId();
-    $this->assertEqual($node_file_r2->id(), $node_file_r3->id(), 'Previous revision file still in place after creating a new revision without a new file.');
+    $this->assertEquals($node_file_r2->id(), $node_file_r3->id(), 'Previous revision file still in place after creating a new revision without a new file.');
     $this->assertFileIsPermanent($node_file_r3, 'New revision file is permanent.');
 
     // Revert to the first revision and check that the original file is active.
@@ -88,7 +88,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
     $node_file_r4 = File::load($node->{$field_name}->target_id);
-    $this->assertEqual($node_file_r1->id(), $node_file_r4->id(), 'Original revision file still in place after reverting to the original revision.');
+    $this->assertEquals($node_file_r1->id(), $node_file_r4->id(), 'Original revision file still in place after reverting to the original revision.');
     $this->assertFileIsPermanent($node_file_r4, 'Original revision file still permanent after reverting to the original revision.');
 
     // Delete the second revision and check that the file is kept (since it is

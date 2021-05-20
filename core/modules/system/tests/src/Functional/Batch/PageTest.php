@@ -45,7 +45,7 @@ class PageTest extends BrowserTestBase {
     $this->drupalGet('admin/batch-test/test-theme');
     // The stack should contain the name of the theme used on the progress
     // page.
-    $this->assertEqual(['seven'], batch_test_stack(), 'A progressive batch correctly uses the theme of the page that started the batch.');
+    $this->assertEquals(['seven'], batch_test_stack(), 'A progressive batch correctly uses the theme of the page that started the batch.');
   }
 
   /**

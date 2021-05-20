@@ -66,13 +66,13 @@ class StyleSummaryTest extends ViewTestBase {
     $this->assertCount(4, $summary_list);
 
     foreach ($summary_list as $summary_list_item) {
-      $this->assertEqual('(5)', trim(explode(' ', $summary_list_item->getText())[1]));
+      $this->assertEquals('(5)', trim(explode(' ', $summary_list_item->getText())[1]));
     }
 
     $summary_links = $this->cssSelect('ul.views-summary a');
     $this->assertCount(4, $summary_links);
     foreach ($summary_links as $index => $summary_link) {
-      $this->assertEqual('type' . $index, trim($summary_link->getText()));
+      $this->assertEquals('type' . $index, trim($summary_link->getText()));
     }
 
     $this->clickLink('type1');
@@ -108,13 +108,13 @@ class StyleSummaryTest extends ViewTestBase {
     $this->assertCount(3, $summary_list);
 
     foreach ($summary_list as $summary_list_item) {
-      $this->assertEqual('(5)', trim(explode(' ', $summary_list_item->getText())[1]));
+      $this->assertEquals('(5)', trim(explode(' ', $summary_list_item->getText())[1]));
     }
 
     $summary_links = $this->cssSelect('.views-summary-unformatted a');
     $this->assertCount(3, $summary_links);
     foreach ($summary_links as $index => $summary_link) {
-      $this->assertEqual('type' . $index, trim($summary_link->getText()));
+      $this->assertEquals('type' . $index, trim($summary_link->getText()));
     }
 
     $this->clickLink('type1');

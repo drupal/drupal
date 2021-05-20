@@ -161,7 +161,7 @@ class FetchTest extends DatabaseTestBase {
     $query_result = $query->execute()->fetchAll(\PDO::FETCH_COLUMN);
 
     $expected_result = ['George', 'John', 'Paul', 'Ringo'];
-    $this->assertEqual($expected_result, $query_result, 'Returned the correct result.');
+    $this->assertEquals($expected_result, $query_result, 'Returned the correct result.');
   }
 
   /**

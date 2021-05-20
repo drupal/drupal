@@ -56,7 +56,7 @@ class NodeOwnerTest extends EntityKernelTestBase {
     ]);
     $english->save();
 
-    $this->assertEqual($user->id(), $english->getOwnerId());
+    $this->assertEquals($user->id(), $english->getOwnerId());
 
     $german = $english->addTranslation('de');
     $german->title = $this->randomString();
@@ -71,9 +71,9 @@ class NodeOwnerTest extends EntityKernelTestBase {
     // Entity::save() saves all translations!
     $italian->save();
 
-    $this->assertEqual(0, $english->getOwnerId());
-    $this->assertEqual(0, $german->getOwnerId());
-    $this->assertEqual(0, $italian->getOwnerId());
+    $this->assertEquals(0, $english->getOwnerId());
+    $this->assertEquals(0, $german->getOwnerId());
+    $this->assertEquals(0, $italian->getOwnerId());
   }
 
   /**

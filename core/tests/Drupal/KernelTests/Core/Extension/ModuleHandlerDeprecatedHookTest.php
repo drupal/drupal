@@ -24,7 +24,7 @@ class ModuleHandlerDeprecatedHookTest extends KernelTestBase {
     /* @var $module_handler \Drupal\Core\Extension\ModuleHandlerInterface */
     $module_handler = $this->container->get('module_handler');
     $arg = 'an_arg';
-    $this->assertEqual(
+    $this->assertEquals(
       $arg,
       $module_handler->invokeDeprecated('Use something else.', 'deprecation_test', 'deprecated_hook', [$arg])
     );
@@ -38,7 +38,7 @@ class ModuleHandlerDeprecatedHookTest extends KernelTestBase {
     /* @var $module_handler \Drupal\Core\Extension\ModuleHandlerInterface */
     $module_handler = $this->container->get('module_handler');
     $arg = 'an_arg';
-    $this->assertEqual(
+    $this->assertEquals(
       [$arg],
       $module_handler->invokeAllDeprecated('Use something else.', 'deprecated_hook', [$arg])
     );
@@ -55,7 +55,7 @@ class ModuleHandlerDeprecatedHookTest extends KernelTestBase {
     $context1 = 'test1';
     $context2 = 'test2';
     $module_handler->alterDeprecated('Alter something else.', 'deprecated_alter', $data, $context1, $context2);
-    $this->assertEqual([$context1, $context2], $data);
+    $this->assertEquals([$context1, $context2], $data);
   }
 
 }
