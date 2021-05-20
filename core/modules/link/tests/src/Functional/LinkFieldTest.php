@@ -686,7 +686,7 @@ class LinkFieldTest extends BrowserTestBase {
       ->save();
 
     $form = \Drupal::service('entity.form_builder')->getForm(EntityTest::create());
-    $this->assertEqual($link_type, $form[$field_name]['widget'][0]['uri']['#link_type']);
+    $this->assertEquals($link_type, $form[$field_name]['widget'][0]['uri']['#link_type']);
   }
 
   /**

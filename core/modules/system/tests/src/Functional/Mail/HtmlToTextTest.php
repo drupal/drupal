@@ -385,11 +385,11 @@ EOT;
   public function testUsenetSignature() {
     $text = "Hi there!\n-- \nHerp Derp";
     $mail_lines = explode("\n", MailFormatHelper::wrapMail($text));
-    $this->assertEqual("-- ", $mail_lines[1], 'Trailing whitespace not removed for dash-dash-space signatures.');
+    $this->assertEquals("-- ", $mail_lines[1], 'Trailing whitespace not removed for dash-dash-space signatures.');
 
     $text = "Hi there!\n--  \nHerp Derp";
     $mail_lines = explode("\n", MailFormatHelper::wrapMail($text));
-    $this->assertEqual("--", $mail_lines[1], 'Trailing whitespace removed for incorrect dash-dash-space signatures.');
+    $this->assertEquals("--", $mail_lines[1], 'Trailing whitespace removed for incorrect dash-dash-space signatures.');
   }
 
 }

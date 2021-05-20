@@ -168,7 +168,7 @@ class ConfigTranslationOverviewTest extends BrowserTestBase {
     $this->writeSettings($settings);
 
     // Test that the overridden label is loaded with the entity.
-    $this->assertEqual($overridden_label, $config_test_storage->load('dotted.default')->label());
+    $this->assertEquals($overridden_label, $config_test_storage->load('dotted.default')->label());
 
     // Test that the original label on the listing page is intact.
     $this->drupalGet('admin/config/regional/config-translation/config_test');

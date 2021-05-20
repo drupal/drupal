@@ -55,7 +55,7 @@ class StorageTest extends UITestBase {
     $view = Views::getView($view_name);
 
     foreach (['label', 'tag', 'description', 'langcode'] as $property) {
-      $this->assertEqual($edit[$property], $view->storage->get($property), new FormattableMarkup('Make sure the property @property got probably saved.', ['@property' => $property]));
+      $this->assertEquals($edit[$property], $view->storage->get($property), new FormattableMarkup('Make sure the property @property got probably saved.', ['@property' => $property]));
     }
   }
 

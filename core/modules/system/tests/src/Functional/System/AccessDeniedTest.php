@@ -60,9 +60,9 @@ class AccessDeniedTest extends BrowserTestBase {
     $this->drupalGet('admin', ['query' => ['foo' => 'bar']]);
 
     $settings = $this->getDrupalSettings();
-    $this->assertEqual('admin', $settings['path']['currentPath']);
+    $this->assertEquals('admin', $settings['path']['currentPath']);
     $this->assertTrue($settings['path']['currentPathIsAdmin']);
-    $this->assertEqual(['foo' => 'bar'], $settings['path']['currentQuery']);
+    $this->assertEquals(['foo' => 'bar'], $settings['path']['currentQuery']);
 
     $this->drupalLogin($this->adminUser);
 

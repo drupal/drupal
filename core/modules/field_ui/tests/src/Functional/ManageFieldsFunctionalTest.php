@@ -204,7 +204,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       }
     }
 
-    $this->assertEqual($number_of_links, $number_of_links_found);
+    $this->assertEquals($number_of_links, $number_of_links_found);
   }
 
   /**
@@ -516,7 +516,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $this->drupalPostForm($admin_path, $edit, 'Save settings');
     $this->assertText("Saved $field_name configuration");
     $field = FieldConfig::loadByName('node', $this->contentType, $field_name);
-    $this->assertEqual([['value' => 1]], $field->getDefaultValueLiteral(), 'The default value was correctly saved.');
+    $this->assertEquals([['value' => 1]], $field->getDefaultValueLiteral(), 'The default value was correctly saved.');
 
     // Check that the default value shows up in the form
     $this->drupalGet($admin_path);
@@ -527,7 +527,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save settings');
     $this->assertText("Saved $field_name configuration");
     $field = FieldConfig::loadByName('node', $this->contentType, $field_name);
-    $this->assertEqual([], $field->getDefaultValueLiteral(), 'The default value was correctly saved.');
+    $this->assertEquals([], $field->getDefaultValueLiteral(), 'The default value was correctly saved.');
 
     // Check that the default value can be empty when the field is marked as
     // required and can store unlimited values.
@@ -545,7 +545,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $this->submitForm([], 'Save settings');
     $this->assertText("Saved $field_name configuration");
     $field = FieldConfig::loadByName('node', $this->contentType, $field_name);
-    $this->assertEqual([], $field->getDefaultValueLiteral(), 'The default value was correctly saved.');
+    $this->assertEquals([], $field->getDefaultValueLiteral(), 'The default value was correctly saved.');
 
     // Check that the default widget is used when the field is hidden.
     $display_repository->getFormDisplay($field->getTargetEntityTypeId(), $field->getTargetBundle())
@@ -819,21 +819,21 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     // Add a field with every possible preconfigured value.
     $this->fieldUIAddNewField(NULL, 'test_custom_options', 'Test label', 'field_ui:test_field_with_preconfigured_options:custom_options');
     $field_storage = FieldStorageConfig::loadByName('node', 'field_test_custom_options');
-    $this->assertEqual(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED, $field_storage->getCardinality());
-    $this->assertEqual('preconfigured_storage_setting', $field_storage->getSetting('test_field_storage_setting'));
+    $this->assertEquals(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED, $field_storage->getCardinality());
+    $this->assertEquals('preconfigured_storage_setting', $field_storage->getSetting('test_field_storage_setting'));
 
     $field = FieldConfig::loadByName('node', 'article', 'field_test_custom_options');
     $this->assertTrue($field->isRequired());
-    $this->assertEqual('preconfigured_field_setting', $field->getSetting('test_field_setting'));
+    $this->assertEquals('preconfigured_field_setting', $field->getSetting('test_field_setting'));
 
     /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
     $display_repository = \Drupal::service('entity_display.repository');
 
     $form_display = $display_repository->getFormDisplay('node', 'article');
-    $this->assertEqual('test_field_widget_multiple', $form_display->getComponent('field_test_custom_options')['type']);
+    $this->assertEquals('test_field_widget_multiple', $form_display->getComponent('field_test_custom_options')['type']);
     $view_display = $display_repository->getViewDisplay('node', 'article');
-    $this->assertEqual('field_test_multiple', $view_display->getComponent('field_test_custom_options')['type']);
-    $this->assertEqual('altered dummy test string', $view_display->getComponent('field_test_custom_options')['settings']['test_formatter_setting_multiple']);
+    $this->assertEquals('field_test_multiple', $view_display->getComponent('field_test_custom_options')['type']);
+    $this->assertEquals('altered dummy test string', $view_display->getComponent('field_test_custom_options')['settings']['test_formatter_setting_multiple']);
   }
 
   /**
