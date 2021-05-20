@@ -355,16 +355,6 @@ class KernelTestBaseTest extends KernelTestBase {
   }
 
   /**
-   * Tests the deprecation of AssertLegacyTrait::assertEqual.
-   *
-   * @group legacy
-   */
-  public function testAssertEqual() {
-    $this->expectDeprecation('AssertLegacyTrait::assertEqual() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertEquals() instead. See https://www.drupal.org/node/3129738');
-    $this->assertEqual('0', 0);
-  }
-
-  /**
    * Tests the deprecation of ::installSchema with the tables key_value(_expire).
    *
    * @group legacy
