@@ -83,7 +83,7 @@ class CronRunTest extends BrowserTestBase {
 
     // Disable cron through the interface by setting the interval to zero.
     $this->drupalPostForm('admin/config/system/cron', ['interval' => 0], 'Save configuration');
-    $this->assertText('The configuration options have been saved.');
+    $this->assertSession()->pageTextContains('The configuration options have been saved.');
     $this->drupalLogout();
 
     // Test if cron does not run when the cron interval is set to zero.
@@ -122,7 +122,7 @@ class CronRunTest extends BrowserTestBase {
     \Drupal::state()->set('system.cron_last', $cron_last);
 
     $this->submitForm([], 'Save configuration');
-    $this->assertText('The configuration options have been saved.');
+    $this->assertSession()->pageTextContains('The configuration options have been saved.');
     $this->assertSession()->addressEquals('admin/config/system/cron');
 
     // Check that cron does not run when saving the configuration form.
@@ -147,7 +147,7 @@ class CronRunTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/status');
     $this->clickLink(t('Run cron'));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('Cron ran successfully.');
+    $this->assertSession()->pageTextContains('Cron ran successfully.');
   }
 
 }

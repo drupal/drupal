@@ -50,7 +50,7 @@ class StatusTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Verify that the PHP version is shown on the page.
-    $this->assertText(phpversion());
+    $this->assertSession()->pageTextContains(phpversion());
 
     if (function_exists('phpinfo')) {
       $this->assertSession()->linkByHrefExists(Url::fromRoute('system.php')->toString());
@@ -69,7 +69,7 @@ class StatusTest extends BrowserTestBase {
     // update_test_postupdate_update_8001() needs to be executed.
     drupal_set_installed_schema_version('update_test_postupdate', 8000);
     $this->drupalGet('admin/reports/status');
-    $this->assertText('Out of date');
+    $this->assertSession()->pageTextContains('Out of date');
 
     // Now cleanup the executed post update functions.
     drupal_set_installed_schema_version('update_test_postupdate', 8001);
@@ -77,7 +77,7 @@ class StatusTest extends BrowserTestBase {
     $post_update_registry = \Drupal::service('update.post_update_registry');
     $post_update_registry->filterOutInvokedUpdatesByModule('update_test_postupdate');
     $this->drupalGet('admin/reports/status');
-    $this->assertText('Out of date');
+    $this->assertSession()->pageTextContains('Out of date');
 
     $this->drupalGet('admin/reports/status/php');
     $this->assertSession()->statusCodeEquals(200);

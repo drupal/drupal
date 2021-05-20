@@ -30,7 +30,7 @@ class DisplayAttachmentTest extends UITestBase {
    */
   public function testAttachmentUI() {
     $this->drupalGet('admin/structure/views/view/test_attachment_ui/edit/attachment_1');
-    $this->assertText('Not defined');
+    $this->assertSession()->pageTextContains('Not defined');
 
     $attachment_display_url = 'admin/structure/views/nojs/display/test_attachment_ui/attachment_1/displays';
     $this->drupalGet($attachment_display_url);
@@ -75,7 +75,7 @@ class DisplayAttachmentTest extends UITestBase {
     // Open the Page display and create the attachment display.
     $this->drupalGet($path_prefix . '/page_1');
     $this->submitForm([], 'Add Attachment');
-    $this->assertText('Not defined');
+    $this->assertSession()->pageTextContains('Not defined');
 
     // Attach the Attachment to the Page display.
     $this->drupalPostForm($attachment_display_url, ['displays[page_1]' => 1], 'Apply');
@@ -94,7 +94,7 @@ class DisplayAttachmentTest extends UITestBase {
     $this->assertNoText("Plugin ID &#039;page_1&#039; was not found.");
 
     // Check that the attachment is no longer linked to the removed display.
-    $this->assertText('Not defined');
+    $this->assertSession()->pageTextContains('Not defined');
 
   }
 

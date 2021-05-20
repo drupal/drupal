@@ -296,17 +296,17 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
     $indexed = $total - $remaining;
     $percent = ($total > 0) ? floor(100 * $indexed / $total) : 100;
     $this->drupalGet('admin/config/search/pages');
-    $this->assertText($percent . '% of the site has been indexed.');
-    $this->assertText($remaining . ' item');
+    $this->assertSession()->pageTextContains($percent . '% of the site has been indexed.');
+    $this->assertSession()->pageTextContains($remaining . ' item');
 
     // Check text in pages section of Search settings page.
-    $this->assertText($indexed . ' of ' . $total . ' indexed');
+    $this->assertSession()->pageTextContains($indexed . ' of ' . $total . ' indexed');
 
     // Check text on status report page.
     $this->drupalGet('admin/reports/status');
-    $this->assertText('Search index progress');
-    $this->assertText($percent . '%');
-    $this->assertText('(' . $remaining . ' remaining)');
+    $this->assertSession()->pageTextContains('Search index progress');
+    $this->assertSession()->pageTextContains($percent . '%');
+    $this->assertSession()->pageTextContains('(' . $remaining . ' remaining)');
   }
 
   /**

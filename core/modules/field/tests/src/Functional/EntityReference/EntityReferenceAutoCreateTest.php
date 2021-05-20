@@ -145,8 +145,8 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
 
     // Now try to view the node and check that the referenced node is shown.
     $this->drupalGet('node/' . $referencing_node->id());
-    $this->assertText($referencing_node->label());
-    $this->assertText($referenced_node->label());
+    $this->assertSession()->pageTextContains($referencing_node->label());
+    $this->assertSession()->pageTextContains($referenced_node->label());
   }
 
   /**

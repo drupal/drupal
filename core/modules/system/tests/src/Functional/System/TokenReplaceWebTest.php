@@ -34,12 +34,12 @@ class TokenReplaceWebTest extends BrowserTestBase {
     $this->drupalLogin($account);
 
     $this->drupalGet('token-test/' . $node->id());
-    $this->assertText("Tokens: {$node->id()} {$account->id()}");
+    $this->assertSession()->pageTextContains("Tokens: {$node->id()} {$account->id()}");
     $this->assertCacheTags(['node:1', 'rendered', 'user:2']);
     $this->assertCacheContexts(['languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'user']);
 
     $this->drupalGet('token-test-without-bubbleable-metadata/' . $node->id());
-    $this->assertText("Tokens: {$node->id()} {$account->id()}");
+    $this->assertSession()->pageTextContains("Tokens: {$node->id()} {$account->id()}");
     $this->assertCacheTags(['node:1', 'rendered', 'user:2']);
     $this->assertCacheContexts(['languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'user']);
   }

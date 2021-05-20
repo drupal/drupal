@@ -120,7 +120,7 @@ class PagerTest extends ViewTestBase {
       'pager_options[items_per_page]' => 20,
     ];
     $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/pager_options', $edit, 'Apply');
-    $this->assertText('20 items');
+    $this->assertSession()->pageTextContains('20 items');
 
     // Change type and check whether the type is new type is stored.
     $edit = [
@@ -128,7 +128,7 @@ class PagerTest extends ViewTestBase {
     ];
     $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/pager', $edit, 'Apply');
     $this->drupalGet('admin/structure/views/view/test_view/edit');
-    $this->assertText('Mini');
+    $this->assertSession()->pageTextContains('Mini');
 
     // Test behavior described in
     //   https://www.drupal.org/node/652712#comment-2354400.
@@ -143,13 +143,13 @@ class PagerTest extends ViewTestBase {
     ];
     $this->drupalPostForm('admin/structure/views/nojs/display/test_store_pager_settings/default/pager', $edit, 'Apply');
     $this->drupalGet('admin/structure/views/view/test_store_pager_settings/edit');
-    $this->assertText('Full');
+    $this->assertSession()->pageTextContains('Full');
 
     $edit = [
       'pager_options[items_per_page]' => 20,
     ];
     $this->drupalPostForm('admin/structure/views/nojs/display/test_store_pager_settings/default/pager_options', $edit, 'Apply');
-    $this->assertText('20 items');
+    $this->assertSession()->pageTextContains('20 items');
 
     // add new display and test the settings again, by override it.
     $edit = [];
@@ -165,15 +165,15 @@ class PagerTest extends ViewTestBase {
     ];
     $this->drupalPostForm('admin/structure/views/nojs/display/test_store_pager_settings/page_1/pager', $edit, 'Apply');
     $this->drupalGet('admin/structure/views/view/test_store_pager_settings/edit/page_1');
-    $this->assertText('Mini');
+    $this->assertSession()->pageTextContains('Mini');
 
     $edit = [
       'pager_options[items_per_page]' => 10,
     ];
     $this->drupalPostForm('admin/structure/views/nojs/display/test_store_pager_settings/default/pager_options', $edit, 'Apply');
-    $this->assertText('10 items');
+    $this->assertSession()->pageTextContains('10 items');
     $this->drupalGet('admin/structure/views/view/test_store_pager_settings/edit/page_1');
-    $this->assertText('20 items');
+    $this->assertSession()->pageTextContains('20 items');
 
     // Test that the override element is only displayed on pager plugin selection form.
     $this->drupalGet('admin/structure/views/nojs/display/test_store_pager_settings/page_1/pager');

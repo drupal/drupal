@@ -345,11 +345,11 @@ class CommentPagerTest extends CommentTestBase {
     $this->drupalGet('admin/structure/types/manage/article/display');
     // No summary for standard pager.
     $this->assertNoText('Pager ID: 0');
-    $this->assertText('Pager ID: 1');
+    $this->assertSession()->pageTextContains('Pager ID: 1');
     $this->submitForm([], 'comment_settings_edit');
     // Change default pager to 2.
     $this->submitForm(['fields[comment][settings_edit_form][settings][pager_id]' => 2], 'Save');
-    $this->assertText('Pager ID: 2');
+    $this->assertSession()->pageTextContains('Pager ID: 2');
     // Revert the changes.
     $this->submitForm([], 'comment_settings_edit');
     $this->submitForm(['fields[comment][settings_edit_form][settings][pager_id]' => 0], 'Save');

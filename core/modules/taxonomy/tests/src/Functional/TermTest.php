@@ -161,16 +161,16 @@ class TermTest extends TaxonomyTestBase {
 
     // Get Page 1. Parent term and terms 1-13 are displayed.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
-    $this->assertText($term1->getName());
+    $this->assertSession()->pageTextContains($term1->getName());
     for ($x = 1; $x <= 13; $x++) {
-      $this->assertText($terms_array[$x]->getName());
+      $this->assertSession()->pageTextContains($terms_array[$x]->getName());
     }
 
     // Get Page 2. Parent term and terms 1-18 are displayed.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview', ['query' => ['page' => 1]]);
-    $this->assertText($term1->getName());
+    $this->assertSession()->pageTextContains($term1->getName());
     for ($x = 1; $x <= 18; $x++) {
-      $this->assertText($terms_array[$x]->getName());
+      $this->assertSession()->pageTextContains($terms_array[$x]->getName());
     }
 
     // Get Page 3. No parent term and no terms <18 are displayed. Terms 18-25
@@ -181,7 +181,7 @@ class TermTest extends TaxonomyTestBase {
       $this->assertNoText($terms_array[$x]->getName());
     }
     for ($x = 18; $x <= 25; $x++) {
-      $this->assertText($terms_array[$x]->getName());
+      $this->assertSession()->pageTextContains($terms_array[$x]->getName());
     }
   }
 
@@ -205,19 +205,19 @@ class TermTest extends TaxonomyTestBase {
     // Check that the term is displayed when the node is viewed.
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->drupalGet('node/' . $node->id());
-    $this->assertText($term1->getName());
+    $this->assertSession()->pageTextContains($term1->getName());
 
     $this->clickLink(t('Edit'));
-    $this->assertText($term1->getName());
+    $this->assertSession()->pageTextContains($term1->getName());
     $this->submitForm([], 'Save');
-    $this->assertText($term1->getName());
+    $this->assertSession()->pageTextContains($term1->getName());
 
     // Edit the node with a different term.
     $edit[$this->field->getName() . '[]'] = $term2->id();
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
 
     $this->drupalGet('node/' . $node->id());
-    $this->assertText($term2->getName());
+    $this->assertSession()->pageTextContains($term2->getName());
 
     // Preview the node.
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Preview');
@@ -267,7 +267,7 @@ class TermTest extends TaxonomyTestBase {
     // Preview and verify the terms appear but are not created.
     $this->submitForm($edit, 'Preview');
     foreach ($terms as $term) {
-      $this->assertText($term);
+      $this->assertSession()->pageTextContains($term);
     }
     $tree = $this->container->get('entity_type.manager')->getStorage('taxonomy_term')->loadTree($this->vocabulary->id());
     $this->assertTrue(empty($tree), 'The terms are not created on preview.');
@@ -277,13 +277,13 @@ class TermTest extends TaxonomyTestBase {
 
     // Save, creating the terms.
     $this->drupalPostForm('node/add/article', $edit, 'Save');
-    $this->assertText('Article ' . $edit['title[0][value]'] . ' has been created.');
+    $this->assertSession()->pageTextContains('Article ' . $edit['title[0][value]'] . ' has been created.');
 
     // Verify that the creation message contains a link to a node.
     $this->assertSession()->elementExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "node/")]');
 
     foreach ($terms as $term) {
-      $this->assertText($term);
+      $this->assertSession()->pageTextContains($term);
     }
 
     // Get the created terms.
@@ -299,7 +299,7 @@ class TermTest extends TaxonomyTestBase {
     // Test editing the node.
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
     foreach ($terms as $term) {
-      $this->assertText($term);
+      $this->assertSession()->pageTextContains($term);
     }
 
     // Delete term 1 from the term edit page.
@@ -316,7 +316,7 @@ class TermTest extends TaxonomyTestBase {
     $term_names = [$term_objects['term3']->getName(), $term_objects['term4']->getName()];
     $this->drupalGet('node/' . $node->id());
     foreach ($term_names as $term_name) {
-      $this->assertText($term_name);
+      $this->assertSession()->pageTextContains($term_name);
     }
     $this->assertNoText($term_objects['term1']->getName());
     $this->assertNoText($term_objects['term2']->getName());
@@ -349,7 +349,7 @@ class TermTest extends TaxonomyTestBase {
 
     // Verify that the randomly generated term is present.
     $this->assertRaw($edit['name[0][value]']);
-    $this->assertText($edit['description[0][value]']);
+    $this->assertSession()->pageTextContains($edit['description[0][value]']);
 
     $edit = [
       'name[0][value]' => $this->randomMachineName(14),
@@ -361,7 +361,7 @@ class TermTest extends TaxonomyTestBase {
 
     // Check that the term is still present at admin UI after edit.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
-    $this->assertText($edit['name[0][value]']);
+    $this->assertSession()->pageTextContains($edit['name[0][value]']);
     $this->assertSession()->linkExists('Edit');
 
     // Check the term link can be clicked through to the term page.
@@ -370,8 +370,8 @@ class TermTest extends TaxonomyTestBase {
 
     // View the term and check that it is correct.
     $this->drupalGet('taxonomy/term/' . $term->id());
-    $this->assertText($edit['name[0][value]']);
-    $this->assertText($edit['description[0][value]']);
+    $this->assertSession()->pageTextContains($edit['name[0][value]']);
+    $this->assertSession()->pageTextContains($edit['description[0][value]']);
 
     // Did this page request display a 'term-listing-heading'?
     $this->assertSession()->elementExists('xpath', '//div[contains(@class, "field--name-description")]');

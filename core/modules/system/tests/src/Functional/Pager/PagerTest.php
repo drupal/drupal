@@ -84,15 +84,15 @@ class PagerTest extends BrowserTestBase {
   public function testPagerQueryParametersAndCacheContext() {
     // First page.
     $this->drupalGet('pager-test/query-parameters');
-    $this->assertText('Pager calls: 0');
-    $this->assertText('[url.query_args.pagers:0]=0.0');
+    $this->assertSession()->pageTextContains('Pager calls: 0');
+    $this->assertSession()->pageTextContains('[url.query_args.pagers:0]=0.0');
     $this->assertCacheContext('url.query_args');
 
     // Go to last page, the count of pager calls need to go to 1.
     $elements = $this->xpath('//li[contains(@class, :class)]/a', [':class' => 'pager__item--last']);
     $elements[0]->click();
-    $this->assertText('Pager calls: 1');
-    $this->assertText('[url.query_args.pagers:0]=0.60');
+    $this->assertSession()->pageTextContains('Pager calls: 1');
+    $this->assertSession()->pageTextContains('[url.query_args.pagers:0]=0.60');
     $this->assertCacheContext('url.query_args');
 
     // Reset counter to 0.
@@ -102,8 +102,8 @@ class PagerTest extends BrowserTestBase {
     $elements[0]->click();
     $elements = $this->xpath('//li[contains(@class, :class)]/a', [':class' => 'pager__item--first']);
     $elements[0]->click();
-    $this->assertText('Pager calls: 2');
-    $this->assertText('[url.query_args.pagers:0]=0.0');
+    $this->assertSession()->pageTextContains('Pager calls: 2');
+    $this->assertSession()->pageTextContains('[url.query_args.pagers:0]=0.0');
     $this->assertCacheContext('url.query_args');
   }
 

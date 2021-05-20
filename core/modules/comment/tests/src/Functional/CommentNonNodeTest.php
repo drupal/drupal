@@ -172,9 +172,9 @@ class CommentNonNodeTest extends BrowserTestBase {
     if ($contact !== TRUE) {
       // If true then attempting to find error message.
       if ($subject) {
-        $this->assertText($subject);
+        $this->assertSession()->pageTextContains($subject);
       }
-      $this->assertText($comment);
+      $this->assertSession()->pageTextContains($comment);
       // Check the comment ID was extracted.
       $this->assertArrayHasKey(1, $match);
     }
@@ -241,7 +241,7 @@ class CommentNonNodeTest extends BrowserTestBase {
       $this->assertRaw(\Drupal::translation()->formatPlural(1, 'Deleted 1 comment.', 'Deleted @count comments.'));
     }
     else {
-      $this->assertText('The update has been performed.');
+      $this->assertSession()->pageTextContains('The update has been performed.');
     }
   }
 
@@ -271,7 +271,7 @@ class CommentNonNodeTest extends BrowserTestBase {
     $this->drupalLogin($limited_user);
     // Test that default field exists.
     $this->drupalGet('entity_test/structure/entity_test/fields');
-    $this->assertText('Comments');
+    $this->assertSession()->pageTextContains('Comments');
     $this->assertSession()->linkByHrefExists('entity_test/structure/entity_test/fields/entity_test.entity_test.comment');
     // Test widget hidden option is not visible when there's no comments.
     $this->drupalGet('entity_test/structure/entity_test/fields/entity_test.entity_test.comment');
@@ -334,7 +334,7 @@ class CommentNonNodeTest extends BrowserTestBase {
     $this->assertRaw('comments[' . $comment1->id() . ']');
 
     // Check that entity access applies to administrative page.
-    $this->assertText($this->entity->label());
+    $this->assertSession()->pageTextContains($this->entity->label());
     $limited_user = $this->drupalCreateUser([
       'administer comments',
     ]);

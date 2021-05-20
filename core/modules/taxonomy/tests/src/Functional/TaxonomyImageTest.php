@@ -96,7 +96,7 @@ class TaxonomyImageTest extends TaxonomyTestBase {
     $this->submitForm(['field_test[0][alt]' => $this->randomMachineName()], 'Save');
     $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadByProperties(['name' => $edit['name[0][value]']]);
     $term = reset($terms);
-    $this->assertText('Created new term ' . $term->getName() . '.');
+    $this->assertSession()->pageTextContains('Created new term ' . $term->getName() . '.');
 
     // Create a user that should have access to the file and one that doesn't.
     $access_user = $this->drupalCreateUser(['access content']);

@@ -65,9 +65,9 @@ class TermTranslationFieldViewTest extends TaxonomyTestBase {
 
     $this->drupalGet($path);
     $this->assertNoText($this->translatedTagName);
-    $this->assertText($this->baseTagName);
+    $this->assertSession()->pageTextContains($this->baseTagName);
     $this->drupalGet($translation_path);
-    $this->assertText($this->translatedTagName);
+    $this->assertSession()->pageTextContains($this->translatedTagName);
     $this->assertNoText($this->baseTagName);
   }
 

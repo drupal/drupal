@@ -40,7 +40,7 @@ class FormatDateTest extends BrowserTestBase {
       'date_format_pattern' => 'j M Y',
     ];
     $this->drupalPostForm('admin/config/regional/date-time/formats/add', $edit, 'Add format');
-    $this->assertText('Custom date format added.');
+    $this->assertSession()->pageTextContains('Custom date format added.');
 
     /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
     $date_formatter = $this->container->get('date.formatter');

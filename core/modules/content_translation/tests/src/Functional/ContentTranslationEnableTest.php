@@ -35,8 +35,8 @@ class ContentTranslationEnableTest extends BrowserTestBase {
     $this->drupalPostForm('admin/modules', $edit, 'Install');
 
     // Status messages are shown.
-    $this->assertText('This site has only a single language enabled. Add at least one more language in order to translate content.');
-    $this->assertText('Enable translation for content types, taxonomy vocabularies, accounts, or any other element you wish to translate.');
+    $this->assertSession()->pageTextContains('This site has only a single language enabled. Add at least one more language in order to translate content.');
+    $this->assertSession()->pageTextContains('Enable translation for content types, taxonomy vocabularies, accounts, or any other element you wish to translate.');
 
     // No pending updates should be available.
     $this->drupalGet('admin/reports/status');

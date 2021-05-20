@@ -36,7 +36,7 @@ class ServiceProviderWebTest extends BrowserTestBase {
     // saying it has fired. This will fire on every page request so it should
     // show up on the front page.
     $this->drupalGet('');
-    $this->assertText('The service_provider_test event subscriber fired!');
+    $this->assertSession()->pageTextContains('The service_provider_test event subscriber fired!');
   }
 
 }
