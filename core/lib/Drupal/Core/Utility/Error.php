@@ -2,11 +2,16 @@
 
 namespace Drupal\Core\Utility;
 
-use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\DependencyInjection\ContainerNotInitializedException;
+use Drupal\Core\Extension\ExtensionDiscovery;
+use Drupal\Core\Site\Settings;
 use Drupal\Component\Utility\Xss;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Log;
+use Twig\Environment;
+use Twig\Loader\ArrayLoader;
 
 /**
  * Drupal error utility class.
@@ -93,6 +98,69 @@ class Error {
     // we assume that it is safe to include a verbose backtrace.
     $decode['@backtrace'] = Error::formatBacktrace($backtrace);
     return new FormattableMarkup('%type: @message in %function (line %line of %file). <pre class="backtrace">@backtrace</pre>', $decode);
+  }
+
+  /**
+   * Renders fatal error page from twig template using Symfony twig engine.
+   *
+   * @param array $context
+   *   Variables to be passed to twig template.
+   *
+   * @return string
+   *   An html code with rendered fatal error page.
+   */
+  public static function renderFatalError(array $context) {
+    $template_path = '/templates/maintenance-page--offline.html.twig';
+    $system_path = 'core/modules/system';
+    $theme = '';
+
+    // Get offline theme from settings.php and check if the template exists.
+    try {
+      $theme = Settings::get('maintenance_theme', '');
+      if (!$theme) {
+        $theme_path = $system_path;
+      }
+      else {
+        $theme_path = \Drupal::service('extension.list.theme')->getPath($theme);
+      }
+    }
+    catch (ContainerNotInitializedException $e) {
+      // The maintenance theme is set but the container doesn't exist
+      // since the database is inactive. Hence there are no services available
+      // to retrieve a maintenance theme path. The path can be obtained by using
+      // ExtensionDiscovery::scan() but the app root should be guessed first
+      // in the same way as DrupalKernel::guessApplicationRoot() does.
+      $app_root = dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
+      $listing = new ExtensionDiscovery($app_root, FALSE, NULL, NULL);
+      // An empty profile directory prevents ExtensionDiscovery::scan()
+      // from calling \Drupal::installProfile() that needs working container.
+      $listing->setProfileDirectories([]);
+      $themes = $listing->scan('theme');
+      $theme_path = isset($themes[$theme]) ? $themes[$theme]->getPath() : $system_path;
+      if ($context['displayable']) {
+        $context['content'] = $context['content'] . "<pre>" . $e . "</pre>";
+      }
+    }
+    catch (\Throwable $error) {
+      // Handle any other cases.
+      $theme_path = $system_path;
+      if ($context['displayable']) {
+        $context['content'] = $context['content'] . "<pre>" . $error . "</pre>";
+      }
+    }
+
+    $path = $theme_path . $template_path;
+    if (!file_exists($path)) {
+      $path = $system_path . $template_path;
+    }
+
+    // Directly use Symfony twig engine without Drupal wrapper to minimize
+    // possibility of nested exception.
+    $template = file_get_contents($path);
+    $loader = new ArrayLoader(['maintenance_page_offline' => $template]);
+    $environment = new Environment($loader);
+
+    return $environment->render('maintenance_page_offline', $context);
   }
 
   /**

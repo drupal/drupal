@@ -27,9 +27,10 @@ use Symfony\Component\HttpKernel\KernelEvents;
  * handled by a single exception subscriber:: serialization.exception.default.
  *
  * This exception subscriber runs after all the above (it has a lower priority),
- * which makes it the last-chance exception handler. It always sends a plain
- * text response. If it's a displayable error and the error level is configured
- * to be verbose, then a helpful backtrace is also printed.
+ * which makes it the last-chance exception handler. It sends a html response
+ * if a request format is html and a plain text otherwise. If it's a displayable
+ * error and the error level is configured to be verbose, then a helpful
+ * backtrace is also printed.
  */
 class FinalExceptionSubscriber implements EventSubscriberInterface {
   use StringTranslationTrait;
@@ -125,6 +126,18 @@ class FinalExceptionSubscriber implements EventSubscriberInterface {
     $content_type = $event->getRequest()->getRequestFormat() == 'html' ? 'text/html' : 'text/plain';
     $content = $this->t('The website encountered an unexpected error. Please try again later.');
     $content .= $message ? '</br></br>' . $message : '';
+
+    if ($content_type == 'text/html') {
+      $html = Error::renderFatalError([
+        'title' => $this->t('Service unavailable'),
+        'content' => $content,
+        'displayable' => $this->isErrorDisplayable($error),
+      ]);
+      if (!empty($html)) {
+        $content = $html;
+      }
+    }
+
     $response = new Response($content, 500, ['Content-Type' => $content_type]);
 
     if ($exception instanceof HttpExceptionInterface) {

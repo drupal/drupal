@@ -578,9 +578,14 @@ $settings['update_free_access'] = FALSE;
  * A custom theme for the offline page:
  *
  * This applies when the site is explicitly set to maintenance mode through the
- * administration page or when the database is inactive due to an error.
- * The template file should also be copied into the theme. It is located inside
+ * administration page.
+ * The template file should also be copied into the theme. It is located at
  * 'core/modules/system/templates/maintenance-page.html.twig'.
+ *
+ * This applies also when the database is inactive due to an error
+ * or when a fatal error is thrown.
+ * The template file should also be copied into the theme. It is located at
+ * 'core/modules/system/templates/maintenance-page--offline.html.twig'.
  *
  * Note: This setting does not apply to installation and update pages.
  */
