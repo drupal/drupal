@@ -41,7 +41,7 @@ class StatisticsTokenReplaceTest extends StatisticsTestBase {
 
     foreach ($tests as $input => $expected) {
       $output = \Drupal::token()->replace($input, ['node' => $node], ['langcode' => $language_interface->getId()]);
-      $this->assertEqual($output, $expected, new FormattableMarkup('Statistics token %token replaced.', ['%token' => $input]));
+      $this->assertEquals($expected, $output, new FormattableMarkup('Statistics token %token replaced.', ['%token' => $input]));
     }
 
     // Hit the node.
@@ -69,7 +69,7 @@ class StatisticsTokenReplaceTest extends StatisticsTestBase {
 
     foreach ($tests as $input => $expected) {
       $output = \Drupal::token()->replace($input, ['node' => $node], ['langcode' => $language_interface->getId()]);
-      $this->assertEqual($expected, $output, new FormattableMarkup('Statistics token %token replaced.', ['%token' => $input]));
+      $this->assertEquals($expected, $output, new FormattableMarkup('Statistics token %token replaced.', ['%token' => $input]));
     }
   }
 

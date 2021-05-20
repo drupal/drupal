@@ -175,7 +175,7 @@ class BasicTest extends WizardTestBase {
     $data = Json::decode($this->getSession()->getPage()->getContent());
     $this->assertCount(1, $data, 'Only the node of type page is exported.');
     $node = reset($data);
-    $this->assertEqual($node1->id(), $node['nid'][0]['value'], 'The node of type page is exported.');
+    $this->assertEquals($node1->id(), $node['nid'][0]['value'], 'The node of type page is exported.');
 
     // Create a view with a leading slash in the path and test that is properly
     // set.

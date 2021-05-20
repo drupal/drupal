@@ -78,7 +78,7 @@ class ImportOpmlTest extends AggregatorTestBase {
     $this->assertText('The URL invalidUrl://empty is not valid.');
 
     $after = $count_query->execute();
-    $this->assertEqual($before, $after, 'No feeds were added during the three last form submissions.');
+    $this->assertEquals($before, $after, 'No feeds were added during the three last form submissions.');
   }
 
   /**
@@ -99,7 +99,7 @@ class ImportOpmlTest extends AggregatorTestBase {
     $this->assertText('No new feed has been added.');
 
     $after = $count_query->execute();
-    $this->assertEqual($before, $after, 'No feeds were added during the two last form submissions.');
+    $this->assertEquals($before, $after, 'No feeds were added during the two last form submissions.');
 
     foreach (Feed::loadMultiple() as $feed) {
       $feed->delete();
@@ -119,7 +119,7 @@ class ImportOpmlTest extends AggregatorTestBase {
     $this->assertRaw(t('A feed named %title already exists.', ['%title' => $feeds[1]['title[0][value]']]));
 
     $after = $count_query->execute();
-    $this->assertEqual(2, $after, 'Verifying that two distinct feeds were added.');
+    $this->assertEquals(2, $after, 'Verifying that two distinct feeds were added.');
 
     $feed_entities = Feed::loadMultiple();
     $refresh = TRUE;
@@ -129,8 +129,8 @@ class ImportOpmlTest extends AggregatorTestBase {
       $refresh = $refresh && $feed_entity->getRefreshRate() == 900;
     }
 
-    $this->assertEqual($title[$feeds[0]['url[0][value]']], $feeds[0]['title[0][value]'], 'First feed was added correctly.');
-    $this->assertEqual($url[$feeds[1]['title[0][value]']], $feeds[1]['url[0][value]'], 'Second feed was added correctly.');
+    $this->assertEquals($title[$feeds[0]['url[0][value]']], $feeds[0]['title[0][value]'], 'First feed was added correctly.');
+    $this->assertEquals($url[$feeds[1]['title[0][value]']], $feeds[1]['url[0][value]'], 'Second feed was added correctly.');
     $this->assertTrue($refresh, 'Refresh times are correct.');
   }
 

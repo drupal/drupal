@@ -91,7 +91,7 @@ class SearchBlockTest extends BrowserTestBase {
     /** @var \Drupal\search\SearchPageRepositoryInterface $search_page_repository */
     $search_page_repository = \Drupal::service('search.search_page_repository');
     $entity_id = $search_page_repository->getDefaultSearchPage();
-    $this->assertEqual(
+    $this->assertEquals(
       $this->getUrl(),
       Url::fromRoute('search.view_' . $entity_id, [], ['query' => ['keys' => $terms['keys']], 'absolute' => TRUE])->toString(),
       'Submitted to correct URL.'
@@ -105,7 +105,7 @@ class SearchBlockTest extends BrowserTestBase {
 
     // Confirm that the user is redirected to the search page, when form is
     // submitted empty.
-    $this->assertEqual(
+    $this->assertEquals(
       $this->getUrl(),
       Url::fromRoute('search.view_' . $entity_id, [], ['query' => ['keys' => ''], 'absolute' => TRUE])->toString(),
       'Redirected to correct URL.'

@@ -75,7 +75,7 @@ class FilterNodeAccessTest extends NodeTestBase {
         ];
 
         $node = $this->drupalCreateNode($settings);
-        $this->assertEqual($is_private, (int) $node->private->value, 'The private status of the node was properly set in the node_access_test table.');
+        $this->assertEquals($is_private, (int) $node->private->value, 'The private status of the node was properly set in the node_access_test table.');
       }
     }
   }
