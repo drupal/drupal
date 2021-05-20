@@ -177,7 +177,7 @@ class ThemeTest extends BrowserTestBase {
         'logo_path' => $path,
       ];
       $this->submitForm($edit, 'Save configuration');
-      $this->assertText('The custom logo path is invalid.');
+      $this->assertSession()->pageTextContains('The custom logo path is invalid.');
     }
 
     // Upload a file to use for the logo.
@@ -383,15 +383,15 @@ class ThemeTest extends BrowserTestBase {
     // Clear the system_list() and theme listing cache to pick up the change.
     $this->container->get('theme_handler')->reset();
     $this->drupalGet('admin/appearance');
-    $this->assertText('This theme requires the base theme not_real_test_basetheme to operate correctly.');
-    $this->assertText('This theme requires the base theme test_invalid_basetheme to operate correctly.');
-    $this->assertText('This theme requires the theme engine not_real_engine to operate correctly.');
+    $this->assertSession()->pageTextContains('This theme requires the base theme not_real_test_basetheme to operate correctly.');
+    $this->assertSession()->pageTextContains('This theme requires the base theme test_invalid_basetheme to operate correctly.');
+    $this->assertSession()->pageTextContains('This theme requires the theme engine not_real_engine to operate correctly.');
     // Check for the error text of a theme with the wrong core version
     // using 7.x and ^7.
     $incompatible_core_message = 'This theme is not compatible with Drupal ' . \Drupal::VERSION . ". Check that the .info.yml file contains a compatible 'core' or 'core_version_requirement' value.";
     $this->assertThemeIncompatibleText('Theme test with invalid semver core version', $incompatible_core_message);
     // Check for the error text of a theme without a content region.
-    $this->assertText("This theme is missing a 'content' region.");
+    $this->assertSession()->pageTextContains("This theme is missing a 'content' region.");
   }
 
   /**
@@ -466,7 +466,7 @@ class ThemeTest extends BrowserTestBase {
       $this->drupalGet('admin/appearance');
       $this->getSession()->getPage()->findLink("Install $theme_name as default theme")->click();
       // Test the confirmation message.
-      $this->assertText("$theme_name is now the default theme.");
+      $this->assertSession()->pageTextContains("$theme_name is now the default theme.");
       // Make sure the theme is now set as the default theme in config.
       $this->assertEquals($theme_machine_name, $this->config('system.theme')->get('default'));
 
@@ -493,7 +493,7 @@ class ThemeTest extends BrowserTestBase {
     $this->drupalGet('admin/appearance/settings/test_theme_settings_features');
     $edit = [];
     $this->drupalPostForm('admin/appearance/settings/test_theme_settings_features', $edit, 'Save configuration');
-    $this->assertText('The configuration options have been saved.');
+    $this->assertSession()->pageTextContains('The configuration options have been saved.');
   }
 
   /**

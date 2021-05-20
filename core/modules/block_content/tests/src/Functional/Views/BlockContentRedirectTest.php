@@ -44,7 +44,7 @@ class BlockContentRedirectTest extends BlockContentTestBase {
 
     // Check the block content is present in the view redirect destination.
     $this->drupalGet('admin/content/redirect_destination');
-    $this->assertText('Test redirect destination');
+    $this->assertSession()->pageTextContains('Test redirect destination');
 
     // Edit the created block and save.
     $this->clickLink('Edit');

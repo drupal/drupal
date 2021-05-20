@@ -39,9 +39,9 @@ class PreviewTest extends UITestBase {
 
     // Test that area text and exposed filters are present and rendered.
     $this->assertSession()->fieldExists('id');
-    $this->assertText('Test header text');
-    $this->assertText('Test footer text');
-    $this->assertText('Test empty text');
+    $this->assertSession()->pageTextContains('Test header text');
+    $this->assertSession()->pageTextContains('Test footer text');
+    $this->assertSession()->pageTextContains('Test empty text');
   }
 
   /**
@@ -65,9 +65,9 @@ class PreviewTest extends UITestBase {
 
     // Test that area text and exposed filters are present and rendered.
     $this->assertSession()->fieldExists('id');
-    $this->assertText('Test header text');
-    $this->assertText('Test footer text');
-    $this->assertText('Test empty text');
+    $this->assertSession()->pageTextContains('Test header text');
+    $this->assertSession()->pageTextContains('Test footer text');
+    $this->assertSession()->pageTextContains('Test empty text');
 
     // Test feed preview.
     $view = [];
@@ -89,17 +89,17 @@ class PreviewTest extends UITestBase {
     $settings->set('ui.show.performance_statistics', TRUE)->save();
     $this->drupalGet('admin/structure/views/view/test_preview/edit');
     $this->submitForm($edit = ['view_args' => '100'], 'Update preview');
-    $this->assertText('Query build time');
-    $this->assertText('Query execute time');
-    $this->assertText('View render time');
+    $this->assertSession()->pageTextContains('Query build time');
+    $this->assertSession()->pageTextContains('Query execute time');
+    $this->assertSession()->pageTextContains('View render time');
     $this->assertNoRaw('<strong>Query</strong>');
 
     // Statistics and query.
     $settings->set('ui.show.sql_query.enabled', TRUE)->save();
     $this->submitForm($edit = ['view_args' => '100'], 'Update preview');
-    $this->assertText('Query build time');
-    $this->assertText('Query execute time');
-    $this->assertText('View render time');
+    $this->assertSession()->pageTextContains('Query build time');
+    $this->assertSession()->pageTextContains('Query execute time');
+    $this->assertSession()->pageTextContains('View render time');
     $this->assertRaw('<strong>Query</strong>');
     $query_string = <<<SQL
 SELECT "views_test_data"."name" AS "views_test_data_name"
@@ -153,7 +153,7 @@ SQL;
 
     $this->submitForm($edit = [], 'Update preview');
 
-    $this->assertText('Unable to preview due to validation errors.');
+    $this->assertSession()->pageTextContains('Unable to preview due to validation errors.');
   }
 
 }

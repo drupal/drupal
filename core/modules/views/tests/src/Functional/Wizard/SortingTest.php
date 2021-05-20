@@ -46,11 +46,11 @@ class SortingTest extends WizardTestBase {
 
     // Make sure the view shows the nodes in the expected order.
     $this->assertSession()->addressEquals($view1['page[path]']);
-    $this->assertText($view1['page[title]']);
+    $this->assertSession()->pageTextContains($view1['page[title]']);
     $content = $this->getSession()->getPage()->getContent();
-    $this->assertText($node1->label());
-    $this->assertText($node2->label());
-    $this->assertText($node3->label());
+    $this->assertSession()->pageTextContains($node1->label());
+    $this->assertSession()->pageTextContains($node2->label());
+    $this->assertSession()->pageTextContains($node3->label());
     $pos1 = strpos($content, $node1->label());
     $pos2 = strpos($content, $node2->label());
     $pos3 = strpos($content, $node3->label());
@@ -72,11 +72,11 @@ class SortingTest extends WizardTestBase {
 
     // Make sure the view shows the nodes in the expected order.
     $this->assertSession()->addressEquals($view2['page[path]']);
-    $this->assertText($view2['page[title]']);
+    $this->assertSession()->pageTextContains($view2['page[title]']);
     $content = $this->getSession()->getPage()->getContent();
-    $this->assertText($node3->label());
-    $this->assertText($node2->label());
-    $this->assertText($node1->label());
+    $this->assertSession()->pageTextContains($node3->label());
+    $this->assertSession()->pageTextContains($node2->label());
+    $this->assertSession()->pageTextContains($node1->label());
     $pos3 = strpos($content, $node3->label());
     $pos2 = strpos($content, $node2->label());
     $pos1 = strpos($content, $node1->label());

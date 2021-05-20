@@ -80,13 +80,13 @@ ENDPO;
 
     // Verify German and Spanish were configured.
     $this->drupalGet('admin/config/regional/language');
-    $this->assertText('German');
-    $this->assertText('Spanish');
+    $this->assertSession()->pageTextContains('German');
+    $this->assertSession()->pageTextContains('Spanish');
     // If the installer was English or we used a profile that keeps English, we
     // expect that configured also. Otherwise English should not be configured
     // on the site.
     if ($this->langcode == 'en' || $this->profile == 'testing_multilingual_with_english') {
-      $this->assertText('English');
+      $this->assertSession()->pageTextContains('English');
     }
     else {
       $this->assertNoText('English');
@@ -174,7 +174,7 @@ ENDPO;
         $edit['translation'] = 'translated';
         $edit['string'] = $sample;
         $this->drupalPostForm('admin/config/regional/translate', $edit, 'Filter');
-        $this->assertText($sample . ' ' . $langcode);
+        $this->assertSession()->pageTextContains($sample . ' ' . $langcode);
       }
     }
   }

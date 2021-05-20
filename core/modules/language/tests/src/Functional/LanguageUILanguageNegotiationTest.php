@@ -409,8 +409,8 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
     }
     $this->container->get('language_manager')->reset();
     $this->drupalGet($test['path'], $test['path_options'], $test['http_header']);
-    $this->assertText($test['expect']);
-    $this->assertText('Language negotiation method: ' . $test['expected_method_id']);
+    $this->assertSession()->pageTextContains($test['expect']);
+    $this->assertSession()->pageTextContains('Language negotiation method: ' . $test['expected_method_id']);
 
     // Get the private file and ensure it is a 200. It is important to
     // invalidate the router cache to ensure the routing system runs a full
@@ -497,7 +497,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
       'domain[en]' => '',
     ];
     $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, 'Save configuration');
-    $this->assertText('The domain may not be left blank for English');
+    $this->assertSession()->pageTextContains('The domain may not be left blank for English');
     $this->rebuildContainer();
 
     // Change the domain for the Italian language.
@@ -507,7 +507,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
       'domain[it]' => 'it.example.com',
     ];
     $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, 'Save configuration');
-    $this->assertText('The configuration options have been saved');
+    $this->assertSession()->pageTextContains('The configuration options have been saved');
     $this->rebuildContainer();
 
     // Try to use an invalid domain.
