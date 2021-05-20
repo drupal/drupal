@@ -121,10 +121,10 @@ class TermKernelTest extends KernelTestBase {
       }
       $depth_count[$element->depth]++;
     }
-    $this->assertEqual(3, $depth_count[0], 'Three elements in taxonomy tree depth 0.');
-    $this->assertEqual(2, $depth_count[1], 'Two elements in taxonomy tree depth 1.');
-    $this->assertEqual(2, $depth_count[2], 'Two elements in taxonomy tree depth 2.');
-    $this->assertEqual(1, $depth_count[3], 'One element in taxonomy tree depth 3.');
+    $this->assertEquals(3, $depth_count[0], 'Three elements in taxonomy tree depth 0.');
+    $this->assertEquals(2, $depth_count[1], 'Two elements in taxonomy tree depth 1.');
+    $this->assertEquals(2, $depth_count[2], 'Two elements in taxonomy tree depth 2.');
+    $this->assertEquals(1, $depth_count[3], 'One element in taxonomy tree depth 3.');
 
     /** @var \Drupal\taxonomy\TermStorageInterface $storage */
     $storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');

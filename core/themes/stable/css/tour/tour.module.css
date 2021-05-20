@@ -141,3 +141,33 @@
   top: 0;
   left: 0;
 }
+
+/* In Joyride, display: block is added as an inline style. */
+.shepherd-element.joyride-tip-guide {
+  display: block;
+}
+.shepherd-element.joyride-tip-guide[hidden] {
+  display: none;
+}
+
+.shepherd-modal-overlay-container {
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  width: 100vw;
+  height: 0;
+  pointer-events: none;
+  opacity: 0;
+  fill-rule: evenodd;
+}
+
+.shepherd-modal-overlay-container.shepherd-modal-is-visible {
+  height: 100vh;
+  opacity: 0.5;
+}
+
+.shepherd-modal-overlay-container.shepherd-modal-is-visible path {
+  pointer-events: all;
+}

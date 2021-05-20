@@ -88,7 +88,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
 
     // Check that the block type was created in site default language.
     $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
-    $this->assertEqual($block_type->language()->getId(), $default_langcode);
+    $this->assertEquals($block_type->language()->getId(), $default_langcode);
 
     // Create block types programmatically.
     $this->createBlockContentType('basic', TRUE);

@@ -54,7 +54,7 @@ class NumericFormatPluralTest extends ViewTestBase {
     $config = $this->config('views.view.numeric_test');
     $field_config_prefix = 'display.default.display_options.fields.count.';
     $this->assertTrue($config->get($field_config_prefix . 'format_plural'));
-    $this->assertEqual('1' . PoItem::DELIMITER . '@count', $config->get($field_config_prefix . 'format_plural_string'));
+    $this->assertEquals('1' . PoItem::DELIMITER . '@count', $config->get($field_config_prefix . 'format_plural_string'));
 
     // Assert that the value is displayed.
     $this->drupalGet('numeric-test');
@@ -73,7 +73,7 @@ class NumericFormatPluralTest extends ViewTestBase {
     $config = $this->config('views.view.numeric_test');
     $field_config_prefix = 'display.default.display_options.fields.count.';
     $this->assertTrue($config->get($field_config_prefix . 'format_plural'));
-    $this->assertEqual('1 time' . PoItem::DELIMITER . '@count times', $config->get($field_config_prefix . 'format_plural_string'));
+    $this->assertEquals('1 time' . PoItem::DELIMITER . '@count times', $config->get($field_config_prefix . 'format_plural_string'));
 
     // Assert that the value is displayed with some sample values.
     $numbers = [0, 1, 2, 3, 4, 42];
@@ -116,7 +116,7 @@ class NumericFormatPluralTest extends ViewTestBase {
     $config = $this->config('views.view.numeric_test');
     $field_config_prefix = 'display.default.display_options.fields.count.';
     $this->assertTrue($config->get($field_config_prefix . 'format_plural'));
-    $this->assertEqual(implode(PoItem::DELIMITER, array_values($edit)), $config->get($field_config_prefix . 'format_plural_string'));
+    $this->assertEquals(implode(PoItem::DELIMITER, array_values($edit)), $config->get($field_config_prefix . 'format_plural_string'));
 
     // The view should now use the new plural configuration.
     $this->drupalGet('sl/numeric-test');

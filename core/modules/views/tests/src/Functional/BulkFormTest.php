@@ -133,7 +133,7 @@ class BulkFormTest extends BrowserTestBase {
     // Check the default title.
     $this->drupalGet('test_bulk_form');
     $result = $this->xpath('//label[@for="edit-action"]');
-    $this->assertEqual('Action', $result[0]->getText());
+    $this->assertEquals('Action', $result[0]->getText());
 
     // Setup up a different bulk form title.
     $view = Views::getView('test_bulk_form');
@@ -143,7 +143,7 @@ class BulkFormTest extends BrowserTestBase {
 
     $this->drupalGet('test_bulk_form');
     $result = $this->xpath('//label[@for="edit-action"]');
-    $this->assertEqual('Test title', $result[0]->getText());
+    $this->assertEquals('Test title', $result[0]->getText());
 
     $this->drupalGet('test_bulk_form');
     // Call the node delete action.
