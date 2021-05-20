@@ -4,7 +4,6 @@ namespace Drupal\Tests\Core\Database\Stub;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Log;
-use Drupal\Core\Database\StatementEmpty;
 use Drupal\Core\Database\StatementWrapper;
 
 /**
@@ -57,13 +56,14 @@ class StubConnection extends Connection {
    * {@inheritdoc}
    */
   public function queryRange($query, $from, $count, array $args = [], array $options = []) {
-    return new StatementEmpty();
+    return NULL;
   }
 
   /**
    * {@inheritdoc}
    */
   public function queryTemporary($query, array $args = [], array $options = []) {
+    @trigger_error('Connection::queryTemporary() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3211781', E_USER_DEPRECATED);
     return '';
   }
 

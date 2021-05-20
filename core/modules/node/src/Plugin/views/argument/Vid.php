@@ -72,6 +72,7 @@ class Vid extends NumericArgument {
     $titles = [];
 
     $results = $this->nodeStorage->getAggregateQuery()
+      ->accessCheck(FALSE)
       ->allRevisions()
       ->groupBy('title')
       ->execute();

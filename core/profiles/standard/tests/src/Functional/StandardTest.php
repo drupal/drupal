@@ -63,12 +63,7 @@ class StandardTest extends BrowserTestBase {
 
     // Verify we have role = complementary on help_block blocks.
     $this->drupalGet('admin/structure/block');
-    $elements = $this->xpath('//div[@role=:role and @id=:id]', [
-      ':role' => 'complementary',
-      ':id' => 'block-bartik-help',
-    ]);
-
-    $this->assertCount(1, $elements, 'Found complementary role on help block.');
+    $this->assertSession()->elementAttributeContains('xpath', "//div[@id='block-bartik-help']", 'role', 'complementary');
 
     // Verify anonymous user can see the block.
     $this->drupalLogout();
@@ -135,7 +130,7 @@ class StandardTest extends BrowserTestBase {
     /** @var \Drupal\contact\ContactFormInterface $contact_form */
     $contact_form = ContactForm::load('feedback');
     $recipients = $contact_form->getRecipients();
-    $this->assertEqual(['simpletest@example.com'], $recipients);
+    $this->assertEquals(['simpletest@example.com'], $recipients);
 
     $role = Role::create([
       'id' => 'admin_theme',

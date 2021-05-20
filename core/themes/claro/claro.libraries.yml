@@ -160,7 +160,7 @@ tour-styling:
   version: VERSION
   css:
     theme:
-      css/components/tour.theme.css: {}
+      css/theme/tour.theme.css: {}
 
 media-form:
   version: VERSION

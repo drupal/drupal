@@ -463,13 +463,11 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
 
     // Check that the language switcher active link matches the given browser
     // language.
-    $args = [':id' => 'block-test-language-block', ':url' => Url::fromRoute('<front>')->toString() . $langcode_browser_fallback];
-    $fields = $this->xpath('//div[@id=:id]//a[@class="language-link is-active" and starts-with(@href, :url)]', $args);
-    $this->assertSame($fields[0]->getText(), $languages[$langcode_browser_fallback]->getName(), 'The browser language is the URL active language');
+    $href = Url::fromRoute('<front>')->toString() . $langcode_browser_fallback;
+    $this->assertSession()->elementTextEquals('xpath', "//div[@id='block-test-language-block']//a[@class='language-link is-active' and starts-with(@href, '$href')]", $languages[$langcode_browser_fallback]->getName());
 
     // Check that URLs are rewritten using the given browser language.
-    $fields = $this->xpath('//div[@class="site-name"]/a[@rel="home" and @href=:url]', $args);
-    $this->assertSame($fields[0]->getText(), 'Drupal', 'URLs are rewritten using the browser language.');
+    $this->assertSession()->elementTextEquals('xpath', "//div[@class='site-name']/a[@rel='home' and @href='$href']", 'Drupal');
   }
 
   /**
@@ -530,7 +528,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
     $italian_url = Url::fromRoute('system.admin', [], ['language' => $languages['it']])->toString();
     $url_scheme = \Drupal::request()->isSecure() ? 'https://' : 'http://';
     $correct_link = $url_scheme . $link;
-    $this->assertEqual($correct_link, $italian_url, new FormattableMarkup('The right URL (@url) in accordance with the chosen language', ['@url' => $italian_url]));
+    $this->assertEquals($correct_link, $italian_url, new FormattableMarkup('The right URL (@url) in accordance with the chosen language', ['@url' => $italian_url]));
 
     // Test HTTPS via options.
     $italian_url = Url::fromRoute('system.admin', [], ['https' => TRUE, 'language' => $languages['it']])->toString();

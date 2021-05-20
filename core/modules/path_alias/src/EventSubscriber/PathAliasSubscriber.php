@@ -51,7 +51,7 @@ class PathAliasSubscriber implements EventSubscriberInterface {
    */
   public function onKernelController(ControllerEvent $event) {
     // Set the cache key on the alias manager cache decorator.
-    if ($event->isMasterRequest()) {
+    if ($event->isMainRequest()) {
       $this->aliasManager->setCacheKey(rtrim($this->currentPath->getPath($event->getRequest()), '/'));
     }
   }

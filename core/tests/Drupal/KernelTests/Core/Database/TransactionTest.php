@@ -566,7 +566,7 @@ class TransactionTest extends DatabaseTestBase {
     unset($transaction);
 
     $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'David'])->fetchField();
-    $this->assertEqual('24', $saved_age);
+    $this->assertEquals('24', $saved_age);
   }
 
 }
