@@ -98,6 +98,7 @@ trait DeprecationListenerTrait {
    */
   public static function getSkippedDeprecations() {
     return [
+      'The Dropbutton render element is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use the Splitbutton render element instead. See https://www.drupal.org/node/3169786.',
       // The following deprecation message is skipped for testing purposes.
       '\Drupal\Tests\SkippedDeprecationTest deprecation',
       // The following Symfony deprecations are introduced in the Symfony 4

@@ -30,6 +30,8 @@ libraries-extend:
     - bartik/classy.dropbutton
   core/drupal.progress:
     - bartik/classy.progress
+  core/drupal.splitbutton:
+    - bartik/splitbutton
   file/drupal.file:
     - bartik/classy.file
   filter/drupal.filter.admin:

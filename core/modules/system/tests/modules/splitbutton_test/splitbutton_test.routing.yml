@@ -1,0 +1,44 @@
+splitbutton.test:
+  path: '/splitbuttons'
+  defaults:
+    _form: '\Drupal\splitbutton_test\Form\SplitButtonTestForm'
+    _title: 'Splitbutton Test'
+    disabled: false
+  requirements:
+    _permission: 'access content'
+
+splitbutton.test_link_1:
+  path: '/splitbuttons-test-link-1'
+  defaults:
+    _form: '\Drupal\splitbutton_test\Form\SplitButtonTestForm'
+    _title: 'Splitbutton Test'
+    disabled: false
+  requirements:
+    _permission: 'access content'
+
+splitbutton.test_link_2:
+  path: '/splitbuttons-test-link-2'
+  defaults:
+    _form: '\Drupal\splitbutton_test\Form\SplitButtonTestForm'
+    _title: 'Splitbutton Test'
+    disabled: false
+  requirements:
+    _permission: 'access content'
+
+splitbutton.test_link_3:
+  path: '/splitbuttons-test-link-3'
+  defaults:
+    _form: '\Drupal\splitbutton_test\Form\SplitButtonTestForm'
+    _title: 'Splitbutton Test'
+    disabled: false
+  requirements:
+    _permission: 'access content'
+
+splitbutton.test_link_4:
+  path: '/splitbuttons-test-link-4'
+  defaults:
+    _form: '\Drupal\splitbutton_test\Form\SplitButtonTestForm'
+    _title: 'Splitbutton Test'
+    disabled: false
+  requirements:
+    _permission: 'access content'

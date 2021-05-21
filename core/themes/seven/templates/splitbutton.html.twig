@@ -1,0 +1,76 @@
+{#
+/**
+ * @file
+ * Theme override for a splitbutton.
+ *
+ * Available variables:
+ * - main_element: A render array of either a link, button, or submit element.
+ *   This is the element that is always visible in a splitbutton.
+ * - variants: An array of strings defined in #splitbutton_type, used for
+ *   adding type-specific classes to elements within the splitbutton.
+ * - attributes: HTML attributes added to the splitbutton container.
+ * - toggle_attributes: HTML attributes added to the toggle button.
+ * - splitbutton_item_list: an array of render elements that will populate the
+ *   list items.
+ * - title: This is a string that, when present, instructs splitbutton to
+ *   function like a dropdown. This becomes the label of the main element, and
+ *   this main element is what toggles the item list.
+ * - exclude_toggle: Boolean that defaults to FALSE. When TRUE, this will
+ *   prevent a dedicated toggle button from rendering. This is for elements
+ *   that extend splitbutton that don't necessarily want the toggle button.
+ *
+ * @see template_preprocess_splitbutton()
+ */
+#}
+{%
+  set container_classes = [
+    'splitbutton',
+    splitbutton_multiple == true ? 'splitbutton--multiple' : 'splitbutton--single',
+  ]
+%}
+{%
+  set toggle_button_classes = [
+    'button',
+    'splitbutton__toggle',
+    title ? 'splitbutton__toggle--with-title' : 'splitbutton__toggle--no-title',
+  ]
+%}
+{%
+  set main_element_classes = [
+    'splitbutton__main-button',
+    'button',
+  ]
+%}
+{# Add modifier classes based on the splitbutton variant types .#}
+{% for variant in variants %}
+  {% set container_classes = container_classes|merge(['splitbutton--' ~ variant]) %}
+  {% set toggle_button_classes = toggle_button_classes|merge(['button--' ~ variant]) %}
+  {% set main_element_classes = main_element_classes|merge(['button--' ~ variant]) %}
+{% endfor %}
+
+{% if main_element %}
+  {% set main_element_classes = main_element_classes|merge(['splitbutton__main-button--' ~ main_element['#type']]) %}
+  {#
+      Since main_element can be any number of different render element types,
+      splitbutton-specific classes must be added here instead of in their own
+      template.
+  #}
+  {% set main_element = main_element|merge({
+    '#attributes': main_element['#attributes']|merge({
+      'class': main_element['#attributes']['class']|merge(main_element_classes),
+    })}) %}
+{% endif %}
+
+{% set toggle_with_title = main_element is empty and title is not empty %}
+
+<div{{ attributes.addClass(container_classes) }}>
+  <div class="splitbutton__main" data-drupal-splitbutton-main>
+    {{ main_element }}
+    {% if splitbutton_multiple and exclude_toggle == FALSE %}
+        <button {{ toggle_attributes.addClass(toggle_button_classes) }} {{ toggle_with_title ? 'data-drupal-splitbutton-toggle-with-title' }}>
+          {{ title }}
+        </button>
+    {% endif %}
+  </div>
+  {{ splitbutton_item_list }}
+</div>

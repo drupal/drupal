@@ -32,7 +32,7 @@
 .button {
   display: inline-block;
   margin: var(--space-m) var(--space-s) var(--space-m) 0; /* LTR */
-  padding: calc(var(--space-m) - 1px) calc(var(--space-l) - 1px); /* 1 */
+  padding: var(--button--vertical-padding) var(--button--horizontal-padding); /* 1 */
   cursor: pointer;
   text-align: center;
   text-decoration: none;
@@ -70,7 +70,7 @@
 /* Common styles for small buttons */
 .no-touchevents .button--small {
   margin: var(--space-s) var(--space-xs) var(--space-s) 0; /* LTR */
-  padding: calc(var(--space-xs) - 1px) calc(var(--space-m) - 1px); /* 1 */
+  padding: var(--button--small--vertical-padding) var(--button--small--horizontal-padding); /* 1 */
   font-size: var(--font-size-xs);
 }
 

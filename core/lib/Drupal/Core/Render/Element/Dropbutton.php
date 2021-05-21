@@ -48,6 +48,7 @@ class Dropbutton extends RenderElement {
    * {@inheritdoc}
    */
   public function getInfo() {
+    @trigger_error("The Dropbutton render element is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use the Splitbutton render element instead. See https://www.drupal.org/node/3169786.", E_USER_DEPRECATED);
     $class = static::class;
     return [
       '#pre_render' => [

@@ -1,0 +1,56 @@
+/**
+ * @file
+ * Base styles for splitbuttons.
+ */
+
+[data-drupal-splitbutton-main] {
+  position: relative;
+  display: inline-flex;
+}
+.js [data-drupal-splitbutton-item-list] {
+  display: none;
+  list-style: none;
+}
+[data-drupal-splitbutton-open] [data-drupal-splitbutton-item-list] {
+  z-index: 4;
+  display: block;
+}
+
+[data-drupal-splitbutton-trigger] {
+  position: relative;
+}
+
+[data-drupal-splitbutton-trigger]::after {
+  position: absolute;
+  top: 50%;
+  right: 6px; /* LTR */
+  width: 0;
+  height: 0;
+  content: "";
+  transform: translate(50%, -50%) rotate(0);
+  border-width: 0.3333em 0.3333em 0;
+  border-style: solid;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+}
+[dir="rtl"] [data-drupal-splitbutton-trigger]::after {
+  right: auto;
+  left: 6px;
+}
+[data-drupal-splitbutton-open] [data-drupal-splitbutton-trigger]::after {
+  top: 48%;
+  transform: translate(50%, -50%) rotate(180deg);
+}
+
+[data-drupal-splitbutton-toggle-with-title] {
+  padding-right: 18px; /* LTR */
+}
+[dir="rtl"] [data-drupal-splitbutton-toggle-with-title] {
+  padding-right: 6px;
+  padding-left: 18px; /* LTR */
+}
+
+html:not(.js) [data-drupal-splitbutton-trigger] {
+  display: none;
+}

@@ -71,8 +71,8 @@ libraries-extend:
     - seven/filter
   filter/drupal.filter:
     - seven/filter
-  media/media_embed_ckeditor_theme:
-    - seven/classy.media_embed_ckeditor_theme
+  core/drupal.splitbutton:
+    - seven/splitbutton
   media_library/view:
     - seven/media_library
   media_library/widget:

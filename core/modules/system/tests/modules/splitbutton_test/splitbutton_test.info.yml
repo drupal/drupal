@@ -1,0 +1,5 @@
+name: 'Splitbutton Test'
+type: module
+description: 'For testing splitbuttons'
+core_version_requirement: ^9
+package: Testing

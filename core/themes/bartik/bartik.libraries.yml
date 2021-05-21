@@ -87,6 +87,12 @@ maintenance_page:
     - system/maintenance
     - bartik/global-styling
 
+splitbutton:
+  version: VERSION
+  css:
+    component:
+      css/components/splitbutton.css: {}
+
 classy.base:
   version: VERSION
   css:

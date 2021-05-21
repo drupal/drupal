@@ -287,6 +287,12 @@ progress:
     component:
       css/components/progress.css: {}
 
+splitbutton:
+  version: VERSION
+  css:
+    component:
+      css/components/splitbutton.css: {}
+
 filter:
   version: VERSION
   css:
