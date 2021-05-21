@@ -171,10 +171,10 @@ class ColorTest extends BrowserTestBase {
       $this->drupalPostForm($settings_path, $edit, 'Save configuration');
 
       if ($is_valid) {
-        $this->assertText('The configuration options have been saved.');
+        $this->assertSession()->pageTextContains('The configuration options have been saved.');
       }
       else {
-        $this->assertText('You must enter a valid hexadecimal color value for Main background.');
+        $this->assertSession()->pageTextContains('You must enter a valid hexadecimal color value for Main background.');
       }
     }
   }

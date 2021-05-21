@@ -392,7 +392,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $languages = $this->container->get('language_manager')->getLanguages();
     foreach ($this->langcodes as $langcode) {
       $this->drupalGet($path, ['language' => $languages[$langcode]]);
-      $this->assertText($values[$langcode]['title'][0]['value']);
+      $this->assertSession()->pageTextContains($values[$langcode]['title'][0]['value']);
     }
   }
 
@@ -526,7 +526,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Contents should be in English, of correct revision.
-    $this->assertText('First rev en title');
+    $this->assertSession()->pageTextContains('First rev en title');
     $this->assertNoText('First rev fr title');
 
     // Get a French view.
@@ -539,7 +539,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Contents should be in French, of correct revision.
-    $this->assertText('First rev fr title');
+    $this->assertSession()->pageTextContains('First rev fr title');
     $this->assertNoText('First rev en title');
   }
 

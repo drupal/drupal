@@ -53,7 +53,7 @@ class SearchQueryAlterTest extends BrowserTestBase {
     // Search for the body keyword 'pizza'.
     $this->drupalPostForm('search/node', ['keys' => 'pizza'], 'Search');
     // The article should be there but not the page.
-    $this->assertText('article');
+    $this->assertSession()->pageTextContains('article');
     $this->assertNoText('page');
   }
 

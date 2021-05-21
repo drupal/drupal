@@ -52,19 +52,19 @@ class OverrideDisplaysTest extends UITestBase {
     // Make sure the title appears in the page.
     $this->drupalGet($view_path);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText($original_title);
+    $this->assertSession()->pageTextContains($original_title);
 
     // Confirm that the view block is available in the block administration UI.
     $this->drupalGet('admin/structure/block/list/' . $this->config('system.theme')->get('default'));
     $this->clickLink('Place block');
-    $this->assertText($view['label']);
+    $this->assertSession()->pageTextContains($view['label']);
 
     // Place the block.
     $this->drupalPlaceBlock("views_block:{$view['id']}-block_1");
 
     // Make sure the title appears in the block.
     $this->drupalGet('');
-    $this->assertText($original_title);
+    $this->assertSession()->pageTextContains($original_title);
 
     // Change the title for the page display only, and make sure that the
     // original title still appears on the page.
@@ -75,8 +75,8 @@ class OverrideDisplaysTest extends UITestBase {
     $this->drupalPostForm("admin/structure/views/view/{$view['id']}/edit/page_1", [], 'Save');
     $this->drupalGet($view_path);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText($new_title);
-    $this->assertText($original_title);
+    $this->assertSession()->pageTextContains($new_title);
+    $this->assertSession()->pageTextContains($original_title);
   }
 
   /**
@@ -107,17 +107,17 @@ class OverrideDisplaysTest extends UITestBase {
     // titles.
     $this->drupalGet($view['page[path]']);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText($view['page[title]']);
+    $this->assertSession()->pageTextContains($view['page[title]']);
     $this->assertNoText($view['block[title]']);
     $this->drupalGet($view['page[feed_properties][path]']);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText($view['page[title]']);
+    $this->assertSession()->responseContains($view['page[title]']);
     $this->assertNoText($view['block[title]']);
 
     // Confirm that the block is available in the block administration UI.
     $this->drupalGet('admin/structure/block/list/' . $this->config('system.theme')->get('default'));
     $this->clickLink('Place block');
-    $this->assertText($view['label']);
+    $this->assertSession()->pageTextContains($view['label']);
 
     // Put the block into the first sidebar region, and make sure it will not
     // display on the view's page display (since we will be searching for the
@@ -132,7 +132,7 @@ class OverrideDisplaysTest extends UITestBase {
     ]);
 
     $this->drupalGet('');
-    $this->assertText($view['block[title]']);
+    $this->assertSession()->pageTextContains($view['block[title]']);
     $this->assertNoText($view['page[title]']);
 
     // Edit the page and change the title. This should automatically change
@@ -143,18 +143,18 @@ class OverrideDisplaysTest extends UITestBase {
     $this->drupalPostForm("admin/structure/views/view/{$view['id']}/edit/page_1", [], 'Save');
     $this->drupalGet($view['page[path]']);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText($new_default_title);
+    $this->assertSession()->pageTextContains($new_default_title);
     $this->assertNoText($view['page[title]']);
     $this->assertNoText($view['block[title]']);
     $this->drupalGet($view['page[feed_properties][path]']);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText($new_default_title);
+    $this->assertSession()->responseContains($new_default_title);
     $this->assertNoText($view['page[title]']);
     $this->assertNoText($view['block[title]']);
     $this->drupalGet('');
     $this->assertNoText($new_default_title);
     $this->assertNoText($view['page[title]']);
-    $this->assertText($view['block[title]']);
+    $this->assertSession()->pageTextContains($view['block[title]']);
 
     // Edit the block and change the title. This should automatically change
     // the block title only, and leave the defaults alone.
@@ -164,13 +164,13 @@ class OverrideDisplaysTest extends UITestBase {
     $this->drupalPostForm("admin/structure/views/view/{$view['id']}/edit/block_1", [], 'Save');
     $this->drupalGet($view['page[path]']);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText($new_default_title);
+    $this->assertSession()->pageTextContains($new_default_title);
     $this->drupalGet($view['page[feed_properties][path]']);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText($new_default_title);
+    $this->assertSession()->responseContains($new_default_title);
     $this->assertNoText($new_block_title);
     $this->drupalGet('');
-    $this->assertText($new_block_title);
+    $this->assertSession()->pageTextContains($new_block_title);
     $this->assertNoText($view['block[title]']);
   }
 
@@ -198,7 +198,7 @@ class OverrideDisplaysTest extends UITestBase {
 
     $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/block_1/title", $edit, 'Apply');
     $this->drupalPostForm("admin/structure/views/view/{$view['id']}/edit/block_1", [], 'Save');
-    $this->assertText($view['page[title]']);
+    $this->assertSession()->pageTextContains($view['page[title]']);
   }
 
 }

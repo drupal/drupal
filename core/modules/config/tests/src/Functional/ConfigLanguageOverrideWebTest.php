@@ -78,7 +78,7 @@ class ConfigLanguageOverrideWebTest extends BrowserTestBase {
     // we access the XX front page.
     // @see \Drupal\Core\PathProcessor::processInbound()
     $this->drupalGet('xx');
-    $this->assertText('XX site name');
+    $this->assertSession()->pageTextContains('XX site name');
 
     // Set the xx language to be the default language and delete the English
     // language so the site is no longer multilingual and confirm configuration
@@ -91,7 +91,7 @@ class ConfigLanguageOverrideWebTest extends BrowserTestBase {
     $this->assertFalse($language_manager->isMultilingual(), 'The test site is monolingual.');
 
     $this->drupalGet('xx');
-    $this->assertText('XX site name');
+    $this->assertSession()->pageTextContains('XX site name');
 
   }
 

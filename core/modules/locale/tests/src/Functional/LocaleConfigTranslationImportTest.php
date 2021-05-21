@@ -124,7 +124,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
 
     // Get the front page and ensure that the translated configuration appears.
     $this->drupalGet('af');
-    $this->assertText('Test site slogan in Afrikaans');
+    $this->assertSession()->pageTextContains('Test site slogan in Afrikaans');
 
     $override = \Drupal::languageManager()->getLanguageConfigOverride('af', 'locale_test_translate.settings');
     $this->assertEquals('Locale can translate Afrikaans', $override->get('translatable_default_with_translation'));
@@ -138,12 +138,12 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
 
     // Install any module.
     $this->drupalPostForm('admin/modules', ['modules[dblog][enable]' => 'dblog'], 'Install');
-    $this->assertText('Module Database Logging has been enabled.');
+    $this->assertSession()->pageTextContains('Module Database Logging has been enabled.');
 
     // Get the front page and ensure that the translated configuration still
     // appears.
     $this->drupalGet('af');
-    $this->assertText('Test site slogan in Afrikaans');
+    $this->assertSession()->pageTextContains('Test site slogan in Afrikaans');
 
     $this->rebuildContainer();
     $override = \Drupal::languageManager()->getLanguageConfigOverride('af', 'locale_test_translate.settings');

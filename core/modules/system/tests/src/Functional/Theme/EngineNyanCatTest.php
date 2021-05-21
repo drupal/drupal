@@ -36,7 +36,7 @@ class EngineNyanCatTest extends BrowserTestBase {
       ->set('default', 'test_theme_nyan_cat_engine')
       ->save();
     $this->drupalGet('theme-test/template-test');
-    $this->assertText('Success: Template overridden with Nyan Cat theme. All of them');
+    $this->assertSession()->pageTextContains('Success: Template overridden with Nyan Cat theme. All of them');
   }
 
 }

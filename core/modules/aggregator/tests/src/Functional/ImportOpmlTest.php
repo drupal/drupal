@@ -46,7 +46,7 @@ class ImportOpmlTest extends AggregatorTestBase {
     $this->drupalPlaceBlock('help_block', ['region' => 'help']);
 
     $this->drupalGet('admin/config/services/aggregator/add/opml');
-    $this->assertText('A single OPML document may contain many feeds.');
+    $this->assertSession()->pageTextContains('A single OPML document may contain many feeds.');
     // Ensure that the file upload, remote URL, and refresh fields exist.
     $this->assertSession()->fieldExists('files[upload]');
     $this->assertSession()->fieldExists('remote');
@@ -75,7 +75,7 @@ class ImportOpmlTest extends AggregatorTestBase {
     // Error if the URL is invalid.
     $edit = ['remote' => 'invalidUrl://empty'];
     $this->drupalPostForm('admin/config/services/aggregator/add/opml', $edit, 'Import');
-    $this->assertText('The URL invalidUrl://empty is not valid.');
+    $this->assertSession()->pageTextContains('The URL invalidUrl://empty is not valid.');
 
     $after = $count_query->execute();
     $this->assertEquals($before, $after, 'No feeds were added during the three last form submissions.');
@@ -91,12 +91,12 @@ class ImportOpmlTest extends AggregatorTestBase {
     // Attempting to upload invalid XML.
     $form['files[upload]'] = $this->getInvalidOpml();
     $this->drupalPostForm('admin/config/services/aggregator/add/opml', $form, 'Import');
-    $this->assertText('No new feed has been added.');
+    $this->assertSession()->pageTextContains('No new feed has been added.');
 
     // Attempting to load empty OPML from remote URL
     $edit = ['remote' => file_create_url($this->getEmptyOpml())];
     $this->drupalPostForm('admin/config/services/aggregator/add/opml', $edit, 'Import');
-    $this->assertText('No new feed has been added.');
+    $this->assertSession()->pageTextContains('No new feed has been added.');
 
     $after = $count_query->execute();
     $this->assertEquals($before, $after, 'No feeds were added during the two last form submissions.');

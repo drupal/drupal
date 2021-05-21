@@ -75,7 +75,7 @@ class ResourceIdentifierNormalizer extends NormalizerBase implements Denormalize
     if (empty($context['related']) || empty($field_definitions[$context['related']])) {
       throw new BadRequestHttpException('Invalid or missing related field.');
     }
-    /* @var \Drupal\field\Entity\FieldConfig $field_definition */
+    /** @var \Drupal\field\Entity\FieldConfig $field_definition */
     $field_definition = $field_definitions[$context['related']];
     // This is typically 'target_id'.
     $item_definition = $field_definition->getItemDefinition();

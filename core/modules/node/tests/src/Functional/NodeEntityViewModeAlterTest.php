@@ -49,7 +49,7 @@ class NodeEntityViewModeAlterTest extends NodeTestBase {
     $this->drupalGet('node/' . $node->id());
 
     // Check that teaser mode is viewed.
-    $this->assertText('Extra data that should appear only in the teaser for the node.');
+    $this->assertSession()->pageTextContains('Extra data that should appear only in the teaser for the node.');
     // Make sure body text is not present.
     $this->assertNoText('Data that should appear only in the body for the node.');
 

@@ -171,7 +171,7 @@ class ForumTest extends BrowserTestBase {
     $this->drupalLogin($this->webUser);
     // Verify that this user is shown a message that they may not post content.
     $this->drupalGet('forum/' . $this->forum['tid']);
-    $this->assertText('You are not allowed to post new content in the forum');
+    $this->assertSession()->pageTextContains('You are not allowed to post new content in the forum');
 
     // Log in, and do basic tests for a user with permission to edit any forum
     // content.
@@ -322,7 +322,7 @@ class ForumTest extends BrowserTestBase {
     // Verify "edit container" link exists and functions correctly.
     $this->drupalGet('admin/structure/forum');
     // Verify help text is shown.
-    $this->assertText('Forums contain forum topics. Use containers to group related forums');
+    $this->assertSession()->pageTextContains('Forums contain forum topics. Use containers to group related forums');
     // Verify action links are there.
     $this->assertSession()->linkExists('Add forum');
     $this->assertSession()->linkExists('Add container');
@@ -441,7 +441,7 @@ class ForumTest extends BrowserTestBase {
     $this->drupalPostForm('admin/structure/forum/add/' . $type, $edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
     $type = ($type == 'container') ? 'forum container' : 'forum';
-    $this->assertText('Created new ' . $type . ' ' . $name . '.');
+    $this->assertSession()->pageTextContains('Created new ' . $type . ' ' . $name . '.');
 
     // Verify that the creation message contains a link to a term.
     $this->assertSession()->elementExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "term/")]');
@@ -482,7 +482,7 @@ class ForumTest extends BrowserTestBase {
     // Delete the forum.
     $this->drupalGet('admin/structure/forum/edit/forum/' . $tid);
     $this->clickLink(t('Delete'));
-    $this->assertText('Are you sure you want to delete the forum');
+    $this->assertSession()->pageTextContains('Are you sure you want to delete the forum');
     $this->assertNoText('Add forum');
     $this->assertNoText('Add forum container');
     $this->submitForm([], 'Delete');
@@ -580,7 +580,7 @@ class ForumTest extends BrowserTestBase {
       return;
     }
     else {
-      $this->assertText($type . ' ' . $title . ' has been created.');
+      $this->assertSession()->pageTextContains($type . ' ' . $title . ' has been created.');
       $this->assertNoRaw(t('The item %title is a forum container, not a forum.', ['%title' => $forum['name']]));
 
       // Verify that the creation message contains a link to a node.
@@ -618,7 +618,7 @@ class ForumTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals($response2);
     if ($response2 == 200) {
       $this->assertSession()->titleEquals('Forum | Drupal');
-      $this->assertText('Forum');
+      $this->assertSession()->pageTextContains('Forum');
     }
 
     // View forum container page.
@@ -660,7 +660,7 @@ class ForumTest extends BrowserTestBase {
       $edit['taxonomy_forums'] = $this->rootForum['tid'];
       $edit['shadow'] = TRUE;
       $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
-      $this->assertText('Forum topic ' . $edit['title[0][value]'] . ' has been updated.');
+      $this->assertSession()->pageTextContains('Forum topic ' . $edit['title[0][value]'] . ' has been updated.');
 
       // Verify topic was moved to a different forum.
       $forum_tid = $this->container

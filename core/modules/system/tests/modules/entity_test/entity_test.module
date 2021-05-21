@@ -85,7 +85,7 @@ function entity_test_entity_types($filter = NULL) {
 function entity_test_entity_type_alter(array &$entity_types) {
   $state = \Drupal::state();
 
-  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   foreach (entity_test_entity_types() as $entity_type) {
     // Optionally specify a translation handler for testing translations.
     if ($state->get('entity_test.translation')) {

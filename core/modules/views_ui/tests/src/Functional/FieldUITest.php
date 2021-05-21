@@ -31,7 +31,7 @@ class FieldUITest extends UITestBase {
   public function testFieldUI() {
     // Ensure the field is not marked as hidden on the first run.
     $this->drupalGet('admin/structure/views/view/test_view/edit');
-    $this->assertText('Views test: Name');
+    $this->assertSession()->pageTextContains('Views test: Name');
     $this->assertSession()->pageTextNotContains('Views test: Name [hidden]');
 
     // Hides the field and check whether the hidden label is appended.
