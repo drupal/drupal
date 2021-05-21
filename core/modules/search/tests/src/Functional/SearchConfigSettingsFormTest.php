@@ -87,19 +87,19 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
 
     // Test that the settings form displays the correct count of items left to index.
     $this->drupalGet('admin/config/search/pages');
-    $this->assertText('There are 0 items left to index.');
+    $this->assertSession()->pageTextContains('There are 0 items left to index.');
 
     // Test the re-index button.
     $this->drupalPostForm('admin/config/search/pages', [], 'Re-index site');
-    $this->assertText('Are you sure you want to re-index the site');
+    $this->assertSession()->pageTextContains('Are you sure you want to re-index the site');
     $this->drupalPostForm('admin/config/search/pages/reindex', [], 'Re-index site');
-    $this->assertText('All search indexes will be rebuilt');
+    $this->assertSession()->pageTextContains('All search indexes will be rebuilt');
     $this->drupalGet('admin/config/search/pages');
-    $this->assertText('There is 1 item left to index.');
+    $this->assertSession()->pageTextContains('There is 1 item left to index.');
 
     // Test that the form saves with the default values.
     $this->drupalPostForm('admin/config/search/pages', [], 'Save configuration');
-    $this->assertText('The configuration options have been saved.');
+    $this->assertSession()->pageTextContains('The configuration options have been saved.');
 
     // Test that the form does not save with an invalid word length.
     $edit = [
@@ -167,7 +167,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
       ],
     ];
     $plugins = array_keys($plugin_info);
-    /** @var $entities \Drupal\search\SearchPageInterface[] */
+    /** @var \Drupal\search\SearchPageInterface[] $entities */
     $entities = SearchPage::loadMultiple();
     // Disable all of the search pages.
     foreach ($entities as $entity) {
@@ -183,7 +183,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
       $this->drupalGet('search/' . $entity->getPath(), ['query' => ['keys' => $info['keys']]]);
       $this->assertSession()->statusCodeEquals(200);
       $this->assertNoText('no results');
-      $this->assertText($info['text']);
+      $this->assertSession()->pageTextContains($info['text']);
 
       // Verify that other plugin search tab labels are not visible.
       foreach ($plugins as $other) {
@@ -199,7 +199,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
       $this->drupalPostForm('node', $terms, 'Search');
       $current = $this->getURL();
       $expected = Url::fromRoute('search.view_' . $entity->id(), [], ['query' => ['keys' => $info['keys']], 'absolute' => TRUE])->toString();
-      $this->assertEqual($expected, $current, 'Block redirected to right search page');
+      $this->assertEquals($expected, $current, 'Block redirected to right search page');
 
       // Try an invalid search path, which should 404.
       $this->drupalGet('search/not_a_plugin_path');
@@ -228,7 +228,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
       $this->drupalGet($item['path'], $item['options']);
       foreach ($plugins as $entity_id) {
         $label = $entities[$entity_id]->label();
-        $this->assertText($label);
+        $this->assertSession()->pageTextContains($label);
       }
     }
   }
@@ -256,7 +256,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
 
     // Ensure that no search pages are configured.
     $this->drupalGet('admin/config/search/pages');
-    $this->assertText('No search pages have been configured.');
+    $this->assertSession()->pageTextContains('No search pages have been configured.');
 
     // Add a search page.
     $edit = [];
@@ -281,7 +281,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
     $edit['id'] = strtolower($this->randomMachineName(8));
     $edit['path'] = $first['path'];
     $this->submitForm($edit, 'Save');
-    $this->assertText('The search page path must be unique.');
+    $this->assertSession()->pageTextContains('The search page path must be unique.');
 
     // Add a second search page.
     $second = [];
@@ -405,7 +405,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
    *   (optional) The group this message is in.
    */
   protected function assertDefaultSearch($expected, $message = '', $group = 'Other') {
-    /** @var $search_page_repository \Drupal\search\SearchPageRepositoryInterface */
+    /** @var \Drupal\search\SearchPageRepositoryInterface $search_page_repository */
     $search_page_repository = \Drupal::service('search.search_page_repository');
     $this->assertSame($expected, $search_page_repository->getDefaultSearchPage(), $message, $group);
   }

@@ -39,6 +39,10 @@ interface TipPluginInterface {
   /**
    * Returns an array of attributes for the tip wrapper.
    *
+   * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. The
+   *   attributes property is no longer used.
+   * @see https://www.drupal.org/node/3204093
+   *
    * @return array
    *   An array of classes and values.
    */
@@ -68,6 +72,11 @@ interface TipPluginInterface {
 
   /**
    * Returns a renderable array.
+   *
+   * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+   *   getBody() instead, and do not include the tip label in the returned
+   *   output.
+   * @see https://www.drupal.org/node/3195234
    *
    * @return array
    *   A renderable array.

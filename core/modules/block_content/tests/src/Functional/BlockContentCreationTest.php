@@ -248,11 +248,11 @@ class BlockContentCreationTest extends BlockContentTestBase {
 
     // Navigate to home page.
     $this->drupalGet('');
-    $this->assertText($body);
+    $this->assertSession()->pageTextContains($body);
 
     // Delete the block.
     $this->drupalGet('block/1/delete');
-    $this->assertText('This will also remove 1 placed block instance.');
+    $this->assertSession()->pageTextContains('This will also remove 1 placed block instance.');
 
     $this->submitForm([], 'Delete');
     $this->assertRaw(t('The custom block %name has been deleted.', ['%name' => $edit['info[0][value]']]));
@@ -297,7 +297,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
 
     $dependencies = \Drupal::service('config.manager')->findConfigEntityDependentsAsEntities('content', [$block->getConfigDependencyName()]);
     $block_placement = reset($dependencies);
-    $this->assertEqual($block_placement_id, $block_placement->id(), "The block placement config entity has a dependency on the block content entity.");
+    $this->assertEquals($block_placement_id, $block_placement->id(), "The block placement config entity has a dependency on the block content entity.");
   }
 
 }

@@ -180,11 +180,11 @@ class WorkspaceTest extends BrowserTestBase {
 
     // Check that the field is displayed on the manage form display page.
     $this->drupalGet('admin/config/workflow/workspaces/form-display');
-    $this->assertText($field_label);
+    $this->assertSession()->pageTextContains($field_label);
 
     // Check that the field is displayed on the manage display page.
     $this->drupalGet('admin/config/workflow/workspaces/display');
-    $this->assertText($field_label);
+    $this->assertSession()->pageTextContains($field_label);
   }
 
   /**

@@ -85,7 +85,7 @@ class BreakpointDiscoveryTest extends KernelTestBase {
 
     $breakpoints = \Drupal::service('breakpoint.manager')->getBreakpointsByGroup('breakpoint_theme_test');
     foreach ($expected_breakpoints as $id => $expected_breakpoint) {
-      $this->assertEqual($expected_breakpoint, $breakpoints[$id]->getPluginDefinition());
+      $this->assertEquals($expected_breakpoint, $breakpoints[$id]->getPluginDefinition());
     }
 
     // Test that the order is as expected.
@@ -140,7 +140,7 @@ class BreakpointDiscoveryTest extends KernelTestBase {
 
     $breakpoints = \Drupal::service('breakpoint.manager')->getBreakpointsByGroup('breakpoint_theme_test.group2');
     foreach ($expected_breakpoints as $id => $expected_breakpoint) {
-      $this->assertEqual($expected_breakpoint, $breakpoints[$id]->getPluginDefinition());
+      $this->assertEquals($expected_breakpoint, $breakpoints[$id]->getPluginDefinition());
     }
   }
 
@@ -177,7 +177,7 @@ class BreakpointDiscoveryTest extends KernelTestBase {
     ];
 
     $breakpoints = \Drupal::service('breakpoint.manager')->getBreakpointsByGroup('breakpoint_module_test');
-    $this->assertEqual(array_keys($expected_breakpoints), array_keys($breakpoints));
+    $this->assertEquals(array_keys($expected_breakpoints), array_keys($breakpoints));
   }
 
   /**
@@ -199,7 +199,7 @@ class BreakpointDiscoveryTest extends KernelTestBase {
       'breakpoint_module_test' => 'module',
     ];
     $breakpoint_group_providers = \Drupal::service('breakpoint.manager')->getGroupProviders('breakpoint_theme_test.group2');
-    $this->assertEqual($expected, $breakpoint_group_providers);
+    $this->assertEquals($expected, $breakpoint_group_providers);
   }
 
 }

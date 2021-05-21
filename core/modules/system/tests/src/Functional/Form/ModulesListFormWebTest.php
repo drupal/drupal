@@ -52,7 +52,7 @@ class ModulesListFormWebTest extends BrowserTestBase {
     // Ensure that the Database Logging module's machine name is printed. This
     // module is used because its machine name is different than its human
     // readable name.
-    $this->assertText('dblog');
+    $this->assertSession()->pageTextContains('dblog');
   }
 
   /**
@@ -143,7 +143,7 @@ BROKEN,
     $edit = ['modules[changing_module][enable]' => 'changing_module'];
     $this->drupalGet('admin/modules');
     $this->drupalPostForm('admin/modules', $edit, 'Install');
-    $this->assertText('Module Module that changes has been enabled.');
+    $this->assertSession()->pageTextContains('Module Module that changes has been enabled.');
 
     $incompatible_updates = [
       [
@@ -157,7 +157,7 @@ BROKEN,
       $incompatible_info = $info + $incompatible_update;
       file_put_contents($file_path, Yaml::encode($incompatible_info));
       $this->drupalGet('admin/modules');
-      $this->assertText($incompatible_modules_message);
+      $this->assertSession()->pageTextContains($incompatible_modules_message);
 
       file_put_contents($file_path, Yaml::encode($compatible_info));
       $this->drupalGet('admin/modules');
@@ -168,7 +168,7 @@ BROKEN,
     $edit = ['uninstall[changing_module]' => 'changing_module'];
     $this->drupalPostForm('admin/modules/uninstall', $edit, 'Uninstall');
     $this->submitForm([], 'Uninstall');
-    $this->assertText('The selected modules have been uninstalled.');
+    $this->assertSession()->pageTextContains('The selected modules have been uninstalled.');
     foreach ($incompatible_updates as $incompatible_update) {
       $incompatible_info = $info + $incompatible_update;
       file_put_contents($file_path, Yaml::encode($incompatible_info));

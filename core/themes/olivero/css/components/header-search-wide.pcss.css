@@ -6,11 +6,11 @@
 @import "../base/variables.pcss.css";
 
 /* Override contextual links so we can position against .site-header. */
-.search-block-form.contextual-region {
+.block-search-wide.contextual-region {
   position: static;
 }
 
-.search-wide__wrapper {
+.block-search-wide__wrapper {
   position: absolute;
   z-index: 1; /* Ensure left border shows above social region in IE11. */
   inset-block-start: 100%;
@@ -169,12 +169,12 @@
   }
 }
 
-.search-wide__container {
+.block-search-wide__container {
   max-width: var(--max-width);
   padding-inline-end: var(--sp2);
 }
 
-.search-wide__grid {
+.block-search-wide__grid {
   display: grid;
   grid-template-columns: repeat(var(--grid-col-count--md), 1fr);
   grid-column-gap: var(--grid-gap--md);
@@ -182,16 +182,16 @@
 
 /* Override specificity from container-inline.module.css */
 .container-inline {
-  & .search-wide__container {
+  & .block-search-wide__container {
     display: block;
   }
 
-  & .search-wide__grid {
+  & .block-search-wide__grid {
     display: grid;
   }
 }
 
-.header-nav__search-button {
+.block-search-wide__button {
   position: relative;
   display: none;
   width: var(--sp3);
@@ -226,14 +226,12 @@
       border-color: var(--color--white);
     }
 
-    & .header-nav__search-button__close {
+    & .block-search-wide__button-close {
       &:before,
       &:after {
         position: absolute;
-        /* stylelint-disable csstools/use-logical */
         top: 50%;
         left: 50%;
-        /* stylelint-enable csstools/use-logical */
         width: var(--sp1-5);
         height: 0;
         content: "";
@@ -261,13 +259,13 @@
 }
 
 /* Provide rudimentary access to site search if JS is disabled. */
-html:not(.js) .search-block-form:focus-within .search-wide__wrapper {
+html:not(.js) .search-block-form:focus-within .block-search-wide__wrapper {
   visibility: visible;
   max-height: var(--sp8);
 }
 
 /* Necessary to override specificity of transpiled PostCSS properties from default input focus styling. */
-[dir] .search-wide__wrapper input[type="search"] {
+[dir] .block-search-wide__wrapper input[type="search"] {
   background-color: transparent;
   background-image: linear-gradient(var(--color--blue-50), var(--color--blue-50)); /* Two values are needed for IE11 support. */
   background-repeat: no-repeat;
@@ -279,7 +277,7 @@ html:not(.js) .search-block-form:focus-within .search-wide__wrapper {
   }
 }
 
-[dir="rtl"] .search-wide__wrapper {
+[dir="rtl"] .block-search-wide__wrapper {
   & input[type="search"] {
     background-position: bottom right;
   }
@@ -290,8 +288,8 @@ html:not(.js) .search-block-form:focus-within .search-wide__wrapper {
 }
 
 body:not(.is-always-mobile-nav) {
-  & .search-wide__wrapper,
-  & .header-nav__search-button {
+  & .block-search-wide__wrapper,
+  & .block-search-wide__button {
     @media (--nav) {
       display: block;
     }

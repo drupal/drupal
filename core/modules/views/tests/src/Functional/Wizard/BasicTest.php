@@ -31,7 +31,7 @@ class BasicTest extends WizardTestBase {
 
     // Check if we can access the main views admin page.
     $this->drupalGet('admin/structure/views');
-    $this->assertText('Add view');
+    $this->assertSession()->pageTextContains('Add view');
 
     // Create a simple and not at all useful view.
     $view1 = [];
@@ -42,8 +42,8 @@ class BasicTest extends WizardTestBase {
     $this->drupalPostForm('admin/structure/views/add', $view1, 'Save and edit');
     $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet('admin/structure/views');
-    $this->assertText($view1['label']);
-    $this->assertText($view1['description']);
+    $this->assertSession()->pageTextContains($view1['label']);
+    $this->assertSession()->pageTextContains($view1['description']);
     $this->assertSession()->linkByHrefExists(Url::fromRoute('entity.view.edit_form', ['view' => $view1['id']])->toString());
     $this->assertSession()->linkByHrefExists(Url::fromRoute('entity.view.delete_form', ['view' => $view1['id']])->toString());
     $this->assertSession()->linkByHrefExists(Url::fromRoute('entity.view.duplicate_form', ['view' => $view1['id']])->toString());
@@ -76,9 +76,9 @@ class BasicTest extends WizardTestBase {
     // Since the view has a page, we expect to be automatically redirected to
     // it.
     $this->assertSession()->addressEquals($view2['page[path]']);
-    $this->assertText($view2['page[title]']);
-    $this->assertText($node1->label());
-    $this->assertText($node2->label());
+    $this->assertSession()->pageTextContains($view2['page[title]']);
+    $this->assertSession()->pageTextContains($node1->label());
+    $this->assertSession()->pageTextContains($node2->label());
 
     // Check if we have the feed.
     $this->assertSession()->linkByHrefExists(Url::fromRoute('view.' . $view2['id'] . '.feed_1')->toString());
@@ -89,16 +89,16 @@ class BasicTest extends WizardTestBase {
     // HTML tag being present.
     $this->assertEquals('2.0', $this->getSession()->getDriver()->getAttribute('//rss', 'version'));
     // The feed should have the same title and nodes as the page.
-    $this->assertText($view2['page[title]']);
+    $this->assertSession()->responseContains($view2['page[title]']);
     $this->assertRaw($node1->toUrl('canonical', ['absolute' => TRUE])->toString());
-    $this->assertText($node1->label());
+    $this->assertSession()->responseContains($node1->label());
     $this->assertRaw($node2->toUrl('canonical', ['absolute' => TRUE])->toString());
-    $this->assertText($node2->label());
+    $this->assertSession()->responseContains($node2->label());
 
     // Go back to the views page and check if this view is there.
     $this->drupalGet('admin/structure/views');
-    $this->assertText($view2['label']);
-    $this->assertText($view2['description']);
+    $this->assertSession()->pageTextContains($view2['label']);
+    $this->assertSession()->pageTextContains($view2['description']);
     $this->assertSession()->linkByHrefExists(Url::fromRoute('view.' . $view2['id'] . '.page_1')->toString());
 
     // The view should not have a REST export display.
@@ -126,14 +126,14 @@ class BasicTest extends WizardTestBase {
 
     // Make sure the view only displays the node we expect.
     $this->assertSession()->addressEquals($view3['page[path]']);
-    $this->assertText($view3['page[title]']);
-    $this->assertText($node1->label());
+    $this->assertSession()->pageTextContains($view3['page[title]']);
+    $this->assertSession()->pageTextContains($node1->label());
     $this->assertNoText($node2->label());
 
     // Go back to the views page and check if this view is there.
     $this->drupalGet('admin/structure/views');
-    $this->assertText($view3['label']);
-    $this->assertText($view3['description']);
+    $this->assertSession()->pageTextContains($view3['label']);
+    $this->assertSession()->pageTextContains($view3['description']);
     $this->assertSession()->linkByHrefExists(Url::fromRoute('view.' . $view3['id'] . '.page_1')->toString());
 
     // The view should not have a REST export display.
@@ -142,7 +142,7 @@ class BasicTest extends WizardTestBase {
     // Confirm that the block is available in the block administration UI.
     $this->drupalGet('admin/structure/block/list/' . $this->config('system.theme')->get('default'));
     $this->clickLink('Place block');
-    $this->assertText($view3['label']);
+    $this->assertSession()->pageTextContains($view3['label']);
 
     // Place the block.
     $this->drupalPlaceBlock("views_block:{$view3['id']}-block_1");
@@ -150,7 +150,7 @@ class BasicTest extends WizardTestBase {
     // Visit a random page (not the one that displays the view itself) and look
     // for the expected node title in the block.
     $this->drupalGet('user');
-    $this->assertText($node1->label());
+    $this->assertSession()->pageTextContains($node1->label());
     $this->assertNoText($node2->label());
 
     // Make sure the listing page doesn't show disabled default views.
@@ -175,7 +175,7 @@ class BasicTest extends WizardTestBase {
     $data = Json::decode($this->getSession()->getPage()->getContent());
     $this->assertCount(1, $data, 'Only the node of type page is exported.');
     $node = reset($data);
-    $this->assertEqual($node1->id(), $node['nid'][0]['value'], 'The node of type page is exported.');
+    $this->assertEquals($node1->id(), $node['nid'][0]['value'], 'The node of type page is exported.');
 
     // Create a view with a leading slash in the path and test that is properly
     // set.

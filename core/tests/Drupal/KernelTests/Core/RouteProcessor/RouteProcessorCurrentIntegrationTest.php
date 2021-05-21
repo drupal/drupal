@@ -64,7 +64,7 @@ class RouteProcessorCurrentIntegrationTest extends KernelTestBase {
     $request_stack->push($request);
     $request_context->fromRequest($request);
     $url = GeneratedUrl::createFromObject($expected_cacheability)->setGeneratedUrl('/subdir/');
-    $this->assertEqual($this->urlGenerator->generateFromRoute('<current>', [], [], TRUE), $url);
+    $this->assertEquals($this->urlGenerator->generateFromRoute('<current>', [], [], TRUE), $url);
 
     // Test request with subdir on other page.
     $server = [
@@ -79,7 +79,7 @@ class RouteProcessorCurrentIntegrationTest extends KernelTestBase {
     $request_stack->push($request);
     $request_context->fromRequest($request);
     $url = GeneratedUrl::createFromObject($expected_cacheability)->setGeneratedUrl('/subdir/node/add');
-    $this->assertEqual($this->urlGenerator->generateFromRoute('<current>', [], [], TRUE), $url);
+    $this->assertEquals($this->urlGenerator->generateFromRoute('<current>', [], [], TRUE), $url);
 
     // Test request without subdir on the homepage.
     $server = [
@@ -94,7 +94,7 @@ class RouteProcessorCurrentIntegrationTest extends KernelTestBase {
     $request_stack->push($request);
     $request_context->fromRequest($request);
     $url = GeneratedUrl::createFromObject($expected_cacheability)->setGeneratedUrl('/');
-    $this->assertEqual($this->urlGenerator->generateFromRoute('<current>', [], [], TRUE), $url);
+    $this->assertEquals($this->urlGenerator->generateFromRoute('<current>', [], [], TRUE), $url);
 
     // Test request without subdir on other page.
     $server = [
@@ -109,7 +109,7 @@ class RouteProcessorCurrentIntegrationTest extends KernelTestBase {
     $request_stack->push($request);
     $request_context->fromRequest($request);
     $url = GeneratedUrl::createFromObject($expected_cacheability)->setGeneratedUrl('/node/add');
-    $this->assertEqual($this->urlGenerator->generateFromRoute('<current>', [], [], TRUE), $url);
+    $this->assertEquals($this->urlGenerator->generateFromRoute('<current>', [], [], TRUE), $url);
 
     // Test request without a found route. This happens for example on an
     // not found exception page.
@@ -126,7 +126,7 @@ class RouteProcessorCurrentIntegrationTest extends KernelTestBase {
     // and the cacheability does not depend on the 'route' cache context, since
     // no route was involved at all: this is fallback behavior.
     $url = GeneratedUrl::createFromObject((new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT))->setGeneratedUrl('/');
-    $this->assertEqual($this->urlGenerator->generateFromRoute('<current>', [], [], TRUE), $url);
+    $this->assertEquals($this->urlGenerator->generateFromRoute('<current>', [], [], TRUE), $url);
   }
 
 }

@@ -93,12 +93,12 @@ class ExposedFormUITest extends UITestBase {
     $edit = [];
     $edit['options[expose][identifier]'] = '';
     $this->submitForm($edit, 'Apply');
-    $this->assertText('The identifier is required if the filter is exposed.');
+    $this->assertSession()->pageTextContains('The identifier is required if the filter is exposed.');
 
     $edit = [];
     $edit['options[expose][identifier]'] = 'value';
     $this->submitForm($edit, 'Apply');
-    $this->assertText('This identifier is not allowed.');
+    $this->assertSession()->pageTextContains('This identifier is not allowed.');
 
     // Now check the sort criteria.
     $this->drupalGet('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/sort/created');
@@ -139,8 +139,8 @@ class ExposedFormUITest extends UITestBase {
     // Check that the values were saved.
     $display = View::load($view_id)->getDisplay('default');
     $this->assertTrue($display['display_options']['sorts']['created']['exposed']);
-    $this->assertEqual(['label' => $edit['options[expose][label]']], $display['display_options']['sorts']['created']['expose']);
-    $this->assertEqual('DESC', $display['display_options']['sorts']['created']['order']);
+    $this->assertEquals(['label' => $edit['options[expose][label]']], $display['display_options']['sorts']['created']['expose']);
+    $this->assertEquals('DESC', $display['display_options']['sorts']['created']['order']);
   }
 
   /**
@@ -233,7 +233,7 @@ class ExposedFormUITest extends UITestBase {
     $edit["options[group_info][group_items][1][title]"] = '';
     $edit["options[group_info][group_items][1][operator]"] = 'empty';
     $this->submitForm($edit, 'Apply');
-    $this->assertText($this->groupFormUiErrors['missing_title_empty_operator']);
+    $this->assertSession()->pageTextContains($this->groupFormUiErrors['missing_title_empty_operator']);
 
     // Specify a title without a value.
     $this->drupalGet('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/filter/type');
@@ -242,7 +242,7 @@ class ExposedFormUITest extends UITestBase {
     $edit = [];
     $edit["options[group_info][group_items][1][title]"] = 'Is Article';
     $this->submitForm($edit, 'Apply');
-    $this->assertText($this->groupFormUiErrors['missing_value']);
+    $this->assertSession()->pageTextContains($this->groupFormUiErrors['missing_value']);
 
     // Specify a value without a title.
     $this->drupalGet('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/filter/type');
@@ -250,7 +250,7 @@ class ExposedFormUITest extends UITestBase {
     $edit["options[group_info][group_items][1][title]"] = '';
     $edit["options[group_info][group_items][1][value][article]"] = 'article';
     $this->submitForm($edit, 'Apply');
-    $this->assertText($this->groupFormUiErrors['missing_title']);
+    $this->assertSession()->pageTextContains($this->groupFormUiErrors['missing_title']);
   }
 
   /**

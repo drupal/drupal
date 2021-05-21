@@ -147,9 +147,9 @@ class ConfigTranslationCacheTest extends BrowserTestBase {
     $this->drupalGet("/entity_test/structure/$bundle/fields/entity_test.$bundle.$field_name/translate");
     $this->clickLink('Add');
 
-    $this->assertText('Translatable field setting');
+    $this->assertSession()->pageTextContains('Translatable field setting');
     $this->assertSession()->assertEscaped($translatable_field_setting);
-    $this->assertText('Translatable storage setting');
+    $this->assertSession()->pageTextContains('Translatable storage setting');
     $this->assertSession()->assertEscaped($translatable_storage_setting);
 
     // Add translation for label.
