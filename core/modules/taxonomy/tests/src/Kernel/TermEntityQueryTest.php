@@ -62,7 +62,7 @@ class TermEntityQueryTest extends KernelTestBase {
       ->condition('vid', $vocabulary2->id())
       ->execute();
     sort($result);
-    $this->assertEqual(array_keys($terms2), $result);
+    $this->assertEquals(array_keys($terms2), $result);
     $tid = reset($result);
     $ids = (object) [
       'entity_type' => 'taxonomy_term',

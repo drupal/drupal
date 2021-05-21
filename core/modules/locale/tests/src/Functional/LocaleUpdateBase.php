@@ -309,7 +309,7 @@ EOF;
       ->execute()
       ->fetchField();
     $db_translation = $db_translation == FALSE ? '' : $db_translation;
-    $this->assertEqual($translation, $db_translation, $message ? $message : new FormattableMarkup('Correct translation of %source (%language)', ['%source' => $source, '%language' => $langcode]));
+    $this->assertEquals($translation, $db_translation, $message ? $message : new FormattableMarkup('Correct translation of %source (%language)', ['%source' => $source, '%language' => $langcode]));
   }
 
 }

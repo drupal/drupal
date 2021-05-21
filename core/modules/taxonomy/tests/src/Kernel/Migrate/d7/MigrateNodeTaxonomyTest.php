@@ -42,9 +42,9 @@ class MigrateNodeTaxonomyTest extends MigrateDrupal7TestBase {
   public function testMigration() {
     $node = Node::load(2);
     $this->assertInstanceOf(NodeInterface::class, $node);
-    $this->assertEqual(9, $node->field_tags[0]->target_id);
-    $this->assertEqual(14, $node->field_tags[1]->target_id);
-    $this->assertEqual(17, $node->field_tags[2]->target_id);
+    $this->assertEquals(9, $node->field_tags[0]->target_id);
+    $this->assertEquals(14, $node->field_tags[1]->target_id);
+    $this->assertEquals(17, $node->field_tags[2]->target_id);
   }
 
 }

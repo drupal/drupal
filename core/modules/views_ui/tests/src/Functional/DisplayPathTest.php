@@ -235,7 +235,7 @@ class DisplayPathTest extends UITestBase {
     $parameters->addCondition('id', $menu_link_content->getPluginId());
     $result = \Drupal::menuTree()->load('admin', $parameters);
     $plugin_definition = end($result)->link->getPluginDefinition();
-    $this->assertEqual('view.' . $view_id . '.page_1', $plugin_definition['route_name']);
+    $this->assertEquals('view.' . $view_id . '.page_1', $plugin_definition['route_name']);
 
     $this->clickLink(t('No menu'));
 

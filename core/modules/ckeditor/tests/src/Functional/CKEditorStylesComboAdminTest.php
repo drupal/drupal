@@ -74,7 +74,7 @@ class CKEditorStylesComboAdminTest extends BrowserTestBase {
     // Ensure an Editor config entity exists, with the proper settings.
     $expected_settings = $default_settings;
     $editor = Editor::load($this->format);
-    $this->assertEqual($expected_settings, $editor->getSettings(), 'The Editor config entity has the correct settings.');
+    $this->assertEquals($expected_settings, $editor->getSettings(), 'The Editor config entity has the correct settings.');
 
     // Case 1: Configure the Styles plugin with different labels for each style,
     // and ensure the updated settings are saved.
@@ -85,7 +85,7 @@ class CKEditorStylesComboAdminTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save configuration');
     $expected_settings['plugins']['stylescombo']['styles'] = "h1.title|Title\np.callout|Callout\ndrupal-entity.has-dashes|Allowing Dashes\n\n";
     $editor = Editor::load($this->format);
-    $this->assertEqual($expected_settings, $editor->getSettings(), 'The Editor config entity has the correct settings.');
+    $this->assertEquals($expected_settings, $editor->getSettings(), 'The Editor config entity has the correct settings.');
 
     // Case 2: Configure the Styles plugin with same labels for each style, and
     // ensure that an error is displayed and that the updated settings are not
@@ -97,7 +97,7 @@ class CKEditorStylesComboAdminTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save configuration');
     $this->assertRaw(t('Each style must have a unique label.'));
     $editor = Editor::load($this->format);
-    $this->assertEqual($expected_settings, $editor->getSettings(), 'The Editor config entity has the correct settings.');
+    $this->assertEquals($expected_settings, $editor->getSettings(), 'The Editor config entity has the correct settings.');
   }
 
 }

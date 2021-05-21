@@ -81,7 +81,7 @@ class CommentTypeTest extends CommentTestBase {
 
     // Check that the comment type was created in site default language.
     $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
-    $this->assertEqual($default_langcode, $comment_type->language()->getId());
+    $this->assertEquals($default_langcode, $comment_type->language()->getId());
 
     // Edit the comment-type and ensure that we cannot change the entity-type.
     $this->drupalGet('admin/structure/comment/manage/foo');
@@ -92,7 +92,7 @@ class CommentTypeTest extends CommentTestBase {
     $this->submitForm([], 'Save');
     \Drupal::entityTypeManager()->getStorage('comment_type')->resetCache(['foo']);
     $comment_type = CommentType::load('foo');
-    $this->assertEqual('node', $comment_type->getTargetEntityTypeId());
+    $this->assertEquals('node', $comment_type->getTargetEntityTypeId());
   }
 
   /**
@@ -102,7 +102,7 @@ class CommentTypeTest extends CommentTestBase {
     $this->drupalLogin($this->adminUser);
 
     $field = FieldConfig::loadByName('comment', 'comment', 'comment_body');
-    $this->assertEqual('Comment', $field->getLabel(), 'Comment body field was found.');
+    $this->assertEquals('Comment', $field->getLabel(), 'Comment body field was found.');
 
     // Change the comment type name.
     $this->drupalGet('admin/structure/comment');

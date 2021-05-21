@@ -69,7 +69,7 @@ class ActionTest extends KernelTestBase {
     $loaded_accounts = $user_storage->loadMultiple();
     $this->assertCount(1, $loaded_accounts);
     $account = reset($loaded_accounts);
-    $this->assertEqual($name, $account->label());
+    $this->assertEquals($name, $account->label());
   }
 
   /**

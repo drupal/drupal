@@ -267,7 +267,7 @@ class KernelTestBaseTest extends KernelTestBase {
       $this->fail('Missing required module throws skipped test exception.');
     }
     catch (SkippedTestError $e) {
-      $this->assertEqual('Required modules: module_does_not_exist', $e->getMessage());
+      $this->assertEquals('Required modules: module_does_not_exist', $e->getMessage());
     }
   }
 
@@ -294,7 +294,7 @@ class KernelTestBaseTest extends KernelTestBase {
       $this->fail('Missing required module throws skipped test exception.');
     }
     catch (SkippedTestError $e) {
-      $this->assertEqual('Required modules: module_does_not_exist', $e->getMessage());
+      $this->assertEquals('Required modules: module_does_not_exist', $e->getMessage());
     }
   }
 

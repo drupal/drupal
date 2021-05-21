@@ -56,7 +56,7 @@ class LanguageConfigOverrideImportTest extends BrowserTestBase {
     $this->rebuildContainer();
 
     $override = \Drupal::languageManager()->getLanguageConfigOverride('fr', 'system.site');
-    $this->assertEqual('FR default site name', $override->get('name'));
+    $this->assertEquals('FR default site name', $override->get('name'));
     $this->drupalGet('fr');
     $this->assertText('FR default site name');
 

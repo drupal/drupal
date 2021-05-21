@@ -111,8 +111,8 @@ class UserTokenReplaceTest extends BrowserTestBase {
     foreach ($tests as $input => $expected) {
       $bubbleable_metadata = new BubbleableMetadata();
       $output = $token_service->replace($input, ['user' => $account], ['langcode' => $language_interface->getId()], $bubbleable_metadata);
-      $this->assertEqual($expected, $output, new FormattableMarkup('User token %token replaced.', ['%token' => $input]));
-      $this->assertEqual($metadata_tests[$input], $bubbleable_metadata);
+      $this->assertEquals($expected, $output, new FormattableMarkup('User token %token replaced.', ['%token' => $input]));
+      $this->assertEquals($metadata_tests[$input], $bubbleable_metadata);
     }
 
     // Generate tokens for the anonymous user.
@@ -131,8 +131,8 @@ class UserTokenReplaceTest extends BrowserTestBase {
     foreach ($tests as $input => $expected) {
       $bubbleable_metadata = new BubbleableMetadata();
       $output = $token_service->replace($input, ['user' => $anonymous_user], ['langcode' => $language_interface->getId()], $bubbleable_metadata);
-      $this->assertEqual($expected, $output, new FormattableMarkup('Sanitized user token %token replaced.', ['%token' => $input]));
-      $this->assertEqual($metadata_tests[$input], $bubbleable_metadata);
+      $this->assertEquals($expected, $output, new FormattableMarkup('Sanitized user token %token replaced.', ['%token' => $input]));
+      $this->assertEquals($metadata_tests[$input], $bubbleable_metadata);
     }
 
     // Generate login and cancel link.
@@ -171,7 +171,7 @@ class UserTokenReplaceTest extends BrowserTestBase {
     $input = '[user:display-name] [current-user:display-name]';
     $expected = "<em>{$user1->id()}</em> <em>{$user2->id()}</em>";
     $output = $token_service->replace($input, ['user' => $user1]);
-    $this->assertEqual($expected, $output, new FormattableMarkup('User token %token does not escape safe markup.', ['%token' => 'display-name']));
+    $this->assertEquals($expected, $output, new FormattableMarkup('User token %token does not escape safe markup.', ['%token' => 'display-name']));
   }
 
 }

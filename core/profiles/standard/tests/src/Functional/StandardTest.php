@@ -130,7 +130,7 @@ class StandardTest extends BrowserTestBase {
     /** @var \Drupal\contact\ContactFormInterface $contact_form */
     $contact_form = ContactForm::load('feedback');
     $recipients = $contact_form->getRecipients();
-    $this->assertEqual(['simpletest@example.com'], $recipients);
+    $this->assertEquals(['simpletest@example.com'], $recipients);
 
     $role = Role::create([
       'id' => 'admin_theme',

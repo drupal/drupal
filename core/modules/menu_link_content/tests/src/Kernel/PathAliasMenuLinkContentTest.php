@@ -69,7 +69,7 @@ class PathAliasMenuLinkContentTest extends KernelTestBase {
     $menu_link_content->save();
 
     $tree = \Drupal::menuTree()->load('tools', new MenuTreeParameters());
-    $this->assertEqual('test_page_test.test_page', $tree[$menu_link_content->getPluginId()]->link->getPluginDefinition()['route_name']);
+    $this->assertEquals('test_page_test.test_page', $tree[$menu_link_content->getPluginId()]->link->getPluginDefinition()['route_name']);
 
     // Saving an alias should clear the alias manager cache.
     $path_alias->setPath('/test-render-title');
@@ -77,15 +77,15 @@ class PathAliasMenuLinkContentTest extends KernelTestBase {
     $path_alias->save();
 
     $tree = \Drupal::menuTree()->load('tools', new MenuTreeParameters());
-    $this->assertEqual('test_page_test.render_title', $tree[$menu_link_content->getPluginId()]->link->getPluginDefinition()['route_name']);
+    $this->assertEquals('test_page_test.render_title', $tree[$menu_link_content->getPluginId()]->link->getPluginDefinition()['route_name']);
 
     // Delete the alias.
     $path_alias->delete();
     $tree = \Drupal::menuTree()->load('tools', new MenuTreeParameters());
     $this->assertTrue(isset($tree[$menu_link_content->getPluginId()]));
-    $this->assertEqual('', $tree[$menu_link_content->getPluginId()]->link->getRouteName());
+    $this->assertEquals('', $tree[$menu_link_content->getPluginId()]->link->getRouteName());
     // Verify the plugin now references a path that does not match any route.
-    $this->assertEqual('base:my-blog', $tree[$menu_link_content->getPluginId()]->link->getUrlObject()->getUri());
+    $this->assertEquals('base:my-blog', $tree[$menu_link_content->getPluginId()]->link->getUrlObject()->getUri());
   }
 
 }

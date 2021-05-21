@@ -385,7 +385,7 @@ class TermTest extends TaxonomyTestBase {
     $value = $this->randomMachineName();
     $term->setDescription($value);
     $term->save();
-    $this->assertEqual("<p>{$value}</p>\n", $term->description->processed);
+    $this->assertEquals("<p>{$value}</p>\n", $term->description->processed);
 
     // Check that the term feed page is working.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/feed');
@@ -449,9 +449,9 @@ class TermTest extends TaxonomyTestBase {
 
     $taxonomy_storage->resetCache();
     $terms = $taxonomy_storage->loadTree($this->vocabulary->id());
-    $this->assertEqual($term2->id(), $terms[0]->tid, 'Term 2 was moved above term 1.');
-    $this->assertEqual([$term2->id()], $terms[1]->parents, 'Term 3 was made a child of term 2.');
-    $this->assertEqual($term1->id(), $terms[2]->tid, 'Term 1 was moved below term 2.');
+    $this->assertEquals($term2->id(), $terms[0]->tid, 'Term 2 was moved above term 1.');
+    $this->assertEquals([$term2->id()], $terms[1]->parents, 'Term 3 was made a child of term 2.');
+    $this->assertEquals($term1->id(), $terms[2]->tid, 'Term 1 was moved below term 2.');
 
     $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview', [], 'Reset to alphabetical');
     // Submit confirmation form.
@@ -461,10 +461,10 @@ class TermTest extends TaxonomyTestBase {
 
     $taxonomy_storage->resetCache();
     $terms = $taxonomy_storage->loadTree($this->vocabulary->id(), 0, NULL, TRUE);
-    $this->assertEqual($term1->id(), $terms[0]->id(), 'Term 1 was moved to back above term 2.');
-    $this->assertEqual($term2->id(), $terms[1]->id(), 'Term 2 was moved to back below term 1.');
-    $this->assertEqual($term3->id(), $terms[2]->id(), 'Term 3 is still below term 2.');
-    $this->assertEqual([$term2->id()], $terms[2]->parents, 'Term 3 is still a child of term 2.');
+    $this->assertEquals($term1->id(), $terms[0]->id(), 'Term 1 was moved to back above term 2.');
+    $this->assertEquals($term2->id(), $terms[1]->id(), 'Term 2 was moved to back below term 1.');
+    $this->assertEquals($term3->id(), $terms[2]->id(), 'Term 3 is still below term 2.');
+    $this->assertEquals([$term2->id()], $terms[2]->parents, 'Term 3 is still a child of term 2.');
   }
 
   /**
@@ -487,13 +487,13 @@ class TermTest extends TaxonomyTestBase {
     $terms = taxonomy_term_load_multiple_by_name($edit['name[0][value]']);
     $term = reset($terms);
     $this->assertNotNull($term, 'Term found in database.');
-    $this->assertEqual($edit['name[0][value]'], $term->getName(), 'Term name was successfully saved.');
-    $this->assertEqual($edit['description[0][value]'], $term->getDescription(), 'Term description was successfully saved.');
+    $this->assertEquals($edit['name[0][value]'], $term->getName(), 'Term name was successfully saved.');
+    $this->assertEquals($edit['description[0][value]'], $term->getDescription(), 'Term description was successfully saved.');
     // Check that the parent tid is still there. The other parent (<root>) is
     // not added by \Drupal\taxonomy\TermStorageInterface::loadParents().
     $parents = $this->container->get('entity_type.manager')->getStorage('taxonomy_term')->loadParents($term->id());
     $parent = reset($parents);
-    $this->assertEqual($edit['parent[]'][1], $parent->id(), 'Term parents were successfully saved.');
+    $this->assertEquals($edit['parent[]'][1], $parent->id(), 'Term parents were successfully saved.');
   }
 
   /**

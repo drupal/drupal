@@ -74,7 +74,7 @@ class TwigTransTest extends BrowserTestBase {
     $this->rebuildContainer();
 
     // Check that lolspeak is the default language for the site.
-    $this->assertEqual('xx', \Drupal::languageManager()->getDefaultLanguage()->getId(), 'Lolspeak is the default language');
+    $this->assertEquals('xx', \Drupal::languageManager()->getDefaultLanguage()->getId(), 'Lolspeak is the default language');
   }
 
   /**

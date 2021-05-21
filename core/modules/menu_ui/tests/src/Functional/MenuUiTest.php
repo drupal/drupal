@@ -165,7 +165,7 @@ class MenuUiTest extends BrowserTestBase {
     $menu_link_manager->resetDefinitions();
 
     $instance = $menu_link_manager->createInstance($instance->getPluginId());
-    $this->assertEqual($edit['weight'], $instance->getWeight(), 'Saving an existing link updates the weight.');
+    $this->assertEquals($edit['weight'], $instance->getWeight(), 'Saving an existing link updates the weight.');
     $this->resetMenuLink($instance, $old_weight);
   }
 
@@ -816,7 +816,7 @@ class MenuUiTest extends BrowserTestBase {
 
     // Verify menu link.
     $instance = \Drupal::service('plugin.manager.menu.link')->createInstance($menu_link->getPluginId());
-    $this->assertEqual($old_weight, $instance->getWeight(), 'Resets to the old weight.');
+    $this->assertEquals($old_weight, $instance->getWeight(), 'Resets to the old weight.');
   }
 
   /**
@@ -1020,8 +1020,8 @@ class MenuUiTest extends BrowserTestBase {
     ], 'Save block');
     $block = Block::load($block_id);
     $settings = $block->getPlugin()->getConfiguration();
-    $this->assertEqual(3, $settings['depth']);
-    $this->assertEqual(2, $settings['level']);
+    $this->assertEquals(3, $settings['depth']);
+    $this->assertEquals(2, $settings['level']);
     // Reset settings.
     $block->getPlugin()->setConfigurationValue('depth', 0);
     $block->getPlugin()->setConfigurationValue('level', 1);

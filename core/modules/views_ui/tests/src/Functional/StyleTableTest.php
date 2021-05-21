@@ -34,7 +34,7 @@ class StyleTableTest extends UITestBase {
 
     $view = Views::getView($view['id']);
     $view->initHandlers();
-    $this->assertEqual('Title', $view->field['title']->options['label'], 'The field label for table styles is not empty.');
+    $this->assertEquals('Title', $view->field['title']->options['label'], 'The field label for table styles is not empty.');
   }
 
 }

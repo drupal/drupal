@@ -58,7 +58,7 @@ class LocaleTranslatedSchemaDefinitionTest extends BrowserTestBase {
     ])->save();
 
     // Ensure that the field is translated when access through the API.
-    $this->assertEqual('Translated Revision ID', \Drupal::service('entity_field.manager')->getBaseFieldDefinitions('node')['vid']->getLabel());
+    $this->assertEquals('Translated Revision ID', \Drupal::service('entity_field.manager')->getBaseFieldDefinitions('node')['vid']->getLabel());
 
     // Assert there are no updates.
     $this->assertFalse(\Drupal::service('entity.definition_update_manager')->needsUpdates());

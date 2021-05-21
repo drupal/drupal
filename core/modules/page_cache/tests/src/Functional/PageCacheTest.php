@@ -558,22 +558,22 @@ class PageCacheTest extends BrowserTestBase {
     $response_body = $this->drupalGet($url_a);
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'MISS');
     $this->assertSession()->responseHeaderEquals('Foo', 'bar');
-    $this->assertEqual('The following header was set: <em class="placeholder">Foo</em>: <em class="placeholder">bar</em>', $response_body);
+    $this->assertEquals('The following header was set: <em class="placeholder">Foo</em>: <em class="placeholder">bar</em>', $response_body);
     $response = $client->request('HEAD', $url_a);
-    $this->assertEqual('HIT', $response->getHeaderLine('X-Drupal-Cache'), 'Page was cached.');
-    $this->assertEqual('bar', $response->getHeaderLine('Foo'), 'Custom header was sent.');
-    $this->assertEqual('', $response->getBody()->getContents());
+    $this->assertEquals('HIT', $response->getHeaderLine('X-Drupal-Cache'), 'Page was cached.');
+    $this->assertEquals('bar', $response->getHeaderLine('Foo'), 'Custom header was sent.');
+    $this->assertEquals('', $response->getBody()->getContents());
 
     // HEAD, then GET.
     $url_b = $this->buildUrl('system-test/set-header', ['query' => ['name' => 'Foo', 'value' => 'baz']]);
     $response = $client->request('HEAD', $url_b);
-    $this->assertEqual('MISS', $response->getHeaderLine('X-Drupal-Cache'), 'Page was not cached.');
-    $this->assertEqual('baz', $response->getHeaderLine('Foo'), 'Custom header was sent.');
-    $this->assertEqual('', $response->getBody()->getContents());
+    $this->assertEquals('MISS', $response->getHeaderLine('X-Drupal-Cache'), 'Page was not cached.');
+    $this->assertEquals('baz', $response->getHeaderLine('Foo'), 'Custom header was sent.');
+    $this->assertEquals('', $response->getBody()->getContents());
     $response_body = $this->drupalGet($url_b);
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
     $this->assertSession()->responseHeaderEquals('Foo', 'baz');
-    $this->assertEqual('The following header was set: <em class="placeholder">Foo</em>: <em class="placeholder">baz</em>', $response_body);
+    $this->assertEquals('The following header was set: <em class="placeholder">Foo</em>: <em class="placeholder">baz</em>', $response_body);
   }
 
   /**

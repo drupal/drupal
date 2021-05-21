@@ -450,10 +450,10 @@ class BookTest extends BrowserTestBase {
     $node_storage = \Drupal::entityTypeManager()->getStorage('node');
     $node_storage->resetCache();
     $child = $node_storage->load($nodes[0]->id());
-    $this->assertEqual($child->id(), $child->book['bid'], 'Child node book ID updated when parent is deleted.');
+    $this->assertEquals($child->id(), $child->book['bid'], 'Child node book ID updated when parent is deleted.');
     // 3rd-level children should now be 2nd-level.
     $second = $node_storage->load($nodes[1]->id());
-    $this->assertEqual($child->id(), $second->book['bid'], '3rd-level child node is now second level when top-level node is deleted.');
+    $this->assertEquals($child->id(), $second->book['bid'], '3rd-level child node is now second level when top-level node is deleted.');
   }
 
   /**
@@ -479,11 +479,11 @@ class BookTest extends BrowserTestBase {
     $this->drupalPostForm('node/' . $empty_book->id() . '/outline', $edit, 'Add to book outline');
     $node = \Drupal::entityTypeManager()->getStorage('node')->load($empty_book->id());
     // Test the book array.
-    $this->assertEqual($empty_book->id(), $node->book['nid']);
-    $this->assertEqual($empty_book->id(), $node->book['bid']);
-    $this->assertEqual(1, $node->book['depth']);
-    $this->assertEqual($empty_book->id(), $node->book['p1']);
-    $this->assertEqual('0', $node->book['pid']);
+    $this->assertEquals($empty_book->id(), $node->book['nid']);
+    $this->assertEquals($empty_book->id(), $node->book['bid']);
+    $this->assertEquals(1, $node->book['depth']);
+    $this->assertEquals($empty_book->id(), $node->book['p1']);
+    $this->assertEquals('0', $node->book['pid']);
 
     // Create new book.
     $this->drupalLogin($this->bookAuthor);
@@ -503,11 +503,11 @@ class BookTest extends BrowserTestBase {
     $node = \Drupal::entityTypeManager()->getStorage('node')->load($node->id());
 
     // Test the book array.
-    $this->assertEqual($node->id(), $node->book['nid']);
-    $this->assertEqual($node->id(), $node->book['bid']);
-    $this->assertEqual(1, $node->book['depth']);
-    $this->assertEqual($node->id(), $node->book['p1']);
-    $this->assertEqual('0', $node->book['pid']);
+    $this->assertEquals($node->id(), $node->book['nid']);
+    $this->assertEquals($node->id(), $node->book['bid']);
+    $this->assertEquals(1, $node->book['depth']);
+    $this->assertEquals($node->id(), $node->book['p1']);
+    $this->assertEquals('0', $node->book['pid']);
 
     // Test the form itself.
     $this->drupalGet('node/' . $node->id() . '/edit');
@@ -531,7 +531,7 @@ class BookTest extends BrowserTestBase {
     $link = $book_manager->getLinkDefaults($link['nid']);
 
     // Test the return from saveBookLink.
-    $this->assertEqual($return, $link);
+    $this->assertEquals($return, $link);
   }
 
   /**
@@ -614,7 +614,7 @@ class BookTest extends BrowserTestBase {
     $this->assertText($this->book->label());
 
     $elements = $this->xpath('//table//ul[@class="dropbutton"]/li/a');
-    $this->assertEqual('View', $elements[0]->getText(), 'View link is found from the list.');
+    $this->assertEquals('View', $elements[0]->getText(), 'View link is found from the list.');
     $this->assertEquals(count($nodes), count($elements), 'All the book pages are displayed on the book outline page.');
 
     // Unpublish a book in the hierarchy.
@@ -660,7 +660,7 @@ class BookTest extends BrowserTestBase {
     $this->drupalLogin($this->webUserWithoutNodeAccess);
     $book_node = $node_storage->load($this->book->id());
     $this->assertTrue(!empty($book_node->book));
-    $this->assertEqual($this->book->id(), $book_node->book['bid']);
+    $this->assertEquals($this->book->id(), $book_node->book['bid']);
 
     // Reset the internal cache to retrigger the hook_node_load() call.
     $node_storage->resetCache();
@@ -668,7 +668,7 @@ class BookTest extends BrowserTestBase {
     $this->drupalLogin($this->webUser);
     $book_node = $node_storage->load($this->book->id());
     $this->assertTrue(!empty($book_node->book));
-    $this->assertEqual($this->book->id(), $book_node->book['bid']);
+    $this->assertEquals($this->book->id(), $book_node->book['bid']);
   }
 
   /**

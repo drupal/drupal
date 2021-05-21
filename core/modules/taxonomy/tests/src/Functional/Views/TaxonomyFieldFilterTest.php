@@ -156,7 +156,7 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
     // page, and they are the same. So the title/body string should appear on
     // the page twice as many times as the input count.
     foreach ($counts as $langcode => $count) {
-      $this->assertEqual(2 * $count, substr_count($text, $this->termNames[$langcode]), 'Translation ' . $langcode . ' has count ' . $count . ' with ' . $message);
+      $this->assertEquals(2 * $count, substr_count($text, $this->termNames[$langcode]), 'Translation ' . $langcode . ' has count ' . $count . ' with ' . $message);
     }
   }
 

@@ -58,8 +58,8 @@ class FieldWidgetConstraintValidatorTest extends KernelTestBase {
     $display->validateFormValues($entity, $form, $form_state);
 
     $errors = $form_state->getErrors();
-    $this->assertEqual('Widget constraint has failed.', $errors['name'], 'Constraint violation at the field items list level is generated correctly');
-    $this->assertEqual('Widget constraint has failed.', $errors['test_field'], 'Constraint violation at the field items list level is generated correctly for an advanced widget');
+    $this->assertEquals('Widget constraint has failed.', $errors['name'], 'Constraint violation at the field items list level is generated correctly');
+    $this->assertEquals('Widget constraint has failed.', $errors['test_field'], 'Constraint violation at the field items list level is generated correctly for an advanced widget');
   }
 
   /**
@@ -141,7 +141,7 @@ class FieldWidgetConstraintValidatorTest extends KernelTestBase {
     $errors = $this->getErrorsForEntity($entity, ['name']);
     $this->assertFalse(isset($errors['name']));
     $this->assertTrue(isset($errors['type']));
-    $this->assertEqual(new FormattableMarkup('The validation failed because the value conflicts with the value in %field_name, which you cannot access.', ['%field_name' => 'name']), $errors['type']);
+    $this->assertEquals(new FormattableMarkup('The validation failed because the value conflicts with the value in %field_name, which you cannot access.', ['%field_name' => 'name']), $errors['type']);
   }
 
   /**
@@ -154,11 +154,11 @@ class FieldWidgetConstraintValidatorTest extends KernelTestBase {
     $entity->save();
 
     $errors = $this->getErrorsForEntity($entity);
-    $this->assertEqual('Entity level validation', $errors['']);
+    $this->assertEquals('Entity level validation', $errors['']);
 
     $entity->name->value = 'entity-level-violation-with-path';
     $errors = $this->getErrorsForEntity($entity);
-    $this->assertEqual('Entity level validation', $errors['test][form][element']);
+    $this->assertEquals('Entity level validation', $errors['test][form][element']);
   }
 
 }

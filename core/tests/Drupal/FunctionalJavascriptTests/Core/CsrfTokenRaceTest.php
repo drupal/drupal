@@ -55,7 +55,7 @@ EOT;
     $token1 = $this->assertSession()->waitForElement('css', '.csrf1')->getHtml();
     $this->assertNotNull($token0);
     $this->assertNotNull($token1);
-    $this->assertEqual($token0, $token1);
+    $this->assertEquals($token0, $token1);
   }
 
 }

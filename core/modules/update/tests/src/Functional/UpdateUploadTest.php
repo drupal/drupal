@@ -110,7 +110,7 @@ class UpdateUploadTest extends UpdateTestBase {
     // directly instead.
     $info_parser = new InfoParserDynamic(DRUPAL_ROOT);
     $info = $info_parser->parse($installedInfoFilePath);
-    $this->assertEqual('8.x-1.0', $info['version']);
+    $this->assertEquals('8.x-1.0', $info['version']);
 
     // Enable the module.
     $this->drupalPostForm('admin/modules', ['modules[update_test_new_module][enable]' => TRUE], 'Install');
@@ -138,7 +138,7 @@ class UpdateUploadTest extends UpdateTestBase {
     // Parse the info file again to check that the module has been updated to
     // 8.x-1.1.
     $info = $info_parser->parse($installedInfoFilePath);
-    $this->assertEqual('8.x-1.1', $info['version']);
+    $this->assertEquals('8.x-1.1', $info['version']);
   }
 
   /**
@@ -201,10 +201,10 @@ class UpdateUploadTest extends UpdateTestBase {
    */
   public function testUpdateDirectory() {
     $type = Updater::getUpdaterFromDirectory($this->root . '/core/modules/update/tests/modules/aaa_update_test');
-    $this->assertEqual('Drupal\\Core\\Updater\\Module', $type, 'Detected a Module');
+    $this->assertEquals('Drupal\\Core\\Updater\\Module', $type, 'Detected a Module');
 
     $type = Updater::getUpdaterFromDirectory($this->root . '/core/modules/update/tests/themes/update_test_basetheme');
-    $this->assertEqual('Drupal\\Core\\Updater\\Theme', $type, 'Detected a Theme.');
+    $this->assertEquals('Drupal\\Core\\Updater\\Theme', $type, 'Detected a Theme.');
   }
 
 }

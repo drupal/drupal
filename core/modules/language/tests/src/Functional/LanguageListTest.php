@@ -56,8 +56,8 @@ class LanguageListTest extends BrowserTestBase {
     $this->rebuildContainer();
     $languages = \Drupal::service('language_manager')->getLanguages();
     $last_language = end($languages);
-    $this->assertEqual($last_language_weight + 1, $last_language->getWeight());
-    $this->assertEqual($edit['predefined_langcode'], $last_language->getId());
+    $this->assertEquals($last_language_weight + 1, $last_language->getWeight());
+    $this->assertEquals($edit['predefined_langcode'], $last_language->getId());
 
     // Add custom language.
     $langcode = 'xx';
@@ -217,13 +217,13 @@ class LanguageListTest extends BrowserTestBase {
     $expected_conf_languages = ['l3' => 'l3', 'l1' => 'l1', 'en' => 'en'];
 
     $locked_languages = $this->container->get('language_manager')->getLanguages(LanguageInterface::STATE_LOCKED);
-    $this->assertEqual([], array_diff_key($expected_locked_languages, $locked_languages), 'Locked languages loaded correctly.');
+    $this->assertEquals([], array_diff_key($expected_locked_languages, $locked_languages), 'Locked languages loaded correctly.');
 
     $all_languages = $this->container->get('language_manager')->getLanguages(LanguageInterface::STATE_ALL);
-    $this->assertEqual([], array_diff_key($expected_all_languages, $all_languages), 'All languages loaded correctly.');
+    $this->assertEquals([], array_diff_key($expected_all_languages, $all_languages), 'All languages loaded correctly.');
 
     $conf_languages = $this->container->get('language_manager')->getLanguages();
-    $this->assertEqual([], array_diff_key($expected_conf_languages, $conf_languages), 'Configurable languages loaded correctly.');
+    $this->assertEquals([], array_diff_key($expected_conf_languages, $conf_languages), 'Configurable languages loaded correctly.');
   }
 
 }

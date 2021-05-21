@@ -39,8 +39,8 @@ class NodeLoadMultipleTest extends NodeAccessTestBase {
     // Load nodes with only a condition. Nodes 3 and 4 will be loaded.
     $nodes = $this->container->get('entity_type.manager')->getStorage('node')
       ->loadByProperties(['promote' => 0]);
-    $this->assertEqual($node3->label(), $nodes[$node3->id()]->label(), 'Node was loaded.');
-    $this->assertEqual($node4->label(), $nodes[$node4->id()]->label(), 'Node was loaded.');
+    $this->assertEquals($node3->label(), $nodes[$node3->id()]->label(), 'Node was loaded.');
+    $this->assertEquals($node4->label(), $nodes[$node4->id()]->label(), 'Node was loaded.');
     $this->assertCount(2, $nodes);
 
     // Load nodes by nid. Nodes 1, 2 and 4 will be loaded.
@@ -114,10 +114,10 @@ class NodeLoadMultipleTest extends NodeAccessTestBase {
     $nodes = $this->container->get('entity_type.manager')->getStorage('node')
       ->loadByProperties(['field_first' => ['1234', '5678'], 'field_second' => 'test_value_1']);
     $this->assertCount(2, $nodes);
-    $this->assertEqual($node1->field_first->value, $nodes[$node1->id()]->field_first->value);
-    $this->assertEqual($node1->field_second->value, $nodes[$node1->id()]->field_second->value);
-    $this->assertEqual($node3->field_first->value, $nodes[$node3->id()]->field_first->value);
-    $this->assertEqual($node3->field_second->value, $nodes[$node3->id()]->field_second->value);
+    $this->assertEquals($node1->field_first->value, $nodes[$node1->id()]->field_first->value);
+    $this->assertEquals($node1->field_second->value, $nodes[$node1->id()]->field_second->value);
+    $this->assertEquals($node3->field_first->value, $nodes[$node3->id()]->field_first->value);
+    $this->assertEquals($node3->field_second->value, $nodes[$node3->id()]->field_second->value);
   }
 
 }

@@ -208,7 +208,7 @@ abstract class AggregatorTestBase extends BrowserTestBase {
 
     if ($expected_count !== NULL) {
       $feed->item_count = count($feed->items);
-      $this->assertEqual($expected_count, $feed->item_count, new FormattableMarkup('Total items in feed equal to the total items in database (@val1 != @val2)', ['@val1' => $expected_count, '@val2' => $feed->item_count]));
+      $this->assertEquals($expected_count, $feed->item_count, new FormattableMarkup('Total items in feed equal to the total items in database (@val1 != @val2)', ['@val1' => $expected_count, '@val2' => $feed->item_count]));
     }
   }
 

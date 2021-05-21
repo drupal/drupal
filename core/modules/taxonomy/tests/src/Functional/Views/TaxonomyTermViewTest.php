@@ -146,7 +146,7 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
     $tables = $query->getTables();
 
     // Ensure that the join to node_field_data is not added by default.
-    $this->assertEqual(['node_field_data', 'taxonomy_index'], array_keys($tables));
+    $this->assertEquals(['node_field_data', 'taxonomy_index'], array_keys($tables));
     // Ensure that the filter to the language column is not there by default.
     $condition = $query->conditions();
     // We only want to check the no. of conditions in the query.

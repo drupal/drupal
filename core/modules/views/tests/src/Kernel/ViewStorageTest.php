@@ -90,12 +90,12 @@ class ViewStorageTest extends ViewsKernelTestBase {
 
     // Check the displays have been loaded correctly from config display data.
     $expected_displays = ['default', 'block_1', 'page_1'];
-    $this->assertEqual($expected_displays, array_keys($view->get('display')), 'The correct display names are present.');
+    $this->assertEquals($expected_displays, array_keys($view->get('display')), 'The correct display names are present.');
 
     // Check each ViewDisplay object and confirm that it has the correct key and
     // property values.
     foreach ($view->get('display') as $key => $display) {
-      $this->assertEqual($key, $display['id'], 'The display has the correct ID assigned.');
+      $this->assertEquals($key, $display['id'], 'The display has the correct ID assigned.');
 
       // Get original display data and confirm that the display options array
       // exists.
@@ -158,7 +158,7 @@ class ViewStorageTest extends ViewsKernelTestBase {
     $display = $view->get('display');
 
     // Ensure the right display_plugin is created/instantiated.
-    $this->assertEqual('page', $display[$new_id]['display_plugin'], 'New page display "test" uses the right display plugin.');
+    $this->assertEquals('page', $display[$new_id]['display_plugin'], 'New page display "test" uses the right display plugin.');
 
     $executable = $view->getExecutable();
     $executable->initDisplay();
@@ -209,19 +209,19 @@ class ViewStorageTest extends ViewsKernelTestBase {
     $random_title = $this->randomMachineName();
 
     $id = $view->addDisplay('page', $random_title);
-    $this->assertEqual('page_1', $id, new FormattableMarkup('Make sure the first display (%id_new) has the expected ID (%id)', ['%id_new' => $id, '%id' => 'page_1']));
+    $this->assertEquals('page_1', $id, new FormattableMarkup('Make sure the first display (%id_new) has the expected ID (%id)', ['%id_new' => $id, '%id' => 'page_1']));
     $display = $view->get('display');
-    $this->assertEqual($random_title, $display[$id]['display_title']);
+    $this->assertEquals($random_title, $display[$id]['display_title']);
 
     $random_title = $this->randomMachineName();
     $id = $view->addDisplay('page', $random_title);
     $display = $view->get('display');
-    $this->assertEqual('page_2', $id, new FormattableMarkup('Make sure the second display (%id_new) has the expected ID (%id)', ['%id_new' => $id, '%id' => 'page_2']));
-    $this->assertEqual($random_title, $display[$id]['display_title']);
+    $this->assertEquals('page_2', $id, new FormattableMarkup('Make sure the second display (%id_new) has the expected ID (%id)', ['%id_new' => $id, '%id' => 'page_2']));
+    $this->assertEquals($random_title, $display[$id]['display_title']);
 
     $id = $view->addDisplay('page');
     $display = $view->get('display');
-    $this->assertEqual('Page 3', $display[$id]['display_title']);
+    $this->assertEquals('Page 3', $display[$id]['display_title']);
 
     // Ensure the 'default' display always has position zero, regardless of when
     // it was set relative to other displays. Even if the 'default' display
@@ -229,8 +229,8 @@ class ViewStorageTest extends ViewsKernelTestBase {
     // title.
     $view->addDisplay('default', $random_title);
     $displays = $view->get('display');
-    $this->assertEqual($random_title, $displays['default']['display_title'], 'Default display is defined with the new title');
-    $this->assertEqual(0, $displays['default']['position'], 'Default displays are always in position zero');
+    $this->assertEquals($random_title, $displays['default']['display_title'], 'Default display is defined with the new title');
+    $this->assertEquals(0, $displays['default']['position'], 'Default displays are always in position zero');
 
     // Tests Drupal\views\Entity\View::generateDisplayId(). Since
     // generateDisplayId() is protected, we have to use reflection to unit-test
@@ -238,10 +238,10 @@ class ViewStorageTest extends ViewsKernelTestBase {
     $view = $this->controller->create([]);
     $ref_generate_display_id = new \ReflectionMethod($view, 'generateDisplayId');
     $ref_generate_display_id->setAccessible(TRUE);
-    $this->assertEqual('default', $ref_generate_display_id->invoke($view, 'default'), 'The plugin ID for default is always default.');
-    $this->assertEqual('feed_1', $ref_generate_display_id->invoke($view, 'feed'), 'The generated ID for the first instance of a plugin type should have an suffix of _1.');
+    $this->assertEquals('default', $ref_generate_display_id->invoke($view, 'default'), 'The plugin ID for default is always default.');
+    $this->assertEquals('feed_1', $ref_generate_display_id->invoke($view, 'feed'), 'The generated ID for the first instance of a plugin type should have an suffix of _1.');
     $view->addDisplay('feed', 'feed title');
-    $this->assertEqual('feed_2', $ref_generate_display_id->invoke($view, 'feed'), 'The generated ID for the first instance of a plugin type should have an suffix of _2.');
+    $this->assertEquals('feed_2', $ref_generate_display_id->invoke($view, 'feed'), 'The generated ID for the first instance of a plugin type should have an suffix of _2.');
 
     // Tests item related methods().
     $view = $this->controller->create(['base_table' => 'views_test_data']);
@@ -261,7 +261,7 @@ class ViewStorageTest extends ViewsKernelTestBase {
       'field' => 'id',
       'plugin_id' => 'numeric',
     ];
-    $this->assertEqual($expected_item, $item1);
+    $this->assertEquals($expected_item, $item1);
 
     $options = [
       'alter' => [
@@ -276,10 +276,10 @@ class ViewStorageTest extends ViewsKernelTestBase {
       'field' => 'name',
       'plugin_id' => 'standard',
     ] + $options;
-    $this->assertEqual($expected_item, $item2);
+    $this->assertEquals($expected_item, $item2);
 
     // Tests the expected fields from the previous additions.
-    $this->assertEqual($expected_items, $view->getHandlers('field', $display_id));
+    $this->assertEquals($expected_items, $view->getHandlers('field', $display_id));
 
     // Alter an existing item via setItem and check the result via getItem
     // and getItems.
@@ -290,13 +290,13 @@ class ViewStorageTest extends ViewsKernelTestBase {
     ] + $item1;
     $expected_items[$id1] = $item;
     $view->setHandler($display_id, 'field', $id1, $item);
-    $this->assertEqual($item, $view->getHandler($display_id, 'field', 'id'));
-    $this->assertEqual($expected_items, $view->getHandlers('field', $display_id));
+    $this->assertEquals($item, $view->getHandler($display_id, 'field', 'id'));
+    $this->assertEquals($expected_items, $view->getHandlers('field', $display_id));
 
     // Test removeItem method.
     unset($expected_items[$id2]);
     $view->removeHandler($display_id, 'field', $id2);
-    $this->assertEqual($expected_items, $view->getHandlers('field', $display_id));
+    $this->assertEquals($expected_items, $view->getHandlers('field', $display_id));
   }
 
   /**
@@ -333,7 +333,7 @@ class ViewStorageTest extends ViewsKernelTestBase {
     $copy_display = $copy->get('display');
     foreach ($view->storage->get('display') as $id => $display) {
       // assertIdentical will not work here.
-      $this->assertEqual($copy_display[$id], $display, new FormattableMarkup('The @display display has been copied correctly.', ['@display' => $id]));
+      $this->assertEquals($copy_display[$id], $display, new FormattableMarkup('The @display display has been copied correctly.', ['@display' => $id]));
     }
   }
 

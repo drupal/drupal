@@ -140,7 +140,7 @@ class ViewEntityDependenciesTest extends ViewsKernelTestBase {
       $view = Views::getView($view_id);
 
       $dependencies = $view->getDependencies();
-      $this->assertEqual($expected[$view_id], $dependencies);
+      $this->assertEquals($expected[$view_id], $dependencies);
       $config = $this->config('views.view.' . $view_id);
       \Drupal::service('config.storage.sync')->write($view_id, $config->get());
     }
@@ -178,7 +178,7 @@ class ViewEntityDependenciesTest extends ViewsKernelTestBase {
     $view->initDisplay();
     foreach ($view->displayHandlers as $display) {
       // Calculate the dependencies each display has.
-      $this->assertEqual($expected_display[$display->getPluginId()], $display->calculateDependencies());
+      $this->assertEquals($expected_display[$display->getPluginId()], $display->calculateDependencies());
     }
   }
 

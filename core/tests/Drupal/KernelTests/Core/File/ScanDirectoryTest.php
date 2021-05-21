@@ -56,17 +56,17 @@ class ScanDirectoryTest extends FileTestBase {
 
     // Check the first file.
     $file = reset($all_files);
-    $this->assertEqual(key($all_files), $file->uri, 'Correct array key was used for the first returned file.');
-    $this->assertEqual($this->path . '/javascript-1.txt', $file->uri, 'First file name was set correctly.');
-    $this->assertEqual('javascript-1.txt', $file->filename, 'First basename was set correctly');
-    $this->assertEqual('javascript-1', $file->name, 'First name was set correctly.');
+    $this->assertEquals(key($all_files), $file->uri, 'Correct array key was used for the first returned file.');
+    $this->assertEquals($this->path . '/javascript-1.txt', $file->uri, 'First file name was set correctly.');
+    $this->assertEquals('javascript-1.txt', $file->filename, 'First basename was set correctly');
+    $this->assertEquals('javascript-1', $file->name, 'First name was set correctly.');
 
     // Check the second file.
     $file = next($all_files);
-    $this->assertEqual(key($all_files), $file->uri, 'Correct array key was used for the second returned file.');
-    $this->assertEqual($this->path . '/javascript-2.script', $file->uri, 'Second file name was set correctly.');
-    $this->assertEqual('javascript-2.script', $file->filename, 'Second basename was set correctly');
-    $this->assertEqual('javascript-2', $file->name, 'Second name was set correctly.');
+    $this->assertEquals(key($all_files), $file->uri, 'Correct array key was used for the second returned file.');
+    $this->assertEquals($this->path . '/javascript-2.script', $file->uri, 'Second file name was set correctly.');
+    $this->assertEquals('javascript-2.script', $file->filename, 'Second basename was set correctly');
+    $this->assertEquals('javascript-2', $file->name, 'Second name was set correctly.');
   }
 
   /**
@@ -117,25 +117,25 @@ class ScanDirectoryTest extends FileTestBase {
     $expected = [$this->path . '/javascript-1.txt', $this->path . '/javascript-2.script'];
     $actual = array_keys($this->fileSystem->scanDirectory($this->path, '/^javascript-/', ['key' => 'filepath']));
     sort($actual);
-    $this->assertEqual($expected, $actual, 'Returned the correct values for the filename key.');
+    $this->assertEquals($expected, $actual, 'Returned the correct values for the filename key.');
 
     // "basename", for the basename of the file.
     $expected = ['javascript-1.txt', 'javascript-2.script'];
     $actual = array_keys($this->fileSystem->scanDirectory($this->path, '/^javascript-/', ['key' => 'filename']));
     sort($actual);
-    $this->assertEqual($expected, $actual, 'Returned the correct values for the basename key.');
+    $this->assertEquals($expected, $actual, 'Returned the correct values for the basename key.');
 
     // "name" for the name of the file without an extension.
     $expected = ['javascript-1', 'javascript-2'];
     $actual = array_keys($this->fileSystem->scanDirectory($this->path, '/^javascript-/', ['key' => 'name']));
     sort($actual);
-    $this->assertEqual($expected, $actual, 'Returned the correct values for the name key.');
+    $this->assertEquals($expected, $actual, 'Returned the correct values for the name key.');
 
     // Invalid option that should default back to "filename".
     $expected = [$this->path . '/javascript-1.txt', $this->path . '/javascript-2.script'];
     $actual = array_keys($this->fileSystem->scanDirectory($this->path, '/^javascript-/', ['key' => 'INVALID']));
     sort($actual);
-    $this->assertEqual($expected, $actual, 'An invalid key defaulted back to the default.');
+    $this->assertEquals($expected, $actual, 'An invalid key defaulted back to the default.');
   }
 
   /**
