@@ -165,18 +165,18 @@ class SearchCommentTest extends BrowserTestBase {
     $this->submitForm($edit, 'Search');
     $node_storage->resetCache([$node->id()]);
     $node2 = $node_storage->load($node->id());
-    $this->assertText($node2->label());
-    $this->assertText($edit_comment['subject[0][value]']);
+    $this->assertSession()->pageTextContains($node2->label());
+    $this->assertSession()->pageTextContains($edit_comment['subject[0][value]']);
 
     // Search for the comment body.
     $edit = [
       'keys' => "'" . $comment_body . "'",
     ];
     $this->submitForm($edit, 'Search');
-    $this->assertText($node2->label());
+    $this->assertSession()->pageTextContains($node2->label());
 
     // Verify that comment is rendered using proper format.
-    $this->assertText($comment_body);
+    $this->assertSession()->pageTextContains($comment_body);
     // Verify that HTML in comment body is not hidden.
     $this->assertNoRaw(t('n/a'));
     $this->assertSession()->assertNoEscaped($edit_comment['comment_body[0][value]']);
@@ -229,7 +229,7 @@ class SearchCommentTest extends BrowserTestBase {
     // Search for $title.
     $this->drupalGet('search/node');
     $this->submitForm($edit, 'Search');
-    $this->assertText('Your search yielded no results.');
+    $this->assertSession()->pageTextContains('Your search yielded no results.');
   }
 
   /**
@@ -358,7 +358,7 @@ class SearchCommentTest extends BrowserTestBase {
     // Verify that if you view the node on its own page, 'add new comment'
     // is there.
     $this->drupalGet('node/' . $node->id());
-    $this->assertText('Add new comment');
+    $this->assertSession()->pageTextContains('Add new comment');
 
     // Run cron to index this page.
     $this->drupalLogout();
@@ -368,13 +368,13 @@ class SearchCommentTest extends BrowserTestBase {
     $this->drupalLogin($user);
     $this->drupalGet('search/node');
     $this->submitForm(['keys' => 'comment'], 'Search');
-    $this->assertText('Your search yielded no results');
+    $this->assertSession()->pageTextContains('Your search yielded no results');
 
     // Search for the node title. Should be found, and 'Add new comment' should
     // not be part of the search snippet.
     $this->drupalGet('search/node');
     $this->submitForm(['keys' => 'short'], 'Search');
-    $this->assertText($node->label());
+    $this->assertSession()->pageTextContains($node->label());
     $this->assertNoText('Add new comment');
   }
 

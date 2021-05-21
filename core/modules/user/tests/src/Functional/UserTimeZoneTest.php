@@ -62,13 +62,13 @@ class UserTimeZoneTest extends BrowserTestBase {
     // Confirm date format and time zone.
     $this->drupalGet('node/' . $node1->id());
     // Date should be PST.
-    $this->assertText('2007-03-09 21:00 0');
+    $this->assertSession()->pageTextContains('2007-03-09 21:00 0');
     $this->drupalGet('node/' . $node2->id());
     // Date should be PST.
-    $this->assertText('2007-03-11 01:00 0');
+    $this->assertSession()->pageTextContains('2007-03-11 01:00 0');
     $this->drupalGet('node/' . $node3->id());
     // Date should be PST.
-    $this->assertText('2007-03-20 21:00 1');
+    $this->assertSession()->pageTextContains('2007-03-20 21:00 1');
 
     // Change user time zone to Santiago time.
     $edit = [];
@@ -76,36 +76,36 @@ class UserTimeZoneTest extends BrowserTestBase {
     $edit['timezone'] = 'America/Santiago';
     $this->drupalGet("user/" . $web_user->id() . "/edit");
     $this->submitForm($edit, 'Save');
-    $this->assertText('The changes have been saved.');
+    $this->assertSession()->pageTextContains('The changes have been saved.');
 
     // Confirm date format and time zone.
     $this->drupalGet('node/' . $node1->id());
     // Date should be Chile summer time, five hours ahead of PST.
-    $this->assertText('2007-03-10 02:00 1');
+    $this->assertSession()->pageTextContains('2007-03-10 02:00 1');
     $this->drupalGet('node/' . $node2->id());
     // Date should be Chile time, four hours ahead of PST.
-    $this->assertText('2007-03-11 05:00 0');
+    $this->assertSession()->pageTextContains('2007-03-11 05:00 0');
     $this->drupalGet('node/' . $node3->id());
     // Date should be Chile time, three hours ahead of PDT.
-    $this->assertText('2007-03-21 00:00 0');
+    $this->assertSession()->pageTextContains('2007-03-21 00:00 0');
 
     // Ensure that anonymous users also use the default timezone.
     $this->drupalLogout();
     $this->drupalGet('node/' . $node1->id());
     // Date should be PST.
-    $this->assertText('2007-03-09 21:00 0');
+    $this->assertSession()->pageTextContains('2007-03-09 21:00 0');
     $this->drupalGet('node/' . $node2->id());
     // Date should be PST.
-    $this->assertText('2007-03-11 01:00 0');
+    $this->assertSession()->pageTextContains('2007-03-11 01:00 0');
     $this->drupalGet('node/' . $node3->id());
     // Date should be PDT.
-    $this->assertText('2007-03-20 21:00 1');
+    $this->assertSession()->pageTextContains('2007-03-20 21:00 1');
 
     // Format a date without accessing the current user at all and
     // ensure that it uses the default timezone.
     $this->drupalGet('/system-test/date');
     // Date should be PST.
-    $this->assertText('2016-01-13 08:29 0');
+    $this->assertSession()->pageTextContains('2016-01-13 08:29 0');
   }
 
 }

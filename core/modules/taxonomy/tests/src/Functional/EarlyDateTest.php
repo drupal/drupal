@@ -74,7 +74,7 @@ class EarlyDateTest extends TaxonomyTestBase {
     $this->submitForm($edit, 'Save');
     // Checks that the node has been saved.
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
-    $this->assertEqual($date->getTimestamp(), $node->getCreatedTime(), 'Legacy node was saved with the right date.');
+    $this->assertEquals($date->getTimestamp(), $node->getCreatedTime(), 'Legacy node was saved with the right date.');
   }
 
 }

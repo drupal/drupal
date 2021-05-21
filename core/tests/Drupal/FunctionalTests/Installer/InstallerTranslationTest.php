@@ -41,7 +41,7 @@ class InstallerTranslationTest extends InstallerTestBase {
 
     // Check the language direction.
     $direction = current($this->xpath('/@dir'))->getText();
-    $this->assertEqual('ltr', $direction);
+    $this->assertEquals('ltr', $direction);
   }
 
   /**
@@ -85,18 +85,18 @@ class InstallerTranslationTest extends InstallerTestBase {
 
     // Verify German was configured but not English.
     $this->drupalGet('admin/config/regional/language');
-    $this->assertText('German');
+    $this->assertSession()->pageTextContains('German');
     $this->assertNoText('English');
 
     // The current container still has the english as current language, rebuild.
     $this->rebuildContainer();
     /** @var \Drupal\user\Entity\User $account */
     $account = User::load(0);
-    $this->assertEqual('en', $account->language()->getId(), 'Anonymous user is English.');
+    $this->assertEquals('en', $account->language()->getId(), 'Anonymous user is English.');
     $account = User::load(1);
-    $this->assertEqual('en', $account->language()->getId(), 'Administrator user is English.');
+    $this->assertEquals('en', $account->language()->getId(), 'Administrator user is English.');
     $account = $this->drupalCreateUser();
-    $this->assertEqual('de', $account->language()->getId(), 'New user is German.');
+    $this->assertEquals('de', $account->language()->getId(), 'New user is German.');
 
     // Ensure that we can enable basic_auth on a non-english site.
     $this->drupalGet('admin/modules');
@@ -119,7 +119,7 @@ class InstallerTranslationTest extends InstallerTestBase {
       $edit['string'] = $sample;
       $this->drupalGet('admin/config/regional/translate');
       $this->submitForm($edit, 'Filter');
-      $this->assertText($sample . ' de');
+      $this->assertSession()->pageTextContains($sample . ' de');
     }
 
     /** @var \Drupal\language\ConfigurableLanguageManager $language_manager */
@@ -130,8 +130,8 @@ class InstallerTranslationTest extends InstallerTestBase {
     $config = \Drupal::config('user.settings');
     $override_de = $language_manager->getLanguageConfigOverride('de', 'user.settings');
     $override_en = $language_manager->getLanguageConfigOverride('en', 'user.settings');
-    $this->assertEqual('Anonymous de', $config->get('anonymous'));
-    $this->assertEqual('de', $config->get('langcode'));
+    $this->assertEquals('Anonymous de', $config->get('anonymous'));
+    $this->assertEquals('de', $config->get('langcode'));
     $this->assertTrue($override_de->isNew());
     $this->assertTrue($override_en->isNew());
 
@@ -141,7 +141,7 @@ class InstallerTranslationTest extends InstallerTestBase {
     $this->submitForm($edit, 'Add language');
     $override_en = $language_manager->getLanguageConfigOverride('en', 'user.settings');
     $this->assertFalse($override_en->isNew());
-    $this->assertEqual('Anonymous', $override_en->get('anonymous'));
+    $this->assertEquals('Anonymous', $override_en->get('anonymous'));
   }
 
   /**

@@ -241,8 +241,8 @@ class BlockUiTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save block');
 
     $this->drupalGet('');
-    $this->assertText('Test context-aware block');
-    $this->assertText('User context found.');
+    $this->assertSession()->pageTextContains('Test context-aware block');
+    $this->assertSession()->pageTextContains('User context found.');
     $this->assertRaw($expected_text);
 
     // Test context mapping form element is not visible if there are no valid
@@ -259,7 +259,7 @@ class BlockUiTest extends BrowserTestBase {
     ];
     $this->submitForm($edit, 'Save block');
     $this->drupalGet('');
-    $this->assertText('No context mapping selected.');
+    $this->assertSession()->pageTextContains('No context mapping selected.');
     $this->assertNoText('User context found.');
 
     // Tests that conditions with missing context are not displayed.
@@ -280,14 +280,13 @@ class BlockUiTest extends BrowserTestBase {
     $edit = ['region' => 'content'];
     $this->drupalGet($url);
     $this->submitForm($edit, 'Save block');
-    $this->assertText('The block configuration has been saved.');
+    $this->assertSession()->pageTextContains('The block configuration has been saved.');
 
     // Now, check to make sure the form starts by autoincrementing correctly.
     $this->drupalGet($url);
-    $this->assertSession()->fieldValueEquals('id', 'displaymessage_2');
-    $this->drupalGet($url);
+    $this->assertSession()->fieldValueEquals('id', 'displaymessage_2');    $this->drupalGet($url);
     $this->submitForm($edit, 'Save block');
-    $this->assertText('The block configuration has been saved.');
+    $this->assertSession()->pageTextContains('The block configuration has been saved.');
 
     // And verify that it continues working beyond just the first two.
     $this->drupalGet($url);

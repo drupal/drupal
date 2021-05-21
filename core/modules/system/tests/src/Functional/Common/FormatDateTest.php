@@ -42,7 +42,7 @@ class FormatDateTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/regional/date-time/formats/add');
     $this->submitForm($edit, 'Add format');
-    $this->assertText('Custom date format added.');
+    $this->assertSession()->pageTextContains('Custom date format added.');
 
     /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
     $date_formatter = $this->container->get('date.formatter');

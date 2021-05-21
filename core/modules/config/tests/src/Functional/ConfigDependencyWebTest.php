@@ -70,8 +70,8 @@ class ConfigDependencyWebTest extends BrowserTestBase {
     $this->assertNoText('Configuration deletions');
     $this->drupalGet($entity1->toUrl('delete-form'));
     $this->assertNoText('Configuration updates');
-    $this->assertText('Configuration deletions');
-    $this->assertText($entity2->id());
+    $this->assertSession()->pageTextContains('Configuration deletions');
+    $this->assertSession()->pageTextContains($entity2->id());
     $this->drupalGet($entity1->toUrl('delete-form'));
     $this->submitForm([], 'Delete');
     $storage->resetCache();
@@ -118,10 +118,10 @@ class ConfigDependencyWebTest extends BrowserTestBase {
     $entity3->save();
 
     $this->drupalGet($entity1->toUrl('delete-form'));
-    $this->assertText('Configuration updates');
+    $this->assertSession()->pageTextContains('Configuration updates');
     $this->assertNoText('Configuration deletions');
     $this->assertNoText($entity2->id());
-    $this->assertText($entity2->label());
+    $this->assertSession()->pageTextContains($entity2->label());
     $this->assertNoText($entity3->id());
     $this->drupalGet($entity1->toUrl('delete-form'));
     $this->submitForm([], 'Delete');

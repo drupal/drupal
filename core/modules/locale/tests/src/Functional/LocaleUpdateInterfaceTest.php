@@ -64,10 +64,10 @@ class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
 
     // One language added, all translations up to date.
     $this->drupalGet('admin/reports/status');
-    $this->assertText('Translation update status');
-    $this->assertText('Up to date');
+    $this->assertSession()->pageTextContains('Translation update status');
+    $this->assertSession()->pageTextContains('Up to date');
     $this->drupalGet('admin/reports/translations');
-    $this->assertText('All translations up to date.');
+    $this->assertSession()->pageTextContains('All translations up to date.');
 
     // Set locale_test_translate module to have a local translation available.
     $status = locale_translation_get_status();
@@ -76,10 +76,10 @@ class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
 
     // Check if updates are available for German.
     $this->drupalGet('admin/reports/status');
-    $this->assertText('Translation update status');
+    $this->assertSession()->pageTextContains('Translation update status');
     $this->assertRaw(t('Updates available for: @languages. See the <a href=":updates">Available translation updates</a> page for more information.', ['@languages' => t('German'), ':updates' => Url::fromRoute('locale.translate_status')->toString()]));
     $this->drupalGet('admin/reports/translations');
-    $this->assertText('Updates for: Locale test translate');
+    $this->assertSession()->pageTextContains('Updates for: Locale test translate');
 
     // Set locale_test_translate module to have a dev release and no
     // translation found.
@@ -90,10 +90,10 @@ class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
 
     // Check if no updates were found.
     $this->drupalGet('admin/reports/status');
-    $this->assertText('Translation update status');
+    $this->assertSession()->pageTextContains('Translation update status');
     $this->assertRaw(t('Missing translations for: @languages. See the <a href=":updates">Available translation updates</a> page for more information.', ['@languages' => t('German'), ':updates' => Url::fromRoute('locale.translate_status')->toString()]));
     $this->drupalGet('admin/reports/translations');
-    $this->assertText('Missing translations for one project');
+    $this->assertSession()->pageTextContains('Missing translations for one project');
     $release_details = new FormattableMarkup('@module (@version). @info', [
       '@module' => 'Locale test translate',
       '@version' => '1.3-dev',
@@ -110,8 +110,8 @@ class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
 
     // Check if Drupal core is not translated.
     $this->drupalGet('admin/reports/translations');
-    $this->assertText('Missing translations for 2 projects');
-    $this->assertText('Drupal core (8.1.1).');
+    $this->assertSession()->pageTextContains('Missing translations for 2 projects');
+    $this->assertSession()->pageTextContains('Drupal core (8.1.1).');
 
     // Override Drupal core translation status as 'translations available'.
     $status = locale_translation_get_status();
@@ -122,8 +122,8 @@ class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
 
     // Check if translations are available for Drupal core.
     $this->drupalGet('admin/reports/translations');
-    $this->assertText('Updates for: Drupal core');
-    $this->assertText('Drupal core (' . $this->container->get('date.formatter')->format(REQUEST_TIME, 'html_date') . ')');
+    $this->assertSession()->pageTextContains('Updates for: Drupal core');
+    $this->assertSession()->pageTextContains('Drupal core (' . $this->container->get('date.formatter')->format(REQUEST_TIME, 'html_date') . ')');
     $this->assertSession()->buttonExists('Update translations');
   }
 

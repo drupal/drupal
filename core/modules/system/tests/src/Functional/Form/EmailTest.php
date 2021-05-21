@@ -42,7 +42,7 @@ class EmailTest extends BrowserTestBase {
     $this->submitForm($edit, 'Submit');
     $values = Json::decode($this->getSession()->getPage()->getContent());
     $this->assertSame('', $values['email']);
-    $this->assertEqual('foo.bar@example.com', $values['email_required']);
+    $this->assertEquals('foo.bar@example.com', $values['email_required']);
 
     $edit = [];
     $edit['email'] = 'foo@example.com';
@@ -50,8 +50,8 @@ class EmailTest extends BrowserTestBase {
     $this->drupalGet('form-test/email');
     $this->submitForm($edit, 'Submit');
     $values = Json::decode($this->getSession()->getPage()->getContent());
-    $this->assertEqual('foo@example.com', $values['email']);
-    $this->assertEqual('example@drupal.org', $values['email_required']);
+    $this->assertEquals('foo@example.com', $values['email']);
+    $this->assertEquals('example@drupal.org', $values['email_required']);
   }
 
 }

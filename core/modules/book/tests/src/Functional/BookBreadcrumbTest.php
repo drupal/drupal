@@ -175,7 +175,7 @@ class BookBreadcrumbTest extends BrowserTestBase {
     }
     // Home link and four parent book nodes should be in the breadcrumb.
     $this->assertCount(5, $got_breadcrumb);
-    $this->assertEqual($nodes[3]->getTitle(), end($got_breadcrumb));
+    $this->assertEquals($nodes[3]->getTitle(), end($got_breadcrumb));
     $edit = [
       'title[0][value]' => 'Updated node5 title',
     ];
@@ -189,7 +189,7 @@ class BookBreadcrumbTest extends BrowserTestBase {
       $got_breadcrumb[] = $link->getText();
     }
     $this->assertCount(5, $got_breadcrumb);
-    $this->assertEqual($edit['title[0][value]'], end($got_breadcrumb));
+    $this->assertEquals($edit['title[0][value]'], end($got_breadcrumb));
   }
 
   /**
@@ -211,7 +211,7 @@ class BookBreadcrumbTest extends BrowserTestBase {
       $got_breadcrumb[] = $link->getText();
     }
     $this->assertCount(5, $got_breadcrumb);
-    $this->assertEqual($edit['title[0][value]'], end($got_breadcrumb));
+    $this->assertEquals($edit['title[0][value]'], end($got_breadcrumb));
     $config = $this->container->get('config.factory')->getEditable('book_breadcrumb_test.settings');
     $config->set('hide', TRUE)->save();
     $this->drupalGet($nodes[4]->toUrl());
@@ -221,7 +221,7 @@ class BookBreadcrumbTest extends BrowserTestBase {
       $got_breadcrumb[] = $link->getText();
     }
     $this->assertCount(4, $got_breadcrumb);
-    $this->assertEqual($nodes[2]->getTitle(), end($got_breadcrumb));
+    $this->assertEquals($nodes[2]->getTitle(), end($got_breadcrumb));
     $this->drupalGet($nodes[3]->toUrl());
     $this->assertSession()->statusCodeEquals(403);
   }

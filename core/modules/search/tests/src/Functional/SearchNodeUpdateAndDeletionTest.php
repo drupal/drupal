@@ -64,7 +64,7 @@ class SearchNodeUpdateAndDeletionTest extends BrowserTestBase {
     $edit = ['keys' => 'knights'];
     $this->drupalGet('search/node');
     $this->submitForm($edit, 'Search');
-    $this->assertText($node->label());
+    $this->assertSession()->pageTextContains($node->label());
 
     // Update the node
     $node->body->value = "We want a shrubbery!";
@@ -77,7 +77,7 @@ class SearchNodeUpdateAndDeletionTest extends BrowserTestBase {
     $edit = ['keys' => 'shrubbery'];
     $this->drupalGet('search/node');
     $this->submitForm($edit, 'Search');
-    $this->assertText($node->label());
+    $this->assertSession()->pageTextContains($node->label());
   }
 
   /**
@@ -99,7 +99,7 @@ class SearchNodeUpdateAndDeletionTest extends BrowserTestBase {
     $edit = ['keys' => 'dragons'];
     $this->drupalGet('search/node');
     $this->submitForm($edit, 'Search');
-    $this->assertText($node->label());
+    $this->assertSession()->pageTextContains($node->label());
 
     // Get the node info from the search index tables.
     $connection = Database::getConnection();

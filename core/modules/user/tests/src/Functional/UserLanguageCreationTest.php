@@ -47,7 +47,7 @@ class UserLanguageCreationTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/regional/language/detection');
     $this->submitForm($edit, 'Save settings');
-    $this->assertText('Language detection configuration saved.');
+    $this->assertSession()->pageTextContains('Language detection configuration saved.');
 
     // Check if the language selector is available on admin/people/create and
     // set to the currently active language.
@@ -68,8 +68,8 @@ class UserLanguageCreationTest extends BrowserTestBase {
     $this->submitForm($edit, 'Create new account');
 
     $user = user_load_by_name($username);
-    $this->assertEqual($langcode, $user->getPreferredLangcode(), 'New user has correct preferred language set.');
-    $this->assertEqual($langcode, $user->language()->getId(), 'New user has correct profile language set.');
+    $this->assertEquals($langcode, $user->getPreferredLangcode(), 'New user has correct preferred language set.');
+    $this->assertEquals($langcode, $user->language()->getId(), 'New user has correct profile language set.');
 
     // Register a new user and check if the language selector is hidden.
     $this->drupalLogout();
@@ -87,8 +87,8 @@ class UserLanguageCreationTest extends BrowserTestBase {
     $this->submitForm($edit, 'Create new account');
 
     $user = user_load_by_name($username);
-    $this->assertEqual($langcode, $user->getPreferredLangcode(), 'New user has correct preferred language set.');
-    $this->assertEqual($langcode, $user->language()->getId(), 'New user has correct profile language set.');
+    $this->assertEquals($langcode, $user->getPreferredLangcode(), 'New user has correct preferred language set.');
+    $this->assertEquals($langcode, $user->language()->getId(), 'New user has correct profile language set.');
 
     // Test that the admin can use the language selector and if the correct
     // language is saved.

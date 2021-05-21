@@ -62,7 +62,7 @@ class SearchNodePunctuationTest extends BrowserTestBase {
     $edit = ['keys' => '"bunny\'s"'];
     $this->drupalGet('search/node');
     $this->submitForm($edit, 'Search');
-    $this->assertText($node->label());
+    $this->assertSession()->pageTextContains($node->label());
 
     // Check if the author is linked correctly to the user profile page.
     $username = $node->getOwner()->getAccountName();
@@ -73,13 +73,13 @@ class SearchNodePunctuationTest extends BrowserTestBase {
     $this->drupalGet('search/node');
     $this->submitForm($edit, 'Search');
     $this->assertNoRaw('<strong>&</strong>amp;');
-    $this->assertText('You must include at least one keyword');
+    $this->assertSession()->pageTextContains('You must include at least one keyword');
 
     $edit = ['keys' => '&amp;'];
     $this->drupalGet('search/node');
     $this->submitForm($edit, 'Search');
     $this->assertNoRaw('<strong>&</strong>amp;');
-    $this->assertText('You must include at least one keyword');
+    $this->assertSession()->pageTextContains('You must include at least one keyword');
   }
 
 }

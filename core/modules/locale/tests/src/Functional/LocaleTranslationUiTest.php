@@ -81,7 +81,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     $this->container->get('string_translation')->reset();
     $this->assertRaw('"edit-languages-' . $langcode . '-weight"');
     // Ensure that test language was added.
-    $this->assertText($name);
+    $this->assertSession()->pageTextContains($name);
     $this->drupalLogout();
 
     // Add a whitespace at the end of string to ensure it is found.
@@ -97,10 +97,10 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     // Check that search finds the string as untranslated.
     $this->drupalGet('admin/config/regional/translate');
     $this->submitForm($search, 'Filter');
-    $this->assertText($name);
+    $this->assertSession()->pageTextContains($name);
 
     // No t() here, it's surely not translated yet.
-    $this->assertText($name);
+    $this->assertSession()->pageTextContains($name);
     // Verify that there is no way to translate the string to English.
     $this->assertSession()->optionNotExists('edit-langcode', 'en');
     $this->drupalLogout();
@@ -112,7 +112,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     // Check that search finds the string as untranslated.
     $this->drupalGet('admin/config/regional/translate');
     $this->submitForm($search, 'Filter');
-    $this->assertText($name);
+    $this->assertSession()->pageTextContains($name);
 
     // Assume this is the only result, given the random name.
     $textarea = $this->assertSession()->elementExists('xpath', '//textarea');
@@ -122,9 +122,9 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/regional/translate');
     $this->submitForm($edit, 'Save translations');
-    $this->assertText('The strings have been saved.');
+    $this->assertSession()->pageTextContains('The strings have been saved.');
     $url_bits = explode('?', $this->getUrl());
-    $this->assertEqual(Url::fromRoute('locale.translate_page', [], ['absolute' => TRUE])->toString(), $url_bits[0], 'Correct page redirection.');
+    $this->assertEquals(Url::fromRoute('locale.translate_page', [], ['absolute' => TRUE])->toString(), $url_bits[0], 'Correct page redirection.');
     $search = [
       'string' => $name,
       'langcode' => $langcode,
@@ -175,12 +175,12 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/regional/translate');
     $this->submitForm($search, 'Filter');
-    $this->assertText('No strings available.');
+    $this->assertSession()->pageTextContains('No strings available.');
 
     // Test invalidation of 'rendered' cache tag after string translation.
     $this->drupalLogout();
     $this->drupalGet('xx/user/login');
-    $this->assertText('Enter the password that accompanies your username.');
+    $this->assertSession()->pageTextContains('Enter the password that accompanies your username.');
 
     $this->drupalLogin($translate_user);
     $search = [
@@ -200,7 +200,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
 
     $this->drupalLogout();
     $this->drupalGet('xx/user/login');
-    $this->assertText('Please enter your Llama username.');
+    $this->assertSession()->pageTextContains('Please enter your Llama username.');
 
     // Delete the language.
     $this->drupalLogin($admin_user);
@@ -437,7 +437,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     // assertText() seems to remove the input field where $name always could be
     // found, so this is not a false assert. See how assertNoText succeeds
     // later.
-    $this->assertText($name);
+    $this->assertSession()->pageTextContains($name);
 
     // Ensure untranslated string doesn't appear if searching on 'only
     // translated strings'.
@@ -448,7 +448,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/regional/translate');
     $this->submitForm($search, 'Filter');
-    $this->assertText('No strings available.');
+    $this->assertSession()->pageTextContains('No strings available.');
 
     // Ensure untranslated string appears if searching on 'only untranslated
     // strings'.
@@ -492,7 +492,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/regional/translate');
     $this->submitForm($search, 'Filter');
-    $this->assertText('No strings available.');
+    $this->assertSession()->pageTextContains('No strings available.');
 
     // Ensure translated string doesn't appear if searching on 'only
     // untranslated strings'.
@@ -503,7 +503,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/regional/translate');
     $this->submitForm($search, 'Filter');
-    $this->assertText('No strings available.');
+    $this->assertSession()->pageTextContains('No strings available.');
 
     // Ensure translated string does appear if searching on the custom language.
     $search = [
@@ -523,7 +523,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/regional/translate');
     $this->submitForm($search, 'Filter');
-    $this->assertText('No strings available.');
+    $this->assertSession()->pageTextContains('No strings available.');
 
     // Search for a string that isn't in the system.
     $unavailable_string = $this->randomMachineName(16);
@@ -534,7 +534,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/regional/translate');
     $this->submitForm($search, 'Filter');
-    $this->assertText('No strings available.');
+    $this->assertSession()->pageTextContains('No strings available.');
   }
 
   /**
@@ -577,7 +577,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     $this->drupalGet('admin/config/regional/translate');
     $this->submitForm($search, 'Filter');
 
-    $this->assertText($translation->getString());
+    $this->assertSession()->pageTextContains($translation->getString());
 
     // Submit the translations without changing the translation.
     $textarea = $this->assertSession()->elementExists('xpath', '//textarea');
@@ -598,7 +598,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/regional/translate');
     $this->submitForm($search, 'Filter');
-    $this->assertText($string->getString());
+    $this->assertSession()->pageTextContains($string->getString());
 
     // Submit the translations with a new translation.
     $textarea = $this->assertSession()->elementExists('xpath', '//textarea');
@@ -619,7 +619,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/regional/translate');
     $this->submitForm($search, 'Filter');
-    $this->assertText($string->getString());
+    $this->assertSession()->pageTextContains($string->getString());
   }
 
 }

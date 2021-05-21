@@ -47,7 +47,7 @@ class BlockLanguageTest extends BrowserTestBase {
     $this->submitForm($edit, 'Add language');
 
     // Verify that language was added successfully.
-    $this->assertText('French');
+    $this->assertSession()->pageTextContains('French');
   }
 
   /**
@@ -80,7 +80,7 @@ class BlockLanguageTest extends BrowserTestBase {
 
     // Check that a page has a block.
     $this->drupalGet('en');
-    $this->assertText('Powered by Drupal');
+    $this->assertSession()->pageTextContains('Powered by Drupal');
 
     // Check that a page doesn't has a block for the current language anymore.
     $this->drupalGet('fr');
@@ -106,7 +106,7 @@ class BlockLanguageTest extends BrowserTestBase {
 
     // Check that we have the language in config after saving the setting.
     $visibility = $block->getVisibility();
-    $this->assertEqual('fr', $visibility['language']['langcodes']['fr'], 'Language is set in the block configuration.');
+    $this->assertEquals('fr', $visibility['language']['langcodes']['fr'], 'Language is set in the block configuration.');
 
     // Delete the language.
     $this->drupalGet('admin/config/regional/language/delete/fr');
@@ -164,7 +164,7 @@ class BlockLanguageTest extends BrowserTestBase {
     $this->drupalGet('node', ['query' => ['language' => 'en']]);
     $this->assertNoText('Powered by Drupal');
     $this->drupalGet('node', ['query' => ['language' => 'fr']]);
-    $this->assertText('Powered by Drupal');
+    $this->assertSession()->pageTextContains('Powered by Drupal');
 
     // Log in again in order to clear the interface language stored in the
     // session.
@@ -196,7 +196,7 @@ class BlockLanguageTest extends BrowserTestBase {
     $this->drupalGet('en');
     $this->assertNoText('Powered by Drupal');
     $this->drupalGet('fr');
-    $this->assertText('Powered by Drupal');
+    $this->assertSession()->pageTextContains('Powered by Drupal');
   }
 
 }

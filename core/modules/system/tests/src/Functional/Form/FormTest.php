@@ -266,7 +266,7 @@ class FormTest extends BrowserTestBase {
     $element = $assert->fieldExists('textfield');
     $this->assertEmpty($element->getValue());
     $assert->responseNotContains($random_string);
-    $this->assertText('The form has become outdated.');
+    $this->assertSession()->pageTextContains('The form has become outdated.');
     // Ensure that we don't use the posted values.
     $this->assertSession()->fieldValueEquals('textfield', '');
     $this->assertSession()->checkboxNotChecked('edit-checkboxes-foo');
@@ -287,7 +287,7 @@ class FormTest extends BrowserTestBase {
     // Verify that the error message is displayed with invalid token even when
     // required fields are filled.
     $this->assertSession()->elementExists('xpath', '//div[contains(@class, "error")]');
-    $this->assertText('The form has become outdated.');
+    $this->assertSession()->pageTextContains('The form has become outdated.');
     $this->assertSession()->fieldValueEquals('textfield', '');
     $this->assertSession()->fieldValueEquals('textarea', '');
 
@@ -305,7 +305,7 @@ class FormTest extends BrowserTestBase {
     // Verify that the error message is displayed with invalid token even when
     // required fields are filled.'
     $this->assertSession()->elementExists('xpath', '//div[contains(@class, "error")]');
-    $this->assertText('The form has become outdated.');
+    $this->assertSession()->pageTextContains('The form has become outdated.');
     $this->assertSession()->fieldValueEquals('integer_step', 5);
 
     // Check a form with a Url field
@@ -320,7 +320,7 @@ class FormTest extends BrowserTestBase {
     // Verify that the error message is displayed with invalid token even when
     // required fields are filled.
     $this->assertSession()->elementExists('xpath', '//div[contains(@class, "error")]');
-    $this->assertText('The form has become outdated.');
+    $this->assertSession()->pageTextContains('The form has become outdated.');
     $this->assertSession()->fieldValueEquals('url', '');
   }
 
@@ -439,7 +439,7 @@ class FormTest extends BrowserTestBase {
         'multiple_no_default_required',
     ];
     foreach ($expected_errors as $key) {
-      $this->assertText($form[$key]['#title'] . ' field is required.');
+      $this->assertSession()->pageTextContains($form[$key]['#title'] . ' field is required.');
     }
 
     // Post values for required fields.
@@ -676,10 +676,10 @@ class FormTest extends BrowserTestBase {
     $this->drupalGet('form-test/range');
     $this->submitForm([], 'Submit');
     $values = json_decode($this->getSession()->getPage()->getContent());
-    $this->assertEqual(18, $values->with_default_value);
-    $this->assertEqual(10.5, $values->float);
-    $this->assertEqual(6, $values->integer);
-    $this->assertEqual(6.9, $values->offset);
+    $this->assertEquals(18, $values->with_default_value);
+    $this->assertEquals(10.5, $values->float);
+    $this->assertEquals(6, $values->integer);
+    $this->assertEquals(6.9, $values->offset);
 
     $this->drupalGet('form-test/range/invalid');
     $this->submitForm([], 'Submit');
@@ -710,7 +710,7 @@ class FormTest extends BrowserTestBase {
       $this->drupalGet('form-test/color');
       $this->submitForm($edit, 'Submit');
       $result = json_decode($this->getSession()->getPage()->getContent());
-      $this->assertEqual($expected, $result->color);
+      $this->assertEquals($expected, $result->color);
     }
 
     // Tests invalid values are rejected.
@@ -770,7 +770,7 @@ class FormTest extends BrowserTestBase {
     // the disabled container.
     $actual_count = count($disabled_elements);
     $expected_count = 42;
-    $this->assertEqual($expected_count, $actual_count, new FormattableMarkup('Found @actual elements with disabled property (expected @expected).', ['@actual' => count($disabled_elements), '@expected' => $expected_count]));
+    $this->assertEquals($expected_count, $actual_count, new FormattableMarkup('Found @actual elements with disabled property (expected @expected).', ['@actual' => count($disabled_elements), '@expected' => $expected_count]));
 
     // Mink does not "see" hidden elements, so we need to set the value of the
     // hidden element directly.
@@ -881,7 +881,7 @@ class FormTest extends BrowserTestBase {
     // an input forgery.
     // @see \Drupal\form_test\Form\FormTestInputForgeryForm::postRender
     $this->submitForm(['checkboxes[one]' => TRUE, 'checkboxes[two]' => TRUE], 'Submit');
-    $this->assertText('An illegal choice has been detected.');
+    $this->assertSession()->pageTextContains('An illegal choice has been detected.');
   }
 
   /**

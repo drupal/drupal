@@ -70,7 +70,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
     ];
     $this->drupalGet('block/add');
     $this->submitForm($edit, 'Save');
-    $this->assertText('basic Moderated block has been created.');
+    $this->assertSession()->pageTextContains('basic Moderated block has been created.');
 
     // Place the block in the Sidebar First region.
     $instance = [
@@ -86,7 +86,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
     // Navigate to home page and check that the block is visible. It should be
     // visible because it is the default revision.
     $this->drupalGet('');
-    $this->assertText($body);
+    $this->assertSession()->pageTextContains($body);
 
     // Update the block.
     $updated_body = 'This is the new body value';
@@ -96,13 +96,13 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
     ];
     $this->drupalGet('block/' . $block->id());
     $this->submitForm($edit, 'Save');
-    $this->assertText('basic Moderated block has been updated.');
+    $this->assertSession()->pageTextContains('basic Moderated block has been updated.');
 
     // Navigate to the home page and check that the block shows the updated
     // content. It should show the updated content because the block's default
     // revision is not a published moderation state.
     $this->drupalGet('');
-    $this->assertText($updated_body);
+    $this->assertSession()->pageTextContains($updated_body);
 
     // Publish the block so we can create a pending revision.
     $this->drupalGet('block/' . $block->id());
@@ -116,12 +116,12 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
     ];
     $this->drupalGet('block/' . $block->id());
     $this->submitForm($edit, 'Save');
-    $this->assertText('basic Moderated block has been updated.');
+    $this->assertSession()->pageTextContains('basic Moderated block has been updated.');
 
     // Navigate to home page and check that the pending revision doesn't show,
     // since it should not be set as the default revision.
     $this->drupalGet('');
-    $this->assertText($updated_body);
+    $this->assertSession()->pageTextContains($updated_body);
 
     // Open the latest tab and publish the new draft.
     $edit = [
@@ -129,18 +129,18 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
     ];
     $this->drupalGet('block/' . $block->id() . '/latest');
     $this->submitForm($edit, 'Apply');
-    $this->assertText('The moderation state has been updated.');
+    $this->assertSession()->pageTextContains('The moderation state has been updated.');
 
     // Navigate to home page and check that the pending revision is now the
     // default revision and therefore visible.
     $this->drupalGet('');
-    $this->assertText($pending_revision_body);
+    $this->assertSession()->pageTextContains($pending_revision_body);
 
     // Check that revision is checked by default when content moderation is
     // enabled.
     $this->drupalGet('/block/' . $block->id());
     $this->assertSession()->checkboxChecked('revision');
-    $this->assertText('Revisions must be required when moderation is enabled.');
+    $this->assertSession()->pageTextContains('Revisions must be required when moderation is enabled.');
     $this->assertSession()->fieldDisabled('revision');
   }
 

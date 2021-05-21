@@ -116,7 +116,7 @@ class FilterUITest extends UITestBase {
     ];
     $this->drupalGet($path);
     $this->submitForm($edit, 'Apply');
-    $this->assertText('The identifier is required if the filter is exposed.');
+    $this->assertSession()->pageTextContains('The identifier is required if the filter is exposed.');
 
     // Set the identifier to 'value'.
     $edit = [
@@ -124,7 +124,7 @@ class FilterUITest extends UITestBase {
     ];
     $this->drupalGet($path);
     $this->submitForm($edit, 'Apply');
-    $this->assertText('This identifier is not allowed.');
+    $this->assertSession()->pageTextContains('This identifier is not allowed.');
 
     // Try a few restricted values for the identifier.
     foreach (['value value', 'value^value'] as $identifier) {
@@ -133,7 +133,7 @@ class FilterUITest extends UITestBase {
       ];
       $this->drupalGet($path);
       $this->submitForm($edit, 'Apply');
-      $this->assertText('This identifier has illegal characters.');
+      $this->assertSession()->pageTextContains('This identifier has illegal characters.');
     }
   }
 

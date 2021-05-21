@@ -39,7 +39,7 @@ class DateFormatsMachineNameTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/regional/date-time/formats/add');
     $this->submitForm($edit, 'Add format');
-    $this->assertText('The machine-readable name must be unique, and can only contain lowercase letters, numbers, and underscores. Additionally, it can not be the reserved word "custom".');
+    $this->assertSession()->pageTextContains('The machine-readable name must be unique, and can only contain lowercase letters, numbers, and underscores. Additionally, it can not be the reserved word "custom".');
 
     // Try to create a date format with the reserved machine name "custom".
     $edit = [
@@ -49,7 +49,7 @@ class DateFormatsMachineNameTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/regional/date-time/formats/add');
     $this->submitForm($edit, 'Add format');
-    $this->assertText('The machine-readable name must be unique, and can only contain lowercase letters, numbers, and underscores. Additionally, it can not be the reserved word "custom".');
+    $this->assertSession()->pageTextContains('The machine-readable name must be unique, and can only contain lowercase letters, numbers, and underscores. Additionally, it can not be the reserved word "custom".');
 
     // Try to create a date format with a machine name, "fallback", that
     // already exists.
@@ -60,7 +60,7 @@ class DateFormatsMachineNameTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/regional/date-time/formats/add');
     $this->submitForm($edit, 'Add format');
-    $this->assertText('The machine-readable name is already in use. It must be unique.');
+    $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
 
     // Create a date format with a machine name distinct from the previous two.
     $id = mb_strtolower($this->randomMachineName(16));
@@ -71,7 +71,7 @@ class DateFormatsMachineNameTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/regional/date-time/formats/add');
     $this->submitForm($edit, 'Add format');
-    $this->assertText('Custom date format added.');
+    $this->assertSession()->pageTextContains('Custom date format added.');
 
     // Try to create a date format with same machine name as the previous one.
     $edit = [
@@ -81,7 +81,7 @@ class DateFormatsMachineNameTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/regional/date-time/formats/add');
     $this->submitForm($edit, 'Add format');
-    $this->assertText('The machine-readable name is already in use. It must be unique.');
+    $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
   }
 
 }

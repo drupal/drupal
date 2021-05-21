@@ -34,7 +34,7 @@ class SyslogTest extends BrowserTestBase {
     if (defined('LOG_LOCAL6')) {
       $this->drupalGet('admin/config/development/logging');
       $this->submitForm(['syslog_facility' => LOG_LOCAL6], 'Save configuration');
-      $this->assertText('The configuration options have been saved.');
+      $this->assertSession()->pageTextContains('The configuration options have been saved.');
 
       $this->drupalGet('admin/config/development/logging');
       // Should be one field.

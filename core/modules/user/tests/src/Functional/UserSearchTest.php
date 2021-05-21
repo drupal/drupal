@@ -37,15 +37,15 @@ class UserSearchTest extends BrowserTestBase {
     $edit = ['keys' => $keys];
     $this->drupalGet('search/user');
     $this->submitForm($edit, 'Search');
-    $this->assertText('Your search yielded no results.');
-    $this->assertText('no results');
+    $this->assertSession()->pageTextContains('Your search yielded no results.');
+    $this->assertSession()->pageTextContains('no results');
 
     // Verify that a non-matching query gives an appropriate message.
     $keys = 'nomatch';
     $edit = ['keys' => $keys];
     $this->drupalGet('search/user');
     $this->submitForm($edit, 'Search');
-    $this->assertText('no results');
+    $this->assertSession()->pageTextContains('no results');
 
     // Verify that a user with search permission can search for users by name.
     $keys = $user1->getAccountName();
@@ -80,31 +80,31 @@ class UserSearchTest extends BrowserTestBase {
     $edit = ['keys' => $keys];
     $this->drupalGet('search/user');
     $this->submitForm($edit, 'Search');
-    $this->assertText($keys);
-    $this->assertText($user2->getAccountName());
+    $this->assertSession()->pageTextContains($keys);
+    $this->assertSession()->pageTextContains($user2->getAccountName());
 
     // Verify that a substring works too for email.
     $subkey = substr($keys, 1, 5);
     $edit = ['keys' => $subkey];
     $this->drupalGet('search/user');
     $this->submitForm($edit, 'Search');
-    $this->assertText($keys);
-    $this->assertText($user2->getAccountName());
+    $this->assertSession()->pageTextContains($keys);
+    $this->assertSession()->pageTextContains($user2->getAccountName());
 
     // Verify that wildcard search works for email
     $subkey = substr($keys, 0, 2) . '*' . substr($keys, 4, 2);
     $edit = ['keys' => $subkey];
     $this->drupalGet('search/user');
     $this->submitForm($edit, 'Search');
-    $this->assertText($user2->getAccountName());
+    $this->assertSession()->pageTextContains($user2->getAccountName());
 
     // Verify that if they search by user name, they see email address too.
     $keys = $user1->getAccountName();
     $edit = ['keys' => $keys];
     $this->drupalGet('search/user');
     $this->submitForm($edit, 'Search');
-    $this->assertText($keys);
-    $this->assertText($user1->getEmail());
+    $this->assertSession()->pageTextContains($keys);
+    $this->assertSession()->pageTextContains($user1->getEmail());;
 
     // Create a blocked user.
     $blocked_user = $this->drupalCreateUser();
@@ -116,7 +116,7 @@ class UserSearchTest extends BrowserTestBase {
     $edit = ['keys' => $blocked_user->getAccountName()];
     $this->drupalGet('search/user');
     $this->submitForm($edit, 'Search');
-    $this->assertText($blocked_user->getAccountName());
+    $this->assertSession()->pageTextContains($blocked_user->getAccountName());
 
     // Verify that users without "administer users" permissions do not see
     // blocked accounts in search results.
@@ -124,7 +124,7 @@ class UserSearchTest extends BrowserTestBase {
     $edit = ['keys' => $blocked_user->getAccountName()];
     $this->drupalGet('search/user');
     $this->submitForm($edit, 'Search');
-    $this->assertText('Your search yielded no results.');
+    $this->assertSession()->pageTextContains('Your search yielded no results.');
 
     // Ensure that a user without access to user profiles cannot access the
     // user search page.

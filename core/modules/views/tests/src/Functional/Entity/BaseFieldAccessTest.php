@@ -66,7 +66,7 @@ class BaseFieldAccessTest extends ViewTestBase {
    */
   public function testProtectedField() {
     $this->drupalGet('test-entity-protected-access');
-    $this->assertText('ok to see this one');
+    $this->assertSession()->pageTextContains('ok to see this one');
     $this->assertNoText('no access value');
   }
 

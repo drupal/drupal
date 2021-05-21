@@ -65,22 +65,22 @@ class SearchAdvancedSearchFormTest extends BrowserTestBase {
 
     // Search for the title of the node with a GET query.
     $this->drupalGet('search/node', ['query' => ['keys' => $this->node->label()]]);
-    $this->assertText($this->node->label());
+    $this->assertSession()->pageTextContains($this->node->label());
 
     // Search for the title of the node with a POST query.
     $edit = ['or' => $this->node->label()];
     $this->drupalGet('search/node');
     $this->submitForm($edit, 'edit-submit--2');
-    $this->assertText($this->node->label());
+    $this->assertSession()->pageTextContains($this->node->label());
 
     // Search by node type.
     $this->drupalGet('search/node');
     $this->submitForm(array_merge($edit, ['type[page]' => 'page']), 'edit-submit--2');
-    $this->assertText($this->node->label());
+    $this->assertSession()->pageTextContains($this->node->label());
 
     $this->drupalGet('search/node');
     $this->submitForm(array_merge($edit, ['type[article]' => 'article']), 'edit-submit--2');
-    $this->assertText('search yielded no results');
+    $this->assertSession()->pageTextContains('search yielded no results');
   }
 
   /**
@@ -100,7 +100,7 @@ class SearchAdvancedSearchFormTest extends BrowserTestBase {
     // Test that the encoded query appears in the page title. Only test the
     // part not including the quote, because assertText() cannot seem to find
     // the quote marks successfully.
-    $this->assertText('Search for cat dog OR gerbil -fish -snake');
+    $this->assertSession()->pageTextContains('Search for cat dog OR gerbil -fish -snake');
 
     // Verify that all of the form fields are filled out.
     foreach ($edit as $key => $value) {
@@ -118,7 +118,7 @@ class SearchAdvancedSearchFormTest extends BrowserTestBase {
     $edit2 = ['keys' => 'cat dog OR gerbil -fish -snake'];
     $this->drupalGet('search/node');
     $this->submitForm($edit2, 'edit-submit--2');
-    $this->assertText('Search for cat dog OR gerbil -fish -snake');
+    $this->assertSession()->pageTextContains('Search for cat dog OR gerbil -fish -snake');
     foreach ($edit as $key => $value) {
       if ($key != 'type[page]') {
         $this->assertSession()->fieldValueNotEquals($key, $value);

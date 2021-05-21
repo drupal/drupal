@@ -49,28 +49,28 @@ class IpAddressBlockingTest extends BrowserTestBase {
     $edit['ip'] = '1.2.3.3';
     $this->drupalGet('admin/config/people/ban');
     $this->submitForm($edit, 'Add');
-    $this->assertText('This IP address is already banned.');
+    $this->assertSession()->pageTextContains('This IP address is already banned.');
 
     // Try to block a reserved IP address.
     $edit = [];
     $edit['ip'] = '255.255.255.255';
     $this->drupalGet('admin/config/people/ban');
     $this->submitForm($edit, 'Add');
-    $this->assertText('Enter a valid IP address.');
+    $this->assertSession()->pageTextContains('Enter a valid IP address.');
 
     // Try to block a reserved IP address.
     $edit = [];
     $edit['ip'] = 'test.example.com';
     $this->drupalGet('admin/config/people/ban');
     $this->submitForm($edit, 'Add');
-    $this->assertText('Enter a valid IP address.');
+    $this->assertSession()->pageTextContains('Enter a valid IP address.');
 
     // Submit an empty form.
     $edit = [];
     $edit['ip'] = '';
     $this->drupalGet('admin/config/people/ban');
     $this->submitForm($edit, 'Add');
-    $this->assertText('Enter a valid IP address.');
+    $this->assertSession()->pageTextContains('Enter a valid IP address.');
 
     // Pass an IP address as a URL parameter and submit it.
     $submit_ip = '1.2.3.4';
@@ -87,7 +87,7 @@ class IpAddressBlockingTest extends BrowserTestBase {
     // $edit['ip'] = \Drupal::request()->getClientIP();
     // $this->drupalGet('admin/config/people/ban');
     // $this->submitForm($edit, 'Save');
-    // $this->assertText('You may not ban your own IP address.');
+    // $this->assertSession()->pageTextContains('You may not ban your own IP address.');
 
     // Test duplicate ip address are not present in the 'blocked_ips' table.
     // when they are entered programmatically.

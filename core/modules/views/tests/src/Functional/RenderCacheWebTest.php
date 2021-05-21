@@ -61,19 +61,19 @@ class RenderCacheWebTest extends ViewTestBase {
   public function testEmptyView() {
     $this->placeBlock('views_block:node_id_argument-block_1', ['region' => 'header']);
     $this->drupalGet('<front>');
-    $this->assertEqual([], $this->cssSelect('div.region-header div.views-field-title'));
+    $this->assertEquals([], $this->cssSelect('div.region-header div.views-field-title'));
 
     $this->drupalGet($this->nodes[0]->toUrl());
     $result = $this->cssSelect('div.region-header div.views-field-title')[0]->getText();
-    $this->assertEqual('test title 1', $result);
+    $this->assertEquals('test title 1', $result);
 
     $this->drupalGet($this->nodes[1]->toUrl());
     $result = $this->cssSelect('div.region-header div.views-field-title')[0]->getText();
-    $this->assertEqual('test title 2', $result);
+    $this->assertEquals('test title 2', $result);
 
     $this->drupalGet($this->nodes[0]->toUrl());
     $result = $this->cssSelect('div.region-header div.views-field-title')[0]->getText();
-    $this->assertEqual('test title 1', $result);
+    $this->assertEquals('test title 1', $result);
   }
 
   /**

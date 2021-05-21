@@ -77,7 +77,7 @@ class WorkspaceContentModerationIntegrationTest extends ModerationStateTestBase 
     ], 'Save');
 
     $this->drupalGet('/node/1');
-    $this->assertText('First article - draft');
+    $this->assertSession()->pageTextContains('First article - draft');
 
     $this->drupalGet('/node/1/edit');
     $this->assertEquals('Current state Draft', $this->cssSelect('#edit-moderation-state-0-current')[0]->getText());
@@ -91,7 +91,7 @@ class WorkspaceContentModerationIntegrationTest extends ModerationStateTestBase 
     $this->submitForm(['title[0][value]' => 'First article - archived', 'moderation_state[0][state]' => 'archived'], 'Save');
 
     $this->drupalGet('/node/1');
-    $this->assertText('First article - archived');
+    $this->assertSession()->pageTextContains('First article - archived');
 
     // Get the second node to a default revision state and publish the
     // workspace.
@@ -102,10 +102,10 @@ class WorkspaceContentModerationIntegrationTest extends ModerationStateTestBase 
 
     // The admin user can see unpublished nodes.
     $this->drupalGet('/node/1');
-    $this->assertText('First article - archived');
+    $this->assertSession()->pageTextContains('First article - archived');
 
     $this->drupalGet('/node/2');
-    $this->assertText('Second article - published');
+    $this->assertSession()->pageTextContains('Second article - published');
   }
 
 }

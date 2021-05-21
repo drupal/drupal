@@ -91,7 +91,7 @@ class SearchNumbersTest extends BrowserTestBase {
     // Run cron to ensure the content is indexed.
     $this->cronRun();
     $this->drupalGet('admin/reports/dblog');
-    $this->assertText('Cron run completed');
+    $this->assertSession()->pageTextContains('Cron run completed');
   }
 
   /**
@@ -117,7 +117,7 @@ class SearchNumbersTest extends BrowserTestBase {
       // when searching for the number.
       $this->drupalGet('search/node');
       $this->submitForm(['keys' => $number], 'Search');
-      $this->assertText($node->label());
+      $this->assertSession()->pageTextContains($node->label());
     }
   }
 

@@ -92,7 +92,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
 
     // This import should have saved plural forms to have 2 variants.
     $locale_plurals = \Drupal::service('locale.plural.formula')->getNumberOfPlurals('fr');
-    $this->assertEqual(2, $locale_plurals, 'Plural number initialized.');
+    $this->assertEquals(2, $locale_plurals, 'Plural number initialized.');
 
     // Ensure we were redirected correctly.
     $this->assertSession()->addressEquals(Url::fromRoute('locale.translate_page'));
@@ -144,7 +144,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
     $this->drupalGet('admin/config/regional/translate/import');
     $this->submitForm(['langcode' => 'fr', 'files[file]' => $name], 'Import');
     $this->assertSession()->addressEquals(Url::fromRoute('locale.translate_import'));
-    $this->assertText('File to import not found.');
+    $this->assertSession()->pageTextContains('File to import not found.');
 
     // Try importing a .po file with overriding strings, and ensure existing
     // strings are kept.
@@ -162,11 +162,11 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/regional/translate');
     $this->submitForm($search, 'Filter');
-    $this->assertText('No strings available.');
+    $this->assertSession()->pageTextContains('No strings available.');
 
     // This import should not have changed number of plural forms.
     $locale_plurals = \Drupal::service('locale.plural.formula')->getNumberOfPlurals('fr');
-    $this->assertEqual(2, $locale_plurals, 'Plural numbers untouched.');
+    $this->assertEquals(2, $locale_plurals, 'Plural numbers untouched.');
 
     // Try importing a .po file with overriding strings, and ensure existing
     // strings are overwritten.
@@ -188,7 +188,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
     $this->assertNoText('No strings available.');
     // This import should have changed number of plural forms.
     $locale_plurals = \Drupal::service('locale.plural.formula')->reset()->getNumberOfPlurals('fr');
-    $this->assertEqual(3, $locale_plurals, 'Plural numbers changed.');
+    $this->assertEquals(3, $locale_plurals, 'Plural numbers changed.');
 
     // Importing a .po file and mark its strings as customized strings.
     $this->importPoFile($this->getCustomPoFile(), [
@@ -206,7 +206,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertEqual($count, 6, 'Customized translations successfully imported.');
+    $this->assertEquals($count, 6, 'Customized translations successfully imported.');
 
     // Try importing a .po file with overriding strings, and ensure existing
     // customized strings are kept.
@@ -226,7 +226,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/regional/translate');
     $this->submitForm($search, 'Filter');
-    $this->assertText('No strings available.');
+    $this->assertSession()->pageTextContains('No strings available.');
 
     // Try importing a .po file with overriding strings, and ensure existing
     // customized strings are overwritten.
@@ -295,7 +295,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
     // Check that search finds the string as untranslated.
     $this->drupalGet('admin/config/regional/translate');
     $this->submitForm($search, 'Filter');
-    $this->assertText($str);
+    $this->assertSession()->pageTextContains($str);
   }
 
   /**
@@ -353,14 +353,14 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
       ];
       $this->drupalGet('admin/config/regional/translate');
       $this->submitForm($search, 'Filter');
-      $this->assertText($config_string[1]);
+      $this->assertSession()->pageTextContains($config_string[1]);
     }
 
     // Test that translations got recorded in the config system.
     $overrides = \Drupal::service('language.config_factory_override');
     foreach ($config_strings as $config_key => $config_string) {
       $override = $overrides->getOverride($langcode, $config_key);
-      $this->assertEqual($override->get($config_string[2]), $config_string[1]);
+      $this->assertEquals($override->get($config_string[2]), $config_string[1]);
     }
   }
 
@@ -378,7 +378,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
 
     // Check that the 'Anonymous' string is translated.
     $config = \Drupal::languageManager()->getLanguageConfigOverride($langcode, 'user.settings');
-    $this->assertEqual('Anonymous German', $config->get('anonymous'));
+    $this->assertEquals('Anonymous German', $config->get('anonymous'));
   }
 
   /**
@@ -390,7 +390,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
 
     // Get the language.entity.de label and check it's been translated.
     $override = \Drupal::languageManager()->getLanguageConfigOverride('de', 'language.entity.de');
-    $this->assertEqual('Deutsch', $override->get('label'));
+    $this->assertEquals('Deutsch', $override->get('label'));
   }
 
   /**

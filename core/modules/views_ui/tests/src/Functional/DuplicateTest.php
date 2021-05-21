@@ -43,7 +43,7 @@ class DuplicateTest extends UITestBase {
     $this->assertSession()->addressEquals('admin/structure/views/view/' . $view['id']);
 
     // Assert that the page title is correctly displayed.
-    $this->assertText($view['label']);
+    $this->assertSession()->pageTextContains($view['label']);
   }
 
 }
