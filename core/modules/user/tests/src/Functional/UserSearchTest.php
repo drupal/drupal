@@ -104,7 +104,7 @@ class UserSearchTest extends BrowserTestBase {
     $this->drupalGet('search/user');
     $this->submitForm($edit, 'Search');
     $this->assertSession()->pageTextContains($keys);
-    $this->assertSession()->pageTextContains($user1->getEmail());;
+    $this->assertSession()->pageTextContains($user1->getEmail());
 
     // Create a blocked user.
     $blocked_user = $this->drupalCreateUser();
