@@ -82,8 +82,8 @@ class TransformedConfigExportImportUITest extends BrowserTestBase {
 
     // Assert the new name and slogan.
     $this->drupalGet('admin/config/development/configuration/sync/diff/system.site');
-    $this->assertText(Html::escape("name: 'Drupal Arrr'"));
-    $this->assertText(Html::escape("slogan: '$originalSlogan Arrr'"));
+    $this->assertSession()->pageTextContains("name: 'Drupal Arrr'");
+    $this->assertSession()->pageTextContains("slogan: '$originalSlogan Arrr'");
     $this->assertEqual('Drupal', $this->config('system.site')->get('name'));
     $this->assertEqual($newSlogan, $this->config('system.site')->get('slogan'));
 

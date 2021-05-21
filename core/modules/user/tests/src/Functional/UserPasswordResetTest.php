@@ -467,7 +467,7 @@ class UserPasswordResetTest extends BrowserTestBase {
    */
   public function assertNoValidPasswordReset($name) {
     // Make sure the error text is displayed and no email sent.
-    $this->assertText($name . ' is not recognized as a username or an email address.');
+    $this->assertSession()->pageTextContains($name . ' is not recognized as a username or an email address.');
     $this->assertCount(0, $this->drupalGetMails(['id' => 'user_password_reset']), 'No e-mail was sent when requesting a password for an invalid account.');
   }
 
@@ -475,7 +475,7 @@ class UserPasswordResetTest extends BrowserTestBase {
    * Makes assertions about a password reset triggering user flood control.
    */
   public function assertPasswordUserFlood() {
-    $this->assertText('Too many password recovery requests for this account. It is temporarily blocked. Try again later or contact the site administrator.');
+    $this->assertSession()->pageTextContains('Too many password recovery requests for this account. It is temporarily blocked. Try again later or contact the site administrator.');
   }
 
   /**

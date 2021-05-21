@@ -47,34 +47,34 @@ class FormStoragePageCacheTest extends BrowserTestBase {
   public function testValidateFormStorageOnCachedPage() {
     $this->drupalGet('form-test/form-storage-page-cache');
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'MISS');
-    $this->assertText('No old build id');
+    $this->assertSession()->pageTextContains('No old build id');
     $build_id_initial = $this->getFormBuildId();
 
     // Trigger validation error by submitting an empty title.
     $edit = ['title' => ''];
     $this->submitForm($edit, 'Save');
-    $this->assertText('No old build id');
+    $this->assertSession()->pageTextContains('No old build id');
     $build_id_first_validation = $this->getFormBuildId();
     $this->assertNotEquals($build_id_initial, $build_id_first_validation, 'Build id changes when form validation fails');
 
     // Trigger validation error by again submitting an empty title.
     $edit = ['title' => ''];
     $this->submitForm($edit, 'Save');
-    $this->assertText('No old build id');
+    $this->assertSession()->pageTextContains('No old build id');
     $build_id_second_validation = $this->getFormBuildId();
     $this->assertEqual($build_id_first_validation, $build_id_second_validation, 'Build id remains the same when form validation fails subsequently');
 
     // Repeat the test sequence but this time with a page loaded from the cache.
     $this->drupalGet('form-test/form-storage-page-cache');
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
-    $this->assertText('No old build id');
+    $this->assertSession()->pageTextContains('No old build id');
     $build_id_from_cache_initial = $this->getFormBuildId();
     $this->assertEqual($build_id_initial, $build_id_from_cache_initial, 'Build id is the same as on the first request');
 
     // Trigger validation error by submitting an empty title.
     $edit = ['title' => ''];
     $this->submitForm($edit, 'Save');
-    $this->assertText('No old build id');
+    $this->assertSession()->pageTextContains('No old build id');
     $build_id_from_cache_first_validation = $this->getFormBuildId();
     $this->assertNotEquals($build_id_initial, $build_id_from_cache_first_validation, 'Build id changes when form validation fails');
     $this->assertNotEquals($build_id_first_validation, $build_id_from_cache_first_validation, 'Build id from first user is not reused');

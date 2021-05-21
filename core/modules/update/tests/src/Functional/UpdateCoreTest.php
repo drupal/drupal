@@ -85,7 +85,7 @@ class UpdateCoreTest extends UpdateTestBase {
           // release but because '8.2.0' is not in a supported branch it will
           // not be in the available updates.
           $this->assertNoRaw('8.2.0');
-          $this->assertText('Up to date');
+          $this->assertSession()->pageTextContains('Up to date');
           $this->assertNoText('Update available');
           $this->assertNoText('Security update required!');
           $this->assertRaw('check.svg');
@@ -123,7 +123,7 @@ class UpdateCoreTest extends UpdateTestBase {
             // A stable release is the latest.
             if ($extra_version == '') {
               $this->assertNoText('Up to date');
-              $this->assertText('Update available');
+              $this->assertSession()->pageTextContains('Update available');
               $this->assertVersionUpdateLinks('Recommended version:', $full_version);
               $this->assertNoText('Latest version:');
               $this->assertRaw('warning.svg');
@@ -131,7 +131,7 @@ class UpdateCoreTest extends UpdateTestBase {
             // Only unstable releases are available.
             // An unstable release is the latest.
             else {
-              $this->assertText('Up to date');
+              $this->assertSession()->pageTextContains('Up to date');
               $this->assertNoText('Update available');
               $this->assertNoText('Recommended version:');
               $this->assertVersionUpdateLinks('Latest version:', $full_version);
@@ -144,7 +144,7 @@ class UpdateCoreTest extends UpdateTestBase {
             // A stable release is the latest.
             if ($extra_version == '') {
               $this->assertNoText('Up to date');
-              $this->assertText('Update available');
+              $this->assertSession()->pageTextContains('Update available');
               $this->assertVersionUpdateLinks('Recommended version:', $full_version);
               $this->assertNoText('Latest version:');
               $this->assertRaw('warning.svg');
@@ -153,7 +153,7 @@ class UpdateCoreTest extends UpdateTestBase {
             // An unstable release is the latest.
             else {
               $this->assertNoText('Up to date');
-              $this->assertText('Update available');
+              $this->assertSession()->pageTextContains('Update available');
               $this->assertVersionUpdateLinks('Recommended version:', '8.1.0');
               $this->assertVersionUpdateLinks('Latest version:', $full_version);
               $this->assertRaw('warning.svg');
@@ -182,8 +182,8 @@ class UpdateCoreTest extends UpdateTestBase {
           $this->assertRaw(Link::fromTextAndUrl(t('Download'), Url::fromUri("http://example.com/drupal-9-0-0.tar.gz"))->toString());
           $this->assertRaw(Link::fromTextAndUrl(t('Release notes'), Url::fromUri("http://example.com/drupal-9-0-0-release"))->toString());
           $this->assertNoText('Up to date');
-          $this->assertText('Not supported!');
-          $this->assertText('Recommended version:');
+          $this->assertSession()->pageTextContains('Not supported!');
+          $this->assertSession()->pageTextContains('Recommended version:');
           $this->assertNoText('Latest version:');
           $this->assertRaw('error.svg');
         }
@@ -637,7 +637,7 @@ class UpdateCoreTest extends UpdateTestBase {
     $this->config('update_test.settings')->set('system_info', $system_info)->save();
     $this->refreshUpdateStatus(['drupal' => 'dev']);
     $this->assertNoText('2001-Sep-');
-    $this->assertText('Up to date');
+    $this->assertSession()->pageTextContains('Up to date');
     $this->assertNoText('Update available');
     $this->assertNoText('Security update required!');
   }
@@ -692,7 +692,7 @@ class UpdateCoreTest extends UpdateTestBase {
     $this->drupalGet('admin/reports/updates');
     $this->clickLink(t('Check manually'));
     $this->checkForMetaRefresh();
-    $this->assertText('Checked available update data for one project.');
+    $this->assertSession()->pageTextContains('Checked available update data for one project.');
     $this->drupalGet('admin/modules');
     $this->assertNoText('There are updates available for your version of Drupal.');
     $this->assertNoText('There is a security update available for your version of Drupal.');
@@ -714,9 +714,9 @@ class UpdateCoreTest extends UpdateTestBase {
     $this->drupalGet('admin/reports/updates');
     $this->clickLink(t('Check manually'));
     $this->checkForMetaRefresh();
-    $this->assertText('Checked available update data for one project.');
+    $this->assertSession()->pageTextContains('Checked available update data for one project.');
     $this->drupalGet('admin/modules');
-    $this->assertText('There are updates available for your version of Drupal.');
+    $this->assertSession()->pageTextContains('There are updates available for your version of Drupal.');
     $this->assertNoText('There is a security update available for your version of Drupal.');
   }
 
@@ -736,15 +736,15 @@ class UpdateCoreTest extends UpdateTestBase {
     $this->drupalGet('admin/reports/updates');
     $this->clickLink(t('Check manually'));
     $this->checkForMetaRefresh();
-    $this->assertText('Checked available update data for one project.');
+    $this->assertSession()->pageTextContains('Checked available update data for one project.');
     $this->drupalGet('admin/modules');
     $this->assertNoText('There are updates available for your version of Drupal.');
-    $this->assertText('There is a security update available for your version of Drupal.');
+    $this->assertSession()->pageTextContains('There is a security update available for your version of Drupal.');
 
     // Make sure admin/appearance warns you you're missing a security update.
     $this->drupalGet('admin/appearance');
     $this->assertNoText('There are updates available for your version of Drupal.');
-    $this->assertText('There is a security update available for your version of Drupal.');
+    $this->assertSession()->pageTextContains('There is a security update available for your version of Drupal.');
 
     // Make sure duplicate messages don't appear on Update status pages.
     $this->drupalGet('admin/reports/status');
@@ -807,7 +807,7 @@ class UpdateCoreTest extends UpdateTestBase {
       ->save();
 
     $this->drupalGet('admin/reports/updates');
-    $this->assertText('Language');
+    $this->assertSession()->pageTextContains('Language');
   }
 
   /**

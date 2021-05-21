@@ -283,14 +283,14 @@ class DisplayTest extends UITestBase {
     // Test that the override option is shown when display master is on.
     \Drupal::configFactory()->getEditable('views.settings')->set('ui.show.master_display', TRUE)->save();
     $this->drupalGet('admin/structure/views/nojs/handler/test_display/page_1/field/title');
-    $this->assertText('All displays');
+    $this->assertSession()->pageTextContains('All displays');
 
     // Test that the override option is shown if the current display is
     // overridden so that the option to revert is available.
     $this->submitForm(['override[dropdown]' => 'page_1'], 'Apply');
     \Drupal::configFactory()->getEditable('views.settings')->set('ui.show.master_display', FALSE)->save();
     $this->drupalGet('admin/structure/views/nojs/handler/test_display/page_1/field/title');
-    $this->assertText('Revert to default');
+    $this->assertSession()->pageTextContains('Revert to default');
   }
 
 }

@@ -890,8 +890,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
     // Check out if the translation page has the altered in settings.
     $this->drupalGet('admin/config/system/site-information/translate/fr/add');
-    $this->assertText('Feed channel');
-    $this->assertText('Feed description');
+    $this->assertSession()->pageTextContains('Feed channel');
+    $this->assertSession()->pageTextContains('Feed description');
 
     // Check if the translation page does not have the altered out settings.
     $this->drupalGet('admin/config/people/accounts/translate/fr/add');

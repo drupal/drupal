@@ -85,13 +85,13 @@ class SiteMaintenanceTest extends BrowserTestBase {
     $this->drupalLogout();
     $this->drupalGet('');
     $this->assertEqual('Site under maintenance', $this->cssSelect('main h1')[0]->getText());
-    $this->assertText($offline_message);
+    $this->assertSession()->pageTextContains($offline_message);
     $this->drupalGet('node');
     $this->assertEqual('Site under maintenance', $this->cssSelect('main h1')[0]->getText());
-    $this->assertText($offline_message);
+    $this->assertSession()->pageTextContains($offline_message);
     $this->drupalGet('user/register');
     $this->assertEqual('Site under maintenance', $this->cssSelect('main h1')[0]->getText());
-    $this->assertText($offline_message);
+    $this->assertSession()->pageTextContains($offline_message);
 
     // Verify that user is able to log in.
     $this->drupalGet('user');

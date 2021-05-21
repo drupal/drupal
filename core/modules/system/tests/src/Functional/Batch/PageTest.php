@@ -66,7 +66,7 @@ class PageTest extends BrowserTestBase {
 
     // The stack should contain the title shown on the progress page.
     $this->assertEqual(['Batch Test'], batch_test_stack(), 'The batch title is shown on the batch page.');
-    $this->assertText('Redirection successful.');
+    $this->assertSession()->pageTextContains('Redirection successful.');
   }
 
   /**
