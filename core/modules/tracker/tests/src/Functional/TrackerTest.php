@@ -88,7 +88,7 @@ class TrackerTest extends BrowserTestBase {
     ]);
 
     $this->drupalGet('activity');
-    $this->assertNoText($unpublished->label());
+    $this->assertSession()->pageTextNotContains($unpublished->label());
     $this->assertSession()->pageTextContains($published->label());
     $this->assertSession()->linkExists('My recent content', 0, 'User tab shows up on the global tracker page.');
 
@@ -121,7 +121,7 @@ class TrackerTest extends BrowserTestBase {
     // Delete a node and ensure it no longer appears on the tracker.
     $published->delete();
     $this->drupalGet('activity');
-    $this->assertNoText($published->label());
+    $this->assertSession()->pageTextNotContains($published->label());
 
     // Test proper display of time on activity page when comments are disabled.
     // Disable comments.
@@ -172,9 +172,9 @@ class TrackerTest extends BrowserTestBase {
     $this->drupalPostForm('comment/reply/node/' . $other_published_my_comment->id() . '/comment', $comment, 'Save');
 
     $this->drupalGet('user/' . $this->user->id() . '/activity');
-    $this->assertNoText($unpublished->label());
+    $this->assertSession()->pageTextNotContains($unpublished->label());
     $this->assertSession()->pageTextContains($my_published->label());
-    $this->assertNoText($other_published_no_comment->label());
+    $this->assertSession()->pageTextNotContains($other_published_no_comment->label());
     $this->assertSession()->pageTextContains($other_published_my_comment->label());
 
     // Assert cache contexts.
@@ -222,7 +222,7 @@ class TrackerTest extends BrowserTestBase {
     $this->drupalLogin($admin_user);
     $this->drupalPostForm('comment/1/edit', ['status' => CommentInterface::NOT_PUBLISHED], 'Save');
     $this->drupalGet('user/' . $this->user->id() . '/activity');
-    $this->assertNoText($other_published_my_comment->label());
+    $this->assertSession()->pageTextNotContains($other_published_my_comment->label());
 
     // Test escaping of title on user's tracker tab.
     \Drupal::service('module_installer')->install(['user_hooks_test']);

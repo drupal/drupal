@@ -110,7 +110,7 @@ class SearchNumbersTest extends BrowserTestBase {
       // Verify that the node title does not appear on the search page
       // with a dummy search.
       $this->drupalPostForm('search/node', ['keys' => 'foo'], 'Search');
-      $this->assertNoText($node->label());
+      $this->assertSession()->pageTextNotContains($node->label());
 
       // Verify that the node title does appear as a link on the search page
       // when searching for the number.

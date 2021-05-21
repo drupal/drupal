@@ -14,7 +14,7 @@ trait RequirementsPageTrait {
     // Assert a warning is shown on older test environments.
     $links = $this->getSession()->getPage()->findAll('named', ['link', 'try again']);
     if ($links && version_compare(phpversion(), \Drupal::MINIMUM_SUPPORTED_PHP) < 0) {
-      $this->assertNoText('Errors found');
+      $this->assertSession()->pageTextNotContains('Errors found');
       $this->assertWarningSummaries(['PHP']);
       $this->clickLink('try again');
       $this->checkForMetaRefresh();
@@ -36,7 +36,7 @@ trait RequirementsPageTrait {
    *   a warning not in the list is present, a fail is raised.
    */
   protected function continueOnExpectedWarnings($expected_warnings = []) {
-    $this->assertNoText('Errors found');
+    $this->assertSession()->pageTextNotContains('Errors found');
     $this->assertWarningSummaries($expected_warnings);
     $this->clickLink('continue anyway');
     $this->checkForMetaRefresh();

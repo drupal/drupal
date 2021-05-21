@@ -47,7 +47,7 @@ class ExperimentalModuleTest extends BrowserTestBase {
     $edit["modules[test_page_test][enable]"] = TRUE;
     $this->drupalPostForm('admin/modules', $edit, 'Install');
     $this->assertSession()->pageTextContains('Module Test page has been enabled.');
-    $this->assertNoText('Experimental modules are provided for testing purposes only.');
+    $this->assertSession()->pageTextNotContains('Experimental modules are provided for testing purposes only.');
 
     // Uninstall the module.
     \Drupal::service('module_installer')->uninstall(['test_page_test']);
@@ -61,12 +61,12 @@ class ExperimentalModuleTest extends BrowserTestBase {
 
     // The module should not be enabled and there should be a warning and a
     // list of the experimental modules with only this one.
-    $this->assertNoText('Experimental Test has been enabled.');
+    $this->assertSession()->pageTextNotContains('Experimental Test has been enabled.');
     $this->assertSession()->pageTextContains('Experimental modules are provided for testing purposes only.');
     $this->assertSession()->pageTextContains('The following modules are experimental: Experimental Test');
 
     // There should be no message about enabling dependencies.
-    $this->assertNoText('You must enable');
+    $this->assertSession()->pageTextNotContains('You must enable');
 
     // Enable the module and confirm that it worked.
     $this->submitForm([], 'Continue');
@@ -83,14 +83,14 @@ class ExperimentalModuleTest extends BrowserTestBase {
 
     // The module should not be enabled and there should be a warning and a
     // list of the experimental modules with only this one.
-    $this->assertNoText('2 modules have been enabled: Experimental Dependency Test, Experimental Test');
+    $this->assertSession()->pageTextNotContains('2 modules have been enabled: Experimental Dependency Test, Experimental Test');
     $this->assertSession()->pageTextContains('Experimental modules are provided for testing purposes only.');
 
     $this->assertSession()->pageTextContains('The following modules are experimental: Experimental Test');
 
     // Ensure the non-experimental module is not listed as experimental.
-    $this->assertNoText('The following modules are experimental: Experimental Test, Experimental Dependency Test');
-    $this->assertNoText('The following modules are experimental: Experimental Dependency Test');
+    $this->assertSession()->pageTextNotContains('The following modules are experimental: Experimental Test, Experimental Dependency Test');
+    $this->assertSession()->pageTextNotContains('The following modules are experimental: Experimental Dependency Test');
 
     // There should be a message about enabling dependencies.
     $this->assertSession()->pageTextContains('You must enable the Experimental Test module to install Experimental Dependency Test');
@@ -112,17 +112,17 @@ class ExperimentalModuleTest extends BrowserTestBase {
 
     // The module should not be enabled and there should be a warning and a
     // list of the experimental modules with only this one.
-    $this->assertNoText('2 modules have been enabled: Experimental Dependency Test, Experimental Test');
+    $this->assertSession()->pageTextNotContains('2 modules have been enabled: Experimental Dependency Test, Experimental Test');
     $this->assertSession()->pageTextContains('Experimental modules are provided for testing purposes only.');
 
     $this->assertSession()->pageTextContains('The following modules are experimental: Experimental Test');
 
     // Ensure the non-experimental module is not listed as experimental.
-    $this->assertNoText('The following modules are experimental: Experimental Dependency Test, Experimental Test');
-    $this->assertNoText('The following modules are experimental: Experimental Dependency Test');
+    $this->assertSession()->pageTextNotContains('The following modules are experimental: Experimental Dependency Test, Experimental Test');
+    $this->assertSession()->pageTextNotContains('The following modules are experimental: Experimental Dependency Test');
 
     // There should be no message about enabling dependencies.
-    $this->assertNoText('You must enable');
+    $this->assertSession()->pageTextNotContains('You must enable');
 
     // Enable the module and confirm that it worked.
     $this->submitForm([], 'Continue');

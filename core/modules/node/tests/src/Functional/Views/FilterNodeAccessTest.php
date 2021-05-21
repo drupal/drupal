@@ -89,7 +89,7 @@ class FilterNodeAccessTest extends NodeTestBase {
     // Test that the private node of the current user is shown.
     $this->assertSession()->pageTextContains('Private Article created by ' . $this->users[0]->getAccountName());
     // Test that the private node of the other use isn't shown.
-    $this->assertNoText('Private Article created by ' . $this->users[1]->getAccountName());
+    $this->assertSession()->pageTextNotContains('Private Article created by ' . $this->users[1]->getAccountName());
     // Test that both public nodes are shown.
     $this->assertSession()->pageTextContains('Public Article created by ' . $this->users[0]->getAccountName());
     $this->assertSession()->pageTextContains('Public Article created by ' . $this->users[1]->getAccountName());
@@ -100,7 +100,7 @@ class FilterNodeAccessTest extends NodeTestBase {
     // Test that the private node of the current user is shown.
     $this->assertSession()->pageTextContains('Private Article created by ' . $this->users[1]->getAccountName());
     // Test that the private node of the other use isn't shown.
-    $this->assertNoText('Private Article created by ' . $this->users[0]->getAccountName());
+    $this->assertSession()->pageTextNotContains('Private Article created by ' . $this->users[0]->getAccountName());
 
     // Test that a user with administer nodes permission can't see all nodes.
     $administer_nodes_user = $this->drupalCreateUser([
@@ -109,8 +109,8 @@ class FilterNodeAccessTest extends NodeTestBase {
     ]);
     $this->drupalLogin($administer_nodes_user);
     $this->drupalGet('test_filter_node_access');
-    $this->assertNoText('Private Article created by ' . $this->users[0]->getAccountName());
-    $this->assertNoText('Private Article created by ' . $this->users[1]->getAccountName());
+    $this->assertSession()->pageTextNotContains('Private Article created by ' . $this->users[0]->getAccountName());
+    $this->assertSession()->pageTextNotContains('Private Article created by ' . $this->users[1]->getAccountName());
     $this->assertSession()->pageTextContains('Public Article created by ' . $this->users[0]->getAccountName());
     $this->assertSession()->pageTextContains('Public Article created by ' . $this->users[1]->getAccountName());
 

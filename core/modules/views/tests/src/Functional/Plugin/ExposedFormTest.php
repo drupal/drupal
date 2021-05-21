@@ -228,7 +228,7 @@ class ExposedFormTest extends ViewTestBase {
     // Test that the label is removed.
     $this->drupalGet('test_exposed_block');
     $this->assertNoRaw('<strong>Custom</strong> titlealert("hacked!");');
-    $this->assertNoText($view->getTitle());
+    $this->assertSession()->pageTextNotContains($view->getTitle());
 
     // Test there is an exposed form in a block.
     $xpath = $this->assertSession()->buildXPathQuery('//div[@id=:id]/form/@id', [':id' => Html::getUniqueId('block-' . $block->id())]);
@@ -300,7 +300,7 @@ class ExposedFormTest extends ViewTestBase {
     // Ensure that the "on demand text" is not displayed when an exposed filter
     // is applied.
     $this->drupalGet('test_exposed_form_buttons', ['query' => ['type' => 'article']]);
-    $this->assertNoText($on_demand_text);
+    $this->assertSession()->pageTextNotContains($on_demand_text);
   }
 
   /**

@@ -70,26 +70,26 @@ class StatusExtraTest extends NodeTestBase {
     $this->drupalLogin($node_author);
     $this->drupalGet('test_status_extra');
     $this->assertSession()->pageTextContains($node_published->label());
-    $this->assertNoText($node_unpublished->label());
+    $this->assertSession()->pageTextNotContains($node_unpublished->label());
     $this->assertSession()->pageTextContains($node_unpublished2->label());
-    $this->assertNoText($node_unpublished3->label());
+    $this->assertSession()->pageTextNotContains($node_unpublished3->label());
 
     // The normal user should just see the published node.
     $this->drupalLogin($normal_user);
     $this->drupalGet('test_status_extra');
     $this->assertSession()->pageTextContains($node_published->label());
-    $this->assertNoText($node_unpublished->label());
-    $this->assertNoText($node_unpublished2->label());
-    $this->assertNoText($node_unpublished3->label());
+    $this->assertSession()->pageTextNotContains($node_unpublished->label());
+    $this->assertSession()->pageTextNotContains($node_unpublished2->label());
+    $this->assertSession()->pageTextNotContains($node_unpublished3->label());
 
     // The author without the permission to see their own unpublished node should
     // just see the published node.
     $this->drupalLogin($node_author_not_unpublished);
     $this->drupalGet('test_status_extra');
     $this->assertSession()->pageTextContains($node_published->label());
-    $this->assertNoText($node_unpublished->label());
-    $this->assertNoText($node_unpublished2->label());
-    $this->assertNoText($node_unpublished3->label());
+    $this->assertSession()->pageTextNotContains($node_unpublished->label());
+    $this->assertSession()->pageTextNotContains($node_unpublished2->label());
+    $this->assertSession()->pageTextNotContains($node_unpublished3->label());
   }
 
 }

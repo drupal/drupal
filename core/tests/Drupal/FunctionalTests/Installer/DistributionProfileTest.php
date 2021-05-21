@@ -55,7 +55,7 @@ class DistributionProfileTest extends InstallerTestBase {
     // Verify that the requested theme is used.
     $this->assertRaw($this->info['distribution']['install']['theme']);
     // Verify that the "Choose profile" step does not appear.
-    $this->assertNoText('profile');
+    $this->assertSession()->pageTextNotContains('profile');
 
     parent::setUpLanguage();
   }

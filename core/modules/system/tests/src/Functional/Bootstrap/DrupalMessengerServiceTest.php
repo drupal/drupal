@@ -31,7 +31,7 @@ class DrupalMessengerServiceTest extends BrowserTestBase {
     // The page at system_test.messenger_service route sets two messages and
     // then removes the first before it is displayed.
     $this->drupalGet(Url::fromRoute('system_test.messenger_service'));
-    $this->assertNoText('First message (removed).');
+    $this->assertSession()->pageTextNotContains('First message (removed).');
     $this->assertRaw(t('Second message with <em>markup!</em> (not removed).'));
 
     // Ensure duplicate messages are handled as expected.

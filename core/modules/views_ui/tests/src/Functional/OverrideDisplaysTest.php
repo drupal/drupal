@@ -108,11 +108,11 @@ class OverrideDisplaysTest extends UITestBase {
     $this->drupalGet($view['page[path]']);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains($view['page[title]']);
-    $this->assertNoText($view['block[title]']);
+    $this->assertSession()->pageTextNotContains($view['block[title]']);
     $this->drupalGet($view['page[feed_properties][path]']);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->responseContains($view['page[title]']);
-    $this->assertNoText($view['block[title]']);
+    $this->assertSession()->pageTextNotContains($view['block[title]']);
 
     // Confirm that the block is available in the block administration UI.
     $this->drupalGet('admin/structure/block/list/' . $this->config('system.theme')->get('default'));
@@ -133,7 +133,7 @@ class OverrideDisplaysTest extends UITestBase {
 
     $this->drupalGet('');
     $this->assertSession()->pageTextContains($view['block[title]']);
-    $this->assertNoText($view['page[title]']);
+    $this->assertSession()->pageTextNotContains($view['page[title]']);
 
     // Edit the page and change the title. This should automatically change
     // the feed's title also, but not the block.
@@ -144,16 +144,16 @@ class OverrideDisplaysTest extends UITestBase {
     $this->drupalGet($view['page[path]']);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains($new_default_title);
-    $this->assertNoText($view['page[title]']);
-    $this->assertNoText($view['block[title]']);
+    $this->assertSession()->pageTextNotContains($view['page[title]']);
+    $this->assertSession()->pageTextNotContains($view['block[title]']);
     $this->drupalGet($view['page[feed_properties][path]']);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->responseContains($new_default_title);
-    $this->assertNoText($view['page[title]']);
-    $this->assertNoText($view['block[title]']);
+    $this->assertSession()->pageTextNotContains($view['page[title]']);
+    $this->assertSession()->pageTextNotContains($view['block[title]']);
     $this->drupalGet('');
-    $this->assertNoText($new_default_title);
-    $this->assertNoText($view['page[title]']);
+    $this->assertSession()->pageTextNotContains($new_default_title);
+    $this->assertSession()->pageTextNotContains($view['page[title]']);
     $this->assertSession()->pageTextContains($view['block[title]']);
 
     // Edit the block and change the title. This should automatically change
@@ -168,10 +168,10 @@ class OverrideDisplaysTest extends UITestBase {
     $this->drupalGet($view['page[feed_properties][path]']);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->responseContains($new_default_title);
-    $this->assertNoText($new_block_title);
+    $this->assertSession()->pageTextNotContains($new_block_title);
     $this->drupalGet('');
     $this->assertSession()->pageTextContains($new_block_title);
-    $this->assertNoText($view['block[title]']);
+    $this->assertSession()->pageTextNotContains($view['block[title]']);
   }
 
   /**

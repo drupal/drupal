@@ -86,7 +86,7 @@ class InstallerTranslationTest extends InstallerTestBase {
     // Verify German was configured but not English.
     $this->drupalGet('admin/config/regional/language');
     $this->assertSession()->pageTextContains('German');
-    $this->assertNoText('English');
+    $this->assertSession()->pageTextNotContains('English');
 
     // The current container still has the english as current language, rebuild.
     $this->rebuildContainer();

@@ -436,7 +436,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
       'translation' => 'translated',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
-    $this->assertNoText('No strings available.');
+    $this->assertSession()->pageTextNotContains('No strings available.');
 
     // Ensure the multiline string was imported.
     $search = [
@@ -457,7 +457,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
     $this->assertSession()->pageTextContains('Allowed HTML source string');
-    $this->assertNoText('Another allowed HTML source string');
+    $this->assertSession()->pageTextNotContains('Another allowed HTML source string');
   }
 
 }

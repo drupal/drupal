@@ -106,7 +106,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
       'minimum_word_size' => $this->randomMachineName(3),
     ];
     $this->drupalPostForm('admin/config/search/pages', $edit, 'Save configuration');
-    $this->assertNoText('The configuration options have been saved.');
+    $this->assertSession()->pageTextNotContains('The configuration options have been saved.');
 
     // Test logging setting. It should be off by default.
     $text = $this->randomMachineName(5);
@@ -182,14 +182,14 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
       $info = $plugin_info[$entity_id];
       $this->drupalGet('search/' . $entity->getPath(), ['query' => ['keys' => $info['keys']]]);
       $this->assertSession()->statusCodeEquals(200);
-      $this->assertNoText('no results');
+      $this->assertSession()->pageTextNotContains('no results');
       $this->assertSession()->pageTextContains($info['text']);
 
       // Verify that other plugin search tab labels are not visible.
       foreach ($plugins as $other) {
         if ($other != $entity_id) {
           $label = $entities[$other]->label();
-          $this->assertNoText($label);
+          $this->assertSession()->pageTextNotContains($label);
         }
       }
 

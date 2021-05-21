@@ -362,7 +362,7 @@ class SearchCommentTest extends BrowserTestBase {
     // not be part of the search snippet.
     $this->drupalPostForm('search/node', ['keys' => 'short'], 'Search');
     $this->assertSession()->pageTextContains($node->label());
-    $this->assertNoText('Add new comment');
+    $this->assertSession()->pageTextNotContains('Add new comment');
   }
 
 }

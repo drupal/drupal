@@ -123,7 +123,7 @@ class HelpTest extends BrowserTestBase {
       $this->assertSession()->pageTextContains('This page shows you all available administration tasks for each module.');
     }
     else {
-      $this->assertNoText('This page shows you all available administration tasks for each module.');
+      $this->assertSession()->pageTextNotContains('This page shows you all available administration tasks for each module.');
     }
 
     foreach ($this->getModuleList() as $module => $name) {

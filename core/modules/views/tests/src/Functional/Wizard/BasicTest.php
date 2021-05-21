@@ -49,11 +49,11 @@ class BasicTest extends WizardTestBase {
     $this->assertSession()->linkByHrefExists(Url::fromRoute('entity.view.duplicate_form', ['view' => $view1['id']])->toString());
 
     // The view should not have a REST export display.
-    $this->assertNoText('REST export');
+    $this->assertSession()->pageTextNotContains('REST export');
 
     // This view should not have a block.
     $this->drupalGet('admin/structure/block');
-    $this->assertNoText($view1['label']);
+    $this->assertSession()->pageTextNotContains($view1['label']);
 
     // Create two nodes.
     $node1 = $this->drupalCreateNode(['type' => 'page']);
@@ -102,11 +102,11 @@ class BasicTest extends WizardTestBase {
     $this->assertSession()->linkByHrefExists(Url::fromRoute('view.' . $view2['id'] . '.page_1')->toString());
 
     // The view should not have a REST export display.
-    $this->assertNoText('REST export');
+    $this->assertSession()->pageTextNotContains('REST export');
 
     // This view should not have a block.
     $this->drupalGet('admin/structure/block');
-    $this->assertNoText('View: ' . $view2['label']);
+    $this->assertSession()->pageTextNotContains('View: ' . $view2['label']);
 
     // Create a view with a page and a block, and filter the listing.
     $view3 = [];
@@ -128,7 +128,7 @@ class BasicTest extends WizardTestBase {
     $this->assertSession()->addressEquals($view3['page[path]']);
     $this->assertSession()->pageTextContains($view3['page[title]']);
     $this->assertSession()->pageTextContains($node1->label());
-    $this->assertNoText($node2->label());
+    $this->assertSession()->pageTextNotContains($node2->label());
 
     // Go back to the views page and check if this view is there.
     $this->drupalGet('admin/structure/views');
@@ -137,7 +137,7 @@ class BasicTest extends WizardTestBase {
     $this->assertSession()->linkByHrefExists(Url::fromRoute('view.' . $view3['id'] . '.page_1')->toString());
 
     // The view should not have a REST export display.
-    $this->assertNoText('REST export');
+    $this->assertSession()->pageTextNotContains('REST export');
 
     // Confirm that the block is available in the block administration UI.
     $this->drupalGet('admin/structure/block/list/' . $this->config('system.theme')->get('default'));
@@ -151,10 +151,10 @@ class BasicTest extends WizardTestBase {
     // for the expected node title in the block.
     $this->drupalGet('user');
     $this->assertSession()->pageTextContains($node1->label());
-    $this->assertNoText($node2->label());
+    $this->assertSession()->pageTextNotContains($node2->label());
 
     // Make sure the listing page doesn't show disabled default views.
-    $this->assertNoText('tracker');
+    $this->assertSession()->pageTextNotContains('tracker');
 
     // Create a view with only a REST export.
     $view4 = [];

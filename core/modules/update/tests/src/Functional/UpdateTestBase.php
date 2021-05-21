@@ -109,7 +109,7 @@ abstract class UpdateTestBase extends BrowserTestBase {
     $this->assertSession()->responseContains('<h3>Drupal core</h3>');
     // Verify that the link to the Drupal project appears.
     $this->assertRaw(Link::fromTextAndUrl(t('Drupal'), Url::fromUri('http://example.com/project/drupal'))->toString());
-    $this->assertNoText('No available releases found');
+    $this->assertSession()->pageTextNotContains('No available releases found');
   }
 
   /**

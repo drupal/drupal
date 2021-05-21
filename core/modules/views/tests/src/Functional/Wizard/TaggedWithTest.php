@@ -180,9 +180,9 @@ class TaggedWithTest extends WizardTestBase {
     $this->submitForm($view2, 'Save and edit');
     $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet($view2['page[path]']);
-    $this->assertNoText($node_tag1_title);
+    $this->assertSession()->pageTextNotContains($node_tag1_title);
     $this->assertSession()->pageTextContains($node_tag1_tag2_title);
-    $this->assertNoText($node_no_tags_title);
+    $this->assertSession()->pageTextNotContains($node_no_tags_title);
   }
 
   /**

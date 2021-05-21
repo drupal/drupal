@@ -483,8 +483,8 @@ class ForumTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/forum/edit/forum/' . $tid);
     $this->clickLink(t('Delete'));
     $this->assertSession()->pageTextContains('Are you sure you want to delete the forum');
-    $this->assertNoText('Add forum');
-    $this->assertNoText('Add forum container');
+    $this->assertSession()->pageTextNotContains('Add forum');
+    $this->assertSession()->pageTextNotContains('Add forum container');
     $this->submitForm([], 'Delete');
 
     // Assert that the forum no longer exists.
@@ -575,7 +575,7 @@ class ForumTest extends BrowserTestBase {
 
     $type = t('Forum topic');
     if ($container) {
-      $this->assertNoText("$type $title has been created.");
+      $this->assertSession()->pageTextNotContains("$type $title has been created.");
       $this->assertRaw(t('The item %title is a forum container, not a forum.', ['%title' => $forum['name']]));
       return;
     }

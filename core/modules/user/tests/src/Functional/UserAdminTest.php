@@ -88,7 +88,7 @@ class UserAdminTest extends BrowserTestBase {
     $this->drupalGet('admin/people', ['query' => ['permission' => 'administer taxonomy']]);
 
     // Check if the correct users show up.
-    $this->assertNoText($user_a->getAccountName());
+    $this->assertSession()->pageTextNotContains($user_a->getAccountName());
     $this->assertSession()->pageTextContains($user_b->getAccountName());
     $this->assertSession()->pageTextContains($user_c->getAccountName());
 
@@ -98,8 +98,8 @@ class UserAdminTest extends BrowserTestBase {
     $this->drupalGet('admin/people', ['query' => ['role' => reset($roles)]]);
 
     // Check if the correct users show up when filtered by role.
-    $this->assertNoText($user_a->getAccountName());
-    $this->assertNoText($user_b->getAccountName());
+    $this->assertSession()->pageTextNotContains($user_a->getAccountName());
+    $this->assertSession()->pageTextNotContains($user_b->getAccountName());
     $this->assertSession()->pageTextContains($user_c->getAccountName());
 
     // Test blocking of a user.
@@ -124,8 +124,8 @@ class UserAdminTest extends BrowserTestBase {
 
     // Test filtering on admin page for blocked users
     $this->drupalGet('admin/people', ['query' => ['status' => 2]]);
-    $this->assertNoText($user_a->getAccountName());
-    $this->assertNoText($user_b->getAccountName());
+    $this->assertSession()->pageTextNotContains($user_a->getAccountName());
+    $this->assertSession()->pageTextNotContains($user_b->getAccountName());
     $this->assertSession()->pageTextContains($user_c->getAccountName());
 
     // Test unblocking of a user from /admin/people page and sending of activation mail

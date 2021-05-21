@@ -95,9 +95,9 @@ class SiteMaintenanceTest extends BrowserTestBase {
 
     // Verify that user is able to log in.
     $this->drupalGet('user');
-    $this->assertNoText($offline_message);
+    $this->assertSession()->pageTextNotContains($offline_message);
     $this->drupalGet('user/login');
-    $this->assertNoText($offline_message);
+    $this->assertSession()->pageTextNotContains($offline_message);
 
     // Log in user and verify that maintenance mode message is displayed
     // directly after login.

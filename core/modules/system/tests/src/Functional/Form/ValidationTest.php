@@ -72,7 +72,7 @@ class ValidationTest extends BrowserTestBase {
       ->setValue('invalid_token');
     $this->submitForm(['name' => 'validate'], 'Save');
     $this->assertSession()->fieldValueNotEquals('name', '#value changed by #validate');
-    $this->assertNoText('Name value: value changed by setValueForElement() in #validate');
+    $this->assertSession()->pageTextNotContains('Name value: value changed by setValueForElement() in #validate');
     $this->assertSession()->pageTextContains('The form has become outdated.');
   }
 
@@ -113,19 +113,19 @@ class ValidationTest extends BrowserTestBase {
     // validated, but the #element_validate handler for the 'test' field
     // is triggered.
     $this->drupalPostForm($path, $edit, 'Partial validate');
-    $this->assertNoText('Title field is required.');
+    $this->assertSession()->pageTextNotContains('Title field is required.');
     $this->assertSession()->pageTextContains('Test element is invalid');
 
     // Edge case of #limit_validation_errors containing numeric indexes: same
     // thing with the 'Partial validate (numeric index)' button and the
     // 'test_numeric_index' field.
     $this->drupalPostForm($path, $edit, 'Partial validate (numeric index)');
-    $this->assertNoText('Title field is required.');
+    $this->assertSession()->pageTextNotContains('Title field is required.');
     $this->assertSession()->pageTextContains('Test (numeric index) element is invalid');
 
     // Ensure something like 'foobar' isn't considered "inside" 'foo'.
     $this->drupalPostForm($path, $edit, 'Partial validate (substring)');
-    $this->assertNoText('Title field is required.');
+    $this->assertSession()->pageTextNotContains('Title field is required.');
     $this->assertSession()->pageTextContains('Test (substring) foo element is invalid');
 
     // Ensure not validated values are not available to submit handlers.
@@ -212,15 +212,15 @@ class ValidationTest extends BrowserTestBase {
 
     foreach (Element::children($form) as $key) {
       if (isset($form[$key]['#required_error'])) {
-        $this->assertNoText($form[$key]['#title'] . ' field is required.');
+        $this->assertSession()->pageTextNotContains($form[$key]['#title'] . ' field is required.');
         $this->assertSession()->pageTextContains((string) $form[$key]['#required_error']);
       }
       elseif (isset($form[$key]['#form_test_required_error'])) {
-        $this->assertNoText($form[$key]['#title'] . ' field is required.');
+        $this->assertSession()->pageTextNotContains($form[$key]['#title'] . ' field is required.');
         $this->assertSession()->pageTextContains((string) $form[$key]['#form_test_required_error']);
       }
     }
-    $this->assertNoText('An illegal choice has been detected. Please contact the site administrator.');
+    $this->assertSession()->pageTextNotContains('An illegal choice has been detected. Please contact the site administrator.');
 
     // Verify that no custom validation error appears with valid values.
     $edit = [
@@ -232,15 +232,15 @@ class ValidationTest extends BrowserTestBase {
 
     foreach (Element::children($form) as $key) {
       if (isset($form[$key]['#required_error'])) {
-        $this->assertNoText($form[$key]['#title'] . ' field is required.');
-        $this->assertNoText((string) $form[$key]['#required_error']);
+        $this->assertSession()->pageTextNotContains($form[$key]['#title'] . ' field is required.');
+        $this->assertSession()->pageTextNotContains((string) $form[$key]['#required_error']);
       }
       elseif (isset($form[$key]['#form_test_required_error'])) {
-        $this->assertNoText($form[$key]['#title'] . ' field is required.');
-        $this->assertNoText((string) $form[$key]['#form_test_required_error']);
+        $this->assertSession()->pageTextNotContains($form[$key]['#title'] . ' field is required.');
+        $this->assertSession()->pageTextNotContains((string) $form[$key]['#form_test_required_error']);
       }
     }
-    $this->assertNoText('An illegal choice has been detected. Please contact the site administrator.');
+    $this->assertSession()->pageTextNotContains('An illegal choice has been detected. Please contact the site administrator.');
   }
 
 }
