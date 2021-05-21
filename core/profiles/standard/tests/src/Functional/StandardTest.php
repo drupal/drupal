@@ -91,7 +91,7 @@ class StandardTest extends BrowserTestBase {
     // Fetch the feed.
     $this->drupalGet('rss.xml');
     $this->assertSession()->responseContains('Foobar');
-    $this->assertSession()->pageTextNotContains('Then she picked out two somebodies, Sally and me');
+    $this->assertSession()->responseNotContains('Then she picked out two somebodies, Sally and me');
 
     // Ensure block body exists.
     $this->drupalGet('block/add');

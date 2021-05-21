@@ -125,7 +125,7 @@ class ModeratedContentViewTest extends BrowserTestBase {
 
     // Check that the latest revision is displayed.
     $assert_session->pageTextContains('first article - draft');
-    $assert_session->assertSession()->pageTextNotContains('first article - published');
+    $assert_session->pageTextNotContains('first article - published');
 
     // Verify filtering by moderation state.
     $this->drupalGet('admin/content/moderated', ['query' => ['moderation_state' => 'editorial-draft']]);

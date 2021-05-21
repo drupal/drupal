@@ -97,7 +97,7 @@ class ModerationRevisionRevertTest extends BrowserTestBase {
 
     // Check if the submission passed the EntityChangedConstraintValidator.
     $this->assertSession()
-      ->assertSession()->pageTextNotContains('The content has either been modified by another user, or you have already submitted modifications. As a result, your changes cannot be saved.');
+      ->pageTextNotContains('The content has either been modified by another user, or you have already submitted modifications. As a result, your changes cannot be saved.');
 
     // Check the node has been saved.
     $this->assertSession()
