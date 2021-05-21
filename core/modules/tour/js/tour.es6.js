@@ -27,23 +27,24 @@
     attach(context) {
       once('tour', 'body').forEach(() => {
         const model = new Drupal.tour.models.StateModel();
-        // eslint-disable-next-line no-newnew Drupal.tour.views.ToggleTourView({
+        // eslint-disable-next-line no-new
+        new Drupal.tour.views.ToggleTourView({
           el: $(context).find('#toolbar-tab-tour'),
           model,
         });
 
-          model
-            // Allow other scripts to respond to tour events.
-            .on('change:isActive', (model, isActive) => {
-              $(document).trigger(
-                isActive ? 'drupalTourStarted' : 'drupalTourStopped',
-              );
-            });
-          // Initialization: check whether a tour is available on the current
-          // page.
-          if (settings._tour_internal) {
-            model.set('tour', settings._tour_internal);
-          }
+        model
+          // Allow other scripts to respond to tour events.
+          .on('change:isActive', (tourModel, isActive) => {
+            $(document).trigger(
+              isActive ? 'drupalTourStarted' : 'drupalTourStopped',
+            );
+          });
+        // Initialization: check whether a tour is available on the current
+        // page.
+        if (settings._tour_internal) {
+          model.set('tour', settings._tour_internal);
+        }
         // Start the tour immediately if toggled via query string.
         if (/tour=?/i.test(queryString)) {
           model.set('isActive', true);
