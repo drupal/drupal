@@ -100,9 +100,9 @@ class UpdateComplexTest extends DatabaseTestBase {
     $this->assertSame('1', $num_matches, 'Updated fields successfully.');
 
     $person = $this->connection->query('SELECT * FROM {test} WHERE [name] = :name', [':name' => 'Ringo'])->fetch();
-    $this->assertEqual('Ringo', $person->name, 'Name set correctly.');
-    $this->assertEqual($before_age + 4, $person->age, 'Age set correctly.');
-    $this->assertEqual('Musician', $person->job, 'Job set correctly.');
+    $this->assertEquals('Ringo', $person->name, 'Name set correctly.');
+    $this->assertEquals($before_age + 4, $person->age, 'Age set correctly.');
+    $this->assertEquals('Musician', $person->job, 'Job set correctly.');
   }
 
   /**
@@ -117,7 +117,7 @@ class UpdateComplexTest extends DatabaseTestBase {
     $this->assertSame(1, $num_updated, 'Updated 1 record.');
 
     $after_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Ringo'])->fetchField();
-    $this->assertEqual($before_age + 4, $after_age, 'Age updated correctly');
+    $this->assertEquals($before_age + 4, $after_age, 'Age updated correctly');
   }
 
   /**
@@ -136,8 +136,8 @@ class UpdateComplexTest extends DatabaseTestBase {
     $num_updated = $query->execute();
     $after_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'Ringo'])->fetchField();
     $expected_age = $select->execute()->fetchField();
-    $this->assertEqual($expected_age, $after_age);
-    $this->assertEqual(1, $num_updated, t('Expected 1 row to be updated in subselect update query.'));
+    $this->assertEquals($expected_age, $after_age);
+    $this->assertEquals(1, $num_updated, t('Expected 1 row to be updated in subselect update query.'));
   }
 
 }

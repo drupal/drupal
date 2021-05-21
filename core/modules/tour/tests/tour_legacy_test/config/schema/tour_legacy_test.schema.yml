@@ -1,0 +1,17 @@
+# Schema for the configuration files of the Tour Test Legacy module.
+
+tour.tip.image_legacy:
+  type: tour.tip
+  label: 'Image tour tip'
+  mapping:
+    url:
+      type: uri
+      label: 'Image URL'
+
+tour.tip.text_legacy:
+  type: tour.tip
+  label: 'Textual tour tip'
+  mapping:
+    body:
+      type: text
+      label: 'Body'

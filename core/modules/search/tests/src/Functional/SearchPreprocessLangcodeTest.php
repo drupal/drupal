@@ -59,7 +59,7 @@ class SearchPreprocessLangcodeTest extends BrowserTestBase {
     $this->drupalPostForm('search/node', $edit, 'edit-submit--2');
 
     // Checks if the langcode message has been set by hook_search_preprocess().
-    $this->assertText('Langcode Preprocess Test: en');
+    $this->assertSession()->pageTextContains('Langcode Preprocess Test: en');
   }
 
   /**
@@ -81,16 +81,16 @@ class SearchPreprocessLangcodeTest extends BrowserTestBase {
     $this->drupalPostForm('search/node', $edit, 'edit-submit--2');
 
     // Check if the node has been found.
-    $this->assertText('Search results');
-    $this->assertText('we are testing');
+    $this->assertSession()->pageTextContains('Search results');
+    $this->assertSession()->pageTextContains('we are testing');
 
     // Search for the same node using a different query.
     $edit = ['or' => 'test'];
     $this->drupalPostForm('search/node', $edit, 'edit-submit--2');
 
     // Check if the node has been found.
-    $this->assertText('Search results');
-    $this->assertText('we are testing');
+    $this->assertSession()->pageTextContains('Search results');
+    $this->assertSession()->pageTextContains('we are testing');
   }
 
 }

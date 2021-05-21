@@ -78,7 +78,7 @@ class ForumUninstallTest extends BrowserTestBase {
     $this->drupalGet('admin/modules/uninstall');
     // Assert forum is required.
     $this->assertSession()->fieldDisabled('uninstall[forum]');
-    $this->assertText('To uninstall Forum, first delete all Forum content');
+    $this->assertSession()->pageTextContains('To uninstall Forum, first delete all Forum content');
 
     // Delete the node.
     $this->drupalPostForm('node/' . $node->id() . '/delete', [], 'Delete');
@@ -87,7 +87,7 @@ class ForumUninstallTest extends BrowserTestBase {
     $this->drupalGet('admin/modules/uninstall');
     // Assert forum is still required.
     $this->assertSession()->fieldDisabled('uninstall[forum]');
-    $this->assertText('To uninstall Forum, first delete all Forums terms');
+    $this->assertSession()->pageTextContains('To uninstall Forum, first delete all Forums terms');
 
     // Delete any forum terms.
     $vid = $this->config('forum.settings')->get('vocabulary');
@@ -129,7 +129,7 @@ class ForumUninstallTest extends BrowserTestBase {
 
     // Double check everything by reinstalling the forum module again.
     $this->drupalPostForm('admin/modules', ['modules[forum][enable]' => 1], 'Install');
-    $this->assertText('Module Forum has been enabled.');
+    $this->assertSession()->pageTextContains('Module Forum has been enabled.');
   }
 
   /**

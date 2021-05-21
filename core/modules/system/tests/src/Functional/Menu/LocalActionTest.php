@@ -84,7 +84,7 @@ class LocalActionTest extends BrowserTestBase {
       // This behavior is a bug in libxml, see
       // https://bugs.php.net/bug.php?id=49437.
       $this->assertSession()->responseMatches('@<a [^>]*class="[^"]*button-action[^"]*"[^>]*>' . preg_quote($title, '@') . '</@');
-      $this->assertEqual($url->toString(), $elements[$index]->getAttribute('href'));
+      $this->assertEquals($url->toString(), $elements[$index]->getAttribute('href'));
       $index++;
     }
   }

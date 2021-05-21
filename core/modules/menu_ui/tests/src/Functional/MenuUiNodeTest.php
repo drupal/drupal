@@ -93,7 +93,7 @@ class MenuUiNodeTest extends BrowserTestBase {
 
     // Verify that no menu settings are displayed and nodes can be created.
     $this->drupalGet('node/add/page');
-    $this->assertText('Create Basic page');
+    $this->assertSession()->pageTextContains('Create Basic page');
     $this->assertNoText('Menu settings');
     $node_title = $this->randomMachineName();
     $edit = [
@@ -102,7 +102,7 @@ class MenuUiNodeTest extends BrowserTestBase {
     ];
     $this->submitForm($edit, 'Save');
     $node = $this->drupalGetNodeByTitle($node_title);
-    $this->assertEqual($edit['title[0][value]'], $node->getTitle());
+    $this->assertEquals($edit['title[0][value]'], $node->getTitle());
 
     // Test that we cannot set a menu item from a menu that is not set as
     // available.
@@ -111,7 +111,7 @@ class MenuUiNodeTest extends BrowserTestBase {
       'menu_parent' => 'main:',
     ];
     $this->drupalPostForm('admin/structure/types/manage/page', $edit, 'Save content type');
-    $this->assertText('The selected menu link is not under one of the selected menus.');
+    $this->assertSession()->pageTextContains('The selected menu link is not under one of the selected menus.');
     $this->assertNoRaw(t('The content type %name has been updated.', ['%name' => 'Basic page']));
 
     // Enable Tools menu as available menu.
@@ -230,7 +230,7 @@ class MenuUiNodeTest extends BrowserTestBase {
     // Assert that disabled Administration menu is not shown on the
     // node/$nid/edit page.
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertText('Provide a menu link');
+    $this->assertSession()->pageTextContains('Provide a menu link');
     // Assert that the link is still in the Administration menu after save.
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
     $link = MenuLinkContent::load($item->id());

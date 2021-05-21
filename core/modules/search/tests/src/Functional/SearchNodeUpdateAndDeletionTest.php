@@ -63,7 +63,7 @@ class SearchNodeUpdateAndDeletionTest extends BrowserTestBase {
     // Search the node to verify it appears in search results
     $edit = ['keys' => 'knights'];
     $this->drupalPostForm('search/node', $edit, 'Search');
-    $this->assertText($node->label());
+    $this->assertSession()->pageTextContains($node->label());
 
     // Update the node
     $node->body->value = "We want a shrubbery!";
@@ -75,7 +75,7 @@ class SearchNodeUpdateAndDeletionTest extends BrowserTestBase {
     // Search again to verify the new text appears in test results.
     $edit = ['keys' => 'shrubbery'];
     $this->drupalPostForm('search/node', $edit, 'Search');
-    $this->assertText($node->label());
+    $this->assertSession()->pageTextContains($node->label());
   }
 
   /**
@@ -96,7 +96,7 @@ class SearchNodeUpdateAndDeletionTest extends BrowserTestBase {
     // Search the node to verify it appears in search results
     $edit = ['keys' => 'dragons'];
     $this->drupalPostForm('search/node', $edit, 'Search');
-    $this->assertText($node->label());
+    $this->assertSession()->pageTextContains($node->label());
 
     // Get the node info from the search index tables.
     $connection = Database::getConnection();

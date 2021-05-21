@@ -111,7 +111,7 @@ abstract class InstallerExistingConfigTestBase extends InstallerTestBase {
       'delete' => [],
       'rename' => [],
     ];
-    $this->assertEqual($expected, $change_list);
+    $this->assertEquals($expected, $change_list);
   }
 
   /**

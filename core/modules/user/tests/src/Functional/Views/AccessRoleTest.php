@@ -125,8 +125,8 @@ class AccessRoleTest extends AccessTestBase {
     $account_switcher->switchTo($this->normalUser);
     $result = $renderer->renderPlain($build);
     $this->assertContains('user.roles', $build['#cache']['contexts']);
-    $this->assertEqual(['config:views.view.test_access_role'], $build['#cache']['tags']);
-    $this->assertEqual(Cache::PERMANENT, $build['#cache']['max-age']);
+    $this->assertEquals(['config:views.view.test_access_role'], $build['#cache']['tags']);
+    $this->assertEquals(Cache::PERMANENT, $build['#cache']['max-age']);
     $this->assertNotSame('', $result);
 
     // Then without access.
@@ -137,9 +137,9 @@ class AccessRoleTest extends AccessTestBase {
     // DisplayPluginBase::applyDisplayCacheabilityMetadata() is not invoked when
     // using buildBasicRenderable() and a Views access plugin returns FALSE.
     // $this->assertContains('user.roles', $build['#cache']['contexts']);
-    // $this->assertEqual([], $build['#cache']['tags']);
-    $this->assertEqual(Cache::PERMANENT, $build['#cache']['max-age']);
-    $this->assertEqual('', $result);
+    // $this->assertEquals([], $build['#cache']['tags']);
+    $this->assertEquals(Cache::PERMANENT, $build['#cache']['max-age']);
+    $this->assertEquals('', $result);
   }
 
 }

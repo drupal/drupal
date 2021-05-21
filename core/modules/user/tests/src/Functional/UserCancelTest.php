@@ -145,12 +145,12 @@ class UserCancelTest extends BrowserTestBase {
     // Confirm account cancellation.
     $timestamp = time();
     $this->submitForm([], 'Cancel account');
-    $this->assertText('A confirmation request to cancel your account has been sent to your email address.');
+    $this->assertSession()->pageTextContains('A confirmation request to cancel your account has been sent to your email address.');
 
     // Attempt bogus account cancellation request confirmation.
     $bogus_timestamp = $timestamp + 60;
     $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$bogus_timestamp/" . user_pass_rehash($account, $bogus_timestamp));
-    $this->assertText('You have tried to use an account cancellation link that has expired. Please request a new one using the form below.');
+    $this->assertSession()->pageTextContains('You have tried to use an account cancellation link that has expired. Please request a new one using the form below.');
     $user_storage->resetCache([$account->id()]);
     $account = $user_storage->load($account->id());
     $this->assertTrue($account->isActive(), 'User account was not canceled.');
@@ -158,7 +158,7 @@ class UserCancelTest extends BrowserTestBase {
     // Attempt expired account cancellation request confirmation.
     $bogus_timestamp = $timestamp - 86400 - 60;
     $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$bogus_timestamp/" . user_pass_rehash($account, $bogus_timestamp));
-    $this->assertText('You have tried to use an account cancellation link that has expired. Please request a new one using the form below.');
+    $this->assertSession()->pageTextContains('You have tried to use an account cancellation link that has expired. Please request a new one using the form below.');
     $user_storage->resetCache([$account->id()]);
     $account = $user_storage->load($account->id());
     $this->assertTrue($account->isActive(), 'User account was not canceled.');
@@ -188,15 +188,15 @@ class UserCancelTest extends BrowserTestBase {
     // Attempt to cancel account.
     $this->drupalGet('user/' . $account->id() . '/edit');
     $this->submitForm([], 'Cancel account');
-    $this->assertText('Are you sure you want to cancel your account?');
-    $this->assertText('Your account will be blocked and you will no longer be able to log in. All of your content will remain attributed to your username.');
+    $this->assertSession()->pageTextContains('Are you sure you want to cancel your account?');
+    $this->assertSession()->pageTextContains('Your account will be blocked and you will no longer be able to log in. All of your content will remain attributed to your username.');
     $this->assertNoText('Select the method to cancel the account above.');
 
     // Confirm account cancellation.
     $timestamp = time();
 
     $this->submitForm([], 'Cancel account');
-    $this->assertText('A confirmation request to cancel your account has been sent to your email address.');
+    $this->assertSession()->pageTextContains('A confirmation request to cancel your account has been sent to your email address.');
 
     // Confirm account cancellation request.
     $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account, $timestamp));
@@ -248,13 +248,13 @@ class UserCancelTest extends BrowserTestBase {
     // Attempt to cancel account.
     $this->drupalGet('user/' . $account->id() . '/edit');
     $this->submitForm([], 'Cancel account');
-    $this->assertText('Are you sure you want to cancel your account?');
-    $this->assertText('Your account will be blocked and you will no longer be able to log in. All of your content will be hidden from everyone but administrators.');
+    $this->assertSession()->pageTextContains('Are you sure you want to cancel your account?');
+    $this->assertSession()->pageTextContains('Your account will be blocked and you will no longer be able to log in. All of your content will be hidden from everyone but administrators.');
 
     // Confirm account cancellation.
     $timestamp = time();
     $this->submitForm([], 'Cancel account');
-    $this->assertText('A confirmation request to cancel your account has been sent to your email address.');
+    $this->assertSession()->pageTextContains('A confirmation request to cancel your account has been sent to your email address.');
 
     // Confirm account cancellation request.
     $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account, $timestamp));
@@ -369,13 +369,13 @@ class UserCancelTest extends BrowserTestBase {
     // Attempt to cancel account.
     $this->drupalGet('user/' . $account->id() . '/edit');
     $this->submitForm([], 'Cancel account');
-    $this->assertText('Are you sure you want to cancel your account?');
+    $this->assertSession()->pageTextContains('Are you sure you want to cancel your account?');
     $this->assertRaw(t('Your account will be removed and all account information deleted. All of your content will be assigned to the %anonymous-name user.', ['%anonymous-name' => $this->config('user.settings')->get('anonymous')]));
 
     // Confirm account cancellation.
     $timestamp = time();
     $this->submitForm([], 'Cancel account');
-    $this->assertText('A confirmation request to cancel your account has been sent to your email address.');
+    $this->assertSession()->pageTextContains('A confirmation request to cancel your account has been sent to your email address.');
 
     // Confirm account cancellation request.
     $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account, $timestamp));
@@ -401,7 +401,7 @@ class UserCancelTest extends BrowserTestBase {
     $test_comment = $storage->load($comment->id());
     $this->assertEquals(0, $test_comment->getOwnerId(), 'Comment of the user has been attributed to anonymous user.');
     $this->assertTrue($test_comment->isPublished());
-    $this->assertEqual($anonymous_user->getDisplayName(), $test_comment->getAuthorName(), 'Comment of the user has been attributed to anonymous user name.');
+    $this->assertEquals($anonymous_user->getDisplayName(), $test_comment->getAuthorName(), 'Comment of the user has been attributed to anonymous user name.');
 
     // Confirm that the confirmation message made it through to the end user.
     $this->assertRaw(t('%name has been deleted.', ['%name' => $account->getAccountName()]));
@@ -433,13 +433,13 @@ class UserCancelTest extends BrowserTestBase {
     // Attempt to cancel account.
     $this->drupalGet('user/' . $account->id() . '/edit');
     $this->submitForm([], 'Cancel account');
-    $this->assertText('Are you sure you want to cancel your account?');
+    $this->assertSession()->pageTextContains('Are you sure you want to cancel your account?');
     $this->assertRaw(t('Your account will be removed and all account information deleted. All of your content will be assigned to the %anonymous-name user.', ['%anonymous-name' => $this->config('user.settings')->get('anonymous')]));
 
     // Confirm account cancellation.
     $timestamp = time();
     $this->submitForm([], 'Cancel account');
-    $this->assertText('A confirmation request to cancel your account has been sent to your email address.');
+    $this->assertSession()->pageTextContains('A confirmation request to cancel your account has been sent to your email address.');
 
     // Confirm account cancellation request.
     $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account, $timestamp));
@@ -487,7 +487,7 @@ class UserCancelTest extends BrowserTestBase {
 
     $this->drupalPostForm('comment/reply/node/' . $node->id() . '/comment', $edit, 'Preview');
     $this->submitForm([], 'Save');
-    $this->assertText('Your comment has been posted.');
+    $this->assertSession()->pageTextContains('Your comment has been posted.');
     $comments = \Drupal::entityTypeManager()->getStorage('comment')->loadByProperties(['subject' => $edit['subject[0][value]']]);
     $comment = reset($comments);
     $this->assertNotEmpty($comment->id(), 'Comment found.');
@@ -505,13 +505,13 @@ class UserCancelTest extends BrowserTestBase {
     // Attempt to cancel account.
     $this->drupalGet('user/' . $account->id() . '/edit');
     $this->submitForm([], 'Cancel account');
-    $this->assertText('Are you sure you want to cancel your account?');
-    $this->assertText('Your account will be removed and all account information deleted. All of your content will also be deleted.');
+    $this->assertSession()->pageTextContains('Are you sure you want to cancel your account?');
+    $this->assertSession()->pageTextContains('Your account will be removed and all account information deleted. All of your content will also be deleted.');
 
     // Confirm account cancellation.
     $timestamp = time();
     $this->submitForm([], 'Cancel account');
-    $this->assertText('A confirmation request to cancel your account has been sent to your email address.');
+    $this->assertSession()->pageTextContains('A confirmation request to cancel your account has been sent to your email address.');
 
     // Confirm account cancellation request.
     $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account, $timestamp));
@@ -553,7 +553,7 @@ class UserCancelTest extends BrowserTestBase {
     $this->drupalGet('user/' . $account->id() . '/edit');
     $this->submitForm([], 'Cancel account');
     $this->assertRaw(t('Are you sure you want to cancel the account %name?', ['%name' => $account->getAccountName()]));
-    $this->assertText('Select the method to cancel the account above.');
+    $this->assertSession()->pageTextContains('Select the method to cancel the account above.');
 
     // Confirm deletion.
     $this->submitForm([], 'Cancel account');
@@ -581,7 +581,7 @@ class UserCancelTest extends BrowserTestBase {
     $this->drupalGet('user/' . $account->id() . '/edit');
     $this->submitForm([], 'Cancel account');
     $this->assertRaw(t('Are you sure you want to cancel the account %name?', ['%name' => $account->getAccountName()]));
-    $this->assertText('Select the method to cancel the account above.');
+    $this->assertSession()->pageTextContains('Select the method to cancel the account above.');
 
     // Confirm deletion.
     $this->submitForm([], 'Cancel account');
@@ -617,10 +617,10 @@ class UserCancelTest extends BrowserTestBase {
       $edit['user_bulk_form[' . $i . ']'] = TRUE;
     }
     $this->drupalPostForm('admin/people', $edit, 'Apply to selected items');
-    $this->assertText('Are you sure you want to cancel these user accounts?');
-    $this->assertText('When cancelling these accounts');
-    $this->assertText('Require email confirmation to cancel account');
-    $this->assertText('Notify user when account is canceled');
+    $this->assertSession()->pageTextContains('Are you sure you want to cancel these user accounts?');
+    $this->assertSession()->pageTextContains('When cancelling these accounts');
+    $this->assertSession()->pageTextContains('Require email confirmation to cancel account');
+    $this->assertSession()->pageTextContains('Notify user when account is canceled');
 
     // Confirm deletion.
     $this->submitForm([], 'Cancel accounts');
@@ -633,7 +633,7 @@ class UserCancelTest extends BrowserTestBase {
     $this->assertTrue($status, 'Users deleted and not found in the database.');
 
     // Ensure that admin account was not cancelled.
-    $this->assertText('A confirmation request to cancel your account has been sent to your email address.');
+    $this->assertSession()->pageTextContains('A confirmation request to cancel your account has been sent to your email address.');
     $admin_user = $user_storage->load($admin_user->id());
     $this->assertTrue($admin_user->isActive(), 'Administrative user is found in the database and enabled.');
 

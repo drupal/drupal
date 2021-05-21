@@ -128,7 +128,7 @@ class ContentTranslationLanguageChangeTest extends NodeTestBase {
       'test_field_only_en_fr' => 'node created',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertEqual('node created', \Drupal::state()->get('test_field_only_en_fr'));
+    $this->assertEquals('node created', \Drupal::state()->get('test_field_only_en_fr'));
 
     // Create a translation in French.
     $this->clickLink('Translate');

@@ -141,12 +141,12 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
 
     $referencing_nid = key($result);
     $referencing_node = Node::load($referencing_nid);
-    $this->assertEqual($referenced_nid, $referencing_node->test_field->target_id, 'Newly created node is referenced from the referencing node.');
+    $this->assertEquals($referenced_nid, $referencing_node->test_field->target_id, 'Newly created node is referenced from the referencing node.');
 
     // Now try to view the node and check that the referenced node is shown.
     $this->drupalGet('node/' . $referencing_node->id());
-    $this->assertText($referencing_node->label());
-    $this->assertText($referenced_node->label());
+    $this->assertSession()->pageTextContains($referencing_node->label());
+    $this->assertSession()->pageTextContains($referenced_node->label());
   }
 
   /**
@@ -196,7 +196,7 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
     $term = reset($term);
 
     // The new term is expected to be stored in the second vocabulary.
-    $this->assertEqual($vocabularies[1]->id(), $term->bundle());
+    $this->assertEquals($vocabularies[1]->id(), $term->bundle());
 
     /** @var \Drupal\field\Entity\FieldConfig $field_config */
     $field_config = FieldConfig::loadByName('node', $this->referencingType, $field_name);
@@ -220,7 +220,7 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
     $term = reset($term);
 
     // The second term is expected to be stored in the first vocabulary.
-    $this->assertEqual($vocabularies[0]->id(), $term->bundle());
+    $this->assertEquals($vocabularies[0]->id(), $term->bundle());
 
     // @todo Re-enable this test when WebTestBase::curlHeaderCallback() provides
     //   a way to catch and assert user-triggered errors.
@@ -285,7 +285,7 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
     $this->assertCount(1, $result);
     $referencing_nid = key($result);
     $referencing_node = Node::load($referencing_nid);
-    $this->assertEqual($referenced_id, $referencing_node->$field_name->target_id, 'Newly created node is referenced from the referencing entity.');
+    $this->assertEquals($referenced_id, $referencing_node->$field_name->target_id, 'Newly created node is referenced from the referencing entity.');
   }
 
 }
