@@ -75,7 +75,7 @@ class LanguageBrowserDetectionTest extends BrowserTestBase {
 
     // Add the same custom mapping again.
     $this->drupalPostForm('admin/config/regional/language/detection/browser', $edit, 'Save configuration');
-    $this->assertText('Browser language codes must be unique.');
+    $this->assertSession()->pageTextContains('Browser language codes must be unique.');
 
     // Change browser language code of our custom mapping to zh-sg.
     $edit = [
@@ -83,7 +83,7 @@ class LanguageBrowserDetectionTest extends BrowserTestBase {
       'mappings[xx][drupal_langcode]' => 'en',
     ];
     $this->drupalPostForm('admin/config/regional/language/detection/browser', $edit, 'Save configuration');
-    $this->assertText('Browser language codes must be unique.');
+    $this->assertSession()->pageTextContains('Browser language codes must be unique.');
 
     // Change Drupal language code of our custom mapping to zh-hans.
     $edit = [

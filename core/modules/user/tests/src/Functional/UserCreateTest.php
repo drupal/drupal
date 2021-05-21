@@ -108,16 +108,16 @@ class UserCreateTest extends BrowserTestBase {
       $this->drupalPostForm('admin/people/create', $edit, 'Create new account');
 
       if ($notify) {
-        $this->assertText('A welcome message with further instructions has been emailed to the new user ' . $edit['name'] . '.');
+        $this->assertSession()->pageTextContains('A welcome message with further instructions has been emailed to the new user ' . $edit['name'] . '.');
         $this->assertCount(1, $this->drupalGetMails(), 'Notification email sent');
       }
       else {
-        $this->assertText('Created a new user account for ' . $edit['name'] . '. No email has been sent.');
+        $this->assertSession()->pageTextContains('Created a new user account for ' . $edit['name'] . '. No email has been sent.');
         $this->assertCount(0, $this->drupalGetMails(), 'Notification email not sent');
       }
 
       $this->drupalGet('admin/people');
-      $this->assertText($edit['name']);
+      $this->assertSession()->pageTextContains($edit['name']);
       $user = user_load_by_name($name);
       $this->assertTrue($user->isActive(), 'User is not blocked');
     }
@@ -133,7 +133,7 @@ class UserCreateTest extends BrowserTestBase {
       'notify' => FALSE,
     ];
     $this->drupalPostForm('admin/people/create', $edit, 'Create new account');
-    $this->assertText("Created a new user account for $name. No email has been sent");
+    $this->assertSession()->pageTextContains("Created a new user account for $name. No email has been sent");
     $this->assertNoText('Password field is required');
   }
 

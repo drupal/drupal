@@ -196,7 +196,7 @@ class FilterDateTest extends ViewTestBase {
     // Generate a definitive wrong value, which should be checked by validation.
     $edit['options[value][value]'] = $this->randomString() . '-------';
     $this->submitForm($edit, 'Apply');
-    $this->assertText('Invalid date format.');
+    $this->assertSession()->pageTextContains('Invalid date format.');
   }
 
   /**

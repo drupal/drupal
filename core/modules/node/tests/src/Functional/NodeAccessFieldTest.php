@@ -95,12 +95,12 @@ class NodeAccessFieldTest extends NodeTestBase {
     // Log in as the administrator and confirm that the field value is present.
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('node/' . $node->id());
-    $this->assertText($value);
+    $this->assertSession()->pageTextContains($value);
 
     // Log in as the content admin and try to view the node.
     $this->drupalLogin($this->contentAdminUser);
     $this->drupalGet('node/' . $node->id());
-    $this->assertText('Access denied');
+    $this->assertSession()->pageTextContains('Access denied');
 
     // Modify the field default as the content admin.
     $edit = [];
@@ -117,7 +117,7 @@ class NodeAccessFieldTest extends NodeTestBase {
 
     // Confirm that the existing node still has the correct field value.
     $this->drupalGet('node/' . $node->id());
-    $this->assertText($value);
+    $this->assertSession()->pageTextContains($value);
 
     // Confirm that the new default value appears when creating a new node.
     $this->drupalGet('node/add/page');

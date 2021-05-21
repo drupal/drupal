@@ -64,16 +64,16 @@ class FilterNumericWebTest extends UITestBase {
 
     // Test that the exposed filter works as expected.
     $this->drupalGet('test_view-path');
-    $this->assertText('John');
-    $this->assertText('Paul');
-    $this->assertText('Ringo');
-    $this->assertText('George');
-    $this->assertText('Meredith');
+    $this->assertSession()->pageTextContains('John');
+    $this->assertSession()->pageTextContains('Paul');
+    $this->assertSession()->pageTextContains('Ringo');
+    $this->assertSession()->pageTextContains('George');
+    $this->assertSession()->pageTextContains('Meredith');
     $this->submitForm(['age' => '2'], 'Apply');
-    $this->assertText('John');
-    $this->assertText('Paul');
+    $this->assertSession()->pageTextContains('John');
+    $this->assertSession()->pageTextContains('Paul');
     $this->assertNoText('Ringo');
-    $this->assertText('George');
+    $this->assertSession()->pageTextContains('George');
     $this->assertNoText('Meredith');
 
     // Change the filter to a single filter to test the schema when the operator
@@ -87,14 +87,14 @@ class FilterNumericWebTest extends UITestBase {
 
     // Test that the filter works as expected.
     $this->drupalGet('test_view-path');
-    $this->assertText('John');
+    $this->assertSession()->pageTextContains('John');
     $this->assertNoText('Paul');
     $this->assertNoText('Ringo');
     $this->assertNoText('George');
     $this->assertNoText('Meredith');
     $this->submitForm(['age' => '26'], 'Apply');
     $this->assertNoText('John');
-    $this->assertText('Paul');
+    $this->assertSession()->pageTextContains('Paul');
     $this->assertNoText('Ringo');
     $this->assertNoText('George');
     $this->assertNoText('Meredith');

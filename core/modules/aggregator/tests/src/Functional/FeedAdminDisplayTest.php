@@ -26,8 +26,8 @@ class FeedAdminDisplayTest extends AggregatorTestBase {
 
     // The scheduled feed shows that it has not been updated yet and is
     // scheduled.
-    $this->assertText('never');
-    $this->assertText('imminently');
+    $this->assertSession()->pageTextContains('never');
+    $this->assertSession()->pageTextContains('imminently');
     $this->assertNoText('ago');
     $this->assertNoText('left');
 
@@ -38,8 +38,8 @@ class FeedAdminDisplayTest extends AggregatorTestBase {
     // and next update.
     $this->assertNoText('never');
     $this->assertNoText('imminently');
-    $this->assertText('ago');
-    $this->assertText('left');
+    $this->assertSession()->pageTextContains('ago');
+    $this->assertSession()->pageTextContains('left');
 
     // Delete scheduled feed.
     $this->deleteFeed($scheduled_feed);
@@ -49,7 +49,7 @@ class FeedAdminDisplayTest extends AggregatorTestBase {
 
     $this->drupalGet('admin/config/services/aggregator');
     // The non scheduled feed shows that it has not been updated yet.
-    $this->assertText('never');
+    $this->assertSession()->pageTextContains('never');
     $this->assertNoText('imminently');
     $this->assertNoText('ago');
     $this->assertNoText('left');
@@ -59,9 +59,9 @@ class FeedAdminDisplayTest extends AggregatorTestBase {
 
     // After the feed update, we still need to see "never" as next update label.
     // Last update will show an interval.
-    $this->assertText('never');
+    $this->assertSession()->pageTextContains('never');
     $this->assertNoText('imminently');
-    $this->assertText('ago');
+    $this->assertSession()->pageTextContains('ago');
     $this->assertNoText('left');
   }
 

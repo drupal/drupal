@@ -190,7 +190,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
     // Check that the file can still be removed.
     $this->removeNodeFile($nid);
     $this->assertNoText('Only files with the following extensions are allowed: txt.');
-    $this->assertText('Article ' . $node->getTitle() . ' has been updated.');
+    $this->assertSession()->pageTextContains('Article ' . $node->getTitle() . ' has been updated.');
   }
 
 }

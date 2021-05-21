@@ -78,7 +78,7 @@ class MultipleDistributionsProfileTest extends InstallerTestBase {
     $this->assertSession()->addressEquals('user/1');
     $this->assertSession()->statusCodeEquals(200);
     // Confirm that we are logged-in after installation.
-    $this->assertText($this->rootUser->getAccountName());
+    $this->assertSession()->pageTextContains($this->rootUser->getAccountName());
 
     // Confirm that Drupal recognizes this distribution as the current profile.
     $this->assertEquals('distribution_one', \Drupal::installProfile());

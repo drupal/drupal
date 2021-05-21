@@ -372,7 +372,7 @@ class FrontPageTest extends ViewTestBase {
     $node->save();
 
     $this->drupalGet(Url::fromRoute('view.frontpage.page_1'));
-    $this->assertText($title);
+    $this->assertSession()->pageTextContains($title);
   }
 
 }

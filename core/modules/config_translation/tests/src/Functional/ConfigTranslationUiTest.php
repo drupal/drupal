@@ -193,8 +193,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
     // Visit French site to ensure base language string present as source.
     $this->drupalGet("fr/$translation_base_url/fr/edit");
-    $this->assertText($site_name);
-    $this->assertText($site_slogan);
+    $this->assertSession()->pageTextContains($site_name);
+    $this->assertSession()->pageTextContains($site_slogan);
 
     // Translate 'Site name' label in French.
     $search = [
@@ -213,18 +213,18 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
     // Ensure that the label is in French (and not in English).
     $this->drupalGet("fr/$translation_base_url/fr/edit");
-    $this->assertText($fr_site_name_label);
+    $this->assertSession()->pageTextContains($fr_site_name_label);
     $this->assertNoText($site_name_label);
 
     // Ensure that the label is also in French (and not in English)
     // when editing another language with the interface in French.
     $this->drupalGet("fr/$translation_base_url/ta/edit");
-    $this->assertText($fr_site_name_label);
+    $this->assertSession()->pageTextContains($fr_site_name_label);
     $this->assertNoText($site_name_label);
 
     // Ensure that the label is not translated when the interface is in English.
     $this->drupalGet("$translation_base_url/fr/edit");
-    $this->assertText($site_name_label);
+    $this->assertSession()->pageTextContains($site_name_label);
     $this->assertNoText($fr_site_name_label);
   }
 
@@ -335,7 +335,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
     // Visit the form to confirm the changes.
     $this->drupalGet('contact/feedback');
-    $this->assertText($label);
+    $this->assertSession()->pageTextContains($label);
 
     foreach ($this->langcodes as $langcode) {
       $this->drupalGet($translation_base_url);
@@ -347,7 +347,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
       // Make sure original text is present on this page.
       $this->drupalGet($translation_page_url);
-      $this->assertText($label);
+      $this->assertSession()->pageTextContains($label);
 
       // Update translatable fields.
       $edit = [
@@ -373,7 +373,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
       // Visit language specific version of form to check label.
       $this->drupalGet($langcode . '/contact/feedback');
-      $this->assertText('Website feedback - ' . $langcode);
+      $this->assertSession()->pageTextContains('Website feedback - ' . $langcode);
 
       // Submit feedback.
       $edit = [
@@ -391,7 +391,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       foreach ($langcode_prefixes as $langcode_prefix) {
         $this->drupalGet(ltrim("$langcode_prefix/$translation_base_url/$langcode/edit", '/'));
         $this->assertSession()->fieldValueEquals('translation[config_names][contact.form.feedback][label]', 'Website feedback - ' . $langcode);
-        $this->assertText($label);
+        $this->assertSession()->pageTextContains($label);
       }
     }
 
@@ -476,7 +476,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
       // Make sure original text is present on this page.
       $this->drupalGet($translation_page_url);
-      $this->assertText($label);
+      $this->assertSession()->pageTextContains($label);
 
       // Make sure that the date library is added.
       $this->assertRaw('core/modules/system/js/system.date.js');
@@ -538,8 +538,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       $this->assertSession()->fieldValueEquals($key, $value);
     }
     // Check that labels for email settings appear.
-    $this->assertText('Account cancellation confirmation');
-    $this->assertText('Password recovery');
+    $this->assertSession()->pageTextContains('Account cancellation confirmation');
+    $this->assertSession()->pageTextContains('Password recovery');
   }
 
   /**
@@ -757,9 +757,9 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $this->drupalGet("/entity_test/structure/$bundle/fields/entity_test.$bundle.$field_name/translate");
     $this->clickLink('Add');
 
-    $this->assertText('Translatable field setting');
+    $this->assertSession()->pageTextContains('Translatable field setting');
     $this->assertSession()->assertEscaped($translatable_field_setting);
-    $this->assertText('Translatable storage setting');
+    $this->assertSession()->pageTextContains('Translatable storage setting');
     $this->assertSession()->assertEscaped($translatable_storage_setting);
   }
 
@@ -796,7 +796,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
     // Checks the text of details summary element that surrounds the translation
     // options.
-    $this->assertText(Html::escape(strip_tags($on_label)) . ' Boolean settings');
+    $this->assertSession()->responseContains(Html::escape(strip_tags($on_label)) . ' Boolean settings');
 
     // Checks that the correct on and off labels appear on the form.
     $this->assertSession()->assertEscaped($on_label);
@@ -890,12 +890,12 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
     // Check out if the translation page has the altered in settings.
     $this->drupalGet('admin/config/system/site-information/translate/fr/add');
-    $this->assertText('Feed channel');
-    $this->assertText('Feed description');
+    $this->assertSession()->pageTextContains('Feed channel');
+    $this->assertSession()->pageTextContains('Feed description');
 
     // Check if the translation page does not have the altered out settings.
     $this->drupalGet('admin/config/people/accounts/translate/fr/add');
-    $this->assertText('Name');
+    $this->assertSession()->pageTextContains('Name');
     $this->assertNoText('Account cancellation confirmation');
     $this->assertNoText('Password recovery');
   }
@@ -1066,7 +1066,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       'translation[config_names][field.field.node.article.translatable_field][label]' => 'FR label',
     ];
     $this->submitForm($form_values, 'Save translation');
-    $this->assertText('Successfully saved French translation.');
+    $this->assertSession()->pageTextContains('Successfully saved French translation.');
 
     // Check that the translations are saved.
     $this->clickLink('Add');

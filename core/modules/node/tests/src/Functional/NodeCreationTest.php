@@ -75,7 +75,7 @@ class NodeCreationTest extends NodeTestBase {
     $this->drupalPostForm('node/add/page', $edit, 'Save');
 
     // Check that the Basic page has been created.
-    $this->assertText('Basic page ' . $edit['title[0][value]'] . ' has been created.');
+    $this->assertSession()->pageTextContains('Basic page ' . $edit['title[0][value]'] . ' has been created.');
 
     // Verify that the creation message contains a link to a node.
     $this->assertSession()->elementExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "node/")]');
@@ -96,8 +96,8 @@ class NodeCreationTest extends NodeTestBase {
     $node_type->save();
 
     $this->drupalGet('node/' . $node->id());
-    $this->assertText($node->getOwner()->getAccountName());
-    $this->assertText($this->container->get('date.formatter')->format($node->getCreatedTime()));
+    $this->assertSession()->pageTextContains($node->getOwner()->getAccountName());
+    $this->assertSession()->pageTextContains($this->container->get('date.formatter')->format($node->getCreatedTime()));
 
     // Check if the node revision checkbox is not rendered on node creation form.
     $admin_user = $this->drupalCreateUser([
@@ -163,10 +163,10 @@ class NodeCreationTest extends NodeTestBase {
 
     // Check that the user was redirected to the home page.
     $this->assertSession()->addressEquals('');
-    $this->assertText('Test page text');
+    $this->assertSession()->pageTextContains('Test page text');
 
     // Confirm that the node was created.
-    $this->assertText('Basic page ' . $edit['title[0][value]'] . ' has been created.');
+    $this->assertSession()->pageTextContains('Basic page ' . $edit['title[0][value]'] . ' has been created.');
 
     // Verify that the creation message contains a link to a node.
     $this->assertSession()->elementExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "node/")]');

@@ -55,11 +55,11 @@ class SystemAuthorizeTest extends BrowserTestBase {
     $this->drupalGetAuthorizePHP($page_title);
     $this->assertSession()->titleEquals("$page_title | Drupal");
     $this->assertNoText('It appears you have reached this page in error.');
-    $this->assertText('To continue, provide your server connection details');
+    $this->assertSession()->pageTextContains('To continue, provide your server connection details');
     // Make sure we see the new connection method added by system_test.
     $this->assertRaw('System Test FileTransfer');
     // Make sure the settings form callback works.
-    $this->assertText('System Test Username');
+    $this->assertSession()->pageTextContains('System Test Username');
     // Test that \Drupal\Core\Render\BareHtmlPageRenderer adds assets as
     // expected to the first page of the authorize.php script.
     $this->assertRaw('core/misc/states.js');

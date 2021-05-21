@@ -63,7 +63,7 @@ class InstallerNonEnglishProfileWithoutLocaleModuleTest extends InstallerTestBas
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->addressEquals('user/1');
     // Confirm that we are logged-in after installation.
-    $this->assertText($this->rootUser->getAccountName());
+    $this->assertSession()->pageTextContains($this->rootUser->getAccountName());
 
     // Verify that the confirmation message appears.
     require_once $this->root . '/core/includes/install.inc';

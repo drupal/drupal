@@ -121,7 +121,7 @@ class FormTest extends FieldTestBase {
 
     // Create token value expected for description.
     $token_description = Html::escape($this->config('system.site')->get('name')) . '_description';
-    $this->assertText($token_description);
+    $this->assertSession()->pageTextContains($token_description);
     $this->assertSession()->fieldValueEquals("{$field_name}[0][value]", '');
     // Verify that no extraneous widget is displayed.
     $this->assertSession()->fieldNotExists("{$field_name}[1][value]");
@@ -149,7 +149,7 @@ class FormTest extends FieldTestBase {
     $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText('entity_test ' . $id . ' has been created.');
+    $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
     $entity = EntityTest::load($id);
     $this->assertEquals($value, $entity->{$field_name}->value, 'Field value was saved');
 
@@ -166,7 +166,7 @@ class FormTest extends FieldTestBase {
       "{$field_name}[0][value]" => $value,
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('entity_test ' . $id . ' has been updated.');
+    $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been updated.');
     $this->container->get('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);
     $entity = EntityTest::load($id);
     $this->assertEquals($value, $entity->{$field_name}->value, 'Field value was updated');
@@ -177,7 +177,7 @@ class FormTest extends FieldTestBase {
       "{$field_name}[0][value]" => $value,
     ];
     $this->drupalPostForm('entity_test/manage/' . $id . '/edit', $edit, 'Save');
-    $this->assertText('entity_test ' . $id . ' has been updated.');
+    $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been updated.');
     $this->container->get('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);
     $entity = EntityTest::load($id);
     $this->assertTrue($entity->{$field_name}->isEmpty(), 'Field was emptied');
@@ -211,7 +211,7 @@ class FormTest extends FieldTestBase {
     $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText('entity_test ' . $id . ' has been created.');
+    $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
     $entity = EntityTest::load($id);
     $this->assertTrue($entity->{$field_name}->isEmpty(), 'Field is now empty.');
   }
@@ -241,7 +241,7 @@ class FormTest extends FieldTestBase {
     $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText('entity_test ' . $id . ' has been created.');
+    $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
     $entity = EntityTest::load($id);
     $this->assertEquals($value, $entity->{$field_name}->value, 'Field value was saved');
 
@@ -327,7 +327,7 @@ class FormTest extends FieldTestBase {
     $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText('entity_test ' . $id . ' has been created.');
+    $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
     $entity = EntityTest::load($id);
     ksort($field_values);
     $field_values = array_values($field_values);
@@ -601,7 +601,7 @@ class FormTest extends FieldTestBase {
     $this->submitForm([], 'Save');
     preg_match('|' . $entity_type . '/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText('entity_test_rev ' . $id . ' has been created.');
+    $this->assertSession()->pageTextContains('entity_test_rev ' . $id . ' has been created.');
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($entity_type);
 
@@ -627,7 +627,7 @@ class FormTest extends FieldTestBase {
     $value = mt_rand(1, 127);
     $edit = ["{$field_name}[0][value]" => $value];
     $this->submitForm($edit, 'Save');
-    $this->assertText('entity_test_rev ' . $id . ' has been updated.');
+    $this->assertSession()->pageTextContains('entity_test_rev ' . $id . ' has been updated.');
     $storage->resetCache([$id]);
     $entity = $storage->load($id);
     $this->assertEquals($value, $entity->{$field_name}->value, 'Field value was updated');
@@ -679,7 +679,7 @@ class FormTest extends FieldTestBase {
 
     $this->drupalGet('entity_test_base_field_display/manage/' . $entity->id());
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('A field with multiple values');
+    $this->assertSession()->pageTextContains('A field with multiple values');
     // Test if labels were XSS filtered.
     $this->assertSession()->assertEscaped("<script>alert('a configurable field');</script>");
   }

@@ -31,7 +31,7 @@ class SystemConfigFormTest extends BrowserTestBase {
     // Verify the primary action submit button is found.
     $this->assertSession()->elementExists('xpath', "//div[@id = 'edit-actions']/input[contains(@class, 'button--primary')]");
     $this->submitForm([], 'Save configuration');
-    $this->assertText('The configuration options have been saved.');
+    $this->assertSession()->pageTextContains('The configuration options have been saved.');
   }
 
 }

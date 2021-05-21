@@ -55,7 +55,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
   public function testUpdateCheckStatus() {
     // Case when contributed modules are absent.
     $this->drupalGet('admin/reports/translations');
-    $this->assertText('Missing translations for one project');
+    $this->assertSession()->pageTextContains('Missing translations for one project');
 
     $config = $this->config('locale.settings');
     // Set a flag to let the locale_test module replace the project data with a
@@ -128,11 +128,11 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Check the status on the Available translation status page.
     $this->assertRaw('<label for="edit-langcodes-de" class="visually-hidden">Update German</label>');
-    $this->assertText('Updates for: Contributed module one, Contributed module two, Custom module one, Locale test');
+    $this->assertSession()->pageTextContains('Updates for: Contributed module one, Contributed module two, Custom module one, Locale test');
     /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
     $date_formatter = $this->container->get('date.formatter');
-    $this->assertText('Contributed module one (' . $date_formatter->format($this->timestampNew, 'html_date') . ')');
-    $this->assertText('Contributed module two (' . $date_formatter->format($this->timestampNew, 'html_date') . ')');
+    $this->assertSession()->pageTextContains('Contributed module one (' . $date_formatter->format($this->timestampNew, 'html_date') . ')');
+    $this->assertSession()->pageTextContains('Contributed module two (' . $date_formatter->format($this->timestampNew, 'html_date') . ')');
 
     // Execute the translation update.
     $this->drupalPostForm('admin/reports/translations', [], 'Update translations');
@@ -426,8 +426,8 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Ensure the translation file is automatically imported when the language
     // was added.
-    $this->assertText('One translation file imported.');
-    $this->assertText('One translation string was skipped because of disallowed or malformed HTML');
+    $this->assertSession()->pageTextContains('One translation file imported.');
+    $this->assertSession()->pageTextContains('One translation string was skipped because of disallowed or malformed HTML');
 
     // Ensure the strings were successfully imported.
     $search = [
@@ -445,7 +445,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
       'translation' => 'all',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
-    $this->assertText('Multiline translation string to make sure that import works with it.');
+    $this->assertSession()->pageTextContains('Multiline translation string to make sure that import works with it.');
 
     // Ensure 'Allowed HTML source string' was imported but the translation for
     // 'Another allowed HTML source string' was not because it contains invalid
@@ -456,7 +456,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
       'translation' => 'all',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
-    $this->assertText('Allowed HTML source string');
+    $this->assertSession()->pageTextContains('Allowed HTML source string');
     $this->assertNoText('Another allowed HTML source string');
   }
 

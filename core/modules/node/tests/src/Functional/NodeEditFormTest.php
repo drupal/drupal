@@ -97,8 +97,8 @@ class NodeEditFormTest extends NodeTestBase {
     $this->submitForm($edit, 'Save');
 
     // Check that the title and body fields are displayed with the updated values.
-    $this->assertText($edit[$title_key]);
-    $this->assertText($edit[$body_key]);
+    $this->assertSession()->pageTextContains($edit[$title_key]);
+    $this->assertSession()->pageTextContains($edit[$body_key]);
 
     // Log in as a second administrator user.
     $second_web_user = $this->drupalCreateUser([
@@ -237,7 +237,7 @@ class NodeEditFormTest extends NodeTestBase {
     // information.
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('node/add/page');
-    $this->assertText('Not saved yet');
+    $this->assertSession()->pageTextContains('Not saved yet');
 
     // Create node to edit.
     $edit['title[0][value]'] = $this->randomMachineName(8);
@@ -246,8 +246,8 @@ class NodeEditFormTest extends NodeTestBase {
 
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->drupalGet("node/" . $node->id() . "/edit");
-    $this->assertText('Published');
-    $this->assertText($this->container->get('date.formatter')->format($node->getChangedTime(), 'short'));
+    $this->assertSession()->pageTextContains('Published');
+    $this->assertSession()->pageTextContains($this->container->get('date.formatter')->format($node->getChangedTime(), 'short'));
   }
 
   /**

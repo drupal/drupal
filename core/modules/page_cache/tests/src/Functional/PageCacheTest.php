@@ -325,7 +325,7 @@ class PageCacheTest extends BrowserTestBase {
 
     // 1. anonymous user, without permission.
     $this->drupalGet($content_url);
-    $this->assertText('Permission to pet llamas: no!');
+    $this->assertSession()->pageTextContains('Permission to pet llamas: no!');
     $this->assertCacheContext('user.permissions');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:user.role.anonymous');
     $this->drupalGet($route_access_url);
@@ -335,7 +335,7 @@ class PageCacheTest extends BrowserTestBase {
     // 2. anonymous user, with permission.
     user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['pet llamas']);
     $this->drupalGet($content_url);
-    $this->assertText('Permission to pet llamas: yes!');
+    $this->assertSession()->pageTextContains('Permission to pet llamas: yes!');
     $this->assertCacheContext('user.permissions');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:user.role.anonymous');
     $this->drupalGet($route_access_url);
@@ -346,7 +346,7 @@ class PageCacheTest extends BrowserTestBase {
     $auth_user = $this->drupalCreateUser();
     $this->drupalLogin($auth_user);
     $this->drupalGet($content_url);
-    $this->assertText('Permission to pet llamas: no!');
+    $this->assertSession()->pageTextContains('Permission to pet llamas: no!');
     $this->assertCacheContext('user.permissions');
     $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'config:user.role.authenticated');
     $this->drupalGet($route_access_url);
@@ -356,7 +356,7 @@ class PageCacheTest extends BrowserTestBase {
     // 4. authenticated user, with permission.
     user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ['pet llamas']);
     $this->drupalGet($content_url);
-    $this->assertText('Permission to pet llamas: yes!');
+    $this->assertSession()->pageTextContains('Permission to pet llamas: yes!');
     $this->assertCacheContext('user.permissions');
     $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'config:user.role.authenticated');
     $this->drupalGet($route_access_url);
@@ -480,7 +480,7 @@ class PageCacheTest extends BrowserTestBase {
 
     $this->drupalGet('page_cache_form_test_immutability');
 
-    $this->assertText("Immutable: TRUE");
+    $this->assertSession()->pageTextContains("Immutable: TRUE");
 
     // The immutable flag is set unconditionally by system_form_alter(), set
     // a flag to tell page_cache_form_test_module_implements_alter() to disable
@@ -491,7 +491,7 @@ class PageCacheTest extends BrowserTestBase {
 
     $this->drupalGet('page_cache_form_test_immutability');
 
-    $this->assertText("Immutable: FALSE");
+    $this->assertSession()->pageTextContains("Immutable: FALSE");
   }
 
   /**

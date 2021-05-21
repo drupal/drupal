@@ -282,7 +282,7 @@ class ConfigEntityTest extends BrowserTestBase {
     $this->drupalPostForm('admin/structure/config_test/add', $edit, 'Save');
     $this->assertSession()->addressEquals('admin/structure/config_test');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText($label1);
+    $this->assertSession()->pageTextContains($label1);
     $this->assertSession()->linkByHrefExists("admin/structure/config_test/manage/$id");
 
     // Rename the configuration entity's ID/machine name.
@@ -295,7 +295,7 @@ class ConfigEntityTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $this->assertNoText($label1);
     $this->assertNoText($label2);
-    $this->assertText($label3);
+    $this->assertSession()->pageTextContains($label3);
     $this->assertSession()->linkByHrefNotExists("admin/structure/config_test/manage/$id");
     $id = $edit['id'];
     $this->assertSession()->linkByHrefExists("admin/structure/config_test/manage/$id");

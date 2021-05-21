@@ -81,12 +81,12 @@ class ItemsPerPageTest extends WizardTestBase {
     // Make sure the page display shows the nodes we expect, and that they
     // appear in the expected order.
     $this->assertSession()->addressEquals($view['page[path]']);
-    $this->assertText($view['page[title]']);
+    $this->assertSession()->pageTextContains($view['page[title]']);
     $content = $this->getSession()->getPage()->getContent();
-    $this->assertText($node5->label());
-    $this->assertText($node4->label());
-    $this->assertText($node3->label());
-    $this->assertText($node2->label());
+    $this->assertSession()->pageTextContains($node5->label());
+    $this->assertSession()->pageTextContains($node4->label());
+    $this->assertSession()->pageTextContains($node3->label());
+    $this->assertSession()->pageTextContains($node2->label());
     $this->assertNoText($node1->label());
     $this->assertNoText($page_node->label());
     $pos5 = strpos($content, $node5->label());
@@ -100,7 +100,7 @@ class ItemsPerPageTest extends WizardTestBase {
     // Confirm that the block is listed in the block administration UI.
     $this->drupalGet('admin/structure/block/list/' . $this->config('system.theme')->get('default'));
     $this->clickLink('Place block');
-    $this->assertText($view['label']);
+    $this->assertSession()->pageTextContains($view['label']);
 
     // Place the block, visit a page that displays the block, and check that the
     // nodes we expect appear in the correct order.
@@ -108,9 +108,9 @@ class ItemsPerPageTest extends WizardTestBase {
 
     $this->drupalGet('user');
     $content = $this->getSession()->getPage()->getContent();
-    $this->assertText($node5->label());
-    $this->assertText($node4->label());
-    $this->assertText($node3->label());
+    $this->assertSession()->pageTextContains($node5->label());
+    $this->assertSession()->pageTextContains($node4->label());
+    $this->assertSession()->pageTextContains($node3->label());
     $this->assertNoText($node2->label());
     $this->assertNoText($node1->label());
     $this->assertNoText($page_node->label());

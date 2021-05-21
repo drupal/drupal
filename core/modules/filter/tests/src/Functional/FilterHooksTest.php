@@ -51,7 +51,7 @@ class FilterHooksTest extends BrowserTestBase {
     $edit['roles[' . RoleInterface::ANONYMOUS_ID . ']'] = 1;
     $this->drupalPostForm('admin/config/content/formats/add', $edit, 'Save configuration');
     $this->assertRaw(t('Added text format %format.', ['%format' => $name]));
-    $this->assertText('hook_filter_format_insert invoked.');
+    $this->assertSession()->pageTextContains('hook_filter_format_insert invoked.');
 
     $format_id = $edit['format'];
 
@@ -60,7 +60,7 @@ class FilterHooksTest extends BrowserTestBase {
     $edit['roles[' . RoleInterface::AUTHENTICATED_ID . ']'] = 1;
     $this->drupalPostForm('admin/config/content/formats/manage/' . $format_id, $edit, 'Save configuration');
     $this->assertRaw(t('The text format %format has been updated.', ['%format' => $name]));
-    $this->assertText('hook_filter_format_update invoked.');
+    $this->assertSession()->pageTextContains('hook_filter_format_update invoked.');
 
     // Use the format created.
     $title = $this->randomMachineName(8);
@@ -69,12 +69,12 @@ class FilterHooksTest extends BrowserTestBase {
     $edit['body[0][value]'] = $this->randomMachineName(32);
     $edit['body[0][format]'] = $format_id;
     $this->drupalPostForm("node/add/{$type->id()}", $edit, 'Save');
-    $this->assertText($type_name . ' ' . $title . ' has been created.');
+    $this->assertSession()->pageTextContains($type_name . ' ' . $title . ' has been created.');
 
     // Disable the text format.
     $this->drupalPostForm('admin/config/content/formats/manage/' . $format_id . '/disable', [], 'Disable');
     $this->assertRaw(t('Disabled text format %format.', ['%format' => $name]));
-    $this->assertText('hook_filter_format_disable invoked.');
+    $this->assertSession()->pageTextContains('hook_filter_format_disable invoked.');
   }
 
 }

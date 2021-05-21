@@ -124,15 +124,15 @@ class NodeLanguageTest extends NodeTestBase {
           $this->assertNoText($title);
         }
         else {
-          $this->assertText($title);
+          $this->assertSession()->pageTextContains($title);
         }
       }
     }
 
     // Test that the language field value is shown.
     $this->assertNoText('English');
-    $this->assertText('French');
-    $this->assertText('Spanish');
+    $this->assertSession()->pageTextContains('French');
+    $this->assertSession()->pageTextContains('Spanish');
 
     // Test page sorting, which is by language code, ascending. So the
     // Spanish nodes should appear before the French nodes.
@@ -153,7 +153,7 @@ class NodeLanguageTest extends NodeTestBase {
     $message = 'Spanish argument page';
     $this->assertNoText('English');
     $this->assertNoText('French');
-    $this->assertText('Spanish');
+    $this->assertSession()->pageTextContains('Spanish');
 
     // Test the front page view filter. Only node titles in the current language
     // should be displayed on the front page by default.
@@ -164,7 +164,7 @@ class NodeLanguageTest extends NodeTestBase {
       }
       $this->drupalGet(($langcode == 'en' ? '' : "$langcode/") . 'node');
       foreach ($titles as $title) {
-        $this->assertText($title);
+        $this->assertSession()->pageTextContains($title);
       }
       foreach ($this->nodeTitles as $control_langcode => $control_titles) {
         if ($langcode != $control_langcode) {
@@ -179,14 +179,14 @@ class NodeLanguageTest extends NodeTestBase {
     $this->drupalGet('admin/content');
     foreach ($this->nodeTitles as $titles) {
       foreach ($titles as $title) {
-        $this->assertText($title);
+        $this->assertSession()->pageTextContains($title);
       }
     }
     // When filtered, only the specific languages should show.
     foreach ($this->nodeTitles as $langcode => $titles) {
       $this->drupalGet('admin/content', ['query' => ['langcode' => $langcode]]);
       foreach ($titles as $title) {
-        $this->assertText($title);
+        $this->assertSession()->pageTextContains($title);
       }
       foreach ($this->nodeTitles as $control_langcode => $control_titles) {
         if ($langcode != $control_langcode) {
@@ -211,7 +211,7 @@ class NodeLanguageTest extends NodeTestBase {
       foreach ($this->nodeTitles as $control_langcode => $control_titles) {
         foreach ($control_titles as $title) {
           if ($control_langcode == 'en') {
-            $this->assertText($title);
+            $this->assertSession()->pageTextContains($title);
           }
           else {
             $this->assertNoText($title);
@@ -239,7 +239,7 @@ class NodeLanguageTest extends NodeTestBase {
     foreach ($this->nodeTitles as $control_langcode => $control_titles) {
       foreach ($control_titles as $title) {
         if ($control_langcode == 'es') {
-          $this->assertText($title);
+          $this->assertSession()->pageTextContains($title);
         }
         else {
           $this->assertNoText($title);
@@ -285,16 +285,16 @@ class NodeLanguageTest extends NodeTestBase {
   protected function assertLanguageNames($native = FALSE) {
     $this->drupalGet('test-language');
     if ($native) {
-      $this->assertText('Français');
-      $this->assertText('Español');
+      $this->assertSession()->pageTextContains('Français');
+      $this->assertSession()->pageTextContains('Español');
       $this->assertNoText('French');
       $this->assertNoText('Spanish');
     }
     else {
       $this->assertNoText('Français');
       $this->assertNoText('Español');
-      $this->assertText('French');
-      $this->assertText('Spanish');
+      $this->assertSession()->pageTextContains('French');
+      $this->assertSession()->pageTextContains('Spanish');
     }
   }
 

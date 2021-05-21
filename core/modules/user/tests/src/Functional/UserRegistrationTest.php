@@ -46,7 +46,7 @@ class UserRegistrationTest extends BrowserTestBase {
     $edit['name'] = $name = $this->randomMachineName();
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
     $this->drupalPostForm('user/register', $edit, 'Create new account');
-    $this->assertText('A welcome message with further instructions has been sent to your email address.');
+    $this->assertSession()->pageTextContains('A welcome message with further instructions has been sent to your email address.');
 
     /** @var EntityStorageInterface $storage */
     $storage = $this->container->get('entity_type.manager')->getStorage('user');
@@ -86,7 +86,7 @@ class UserRegistrationTest extends BrowserTestBase {
     $edit['pass[pass1]'] = '99999.0';
     $edit['pass[pass2]'] = '99999';
     $this->drupalPostForm('user/register', $edit, 'Create new account');
-    $this->assertText('The specified passwords do not match.');
+    $this->assertSession()->pageTextContains('The specified passwords do not match.');
 
     // Enter a correct password.
     $edit['pass[pass1]'] = $new_pass = $this->randomMachineName();
@@ -97,7 +97,7 @@ class UserRegistrationTest extends BrowserTestBase {
       ->loadByProperties(['name' => $name, 'mail' => $mail]);
     $new_user = reset($accounts);
     $this->assertNotNull($new_user, 'New account successfully created with matching passwords.');
-    $this->assertText('Registration successful. You are now logged in.');
+    $this->assertSession()->pageTextContains('Registration successful. You are now logged in.');
     $this->drupalLogout();
 
     // Allow registration by site visitors, but require administrator approval.
@@ -108,7 +108,7 @@ class UserRegistrationTest extends BrowserTestBase {
     $edit['pass[pass1]'] = $pass = $this->randomMachineName();
     $edit['pass[pass2]'] = $pass;
     $this->drupalPostForm('user/register', $edit, 'Create new account');
-    $this->assertText('Thank you for applying for an account. Your account is currently pending approval by the site administrator.');
+    $this->assertSession()->pageTextContains('Thank you for applying for an account. Your account is currently pending approval by the site administrator.');
 
     // Try to log in before administrator approval.
     $auth = [
@@ -116,7 +116,7 @@ class UserRegistrationTest extends BrowserTestBase {
       'pass' => $pass,
     ];
     $this->drupalPostForm('user/login', $auth, 'Log in');
-    $this->assertText('The username ' . $name . ' has not been activated or is blocked.');
+    $this->assertSession()->pageTextContains('The username ' . $name . ' has not been activated or is blocked.');
 
     // Activate the new account.
     $accounts = $this->container->get('entity_type.manager')->getStorage('user')
@@ -132,7 +132,7 @@ class UserRegistrationTest extends BrowserTestBase {
 
     // Log in after administrator approval.
     $this->drupalPostForm('user/login', $auth, 'Log in');
-    $this->assertText('Member for');
+    $this->assertSession()->pageTextContains('Member for');
   }
 
   public function testRegistrationEmailDuplicates() {
@@ -152,13 +152,13 @@ class UserRegistrationTest extends BrowserTestBase {
 
     // Attempt to create a new account using an existing email address.
     $this->drupalPostForm('user/register', $edit, 'Create new account');
-    $this->assertText('The email address ' . $duplicate_user->getEmail() . ' is already taken.');
+    $this->assertSession()->pageTextContains('The email address ' . $duplicate_user->getEmail() . ' is already taken.');
 
     // Attempt to bypass duplicate email registration validation by adding spaces.
     $edit['mail'] = '   ' . $duplicate_user->getEmail() . '   ';
 
     $this->drupalPostForm('user/register', $edit, 'Create new account');
-    $this->assertText('The email address ' . $duplicate_user->getEmail() . ' is already taken.');
+    $this->assertSession()->pageTextContains('The email address ' . $duplicate_user->getEmail() . ' is already taken.');
   }
 
   /**
@@ -328,7 +328,7 @@ class UserRegistrationTest extends BrowserTestBase {
       ->save();
 
     $this->drupalGet('user/register');
-    $this->assertText($field->label());
+    $this->assertSession()->pageTextContains($field->label());
     $this->assertRegistrationFormCacheTagsWithUserFields();
 
     // Check that validation errors are correctly reported.

@@ -211,7 +211,7 @@ class FilterTest extends ViewTestBase {
     $edit['options[operator]'] = '=';
     $edit['options[expose][operator_list][]'] = ['<', '>'];
     $this->drupalPostForm('admin/structure/views/nojs/handler/test_filter_in_operator_ui/default/filter/nid', $edit, 'Apply');
-    $this->assertText('You selected the "Is equal to" operator as the default value but is not included in the list of limited operators.');
+    $this->assertSession()->pageTextContains('You selected the "Is equal to" operator as the default value but is not included in the list of limited operators.');
   }
 
 }

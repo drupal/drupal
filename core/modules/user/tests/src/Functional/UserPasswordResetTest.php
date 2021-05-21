@@ -111,8 +111,8 @@ class UserPasswordResetTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderDoesNotExist('X-Drupal-Cache');
 
     // Check the one-time login page.
-    $this->assertText($this->account->getAccountName());
-    $this->assertText('This login can be used only once.');
+    $this->assertSession()->pageTextContains($this->account->getAccountName());
+    $this->assertSession()->pageTextContains('This login can be used only once.');
     $this->assertSession()->titleEquals('Reset password | Drupal');
 
     // Check successful login.
@@ -124,17 +124,17 @@ class UserPasswordResetTest extends BrowserTestBase {
     $password = \Drupal::service('password_generator')->generate();
     $edit = ['pass[pass1]' => $password, 'pass[pass2]' => $password];
     $this->submitForm($edit, 'Save');
-    $this->assertText('The changes have been saved.');
+    $this->assertSession()->pageTextContains('The changes have been saved.');
 
     // Verify that the password reset session has been destroyed.
     $this->submitForm($edit, 'Save');
-    $this->assertText("Your current password is missing or incorrect; it's required to change the Password.");
+    $this->assertSession()->pageTextContains("Your current password is missing or incorrect; it's required to change the Password.");
 
     // Log out, and try to log in again using the same one-time link.
     $this->drupalLogout();
     $this->drupalGet($resetURL);
     $this->submitForm([], 'Log in');
-    $this->assertText('You have tried to use a one-time login link that has either been used or is no longer valid. Please request a new one using the form below.');
+    $this->assertSession()->pageTextContains('You have tried to use a one-time login link that has either been used or is no longer valid. Please request a new one using the form below.');
 
     // Request a new password again, this time using the email address.
     // Count email messages before to compare with after.
@@ -160,7 +160,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     $_uid = $this->account->id();
     $this->drupalGet("user/reset/$_uid/$bogus_timestamp/" . user_pass_rehash($this->account, $bogus_timestamp));
     $this->submitForm([], 'Log in');
-    $this->assertText('You have tried to use a one-time login link that has expired. Please request a new one using the form below.');
+    $this->assertSession()->pageTextContains('You have tried to use a one-time login link that has expired. Please request a new one using the form below.');
 
     // Create a user, block the account, and verify that a login link is denied.
     $timestamp = REQUEST_TIME - 1;
@@ -187,7 +187,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     $this->account->save();
     $this->drupalGet($old_email_reset_link);
     $this->submitForm([], 'Log in');
-    $this->assertText('You have tried to use a one-time login link that has either been used or is no longer valid. Please request a new one using the form below.');
+    $this->assertSession()->pageTextContains('You have tried to use a one-time login link that has either been used or is no longer valid. Please request a new one using the form below.');
 
     // Verify a password reset link will automatically log a user when /login is
     // appended.
@@ -320,7 +320,7 @@ class UserPasswordResetTest extends BrowserTestBase {
 
     $another_account->delete();
     $this->drupalGet($resetURL);
-    $this->assertText('The one-time login link you clicked is invalid.');
+    $this->assertSession()->pageTextContains('The one-time login link you clicked is invalid.');
 
     // Log in.
     $this->drupalLogin($this->account);
@@ -338,7 +338,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     $password = \Drupal::service('password_generator')->generate();
     $edit = ['pass[pass1]' => $password, 'pass[pass2]' => $password];
     $this->submitForm($edit, 'Save');
-    $this->assertText('The changes have been saved.');
+    $this->assertSession()->pageTextContains('The changes have been saved.');
 
     // Logged in users should not be able to access the user.reset.login or the
     // user.reset.form routes.
@@ -467,7 +467,7 @@ class UserPasswordResetTest extends BrowserTestBase {
    */
   public function assertNoValidPasswordReset($name) {
     // Make sure the error text is displayed and no email sent.
-    $this->assertText($name . ' is not recognized as a username or an email address.');
+    $this->assertSession()->pageTextContains($name . ' is not recognized as a username or an email address.');
     $this->assertCount(0, $this->drupalGetMails(['id' => 'user_password_reset']), 'No e-mail was sent when requesting a password for an invalid account.');
   }
 
@@ -475,7 +475,7 @@ class UserPasswordResetTest extends BrowserTestBase {
    * Makes assertions about a password reset triggering user flood control.
    */
   public function assertPasswordUserFlood() {
-    $this->assertText('Too many password recovery requests for this account. It is temporarily blocked. Try again later or contact the site administrator.');
+    $this->assertSession()->pageTextContains('Too many password recovery requests for this account. It is temporarily blocked. Try again later or contact the site administrator.');
   }
 
   /**
@@ -489,7 +489,7 @@ class UserPasswordResetTest extends BrowserTestBase {
    * Makes assertions about a password reset triggering IP flood control.
    */
   public function assertPasswordIpFlood() {
-    $this->assertText('Too many password recovery requests from your IP address. It is temporarily blocked. Try again later or contact the site administrator.');
+    $this->assertSession()->pageTextContains('Too many password recovery requests from your IP address. It is temporarily blocked. Try again later or contact the site administrator.');
   }
 
   /**
@@ -537,7 +537,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     // Verify that the invalid password reset page does not show the user name.
     $this->assertNoText($user2->getAccountName());
     $this->assertSession()->addressEquals('user/password');
-    $this->assertText('You have tried to use a one-time login link that has either been used or is no longer valid. Please request a new one using the form below.');
+    $this->assertSession()->pageTextContains('You have tried to use a one-time login link that has either been used or is no longer valid. Please request a new one using the form below.');
   }
 
 }

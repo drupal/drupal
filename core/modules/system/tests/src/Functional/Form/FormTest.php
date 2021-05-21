@@ -269,7 +269,7 @@ class FormTest extends BrowserTestBase {
     $element = $assert->fieldExists('textfield');
     $this->assertEmpty($element->getValue());
     $assert->responseNotContains($random_string);
-    $this->assertText('The form has become outdated.');
+    $this->assertSession()->pageTextContains('The form has become outdated.');
     // Ensure that we don't use the posted values.
     $this->assertSession()->fieldValueEquals('textfield', '');
     $this->assertSession()->checkboxNotChecked('edit-checkboxes-foo');
@@ -290,7 +290,7 @@ class FormTest extends BrowserTestBase {
     // Verify that the error message is displayed with invalid token even when
     // required fields are filled.
     $this->assertSession()->elementExists('xpath', '//div[contains(@class, "error")]');
-    $this->assertText('The form has become outdated.');
+    $this->assertSession()->pageTextContains('The form has become outdated.');
     $this->assertSession()->fieldValueEquals('textfield', '');
     $this->assertSession()->fieldValueEquals('textarea', '');
 
@@ -308,7 +308,7 @@ class FormTest extends BrowserTestBase {
     // Verify that the error message is displayed with invalid token even when
     // required fields are filled.'
     $this->assertSession()->elementExists('xpath', '//div[contains(@class, "error")]');
-    $this->assertText('The form has become outdated.');
+    $this->assertSession()->pageTextContains('The form has become outdated.');
     $this->assertSession()->fieldValueEquals('integer_step', 5);
 
     // Check a form with a Url field
@@ -323,7 +323,7 @@ class FormTest extends BrowserTestBase {
     // Verify that the error message is displayed with invalid token even when
     // required fields are filled.
     $this->assertSession()->elementExists('xpath', '//div[contains(@class, "error")]');
-    $this->assertText('The form has become outdated.');
+    $this->assertSession()->pageTextContains('The form has become outdated.');
     $this->assertSession()->fieldValueEquals('url', '');
   }
 
@@ -440,7 +440,7 @@ class FormTest extends BrowserTestBase {
         'multiple_no_default_required',
     ];
     foreach ($expected_errors as $key) {
-      $this->assertText($form[$key]['#title'] . ' field is required.');
+      $this->assertSession()->pageTextContains($form[$key]['#title'] . ' field is required.');
     }
 
     // Post values for required fields.
@@ -876,7 +876,7 @@ class FormTest extends BrowserTestBase {
     // an input forgery.
     // @see \Drupal\form_test\Form\FormTestInputForgeryForm::postRender
     $this->submitForm(['checkboxes[one]' => TRUE, 'checkboxes[two]' => TRUE], 'Submit');
-    $this->assertText('An illegal choice has been detected.');
+    $this->assertSession()->pageTextContains('An illegal choice has been detected.');
   }
 
   /**
