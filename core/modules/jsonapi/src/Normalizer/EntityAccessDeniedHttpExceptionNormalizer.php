@@ -47,7 +47,7 @@ class EntityAccessDeniedHttpExceptionNormalizer extends HttpExceptionNormalizer 
       if (isset($entity)) {
         $entity_type_id = $entity->getEntityTypeId();
         $bundle = $entity->bundle();
-        /* @var \Drupal\jsonapi\ResourceType\ResourceType $resource_type */
+        /** @var \Drupal\jsonapi\ResourceType\ResourceType $resource_type */
         $resource_type = \Drupal::service('jsonapi.resource_type.repository')->get($entity_type_id, $bundle);
         $resource_type_name = $resource_type->getTypeName();
         $route_name = !is_null($relationship_field)

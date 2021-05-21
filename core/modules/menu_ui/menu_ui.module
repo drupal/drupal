@@ -51,7 +51,7 @@ function menu_ui_help($route_name, RouteMatchInterface $route_match) {
  * Implements hook_entity_type_build().
  */
 function menu_ui_entity_type_build(array &$entity_types) {
-  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   $entity_types['menu']
     ->setFormClass('add', 'Drupal\menu_ui\MenuForm')
     ->setFormClass('edit', 'Drupal\menu_ui\MenuForm')

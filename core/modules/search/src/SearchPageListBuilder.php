@@ -138,7 +138,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    /** @var $entity \Drupal\search\SearchPageInterface */
+    /** @var \Drupal\search\SearchPageInterface $entity */
     $row['label'] = $entity->label();
     $row['url']['#markup'] = 'search/' . $entity->getPath();
     // If the search page is active, link to it.
@@ -317,7 +317,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
    * {@inheritdoc}
    */
   public function getDefaultOperations(EntityInterface $entity) {
-    /** @var $entity \Drupal\search\SearchPageInterface */
+    /** @var \Drupal\search\SearchPageInterface $entity */
     $operations = parent::getDefaultOperations($entity);
 
     // Prevent the default search from being disabled or deleted.

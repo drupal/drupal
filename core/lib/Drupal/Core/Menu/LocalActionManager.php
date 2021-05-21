@@ -178,7 +178,7 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
     $links = [];
     $cacheability = new CacheableMetadata();
     $cacheability->addCacheContexts(['route']);
-    /** @var $plugin \Drupal\Core\Menu\LocalActionInterface */
+    /** @var \Drupal\Core\Menu\LocalActionInterface $plugin */
     foreach ($this->instances[$route_appears] as $plugin_id => $plugin) {
       $route_name = $plugin->getRouteName();
       $route_parameters = $plugin->getRouteParameters($this->routeMatch);

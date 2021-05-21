@@ -123,7 +123,7 @@ class MenuLinksTest extends KernelTestBase {
    */
   public function assertMenuLinkParents($links, $expected_hierarchy) {
     foreach ($expected_hierarchy as $id => $parent) {
-      /* @var \Drupal\Core\Menu\MenuLinkInterface $menu_link_plugin  */
+      /** @var \Drupal\Core\Menu\MenuLinkInterface $menu_link_plugin  */
       $menu_link_plugin = $this->menuLinkManager->createInstance($links[$id]);
       $expected_parent = isset($links[$parent]) ? $links[$parent] : '';
 
@@ -223,9 +223,9 @@ class MenuLinksTest extends KernelTestBase {
     // Start over, and move child-1 under child-2, and check that all the
     // children of child-1 have been moved too.
     $links = $this->createLinkHierarchy($module);
-    /* @var \Drupal\Core\Menu\MenuLinkInterface $menu_link_plugin  */
     $this->menuLinkManager->updateDefinition($links['child-1'], ['parent' => $links['child-2']]);
     // Verify that the entity was updated too.
+    /** @var \Drupal\Core\Menu\MenuLinkInterface $menu_link_plugin  */
     $menu_link_plugin = $this->menuLinkManager->createInstance($links['child-1']);
     $entity = \Drupal::service('entity.repository')->loadEntityByUuid('menu_link_content', $menu_link_plugin->getDerivativeId());
     $this->assertEqual($links['child-2'], $entity->getParentId());

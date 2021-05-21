@@ -23,11 +23,11 @@ class PagerManagerTest extends KernelTestBase {
     ];
     $request = Request::create('http://example.com', 'GET', $test_parameters);
 
-    /* @var $request_stack \Symfony\Component\HttpFoundation\RequestStack */
+    /** @var \Symfony\Component\HttpFoundation\RequestStack $request_stack */
     $request_stack = $this->container->get('request_stack');
     $request_stack->push($request);
 
-    /* @var $pager_manager \Drupal\Core\Pager\PagerManagerInterface */
+    /** @var \Drupal\Core\Pager\PagerManagerInterface $pager_manager */
     $pager_manager = $this->container->get('pager.manager');
 
     $pager_manager->createPager(30, 10, $element);

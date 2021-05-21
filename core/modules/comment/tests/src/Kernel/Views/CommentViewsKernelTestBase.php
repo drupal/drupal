@@ -73,7 +73,7 @@ abstract class CommentViewsKernelTestBase extends ViewsKernelTestBase {
     $admin_role->grantPermission('view test entity');
     $admin_role->save();
 
-    /* @var \Drupal\user\RoleInterface $anonymous_role */
+    /** @var \Drupal\user\RoleInterface $anonymous_role */
     $anonymous_role = Role::load(Role::ANONYMOUS_ID);
     $anonymous_role->grantPermission('access comments');
     $anonymous_role->save();

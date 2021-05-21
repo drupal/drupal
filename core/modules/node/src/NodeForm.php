@@ -89,7 +89,7 @@ class NodeForm extends ContentEntityForm {
     // rebuilding the form.
     $request_uuid = \Drupal::request()->query->get('uuid');
     if (!$form_state->isRebuilding() && $request_uuid && $preview = $store->get($request_uuid)) {
-      /** @var $preview \Drupal\Core\Form\FormStateInterface */
+      /** @var \Drupal\Core\Form\FormStateInterface $preview */
 
       $form_state->setStorage($preview->getStorage());
       $form_state->setUserInput($preview->getUserInput());

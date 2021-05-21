@@ -47,7 +47,7 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
       'moderation_state[0][state]' => 'published',
     ], 'Save');
     \Drupal::entityTypeManager()->getStorage('node')->resetCache([$node->id()]);
-    /* @var \Drupal\node\NodeInterface $node */
+    /** @var \Drupal\node\NodeInterface $node */
     $node = \Drupal::entityTypeManager()->getStorage('node')->load($node->id());
     $this->assertTrue($node->isPublished());
     $this->assertEqual('published', $node->moderation_state->value);

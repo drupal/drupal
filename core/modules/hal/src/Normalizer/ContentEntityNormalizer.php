@@ -73,7 +73,7 @@ class ContentEntityNormalizer extends NormalizerBase {
     ];
 
     // Create the array of normalized fields, starting with the URI.
-    /** @var $entity \Drupal\Core\Entity\ContentEntityInterface */
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $normalized = [
       '_links' => [
         'self' => [

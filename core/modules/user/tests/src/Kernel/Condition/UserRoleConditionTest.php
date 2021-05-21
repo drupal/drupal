@@ -105,7 +105,7 @@ class UserRoleConditionTest extends KernelTestBase {
   public function testConditions() {
     // Grab the user role condition and configure it to check against
     // authenticated user roles.
-    /** @var $condition \Drupal\Core\Condition\ConditionInterface */
+    /** @var \Drupal\Core\Condition\ConditionInterface $condition */
     $condition = $this->manager->createInstance('user_role')
       ->setConfig('roles', [RoleInterface::AUTHENTICATED_ID => RoleInterface::AUTHENTICATED_ID])
       ->setContextValue('user', $this->anonymous);

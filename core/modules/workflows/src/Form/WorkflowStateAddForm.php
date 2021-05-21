@@ -56,7 +56,7 @@ class WorkflowStateAddForm extends EntityForm {
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
-    /* @var \Drupal\workflows\WorkflowInterface $workflow */
+    /** @var \Drupal\workflows\WorkflowInterface $workflow */
     $workflow = $this->getEntity();
     $workflow_type = $workflow->getTypePlugin();
 

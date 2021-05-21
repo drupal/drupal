@@ -94,7 +94,7 @@ function settings_tray_block_view_alter(array &$build) {
  * Implements hook_entity_type_build().
  */
 function settings_tray_entity_type_build(array &$entity_types) {
-  /* @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   $entity_types['block']
     ->setFormClass('settings_tray', BlockEntitySettingTrayForm::class)
     ->setLinkTemplate('settings_tray-form', '/admin/structure/block/manage/{block}/settings-tray');

@@ -48,7 +48,7 @@ class WorkflowAddForm extends EntityForm {
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
-    /* @var \Drupal\workflows\WorkflowInterface $workflow */
+    /** @var \Drupal\workflows\WorkflowInterface $workflow */
     $workflow = $this->entity;
     $form['label'] = [
       '#type' => 'textfield',
@@ -82,7 +82,7 @@ class WorkflowAddForm extends EntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    /* @var \Drupal\workflows\WorkflowInterface $workflow */
+    /** @var \Drupal\workflows\WorkflowInterface $workflow */
     $workflow = $this->entity;
     $return = $workflow->save();
     if (empty($workflow->getTypePlugin()->getStates())) {

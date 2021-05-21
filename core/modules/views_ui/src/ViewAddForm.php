@@ -186,7 +186,7 @@ class ViewAddForm extends ViewFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     try {
-      /** @var $wizard \Drupal\views\Plugin\views\wizard\WizardInterface */
+      /** @var \Drupal\views\Plugin\views\wizard\WizardInterface $wizard */
       $wizard = $form_state->get('wizard_instance');
       $this->entity = $wizard->createView($form, $form_state);
     }

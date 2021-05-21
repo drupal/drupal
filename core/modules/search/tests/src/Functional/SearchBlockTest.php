@@ -88,7 +88,7 @@ class SearchBlockTest extends BrowserTestBase {
     $this->assertText('Your search yielded no results');
 
     // Confirm that the form submits to the default search page.
-    /** @var $search_page_repository \Drupal\search\SearchPageRepositoryInterface */
+    /** @var \Drupal\search\SearchPageRepositoryInterface $search_page_repository */
     $search_page_repository = \Drupal::service('search.search_page_repository');
     $entity_id = $search_page_repository->getDefaultSearchPage();
     $this->assertEqual(

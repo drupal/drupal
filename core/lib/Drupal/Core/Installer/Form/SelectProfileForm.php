@@ -37,7 +37,7 @@ class SelectProfileForm extends FormBase {
     $profiles = [];
     $names = [];
     foreach ($install_state['profiles'] as $profile) {
-      /** @var $profile \Drupal\Core\Extension\Extension */
+      /** @var \Drupal\Core\Extension\Extension $profile */
       $details = install_profile_info($profile->getName());
       // Don't show hidden profiles. This is used by to hide the testing profile,
       // which only exists to speed up test runs.

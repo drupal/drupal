@@ -42,7 +42,7 @@ class BlockInterfaceTest extends KernelTestBase {
       'display_message' => 'no message set',
     ];
     // Initial configuration of the block at construction time.
-    /** @var $display_block \Drupal\Core\Block\BlockPluginInterface */
+    /** @var \Drupal\Core\Block\BlockPluginInterface $display_block */
     $display_block = $manager->createInstance('test_block_instantiation', $configuration);
     $this->assertSame($expected_configuration, $display_block->getConfiguration(), 'The block was configured correctly.');
 

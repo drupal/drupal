@@ -179,7 +179,7 @@ class IncludeResolver {
       return array_map('trim', explode('.', $include_path));
     }, $include_paths);
     $resolved_paths_per_resource_type = [];
-    /* @var \Drupal\jsonapi\JsonApiResource\ResourceIdentifierInterface $resource_object */
+    /** @var \Drupal\jsonapi\JsonApiResource\ResourceIdentifierInterface $resource_object */
     foreach ($data as $resource_object) {
       $resource_type = $resource_object->getResourceType();
       $resource_type_name = $resource_type->getTypeName();
