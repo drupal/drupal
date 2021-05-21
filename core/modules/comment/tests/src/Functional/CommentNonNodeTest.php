@@ -340,7 +340,7 @@ class CommentNonNodeTest extends BrowserTestBase {
     ]);
     $this->drupalLogin($limited_user);
     $this->drupalGet('admin/content/comment');
-    $this->assertNoText($this->entity->label());
+    $this->assertSession()->pageTextNotContains($this->entity->label());
 
     $this->drupalLogout();
 
@@ -395,7 +395,7 @@ class CommentNonNodeTest extends BrowserTestBase {
 
     $this->drupalGet('comment/reply/entity_test/' . $this->entity->id() . '/comment/' . $comment1->id());
     $this->assertSession()->statusCodeEquals(403);
-    $this->assertNoText($comment1->getSubject());
+    $this->assertSession()->pageTextNotContains($comment1->getSubject());
 
     // Test comment field widget changes.
     $limited_user = $this->drupalCreateUser([

@@ -70,8 +70,8 @@ class CommentRestExportTest extends CommentTestBase {
 
     // Ensure field-level access is respected - user shouldn't be able to see
     // mail or hostname fields.
-    $this->assertNoText('someone@example.com');
-    $this->assertNoText('public.example.com');
+    $this->assertSession()->pageTextNotContains('someone@example.com');
+    $this->assertSession()->pageTextNotContains('public.example.com');
   }
 
 }

@@ -107,9 +107,9 @@ class FieldUIDeleteTest extends BrowserTestBase {
     // Check the config dependencies of the first field, the field storage must
     // not be shown as being deleted yet.
     $this->drupalGet("$bundle_path1/fields/node.$type_name1.$field_name/delete");
-    $this->assertNoText('The listed configuration will be deleted.');
-    $this->assertNoText('View');
-    $this->assertNoText('test_view_field_delete');
+    $this->assertSession()->pageTextNotContains('The listed configuration will be deleted.');
+    $this->assertSession()->pageTextNotContains('View');
+    $this->assertSession()->pageTextNotContains('test_view_field_delete');
 
     // Delete the first field.
     $this->fieldUIDeleteField($bundle_path1, "node.$type_name1.$field_name", $field_label, $type_name1);
