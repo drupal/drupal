@@ -112,7 +112,7 @@ class OverrideDisplaysTest extends UITestBase {
     $this->drupalGet($view['page[feed_properties][path]']);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->responseContains($view['page[title]']);
-    $this->assertSession()->pageTextNotContains($view['block[title]']);
+    $this->assertSession()->responseNotContains($view['block[title]']);
 
     // Confirm that the block is available in the block administration UI.
     $this->drupalGet('admin/structure/block/list/' . $this->config('system.theme')->get('default'));
@@ -149,8 +149,8 @@ class OverrideDisplaysTest extends UITestBase {
     $this->drupalGet($view['page[feed_properties][path]']);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->responseContains($new_default_title);
-    $this->assertSession()->pageTextNotContains($view['page[title]']);
-    $this->assertSession()->pageTextNotContains($view['block[title]']);
+    $this->assertSession()->responseNotContains($view['page[title]']);
+    $this->assertSession()->responseNotContains($view['block[title]']);
     $this->drupalGet('');
     $this->assertSession()->pageTextNotContains($new_default_title);
     $this->assertSession()->pageTextNotContains($view['page[title]']);
@@ -168,7 +168,7 @@ class OverrideDisplaysTest extends UITestBase {
     $this->drupalGet($view['page[feed_properties][path]']);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->responseContains($new_default_title);
-    $this->assertSession()->pageTextNotContains($new_block_title);
+    $this->assertSession()->responseNotContains($new_block_title);
     $this->drupalGet('');
     $this->assertSession()->pageTextContains($new_block_title);
     $this->assertSession()->pageTextNotContains($view['block[title]']);

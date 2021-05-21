@@ -236,7 +236,7 @@ class ConfigImportUITest extends BrowserTestBase {
 
     // Verify that there are configuration differences to import.
     $this->drupalGet('admin/config/development/configuration');
-    $this->assertNoText('There are no configuration changes to import.');
+    $this->assertSession()->pageTextNotContains('There are no configuration changes to import.');
 
     // Acquire a fake-lock on the import mechanism.
     $config_importer = $this->configImporter();
@@ -360,7 +360,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->prepareSiteNameUpdate($new_site_name);
 
     $this->drupalGet('admin/config/development/configuration');
-    $this->assertNoText('There are no configuration changes to import.');
+    $this->assertSession()->pageTextNotContains('There are no configuration changes to import.');
     $this->submitForm([], 'Import all');
 
     // Verify that the validation messages appear.
@@ -437,13 +437,13 @@ class ConfigImportUITest extends BrowserTestBase {
     $sync->write($name_secondary, $values_secondary);
     // Verify that there are configuration differences to import.
     $this->drupalGet('admin/config/development/configuration');
-    $this->assertNoText('There are no configuration changes to import.');
+    $this->assertSession()->pageTextNotContains('There are no configuration changes to import.');
 
     // Attempt to import configuration and verify that an error message appears.
     $this->submitForm([], 'Import all');
     $this->assertSession()->pageTextContains('Deleted and replaced configuration entity "' . $name_secondary . '"');
     $this->assertSession()->pageTextContains('The configuration was imported with errors.');
-    $this->assertNoText('The configuration was imported successfully.');
+    $this->assertSession()->pageTextNotContains('The configuration was imported successfully.');
     $this->assertSession()->pageTextContains('There are no configuration changes to import.');
   }
 
@@ -484,11 +484,11 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->submitForm([], 'Import all');
     $this->assertNoRaw($validation_message);
     $this->assertSession()->pageTextContains('There are no configuration changes to import.');
-    $this->assertNoText('node.type.' . $node_type->id());
-    $this->assertNoText('field.field.node.' . $node_type->id() . '.body');
-    $this->assertNoText('core.entity_view_display.node.' . $node_type->id() . '.teaser');
-    $this->assertNoText('core.entity_view_display.node.' . $node_type->id() . '.default');
-    $this->assertNoText('core.entity_form_display.node.' . $node_type->id() . '.default');
+    $this->assertSession()->pageTextNotContains('node.type.' . $node_type->id());
+    $this->assertSession()->pageTextNotContains('field.field.node.' . $node_type->id() . '.body');
+    $this->assertSession()->pageTextNotContains('core.entity_view_display.node.' . $node_type->id() . '.teaser');
+    $this->assertSession()->pageTextNotContains('core.entity_view_display.node.' . $node_type->id() . '.default');
+    $this->assertSession()->pageTextNotContains('core.entity_form_display.node.' . $node_type->id() . '.default');
   }
 
   /**

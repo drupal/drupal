@@ -299,7 +299,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
     $this->drupalGet($path);
     $this->assertSession()->fieldEnabled('edit-translatable');
     $this->assertSession()->checkboxChecked('edit-translatable');
-    $this->assertNoText('To enable translation of this field, enable language support for this type.');
+    $this->assertSession()->pageTextNotContains('To enable translation of this field, enable language support for this type.');
   }
 
   /**

@@ -75,7 +75,7 @@ class TaxonomyVocabularyArgumentTest extends TaxonomyTestBase {
     // First term should be present.
     $this->assertSession()->pageTextContains($this->terms[0]->label());
     // Second term should not be present.
-    $this->assertNoText($this->terms[1]->label());
+    $this->assertSession()->pageTextNotContains($this->terms[1]->label());
   }
 
 }

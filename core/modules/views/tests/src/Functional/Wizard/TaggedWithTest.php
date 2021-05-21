@@ -162,7 +162,7 @@ class TaggedWithTest extends WizardTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains($node_tag1_title);
     $this->assertSession()->pageTextContains($node_tag1_tag2_title);
-    $this->assertNoText($node_no_tags_title);
+    $this->assertSession()->pageTextNotContains($node_no_tags_title);
 
     // Create a view that filters by taxonomy term "tag2". It should show only
     // the one node from above that is tagged with "tag2".

@@ -130,7 +130,7 @@ class LayoutBuilderContentModerationIntegrationTest extends BrowserTestBase {
 
     // Block is not visible on the live node page.
     $page->clickLink('View');
-    $assert_session->pageTextNotContains('Powered by Drupal');
+    $assert_session->assertSession()->pageTextNotContains('Powered by Drupal');
 
     // Publish the node. Revision count: 4.
     $page->clickLink('Latest version');
@@ -149,7 +149,7 @@ class LayoutBuilderContentModerationIntegrationTest extends BrowserTestBase {
     $page->pressButton('Revert');
 
     $page->clickLink('View');
-    $assert_session->pageTextNotContains('Powered by Drupal');
+    $assert_session->assertSession()->pageTextNotContains('Powered by Drupal');
   }
 
   /**

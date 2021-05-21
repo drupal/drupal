@@ -130,7 +130,7 @@ abstract class FieldFieldAccessTestBase extends ViewsKernelTestBase {
     $build = $executable->preview();
     $this->setRawContent($renderer->renderRoot($build));
 
-    $this->assertSession()->pageTextNotContains($field_content);
+    $this->assertNoText($field_content);
     $this->assertFalse(isset($executable->field[$field_name]));
 
     \Drupal::state()->delete('views_field_access_test-field');
