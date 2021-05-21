@@ -218,7 +218,9 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     // Add file description.
     $description = 'This is the test file description';
     $this->drupalGet("node/{$nid}/edit");
-    $this->submitForm([$field_name . '[0][description]' => $description], 'Save');
+    $this->submitForm([
+      $field_name . '[0][description]' => $description,
+    ], 'Save');
 
     // Load uncached node.
     \Drupal::entityTypeManager()->getStorage('node')->resetCache([$nid]);

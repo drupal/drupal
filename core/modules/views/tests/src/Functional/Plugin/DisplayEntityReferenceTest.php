@@ -136,7 +136,9 @@ class DisplayEntityReferenceTest extends ViewTestBase {
 
     // Add the new field to the fields.
     $this->drupalGet('admin/structure/views/nojs/add-handler/test_display_entity_reference/default/field');
-    $this->submitForm(['name[entity_test__' . $this->fieldName . '.' . $this->fieldName . ']' => TRUE], 'Add and configure fields');
+    $this->submitForm([
+      'name[entity_test__' . $this->fieldName . '.' . $this->fieldName . ']' => TRUE,
+    ], 'Add and configure fields');
     $this->submitForm([], 'Apply');
 
     // Test that the right fields are shown on the display settings form.
@@ -145,7 +147,9 @@ class DisplayEntityReferenceTest extends ViewTestBase {
     $this->assertSession()->pageTextContains('Test entity: ' . $this->field->label());
 
     // Add the new field to the search fields.
-    $this->submitForm(['style_options[search_fields][' . $this->fieldName . ']' => $this->fieldName], 'Apply');
+    $this->submitForm([
+      'style_options[search_fields][' . $this->fieldName . ']' => $this->fieldName,
+    ], 'Apply');
     $this->submitForm([], 'Save');
 
     $view = Views::getView('test_display_entity_reference');
@@ -242,7 +246,9 @@ class DisplayEntityReferenceTest extends ViewTestBase {
     $view->destroy();
 
     $this->drupalGet('admin/structure/views/nojs/add-handler/test_display_entity_reference/default/relationship');
-    $this->submitForm(['name[entity_test__field_test_entity_ref_entity_ref.field_test_entity_ref_entity_ref]' => TRUE], 'Add and configure relationships');
+    $this->submitForm([
+      'name[entity_test__field_test_entity_ref_entity_ref.field_test_entity_ref_entity_ref]' => TRUE,
+    ], 'Add and configure relationships');
     $this->submitForm([], 'Apply');
 
     $this->submitForm([], 'Save');

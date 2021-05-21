@@ -262,7 +262,10 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $shortcuts = $set->getShortcuts();
     $shortcut = reset($shortcuts);
     $this->drupalGet('admin/config/user-interface/shortcut/link/' . $shortcut->id());
-    $this->submitForm(['title[0][value]' => $shortcut->getTitle(), 'link[0][uri]' => $new_link_path], 'Save');
+    $this->submitForm([
+      'title[0][value]' => $shortcut->getTitle(),
+      'link[0][uri]' => $new_link_path,
+    ], 'Save');
     $saved_set = ShortcutSet::load($set->id());
     $paths = $this->getShortcutInformation($saved_set, 'link');
     $this->assertContains('internal:' . $new_link_path, $paths, 'Shortcut path changed: ' . $new_link_path);

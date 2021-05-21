@@ -32,7 +32,10 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
    */
   public function testCreatingContent() {
     $this->drupalGet('node/add/moderated_content');
-    $this->submitForm(['title[0][value]' => 'moderated content', 'moderation_state[0][state]' => 'draft'], 'Save');
+    $this->submitForm([
+      'title[0][value]' => 'moderated content',
+      'moderation_state[0][state]' => 'draft',
+    ], 'Save');
     $node = $this->getNodeByTitle('moderated content');
     if (!$node) {
       $this->fail('Test node was not saved correctly.');
@@ -83,7 +86,11 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
   public function testFormSaveDestination() {
     // Create new moderated content in draft.
     $this->drupalGet('node/add/moderated_content');
-    $this->submitForm(['title[0][value]' => 'Some moderated content', 'body[0][value]' => 'First version of the content.', 'moderation_state[0][state]' => 'draft'], 'Save');
+    $this->submitForm([
+      'title[0][value]' => 'Some moderated content',
+      'body[0][value]' => 'First version of the content.',
+      'moderation_state[0][state]' => 'draft',
+    ], 'Save');
 
     $node = $this->drupalGetNodeByTitle('Some moderated content');
     $edit_path = sprintf('node/%d/edit', $node->id());
@@ -96,21 +103,30 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
     // Create a new draft; after saving, we should still be on the canonical
     // URL, but viewing the second revision.
     $this->drupalGet($edit_path);
-    $this->submitForm(['body[0][value]' => 'Second version of the content.', 'moderation_state[0][state]' => 'draft'], 'Save');
+    $this->submitForm([
+      'body[0][value]' => 'Second version of the content.',
+      'moderation_state[0][state]' => 'draft',
+    ], 'Save');
     $this->assertSession()->addressEquals(Url::fromRoute('entity.node.canonical', ['node' => $node->id()]));
     $this->assertSession()->pageTextContains('Second version of the content.');
 
     // Make a new published revision; after saving, we should be at the
     // canonical URL.
     $this->drupalGet($edit_path);
-    $this->submitForm(['body[0][value]' => 'Third version of the content.', 'moderation_state[0][state]' => 'published'], 'Save');
+    $this->submitForm([
+      'body[0][value]' => 'Third version of the content.',
+      'moderation_state[0][state]' => 'published',
+    ], 'Save');
     $this->assertSession()->addressEquals(Url::fromRoute('entity.node.canonical', ['node' => $node->id()]));
     $this->assertSession()->pageTextContains('Third version of the content.');
 
     // Make a new pending revision; after saving, we should be on the "Latest
     // version" tab.
     $this->drupalGet($edit_path);
-    $this->submitForm(['body[0][value]' => 'Fourth version of the content.', 'moderation_state[0][state]' => 'draft'], 'Save');
+    $this->submitForm([
+      'body[0][value]' => 'Fourth version of the content.',
+      'moderation_state[0][state]' => 'draft',
+    ], 'Save');
     $this->assertSession()->addressEquals(Url::fromRoute('entity.node.latest_version', ['node' => $node->id()]));
     $this->assertSession()->pageTextContains('Fourth version of the content.');
   }

@@ -110,9 +110,16 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
 
     // Create another workflow and repeat the checks above.
     $this->drupalGet('admin/config/workflow/workflows/add');
-    $this->submitForm(['label' => 'Translation', 'id' => 'translation', 'workflow_type' => 'content_moderation'], 'Save');
+    $this->submitForm([
+      'label' => 'Translation',
+      'id' => 'translation',
+      'workflow_type' => 'content_moderation',
+    ], 'Save');
     $this->drupalGet('admin/config/workflow/workflows/manage/translation/add_state');
-    $this->submitForm(['label' => 'Needs Review', 'id' => 'needs_review'], 'Save');
+    $this->submitForm([
+      'label' => 'Needs Review',
+      'id' => 'needs_review',
+    ], 'Save');
     $this->drupalGet('admin/config/workflow/workflows/manage/translation/type/node');
     $this->submitForm(['bundles[example_b]' => TRUE], 'Save');
 
@@ -164,7 +171,10 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
   public function testWorkflowChanges($view_id) {
     // First, apply the Editorial workflow to both of our content types.
     $this->drupalGet('admin/config/workflow/workflows/manage/editorial/type/node');
-    $this->submitForm(['bundles[example_a]' => TRUE, 'bundles[example_b]' => TRUE], 'Save');
+    $this->submitForm([
+      'bundles[example_a]' => TRUE,
+      'bundles[example_b]' => TRUE,
+    ], 'Save');
     \Drupal::service('entity_type.bundle.info')->clearCachedBundles();
 
     // Update the view and make the default filter not exposed anymore,
@@ -195,7 +205,10 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
 
     // Remove the Editorial workflow from one of the bundles.
     $this->drupalGet('admin/config/workflow/workflows/manage/editorial/type/node');
-    $this->submitForm(['bundles[example_a]' => TRUE, 'bundles[example_b]' => FALSE], 'Save');
+    $this->submitForm([
+      'bundles[example_a]' => TRUE,
+      'bundles[example_b]' => FALSE,
+    ], 'Save');
     \Drupal::service('entity_type.bundle.info')->clearCachedBundles();
 
     $view = $this->loadViewUnchanged($view_id);
@@ -208,7 +221,10 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
 
     // Remove the Editorial workflow from both bundles.
     $this->drupalGet('admin/config/workflow/workflows/manage/editorial/type/node');
-    $this->submitForm(['bundles[example_a]' => FALSE, 'bundles[example_b]' => FALSE], 'Save');
+    $this->submitForm([
+      'bundles[example_a]' => FALSE,
+      'bundles[example_b]' => FALSE,
+    ], 'Save');
     \Drupal::service('entity_type.bundle.info')->clearCachedBundles();
 
     // Check that the view doesn't return any result.
@@ -268,7 +284,10 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
     // Adding a new state to the editorial workflow will display that state in
     // the list of filters.
     $this->drupalGet('admin/config/workflow/workflows/manage/editorial/add_state');
-    $this->submitForm(['label' => 'Foo', 'id' => 'foo'], 'Save');
+    $this->submitForm([
+      'label' => 'Foo',
+      'id' => 'foo',
+    ], 'Save');
     $this->assertFilterStates(['All', 'editorial-draft', 'editorial-published', 'editorial-archived', 'editorial-foo']);
 
     // Adding a second workflow to nodes will also show new states.
@@ -280,9 +299,15 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
     // selections so we can check that the size of the select element does not
     // exceed 8 options.
     $this->drupalGet('admin/config/workflow/workflows/manage/editorial/add_state');
-    $this->submitForm(['label' => 'Foo 2', 'id' => 'foo2'], 'Save');
+    $this->submitForm([
+      'label' => 'Foo 2',
+      'id' => 'foo2',
+    ], 'Save');
     $this->drupalGet('admin/config/workflow/workflows/manage/editorial/add_state');
-    $this->submitForm(['label' => 'Foo 3', 'id' => 'foo3'], 'Save');
+    $this->submitForm([
+      'label' => 'Foo 3',
+      'id' => 'foo3',
+    ], 'Save');
 
     $view_id = 'test_content_moderation_state_filter_base_table';
     $edit['options[expose][multiple]'] = TRUE;

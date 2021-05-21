@@ -125,7 +125,9 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
     $this->drupalGet('admin/config/system/site-information');
     $this->submitForm(['site_slogan' => 'Test site slogan'], 'Save configuration');
     $this->drupalGet('admin/config/system/site-information/translate/af/edit');
-    $this->submitForm(['translation[config_names][system.site][slogan]' => 'Test site slogan in Afrikaans'], 'Save translation');
+    $this->submitForm([
+      'translation[config_names][system.site][slogan]' => 'Test site slogan in Afrikaans',
+    ], 'Save translation');
 
     // Get the front page and ensure that the translated configuration appears.
     $this->drupalGet('af');

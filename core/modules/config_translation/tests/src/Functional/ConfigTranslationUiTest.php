@@ -661,7 +661,10 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       $name = \Drupal::service('file_system')->tempnam('temporary://', $langcode . '_') . '.po';
       file_put_contents($name, $this->getPoFile($data['plurals']));
       $this->drupalGet('admin/config/regional/translate/import');
-      $this->submitForm(['langcode' => $langcode, 'files[file]' => $name], 'Import');
+      $this->submitForm([
+        'langcode' => $langcode,
+        'files[file]' => $name,
+      ], 'Import');
 
       // Change the config langcode of the 'files' view.
       $config = \Drupal::service('config.factory')->getEditable('views.view.files');
@@ -695,7 +698,10 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $name = \Drupal::service('file_system')->tempnam('temporary://', "sl_") . '.po';
     file_put_contents($name, $this->getPoFile(4));
     $this->drupalGet('admin/config/regional/translate/import');
-    $this->submitForm(['langcode' => 'sl', 'files[file]' => $name], 'Import');
+    $this->submitForm([
+      'langcode' => 'sl',
+      'files[file]' => $name,
+    ], 'Import');
 
     // Translate the files view, as this one uses numeric formatters.
     $description = 'Singular form';

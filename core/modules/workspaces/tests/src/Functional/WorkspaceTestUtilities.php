@@ -59,7 +59,11 @@ trait WorkspaceTestUtilities {
    */
   protected function createWorkspaceThroughUi($label, $id, $parent = '_none') {
     $this->drupalGet('/admin/config/workflow/workspaces/add');
-    $this->submitForm(['id' => $id, 'label' => $label, 'parent' => $parent], 'Save');
+    $this->submitForm([
+      'id' => $id,
+      'label' => $label,
+      'parent' => $parent,
+    ], 'Save');
 
     $this->getSession()->getPage()->hasContent("$label ($id)");
 

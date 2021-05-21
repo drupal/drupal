@@ -152,10 +152,14 @@ class SearchPageTextTest extends BrowserTestBase {
     // Make sure the "Please enter some keywords" message is NOT displayed if
     // you use "or" words or phrases in Advanced Search.
     $this->drupalGet('search/node');
-    $this->submitForm(['or' => $this->randomMachineName() . ' ' . $this->randomMachineName()], 'edit-submit--2');
+    $this->submitForm([
+      'or' => $this->randomMachineName() . ' ' . $this->randomMachineName(),
+    ], 'edit-submit--2');
     $this->assertNoText('Please enter some keywords');
     $this->drupalGet('search/node');
-    $this->submitForm(['phrase' => '"' . $this->randomMachineName() . '" "' . $this->randomMachineName() . '"'], 'edit-submit--2');
+    $this->submitForm([
+      'phrase' => '"' . $this->randomMachineName() . '" "' . $this->randomMachineName() . '"',
+    ], 'edit-submit--2');
     $this->assertNoText('Please enter some keywords');
 
     // Verify that if you search for a too-short keyword, you get the right

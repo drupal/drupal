@@ -209,7 +209,12 @@ class BlockTest extends BlockTestBase {
 
     // Set block title to confirm that interface works and override any custom titles.
     $this->drupalGet('admin/structure/block/add/' . $block['id'] . '/' . $block['theme']);
-    $this->submitForm(['settings[label]' => $block['settings[label]'], 'settings[label_display]' => $block['settings[label_display]'], 'id' => $block['id'], 'region' => $block['region']], 'Save block');
+    $this->submitForm([
+      'settings[label]' => $block['settings[label]'],
+      'settings[label_display]' => $block['settings[label_display]'],
+      'id' => $block['id'],
+      'region' => $block['region'],
+    ], 'Save block');
     $this->assertSession()->pageTextContains('The block configuration has been saved.');
     // Check to see if the block was created by checking its configuration.
     $instance = Block::load($block['id']);

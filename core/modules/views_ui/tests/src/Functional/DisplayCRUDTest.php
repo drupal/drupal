@@ -133,7 +133,10 @@ class DisplayCRUDTest extends UITestBase {
     $this->drupalGet("admin/structure/views/nojs/display/{$view['id']}/page_2/title");
     $this->submitForm(['title' => $random_title], 'Apply');
     $this->drupalGet("admin/structure/views/nojs/display/{$view['id']}/page_2/css_class");
-    $this->submitForm(['override[dropdown]' => 'page_2', 'css_class' => $random_css], 'Apply');
+    $this->submitForm([
+      'override[dropdown]' => 'page_2',
+      'css_class' => $random_css,
+    ], 'Apply');
 
     // Duplicate as a different display type.
     $this->submitForm([], 'Duplicate as Block');

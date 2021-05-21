@@ -55,7 +55,10 @@ class DisplayAttachmentTest extends UITestBase {
     $this->assertEquals(['page_1'], array_keys(array_filter($view->displayHandlers->get('attachment_1')->getOption('displays'))), 'The attached displays got saved as expected');
 
     $this->drupalGet($attachment_display_url);
-    $this->submitForm(['displays[default]' => 1, 'displays[page_1]' => 1], 'Apply');
+    $this->submitForm([
+      'displays[default]' => 1,
+      'displays[page_1]' => 1,
+    ], 'Apply');
     $result = $this->xpath('//a[@id = :id]', [':id' => 'views-attachment-1-displays']);
     $this->assertEquals(t('Multiple displays'), $result[0]->getAttribute('title'));
     $this->submitForm([], 'Save');

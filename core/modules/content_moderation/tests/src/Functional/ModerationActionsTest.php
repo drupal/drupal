@@ -74,7 +74,10 @@ class ModerationActionsTest extends BrowserTestBase {
     $node->save();
 
     $this->drupalGet('admin/content');
-    $this->submitForm(['node_bulk_form[0]' => TRUE, 'action' => $action], 'Apply to selected items');
+    $this->submitForm([
+      'node_bulk_form[0]' => TRUE,
+      'action' => $action,
+    ], 'Apply to selected items');
 
     if ($warning_appears) {
       if ($action == 'node_publish_action') {

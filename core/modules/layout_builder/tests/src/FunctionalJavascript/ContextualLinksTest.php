@@ -72,7 +72,10 @@ class ContextualLinksTest extends WebDriverTestBase {
 
     // Enable Layout Builder and overrides.
     $this->drupalGet("{$field_ui_prefix}/display/default");
-    $this->submitForm(['layout[enabled]' => TRUE, 'layout[allow_custom]' => TRUE], 'Save');
+    $this->submitForm([
+      'layout[enabled]' => TRUE,
+      'layout[allow_custom]' => TRUE,
+    ], 'Save');
 
     $this->drupalGet('node/1/layout');
 

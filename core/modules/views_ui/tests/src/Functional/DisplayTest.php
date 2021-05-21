@@ -175,7 +175,10 @@ class DisplayTest extends UITestBase {
     $this->assertEquals('Page', $result[0]->getHtml(), 'Make sure that the link option summary shows the right linked display.');
 
     $this->drupalGet($link_display_path);
-    $this->submitForm(['link_display' => 'custom_url', 'link_url' => 'a-custom-url'], 'Apply');
+    $this->submitForm([
+      'link_display' => 'custom_url',
+      'link_url' => 'a-custom-url',
+    ], 'Apply');
     // The form redirects to the default display.
     $this->drupalGet($path);
 

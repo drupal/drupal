@@ -332,7 +332,9 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // providing all settings, even if they are not used.
     // @see FileWidget::formMultipleElements().
     $this->drupalGet('admin/structure/types/manage/article/fields/node.article.' . $field_name . '/storage');
-    $this->submitForm(['cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED], 'Save field settings');
+    $this->submitForm([
+      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
+    ], 'Save field settings');
     $edit = [
       'files[' . $field_name . '_1][]' => \Drupal::service('file_system')->realpath($test_image->uri),
     ];

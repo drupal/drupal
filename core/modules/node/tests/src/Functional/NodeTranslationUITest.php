@@ -182,7 +182,9 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
         $options = ['language' => $languages[$langcode]];
         $url = $entity->toUrl('edit-form', $options);
         $this->drupalGet($url, $options);
-        $this->submitForm(['status[value]' => $value], 'Save' . $this->getFormSubmitSuffix($entity, $langcode));
+        $this->submitForm([
+          'status[value]' => $value,
+        ], 'Save' . $this->getFormSubmitSuffix($entity, $langcode));
       }
       $storage->resetCache([$this->entityId]);
       $entity = $storage->load($this->entityId);

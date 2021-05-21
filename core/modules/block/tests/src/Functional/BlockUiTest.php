@@ -355,7 +355,10 @@ class BlockUiTest extends BrowserTestBase {
    */
   public function testBlockValidateErrors() {
     $this->drupalGet('admin/structure/block/add/test_settings_validation/classy');
-    $this->submitForm(['region' => 'content', 'settings[digits]' => 'abc'], 'Save block');
+    $this->submitForm([
+      'region' => 'content',
+      'settings[digits]' => 'abc',
+    ], 'Save block');
 
     $arguments = [':message' => 'Only digits are allowed'];
     $pattern = '//div[contains(@class,"messages messages--error")]/div[contains(text()[2],:message)]';

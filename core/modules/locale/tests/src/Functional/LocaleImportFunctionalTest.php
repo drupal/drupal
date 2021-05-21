@@ -142,7 +142,10 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
     // Try importing a .po file which doesn't exist.
     $name = $this->randomMachineName(16);
     $this->drupalGet('admin/config/regional/translate/import');
-    $this->submitForm(['langcode' => 'fr', 'files[file]' => $name], 'Import');
+    $this->submitForm([
+      'langcode' => 'fr',
+      'files[file]' => $name,
+    ], 'Import');
     $this->assertSession()->addressEquals(Url::fromRoute('locale.translate_import'));
     $this->assertSession()->pageTextContains('File to import not found.');
 

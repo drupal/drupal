@@ -88,7 +88,10 @@ class ModerationFormTest extends ModerationStateTestBase {
 
     // Update the draft.
     $this->drupalGet($edit_path);
-    $this->submitForm(['body[0][value]' => 'Second version of the content.', 'moderation_state[0][state]' => 'draft'], 'Save');
+    $this->submitForm([
+      'body[0][value]' => 'Second version of the content.',
+      'moderation_state[0][state]' => 'draft',
+    ], 'Save');
 
     // The canonical view should have a moderation form, because it is not the
     // live revision.
@@ -98,7 +101,10 @@ class ModerationFormTest extends ModerationStateTestBase {
 
     // Preview the draft.
     $this->drupalGet($edit_path);
-    $this->submitForm(['body[0][value]' => 'Second version of the content.', 'moderation_state[0][state]' => 'draft'], 'Preview');
+    $this->submitForm([
+      'body[0][value]' => 'Second version of the content.',
+      'moderation_state[0][state]' => 'draft',
+    ], 'Preview');
 
     // The preview view should not have a moderation form.
     $preview_url = Url::fromRoute('entity.node.preview', [
@@ -116,7 +122,10 @@ class ModerationFormTest extends ModerationStateTestBase {
 
     // Publish the draft.
     $this->drupalGet($edit_path);
-    $this->submitForm(['body[0][value]' => 'Third version of the content.', 'moderation_state[0][state]' => 'published'], 'Save');
+    $this->submitForm([
+      'body[0][value]' => 'Third version of the content.',
+      'moderation_state[0][state]' => 'published',
+    ], 'Save');
 
     // Check widget default value.
     $this->drupalGet($edit_path);
@@ -144,7 +153,10 @@ class ModerationFormTest extends ModerationStateTestBase {
 
     // Make a pending revision.
     $this->drupalGet($edit_path);
-    $this->submitForm(['body[0][value]' => 'Fourth version of the content.', 'moderation_state[0][state]' => 'draft'], 'Save');
+    $this->submitForm([
+      'body[0][value]' => 'Fourth version of the content.',
+      'moderation_state[0][state]' => 'draft',
+    ], 'Save');
 
     // The published view should not have a moderation form, because it is the
     // live revision.
@@ -291,7 +303,11 @@ class ModerationFormTest extends ModerationStateTestBase {
 
     // Create new moderated content in draft (revision 1).
     $this->drupalGet('node/add/moderated_content');
-    $this->submitForm(['title[0][value]' => 'Some moderated content', 'body[0][value]' => 'First version of the content.', 'moderation_state[0][state]' => 'draft'], 'Save');
+    $this->submitForm([
+      'title[0][value]' => 'Some moderated content',
+      'body[0][value]' => 'First version of the content.',
+      'moderation_state[0][state]' => 'draft',
+    ], 'Save');
     $this->assertNotEmpty($this->xpath('//ul[@class="entity-moderation-form"]'));
 
     $node = $this->drupalGetNodeByTitle('Some moderated content');
@@ -423,7 +439,10 @@ class ModerationFormTest extends ModerationStateTestBase {
 
     // Create new moderated content (revision 1).
     $this->drupalGet('node/add/moderated_content');
-    $this->submitForm(['title[0][value]' => 'Third moderated content', 'moderation_state[0][state]' => 'published'], 'Save');
+    $this->submitForm([
+      'title[0][value]' => 'Third moderated content',
+      'moderation_state[0][state]' => 'published',
+    ], 'Save');
 
     $node = $this->drupalGetNodeByTitle('Third moderated content');
     $this->assertNotEmpty($node->language(), 'en');
@@ -478,7 +497,10 @@ class ModerationFormTest extends ModerationStateTestBase {
     ]);
     $entity_form_display->save();
     $this->drupalGet('node/add/moderated_content');
-    $this->submitForm(['title[0][value]' => 'Test content', 'moderation_state[0][value]' => 'published'], 'Save');
+    $this->submitForm([
+      'title[0][value]' => 'Test content',
+      'moderation_state[0][value]' => 'published',
+    ], 'Save');
     $this->assertSession()->pageTextContains('Moderated content Test content has been created.');
   }
 
@@ -512,7 +534,11 @@ class ModerationFormTest extends ModerationStateTestBase {
     }
     // Create new moderated content in draft.
     $this->drupalGet('node/add/moderated_content');
-    $this->submitForm(['title[0][value]' => 'Some moderated content', 'body[0][value]' => 'First version of the content.', 'moderation_state[0][state]' => 'draft'], 'Save');
+    $this->submitForm([
+      'title[0][value]' => 'Some moderated content',
+      'body[0][value]' => 'First version of the content.',
+      'moderation_state[0][state]' => 'draft',
+    ], 'Save');
 
     // The archived state is not used yet, so can still be deleted.
     $this->drupalGet($paths['archived_state']);

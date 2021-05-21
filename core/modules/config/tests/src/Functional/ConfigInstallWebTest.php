@@ -136,7 +136,10 @@ class ConfigInstallWebTest extends BrowserTestBase {
     // config_install_fail_test.
     // @see \Drupal\system\Form\ModulesListForm::submitForm()
     $this->drupalGet('admin/modules');
-    $this->submitForm(['modules[config_test][enable]' => TRUE, 'modules[config_install_fail_test][enable]' => TRUE], 'Install');
+    $this->submitForm([
+      'modules[config_test][enable]' => TRUE,
+      'modules[config_install_fail_test][enable]' => TRUE,
+    ], 'Install');
     $this->assertRaw('Unable to install Configuration install fail test, <em class="placeholder">config_test.dynamic.dotted.default</em> already exists in active configuration.');
 
     // Uninstall the config_test module to test the confirm form.

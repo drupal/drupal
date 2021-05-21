@@ -57,7 +57,10 @@ class LocaleExportTest extends BrowserTestBase {
     $name = $file_system->tempnam('temporary://', "po_") . '.po';
     file_put_contents($name, $this->getPoFile());
     $this->drupalGet('admin/config/regional/translate/import');
-    $this->submitForm(['langcode' => 'fr', 'files[file]' => $name], 'Import');
+    $this->submitForm([
+      'langcode' => 'fr',
+      'files[file]' => $name,
+    ], 'Import');
     $file_system->unlink($name);
 
     // Get the French translations.
@@ -73,7 +76,11 @@ class LocaleExportTest extends BrowserTestBase {
     $name = $file_system->tempnam('temporary://', "po2_") . '.po';
     file_put_contents($name, $this->getCustomPoFile());
     $this->drupalGet('admin/config/regional/translate/import');
-    $this->submitForm(['langcode' => 'fr', 'files[file]' => $name, 'customized' => 1], 'Import');
+    $this->submitForm([
+      'langcode' => 'fr',
+      'files[file]' => $name,
+      'customized' => 1,
+    ], 'Import');
     $file_system->unlink($name);
 
     // Create string without translation in the locales_source table.
@@ -85,7 +92,12 @@ class LocaleExportTest extends BrowserTestBase {
 
     // Export only customized French translations.
     $this->drupalGet('admin/config/regional/translate/export');
-    $this->submitForm(['langcode' => 'fr', 'content_options[not_customized]' => FALSE, 'content_options[customized]' => TRUE, 'content_options[not_translated]' => FALSE], 'Export');
+    $this->submitForm([
+      'langcode' => 'fr',
+      'content_options[not_customized]' => FALSE,
+      'content_options[customized]' => TRUE,
+      'content_options[not_translated]' => FALSE,
+    ], 'Export');
 
     // Ensure we have a translation file.
     $this->assertRaw('# French translation of Drupal');
@@ -96,7 +108,12 @@ class LocaleExportTest extends BrowserTestBase {
 
     // Export only untranslated French translations.
     $this->drupalGet('admin/config/regional/translate/export');
-    $this->submitForm(['langcode' => 'fr', 'content_options[not_customized]' => FALSE, 'content_options[customized]' => FALSE, 'content_options[not_translated]' => TRUE], 'Export');
+    $this->submitForm([
+      'langcode' => 'fr',
+      'content_options[not_customized]' => FALSE,
+      'content_options[customized]' => FALSE,
+      'content_options[not_translated]' => TRUE,
+    ], 'Export');
 
     // Ensure we have a translation file.
     $this->assertRaw('# French translation of Drupal');

@@ -161,7 +161,10 @@ class DisplayPathTest extends UITestBase {
     $this->drupalGet('admin/structure/views/view/test_view');
 
     $this->drupalGet('admin/structure/views/nojs/display/test_view/page_1/menu');
-    $this->submitForm(['menu[type]' => 'default tab', 'menu[title]' => 'Test tab title'], 'Apply');
+    $this->submitForm([
+      'menu[type]' => 'default tab',
+      'menu[title]' => 'Test tab title',
+    ], 'Apply');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->addressEquals('admin/structure/views/nojs/display/test_view/page_1/tab_options');
 

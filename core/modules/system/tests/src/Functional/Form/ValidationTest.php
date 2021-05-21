@@ -134,7 +134,10 @@ class ValidationTest extends BrowserTestBase {
 
     // Ensure not validated values are not available to submit handlers.
     $this->drupalGet($path);
-    $this->submitForm(['title' => '', 'test' => 'valid'], 'Partial validate');
+    $this->submitForm([
+      'title' => '',
+      'test' => 'valid',
+    ], 'Partial validate');
     $this->assertSession()->pageTextContains('Only validated values appear in the form values.');
 
     // Now test full form validation and ensure that the #element_validate

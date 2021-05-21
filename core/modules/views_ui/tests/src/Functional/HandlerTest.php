@@ -104,19 +104,25 @@ class HandlerTest extends UITestBase {
       // Area handler types need to use a different handler.
       if (in_array($type, ['header', 'footer', 'empty'])) {
         $this->drupalGet($add_handler_url);
-        $this->submitForm(['name[views.area]' => TRUE], 'Add and configure ' . $type_info['ltitle']);
+        $this->submitForm([
+          'name[views.area]' => TRUE,
+        ], 'Add and configure ' . $type_info['ltitle']);
         $id = 'area';
         $edit_handler_url = "admin/structure/views/nojs/handler/test_view_empty/default/$type/$id";
       }
       elseif ($type == 'relationship') {
         $this->drupalGet($add_handler_url);
-        $this->submitForm(['name[views_test_data.uid]' => TRUE], 'Add and configure ' . $type_info['ltitle']);
+        $this->submitForm([
+          'name[views_test_data.uid]' => TRUE,
+        ], 'Add and configure ' . $type_info['ltitle']);
         $id = 'uid';
         $edit_handler_url = "admin/structure/views/nojs/handler/test_view_empty/default/$type/$id";
       }
       else {
         $this->drupalGet($add_handler_url);
-        $this->submitForm(['name[views_test_data.job]' => TRUE], 'Add and configure ' . $type_info['ltitle']);
+        $this->submitForm([
+          'name[views_test_data.job]' => TRUE,
+        ], 'Add and configure ' . $type_info['ltitle']);
         $id = 'job';
         $edit_handler_url = "admin/structure/views/nojs/handler/test_view_empty/default/$type/$id";
       }
@@ -154,12 +160,16 @@ class HandlerTest extends UITestBase {
     $type_info = $handler_types['relationship'];
     $add_handler_url = "admin/structure/views/nojs/add-handler/test_view_empty/default/relationship";
     $this->drupalGet($add_handler_url);
-    $this->submitForm(['name[views_test_data.uid]' => TRUE], 'Add and configure ' . $type_info['ltitle']);
+    $this->submitForm([
+      'name[views_test_data.uid]' => TRUE,
+    ], 'Add and configure ' . $type_info['ltitle']);
 
     $add_handler_url = "admin/structure/views/nojs/add-handler/test_view_empty/default/field";
     $type_info = $handler_types['field'];
     $this->drupalGet($add_handler_url);
-    $this->submitForm(['name[users_field_data.name]' => TRUE], 'Add and configure ' . $type_info['ltitle']);
+    $this->submitForm([
+      'name[users_field_data.name]' => TRUE,
+    ], 'Add and configure ' . $type_info['ltitle']);
     $id = 'name';
     $edit_handler_url = "admin/structure/views/nojs/handler/test_view_empty/default/field/$id";
 

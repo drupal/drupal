@@ -117,7 +117,10 @@ class InlineBlockTest extends InlineBlockTestBase {
     $this->assertEmpty($this->blockStorage->loadMultiple(), 'No entity blocks exist');
     // Enable layout builder and overrides.
     $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
-    $this->submitForm(['layout[enabled]' => TRUE, 'layout[allow_custom]' => TRUE], 'Save');
+    $this->submitForm([
+      'layout[enabled]' => TRUE,
+      'layout[allow_custom]' => TRUE,
+    ], 'Save');
 
     $this->drupalGet('node/1/layout');
     $this->addInlineBlockToLayout('Block title', 'The block body');

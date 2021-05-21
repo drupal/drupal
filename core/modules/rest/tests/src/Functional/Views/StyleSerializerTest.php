@@ -434,7 +434,10 @@ class StyleSerializerTest extends ViewTestBase {
 
     // Now configure no format, so both serialization formats should be allowed.
     $this->drupalGet($style_options);
-    $this->submitForm(['style_options[formats][json]' => '0', 'style_options[formats][xml]' => '0'], 'Apply');
+    $this->submitForm([
+      'style_options[formats][json]' => '0',
+      'style_options[formats][xml]' => '0',
+    ], 'Apply');
 
     // Ensure a request for JSON returns 200 OK.
     $this->drupalGet('test/serialize/field', ['query' => ['_format' => 'json']]);

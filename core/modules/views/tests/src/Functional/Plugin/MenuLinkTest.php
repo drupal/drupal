@@ -84,7 +84,11 @@ class MenuLinkTest extends ViewTestBase {
     // Alter the view's menu link in view page to use the menu link from the
     // node as parent.
     $this->drupalGet("admin/structure/views/nojs/display/test_menu_link/page_1/menu");
-    $this->submitForm(['menu[type]' => 'normal', 'menu[title]' => 'Secondary level view page', 'menu[parent]' => $parent_menu_value], 'Apply');
+    $this->submitForm([
+      'menu[type]' => 'normal',
+      'menu[title]' => 'Secondary level view page',
+      'menu[parent]' => $parent_menu_value,
+    ], 'Apply');
 
     // Save view which has pending changes.
     $this->submitForm([], 'Save');

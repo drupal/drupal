@@ -65,11 +65,17 @@ class ModerationRevisionRevertTest extends BrowserTestBase {
   public function testEditingAfterRevertRevision() {
     // Create a draft.
     $this->drupalGet('node/add/moderated_bundle');
-    $this->submitForm(['title[0][value]' => 'First draft node', 'moderation_state[0][state]' => 'draft'], 'Save');
+    $this->submitForm([
+      'title[0][value]' => 'First draft node',
+      'moderation_state[0][state]' => 'draft',
+    ], 'Save');
 
     // Now make it published.
     $this->drupalGet('node/1/edit');
-    $this->submitForm(['title[0][value]' => 'Published node', 'moderation_state[0][state]' => 'published'], 'Save');
+    $this->submitForm([
+      'title[0][value]' => 'Published node',
+      'moderation_state[0][state]' => 'published',
+    ], 'Save');
 
     // Check the editing form that show the published title.
     $this->drupalGet('node/1/edit');

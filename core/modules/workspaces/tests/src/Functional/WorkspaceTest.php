@@ -85,7 +85,10 @@ class WorkspaceTest extends BrowserTestBase {
     $this->drupalLogin($this->editor1);
 
     $this->drupalGet('/admin/config/workflow/workspaces/add');
-    $this->submitForm(['id' => 'test_workspace', 'label' => 'Test workspace'], 'Save');
+    $this->submitForm([
+      'id' => 'test_workspace',
+      'label' => 'Test workspace',
+    ], 'Save');
 
     // Activate the test workspace.
     $this->drupalGet('/admin/config/workflow/workspaces/manage/test_workspace/activate');
@@ -113,7 +116,10 @@ class WorkspaceTest extends BrowserTestBase {
     $this->drupalLogin($this->editor1);
 
     $this->drupalGet('/admin/config/workflow/workspaces/add');
-    $this->submitForm(['id' => 'test_workspace', 'label' => 'Test workspace'], 'Save');
+    $this->submitForm([
+      'id' => 'test_workspace',
+      'label' => 'Test workspace',
+    ], 'Save');
 
     $storage = \Drupal::entityTypeManager()->getStorage('workspace');
     $test_workspace = $storage->load('test_workspace');
