@@ -262,9 +262,9 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->assertSession()->fieldValueEquals('settings[min_resolution][y]', '10');
 
     $this->drupalGet('node/add/article');
-    $this->assertText('50 KB limit.');
-    $this->assertText('Allowed types: ' . $test_image_extension . '.');
-    $this->assertText('Images must be larger than 10x10 pixels. Images larger than 100x100 pixels will be resized.');
+    $this->assertSession()->pageTextContains('50 KB limit.');
+    $this->assertSession()->pageTextContains('Allowed types: ' . $test_image_extension . '.');
+    $this->assertSession()->pageTextContains('Images must be larger than 10x10 pixels. Images larger than 100x100 pixels will be resized.');
 
     // We have to create the article first and then edit it because the alt
     // and title fields do not display until the image has been attached.
@@ -336,7 +336,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
     // Add the required alt text.
     $this->submitForm([$field_name . '[1][alt]' => $alt], 'Save');
-    $this->assertText('Article ' . $node->getTitle() . ' has been updated.');
+    $this->assertSession()->pageTextContains('Article ' . $node->getTitle() . ' has been updated.');
 
     // Assert ImageWidget::process() calls FieldWidget::process().
     $this->drupalGet('node/' . $node->id() . '/edit');

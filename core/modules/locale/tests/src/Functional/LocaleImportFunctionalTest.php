@@ -146,7 +146,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
       'files[file]' => $name,
     ], 'Import');
     $this->assertSession()->addressEquals(Url::fromRoute('locale.translate_import'));
-    $this->assertText('File to import not found.');
+    $this->assertSession()->pageTextContains('File to import not found.');
 
     // Try importing a .po file with overriding strings, and ensure existing
     // strings are kept.
@@ -163,7 +163,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
       'translation' => 'translated',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
-    $this->assertText('No strings available.');
+    $this->assertSession()->pageTextContains('No strings available.');
 
     // This import should not have changed number of plural forms.
     $locale_plurals = \Drupal::service('locale.plural.formula')->getNumberOfPlurals('fr');
@@ -225,7 +225,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
       'translation' => 'translated',
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
-    $this->assertText('No strings available.');
+    $this->assertSession()->pageTextContains('No strings available.');
 
     // Try importing a .po file with overriding strings, and ensure existing
     // customized strings are overwritten.
@@ -292,7 +292,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
     ];
     // Check that search finds the string as untranslated.
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
-    $this->assertText($str);
+    $this->assertSession()->pageTextContains($str);
   }
 
   /**
@@ -348,7 +348,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
         'translation' => 'all',
       ];
       $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
-      $this->assertText($config_string[1]);
+      $this->assertSession()->pageTextContains($config_string[1]);
     }
 
     // Test that translations got recorded in the config system.

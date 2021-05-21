@@ -46,7 +46,7 @@ class HandlerFieldRoleTest extends UserTestBase {
     $this->drupalGet('/test-views-handler-field-role');
     // Verify that the view test_views_handler_field_role renders role assigned
     // to user in the correct order and markup in role names is escaped.
-    $this->assertText($rolename_b . Html::escape('<em>' . $rolename_a . '</em>'));
+    $this->assertSession()->responseContains($rolename_b . Html::escape('<em>' . $rolename_a . '</em>'));
     // Verify that the view test_views_handler_field_role does not render a role
     // not assigned to a user.
     $this->assertNoText($rolename_not_assigned);

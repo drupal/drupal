@@ -58,7 +58,7 @@ class PageTest extends BrowserTestBase {
     // Run initial step only first.
     $this->maximumMetaRefreshCount = 0;
     $this->drupalGet('batch-test/test-title');
-    $this->assertText('Batch Test');
+    $this->assertSession()->pageTextContains('Batch Test');
 
     // Leave the batch process running.
     $this->maximumMetaRefreshCount = NULL;

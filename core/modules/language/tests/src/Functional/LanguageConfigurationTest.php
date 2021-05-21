@@ -55,7 +55,7 @@ class LanguageConfigurationTest extends BrowserTestBase {
       'predefined_langcode' => 'fr',
     ];
     $this->submitForm($edit, 'Add language');
-    $this->assertText('French');
+    $this->assertSession()->pageTextContains('French');
     $this->assertSession()->addressEquals(Url::fromRoute('entity.configurable_language.collection'));
     // Langcode for Languages is always 'en'.
     $language = $this->config('language.entity.fr')->get();
@@ -111,14 +111,14 @@ class LanguageConfigurationTest extends BrowserTestBase {
       'prefix[en]' => '',
     ];
     $this->submitForm($edit, 'Save configuration');
-    $this->assertText('The prefix may only be left blank for the selected detection fallback language.');
+    $this->assertSession()->pageTextContains('The prefix may only be left blank for the selected detection fallback language.');
 
     //  Check that prefix cannot be changed to contain a slash.
     $edit = [
       'prefix[en]' => 'foo/bar',
     ];
     $this->submitForm($edit, 'Save configuration');
-    $this->assertText('The prefix may not contain a slash.');
+    $this->assertSession()->pageTextContains('The prefix may not contain a slash.');
 
     // Remove English language and add a new Language to check if langcode of
     // Language entity is 'en'.

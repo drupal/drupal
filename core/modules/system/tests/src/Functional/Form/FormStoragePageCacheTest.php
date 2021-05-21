@@ -82,7 +82,7 @@ class FormStoragePageCacheTest extends BrowserTestBase {
     // Trigger validation error by again submitting an empty title.
     $edit = ['title' => ''];
     $this->submitForm($edit, 'Save');
-    $this->assertText('No old build id');
+    $this->assertSession()->pageTextContains('No old build id');
     $build_id_from_cache_second_validation = $this->getFormBuildId();
     $this->assertEqual($build_id_from_cache_first_validation, $build_id_from_cache_second_validation, 'Build id remains the same when form validation fails subsequently');
   }
@@ -93,7 +93,7 @@ class FormStoragePageCacheTest extends BrowserTestBase {
   public function testRebuildFormStorageOnCachedPage() {
     $this->drupalGet('form-test/form-storage-page-cache');
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'MISS');
-    $this->assertText('No old build id');
+    $this->assertSession()->pageTextContains('No old build id');
     $build_id_initial = $this->getFormBuildId();
 
     // Trigger rebuild, should regenerate build id. When a submit handler
@@ -111,7 +111,7 @@ class FormStoragePageCacheTest extends BrowserTestBase {
     // Trigger subsequent rebuild, should regenerate the build id again.
     $edit = ['title' => 'something'];
     $this->submitForm($edit, 'Rebuild');
-    $this->assertText($build_id_first_rebuild);
+    $this->assertSession()->pageTextContains($build_id_first_rebuild);
     $build_id_second_rebuild = $this->getFormBuildId();
     $this->assertNotEquals($build_id_first_rebuild, $build_id_second_rebuild, 'Build id changes on second rebuild.');
   }

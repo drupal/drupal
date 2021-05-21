@@ -129,7 +129,7 @@ class SearchRankingTest extends BrowserTestBase {
 
     // Test that the settings form displays the content ranking section.
     $this->drupalGet('admin/config/search/pages/manage/node_search');
-    $this->assertText('Content ranking');
+    $this->assertSession()->pageTextContains('Content ranking');
 
     // Check that all rankings are visible and set to 0.
     foreach ($node_ranks as $node_rank) {

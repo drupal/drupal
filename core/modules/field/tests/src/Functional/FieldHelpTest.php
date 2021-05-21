@@ -55,7 +55,7 @@ class FieldHelpTest extends BrowserTestBase {
     $this->assertSession()->linkExists('Options', 0, 'Options module is listed on the Field help page.');
     // Verify that modules with field types that do not implement hook_help are
     // listed.
-    $this->assertText('Field API Test');
+    $this->assertSession()->pageTextContains('Field API Test');
     $this->assertSession()->linkNotExists('Field API Test', 'Modules with field types that do not implement hook_help are not linked.');
     $this->assertSession()->linkNotExists('Link', 'Modules that have not been installed, are not listed.');
   }

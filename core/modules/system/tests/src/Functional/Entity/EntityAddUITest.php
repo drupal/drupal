@@ -47,7 +47,7 @@ class EntityAddUITest extends BrowserTestBase {
     // No bundles exist, the add bundle message should be present as the user
     // has the necessary permissions.
     $this->drupalGet('/entity_test_with_bundle/add');
-    $this->assertText('There is no test entity bundle yet.');
+    $this->assertSession()->pageTextContains('There is no test entity bundle yet.');
     $this->assertSession()->linkExists('Add a new test entity bundle.');
 
     // One bundle exists, confirm redirection to the add-form.
@@ -69,8 +69,8 @@ class EntityAddUITest extends BrowserTestBase {
 
     $this->assertSession()->linkExists('Test label');
     $this->assertSession()->linkExists('Test2 label');
-    $this->assertText('My test description');
-    $this->assertText('My test2 description');
+    $this->assertSession()->pageTextContains('My test description');
+    $this->assertSession()->pageTextContains('My test2 description');
 
     $this->clickLink('Test2 label');
     $this->drupalGet('/entity_test_with_bundle/add/test2');

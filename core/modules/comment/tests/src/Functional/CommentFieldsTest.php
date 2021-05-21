@@ -163,7 +163,7 @@ class CommentFieldsTest extends CommentTestBase {
     $edit = [];
     $this->drupalPostForm('admin/config/people/accounts/fields/user.user.field_user_comment/storage', $edit, 'Save field settings');
     // We should get an error message.
-    $this->assertText('An illegal choice has been detected. Please contact the site administrator.');
+    $this->assertSession()->pageTextContains('An illegal choice has been detected. Please contact the site administrator.');
 
     // Create a comment type for users.
     $bundle = CommentType::create([

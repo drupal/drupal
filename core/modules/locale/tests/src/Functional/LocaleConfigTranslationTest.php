@@ -201,7 +201,7 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
     // translation. This test ensures the entity loaded from the request
     // upcasting will already work.
     $this->drupalGet($this->langcode . '/contact/feedback');
-    $this->assertText($category_label);
+    $this->assertSession()->pageTextContains($category_label);
 
     // Check if the UI does not show the translated String.
     $this->drupalGet('admin/structure/contact/manage/feedback');

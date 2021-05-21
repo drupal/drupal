@@ -124,7 +124,7 @@ class UpdatePostUpdateTest extends BrowserTestBase {
     $this->drupalGet('update.php/selection');
     $this->updateRequirementsProblem();
     $this->drupalGet('update.php/selection');
-    $this->assertText('No pending updates.');
+    $this->assertSession()->pageTextContains('No pending updates.');
   }
 
 }

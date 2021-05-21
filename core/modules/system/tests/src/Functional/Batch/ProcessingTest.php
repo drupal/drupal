@@ -45,7 +45,7 @@ class ProcessingTest extends BrowserTestBase {
     $this->assertEqual($this->_resultStack('batch_1'), batch_test_stack(), 'Execution order was correct.');
     // Verify that the custom redirection after batch execution displays the
     // correct page.
-    $this->assertText('Test page text.');
+    $this->assertSession()->pageTextContains('Test page text.');
     $this->assertSession()->addressEquals(Url::fromRoute('test_page_test.test_page'));
   }
 
@@ -61,7 +61,7 @@ class ProcessingTest extends BrowserTestBase {
     // of verifying that no markup is incorrectly escaped.
     $this->assertSession()->assertNoEscaped('<');
     $this->assertBatchMessages($this->_resultMessages('batch_0'), 'Batch with no operation performed successfully.');
-    $this->assertText('Redirection successful.');
+    $this->assertSession()->pageTextContains('Redirection successful.');
 
     // Batch 1: several simple operations.
     $edit = ['batch' => 'batch_1'];

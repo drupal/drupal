@@ -40,7 +40,7 @@ class DisplayTest extends UITestBase {
     $this->assertNoText('Block 2');
 
     $this->submitForm([], 'Add Block');
-    $this->assertText('Block');
+    $this->assertSession()->pageTextContains('Block');
     $this->assertNoText('Block 2');
   }
 
@@ -271,7 +271,7 @@ class DisplayTest extends UITestBase {
   public function testHideDisplayOverride() {
     // Test that the override option appears with two displays.
     $this->drupalGet('admin/structure/views/nojs/handler/test_display/page_1/field/title');
-    $this->assertText('All displays');
+    $this->assertSession()->pageTextContains('All displays');
 
     // Remove a display and test if the override option is hidden.
     $this->drupalPostForm('admin/structure/views/view/test_display/edit/block_1', [], 'Delete Block');

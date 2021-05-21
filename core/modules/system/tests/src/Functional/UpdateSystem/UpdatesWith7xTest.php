@@ -62,7 +62,7 @@ class UpdatesWith7xTest extends BrowserTestBase {
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->updateRequirementsProblem();
     $this->clickLink(t('Continue'));
-    $this->assertText('Some of the pending updates cannot be applied because their dependencies were not met.');
+    $this->assertSession()->pageTextContains('Some of the pending updates cannot be applied because their dependencies were not met.');
   }
 
 }
