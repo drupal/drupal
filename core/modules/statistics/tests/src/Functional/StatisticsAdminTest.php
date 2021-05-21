@@ -132,7 +132,7 @@ class StatisticsAdminTest extends BrowserTestBase {
       ->condition('n.nid', $this->testNode->id())
       ->execute()
       ->fetchAssoc();
-    $this->assertEqual($result['nid'], $this->testNode->id(), 'Verifying that the node counter is incremented.');
+    $this->assertEquals($result['nid'], $this->testNode->id(), 'Verifying that the node counter is incremented.');
 
     $this->testNode->delete();
 

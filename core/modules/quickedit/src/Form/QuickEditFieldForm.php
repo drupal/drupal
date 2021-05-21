@@ -168,7 +168,7 @@ class QuickEditFieldForm extends FormBase {
    * it back to the form state and save it.
    */
   protected function buildEntity(array $form, FormStateInterface $form_state) {
-    /** @var $entity \Drupal\Core\Entity\EntityInterface */
+    /** @var \Drupal\Core\Entity\EntityInterface $entity */
     $entity = clone $form_state->get('entity');
     $field_name = $form_state->get('field_name');
 

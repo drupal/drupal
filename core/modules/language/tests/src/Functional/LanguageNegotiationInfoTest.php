@@ -137,7 +137,7 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
     foreach ($this->languageManager()->getDefinedLanguageTypes() as $type) {
       $langcode = $last[$type];
       $value = $type == LanguageInterface::TYPE_CONTENT || strpos($type, 'test') !== FALSE ? 'it' : 'en';
-      $this->assertEqual($langcode, $value, new FormattableMarkup('The negotiated language for %type is %language', ['%type' => $type, '%language' => $value]));
+      $this->assertEquals($langcode, $value, new FormattableMarkup('The negotiated language for %type is %language', ['%type' => $type, '%language' => $value]));
     }
 
     // Uninstall language_test and check that everything is set back to the

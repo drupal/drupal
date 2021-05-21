@@ -167,7 +167,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
       ],
     ];
     $plugins = array_keys($plugin_info);
-    /** @var $entities \Drupal\search\SearchPageInterface[] */
+    /** @var \Drupal\search\SearchPageInterface[] $entities */
     $entities = SearchPage::loadMultiple();
     // Disable all of the search pages.
     foreach ($entities as $entity) {
@@ -199,7 +199,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
       $this->drupalPostForm('node', $terms, 'Search');
       $current = $this->getURL();
       $expected = Url::fromRoute('search.view_' . $entity->id(), [], ['query' => ['keys' => $info['keys']], 'absolute' => TRUE])->toString();
-      $this->assertEqual($expected, $current, 'Block redirected to right search page');
+      $this->assertEquals($expected, $current, 'Block redirected to right search page');
 
       // Try an invalid search path, which should 404.
       $this->drupalGet('search/not_a_plugin_path');
@@ -405,7 +405,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
    *   (optional) The group this message is in.
    */
   protected function assertDefaultSearch($expected, $message = '', $group = 'Other') {
-    /** @var $search_page_repository \Drupal\search\SearchPageRepositoryInterface */
+    /** @var \Drupal\search\SearchPageRepositoryInterface $search_page_repository */
     $search_page_repository = \Drupal::service('search.search_page_repository');
     $this->assertSame($expected, $search_page_repository->getDefaultSearchPage(), $message, $group);
   }

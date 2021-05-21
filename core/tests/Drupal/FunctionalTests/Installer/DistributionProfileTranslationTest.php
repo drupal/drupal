@@ -85,7 +85,7 @@ class DistributionProfileTranslationTest extends InstallerTestBase {
 
     // Check the language direction.
     $direction = current($this->xpath('/@dir'))->getText();
-    $this->assertEqual('ltr', $direction);
+    $this->assertEquals('ltr', $direction);
 
     // Verify that the distribution name appears.
     $this->assertRaw($this->info['distribution']['name']);

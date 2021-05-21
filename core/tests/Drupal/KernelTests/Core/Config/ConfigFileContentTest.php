@@ -55,11 +55,11 @@ class ConfigFileContentTest extends KernelTestBase {
     $config = $this->config($name);
 
     // Verify a configuration object is returned.
-    $this->assertEqual($name, $config->getName());
+    $this->assertEquals($name, $config->getName());
     $this->assertNotEmpty($config, 'Config object created.');
 
     // Verify the configuration object is empty.
-    $this->assertEqual([], $config->get(), 'New config object is empty.');
+    $this->assertEquals([], $config->get(), 'New config object is empty.');
 
     // Verify nothing was saved.
     $data = $storage->read($name);
@@ -97,18 +97,18 @@ class ConfigFileContentTest extends KernelTestBase {
 
     // Read top level value.
     $config = $this->config($name);
-    $this->assertEqual($name, $config->getName());
+    $this->assertEquals($name, $config->getName());
     $this->assertNotEmpty($config, 'Config object created.');
-    $this->assertEqual('bar', $config->get($key), 'Top level configuration value found.');
+    $this->assertEquals('bar', $config->get($key), 'Top level configuration value found.');
 
     // Read nested value.
-    $this->assertEqual($nested_value, $config->get($nested_key), 'Nested configuration value found.');
+    $this->assertEquals($nested_value, $config->get($nested_key), 'Nested configuration value found.');
 
     // Read array.
-    $this->assertEqual($array_value, $config->get($array_key), 'Top level array configuration value found.');
+    $this->assertEquals($array_value, $config->get($array_key), 'Top level array configuration value found.');
 
     // Read nested array.
-    $this->assertEqual($array_value, $config->get($nested_array_key), 'Nested array configuration value found.');
+    $this->assertEquals($array_value, $config->get($nested_array_key), 'Nested array configuration value found.');
 
     // Read a top level value that doesn't exist.
     $this->assertNull($config->get('i_do_not_exist'), 'Non-existent top level value returned NULL.');
@@ -154,7 +154,7 @@ class ConfigFileContentTest extends KernelTestBase {
 
     // Verify the database entry exists from a chained save.
     $data = $storage->read($chained_name);
-    $this->assertEqual($config->get(), $data);
+    $this->assertEquals($config->get(), $data);
 
     // Get file listing for all files starting with 'foo'. Should return
     // two elements.
@@ -174,7 +174,7 @@ class ConfigFileContentTest extends KernelTestBase {
     // Get file listing for all files starting with 'bar'. Should return
     // an empty array.
     $files = $storage->listAll('bar');
-    $this->assertEqual([], $files, 'No files listed with the prefix \'bar\'.');
+    $this->assertEquals([], $files, 'No files listed with the prefix \'bar\'.');
 
     // Delete the configuration.
     $config = $this->config($name);

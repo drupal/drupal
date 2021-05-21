@@ -68,7 +68,7 @@ class DisplayFeedTest extends UITestBase {
       }
     }
 
-    $this->assertEqual(['default', 'page'], $options, 'Make sure all displays appears as expected.');
+    $this->assertEquals(['default', 'page'], $options, 'Make sure all displays appears as expected.');
 
     // Post and save this and check the output.
     $this->drupalPostForm('admin/structure/views/nojs/display/' . $view_name . '/feed_1/displays', ['displays[page]' => 'page'], 'Apply');
