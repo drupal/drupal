@@ -25,7 +25,7 @@
 {%
   set classes = [
     'block',
-    'block-search',
+    'block-search-wide',
   ]
 %}
 <div{{ attributes.addClass(classes) }}>
@@ -35,14 +35,14 @@
   {% endif %}
   {{ title_suffix }}
   {% block content %}
-    <button class="header-nav__search-button" aria-label="{{ 'Toggle Search Form'|t }}">
+    <button class="block-search-wide__button" aria-label="{{ 'Toggle Search Form'|t }}" data-drupal-selector="block-search-wide-button">
       {% include "@olivero/../images/search.svg" %}
-      <div class="header-nav__search-button__close"></div>
+      <div class="block-search-wide__button-close"></div>
     </button>
 
-    <div{{ content_attributes.addClass('search-wide__wrapper') }}>
-      <div class="search-wide__container">
-        <div class="search-wide__grid">
+    <div{{ content_attributes.addClass('block-search-wide__wrapper').setAttribute('data-drupal-selector', 'block-search-wide-wrapper') }}>
+      <div class="block-search-wide__container">
+        <div class="block-search-wide__grid">
           {{ content }}
         </div>
       </div>
