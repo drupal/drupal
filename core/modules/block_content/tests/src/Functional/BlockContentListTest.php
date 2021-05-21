@@ -107,7 +107,7 @@ class BlockContentListTest extends BlockContentTestBase {
     $this->assertSession()->elementTextNotContains('xpath', '//td', $new_label);
 
     // Confirm that the empty text is displayed.
-    $this->assertText('There are no custom blocks yet.');
+    $this->assertSession()->pageTextContains('There are no custom blocks yet.');
 
     $block_content = BlockContent::create([
       'info' => 'Non-reusable block',

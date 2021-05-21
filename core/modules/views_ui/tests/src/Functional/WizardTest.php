@@ -38,13 +38,13 @@ class WizardTest extends WizardTestBase {
 
     $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
 
-    $this->assertText('Machine-readable name cannot be longer than 128 characters but is currently 129 characters long.');
-    $this->assertText('Path cannot be longer than 254 characters but is currently 255 characters long.');
-    $this->assertText('Page title cannot be longer than 255 characters but is currently 256 characters long.');
-    $this->assertText('View name cannot be longer than 255 characters but is currently 256 characters long.');
-    $this->assertText('Feed path cannot be longer than 254 characters but is currently 255 characters long.');
-    $this->assertText('Block title cannot be longer than 255 characters but is currently 256 characters long.');
-    $this->assertText('REST export path cannot be longer than 254 characters but is currently 255 characters long.');
+    $this->assertSession()->pageTextContains('Machine-readable name cannot be longer than 128 characters but is currently 129 characters long.');
+    $this->assertSession()->pageTextContains('Path cannot be longer than 254 characters but is currently 255 characters long.');
+    $this->assertSession()->pageTextContains('Page title cannot be longer than 255 characters but is currently 256 characters long.');
+    $this->assertSession()->pageTextContains('View name cannot be longer than 255 characters but is currently 256 characters long.');
+    $this->assertSession()->pageTextContains('Feed path cannot be longer than 254 characters but is currently 255 characters long.');
+    $this->assertSession()->pageTextContains('Block title cannot be longer than 255 characters but is currently 256 characters long.');
+    $this->assertSession()->pageTextContains('REST export path cannot be longer than 254 characters but is currently 255 characters long.');
 
     $view['label'] = $this->randomMachineName(255);
     $view['id'] = strtolower($this->randomMachineName(128));
@@ -63,7 +63,7 @@ class WizardTest extends WizardTestBase {
     $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
     $this->assertSession()->addressEquals('admin/structure/views/view/' . $view['id']);
     // Assert that the page title is correctly truncated.
-    $this->assertText(views_ui_truncate($view['page[title]'], 32));
+    $this->assertSession()->pageTextContains(views_ui_truncate($view['page[title]'], 32));
   }
 
 }

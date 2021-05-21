@@ -211,11 +211,11 @@ class EntityRevisionsTest extends BrowserTestBase {
     $revision_url = 'entity_test_mulrev/' . $entity->id() . '/revision/' . $pending_revision->getRevisionId() . '/view';
 
     $this->drupalGet($revision_url);
-    $this->assertText('pending revision - en');
+    $this->assertSession()->pageTextContains('pending revision - en');
     $this->assertNoText('pending revision - de');
 
     $this->drupalGet('de/' . $revision_url);
-    $this->assertText('pending revision - de');
+    $this->assertSession()->pageTextContains('pending revision - de');
     $this->assertNoText('pending revision - en');
   }
 

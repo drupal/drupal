@@ -160,8 +160,8 @@ class TaggedWithTest extends WizardTestBase {
     // ones we don't expect are absent.
     $this->drupalGet($view1['page[path]']);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText($node_tag1_title);
-    $this->assertText($node_tag1_tag2_title);
+    $this->assertSession()->pageTextContains($node_tag1_title);
+    $this->assertSession()->pageTextContains($node_tag1_tag2_title);
     $this->assertNoText($node_no_tags_title);
 
     // Create a view that filters by taxonomy term "tag2". It should show only
@@ -181,7 +181,7 @@ class TaggedWithTest extends WizardTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet($view2['page[path]']);
     $this->assertNoText($node_tag1_title);
-    $this->assertText($node_tag1_tag2_title);
+    $this->assertSession()->pageTextContains($node_tag1_tag2_title);
     $this->assertNoText($node_no_tags_title);
   }
 

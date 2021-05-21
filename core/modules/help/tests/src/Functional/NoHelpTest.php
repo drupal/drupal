@@ -43,7 +43,7 @@ class NoHelpTest extends BrowserTestBase {
 
     $this->drupalGet('admin/help');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('Module overviews are provided by modules');
+    $this->assertSession()->pageTextContains('Module overviews are provided by modules');
     $this->assertFalse(\Drupal::moduleHandler()->implementsHook('menu_test', 'help'), 'The menu_test module does not implement hook_help');
     // Make sure the test module menu_test does not display a help link on
     // admin/help.

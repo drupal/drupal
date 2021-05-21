@@ -123,7 +123,7 @@ class DisplayTest extends ViewTestBase {
 
     // Test that the display category/summary is in the UI.
     $this->drupalGet('admin/structure/views/view/test_view/edit/display_test_1');
-    $this->assertText('Display test settings');
+    $this->assertSession()->pageTextContains('Display test settings');
     // Ensure that the order is as expected.
     $result = $this->xpath('//ul[@id="views-display-menu-tabs"]/li/a/child::text()');
     $this->assertEquals('Display test 2', $result[0]->getText());
@@ -308,7 +308,7 @@ class DisplayTest extends ViewTestBase {
 
     $this->drupalGet('test_display_invalid');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('The &quot;invalid&quot; plugin does not exist.');
+    $this->assertSession()->pageTextContains('The "invalid" plugin does not exist.');
 
     // Rebuild the router, and ensure that the path is not accessible anymore.
     views_invalidate_cache();
@@ -338,7 +338,7 @@ class DisplayTest extends ViewTestBase {
     // plugin warning message.
     $this->drupalGet('<front>');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('The &quot;invalid&quot; plugin does not exist.');
+    $this->assertSession()->pageTextContains('The "invalid" plugin does not exist.');
     $this->assertSession()->elementNotExists('xpath', "//div[@id = 'block-{$block->id()}']");
   }
 
@@ -446,15 +446,15 @@ class DisplayTest extends ViewTestBase {
     $this->drupalGet('admin/structure/views/nojs/display/content/page_1/rendering_language');
     if ($expected_node_translatability) {
       $this->assertNoText($not_supported_text);
-      $this->assertText($supported_text);
+      $this->assertSession()->pageTextContains($supported_text);
     }
     else {
-      $this->assertText($not_supported_text);
+      $this->assertSession()->pageTextContains($not_supported_text);
       $this->assertNoText($supported_text);
     }
 
     $this->drupalGet('admin/structure/views/nojs/display/files/page_1/rendering_language');
-    $this->assertText($not_supported_text);
+    $this->assertSession()->pageTextContains($not_supported_text);
     $this->assertNoText($supported_text);
   }
 

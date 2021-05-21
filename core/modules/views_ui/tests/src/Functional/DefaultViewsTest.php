@@ -65,7 +65,7 @@ class DefaultViewsTest extends UITestBase {
     $this->drupalPostForm('admin/structure/views/view/glossary/edit/page_1', [], 'Save');
     $this->drupalGet('glossary');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText($new_title);
+    $this->assertSession()->pageTextContains($new_title);
 
     // Save another view in the UI.
     $this->drupalPostForm('admin/structure/views/nojs/display/archive/page_1/title', [], 'Apply');
@@ -141,7 +141,7 @@ class DefaultViewsTest extends UITestBase {
     // Ensure the view is no longer available.
     $this->drupalGet($edit_href);
     $this->assertSession()->statusCodeEquals(404);
-    $this->assertText('Page not found');
+    $this->assertSession()->pageTextContains('Page not found');
 
     // Delete all duplicated Glossary views.
     $this->drupalGet('admin/structure/views');
@@ -158,7 +158,7 @@ class DefaultViewsTest extends UITestBase {
     $this->submitForm([], 'Delete');
     $this->drupalGet('glossary');
     $this->assertSession()->statusCodeEquals(404);
-    $this->assertText('Page not found');
+    $this->assertSession()->pageTextContains('Page not found');
   }
 
   /**

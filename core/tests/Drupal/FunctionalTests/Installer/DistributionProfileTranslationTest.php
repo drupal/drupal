@@ -105,11 +105,11 @@ class DistributionProfileTranslationTest extends InstallerTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Confirm that we are logged-in after installation.
-    $this->assertText($this->rootUser->getDisplayName());
+    $this->assertSession()->pageTextContains($this->rootUser->getDisplayName());
 
     // Verify German was configured but not English.
     $this->drupalGet('admin/config/regional/language');
-    $this->assertText('German');
+    $this->assertSession()->pageTextContains('German');
     $this->assertNoText('English');
   }
 

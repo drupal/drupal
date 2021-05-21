@@ -28,11 +28,11 @@ class Datetime extends DateElementBase {
     // Date formats cannot be loaded during install or update.
     if (!defined('MAINTENANCE_MODE')) {
       if ($date_format_entity = DateFormat::load('html_date')) {
-        /** @var $date_format_entity \Drupal\Core\Datetime\DateFormatInterface */
+        /** @var \Drupal\Core\Datetime\DateFormatInterface $date_format_entity */
         $date_format = $date_format_entity->getPattern();
       }
       if ($time_format_entity = DateFormat::load('html_time')) {
-        /** @var $time_format_entity \Drupal\Core\Datetime\DateFormatInterface */
+        /** @var \Drupal\Core\Datetime\DateFormatInterface $time_format_entity */
         $time_format = $time_format_entity->getPattern();
       }
     }

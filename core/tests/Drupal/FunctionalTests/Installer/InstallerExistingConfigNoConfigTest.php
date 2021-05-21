@@ -35,8 +35,8 @@ class InstallerExistingConfigNoConfigTest extends InstallerExistingConfigTestBas
    */
   public function testConfigSync() {
     $this->assertSession()->titleEquals('Configuration validation | Drupal');
-    $this->assertText('The configuration synchronization failed validation.');
-    $this->assertText('This import is empty and if applied would delete all of your configuration, so has been rejected.');
+    $this->assertSession()->pageTextContains('The configuration synchronization failed validation.');
+    $this->assertSession()->pageTextContains('This import is empty and if applied would delete all of your configuration, so has been rejected.');
 
     // Ensure there is no continuation button.
     $this->assertNoText('Save and continue');

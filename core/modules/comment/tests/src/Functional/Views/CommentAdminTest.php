@@ -52,7 +52,7 @@ class CommentAdminTest extends CommentBrowserTestBase {
 
     // Test that the comments page loads correctly when there are no comments.
     $this->drupalGet('admin/content/comment');
-    $this->assertText('No comments available.');
+    $this->assertSession()->pageTextContains('No comments available.');
 
     // Assert the expose filters on the admin page.
     $this->assertSession()->fieldExists('subject');
@@ -69,7 +69,7 @@ class CommentAdminTest extends CommentBrowserTestBase {
       'name' => $author_name,
       'comment_body[0][value]' => $body,
     ], 'Save');
-    $this->assertText('Your comment has been queued for review by site administrators and will be published after approval.');
+    $this->assertSession()->pageTextContains('Your comment has been queued for review by site administrators and will be published after approval.');
 
     // Get unapproved comment id.
     $this->drupalLogin($this->adminUser);
@@ -93,7 +93,7 @@ class CommentAdminTest extends CommentBrowserTestBase {
     $edit['comment_bulk_form[0]'] = $anonymous_comment4->id();
     $this->drupalPostForm('admin/content/comment/approval', $edit, 'Apply to selected items');
 
-    $this->assertText('Publish comment was applied to 1 item.');
+    $this->assertSession()->pageTextContains('Publish comment was applied to 1 item.');
     $this->drupalLogout();
 
     $this->drupalGet('node/' . $this->node->id());
@@ -106,7 +106,7 @@ class CommentAdminTest extends CommentBrowserTestBase {
     // Publish multiple comments in one operation.
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/content/comment/approval');
-    $this->assertText('Unapproved comments (2)');
+    $this->assertSession()->pageTextContains('Unapproved comments (2)');
 
     // Assert the expose filters on the admin page.
     $this->assertSession()->fieldExists('subject');
@@ -119,11 +119,11 @@ class CommentAdminTest extends CommentBrowserTestBase {
       "comment_bulk_form[0]" => $comments[1]->id(),
     ];
     $this->submitForm($edit, 'Apply to selected items');
-    $this->assertText('Unapproved comments (0)');
+    $this->assertSession()->pageTextContains('Unapproved comments (0)');
 
     // Test message when no comments selected.
     $this->drupalPostForm('admin/content/comment', [], 'Apply to selected items');
-    $this->assertText('Select one or more comments to perform the update on.');
+    $this->assertSession()->pageTextContains('Select one or more comments to perform the update on.');
 
     $subject_link = $this->xpath('//table/tbody/tr/td/a[contains(@href, :href) and contains(@title, :title) and text()=:text]', [
       ':href' => $comments[0]->permalink()->toString(),
@@ -132,7 +132,7 @@ class CommentAdminTest extends CommentBrowserTestBase {
     ]);
     $this->assertTrue(!empty($subject_link), 'Comment listing shows the correct subject link.');
     // Verify that anonymous author name is displayed correctly.
-    $this->assertText($author_name . ' (not verified)');
+    $this->assertSession()->pageTextContains($author_name . ' (not verified)');
 
     $subject_link = $this->xpath('//table/tbody/tr/td/a[contains(@href, :href) and contains(@title, :title) and text()=:text]', [
       ':href' => $anonymous_comment4->permalink()->toString(),
@@ -141,7 +141,7 @@ class CommentAdminTest extends CommentBrowserTestBase {
     ]);
     $this->assertTrue(!empty($subject_link), 'Comment listing shows the correct subject link.');
     // Verify that anonymous author name is displayed correctly.
-    $this->assertText($author_name . ' (not verified)');
+    $this->assertSession()->pageTextContains($author_name . ' (not verified)');
 
     // Delete multiple comments in one operation.
     $edit = [
@@ -151,9 +151,9 @@ class CommentAdminTest extends CommentBrowserTestBase {
       "comment_bulk_form[2]" => $anonymous_comment4->id(),
     ];
     $this->submitForm($edit, 'Apply to selected items');
-    $this->assertText('Are you sure you want to delete these comments and all their children?');
+    $this->assertSession()->pageTextContains('Are you sure you want to delete these comments and all their children?');
     $this->submitForm([], 'Delete');
-    $this->assertText('No comments available.');
+    $this->assertSession()->pageTextContains('No comments available.');
 
     // Make sure the label of unpublished node is not visible on listing page.
     $this->drupalGet('admin/content/comment');
@@ -162,7 +162,7 @@ class CommentAdminTest extends CommentBrowserTestBase {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/content/comment');
     // Verify that comment admin can see the title of a published node.
-    $this->assertText(Html::escape($this->node->label()));
+    $this->assertSession()->pageTextContains(Html::escape($this->node->label()));
     $this->node->setUnpublished()->save();
     $this->assertFalse($this->node->isPublished(), 'Node is unpublished now.');
     $this->drupalGet('admin/content/comment');
@@ -177,7 +177,7 @@ class CommentAdminTest extends CommentBrowserTestBase {
     $this->drupalGet('admin/content/comment');
     // Verify that comment admin with bypass node access permissions can still
     // see the title of a published node.
-    $this->assertText(Html::escape($this->node->label()));
+    $this->assertSession()->pageTextContains(Html::escape($this->node->label()));
   }
 
   /**
@@ -222,11 +222,11 @@ class CommentAdminTest extends CommentBrowserTestBase {
     ]);
     $this->assertTrue(!empty($comment_author_link), 'Comment listing links to comment author.');
     // Admin page contains label of both entities.
-    $this->assertText(Html::escape($this->node->label()));
-    $this->assertText(Html::escape($block_content->label()));
+    $this->assertSession()->pageTextContains(Html::escape($this->node->label()));
+    $this->assertSession()->pageTextContains(Html::escape($block_content->label()));
     // Admin page contains subject of both entities.
-    $this->assertText(Html::escape($node_comment->label()));
-    $this->assertText(Html::escape($block_content_comment->label()));
+    $this->assertSession()->pageTextContains(Html::escape($node_comment->label()));
+    $this->assertSession()->pageTextContains(Html::escape($block_content_comment->label()));
   }
 
 }

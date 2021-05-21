@@ -44,7 +44,7 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
   public function testResponsiveImageAdmin() {
     // We start without any default styles.
     $this->drupalGet('admin/config/media/responsive-image-style');
-    $this->assertText('There are no responsive image styles yet.');
+    $this->assertSession()->pageTextContains('There are no responsive image styles yet.');
 
     // Add a responsive image style.
     $this->drupalGet('admin/config/media/responsive-image-style/add');
@@ -64,7 +64,7 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet('admin/config/media/responsive-image-style');
     $this->assertNoText('There are no responsive image styles yet.');
-    $this->assertText('Style One');
+    $this->assertSession()->pageTextContains('Style One');
 
     // Edit the group.
     $this->drupalGet('admin/config/media/responsive-image-style/style_one');
@@ -140,7 +140,7 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
     $this->drupalGet('admin/config/media/responsive-image-style/style_one/delete');
     $this->submitForm([], 'Delete');
     $this->drupalGet('admin/config/media/responsive-image-style');
-    $this->assertText('There are no responsive image styles yet.');
+    $this->assertSession()->pageTextContains('There are no responsive image styles yet.');
   }
 
 }

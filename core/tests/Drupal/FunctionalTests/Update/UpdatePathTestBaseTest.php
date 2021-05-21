@@ -66,7 +66,7 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
     $this->assertEquals('standard', \Drupal::config('core.extension')->get('profile'));
     $this->assertEquals('Site-Install', \Drupal::config('system.site')->get('name'));
     $this->drupalGet('<front>');
-    $this->assertText('Site-Install');
+    $this->assertSession()->pageTextContains('Site-Install');
 
     // Ensure that the database tasks have been run during set up. Neither MySQL
     // nor SQLite make changes that are testable.
