@@ -218,7 +218,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
    * @covers ::normalize
    */
   public function testNormalize() {
-    [$request, $resource_type] = $this->generateProphecies('node', 'article');
+    list($request, $resource_type) = $this->generateProphecies('node', 'article');
 
     $resource_object = ResourceObject::createFromEntity($resource_type, $this->node);
     $includes = $this->includeResolver->resolve($resource_object, 'uid,field_tags,field_image');
@@ -314,7 +314,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
   public function testNormalizeRelated() {
     $this->markTestIncomplete('This fails and should be fixed by https://www.drupal.org/project/drupal/issues/2922121');
 
-    [$request, $resource_type] = $this->generateProphecies('node', 'article', 'uid');
+    list($request, $resource_type) = $this->generateProphecies('node', 'article', 'uid');
     $request->query = new ParameterBag([
       'fields' => [
         'user--user' => 'name,roles',
@@ -349,7 +349,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
    * @covers ::normalize
    */
   public function testNormalizeUuid() {
-    [$request, $resource_type] = $this->generateProphecies('node', 'article', 'uuid');
+    list($request, $resource_type) = $this->generateProphecies('node', 'article', 'uuid');
     $resource_object = ResourceObject::createFromEntity($resource_type, $this->node);
     $include_param = 'uid,field_tags';
     $includes = $this->includeResolver->resolve($resource_object, $include_param);
@@ -439,7 +439,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     $this->assertSame('user_roles', $this->resourceTypeRepository->getByTypeName('user--user')->getPublicName('roles'));
 
     // Create the request to fetch the articles and fetch included user.
-    [$request, $resource_type] = $this->generateProphecies('node', 'article');
+    list($request, $resource_type) = $this->generateProphecies('node', 'article');
     $user = User::load($this->node->getOwnerId());
 
     $resource_object = ResourceObject::createFromEntity($resource_type, $this->node);
@@ -486,7 +486,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
    * @covers ::normalize
    */
   public function testNormalizeConfig() {
-    [$request, $resource_type] = $this->generateProphecies('node_type', 'node_type', 'id');
+    list($request, $resource_type) = $this->generateProphecies('node_type', 'node_type', 'id');
     $resource_object = ResourceObject::createFromEntity($resource_type, $this->nodeType);
     $document_wrapper = new JsonApiDocumentTopLevel(new ResourceObjectData([$resource_object], 1), new NullIncludedData(), new LinkCollection([]));
 
@@ -519,7 +519,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
   public function testDenormalize() {
     $payload = '{"data":{"type":"article","attributes":{"title":"Testing article"}}}';
 
-    [$request, $resource_type] = $this->generateProphecies('node', 'article', 'id');
+    list($request, $resource_type) = $this->generateProphecies('node', 'article', 'id');
     $node = $this
       ->getNormalizer()
       ->denormalize(Json::decode($payload), NULL, 'api_json', [
@@ -588,7 +588,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
       [$payload_data, $expected] = $this->denormalizeUuidProviderBuilder($configuration);
       $payload = Json::encode($payload_data);
 
-      [$request, $resource_type] = $this->generateProphecies('node', 'article');
+      list($request, $resource_type) = $this->generateProphecies('node', 'article');
       $this->container->get('request_stack')->push($request);
       try {
         $node = $this
@@ -658,7 +658,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
 
     // Test relationship member with invalid type.
     $payload = Json::encode($payload_data);
-    [$request, $resource_type] = $this->generateProphecies('node', 'article');
+    list($request, $resource_type) = $this->generateProphecies('node', 'article');
     $this->container->get('request_stack')->push($request);
     try {
       $this
@@ -677,7 +677,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     unset($payload_data['data']['relationships']['field_tags']['data'][0]['type']);
 
     $payload = Json::encode($payload_data);
-    [$request, $resource_type] = $this->generateProphecies('node', 'article');
+    list($request, $resource_type) = $this->generateProphecies('node', 'article');
     $this->container->get('request_stack')->push($request);
     try {
       $this->container->get('jsonapi_test_normalizers_kernel.jsonapi_document_toplevel')
@@ -760,7 +760,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
    * @dataProvider testCacheableMetadataProvider
    */
   public function testCacheableMetadata(CacheableMetadata $expected_metadata, $fields = NULL, $includes = NULL) {
-    [$request, $resource_type] = $this->generateProphecies('node', 'article');
+    list($request, $resource_type) = $this->generateProphecies('node', 'article');
     $resource_object = ResourceObject::createFromEntity($resource_type, $this->node);
     $context = [
       'resource_type' => $resource_type,
