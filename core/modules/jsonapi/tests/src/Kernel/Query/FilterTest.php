@@ -383,29 +383,29 @@ class FilterTest extends JsonapiKernelTestBase {
     $root = $filter->root();
 
     // Make sure the implicit root group was added.
-    $this->assertEquals($root->conjunction(), 'AND');
+    $this->assertEquals('AND', $root->conjunction());
 
     // Ensure the or-group and the and-group were added correctly.
     $members = $root->members();
 
     // Ensure the OR group was added.
     $or_group = $members[0];
-    $this->assertEquals($or_group->conjunction(), 'OR');
+    $this->assertEquals('OR', $or_group->conjunction());
     $or_group_members = $or_group->members();
 
     // Make sure the nested OR group was added with the right conditions.
     $nested_or_group = $or_group_members[0];
-    $this->assertEquals($nested_or_group->conjunction(), 'OR');
+    $this->assertEquals('OR', $nested_or_group->conjunction());
     $nested_or_group_members = $nested_or_group->members();
-    $this->assertEquals($nested_or_group_members[0]->field(), 'field0');
-    $this->assertEquals($nested_or_group_members[1]->field(), 'field1');
+    $this->assertEquals('field0', $nested_or_group_members[0]->field());
+    $this->assertEquals('field1', $nested_or_group_members[1]->field());
 
     // Make sure the nested AND group was added with the right conditions.
     $nested_and_group = $or_group_members[1];
-    $this->assertEquals($nested_and_group->conjunction(), 'AND');
+    $this->assertEquals('AND', $nested_and_group->conjunction());
     $nested_and_group_members = $nested_and_group->members();
-    $this->assertEquals($nested_and_group_members[0]->field(), 'field2');
-    $this->assertEquals($nested_and_group_members[1]->field(), 'field3');
+    $this->assertEquals('field2', $nested_and_group_members[0]->field());
+    $this->assertEquals('field3', $nested_and_group_members[1]->field());
   }
 
   /**

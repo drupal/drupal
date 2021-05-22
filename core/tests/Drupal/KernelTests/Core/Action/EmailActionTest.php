@@ -57,9 +57,9 @@ class EmailActionTest extends KernelTestBase {
       ->execute()
       ->fetch();
 
-    $this->assertEquals($log->message, 'Sent email to %recipient');
+    $this->assertEquals('Sent email to %recipient', $log->message);
     $variables = unserialize($log->variables);
-    $this->assertEquals($variables['%recipient'], 'test@example.com');
+    $this->assertEquals('test@example.com', $variables['%recipient']);
   }
 
 }

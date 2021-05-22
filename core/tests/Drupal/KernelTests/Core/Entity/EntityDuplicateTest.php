@@ -41,7 +41,7 @@ class EntityDuplicateTest extends EntityKernelTestBase {
 
     $duplicate_first_revision = $this->entityTestRevStorage->loadRevision($first_revision_id)->createDuplicate();
     $this->assertTrue($duplicate_first_revision->isDefaultRevision(), 'Duplicating a non-default revision creates a default revision.');
-    $this->assertEquals($duplicate_first_revision->label(), 'First Revision');
+    $this->assertEquals('First Revision', $duplicate_first_revision->label());
     $duplicate_first_revision->save();
 
     $duplicate_first_revision->name = 'Updated name';
