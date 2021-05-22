@@ -48,7 +48,7 @@ final class ExtensionLifecycle {
    * @return bool
    *   TRUE if the lifecycle is valid, otherwise FALSE.
    */
-  public static function isValid($lifecycle) : bool {
+  public static function isValid(string $lifecycle) : bool {
     $valid_values = [
       self::EXPERIMENTAL,
       self::STABLE,
