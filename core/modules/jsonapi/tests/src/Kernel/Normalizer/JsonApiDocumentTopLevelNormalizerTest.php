@@ -443,7 +443,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     $user = User::load($this->node->getOwnerId());
 
     $resource_object = ResourceObject::createFromEntity($resource_type, $this->node);
-    [$request, $user_resource_type] = $this->generateProphecies('user', 'user');
+    list($request, $user_resource_type) = $this->generateProphecies('user', 'user');
     $resource_object_user = LabelOnlyResourceObject::createFromEntity($user_resource_type, $user);
     $includes = $this->includeResolver->resolve($resource_object_user, 'user_roles');
 
@@ -585,7 +585,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     ];
 
     foreach ($configurations as $configuration) {
-      [$payload_data, $expected] = $this->denormalizeUuidProviderBuilder($configuration);
+      list($payload_data, $expected) = $this->denormalizeUuidProviderBuilder($configuration);
       $payload = Json::encode($payload_data);
 
       list($request, $resource_type) = $this->generateProphecies('node', 'article');
@@ -702,9 +702,9 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
    *   The test data.
    */
   protected function denormalizeUuidProviderBuilder(array $options) {
-    [$input, $expected] = $options;
-    [$input_tag_uuids, $input_user_uuid] = $input;
-    [$expected_tag_ids, $expected_user_id] = $expected;
+    list($input, $expected) = $options;
+    list($input_tag_uuids, $input_user_uuid) = $input;
+    list($expected_tag_ids, $expected_user_id) = $expected;
 
     $node = [
       [
