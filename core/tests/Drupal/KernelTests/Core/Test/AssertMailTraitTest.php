@@ -19,7 +19,7 @@ class AssertMailTraitTest extends KernelTestBase {
    * Tests that the maintenance theme initializes the theme and its base themes.
    */
   public function testAssertMailTrait() {
-    /* @var \Drupal\Core\Mail\MailManagerInterface $mail_service */
+    /** @var \Drupal\Core\Mail\MailManagerInterface $mail_service */
     $mail_service = \Drupal::service('plugin.manager.mail');
 
     // Create an email.

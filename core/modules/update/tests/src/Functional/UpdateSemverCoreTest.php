@@ -279,7 +279,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
     $this->config('update_test.settings')->set('system_info', $system_info)->save();
     $this->refreshUpdateStatus(['drupal' => 'dev']);
     $this->assertNoText('2001-Sep-');
-    $this->assertText('Up to date');
+    $this->assertSession()->pageTextContains('Up to date');
     $this->assertNoText('Update available');
     $this->assertNoText('Security update required!');
   }
@@ -334,7 +334,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
     $this->drupalGet('admin/reports/updates');
     $this->clickLink(t('Check manually'));
     $this->checkForMetaRefresh();
-    $this->assertText('Checked available update data for one project.');
+    $this->assertSession()->pageTextContains('Checked available update data for one project.');
     $this->drupalGet('admin/modules');
     $this->assertNoText('There are updates available for your version of Drupal.');
     $this->assertNoText('There is a security update available for your version of Drupal.');
@@ -356,9 +356,9 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
     $this->drupalGet('admin/reports/updates');
     $this->clickLink(t('Check manually'));
     $this->checkForMetaRefresh();
-    $this->assertText('Checked available update data for one project.');
+    $this->assertSession()->pageTextContains('Checked available update data for one project.');
     $this->drupalGet('admin/modules');
-    $this->assertText('There are updates available for your version of Drupal.');
+    $this->assertSession()->pageTextContains('There are updates available for your version of Drupal.');
     $this->assertNoText('There is a security update available for your version of Drupal.');
   }
 
@@ -378,15 +378,15 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
     $this->drupalGet('admin/reports/updates');
     $this->clickLink(t('Check manually'));
     $this->checkForMetaRefresh();
-    $this->assertText('Checked available update data for one project.');
+    $this->assertSession()->pageTextContains('Checked available update data for one project.');
     $this->drupalGet('admin/modules');
     $this->assertNoText('There are updates available for your version of Drupal.');
-    $this->assertText('There is a security update available for your version of Drupal.');
+    $this->assertSession()->pageTextContains('There is a security update available for your version of Drupal.');
 
     // Make sure admin/appearance warns you you're missing a security update.
     $this->drupalGet('admin/appearance');
     $this->assertNoText('There are updates available for your version of Drupal.');
-    $this->assertText('There is a security update available for your version of Drupal.');
+    $this->assertSession()->pageTextContains('There is a security update available for your version of Drupal.');
 
     // Make sure duplicate messages don't appear on Update status pages.
     $this->drupalGet('admin/reports/status');
@@ -449,7 +449,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
       ->save();
 
     $this->drupalGet('admin/reports/updates');
-    $this->assertText('Language');
+    $this->assertSession()->pageTextContains('Language');
   }
 
   /**

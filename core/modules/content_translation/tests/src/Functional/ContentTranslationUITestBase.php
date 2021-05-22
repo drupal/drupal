@@ -194,7 +194,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId);
     $this->drupalGet($entity->toUrl('drupal:content-translation-overview'));
-    $this->assertText('Source language');
+    $this->assertSession()->pageTextContains('Source language');
 
     // Check that the entered values have been correctly stored.
     foreach ($values as $langcode => $property_values) {

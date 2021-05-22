@@ -38,7 +38,7 @@ class DeleteFeedTest extends AggregatorTestBase {
 
     // Delete feed.
     $this->deleteFeed($feed1);
-    $this->assertText($feed2->label());
+    $this->assertSession()->pageTextContains($feed2->label());
     $block_storage = $this->container->get('entity_type.manager')->getStorage('block');
     $this->assertNull($block_storage->load($block->id()), 'Block for the deleted feed was deleted.');
     $this->assertEquals($block2->id(), $block_storage->load($block2->id())->id(), 'Block for not deleted feed still exists.');

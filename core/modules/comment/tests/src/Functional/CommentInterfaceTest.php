@@ -85,8 +85,8 @@ class CommentInterfaceTest extends CommentTestBase {
     // Check comment display.
     $this->drupalLogin($this->webUser);
     $this->drupalGet('node/' . $this->node->id());
-    $this->assertText($subject_text);
-    $this->assertText($comment_text);
+    $this->assertSession()->pageTextContains($subject_text);
+    $this->assertSession()->pageTextContains($comment_text);
     $arguments = [
       ':link' => base_path() . 'comment/' . $comment->id() . '#comment-' . $comment->id(),
     ];
@@ -132,8 +132,8 @@ class CommentInterfaceTest extends CommentTestBase {
     // Verify we were correctly redirected.
     $this->assertSession()->addressEquals(Url::fromRoute('comment.reply', ['entity_type' => 'node', 'entity' => $this->node->id(), 'field_name' => 'comment']));
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment/' . $comment->id());
-    $this->assertText($subject_text);
-    $this->assertText($comment_text);
+    $this->assertSession()->pageTextContains($subject_text);
+    $this->assertSession()->pageTextContains($comment_text);
     $reply = $this->postComment(NULL, $this->randomMachineName(), '', TRUE);
     $reply_loaded = Comment::load($reply->id());
     $this->assertTrue($this->commentExists($reply, TRUE), 'Reply found.');
@@ -143,8 +143,8 @@ class CommentInterfaceTest extends CommentTestBase {
 
     // Second reply to comment #2 creating comment #4.
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment/' . $comment->id());
-    $this->assertText($comment->getSubject());
-    $this->assertText($comment->comment_body->value);
+    $this->assertSession()->pageTextContains($comment->getSubject());
+    $this->assertSession()->pageTextContains($comment->comment_body->value);
     $reply = $this->postComment(NULL, $this->randomMachineName(), $this->randomMachineName(), TRUE);
     $reply_loaded = Comment::load($reply->id());
     $this->assertTrue($this->commentExists($reply, TRUE), 'Second reply found.');
@@ -153,8 +153,8 @@ class CommentInterfaceTest extends CommentTestBase {
 
     // Reply to comment #4 creating comment #5.
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment/' . $reply_loaded->id());
-    $this->assertText($reply_loaded->getSubject());
-    $this->assertText($reply_loaded->comment_body->value);
+    $this->assertSession()->pageTextContains($reply_loaded->getSubject());
+    $this->assertSession()->pageTextContains($reply_loaded->comment_body->value);
     $reply = $this->postComment(NULL, $this->randomMachineName(), $this->randomMachineName(), TRUE);
     $reply_loaded = Comment::load($reply->id());
     $this->assertTrue($this->commentExists($reply, TRUE), 'Second reply found.');

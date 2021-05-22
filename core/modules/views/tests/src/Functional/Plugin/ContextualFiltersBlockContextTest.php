@@ -129,13 +129,13 @@ class ContextualFiltersBlockContextTest extends ViewTestBase {
 
     // Make sure view behaves as expected.
     $this->drupalGet('<front>');
-    $this->assertText('Test view: No results found.');
+    $this->assertSession()->pageTextContains('Test view: No results found.');
 
     $this->drupalGet($this->nodes[0]->toUrl());
-    $this->assertText('Test view row: First test node');
+    $this->assertSession()->pageTextContains('Test view row: First test node');
 
     $this->drupalGet($this->nodes[1]->toUrl());
-    $this->assertText('Test view row: Second test node');
+    $this->assertSession()->pageTextContains('Test view row: Second test node');
 
     // Check the second block which should expose two integer contexts, one
     // based on the numeric plugin and the other based on numeric validation.
