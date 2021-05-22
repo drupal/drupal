@@ -884,7 +884,7 @@ class WebAssert extends MinkWebAssert {
    *   space. Defaults to FALSE.
    *
    * @return string
-   *   The cleanud up page text.
+   *   The cleaned up page text.
    */
   private function getCleanedUpPageText(bool $pack = FALSE): string {
     $dom = new \DOMDocument();
