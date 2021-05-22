@@ -93,8 +93,7 @@ class BlockUiTest extends BrowserTestBase {
     $this->drupalPlaceBlock('help_block', ['region' => 'help']);
     $this->drupalGet('admin/structure/block');
     $this->clickLink(t('Demonstrate block regions (@theme)', ['@theme' => 'Classy']));
-    $elements = $this->xpath('//div[contains(@class, "region-highlighted")]/div[contains(@class, "block-region") and contains(text(), :title)]', [':title' => 'Highlighted']);
-    $this->assertTrue(!empty($elements), 'Block demo regions are shown.');
+    $this->assertSession()->elementExists('xpath', '//div[contains(@class, "region-highlighted")]/div[contains(@class, "block-region") and contains(text(), "Highlighted")]');
 
     // Ensure that other themes can use the block demo page.
     \Drupal::service('theme_installer')->install(['test_theme']);
@@ -201,16 +200,10 @@ class BlockUiTest extends BrowserTestBase {
    * Tests the behavior of unsatisfied context-aware blocks.
    */
   public function testContextAwareUnsatisfiedBlocks() {
-    $arguments = [
-      ':category' => 'Block test',
-      ':href' => 'admin/structure/block/add/test_context_aware_unsatisfied/classy',
-      ':text' => 'Test context-aware unsatisfied block',
-    ];
-
     $this->drupalGet('admin/structure/block');
     $this->clickLink('Place block');
-    $elements = $this->xpath('//tr[.//td/div[text()=:text] and .//td[text()=:category] and .//td//a[contains(@href, :href)]]', $arguments);
-    $this->assertTrue(empty($elements), 'The context-aware test block does not appear.');
+    // Verify that the context-aware test block does not appear.
+    $this->assertSession()->elementNotExists('xpath', '//tr[.//td/div[text()="Test context-aware unsatisfied block"] and .//td[text()="Block test"] and .//td//a[contains(@href, "admin/structure/block/add/test_context_aware_unsatisfied/classy")]]');
 
     $definition = \Drupal::service('plugin.manager.block')->getDefinition('test_context_aware_unsatisfied');
     $this->assertTrue(!empty($definition), 'The context-aware test block does not exist.');
@@ -246,8 +239,8 @@ class BlockUiTest extends BrowserTestBase {
     $this->drupalPostForm($block_url, $edit, 'Save block');
 
     $this->drupalGet('');
-    $this->assertText('Test context-aware block');
-    $this->assertText('User context found.');
+    $this->assertSession()->pageTextContains('Test context-aware block');
+    $this->assertSession()->pageTextContains('User context found.');
     $this->assertRaw($expected_text);
 
     // Test context mapping form element is not visible if there are no valid
@@ -264,7 +257,7 @@ class BlockUiTest extends BrowserTestBase {
     ];
     $this->submitForm($edit, 'Save block');
     $this->drupalGet('');
-    $this->assertText('No context mapping selected.');
+    $this->assertSession()->pageTextContains('No context mapping selected.');
     $this->assertNoText('User context found.');
 
     // Tests that conditions with missing context are not displayed.
@@ -284,13 +277,13 @@ class BlockUiTest extends BrowserTestBase {
     $this->assertSession()->fieldValueEquals('id', 'displaymessage');
     $edit = ['region' => 'content'];
     $this->drupalPostForm($url, $edit, 'Save block');
-    $this->assertText('The block configuration has been saved.');
+    $this->assertSession()->pageTextContains('The block configuration has been saved.');
 
     // Now, check to make sure the form starts by autoincrementing correctly.
     $this->drupalGet($url);
     $this->assertSession()->fieldValueEquals('id', 'displaymessage_2');
     $this->drupalPostForm($url, $edit, 'Save block');
-    $this->assertText('The block configuration has been saved.');
+    $this->assertSession()->pageTextContains('The block configuration has been saved.');
 
     // And verify that it continues working beyond just the first two.
     $this->drupalGet($url);

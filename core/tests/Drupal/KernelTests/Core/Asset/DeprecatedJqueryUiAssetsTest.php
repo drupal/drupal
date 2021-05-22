@@ -23,11 +23,11 @@ class DeprecatedJqueryUiAssetsTest extends KernelTestBase {
       'jquery.ui' => '291c28f873a71cd6b3116218d1f5da22',
       'jquery.ui.autocomplete' => '153f2836f8f2da39767208b6e09cb5b4',
       'jquery.ui.button' => 'ad23e5de0fa1de1f511d10ba2e10d2dd',
-      'jquery.ui.dialog' => '729090e5ddcd8563ddade80c3dabc87c',
+      'jquery.ui.dialog' => '6521b8917536afe00f35055da4ec466c',
       'jquery.ui.draggable' => 'af0f2bdc8aa4ade1e3de8042f31a9312',
       'jquery.ui.menu' => '7d0c4d57f43d2f881d2cd5e5b79effbb',
       'jquery.ui.mouse' => '626bb203807fa2cdc62510412685df4a',
-      'jquery.ui.position' => '6d1759c7d3eb94accbed78416487469b',
+      'jquery.ui.position' => 'fec1ca376f2b1cb9b0ca3db36be848c2',
       'jquery.ui.resizable' => 'a2448fa87071a17a9756f39c9becb70d',
       'jquery.ui.widget' => 'eacd675de09572383b58e52309ba2245',
     ];
@@ -41,7 +41,7 @@ class DeprecatedJqueryUiAssetsTest extends KernelTestBase {
 
       // Confirm that the libraries extending jQuery UI functionality depend on
       // core/jquery.ui directly or via a dependency on core/jquery.ui.widget.
-      if ($library !== 'jquery.ui' && $library !== 'jquery.ui.dialog') {
+      if (!in_array($library, ['jquery.ui', 'jquery.ui.dialog', 'jquery.ui.position'])) {
         $has_main_or_widget = (in_array('core/jquery.ui', $library_definition['dependencies']) || in_array('core/jquery.ui.widget', $library_definition['dependencies']));
         $this->assertTrue($has_main_or_widget, "$library must depend on core/jquery.ui or core/jquery.ui.widget");
       }

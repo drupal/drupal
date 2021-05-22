@@ -65,9 +65,9 @@ class PageTitleTest extends BrowserTestBase {
     // Make sure tags in the node title are converted.
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->assertNotNull($node, 'Node created and found in database');
-    $this->assertText(Html::escape($edit['title[0][value]']));
+    $this->assertSession()->responseContains(Html::escape($edit['title[0][value]']));
     $this->drupalGet("node/" . $node->id());
-    $this->assertText(Html::escape($edit['title[0][value]']));
+    $this->assertSession()->responseContains(Html::escape($edit['title[0][value]']));
   }
 
   /**
@@ -119,14 +119,14 @@ class PageTitleTest extends BrowserTestBase {
 
     $this->assertSession()->titleEquals('Foo | Drupal');
     $result = $this->xpath('//h1[@class="page-title"]');
-    $this->assertEqual('Foo', $result[0]->getText());
+    $this->assertEquals('Foo', $result[0]->getText());
 
     // Test forms
     $this->drupalGet('form-test/object-builder');
 
     $this->assertSession()->titleEquals('Test dynamic title | Drupal');
     $result = $this->xpath('//h1[@class="page-title"]');
-    $this->assertEqual('Test dynamic title', $result[0]->getText());
+    $this->assertEquals('Test dynamic title', $result[0]->getText());
 
     // Set some custom translated strings.
     $settings_key = 'locale_custom_strings_en';
@@ -151,14 +151,14 @@ class PageTitleTest extends BrowserTestBase {
 
     $this->assertSession()->titleEquals('Static title translated | Drupal');
     $result = $this->xpath('//h1[@class="page-title"]');
-    $this->assertEqual('Static title translated', $result[0]->getText());
+    $this->assertEquals('Static title translated', $result[0]->getText());
 
     // Test the dynamic '_title_callback' route option.
     $this->drupalGet('test-page-dynamic-title');
 
     $this->assertSession()->titleEquals('Dynamic title | Drupal');
     $result = $this->xpath('//h1[@class="page-title"]');
-    $this->assertEqual('Dynamic title', $result[0]->getText());
+    $this->assertEquals('Dynamic title', $result[0]->getText());
 
     // Ensure that titles are cacheable and are escaped normally if the
     // controller does not escape them.

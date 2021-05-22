@@ -85,7 +85,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
   protected function doTestLanguageBlockAuthenticated($block_label) {
     // Assert that the language switching block is displayed on the frontpage.
     $this->drupalGet('');
-    $this->assertText($block_label);
+    $this->assertSession()->pageTextContains($block_label);
 
     // Assert that each list item and anchor element has the appropriate data-
     // attributes.
@@ -139,7 +139,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
     // Assert that the language switching block is displayed on the frontpage
     // and ensure that the active class is added when query params are present.
     $this->drupalGet('', ['query' => ['foo' => 'bar']]);
-    $this->assertText($block_label);
+    $this->assertSession()->pageTextContains($block_label);
 
     // Assert that only the current language is marked as active.
     $language_switchers = $this->xpath('//div[@id=:id]/ul/li', [':id' => 'block-test-language-block']);
@@ -203,7 +203,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
       'domain[en]' => '',
     ];
     $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, 'Save configuration');
-    $this->assertText('The domain may not be left blank for English');
+    $this->assertSession()->pageTextContains('The domain may not be left blank for English');
 
     // Change the domain for the Italian language.
     $edit = [
@@ -212,7 +212,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
       'domain[it]' => 'it.example.com',
     ];
     $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, 'Save configuration');
-    $this->assertText('The configuration options have been saved');
+    $this->assertSession()->pageTextContains('The configuration options have been saved');
 
     // Enable the language switcher block.
     $this->drupalPlaceBlock('language_block:' . LanguageInterface::TYPE_INTERFACE, ['id' => 'test_language_block']);
@@ -223,20 +223,12 @@ class LanguageSwitchingTest extends BrowserTestBase {
     $generator = $this->container->get('url_generator');
 
     // Verify the English URL is correct
-    list($english_link) = $this->xpath('//div[@id=:id]/ul/li/a[@hreflang=:hreflang]', [
-      ':id' => 'block-test-language-block',
-      ':hreflang' => 'en',
-    ]);
     $english_url = $generator->generateFromRoute('entity.user.canonical', ['user' => 2], ['language' => $languages['en']]);
-    $this->assertEqual($english_link->getAttribute('href'), $english_url);
+    $this->assertSession()->elementAttributeContains('xpath', '//div[@id="block-test-language-block"]/ul/li/a[@hreflang="en"]', 'href', $english_url);
 
     // Verify the Italian URL is correct
-    list($italian_link) = $this->xpath('//div[@id=:id]/ul/li/a[@hreflang=:hreflang]', [
-      ':id' => 'block-test-language-block',
-      ':hreflang' => 'it',
-    ]);
     $italian_url = $generator->generateFromRoute('entity.user.canonical', ['user' => 2], ['language' => $languages['it']]);
-    $this->assertEqual($italian_link->getAttribute('href'), $italian_url);
+    $this->assertSession()->elementAttributeContains('xpath', '//div[@id="block-test-language-block"]/ul/li/a[@hreflang="it"]', 'href', $italian_url);
   }
 
   /**

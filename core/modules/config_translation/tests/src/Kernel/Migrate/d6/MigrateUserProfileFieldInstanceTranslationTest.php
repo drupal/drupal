@@ -26,6 +26,7 @@ class MigrateUserProfileFieldInstanceTranslationTest extends MigrateDrupal6TestB
    */
   public function testUserProfileFields() {
     $this->executeMigrations([
+      'language',
       'user_profile_field',
       'user_profile_field_instance',
       'd6_user_profile_field_instance_translation',

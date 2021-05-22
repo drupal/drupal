@@ -89,7 +89,7 @@ class TrackerTest extends BrowserTestBase {
 
     $this->drupalGet('activity');
     $this->assertNoText($unpublished->label());
-    $this->assertText($published->label());
+    $this->assertSession()->pageTextContains($published->label());
     $this->assertSession()->linkExists('My recent content', 0, 'User tab shows up on the global tracker page.');
 
     // Assert cache contexts, specifically the pager and node access contexts.
@@ -135,8 +135,8 @@ class TrackerTest extends BrowserTestBase {
     ]);
 
     $this->drupalGet('activity');
-    $this->assertText($node->label());
-    $this->assertText(\Drupal::service('date.formatter')->formatTimeDiffSince($node->getChangedTime()));
+    $this->assertSession()->pageTextContains($node->label());
+    $this->assertSession()->pageTextContains(\Drupal::service('date.formatter')->formatTimeDiffSince($node->getChangedTime()));
   }
 
   /**
@@ -173,9 +173,9 @@ class TrackerTest extends BrowserTestBase {
 
     $this->drupalGet('user/' . $this->user->id() . '/activity');
     $this->assertNoText($unpublished->label());
-    $this->assertText($my_published->label());
+    $this->assertSession()->pageTextContains($my_published->label());
     $this->assertNoText($other_published_no_comment->label());
-    $this->assertText($other_published_my_comment->label());
+    $this->assertSession()->pageTextContains($other_published_my_comment->label());
 
     // Assert cache contexts.
     $this->assertCacheContexts(['languages:language_interface', 'route', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'url.query_args.pagers:0', 'user', 'user.node_grants:view']);
@@ -210,7 +210,7 @@ class TrackerTest extends BrowserTestBase {
     $this->assertSession()->linkExists($my_published->label());
     $this->assertSession()->linkNotExists($unpublished->label());
     // Verify that title and tab title have been set correctly.
-    $this->assertText('Activity');
+    $this->assertSession()->pageTextContains('Activity');
     $this->assertSession()->titleEquals($this->user->getAccountName() . ' | Drupal');
 
     // Verify that unpublished comments are removed from the tracker.
@@ -404,7 +404,7 @@ class TrackerTest extends BrowserTestBase {
 
     // Assert that all node titles are displayed.
     foreach ($nodes as $i => $node) {
-      $this->assertText($node->label());
+      $this->assertSession()->pageTextContains($node->label());
     }
 
     // Fetch the site-wide tracker.
@@ -412,7 +412,7 @@ class TrackerTest extends BrowserTestBase {
 
     // Assert that all node titles are displayed.
     foreach ($nodes as $i => $node) {
-      $this->assertText($node->label());
+      $this->assertSession()->pageTextContains($node->label());
     }
   }
 
@@ -434,7 +434,7 @@ class TrackerTest extends BrowserTestBase {
 
     // Assert that the node is displayed.
     $this->drupalGet('activity');
-    $this->assertText($node->label());
+    $this->assertSession()->pageTextContains($node->label());
 
     // Unpublish the node and ensure that it's no longer displayed.
     $edit = [
@@ -444,7 +444,7 @@ class TrackerTest extends BrowserTestBase {
     $this->drupalPostForm('admin/content', $edit, 'Apply to selected items');
 
     $this->drupalGet('activity');
-    $this->assertText('No content available.');
+    $this->assertSession()->pageTextContains('No content available.');
   }
 
   /**

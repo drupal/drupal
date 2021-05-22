@@ -172,7 +172,7 @@ class LinkFieldUITest extends BrowserTestBase {
     // generate warnings.
     // @todo Mess with the formatter settings a bit here.
     $this->drupalGet("$type_path/display");
-    $this->assertText('Link text trimmed to 80 characters');
+    $this->assertSession()->pageTextContains('Link text trimmed to 80 characters');
 
     // Make the fields visible in the form display.
     $form_display_id = implode('.', ['node', $this->contentType->id(), 'default']);

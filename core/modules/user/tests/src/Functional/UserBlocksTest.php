@@ -55,12 +55,11 @@ class UserBlocksTest extends BrowserTestBase {
     ];
     foreach ($paths as $path => $expected_visibility) {
       $this->drupalGet($path);
-      $elements = $this->xpath('//div[contains(@class,"block-user-login-block") and @role="form"]');
       if ($expected_visibility) {
-        $this->assertTrue(!empty($elements), 'User login block in path "' . $path . '" should be visible');
+        $this->assertSession()->elementExists('xpath', '//div[contains(@class,"block-user-login-block") and @role="form"]');
       }
       else {
-        $this->assertTrue(empty($elements), 'User login block in path "' . $path . '" should not be visible');
+        $this->assertSession()->elementNotExists('xpath', '//div[contains(@class,"block-user-login-block") and @role="form"]');
       }
     }
   }
@@ -125,7 +124,7 @@ class UserBlocksTest extends BrowserTestBase {
     $edit['name'] = 'foo';
     $edit['pass'] = 'invalid password';
     $this->drupalPostForm('filter/tips', $edit, 'Log in');
-    $this->assertText('Unrecognized username or password. Forgot your password?');
+    $this->assertSession()->pageTextContains('Unrecognized username or password. Forgot your password?');
     $this->drupalGet('filter/tips');
     $this->assertNoText('Unrecognized username or password. Forgot your password?');
   }

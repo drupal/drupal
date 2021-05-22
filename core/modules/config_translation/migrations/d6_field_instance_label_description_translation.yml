@@ -55,3 +55,4 @@ destination:
 migration_dependencies:
   required:
     - d6_field_instance
+    - language

@@ -80,7 +80,7 @@ class InlineBlockTest extends InlineBlockTestBase {
 
     // Confirm the block can be edited.
     $this->drupalGet('node/1/layout');
-    /* @var \Behat\Mink\Element\NodeElement $inline_block_2 */
+    /** @var \Behat\Mink\Element\NodeElement $inline_block_2 */
     $inline_block_2 = $page->findAll('css', static::INLINE_BLOCK_LOCATOR)[1];
     $uuid = $inline_block_2->getAttribute('data-layout-block-uuid');
     $block_css_locator = static::INLINE_BLOCK_LOCATOR . "[data-layout-block-uuid=\"$uuid\"]";
@@ -142,7 +142,7 @@ class InlineBlockTest extends InlineBlockTestBase {
     $assert_session->pageTextContains('The block body');
     $blocks = $this->blockStorage->loadMultiple();
     $this->assertCount(1, $blocks);
-    /* @var \Drupal\Core\Entity\ContentEntityBase $block */
+    /** @var \Drupal\Core\Entity\ContentEntityBase $block */
     $block = array_pop($blocks);
     $revision_id = $block->getRevisionId();
 

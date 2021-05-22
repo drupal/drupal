@@ -111,7 +111,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     $file1 = File::load($max_fid_after);
     $this->assertInstanceOf(File::class, $file1);
     // MIME type of the uploaded image may be either image/jpeg or image/png.
-    $this->assertEqual('image', substr($file1->getMimeType(), 0, 5), 'A MIME type was set.');
+    $this->assertEquals('image', substr($file1->getMimeType(), 0, 5), 'A MIME type was set.');
 
     // Reset the hook counters to get rid of the 'load' we just called.
     file_test_reset();
@@ -135,7 +135,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     $file2 = File::load($max_fid_after);
     $this->assertInstanceOf(File::class, $file2);
     // MIME type of the uploaded image may be either image/jpeg or image/png.
-    $this->assertEqual('image', substr($file2->getMimeType(), 0, 5), 'A MIME type was set.');
+    $this->assertEquals('image', substr($file2->getMimeType(), 0, 5), 'A MIME type was set.');
 
     // Load both files using File::loadMultiple().
     $files = File::loadMultiple([$file1->id(), $file2->id()]);
@@ -485,7 +485,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
 
     // Ensure the expected error message is present and the counts before and
     // after calling _file_save_upload_from_form() are correct.
-    $this->assertText($error);
+    $this->assertSession()->pageTextContains($error);
     $this->assertRaw('Number of error messages before _file_save_upload_from_form(): 1');
     $this->assertRaw('Number of error messages after _file_save_upload_from_form(): 1');
 
@@ -501,7 +501,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
 
     // Ensure the expected error message is present and the counts before and
     // after calling _file_save_upload_from_form() are correct.
-    $this->assertText($error);
+    $this->assertSession()->pageTextContains($error);
     $this->assertRaw('Number of error messages before _file_save_upload_from_form(): 1');
     $this->assertRaw('Number of error messages after _file_save_upload_from_form(): 1');
 

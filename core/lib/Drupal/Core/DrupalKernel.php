@@ -1233,7 +1233,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $path = 'core/lib/Drupal/' . $parent_directory;
       $parent_namespace = 'Drupal\\' . $parent_directory;
       foreach (new \DirectoryIterator($this->root . '/' . $path) as $component) {
-        /** @var $component \DirectoryIterator */
+        /** @var \DirectoryIterator $component */
         $pathname = $component->getPathname();
         if (!$component->isDot() && $component->isDir() && (
           is_dir($pathname . '/Plugin') ||
