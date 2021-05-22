@@ -499,7 +499,7 @@ class LayoutBuilderTest extends BrowserTestBase {
 
     $this->drupalGet('node/1/layout');
     $assert_session->pageTextNotContains('The first node body');
-    $assert_session->pageTextContains('Access denied');
+    $assert_session->responseContains('Access denied');
   }
 
   /**
@@ -973,8 +973,8 @@ class LayoutBuilderTest extends BrowserTestBase {
     $this->drupalGet('node/1');
     $assert_session->responseContains('The first node title');
     $page->clickLink('Layout');
-    $assert_session->pageTextNotContains('The first node title');
-    $assert_session->pageTextContains('The pending title of the first node');
+    $assert_session->responseNotContains('The first node title');
+    $assert_session->responseContains('The pending title of the first node');
   }
 
   /**

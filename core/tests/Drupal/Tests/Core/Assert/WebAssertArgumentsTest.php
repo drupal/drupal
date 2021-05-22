@@ -50,7 +50,7 @@ class WebAssertArgumentsTest extends UnitTestCase {
     parent::setUp();
 
     $this->page = $this->prophesize(DocumentElement::class);
-    $this->page->getHtml()->willReturn('');
+    $this->page->getHtml()->willReturn('<html/>');
     $this->session = $this->prophesize(Session::class);
     $this->session->getPage()->willReturn($this->page->reveal());
     $this->webAssert = new WebAssert($this->getSession());

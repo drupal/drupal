@@ -253,7 +253,7 @@ class WorkflowUiTest extends BrowserTestBase {
 
     // Delete the Draft state.
     $this->clickLink('Delete');
-    $this->assertSession()->pageTextContains('Are you sure you want to delete Draft from Test?');
+    $this->assertSession()->responseContains('Are you sure you want to delete Draft from Test?');
     $this->submitForm([], 'Delete');
     $this->assertSession()->pageTextContains('State Draft deleted.');
     $workflow = $workflow_storage->loadUnchanged('test');
