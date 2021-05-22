@@ -143,3 +143,4 @@ destination:
 migration_dependencies:
   required:
     - d6_field
+    - language

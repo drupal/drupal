@@ -40,3 +40,4 @@ migration_dependencies:
   required:
     - d6_taxonomy_vocabulary
     - d6_taxonomy_term
+    - language

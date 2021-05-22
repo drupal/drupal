@@ -28,6 +28,7 @@ class MigrateUserConfigsTranslationTest extends MigrateDrupal6TestBase {
     $this->installSchema('locale',
       ['locales_source', 'locales_target', 'locales_location']);
     $this->executeMigrations([
+      'language',
       'd6_user_mail',
       'd6_user_settings',
       'd6_user_mail_translation',

@@ -39,6 +39,7 @@ class MigrateTaxonomyTermTranslationTest extends MigrateDrupal6TestBase {
     $this->installEntitySchema('taxonomy_term');
     $this->installConfig(static::$modules);
     $this->executeMigrations([
+      'language',
       'd6_node_type',
       'd6_field',
       'd6_taxonomy_vocabulary',
