@@ -890,10 +890,14 @@ class WebAssert extends MinkWebAssert {
     $dom = new \DOMDocument();
     // Suppress libxml warnings when loading HTML 5 content.
     @$dom->loadHTML($this->session->getPage()->getHtml());
+    // dump(['pre-', $dom->textContent]);
     $body = $dom->getElementsByTagName('body')[0];
-    foreach ($body->getElementsByTagName('script') as $item) {
-      $item->parentNode->removeChild($item);
+    $items = $body->getElementsByTagName('script');
+    while ($items->count() > 0) {
+      $items->item(0)->parentNode->removeChild($items->item(0));
+      $items = $body->getElementsByTagName('script');
     }
+    // dump(['post', ($pack ? preg_replace('/\s+/u', ' ', $body->textContent) : $body->textContent)]);
     return $pack ? preg_replace('/\s+/u', ' ', $body->textContent) : $body->textContent;
   }
 
