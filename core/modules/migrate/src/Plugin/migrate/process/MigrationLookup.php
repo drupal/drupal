@@ -69,7 +69,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @endcode
  *
  * It's not required to describe source identifiers for each migration. If the
- * source identifier for migration is not specified, the default source value
+ * source identifier for a migration is not specified, the default source value
  * will be used. In the example below, the 'author' source property will be used
  * to do a lookup in the 'users' migration, and the 'uid' property in the
  * 'members' migration.
@@ -205,7 +205,7 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
         $lookup_value = array_values($row->getMultiple($this->configuration['source_ids'][$lookup_migration_id]));
       }
       if (!is_array($lookup_value)) {
-        $lookup_value = [$lookup_value];
+        $lookup_value = (array) $lookup_value;
       }
       $this->skipInvalid($lookup_value);
       $source_id_values[$lookup_migration_id] = $lookup_value;
