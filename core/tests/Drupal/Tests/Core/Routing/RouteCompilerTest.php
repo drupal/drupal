@@ -57,7 +57,7 @@ class RouteCompilerTest extends UnitTestCase {
     $route->setOption('compiler_class', RouteCompiler::class);
     $compiled = $route->compile();
 
-    $this->assertEquals(5, $compiled->getFit() /* That's 101 binary*/, 'The fit was incorrect.');
+    $this->assertEquals(5 /* That's 101 binary*/, $compiled->getFit(), 'The fit was incorrect.');
     $this->assertEquals('/test/%/more', $compiled->getPatternOutline(), 'The pattern outline was not correct.');
   }
 
@@ -73,7 +73,7 @@ class RouteCompilerTest extends UnitTestCase {
     $route->setOption('compiler_class', RouteCompiler::class);
     $compiled = $route->compile();
 
-    $this->assertEquals(5, $compiled->getFit() /* That's 101 binary*/, 'The fit was not correct.');
+    $this->assertEquals(5  /* That's 101 binary*/, $compiled->getFit(), 'The fit was not correct.');
     $this->assertEquals('/test/%/more', $compiled->getPatternOutline(), 'The pattern outline was not correct.');
   }
 
