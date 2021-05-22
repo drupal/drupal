@@ -19,7 +19,22 @@ class RequestStack extends SymfonyRequestStack {
    *   The main request.
    */
   public function getMainRequest(): ?Request {
-    return $this->getMasterRequest();
+    if (method_exists(SymfonyRequestStack::class, 'getMainRequest')) {
+      return parent::getMainRequest();
+    }
+    else {
+      return parent::getMasterRequest();
+    }
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMasterRequest() {
+    trigger_deprecation('symfony/http-foundation', '5.3', '"%s()" is deprecated, use "getMainRequest()" instead.', __METHOD__);
+
+    return $this->getMainRequest();
+  }
+
 
 }
