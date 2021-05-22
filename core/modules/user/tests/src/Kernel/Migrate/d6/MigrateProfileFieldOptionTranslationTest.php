@@ -29,6 +29,7 @@ class MigrateProfileFieldOptionTranslationTest extends MigrateDrupal6TestBase {
     $this->executeMigrations([
       'language',
       'user_profile_field',
+      'user_profile_field_instance',
       'd6_profile_field_option_translation',
     ]);
   }
