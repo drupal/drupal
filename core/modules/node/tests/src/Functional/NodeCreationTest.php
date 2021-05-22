@@ -54,7 +54,7 @@ class NodeCreationTest extends NodeTestBase {
     $admin_content_types = $this->drupalCreateUser(['bypass node access']);
     $this->drupalLogin($admin_content_types);
     $this->drupalGet('node/add');
-    $this->assertSession()->pageTextMatches('/Aaa Bundle 2(.*)Bundle 1/');
+    $this->assertSession()->responseMatches('/Aaa Bundle 2(.*)Bundle 1/');
   }
 
   /**

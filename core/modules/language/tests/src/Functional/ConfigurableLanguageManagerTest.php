@@ -128,7 +128,7 @@ class ConfigurableLanguageManagerTest extends BrowserTestBase {
     // See if the full view of the node in english is present and the
     // string in the Powered By Block is in English.
     $this->drupalGet('/node/1');
-    $assert_session->pageTextContains('English');
+    $assert_session->responseContains('English');
     $assert_session->pageTextContains('Powered by');
 
     // Load the spanish node page again and see if both the node and the string
@@ -169,7 +169,7 @@ class ConfigurableLanguageManagerTest extends BrowserTestBase {
     // See if the full view of the node in english is present and the
     // string in the Powered By Block is in English.
     $this->drupalGet('/node/1');
-    $assert_session->pageTextContains('English');
+    $assert_session->responseContains('English');
     $assert_session->pageTextContains('Powered by');
 
     // The language session variable has not been set yet, so

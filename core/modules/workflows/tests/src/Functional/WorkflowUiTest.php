@@ -192,7 +192,7 @@ class WorkflowUiTest extends BrowserTestBase {
     $workflow = $workflow_storage->loadUnchanged('test');
     $this->assertTrue($workflow->getTypePlugin()->hasTransitionFromStateToState('published', 'published'), 'Can transition from published to published');
     $this->clickLink('Delete');
-    $this->assertSession()->pageTextContains('Are you sure you want to delete Save and publish from Test?');
+    $this->assertSession()->responseContains('Are you sure you want to delete Save and publish from Test?');
     $this->submitForm([], 'Delete');
     $workflow = $workflow_storage->loadUnchanged('test');
     $this->assertFalse($workflow->getTypePlugin()->hasTransitionFromStateToState('published', 'published'), 'Cannot transition from published to published');

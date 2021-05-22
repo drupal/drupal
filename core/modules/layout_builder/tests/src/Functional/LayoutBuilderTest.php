@@ -465,7 +465,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     // Install module that decorates controller.entity_form.
     \Drupal::service('module_installer')->install(['layout_builder_decoration_test']);
     $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default');
-    $assert_session->pageTextContains('Manage Display');
+    $assert_session->responseContains('Manage Display');
   }
 
   /**
@@ -495,7 +495,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     $node->save();
     $this->drupalGet('node/1');
     $assert_session->pageTextNotContains('The first node body');
-    $assert_session->pageTextContains('Access denied');
+    $assert_session->responseContains('Access denied');
 
     $this->drupalGet('node/1/layout');
     $assert_session->pageTextNotContains('The first node body');
@@ -971,7 +971,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     // The original node title is available when viewing the node, but the
     // pending title is visible within the Layout Builder UI.
     $this->drupalGet('node/1');
-    $assert_session->pageTextContains('The first node title');
+    $assert_session->responseContains('The first node title');
     $page->clickLink('Layout');
     $assert_session->pageTextNotContains('The first node title');
     $assert_session->pageTextContains('The pending title of the first node');
@@ -1012,7 +1012,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     View::load('test_block_view')->delete();
     $this->drupalGet('node/1');
     // Node can be loaded after deleting the View.
-    $assert_session->pageTextContains(Node::load(1)->getTitle());
+    $assert_session->responseContains(Node::load(1)->getTitle());
     $assert_session->pageTextNotContains('Test Block View');
   }
 

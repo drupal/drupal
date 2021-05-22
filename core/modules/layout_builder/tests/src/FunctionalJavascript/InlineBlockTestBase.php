@@ -115,7 +115,7 @@ abstract class InlineBlockTestBase extends WebDriverTestBase {
     $page = $this->getSession()->getPage();
     $block_text = $page->find('css', static::INLINE_BLOCK_LOCATOR)->getText();
     $this->assertNotEmpty($block_text);
-    $assert_session->pageTextContains($block_text);
+    $assert_session->responseContains($block_text);
     $this->clickContextualLink(static::INLINE_BLOCK_LOCATOR, 'Remove block');
     $assert_session->waitForElement('css', "#drupal-off-canvas input[value='Remove']");
     $assert_session->assertWaitOnAjaxRequest();
