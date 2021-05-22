@@ -77,7 +77,7 @@ final class ClassWriter {
       return;
     }
     // Mutate TestCase code to make it forward compatible with different PhpUnit
-    // versions, by adding Symfony's PHPUnit-bridge PolyfillAssertTrait.
+    // versions, by adding Symfony's PHPUnit-bridge PolyfillTestCaseTrait.
     $alteredFile = $autoloader->findFile('PHPUnit\Framework\TestCase');
     $phpunit_dir = dirname($alteredFile, 3);
     $alteredCode = file_get_contents($alteredFile);
