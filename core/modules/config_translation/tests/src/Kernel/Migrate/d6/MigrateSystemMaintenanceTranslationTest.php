@@ -21,8 +21,11 @@ class MigrateSystemMaintenanceTranslationTest extends MigrateDrupal6TestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->executeMigration('system_maintenance');
-    $this->executeMigration('d6_system_maintenance_translation');
+    $this->executeMigrations([
+      'language',
+      'system_maintenance',
+      'd6_system_maintenance_translation',
+    ]);
   }
 
   /**

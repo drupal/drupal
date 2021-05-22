@@ -40,3 +40,6 @@ process:
 destination:
   plugin: config
   config_name: language.types
+migration_dependencies:
+  required:
+    - language

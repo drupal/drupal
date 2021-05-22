@@ -32,7 +32,11 @@ class MigrateLanguageContentSettingsTest extends MigrateDrupal6TestBase {
 
     $this->installConfig(['node']);
     $this->installEntitySchema('node');
-    $this->executeMigrations(['d6_node_type', 'd6_language_content_settings']);
+    $this->executeMigrations([
+      'language',
+      'd6_node_type',
+      'd6_language_content_settings',
+    ]);
   }
 
   /**

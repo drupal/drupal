@@ -177,3 +177,4 @@ migration_dependencies:
     - d6_node_type
     - d6_field_instance
     - d6_field_option_translation
+    - language

@@ -46,6 +46,7 @@ class MigrateEntityTranslationSettingsTest extends MigrateDrupal7TestBase {
     $this->installEntitySchema('user');
 
     $this->executeMigrations([
+      'language',
       'd7_comment_type',
       'd7_node_type',
       'd7_taxonomy_vocabulary',

@@ -72,6 +72,8 @@ process:
       - admin_theme
 destination:
   plugin: entity:block
+
 migration_dependencies:
-  optional:
+  required:
     - d7_block
+    - language

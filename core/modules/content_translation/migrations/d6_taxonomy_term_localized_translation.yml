@@ -42,3 +42,4 @@ destination:
 migration_dependencies:
   required:
     - d6_taxonomy_term
+    - language

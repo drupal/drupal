@@ -43,3 +43,4 @@ destination:
 migration_dependencies:
   required:
     - d6_node_type
+    - language
