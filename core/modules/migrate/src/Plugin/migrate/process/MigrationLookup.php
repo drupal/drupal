@@ -69,9 +69,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @endcode
  *
  * It's not required to describe source identifiers for each migration. If the
- * source identifier for migration is not specified, default source value will
- * be used. In the example below, 'author' source property will be used to
- * do a lookup in 'users' migration, and 'uid' property in 'members' migration.
+ * source identifier for migration is not specified, the default source value
+ * will be used. In the example below, the 'author' source property will be used
+ * to do a lookup in the 'users' migration, and the 'uid' property in the
+ * 'members' migration.
  * @code
  * process:
  *   uid:
