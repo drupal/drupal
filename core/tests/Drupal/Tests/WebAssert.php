@@ -892,6 +892,9 @@ class WebAssert extends MinkWebAssert {
     @$dom->loadHTML($this->session->getPage()->getHtml());
     // dump(['pre-', $dom->textContent]);
     $body = $dom->getElementsByTagName('body')[0];
+    if (!$body) {
+      return '';
+    }
     $items = $body->getElementsByTagName('script');
     while ($items->count() > 0) {
       $items->item(0)->parentNode->removeChild($items->item(0));
