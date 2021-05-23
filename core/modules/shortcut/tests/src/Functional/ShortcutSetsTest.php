@@ -48,7 +48,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
     $this->drupalGet('user/' . $this->adminUser->id() . '/shortcuts');
     // Verify that generated shortcut set was listed as a choice on the user
     // account page.
-    $this->assertText($new_set->label());
+    $this->assertSession()->pageTextContains($new_set->label());
   }
 
   /**
@@ -138,7 +138,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
     $this->drupalPostForm('user/' . $this->adminUser->id() . '/shortcuts', $edit, 'Change set');
     $current_set = shortcut_current_displayed_set($this->adminUser);
     $this->assertNotEquals($this->set->id(), $current_set->id(), 'A shortcut set can be switched to at the same time as it is created.');
-    $this->assertEqual($edit['label'], $current_set->label(), 'The new set is correctly assigned to the user.');
+    $this->assertEquals($edit['label'], $current_set->label(), 'The new set is correctly assigned to the user.');
   }
 
   /**
@@ -147,9 +147,9 @@ class ShortcutSetsTest extends ShortcutTestBase {
   public function testShortcutSetSwitchNoSetName() {
     $edit = ['set' => 'new'];
     $this->drupalPostForm('user/' . $this->adminUser->id() . '/shortcuts', $edit, 'Change set');
-    $this->assertText('The new set label is required.');
+    $this->assertSession()->pageTextContains('The new set label is required.');
     $current_set = shortcut_current_displayed_set($this->adminUser);
-    $this->assertEqual($this->set->id(), $current_set->id(), 'Attempting to switch to a new shortcut set without providing a set name does not succeed.');
+    $this->assertEquals($this->set->id(), $current_set->id(), 'Attempting to switch to a new shortcut set without providing a set name does not succeed.');
     $field = $this->assertSession()->fieldExists('label');
     $this->assertTrue($field->hasClass('error'));
   }
@@ -212,7 +212,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
     $this->drupalGet('user/' . $this->adminUser->id() . '/shortcuts');
     // Verify that generated shortcut set was listed as a choice on the user
     // account page.
-    $this->assertText($new_set->label());
+    $this->assertSession()->pageTextContains($new_set->label());
   }
 
 }

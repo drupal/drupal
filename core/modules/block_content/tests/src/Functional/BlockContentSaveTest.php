@@ -54,7 +54,7 @@ class BlockContentSaveTest extends BlockContentTestBase {
     $block->save();
 
     // Verify that block_submit did not wipe the provided id.
-    $this->assertEqual($test_id, $block->id(), 'Block imported using provide id');
+    $this->assertEquals($test_id, $block->id(), 'Block imported using provide id');
 
     // Test the import saved.
     $block_by_id = BlockContent::load($test_id);
@@ -70,11 +70,11 @@ class BlockContentSaveTest extends BlockContentTestBase {
   public function testDeterminingChanges() {
     // Initial creation.
     $block = $this->createBlockContent('test_changes');
-    $this->assertEqual(REQUEST_TIME, $block->getChangedTime(), 'Creating a block sets default "changed" timestamp.');
+    $this->assertEquals(REQUEST_TIME, $block->getChangedTime(), 'Creating a block sets default "changed" timestamp.');
 
     // Update the block without applying changes.
     $block->save();
-    $this->assertEqual('test_changes', $block->label(), 'No changes have been determined.');
+    $this->assertEquals('test_changes', $block->label(), 'No changes have been determined.');
 
     // Apply changes.
     $block->setInfo('updated');
@@ -83,12 +83,12 @@ class BlockContentSaveTest extends BlockContentTestBase {
     // The hook implementations block_content_test_block_content_presave() and
     // block_content_test_block_content_update() determine changes and change
     // the title as well as programmatically set the 'changed' timestamp.
-    $this->assertEqual('updated_presave_update', $block->label(), 'Changes have been determined.');
-    $this->assertEqual(979534800, $block->getChangedTime(), 'Saving a custom block uses "changed" timestamp set in presave hook.');
+    $this->assertEquals('updated_presave_update', $block->label(), 'Changes have been determined.');
+    $this->assertEquals(979534800, $block->getChangedTime(), 'Saving a custom block uses "changed" timestamp set in presave hook.');
 
     // Test the static block load cache to be cleared.
     $block = BlockContent::load($block->id());
-    $this->assertEqual('updated_presave', $block->label(), 'Static cache has been cleared.');
+    $this->assertEquals('updated_presave', $block->label(), 'Static cache has been cleared.');
   }
 
   /**
@@ -104,7 +104,7 @@ class BlockContentSaveTest extends BlockContentTestBase {
     // block_content_test_block_content_insert() triggers a save on insert if the
     // title equals 'new'.
     $block = $this->createBlockContent('new');
-    $this->assertEqual('BlockContent ' . $block->id(), $block->label(), 'Custom block saved on block insert.');
+    $this->assertEquals('BlockContent ' . $block->id(), $block->label(), 'Custom block saved on block insert.');
   }
 
 }

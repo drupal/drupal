@@ -56,18 +56,18 @@ class EmailItemTest extends FieldKernelTestBase {
     $entity = EntityTest::load($id);
     $this->assertInstanceOf(FieldItemListInterface::class, $entity->field_email);
     $this->assertInstanceOf(FieldItemInterface::class, $entity->field_email[0]);
-    $this->assertEqual($value, $entity->field_email->value);
-    $this->assertEqual($value, $entity->field_email[0]->value);
+    $this->assertEquals($value, $entity->field_email->value);
+    $this->assertEquals($value, $entity->field_email[0]->value);
 
     // Verify changing the email value.
     $new_value = $this->randomMachineName();
     $entity->field_email->value = $new_value;
-    $this->assertEqual($new_value, $entity->field_email->value);
+    $this->assertEquals($new_value, $entity->field_email->value);
 
     // Read changed entity and assert changed values.
     $entity->save();
     $entity = EntityTest::load($id);
-    $this->assertEqual($new_value, $entity->field_email->value);
+    $this->assertEquals($new_value, $entity->field_email->value);
 
     // Test sample item generation.
     $entity = EntityTest::create();

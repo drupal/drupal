@@ -173,7 +173,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     $this->drupalPostForm('node/add/' . $this->type, $edit, 'Save');
 
     // Assert that entity reference autocomplete field is validated.
-    $this->assertText('There are no content items matching "Test"');
+    $this->assertSession()->pageTextContains('There are no content items matching "Test"');
 
     $edit = [
       'title[0][value]' => 'Test',
@@ -183,10 +183,10 @@ class EntityReferenceAdminTest extends BrowserTestBase {
 
     // Assert the results multiple times to avoid sorting problem of nodes with
     // the same title.
-    $this->assertText('Multiple content items match this reference;');
-    $this->assertText($node1->getTitle() . ' (' . $node1->id() . ')');
-    $this->assertText($node2->getTitle() . ' (' . $node2->id() . ')');
-    $this->assertText('Specify the one you want by appending the id in parentheses, like "' . $node2->getTitle() . ' (' . $node2->id() . ')' . '".');
+    $this->assertSession()->pageTextContains('Multiple content items match this reference;');
+    $this->assertSession()->pageTextContains($node1->getTitle() . ' (' . $node1->id() . ')');
+    $this->assertSession()->pageTextContains($node2->getTitle() . ' (' . $node2->id() . ')');
+    $this->assertSession()->pageTextContains('Specify the one you want by appending the id in parentheses, like "' . $node2->getTitle() . ' (' . $node2->id() . ')' . '".');
 
     $edit = [
       'title[0][value]' => 'Test',
@@ -336,7 +336,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     /** @var \Drupal\field\Entity\FieldConfig $field_config */
     $field_config = FieldConfig::load($field_id);
     // Expect that the target bundle has been saved in the backend.
-    $this->assertEqual($vocabularies[1]->id(), $field_config->getSetting('handler_settings')['auto_create_bundle']);
+    $this->assertEquals($vocabularies[1]->id(), $field_config->getSetting('handler_settings')['auto_create_bundle']);
 
     // Delete the other bundle. Field config should not be affected.
     $vocabularies[0]->delete();

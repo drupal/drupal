@@ -49,12 +49,12 @@ class UserEditTest extends BrowserTestBase {
     $edit['pass[pass1]'] = '';
     $edit['pass[pass2]'] = $this->randomMachineName();
     $this->drupalPostForm("user/" . $user1->id() . "/edit", $edit, 'Save');
-    $this->assertText("The specified passwords do not match.");
+    $this->assertSession()->pageTextContains("The specified passwords do not match.");
 
     $edit['pass[pass1]'] = $this->randomMachineName();
     $edit['pass[pass2]'] = '';
     $this->drupalPostForm("user/" . $user1->id() . "/edit", $edit, 'Save');
-    $this->assertText("The specified passwords do not match.");
+    $this->assertSession()->pageTextContains("The specified passwords do not match.");
 
     // Test that the error message appears when attempting to change the mail or
     // pass without the current password.
@@ -85,7 +85,7 @@ class UserEditTest extends BrowserTestBase {
     $this->assertSame(1, (int) \Drupal::database()->select('sessions', 's')->countQuery()->execute()->fetchField());
 
     // Make sure the changed timestamp is updated.
-    $this->assertEqual(REQUEST_TIME, $user1->getChangedTime(), 'Changing a user sets "changed" timestamp.');
+    $this->assertEquals(REQUEST_TIME, $user1->getChangedTime(), 'Changing a user sets "changed" timestamp.');
 
     // Make sure the user can log in with their new password.
     $this->drupalLogout();
@@ -116,13 +116,13 @@ class UserEditTest extends BrowserTestBase {
 
     $edit = ['status' => 0];
     $this->drupalPostForm('user/' . $user1->id() . '/edit', $edit, 'Save');
-    $this->assertText('The changes have been saved.');
+    $this->assertSession()->pageTextContains('The changes have been saved.');
     $this->assertSession()->checkboxChecked('edit-status-0');
     $this->assertSession()->checkboxNotChecked('edit-status-1');
 
     $edit = ['status' => 1];
     $this->drupalPostForm('user/' . $user1->id() . '/edit', $edit, 'Save');
-    $this->assertText('The changes have been saved.');
+    $this->assertSession()->pageTextContains('The changes have been saved.');
     $this->assertSession()->checkboxNotChecked('edit-status-0');
     $this->assertSession()->checkboxChecked('edit-status-1');
   }

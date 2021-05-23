@@ -55,7 +55,7 @@ class LanguagePathMonolingualTest extends BrowserTestBase {
     // Verify that French is the only language.
     $this->container->get('language_manager')->reset();
     $this->assertFalse(\Drupal::languageManager()->isMultilingual(), 'Site is mono-lingual');
-    $this->assertEqual('fr', \Drupal::languageManager()->getDefaultLanguage()->getId(), 'French is the default language');
+    $this->assertEquals('fr', \Drupal::languageManager()->getDefaultLanguage()->getId(), 'French is the default language');
 
     // Set language detection to URL.
     $edit = ['language_interface[enabled][language-url]' => TRUE];
@@ -76,7 +76,7 @@ class LanguagePathMonolingualTest extends BrowserTestBase {
     // Verify that links in this page can be followed and work.
     $this->clickLink(t('Languages'));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('Add language');
+    $this->assertSession()->pageTextContains('Add language');
   }
 
 }

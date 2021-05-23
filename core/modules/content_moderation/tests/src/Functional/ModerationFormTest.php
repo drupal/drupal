@@ -165,7 +165,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->drupalGet($latest_version_path);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->fieldExists('edit-new-state');
-    $this->assertText('Draft');
+    $this->assertSession()->pageTextContains('Draft');
 
     // Submit the moderation form to change status to published.
     $this->drupalPostForm($latest_version_path, [
@@ -229,8 +229,8 @@ class ModerationFormTest extends ModerationStateTestBase {
     // status, because the pending revision is in "Draft".
     $this->drupalGet('entity_test_mulrevpub/manage/1/latest');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('Moderation state');
-    $this->assertText('Draft');
+    $this->assertSession()->pageTextContains('Moderation state');
+    $this->assertSession()->pageTextContains('Draft');
 
     // Submit the moderation form to change status to published.
     $this->drupalPostForm('entity_test_mulrevpub/manage/1/latest', [
@@ -263,7 +263,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     ], 'Apply');
 
     $this->drupalGet(sprintf('node/%d/revisions', $node->id()));
-    $this->assertText('by ' . $another_user->getAccountName());
+    $this->assertSession()->pageTextContains('by ' . $another_user->getAccountName());
 
     // Verify the revision creation time has been updated.
     $node = $node->load($node->id());

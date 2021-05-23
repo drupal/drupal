@@ -147,7 +147,7 @@ class ExposedFormTest extends ViewTestBase {
       'default' => ['This identifier has illegal characters.'],
       'page_1' => ['This identifier has illegal characters.'],
     ];
-    $this->assertEqual($expected, $errors);
+    $this->assertEquals($expected, $errors);
   }
 
   /**
@@ -211,7 +211,7 @@ class ExposedFormTest extends ViewTestBase {
 
     // Test that the block label is found.
     $this->drupalGet('test_exposed_block');
-    $this->assertText($view->getTitle());
+    $this->assertSession()->pageTextContains($view->getTitle());
 
     // Set a custom label on the exposed filter form block.
     $block->getPlugin()->setConfigurationValue('views_label', '<strong>Custom</strong> title<script>alert("hacked!");</script>');
@@ -295,7 +295,7 @@ class ExposedFormTest extends ViewTestBase {
     // Ensure that the "on demand text" is displayed when no exposed filters are
     // applied.
     $this->drupalGet('test_exposed_form_buttons');
-    $this->assertText('Select any filter and click Apply to see results.');
+    $this->assertSession()->pageTextContains('Select any filter and click Apply to see results.');
 
     // Ensure that the "on demand text" is not displayed when an exposed filter
     // is applied.

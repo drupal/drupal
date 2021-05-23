@@ -94,20 +94,20 @@ class FieldDataCountTest extends FieldKernelTestBase {
         ->countQuery()
         ->execute()
         ->fetchField();
-      $this->assertEqual(24, $result, 'The field table has 24 rows.');
+      $this->assertEquals(24, $result, 'The field table has 24 rows.');
     }
 
     $this->assertTrue($field_storage->hasdata(), 'There are entities with field data.');
-    $this->assertEqual(12, $this->storage->countFieldData($field_storage), 'There are 12 entities with field data.');
+    $this->assertEquals(12, $this->storage->countFieldData($field_storage), 'There are 12 entities with field data.');
 
     // Ensure the methods work on deleted fields.
     $field_storage->delete();
     $this->assertTrue($field_storage->hasdata(), 'There are entities with deleted field data.');
-    $this->assertEqual(12, $this->storage->countFieldData($field_storage), 'There are 12 entities with deleted field data.');
+    $this->assertEquals(12, $this->storage->countFieldData($field_storage), 'There are 12 entities with deleted field data.');
 
     field_purge_batch(6);
     $this->assertTrue($field_storage->hasdata(), 'There are entities with deleted field data.');
-    $this->assertEqual(6, $this->storage->countFieldData($field_storage), 'There are 6 entities with deleted field data.');
+    $this->assertEquals(6, $this->storage->countFieldData($field_storage), 'There are 6 entities with deleted field data.');
 
     $entity_type = 'entity_test_rev';
     $this->createFieldWithStorage('_2', $entity_type);

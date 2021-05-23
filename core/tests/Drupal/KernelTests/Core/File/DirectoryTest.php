@@ -109,7 +109,7 @@ class DirectoryTest extends FileTestBase {
 
     // Verify contents of .htaccess file.
     $file = file_get_contents($default_scheme . '://.htaccess');
-    $this->assertEqual(FileSecurity::htaccessLines(FALSE), $file, 'The .htaccess file contains the proper content.', 'File');
+    $this->assertEquals(FileSecurity::htaccessLines(FALSE), $file, 'The .htaccess file contains the proper content.');
   }
 
   /**
@@ -125,14 +125,14 @@ class DirectoryTest extends FileTestBase {
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
     $path = $file_system->createFilename($basename, $directory);
-    $this->assertEqual($original, $path, new FormattableMarkup('New filepath %new equals %original.', ['%new' => $path, '%original' => $original]), 'File');
+    $this->assertEquals($original, $path, new FormattableMarkup('New filepath %new equals %original.', ['%new' => $path, '%original' => $original]));
 
     // Then we test against a file that already exists within that directory.
     $basename = 'druplicon.png';
     $original = $directory . '/' . $basename;
     $expected = $directory . '/druplicon_0.png';
     $path = $file_system->createFilename($basename, $directory);
-    $this->assertEqual($expected, $path, new FormattableMarkup('Creating a new filepath from %original equals %new (expected %expected).', ['%new' => $path, '%original' => $original, '%expected' => $expected]), 'File');
+    $this->assertEquals($expected, $path, new FormattableMarkup('Creating a new filepath from %original equals %new (expected %expected).', ['%new' => $path, '%original' => $original, '%expected' => $expected]));
 
     // @TODO: Finally we copy a file into a directory several times, to ensure a properly iterating filename suffix.
   }
@@ -155,19 +155,19 @@ class DirectoryTest extends FileTestBase {
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
     $path = $file_system->getDestinationFilename($destination, FileSystemInterface::EXISTS_REPLACE);
-    $this->assertEqual($destination, $path, 'Non-existing filepath destination is correct with FileSystemInterface::EXISTS_REPLACE.', 'File');
+    $this->assertEquals($destination, $path, 'Non-existing filepath destination is correct with FileSystemInterface::EXISTS_REPLACE.');
     $path = $file_system->getDestinationFilename($destination, FileSystemInterface::EXISTS_RENAME);
-    $this->assertEqual($destination, $path, 'Non-existing filepath destination is correct with FileSystemInterface::EXISTS_RENAME.', 'File');
+    $this->assertEquals($destination, $path, 'Non-existing filepath destination is correct with FileSystemInterface::EXISTS_RENAME.');
     $path = $file_system->getDestinationFilename($destination, FileSystemInterface::EXISTS_ERROR);
-    $this->assertEqual($destination, $path, 'Non-existing filepath destination is correct with FileSystemInterface::EXISTS_ERROR.', 'File');
+    $this->assertEquals($destination, $path, 'Non-existing filepath destination is correct with FileSystemInterface::EXISTS_ERROR.');
 
     $destination = 'core/misc/druplicon.png';
     $path = $file_system->getDestinationFilename($destination, FileSystemInterface::EXISTS_REPLACE);
-    $this->assertEqual($destination, $path, 'Existing filepath destination remains the same with FileSystemInterface::EXISTS_REPLACE.', 'File');
+    $this->assertEquals($destination, $path, 'Existing filepath destination remains the same with FileSystemInterface::EXISTS_REPLACE.');
     $path = $file_system->getDestinationFilename($destination, FileSystemInterface::EXISTS_RENAME);
     $this->assertNotEquals($destination, $path, 'A new filepath destination is created when filepath destination already exists with FileSystemInterface::EXISTS_RENAME.');
     $path = $file_system->getDestinationFilename($destination, FileSystemInterface::EXISTS_ERROR);
-    $this->assertFalse($path, 'An error is returned when filepath destination already exists with FileSystemInterface::EXISTS_ERROR.', 'File');
+    $this->assertFalse($path, 'An error is returned when filepath destination already exists with FileSystemInterface::EXISTS_ERROR.');
 
     // Invalid UTF-8 causes an exception.
     $this->expectException(FileException::class);

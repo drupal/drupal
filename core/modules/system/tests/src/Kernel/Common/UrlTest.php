@@ -68,8 +68,8 @@ class UrlTest extends KernelTestBase {
         '#url' => Url::fromUri($uri),
       ];
       \Drupal::service('renderer')->renderRoot($link);
-      $this->assertEqual($expected_cacheability, $link['#cache']);
-      $this->assertEqual($expected_attachments, $link['#attached']);
+      $this->assertEquals($expected_cacheability, $link['#cache']);
+      $this->assertEquals($expected_attachments, $link['#attached']);
     }
   }
 
@@ -140,7 +140,7 @@ class UrlTest extends KernelTestBase {
     $renderer->executeInRenderContext(new RenderContext(), function () use ($renderer, $l) {
       $renderable_text = ['#markup' => 'foo'];
       $l_renderable_text = \Drupal::service('link_generator')->generate($renderable_text, Url::fromUri('https://www.drupal.org'));
-      $this->assertEqual($l, $l_renderable_text);
+      $this->assertEquals($l, $l_renderable_text);
     });
 
     // Test a themed link with plain text 'text'.
@@ -150,7 +150,7 @@ class UrlTest extends KernelTestBase {
       '#url' => Url::fromUri('https://www.drupal.org'),
     ];
     $type_link_plain = $renderer->renderRoot($type_link_plain_array);
-    $this->assertEqual($l, $type_link_plain);
+    $this->assertEquals($l, $type_link_plain);
 
     // Build a themed link with renderable 'text'.
     $type_link_nested_array = [
@@ -159,7 +159,7 @@ class UrlTest extends KernelTestBase {
       '#url' => Url::fromUri('https://www.drupal.org'),
     ];
     $type_link_nested = $renderer->renderRoot($type_link_nested_array);
-    $this->assertEqual($l, $type_link_nested);
+    $this->assertEquals($l, $type_link_nested);
   }
 
   /**
@@ -196,22 +196,22 @@ class UrlTest extends KernelTestBase {
     // First-level exclusion.
     $result = $original;
     unset($result['b']);
-    $this->assertEqual(UrlHelper::filterQueryParameters($original, ['b']), $result, "'b' was removed.");
+    $this->assertEquals(UrlHelper::filterQueryParameters($original, ['b']), $result, "'b' was removed.");
 
     // Second-level exclusion.
     $result = $original;
     unset($result['b']['d']);
-    $this->assertEqual(UrlHelper::filterQueryParameters($original, ['b[d]']), $result, "'b[d]' was removed.");
+    $this->assertEquals(UrlHelper::filterQueryParameters($original, ['b[d]']), $result, "'b[d]' was removed.");
 
     // Third-level exclusion.
     $result = $original;
     unset($result['b']['e']['f']);
-    $this->assertEqual(UrlHelper::filterQueryParameters($original, ['b[e][f]']), $result, "'b[e][f]' was removed.");
+    $this->assertEquals(UrlHelper::filterQueryParameters($original, ['b[e][f]']), $result, "'b[e][f]' was removed.");
 
     // Multiple exclusions.
     $result = $original;
     unset($result['a'], $result['b']['e'], $result['c']);
-    $this->assertEqual(UrlHelper::filterQueryParameters($original, ['a', 'b[e]', 'c']), $result, "'a', 'b[e]', 'c' were removed.");
+    $this->assertEquals(UrlHelper::filterQueryParameters($original, ['a', 'b[e]', 'c']), $result, "'a', 'b[e]', 'c' were removed.");
   }
 
   /**
@@ -229,7 +229,7 @@ class UrlTest extends KernelTestBase {
             'query' => ['foo' => 'bar', 'bar' => 'baz', 'baz' => ''],
             'fragment' => 'foo',
           ];
-          $this->assertEqual($expected, UrlHelper::parse($url), 'URL parsed correctly.');
+          $this->assertEquals($expected, UrlHelper::parse($url), 'URL parsed correctly.');
         }
       }
     }
@@ -241,7 +241,7 @@ class UrlTest extends KernelTestBase {
       'query' => [],
       'fragment' => '',
     ];
-    $this->assertEqual($result, UrlHelper::parse($url), 'Relative URL parsed correctly.');
+    $this->assertEquals($result, UrlHelper::parse($url), 'Relative URL parsed correctly.');
 
     // Test that drupal can recognize an absolute URL. Used to prevent attack vectors.
     $url = 'https://www.drupal.org/foo/bar?foo=bar&bar=baz&baz#foo';
@@ -261,23 +261,23 @@ class UrlTest extends KernelTestBase {
     // Verify external URL can contain a fragment.
     $url = $test_url . '#drupal';
     $result = Url::fromUri($url)->toString();
-    $this->assertEqual($url, $result, 'External URL with fragment works without a fragment in $options.');
+    $this->assertEquals($url, $result, 'External URL with fragment works without a fragment in $options.');
 
     // Verify fragment can be overridden in an external URL.
     $url = $test_url . '#drupal';
     $fragment = $this->randomMachineName(10);
     $result = Url::fromUri($url, ['fragment' => $fragment])->toString();
-    $this->assertEqual($test_url . '#' . $fragment, $result, 'External URL fragment is overridden with a custom fragment in $options.');
+    $this->assertEquals($test_url . '#' . $fragment, $result, 'External URL fragment is overridden with a custom fragment in $options.');
 
     // Verify external URL can contain a query string.
     $url = $test_url . '?drupal=awesome';
     $result = Url::fromUri($url)->toString();
-    $this->assertEqual($url, $result);
+    $this->assertEquals($url, $result);
 
     // Verify external URL can contain a query string with an integer key.
     $url = $test_url . '?120=1';
     $result = Url::fromUri($url)->toString();
-    $this->assertEqual($url, $result);
+    $this->assertEquals($url, $result);
 
     // Verify external URL can be extended with a query string.
     $url = $test_url;
@@ -289,7 +289,7 @@ class UrlTest extends KernelTestBase {
     $url = $test_url . '?drupal=awesome';
     $query = ['awesome' => 'drupal'];
     $result = Url::fromUri($url, ['query' => $query])->toString();
-    $this->assertEqual('https://www.drupal.org/?drupal=awesome&awesome=drupal', $result);
+    $this->assertEquals('https://www.drupal.org/?drupal=awesome&awesome=drupal', $result);
   }
 
 }

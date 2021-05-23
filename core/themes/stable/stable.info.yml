@@ -306,3 +306,5 @@ libraries-extend:
     - stable/drupal.ajax
   user/drupal.user:
     - stable/drupal.user
+  tour/tour:
+    - stable/tour

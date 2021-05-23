@@ -103,7 +103,7 @@ class MetadataGeneratorTest extends QuickEditTestBase {
       'label' => 'Plain text field',
       'editor' => 'plain_text',
     ];
-    $this->assertEqual($expected_1, $metadata_1, 'The correct metadata is generated for the first field.');
+    $this->assertEquals($expected_1, $metadata_1, 'The correct metadata is generated for the first field.');
 
     // Verify metadata for field 2.
     $items_2 = $entity->get($field_2_name);
@@ -113,7 +113,7 @@ class MetadataGeneratorTest extends QuickEditTestBase {
       'label' => 'Simple number field',
       'editor' => 'form',
     ];
-    $this->assertEqual($expected_2, $metadata_2, 'The correct metadata is generated for the second field.');
+    $this->assertEquals($expected_2, $metadata_2, 'The correct metadata is generated for the second field.');
   }
 
   /**
@@ -172,7 +172,7 @@ class MetadataGeneratorTest extends QuickEditTestBase {
         'format' => 'full_html',
       ],
     ];
-    $this->assertEqual($expected, $metadata, 'The correct metadata (including custom metadata) is generated.');
+    $this->assertEquals($expected, $metadata, 'The correct metadata (including custom metadata) is generated.');
   }
 
 }

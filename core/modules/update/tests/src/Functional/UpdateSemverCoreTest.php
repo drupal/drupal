@@ -279,7 +279,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
     $this->config('update_test.settings')->set('system_info', $system_info)->save();
     $this->refreshUpdateStatus(['drupal' => 'dev']);
     $this->assertNoText('2001-Sep-');
-    $this->assertText('Up to date');
+    $this->assertSession()->pageTextContains('Up to date');
     $this->assertNoText('Update available');
     $this->assertNoText('Security update required!');
   }
@@ -334,7 +334,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
     $this->drupalGet('admin/reports/updates');
     $this->clickLink(t('Check manually'));
     $this->checkForMetaRefresh();
-    $this->assertText('Checked available update data for one project.');
+    $this->assertSession()->pageTextContains('Checked available update data for one project.');
     $this->drupalGet('admin/modules');
     $this->assertNoText('There are updates available for your version of Drupal.');
     $this->assertNoText('There is a security update available for your version of Drupal.');
@@ -356,9 +356,9 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
     $this->drupalGet('admin/reports/updates');
     $this->clickLink(t('Check manually'));
     $this->checkForMetaRefresh();
-    $this->assertText('Checked available update data for one project.');
+    $this->assertSession()->pageTextContains('Checked available update data for one project.');
     $this->drupalGet('admin/modules');
-    $this->assertText('There are updates available for your version of Drupal.');
+    $this->assertSession()->pageTextContains('There are updates available for your version of Drupal.');
     $this->assertNoText('There is a security update available for your version of Drupal.');
   }
 
@@ -378,15 +378,15 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
     $this->drupalGet('admin/reports/updates');
     $this->clickLink(t('Check manually'));
     $this->checkForMetaRefresh();
-    $this->assertText('Checked available update data for one project.');
+    $this->assertSession()->pageTextContains('Checked available update data for one project.');
     $this->drupalGet('admin/modules');
     $this->assertNoText('There are updates available for your version of Drupal.');
-    $this->assertText('There is a security update available for your version of Drupal.');
+    $this->assertSession()->pageTextContains('There is a security update available for your version of Drupal.');
 
     // Make sure admin/appearance warns you you're missing a security update.
     $this->drupalGet('admin/appearance');
     $this->assertNoText('There are updates available for your version of Drupal.');
-    $this->assertText('There is a security update available for your version of Drupal.');
+    $this->assertSession()->pageTextContains('There is a security update available for your version of Drupal.');
 
     // Make sure duplicate messages don't appear on Update status pages.
     $this->drupalGet('admin/reports/status');
@@ -420,19 +420,19 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
       'name' => 'bbb_update_test',
     ];
     $queue = \Drupal::queue('update_fetch_tasks');
-    $this->assertEqual(0, $queue->numberOfItems(), 'Queue is empty');
+    $this->assertEquals(0, $queue->numberOfItems(), 'Queue is empty');
     update_create_fetch_task($projecta);
-    $this->assertEqual(1, $queue->numberOfItems(), 'Queue contains one item');
+    $this->assertEquals(1, $queue->numberOfItems(), 'Queue contains one item');
     update_create_fetch_task($projectb);
-    $this->assertEqual(2, $queue->numberOfItems(), 'Queue contains two items');
+    $this->assertEquals(2, $queue->numberOfItems(), 'Queue contains two items');
     // Try to add a project again.
     update_create_fetch_task($projecta);
-    $this->assertEqual(2, $queue->numberOfItems(), 'Queue still contains two items');
+    $this->assertEquals(2, $queue->numberOfItems(), 'Queue still contains two items');
 
     // Clear storage and try again.
     update_storage_clear();
     update_create_fetch_task($projecta);
-    $this->assertEqual(2, $queue->numberOfItems(), 'Queue contains two items');
+    $this->assertEquals(2, $queue->numberOfItems(), 'Queue contains two items');
   }
 
   /**
@@ -449,7 +449,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
       ->save();
 
     $this->drupalGet('admin/reports/updates');
-    $this->assertText('Language');
+    $this->assertSession()->pageTextContains('Language');
   }
 
   /**

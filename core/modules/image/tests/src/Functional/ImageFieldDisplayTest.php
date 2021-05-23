@@ -144,7 +144,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'image_style:');
     $this->assertRaw($default_output);
     // Verify that the image can be downloaded.
-    $this->assertEqual(file_get_contents($test_image->uri), $this->drupalGet(file_create_url($image_uri)), 'File was downloaded successfully.');
+    $this->assertEquals(file_get_contents($test_image->uri), $this->drupalGet(file_create_url($image_uri)), 'File was downloaded successfully.');
     if ($scheme == 'private') {
       // Only verify HTTP headers when using private scheme and the headers are
       // sent by Drupal.
@@ -222,12 +222,12 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       'settings' => ['image_style' => ''],
     ];
     $expected_url = file_url_transform_relative(file_create_url($image_uri));
-    $this->assertEqual($expected_url, $node->{$field_name}->view($display_options)[0]['#markup']);
+    $this->assertEquals($expected_url, $node->{$field_name}->view($display_options)[0]['#markup']);
 
     // Test the image URL formatter with an image style.
     $display_options['settings']['image_style'] = 'thumbnail';
     $expected_url = file_url_transform_relative(ImageStyle::load('thumbnail')->buildUrl($image_uri));
-    $this->assertEqual($expected_url, $node->{$field_name}->view($display_options)[0]['#markup']);
+    $this->assertEquals($expected_url, $node->{$field_name}->view($display_options)[0]['#markup']);
   }
 
   /**
@@ -262,9 +262,9 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->assertSession()->fieldValueEquals('settings[min_resolution][y]', '10');
 
     $this->drupalGet('node/add/article');
-    $this->assertText('50 KB limit.');
-    $this->assertText('Allowed types: ' . $test_image_extension . '.');
-    $this->assertText('Images must be larger than 10x10 pixels. Images larger than 100x100 pixels will be resized.');
+    $this->assertSession()->pageTextContains('50 KB limit.');
+    $this->assertSession()->pageTextContains('Allowed types: ' . $test_image_extension . '.');
+    $this->assertSession()->pageTextContains('Images must be larger than 10x10 pixels. Images larger than 100x100 pixels will be resized.');
 
     // We have to create the article first and then edit it because the alt
     // and title fields do not display until the image has been attached.
@@ -336,7 +336,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
     // Add the required alt text.
     $this->submitForm([$field_name . '[1][alt]' => $alt], 'Save');
-    $this->assertText('Article ' . $node->getTitle() . ' has been updated.');
+    $this->assertSession()->pageTextContains('Article ' . $node->getTitle() . ' has been updated.');
 
     // Assert ImageWidget::process() calls FieldWidget::process().
     $this->drupalGet('node/' . $node->id() . '/edit');
@@ -460,7 +460,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $default_image = $private_field_storage->getSetting('default_image');
     $file = \Drupal::service('entity.repository')->loadEntityByUuid('file', $default_image['uuid']);
 
-    $this->assertEqual('private', StreamWrapperManager::getScheme($file->getFileUri()), 'Default image uses private:// scheme.');
+    $this->assertEquals('private', StreamWrapperManager::getScheme($file->getFileUri()), 'Default image uses private:// scheme.');
     $this->assertTrue($file->isPermanent(), 'The default image status is permanent.');
     // Create a new node with no image attached and ensure that default private
     // image is displayed.

@@ -28,7 +28,7 @@ class FileMoveTest extends FileTestBase {
     $file_system = \Drupal::service('file_system');
     $new_filepath = $file_system->move($uri, $desired_filepath, FileSystemInterface::EXISTS_ERROR);
     $this->assertNotFalse($new_filepath, 'Move was successful.');
-    $this->assertEqual($desired_filepath, $new_filepath, 'Returned expected filepath.');
+    $this->assertEquals($desired_filepath, $new_filepath, 'Returned expected filepath.');
     $this->assertFileExists($new_filepath);
     $this->assertFileNotExists($uri);
     $this->assertFilePermissions($new_filepath, Settings::get('file_chmod_file', FileSystem::CHMOD_FILE));
