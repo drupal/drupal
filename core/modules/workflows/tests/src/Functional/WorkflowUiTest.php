@@ -264,7 +264,7 @@ class WorkflowUiTest extends BrowserTestBase {
     // be for the workflow.
     $this->assertSession()->linkByHrefNotExists($published_delete_link);
     $this->clickLink('Delete');
-    $this->assertSession()->pageTextContains('Are you sure you want to delete Test?');
+    $this->assertSession()->responseContains('Are you sure you want to delete Test?');
     $this->submitForm([], 'Delete');
     $this->assertSession()->pageTextContains('Workflow Test deleted.');
     $this->assertSession()->pageTextContains('There are no workflows yet.');
