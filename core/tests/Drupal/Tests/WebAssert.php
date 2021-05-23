@@ -890,7 +890,8 @@ class WebAssert extends MinkWebAssert {
     $dom = new \DOMDocument();
     // Suppress libxml warnings when loading HTML 5 content.
     @$dom->loadHTML($this->session->getPage()->getHtml());
-    // dump(['pre-', $dom->textContent]);
+    // global $xxx;
+    // if ($xxx) dump(['pre-', $dom->textContent]);
     $body = $dom->getElementsByTagName('body')[0];
     if (!$body) {
       return '';
@@ -900,7 +901,7 @@ class WebAssert extends MinkWebAssert {
       $items->item(0)->parentNode->removeChild($items->item(0));
       $items = $body->getElementsByTagName('script');
     }
-    // dump(['post', ($pack ? preg_replace('/\s+/u', ' ', $body->textContent) : $body->textContent)]);
+    // if ($xxx) dump(['post', ($pack ? preg_replace('/\s+/u', ' ', $body->textContent) : $body->textContent)]);
     return $pack ? preg_replace('/\s+/u', ' ', $body->textContent) : $body->textContent;
   }
 
@@ -941,7 +942,7 @@ class WebAssert extends MinkWebAssert {
     if (func_num_args() > 1) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than one argument is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
-    if ((bool) preg_match($regex, $this->getCleanedUpPageText())) {
+    if ((bool) preg_match($regex, $this->getCleanedUpPageText(TRUE))) {
       return;
     }
     $message = sprintf('The pattern %s was not found anywhere in the text of the current page.', $regex);
@@ -955,7 +956,7 @@ class WebAssert extends MinkWebAssert {
     if (func_num_args() > 1) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than one argument is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
-    if (!preg_match($regex, $this->getCleanedUpPageText())) {
+    if (!preg_match($regex, $this->getCleanedUpPageText(TRUE))) {
       return;
     }
     $message = sprintf('The pattern %s was found in the text of the current page, but it should not.', $regex);
