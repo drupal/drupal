@@ -129,6 +129,7 @@
         css.left = "".concat(containerLeftOffset - containerAmountScrolled, "px");
       }
 
+      this.$html.css('scroll-padding-top', displace.offsets.top + (this.stickyVisible ? this.$stickyTable.height() : 0));
       return this.$stickyTable.css(css);
     },
     checkStickyVisible: function checkStickyVisible() {
