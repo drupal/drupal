@@ -20,10 +20,10 @@ trait FieldUiTestTrait {
    *   (optional) The field type of the new field storage. Defaults to
    *   'test_field'.
    * @param array $storage_edit
-   *   (optional) $edit parameter for drupalPostForm() on the second step
+   *   (optional) $edit parameter for submitForm() on the second step
    *   ('Storage settings' form).
    * @param array $field_edit
-   *   (optional) $edit parameter for drupalPostForm() on the third step ('Field
+   *   (optional) $edit parameter for submitForm() on the third step ('Field
    *   settings' form).
    */
   public function fieldUIAddNewField($bundle_path, $field_name, $label = NULL, $field_type = 'test_field', array $storage_edit = [], array $field_edit = []) {
@@ -78,7 +78,7 @@ trait FieldUiTestTrait {
    * @param string $label
    *   (optional) The label of the new field. Defaults to a random string.
    * @param array $field_edit
-   *   (optional) $edit parameter for drupalPostForm() on the second step
+   *   (optional) $edit parameter for submitForm() on the second step
    *   ('Field settings' form).
    */
   public function fieldUIAddExistingField($bundle_path, $existing_storage_name, $label = NULL, array $field_edit = []) {

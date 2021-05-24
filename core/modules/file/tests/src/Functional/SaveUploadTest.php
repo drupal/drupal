@@ -531,7 +531,8 @@ class SaveUploadTest extends FileManagedTestBase {
       'file_test_replace' => FileSystemInterface::EXISTS_REPLACE,
       'files[file_test_upload]' => \Drupal::service('file_system')->realpath($this->image->getFileUri()),
     ];
-    $this->drupalPostForm('file-test/upload', $edit, 'Submit');
+    $this->drupalGet('file-test/upload');
+    $this->submitForm($edit, 'Submit');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertRaw(t('You WIN!'));
     $this->assertSession()->pageTextContains('File name is image-test.png.');
