@@ -280,7 +280,8 @@ class FilterFormatAccessTest extends BrowserTestBase {
     $new_title = $this->randomMachineName(8);
     $edit = [];
     $edit['title[0][value]'] = $new_title;
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('Text format field is required.');
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->pageTextContains($old_title);
@@ -317,13 +318,15 @@ class FilterFormatAccessTest extends BrowserTestBase {
     $new_title = $this->randomMachineName(8);
     $edit = [];
     $edit['title[0][value]'] = $new_title;
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('Text format field is required.');
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->pageTextContains($old_title);
     $this->assertNoText($new_title);
     $edit[$body_format_key] = filter_fallback_format();
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->addressEquals('node/' . $node->id());
     $this->assertSession()->pageTextContains($new_title);
     $this->assertNoText($old_title);

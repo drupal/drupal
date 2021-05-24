@@ -282,7 +282,8 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       'cardinality' => 'number',
       'cardinality_number' => '',
     ];
-    $this->drupalPostForm($field_edit_path, $edit, 'Save field settings');
+    $this->drupalGet($field_edit_path);
+    $this->submitForm($edit, 'Save field settings');
     $this->assertSession()->pageTextContains('Number of values is required.');
 
     // Submit a custom number.
@@ -290,7 +291,8 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       'cardinality' => 'number',
       'cardinality_number' => 6,
     ];
-    $this->drupalPostForm($field_edit_path, $edit, 'Save field settings');
+    $this->drupalGet($field_edit_path);
+    $this->submitForm($edit, 'Save field settings');
     $this->assertSession()->pageTextContains('Updated field Body field settings.');
     $this->drupalGet($field_edit_path);
     $this->assertSession()->fieldValueEquals('cardinality', 'number');
@@ -313,18 +315,21 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       'cardinality' => 'number',
       'cardinality_number' => 1,
     ];
-    $this->drupalPostForm($field_edit_path, $edit, 'Save field settings');
+    $this->drupalGet($field_edit_path);
+    $this->submitForm($edit, 'Save field settings');
     $this->assertRaw(t('There is @count entity with @delta or more values in this field.', ['@count' => 1, '@delta' => 2]));
 
     // Create a second entity with three values.
     $edit = ['title[0][value]' => 'Cardinality 3', 'body[0][value]' => 'Body 1', 'body[1][value]' => 'Body 2', 'body[2][value]' => 'Body 3'];
-    $this->drupalPostForm('node/add/article', $edit, 'Save');
+    $this->drupalGet('node/add/article');
+    $this->submitForm($edit, 'Save');
 
     // Set to unlimited.
     $edit = [
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ];
-    $this->drupalPostForm($field_edit_path, $edit, 'Save field settings');
+    $this->drupalGet($field_edit_path);
+    $this->submitForm($edit, 'Save field settings');
     $this->assertSession()->pageTextContains('Updated field Body field settings.');
     $this->drupalGet($field_edit_path);
     $this->assertSession()->fieldValueEquals('cardinality', FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
@@ -474,7 +479,8 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       'label' => $field_exceed_max_length_label,
       'field_name' => $field_exceed_max_length_input,
     ];
-    $this->drupalPostForm('admin/structure/types/manage/' . $this->contentType . '/fields/add-field', $edit, 'Save and continue');
+    $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/add-field');
+    $this->submitForm($edit, 'Save and continue');
     $this->assertSession()->pageTextContains('Machine-readable name cannot be longer than 22 characters but is currently 23 characters long.');
 
     // Create a valid field.
@@ -516,12 +522,14 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
 
     // Check that invalid default values are rejected.
     $edit = [$element_name => '-1'];
-    $this->drupalPostForm($admin_path, $edit, 'Save settings');
+    $this->drupalGet($admin_path);
+    $this->submitForm($edit, 'Save settings');
     $this->assertSession()->pageTextContains("$field_name does not accept the value -1");
 
     // Check that the default value is saved.
     $edit = [$element_name => '1'];
-    $this->drupalPostForm($admin_path, $edit, 'Save settings');
+    $this->drupalGet($admin_path);
+    $this->submitForm($edit, 'Save settings');
     $this->assertSession()->pageTextContains("Saved $field_name configuration");
     $field = FieldConfig::loadByName('node', $this->contentType, $field_name);
     $this->assertEquals([['value' => 1]], $field->getDefaultValueLiteral(), 'The default value was correctly saved.');
@@ -613,13 +621,15 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     // Try with an entity key.
     $edit['field_name'] = 'title';
     $bundle_path = 'admin/structure/types/manage/' . $this->contentType;
-    $this->drupalPostForm("$bundle_path/fields/add-field", $edit, 'Save and continue');
+    $this->drupalGet("{$bundle_path}/fields/add-field");
+    $this->submitForm($edit, 'Save and continue');
     $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
 
     // Try with a base field.
     $edit['field_name'] = 'sticky';
     $bundle_path = 'admin/structure/types/manage/' . $this->contentType;
-    $this->drupalPostForm("$bundle_path/fields/add-field", $edit, 'Save and continue');
+    $this->drupalGet("{$bundle_path}/fields/add-field");
+    $this->submitForm($edit, 'Save and continue');
     $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
   }
 

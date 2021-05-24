@@ -175,7 +175,8 @@ class FilterAdminTest extends BrowserTestBase {
       'format' => $format_id,
       'name' => 'New format',
     ];
-    $this->drupalPostForm('admin/config/content/formats/add', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/content/formats/add');
+    $this->submitForm($edit, 'Save configuration');
     $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
 
     // Attempt to create a format of the same human readable name as the
@@ -307,7 +308,8 @@ class FilterAdminTest extends BrowserTestBase {
     $edit['title[0][value]'] = $this->randomMachineName();
     $edit['body[0][value]'] = $text;
     $edit['body[0][format]'] = $basic;
-    $this->drupalPostForm('node/add/page', $edit, 'Save');
+    $this->drupalGet('node/add/page');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('Basic page ' . $edit['title[0][value]'] . ' has been created.');
 
     // Verify that the creation message contains a link to a node.

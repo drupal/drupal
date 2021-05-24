@@ -176,7 +176,8 @@ class FormTest extends FieldTestBase {
     $edit = [
       "{$field_name}[0][value]" => $value,
     ];
-    $this->drupalPostForm('entity_test/manage/' . $id . '/edit', $edit, 'Save');
+    $this->drupalGet('entity_test/manage/' . $id . '/edit');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been updated.');
     $this->container->get('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);
     $entity = EntityTest::load($id);

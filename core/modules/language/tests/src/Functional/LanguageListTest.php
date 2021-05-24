@@ -47,7 +47,8 @@ class LanguageListTest extends BrowserTestBase {
     $edit = [
       'predefined_langcode' => 'fr',
     ];
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
+    $this->drupalGet('admin/config/regional/language/add');
+    $this->submitForm($edit, 'Add language');
     $this->assertSession()->pageTextContains('French');
     $this->assertSession()->addressEquals(Url::fromRoute('entity.configurable_language.collection'));
 

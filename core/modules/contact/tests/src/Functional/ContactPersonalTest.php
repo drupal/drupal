@@ -202,7 +202,8 @@ class ContactPersonalTest extends BrowserTestBase {
     // Disable the personal contact form.
     $this->drupalLogin($this->adminUser);
     $edit = ['contact_default_status' => FALSE];
-    $this->drupalPostForm('admin/config/people/accounts', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/people/accounts');
+    $this->submitForm($edit, 'Save configuration');
     $this->assertSession()->pageTextContains('The configuration options have been saved.');
     $this->drupalLogout();
 

@@ -497,14 +497,16 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
       'language_interface[enabled][language-url]' => TRUE,
       'language_interface[weight][language-url]' => -10,
     ];
-    $this->drupalPostForm('admin/config/regional/language/detection', $edit, 'Save settings');
+    $this->drupalGet('admin/config/regional/language/detection');
+    $this->submitForm($edit, 'Save settings');
 
     // Do not allow blank domain.
     $edit = [
       'language_negotiation_url_part' => LanguageNegotiationUrl::CONFIG_DOMAIN,
       'domain[en]' => '',
     ];
-    $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/regional/language/detection/url');
+    $this->submitForm($edit, 'Save configuration');
     $this->assertSession()->pageTextContains('The domain may not be left blank for English');
     $this->rebuildContainer();
 
@@ -514,7 +516,8 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
       'domain[en]' => $base_url_host,
       'domain[it]' => 'it.example.com',
     ];
-    $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/regional/language/detection/url');
+    $this->submitForm($edit, 'Save configuration');
     $this->assertSession()->pageTextContains('The configuration options have been saved');
     $this->rebuildContainer();
 

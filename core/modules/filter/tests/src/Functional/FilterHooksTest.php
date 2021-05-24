@@ -70,11 +70,13 @@ class FilterHooksTest extends BrowserTestBase {
     $edit['title[0][value]'] = $title;
     $edit['body[0][value]'] = $this->randomMachineName(32);
     $edit['body[0][format]'] = $format_id;
-    $this->drupalPostForm("node/add/{$type->id()}", $edit, 'Save');
+    $this->drupalGet("node/add/{$type->id()}");
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains($type_name . ' ' . $title . ' has been created.');
 
     // Disable the text format.
-    $this->drupalPostForm('admin/config/content/formats/manage/' . $format_id . '/disable', [], 'Disable');
+    $this->drupalGet('admin/config/content/formats/manage/' . $format_id . '/disable');
+    $this->submitForm([], 'Disable');
     $this->assertRaw(t('Disabled text format %format.', ['%format' => $name]));
     $this->assertSession()->pageTextContains('hook_filter_format_disable invoked.');
   }

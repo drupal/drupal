@@ -95,7 +95,8 @@ class FileFieldDisplayTest extends FileFieldTestBase {
       $field_name . '[0][description]' => $description,
       $field_name . '[0][display]' => TRUE,
     ];
-    $this->drupalPostForm('node/' . $nid . '/edit', $edit, 'Save');
+    $this->drupalGet('node/' . $nid . '/edit');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains($description);
 
     // Ensure the filename in the link's title attribute is escaped.

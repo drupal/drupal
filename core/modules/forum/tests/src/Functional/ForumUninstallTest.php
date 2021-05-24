@@ -129,7 +129,8 @@ class ForumUninstallTest extends BrowserTestBase {
     $this->assertFalse((bool) NodeType::load('forum'), 'Node type with machine forum deleted.');
 
     // Double check everything by reinstalling the forum module again.
-    $this->drupalPostForm('admin/modules', ['modules[forum][enable]' => 1], 'Install');
+    $this->drupalGet('admin/modules');
+    $this->submitForm(['modules[forum][enable]' => 1], 'Install');
     $this->assertSession()->pageTextContains('Module Forum has been enabled.');
   }
 

@@ -354,7 +354,8 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       'name' => $new_style_name,
       'label' => $new_style_label,
     ];
-    $this->drupalPostForm($style_path . $style_name, $edit, 'Save');
+    $this->drupalGet($style_path . $style_name);
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('Changes to the style have been saved.');
     $this->drupalGet('node/' . $nid);
 

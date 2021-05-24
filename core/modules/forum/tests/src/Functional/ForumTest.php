@@ -669,7 +669,8 @@ class ForumTest extends BrowserTestBase {
       // Assume the topic is initially associated with $forum.
       $edit['taxonomy_forums'] = $this->rootForum['tid'];
       $edit['shadow'] = TRUE;
-      $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
+      $this->drupalGet('node/' . $node->id() . '/edit');
+      $this->submitForm($edit, 'Save');
       $this->assertSession()->pageTextContains('Forum topic ' . $edit['title[0][value]'] . ' has been updated.');
 
       // Verify topic was moved to a different forum.

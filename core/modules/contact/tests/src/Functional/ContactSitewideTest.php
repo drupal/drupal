@@ -107,7 +107,8 @@ class ContactSitewideTest extends BrowserTestBase {
     // Set settings.
     $edit = [];
     $edit['contact_default_status'] = TRUE;
-    $this->drupalPostForm('admin/config/people/accounts', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/people/accounts');
+    $this->submitForm($edit, 'Save configuration');
     $this->assertSession()->pageTextContains('The configuration options have been saved.');
 
     $this->drupalGet('admin/structure/contact');

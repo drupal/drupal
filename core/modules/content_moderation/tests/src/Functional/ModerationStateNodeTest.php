@@ -56,21 +56,22 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
     $this->assertNoText('Published');
 
     // Delete the node.
-    $this->drupalPostForm('node/' . $node->id() . '/delete', [], 'Delete');
+    $this->drupalGet('node/' . $node->id() . '/delete');
+    $this->submitForm([], 'Delete');
     $this->assertSession()->pageTextContains('The Moderated content moderated content has been deleted.');
 
     // Disable content moderation.
     $edit['bundles[moderated_content]'] = FALSE;
-    $this->drupalPostForm('admin/config/workflow/workflows/manage/editorial/type/node', $edit, 'Save');
+    $this->drupalGet('admin/config/workflow/workflows/manage/editorial/type/node');
+    $this->submitForm($edit, 'Save');
     // Ensure the parent environment is up-to-date.
     // @see content_moderation_workflow_insert()
     \Drupal::service('entity_type.bundle.info')->clearCachedBundles();
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 
     // Create a new node.
-    $this->drupalPostForm('node/add/moderated_content', [
-      'title[0][value]' => 'non-moderated content',
-    ], 'Save');
+    $this->drupalGet('node/add/moderated_content');
+    $this->submitForm(['title[0][value]' => 'non-moderated content'], 'Save');
 
     $node = $this->getNodeByTitle('non-moderated content');
     if (!$node) {

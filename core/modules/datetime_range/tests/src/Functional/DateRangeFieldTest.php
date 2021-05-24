@@ -1052,7 +1052,8 @@ class DateRangeFieldTest extends DateTestBase {
       'default_value_input[default_end_date_type]' => 'relative',
       'default_value_input[default_end_date]' => '+1 day',
     ];
-    $this->drupalPostForm('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name, $field_edit, 'Save settings');
+    $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
+    $this->submitForm($field_edit, 'Save settings');
     $this->assertSession()->pageTextContains('The relative start date value entered is invalid.');
 
     $field_edit = [
@@ -1061,7 +1062,8 @@ class DateRangeFieldTest extends DateTestBase {
       'default_value_input[default_end_date_type]' => 'relative',
       'default_value_input[default_end_date]' => 'invalid date',
     ];
-    $this->drupalPostForm('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name, $field_edit, 'Save settings');
+    $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
+    $this->submitForm($field_edit, 'Save settings');
     $this->assertSession()->pageTextContains('The relative end date value entered is invalid.');
 
     // Set a relative default_value.
