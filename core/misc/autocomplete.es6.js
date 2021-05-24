@@ -6,6 +6,10 @@
 (function ($, Drupal) {
   let autocomplete;
 
+  const inBrowser = typeof window !== 'undefined';
+  const UA = inBrowser && window.navigator.userAgent.toLowerCase();
+  const isAndroid = UA && UA.indexOf('android') > 0;
+
   /**
    * Helper splitting terms from the autocomplete value.
    *
@@ -229,13 +233,24 @@
             autocomplete.options.renderItem;
         });
 
-        // Use CompositionEvent to handle IME inputs. It requests remote server on "compositionend" event only.
-        $autocomplete.on('compositionstart.autocomplete', () => {
-          autocomplete.options.isComposing = true;
-        });
-        $autocomplete.on('compositionend.autocomplete', () => {
+        // Use CompositionEvent to handle IME inputs. It requests remote server
+        // on "compositionend" event only.
+        // Safari < 10.2 & UIWebView doesn't fire compositionend when
+        // switching focus before confirming composition choice
+        // this also fixes the issue where some browsers e.g. iOS Chrome
+        // fires "change" instead of "input" on autocomplete.
+        // @see: https://github.com/vuejs/vue/blob/v2.4.4/src/platforms/web/runtime/directives/model.js
+        $autocomplete.on('change.autocomplete', () => {
           autocomplete.options.isComposing = false;
         });
+        if (!isAndroid) {
+          $autocomplete.on('compositionstart.autocomplete', () => {
+            autocomplete.options.isComposing = true;
+          });
+          $autocomplete.on('compositionend.autocomplete', () => {
+            autocomplete.options.isComposing = false;
+          });
+        }
       }
     },
     detach(context, settings, trigger) {
