@@ -125,7 +125,7 @@ class ElementsTableSelectTest extends BrowserTestBase {
    */
   public function testMultipleFalseSubmit() {
     $edit['tableselect'] = 'row1';
-    $this->drupalGet('form_test/tableselect/multiple-true');
+    $this->drupalGet('form_test/tableselect/multiple-false');
     $this->submitForm($edit, 'Submit');
     $this->assertSession()->pageTextContains('Submitted: row1');
   }
