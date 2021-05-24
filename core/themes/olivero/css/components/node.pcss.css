@@ -13,14 +13,6 @@
   font-size: 14px;
   line-height: var(--sp);
 
-  & .field--name-user-picture img {
-    width: var(--sp2-5);
-    height: var(--sp2-5);
-    margin-inline-end: var(--sp0-5);
-    object-fit: cover;
-    border-radius: 50%;
-  }
-
   & a {
     font-weight: bold;
   }
@@ -28,6 +20,14 @@
   @media (--sm) {
     margin-block-end: var(--sp2);
   }
+}
+
+.node__author-image img {
+  width: var(--sp2-5);
+  height: var(--sp2-5);
+  margin-inline-end: var(--sp0-5);
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .node__title {
@@ -42,18 +42,9 @@
     background-position: bottom left; /* LTR */
     background-size: 0 3px;
 
-    &:hover {
-      color: var(--color--blue-20);
-    }
-
+    &:hover,
     &:focus {
       color: var(--color--blue-20);
-      background-size: 100% 3px;
-
-      @media screen and (-ms-high-contrast: active) {
-        text-decoration: underline;
-        outline: initial;
-      }
     }
   }
 }

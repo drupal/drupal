@@ -39,7 +39,6 @@
   & a {
     color: var(--color--blue-20);
     text-decoration-color: var(--color--blue-20);
-    text-decoration-width: 2px;
     text-decoration-thickness: 2px;
     overflow-wrap: break-word;
 
@@ -48,8 +47,7 @@
       text-decoration: none;
       box-shadow: inset 0 -2px 0 0 var(--color--blue-50);
 
-      &:hover,
-      &:focus {
+      &:hover {
         text-decoration: underline;
         color: var(--color--black);
 
@@ -142,26 +140,22 @@
 /**
  * Special colors for footer that has a dark background.
  */
-.site-footer {
-  & .text-content,
-  & .cke_editable {
+.site-footer .text-content {
+  color: inherit;
+
+  & * {
     color: inherit;
+  }
 
-    & * {
-      color: inherit;
-    }
+  & a {
+    text-decoration: underline;
+    color: var(--color--white);
+    box-shadow: none;
 
-    & a {
-      text-decoration: underline;
+    &:hover {
+      text-decoration: none;
       color: var(--color--white);
       box-shadow: none;
-
-      &:hover,
-      &:focus {
-        text-decoration: none;
-        color: var(--color--white);
-        box-shadow: none;
-      }
     }
   }
 }

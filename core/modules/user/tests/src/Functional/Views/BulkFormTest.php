@@ -50,8 +50,9 @@ class BulkFormTest extends UserTestBase {
     $edit = [
       'action' => 'user_block_user_action',
     ];
-    $this->drupalPostForm('test-user-bulk-form', $edit, 'Apply to selected items');
-    $this->assertText('No users selected.');
+    $this->drupalGet('test-user-bulk-form');
+    $this->submitForm($edit, 'Apply to selected items');
+    $this->assertSession()->pageTextContains('No users selected.');
 
     // Assign a role to a user.
     $account = $user_storage->load($this->users[0]->id());
@@ -101,7 +102,7 @@ class BulkFormTest extends UserTestBase {
 
     // Ensure the anonymous user is found.
     $this->drupalGet('test-user-bulk-form');
-    $this->assertText($this->config('user.settings')->get('anonymous'));
+    $this->assertSession()->pageTextContains($this->config('user.settings')->get('anonymous'));
 
     // Attempt to block the anonymous user.
     $edit = [
@@ -123,12 +124,14 @@ class BulkFormTest extends UserTestBase {
       'options[include_exclude]' => 'exclude',
       "options[selected_actions][$action_id]" => $action_id,
     ];
-    $this->drupalPostForm('admin/structure/views/nojs/handler/test_user_bulk_form/default/field/user_bulk_form', $edit, 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/handler/test_user_bulk_form/default/field/user_bulk_form');
+    $this->submitForm($edit, 'Apply');
     $this->submitForm([], 'Save');
     $this->drupalGet('test-user-bulk-form');
     $this->assertSession()->optionNotExists('edit-action', $action_id);
     $edit['options[include_exclude]'] = 'include';
-    $this->drupalPostForm('admin/structure/views/nojs/handler/test_user_bulk_form/default/field/user_bulk_form', $edit, 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/handler/test_user_bulk_form/default/field/user_bulk_form');
+    $this->submitForm($edit, 'Apply');
     $this->submitForm([], 'Save');
     $this->drupalGet('test-user-bulk-form');
     $this->assertSession()->optionExists('edit-action', $action_id);
@@ -142,7 +145,7 @@ class BulkFormTest extends UserTestBase {
     User::load($this->users[0]->id());
     $view = Views::getView('test_user_bulk_form_combine_filter');
     $errors = $view->validate();
-    $this->assertEqual(t('Field %field set in %filter is not usable for this filter type. Combined field filter only works for simple fields.', ['%field' => 'User: Bulk update', '%filter' => 'Global: Combine fields filter']), reset($errors['default']));
+    $this->assertEquals(t('Field %field set in %filter is not usable for this filter type. Combined field filter only works for simple fields.', ['%field' => 'User: Bulk update', '%filter' => 'Global: Combine fields filter']), reset($errors['default']));
   }
 
 }

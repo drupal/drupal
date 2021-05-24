@@ -89,7 +89,7 @@ class TrackerTest extends BrowserTestBase {
 
     $this->drupalGet('activity');
     $this->assertNoText($unpublished->label());
-    $this->assertText($published->label());
+    $this->assertSession()->pageTextContains($published->label());
     $this->assertSession()->linkExists('My recent content', 0, 'User tab shows up on the global tracker page.');
 
     // Assert cache contexts, specifically the pager and node access contexts.
@@ -135,8 +135,8 @@ class TrackerTest extends BrowserTestBase {
     ]);
 
     $this->drupalGet('activity');
-    $this->assertText($node->label());
-    $this->assertText(\Drupal::service('date.formatter')->formatTimeDiffSince($node->getChangedTime()));
+    $this->assertSession()->pageTextContains($node->label());
+    $this->assertSession()->pageTextContains(\Drupal::service('date.formatter')->formatTimeDiffSince($node->getChangedTime()));
   }
 
   /**
@@ -169,13 +169,14 @@ class TrackerTest extends BrowserTestBase {
       'subject[0][value]' => $this->randomMachineName(),
       'comment_body[0][value]' => $this->randomMachineName(20),
     ];
-    $this->drupalPostForm('comment/reply/node/' . $other_published_my_comment->id() . '/comment', $comment, 'Save');
+    $this->drupalGet('comment/reply/node/' . $other_published_my_comment->id() . '/comment');
+    $this->submitForm($comment, 'Save');
 
     $this->drupalGet('user/' . $this->user->id() . '/activity');
     $this->assertNoText($unpublished->label());
-    $this->assertText($my_published->label());
+    $this->assertSession()->pageTextContains($my_published->label());
     $this->assertNoText($other_published_no_comment->label());
-    $this->assertText($other_published_my_comment->label());
+    $this->assertSession()->pageTextContains($other_published_my_comment->label());
 
     // Assert cache contexts.
     $this->assertCacheContexts(['languages:language_interface', 'route', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'url.query_args.pagers:0', 'user', 'user.node_grants:view']);
@@ -210,7 +211,7 @@ class TrackerTest extends BrowserTestBase {
     $this->assertSession()->linkExists($my_published->label());
     $this->assertSession()->linkNotExists($unpublished->label());
     // Verify that title and tab title have been set correctly.
-    $this->assertText('Activity');
+    $this->assertSession()->pageTextContains('Activity');
     $this->assertSession()->titleEquals($this->user->getAccountName() . ' | Drupal');
 
     // Verify that unpublished comments are removed from the tracker.
@@ -220,7 +221,8 @@ class TrackerTest extends BrowserTestBase {
       'access user profiles',
     ]);
     $this->drupalLogin($admin_user);
-    $this->drupalPostForm('comment/1/edit', ['status' => CommentInterface::NOT_PUBLISHED], 'Save');
+    $this->drupalGet('comment/1/edit');
+    $this->submitForm(['status' => CommentInterface::NOT_PUBLISHED], 'Save');
     $this->drupalGet('user/' . $this->user->id() . '/activity');
     $this->assertNoText($other_published_my_comment->label());
 
@@ -266,7 +268,8 @@ class TrackerTest extends BrowserTestBase {
       'comment_body[0][value]' => $this->randomMachineName(20),
     ];
     sleep(1);
-    $this->drupalPostForm('comment/reply/node/' . $node->id() . '/comment', $comment, 'Save');
+    $this->drupalGet('comment/reply/node/' . $node->id() . '/comment');
+    $this->submitForm($comment, 'Save');
     // Reload the node so that comment.module's hook_node_load()
     // implementation can set $node->last_comment_timestamp for the freshly
     // posted comment.
@@ -311,7 +314,8 @@ class TrackerTest extends BrowserTestBase {
       'subject[0][value]' => $this->randomMachineName(),
       'comment_body[0][value]' => $this->randomMachineName(20),
     ];
-    $this->drupalPostForm('comment/reply/node/' . $node_one->id() . '/comment', $comment, 'Save');
+    $this->drupalGet('comment/reply/node/' . $node_one->id() . '/comment');
+    $this->submitForm($comment, 'Save');
 
     // If the comment is posted in the same second as the last one then Drupal
     // can't tell the difference, so we wait one second here.
@@ -322,7 +326,8 @@ class TrackerTest extends BrowserTestBase {
       'subject[0][value]' => $this->randomMachineName(),
       'comment_body[0][value]' => $this->randomMachineName(20),
     ];
-    $this->drupalPostForm('comment/reply/node/' . $node_two->id() . '/comment', $comment, 'Save');
+    $this->drupalGet('comment/reply/node/' . $node_two->id() . '/comment');
+    $this->submitForm($comment, 'Save');
 
     // We should at this point have in our tracker for otherUser:
     // 1. node_two
@@ -342,7 +347,8 @@ class TrackerTest extends BrowserTestBase {
       'subject[0][value]' => $this->randomMachineName(),
       'comment_body[0][value]' => $this->randomMachineName(20),
     ];
-    $this->drupalPostForm('comment/reply/node/' . $node_one->id() . '/comment', $comment, 'Save');
+    $this->drupalGet('comment/reply/node/' . $node_one->id() . '/comment');
+    $this->submitForm($comment, 'Save');
 
     // Switch back to the otherUser and assert that the order has swapped.
     $this->drupalLogin($this->otherUser);
@@ -351,7 +357,6 @@ class TrackerTest extends BrowserTestBase {
     // on the tracker page.
     // It's almost certainly too brittle.
     $pattern = '/' . preg_quote($node_one->getTitle()) . '.+' . preg_quote($node_two->getTitle()) . '/s';
-    $this->verbose($pattern);
     // Verify that the most recent comment on node appears at the top of
     // tracker.
     $this->assertSession()->responseMatches($pattern);
@@ -379,7 +384,8 @@ class TrackerTest extends BrowserTestBase {
       'subject[0][value]' => $this->randomMachineName(),
       'comment_body[0][value]' => $this->randomMachineName(20),
     ];
-    $this->drupalPostForm('comment/reply/node/' . $nodes[3]->id() . '/comment', $comment, 'Save');
+    $this->drupalGet('comment/reply/node/' . $nodes[3]->id() . '/comment');
+    $this->submitForm($comment, 'Save');
 
     // Create an unpublished node.
     $unpublished = $this->drupalCreateNode([
@@ -405,7 +411,7 @@ class TrackerTest extends BrowserTestBase {
 
     // Assert that all node titles are displayed.
     foreach ($nodes as $i => $node) {
-      $this->assertText($node->label());
+      $this->assertSession()->pageTextContains($node->label());
     }
 
     // Fetch the site-wide tracker.
@@ -413,7 +419,7 @@ class TrackerTest extends BrowserTestBase {
 
     // Assert that all node titles are displayed.
     foreach ($nodes as $i => $node) {
-      $this->assertText($node->label());
+      $this->assertSession()->pageTextContains($node->label());
     }
   }
 
@@ -435,17 +441,18 @@ class TrackerTest extends BrowserTestBase {
 
     // Assert that the node is displayed.
     $this->drupalGet('activity');
-    $this->assertText($node->label());
+    $this->assertSession()->pageTextContains($node->label());
 
     // Unpublish the node and ensure that it's no longer displayed.
     $edit = [
       'action' => 'node_unpublish_action',
       'node_bulk_form[0]' => $node->id(),
     ];
-    $this->drupalPostForm('admin/content', $edit, 'Apply to selected items');
+    $this->drupalGet('admin/content');
+    $this->submitForm($edit, 'Apply to selected items');
 
     $this->drupalGet('activity');
-    $this->assertText('No content available.');
+    $this->assertSession()->pageTextContains('No content available.');
   }
 
   /**

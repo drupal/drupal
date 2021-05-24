@@ -11,13 +11,15 @@ function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread n
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-(function ($, window, Drupal, drupalSettings) {
+(function ($, window, Drupal, drupalSettings, _ref) {
+  var isFocusable = _ref.isFocusable,
+      tabbable = _ref.tabbable;
   Drupal.behaviors.AJAX = {
     attach: function attach(context, settings) {
       function loadAjaxBehavior(base) {
@@ -443,7 +445,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       if (response[i].command && _this.commands[response[i].command]) {
         _this.commands[response[i].command](_this, response[i], status);
 
-        if (response[i].command === 'invoke' && response[i].method === 'focus') {
+        if (response[i].command === 'invoke' && response[i].method === 'focus' || response[i].command === 'focusFirst') {
           focusChanged = true;
         }
       }
@@ -626,6 +628,26 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     data: function data(ajax, response, status) {
       $(response.selector).data(response.name, response.value);
     },
+    focusFirst: function focusFirst(ajax, response, status) {
+      var focusChanged = false;
+      var container = document.querySelector(response.selector);
+
+      if (container) {
+        var tabbableElements = tabbable(container);
+
+        if (tabbableElements.length) {
+          tabbableElements[0].focus();
+          focusChanged = true;
+        } else if (isFocusable(container)) {
+          container.focus();
+          focusChanged = true;
+        }
+      }
+
+      if (ajax.hasOwnProperty('element') && !focusChanged) {
+        ajax.element.focus();
+      }
+    },
     invoke: function invoke(ajax, response, status) {
       var $element = $(response.selector);
       $element[response.method].apply($element, _toConsumableArray(response.args));
@@ -649,4 +671,4 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       messages.add(response.message, response.messageOptions);
     }
   };
-})(jQuery, window, Drupal, drupalSettings);
+})(jQuery, window, Drupal, drupalSettings, window.tabbable);

@@ -17,3 +17,7 @@ destination:
   plugin: config
   config_name: system.site
   translations: true
+migration_dependencies:
+  required:
+    - language
+    - system_site

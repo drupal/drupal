@@ -26,22 +26,6 @@
   margin-left: 1.125rem
 }
 
-[dir="ltr"] .button {
-  padding-left: 1.6875rem
-}
-
-[dir="rtl"] .button {
-  padding-right: 1.6875rem
-}
-
-[dir="ltr"] .button {
-  padding-right: 1.6875rem
-}
-
-[dir="rtl"] .button {
-  padding-left: 1.6875rem
-}
-
 .button {
   display: inline-block;
   height: 3.375rem;
@@ -49,17 +33,18 @@
   margin-bottom: 1.125rem;
   padding-top: 1.125rem;
   padding-bottom: 1.125rem;
+  padding-left: 1.6875rem;
+  padding-right: 1.6875rem;
   cursor: pointer;
   text-align: center;
   text-decoration: none;
   color: #0d77b5;
-  border: 2px solid #0d77b5;
-  border-radius: 2px;
+  border: solid 2px #0d77b5;
+  border-radius: 0.1875rem;
   background-color: #fff;
   font-family: inherit;
-  font-size: 0.875rem;
+  font-size: 1.125rem;
   font-weight: 700;
-  line-height: 1.125rem;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -74,15 +59,13 @@
   }
 
 .button:focus {
-    outline: 2px solid  #53b0eb;
+    outline: 2px solid #53b0eb;
     outline-offset: 2px;
-    box-shadow: 0 0 0 2px #fff, 0 0 0 4px #53b0eb, 0 0 36px rgba(83, 176, 235, 0.25);
   }
 
 .button:active {
     color: #0d77b5;
     border-color: #0d77b5;
-    box-shadow: none;
   }
 
 .button:disabled,
@@ -102,22 +85,6 @@
 
 @supports (display: inline-flex) {
 
-[dir="ltr"] .button {
-    padding-left: 1.6875rem
-  }
-
-[dir="rtl"] .button {
-    padding-right: 1.6875rem
-  }
-
-[dir="ltr"] .button {
-    padding-right: 1.6875rem
-  }
-
-[dir="rtl"] .button {
-    padding-left: 1.6875rem
-  }
-
 .button {
     display: inline-flex;
     align-items: center;
@@ -125,6 +92,8 @@
     /* Top padding accounts for font not being vertically centered within line-height. */
     padding-top: 1px;
     padding-bottom: 0;
+    padding-left: 1.6875rem;
+    padding-right: 1.6875rem;
     line-height: 1.125rem
 }
   }
@@ -152,26 +121,14 @@
   margin-bottom: 0;
 }
 
-[dir="ltr"] .button--small {
-  padding-left: 1.6875rem
-}
-
-[dir="rtl"] .button--small {
-  padding-right: 1.6875rem
-}
-
-[dir="ltr"] .button--small {
-  padding-right: 1.6875rem
-}
-
-[dir="rtl"] .button--small {
-  padding-left: 1.6875rem
-}
-
 .button--small {
   height: 2.8125rem;
   padding-top: 0.84375rem;
   padding-bottom: 0.84375rem;
+  padding-left: 1.125rem;
+  padding-right: 1.125rem;
+  font-size: 1rem;
+  line-height: normal;
 }
 
 .button--primary {
@@ -195,6 +152,16 @@
     color: #fff;
     background-color: #d7e1e8;
   }
+
+#drupal-off-canvas input[type="submit"].button {
+    float: left;
+    width: auto;
+  }
+
+.button--icon-back {
+  display: inline-flex;
+  align-items: center
+}
 
 [dir="ltr"] .button--icon-back:before {
     margin-right: 0.5em

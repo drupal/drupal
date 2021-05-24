@@ -1,5 +1,5 @@
 <?php
-// @codingStandardsIgnoreFile
+
 namespace Drupal\FunctionalTests;
 
 use Behat\Mink\Element\NodeElement;

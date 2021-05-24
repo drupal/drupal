@@ -42,7 +42,7 @@ class DeleteTest extends FileManagedUnitTestBase {
 
     $file_usage->delete($file, 'testing', 'test', 1);
     $usage = $file_usage->listUsage($file);
-    $this->assertEqual([1 => 1], $usage['testing']['test'], 'Test file is still in use.');
+    $this->assertEquals([1 => 1], $usage['testing']['test'], 'Test file is still in use.');
     $this->assertFileExists($file->getFileUri());
     $this->assertNotEmpty(File::load($file->id()), 'File still exists in the database.');
 

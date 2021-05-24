@@ -51,48 +51,48 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
 
       // Make sure our English nodes still exist.
       $node = Node::load($id);
-      $this->assertEqual($langcode, $node->language()->getId());
-      $this->assertEqual($type, $node->getType());
-      $this->assertEqual($title, $node->getTitle());
+      $this->assertEquals($langcode, $node->language()->getId());
+      $this->assertEquals($type, $node->getType());
+      $this->assertEquals($title, $node->getTitle());
       // Assert that nodes are all published.
       $this->assertTrue($node->isPublished());
       $this->drupalGet('node/' . $id);
-      $this->assertText($title);
+      $this->assertSession()->pageTextContains($title);
     }
 
     // Make sure the translated node still exists.
     $translation = Node::load(8)->getTranslation('es');
-    $this->assertEqual('Test title Spanish', $translation->getTitle());
+    $this->assertEquals('Test title Spanish', $translation->getTitle());
 
     // Make sure our alias still works.
     $this->drupalGet('test-article');
-    $this->assertText('Test Article - New title');
-    $this->assertText('Body');
-    $this->assertText('Tags');
+    $this->assertSession()->pageTextContains('Test Article - New title');
+    $this->assertSession()->pageTextContains('Body');
+    $this->assertSession()->pageTextContains('Tags');
 
     // Make sure a translated page exists.
     $this->drupalGet('node/8', ['language' => $spanish]);
     // Check for text of two comments.
-    $this->assertText('Hola');
-    $this->assertText('Hello');
+    $this->assertSession()->pageTextContains('Hola');
+    $this->assertSession()->pageTextContains('Hello');
     // The user entity reference field is access restricted.
     $this->assertNoText('Test 12');
     // Make sure all other field labels are there.
     for ($i = 1; $i <= 23; $i++) {
       if ($i != 12) {
-        $this->assertText('Test ' . $i);
+        $this->assertSession()->pageTextContains('Test ' . $i);
       }
     }
 
     // Make sure the translated slogan appears.
-    $this->assertText('drupal Spanish');
+    $this->assertSession()->pageTextContains('drupal Spanish');
 
     // Make sure the custom block appears.
     $this->drupalGet('<front>');
     // Block title.
-    $this->assertText('Another block');
+    $this->assertSession()->pageTextContains('Another block');
     // Block body.
-    $this->assertText('Hello');
+    $this->assertSession()->pageTextContains('Hello');
 
     // Log in as user 1.
     $account = User::load(1);
@@ -102,39 +102,40 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
     // Make sure we can see the access-restricted entity reference field
     // now that we're logged in.
     $this->drupalGet('node/8', ['language' => $spanish]);
-    $this->assertText('Test 12');
+    $this->assertSession()->pageTextContains('Test 12');
     $this->assertSession()->linkExists('drupal');
 
     // Make sure the content for node 8 is still in the edit form.
     $this->drupalGet('node/8/edit');
-    $this->assertText('Test title');
-    $this->assertText('Test body');
+    $this->assertSession()->pageTextContains('Test title');
+    $this->assertSession()->pageTextContains('Test body');
     $this->assertSession()->checkboxChecked('edit-field-test-1-value');
     $this->assertRaw('2015-08-16');
     $this->assertRaw('test@example.com');
     $this->assertRaw('drupal.org');
-    $this->assertText('0.1');
-    $this->assertText('0.2');
+    $this->assertSession()->pageTextContains('0.1');
+    $this->assertSession()->pageTextContains('0.2');
     $this->assertRaw('+31612345678');
     $this->assertRaw('+31612345679');
-    $this->assertText('Test Article - New title');
-    $this->assertText('test.txt');
-    $this->assertText('druplicon.small');
+    $this->assertSession()->pageTextContains('Test Article - New title');
+    $this->assertSession()->pageTextContains('test.txt');
+    $this->assertSession()->pageTextContains('druplicon.small');
     $this->assertRaw('General discussion');
-    $this->assertText('Test Article - New title');
-    $this->assertText('Test 1');
+    $this->assertSession()->pageTextContains('Test Article - New title');
+    $this->assertSession()->pageTextContains('Test 1');
     $this->assertRaw('0.01');
-    $this->drupalPostForm('node/8/edit', [], 'Save (this translation)');
+    $this->drupalGet('node/8/edit');
+    $this->submitForm([], 'Save (this translation)');
     $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet('node/8/edit', ['language' => $spanish]);
-    $this->assertText('Test title Spanish');
-    $this->assertText('Test body Spanish');
+    $this->assertSession()->pageTextContains('Test title Spanish');
+    $this->assertSession()->pageTextContains('Test body Spanish');
 
     // Make sure the user page is correct.
     $this->drupalGet('user/3');
-    $this->assertText('usuario_test');
+    $this->assertSession()->pageTextContains('usuario_test');
     $this->assertRaw('druplicon.small');
-    $this->assertText('Test file field');
+    $this->assertSession()->pageTextContains('Test file field');
     $this->assertSession()->linkExists('test.txt');
 
     // Make sure the user is translated.
@@ -143,37 +144,37 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
 
     // Make sure the custom field on the user is still there.
     $this->drupalGet('admin/config/people/accounts/fields');
-    $this->assertText('Test file field');
+    $this->assertSession()->pageTextContains('Test file field');
 
     // Make sure the test view still exists.
     $this->drupalGet('admin/structure/views/view/test_view');
-    $this->assertText('Test view');
+    $this->assertSession()->pageTextContains('Test view');
 
     // Make sure the book node exists.
     $this->drupalGet('admin/structure/book');
     $this->clickLink('Test Article - New title');
-    $this->assertText('Body');
-    $this->assertText('Tags');
+    $this->assertSession()->pageTextContains('Body');
+    $this->assertSession()->pageTextContains('Tags');
     $this->assertRaw('Text format');
 
     // Make sure that users still exist.
     $this->drupalGet('admin/people');
-    $this->assertText('usuario_test');
-    $this->assertText('drupal');
+    $this->assertSession()->pageTextContains('usuario_test');
+    $this->assertSession()->pageTextContains('drupal');
     $this->drupalGet('user/1/edit');
     $this->assertRaw('drupal@example.com');
 
     // Make sure the content view works.
     $this->drupalGet('admin/content');
-    $this->assertText('Test title');
+    $this->assertSession()->pageTextContains('Test title');
 
     // Make sure our custom blocks show up.
     $this->drupalGet('admin/structure/block');
-    $this->assertText('Another block');
-    $this->assertText('Test block');
+    $this->assertSession()->pageTextContains('Another block');
+    $this->assertSession()->pageTextContains('Test block');
     $this->drupalGet('admin/structure/block/block-content');
-    $this->assertText('Another block');
-    $this->assertText('Test block');
+    $this->assertSession()->pageTextContains('Another block');
+    $this->assertSession()->pageTextContains('Test block');
 
     // Make sure our custom visibility conditions are correct.
     $this->drupalGet('admin/structure/block/manage/testblock');
@@ -188,28 +189,28 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
 
     // Make sure our custom text format exists.
     $this->drupalGet('admin/config/content/formats');
-    $this->assertText('Test text format');
+    $this->assertSession()->pageTextContains('Test text format');
     $this->drupalGet('admin/config/content/formats/manage/test_text_format');
     $this->assertSession()->statusCodeEquals(200);
 
     // Make sure our feed still exists.
     $this->drupalGet('admin/config/services/aggregator');
-    $this->assertText('Test feed');
+    $this->assertSession()->pageTextContains('Test feed');
     $this->drupalGet('admin/config/services/aggregator/fields');
-    $this->assertText('field_test');
+    $this->assertSession()->pageTextContains('field_test');
 
     // Make sure our view appears in the overview.
     $this->drupalGet('admin/structure/views');
-    $this->assertText('test_view');
-    $this->assertText('Test view');
+    $this->assertSession()->pageTextContains('test_view');
+    $this->assertSession()->pageTextContains('Test view');
 
     // Make sure our custom forum exists.
     $this->drupalGet('admin/structure/forum');
-    $this->assertText('Test forum');
+    $this->assertSession()->pageTextContains('Test forum');
 
     // Make sure our custom menu exists.
     $this->drupalGet('admin/structure/menu');
-    $this->assertText('Test menu');
+    $this->assertSession()->pageTextContains('Test menu');
 
     // Make sure our custom menu exists.
     $this->drupalGet('admin/structure/menu/manage/test-menu');
@@ -223,15 +224,15 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
 
     // Make sure our comment type exists.
     $this->drupalGet('admin/structure/comment');
-    $this->assertText('Test comment type');
+    $this->assertSession()->pageTextContains('Test comment type');
     $this->drupalGet('admin/structure/comment/manage/test_comment_type/fields');
-    $this->assertText('comment_body');
+    $this->assertSession()->pageTextContains('comment_body');
 
     // Make sure our contact form exists.
     $this->drupalGet('admin/structure/contact');
-    $this->assertText('Test contact form');
+    $this->assertSession()->pageTextContains('Test contact form');
     $this->drupalGet('admin/structure/types');
-    $this->assertText('Test content type description');
+    $this->assertSession()->pageTextContains('Test content type description');
     $this->drupalGet('admin/structure/types/manage/test_content_type/fields');
 
     // Make sure fields are the right type.
@@ -256,40 +257,40 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
 
     // Make sure our form mode exists.
     $this->drupalGet('admin/structure/display-modes/form');
-    $this->assertText('New form mode');
+    $this->assertSession()->pageTextContains('New form mode');
 
     // Make sure our view mode exists.
     $this->drupalGet('admin/structure/display-modes/view');
-    $this->assertText('New view mode');
+    $this->assertSession()->pageTextContains('New view mode');
     $this->drupalGet('admin/structure/display-modes/view/manage/node.new_view_mode');
     $this->assertSession()->statusCodeEquals(200);
 
     // Make sure our other language is still there.
     $this->drupalGet('admin/config/regional/language');
-    $this->assertText('Spanish');
+    $this->assertSession()->pageTextContains('Spanish');
 
     // Make sure our custom date format exists.
     $this->drupalGet('admin/config/regional/date-time');
-    $this->assertText('Test date format');
+    $this->assertSession()->pageTextContains('Test date format');
     $this->drupalGet('admin/config/regional/date-time/formats/manage/test_date_format');
     $this->assertTrue($this->assertSession()->optionExists('edit-langcode', 'es')->isSelected());
 
     // Make sure our custom image style exists.
     $this->drupalGet('admin/config/media/image-styles/manage/test_image_style');
-    $this->assertText('Test image style');
-    $this->assertText('Desaturate');
-    $this->assertText('Convert PNG');
+    $this->assertSession()->pageTextContains('Test image style');
+    $this->assertSession()->pageTextContains('Desaturate');
+    $this->assertSession()->pageTextContains('Convert PNG');
 
     // Make sure our custom responsive image style exists.
     $this->drupalGet('admin/config/media/responsive-image-style/test');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('Test');
+    $this->assertSession()->pageTextContains('Test');
 
     // Make sure our custom shortcut exists.
     $this->drupalGet('admin/config/user-interface/shortcut');
-    $this->assertText('Test shortcut');
+    $this->assertSession()->pageTextContains('Test shortcut');
     $this->drupalGet('admin/config/user-interface/shortcut/manage/test/customize');
-    $this->assertText('All content');
+    $this->assertSession()->pageTextContains('All content');
 
     // Make sure our language detection settings are still correct.
     $this->drupalGet('admin/config/regional/language/detection');
@@ -302,28 +303,29 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
     // Make sure strings are still translated.
     $this->drupalGet('admin/structure/views/view/content/translate/es/edit');
     // cSpell:disable-next-line
-    $this->assertText('Contenido');
-    $this->drupalPostForm('admin/config/regional/translate', ['string' => 'Full comment'], 'Filter');
+    $this->assertSession()->pageTextContains('Contenido');
+    $this->drupalGet('admin/config/regional/translate');
+    $this->submitForm(['string' => 'Full comment'], 'Filter');
     // cSpell:disable-next-line
-    $this->assertText('Comentario completo');
+    $this->assertSession()->pageTextContains('Comentario completo');
 
     // Make sure our custom action is still there.
     $this->drupalGet('admin/config/system/actions');
-    $this->assertText('Test action');
+    $this->assertSession()->pageTextContains('Test action');
     $this->drupalGet('admin/config/system/actions/configure/test_action');
-    $this->assertText('test_action');
+    $this->assertSession()->pageTextContains('test_action');
     $this->assertRaw('drupal.org');
 
     // Make sure our ban still exists.
     $this->drupalGet('admin/config/people/ban');
-    $this->assertText('8.8.8.8');
+    $this->assertSession()->pageTextContains('8.8.8.8');
 
     // Make sure our vocabulary exists.
     $this->drupalGet('admin/structure/taxonomy/manage/test_vocabulary/overview');
 
     // Make sure our terms exist.
-    $this->assertText('Test root term');
-    $this->assertText('Test child term');
+    $this->assertSession()->pageTextContains('Test root term');
+    $this->assertSession()->pageTextContains('Test child term');
     $this->drupalGet('taxonomy/term/3');
     $this->assertSession()->statusCodeEquals(200);
 
@@ -333,12 +335,12 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
 
     // Make sure our contact form exists.
     $this->drupalGet('admin/structure/contact');
-    $this->assertText('Test contact form');
+    $this->assertSession()->pageTextContains('Test contact form');
     $this->drupalGet('admin/structure/contact/manage/test_contact_form');
-    $this->assertText('test@example.com');
-    $this->assertText('Hello');
+    $this->assertSession()->pageTextContains('test@example.com');
+    $this->assertSession()->pageTextContains('Hello');
     $this->drupalGet('admin/structure/contact/manage/test_contact_form/translate/es/edit');
-    $this->assertText('Hola');
+    $this->assertSession()->pageTextContains('Hola');
     $this->assertRaw('Test contact form Spanish');
 
     // Make sure our modules are still enabled.
@@ -422,7 +424,7 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
     // dependencies.
     // @see system_post_update_fix_enforced_dependencies()
     $book_node_type = NodeType::load('book');
-    $this->assertEqual(['enforced' => ['module' => ['book']]], $book_node_type->get('dependencies'));
+    $this->assertEquals(['enforced' => ['module' => ['book']]], $book_node_type->get('dependencies'));
   }
 
   /**

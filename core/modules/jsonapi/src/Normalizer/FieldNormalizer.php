@@ -31,7 +31,7 @@ class FieldNormalizer extends NormalizerBase implements DenormalizerInterface {
    * {@inheritdoc}
    */
   public function normalize($field, $format = NULL, array $context = []) {
-    /* @var \Drupal\Core\Field\FieldItemListInterface $field */
+    /** @var \Drupal\Core\Field\FieldItemListInterface $field */
     $normalized_items = $this->normalizeFieldItems($field, $format, $context);
     assert($context['resource_object'] instanceof ResourceObject);
     return $context['resource_object']->getResourceType()->getFieldByInternalName($field->getName())->hasOne()

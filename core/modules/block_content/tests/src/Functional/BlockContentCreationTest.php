@@ -55,7 +55,8 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $edit = [];
     $edit['info[0][value]'] = 'Test Block';
     $edit['body[0][value]'] = $this->randomMachineName(16);
-    $this->drupalPostForm('block/add/basic', $edit, 'Save');
+    $this->drupalGet('block/add/basic');
+    $this->submitForm($edit, 'Save');
 
     // Check that the Basic block has been created.
     $this->assertSession()->pageTextContains('basic ' . $edit['info[0][value]'] . ' has been created.');
@@ -72,7 +73,8 @@ class BlockContentCreationTest extends BlockContentTestBase {
 
     // Check that attempting to create another block with the same value for
     // 'info' returns an error.
-    $this->drupalPostForm('block/add/basic', $edit, 'Save');
+    $this->drupalGet('block/add/basic');
+    $this->submitForm($edit, 'Save');
 
     // Check that the Basic block has been created.
     $this->assertSession()->pageTextContains('A custom block with block description ' . $edit['info[0][value]'] . ' already exists.');
@@ -99,7 +101,8 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $edit = [];
     $edit['info[0][value]'] = 'Test Block';
     $edit['body[0][value]'] = $this->randomMachineName(16);
-    $this->drupalPostForm('block/add/basic', $edit, 'Save');
+    $this->drupalGet('block/add/basic');
+    $this->submitForm($edit, 'Save');
 
     // Check that the Basic block has been created.
     $this->assertSession()->pageTextContains('basic ' . $edit['info[0][value]'] . ' has been created.');
@@ -151,7 +154,8 @@ class BlockContentCreationTest extends BlockContentTestBase {
 
     // Check that attempting to create another block with the same value for
     // 'info' returns an error.
-    $this->drupalPostForm('block/add/basic', $edit, 'Save');
+    $this->drupalGet('block/add/basic');
+    $this->submitForm($edit, 'Save');
 
     // Check that the Basic block has been created.
     $this->assertSession()->pageTextContains('A custom block with block description ' . $edit['info[0][value]'] . ' already exists.');
@@ -169,7 +173,8 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $edit['info[0][value]'] = $this->randomMachineName(8);
     $edit['body[0][value]'] = $this->randomMachineName(16);
     // Don't pass the custom block type in the url so the default is forced.
-    $this->drupalPostForm('block/add', $edit, 'Save');
+    $this->drupalGet('block/add');
+    $this->submitForm($edit, 'Save');
 
     // Check that the block has been created and that it is a basic block.
     $this->assertSession()->pageTextContains('basic ' . $edit['info[0][value]'] . ' has been created.');
@@ -207,7 +212,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
   }
 
   /**
-   * Test deleting a block.
+   * Tests deleting a block.
    */
   public function testBlockDelete() {
     // Create a block.
@@ -215,7 +220,8 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $edit['info[0][value]'] = $this->randomMachineName(8);
     $body = $this->randomMachineName(16);
     $edit['body[0][value]'] = $body;
-    $this->drupalPostForm('block/add/basic', $edit, 'Save');
+    $this->drupalGet('block/add/basic');
+    $this->submitForm($edit, 'Save');
 
     // Place the block.
     $instance = [
@@ -225,7 +231,8 @@ class BlockContentCreationTest extends BlockContentTestBase {
     ];
     $block = BlockContent::load(1);
     $url = 'admin/structure/block/add/block_content:' . $block->uuid() . '/' . $this->config('system.theme')->get('default');
-    $this->drupalPostForm($url, $instance, 'Save block');
+    $this->drupalGet($url);
+    $this->submitForm($instance, 'Save block');
 
     $block = BlockContent::load(1);
 
@@ -234,11 +241,11 @@ class BlockContentCreationTest extends BlockContentTestBase {
 
     // Navigate to home page.
     $this->drupalGet('');
-    $this->assertText($body);
+    $this->assertSession()->pageTextContains($body);
 
     // Delete the block.
     $this->drupalGet('block/1/delete');
-    $this->assertText('This will also remove 1 placed block instance.');
+    $this->assertSession()->pageTextContains('This will also remove 1 placed block instance.');
 
     $this->submitForm([], 'Delete');
     $this->assertSession()->pageTextContains('The custom block ' . $edit['info[0][value]'] . ' has been deleted.');
@@ -248,7 +255,8 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $edit2['info[0][value]'] = $this->randomMachineName(8);
     $body2 = $this->randomMachineName(16);
     $edit2['body[0][value]'] = $body2;
-    $this->drupalPostForm('block/add/basic', $edit2, 'Save');
+    $this->drupalGet('block/add/basic');
+    $this->submitForm($edit2, 'Save');
 
     $this->assertNoRaw('Error message');
 
@@ -258,7 +266,8 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $edit3['info[0][value]'] = $this->randomMachineName(8);
     $body = $this->randomMachineName(16);
     $edit3['body[0][value]'] = $body;
-    $this->drupalPostForm('block/add/basic', $edit3, 'Save');
+    $this->drupalGet('block/add/basic');
+    $this->submitForm($edit3, 'Save');
 
     // Show the delete confirm form.
     $this->drupalGet('block/3/delete');
@@ -266,7 +275,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
   }
 
   /**
-   * Test that placed content blocks create a dependency in the block placement.
+   * Tests placed content blocks create a dependency in the block placement.
    */
   public function testConfigDependencies() {
     $block = $this->createBlockContent();
@@ -279,11 +288,12 @@ class BlockContentCreationTest extends BlockContentTestBase {
     ];
     $block = BlockContent::load(1);
     $url = 'admin/structure/block/add/block_content:' . $block->uuid() . '/' . $this->config('system.theme')->get('default');
-    $this->drupalPostForm($url, $instance, 'Save block');
+    $this->drupalGet($url);
+    $this->submitForm($instance, 'Save block');
 
     $dependencies = \Drupal::service('config.manager')->findConfigEntityDependentsAsEntities('content', [$block->getConfigDependencyName()]);
     $block_placement = reset($dependencies);
-    $this->assertEqual($block_placement_id, $block_placement->id(), "The block placement config entity has a dependency on the block content entity.");
+    $this->assertEquals($block_placement_id, $block_placement->id(), "The block placement config entity has a dependency on the block content entity.");
   }
 
 }

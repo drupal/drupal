@@ -511,14 +511,14 @@ class EntityResource {
    *   The response.
    */
   public function getRelated(ResourceType $resource_type, FieldableEntityInterface $entity, $related, Request $request) {
-    /* @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
+    /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
     $resource_relationship = $resource_type->getFieldByPublicName($related);
     $field_list = $entity->get($resource_relationship->getInternalName());
 
     // Remove the entities pointing to a resource that may be disabled. Even
     // though the normalizer skips disabled references, we can avoid unnecessary
     // work by checking here too.
-    /* @var \Drupal\Core\Entity\EntityInterface[] $referenced_entities */
+    /** @var \Drupal\Core\Entity\EntityInterface[] $referenced_entities */
     $referenced_entities = array_filter(
       $field_list->referencedEntities(),
       function (EntityInterface $entity) {
@@ -562,9 +562,9 @@ class EntityResource {
    *   The response.
    */
   public function getRelationship(ResourceType $resource_type, FieldableEntityInterface $entity, $related, Request $request, $response_code = 200) {
-    /* @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
+    /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
     $field_list = $entity->get($resource_type->getInternalName($related));
-    // Access will have already been checked by the RelationshipFieldAccess
+    // Access will have already been checked by the RelationshipRouteAccessCheck
     // service, so we don't need to call ::getAccessCheckedResourceObject().
     $resource_object = ResourceObject::createFromEntity($resource_type, $entity);
     $relationship = Relationship::createFromEntityReferenceField($resource_object, $field_list);
@@ -606,9 +606,9 @@ class EntityResource {
     $internal_relationship_field_name = $resource_type->getInternalName($related);
     // According to the specification, you are only allowed to POST to a
     // relationship if it is a to-many relationship.
-    /* @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
+    /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
     $field_list = $entity->{$internal_relationship_field_name};
-    /* @var \Drupal\field\Entity\FieldConfig $field_definition */
+    /** @var \Drupal\field\Entity\FieldConfig $field_definition */
     $field_definition = $field_list->getFieldDefinition();
     $is_multiple = $field_definition->getFieldStorageDefinition()->isMultiple();
     if (!$is_multiple) {
@@ -666,12 +666,12 @@ class EntityResource {
    *   Thrown when the updated entity does not pass validation.
    */
   public function replaceRelationshipData(ResourceType $resource_type, EntityInterface $entity, $related, Request $request) {
+    /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $resource_identifiers */
     $resource_identifiers = $this->deserialize($resource_type, $request, ResourceIdentifier::class, $related);
     $internal_relationship_field_name = $resource_type->getInternalName($related);
-    /* @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $resource_identifiers */
     // According to the specification, PATCH works a little bit different if the
     // relationship is to-one or to-many.
-    /* @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
+    /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
     $field_list = $entity->{$internal_relationship_field_name};
     $field_definition = $field_list->getFieldDefinition();
     $is_multiple = $field_definition->getFieldStorageDefinition()->isMultiple();
@@ -751,7 +751,7 @@ class EntityResource {
   public function removeFromRelationshipData(ResourceType $resource_type, EntityInterface $entity, $related, Request $request) {
     $resource_identifiers = $this->deserialize($resource_type, $request, ResourceIdentifier::class, $related);
     $internal_relationship_field_name = $resource_type->getInternalName($related);
-    /* @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
+    /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
     $field_list = $entity->{$internal_relationship_field_name};
     $is_multiple = $field_list->getFieldDefinition()
       ->getFieldStorageDefinition()
@@ -1272,7 +1272,6 @@ class EntityResource {
     if (!empty($link_context['total_count']) && !$total = (int) $link_context['total_count']) {
       return $pager_links;
     }
-    /* @var \Drupal\jsonapi\Query\OffsetPage $page_param */
     $offset = $page_param->getOffset();
     $size = $page_param->getSize();
     if ($size <= 0) {

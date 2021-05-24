@@ -195,13 +195,11 @@
   appearance: none
 }
 
-.messages__close::before,
-  .messages__close::after {
+.messages__close:before,
+  .messages__close:after {
     position: absolute;
-    /* stylelint-disable csstools/use-logical */
     top: 50%;
     left: 50%;
-    /* stylelint-enable csstools/use-logical */
     display: block;
     width: 2.0625rem;
     height: 2px;
@@ -209,11 +207,11 @@
     background-color: #7e96a7;
   }
 
-.messages__close::before {
+.messages__close:before {
     transform: translate(-50%, -50%) rotate(45deg);
   }
 
-.messages__close::after {
+.messages__close:after {
     transform: translate(-50%, -50%) rotate(-45deg);
   }
 
@@ -256,11 +254,11 @@
 }
 
 [dir="ltr"] .js-form-managed-file .messages {
-  border-left: 6px solid #e33f1e;
+  border-left: solid 6px #e33f1e;
 }
 
 [dir="rtl"] .js-form-managed-file .messages {
-  border-right: 6px solid #e33f1e;
+  border-right: solid 6px #e33f1e;
 }
 
 .js-form-managed-file .messages {

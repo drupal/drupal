@@ -1,7 +1,7 @@
 {#
 /**
  * @file
- * Olivero's theme implementation for the main menu.
+ * Olivero's theme implementation for the menus in the primary_menu region.
  *
  * Available variables:
  * - menu_name: The machine name of the menu.
@@ -33,6 +33,15 @@
   {% set primary_nav_level = 'primary-nav__menu--level-' ~ (menu_level + 1) %}
   {% import _self as menus %}
   {% if items %}
+
+    {#
+      Place the menu arrow (caret) outside of the submenu because the submenu
+      has the overflow:hidden CSS rule applied.
+    #}
+    {% if menu_level == 1 %}
+      <span class="primary-nav__menu-🥕"></span>
+    {% endif %}
+
     <ul {{ attributes.addClass('primary-nav__menu', primary_nav_level) }}>
       {% set attributes = attributes.removeClass(primary_nav_level) %}
       {% for item in items %}
@@ -84,7 +93,7 @@
                 drop menu).
               #}
               <button class="primary-nav__button-toggle" aria-controls="{{ aria_id }}" aria-expanded="false" aria-hidden="true" tabindex="-1">
-                <span class="visually-hidden">{{ 'Toggle sub-navigation'|t }}</span>
+                <span class="visually-hidden">{{ '@title sub-navigation'|t({'@title': item.title}) }}</span>
                 <span class="icon--menu-toggle"></span>
               </button>
 

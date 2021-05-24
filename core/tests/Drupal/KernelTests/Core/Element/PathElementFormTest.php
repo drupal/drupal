@@ -153,12 +153,12 @@ class PathElementFormTest extends KernelTestBase implements FormInterface {
 
     // Valid form state.
     $this->assertCount(0, $form_state->getErrors());
-    $this->assertEqual(['route_name' => 'entity.user.canonical', 'route_parameters' => ['user' => $this->testUser->id()]], $form_state->getValue('required_validate_route'));
+    $this->assertEquals(['route_name' => 'entity.user.canonical', 'route_parameters' => ['user' => $this->testUser->id()]], $form_state->getValue('required_validate_route'));
     /** @var \Drupal\Core\Url $url */
     $url = $form_state->getValue('required_validate_url');
     $this->assertInstanceOf(Url::class, $url);
-    $this->assertEqual('entity.user.canonical', $url->getRouteName());
-    $this->assertEqual(['user' => $this->testUser->id()], $url->getRouteParameters());
+    $this->assertEquals('entity.user.canonical', $url->getRouteName());
+    $this->assertEquals(['user' => $this->testUser->id()], $url->getRouteParameters());
 
     // Test #required.
     $form_state = (new FormState())
@@ -171,7 +171,7 @@ class PathElementFormTest extends KernelTestBase implements FormInterface {
     $errors = $form_state->getErrors();
     // Should be missing 'required_validate' field.
     $this->assertCount(1, $errors);
-    $this->assertEqual(['required_validate' => t('@name field is required.', ['@name' => 'required_validate'])], $errors);
+    $this->assertEquals(['required_validate' => t('@name field is required.', ['@name' => 'required_validate'])], $errors);
 
     // Test invalid parameters.
     $form_state = (new FormState())
@@ -187,7 +187,7 @@ class PathElementFormTest extends KernelTestBase implements FormInterface {
     // Valid form state.
     $errors = $form_state->getErrors();
     $this->assertCount(3, $errors);
-    $this->assertEqual(['required_validate' => t('This path does not exist or you do not have permission to link to %path.', ['%path' => 'user/74']), 'required_validate_route' => t('This path does not exist or you do not have permission to link to %path.', ['%path' => 'user/74']), 'required_validate_url' => t('This path does not exist or you do not have permission to link to %path.', ['%path' => 'user/74'])], $errors);
+    $this->assertEquals(['required_validate' => t('This path does not exist or you do not have permission to link to %path.', ['%path' => 'user/74']), 'required_validate_route' => t('This path does not exist or you do not have permission to link to %path.', ['%path' => 'user/74']), 'required_validate_url' => t('This path does not exist or you do not have permission to link to %path.', ['%path' => 'user/74'])], $errors);
   }
 
 }

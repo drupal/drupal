@@ -5,10 +5,6 @@
 
 @import "../base/variables.pcss.css";
 
-:root {
-  --button-border-width: var(--form-element-border-size-base);
-}
-
 .button {
   display: inline-block;
   height: var(--sp3);
@@ -16,19 +12,17 @@
   margin-inline-start: 0;
   margin-inline-end: var(--sp1);
   padding-block: calc((var(--sp3) - var(--line-height-s)) / 2);
-  padding-inline-start: var(--sp1-5);
-  padding-inline-end: var(--sp1-5);
+  padding-inline: var(--sp1-5);
   cursor: pointer;
   text-align: center;
   text-decoration: none;
   color: var(--color--blue-20);
-  border: var(--button-border-width) solid var(--color--blue-20);
-  border-radius: var(--border-radius-base);
+  border: solid 2px var(--color--blue-20);
+  border-radius: var(--border-radius);
   background-color: var(--color--white);
   font-family: inherit;
-  font-size: var(--font-size-s);
+  font-size: var(--font-size-l);
   font-weight: 700;
-  line-height: var(--line-height-s);
   appearance: none;
   -webkit-font-smoothing: antialiased;
 
@@ -40,15 +34,13 @@
   }
 
   &:focus {
-    outline: var(--outline--base);
-    outline-offset: var(--outline-offset);
-    box-shadow: var(--shadow-focusable);
+    outline: 2px solid var(--color--blue-70);
+    outline-offset: 2px;
   }
 
   &:active {
     color: var(--color--blue-20);
     border-color: var(--color--blue-20);
-    box-shadow: none;
   }
 
   &:disabled,
@@ -68,8 +60,7 @@
 
     /* Top padding accounts for font not being vertically centered within line-height. */
     padding-block: 1px 0;
-    padding-inline-start: var(--sp1-5);
-    padding-inline-end: var(--sp1-5);
+    padding-inline: var(--sp1-5);
     line-height: var(--line-height-s);
   }
 }
@@ -84,8 +75,9 @@
 .button--small {
   height: var(--sp2-5);
   padding-block: calc((var(--sp2-5) - var(--line-height-s)) / 2);
-  padding-inline-start: var(--sp1-5);
-  padding-inline-end: var(--sp1-5);
+  padding-inline: var(--sp);
+  font-size: var(--font-size-base);
+  line-height: normal;
 }
 
 .button--primary {
@@ -110,7 +102,17 @@
   }
 }
 
+#drupal-off-canvas input[type="submit"] {
+  &.button {
+    float: left;
+    width: auto;
+  }
+}
+
 .button--icon-back {
+  display: inline-flex;
+  align-items: center;
+
   &:before {
     display: block;
     width: 0.5em;

@@ -139,6 +139,11 @@ claro.drupal.dialog:
     theme:
       css/components/dialog.css: {}
 
+claro.tabledrag:
+  version: VERSION
+  js:
+    js/tabledrag.js: {}
+
 ckeditor-dialog:
   version: VERSION
   css:
@@ -155,7 +160,7 @@ tour-styling:
   version: VERSION
   css:
     theme:
-      css/components/tour.theme.css: {}
+      css/theme/tour.theme.css: {}
 
 media-form:
   version: VERSION
@@ -203,6 +208,8 @@ autocomplete:
   version: VERSION
   js:
     js/autocomplete.js: {}
+  dependencies:
+    - core/once
 
 drupal.shortcut:
   version: VERSION

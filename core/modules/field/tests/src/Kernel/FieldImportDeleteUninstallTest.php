@@ -71,9 +71,9 @@ class FieldImportDeleteUninstallTest extends FieldKernelTestBase {
     // Verify entity has been created properly.
     $id = $entity->id();
     $entity = EntityTest::load($id);
-    $this->assertEqual($value, $entity->field_test->value);
-    $this->assertEqual($value, $entity->field_test[0]->value);
-    $this->assertEqual('99', $entity->field_int->value);
+    $this->assertEquals($value, $entity->field_test->value);
+    $this->assertEquals($value, $entity->field_test[0]->value);
+    $this->assertEquals('99', $entity->field_int->value);
 
     // Delete unrelated field before copying configuration and running the
     // synchronization.
@@ -135,7 +135,7 @@ class FieldImportDeleteUninstallTest extends FieldKernelTestBase {
       // Verify entity has been created properly.
       $id = $entity->id();
       $entity = EntityTest::load($id);
-      $this->assertEqual($value, $entity->field_test->value);
+      $this->assertEquals($value, $entity->field_test->value);
     }
 
     // Delete the field.

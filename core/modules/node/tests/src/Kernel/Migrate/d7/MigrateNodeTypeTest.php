@@ -43,6 +43,11 @@ class MigrateNodeTypeTest extends MigrateDrupal7TestBase {
    *   The expected node type description.
    * @param string $help
    *   The expected help text.
+   * @param bool $display_submitted
+   * @param bool $new_revision
+   * @param array $expected_available_menus
+   * @param string $expected_parent
+   * @param string|null $body_label
    */
   protected function assertEntity($id, $label, $description, $help, $display_submitted, $new_revision, $expected_available_menus, $expected_parent, $body_label = NULL) {
     /** @var \Drupal\node\NodeTypeInterface $entity */

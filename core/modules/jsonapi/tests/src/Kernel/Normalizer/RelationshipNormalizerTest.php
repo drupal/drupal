@@ -3,7 +3,6 @@
 namespace Drupal\Tests\jsonapi\Kernel\Normalizer;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -15,6 +14,7 @@ use Drupal\jsonapi\Normalizer\Value\CacheableNormalization;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\jsonapi\Kernel\JsonapiKernelTestBase;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\User;
 
 /**
@@ -24,6 +24,8 @@ use Drupal\user\Entity\User;
  * @internal
  */
 class RelationshipNormalizerTest extends JsonapiKernelTestBase {
+
+  use UserCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -101,7 +103,7 @@ class RelationshipNormalizerTest extends JsonapiKernelTestBase {
     FieldConfig::create(['field_name' => 'field_images', 'label' => 'Images'] + $field_config)->save();
 
     // Set up the test data.
-    $this->account = $this->prophesize(AccountInterface::class)->reveal();
+    $this->setUpCurrentUser([], ['access content']);
     $this->user1 = User::create([
       'name' => $this->randomMachineName(),
       'mail' => $this->randomMachineName() . '@example.com',

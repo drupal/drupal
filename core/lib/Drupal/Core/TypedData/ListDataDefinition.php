@@ -96,7 +96,7 @@ class ListDataDefinition extends DataDefinition implements ListDataDefinitionInt
   /**
    * Sets the item definition.
    *
-   * @param \Drupal\Core\TypedData\DataDefinition $definition
+   * @param \Drupal\Core\TypedData\DataDefinitionInterface $definition
    *   A list item's data definition.
    *
    * @return $this

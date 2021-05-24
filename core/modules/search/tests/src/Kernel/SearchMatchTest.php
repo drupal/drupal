@@ -38,7 +38,7 @@ class SearchMatchTest extends KernelTestBase {
   }
 
   /**
-   * Test search indexing.
+   * Tests search indexing.
    */
   public function testMatching() {
     $this->_setup();
@@ -219,7 +219,7 @@ class SearchMatchTest extends KernelTestBase {
   }
 
   /**
-   * Test the matching abilities of the engine.
+   * Tests the matching abilities of the engine.
    *
    * Verify if a query produces the correct results.
    */
@@ -233,11 +233,11 @@ class SearchMatchTest extends KernelTestBase {
     // Compare $results and $found.
     sort($found);
     sort($results);
-    $this->assertEqual($found, $results, "Query matching '$query'");
+    $this->assertEquals($found, $results, "Query matching '$query'");
   }
 
   /**
-   * Test the scoring abilities of the engine.
+   * Tests the scoring abilities of the engine.
    *
    * Verify if a query produces normalized, monotonous scores.
    */
@@ -251,7 +251,7 @@ class SearchMatchTest extends KernelTestBase {
     // Check order.
     $sorted = $scores;
     sort($sorted);
-    $this->assertEqual($scores, array_reverse($sorted), "Query order '$query'");
+    $this->assertEquals($scores, array_reverse($sorted), "Query order '$query'");
 
     // Check range.
     $this->assertTrue(!count($scores) || (min($scores) > 0.0 && max($scores) <= 1.0001), "Query scoring '$query'");

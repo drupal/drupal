@@ -1,0 +1,346 @@
+/**
+ * @file
+ * Set base styles for the off-canvas dialog.
+ */
+
+/* Set some global attributes. */
+#drupal-off-canvas {
+  color: #ddd;
+  background: #444;
+}
+/**
+ * All HTML elements that could be used in off-canvas except div, bdo, bdi,
+ * data, svg, map and math.
+ *
+ * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element
+ */
+#drupal-off-canvas {
+  & span,
+  & applet,
+  & object,
+  & iframe,
+  & h1,
+  & h2,
+  & h3,
+  & h4,
+  & h5,
+  & h6,
+  & p,
+  & blockquote,
+  & pre,
+  & a,
+  & abbr,
+  & acronym,
+  & address,
+  & big,
+  & button,
+  & cite,
+  & code,
+  & del,
+  & dfn,
+  & em,
+  & img,
+  & ins,
+  & kbd,
+  & q,
+  & s,
+  & samp,
+  & small,
+  & strike,
+  & strong,
+  & sub,
+  & sup,
+  & tt,
+  & var,
+  & b,
+  & u,
+  & i,
+  & center,
+  & dl,
+  & dt,
+  & dd,
+  & ol,
+  & ul,
+  & li,
+  & fieldset,
+  & form,
+  & label,
+  & legend,
+  & table,
+  & caption,
+  & tbody,
+  & tfoot,
+  & thead,
+  & tr,
+  & th,
+  & td,
+  & article,
+  & aside,
+  & canvas,
+  & details,
+  & embed,
+  & figure,
+  & figcaption,
+  & footer,
+  & header,
+  & hgroup,
+  & main,
+  & menu,
+  & meter,
+  & nav,
+  & output,
+  & progress,
+  & ruby,
+  & section,
+  & summary,
+  & time,
+  & mark,
+  & audio,
+  & video,
+  & input,
+  & select,
+  & textarea {
+    color: inherit;
+    background: inherit;
+    font-family: "Lucida Grande", "Lucida Sans Unicode", "liberation sans", sans-serif;
+  }
+}
+
+/* Generic elements. */
+#drupal-off-canvas a,
+#drupal-off-canvas .link {
+  cursor: pointer;
+  transition: color 0.5s ease;
+  text-decoration: none;
+  color: #85bef4;
+  border-bottom: none;
+  font-family: "Lucida Grande", "Lucida Sans Unicode", "liberation sans", sans-serif;
+  font-size: inherit;
+  font-weight: normal;
+}
+
+#drupal-off-canvas a:focus,
+#drupal-off-canvas .link:focus,
+#drupal-off-canvas a:hover,
+#drupal-off-canvas .link:hover {
+  text-decoration: underline;
+}
+#drupal-off-canvas hr {
+  height: 1px;
+  background: #ccc;
+}
+#drupal-off-canvas summary,
+#drupal-off-canvas .fieldgroup:not(.form-composite) > legend {
+  font-weight: bold;
+}
+#drupal-off-canvas h1,
+#drupal-off-canvas .heading-a {
+  display: block;
+  font-size: 1.625em;
+  font-weight: bold;
+  line-height: 1.875em;
+}
+#drupal-off-canvas h2,
+#drupal-off-canvas .heading-b {
+  display: block;
+  margin: 10px 0;
+  font-size: 1.385em;
+  font-weight: bold;
+}
+#drupal-off-canvas h3,
+#drupal-off-canvas .heading-c {
+  display: block;
+  margin: 10px 0;
+  font-size: 1.231em;
+  font-weight: bold;
+}
+#drupal-off-canvas h4,
+#drupal-off-canvas .heading-d {
+  display: block;
+  margin: 10px 0;
+  font-size: 1.154em;
+  font-weight: bold;
+}
+#drupal-off-canvas h5,
+#drupal-off-canvas .heading-e {
+  display: block;
+  margin: 10px 0;
+  font-size: 1.077em;
+  font-weight: bold;
+}
+#drupal-off-canvas h6,
+#drupal-off-canvas .heading-f {
+  display: block;
+  margin: 10px 0;
+  font-size: 1.077em;
+  font-weight: bold;
+}
+#drupal-off-canvas p {
+  margin: 1em 0;
+}
+#drupal-off-canvas dl {
+  margin: 0 0 20px;
+}
+#drupal-off-canvas dl dd,
+#drupal-off-canvas dl dl {
+  margin-bottom: 10px;
+  margin-left: 20px; /* LTR */
+}
+[dir="rtl"] #drupal-off-canvas dl dd,
+[dir="rtl"] #drupal-off-canvas dl dl {
+  margin-right: 20px;
+}
+#drupal-off-canvas blockquote {
+  margin: 1em 40px;
+}
+#drupal-off-canvas address {
+  font-style: italic;
+}
+#drupal-off-canvas u,
+#drupal-off-canvas ins {
+  text-decoration: underline;
+}
+#drupal-off-canvas s,
+#drupal-off-canvas strike,
+#drupal-off-canvas del {
+  text-decoration: line-through;
+}
+#drupal-off-canvas big {
+  font-size: larger;
+}
+#drupal-off-canvas small {
+  font-size: smaller;
+}
+#drupal-off-canvas sub {
+  vertical-align: sub;
+  font-size: smaller;
+  line-height: normal;
+}
+#drupal-off-canvas sup {
+  vertical-align: super;
+  font-size: smaller;
+  line-height: normal;
+}
+#drupal-off-canvas abbr,
+#drupal-off-canvas acronym {
+  border-bottom: dotted 1px;
+  background: transparent;
+}
+
+#drupal-off-canvas ul {
+  list-style-type: disc;
+  list-style-image: none;
+}
+[dir="rtl"] #drupal-off-canvas .messages__list {
+  margin-right: 0;
+}
+#drupal-off-canvas ol {
+  list-style-type: decimal;
+}
+#drupal-off-canvas ul li,
+#drupal-off-canvas ol li {
+  display: block;
+  padding: 5px 0;
+  border-bottom: 1px solid #333;
+  &:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+}
+#drupal-off-canvas blockquote,
+#drupal-off-canvas code {
+  margin: 20px 0;
+}
+#drupal-off-canvas pre {
+  margin: 20px 0;
+  white-space: pre-wrap;
+}
+#drupal-off-canvas details {
+  display: block;
+}
+#drupal-off-canvas summary {
+  display: list-item;
+}
+
+#drupal-off-canvas select::-ms-expand {
+  display: block;
+}
+
+/* Classes for hidden and visually hidden elements. See hidden.module.css. */
+#drupal-off-canvas .hidden {
+  display: none;
+}
+#drupal-off-canvas .visually-hidden {
+  position: absolute !important;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  width: 1px;
+  height: 1px;
+  word-wrap: normal;
+}
+#drupal-off-canvas .visually-hidden.focusable:active,
+#drupal-off-canvas .visually-hidden.focusable:focus {
+  position: static !important;
+  overflow: visible;
+  clip: auto;
+  width: auto;
+  height: auto;
+}
+#drupal-off-canvas .invisible {
+  visibility: hidden;
+}
+
+/* Some system classes. See system.admin.css. */
+#drupal-off-canvas .panel {
+  padding: 5px 5px 15px;
+}
+#drupal-off-canvas .panel__description {
+  margin: 0 0 3px;
+  padding: 2px 0 3px 0;
+}
+#drupal-off-canvas .compact-link {
+  margin: 0 0 10px 0;
+}
+#drupal-off-canvas small .admin-link:before {
+  content: " [";
+}
+#drupal-off-canvas small .admin-link:after {
+  content: "]";
+}
+
+/* Override jQuery UI */
+#drupal-off-canvas .ui-widget-content a {
+  color: #85bef4 !important;
+}
+
+/* Message styles */
+#drupal-off-canvas .messages {
+  background: no-repeat 10px 17px;
+}
+[dir="rtl"] #drupal-off-canvas .messages {
+  background-position: right 10px top 17px;
+}
+#drupal-off-canvas .messages abbr {
+  color: #444;
+}
+#drupal-off-canvas .messages--status {
+  color: #325e1c;
+  background-color: #f3faef;
+  background-image: url(../icons/73b355/check.svg);
+}
+#drupal-off-canvas .messages--warning {
+  color: #734c00;
+  background-color: #fdf8ed;
+  background-image: url(../icons/e29700/warning.svg);
+}
+
+#drupal-off-canvas .messages--error {
+  color: #a51b00;
+  background-color: #fcf4f2;
+  background-image: url(../icons/e32700/error.svg);
+}
+
+#drupal-off-canvas .messages--error div[role="alert"] {
+  color: inherit;
+  background: transparent;
+}

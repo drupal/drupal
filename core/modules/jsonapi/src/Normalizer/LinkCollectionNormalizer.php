@@ -3,9 +3,12 @@
 namespace Drupal\jsonapi\Normalizer;
 
 use Drupal\Component\Utility\Crypt;
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\jsonapi\JsonApiResource\LinkCollection;
 use Drupal\jsonapi\JsonApiResource\Link;
 use Drupal\jsonapi\Normalizer\Value\CacheableNormalization;
+use Drupal\jsonapi\Normalizer\Value\CacheableOmission;
 
 /**
  * Normalizes a LinkCollection object.
@@ -64,19 +67,51 @@ class LinkCollectionNormalizer extends NormalizerBase {
   protected $hashSalt;
 
   /**
+   * The current user making the request.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
+   * LinkCollectionNormalizer constructor.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   The current user.
+   */
+  public function __construct(AccountInterface $current_user = NULL) {
+    if (is_null($current_user)) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $current_user argument is deprecated in drupal:9.2.0 and will be required in drupal:10.0.0.', E_USER_DEPRECATED);
+      $current_user = \Drupal::currentUser();
+    }
+    $this->currentUser = $current_user;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function normalize($object, $format = NULL, array $context = []) {
     assert($object instanceof LinkCollection);
     $normalized = [];
-    /* @var \Drupal\jsonapi\JsonApiResource\Link $link */
+    /** @var \Drupal\jsonapi\JsonApiResource\Link $link */
     foreach ($object as $key => $links) {
       $is_multiple = count($links) > 1;
       foreach ($links as $link) {
         $link_key = $is_multiple ? sprintf('%s--%s', $key, $this->hashByHref($link)) : $key;
         $attributes = $link->getTargetAttributes();
         $normalization = array_merge(['href' => $link->getHref()], !empty($attributes) ? ['meta' => $attributes] : []);
-        $normalized[$link_key] = new CacheableNormalization($link, $normalization);
+        // Checking access on links is not about access to the link itself;
+        // it is about whether the current user has access to the route that is
+        // *targeted* by the link. This is done on a "best effort" basis. That
+        // is, some links target routes that depend on a request to determine if
+        // they're accessible or not. Some other links might target routes to
+        // which the current user will clearly not have access, in that case
+        // this code proactively removes those links from the response.
+        $access = $link->getUri()->access($this->currentUser, TRUE);
+        $cacheability = CacheableMetadata::createFromObject($link)->addCacheableDependency($access);
+        $normalized[$link_key] = $access->isAllowed()
+          ? new CacheableNormalization($cacheability, $normalization)
+          : new CacheableOmission($cacheability);
       }
     }
     return CacheableNormalization::aggregate($normalized);

@@ -29,7 +29,7 @@ class MigrateAggregatorItemTest extends MigrateDrupal7TestBase {
   }
 
   /**
-   * Test Drupal 7 aggregator item migration to Drupal 8.
+   * Tests Drupal 7 aggregator item migration to Drupal 8.
    */
   public function testAggregatorItem() {
     // Since the feed items can change as the fixture is updated normally,
@@ -46,7 +46,7 @@ class MigrateAggregatorItemTest extends MigrateDrupal7TestBase {
       $this->assertSame($original->title, $item->label());
       // If $original->author is an empty string, getAuthor() returns NULL so
       // we need to use assertEqual() here.
-      $this->assertEqual($original->author, $item->getAuthor());
+      $this->assertEquals($original->author, $item->getAuthor());
       $this->assertSame($original->description, $item->getDescription());
       $this->assertSame($original->link, $item->getLink());
       $this->assertSame($original->timestamp, $item->getPostedTime());

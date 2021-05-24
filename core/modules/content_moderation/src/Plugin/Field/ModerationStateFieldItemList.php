@@ -75,6 +75,7 @@ class ModerationStateFieldItemList extends FieldItemList {
     $content_moderation_storage = \Drupal::entityTypeManager()->getStorage('content_moderation_state');
 
     $revisions = $content_moderation_storage->getQuery()
+      ->accessCheck(FALSE)
       ->condition('content_entity_type_id', $entity->getEntityTypeId())
       ->condition('content_entity_id', $entity->id())
       // Ensure the correct revision is loaded in scenarios where a revision is

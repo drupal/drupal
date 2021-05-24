@@ -19,6 +19,11 @@ class ComposerIntegrationTest extends UnitTestCase {
 
   /**
    * Tests composer.lock content-hash.
+   *
+   * If you have made a change to composer.json, you may need to reconstruct
+   * composer.lock. Follow the link below for further instructions.
+   *
+   * @see https://www.drupal.org/about/core/policies/core-dependencies-policies/managing-composer-updates-for-drupal-core
    */
   public function testComposerLockHash() {
     $content_hash = self::getContentHash(file_get_contents($this->root . '/composer.json'));
@@ -142,7 +147,7 @@ class ComposerIntegrationTest extends UnitTestCase {
       ['example.gitignore', 'assets/scaffold/files/example.gitignore'],
       ['index.php', 'assets/scaffold/files/index.php'],
       ['INSTALL.txt', 'assets/scaffold/files/drupal.INSTALL.txt'],
-      ['README.txt', 'assets/scaffold/files/drupal.README.txt'],
+      ['README.md', 'assets/scaffold/files/drupal.README.md'],
       ['robots.txt', 'assets/scaffold/files/robots.txt'],
       ['update.php', 'assets/scaffold/files/update.php'],
       ['web.config', 'assets/scaffold/files/web.config'],
@@ -200,7 +205,7 @@ class ComposerIntegrationTest extends UnitTestCase {
     $this->assertFileEquals($this->root . '/core/' . $sourceRelPath, $this->root . '/' . $destRelPath, 'Scaffold source and destination files must have the same contents.');
   }
 
-  // @codingStandardsIgnoreStart
+  // phpcs:disable
   /**
    * The following method is copied from \Composer\Package\Locker.
    *
@@ -244,7 +249,7 @@ class ComposerIntegrationTest extends UnitTestCase {
 
     return md5(json_encode($relevantContent));
   }
-  // @codingStandardsIgnoreEnd
+  // phpcs:enable
 
   /**
    * Tests the vendor cleanup utilities do not have obsolete packages listed.

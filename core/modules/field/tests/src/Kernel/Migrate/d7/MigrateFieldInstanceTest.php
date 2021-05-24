@@ -108,6 +108,8 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
     $this->assertEntity('node.article.field_image', 'Image', 'image', FALSE, TRUE);
     $this->assertEntity('comment.comment_node_blog.comment_body', 'Comment', 'text_long', TRUE, FALSE);
     $this->assertEntity('node.blog.body', 'Body', 'text_with_summary', FALSE, TRUE);
+    $this->assertEntity('node.blog.field_file_mfw', 'file_mfw', 'file', FALSE, TRUE);
+    $this->assertEntity('node.blog.field_image_miw', 'image_miw', 'image', FALSE, TRUE);
     $this->assertEntity('comment.comment_node_book.comment_body', 'Comment', 'text_long', TRUE, FALSE);
     $this->assertEntity('node.book.body', 'Body', 'text_with_summary', FALSE, FALSE);
     $this->assertEntity('node.forum.taxonomy_forums', 'Forums', 'entity_reference', TRUE, FALSE);
@@ -130,6 +132,7 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
     $this->assertEntity('node.test_content_type.field_long_text', 'Long text', 'text_with_summary', FALSE, FALSE);
     $this->assertEntity('node.test_content_type.field_term_reference', 'Term Reference', 'entity_reference', FALSE, FALSE);
     $this->assertEntity('node.test_content_type.field_text', 'Text', 'string', FALSE, FALSE);
+    $this->assertEntity('node.test_content_type.field_telephone', 'Telephone', 'telephone', FALSE, FALSE);
     $this->assertEntity('comment.comment_node_test_content_type.field_integer', 'Integer', 'integer', FALSE, TRUE);
     $this->assertEntity('comment.comment_node_a_thirty_two_char.comment_body', 'Comment', 'text_long', TRUE, FALSE);
     $this->assertEntity('user.user.field_file', 'File', 'file', FALSE, FALSE);

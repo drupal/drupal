@@ -2,6 +2,7 @@
 
 namespace Drupal\comment\Plugin\migrate\source\d7;
 
+use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\d7\FieldableEntity;
 
@@ -98,6 +99,22 @@ class CommentEntityTranslation extends FieldableEntity {
         'alias' => 'et',
       ],
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function checkRequirements() {
+    parent::checkRequirements();
+
+    if (!$this->moduleExists('comment')) {
+      // If we make it to here, the comment module isn't installed.
+      throw new RequirementsException('The module comment is not enabled in the source site');
+    }
+    if (!$this->moduleExists('node')) {
+      // Node module is also a requirement.
+      throw new RequirementsException('The module node is not enabled in the source site');
+    }
   }
 
 }

@@ -11,87 +11,36 @@
   --autocomplete-throbber-IE-icon-url: url("../../images/throbber.gif");
   --autocomplete-throbber-IE-size: 1.125rem 1.125rem; /* 18 18 */
   --autocomplete-icon-right-offset: var(--sp1);
-  --autocomplete-icon-top-offset: calc(var(--sp1) - var(--form-element-border-size-base));
 }
 
 html.js .form-autocomplete {
   padding-inline-end: var(--sp3);
-  background:
-    var(--autocomplete-search-icon-url) no-repeat right var(--autocomplete-icon-right-offset) top var(--autocomplete-icon-top-offset),
-    linear-gradient(to right, var(--color--gray-30) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%) var(--color--gray-95);
+  background-color: var(--color--white);
+  background-image: var(--autocomplete-search-icon-url);
+  background-repeat: no-repeat;
+  background-position: right var(--autocomplete-icon-right-offset) center;  /* LTR */
 
-  &:hover {
-    background:
-      var(--autocomplete-search-icon-url) no-repeat right var(--autocomplete-icon-right-offset) top var(--autocomplete-icon-top-offset),
-      linear-gradient(to right, var(--color--blue-70) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%),
-      linear-gradient(to left, var(--color--blue-70) var(--form-element-border-size-base), transparent var(--form-element-border-size-base), transparent 100%) var(--color--gray-95);
-  }
-
-  &:focus {
-    background:
-      var(--autocomplete-search-icon-url) no-repeat right var(--autocomplete-icon-right-offset) top var(--autocomplete-icon-top-offset),
-      linear-gradient(to right, var(--color--blue-70) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%),
-      linear-gradient(to left, var(--color--blue-70) var(--form-element-border-size-base), transparent var(--form-element-border-size-base), transparent 100%) var(--color--gray-95);
+  &:disabled {
+    background-color: var(--color--gray-90);
   }
 
   &.ui-autocomplete-loading {
-    background:
-      var(--autocomplete-throbber-icon-url) no-repeat right var(--autocomplete-icon-right-offset) top var(--autocomplete-icon-top-offset),
-      linear-gradient(to right, var(--color--gray-30) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%) var(--color--gray-95);
-
-    &:hover {
-      background:
-        var(--autocomplete-throbber-icon-url) no-repeat right var(--autocomplete-icon-right-offset) top var(--autocomplete-icon-top-offset),
-        linear-gradient(to right, var(--color--blue-70) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%),
-        linear-gradient(to left, var(--color--blue-70) var(--form-element-border-size-base), transparent var(--form-element-border-size-base), transparent 100%) var(--color--gray-95);
-    }
-
-    &:focus {
-      background:
-        var(--autocomplete-throbber-icon-url) no-repeat right var(--autocomplete-icon-right-offset) top var(--autocomplete-icon-top-offset),
-        linear-gradient(to right, var(--color--blue-70) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%),
-        linear-gradient(to left, var(--color--blue-70) var(--form-element-border-size-base), transparent var(--form-element-border-size-base), transparent 100%) var(--color--gray-95);
-    }
+    background: var(--autocomplete-throbber-icon-url) no-repeat right var(--autocomplete-icon-right-offset) center;
   }
 }
 
 html.js[dir="rtl"] .form-autocomplete {
-  background:
-    var(--autocomplete-search-icon-url) no-repeat left var(--autocomplete-icon-right-offset) top var(--autocomplete-icon-top-offset),
-    linear-gradient(to left, var(--color--gray-30) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%) var(--color--gray-95);
+  background-color: var(--color--white);
+  background-image: var(--autocomplete-search-icon-url);
+  background-repeat: no-repeat;
+  background-position: left var(--autocomplete-icon-right-offset) center;
 
-  &:hover {
-    background:
-      var(--autocomplete-search-icon-url) no-repeat left var(--autocomplete-icon-right-offset) top var(--autocomplete-icon-top-offset),
-      linear-gradient(to left, var(--color--blue-70) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%),
-      linear-gradient(to right, var(--color--blue-70) var(--form-element-border-size-base), transparent var(--form-element-border-size-base), transparent 100%) var(--color--gray-95);
-  }
-
-  &:focus {
-    background:
-      var(--autocomplete-search-icon-url) no-repeat left var(--autocomplete-icon-right-offset) top var(--autocomplete-icon-top-offset),
-      linear-gradient(to left, var(--color--blue-70) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%),
-      linear-gradient(to right, var(--color--blue-70) var(--form-element-border-size-base), transparent var(--form-element-border-size-base), transparent 100%) var(--color--gray-95);
+  &:disabled {
+    background-color: var(--color--gray-90);
   }
 
   &.ui-autocomplete-loading {
-    background:
-      var(--autocomplete-throbber-icon-url) no-repeat left var(--autocomplete-icon-right-offset) top var(--autocomplete-icon-top-offset),
-      linear-gradient(to left, var(--color--gray-30) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%) var(--color--gray-95);
-
-    &:hover {
-      background:
-        var(--autocomplete-throbber-icon-url) no-repeat left var(--autocomplete-icon-right-offset) top var(--autocomplete-icon-top-offset),
-        linear-gradient(to left, var(--color--blue-70) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%),
-        linear-gradient(to right, var(--color--blue-70) var(--form-element-border-size-base), transparent var(--form-element-border-size-base), transparent 100%) var(--color--gray-95);
-    }
-
-    &:focus {
-      background:
-        var(--autocomplete-throbber-icon-url) no-repeat left var(--autocomplete-icon-right-offset) top var(--autocomplete-icon-top-offset),
-        linear-gradient(to left, var(--color--blue-70) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%),
-        linear-gradient(to right, var(--color--blue-70) var(--form-element-border-size-base), transparent var(--form-element-border-size-base), transparent 100%) var(--color--gray-95);
-    }
+    background: var(--autocomplete-throbber-icon-url) no-repeat left var(--autocomplete-icon-right-offset) center;
   }
 }
 
@@ -100,52 +49,11 @@ html.js[dir="rtl"] .form-autocomplete {
 /* stylelint-disable-next-line selector-type-no-unknown */
 _:-ms-fullscreen,
 html[dir=ltr].js .form-autocomplete.ui-autocomplete-loading {
-  background:
-    var(--autocomplete-throbber-IE-icon-url) no-repeat right var(--autocomplete-icon-right-offset) top var(--autocomplete-icon-top-offset) / var(--autocomplete-throbber-IE-size),
-    linear-gradient(to right, var(--color--gray-30) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%) var(--color--gray-95);
-}
-
-/* stylelint-disable-next-line selector-type-no-unknown */
-_:-ms-fullscreen,
-html[dir=ltr].js .form-autocomplete.ui-autocomplete-loading:hover {
-  background:
-    var(--autocomplete-throbber-IE-icon-url) no-repeat right var(--autocomplete-icon-right-offset) top var(--autocomplete-icon-top-offset) / var(--autocomplete-throbber-IE-size),
-    linear-gradient(to right, var(--color--blue-70) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%),
-    linear-gradient(to left, var(--color--blue-70) var(--form-element-border-size-base), transparent var(--form-element-border-size-base), transparent 100%) var(--color--gray-95);
-}
-
-/* stylelint-disable-next-line selector-type-no-unknown */
-_:-ms-fullscreen,
-html[dir=ltr].js .form-autocomplete.ui-autocomplete-loading:focus {
-  background:
-    var(--autocomplete-throbber-IE-icon-url) no-repeat right var(--autocomplete-icon-right-offset) top var(--autocomplete-icon-top-offset) / var(--autocomplete-throbber-IE-size),
-    linear-gradient(to right, var(--color--blue-70) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%),
-    linear-gradient(to left, var(--color--blue-70) var(--form-element-border-size-base), transparent var(--form-element-border-size-base), transparent 100%) var(--color--gray-95);
+  background: var(--autocomplete-throbber-IE-icon-url) no-repeat right var(--autocomplete-icon-right-offset) center / var(--autocomplete-throbber-IE-size);
 }
 
 /* stylelint-disable-next-line selector-type-no-unknown */
 _:-ms-fullscreen,
 html[dir=rtl].js .form-autocomplete.ui-autocomplete-loading {
-  background:
-    var(--autocomplete-throbber-IE-icon-url) no-repeat left var(--autocomplete-icon-right-offset) top var(--autocomplete-icon-top-offset) / var(--autocomplete-throbber-IE-size),
-    linear-gradient(to left, var(--color--gray-30) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%) var(--color--gray-95);
+  background: var(--autocomplete-throbber-IE-icon-url) no-repeat left var(--autocomplete-icon-right-offset) center / var(--autocomplete-throbber-IE-size);
 }
-
-/* stylelint-disable-next-line selector-type-no-unknown */
-_:-ms-fullscreen,
-html[dir=rtl].js .form-autocomplete.ui-autocomplete-loading:hover {
-  background:
-    var(--autocomplete-throbber-IE-icon-url) no-repeat left var(--autocomplete-icon-right-offset) top var(--autocomplete-icon-top-offset) / var(--autocomplete-throbber-IE-size),
-    linear-gradient(to left, var(--color--blue-70) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%),
-    linear-gradient(to right, var(--color--blue-70) var(--form-element-border-size-base), transparent var(--form-element-border-size-base), transparent 100%) var(--color--gray-95);
-}
-
-/* stylelint-disable-next-line selector-type-no-unknown */
-_:-ms-fullscreen,
-html[dir=rtl].js .form-autocomplete.ui-autocomplete-loading:focus {
-  background:
-    var(--autocomplete-throbber-IE-icon-url) no-repeat left var(--autocomplete-icon-right-offset) top var(--autocomplete-icon-top-offset) / var(--autocomplete-throbber-IE-size),
-    linear-gradient(to left, var(--color--blue-70) var(--form-element-border-size-left), transparent var(--form-element-border-size-left), transparent 100%),
-    linear-gradient(to right, var(--color--blue-70) var(--form-element-border-size-base), transparent var(--form-element-border-size-base), transparent 100%) var(--color--gray-95);
-}
-/* rtl:end:ignore */

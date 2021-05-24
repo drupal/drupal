@@ -83,9 +83,9 @@ class EntityContextDefinitionIsSatisfiedTest extends UnitTestCase {
    *
    * @param bool $expected
    *   The expected outcome.
-   * @param \Drupal\Core\Plugin\Context\EntityContextDefinition $requirement
+   * @param \Drupal\Core\Plugin\Context\ContextDefinition $requirement
    *   The requirement to check against.
-   * @param \Drupal\Core\Plugin\Context\EntityContextDefinition $definition
+   * @param \Drupal\Core\Plugin\Context\ContextDefinition $definition
    *   The context definition to check.
    * @param mixed $value
    *   (optional) The value to set on the context, defaults to NULL.

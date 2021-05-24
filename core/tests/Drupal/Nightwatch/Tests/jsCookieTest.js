@@ -189,53 +189,52 @@ module.exports = {
       })
       .drupalLogAndEnd({ onlyOnError: false });
   },
-  'Test jquery.cookie Shim Read all when there are cookies or return empty object': (
-    browser,
-  ) => {
-    browser
-      .getCookie('SIMPLETEST_USER_AGENT', (simpletestCookie) => {
-        const simpletestCookieValue = simpletestCookie.value;
-        browser
-          .drupalRelativeURL('/js_cookie_with_shim_test')
-          .deleteCookies(() => {
-            browser
-              .execute(getJqueryCookie, [], (result) => {
-                browser.assert.deepEqual(
-                  result.value,
-                  {},
-                  '$.cookie() returns empty object',
-                );
-              })
-              .setCookie({
-                name: 'js_cookie_test_first',
-                value: 'red panda',
-              })
-              .setCookie({
-                name: 'js_cookie_test_second',
-                value: 'second red panda',
-              })
-              .setCookie({
-                name: 'js_cookie_test_third',
-                value: 'third red panda id bad%',
-              })
-              .execute(getJqueryCookie, [], (result) => {
-                browser.assert.deepEqual(
-                  result.value,
-                  {
-                    js_cookie_test_first: 'red panda',
-                    js_cookie_test_second: 'second red panda',
-                  },
-                  '$.cookie() returns object containing all cookies',
-                );
-              })
-              .setCookie({
-                name: 'SIMPLETEST_USER_AGENT',
-                value: simpletestCookieValue,
-              });
-          });
-      })
-      .drupalLogAndEnd({ onlyOnError: false });
-  },
+  'Test jquery.cookie Shim Read all when there are cookies or return empty object':
+    (browser) => {
+      browser
+        .getCookie('SIMPLETEST_USER_AGENT', (simpletestCookie) => {
+          const simpletestCookieValue = simpletestCookie.value;
+          browser
+            .drupalRelativeURL('/js_cookie_with_shim_test')
+            .deleteCookies(() => {
+              browser
+                .execute(getJqueryCookie, [], (result) => {
+                  browser.assert.deepEqual(
+                    result.value,
+                    {},
+                    '$.cookie() returns empty object',
+                  );
+                })
+                .setCookie({
+                  name: 'js_cookie_test_first',
+                  value: 'red panda',
+                })
+                .setCookie({
+                  name: 'js_cookie_test_second',
+                  value: 'second red panda',
+                })
+                .setCookie({
+                  name: 'js_cookie_test_third',
+                  value: 'third red panda id bad%',
+                })
+                .execute(getJqueryCookie, [], (result) => {
+                  browser.assert.deepEqual(
+                    result.value,
+                    {
+                      js_cookie_test_first: 'red panda',
+                      js_cookie_test_second: 'second red panda',
+                    },
+                    '$.cookie() returns object containing all cookies',
+                  );
+                })
+                .setCookie({
+                  name: 'SIMPLETEST_USER_AGENT',
+                  value: simpletestCookieValue,
+                });
+            });
+        })
+        .drupalLogAndEnd({ onlyOnError: false });
+    },
   'Test jquery.cookie Shim $.cookie deprecation message': (browser) => {
     browser
       .drupalRelativeURL('/js_cookie_with_shim_test')

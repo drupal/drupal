@@ -47,6 +47,11 @@
     color: inherit;
   }
 
+.primary-nav__menu-link:focus {
+    outline: auto 2px #2494db;
+    outline-offset: 2px;
+  }
+
 [dir="ltr"] .primary-nav__menu-link--nolink {
   padding-left: 0;
 }
@@ -286,7 +291,7 @@
   opacity: 0
 }
 
-.primary-nav__menu--level-2.is-active {
+.primary-nav__menu--level-2.is-active-menu-parent {
     visibility: visible;
     max-height: none;
     margin-top: 1.6875rem;

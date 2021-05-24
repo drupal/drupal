@@ -19,19 +19,27 @@
 }
 
 [dir="ltr"] .mobile-nav-button {
-  padding-left: 0
+  margin-right: -0.375rem
 }
 
 [dir="rtl"] .mobile-nav-button {
-  padding-right: 0
+  margin-left: -0.375rem
 }
 
 [dir="ltr"] .mobile-nav-button {
-  padding-right: 0
+  padding-left: 0.375rem
 }
 
 [dir="rtl"] .mobile-nav-button {
-  padding-left: 0
+  padding-right: 0.375rem
+}
+
+[dir="ltr"] .mobile-nav-button {
+  padding-right: 0.375rem
+}
+
+[dir="rtl"] .mobile-nav-button {
+  padding-left: 0.375rem
 }
 
 .mobile-nav-button {
@@ -48,8 +56,18 @@
   cursor: pointer;
   border: none;
   background: transparent;
-  -webkit-appearance: none
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none
 }
+
+.mobile-nav-button:focus {
+    outline: solid 2px #0d77b5;
+  }
+
+.mobile-nav-button:active {
+    color: inherit; /* Override Safari's default UA styles. */
+  }
 
 @media (min-width: 31.25rem) {
 

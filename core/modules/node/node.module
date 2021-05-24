@@ -554,6 +554,7 @@ function node_cron() {
     $min_alias = 'min_created';
     $max_alias = 'max_created';
     $result = \Drupal::entityQueryAggregate('node')
+      ->accessCheck(FALSE)
       ->aggregate('created', 'MIN', NULL, $min_alias)
       ->aggregate('created', 'MAX', NULL, $max_alias)
       ->execute();
@@ -614,6 +615,7 @@ function node_user_cancel($edit, UserInterface $account, $method) {
     case 'user_cancel_block_unpublish':
       // Unpublish nodes (current revisions).
       $nids = \Drupal::entityQuery('node')
+        ->accessCheck(FALSE)
         ->condition('uid', $account->id())
         ->execute();
       module_load_include('inc', 'node', 'node.admin');

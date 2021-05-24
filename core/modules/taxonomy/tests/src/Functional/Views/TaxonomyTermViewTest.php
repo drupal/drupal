@@ -93,12 +93,13 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
     $edit['title[0][value]'] = $original_title = $this->randomMachineName();
     $edit['body[0][value]'] = $this->randomMachineName();
     $edit["{$this->fieldName1}[]"] = $term->id();
-    $this->drupalPostForm('node/add/article', $edit, 'Save');
+    $this->drupalGet('node/add/article');
+    $this->submitForm($edit, 'Save');
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
 
     $this->drupalGet('taxonomy/term/' . $term->id());
-    $this->assertText($term->label());
-    $this->assertText($node->label());
+    $this->assertSession()->pageTextContains($term->label());
+    $this->assertSession()->pageTextContains($node->label());
 
     \Drupal::service('module_installer')->install(['language', 'content_translation']);
     ConfigurableLanguage::createFromLangcode('ur')->save();
@@ -113,17 +114,18 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
 
     $edit['title[0][value]'] = $translated_title = $this->randomMachineName();
 
-    $this->drupalPostForm('node/' . $node->id() . '/translations/add/en/ur', $edit, 'Save (this translation)');
+    $this->drupalGet('node/' . $node->id() . '/translations/add/en/ur');
+    $this->submitForm($edit, 'Save (this translation)');
 
     $this->drupalGet('taxonomy/term/' . $term->id());
-    $this->assertText($term->label());
-    $this->assertText($original_title);
+    $this->assertSession()->pageTextContains($term->label());
+    $this->assertSession()->pageTextContains($original_title);
     $this->assertNoText($translated_title);
 
     $this->drupalGet('ur/taxonomy/term/' . $term->id());
-    $this->assertText($term->label());
+    $this->assertSession()->pageTextContains($term->label());
     $this->assertNoText($original_title);
-    $this->assertText($translated_title);
+    $this->assertSession()->pageTextContains($translated_title);
 
     // Uninstall language module and ensure that the language is not part of the
     // query anymore.
@@ -146,7 +148,7 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
     $tables = $query->getTables();
 
     // Ensure that the join to node_field_data is not added by default.
-    $this->assertEqual(['node_field_data', 'taxonomy_index'], array_keys($tables));
+    $this->assertEquals(['node_field_data', 'taxonomy_index'], array_keys($tables));
     // Ensure that the filter to the language column is not there by default.
     $condition = $query->conditions();
     // We only want to check the no. of conditions in the query.

@@ -221,7 +221,7 @@ function hook_node_access_records(\Drupal\node\NodeInterface $node) {
  * @see hook_node_grants_alter()
  * @ingroup node_access
  */
-function hook_node_access_records_alter(&$grants, Drupal\node\NodeInterface $node) {
+function hook_node_access_records_alter(&$grants, \Drupal\node\NodeInterface $node) {
   // Our module allows editors to mark specific articles with the 'is_preview'
   // field. If the node being saved has a TRUE value for that field, then only
   // our grants are retained, and other grants are removed. Doing so ensures

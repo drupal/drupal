@@ -4,7 +4,7 @@ namespace Drupal\Core\Config;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Lock\LockBackendInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * The export storage manager dispatches an event for the export storage.
@@ -39,7 +39,7 @@ final class ExportStorageManager implements StorageManagerInterface {
   /**
    * The event dispatcher.
    *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
    */
   protected $eventDispatcher;
 
@@ -57,7 +57,7 @@ final class ExportStorageManager implements StorageManagerInterface {
    *   The active config storage to prime the export storage.
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
-   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
    *   The used lock backend instance.

@@ -94,7 +94,7 @@ class AddFeedTest extends KernelTestBase {
       '#title' => '<>&"\'',
     ];
     $text = \Drupal::service('renderer')->renderRoot($variables);
-    $this->assertEqual('Subscribe to &lt;&gt;&amp;&quot;&#039;', trim(strip_tags($text)), 'feed_icon template escapes reserved HTML characters.');
+    $this->assertEquals('Subscribe to &lt;&gt;&amp;&quot;&#039;', trim(strip_tags($text)), 'feed_icon template escapes reserved HTML characters.');
   }
 
 }

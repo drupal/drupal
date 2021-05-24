@@ -16,11 +16,6 @@
   box-sizing: border-box;
 }
 
-::selection {
-  color: white;
-  background-color: #0d77b5;
-}
-
 html {
   font-family: "metropolis", sans-serif;
   font-size: 100%;
@@ -53,6 +48,11 @@ a {
 
 a:hover {
     color: #2494db;
+  }
+
+a:focus {
+    outline: solid 2px currentColor;
+    outline-offset: 2px;
   }
 
 img,

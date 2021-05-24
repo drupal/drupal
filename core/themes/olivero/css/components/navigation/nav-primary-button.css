@@ -41,6 +41,11 @@
   -webkit-appearance: none
 }
 
+.primary-nav__button-toggle:focus {
+    outline: auto 2px #2494db;
+    outline-offset: 2px;
+  }
+
 .primary-nav__button-toggle .icon--menu-toggle {
     position: absolute;
     /* stylelint-disable csstools/use-logical */
@@ -111,13 +116,8 @@
       }
 
         body:not(.is-always-mobile-nav) .primary-nav__button-toggle:focus .icon--menu-toggle {
-          border: solid 1px transparent;
-          background-color: #2494db
+          border: solid 2px #0d77b5;
         }
-
-          body:not(.is-always-mobile-nav) .primary-nav__button-toggle:focus .icon--menu-toggle:after {
-            border-color: #fff;
-          }
 
       body:not(.is-always-mobile-nav) .primary-nav__button-toggle:active {
         /* Necessary for Safari. */
@@ -137,7 +137,10 @@
   }
 
       body:not(.is-always-mobile-nav) .primary-nav__button-toggle .icon--menu-toggle {
-        transform: translateY(-50%)
+        width: 1.125rem;
+        transform: translateY(-50%);
+        border-radius: 0.25rem;
+        background-color: #fff
       }
 
         body:not(.is-always-mobile-nav) .primary-nav__button-toggle .icon--menu-toggle:before {

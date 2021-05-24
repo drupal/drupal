@@ -42,6 +42,7 @@
   --content-left: 90px;
   --container-padding: var(--sp);
   --container-padding-nav: var(--sp2);
+  --site-header-height-wide: var(--sp10);
 
   /* Drupal administrative toolbar heights and width. */
   --toolbar-height: 39px;
@@ -120,12 +121,14 @@
   --color--gray-10: #313637; /* Black 2 */
   --color--gray-20: #6e7172; /* Black 3 */
   --color--gray-25: #5d7585; /* Gray Dark */
+  --color--gray-28: #7d919d; /* Gray Dark 2 */
   --color--gray-30: #7e96a7; /* Gray medium */
   --color--gray-40: #98abb9; /* Gray medium 1 */
   --color--gray-45: #afb8be; /* Gray medium 2 */
   --color--gray-50: #9ea0a1; /* Black 4 */
   --color--gray-70: #d7e1e8; /* Gray light */
   --color--gray-80: #e7edf1; /* Gray light 1 */
+  --color--gray-90: #f1f4f7;
   --color--gray-95: #f7f9fa; /* Gray light 2 */
   --color--blue-20: #0d77b5; /* Blue dark */
   --color--blue-30: #3d92c4; /* Blue dark 2 */
@@ -137,19 +140,6 @@
   --color--gold: #fdca40; /* Gold */
   --color--green: #3fa21c; /* Green */
 
-  /* Shadows */
-  --shadow-focusable: 0 0 0 2px var(--color--white), 0 0 0 4px var(--color--blue-70), var(--shadow-focusable-smooth);
-  --shadow-focusable-smooth: 0 0 36px rgba(83, 176, 235, 0.25);
-
-  /* Radius */
-  --border-radius-base: 2px;
-
-  /* Outlines */
-  --outline--thin: 1px solid transparent;
-  --outline--thick: 6px dashed transparent;
-  --outline--base: 2px solid  var(--color--blue-70);
-  --outline-offset: 2px;
-
   /* Header */
   --header-height-wide-when-fixed: calc(6 * var(--sp));
 
@@ -157,9 +147,5 @@
   --mobile-nav-width: 500px;
 
   /* Border radius */
-  --border-radius: 2px;
-
-  /* Form */
-  --form-element-border-size-base: 2px;
-  --form-element-border-size-left: 6px;
+  --border-radius: 3px;
 }

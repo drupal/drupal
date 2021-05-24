@@ -22,8 +22,25 @@
     body:not(.is-always-mobile-nav) .primary-nav__menu-link {
       letter-spacing: 0.02em;
       font-size: 1rem;
-      line-height: 1.6875rem;
+      line-height: 1.6875rem
     }
+
+      body:not(.is-always-mobile-nav) .primary-nav__menu-link:focus {
+        position: relative;
+        outline: 0
+      }
+
+        body:not(.is-always-mobile-nav) .primary-nav__menu-link:focus:before {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: calc(100% + 1.125rem);
+          height: 3.375rem;
+          content: "";
+          transform: translate(-50%, -50%);
+          border: solid 2px #2494db;
+          border-radius: 0.25rem;
+        }
       [dir="ltr"] body:not(.is-always-mobile-nav) .primary-nav__menu-link--button.primary-nav__menu-link--has-children {
         padding-right: 0.5625rem;
     }
@@ -33,6 +50,11 @@
       body:not(.is-always-mobile-nav) .primary-nav__menu-link--button.primary-nav__menu-link--has-children {
         overflow: visible /* Necessary to view icon in IE11 */
       }
+
+        body:not(.is-always-mobile-nav) .primary-nav__menu-link--button.primary-nav__menu-link--has-children:focus:before {
+          width: calc(100% + 1.6875rem);
+          content: "";
+        }
 
         body:not(.is-always-mobile-nav) .primary-nav__menu-link--button.primary-nav__menu-link--has-children:before {
           content: none;
@@ -162,14 +184,16 @@
     body:not(.is-always-mobile-nav) .primary-nav__menu--level-2 {
       position: absolute;
       z-index: 105; /* Appear above search container. */
-      /* stylelint-disable csstools/use-logical */
       top: calc(100% - 0.5625rem);
       left: 50%;
-      /* stylelint-enable csstools/use-logical */
       visibility: hidden;
-      overflow: visible;
+      overflow: auto;
       width: 15.625rem;
-      max-height: none;
+      /**
+       * Ensure that long level-2 menus will never overflow viewport (focused
+       * elements should always be in viewport per accessibility guidelines).
+       */
+      max-height: calc(100vh - 12.375rem);
       margin-top: 0;
       padding-top: 3.375rem;
       padding-bottom: 3.375rem;
@@ -184,26 +208,9 @@
       border-radius: 0 0 2px 2px;
       background: #fff;
       box-shadow: 0 1px 36px rgba(0, 0, 0, 0.08)
-
-      /* Arrow */
     }
-      body:not(.is-always-mobile-nav) .primary-nav__menu--level-2:after {
-        position: absolute;
-        /* stylelint-disable csstools/use-logical */
-        bottom: calc(100% + 0.5625rem);
-        left: 50%;
-        /* stylelint-enable csstools/use-logical */
-        width: 0;
-        height: 0;
-        content: "";
-        transform: translateX(-50%);
-        /* Intentionally not using CSS logical properties. */
-        border-right: solid 10px transparent;
-        border-bottom: solid 10px #2494db;
-        border-left: solid 10px transparent;
-      }
 
-      body:not(.is-always-mobile-nav) .primary-nav__menu--level-2.is-active {
+      body:not(.is-always-mobile-nav) .primary-nav__menu--level-2.is-active-menu-parent {
         visibility: visible;
         margin-top: 0;
         transform: translate(-50%, 0);
@@ -213,6 +220,10 @@
     body:not(.is-always-mobile-nav) .primary-nav__menu-link--level-2 {
       display: block
     }
+
+      body:not(.is-always-mobile-nav) .primary-nav__menu-link--level-2:focus:before {
+        height: 100%;
+      }
 
       [dir="ltr"] body:not(.is-always-mobile-nav) .primary-nav__menu-link--level-2 .primary-nav__menu-link-inner {
         padding-left: 0;
@@ -239,7 +250,76 @@
           transform-origin: left;
           border-top-width: 3px;
         }
+
+body:not(.is-always-mobile-nav) {
+
+    /**
+     * Arrow is placed outside of submenu because the submenu has the
+     * `overflow: hidden` CSS rule applied.
+     */
+}
+    body:not(.is-always-mobile-nav) .primary-nav__menu-🥕 {
+      position: absolute;
+      z-index: 105; /* Match level 2 menus. */
+      top: calc(100% - 1.125rem);
+      left: 50%;
+      visibility: hidden;
+      width: 0;
+      height: 0;
+      transform: translate(-50%, -1.25rem);
+      opacity: 0;
+      /* Intentionally not using CSS logical properties. */
+      border-right: solid 10px transparent;
+      border-bottom: solid 10px #2494db;
+      border-left: solid 10px transparent
+    }
+
+      body:not(.is-always-mobile-nav) .primary-nav__menu-🥕.is-active-menu-parent {
+        visibility: visible;
+        transform: translate(-50%, 0);
+        opacity: 1;
+      }
+
+body:not(.is-always-mobile-nav) {
+
+    /**
+     * When ensuring that long menus don't overflow viewport, we can give a
+     * little extra room when the toolbar is fixed (and is shorter).
+     */
+}
+    body:not(.is-always-mobile-nav) .js-fixed .primary-nav__menu--level-2 {
+      max-height: calc(100vh - 7.875rem);
+    }
   }
+
+/*
+ * Take into account Drupal's admin toolbars when ensuring that long level-2
+ * menus will never overflow viewport.
+ */
+
+@media (min-width: 75rem) {
+  body:not(.is-always-mobile-nav) {
+    /* Toolbar is fixed, and tray is vertical or toolbar is horizontal and tray is closed. */
+  }
+      body:not(.is-always-mobile-nav).toolbar-vertical .primary-nav__menu--level-2, body:not(.is-always-mobile-nav).toolbar-horizontal.toolbar-fixed .primary-nav__menu--level-2 {
+        max-height: calc(100vh - 14.8125rem);
+      }
+
+      body:not(.is-always-mobile-nav).toolbar-vertical .js-fixed .primary-nav__menu--level-2, body:not(.is-always-mobile-nav).toolbar-horizontal.toolbar-fixed .js-fixed .primary-nav__menu--level-2 {
+        max-height: calc(100vh - 10.3125rem);
+      }
+  body:not(.is-always-mobile-nav) {
+
+    /* Toolbar is horizontal fixed, and tray is open. */
+  }
+      body:not(.is-always-mobile-nav).toolbar-horizontal.toolbar-fixed.toolbar-tray-open .primary-nav__menu--level-2 {
+        max-height: calc(100vh - 17.3125rem);
+      }
+
+      body:not(.is-always-mobile-nav).toolbar-horizontal.toolbar-fixed.toolbar-tray-open .js-fixed .primary-nav__menu--level-2 {
+        max-height: calc(100vh - 12.8125rem);
+      }
+}
 
 /*
  * Only apply transition styles to menu when JS is loaded. This
@@ -247,10 +327,10 @@
  */
 
 @media (min-width: 75rem) {
-
-html.js body:not(.is-always-mobile-nav) .primary-nav__menu--level-2 {
-    transition: visibility 0.2s, transform 0.2s, opacity 0.2s
-}
+    html.js body:not(.is-always-mobile-nav) .primary-nav__menu--level-2,
+    html.js body:not(.is-always-mobile-nav) .primary-nav__menu-🥕 {
+      transition: visibility 0.2s, transform 0.2s, opacity 0.2s;
+    }
   }
 
 @media (min-width: 75rem) {

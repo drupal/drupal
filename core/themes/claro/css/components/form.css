@@ -55,7 +55,7 @@ tr .form-item,
   margin-bottom: 0.25rem; /* 4px */
   font-size: 0.889rem; /* ~14px */
   font-weight: bold;
-  line-height: 1.125rem; /* 18px */
+  line-height: 1.125rem;
 }
 
 .form-item__label--multiple-value-form {

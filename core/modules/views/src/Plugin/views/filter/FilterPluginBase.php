@@ -963,24 +963,24 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
    *
    * @param array $form
    *   The form.
-   * @param string $wrapper_identifer
+   * @param string $wrapper_identifier
    *   The key to use for the wrapper element.
    */
-  protected function buildValueWrapper(&$form, $wrapper_identifer) {
+  protected function buildValueWrapper(&$form, $wrapper_identifier) {
     // If both the field and the operator are exposed, this will end up being
     // called twice. We don't want to wipe out what's already there, so if it
     // exists already, do nothing.
-    if (!isset($form[$wrapper_identifer])) {
-      $form[$wrapper_identifer] = [
+    if (!isset($form[$wrapper_identifier])) {
+      $form[$wrapper_identifier] = [
         '#type' => 'fieldset',
       ];
 
       $exposed_info = $this->exposedInfo();
       if (!empty($exposed_info['label'])) {
-        $form[$wrapper_identifer]['#title'] = $exposed_info['label'];
+        $form[$wrapper_identifier]['#title'] = $exposed_info['label'];
       }
       if (!empty($exposed_info['description'])) {
-        $form[$wrapper_identifer]['#description'] = $exposed_info['description'];
+        $form[$wrapper_identifier]['#description'] = $exposed_info['description'];
       }
     }
   }

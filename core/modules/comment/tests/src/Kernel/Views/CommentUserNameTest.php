@@ -58,7 +58,7 @@ class CommentUserNameTest extends ViewsKernelTestBase {
     ]);
     $admin_role->save();
 
-    /* @var \Drupal\user\RoleInterface $anonymous_role */
+    /** @var \Drupal\user\RoleInterface $anonymous_role */
     $anonymous_role = Role::load(Role::ANONYMOUS_ID);
     $anonymous_role->grantPermission('access comments');
     $anonymous_role->save();
@@ -102,7 +102,7 @@ class CommentUserNameTest extends ViewsKernelTestBase {
   }
 
   /**
-   * Test the username formatter.
+   * Tests the username formatter.
    */
   public function testUsername() {
     $view_id = $this->randomMachineName();
@@ -139,17 +139,16 @@ class CommentUserNameTest extends ViewsKernelTestBase {
     ]);
     $view->save();
 
-    /* @var \Drupal\Core\Session\AccountSwitcherInterface $account_switcher */
+    /** @var \Drupal\Core\Session\AccountSwitcherInterface $account_switcher */
     $account_switcher = \Drupal::service('account_switcher');
 
-    /* @var \Drupal\Core\Render\RendererInterface $renderer */
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');
 
     $account_switcher->switchTo($this->adminUser);
     $executable = Views::getView($view_id);
     $build = $executable->preview();
     $this->setRawContent($renderer->renderRoot($build));
-    $this->verbose($this->getRawContent());
 
     $this->assertLink('My comment title');
     $this->assertLink('Anonymous comment title');
@@ -174,7 +173,6 @@ class CommentUserNameTest extends ViewsKernelTestBase {
     $this->assertNoLink($this->adminUser->label());
     // Note: External users aren't pointing to drupal user profiles.
     $this->assertLink('barry (not verified)');
-    $this->verbose($this->getRawContent());
     $this->assertLink('My comment title');
     $this->assertLink('Anonymous comment title');
   }

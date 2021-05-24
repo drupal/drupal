@@ -469,6 +469,11 @@ Workflows
 Topic maintainers
 -----------------
 
+The Drupal Core topic maintainers are subject-matter experts in a topic that
+spans multiple subsystems. These correspond to the core gates which all
+proposed changes must pass. https://www.drupal.org/contribute/core/maintainers
+provides more information on their responsibilities.
+
 Accessibility
 - Rain Breaw Michaels 'rainbreaw' https://www.drupal.org/u/rainbreaw
 - Mike Gifford 'mgifford' https://www.drupal.org/u/mgifford
@@ -509,16 +514,12 @@ Initiative coordinators
 
 The Drupal core initiative coordinators oversee approved projects that
 re-architect or otherwise improve large areas of Drupal core. See
-https://www.drupal.org/community-initiatives/drupal-core for more information on
+https://www.drupal.org/contribute/core/maintainers for more information on
 their responsibilities. The initiative coordinators are:
 
 Decoupled Menus Initiative
 - Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
 - Gabe Sullice 'gabesullice' https://www.drupal.org/u/gabesullice
-
-Layout Initiative
-- Tim Plunkett 'tim.plunkett' https://www.drupal.org/u/tim.plunkett
-- Emilie Nouveau 'DyanneNova' https://www.drupal.org/u/dyannenova
 
 Media Initiative
 - Janez Urevc 'slashrsm' https://www.drupal.org/u/slashrsm

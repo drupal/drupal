@@ -267,7 +267,8 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $edit = [
       'settings[target_type]' => 'taxonomy_term',
     ];
-    $this->drupalPostForm($bundle_path . '/fields/' . $field_name . '/storage', $edit, 'Save field settings');
+    $this->drupalGet($bundle_path . '/fields/' . $field_name . '/storage');
+    $this->submitForm($edit, 'Save field settings');
     $this->drupalGet($bundle_path . '/fields/' . $field_name);
     $this->assertSession()->fieldExists('settings[handler_settings][auto_create]');
 
@@ -277,7 +278,8 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $edit = [
       'settings[target_type]' => 'user',
     ];
-    $this->drupalPostForm($bundle_path . '/fields/' . $field_name . '/storage', $edit, 'Save field settings');
+    $this->drupalGet($bundle_path . '/fields/' . $field_name . '/storage');
+    $this->submitForm($edit, 'Save field settings');
     $this->drupalGet($bundle_path . '/fields/' . $field_name);
     $this->assertSession()->fieldValueEquals('settings[handler_settings][filter][type]', '_none');
     $this->assertSession()->fieldValueEquals('settings[handler_settings][sort][field]', '_none');
@@ -296,7 +298,8 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $edit = [
       'settings[target_type]' => 'node',
     ];
-    $this->drupalPostForm($bundle_path . '/fields/' . $field_name . '/storage', $edit, 'Save field settings');
+    $this->drupalGet($bundle_path . '/fields/' . $field_name . '/storage');
+    $this->submitForm($edit, 'Save field settings');
 
     // Try to select the views handler.
     $this->drupalGet($bundle_path . '/fields/' . $field_name);
@@ -328,7 +331,8 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $edit = [
       'settings[target_type]' => 'entity_test',
     ];
-    $this->drupalPostForm($bundle_path . '/fields/' . $field_name . '/storage', $edit, 'Save field settings');
+    $this->drupalGet($bundle_path . '/fields/' . $field_name . '/storage');
+    $this->submitForm($edit, 'Save field settings');
     $this->drupalGet($bundle_path . '/fields/' . $field_name);
     $page->findField('settings[handler]')->setValue('views');
     $assert_session
@@ -350,27 +354,16 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
    *   An array of expected options.
    */
   protected function assertFieldSelectOptions($name, array $expected_options) {
-    $xpath = $this->assertSession()->buildXPathQuery('//select[@name=:name]', [':name' => $name]);
-    $fields = $this->xpath($xpath);
-    if ($fields) {
-      $field = $fields[0];
-      $options = $field->findAll('xpath', 'option');
-      $optgroups = $field->findAll('xpath', 'optgroup');
-      foreach ($optgroups as $optgroup) {
-        $options = array_merge($options, $optgroup->findAll('xpath', 'option'));
-      }
-      array_walk($options, function (NodeElement &$option) {
-        $option = $option->getAttribute('value');
-      });
-
-      sort($options);
-      sort($expected_options);
-
-      $this->assertSame($expected_options, $options);
+    $field = $this->assertSession()->selectExists($name);
+    $options = $field->findAll('xpath', 'option');
+    $optgroups = $field->findAll('xpath', 'optgroup');
+    foreach ($optgroups as $optgroup) {
+      $options = array_merge($options, $optgroup->findAll('xpath', 'option'));
     }
-    else {
-      $this->fail('Unable to find field ' . $name);
-    }
+    array_walk($options, function (NodeElement &$option) {
+      $option = $option->getAttribute('value');
+    });
+    $this->assertEqualsCanonicalizing($expected_options, $options);
   }
 
 }

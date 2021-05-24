@@ -144,7 +144,7 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
   }
 
   /**
-   * Test node migration from Drupal 7 to 8.
+   * Tests node migration from Drupal 7 to 8.
    */
   public function testNode() {
     // Confirm there are only classic node migration map tables. This shows
@@ -250,12 +250,7 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
     $node = $node->getTranslation('is');
     $this->assertSame($value, $node->field_text_plain->value);
 
-  }
-
-  /**
-   * Test node entity translations migration from Drupal 7 to 8.
-   */
-  public function testNodeEntityTranslations() {
+    // Tests node entity translations migration from Drupal 7 to 8.
     $manager = $this->container->get('content_translation.manager');
 
     // Get the node and its translations.

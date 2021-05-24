@@ -49,7 +49,7 @@ class LockBackendAbstractTest extends UnitTestCase {
   }
 
   /**
-   * Test the getLockId() method.
+   * Tests the getLockId() method.
    */
   public function testGetLockId() {
     $lock_id = $this->lock->getLockId();

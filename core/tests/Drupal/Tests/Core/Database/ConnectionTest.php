@@ -150,6 +150,11 @@ class ConnectionTest extends UnitTestCase {
         'Delete',
       ],
       [
+        'Drupal\Core\Database\ExceptionHandler',
+        'Drupal\corefake\Driver\Database\corefake',
+        'ExceptionHandler',
+      ],
+      [
         'Drupal\Core\Database\Query\Insert',
         'Drupal\corefake\Driver\Database\corefake',
         'Insert',
@@ -215,6 +220,11 @@ class ConnectionTest extends UnitTestCase {
         'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\Delete',
         'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
         'Delete',
+      ],
+      [
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\ExceptionHandler',
+        'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses',
+        'ExceptionHandler',
       ],
       [
         'Drupal\corefake\Driver\Database\corefakeWithAllCustomClasses\Insert',
@@ -339,7 +349,7 @@ class ConnectionTest extends UnitTestCase {
   }
 
   /**
-   * Test Connection::schema().
+   * Tests Connection::schema().
    *
    * @dataProvider providerSchema
    */
@@ -351,7 +361,7 @@ class ConnectionTest extends UnitTestCase {
   }
 
   /**
-   * Test Connection::destroy().
+   * Tests Connection::destroy().
    *
    * @group legacy
    */
@@ -373,7 +383,7 @@ class ConnectionTest extends UnitTestCase {
   }
 
   /**
-   * Test Connection::__destruct().
+   * Tests Connection::__destruct().
    *
    * @group legacy
    */
@@ -421,7 +431,7 @@ class ConnectionTest extends UnitTestCase {
   }
 
   /**
-   * Test Connection::makeComments().
+   * Tests Connection::makeComments().
    *
    * @dataProvider providerMakeComments
    */
@@ -448,7 +458,7 @@ class ConnectionTest extends UnitTestCase {
   }
 
   /**
-   * Test Connection::filterComments().
+   * Tests Connection::filterComments().
    *
    * @dataProvider providerFilterComments
    */

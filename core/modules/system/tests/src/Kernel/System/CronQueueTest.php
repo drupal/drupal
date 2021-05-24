@@ -133,10 +133,10 @@ class CronQueueTest extends KernelTestBase {
     // Run cron; the worker for this queue should throw an exception and handle
     // it.
     $this->cron->run();
-    $this->assertEqual(1, \Drupal::state()->get('cron_queue_test_exception'));
+    $this->assertEquals(1, \Drupal::state()->get('cron_queue_test_exception'));
 
     // The item should be left in the queue.
-    $this->assertEqual(1, $queue->numberOfItems(), 'Failing item still in the queue after throwing an exception.');
+    $this->assertEquals(1, $queue->numberOfItems(), 'Failing item still in the queue after throwing an exception.');
 
     // Expire the queue item manually. system_cron() relies in REQUEST_TIME to
     // find queue items whose expire field needs to be reset to 0. This is a
@@ -148,8 +148,8 @@ class CronQueueTest extends KernelTestBase {
       ->fields(['expire' => REQUEST_TIME - 1])
       ->execute();
     $this->cron->run();
-    $this->assertEqual(2, \Drupal::state()->get('cron_queue_test_exception'));
-    $this->assertEqual(0, $queue->numberOfItems(), 'Item was processed and removed from the queue.');
+    $this->assertEquals(2, \Drupal::state()->get('cron_queue_test_exception'));
+    $this->assertEquals(0, $queue->numberOfItems(), 'Item was processed and removed from the queue.');
 
     // Get the queue to test the specific SuspendQueueException.
     $queue = $this->container->get('queue')->get('cron_queue_test_broken_queue');
@@ -164,14 +164,14 @@ class CronQueueTest extends KernelTestBase {
     $this->cron->run();
 
     // Only one item should have been processed.
-    $this->assertEqual(2, $queue->numberOfItems(), 'Failing queue stopped processing at the failing item.');
+    $this->assertEquals(2, $queue->numberOfItems(), 'Failing queue stopped processing at the failing item.');
 
     // Check the items remaining in the queue. The item that throws the
     // exception gets released by cron, so we can claim it again to check it.
     $item = $queue->claimItem();
-    $this->assertEqual('crash', $item->data, 'Failing item remains in the queue.');
+    $this->assertEquals('crash', $item->data, 'Failing item remains in the queue.');
     $item = $queue->claimItem();
-    $this->assertEqual('ignored', $item->data, 'Item beyond the failing item remains in the queue.');
+    $this->assertEquals('ignored', $item->data, 'Item beyond the failing item remains in the queue.');
 
     // Test the requeueing functionality.
     $queue = $this->container->get('queue')->get('cron_queue_test_requeue_exception');

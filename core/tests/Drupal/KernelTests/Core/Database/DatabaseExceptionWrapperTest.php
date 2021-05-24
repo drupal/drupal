@@ -50,12 +50,71 @@ class DatabaseExceptionWrapperTest extends KernelTestBase {
   }
 
   /**
-   * Tests Connection::prepareStatement exceptions.
+   * Tests deprecation of Connection::handleQueryException.
+   *
+   * @group legacy
    */
-  public function testPrepareStatement() {
+  public function testHandleQueryExceptionDeprecation(): void {
+    $this->expectDeprecation('Passing a StatementInterface object as a $query argument to Drupal\Core\Database\Connection::query is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Call the execute method from the StatementInterface object directly instead. See https://www.drupal.org/node/3154439');
+    $this->expectDeprecation('Connection::handleQueryException() is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Get a handler through $this->exceptionHandler() instead, and use one of its methods. See https://www.drupal.org/node/3187222');
+    $this->expectException(DatabaseExceptionWrapper::class);
+    $stmt = Database::getConnection()->prepareStatement('SELECT * FROM {does_not_exist}', []);
+    Database::getConnection()->query($stmt);
+  }
+
+  /**
+   * Tests Connection::prepareStatement exceptions on execution.
+   *
+   * Core database drivers use PDO emulated statements or the StatementPrefetch
+   * class, which defer the statement check to the moment of the execution.
+   */
+  public function testPrepareStatementFailOnExecution() {
     $this->expectException(\PDOException::class);
     $stmt = Database::getConnection()->prepareStatement('bananas', []);
     $stmt->execute();
+  }
+
+  /**
+   * Tests Connection::prepareStatement exceptions on preparation.
+   *
+   * Core database drivers use PDO emulated statements or the StatementPrefetch
+   * class, which defer the statement check to the moment of the execution. In
+   * order to test a failure at preparation time, we have to force the
+   * connection not to emulate statement preparation. Still, this is only valid
+   * for the MySql driver.
+   */
+  public function testPrepareStatementFailOnPreparation() {
+    $driver = Database::getConnection()->driver();
+    if ($driver !== 'mysql') {
+      $this->markTestSkipped("MySql tests can not run for driver '$driver'.");
+    }
+
+    $connection_info = Database::getConnectionInfo('default');
+    $connection_info['default']['pdo'][\PDO::ATTR_EMULATE_PREPARES] = FALSE;
+    Database::addConnectionInfo('default', 'foo', $connection_info['default']);
+    $foo_connection = Database::getConnection('foo', 'default');
+    $this->expectException(DatabaseExceptionWrapper::class);
+    $stmt = $foo_connection->prepareStatement('bananas', []);
+  }
+
+  /**
+   * Tests Connection::prepareStatement with throw_exception option set.
+   *
+   * @group legacy
+   */
+  public function testPrepareStatementFailOnPreparationWithThrowExceptionOption(): void {
+    $driver = Database::getConnection()->driver();
+    if ($driver !== 'mysql') {
+      $this->markTestSkipped("MySql tests can not run for driver '$driver'.");
+    }
+
+    $connection_info = Database::getConnectionInfo('default');
+    $connection_info['default']['pdo'][\PDO::ATTR_EMULATE_PREPARES] = FALSE;
+    Database::addConnectionInfo('default', 'foo', $connection_info['default']);
+    $foo_connection = Database::getConnection('foo', 'default');
+    $this->expectException(DatabaseExceptionWrapper::class);
+    $this->expectDeprecation('Passing a \'throw_exception\' option to %AExceptionHandler::handleStatementException is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Always catch exceptions. See https://www.drupal.org/node/3201187');
+    $stmt = $foo_connection->prepareStatement('bananas', ['throw_exception' => FALSE]);
   }
 
   /**

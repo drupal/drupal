@@ -23,13 +23,14 @@
         "symfony/event-dispatcher": "^4.4",
         "symfony/http-foundation": "^4.4.7",
         "symfony/http-kernel": "^4.4",
+        "symfony/mime": "^5.2",
         "symfony/routing": "^4.4",
         "symfony/serializer": "^4.4",
         "symfony/translation": "^4.4",
         "symfony/validator": "^4.4",
         "symfony/process": "^4.4",
         "symfony/polyfill-iconv": "^1.0",
-        "symfony/yaml": "^4.4",
+        "symfony/yaml": "^4.4.19",
         "typo3/phar-stream-wrapper": "^3.1.3",
         "twig/twig": "^2.12.0",
         "doctrine/reflection": "^1.1",
@@ -196,10 +197,13 @@
             "lib/Drupal/Core/DependencyInjection/Container.php",
             "lib/Drupal/Core/DrupalKernel.php",
             "lib/Drupal/Core/DrupalKernelInterface.php",
+            "lib/Drupal/Core/Http/InputBag.php",
             "lib/Drupal/Core/Installer/InstallerRedirectTrait.php",
             "lib/Drupal/Core/Site/Settings.php"
         ],
-        "files": [ "includes/bootstrap.inc" ]
+        "files": [
+            "includes/bootstrap.inc"
+        ]
     },
     "config": {
         "preferred-install": "dist"
@@ -217,7 +221,7 @@
                 "[web-root]/example.gitignore": "assets/scaffold/files/example.gitignore",
                 "[web-root]/index.php": "assets/scaffold/files/index.php",
                 "[web-root]/INSTALL.txt": "assets/scaffold/files/drupal.INSTALL.txt",
-                "[web-root]/README.txt": "assets/scaffold/files/drupal.README.txt",
+                "[web-root]/README.md": "assets/scaffold/files/drupal.README.md",
                 "[web-root]/robots.txt": "assets/scaffold/files/robots.txt",
                 "[web-root]/update.php": "assets/scaffold/files/update.php",
                 "[web-root]/web.config": "assets/scaffold/files/web.config",

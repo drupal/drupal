@@ -60,7 +60,8 @@ class PagerTest extends WizardTestBase {
     $view['page[title]'] = $this->randomMachineName(16);
     $view['page[path]'] = $path;
     $view['page[pager]'] = $pager;
-    $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm($view, 'Save and edit');
   }
 
 }

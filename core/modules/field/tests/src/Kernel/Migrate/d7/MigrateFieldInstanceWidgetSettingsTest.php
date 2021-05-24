@@ -77,7 +77,7 @@ class MigrateFieldInstanceWidgetSettingsTest extends MigrateDrupal7TestBase {
   }
 
   /**
-   * Test that migrated view modes can be loaded using D8 APIs.
+   * Tests that migrated view modes can be loaded using D8 APIs.
    */
   public function testWidgetSettings() {
     $this->assertEntity('node.page.default', 'node', 'page');
@@ -128,6 +128,7 @@ class MigrateFieldInstanceWidgetSettingsTest extends MigrateDrupal7TestBase {
     $this->assertComponent('node.test_content_type.default', 'field_text', 'string_textfield', 15);
     $this->assertComponent('node.test_content_type.default', 'field_text_list', 'options_select', 11);
     $this->assertComponent('node.test_content_type.default', 'field_float_list', 'options_select', 20);
+    $this->assertComponent('node.test_content_type.default', 'field_telephone', 'telephone_default', 21);
 
     $this->assertEntity('user.user.default', 'user', 'user');
     $this->assertComponent('user.user.default', 'field_file', 'file_generic', 8);
@@ -141,6 +142,10 @@ class MigrateFieldInstanceWidgetSettingsTest extends MigrateDrupal7TestBase {
 
     $this->assertEntity('taxonomy_term.test_vocabulary.default', 'taxonomy_term', 'test_vocabulary');
     $this->assertComponent('comment.comment_node_test_content_type.default', 'field_integer', 'number', 2);
+
+    $this->assertEntity('node.blog.default', 'node', 'blog');
+    $this->assertComponent('node.blog.default', 'field_file_mfw', 'file_generic', 17);
+    $this->assertComponent('node.blog.default', 'field_image_miw', 'image_image', 18);
   }
 
 }

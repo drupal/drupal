@@ -22,12 +22,34 @@ body:not(.is-always-mobile-nav) {
       letter-spacing: 0.02em;
       font-size: 16px;
       line-height: var(--sp1-5);
+
+      &:focus {
+        position: relative;
+        outline: 0;
+
+        &:before {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: calc(100% + var(--sp));
+          height: var(--sp3);
+          content: "";
+          transform: translate(-50%, -50%);
+          border: solid 2px var(--color--blue-50);
+          border-radius: 4px;
+        }
+      }
     }
 
     & .primary-nav__menu-link--button {
       &.primary-nav__menu-link--has-children {
         overflow: visible; /* Necessary to view icon in IE11 */
         padding-inline-end: 9px;
+
+        &:focus:before {
+          width: calc(100% + var(--sp1-5));
+          content: "";
+        }
 
         &:before {
           content: none;
@@ -86,14 +108,16 @@ body:not(.is-always-mobile-nav) {
     & .primary-nav__menu--level-2 {
       position: absolute;
       z-index: 105; /* Appear above search container. */
-      /* stylelint-disable csstools/use-logical */
       top: calc(100% - (0.5 * var(--sp)));
       left: 50%;
-      /* stylelint-enable csstools/use-logical */
       visibility: hidden;
-      overflow: visible;
+      overflow: auto;
       width: 250px;
-      max-height: none;
+      /**
+       * Ensure that long level-2 menus will never overflow viewport (focused
+       * elements should always be in viewport per accessibility guidelines).
+       */
+      max-height: calc(100vh - var(--site-header-height-wide) - var(--sp));
       margin-block-start: 0;
       margin-inline-start: 0;
       padding-block: calc(3 * var(--sp));
@@ -111,24 +135,7 @@ body:not(.is-always-mobile-nav) {
       background: var(--color--white);
       box-shadow: 0 1px 36px rgba(0, 0, 0, 0.08);
 
-      /* Arrow */
-      &:after {
-        position: absolute;
-        /* stylelint-disable csstools/use-logical */
-        bottom: calc(100% + (0.5 * var(--sp)));
-        left: 50%;
-        /* stylelint-enable csstools/use-logical */
-        width: 0;
-        height: 0;
-        content: "";
-        transform: translateX(-50%);
-        /* Intentionally not using CSS logical properties. */
-        border-right: solid 10px transparent;
-        border-bottom: solid 10px var(--color--blue-50);
-        border-left: solid 10px transparent;
-      }
-
-      &.is-active {
+      &.is-active-menu-parent {
         visibility: visible;
         margin-block-start: 0;
         transform: translate(-50%, 0);
@@ -138,6 +145,10 @@ body:not(.is-always-mobile-nav) {
 
     & .primary-nav__menu-link--level-2 {
       display: block;
+
+      &:focus:before {
+        height: 100%;
+      }
 
       & .primary-nav__menu-link-inner {
         padding-block: var(--sp0-5);
@@ -150,6 +161,71 @@ body:not(.is-always-mobile-nav) {
         }
       }
     }
+
+    /**
+     * Arrow is placed outside of submenu because the submenu has the
+     * `overflow: hidden` CSS rule applied.
+     */
+    & .primary-nav__menu-🥕 {
+      position: absolute;
+      z-index: 105; /* Match level 2 menus. */
+      top: calc(100% - var(--sp));
+      left: 50%;
+      visibility: hidden;
+      width: 0;
+      height: 0;
+      transform: translate(-50%, -20px);
+      opacity: 0;
+      /* Intentionally not using CSS logical properties. */
+      border-right: solid 10px transparent;
+      border-bottom: solid 10px var(--color--blue-50);
+      border-left: solid 10px transparent;
+
+      &.is-active-menu-parent {
+        visibility: visible;
+        transform: translate(-50%, 0);
+        opacity: 1;
+      }
+    }
+
+    /**
+     * When ensuring that long menus don't overflow viewport, we can give a
+     * little extra room when the toolbar is fixed (and is shorter).
+     */
+    & .js-fixed .primary-nav__menu--level-2 {
+      max-height: calc(100vh - var(--site-header-height-wide) - var(--sp) + var(--sp4));
+    }
+  }
+}
+
+/*
+ * Take into account Drupal's admin toolbars when ensuring that long level-2
+ * menus will never overflow viewport.
+ */
+@media (--nav) {
+  body:not(.is-always-mobile-nav) {
+    /* Toolbar is fixed, and tray is vertical or toolbar is horizontal and tray is closed. */
+    &.toolbar-vertical,
+    &.toolbar-horizontal.toolbar-fixed {
+      & .primary-nav__menu--level-2 {
+        max-height: calc(100vh - var(--site-header-height-wide) - var(--sp) - var(--toolbar-height));
+      }
+
+      & .js-fixed .primary-nav__menu--level-2 {
+        max-height: calc(100vh - var(--site-header-height-wide) - var(--sp) - var(--toolbar-height) + var(--sp4));
+      }
+    }
+
+    /* Toolbar is horizontal fixed, and tray is open. */
+    &.toolbar-horizontal.toolbar-fixed.toolbar-tray-open {
+      & .primary-nav__menu--level-2 {
+        max-height: calc(100vh - var(--site-header-height-wide) - var(--sp) - var(--toolbar-height) - var(--toolbar-tray-height));
+      }
+
+      & .js-fixed .primary-nav__menu--level-2 {
+        max-height: calc(100vh - var(--site-header-height-wide) - var(--sp) - var(--toolbar-height) - var(--toolbar-tray-height) + var(--sp4));
+      }
+    }
   }
 }
 
@@ -157,9 +233,12 @@ body:not(.is-always-mobile-nav) {
  * Only apply transition styles to menu when JS is loaded. This
  * works around https://bugs.chromium.org/p/chromium/issues/detail?id=332189
  */
-html.js body:not(.is-always-mobile-nav) .primary-nav__menu--level-2 {
+html.js body:not(.is-always-mobile-nav) {
   @media (--nav) {
-    transition: visibility 0.2s, transform 0.2s, opacity 0.2s;
+    & .primary-nav__menu--level-2,
+    & .primary-nav__menu-🥕 {
+      transition: visibility 0.2s, transform 0.2s, opacity 0.2s;
+    }
   }
 }
 

@@ -16,10 +16,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class VocabularyVid extends NumericArgument {
 
   /**
-    * The vocabulary storage.
-    *
-    * @var \Drupal\taxonomy\VocabularyStorageInterface
-    */
+   * The vocabulary storage.
+   *
+   * @var \Drupal\taxonomy\VocabularyStorageInterface
+   */
   protected $vocabularyStorage;
 
   /**

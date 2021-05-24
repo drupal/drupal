@@ -110,8 +110,8 @@ html:not(.js) .tabs__tab,
 }
   }
 .tabs__link:focus {
-  border-color: #2494db;
-  outline: none;
+  outline: solid 3px #2494db;
+  outline-offset: -3px;
 }
 .tabs__link:hover {
   background-color: #e7edf1;

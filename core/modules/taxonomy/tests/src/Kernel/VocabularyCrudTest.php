@@ -40,11 +40,11 @@ class VocabularyCrudTest extends KernelTestBase {
   }
 
   /**
-   * Test deleting a taxonomy that contains terms.
+   * Tests deleting a taxonomy that contains terms.
    */
   public function testTaxonomyVocabularyDeleteWithTerms() {
     $vocabulary = $this->createVocabulary();
-    $query = \Drupal::entityQuery('taxonomy_term')->count();
+    $query = \Drupal::entityQuery('taxonomy_term')->accessCheck(FALSE)->count();
 
     // Assert that there are no terms left.
     $this->assertEquals(0, $query->execute());
@@ -127,7 +127,7 @@ class VocabularyCrudTest extends KernelTestBase {
   }
 
   /**
-   * Test uninstall and reinstall of the taxonomy module.
+   * Tests uninstall and reinstall of the taxonomy module.
    */
   public function testUninstallReinstall() {
     $vocabulary = $this->createVocabulary();

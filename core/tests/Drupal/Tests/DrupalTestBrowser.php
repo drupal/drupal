@@ -140,12 +140,10 @@ class DrupalTestBrowser extends AbstractBrowser {
     // to re-throw the exception whenever the response is NULL, and
     // ConnectException always has a NULL response.
     catch (RequestException $e) {
-      $response = $e->getResponse();
-      // @todo RequestException has a hasResponse() method which we could use
-      //   here instead. https://www.drupal.org/project/drupal/issues/3188957
-      if (NULL === $response) {
+      if (!$e->hasResponse()) {
         throw $e;
       }
+      $response = $e->getResponse();
     }
 
     return $this->createResponse($response);
