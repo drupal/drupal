@@ -77,20 +77,21 @@ class ContentPreviewToggleTest extends WebDriverTestBase {
     // Placeholder label should not be visible, preview content should be.
     $assert_session->elementNotExists('css', '.layout-builder-block__content-preview-placeholder-label');
     $assert_session->pageTextContains($content_preview_body_text);
+    $assert_session->elementTextEquals('css', '.field__item', $content_preview_body_text);
 
     // Disable content preview, confirm presence of placeholder labels.
     $this->assertTrue($page->hasCheckedField('layout-builder-content-preview'));
     $page->uncheckField('layout-builder-content-preview');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.layout-builder-block__content-preview-placeholder-label'));
 
-    // Confirm that block content is not on page.
-    $assert_session->pageTextNotContains($content_preview_body_text);
+    // Confirm that block content is not displayed on page.
+    $assert_session->elementAttributeContains('css', '.field__item', 'style', 'display: none');
     $this->assertContextualLinks();
 
     // Check that content preview is still disabled on page reload.
     $this->getSession()->reload();
     $this->assertNotEmpty($assert_session->waitForElement('css', '.layout-builder-block__content-preview-placeholder-label'));
-    $assert_session->pageTextNotContains($content_preview_body_text);
+    $assert_session->elementAttributeContains('css', '.field__item', 'style', 'display: none');
     $this->assertContextualLinks();
 
     // Confirm repositioning blocks works with content preview disabled.
@@ -107,7 +108,7 @@ class ContentPreviewToggleTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
 
     // Check that the drag-triggered rebuild did not trigger content preview.
-    $assert_session->pageTextNotContains($content_preview_body_text);
+    $assert_session->elementAttributeContains('css', '.field__item', 'style', 'display: none');
 
     // Check that drag successfully repositioned blocks.
     $this->assertOrderInPage([$body_field_placeholder_label, $links_field_placeholder_label]);
@@ -116,7 +117,7 @@ class ContentPreviewToggleTest extends WebDriverTestBase {
     $this->assertTrue($page->hasUncheckedField('layout-builder-content-preview'));
     $page->checkField('layout-builder-content-preview');
     $this->assertNotEmpty($assert_session->waitForText($content_preview_body_text));
-    $assert_session->pageTextContains($content_preview_body_text);
+    $assert_session->elementAttributeNotContains('css', '.field__item', 'style', 'display: none');
     $this->assertNotEmpty($assert_session->waitForText('Placeholder for the "Links" field'));
     $this->assertOrderInPage([$content_preview_body_text, 'Placeholder for the "Links" field']);
   }
