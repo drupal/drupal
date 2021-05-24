@@ -71,11 +71,11 @@ class InlineBlockPrivateFilesTest extends InlineBlockTestBase {
     ]));
 
     // Enable layout builder and overrides.
-    $this->drupalPostForm(
-      static::FIELD_UI_PREFIX . '/display/default',
-      ['layout[enabled]' => TRUE, 'layout[allow_custom]' => TRUE],
-      'Save'
-    );
+    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
+    $this->submitForm([
+      'layout[enabled]' => TRUE,
+      'layout[allow_custom]' => TRUE,
+    ], 'Save');
     $this->drupalLogout();
 
     // Log in as user you can only configure layouts and access content.

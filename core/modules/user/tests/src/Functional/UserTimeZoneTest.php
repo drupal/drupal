@@ -74,7 +74,8 @@ class UserTimeZoneTest extends BrowserTestBase {
     $edit = [];
     $edit['mail'] = $web_user->getEmail();
     $edit['timezone'] = 'America/Santiago';
-    $this->drupalPostForm("user/" . $web_user->id() . "/edit", $edit, 'Save');
+    $this->drupalGet("user/" . $web_user->id() . "/edit");
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('The changes have been saved.');
 
     // Confirm date format and time zone.

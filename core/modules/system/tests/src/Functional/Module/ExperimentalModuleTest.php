@@ -45,7 +45,8 @@ class ExperimentalModuleTest extends BrowserTestBase {
     // There should be no confirmation form and no experimental module warning.
     $edit = [];
     $edit["modules[test_page_test][enable]"] = TRUE;
-    $this->drupalPostForm('admin/modules', $edit, 'Install');
+    $this->drupalGet('admin/modules');
+    $this->submitForm($edit, 'Install');
     $this->assertSession()->pageTextContains('Module Test page has been enabled.');
     $this->assertNoText('Experimental modules are provided for testing purposes only.');
 
@@ -57,7 +58,8 @@ class ExperimentalModuleTest extends BrowserTestBase {
     // list of dependencies.
     $edit = [];
     $edit["modules[experimental_module_test][enable]"] = TRUE;
-    $this->drupalPostForm('admin/modules', $edit, 'Install');
+    $this->drupalGet('admin/modules');
+    $this->submitForm($edit, 'Install');
 
     // The module should not be enabled and there should be a warning and a
     // list of the experimental modules with only this one.
@@ -79,7 +81,8 @@ class ExperimentalModuleTest extends BrowserTestBase {
     // on an experimental module.
     $edit = [];
     $edit["modules[experimental_module_dependency_test][enable]"] = TRUE;
-    $this->drupalPostForm('admin/modules', $edit, 'Install');
+    $this->drupalGet('admin/modules');
+    $this->submitForm($edit, 'Install');
 
     // The module should not be enabled and there should be a warning and a
     // list of the experimental modules with only this one.
@@ -108,7 +111,8 @@ class ExperimentalModuleTest extends BrowserTestBase {
     $edit = [];
     $edit["modules[experimental_module_test][enable]"] = TRUE;
     $edit["modules[experimental_module_dependency_test][enable]"] = TRUE;
-    $this->drupalPostForm('admin/modules', $edit, 'Install');
+    $this->drupalGet('admin/modules');
+    $this->submitForm($edit, 'Install');
 
     // The module should not be enabled and there should be a warning and a
     // list of the experimental modules with only this one.
@@ -133,7 +137,8 @@ class ExperimentalModuleTest extends BrowserTestBase {
     \Drupal::state()->set('experimental_module_requirements_test_requirements', TRUE);
     $edit = [];
     $edit["modules[experimental_module_requirements_test][enable]"] = TRUE;
-    $this->drupalPostForm('admin/modules', $edit, 'Install');
+    $this->drupalGet('admin/modules');
+    $this->submitForm($edit, 'Install');
     // Verify that if the module can not be installed, we are not taken to the
     // confirm form.
     $this->assertSession()->addressEquals('admin/modules');

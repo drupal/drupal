@@ -100,7 +100,8 @@ class ElementsTableSelectTest extends BrowserTestBase {
     // Test a submission with one checkbox checked.
     $edit = [];
     $edit['tableselect[row1]'] = TRUE;
-    $this->drupalPostForm('form_test/tableselect/multiple-true', $edit, 'Submit');
+    $this->drupalGet('form_test/tableselect/multiple-true');
+    $this->submitForm($edit, 'Submit');
 
     $assert_session = $this->assertSession();
     $assert_session->pageTextContains('Submitted: row1 = row1');
@@ -110,7 +111,8 @@ class ElementsTableSelectTest extends BrowserTestBase {
     // Test a submission with multiple checkboxes checked.
     $edit['tableselect[row1]'] = TRUE;
     $edit['tableselect[row3]'] = TRUE;
-    $this->drupalPostForm('form_test/tableselect/multiple-true', $edit, 'Submit');
+    $this->drupalGet('form_test/tableselect/multiple-true');
+    $this->submitForm($edit, 'Submit');
 
     $assert_session->pageTextContains('Submitted: row1 = row1');
     $assert_session->pageTextContains('Submitted: row2 = 0');
@@ -123,7 +125,8 @@ class ElementsTableSelectTest extends BrowserTestBase {
    */
   public function testMultipleFalseSubmit() {
     $edit['tableselect'] = 'row1';
-    $this->drupalPostForm('form_test/tableselect/multiple-false', $edit, 'Submit');
+    $this->drupalGet('form_test/tableselect/multiple-false');
+    $this->submitForm($edit, 'Submit');
     $this->assertSession()->pageTextContains('Submitted: row1');
   }
 

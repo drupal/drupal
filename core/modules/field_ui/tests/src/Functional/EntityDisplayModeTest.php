@@ -192,7 +192,8 @@ class EntityDisplayModeTest extends BrowserTestBase {
     $edit = [
       'label' => 'Breezer',
     ];
-    $this->drupalPostForm('admin/structure/display-modes/view/manage/node.teaser', $edit, 'Save');
+    $this->drupalGet('admin/structure/display-modes/view/manage/node.teaser');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('Saved the Breezer view mode.');
 
     // Re-open the display settings for the article content type and verify

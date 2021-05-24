@@ -142,7 +142,7 @@ BROKEN,
     file_put_contents($file_path, Yaml::encode($compatible_info));
     $edit = ['modules[changing_module][enable]' => 'changing_module'];
     $this->drupalGet('admin/modules');
-    $this->drupalPostForm('admin/modules', $edit, 'Install');
+    $this->submitForm($edit, 'Install');
     $this->assertSession()->pageTextContains('Module Module that changes has been enabled.');
 
     $incompatible_updates = [
@@ -166,7 +166,8 @@ BROKEN,
     // Uninstall the module and ensure that incompatible modules message is not
     // displayed for modules that are not installed.
     $edit = ['uninstall[changing_module]' => 'changing_module'];
-    $this->drupalPostForm('admin/modules/uninstall', $edit, 'Uninstall');
+    $this->drupalGet('admin/modules/uninstall');
+    $this->submitForm($edit, 'Uninstall');
     $this->submitForm([], 'Uninstall');
     $this->assertSession()->pageTextContains('The selected modules have been uninstalled.');
     foreach ($incompatible_updates as $incompatible_update) {

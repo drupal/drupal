@@ -67,7 +67,8 @@ class ForumIndexTest extends BrowserTestBase {
       'description[0][value]' => $this->randomMachineName(200),
       'parent[0]' => $tid,
     ];
-    $this->drupalPostForm('admin/structure/forum/add/forum', $edit, 'Save');
+    $this->drupalGet('admin/structure/forum/add/forum');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->linkExists('edit forum');
 
     $tid_child = $tid + 1;
@@ -84,7 +85,8 @@ class ForumIndexTest extends BrowserTestBase {
 
     // Unpublish the node.
     $edit = ['status[value]' => FALSE];
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm($edit, 'Save');
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->pageTextContains('Access denied');
 

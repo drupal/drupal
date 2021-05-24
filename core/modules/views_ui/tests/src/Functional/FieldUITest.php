@@ -36,7 +36,8 @@ class FieldUITest extends UITestBase {
 
     // Hides the field and check whether the hidden label is appended.
     $edit_handler_url = 'admin/structure/views/nojs/handler/test_view/default/field/name';
-    $this->drupalPostForm($edit_handler_url, ['options[exclude]' => TRUE], 'Apply');
+    $this->drupalGet($edit_handler_url);
+    $this->submitForm(['options[exclude]' => TRUE], 'Apply');
 
     $this->assertSession()->pageTextContains('Views test: Name [hidden]');
 
@@ -68,7 +69,8 @@ class FieldUITest extends UITestBase {
     $edit = [
       'group_by' => TRUE,
     ];
-    $this->drupalPostForm('/admin/structure/views/nojs/display/test_view/default/group_by', $edit, 'Apply');
+    $this->drupalGet('/admin/structure/views/nojs/display/test_view/default/group_by');
+    $this->submitForm($edit, 'Apply');
 
     $this->assertSession()->linkByHrefExists($edit_groupby_url, 0, 'Aggregation link found.');
 
@@ -93,7 +95,8 @@ class FieldUITest extends UITestBase {
     $view['page[style][style_plugin]'] = 'default';
     $view['page[title]'] = $this->randomMachineName(16);
     $view['page[path]'] = $view['id'];
-    $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm($view, 'Save and edit');
 
     $view = Views::getView($view['id']);
     $view->initHandlers();

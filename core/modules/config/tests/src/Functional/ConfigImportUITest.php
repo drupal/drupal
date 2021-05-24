@@ -518,7 +518,8 @@ class ConfigImportUITest extends BrowserTestBase {
     $core['theme']['does_not_exist'] = 0;
     $sync->write('core.extension', $core);
 
-    $this->drupalPostForm('admin/config/development/configuration', [], 'Import all');
+    $this->drupalGet('admin/config/development/configuration');
+    $this->submitForm([], 'Import all');
     $this->assertSession()->pageTextContains('The configuration cannot be imported because it failed validation for the following reasons:');
     $this->assertSession()->pageTextContains('Unable to uninstall the Text module since the Node module is installed.');
     $this->assertSession()->pageTextContains('Unable to uninstall the Theme test base theme theme since the Theme test subtheme theme is installed.');
@@ -533,7 +534,8 @@ class ConfigImportUITest extends BrowserTestBase {
     $new_site_name = 'Config import test ' . $this->randomString();
     $this->prepareSiteNameUpdate($new_site_name);
     \Drupal::state()->set('config_import_steps_alter.error', TRUE);
-    $this->drupalPostForm('admin/config/development/configuration', [], 'Import all');
+    $this->drupalGet('admin/config/development/configuration');
+    $this->submitForm([], 'Import all');
     $this->assertSession()->responseContains('_config_import_test_config_import_steps_alter batch error');
     $this->assertSession()->responseContains('_config_import_test_config_import_steps_alter ConfigImporter error');
     $this->assertSession()->responseContains('The configuration was imported with errors.');

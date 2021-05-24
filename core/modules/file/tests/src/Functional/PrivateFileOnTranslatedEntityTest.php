@@ -59,7 +59,8 @@ class PrivateFileOnTranslatedEntityTest extends FileFieldTestBase {
     // Add a second language.
     $edit = [];
     $edit['predefined_langcode'] = 'fr';
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
+    $this->drupalGet('admin/config/regional/language/add');
+    $this->submitForm($edit, 'Add language');
 
     // Enable translation for "Basic page" nodes.
     $edit = [
@@ -67,7 +68,8 @@ class PrivateFileOnTranslatedEntityTest extends FileFieldTestBase {
       'settings[node][page][translatable]' => 1,
       "settings[node][page][fields][$this->fieldName]" => 1,
     ];
-    $this->drupalPostForm('admin/config/regional/content-language', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/regional/content-language');
+    $this->submitForm($edit, 'Save configuration');
   }
 
   /**
@@ -85,7 +87,8 @@ class PrivateFileOnTranslatedEntityTest extends FileFieldTestBase {
     $edit = [];
     $name = 'files[' . $this->fieldName . '_0]';
     $edit[$name] = \Drupal::service('file_system')->realpath($this->drupalGetTestFiles('text')[0]->uri);
-    $this->drupalPostForm('node/' . $default_language_node->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('node/' . $default_language_node->id() . '/edit');
+    $this->submitForm($edit, 'Save');
     $last_fid_prior = $this->getLastFileId();
 
     // Languages are cached on many levels, and we need to clear those caches.

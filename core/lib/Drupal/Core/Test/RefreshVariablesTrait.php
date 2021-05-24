@@ -15,7 +15,7 @@ trait RefreshVariablesTrait {
    * Useful after a page request is made that changes configuration or state in
    * a different thread.
    *
-   * In other words calling a settings page with $this->drupalPostForm() with a
+   * In other words calling a settings page with $this->submitForm() with a
    * changed value would update configuration to reflect that change, but in the
    * thread that made the call (thread running the test) the changed values
    * would not be picked up.

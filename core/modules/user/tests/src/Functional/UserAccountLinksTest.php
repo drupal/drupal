@@ -101,7 +101,8 @@ class UserAccountLinksTest extends BrowserTestBase {
 
     // Disable the 'My account' link.
     $edit['links[menu_plugin_id:user.page][enabled]'] = FALSE;
-    $this->drupalPostForm('admin/structure/menu/manage/account', $edit, 'Save');
+    $this->drupalGet('admin/structure/menu/manage/account');
+    $this->submitForm($edit, 'Save');
 
     // Get the homepage.
     $this->drupalGet('<front>');

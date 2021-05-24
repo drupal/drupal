@@ -64,7 +64,8 @@ class MultiStepNodeFormBasicOptionsTest extends NodeTestBase {
       'sticky[value]' => 1,
       "{$this->fieldName}[0][value]" => $this->randomString(32),
     ];
-    $this->drupalPostForm('node/add/page', $edit, 'Add another item');
+    $this->drupalGet('node/add/page');
+    $this->submitForm($edit, 'Add another item');
     $this->assertSession()->checkboxNotChecked('edit-promote-value');
     $this->assertSession()->checkboxChecked('edit-sticky-value');
   }

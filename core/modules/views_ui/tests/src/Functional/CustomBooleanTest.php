@@ -94,10 +94,12 @@ class CustomBooleanTest extends UITestBase {
         'options[type_custom_true]' => $values['true'],
         'options[type_custom_false]' => $values['false'],
       ];
-      $this->drupalPostForm('admin/structure/views/nojs/handler/test_view/default/field/age', $options, 'Apply');
+      $this->drupalGet('admin/structure/views/nojs/handler/test_view/default/field/age');
+      $this->submitForm($options, 'Apply');
 
       // Save the view.
-      $this->drupalPostForm('admin/structure/views/view/test_view', [], 'Save');
+      $this->drupalGet('admin/structure/views/view/test_view');
+      $this->submitForm([], 'Save');
 
       $view = Views::getView('test_view');
       $output = $view->preview();
@@ -166,10 +168,12 @@ class CustomBooleanTest extends UITestBase {
         'options[type_custom_true]' => $values['true'],
         'options[type_custom_false]' => $values['false'],
       ];
-      $this->drupalPostForm('admin/structure/views/nojs/handler/test_view/default/field/age', $options, 'Apply');
+      $this->drupalGet('admin/structure/views/nojs/handler/test_view/default/field/age');
+      $this->submitForm($options, 'Apply');
 
       // Save the view.
-      $this->drupalPostForm('admin/structure/views/view/test_view', [], 'Save');
+      $this->drupalGet('admin/structure/views/view/test_view');
+      $this->submitForm([], 'Save');
 
       $view = Views::getView('test_view');
       $output = $view->preview();

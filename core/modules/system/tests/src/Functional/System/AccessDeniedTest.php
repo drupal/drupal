@@ -70,14 +70,16 @@ class AccessDeniedTest extends BrowserTestBase {
     $edit = [
       'site_403' => 'user/' . $this->adminUser->id(),
     ];
-    $this->drupalPostForm('admin/config/system/site-information', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/system/site-information');
+    $this->submitForm($edit, 'Save configuration');
     $this->assertRaw(new FormattableMarkup("The path '%path' has to start with a slash.", ['%path' => $edit['site_403']]));
 
     // Use a custom 403 page.
     $edit = [
       'site_403' => '/user/' . $this->adminUser->id(),
     ];
-    $this->drupalPostForm('admin/config/system/site-information', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/system/site-information');
+    $this->submitForm($edit, 'Save configuration');
 
     // Enable the user login block.
     $block = $this->drupalPlaceBlock('user_login_block', ['id' => 'login']);
@@ -93,7 +95,8 @@ class AccessDeniedTest extends BrowserTestBase {
     $edit = [
       'site_403' => '',
     ];
-    $this->drupalPostForm('admin/config/system/site-information', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/system/site-information');
+    $this->submitForm($edit, 'Save configuration');
 
     // Logout and check that the user login block is shown on default 403 pages.
     $this->drupalLogout();
@@ -113,7 +116,8 @@ class AccessDeniedTest extends BrowserTestBase {
       'name' => $this->adminUser->getAccountName(),
       'pass' => $this->adminUser->pass_raw,
     ];
-    $this->drupalPostForm('admin/config/system/site-information', $edit, 'Log in');
+    $this->drupalGet('admin/config/system/site-information');
+    $this->submitForm($edit, 'Log in');
 
     // Check that we're still on the same page.
     $this->assertSession()->pageTextContains('Basic site settings');

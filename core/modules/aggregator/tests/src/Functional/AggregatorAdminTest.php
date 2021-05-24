@@ -36,7 +36,8 @@ class AggregatorAdminTest extends AggregatorTestBase {
       'aggregator_parser' => 'aggregator_test_parser',
       'aggregator_processors[aggregator_test_processor]' => 'aggregator_test_processor',
     ];
-    $this->drupalPostForm('admin/config/services/aggregator/settings', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/services/aggregator/settings');
+    $this->submitForm($edit, 'Save configuration');
     $this->assertSession()->pageTextContains('The configuration options have been saved.');
 
     // Check that settings have the correct default value.
@@ -50,7 +51,8 @@ class AggregatorAdminTest extends AggregatorTestBase {
     $edit = [
       'dummy_length' => 100,
     ];
-    $this->drupalPostForm('admin/config/services/aggregator/settings', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/services/aggregator/settings');
+    $this->submitForm($edit, 'Save configuration');
     $this->assertSession()->pageTextContains('The configuration options have been saved.');
     $this->assertSession()->fieldValueEquals('dummy_length', 100);
 

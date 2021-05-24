@@ -229,7 +229,8 @@ class ForumTest extends BrowserTestBase {
       'create forum content',
       'post comments',
     ]));
-    $this->drupalPostForm('admin/structure/types/manage/forum', ['options[promote]' => 'promote'], 'Save content type');
+    $this->drupalGet('admin/structure/types/manage/forum');
+    $this->submitForm(['options[promote]' => 'promote'], 'Save content type');
     $this->createForumTopic($this->forum, FALSE);
     $this->createForumTopic($this->forum, FALSE);
     $this->drupalGet('node');
@@ -238,13 +239,15 @@ class ForumTest extends BrowserTestBase {
     $node = $this->createForumTopic($this->forum, FALSE);
     $edit = [];
     $edit['comment_body[0][value]'] = $this->randomMachineName();
-    $this->drupalPostForm('node/' . $node->id(), $edit, 'Save');
+    $this->drupalGet('node/' . $node->id());
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
 
     // Test editing a forum topic that has a comment.
     $this->drupalLogin($this->editAnyTopicsUser);
     $this->drupalGet('forum/' . $this->forum['tid']);
-    $this->drupalPostForm('node/' . $node->id() . '/edit', [], 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm([], 'Save');
     $this->assertSession()->statusCodeEquals(200);
 
     // Test the root forum page title change.
@@ -285,7 +288,8 @@ class ForumTest extends BrowserTestBase {
     $edit['title[0][value]'] = $this->randomMachineName(10);
     $edit['body[0][value]'] = $this->randomMachineName(120);
     $this->drupalLogin($this->adminUser);
-    $this->drupalPostForm('node/add/forum', $edit, 'Save');
+    $this->drupalGet('node/add/forum');
+    $this->submitForm($edit, 'Save');
 
     $nid_count = $this->container->get('entity_type.manager')
       ->getStorage('node')
@@ -311,7 +315,8 @@ class ForumTest extends BrowserTestBase {
 
     // Add forum to the Tools menu.
     $edit = [];
-    $this->drupalPostForm('admin/structure/menu/manage/tools', $edit, 'Save');
+    $this->drupalGet('admin/structure/menu/manage/tools');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
 
     // Edit forum taxonomy.
@@ -339,7 +344,8 @@ class ForumTest extends BrowserTestBase {
     // Create second forum in container, destined to be deleted below.
     $delete_forum = $this->createForum('forum', $this->forumContainer['tid']);
     // Save forum overview.
-    $this->drupalPostForm('admin/structure/forum/', [], 'Save');
+    $this->drupalGet('admin/structure/forum/');
+    $this->submitForm([], 'Save');
     $this->assertRaw(t('The configuration options have been saved.'));
     // Delete this second forum.
     $this->deleteForum($delete_forum['tid']);
@@ -394,7 +400,8 @@ class ForumTest extends BrowserTestBase {
     ];
 
     // Edit the vocabulary.
-    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $original_vocabulary->id(), $edit, 'Save');
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $original_vocabulary->id());
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertRaw(t('Updated vocabulary %name.', ['%name' => $edit['name']]));
 
@@ -438,7 +445,8 @@ class ForumTest extends BrowserTestBase {
     ];
 
     // Create forum.
-    $this->drupalPostForm('admin/structure/forum/add/' . $type, $edit, 'Save');
+    $this->drupalGet('admin/structure/forum/add/' . $type);
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
     $type = ($type == 'container') ? 'forum container' : 'forum';
     $this->assertSession()->pageTextContains('Created new ' . $type . ' ' . $name . '.');
@@ -530,7 +538,8 @@ class ForumTest extends BrowserTestBase {
     $edit = [];
     $edit['subject[0][value]'] = $this->randomMachineName();
     $edit['comment_body[0][value]'] = $this->randomMachineName();
-    $this->drupalPostForm('node/' . $node->id(), $edit, 'Save');
+    $this->drupalGet('node/' . $node->id());
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
 
     // Test replying to a comment.
@@ -571,7 +580,8 @@ class ForumTest extends BrowserTestBase {
     $tid = $forum['tid'];
 
     // Create the forum topic, preselecting the forum ID via a URL parameter.
-    $this->drupalPostForm('node/add/forum', $edit, 'Save', ['query' => ['forum_id' => $tid]]);
+    $this->drupalGet('node/add/forum', ['query' => ['forum_id' => $tid]]);
+    $this->submitForm($edit, 'Save');
 
     $type = t('Forum topic');
     if ($container) {
@@ -659,7 +669,8 @@ class ForumTest extends BrowserTestBase {
       // Assume the topic is initially associated with $forum.
       $edit['taxonomy_forums'] = $this->rootForum['tid'];
       $edit['shadow'] = TRUE;
-      $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
+      $this->drupalGet('node/' . $node->id() . '/edit');
+      $this->submitForm($edit, 'Save');
       $this->assertSession()->pageTextContains('Forum topic ' . $edit['title[0][value]'] . ' has been updated.');
 
       // Verify topic was moved to a different forum.
@@ -674,7 +685,8 @@ class ForumTest extends BrowserTestBase {
       $this->assertSame($this->rootForum['tid'], $forum_tid, 'The forum topic is linked to a different forum');
 
       // Delete forum node.
-      $this->drupalPostForm('node/' . $node->id() . '/delete', [], 'Delete');
+      $this->drupalGet('node/' . $node->id() . '/delete');
+      $this->submitForm([], 'Delete');
       $this->assertSession()->statusCodeEquals($response);
       $this->assertRaw(t('Forum topic %title has been deleted.', ['%title' => $edit['title[0][value]']]));
     }

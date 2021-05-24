@@ -227,7 +227,8 @@ abstract class CommentTestBase extends BrowserTestBase {
    *   Comment to delete.
    */
   public function deleteComment(CommentInterface $comment) {
-    $this->drupalPostForm('comment/' . $comment->id() . '/delete', [], 'Delete');
+    $this->drupalGet('comment/' . $comment->id() . '/delete');
+    $this->submitForm([], 'Delete');
     $this->assertSession()->pageTextContains('The comment and all its replies have been deleted.');
   }
 
@@ -361,7 +362,8 @@ abstract class CommentTestBase extends BrowserTestBase {
     $edit = [];
     $edit['operation'] = $operation;
     $edit['comments[' . $comment->id() . ']'] = TRUE;
-    $this->drupalPostForm('admin/content/comment' . ($approval ? '/approval' : ''), $edit, 'Update');
+    $this->drupalGet('admin/content/comment' . ($approval ? '/approval' : ''));
+    $this->submitForm($edit, 'Update');
 
     if ($operation == 'delete') {
       $this->submitForm([], 'Delete');
