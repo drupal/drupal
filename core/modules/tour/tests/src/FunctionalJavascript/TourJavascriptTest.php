@@ -104,8 +104,8 @@ class TourJavascriptTest extends WebDriverTestBase {
 
     // The second tour tip should appear, confirm it has the expected content.
     $tip2 = $assert_session->waitForElementVisible('css', '.shepherd-enabled.tip-tour-test-3');
+    $assert_session->pageTextNotContains('always the best dressed');
     $tip_text = $tip2->getText();
-    $this->assertStringNotContainsString('always the best dressed', $tip_text);
     $this->assertStringContainsString('The awesome image', $tip_text);
     $this->assertStringContainsString('2 of 3', $tip_text);
     $this->assertStringNotContainsString('End tour', $tip_text);
@@ -115,8 +115,8 @@ class TourJavascriptTest extends WebDriverTestBase {
 
     // The third tour tip should appear, confirm it has the expected content.
     $tip3 = $assert_session->waitForElementVisible('css', '.shepherd-enabled.tip-tour-test-6');
+    $assert_session->pageTextNotContains('The awesome image');
     $tip_text = $tip3->getText();
-    $this->assertStringNotContainsString('The awesome image', $tip_text);
     $this->assertStringContainsString('Im all these things', $tip_text);
     $this->assertStringContainsString('3 of 3', $tip_text);
     $this->assertStringNotContainsString('Next', $tip_text);

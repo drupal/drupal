@@ -69,7 +69,7 @@ class LayoutBuilderTranslationTest extends ContentTranslationTestBase {
     $assert_session->linkNotExists('Layout');
 
     $this->drupalGet($translated_layout_url);
-    $assert_session->responseContains('Access denied');
+    $assert_session->pageTextContains('Access denied');
 
     $this->addLayoutOverride();
 
@@ -119,7 +119,7 @@ class LayoutBuilderTranslationTest extends ContentTranslationTestBase {
     $assert_session->linkNotExists('Layout');
 
     $this->drupalGet($translated_layout_url);
-    $assert_session->responseContains('Access denied');
+    $assert_session->pageTextContains('Access denied');
   }
 
   /**
