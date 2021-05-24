@@ -70,7 +70,8 @@ class UpdateUploadTest extends UpdateTestBase {
     $edit = [
       'files[project_upload]' => $validArchiveFile,
     ];
-    $this->drupalPostForm('admin/modules/install', $edit, 'Continue');
+    $this->drupalGet('admin/modules/install');
+    $this->submitForm($edit, 'Continue');
     $this->assertSession()->pageTextContains('AAA Update test is already present.');
     $this->assertSession()->addressEquals('admin/modules/install');
 

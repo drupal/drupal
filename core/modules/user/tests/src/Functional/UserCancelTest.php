@@ -621,7 +621,8 @@ class UserCancelTest extends BrowserTestBase {
     for ($i = 0; $i <= 4; $i++) {
       $edit['user_bulk_form[' . $i . ']'] = TRUE;
     }
-    $this->drupalPostForm('admin/people', $edit, 'Apply to selected items');
+    $this->drupalGet('admin/people');
+    $this->submitForm($edit, 'Apply to selected items');
     $this->assertSession()->pageTextContains('Are you sure you want to cancel these user accounts?');
     $this->assertSession()->pageTextContains('When cancelling these accounts');
     $this->assertSession()->pageTextContains('Require email confirmation to cancel account');

@@ -207,8 +207,10 @@ class OverrideDisplaysTest extends UITestBase {
     $edit['title'] = $this->randomMachineName();
     $edit['override[dropdown]'] = 'default_revert';
 
-    $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/block_1/title", $edit, 'Apply');
-    $this->drupalPostForm("admin/structure/views/view/{$view['id']}/edit/block_1", [], 'Save');
+    $this->drupalGet("admin/structure/views/nojs/display/{$view['id']}/block_1/title");
+    $this->submitForm($edit, 'Apply');
+    $this->drupalGet("admin/structure/views/view/{$view['id']}/edit/block_1");
+    $this->submitForm([], 'Save');
     $this->assertSession()->pageTextContains($view['page[title]']);
   }
 

@@ -53,12 +53,14 @@ class ViewEditTest extends UITestBase {
 
     // Test that a long administrative comment is truncated.
     $edit = ['display_comment' => 'one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen'];
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/attachment_1/display_comment', $edit, 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/display/test_view/attachment_1/display_comment');
+    $this->submitForm($edit, 'Apply');
     $this->assertSession()->pageTextContains('one two three four five six seven eight nine ten eleven twelve thirteen fourteen...');
 
     // Change the machine name for the display from page_1 to test_1.
     $edit = ['display_id' => 'test_1'];
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/attachment_1/display_id', $edit, 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/display/test_view/attachment_1/display_id');
+    $this->submitForm($edit, 'Apply');
     $this->assertSession()->linkExists('test_1');
 
     // Save the view, and test the new ID has been saved.
@@ -90,16 +92,19 @@ class ViewEditTest extends UITestBase {
     }
 
     $edit = ['display_id' => 'test 1'];
-    $this->drupalPostForm($machine_name_edit_url, $edit, 'Apply');
+    $this->drupalGet($machine_name_edit_url);
+    $this->submitForm($edit, 'Apply');
     $this->assertSession()->pageTextContains($error_text);
 
     $edit = ['display_id' => 'test_1#'];
-    $this->drupalPostForm($machine_name_edit_url, $edit, 'Apply');
+    $this->drupalGet($machine_name_edit_url);
+    $this->submitForm($edit, 'Apply');
     $this->assertSession()->pageTextContains($error_text);
 
     // Test using an existing display ID.
     $edit = ['display_id' => 'default'];
-    $this->drupalPostForm($machine_name_edit_url, $edit, 'Apply');
+    $this->drupalGet($machine_name_edit_url);
+    $this->submitForm($edit, 'Apply');
     $this->assertSession()->pageTextContains('Display id should be unique.');
 
     // Test that the display ID has not been changed.

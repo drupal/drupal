@@ -49,35 +49,41 @@ class UserEditTest extends BrowserTestBase {
     $edit = [];
     $edit['pass[pass1]'] = '';
     $edit['pass[pass2]'] = $this->randomMachineName();
-    $this->drupalPostForm("user/" . $user1->id() . "/edit", $edit, 'Save');
+    $this->drupalGet("user/" . $user1->id() . "/edit");
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains("The specified passwords do not match.");
 
     $edit['pass[pass1]'] = $this->randomMachineName();
     $edit['pass[pass2]'] = '';
-    $this->drupalPostForm("user/" . $user1->id() . "/edit", $edit, 'Save');
+    $this->drupalGet("user/" . $user1->id() . "/edit");
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains("The specified passwords do not match.");
 
     // Test that the error message appears when attempting to change the mail or
     // pass without the current password.
     $edit = [];
     $edit['mail'] = $this->randomMachineName() . '@new.example.com';
-    $this->drupalPostForm("user/" . $user1->id() . "/edit", $edit, 'Save');
+    $this->drupalGet("user/" . $user1->id() . "/edit");
+    $this->submitForm($edit, 'Save');
     $this->assertRaw(t("Your current password is missing or incorrect; it's required to change the %name.", ['%name' => t('Email')]));
 
     $edit['current_pass'] = $user1->passRaw;
-    $this->drupalPostForm("user/" . $user1->id() . "/edit", $edit, 'Save');
+    $this->drupalGet("user/" . $user1->id() . "/edit");
+    $this->submitForm($edit, 'Save');
     $this->assertRaw(t("The changes have been saved."));
 
     // Test that the user must enter current password before changing passwords.
     $edit = [];
     $edit['pass[pass1]'] = $new_pass = $this->randomMachineName();
     $edit['pass[pass2]'] = $new_pass;
-    $this->drupalPostForm("user/" . $user1->id() . "/edit", $edit, 'Save');
+    $this->drupalGet("user/" . $user1->id() . "/edit");
+    $this->submitForm($edit, 'Save');
     $this->assertRaw(t("Your current password is missing or incorrect; it's required to change the %name.", ['%name' => t('Password')]));
 
     // Try again with the current password.
     $edit['current_pass'] = $user1->passRaw;
-    $this->drupalPostForm("user/" . $user1->id() . "/edit", $edit, 'Save');
+    $this->drupalGet("user/" . $user1->id() . "/edit");
+    $this->submitForm($edit, 'Save');
     $this->assertRaw(t("The changes have been saved."));
 
     // Confirm there's only one session in the database as the existing session
@@ -118,13 +124,15 @@ class UserEditTest extends BrowserTestBase {
     $this->assertSession()->checkboxChecked('edit-status-1');
 
     $edit = ['status' => 0];
-    $this->drupalPostForm('user/' . $user1->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('user/' . $user1->id() . '/edit');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('The changes have been saved.');
     $this->assertSession()->checkboxChecked('edit-status-0');
     $this->assertSession()->checkboxNotChecked('edit-status-1');
 
     $edit = ['status' => 1];
-    $this->drupalPostForm('user/' . $user1->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('user/' . $user1->id() . '/edit');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('The changes have been saved.');
     $this->assertSession()->checkboxNotChecked('edit-status-0');
     $this->assertSession()->checkboxChecked('edit-status-1');

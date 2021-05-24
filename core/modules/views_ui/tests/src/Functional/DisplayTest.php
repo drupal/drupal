@@ -166,14 +166,19 @@ class DisplayTest extends UITestBase {
     $this->assertSession()->checkboxChecked('edit-link-display-0');
 
     // Test the default radio option on the link display form.
-    $this->drupalPostForm($link_display_path, ['link_display' => 'page_1'], 'Apply');
+    $this->drupalGet($link_display_path);
+    $this->submitForm(['link_display' => 'page_1'], 'Apply');
     // The form redirects to the default display.
     $this->drupalGet($path);
 
     $result = $this->xpath("//a[contains(@href, :path)]", [':path' => $link_display_path]);
     $this->assertEquals('Page', $result[0]->getHtml(), 'Make sure that the link option summary shows the right linked display.');
 
-    $this->drupalPostForm($link_display_path, ['link_display' => 'custom_url', 'link_url' => 'a-custom-url'], 'Apply');
+    $this->drupalGet($link_display_path);
+    $this->submitForm([
+      'link_display' => 'custom_url',
+      'link_url' => 'a-custom-url',
+    ], 'Apply');
     // The form redirects to the default display.
     $this->drupalGet($path);
 

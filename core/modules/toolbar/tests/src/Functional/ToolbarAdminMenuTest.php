@@ -202,7 +202,8 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     $rid = $this->drupalCreateRole(['administer content types']);
 
     // Assign the role to the user.
-    $this->drupalPostForm('user/' . $this->adminUser->id() . '/edit', ["roles[$rid]" => $rid], 'Save');
+    $this->drupalGet('user/' . $this->adminUser->id() . '/edit');
+    $this->submitForm(["roles[{$rid}]" => $rid], 'Save');
     $this->assertSession()->pageTextContains('The changes have been saved.');
 
     // Assert that the subtrees hash has been altered because the subtrees
@@ -243,7 +244,8 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     $admin_user_2_hash = $this->getSubtreesHash();
 
     // Assign the role to the user.
-    $this->drupalPostForm('user/' . $admin_user_id . '/edit', ["roles[$rid]" => $rid], 'Save');
+    $this->drupalGet('user/' . $admin_user_id . '/edit');
+    $this->submitForm(["roles[{$rid}]" => $rid], 'Save');
     $this->assertSession()->pageTextContains('The changes have been saved.');
 
     // Log in adminUser and assert that the subtrees hash has changed.
@@ -328,7 +330,8 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     $edit = [
       $lid => $translation,
     ];
-    $this->drupalPostForm('admin/config/regional/translate', $edit, 'Save translations');
+    $this->drupalGet('admin/config/regional/translate');
+    $this->submitForm($edit, 'Save translations');
     $this->assertSession()->pageTextContains('The strings have been saved.');
     // Verify that the user is redirected to the correct page.
     $this->assertSession()->addressEquals(Url::fromRoute('locale.translate_page'));

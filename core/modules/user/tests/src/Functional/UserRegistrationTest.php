@@ -45,7 +45,8 @@ class UserRegistrationTest extends BrowserTestBase {
     $edit = [];
     $edit['name'] = $name = $this->randomMachineName();
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
-    $this->drupalPostForm('user/register', $edit, 'Create new account');
+    $this->drupalGet('user/register');
+    $this->submitForm($edit, 'Create new account');
     $this->assertSession()->pageTextContains('A welcome message with further instructions has been sent to your email address.');
 
     /** @var EntityStorageInterface $storage */
@@ -86,13 +87,15 @@ class UserRegistrationTest extends BrowserTestBase {
     // Try entering a mismatching password.
     $edit['pass[pass1]'] = '99999.0';
     $edit['pass[pass2]'] = '99999';
-    $this->drupalPostForm('user/register', $edit, 'Create new account');
+    $this->drupalGet('user/register');
+    $this->submitForm($edit, 'Create new account');
     $this->assertSession()->pageTextContains('The specified passwords do not match.');
 
     // Enter a correct password.
     $edit['pass[pass1]'] = $new_pass = $this->randomMachineName();
     $edit['pass[pass2]'] = $new_pass;
-    $this->drupalPostForm('user/register', $edit, 'Create new account');
+    $this->drupalGet('user/register');
+    $this->submitForm($edit, 'Create new account');
     $this->container->get('entity_type.manager')->getStorage('user')->resetCache();
     $accounts = $this->container->get('entity_type.manager')->getStorage('user')
       ->loadByProperties(['name' => $name, 'mail' => $mail]);
@@ -108,7 +111,8 @@ class UserRegistrationTest extends BrowserTestBase {
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
     $edit['pass[pass1]'] = $pass = $this->randomMachineName();
     $edit['pass[pass2]'] = $pass;
-    $this->drupalPostForm('user/register', $edit, 'Create new account');
+    $this->drupalGet('user/register');
+    $this->submitForm($edit, 'Create new account');
     $this->assertSession()->pageTextContains('Thank you for applying for an account. Your account is currently pending approval by the site administrator.');
 
     // Try to log in before administrator approval.
@@ -116,7 +120,8 @@ class UserRegistrationTest extends BrowserTestBase {
       'name' => $name,
       'pass' => $pass,
     ];
-    $this->drupalPostForm('user/login', $auth, 'Log in');
+    $this->drupalGet('user/login');
+    $this->submitForm($auth, 'Log in');
     $this->assertSession()->pageTextContains('The username ' . $name . ' has not been activated or is blocked.');
 
     // Activate the new account.
@@ -128,11 +133,13 @@ class UserRegistrationTest extends BrowserTestBase {
     $edit = [
       'status' => 1,
     ];
-    $this->drupalPostForm('user/' . $new_user->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('user/' . $new_user->id() . '/edit');
+    $this->submitForm($edit, 'Save');
     $this->drupalLogout();
 
     // Log in after administrator approval.
-    $this->drupalPostForm('user/login', $auth, 'Log in');
+    $this->drupalGet('user/login');
+    $this->submitForm($auth, 'Log in');
     $this->assertSession()->pageTextContains('Member for');
   }
 
@@ -152,13 +159,15 @@ class UserRegistrationTest extends BrowserTestBase {
     $edit['mail'] = $duplicate_user->getEmail();
 
     // Attempt to create a new account using an existing email address.
-    $this->drupalPostForm('user/register', $edit, 'Create new account');
+    $this->drupalGet('user/register');
+    $this->submitForm($edit, 'Create new account');
     $this->assertSession()->pageTextContains('The email address ' . $duplicate_user->getEmail() . ' is already taken.');
 
     // Attempt to bypass duplicate email registration validation by adding spaces.
     $edit['mail'] = '   ' . $duplicate_user->getEmail() . '   ';
 
-    $this->drupalPostForm('user/register', $edit, 'Create new account');
+    $this->drupalGet('user/register');
+    $this->submitForm($edit, 'Create new account');
     $this->assertSession()->pageTextContains('The email address ' . $duplicate_user->getEmail() . ' is already taken.');
   }
 

@@ -72,7 +72,8 @@ class UserPermissionsTest extends BrowserTestBase {
     $this->assertFalse($account->hasPermission('administer users'), 'User does not have "administer users" permission.');
     $edit = [];
     $edit[$rid . '[administer users]'] = TRUE;
-    $this->drupalPostForm('admin/people/permissions', $edit, 'Save permissions');
+    $this->drupalGet('admin/people/permissions');
+    $this->submitForm($edit, 'Save permissions');
     $this->assertSession()->pageTextContains('The changes have been saved.');
     $storage->resetCache();
     $this->assertTrue($account->hasPermission('administer users'), 'User now has "administer users" permission.');
@@ -85,7 +86,8 @@ class UserPermissionsTest extends BrowserTestBase {
     $this->assertTrue($account->hasPermission('access user profiles'), 'User has "access user profiles" permission.');
     $edit = [];
     $edit[$rid . '[access user profiles]'] = FALSE;
-    $this->drupalPostForm('admin/people/permissions', $edit, 'Save permissions');
+    $this->drupalGet('admin/people/permissions');
+    $this->submitForm($edit, 'Save permissions');
     $this->assertSession()->pageTextContains('The changes have been saved.');
     $storage->resetCache();
     $this->assertFalse($account->hasPermission('access user profiles'), 'User no longer has "access user profiles" permission.');

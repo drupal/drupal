@@ -65,7 +65,8 @@ class DisplayPathTest extends UITestBase {
     //   longer use Url::fromUri(), and this path will be able to contain ':'.
     $random_path = str_replace(':', '', $random_path);
 
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/path', ['path' => $random_path], 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/display/test_view/page_1/path');
+    $this->submitForm(['path' => $random_path], 'Apply');
     $this->assertSession()->pageTextContains('/' . $random_path);
     $display_link_text = t('View @display', ['@display' => 'Page']);
     $this->assertSession()->linkExists($display_link_text, 0, 'view page link found on the page.');
@@ -105,11 +106,13 @@ class DisplayPathTest extends UITestBase {
   protected function doAdvancedPathsValidationTest() {
     $url = 'admin/structure/views/nojs/display/test_view/page_1/path';
 
-    $this->drupalPostForm($url, ['path' => '%/magrathea'], 'Apply');
+    $this->drupalGet($url);
+    $this->submitForm(['path' => '%/magrathea'], 'Apply');
     $this->assertSession()->addressEquals($url);
     $this->assertSession()->pageTextContains('"%" may not be used for the first segment of a path.');
 
-    $this->drupalPostForm($url, ['path' => 'user/%1/example'], 'Apply');
+    $this->drupalGet($url);
+    $this->submitForm(['path' => 'user/%1/example'], 'Apply');
     $this->assertSession()->addressEquals($url);
     $this->assertSession()->pageTextContains("Numeric placeholders may not be used. Please use plain placeholders (%).");
   }
@@ -135,25 +138,33 @@ class DisplayPathTest extends UITestBase {
     $this->submitForm([], 'Add Page');
 
     // Add an invalid path (only fragment).
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/path', ['path' => '#foo'], 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/display/test_view/page_1/path');
+    $this->submitForm(['path' => '#foo'], 'Apply');
     $this->assertSession()->pageTextContains('Path is empty');
 
     // Add an invalid path with a query.
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/path', ['path' => 'foo?bar'], 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/display/test_view/page_1/path');
+    $this->submitForm(['path' => 'foo?bar'], 'Apply');
     $this->assertSession()->pageTextContains('No query allowed.');
 
     // Add an invalid path with just a query.
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/path', ['path' => '?bar'], 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/display/test_view/page_1/path');
+    $this->submitForm(['path' => '?bar'], 'Apply');
     $this->assertSession()->pageTextContains('Path is empty');
 
     // Provide a random, valid path string.
     $random_string = $this->randomMachineName();
 
     // Save a path.
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/path', ['path' => $random_string], 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/display/test_view/page_1/path');
+    $this->submitForm(['path' => $random_string], 'Apply');
     $this->drupalGet('admin/structure/views/view/test_view');
 
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/menu', ['menu[type]' => 'default tab', 'menu[title]' => 'Test tab title'], 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/display/test_view/page_1/menu');
+    $this->submitForm([
+      'menu[type]' => 'default tab',
+      'menu[title]' => 'Test tab title',
+    ], 'Apply');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->addressEquals('admin/structure/views/nojs/display/test_view/page_1/tab_options');
 

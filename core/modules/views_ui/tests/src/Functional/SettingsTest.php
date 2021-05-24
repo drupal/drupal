@@ -42,14 +42,16 @@ class SettingsTest extends UITestBase {
     $this->assertSession()->linkNotExists('admin/structure/views/settings');
 
     // Test the confirmation message.
-    $this->drupalPostForm('admin/structure/views/settings', [], 'Save configuration');
+    $this->drupalGet('admin/structure/views/settings');
+    $this->submitForm([], 'Save configuration');
     $this->assertSession()->pageTextContains('The configuration options have been saved.');
 
     // Configure to always show the default display.
     $edit = [
       'ui_show_default_display' => TRUE,
     ];
-    $this->drupalPostForm('admin/structure/views/settings', $edit, 'Save configuration');
+    $this->drupalGet('admin/structure/views/settings');
+    $this->submitForm($edit, 'Save configuration');
 
     $view = [];
     $view['label'] = $this->randomMachineName(16);
@@ -144,20 +146,23 @@ class SettingsTest extends UITestBase {
     // Test the advanced settings form.
 
     // Test the confirmation message.
-    $this->drupalPostForm('admin/structure/views/settings/advanced', [], 'Save configuration');
+    $this->drupalGet('admin/structure/views/settings/advanced');
+    $this->submitForm([], 'Save configuration');
     $this->assertSession()->pageTextContains('The configuration options have been saved.');
 
     $edit = [
       'skip_cache' => TRUE,
       'sql_signature' => TRUE,
     ];
-    $this->drupalPostForm('admin/structure/views/settings/advanced', $edit, 'Save configuration');
+    $this->drupalGet('admin/structure/views/settings/advanced');
+    $this->submitForm($edit, 'Save configuration');
 
     $this->assertSession()->checkboxChecked('edit-skip-cache');
     $this->assertSession()->checkboxChecked('edit-sql-signature');
 
     // Test the "Clear Views' cache" button.
-    $this->drupalPostForm('admin/structure/views/settings/advanced', [], "Clear Views' cache");
+    $this->drupalGet('admin/structure/views/settings/advanced');
+    $this->submitForm([], "Clear Views' cache");
     $this->assertSession()->pageTextContains('The cache has been cleared.');
   }
 
