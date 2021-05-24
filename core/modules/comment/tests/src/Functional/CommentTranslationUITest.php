@@ -148,7 +148,8 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
       if ($index > 0) {
         $edit = ['status' => 0];
         $url = $entity->toUrl('edit-form', ['language' => ConfigurableLanguage::load($langcode)]);
-        $this->drupalPostForm($url, $edit, $this->getFormSubmitAction($entity, $langcode));
+        $this->drupalGet($url);
+        $this->submitForm($edit, $this->getFormSubmitAction($entity, $langcode));
         $storage->resetCache();
         $entity = $storage->load($this->entityId);
         $this->assertFalse($this->manager->getTranslationMetadata($entity->getTranslation($langcode))->isPublished(), 'The translation has been correctly unpublished.');
@@ -182,7 +183,8 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
         'date[date]' => $date_formatter->format($values[$langcode]['created'], 'custom', 'Y-m-d'),
         'date[time]' => $date_formatter->format($values[$langcode]['created'], 'custom', 'H:i:s'),
       ];
-      $this->drupalPostForm($url, $edit, $this->getFormSubmitAction($entity, $langcode));
+      $this->drupalGet($url);
+      $this->submitForm($edit, $this->getFormSubmitAction($entity, $langcode));
     }
 
     $storage->resetCache([$this->entityId]);
