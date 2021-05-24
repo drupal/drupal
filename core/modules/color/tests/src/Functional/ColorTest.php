@@ -183,7 +183,7 @@ class ColorTest extends BrowserTestBase {
   }
 
   /**
-   * Tests whether the custom logo is used in the color preview.
+   * Test whether the custom logo is used in the color preview.
    */
   public function testLogoSettingOverride() {
     $this->drupalLogin($this->bigUser);
@@ -200,7 +200,7 @@ class ColorTest extends BrowserTestBase {
   }
 
   /**
-   * Tests whether the scheme can be set, viewed anonymously and reset.
+   * Test whether the scheme can be set, viewed anonymously and reset.
    */
   public function testOverrideAndResetScheme() {
     $settings_path = 'admin/appearance/settings/bartik';
