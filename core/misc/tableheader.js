@@ -112,7 +112,6 @@
         css.left = "".concat(this.tableOffset.left - offsetLeft, "px");
       }
 
-<<<<<<< HEAD
       var stickyParent = this.$stickyTable[0].parentElement;
 
       if (stickyParent.hasAttribute('data-drupal-scrollable-table-wrapper')) {
@@ -121,9 +120,7 @@
         css.left = "".concat(containerLeftOffset - containerAmountScrolled, "px");
       }
 
-=======
       this.$html.css('scroll-padding-top', displace.offsets.top + (this.stickyVisible ? this.$stickyTable.height() : 0));
->>>>>>> origin/9.3.x
       return this.$stickyTable.css(css);
     },
     checkStickyVisible: function checkStickyVisible() {
