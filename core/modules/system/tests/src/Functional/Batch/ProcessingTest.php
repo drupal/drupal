@@ -1,4 +1,4 @@
-\<?php
+<?php
 
 namespace Drupal\Tests\system\Functional\Batch;
 
