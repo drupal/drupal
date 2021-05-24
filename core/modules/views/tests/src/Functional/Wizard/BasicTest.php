@@ -39,7 +39,8 @@ class BasicTest extends WizardTestBase {
     $view1['id'] = strtolower($this->randomMachineName(16));
     $view1['description'] = $this->randomMachineName(16);
     $view1['page[create]'] = FALSE;
-    $this->drupalPostForm('admin/structure/views/add', $view1, 'Save and edit');
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm($view1, 'Save and edit');
     $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet('admin/structure/views');
     $this->assertSession()->pageTextContains($view1['label']);
@@ -69,7 +70,8 @@ class BasicTest extends WizardTestBase {
     $view2['page[path]'] = $this->randomMachineName(16);
     $view2['page[feed]'] = 1;
     $view2['page[feed_properties][path]'] = $this->randomMachineName(16);
-    $this->drupalPostForm('admin/structure/views/add', $view2, 'Save and edit');
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm($view2, 'Save and edit');
     $this->drupalGet($view2['page[path]']);
     $this->assertSession()->statusCodeEquals(200);
 
@@ -120,7 +122,8 @@ class BasicTest extends WizardTestBase {
     $view3['page[path]'] = $this->randomMachineName(16);
     $view3['block[create]'] = 1;
     $view3['block[title]'] = $this->randomMachineName(16);
-    $this->drupalPostForm('admin/structure/views/add', $view3, 'Save and edit');
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm($view3, 'Save and edit');
     $this->drupalGet($view3['page[path]']);
     $this->assertSession()->statusCodeEquals(200);
 
@@ -165,7 +168,8 @@ class BasicTest extends WizardTestBase {
     $view4['show[type]'] = 'page';
     $view4['rest_export[create]'] = 1;
     $view4['rest_export[path]'] = $this->randomMachineName(16);
-    $this->drupalPostForm('admin/structure/views/add', $view4, 'Save and edit');
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm($view4, 'Save and edit');
     $this->assertRaw(t('The view %view has been saved.', ['%view' => $view4['label']]));
 
     // Check that the REST export path works. JSON will work, as all core
@@ -188,7 +192,8 @@ class BasicTest extends WizardTestBase {
     $leading_slash_view['page[create]'] = 1;
     $leading_slash_view['page[title]'] = $this->randomMachineName(16);
     $leading_slash_view['page[path]'] = '/' . $this->randomMachineName(16);
-    $this->drupalPostForm('admin/structure/views/add', $leading_slash_view, 'Save and edit');
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm($leading_slash_view, 'Save and edit');
     $this->assertEquals($leading_slash_view['page[path]'], $this->cssSelect('#views-page-1-path')[0]->getText());
   }
 
@@ -205,7 +210,8 @@ class BasicTest extends WizardTestBase {
     $view['id'] = $random_id;
     $view['description'] = $this->randomMachineName(16);
     $view['page[create]'] = FALSE;
-    $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm($view, 'Save and edit');
 
     // Make sure the plugin types that should not have empty options don't have.
     // Test against all values is unit tested.

@@ -172,7 +172,8 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
       'name[0][value]' => 'translation name',
       'content_translation[status]' => FALSE,
     ];
-    $this->drupalPostForm($add_translation_url, $edit, 'Save');
+    $this->drupalGet($add_translation_url);
+    $this->submitForm($edit, 'Save');
 
     $storage->resetCache([$id]);
     $this->entity = $storage->load($id);
