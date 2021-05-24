@@ -142,7 +142,6 @@ BROKEN,
     file_put_contents($file_path, Yaml::encode($compatible_info));
     $edit = ['modules[changing_module][enable]' => 'changing_module'];
     $this->drupalGet('admin/modules');
-    $this->drupalGet('admin/modules');
     $this->submitForm($edit, 'Install');
     $this->assertSession()->pageTextContains('Module Module that changes has been enabled.');
 
