@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\layout_builder\Functional;
 
-use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Tests\content_translation\Functional\ContentTranslationTestBase;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Url;
