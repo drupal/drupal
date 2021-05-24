@@ -154,7 +154,8 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
 
     // Now index the rest of the nodes.
     // Make sure index throttle is high enough, via the UI.
-    $this->drupalPostForm('admin/config/search/pages', ['cron_limit' => 20], 'Save configuration');
+    $this->drupalGet('admin/config/search/pages');
+    $this->submitForm(['cron_limit' => 20], 'Save configuration');
     $this->assertEquals(20, $this->config('search.settings')->get('index.cron_limit', 100), 'Config setting was saved correctly');
     // Get a new search plugin, to make sure it has this setting.
     $this->plugin = $this->container->get('plugin.manager.search')->createInstance('node_search');
@@ -164,7 +165,8 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
     $this->assertDatabaseCounts(8, 0, 'after updating fully');
 
     // Click the reindex button on the admin page, verify counts, and reindex.
-    $this->drupalPostForm('admin/config/search/pages', [], 'Re-index site');
+    $this->drupalGet('admin/config/search/pages');
+    $this->submitForm([], 'Re-index site');
     $this->submitForm([], 'Re-index site');
     $this->assertIndexCounts(8, 8, 'after reindex');
     $this->assertDatabaseCounts(8, 0, 'after reindex');

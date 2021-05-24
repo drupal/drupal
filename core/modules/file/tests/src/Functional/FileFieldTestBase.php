@@ -197,7 +197,8 @@ abstract class FileFieldTestBase extends BrowserTestBase {
       'revision' => (string) (int) $new_revision,
     ];
 
-    $this->drupalPostForm('node/' . $nid . '/edit', [], 'Remove');
+    $this->drupalGet('node/' . $nid . '/edit');
+    $this->submitForm([], 'Remove');
     $this->submitForm($edit, 'Save');
   }
 
@@ -210,7 +211,8 @@ abstract class FileFieldTestBase extends BrowserTestBase {
       'revision' => (string) (int) $new_revision,
     ];
 
-    $this->drupalPostForm('node/' . $nid . '/edit', [], 'Remove');
+    $this->drupalGet('node/' . $nid . '/edit');
+    $this->submitForm([], 'Remove');
     $this->submitForm($edit, 'Save');
   }
 

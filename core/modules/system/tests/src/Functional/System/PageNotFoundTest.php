@@ -54,14 +54,16 @@ class PageNotFoundTest extends BrowserTestBase {
     $edit = [
       'site_404' => 'user/' . $this->adminUser->id(),
     ];
-    $this->drupalPostForm('admin/config/system/site-information', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/system/site-information');
+    $this->submitForm($edit, 'Save configuration');
     $this->assertRaw(new FormattableMarkup("The path '%path' has to start with a slash.", ['%path' => $edit['site_404']]));
 
     // Use a custom 404 page.
     $edit = [
       'site_404' => '/user/' . $this->adminUser->id(),
     ];
-    $this->drupalPostForm('admin/config/system/site-information', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/system/site-information');
+    $this->submitForm($edit, 'Save configuration');
 
     $this->drupalGet($this->randomMachineName(10));
     $this->assertSession()->pageTextContains($this->adminUser->getAccountName());

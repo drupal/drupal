@@ -107,7 +107,8 @@ class ContactSitewideTest extends BrowserTestBase {
     // Set settings.
     $edit = [];
     $edit['contact_default_status'] = TRUE;
-    $this->drupalPostForm('admin/config/people/accounts', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/people/accounts');
+    $this->submitForm($edit, 'Save configuration');
     $this->assertSession()->pageTextContains('The configuration options have been saved.');
 
     $this->drupalGet('admin/structure/contact');
@@ -391,7 +392,8 @@ class ContactSitewideTest extends BrowserTestBase {
       'message[0][value]' => $this->randomMachineName(),
       $field_name . '[0][value]' => $this->randomMachineName(),
     ];
-    $this->drupalPostForm($form->toUrl('canonical'), $edit, 'Preview');
+    $this->drupalGet($form->toUrl('canonical'));
+    $this->submitForm($edit, 'Preview');
 
     // Message is now by default displayed twice, once for the form element and
     // once for the viewed message.
@@ -404,9 +406,11 @@ class ContactSitewideTest extends BrowserTestBase {
     $display_edit = [
       'fields[message][label]' => 'hidden',
     ];
-    $this->drupalPostForm('admin/structure/contact/manage/' . $contact_form . '/display', $display_edit, 'Save');
+    $this->drupalGet('admin/structure/contact/manage/' . $contact_form . '/display');
+    $this->submitForm($display_edit, 'Save');
 
-    $this->drupalPostForm($form->toUrl('canonical'), $edit, 'Preview');
+    $this->drupalGet($form->toUrl('canonical'));
+    $this->submitForm($edit, 'Preview');
     // Message should only be displayed once now.
     $page_text = $this->getSession()->getPage()->getText();
     $this->assertEquals(1, substr_count($page_text, t('Message')));
@@ -418,7 +422,8 @@ class ContactSitewideTest extends BrowserTestBase {
     $edit = [
       'fields[preview][region]' => 'hidden',
     ];
-    $this->drupalPostForm('admin/structure/contact/manage/' . $contact_form . '/form-display', $edit, 'Save');
+    $this->drupalGet('admin/structure/contact/manage/' . $contact_form . '/form-display');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->fieldExists('fields[preview][region]');
 
     // Check that the field preview is not displayed in the form.
@@ -521,7 +526,8 @@ class ContactSitewideTest extends BrowserTestBase {
     $edit['reply'] = $reply;
     $edit['selected'] = ($selected ? TRUE : FALSE);
     $edit += $third_party_settings;
-    $this->drupalPostForm('admin/structure/contact/add', $edit, 'Save');
+    $this->drupalGet('admin/structure/contact/add');
+    $this->submitForm($edit, 'Save');
   }
 
   /**
@@ -552,7 +558,8 @@ class ContactSitewideTest extends BrowserTestBase {
     $edit['selected'] = ($selected ? TRUE : FALSE);
     $edit['message'] = $message;
     $edit['redirect'] = $redirect;
-    $this->drupalPostForm("admin/structure/contact/manage/$id", $edit, 'Save');
+    $this->drupalGet("admin/structure/contact/manage/{$id}");
+    $this->submitForm($edit, 'Save');
   }
 
   /**
@@ -576,10 +583,12 @@ class ContactSitewideTest extends BrowserTestBase {
     $edit['subject[0][value]'] = $subject;
     $edit['message[0][value]'] = $message;
     if ($id == $this->config('contact.settings')->get('default_form')) {
-      $this->drupalPostForm('contact', $edit, 'Send message');
+      $this->drupalGet('contact');
+      $this->submitForm($edit, 'Send message');
     }
     else {
-      $this->drupalPostForm('contact/' . $id, $edit, 'Send message');
+      $this->drupalGet('contact/' . $id);
+      $this->submitForm($edit, 'Send message');
     }
   }
 
@@ -595,7 +604,8 @@ class ContactSitewideTest extends BrowserTestBase {
         $this->assertSession()->statusCodeEquals(403);
       }
       else {
-        $this->drupalPostForm("admin/structure/contact/manage/$id/delete", [], 'Delete');
+        $this->drupalGet("admin/structure/contact/manage/{$id}/delete");
+        $this->submitForm([], 'Delete');
         $this->assertRaw(t('The contact form %label has been deleted.', ['%label' => $contact_form->label()]));
         $this->assertNull(ContactForm::load($id), new FormattableMarkup('Form %contact_form not found', ['%contact_form' => $contact_form->label()]));
       }

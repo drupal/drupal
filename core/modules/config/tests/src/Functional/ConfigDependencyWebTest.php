@@ -72,7 +72,8 @@ class ConfigDependencyWebTest extends BrowserTestBase {
     $this->assertNoText('Configuration updates');
     $this->assertSession()->pageTextContains('Configuration deletions');
     $this->assertSession()->pageTextContains($entity2->id());
-    $this->drupalPostForm($entity1->toUrl('delete-form'), [], 'Delete');
+    $this->drupalGet($entity1->toUrl('delete-form'));
+    $this->submitForm([], 'Delete');
     $storage->resetCache();
     $this->assertEmpty($storage->loadMultiple([$entity1->id(), $entity2->id()]), 'Test entities deleted');
 
@@ -122,7 +123,8 @@ class ConfigDependencyWebTest extends BrowserTestBase {
     $this->assertNoText($entity2->id());
     $this->assertSession()->pageTextContains($entity2->label());
     $this->assertNoText($entity3->id());
-    $this->drupalPostForm($entity1->toUrl('delete-form'), [], 'Delete');
+    $this->drupalGet($entity1->toUrl('delete-form'));
+    $this->submitForm([], 'Delete');
     $storage->resetCache();
     $this->assertNull($storage->load('entity1'), 'Test entity 1 deleted');
     $entity2 = $storage->load('entity2');

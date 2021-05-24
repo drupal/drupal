@@ -69,14 +69,17 @@ class SearchAdvancedSearchFormTest extends BrowserTestBase {
 
     // Search for the title of the node with a POST query.
     $edit = ['or' => $this->node->label()];
-    $this->drupalPostForm('search/node', $edit, 'edit-submit--2');
+    $this->drupalGet('search/node');
+    $this->submitForm($edit, 'edit-submit--2');
     $this->assertSession()->pageTextContains($this->node->label());
 
     // Search by node type.
-    $this->drupalPostForm('search/node', array_merge($edit, ['type[page]' => 'page']), 'edit-submit--2');
+    $this->drupalGet('search/node');
+    $this->submitForm(array_merge($edit, ['type[page]' => 'page']), 'edit-submit--2');
     $this->assertSession()->pageTextContains($this->node->label());
 
-    $this->drupalPostForm('search/node', array_merge($edit, ['type[article]' => 'article']), 'edit-submit--2');
+    $this->drupalGet('search/node');
+    $this->submitForm(array_merge($edit, ['type[article]' => 'article']), 'edit-submit--2');
     $this->assertSession()->pageTextContains('search yielded no results');
   }
 
@@ -91,7 +94,8 @@ class SearchAdvancedSearchFormTest extends BrowserTestBase {
       'negative' => 'fish snake',
       'type[page]' => 'page',
     ];
-    $this->drupalPostForm('search/node', $edit, 'edit-submit--2');
+    $this->drupalGet('search/node');
+    $this->submitForm($edit, 'edit-submit--2');
 
     // Test that the encoded query appears in the page title. Only test the
     // part not including the quote, because assertText() cannot seem to find
@@ -112,7 +116,8 @@ class SearchAdvancedSearchFormTest extends BrowserTestBase {
     // search box, and verify that the advanced form is not filled out.
     // (It shouldn't be filled out unless you submit values in those fields.)
     $edit2 = ['keys' => 'cat dog OR gerbil -fish -snake'];
-    $this->drupalPostForm('search/node', $edit2, 'edit-submit--2');
+    $this->drupalGet('search/node');
+    $this->submitForm($edit2, 'edit-submit--2');
     $this->assertSession()->pageTextContains('Search for cat dog OR gerbil -fish -snake');
     foreach ($edit as $key => $value) {
       if ($key != 'type[page]') {

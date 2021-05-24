@@ -169,7 +169,8 @@ class TrackerTest extends BrowserTestBase {
       'subject[0][value]' => $this->randomMachineName(),
       'comment_body[0][value]' => $this->randomMachineName(20),
     ];
-    $this->drupalPostForm('comment/reply/node/' . $other_published_my_comment->id() . '/comment', $comment, 'Save');
+    $this->drupalGet('comment/reply/node/' . $other_published_my_comment->id() . '/comment');
+    $this->submitForm($comment, 'Save');
 
     $this->drupalGet('user/' . $this->user->id() . '/activity');
     $this->assertNoText($unpublished->label());
@@ -220,7 +221,8 @@ class TrackerTest extends BrowserTestBase {
       'access user profiles',
     ]);
     $this->drupalLogin($admin_user);
-    $this->drupalPostForm('comment/1/edit', ['status' => CommentInterface::NOT_PUBLISHED], 'Save');
+    $this->drupalGet('comment/1/edit');
+    $this->submitForm(['status' => CommentInterface::NOT_PUBLISHED], 'Save');
     $this->drupalGet('user/' . $this->user->id() . '/activity');
     $this->assertNoText($other_published_my_comment->label());
 
@@ -266,7 +268,8 @@ class TrackerTest extends BrowserTestBase {
       'comment_body[0][value]' => $this->randomMachineName(20),
     ];
     sleep(1);
-    $this->drupalPostForm('comment/reply/node/' . $node->id() . '/comment', $comment, 'Save');
+    $this->drupalGet('comment/reply/node/' . $node->id() . '/comment');
+    $this->submitForm($comment, 'Save');
     // Reload the node so that comment.module's hook_node_load()
     // implementation can set $node->last_comment_timestamp for the freshly
     // posted comment.
@@ -311,7 +314,8 @@ class TrackerTest extends BrowserTestBase {
       'subject[0][value]' => $this->randomMachineName(),
       'comment_body[0][value]' => $this->randomMachineName(20),
     ];
-    $this->drupalPostForm('comment/reply/node/' . $node_one->id() . '/comment', $comment, 'Save');
+    $this->drupalGet('comment/reply/node/' . $node_one->id() . '/comment');
+    $this->submitForm($comment, 'Save');
 
     // If the comment is posted in the same second as the last one then Drupal
     // can't tell the difference, so we wait one second here.
@@ -322,7 +326,8 @@ class TrackerTest extends BrowserTestBase {
       'subject[0][value]' => $this->randomMachineName(),
       'comment_body[0][value]' => $this->randomMachineName(20),
     ];
-    $this->drupalPostForm('comment/reply/node/' . $node_two->id() . '/comment', $comment, 'Save');
+    $this->drupalGet('comment/reply/node/' . $node_two->id() . '/comment');
+    $this->submitForm($comment, 'Save');
 
     // We should at this point have in our tracker for otherUser:
     // 1. node_two
@@ -342,7 +347,8 @@ class TrackerTest extends BrowserTestBase {
       'subject[0][value]' => $this->randomMachineName(),
       'comment_body[0][value]' => $this->randomMachineName(20),
     ];
-    $this->drupalPostForm('comment/reply/node/' . $node_one->id() . '/comment', $comment, 'Save');
+    $this->drupalGet('comment/reply/node/' . $node_one->id() . '/comment');
+    $this->submitForm($comment, 'Save');
 
     // Switch back to the otherUser and assert that the order has swapped.
     $this->drupalLogin($this->otherUser);
@@ -378,7 +384,8 @@ class TrackerTest extends BrowserTestBase {
       'subject[0][value]' => $this->randomMachineName(),
       'comment_body[0][value]' => $this->randomMachineName(20),
     ];
-    $this->drupalPostForm('comment/reply/node/' . $nodes[3]->id() . '/comment', $comment, 'Save');
+    $this->drupalGet('comment/reply/node/' . $nodes[3]->id() . '/comment');
+    $this->submitForm($comment, 'Save');
 
     // Create an unpublished node.
     $unpublished = $this->drupalCreateNode([
@@ -441,7 +448,8 @@ class TrackerTest extends BrowserTestBase {
       'action' => 'node_unpublish_action',
       'node_bulk_form[0]' => $node->id(),
     ];
-    $this->drupalPostForm('admin/content', $edit, 'Apply to selected items');
+    $this->drupalGet('admin/content');
+    $this->submitForm($edit, 'Apply to selected items');
 
     $this->drupalGet('activity');
     $this->assertSession()->pageTextContains('No content available.');

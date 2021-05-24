@@ -124,7 +124,8 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
       'title[0][value]' => $this->randomMachineName(),
       'test_field[0][target_id]' => $new_title,
     ];
-    $this->drupalPostForm("node/add/$this->referencingType", $edit, 'Save');
+    $this->drupalGet("node/add/{$this->referencingType}");
+    $this->submitForm($edit, 'Save');
 
     // Assert referenced node was created.
     $query = clone $base_query;
@@ -190,7 +191,8 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
       'title[0][value]' => $this->randomString(),
     ];
 
-    $this->drupalPostForm('node/add/' . $this->referencingType, $edit, 'Save');
+    $this->drupalGet('node/add/' . $this->referencingType);
+    $this->submitForm($edit, 'Save');
     /** @var \Drupal\taxonomy\Entity\Term $term */
     $term = taxonomy_term_load_multiple_by_name($term_name);
     $term = reset($term);
@@ -214,7 +216,8 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
       'title[0][value]' => $this->randomString(),
     ];
 
-    $this->drupalPostForm('node/add/' . $this->referencingType, $edit, 'Save');
+    $this->drupalGet('node/add/' . $this->referencingType);
+    $this->submitForm($edit, 'Save');
     /** @var \Drupal\taxonomy\Entity\Term $term */
     $term = taxonomy_term_load_multiple_by_name($term_name);
     $term = reset($term);
@@ -267,7 +270,8 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
       'title[0][value]' => $node_title,
     ];
 
-    $this->drupalPostForm('node/add/' . $this->referencingType, $edit, 'Save');
+    $this->drupalGet('node/add/' . $this->referencingType);
+    $this->submitForm($edit, 'Save');
 
     // Assert referenced entity was created.
     $result = \Drupal::entityQuery('entity_test_no_bundle_with_label')

@@ -139,7 +139,8 @@ class ConfigExportImportUITest extends BrowserTestBase {
     $this->assertSession()->fieldValueEquals("{$this->fieldName}[0][value]", '');
 
     // Export the configuration.
-    $this->drupalPostForm('admin/config/development/configuration/full/export', [], 'Export');
+    $this->drupalGet('admin/config/development/configuration/full/export');
+    $this->submitForm([], 'Export');
     $this->tarball = $this->getSession()->getPage()->getContent();
 
     $this->config('system.site')
@@ -166,7 +167,8 @@ class ConfigExportImportUITest extends BrowserTestBase {
     // Import the configuration.
     $filename = 'temporary://' . $this->randomMachineName();
     file_put_contents($filename, $this->tarball);
-    $this->drupalPostForm('admin/config/development/configuration/full/import', ['files[import_tarball]' => $filename], 'Upload');
+    $this->drupalGet('admin/config/development/configuration/full/import');
+    $this->submitForm(['files[import_tarball]' => $filename], 'Upload');
     // There is no snapshot yet because an import has never run.
     $this->assertNoText('Warning message');
     $this->assertNoText('There are no configuration changes to import.');
@@ -229,7 +231,8 @@ class ConfigExportImportUITest extends BrowserTestBase {
     $test2_storage->write('config_test.another_update', ['foo' => 'bar']);
 
     // Export the configuration.
-    $this->drupalPostForm('admin/config/development/configuration/full/export', [], 'Export');
+    $this->drupalGet('admin/config/development/configuration/full/export');
+    $this->submitForm([], 'Export');
     $this->tarball = $this->getSession()->getPage()->getContent();
     $filename = \Drupal::service('file_system')->getTempDirectory() . '/' . $this->randomMachineName();
     file_put_contents($filename, $this->tarball);
@@ -275,7 +278,8 @@ class ConfigExportImportUITest extends BrowserTestBase {
     $this->assertNotContains('collection/test1/config_test.delete.yml', $files, 'Config export does not contain collection/test1/config_test.delete.yml.');
     $this->assertNotContains('collection/test2/config_test.another_delete.yml', $files, 'Config export does not contain collection/test2/config_test.another_delete.yml.');
 
-    $this->drupalPostForm('admin/config/development/configuration/full/import', ['files[import_tarball]' => $filename], 'Upload');
+    $this->drupalGet('admin/config/development/configuration/full/import');
+    $this->submitForm(['files[import_tarball]' => $filename], 'Upload');
     // Verify that there are configuration differences to import.
     $this->drupalGet('admin/config/development/configuration');
     $this->assertNoText('There are no configuration changes to import.');

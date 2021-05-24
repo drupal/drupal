@@ -54,7 +54,8 @@ class NodeViewTest extends NodeTestBase {
     $edit = [
       'anonymous[edit own ' . $node->bundle() . ' content]' => TRUE,
     ];
-    $this->drupalPostForm('admin/people/permissions', $edit, 'Save permissions');
+    $this->drupalGet('admin/people/permissions');
+    $this->submitForm($edit, 'Save permissions');
     $this->drupalLogout();
 
     // Anonymous user's should now see the edit-form link but not the

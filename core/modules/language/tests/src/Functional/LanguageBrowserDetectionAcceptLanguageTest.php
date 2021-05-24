@@ -41,29 +41,32 @@ class LanguageBrowserDetectionAcceptLanguageTest extends BrowserTestBase {
     // Create FR.
     ConfigurableLanguage::createFromLangcode('fr')->save();
     // Set language detection to url and browser detection.
-    $this->drupalPostForm('/admin/config/regional/language/detection', [
+    $this->drupalGet('/admin/config/regional/language/detection');
+    $this->submitForm([
       'language_interface[enabled][language-url]' => TRUE,
       'language_interface[enabled][language-browser]' => TRUE,
       'language_interface[enabled][language-selected]' => TRUE,
     ], 'Save settings');
 
     // Set prefixes to en and fr.
-    $this->drupalPostForm('/admin/config/regional/language/detection/url', [
+    $this->drupalGet('/admin/config/regional/language/detection/url');
+    $this->submitForm([
       'prefix[en]' => 'en',
       'prefix[fr]' => 'fr',
     ], 'Save configuration');
     // Add language codes to browser detection.
-    $this->drupalPostForm('/admin/config/regional/language/detection/browser', [
+    $this->drupalGet('/admin/config/regional/language/detection/browser');
+    $this->submitForm([
       'new_mapping[browser_langcode]' => 'fr',
       'new_mapping[drupal_langcode]' => 'fr',
     ], 'Save configuration');
-    $this->drupalPostForm('/admin/config/regional/language/detection/browser', [
+    $this->drupalGet('/admin/config/regional/language/detection/browser');
+    $this->submitForm([
       'new_mapping[browser_langcode]' => 'en',
       'new_mapping[drupal_langcode]' => 'en',
     ], 'Save configuration');
-    $this->drupalPostForm('/admin/config/regional/language/detection/selected', [
-      'edit-selected-langcode' => 'en',
-    ], 'Save configuration');
+    $this->drupalGet('/admin/config/regional/language/detection/selected');
+    $this->submitForm(['edit-selected-langcode' => 'en'], 'Save configuration');
 
     $this->drupalLogout();
   }

@@ -31,7 +31,8 @@ class FormatDateTest extends BrowserTestBase {
       'label' => 'Example Style',
       'date_format_pattern' => 'j M y',
     ];
-    $this->drupalPostForm('admin/config/regional/date-time/formats/add', $edit, 'Add format');
+    $this->drupalGet('admin/config/regional/date-time/formats/add');
+    $this->submitForm($edit, 'Add format');
 
     // Add a second date format with a different case than the first.
     $edit = [
@@ -39,7 +40,8 @@ class FormatDateTest extends BrowserTestBase {
       'label' => 'Example Style Uppercase',
       'date_format_pattern' => 'j M Y',
     ];
-    $this->drupalPostForm('admin/config/regional/date-time/formats/add', $edit, 'Add format');
+    $this->drupalGet('admin/config/regional/date-time/formats/add');
+    $this->submitForm($edit, 'Add format');
     $this->assertSession()->pageTextContains('Custom date format added.');
 
     /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */

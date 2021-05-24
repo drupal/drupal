@@ -65,7 +65,8 @@ class FilterPermissionUiTest extends ViewTestBase {
         'administer views',
       ],
     ];
-    $this->drupalPostForm('admin/structure/views/nojs/handler/test_filter_permission/default/filter/permission', $edit, 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/handler/test_filter_permission/default/filter/permission');
+    $this->submitForm($edit, 'Apply');
     $this->assertSession()->linkExists('User: Permission (or View us…)');
     $this->submitForm([], 'Save');
     // Verify that we can save the view.

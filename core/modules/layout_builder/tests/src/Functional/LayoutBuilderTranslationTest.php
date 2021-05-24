@@ -150,8 +150,10 @@ class LayoutBuilderTranslationTest extends ContentTranslationTestBase {
 
     $field_ui_prefix = 'entity_test_mul/structure/entity_test_mul';
     // Allow overrides for the layout.
-    $this->drupalPostForm("$field_ui_prefix/display/default", ['layout[enabled]' => TRUE], 'Save');
-    $this->drupalPostForm("$field_ui_prefix/display/default", ['layout[allow_custom]' => TRUE], 'Save');
+    $this->drupalGet("{$field_ui_prefix}/display/default");
+    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
+    $this->drupalGet("{$field_ui_prefix}/display/default");
+    $this->submitForm(['layout[allow_custom]' => TRUE], 'Save');
 
     // @todo The Layout Builder UI relies on local tasks; fix in
     //   https://www.drupal.org/project/drupal/issues/2917777.
@@ -190,9 +192,8 @@ class LayoutBuilderTranslationTest extends ContentTranslationTestBase {
       'source' => $this->langcodes[0],
       'target' => $this->langcodes[2],
     ]);
-    $this->drupalPostForm($add_translation_url, [
-      "{$this->fieldName}[0][value]" => 'The translated field value',
-    ], 'Save');
+    $this->drupalGet($add_translation_url);
+    $this->submitForm(["{$this->fieldName}[0][value]" => 'The translated field value'], 'Save');
     $this->drupalLogin($user);
   }
 

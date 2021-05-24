@@ -124,7 +124,8 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
     $this->assertSession()->pageTextContains('Test Article - New title');
     $this->assertSession()->pageTextContains('Test 1');
     $this->assertRaw('0.01');
-    $this->drupalPostForm('node/8/edit', [], 'Save (this translation)');
+    $this->drupalGet('node/8/edit');
+    $this->submitForm([], 'Save (this translation)');
     $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet('node/8/edit', ['language' => $spanish]);
     $this->assertSession()->pageTextContains('Test title Spanish');
@@ -303,7 +304,8 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
     $this->drupalGet('admin/structure/views/view/content/translate/es/edit');
     // cSpell:disable-next-line
     $this->assertSession()->pageTextContains('Contenido');
-    $this->drupalPostForm('admin/config/regional/translate', ['string' => 'Full comment'], 'Filter');
+    $this->drupalGet('admin/config/regional/translate');
+    $this->submitForm(['string' => 'Full comment'], 'Filter');
     // cSpell:disable-next-line
     $this->assertSession()->pageTextContains('Comentario completo');
 

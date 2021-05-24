@@ -49,7 +49,8 @@ class NodeRevisionWizardTest extends WizardTestBase {
     $type = [
       'show[wizard_key]' => 'node_revision',
     ];
-    $this->drupalPostForm('admin/structure/views/add', $type, 'Update "Show" choice');
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm($type, 'Update "Show" choice');
 
     $view = [];
     $view['label'] = $this->randomMachineName(16);
@@ -80,7 +81,8 @@ class NodeRevisionWizardTest extends WizardTestBase {
     $type = [
       'show[wizard_key]' => 'node_revision',
     ];
-    $this->drupalPostForm('admin/structure/views/add', $type, 'Update "Show" choice');
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm($type, 'Update "Show" choice');
     $view = [];
     $view['label'] = $this->randomMachineName(16);
     $view['id'] = strtolower($this->randomMachineName(16));

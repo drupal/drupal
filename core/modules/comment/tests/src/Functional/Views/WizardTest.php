@@ -51,7 +51,8 @@ class WizardTest extends WizardTestBase {
 
     // Just triggering the saving should automatically choose a proper row
     // plugin.
-    $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm($view, 'Save and edit');
     // Verify that the view saving was successful and the browser got redirected
     // to the edit page.
     $this->assertSession()->addressEquals('admin/structure/views/view/' . $view['id']);
@@ -60,7 +61,8 @@ class WizardTest extends WizardTestBase {
     // row plugins as the select field.
 
     $this->drupalGet('admin/structure/views/add');
-    $this->drupalPostForm('admin/structure/views/add', $view, 'Update "of type" choice');
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm($view, 'Update "of type" choice');
 
     // Check for available options of the row plugin.
     $expected_options = ['entity:comment', 'fields'];

@@ -55,8 +55,10 @@ class ArgumentValidatorTest extends UITestBase {
       'options[validate][type]' => 'entity---node',
       'options[specify_validation]' => $specify_validation,
     ];
-    $this->drupalPostForm('admin/structure/views/nojs/handler/test_argument/default/argument/id', $options, 'Apply');
-    $this->drupalPostForm('admin/structure/views/view/test_argument', [], 'Save');
+    $this->drupalGet('admin/structure/views/nojs/handler/test_argument/default/argument/id');
+    $this->submitForm($options, 'Apply');
+    $this->drupalGet('admin/structure/views/view/test_argument');
+    $this->submitForm([], 'Save');
   }
 
 }
