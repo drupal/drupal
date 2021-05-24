@@ -993,7 +993,7 @@ class DateRangeFieldTest extends DateTestBase {
   }
 
   /**
-   * Test default value functionality.
+   * Tests default value functionality.
    */
   public function testDefaultValue() {
     // Create a test content type.
@@ -1164,7 +1164,7 @@ class DateRangeFieldTest extends DateTestBase {
   }
 
   /**
-   * Test that invalid values are caught and marked as invalid.
+   * Tests that invalid values are caught and marked as invalid.
    */
   public function testInvalidField() {
     // Change the field to a datetime field.

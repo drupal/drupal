@@ -24,7 +24,7 @@ class TokenizeAreaUITest extends UITestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test that the right tokens are shown as available for replacement.
+   * Tests that the right tokens are shown as available for replacement.
    */
   public function testTokenUI() {
     $entity_test = EntityTest::create(['bundle' => 'entity_test']);

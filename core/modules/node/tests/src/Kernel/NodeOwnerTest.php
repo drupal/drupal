@@ -77,7 +77,7 @@ class NodeOwnerTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test an unsaved node owner.
+   * Tests an unsaved node owner.
    */
   public function testUnsavedNodeOwner() {
     $user = User::create([

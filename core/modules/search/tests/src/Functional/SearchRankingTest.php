@@ -218,7 +218,7 @@ class SearchRankingTest extends BrowserTestBase {
   }
 
   /**
-   * Test rankings of HTML tags.
+   * Tests rankings of HTML tags.
    */
   public function testHTMLRankings() {
     $full_html_format = FilterFormat::create([

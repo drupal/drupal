@@ -922,7 +922,7 @@ class MenuUiTest extends BrowserTestBase {
   }
 
   /**
-   * Test the "expand all items" feature.
+   * Tests the "expand all items" feature.
    */
   public function testExpandAllItems() {
     $this->drupalLogin($this->adminUser);
@@ -1045,7 +1045,7 @@ class MenuUiTest extends BrowserTestBase {
   }
 
   /**
-   * Test that menu links with pending revisions can not be re-parented.
+   * Tests that menu links with pending revisions can not be re-parented.
    */
   public function testMenuUiWithPendingRevisions() {
     $this->drupalLogin($this->adminUser);

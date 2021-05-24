@@ -194,7 +194,7 @@ class ProcessingTest extends BrowserTestBase {
   }
 
   /**
-   * Test form submission during a batch operation.
+   * Tests form submission during a batch operation.
    */
   public function testDrupalFormSubmitInBatch() {
     // Displaying the page triggers a batch that programmatically submits a

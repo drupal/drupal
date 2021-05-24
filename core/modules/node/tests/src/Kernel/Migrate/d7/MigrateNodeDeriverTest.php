@@ -17,7 +17,7 @@ class MigrateNodeDeriverTest extends MigrateDrupal7TestBase {
   protected static $modules = ['node'];
 
   /**
-   * Test node translation migrations with translation disabled.
+   * Tests node translation migrations with translation disabled.
    */
   public function testNoTranslations() {
     // Without content_translation, there should be no translation migrations.
@@ -26,7 +26,7 @@ class MigrateNodeDeriverTest extends MigrateDrupal7TestBase {
   }
 
   /**
-   * Test node translation migrations with translation enabled.
+   * Tests node translation migrations with translation enabled.
    */
   public function testTranslations() {
     // With content_translation, there should be translation migrations for

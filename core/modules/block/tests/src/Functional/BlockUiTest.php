@@ -87,7 +87,7 @@ class BlockUiTest extends BrowserTestBase {
   }
 
   /**
-   * Test block demo page exists and functions correctly.
+   * Tests block demo page exists and functions correctly.
    */
   public function testBlockDemoUiPage() {
     $this->drupalPlaceBlock('help_block', ['region' => 'help']);
@@ -107,7 +107,7 @@ class BlockUiTest extends BrowserTestBase {
   }
 
   /**
-   * Test block admin page exists and functions correctly.
+   * Tests block admin page exists and functions correctly.
    */
   public function testBlockAdminUiPage() {
     // Visit the blocks admin ui.

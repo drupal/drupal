@@ -65,7 +65,7 @@ class TestControllers {
   }
 
   /**
-   * Test controller for ExceptionHandlingTest::testBacktraceEscaping().
+   * Tests controller for ExceptionHandlingTest::testBacktraceEscaping().
    *
    * Passes unsafe HTML as an argument to a method which throws an exception.
    * This can be used to test if the generated backtrace is properly escaped.

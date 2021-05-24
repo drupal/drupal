@@ -12,7 +12,7 @@ use Drupal\Core\File\FileSystemInterface;
 class FileSaveDataTest extends FileTestBase {
 
   /**
-   * Test the file_unmanaged_save_data() function.
+   * Tests the file_unmanaged_save_data() function.
    */
   public function testFileSaveData() {
     $contents = $this->randomMachineName(8);

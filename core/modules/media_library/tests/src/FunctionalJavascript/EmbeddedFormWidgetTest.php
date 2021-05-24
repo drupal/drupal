@@ -90,7 +90,7 @@ class EmbeddedFormWidgetTest extends WebDriverTestBase {
   }
 
   /**
-   * Test media inside another widget that validates too enthusiastically.
+   * Tests media inside another widget that validates too enthusiastically.
    *
    * @dataProvider insertionReselectionProvider
    */

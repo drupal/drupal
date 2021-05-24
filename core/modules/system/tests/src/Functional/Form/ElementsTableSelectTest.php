@@ -25,7 +25,7 @@ class ElementsTableSelectTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test the display of checkboxes when #multiple is TRUE.
+   * Tests the display of checkboxes when #multiple is TRUE.
    */
   public function testMultipleTrue() {
 
@@ -43,7 +43,7 @@ class ElementsTableSelectTest extends BrowserTestBase {
   }
 
   /**
-   * Test the display of radios when #multiple is FALSE.
+   * Tests the display of radios when #multiple is FALSE.
    */
   public function testMultipleFalse() {
     $this->drupalGet('form_test/tableselect/multiple-false');
@@ -85,7 +85,7 @@ class ElementsTableSelectTest extends BrowserTestBase {
   }
 
   /**
-   * Test the display of the #empty text when #options is an empty array.
+   * Tests the display of the #empty text when #options is an empty array.
    */
   public function testEmptyText() {
     $this->drupalGet('form_test/tableselect/empty-text');
@@ -93,7 +93,7 @@ class ElementsTableSelectTest extends BrowserTestBase {
   }
 
   /**
-   * Test the submission of single and multiple values when #multiple is TRUE.
+   * Tests the submission of single and multiple values when #multiple is TRUE.
    */
   public function testMultipleTrueSubmit() {
 
@@ -121,7 +121,7 @@ class ElementsTableSelectTest extends BrowserTestBase {
   }
 
   /**
-   * Test submission of values when #multiple is FALSE.
+   * Tests submission of values when #multiple is FALSE.
    */
   public function testMultipleFalseSubmit() {
     $edit['tableselect'] = 'row1';
@@ -131,7 +131,7 @@ class ElementsTableSelectTest extends BrowserTestBase {
   }
 
   /**
-   * Test the #js_select property.
+   * Tests the #js_select property.
    */
   public function testAdvancedSelect() {
     // When #multiple = TRUE a Select all checkbox should be displayed by default.
@@ -151,7 +151,8 @@ class ElementsTableSelectTest extends BrowserTestBase {
   }
 
   /**
-   * Test the whether the option checker gives an error on invalid tableselect values for checkboxes.
+   * Tests the whether the option checker gives an error on invalid
+   * tableselect values for checkboxes.
    */
   public function testMultipleTrueOptionchecker() {
 
@@ -174,7 +175,8 @@ class ElementsTableSelectTest extends BrowserTestBase {
   }
 
   /**
-   * Test the whether the option checker gives an error on invalid tableselect values for radios.
+   * Tests the whether the option checker gives an error on invalid
+   * tableselect values for radios.
    */
   public function testMultipleFalseOptionchecker() {
 
