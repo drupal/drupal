@@ -42,7 +42,7 @@ class TextFieldTest extends StringFieldTest {
   // Test fields.
 
   /**
-   * Test text field validation.
+   * Tests text field validation.
    */
   public function testTextFieldValidation() {
     // Create a field with settings to validate.
@@ -77,7 +77,7 @@ class TextFieldTest extends StringFieldTest {
   }
 
   /**
-   * Test required long text with file upload.
+   * Tests required long text with file upload.
    */
   public function testRequiredLongTextWithFileUpload() {
     // Create a text field.
@@ -138,7 +138,7 @@ class TextFieldTest extends StringFieldTest {
   }
 
   /**
-   * Test widgets.
+   * Tests widgets.
    */
   public function testTextfieldWidgets() {
     $this->_testTextfieldWidgets('text', 'text_textfield');
@@ -146,7 +146,7 @@ class TextFieldTest extends StringFieldTest {
   }
 
   /**
-   * Test widgets + 'formatted_text' setting.
+   * Tests widgets + 'formatted_text' setting.
    */
   public function testTextfieldWidgetsFormatted() {
     $this->_testTextfieldWidgetsFormatted('text', 'text_textfield');

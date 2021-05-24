@@ -96,7 +96,7 @@ class CommentLanguageTest extends BrowserTestBase {
   }
 
   /**
-   * Test that comment language is properly set.
+   * Tests that comment language is properly set.
    */
   public function testCommentLanguage() {
 

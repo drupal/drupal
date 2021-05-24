@@ -67,7 +67,7 @@ class MigrateUrlAliasTest extends MigrateDrupal6TestBase {
   }
 
   /**
-   * Test the url alias migration.
+   * Tests the url alias migration.
    */
   public function testUrlAlias() {
     $id_map = $this->getMigration('d6_url_alias')->getIdMap();
@@ -125,7 +125,7 @@ class MigrateUrlAliasTest extends MigrateDrupal6TestBase {
   }
 
   /**
-   * Test the URL alias migration with translated nodes.
+   * Tests the URL alias migration with translated nodes.
    */
   public function testUrlAliasWithTranslatedNodes() {
     // Alias for the 'The Real McCoy' node in English.

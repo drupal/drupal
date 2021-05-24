@@ -12,7 +12,7 @@ use Drupal\migrate\Plugin\migrate\process\Callback;
 class CallbackTest extends MigrateProcessTestCase {
 
   /**
-   * Test callback with valid "callable".
+   * Tests callback with valid "callable".
    *
    * @dataProvider providerCallback
    */
@@ -34,7 +34,42 @@ class CallbackTest extends MigrateProcessTestCase {
   }
 
   /**
-   * Test callback exceptions.
+   * Tests callback with valid "callable" and multiple arguments.
+   *
+   * @dataProvider providerCallbackArray
+   */
+  public function testCallbackArray($callable, $args, $result) {
+    $configuration = ['callable' => $callable, 'unpack_source' => TRUE];
+    $this->plugin = new Callback($configuration, 'map', []);
+    $value = $this->plugin->transform($args, $this->migrateExecutable, $this->row, 'destination_property');
+    $this->assertSame($result, $value);
+  }
+
+  /**
+   * Data provider for ::testCallbackArray().
+   */
+  public function providerCallbackArray() {
+    return [
+      'date format' => [
+        'date',
+        ['Y-m-d', 995328000],
+        '2001-07-17',
+      ],
+      'rtrim' => [
+        'rtrim',
+        ['https://www.example.com/', '/'],
+        'https://www.example.com',
+      ],
+      'str_replace' => [
+        'str_replace',
+        [['One', 'two'], ['1', '2'], 'One, two, three!'],
+        '1, 2, three!',
+      ],
+    ];
+  }
+
+  /**
+   * Tests callback exceptions.
    *
    * @dataProvider providerCallbackExceptions
    */

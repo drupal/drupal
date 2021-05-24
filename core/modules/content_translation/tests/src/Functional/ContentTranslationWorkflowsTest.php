@@ -181,7 +181,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
   }
 
   /**
-   * Test simple and editorial translation workflows.
+   * Tests simple and editorial translation workflows.
    */
   public function testWorkflows() {
     // Test workflows for the editor.

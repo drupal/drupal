@@ -93,7 +93,7 @@ class FilterDateTest extends ViewTestBase {
   }
 
   /**
-   * Test the general offset functionality.
+   * Tests the general offset functionality.
    */
   protected function _testOffset() {
     $view = Views::getView('test_filter_date_between');
@@ -200,7 +200,7 @@ class FilterDateTest extends ViewTestBase {
   }
 
   /**
-   * Test date filter UI.
+   * Tests date filter UI.
    */
   protected function _testFilterDateUI() {
     $this->drupalLogin($this->drupalCreateUser(['administer views']));
@@ -286,7 +286,7 @@ class FilterDateTest extends ViewTestBase {
   }
 
   /**
-   * Test datetime grouped filter UI.
+   * Tests datetime grouped filter UI.
    */
   protected function _testFilterDatetimeUI() {
     $this->drupalLogin($this->drupalCreateUser(['administer views']));

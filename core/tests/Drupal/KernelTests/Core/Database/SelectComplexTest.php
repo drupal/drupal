@@ -160,7 +160,7 @@ class SelectComplexTest extends DatabaseTestBase {
   }
 
   /**
-   * Test whether the range property of a select clause can be undone.
+   * Tests whether the range property of a select clause can be undone.
    */
   public function testRangeUndo() {
     $query = $this->connection->select('test');
@@ -394,7 +394,7 @@ class SelectComplexTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that join conditions can use Condition objects.
+   * Tests that join conditions can use Condition objects.
    */
   public function testJoinConditionObject() {
     // Same test as testDefaultJoin, but with a Condition object.

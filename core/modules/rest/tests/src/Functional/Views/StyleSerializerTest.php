@@ -450,7 +450,7 @@ class StyleSerializerTest extends ViewTestBase {
   }
 
   /**
-   * Test the field ID alias functionality of the DataFieldRow plugin.
+   * Tests the field ID alias functionality of the DataFieldRow plugin.
    */
   public function testUIFieldAlias() {
     $this->drupalLogin($this->adminUser);
@@ -842,7 +842,7 @@ class StyleSerializerTest extends ViewTestBase {
   }
 
   /**
-   * Test multilingual entity rows.
+   * Tests multilingual entity rows.
    */
   public function testMulEntityRows() {
     // Create some languages.

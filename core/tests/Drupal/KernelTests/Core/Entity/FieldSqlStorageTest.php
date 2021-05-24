@@ -312,7 +312,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test trying to update a field with data.
+   * Tests trying to update a field with data.
    */
   public function testUpdateFieldSchemaWithData() {
     $entity_type = 'entity_test_rev';
@@ -345,7 +345,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test that failure to create fields is handled gracefully.
+   * Tests that failure to create fields is handled gracefully.
    */
   public function testFieldUpdateFailure() {
     // Create a text field.
@@ -384,7 +384,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test adding and removing indexes while data is present.
+   * Tests adding and removing indexes while data is present.
    */
   public function testFieldUpdateIndexesWithData() {
     // Create a decimal field.
@@ -441,7 +441,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test foreign key support.
+   * Tests foreign key support.
    */
   public function testFieldSqlStorageForeignKeys() {
     // Create a 'shape' field, with a configurable foreign key (see

@@ -105,7 +105,7 @@ class BlockTest extends BlockTestBase {
   }
 
   /**
-   * Test block visibility when leaving "pages" textarea empty.
+   * Tests block visibility when leaving "pages" textarea empty.
    */
   public function testBlockVisibilityListedEmpty() {
     $block_name = 'system_powered_by_block';
@@ -186,7 +186,7 @@ class BlockTest extends BlockTestBase {
   }
 
   /**
-   * Test configuring and moving a module-define block to specific regions.
+   * Tests configuring and moving a module-define block to specific regions.
    */
   public function testBlock() {
     // Place page title block to test error messages.
@@ -278,7 +278,7 @@ class BlockTest extends BlockTestBase {
   }
 
   /**
-   * Test block display of theme titles.
+   * Tests block display of theme titles.
    */
   public function testThemeName() {
     // Enable the help block.
@@ -294,7 +294,7 @@ class BlockTest extends BlockTestBase {
   }
 
   /**
-   * Test block title display settings.
+   * Tests block title display settings.
    */
   public function testHideBlockTitle() {
     $block_name = 'system_powered_by_block';
@@ -364,7 +364,7 @@ class BlockTest extends BlockTestBase {
   }
 
   /**
-   * Test that cache tags are properly set and bubbled up to the page cache.
+   * Tests that cache tags are properly set and bubbled up to the page cache.
    *
    * Verify that invalidation of these cache tags works:
    * - "block:<block ID>"

@@ -95,7 +95,7 @@ class SaveUploadTest extends FileManagedTestBase {
   }
 
   /**
-   * Test the file_save_upload() function.
+   * Tests the file_save_upload() function.
    */
   public function testNormal() {
     $max_fid_after = (int) \Drupal::entityQueryAggregate('file')
@@ -151,7 +151,7 @@ class SaveUploadTest extends FileManagedTestBase {
   }
 
   /**
-   * Test uploading a duplicate file.
+   * Tests uploading a duplicate file.
    */
   public function testDuplicate() {
     // It should not be possible to create two managed files with the same URI.
@@ -186,7 +186,7 @@ class SaveUploadTest extends FileManagedTestBase {
   }
 
   /**
-   * Test extension handling.
+   * Tests extension handling.
    */
   public function testHandleExtension() {
     // The file being tested is a .gif which is in the default safe list
@@ -266,7 +266,7 @@ class SaveUploadTest extends FileManagedTestBase {
   }
 
   /**
-   * Test dangerous file handling.
+   * Tests dangerous file handling.
    */
   public function testHandleDangerousFile() {
     $config = $this->config('system.file');
@@ -338,7 +338,7 @@ class SaveUploadTest extends FileManagedTestBase {
   }
 
   /**
-   * Test file munge handling.
+   * Tests file munge handling.
    */
   public function testHandleFileMunge() {
     // Ensure insecure uploads are disabled for this test.
@@ -486,7 +486,7 @@ class SaveUploadTest extends FileManagedTestBase {
   }
 
   /**
-   * Test renaming when uploading over a file that already exists.
+   * Tests renaming when uploading over a file that already exists.
    */
   public function testExistingRename() {
     $edit = [
@@ -503,7 +503,7 @@ class SaveUploadTest extends FileManagedTestBase {
   }
 
   /**
-   * Test replacement when uploading over a file that already exists.
+   * Tests replacement when uploading over a file that already exists.
    */
   public function testExistingReplace() {
     $edit = [
@@ -520,7 +520,7 @@ class SaveUploadTest extends FileManagedTestBase {
   }
 
   /**
-   * Test for failure when uploading over a file that already exists.
+   * Tests for failure when uploading over a file that already exists.
    */
   public function testExistingError() {
     $edit = [
@@ -536,7 +536,7 @@ class SaveUploadTest extends FileManagedTestBase {
   }
 
   /**
-   * Test for no failures when not uploading a file.
+   * Tests for no failures when not uploading a file.
    */
   public function testNoUpload() {
     $this->drupalPostForm('file-test/upload', [], 'Submit');

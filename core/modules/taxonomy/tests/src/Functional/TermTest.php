@@ -91,7 +91,7 @@ class TermTest extends TaxonomyTestBase {
   }
 
   /**
-   * Test terms in a single and multiple hierarchy.
+   * Tests terms in a single and multiple hierarchy.
    */
   public function testTaxonomyTermHierarchy() {
     // Create two taxonomy terms.
@@ -186,7 +186,7 @@ class TermTest extends TaxonomyTestBase {
   }
 
   /**
-   * Test that hook_node_$op implementations work correctly.
+   * Tests that hook_node_$op implementations work correctly.
    *
    * Save & edit a node and assert that taxonomy terms are saved/loaded properly.
    */
@@ -229,7 +229,7 @@ class TermTest extends TaxonomyTestBase {
   }
 
   /**
-   * Test term creation with a free-tagging vocabulary from the node form.
+   * Tests term creation with a free-tagging vocabulary from the node form.
    */
   public function testNodeTermCreationAndDeletion() {
     // Enable tags in the vocabulary.
@@ -468,7 +468,7 @@ class TermTest extends TaxonomyTestBase {
   }
 
   /**
-   * Test saving a term with multiple parents through the UI.
+   * Tests saving a term with multiple parents through the UI.
    */
   public function testTermMultipleParentsInterface() {
     // Add a new term to the vocabulary so that we can have multiple parents.
@@ -497,7 +497,7 @@ class TermTest extends TaxonomyTestBase {
   }
 
   /**
-   * Test taxonomy_term_load_multiple_by_name().
+   * Tests taxonomy_term_load_multiple_by_name().
    */
   public function testTaxonomyGetTermByName() {
     $term = $this->createTerm($this->vocabulary);

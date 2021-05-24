@@ -19,7 +19,7 @@ class LogTest extends KernelTestBase {
   protected static $modules = ['migrate'];
 
   /**
-   * Test the Log plugin.
+   * Tests the Log plugin.
    */
   public function testLog() {
     $plugin = \Drupal::service('plugin.manager.migrate.process')

@@ -13,7 +13,7 @@ use Symfony\Component\Process\PhpProcess;
 class DrupalLogErrorTest extends UnitTestCase {
 
   /**
-   * Test that fatal errors return a non-zero exit code.
+   * Tests that fatal errors return a non-zero exit code.
    */
   public function testFatalExitCode() {
     $script = <<<'EOT'
