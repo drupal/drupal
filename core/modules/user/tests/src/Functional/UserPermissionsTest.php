@@ -73,7 +73,7 @@ class UserPermissionsTest extends BrowserTestBase {
     $edit = [];
     $edit[$rid . '[administer users]'] = TRUE;
     $this->drupalPostForm('admin/people/permissions', $edit, 'Save permissions');
-    $this->assertText('The changes have been saved.');
+    $this->assertSession()->pageTextContains('The changes have been saved.');
     $storage->resetCache();
     $this->assertTrue($account->hasPermission('administer users'), 'User now has "administer users" permission.');
     $current_permissions_hash = $permissions_hash_generator->generate($account);
@@ -86,7 +86,7 @@ class UserPermissionsTest extends BrowserTestBase {
     $edit = [];
     $edit[$rid . '[access user profiles]'] = FALSE;
     $this->drupalPostForm('admin/people/permissions', $edit, 'Save permissions');
-    $this->assertText('The changes have been saved.');
+    $this->assertSession()->pageTextContains('The changes have been saved.');
     $storage->resetCache();
     $this->assertFalse($account->hasPermission('access user profiles'), 'User no longer has "access user profiles" permission.');
     $current_permissions_hash = $permissions_hash_generator->generate($account);
@@ -186,14 +186,14 @@ class UserPermissionsTest extends BrowserTestBase {
     // to 'access site reports'.
     $this->drupalGet('admin/people/permissions');
     $next_row = $this->xpath('//tr[@data-drupal-selector=\'edit-permissions-access-content\']/following-sibling::tr[1]');
-    $this->assertEqual('edit-permissions-access-site-reports', $next_row[0]->getAttribute('data-drupal-selector'));
+    $this->assertEquals('edit-permissions-access-site-reports', $next_row[0]->getAttribute('data-drupal-selector'));
 
     // When Node is installed the 'access content' permission is listed next to
     // to 'view own unpublished content'.
     \Drupal::service('module_installer')->install(['node']);
     $this->drupalGet('admin/people/permissions');
     $next_row = $this->xpath('//tr[@data-drupal-selector=\'edit-permissions-access-content\']/following-sibling::tr[1]');
-    $this->assertEqual('edit-permissions-view-own-unpublished-content', $next_row[0]->getAttribute('data-drupal-selector'));
+    $this->assertEquals('edit-permissions-view-own-unpublished-content', $next_row[0]->getAttribute('data-drupal-selector'));
   }
 
 }

@@ -95,12 +95,12 @@ class ToolbarMenuTranslationTest extends BrowserTestBase {
     ];
     $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
     // Make sure the menu item string was translated.
-    $this->assertText($menu_item_translated);
+    $this->assertSession()->pageTextContains($menu_item_translated);
 
     // Go to another page in the custom language and make sure the menu item
     // was translated.
     $this->drupalGet($langcode . '/admin/structure');
-    $this->assertText($menu_item_translated);
+    $this->assertSession()->pageTextContains($menu_item_translated);
 
     // Toolbar icons are included based on the presence of a specific class on
     // the menu item. Ensure that class also exists for a translated menu item.

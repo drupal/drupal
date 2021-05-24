@@ -100,14 +100,14 @@ class MenuLinkTest extends ViewTestBase {
 
     // Test if the primary menu item (node) is visible, and the secondary menu
     // item (view) is hidden.
-    $this->assertText('Primary level node');
+    $this->assertSession()->pageTextContains('Primary level node');
     $this->assertNoText('Secondary level view page');
 
     // Go to the node page and ensure that both the first and second level items
     // are visible.
     $this->drupalGet($node->toUrl());
-    $this->assertText('Primary level node');
-    $this->assertText('Secondary level view page');
+    $this->assertSession()->pageTextContains('Primary level node');
+    $this->assertSession()->pageTextContains('Secondary level view page');
   }
 
 }

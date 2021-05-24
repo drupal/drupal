@@ -31,7 +31,7 @@ class FieldUITest extends UITestBase {
   public function testFieldUI() {
     // Ensure the field is not marked as hidden on the first run.
     $this->drupalGet('admin/structure/views/view/test_view/edit');
-    $this->assertText('Views test: Name');
+    $this->assertSession()->pageTextContains('Views test: Name');
     $this->assertSession()->pageTextNotContains('Views test: Name [hidden]');
 
     // Hides the field and check whether the hidden label is appended.
@@ -75,7 +75,7 @@ class FieldUITest extends UITestBase {
     $edit_handler_url = '/admin/structure/views/ajax/handler-group/test_view/default/field/name';
     $this->drupalGet($edit_handler_url);
     $data = Json::decode($this->getSession()->getPage()->getContent());
-    $this->assertEqual('Configure aggregation settings for field Views test: Name', $data[3]['dialogOptions']['title']);
+    $this->assertEquals('Configure aggregation settings for field Views test: Name', $data[3]['dialogOptions']['title']);
   }
 
   /**
@@ -97,7 +97,7 @@ class FieldUITest extends UITestBase {
 
     $view = Views::getView($view['id']);
     $view->initHandlers();
-    $this->assertEqual('', $view->field['title']->options['label'], 'The field label for normal styles are empty.');
+    $this->assertEquals('', $view->field['title']->options['label'], 'The field label for normal styles are empty.');
   }
 
 }

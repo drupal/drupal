@@ -59,7 +59,7 @@ class SearchBlockTest extends BrowserTestBase {
     $block = $this->drupalPlaceBlock('search_form_block');
 
     $this->drupalGet('');
-    $this->assertText($block->label());
+    $this->assertSession()->pageTextContains($block->label());
 
     // Check that name attribute is not empty.
     $pattern = "//input[@type='submit' and @name='']";
@@ -70,14 +70,14 @@ class SearchBlockTest extends BrowserTestBase {
     $terms = ['keys' => 'test'];
     $this->drupalPostForm('', $terms, 'Search');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('Your search yielded no results');
+    $this->assertSession()->pageTextContains('Your search yielded no results');
 
     // Test a search from the block on a 404 page.
     $this->drupalGet('foo');
     $this->assertSession()->statusCodeEquals(404);
     $this->submitForm($terms, 'Search');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('Your search yielded no results');
+    $this->assertSession()->pageTextContains('Your search yielded no results');
 
     $visibility = $block->getVisibility();
     $visibility['request_path']['pages'] = 'search';
@@ -85,13 +85,13 @@ class SearchBlockTest extends BrowserTestBase {
 
     $this->drupalPostForm('', $terms, 'Search');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('Your search yielded no results');
+    $this->assertSession()->pageTextContains('Your search yielded no results');
 
     // Confirm that the form submits to the default search page.
-    /** @var $search_page_repository \Drupal\search\SearchPageRepositoryInterface */
+    /** @var \Drupal\search\SearchPageRepositoryInterface $search_page_repository */
     $search_page_repository = \Drupal::service('search.search_page_repository');
     $entity_id = $search_page_repository->getDefaultSearchPage();
-    $this->assertEqual(
+    $this->assertEquals(
       $this->getUrl(),
       Url::fromRoute('search.view_' . $entity_id, [], ['query' => ['keys' => $terms['keys']], 'absolute' => TRUE])->toString(),
       'Submitted to correct URL.'
@@ -101,11 +101,11 @@ class SearchBlockTest extends BrowserTestBase {
     $terms = ['keys' => ''];
     $this->drupalPostForm('', $terms, 'Search');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('Please enter some keywords');
+    $this->assertSession()->pageTextContains('Please enter some keywords');
 
     // Confirm that the user is redirected to the search page, when form is
     // submitted empty.
-    $this->assertEqual(
+    $this->assertEquals(
       $this->getUrl(),
       Url::fromRoute('search.view_' . $entity_id, [], ['query' => ['keys' => ''], 'absolute' => TRUE])->toString(),
       'Redirected to correct URL.'
@@ -114,7 +114,7 @@ class SearchBlockTest extends BrowserTestBase {
     // Test that after entering a too-short keyword in the form, you can then
     // search again with a longer keyword. First test using the block form.
     $this->drupalPostForm('node', ['keys' => $this->randomMachineName(1)], 'Search');
-    $this->assertText('You must include at least one keyword to match in the content');
+    $this->assertSession()->pageTextContains('You must include at least one keyword to match in the content');
     $this->assertNoText('Please enter some keywords');
     $this->submitForm(['keys' => $this->randomMachineName()], 'Search', 'search-block-form');
     $this->assertNoText('You must include at least one keyword to match in the content');

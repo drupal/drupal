@@ -77,14 +77,14 @@ class DateTimeFieldTest extends DateTestBase {
       $this->submitForm($edit, 'Save');
       preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
       $id = $match[1];
-      $this->assertText('entity_test ' . $id . ' has been created.');
+      $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
       $this->assertRaw($date->format($date_format));
       $this->assertNoRaw($date->format($time_format));
 
       // Verify the date doesn't change if using a timezone that is UTC+12 when
       // the entity is edited through the form.
       $entity = EntityTest::load($id);
-      $this->assertEqual('2012-12-31', $entity->{$field_name}->value);
+      $this->assertEquals('2012-12-31', $entity->{$field_name}->value);
       $this->drupalGet('entity_test/manage/' . $id . '/edit');
       $this->submitForm([], 'Save');
       $this->drupalGet('entity_test/manage/' . $id . '/edit');
@@ -92,7 +92,7 @@ class DateTimeFieldTest extends DateTestBase {
       $this->drupalGet('entity_test/manage/' . $id . '/edit');
       $this->submitForm([], 'Save');
       $entity = EntityTest::load($id);
-      $this->assertEqual('2012-12-31', $entity->{$field_name}->value);
+      $this->assertEquals('2012-12-31', $entity->{$field_name}->value);
 
       // Reset display options since these get changed below.
       $this->displayOptions = [
@@ -272,7 +272,7 @@ class DateTimeFieldTest extends DateTestBase {
     $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText('entity_test ' . $id . ' has been created.');
+    $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
     $this->assertRaw($date->format($date_format));
     $this->assertRaw($date->format($time_format));
 
@@ -499,7 +499,7 @@ class DateTimeFieldTest extends DateTestBase {
     $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText('entity_test ' . $id . ' has been created.');
+    $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
 
     $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-year", '2012')->isSelected());
     $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-month", '12')->isSelected());
@@ -539,7 +539,7 @@ class DateTimeFieldTest extends DateTestBase {
     $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText('entity_test ' . $id . ' has been created.');
+    $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
 
     $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-year", '2012')->isSelected());
     $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-month", '12')->isSelected());
@@ -576,7 +576,7 @@ class DateTimeFieldTest extends DateTestBase {
       $this->submitForm($edit, 'Save');
       $this->assertSession()->statusCodeEquals(200);
       foreach ($expected as $expected_text) {
-        $this->assertText($expected_text);
+        $this->assertSession()->pageTextContains($expected_text);
       }
     }
 
@@ -593,7 +593,7 @@ class DateTimeFieldTest extends DateTestBase {
     $this->assertSession()->statusCodeEquals(200);
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
-    $this->assertText('entity_test ' . $id . ' has been created.');
+    $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
 
     // Test the widget to ensure zeros are not deselected on validation.
     $this->drupalGet('entity_test/add');
@@ -711,7 +711,7 @@ class DateTimeFieldTest extends DateTestBase {
       // Check if default_date has been stored successfully.
       $config_entity = $this->config('field.field.node.date_content.' . $field_name)
         ->get();
-      $this->assertEqual(['default_date_type' => 'now', 'default_date' => 'now'], $config_entity['default_value'][0], 'Default value has been stored successfully');
+      $this->assertEquals(['default_date_type' => 'now', 'default_date' => 'now'], $config_entity['default_value'][0], 'Default value has been stored successfully');
 
       // Clear field cache in order to avoid stale cache values.
       \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
@@ -719,7 +719,7 @@ class DateTimeFieldTest extends DateTestBase {
       // Create a new node to check that datetime field default value is today.
       $new_node = Node::create(['type' => 'date_content']);
       $expected_date = new DrupalDateTime('now', date_default_timezone_get());
-      $this->assertEqual($expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT), $new_node->get($field_name)->offsetGet(0)->value);
+      $this->assertEquals($expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT), $new_node->get($field_name)->offsetGet(0)->value);
 
       // Set an invalid relative default_value to test validation.
       $field_edit = [
@@ -728,7 +728,7 @@ class DateTimeFieldTest extends DateTestBase {
       ];
       $this->drupalPostForm('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name, $field_edit, 'Save settings');
 
-      $this->assertText('The relative date value entered is invalid.');
+      $this->assertSession()->pageTextContains('The relative date value entered is invalid.');
 
       // Set a relative default_value.
       $field_edit = [
@@ -746,7 +746,7 @@ class DateTimeFieldTest extends DateTestBase {
       // Check if default_date has been stored successfully.
       $config_entity = $this->config('field.field.node.date_content.' . $field_name)
         ->get();
-      $this->assertEqual(['default_date_type' => 'relative', 'default_date' => '+90 days'], $config_entity['default_value'][0], 'Default value has been stored successfully');
+      $this->assertEquals(['default_date_type' => 'relative', 'default_date' => '+90 days'], $config_entity['default_value'][0], 'Default value has been stored successfully');
 
       // Clear field cache in order to avoid stale cache values.
       \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
@@ -755,7 +755,7 @@ class DateTimeFieldTest extends DateTestBase {
       // days.
       $new_node = Node::create(['type' => 'date_content']);
       $expected_date = new DrupalDateTime('+90 days', date_default_timezone_get());
-      $this->assertEqual($expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT), $new_node->get($field_name)->offsetGet(0)->value);
+      $this->assertEquals($expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT), $new_node->get($field_name)->offsetGet(0)->value);
 
       // Remove default value.
       $field_edit = [
@@ -805,7 +805,7 @@ class DateTimeFieldTest extends DateTestBase {
       "{$field_name}[0][value][time]" => '12:00:00',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid');
+    $this->assertSession()->pageTextContains('date is invalid');
 
     // Invalid year value.
     $date_value = 'aaaa-12-01';
@@ -814,7 +814,7 @@ class DateTimeFieldTest extends DateTestBase {
       "{$field_name}[0][value][time]" => '00:00:00',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid');
+    $this->assertSession()->pageTextContains('date is invalid');
 
     // Invalid month value.
     $date_value = '2012-75-01';
@@ -823,7 +823,7 @@ class DateTimeFieldTest extends DateTestBase {
       "{$field_name}[0][value][time]" => '00:00:00',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid');
+    $this->assertSession()->pageTextContains('date is invalid');
 
     // Invalid day value.
     $date_value = '2012-12-99';
@@ -832,7 +832,7 @@ class DateTimeFieldTest extends DateTestBase {
       "{$field_name}[0][value][time]" => '00:00:00',
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid');
+    $this->assertSession()->pageTextContains('date is invalid');
 
     // Invalid time value.
     $date_value = '2012-12-01';
@@ -842,7 +842,7 @@ class DateTimeFieldTest extends DateTestBase {
       "{$field_name}[0][value][time]" => $time_value,
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid');
+    $this->assertSession()->pageTextContains('date is invalid');
 
     // Invalid hour value.
     $date_value = '2012-12-01';
@@ -852,7 +852,7 @@ class DateTimeFieldTest extends DateTestBase {
       "{$field_name}[0][value][time]" => $time_value,
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid');
+    $this->assertSession()->pageTextContains('date is invalid');
 
     // Invalid minutes value.
     $date_value = '2012-12-01';
@@ -862,7 +862,7 @@ class DateTimeFieldTest extends DateTestBase {
       "{$field_name}[0][value][time]" => $time_value,
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid');
+    $this->assertSession()->pageTextContains('date is invalid');
 
     // Invalid seconds value.
     $date_value = '2012-12-01';
@@ -872,7 +872,7 @@ class DateTimeFieldTest extends DateTestBase {
       "{$field_name}[0][value][time]" => $time_value,
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertText('date is invalid');
+    $this->assertSession()->pageTextContains('date is invalid');
   }
 
   /**
@@ -915,7 +915,7 @@ class DateTimeFieldTest extends DateTestBase {
     $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name . '/storage');
     $result = $this->xpath("//*[@id='edit-settings-datetime-type' and contains(@disabled, 'disabled')]");
     $this->assertCount(1, $result, "Changing datetime setting is disabled.");
-    $this->assertText('There is data for this field in the database. The field settings can no longer be changed.');
+    $this->assertSession()->pageTextContains('There is data for this field in the database. The field settings can no longer be changed.');
   }
 
 }

@@ -44,14 +44,14 @@ class BlockTest extends BlockTestBase {
     $this->assertSession()->checkboxChecked('edit-visibility-request-path-negate-0');
 
     $this->submitForm($edit, 'Save block');
-    $this->assertText('The block configuration has been saved.');
+    $this->assertSession()->pageTextContains('The block configuration has been saved.');
 
     $this->clickLink('Configure');
     $this->assertSession()->checkboxChecked('edit-visibility-request-path-negate-1');
 
     // Confirm that the block is displayed on the front page.
     $this->drupalGet('');
-    $this->assertText($title);
+    $this->assertSession()->pageTextContains($title);
 
     // Confirm that the block is not displayed according to block visibility
     // rules.
@@ -122,7 +122,7 @@ class BlockTest extends BlockTestBase {
     // Set the block to be hidden on any user path, and to be shown only to
     // authenticated users.
     $this->drupalPostForm('admin/structure/block/add/' . $block_name . '/' . $default_theme, $edit, 'Save block');
-    $this->assertText('The block configuration has been saved.');
+    $this->assertSession()->pageTextContains('The block configuration has been saved.');
 
     // Confirm that block was not displayed according to block visibility
     // rules.
@@ -162,11 +162,11 @@ class BlockTest extends BlockTestBase {
       ]);
       $links = $this->xpath('//a[contains(@href, :href)]', [':href' => $add_url->toString()]);
       $this->assertCount(1, $links, 'Found one matching link.');
-      $this->assertEqual(t('Place block'), $links[0]->getText(), 'Found the expected link text.');
+      $this->assertEquals(t('Place block'), $links[0]->getText(), 'Found the expected link text.');
 
       list($path, $query_string) = explode('?', $links[0]->getAttribute('href'), 2);
       parse_str($query_string, $query_parts);
-      $this->assertEqual($weight, $query_parts['weight'], 'Found the expected weight query string.');
+      $this->assertEquals($weight, $query_parts['weight'], 'Found the expected weight query string.');
 
       // Create a random title for the block.
       $title = $this->randomMachineName(8);
@@ -181,7 +181,7 @@ class BlockTest extends BlockTestBase {
       // Ensure that the block was created with the expected weight.
       /** @var \Drupal\block\BlockInterface $block */
       $block = Block::load($block_id);
-      $this->assertEqual($weight, $block->getWeight(), 'Found the block with expected weight.');
+      $this->assertEquals($weight, $block->getWeight(), 'Found the block with expected weight.');
     }
   }
 
@@ -206,11 +206,11 @@ class BlockTest extends BlockTestBase {
 
     // Set block title to confirm that interface works and override any custom titles.
     $this->drupalPostForm('admin/structure/block/add/' . $block['id'] . '/' . $block['theme'], ['settings[label]' => $block['settings[label]'], 'settings[label_display]' => $block['settings[label_display]'], 'id' => $block['id'], 'region' => $block['region']], 'Save block');
-    $this->assertText('The block configuration has been saved.');
+    $this->assertSession()->pageTextContains('The block configuration has been saved.');
     // Check to see if the block was created by checking its configuration.
     $instance = Block::load($block['id']);
 
-    $this->assertEqual($block['settings[label]'], $instance->label(), 'Stored block title found.');
+    $this->assertEquals($block['settings[label]'], $instance->label(), 'Stored block title found.');
 
     // Check whether the block can be moved to all available regions.
     foreach ($this->regions as $region) {
@@ -222,7 +222,7 @@ class BlockTest extends BlockTestBase {
     $this->clickLink('Disable');
 
     // Confirm that the block is now listed as disabled.
-    $this->assertText('The block settings have been updated.');
+    $this->assertSession()->pageTextContains('The block settings have been updated.');
 
     // Confirm that the block instance title and markup are not displayed.
     $this->drupalGet('node');
@@ -266,7 +266,7 @@ class BlockTest extends BlockTestBase {
       $block['theme'] = $theme;
       $block['region'] = 'content';
       $this->drupalPostForm('admin/structure/block/add/system_powered_by_block', $block, 'Save block');
-      $this->assertText('The block configuration has been saved.');
+      $this->assertSession()->pageTextContains('The block configuration has been saved.');
       $this->assertSession()->addressEquals('admin/structure/block/list/' . $theme . '?block-placement=' . Html::getClass($block['id']));
 
       // Set the default theme and ensure the block is placed.
@@ -309,7 +309,7 @@ class BlockTest extends BlockTestBase {
       'settings[label]' => $title,
     ];
     $this->drupalPostForm('admin/structure/block/add/' . $block_name . '/' . $default_theme, $edit, 'Save block');
-    $this->assertText('The block configuration has been saved.');
+    $this->assertSession()->pageTextContains('The block configuration has been saved.');
 
     // Confirm that the block is not displayed by default.
     $this->drupalGet('user');
@@ -319,14 +319,14 @@ class BlockTest extends BlockTestBase {
       'settings[label_display]' => TRUE,
     ];
     $this->drupalPostForm('admin/structure/block/manage/' . $id, $edit, 'Save block');
-    $this->assertText('The block configuration has been saved.');
+    $this->assertSession()->pageTextContains('The block configuration has been saved.');
 
     $this->drupalGet('admin/structure/block/manage/' . $id);
     $this->assertSession()->checkboxChecked('edit-settings-label-display');
 
     // Confirm that the block is displayed when enabled.
     $this->drupalGet('user');
-    $this->assertText($title);
+    $this->assertSession()->pageTextContains($title);
   }
 
   /**
@@ -349,11 +349,11 @@ class BlockTest extends BlockTestBase {
     $this->drupalPostForm('admin/structure/block', $edit, 'Save blocks');
 
     // Confirm that the block was moved to the proper region.
-    $this->assertText('The block settings have been updated.');
+    $this->assertSession()->pageTextContains('The block settings have been updated.');
 
     // Confirm that the block is being displayed.
     $this->drupalGet('');
-    $this->assertText($block['settings[label]']);
+    $this->assertSession()->pageTextContains($block['settings[label]']);
 
     // Confirm that the custom block was found at the proper region.
     $xpath = $this->assertSession()->buildXPathQuery('//div[@class=:region-class]//div[@id=:block-id]/*', [
@@ -444,7 +444,7 @@ class BlockTest extends BlockTestBase {
       'rendered',
     ];
     sort($expected_cache_tags);
-    $this->assertEqual($expected_cache_tags, $cache_entry->tags);
+    $this->assertEquals($expected_cache_tags, $cache_entry->tags);
     $expected_cache_tags = [
       'block_view',
       'config:block.block.powered',
@@ -488,7 +488,7 @@ class BlockTest extends BlockTestBase {
     ]);
     $this->drupalLogin($theme_admin);
     $this->drupalGet('admin/appearance');
-    $this->assertText('You can place blocks for each theme on the block layout page');
+    $this->assertSession()->pageTextContains('You can place blocks for each theme on the block layout page');
     $this->assertSession()->linkByHrefExists('admin/structure/block');
   }
 
@@ -503,7 +503,7 @@ class BlockTest extends BlockTestBase {
     $this->config('system.theme')->set('default', 'seven')->save();
     $block = $this->drupalPlaceBlock('system_powered_by_block', ['theme' => 'seven', 'region' => 'help']);
     $this->drupalGet('<front>');
-    $this->assertText('Powered by Drupal');
+    $this->assertSession()->pageTextContains('Powered by Drupal');
 
     $this->config('system.theme')->set('default', 'classy')->save();
     $theme_installer->uninstall(['seven']);
@@ -523,7 +523,7 @@ class BlockTest extends BlockTestBase {
 
     \Drupal::state()->set('test_block_access', TRUE);
     $this->drupalGet('<front>');
-    $this->assertText('Hello test world');
+    $this->assertSession()->pageTextContains('Hello test world');
   }
 
   /**
@@ -550,12 +550,12 @@ class BlockTest extends BlockTestBase {
 
     $block->save();
 
-    $this->assertEqual([$role1->id() => $role1->id(), $role2->id() => $role2->id()], $block->getVisibility()['user_role']['roles']);
+    $this->assertEquals([$role1->id() => $role1->id(), $role2->id() => $role2->id()], $block->getVisibility()['user_role']['roles']);
 
     $role1->delete();
 
     $block = Block::load($block->id());
-    $this->assertEqual([$role2->id() => $role2->id()], $block->getVisibility()['user_role']['roles']);
+    $this->assertEquals([$role2->id() => $role2->id()], $block->getVisibility()['user_role']['roles']);
   }
 
 }

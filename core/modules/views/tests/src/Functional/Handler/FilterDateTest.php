@@ -196,7 +196,7 @@ class FilterDateTest extends ViewTestBase {
     // Generate a definitive wrong value, which should be checked by validation.
     $edit['options[value][value]'] = $this->randomString() . '-------';
     $this->submitForm($edit, 'Apply');
-    $this->assertText('Invalid date format.');
+    $this->assertSession()->pageTextContains('Invalid date format.');
   }
 
   /**
@@ -230,7 +230,7 @@ class FilterDateTest extends ViewTestBase {
       $this->assertSession()->fieldValueEquals($name, $value);
       if (strpos($name, '[value][type]')) {
         $radio = $this->cssSelect('input[name="' . $name . '"][checked="checked"][type="radio"]');
-        $this->assertEqual($value, $radio[0]->getAttribute('value'));
+        $this->assertEquals($value, $radio[0]->getAttribute('value'));
       }
     }
 
@@ -250,15 +250,15 @@ class FilterDateTest extends ViewTestBase {
     $this->submitForm(['created' => '1'], 'Apply');
     $results = $this->cssSelect('.view-content .field-content');
     $this->assertCount(1, $results);
-    $this->assertEqual($this->nodes[3]->id(), $results[0]->getText());
+    $this->assertEquals($this->nodes[3]->id(), $results[0]->getText());
     $this->submitForm(['created' => '2'], 'Apply');
     $results = $this->cssSelect('.view-content .field-content');
     $this->assertCount(1, $results);
-    $this->assertEqual($this->nodes[3]->id(), $results[0]->getText());
+    $this->assertEquals($this->nodes[3]->id(), $results[0]->getText());
     $this->submitForm(['created' => '3'], 'Apply');
     $results = $this->cssSelect('.view-content .field-content');
     $this->assertCount(1, $results);
-    $this->assertEqual($this->nodes[1]->id(), $results[0]->getText());
+    $this->assertEquals($this->nodes[1]->id(), $results[0]->getText());
 
     // Change the filter to a single filter to test the schema when the operator
     // is not exposed.
@@ -275,14 +275,14 @@ class FilterDateTest extends ViewTestBase {
     $this->drupalGet($path);
     $results = $this->cssSelect('.view-content .field-content');
     $this->assertCount(1, $results);
-    $this->assertEqual($this->nodes[3]->id(), $results[0]->getText());
+    $this->assertEquals($this->nodes[3]->id(), $results[0]->getText());
     $this->submitForm([
       'created' => $this->dateFormatter->format(250000, 'custom', 'Y-m-d H:i:s'),
     ], 'Apply');
     $results = $this->cssSelect('.view-content .field-content');
     $this->assertCount(2, $results);
-    $this->assertEqual($this->nodes[2]->id(), $results[0]->getText());
-    $this->assertEqual($this->nodes[3]->id(), $results[1]->getText());
+    $this->assertEquals($this->nodes[2]->id(), $results[0]->getText());
+    $this->assertEquals($this->nodes[3]->id(), $results[1]->getText());
   }
 
   /**

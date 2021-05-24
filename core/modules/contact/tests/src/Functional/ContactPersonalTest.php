@@ -89,17 +89,17 @@ class ContactPersonalTest extends BrowserTestBase {
     $mails = $this->getMails();
     $this->assertCount(1, $mails);
     $mail = $mails[0];
-    $this->assertEqual($this->contactUser->getEmail(), $mail['to']);
-    $this->assertEqual($this->config('system.site')->get('mail'), $mail['from']);
-    $this->assertEqual($this->webUser->getEmail(), $mail['reply-to']);
-    $this->assertEqual('user_mail', $mail['key']);
+    $this->assertEquals($this->contactUser->getEmail(), $mail['to']);
+    $this->assertEquals($this->config('system.site')->get('mail'), $mail['from']);
+    $this->assertEquals($this->webUser->getEmail(), $mail['reply-to']);
+    $this->assertEquals('user_mail', $mail['key']);
     $variables = [
       '@site-name' => $this->config('system.site')->get('name'),
       '@subject' => $message['subject[0][value]'],
       '@recipient-name' => $this->contactUser->getDisplayName(),
     ];
     $subject = PlainTextOutput::renderFromHtml(t('[@site-name] @subject', $variables));
-    $this->assertEqual($subject, $mail['subject'], 'Subject is in sent message.');
+    $this->assertEquals($subject, $mail['subject'], 'Subject is in sent message.');
     $this->assertStringContainsString('Hello ' . $variables['@recipient-name'], $mail['body'], 'Recipient name is in sent message.');
     $this->assertStringContainsString($this->webUser->getDisplayName(), $mail['body'], 'Sender name is in sent message.');
     $this->assertStringContainsString($message['message[0][value]'], $mail['body'], 'Message body is in sent message.');
@@ -203,7 +203,7 @@ class ContactPersonalTest extends BrowserTestBase {
     $this->drupalLogin($this->adminUser);
     $edit = ['contact_default_status' => FALSE];
     $this->drupalPostForm('admin/config/people/accounts', $edit, 'Save configuration');
-    $this->assertText('The configuration options have been saved.');
+    $this->assertSession()->pageTextContains('The configuration options have been saved.');
     $this->drupalLogout();
 
     // Re-create our contacted user with personal contact forms disabled by
@@ -265,7 +265,7 @@ class ContactPersonalTest extends BrowserTestBase {
     // Submit contact form with correct values and check flood interval.
     for ($i = 0; $i < $flood_limit; $i++) {
       $this->submitPersonalContact($this->contactUser);
-      $this->assertText('Your message has been sent.');
+      $this->assertSession()->pageTextContains('Your message has been sent.');
     }
 
     // Submit contact form one over limit.

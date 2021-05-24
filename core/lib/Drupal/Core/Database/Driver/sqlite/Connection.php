@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Database\Driver\sqlite;
 
-use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\Connection as DatabaseConnection;
 use Drupal\Core\Database\StatementInterface;
@@ -431,10 +430,10 @@ class Connection extends DatabaseConnection {
   /**
    * {@inheritdoc}
    */
-  public function prepareStatement(string $query, array $options): StatementInterface {
+  public function prepareStatement(string $query, array $options, bool $allow_row_count = FALSE): StatementInterface {
     try {
       $query = $this->preprocessStatement($query, $options);
-      $statement = new Statement($this->connection, $this, $query, $options['pdo'] ?? []);
+      $statement = new Statement($this->connection, $this, $query, $options['pdo'] ?? [], $allow_row_count);
     }
     catch (\Exception $e) {
       $this->exceptionHandler()->handleStatementException($e, $query, $options);
@@ -449,20 +448,21 @@ class Connection extends DatabaseConnection {
     // override nextId. However, this is unlikely as we deal with short strings
     // and integers and no known databases require special handling for those
     // simple cases. If another transaction wants to write the same row, it will
-    // wait until this transaction commits. Also, the return value needs to be
-    // set to RETURN_AFFECTED as if it were a real update() query otherwise it
-    // is not possible to get the row count properly.
-    $affected = $this->query('UPDATE {sequences} SET value = GREATEST(value, :existing_id) + 1', [
-      ':existing_id' => $existing_id,
-    ], ['return' => Database::RETURN_AFFECTED]);
-    if (!$affected) {
-      $this->query('INSERT INTO {sequences} (value) VALUES (:existing_id + 1)', [
-        ':existing_id' => $existing_id,
-      ]);
+    // wait until this transaction commits.
+    $stmt = $this->prepareStatement('UPDATE {sequences} SET [value] = GREATEST([value], :existing_id) + 1', [], TRUE);
+    $args = [':existing_id' => $existing_id];
+    try {
+      $stmt->execute($args);
+    }
+    catch (\Exception $e) {
+      $this->exceptionHandler()->handleExecutionException($e, $stmt, $args, []);
+    }
+    if ($stmt->rowCount() === 0) {
+      $this->query('INSERT INTO {sequences} ([value]) VALUES (:existing_id + 1)', $args);
     }
     // The transaction gets committed when the transaction object gets destroyed
     // because it gets out of scope.
-    return $this->query('SELECT value FROM {sequences}')->fetchField();
+    return $this->query('SELECT [value] FROM {sequences}')->fetchField();
   }
 
   /**

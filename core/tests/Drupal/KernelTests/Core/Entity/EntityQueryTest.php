@@ -178,7 +178,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->condition("$figures.color", 'red')
       ->sort('id');
     $count_query = clone $query;
-    $this->assertEqual(12, $count_query->count()->execute());
+    $this->assertEquals(12, $count_query->count()->execute());
     $this->queryResults = $query->execute();
     // Now bit 0 (1, 3, 5, 7, 9, 11, 13, 15) or bit 2 (4, 5, 6, 7, 12, 13, 14,
     // 15) needs to be set.
@@ -438,7 +438,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     // 13 red  tr
     // 15 red  tr
     $count_query = clone $query;
-    $this->assertEqual(15, $count_query->count()->execute());
+    $this->assertEquals(15, $count_query->count()->execute());
     $this->queryResults = $query->execute();
     $this->assertResult(8, 12, 4, 2, 3, 10, 11, 14, 15, 6, 7, 1, 9, 13, 5);
 
@@ -467,7 +467,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->sort("$greetings.format", 'DESC')
       ->sort('id', 'DESC');
     $count_query = clone $query;
-    $this->assertEqual(15, $count_query->count()->execute());
+    $this->assertEquals(15, $count_query->count()->execute());
     $this->queryResults = $query->execute();
     $this->assertResult(15, 13, 7, 5, 11, 9, 3, 1, 14, 6, 10, 2, 12, 4, 8);
   }
@@ -608,7 +608,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->condition($this->figures . '.shape', 'triangle');
 
     // We added 2 conditions so count should be 2.
-    $this->assertEqual(2, $and_condition_group->count());
+    $this->assertEquals(2, $and_condition_group->count());
 
     // Add an OR condition group with 2 conditions in it.
     $or_condition_group = $query->orConditionGroup()
@@ -616,7 +616,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->condition($this->figures . '.shape', 'triangle');
 
     // We added 2 conditions so count should be 2.
-    $this->assertEqual(2, $or_condition_group->count());
+    $this->assertEquals(2, $or_condition_group->count());
   }
 
   /**
@@ -775,7 +775,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->execute();
 
     global $efq_test_metadata;
-    $this->assertEqual('bar', $efq_test_metadata, 'Tag and metadata propagated to the SQL query object.');
+    $this->assertEquals('bar', $efq_test_metadata, 'Tag and metadata propagated to the SQL query object.');
   }
 
   /**
@@ -1120,7 +1120,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->condition('id', [14], 'IN')
       ->condition("$this->figures.color", $current_values[0]['color'])
       ->execute();
-    $this->assertEqual([14 => '14'], $result);
+    $this->assertEquals([14 => '14'], $result);
     $result = $this->storage
       ->getQuery()
       ->accessCheck(FALSE)
@@ -1128,7 +1128,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->condition("$this->figures.color", 'red')
       ->allRevisions()
       ->execute();
-    $this->assertEqual([16 => '14'], $result);
+    $this->assertEquals([16 => '14'], $result);
 
     // Add another pending revision on the same entity and repeat the checks.
     $entity->setNewRevision(TRUE);

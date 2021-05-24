@@ -49,7 +49,7 @@ class FieldTypePluginManagerTest extends FieldKernelTestBase {
       $instance = $field_type_manager->createInstance($type, $configuration);
 
       $this->assertInstanceOf($class, $instance);
-      $this->assertEqual($field_name, $instance->getName(), new FormattableMarkup('Instance name is @name', ['@name' => $field_name]));
+      $this->assertEquals($field_name, $instance->getName(), new FormattableMarkup('Instance name is @name', ['@name' => $field_name]));
     }
   }
 
@@ -80,9 +80,9 @@ class FieldTypePluginManagerTest extends FieldKernelTestBase {
     $instance = $field_type_manager->createInstance($type, $configuration);
 
     $this->assertInstanceOf($class, $instance);
-    $this->assertEqual($field_name, $instance->getName(), new FormattableMarkup('Instance name is @name', ['@name' => $field_name]));
-    $this->assertEqual('Jenny', $instance->getFieldDefinition()->getLabel(), 'Instance label is Jenny');
-    $this->assertEqual([['value' => 8675309]], $instance->getFieldDefinition()->getDefaultValue($entity), 'Instance default_value is 8675309');
+    $this->assertEquals($field_name, $instance->getName(), new FormattableMarkup('Instance name is @name', ['@name' => $field_name]));
+    $this->assertEquals('Jenny', $instance->getFieldDefinition()->getLabel(), 'Instance label is Jenny');
+    $this->assertEquals([['value' => 8675309]], $instance->getFieldDefinition()->getDefaultValue($entity), 'Instance default_value is 8675309');
   }
 
   /**

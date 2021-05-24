@@ -32,47 +32,47 @@ class FormObjectTest extends BrowserTestBase {
     $config_factory = $this->container->get('config.factory');
 
     $this->drupalGet('form-test/object-builder');
-    $this->assertText('The FormTestObject::buildForm() method was used for this form.');
+    $this->assertSession()->pageTextContains('The FormTestObject::buildForm() method was used for this form.');
     $elements = $this->xpath('//form[@id="form-test-form-test-object"]');
     $this->assertTrue(!empty($elements), 'The correct form ID was used.');
     $this->submitForm(['bananas' => 'green'], 'Save');
-    $this->assertText('The FormTestObject::validateForm() method was used for this form.');
-    $this->assertText('The FormTestObject::submitForm() method was used for this form.');
+    $this->assertSession()->pageTextContains('The FormTestObject::validateForm() method was used for this form.');
+    $this->assertSession()->pageTextContains('The FormTestObject::submitForm() method was used for this form.');
     $value = $config_factory->get('form_test.object')->get('bananas');
     $this->assertSame('green', $value);
 
     $this->drupalGet('form-test/object-arguments-builder/yellow');
-    $this->assertText('The FormTestArgumentsObject::buildForm() method was used for this form.');
+    $this->assertSession()->pageTextContains('The FormTestArgumentsObject::buildForm() method was used for this form.');
     $elements = $this->xpath('//form[@id="form-test-form-test-arguments-object"]');
     $this->assertTrue(!empty($elements), 'The correct form ID was used.');
     $this->submitForm([], 'Save');
-    $this->assertText('The FormTestArgumentsObject::validateForm() method was used for this form.');
-    $this->assertText('The FormTestArgumentsObject::submitForm() method was used for this form.');
+    $this->assertSession()->pageTextContains('The FormTestArgumentsObject::validateForm() method was used for this form.');
+    $this->assertSession()->pageTextContains('The FormTestArgumentsObject::submitForm() method was used for this form.');
     $value = $config_factory->get('form_test.object')->get('bananas');
     $this->assertSame('yellow', $value);
 
     $this->drupalGet('form-test/object-service-builder');
-    $this->assertText('The FormTestServiceObject::buildForm() method was used for this form.');
+    $this->assertSession()->pageTextContains('The FormTestServiceObject::buildForm() method was used for this form.');
     $elements = $this->xpath('//form[@id="form-test-form-test-service-object"]');
     $this->assertTrue(!empty($elements), 'The correct form ID was used.');
     $this->submitForm(['bananas' => 'brown'], 'Save');
-    $this->assertText('The FormTestServiceObject::validateForm() method was used for this form.');
-    $this->assertText('The FormTestServiceObject::submitForm() method was used for this form.');
+    $this->assertSession()->pageTextContains('The FormTestServiceObject::validateForm() method was used for this form.');
+    $this->assertSession()->pageTextContains('The FormTestServiceObject::submitForm() method was used for this form.');
     $value = $config_factory->get('form_test.object')->get('bananas');
     $this->assertSame('brown', $value);
 
     $this->drupalGet('form-test/object-controller-builder');
-    $this->assertText('The FormTestControllerObject::create() method was used for this form.');
-    $this->assertText('The FormTestControllerObject::buildForm() method was used for this form.');
+    $this->assertSession()->pageTextContains('The FormTestControllerObject::create() method was used for this form.');
+    $this->assertSession()->pageTextContains('The FormTestControllerObject::buildForm() method was used for this form.');
     $elements = $this->xpath('//form[@id="form-test-form-test-controller-object"]');
     $this->assertTrue(!empty($elements), 'The correct form ID was used.');
     // Ensure parameters are injected from request attributes.
-    $this->assertText('custom_value');
+    $this->assertSession()->pageTextContains('custom_value');
     // Ensure the request object is injected.
-    $this->assertText('request_value');
+    $this->assertSession()->pageTextContains('request_value');
     $this->submitForm(['bananas' => 'black'], 'Save');
-    $this->assertText('The FormTestControllerObject::validateForm() method was used for this form.');
-    $this->assertText('The FormTestControllerObject::submitForm() method was used for this form.');
+    $this->assertSession()->pageTextContains('The FormTestControllerObject::validateForm() method was used for this form.');
+    $this->assertSession()->pageTextContains('The FormTestControllerObject::submitForm() method was used for this form.');
     $value = $config_factory->get('form_test.object')->get('bananas');
     $this->assertSame('black', $value);
   }

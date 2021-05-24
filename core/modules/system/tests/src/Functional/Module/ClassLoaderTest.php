@@ -42,7 +42,7 @@ class ClassLoaderTest extends BrowserTestBase {
     for ($i = 0; $i < 2; $i++) {
       $this->drupalGet('module-test/class-loading');
       $this->assertSession()->statusCodeEquals(200);
-      $this->assertText($this->expected);
+      $this->assertSession()->pageTextContains($this->expected);
     }
   }
 

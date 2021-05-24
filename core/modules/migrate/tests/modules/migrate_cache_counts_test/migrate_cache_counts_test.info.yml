@@ -1,0 +1,5 @@
+name: Cacheable Embedded Data Test
+type: module
+description: Module containing a cacheable embedded data source.
+package: Testing
+version: VERSION

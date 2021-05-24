@@ -42,9 +42,9 @@ class TokenizeAreaUITest extends UITestBase {
 
     $this->drupalPostForm("admin/structure/views/nojs/add-handler/$id/page_1/header", ['name[views.area]' => 'views.area'], 'Add and configure header');
     // Test that field tokens are shown.
-    $this->assertText('{{ title }} == Content: Title');
+    $this->assertSession()->pageTextContains('{{ title }} == Content: Title');
     // Test that argument tokens are shown.
-    $this->assertText('{{ arguments.null }} == Global: Null title');
+    $this->assertSession()->pageTextContains('{{ arguments.null }} == Global: Null title');
   }
 
 }

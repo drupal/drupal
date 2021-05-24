@@ -3,6 +3,7 @@
 namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\DatabaseExceptionWrapper;
 
 /**
  * Tests the Upsert query builder.
@@ -42,17 +43,17 @@ class UpsertTest extends DatabaseTestBase {
     $this->assertGreaterThanOrEqual(2, $result, 'The result of the upsert operation should report that at least two rows were affected.');
 
     $num_records_after = $connection->query('SELECT COUNT(*) FROM {test_people}')->fetchField();
-    $this->assertEqual($num_records_before + 1, $num_records_after, 'Rows were inserted and updated properly.');
+    $this->assertEquals($num_records_before + 1, $num_records_after, 'Rows were inserted and updated properly.');
 
     $person = $connection->query('SELECT * FROM {test_people} WHERE [job] = :job', [':job' => 'Presenter'])->fetch();
-    $this->assertEqual('Presenter', $person->job, 'Job set correctly.');
-    $this->assertEqual(31, $person->age, 'Age set correctly.');
-    $this->assertEqual('Tiffany', $person->name, 'Name set correctly.');
+    $this->assertEquals('Presenter', $person->job, 'Job set correctly.');
+    $this->assertEquals(31, $person->age, 'Age set correctly.');
+    $this->assertEquals('Tiffany', $person->name, 'Name set correctly.');
 
     $person = $connection->query('SELECT * FROM {test_people} WHERE [job] = :job', [':job' => 'Speaker'])->fetch();
-    $this->assertEqual('Speaker', $person->job, 'Job was not changed.');
-    $this->assertEqual(32, $person->age, 'Age updated correctly.');
-    $this->assertEqual('Meredith', $person->name, 'Name was not changed.');
+    $this->assertEquals('Speaker', $person->job, 'Job was not changed.');
+    $this->assertEquals(32, $person->age, 'Age updated correctly.');
+    $this->assertEquals('Meredith', $person->name, 'Name was not changed.');
   }
 
   /**
@@ -89,6 +90,21 @@ class UpsertTest extends DatabaseTestBase {
 
     $record = $this->connection->query('SELECT * FROM {select} WHERE [id] = :id', [':id' => 2])->fetch();
     $this->assertEquals('Update value 2', $record->update);
+  }
+
+  /**
+   * Upsert on a not existing table throws a DatabaseExceptionWrapper.
+   */
+  public function testUpsertNonExistingTable(): void {
+    $this->expectException(DatabaseExceptionWrapper::class);
+    $upsert = $this->connection->upsert('a-table-that-does-not-exist')
+      ->key('id')
+      ->fields(['id', 'update']);
+    $upsert->values([
+      'id' => 1,
+      'update' => 'Update value 1 updated',
+    ]);
+    $upsert->execute();
   }
 
 }

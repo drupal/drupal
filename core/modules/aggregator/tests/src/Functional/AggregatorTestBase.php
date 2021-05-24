@@ -75,7 +75,7 @@ abstract class AggregatorTestBase extends BrowserTestBase {
   public function createFeed($feed_url = NULL, array $edit = []) {
     $edit = $this->getFeedEditArray($feed_url, $edit);
     $this->drupalPostForm('aggregator/sources/add', $edit, 'Save');
-    $this->assertText('The feed ' . Html::escape($edit['title[0][value]']) . ' has been added.');
+    $this->assertSession()->pageTextContains('The feed ' . $edit['title[0][value]'] . ' has been added.');
 
     // Verify that the creation message contains a link to a feed.
     $this->assertSession()->elementExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "aggregator/sources/")]');
@@ -207,7 +207,7 @@ abstract class AggregatorTestBase extends BrowserTestBase {
 
     if ($expected_count !== NULL) {
       $feed->item_count = count($feed->items);
-      $this->assertEqual($expected_count, $feed->item_count, new FormattableMarkup('Total items in feed equal to the total items in database (@val1 != @val2)', ['@val1' => $expected_count, '@val2' => $feed->item_count]));
+      $this->assertEquals($expected_count, $feed->item_count, new FormattableMarkup('Total items in feed equal to the total items in database (@val1 != @val2)', ['@val1' => $expected_count, '@val2' => $feed->item_count]));
     }
   }
 
