@@ -146,7 +146,7 @@ class AdminTest extends BrowserTestBase {
   }
 
   /**
-   * Test compact mode.
+   * Tests compact mode.
    */
   public function testCompactMode() {
     $session = $this->getSession();

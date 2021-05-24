@@ -40,7 +40,7 @@ class ClaroTest extends BrowserTestBase {
   }
 
   /**
-   * Test Claro's configuration schema.
+   * Tests Claro's configuration schema.
    */
   public function testConfigSchema() {
     $this->drupalLogin($this->rootUser);

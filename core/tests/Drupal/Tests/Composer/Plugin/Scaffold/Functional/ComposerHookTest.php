@@ -68,7 +68,7 @@ class ComposerHookTest extends TestCase {
   }
 
   /**
-   * Test to see if scaffold operation runs at the correct times.
+   * Tests to see if scaffold operation runs at the correct times.
    */
   public function testComposerHooks() {
     $topLevelProjectDir = 'composer-hooks-fixture';
@@ -126,7 +126,7 @@ class ComposerHookTest extends TestCase {
   }
 
   /**
-   * Test to see if scaffold messages are omitted when running scaffold twice.
+   * Tests to see if scaffold messages are omitted when running scaffold twice.
    */
   public function testScaffoldMessagesDoNotPrintTwice() {
     $topLevelProjectDir = 'drupal-drupal';

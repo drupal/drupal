@@ -262,7 +262,7 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
   }
 
   /**
-   * Test that validation errors appear in the off-canvas dialog.
+   * Tests that validation errors appear in the off-canvas dialog.
    */
   public function testValidationMessages() {
     $page = $this->getSession()->getPage();

@@ -29,7 +29,7 @@ class UserInstallTest extends KernelTestBase {
   }
 
   /**
-   * Test that the initial users have correct values.
+   * Tests that the initial users have correct values.
    */
   public function testUserInstall() {
     $user_ids = \Drupal::entityQuery('user')->sort('uid')->accessCheck(FALSE)->execute();

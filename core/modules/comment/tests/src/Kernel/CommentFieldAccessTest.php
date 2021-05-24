@@ -91,7 +91,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test permissions on comment fields.
+   * Tests permissions on comment fields.
    */
   public function testAccessToAdministrativeFields() {
     // Create a comment type.

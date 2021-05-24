@@ -102,7 +102,7 @@ class ViewsIntegrationTest extends ViewsKernelTestBase {
   }
 
   /**
-   * Test views can be filtered by severity and log type.
+   * Tests views can be filtered by severity and log type.
    */
   public function testFiltering() {
     // Remove the watchdog entries added by the potential batch process.

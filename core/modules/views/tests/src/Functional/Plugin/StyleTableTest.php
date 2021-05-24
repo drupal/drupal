@@ -36,7 +36,7 @@ class StyleTableTest extends ViewTestBase {
   }
 
   /**
-   * Test table caption/summary/description.
+   * Tests table caption/summary/description.
    */
   public function testAccessibilitySettings() {
     $this->drupalGet('test-table');
@@ -87,7 +87,7 @@ class StyleTableTest extends ViewTestBase {
   }
 
   /**
-   * Test table fields in columns.
+   * Tests table fields in columns.
    */
   public function testFieldInColumns() {
     $this->drupalGet('test-table');
@@ -119,7 +119,7 @@ class StyleTableTest extends ViewTestBase {
   }
 
   /**
-   * Test that a number with the value of "0" is displayed in the table.
+   * Tests that a number with the value of "0" is displayed in the table.
    */
   public function testNumericFieldVisible() {
     // Adds a new datapoint in the views_test_data table to have a person with
@@ -146,7 +146,7 @@ class StyleTableTest extends ViewTestBase {
   }
 
   /**
-   * Test that empty columns are hidden when empty_column is set.
+   * Tests that empty columns are hidden when empty_column is set.
    */
   public function testEmptyColumn() {
     // Empty the 'job' data.

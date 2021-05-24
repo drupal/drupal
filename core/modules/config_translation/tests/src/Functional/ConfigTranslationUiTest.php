@@ -634,7 +634,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
   }
 
   /**
-   * Test the number of source elements for plural strings in config translation forms.
+   * Tests the number of source elements for plural strings in config
+   * translation forms.
    */
   public function testPluralConfigStringsSourceElements() {
     $this->drupalLogin($this->adminUser);
@@ -677,7 +678,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
   }
 
   /**
-   * Test translation of plural strings with multiple plural forms in config.
+   * Tests translation of plural strings with multiple plural forms in config.
    */
   public function testPluralConfigStrings() {
     $this->drupalLogin($this->adminUser);
@@ -804,7 +805,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
   }
 
   /**
-   * Test translation storage in locale storage.
+   * Tests translation storage in locale storage.
    */
   public function testLocaleDBStorage() {
     // Enable import of translations. By default this is disabled for automated
@@ -936,7 +937,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
   }
 
   /**
-   * Test text_format translation.
+   * Tests text_format translation.
    */
   public function testTextFormatTranslation() {
     $this->drupalLogin($this->adminUser);

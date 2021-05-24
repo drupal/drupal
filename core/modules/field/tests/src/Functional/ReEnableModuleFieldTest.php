@@ -45,7 +45,7 @@ class ReEnableModuleFieldTest extends BrowserTestBase {
   }
 
   /**
-   * Test the behavior of a field module after being disabled and re-enabled.
+   * Tests the behavior of a field module after being disabled and re-enabled.
    *
    * @see field_system_info_alter()
    */

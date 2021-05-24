@@ -12,7 +12,7 @@ use Drupal\Tests\UnitTestCase;
 class DrupalDateTimeTest extends UnitTestCase {
 
   /**
-   * Test date diffs.
+   * Tests date diffs.
    *
    * @param mixed $input1
    *   A DrupalDateTime object.
@@ -31,7 +31,7 @@ class DrupalDateTimeTest extends UnitTestCase {
   }
 
   /**
-   * Test date diff exception caused by invalid input.
+   * Tests date diff exception caused by invalid input.
    *
    * @param mixed $input1
    *   A DateTimePlus object.

@@ -359,7 +359,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
   }
 
   /**
-   * Test that subtrees hashes vary by the language of the page.
+   * Tests that subtrees hashes vary by the language of the page.
    */
   public function testLanguageSwitching() {
     // Create a new language with the langcode 'xx'.
@@ -383,7 +383,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
   }
 
   /**
-   * Test that back to site link exists on admin pages, not on content pages.
+   * Tests that back to site link exists on admin pages, not on content pages.
    */
   public function testBackToSiteLink() {
     // Back to site link should exist in the markup.

@@ -589,7 +589,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
   }
 
   /**
-   * Test the changed time after API and FORM save without changes.
+   * Tests the changed time after API and FORM save without changes.
    */
   public function doTestChangedTimeAfterSaveWithoutChanges() {
     $storage = $this->container->get('entity_type.manager')

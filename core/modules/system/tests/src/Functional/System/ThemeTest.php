@@ -56,7 +56,7 @@ class ThemeTest extends BrowserTestBase {
   }
 
   /**
-   * Test the theme settings form.
+   * Tests the theme settings form.
    */
   public function testThemeSettings() {
     // Ensure a disabled theme settings form URL returns 404.
@@ -231,7 +231,7 @@ class ThemeTest extends BrowserTestBase {
   }
 
   /**
-   * Test the theme settings logo form.
+   * Tests the theme settings logo form.
    */
   public function testThemeSettingsLogo() {
     // Visit Bartik's theme settings page to replace the logo.
@@ -276,7 +276,7 @@ class ThemeTest extends BrowserTestBase {
   }
 
   /**
-   * Test the administration theme functionality.
+   * Tests the administration theme functionality.
    */
   public function testAdministrationTheme() {
     $this->container->get('theme_installer')->install(['seven']);
@@ -344,7 +344,7 @@ class ThemeTest extends BrowserTestBase {
   }
 
   /**
-   * Test switching the default theme.
+   * Tests switching the default theme.
    */
   public function testSwitchDefaultTheme() {
     /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
@@ -372,7 +372,7 @@ class ThemeTest extends BrowserTestBase {
   }
 
   /**
-   * Test themes can't be installed when the base theme or engine is missing.
+   * Tests themes can't be installed when the base theme or engine is missing.
    *
    * Include test for themes that have a missing base theme somewhere further up
    * the chain than the immediate base theme.
@@ -395,7 +395,7 @@ class ThemeTest extends BrowserTestBase {
   }
 
   /**
-   * Test uninstalling of themes works.
+   * Tests uninstalling of themes works.
    */
   public function testUninstallingThemes() {
     // Install Bartik and set it as the default theme.
@@ -484,7 +484,7 @@ class ThemeTest extends BrowserTestBase {
   }
 
   /**
-   * Test the theme settings form when logo and favicon features are disabled.
+   * Tests the theme settings form when logo and favicon features are disabled.
    */
   public function testThemeSettingsNoLogoNoFavicon() {
     // Install theme with no logo and no favicon feature.

@@ -10,7 +10,7 @@ namespace Drupal\Tests\file\Kernel;
 class ValidateTest extends FileManagedUnitTestBase {
 
   /**
-   * Test that the validators passed into are checked.
+   * Tests that the validators passed into are checked.
    */
   public function testCallerValidation() {
     $file = $this->createFile();

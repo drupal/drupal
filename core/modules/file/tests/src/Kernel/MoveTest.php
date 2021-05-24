@@ -44,7 +44,7 @@ class MoveTest extends FileManagedUnitTestBase {
   }
 
   /**
-   * Test renaming when moving onto a file that already exists.
+   * Tests renaming when moving onto a file that already exists.
    */
   public function testExistingRename() {
     // Setup a file to overwrite.
@@ -79,7 +79,7 @@ class MoveTest extends FileManagedUnitTestBase {
   }
 
   /**
-   * Test replacement when moving onto a file that already exists.
+   * Tests replacement when moving onto a file that already exists.
    */
   public function testExistingReplace() {
     // Setup a file to overwrite.
@@ -111,7 +111,7 @@ class MoveTest extends FileManagedUnitTestBase {
   }
 
   /**
-   * Test replacement when moving onto itself.
+   * Tests replacement when moving onto itself.
    */
   public function testExistingReplaceSelf() {
     // Setup a file to overwrite.
@@ -133,7 +133,7 @@ class MoveTest extends FileManagedUnitTestBase {
   }
 
   /**
-   * Test that moving onto an existing file fails when instructed to do so.
+   * Tests that moving onto an existing file fails when instructed to do so.
    */
   public function testExistingError() {
     $contents = $this->randomMachineName(10);

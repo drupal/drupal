@@ -17,7 +17,7 @@ class FactoryTest extends PluginTestBase {
   protected static $modules = ['node', 'user'];
 
   /**
-   * Test that DefaultFactory can create a plugin instance.
+   * Tests that DefaultFactory can create a plugin instance.
    */
   public function testDefaultFactory() {
     // Ensure a non-derivative plugin can be instantiated.
@@ -37,7 +37,7 @@ class FactoryTest extends PluginTestBase {
   }
 
   /**
-   * Test that the Reflection factory can create a plugin instance.
+   * Tests that the Reflection factory can create a plugin instance.
    *
    * The mock plugin classes use different values for their constructors
    * allowing us to test the reflection capabilities as well.

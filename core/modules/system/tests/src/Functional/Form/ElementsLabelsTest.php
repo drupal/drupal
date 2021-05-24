@@ -25,7 +25,7 @@ class ElementsLabelsTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test form elements, labels, title attributes and required marks output
+   * Tests form elements, labels, title attributes and required marks output
    * correctly and have the correct label option class if needed.
    */
   public function testFormLabels() {
@@ -122,7 +122,7 @@ class ElementsLabelsTest extends BrowserTestBase {
   }
 
   /**
-   * Test forms in theme-less environments.
+   * Tests forms in theme-less environments.
    */
   public function testFormsInThemeLessEnvironments() {
     $form = $this->getFormWithLimitedProperties();

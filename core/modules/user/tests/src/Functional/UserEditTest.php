@@ -18,7 +18,7 @@ class UserEditTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test user edit page.
+   * Tests user edit page.
    */
   public function testUserEdit() {
     // Test user edit functionality.

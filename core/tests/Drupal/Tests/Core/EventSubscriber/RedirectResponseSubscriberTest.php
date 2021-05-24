@@ -65,7 +65,7 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
   }
 
   /**
-   * Test destination detection and redirection.
+   * Tests destination detection and redirection.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object with destination query set.

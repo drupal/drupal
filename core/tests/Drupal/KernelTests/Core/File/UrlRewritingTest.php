@@ -94,7 +94,7 @@ class UrlRewritingTest extends FileTestBase {
   }
 
   /**
-   * Test file_url_transform_relative().
+   * Tests file_url_transform_relative().
    */
   public function testRelativeFileURL() {
     // Disable file_test.module's hook_file_url_alter() implementation.

@@ -26,7 +26,7 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
   }
 
   /**
-   * Test whether token-replacement works in various contexts.
+   * Tests whether token-replacement works in various contexts.
    */
   public function testSystemTokenRecognition() {
     // Generate prefixes and suffixes for the token context.

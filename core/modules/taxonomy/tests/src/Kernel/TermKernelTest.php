@@ -66,7 +66,7 @@ class TermKernelTest extends KernelTestBase {
   }
 
   /**
-   * Test a taxonomy with terms that have multiple parents of different depths.
+   * Tests a taxonomy with terms that have multiple parents of different depths.
    */
   public function testTaxonomyVocabularyTree() {
     // Create a new vocabulary with 6 terms.

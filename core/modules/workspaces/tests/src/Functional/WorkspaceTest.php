@@ -59,7 +59,7 @@ class WorkspaceTest extends BrowserTestBase {
   }
 
   /**
-   * Test creating a workspace with special characters.
+   * Tests creating a workspace with special characters.
    */
   public function testSpecialCharacters() {
     $this->drupalLogin($this->editor1);
@@ -79,7 +79,7 @@ class WorkspaceTest extends BrowserTestBase {
   }
 
   /**
-   * Test that the toolbar correctly shows the active workspace.
+   * Tests that the toolbar correctly shows the active workspace.
    */
   public function testWorkspaceToolbar() {
     $this->drupalLogin($this->editor1);
@@ -109,7 +109,7 @@ class WorkspaceTest extends BrowserTestBase {
   }
 
   /**
-   * Test changing the owner of a workspace.
+   * Tests changing the owner of a workspace.
    */
   public function testWorkspaceOwner() {
     $this->drupalLogin($this->editor1);

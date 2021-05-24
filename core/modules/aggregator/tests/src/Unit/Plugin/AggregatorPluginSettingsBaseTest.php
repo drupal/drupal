@@ -71,7 +71,7 @@ class AggregatorPluginSettingsBaseTest extends UnitTestCase {
   }
 
   /**
-   * Test for AggregatorPluginSettingsBase.
+   * Tests for AggregatorPluginSettingsBase.
    *
    * Ensure that the settings form calls build, validate and submit methods on
    * plugins that extend AggregatorPluginSettingsBase.

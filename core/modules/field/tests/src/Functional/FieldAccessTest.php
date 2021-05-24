@@ -79,7 +79,7 @@ class FieldAccessTest extends FieldTestBase {
   }
 
   /**
-   * Test that hook_entity_field_access() is called.
+   * Tests that hook_entity_field_access() is called.
    */
   public function testFieldAccess() {
 

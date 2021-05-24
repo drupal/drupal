@@ -24,7 +24,7 @@ class ConfigDraggableListBuilderTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test draggable lists.
+   * Tests draggable lists.
    */
   public function testDraggableList() {
     $this->drupalLogin($this->drupalCreateUser(['administer permissions']));

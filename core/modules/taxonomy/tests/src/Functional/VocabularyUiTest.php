@@ -114,7 +114,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
   }
 
   /**
-   * Test the vocabulary overview with no vocabularies.
+   * Tests the vocabulary overview with no vocabularies.
    */
   public function testTaxonomyAdminNoVocabularies() {
     // Delete all vocabularies.

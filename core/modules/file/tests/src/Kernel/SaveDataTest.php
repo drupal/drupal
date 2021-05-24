@@ -14,7 +14,7 @@ use Drupal\file\Entity\File;
 class SaveDataTest extends FileManagedUnitTestBase {
 
   /**
-   * Test the file_save_data() function when no filename is provided.
+   * Tests the file_save_data() function when no filename is provided.
    */
   public function testWithoutFilename() {
     $contents = $this->randomMachineName(8);
@@ -38,7 +38,7 @@ class SaveDataTest extends FileManagedUnitTestBase {
   }
 
   /**
-   * Test the file_save_data() function when a filename is provided.
+   * Tests the file_save_data() function when a filename is provided.
    */
   public function testWithFilename() {
     $contents = $this->randomMachineName(8);
@@ -66,7 +66,7 @@ class SaveDataTest extends FileManagedUnitTestBase {
   }
 
   /**
-   * Test file_save_data() when renaming around an existing file.
+   * Tests file_save_data() when renaming around an existing file.
    */
   public function testExistingRename() {
     // Setup a file to overwrite.
@@ -96,7 +96,7 @@ class SaveDataTest extends FileManagedUnitTestBase {
   }
 
   /**
-   * Test file_save_data() when replacing an existing file.
+   * Tests file_save_data() when replacing an existing file.
    */
   public function testExistingReplace() {
     // Setup a file to overwrite.
@@ -125,7 +125,7 @@ class SaveDataTest extends FileManagedUnitTestBase {
   }
 
   /**
-   * Test that file_save_data() fails overwriting an existing file.
+   * Tests that file_save_data() fails overwriting an existing file.
    */
   public function testExistingError() {
     $contents = $this->randomMachineName(8);

@@ -236,7 +236,7 @@ JS;
   }
 
   /**
-   * Test that a node, or its specific corner, is visible in the viewport.
+   * Tests that a node, or its specific corner, is visible in the viewport.
    *
    * Note: Always set the viewport size. This can be done in your test with
    * \Behat\Mink\Session->resizeWindow(). Drupal CI JavaScript tests by default
@@ -281,7 +281,7 @@ JS;
   }
 
   /**
-   * Test that a node, or its specific corner, is not visible in the viewport.
+   * Tests that a node, or its specific corner, is not visible in the viewport.
    *
    * Note: the node should exist in the page, otherwise this assertion fails.
    *

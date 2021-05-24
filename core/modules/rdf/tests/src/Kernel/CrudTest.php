@@ -53,7 +53,7 @@ class CrudTest extends KernelTestBase {
   }
 
   /**
-   * Test the handling of bundle mappings.
+   * Tests the handling of bundle mappings.
    */
   public function testBundleMapping() {
     // Test that the bundle mapping can be saved.
@@ -76,7 +76,7 @@ class CrudTest extends KernelTestBase {
   }
 
   /**
-   * Test the handling of field mappings.
+   * Tests the handling of field mappings.
    */
   public function testFieldMapping() {
     $field_name = 'created';

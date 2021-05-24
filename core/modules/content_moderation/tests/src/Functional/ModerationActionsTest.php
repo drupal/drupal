@@ -57,7 +57,7 @@ class ModerationActionsTest extends BrowserTestBase {
   }
 
   /**
-   * Test the node status actions report moderation status to users correctly.
+   * Tests the node status actions report moderation status to users correctly.
    *
    * @dataProvider nodeStatusActionsTestCases
    */

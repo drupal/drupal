@@ -24,7 +24,7 @@ class MigrationPluginConfigurationTest extends KernelTestBase {
   ];
 
   /**
-   * Test merging configuration into a plugin through the plugin manager.
+   * Tests merging configuration into a plugin through the plugin manager.
    *
    * @dataProvider mergeProvider
    */

@@ -155,7 +155,7 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test basic functionality.
+   * Tests basic functionality.
    */
   public function testEntityQuery() {
     $greetings = $this->greetings;
@@ -377,7 +377,7 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test sort().
+   * Tests sort().
    *
    * Warning: this is complicated.
    */
@@ -473,7 +473,7 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test tablesort().
+   * Tests tablesort().
    */
   public function testTableSort() {
     // While ordering on bundles do not give us a definite order, we can still
@@ -528,7 +528,7 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test that count queries are separated across entity types.
+   * Tests that count queries are separated across entity types.
    */
   public function testCount() {
     // Create a field with the same name in a different entity type.
@@ -620,7 +620,7 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test queries with delta conditions.
+   * Tests queries with delta conditions.
    */
   public function testDelta() {
     $figures = $this->figures;
@@ -763,7 +763,7 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test adding a tag and metadata to the Entity query object.
+   * Tests adding a tag and metadata to the Entity query object.
    *
    * The tags and metadata should propagate to the SQL query object.
    */
@@ -779,7 +779,7 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test case sensitive and in-sensitive query conditions.
+   * Tests case sensitive and in-sensitive query conditions.
    */
   public function testCaseSensitivity() {
     $bundle = $this->randomMachineName();
@@ -1022,7 +1022,7 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test base fields with multiple columns.
+   * Tests base fields with multiple columns.
    */
   public function testBaseFieldMultipleColumns() {
     $this->enableModules(['taxonomy']);
@@ -1081,7 +1081,7 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test pending revisions.
+   * Tests pending revisions.
    */
   public function testPendingRevisions() {
     // Ensure entity 14 is returned.
@@ -1190,7 +1190,7 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test against SQL inject of condition field. This covers a
+   * Tests against SQL inject of condition field. This covers a
    * database driver's EntityQuery\Condition class.
    */
   public function testInjectionInCondition() {

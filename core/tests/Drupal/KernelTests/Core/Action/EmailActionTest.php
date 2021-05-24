@@ -28,7 +28,7 @@ class EmailActionTest extends KernelTestBase {
   }
 
   /**
-   * Test the email action plugin.
+   * Tests the email action plugin.
    */
   public function testEmailAction() {
     /** @var \Drupal\Core\Action\ActionManager $plugin_manager */

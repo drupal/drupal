@@ -28,7 +28,7 @@ class MigrateAggregatorItemTest extends MigrateDrupal6TestBase {
   }
 
   /**
-   * Test Drupal 6 aggregator item migration to Drupal 8.
+   * Tests Drupal 6 aggregator item migration to Drupal 8.
    */
   public function testAggregatorItem() {
     /** @var \Drupal\aggregator\Entity\Item $item */

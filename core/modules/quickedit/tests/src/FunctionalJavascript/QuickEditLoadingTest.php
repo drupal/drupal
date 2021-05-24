@@ -120,7 +120,7 @@ class QuickEditLoadingTest extends WebDriverTestBase {
   }
 
   /**
-   * Test the loading of Quick Edit with different permissions.
+   * Tests the loading of Quick Edit with different permissions.
    */
   public function testUserPermissions() {
     $assert = $this->assertSession();
@@ -182,7 +182,7 @@ class QuickEditLoadingTest extends WebDriverTestBase {
   }
 
   /**
-   * Test Quick Edit does not appear for entities with pending revisions.
+   * Tests Quick Edit does not appear for entities with pending revisions.
    */
   public function testWithPendingRevision() {
     $this->drupalLogin($this->editorUser);

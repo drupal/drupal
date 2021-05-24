@@ -421,7 +421,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
   }
 
   /**
-   * Test URL language detection when the requested URL has no language.
+   * Tests URL language detection when the requested URL has no language.
    */
   public function testUrlLanguageFallback() {
     // Add the Italian language.

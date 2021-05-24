@@ -13,7 +13,7 @@ use Drupal\file\Entity\File;
 class CopyTest extends FileManagedUnitTestBase {
 
   /**
-   * Test file copying in the normal, base case.
+   * Tests file copying in the normal, base case.
    */
   public function testNormal() {
     $contents = $this->randomMachineName(10);
@@ -42,7 +42,7 @@ class CopyTest extends FileManagedUnitTestBase {
   }
 
   /**
-   * Test renaming when copying over a file that already exists.
+   * Tests renaming when copying over a file that already exists.
    */
   public function testExistingRename() {
     // Setup a file to overwrite.
@@ -82,7 +82,7 @@ class CopyTest extends FileManagedUnitTestBase {
   }
 
   /**
-   * Test replacement when copying over a file that already exists.
+   * Tests replacement when copying over a file that already exists.
    */
   public function testExistingReplace() {
     // Setup a file to overwrite.
@@ -120,7 +120,7 @@ class CopyTest extends FileManagedUnitTestBase {
   }
 
   /**
-   * Test that copying over an existing file fails when instructed to do so.
+   * Tests that copying over an existing file fails when instructed to do so.
    */
   public function testExistingError() {
     $contents = $this->randomMachineName(10);

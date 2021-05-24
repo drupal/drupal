@@ -24,7 +24,7 @@ class WorkspaceConcurrentEditingTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test editing a node in multiple workspaces.
+   * Tests editing a node in multiple workspaces.
    */
   public function testConcurrentEditing() {
     // Create a test node.

@@ -36,7 +36,7 @@ class EntityRevisionsTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test getLoadedRevisionId() returns the correct ID throughout the process.
+   * Tests getLoadedRevisionId() returns the correct ID throughout the process.
    */
   public function testLoadedRevisionId() {
     // Create a basic EntityTestMulRev entity and save it.

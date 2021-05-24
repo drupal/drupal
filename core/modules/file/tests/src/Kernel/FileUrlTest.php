@@ -12,7 +12,7 @@ use Drupal\Core\File\FileSystemInterface;
 class FileUrlTest extends FileManagedUnitTestBase {
 
   /**
-   * Test public files with a different host name from settings.
+   * Tests public files with a different host name from settings.
    */
   public function testFilesUrlWithDifferentHostName() {
     $test_base_url = 'http://www.example.com/cdn';

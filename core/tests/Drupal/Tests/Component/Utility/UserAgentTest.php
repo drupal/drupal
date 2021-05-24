@@ -65,7 +65,7 @@ class UserAgentTest extends TestCase {
   }
 
   /**
-   * Test matching language from user agent.
+   * Tests matching language from user agent.
    *
    * @dataProvider providerTestGetBestMatchingLangcode
    * @covers ::getBestMatchingLangcode

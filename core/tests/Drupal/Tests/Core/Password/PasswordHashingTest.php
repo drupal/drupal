@@ -77,7 +77,7 @@ class PasswordHashingTest extends UnitTestCase {
   }
 
   /**
-   * Test a password needs update.
+   * Tests a password needs update.
    *
    * @covers ::needsRehash
    */
@@ -87,7 +87,7 @@ class PasswordHashingTest extends UnitTestCase {
   }
 
   /**
-   * Test password hashing.
+   * Tests password hashing.
    *
    * @covers ::hash
    * @covers ::getCountLog2

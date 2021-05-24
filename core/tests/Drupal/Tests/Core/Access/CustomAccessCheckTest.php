@@ -56,7 +56,7 @@ class CustomAccessCheckTest extends UnitTestCase {
   }
 
   /**
-   * Test the access method.
+   * Tests the access method.
    */
   public function testAccess() {
     $route_match = $this->createMock('Drupal\Core\Routing\RouteMatchInterface');

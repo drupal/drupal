@@ -62,7 +62,7 @@ class FieldCrudTest extends FieldKernelTestBase {
   // and for testUpdateField
 
   /**
-   * Test the creation of a field.
+   * Tests the creation of a field.
    */
   public function testCreateField() {
     $field = FieldConfig::create($this->fieldDefinition);
@@ -195,7 +195,7 @@ class FieldCrudTest extends FieldKernelTestBase {
   }
 
   /**
-   * Test creating a field with custom storage set.
+   * Tests creating a field with custom storage set.
    */
   public function testCreateFieldCustomStorage() {
     $field_name = mb_strtolower($this->randomMachineName());
@@ -233,7 +233,7 @@ class FieldCrudTest extends FieldKernelTestBase {
   }
 
   /**
-   * Test reading back a field definition.
+   * Tests reading back a field definition.
    */
   public function testReadField() {
     FieldConfig::create($this->fieldDefinition)->save();
@@ -246,7 +246,7 @@ class FieldCrudTest extends FieldKernelTestBase {
   }
 
   /**
-   * Test the update of a field.
+   * Tests the update of a field.
    */
   public function testUpdateField() {
     FieldConfig::create($this->fieldDefinition)->save();
@@ -268,7 +268,7 @@ class FieldCrudTest extends FieldKernelTestBase {
   }
 
   /**
-   * Test the deletion of a field with no data.
+   * Tests the deletion of a field with no data.
    */
   public function testDeleteFieldNoData() {
     // Deleting and purging fields with data is tested in

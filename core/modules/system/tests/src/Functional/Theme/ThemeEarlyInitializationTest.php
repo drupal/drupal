@@ -25,7 +25,7 @@ class ThemeEarlyInitializationTest extends BrowserTestBase {
   protected $defaultTheme = 'classy';
 
   /**
-   * Test that the theme system can generate output in a request listener.
+   * Tests that the theme system can generate output in a request listener.
    */
   public function testRequestListener() {
     $this->drupalGet('theme-test/request-listener');

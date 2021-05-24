@@ -332,7 +332,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
   }
 
   /**
-   * Test saving order sequence doesn't matter.
+   * Tests saving order sequence doesn't matter.
    */
   public function testEntitySaveOrder() {
     // The term entity is unsaved here.

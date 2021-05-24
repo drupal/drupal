@@ -95,7 +95,7 @@ class JsonTest extends TestCase {
   }
 
   /**
-   * Test the reversibility of structured data.
+   * Tests the reversibility of structured data.
    */
   public function testStructuredReversibility() {
     // Verify reversibility for structured data. Also verify that necessary

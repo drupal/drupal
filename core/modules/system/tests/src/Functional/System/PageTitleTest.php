@@ -71,7 +71,7 @@ class PageTitleTest extends BrowserTestBase {
   }
 
   /**
-   * Test if the title of the site is XSS proof.
+   * Tests if the title of the site is XSS proof.
    */
   public function testTitleXSS() {
     // Set some title with JavaScript and HTML chars to escape.

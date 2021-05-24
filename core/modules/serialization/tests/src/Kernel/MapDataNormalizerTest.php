@@ -59,7 +59,7 @@ class MapDataNormalizerTest extends KernelTestBase {
   }
 
   /**
-   * Test whether map data with properties can be normalized.
+   * Tests whether map data with properties can be normalized.
    */
   public function testMapWithPropertiesNormalize() {
     $typed_data = $this->buildExampleTypedDataWithProperties();

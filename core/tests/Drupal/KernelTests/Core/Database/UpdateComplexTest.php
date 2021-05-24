@@ -121,7 +121,7 @@ class UpdateComplexTest extends DatabaseTestBase {
   }
 
   /**
-   * Test UPDATE with a subselect value.
+   * Tests UPDATE with a subselect value.
    */
   public function testSubSelectUpdate() {
     $subselect = $this->connection->select('test_task', 't');

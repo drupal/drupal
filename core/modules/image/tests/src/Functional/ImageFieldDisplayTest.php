@@ -39,14 +39,14 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
   protected $defaultTheme = 'classy';
 
   /**
-   * Test image formatters on node display for public files.
+   * Tests image formatters on node display for public files.
    */
   public function testImageFieldFormattersPublic() {
     $this->_testImageFieldFormatters('public');
   }
 
   /**
-   * Test image formatters on node display for private files.
+   * Tests image formatters on node display for private files.
    */
   public function testImageFieldFormattersPrivate() {
     // Remove access content permission from anonymous users.
@@ -55,7 +55,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
   }
 
   /**
-   * Test image formatters on node display.
+   * Tests image formatters on node display.
    */
   public function _testImageFieldFormatters($scheme) {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
@@ -349,7 +349,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
   }
 
   /**
-   * Test use of a default image with an image field.
+   * Tests use of a default image with an image field.
    */
   public function testImageFieldDefaultImage() {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */

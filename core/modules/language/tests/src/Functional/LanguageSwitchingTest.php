@@ -178,7 +178,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
   }
 
   /**
-   * Test language switcher links for domain based negotiation.
+   * Tests language switcher links for domain based negotiation.
    */
   public function testLanguageBlockWithDomain() {
     // Add the Italian language.
@@ -232,7 +232,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
   }
 
   /**
-   * Test active class on links when switching languages.
+   * Tests active class on links when switching languages.
    */
   public function testLanguageLinkActiveClass() {
     // Add language.

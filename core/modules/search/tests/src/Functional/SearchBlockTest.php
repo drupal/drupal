@@ -46,7 +46,7 @@ class SearchBlockTest extends BrowserTestBase {
   }
 
   /**
-   * Test that the search form block can be placed and works.
+   * Tests that the search form block can be placed and works.
    */
   public function testSearchFormBlock() {
 

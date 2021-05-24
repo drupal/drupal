@@ -60,7 +60,7 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
   }
 
   /**
-   * Test the vocabulary overview permission.
+   * Tests the vocabulary overview permission.
    */
   public function testTaxonomyVocabularyOverviewPermissions() {
     // Create two vocabularies, one with two terms, the other without any term.

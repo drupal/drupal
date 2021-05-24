@@ -160,7 +160,7 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
   }
 
   /**
-   * Test that invalid bundles are handled.
+   * Tests that invalid bundles are handled.
    */
   public function testCalculateDependenciesIncorrectBundle() {
     $storage = $this->createMock('\Drupal\Core\Config\Entity\ConfigEntityStorageInterface');

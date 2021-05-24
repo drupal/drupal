@@ -35,7 +35,7 @@ class BasicAuthTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test http basic authentication.
+   * Tests http basic authentication.
    */
   public function testBasicAuth() {
     // Enable page caching.
@@ -91,7 +91,7 @@ class BasicAuthTest extends BrowserTestBase {
   }
 
   /**
-   * Test the global login flood control.
+   * Tests the global login flood control.
    */
   public function testGlobalLoginFloodControl() {
     $this->config('user.flood')
@@ -116,7 +116,7 @@ class BasicAuthTest extends BrowserTestBase {
   }
 
   /**
-   * Test the per-user login flood control.
+   * Tests the per-user login flood control.
    */
   public function testPerUserLoginFloodControl() {
     $this->config('user.flood')

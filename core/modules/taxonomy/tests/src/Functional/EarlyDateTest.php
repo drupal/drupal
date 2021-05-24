@@ -59,7 +59,7 @@ class EarlyDateTest extends TaxonomyTestBase {
   }
 
   /**
-   * Test taxonomy functionality with nodes prior to 1970.
+   * Tests taxonomy functionality with nodes prior to 1970.
    */
   public function testTaxonomyEarlyDateNode() {
     // Posts an article with a taxonomy term and a date prior to 1970.

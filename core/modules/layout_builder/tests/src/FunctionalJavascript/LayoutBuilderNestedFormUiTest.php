@@ -62,7 +62,7 @@ class LayoutBuilderNestedFormUiTest extends WebDriverTestBase {
   }
 
   /**
-   * Test blocks containing forms can be successfully saved editing defaults.
+   * Tests blocks containing forms can be successfully saved editing defaults.
    */
   public function testAddingFormBlocksToDefaults() {
     $this->drupalLogin($this->drupalCreateUser([
@@ -96,7 +96,7 @@ class LayoutBuilderNestedFormUiTest extends WebDriverTestBase {
   }
 
   /**
-   * Test blocks containing forms can be successfully saved editing overrides.
+   * Tests blocks containing forms can be successfully saved editing overrides.
    */
   public function testAddingFormBlocksToOverrides() {
     $this->drupalLogin($this->drupalCreateUser([

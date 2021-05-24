@@ -105,7 +105,7 @@ class DenormalizeTest extends NormalizerTestBase {
   }
 
   /**
-   * Test that a field set to an empty array is different than an absent field.
+   * Tests that a field set to an empty array is different than an absent field.
    */
   public function testMarkFieldForDeletion() {
     // Add a default value for a field.

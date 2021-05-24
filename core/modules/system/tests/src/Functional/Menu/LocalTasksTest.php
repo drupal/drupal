@@ -254,7 +254,7 @@ class LocalTasksTest extends BrowserTestBase {
   }
 
   /**
-   * Test that local tasks blocks cache is invalidated correctly.
+   * Tests that local tasks blocks cache is invalidated correctly.
    */
   public function testLocalTaskBlockCache() {
     $this->drupalLogin($this->rootUser);

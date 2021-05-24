@@ -68,7 +68,7 @@ class QuickEditIntegrationLoadingTest extends BrowserTestBase {
   }
 
   /**
-   * Test loading of untransformed text when a user doesn't have access to it.
+   * Tests loading of untransformed text when a user doesn't have access to it.
    */
   public function testUsersWithoutPermission() {
     // Create 3 users, each with insufficient permissions, i.e. without either
@@ -117,7 +117,7 @@ class QuickEditIntegrationLoadingTest extends BrowserTestBase {
   }
 
   /**
-   * Test loading of untransformed text when a user does have access to it.
+   * Tests loading of untransformed text when a user does have access to it.
    */
   public function testUserWithPermission() {
     $user = $this->drupalCreateUser(array_merge(static::$basicPermissions, ['edit any article content', 'access in-place editing']));

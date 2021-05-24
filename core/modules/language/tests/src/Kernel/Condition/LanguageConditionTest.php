@@ -45,7 +45,7 @@ class LanguageConditionTest extends KernelTestBase {
   }
 
   /**
-   * Test the language condition.
+   * Tests the language condition.
    */
   public function testConditions() {
     // Grab the language condition and configure it to check the content

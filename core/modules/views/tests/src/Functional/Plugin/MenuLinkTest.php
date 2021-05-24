@@ -62,7 +62,7 @@ class MenuLinkTest extends ViewTestBase {
   }
 
   /**
-   * Test that menu links using menu_link_content as parent are visible.
+   * Tests that menu links using menu_link_content as parent are visible.
    */
   public function testHierarchicalMenuLinkVisibility() {
     $this->drupalLogin($this->adminUser);

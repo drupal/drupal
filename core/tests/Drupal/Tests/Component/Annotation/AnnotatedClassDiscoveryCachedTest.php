@@ -26,7 +26,7 @@ class AnnotatedClassDiscoveryCachedTest extends TestCase {
   }
 
   /**
-   * Test that getDefinitions() retrieves the file cache correctly.
+   * Tests that getDefinitions() retrieves the file cache correctly.
    *
    * @covers ::getDefinitions
    */

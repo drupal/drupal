@@ -813,7 +813,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
   }
 
   /**
-   * Test the protections provided by .htkey.
+   * Tests the protections provided by .htkey.
    */
   public function testHtkey() {
     // Remove the Simpletest private key file so we can test the protection

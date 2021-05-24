@@ -86,7 +86,7 @@ class UserTranslationUITest extends ContentTranslationUITestBase {
   }
 
   /**
-   * Test translated user deletion.
+   * Tests translated user deletion.
    */
   public function testTranslatedUserDeletion() {
     $this->drupalLogin($this->administrator);
