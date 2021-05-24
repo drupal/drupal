@@ -46,7 +46,7 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
   }
 
   /**
-   * Test basic media display.
+   * Tests basic media display.
    */
   public function testMediaDisplay() {
     $assert_session = $this->assertSession();
@@ -91,6 +91,7 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
       ->get('entity_type.manager')
       ->getStorage('media')
       ->getQuery()
+      ->accessCheck(FALSE)
       ->sort('mid', 'DESC')
       ->execute();
     $image_media_id = reset($image_media_id);

@@ -89,17 +89,17 @@ class ContactPersonalTest extends BrowserTestBase {
     $mails = $this->getMails();
     $this->assertCount(1, $mails);
     $mail = $mails[0];
-    $this->assertEqual($this->contactUser->getEmail(), $mail['to']);
-    $this->assertEqual($this->config('system.site')->get('mail'), $mail['from']);
-    $this->assertEqual($this->webUser->getEmail(), $mail['reply-to']);
-    $this->assertEqual('user_mail', $mail['key']);
+    $this->assertEquals($this->contactUser->getEmail(), $mail['to']);
+    $this->assertEquals($this->config('system.site')->get('mail'), $mail['from']);
+    $this->assertEquals($this->webUser->getEmail(), $mail['reply-to']);
+    $this->assertEquals('user_mail', $mail['key']);
     $variables = [
       '@site-name' => $this->config('system.site')->get('name'),
       '@subject' => $message['subject[0][value]'],
       '@recipient-name' => $this->contactUser->getDisplayName(),
     ];
     $subject = PlainTextOutput::renderFromHtml(t('[@site-name] @subject', $variables));
-    $this->assertEqual($subject, $mail['subject'], 'Subject is in sent message.');
+    $this->assertEquals($subject, $mail['subject'], 'Subject is in sent message.');
     $this->assertStringContainsString('Hello ' . $variables['@recipient-name'], $mail['body'], 'Recipient name is in sent message.');
     $this->assertStringContainsString($this->webUser->getDisplayName(), $mail['body'], 'Sender name is in sent message.');
     $this->assertStringContainsString($message['message[0][value]'], $mail['body'], 'Message body is in sent message.');
@@ -202,8 +202,9 @@ class ContactPersonalTest extends BrowserTestBase {
     // Disable the personal contact form.
     $this->drupalLogin($this->adminUser);
     $edit = ['contact_default_status' => FALSE];
-    $this->drupalPostForm('admin/config/people/accounts', $edit, 'Save configuration');
-    $this->assertText('The configuration options have been saved.');
+    $this->drupalGet('admin/config/people/accounts');
+    $this->submitForm($edit, 'Save configuration');
+    $this->assertSession()->pageTextContains('The configuration options have been saved.');
     $this->drupalLogout();
 
     // Re-create our contacted user with personal contact forms disabled by
@@ -265,7 +266,7 @@ class ContactPersonalTest extends BrowserTestBase {
     // Submit contact form with correct values and check flood interval.
     for ($i = 0; $i < $flood_limit; $i++) {
       $this->submitPersonalContact($this->contactUser);
-      $this->assertText('Your message has been sent.');
+      $this->assertSession()->pageTextContains('Your message has been sent.');
     }
 
     // Submit contact form one over limit.
@@ -320,7 +321,8 @@ class ContactPersonalTest extends BrowserTestBase {
     if (isset($contact_value)) {
       $edit['contact'] = $contact_value;
     }
-    $this->drupalPostForm('admin/people/create', $edit, 'Create new account');
+    $this->drupalGet('admin/people/create');
+    $this->submitForm($edit, 'Create new account');
     $user = user_load_by_name($name);
     $this->drupalLogout();
 
@@ -345,7 +347,8 @@ class ContactPersonalTest extends BrowserTestBase {
       'subject[0][value]' => $this->randomMachineName(16) . '< " =+ >',
       'message[0][value]' => $this->randomMachineName(64) . '< " =+ >',
     ];
-    $this->drupalPostForm('user/' . $account->id() . '/contact', $message, 'Send message');
+    $this->drupalGet('user/' . $account->id() . '/contact');
+    $this->submitForm($message, 'Send message');
     return $message;
   }
 

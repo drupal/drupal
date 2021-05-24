@@ -50,7 +50,8 @@ class LanguageNegotiationUrlTest extends BrowserTestBase {
     ]);
     $this->drupalLogin($this->user);
 
-    $this->drupalPostForm('admin/config/regional/language/add', ['predefined_langcode' => 'de'], 'Add language');
+    $this->drupalGet('admin/config/regional/language/add');
+    $this->submitForm(['predefined_langcode' => 'de'], 'Add language');
   }
 
   /**
@@ -66,13 +67,15 @@ class LanguageNegotiationUrlTest extends BrowserTestBase {
       'domain[en]' => $_SERVER['HTTP_HOST'],
       'domain[de]' => "de.$_SERVER[HTTP_HOST]",
     ];
-    $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/regional/language/detection/url');
+    $this->submitForm($edit, 'Save configuration');
 
     $nodeValues = [
       'title[0][value]' => 'Test',
       'path[0][alias]' => '/eng/test',
     ];
-    $this->drupalPostForm('node/add/article', $nodeValues, 'Save');
+    $this->drupalGet('node/add/article');
+    $this->submitForm($nodeValues, 'Save');
     $this->assertSession()->statusCodeEquals(200);
   }
 

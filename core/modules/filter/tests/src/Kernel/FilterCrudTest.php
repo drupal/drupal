@@ -95,11 +95,11 @@ class FilterCrudTest extends KernelTestBase {
 
     // Verify the loaded filter has all properties.
     $filter_format = FilterFormat::load($format->id());
-    $this->assertEqual($format->id(), $filter_format->id(), new FormattableMarkup('filter_format_load: Proper format id for text format %format.', $t_args));
-    $this->assertEqual($format->label(), $filter_format->label(), new FormattableMarkup('filter_format_load: Proper title for text format %format.', $t_args));
-    $this->assertEqual($format->get('weight'), $filter_format->get('weight'), new FormattableMarkup('filter_format_load: Proper weight for text format %format.', $t_args));
+    $this->assertEquals($format->id(), $filter_format->id(), new FormattableMarkup('filter_format_load: Proper format id for text format %format.', $t_args));
+    $this->assertEquals($format->label(), $filter_format->label(), new FormattableMarkup('filter_format_load: Proper title for text format %format.', $t_args));
+    $this->assertEquals($format->get('weight'), $filter_format->get('weight'), new FormattableMarkup('filter_format_load: Proper weight for text format %format.', $t_args));
     // Check that the filter was created in site default language.
-    $this->assertEqual($default_langcode, $format->language()->getId(), new FormattableMarkup('filter_format_load: Proper language code for text format %format.', $t_args));
+    $this->assertEquals($default_langcode, $format->language()->getId(), new FormattableMarkup('filter_format_load: Proper language code for text format %format.', $t_args));
   }
 
 }

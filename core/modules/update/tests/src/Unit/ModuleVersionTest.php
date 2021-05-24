@@ -8,6 +8,7 @@ use Drupal\update\ModuleVersion;
 /**
  * @coversDefaultClass \Drupal\update\ModuleVersion
  *
+ * @group legacy
  * @group update
  */
 class ModuleVersionTest extends UnitTestCase {

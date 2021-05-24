@@ -95,6 +95,7 @@ class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderIn
    */
   protected function getEntityIds() {
     $query = $this->getStorage()->getQuery()
+      ->accessCheck(TRUE)
       ->sort($this->entityType->getKey('id'));
 
     // Only add the pager if a limit is specified.

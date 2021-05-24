@@ -47,11 +47,11 @@ class FieldCounterTest extends ViewsKernelTestBase {
     $view->preview();
 
     $counter = $view->style_plugin->getField(0, 'counter');
-    $this->assertEqual('1', $counter, new FormattableMarkup('Make sure the expected number (@expected) patches with the rendered number (@counter)', ['@expected' => 1, '@counter' => $counter]));
+    $this->assertEquals('1', $counter, new FormattableMarkup('Make sure the expected number (@expected) patches with the rendered number (@counter)', ['@expected' => 1, '@counter' => $counter]));
     $counter = $view->style_plugin->getField(1, 'counter');
-    $this->assertEqual('2', $counter, new FormattableMarkup('Make sure the expected number (@expected) patches with the rendered number (@counter)', ['@expected' => 2, '@counter' => $counter]));
+    $this->assertEquals('2', $counter, new FormattableMarkup('Make sure the expected number (@expected) patches with the rendered number (@counter)', ['@expected' => 2, '@counter' => $counter]));
     $counter = $view->style_plugin->getField(2, 'counter');
-    $this->assertEqual('3', $counter, new FormattableMarkup('Make sure the expected number (@expected) patches with the rendered number (@counter)', ['@expected' => 3, '@counter' => $counter]));
+    $this->assertEquals('3', $counter, new FormattableMarkup('Make sure the expected number (@expected) patches with the rendered number (@counter)', ['@expected' => 3, '@counter' => $counter]));
     $view->destroy();
     $view->storage->invalidateCaches();
 
@@ -76,13 +76,13 @@ class FieldCounterTest extends ViewsKernelTestBase {
 
     $counter = $view->style_plugin->getField(0, 'counter');
     $expected_number = 0 + $rand_start;
-    $this->assertEqual((string) $expected_number, $counter, new FormattableMarkup('Make sure the expected number (@expected) patches with the rendered number (@counter)', ['@expected' => $expected_number, '@counter' => $counter]));
+    $this->assertEquals((string) $expected_number, $counter, new FormattableMarkup('Make sure the expected number (@expected) patches with the rendered number (@counter)', ['@expected' => $expected_number, '@counter' => $counter]));
     $counter = $view->style_plugin->getField(1, 'counter');
     $expected_number = 1 + $rand_start;
-    $this->assertEqual((string) $expected_number, $counter, new FormattableMarkup('Make sure the expected number (@expected) patches with the rendered number (@counter)', ['@expected' => $expected_number, '@counter' => $counter]));
+    $this->assertEquals((string) $expected_number, $counter, new FormattableMarkup('Make sure the expected number (@expected) patches with the rendered number (@counter)', ['@expected' => $expected_number, '@counter' => $counter]));
     $counter = $view->style_plugin->getField(2, 'counter');
     $expected_number = 2 + $rand_start;
-    $this->assertEqual((string) $expected_number, $counter, new FormattableMarkup('Make sure the expected number (@expected) patches with the rendered number (@counter)', ['@expected' => $expected_number, '@counter' => $counter]));
+    $this->assertEquals((string) $expected_number, $counter, new FormattableMarkup('Make sure the expected number (@expected) patches with the rendered number (@counter)', ['@expected' => $expected_number, '@counter' => $counter]));
   }
 
   /**

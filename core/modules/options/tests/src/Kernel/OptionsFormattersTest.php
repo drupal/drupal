@@ -30,12 +30,12 @@ class OptionsFormattersTest extends OptionsFieldUnitTestBase {
     $items = $entity->get($this->fieldName);
 
     $build = $items->view();
-    $this->assertEqual('list_default', $build['#formatter'], 'Ensure to fall back to the default formatter.');
-    $this->assertEqual('One', $build[0]['#markup']);
+    $this->assertEquals('list_default', $build['#formatter'], 'Ensure to fall back to the default formatter.');
+    $this->assertEquals('One', $build[0]['#markup']);
 
     $build = $items->view(['type' => 'list_key']);
-    $this->assertEqual('list_key', $build['#formatter'], 'The chosen formatter is used.');
-    $this->assertEqual(1, (string) $build[0]['#markup']);
+    $this->assertEquals('list_key', $build['#formatter'], 'The chosen formatter is used.');
+    $this->assertEquals(1, (string) $build[0]['#markup']);
   }
 
 }

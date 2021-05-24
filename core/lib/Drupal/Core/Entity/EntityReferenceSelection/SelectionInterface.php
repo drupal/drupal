@@ -17,6 +17,15 @@ interface SelectionInterface extends PluginFormInterface {
   /**
    * Gets the list of referenceable entities.
    *
+   * @param string|null $match
+   *   (optional) Text to match the label against. Defaults to NULL.
+   * @param string $match_operator
+   *   (optional) Operator to be used for string matching. Defaults to
+   *   "CONTAINS".
+   * @param int $limit
+   *   (optional) Limit the query to a given number of items. Defaults to 0,
+   *   which indicates no limiting.
+   *
    * @return array
    *   A nested array of entities, the first level is keyed by the
    *   entity bundle, which contains an array of entity labels (escaped),
@@ -27,6 +36,12 @@ interface SelectionInterface extends PluginFormInterface {
   /**
    * Counts entities that are referenceable.
    *
+   * @param string $match
+   *   (optional) Text to match the label against. Defaults to NULL.
+   * @param string $match_operator
+   *   (optional) Operator to be used for string matching. Defaults to
+   *   "CONTAINS".
+   *
    * @return int
    *   The number of referenceable entities.
    */
@@ -34,6 +49,9 @@ interface SelectionInterface extends PluginFormInterface {
 
   /**
    * Validates which existing entities can be referenced.
+   *
+   * @param array $ids
+   *   An array of IDs to validate.
    *
    * @return array
    *   An array of valid entity IDs.

@@ -71,7 +71,7 @@ class ContentTranslationOperationsTest extends NodeTestBase {
   }
 
   /**
-   * Test that the operation "Translate" is displayed in the content listing.
+   * Tests that the operation "Translate" is displayed in the content listing.
    */
   public function testOperationTranslateLink() {
     $node = $this->drupalCreateNode(['type' => 'article', 'langcode' => 'es']);
@@ -129,7 +129,8 @@ class ContentTranslationOperationsTest extends NodeTestBase {
     $this->drupalLogin($this->baseUser2);
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->linkByHrefExists('node/' . $node->id() . '/translations');
-    $this->drupalPostForm('admin/config/regional/content-language', ['settings[node][article][translatable]' => FALSE], 'Save configuration');
+    $this->drupalGet('admin/config/regional/content-language');
+    $this->submitForm(['settings[node][article][translatable]' => FALSE], 'Save configuration');
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->linkByHrefNotExists('node/' . $node->id() . '/translations');
   }

@@ -238,12 +238,12 @@ class RouterTest extends BrowserTestBase {
   public function testRouterMatching() {
     $this->drupalGet('router_test/test14/1');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('User route "entity.user.canonical" was matched.');
+    $this->assertSession()->pageTextContains('User route "entity.user.canonical" was matched.');
 
     // Try to match a route for a non-existent user.
     $this->drupalGet('router_test/test14/2');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('Route not matched.');
+    $this->assertSession()->pageTextContains('Route not matched.');
 
     // Check that very long paths don't cause an error.
     $path = 'router_test/test1';
@@ -261,7 +261,7 @@ class RouterTest extends BrowserTestBase {
   public function testRouterResponsePsr7() {
     $this->drupalGet('/router_test/test23');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('test23');
+    $this->assertSession()->pageTextContains('test23');
   }
 
   /**
@@ -274,12 +274,12 @@ class RouterTest extends BrowserTestBase {
     $second_account = $this->drupalCreateUser();
 
     $this->drupalGet('router_test/test12/' . $second_account->id());
-    $this->assertText($account->getAccountName() . ':' . $second_account->getAccountName());
-    $this->assertEqual($this->loggedInUser->id(), $account->id(), 'Ensure that the user was not changed.');
+    $this->assertSession()->pageTextContains($account->getAccountName() . ':' . $second_account->getAccountName());
+    $this->assertEquals($this->loggedInUser->id(), $account->id(), 'Ensure that the user was not changed.');
 
     $this->drupalGet('router_test/test13/' . $second_account->id());
-    $this->assertText($account->getAccountName() . ':' . $second_account->getAccountName());
-    $this->assertEqual($this->loggedInUser->id(), $account->id(), 'Ensure that the user was not changed.');
+    $this->assertSession()->pageTextContains($account->getAccountName() . ':' . $second_account->getAccountName());
+    $this->assertEquals($this->loggedInUser->id(), $account->id(), 'Ensure that the user was not changed.');
   }
 
   /**

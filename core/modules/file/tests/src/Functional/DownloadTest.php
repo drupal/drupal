@@ -23,7 +23,7 @@ class DownloadTest extends FileManagedTestBase {
   }
 
   /**
-   * Test the public file transfer system.
+   * Tests the public file transfer system.
    */
   public function testPublicFileTransfer() {
     // Test generating a URL to a created file.
@@ -32,7 +32,7 @@ class DownloadTest extends FileManagedTestBase {
     // URLs can't contain characters outside the ASCII set so $filename has to be
     // encoded.
     $filename = $GLOBALS['base_url'] . '/' . \Drupal::service('stream_wrapper_manager')->getViaScheme('public')->getDirectoryPath() . '/' . rawurlencode($file->getFilename());
-    $this->assertEqual($filename, $url, 'Correctly generated a URL for a created file.');
+    $this->assertEquals($filename, $url, 'Correctly generated a URL for a created file.');
     $http_client = $this->getHttpClient();
     $response = $http_client->head($url);
     $this->assertEquals(200, $response->getStatusCode(), 'Confirmed that the generated URL is correct by downloading the created file.');
@@ -41,20 +41,20 @@ class DownloadTest extends FileManagedTestBase {
     // Drupal core, a module or a theme, for example a JavaScript file).
     $filepath = 'core/assets/vendor/jquery/jquery.min.js';
     $url = file_create_url($filepath);
-    $this->assertEqual($GLOBALS['base_url'] . '/' . $filepath, $url, 'Correctly generated a URL for a shipped file.');
+    $this->assertEquals($GLOBALS['base_url'] . '/' . $filepath, $url, 'Correctly generated a URL for a shipped file.');
     $response = $http_client->head($url);
     $this->assertEquals(200, $response->getStatusCode(), 'Confirmed that the generated URL is correct by downloading the shipped file.');
   }
 
   /**
-   * Test the private file transfer system.
+   * Tests the private file transfer system.
    */
   public function testPrivateFileTransferWithoutPageCache() {
     $this->doPrivateFileTransferTest();
   }
 
   /**
-   * Test the private file transfer system.
+   * Tests the private file transfer system.
    */
   protected function doPrivateFileTransferTest() {
     // Set file downloads to private so handler functions get called.
@@ -109,7 +109,7 @@ class DownloadTest extends FileManagedTestBase {
   }
 
   /**
-   * Test file_create_url().
+   * Tests file_create_url().
    */
   public function testFileCreateUrl() {
     // "Special" ASCII characters.
@@ -139,7 +139,7 @@ class DownloadTest extends FileManagedTestBase {
       $this->checkUrl('public', '', $basename, $base_path . '/' . $public_directory_path . '/' . $basename_encoded);
       $this->checkUrl('private', '', $basename, $base_path . '/' . $script_path . 'system/files/' . $basename_encoded);
     }
-    $this->assertEqual('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==', file_create_url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='), t('Generated URL matches expected URL.'));
+    $this->assertEquals('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==', file_create_url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='), t('Generated URL matches expected URL.'));
   }
 
   /**
@@ -168,7 +168,7 @@ class DownloadTest extends FileManagedTestBase {
     $file = $this->createFile($filepath, NULL, $scheme);
 
     $url = file_create_url($file->getFileUri());
-    $this->assertEqual($expected_url, $url);
+    $this->assertEquals($expected_url, $url);
 
     if ($scheme == 'private') {
       // Tell the implementation of hook_file_download() in file_test.module

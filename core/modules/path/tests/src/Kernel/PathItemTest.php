@@ -49,7 +49,7 @@ class PathItemTest extends KernelTestBase {
   }
 
   /**
-   * Test creating, loading, updating and deleting aliases through PathItem.
+   * Tests creating, loading, updating and deleting aliases through PathItem.
    */
   public function testPathItem() {
     /** @var \Drupal\path_alias\AliasRepositoryInterface $alias_repository */

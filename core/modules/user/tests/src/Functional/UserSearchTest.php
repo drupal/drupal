@@ -35,32 +35,37 @@ class UserSearchTest extends BrowserTestBase {
     $this->drupalLogin($user1);
     $keys = $user1->getEmail();
     $edit = ['keys' => $keys];
-    $this->drupalPostForm('search/user', $edit, 'Search');
-    $this->assertText('Your search yielded no results.');
-    $this->assertText('no results');
+    $this->drupalGet('search/user');
+    $this->submitForm($edit, 'Search');
+    $this->assertSession()->pageTextContains('Your search yielded no results.');
+    $this->assertSession()->pageTextContains('no results');
 
     // Verify that a non-matching query gives an appropriate message.
     $keys = 'nomatch';
     $edit = ['keys' => $keys];
-    $this->drupalPostForm('search/user', $edit, 'Search');
-    $this->assertText('no results');
+    $this->drupalGet('search/user');
+    $this->submitForm($edit, 'Search');
+    $this->assertSession()->pageTextContains('no results');
 
     // Verify that a user with search permission can search for users by name.
     $keys = $user1->getAccountName();
     $edit = ['keys' => $keys];
-    $this->drupalPostForm('search/user', $edit, 'Search');
+    $this->drupalGet('search/user');
+    $this->submitForm($edit, 'Search');
     $this->assertSession()->linkExists($keys, 0, 'Search by username worked for non-admin user');
 
     // Verify that searching by sub-string works too.
     $subkey = substr($keys, 1, 5);
     $edit = ['keys' => $subkey];
-    $this->drupalPostForm('search/user', $edit, 'Search');
+    $this->drupalGet('search/user');
+    $this->submitForm($edit, 'Search');
     $this->assertSession()->linkExists($keys, 0, 'Search by username substring worked for non-admin user');
 
     // Verify that wildcard search works.
     $subkey = substr($keys, 0, 2) . '*' . substr($keys, 4, 2);
     $edit = ['keys' => $subkey];
-    $this->drupalPostForm('search/user', $edit, 'Search');
+    $this->drupalGet('search/user');
+    $this->submitForm($edit, 'Search');
     $this->assertSession()->linkExists($keys, 0, 'Search with wildcard worked for non-admin user');
 
     // Verify that a user with 'administer users' permission can search by
@@ -73,29 +78,33 @@ class UserSearchTest extends BrowserTestBase {
     $this->drupalLogin($user2);
     $keys = $user2->getEmail();
     $edit = ['keys' => $keys];
-    $this->drupalPostForm('search/user', $edit, 'Search');
-    $this->assertText($keys);
-    $this->assertText($user2->getAccountName());
+    $this->drupalGet('search/user');
+    $this->submitForm($edit, 'Search');
+    $this->assertSession()->pageTextContains($keys);
+    $this->assertSession()->pageTextContains($user2->getAccountName());
 
     // Verify that a substring works too for email.
     $subkey = substr($keys, 1, 5);
     $edit = ['keys' => $subkey];
-    $this->drupalPostForm('search/user', $edit, 'Search');
-    $this->assertText($keys);
-    $this->assertText($user2->getAccountName());
+    $this->drupalGet('search/user');
+    $this->submitForm($edit, 'Search');
+    $this->assertSession()->pageTextContains($keys);
+    $this->assertSession()->pageTextContains($user2->getAccountName());
 
     // Verify that wildcard search works for email
     $subkey = substr($keys, 0, 2) . '*' . substr($keys, 4, 2);
     $edit = ['keys' => $subkey];
-    $this->drupalPostForm('search/user', $edit, 'Search');
-    $this->assertText($user2->getAccountName());
+    $this->drupalGet('search/user');
+    $this->submitForm($edit, 'Search');
+    $this->assertSession()->pageTextContains($user2->getAccountName());
 
     // Verify that if they search by user name, they see email address too.
     $keys = $user1->getAccountName();
     $edit = ['keys' => $keys];
-    $this->drupalPostForm('search/user', $edit, 'Search');
-    $this->assertText($keys);
-    $this->assertText($user1->getEmail());
+    $this->drupalGet('search/user');
+    $this->submitForm($edit, 'Search');
+    $this->assertSession()->pageTextContains($keys);
+    $this->assertSession()->pageTextContains($user1->getEmail());
 
     // Create a blocked user.
     $blocked_user = $this->drupalCreateUser();
@@ -105,15 +114,17 @@ class UserSearchTest extends BrowserTestBase {
     // Verify that users with "administer users" permissions can see blocked
     // accounts in search results.
     $edit = ['keys' => $blocked_user->getAccountName()];
-    $this->drupalPostForm('search/user', $edit, 'Search');
-    $this->assertText($blocked_user->getAccountName());
+    $this->drupalGet('search/user');
+    $this->submitForm($edit, 'Search');
+    $this->assertSession()->pageTextContains($blocked_user->getAccountName());
 
     // Verify that users without "administer users" permissions do not see
     // blocked accounts in search results.
     $this->drupalLogin($user1);
     $edit = ['keys' => $blocked_user->getAccountName()];
-    $this->drupalPostForm('search/user', $edit, 'Search');
-    $this->assertText('Your search yielded no results.');
+    $this->drupalGet('search/user');
+    $this->submitForm($edit, 'Search');
+    $this->assertSession()->pageTextContains('Your search yielded no results.');
 
     // Ensure that a user without access to user profiles cannot access the
     // user search page.

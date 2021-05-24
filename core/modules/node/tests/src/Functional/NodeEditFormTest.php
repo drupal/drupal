@@ -73,7 +73,8 @@ class NodeEditFormTest extends NodeTestBase {
     $edit = [];
     $edit[$title_key] = $this->randomMachineName(8);
     $edit[$body_key] = $this->randomMachineName(16);
-    $this->drupalPostForm('node/add/page', $edit, 'Save');
+    $this->drupalGet('node/add/page');
+    $this->submitForm($edit, 'Save');
 
     // Check that the node exists in the database.
     $node = $this->drupalGetNodeByTitle($edit[$title_key]);
@@ -97,8 +98,8 @@ class NodeEditFormTest extends NodeTestBase {
     $this->submitForm($edit, 'Save');
 
     // Check that the title and body fields are displayed with the updated values.
-    $this->assertText($edit[$title_key]);
-    $this->assertText($edit[$body_key]);
+    $this->assertSession()->pageTextContains($edit[$title_key]);
+    $this->assertSession()->pageTextContains($edit[$body_key]);
 
     // Log in as a second administrator user.
     $second_web_user = $this->drupalCreateUser([
@@ -166,7 +167,8 @@ class NodeEditFormTest extends NodeTestBase {
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName(8);
     $edit[$body_key] = $this->randomMachineName(16);
-    $this->drupalPostForm('node/add/page', $edit, 'Save');
+    $this->drupalGet('node/add/page');
+    $this->submitForm($edit, 'Save');
 
     // Check that the node was authored by the currently logged in user.
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
@@ -195,7 +197,8 @@ class NodeEditFormTest extends NodeTestBase {
     $this->drupalLogin($this->adminUser);
 
     // Save the node without making any changes.
-    $this->drupalPostForm('node/' . $node->id() . '/edit', [], 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm([], 'Save');
     $this->nodeStorage->resetCache([$node->id()]);
     $node = $this->nodeStorage->load($node->id());
     $this->assertSame($this->webUser->id(), $node->getOwner()->id());
@@ -207,7 +210,8 @@ class NodeEditFormTest extends NodeTestBase {
 
     // Check that saving the node without making any changes keeps the proper
     // author ID.
-    $this->drupalPostForm('node/' . $node->id() . '/edit', [], 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm([], 'Save');
     $this->nodeStorage->resetCache([$node->id()]);
     $node = $this->nodeStorage->load($node->id());
     $this->assertSame($this->webUser->id(), $node->getOwner()->id());
@@ -237,7 +241,7 @@ class NodeEditFormTest extends NodeTestBase {
     // information.
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('node/add/page');
-    $this->assertText('Not saved yet');
+    $this->assertSession()->pageTextContains('Not saved yet');
 
     // Create node to edit.
     $edit['title[0][value]'] = $this->randomMachineName(8);
@@ -246,8 +250,8 @@ class NodeEditFormTest extends NodeTestBase {
 
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->drupalGet("node/" . $node->id() . "/edit");
-    $this->assertText('Published');
-    $this->assertText($this->container->get('date.formatter')->format($node->getChangedTime(), 'short'));
+    $this->assertSession()->pageTextContains('Published');
+    $this->assertSession()->pageTextContains($this->container->get('date.formatter')->format($node->getChangedTime(), 'short'));
   }
 
   /**
@@ -263,13 +267,15 @@ class NodeEditFormTest extends NodeTestBase {
     $edit = [
       $form_element_name => 'invalid-name',
     ];
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm($edit, 'Save');
     $this->assertRaw(t('There are no users matching "%name".', ['%name' => 'invalid-name']));
 
     // Change the authored by field to an empty string, which should assign
     // authorship to the anonymous user (uid 0).
     $edit[$form_element_name] = '';
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm($edit, 'Save');
     $this->nodeStorage->resetCache([$node->id()]);
     $node = $this->nodeStorage->load($node->id());
     $uid = $node->getOwnerId();

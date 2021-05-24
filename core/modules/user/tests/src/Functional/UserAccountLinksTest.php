@@ -101,7 +101,8 @@ class UserAccountLinksTest extends BrowserTestBase {
 
     // Disable the 'My account' link.
     $edit['links[menu_plugin_id:user.page][enabled]'] = FALSE;
-    $this->drupalPostForm('admin/structure/menu/manage/account', $edit, 'Save');
+    $this->drupalGet('admin/structure/menu/manage/account');
+    $this->submitForm($edit, 'Save');
 
     // Get the homepage.
     $this->drupalGet('<front>');
@@ -148,6 +149,11 @@ class UserAccountLinksTest extends BrowserTestBase {
     $this->drupalGet('user/logout');
     $this->assertSession()->addressEquals('/');
     $this->assertSession()->statusCodeEquals(200);
+
+    // The redirection shouldn't affect other pages.
+    $this->drupalGet('admin');
+    $this->assertSession()->addressEquals('/admin');
+    $this->assertSession()->statusCodeEquals(403);
   }
 
 }
