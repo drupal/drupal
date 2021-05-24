@@ -98,7 +98,8 @@ class UninstallTest extends BrowserTestBase {
     $node_dependencies = \Drupal::service('config.manager')->findConfigEntityDependentsAsEntities('module', ['node']);
     $edit = [];
     $edit['uninstall[node]'] = TRUE;
-    $this->drupalPostForm('admin/modules/uninstall', $edit, 'Uninstall');
+    $this->drupalGet('admin/modules/uninstall');
+    $this->submitForm($edit, 'Uninstall');
     $this->assertSession()->pageTextContains('Configuration deletions');
     $this->assertNoText('Configuration updates');
 
@@ -142,7 +143,8 @@ class UninstallTest extends BrowserTestBase {
 
     // Make sure the correct error is shown when no modules are selected.
     $edit = [];
-    $this->drupalPostForm('admin/modules/uninstall', $edit, 'Uninstall');
+    $this->drupalGet('admin/modules/uninstall');
+    $this->submitForm($edit, 'Uninstall');
     $this->assertSession()->pageTextContains('No modules selected.');
   }
 

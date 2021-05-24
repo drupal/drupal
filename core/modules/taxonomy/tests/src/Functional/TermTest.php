@@ -216,16 +216,19 @@ class TermTest extends TaxonomyTestBase {
 
     // Edit the node with a different term.
     $edit[$this->field->getName() . '[]'] = $term2->id();
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm($edit, 'Save');
 
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->pageTextContains($term2->getName());
 
     // Preview the node.
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Preview');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm($edit, 'Preview');
     // Ensure that term is displayed when previewing the node.
     $this->assertSession()->pageTextContainsOnce($term2->getName());
-    $this->drupalPostForm('node/' . $node->id() . '/edit', [], 'Preview');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm($edit, 'Preview');
     // Ensure that term is displayed when previewing the node again.
     $this->assertSession()->pageTextContainsOnce($term2->getName());
   }
@@ -278,7 +281,8 @@ class TermTest extends TaxonomyTestBase {
     taxonomy_terms_static_reset();
 
     // Save, creating the terms.
-    $this->drupalPostForm('node/add/article', $edit, 'Save');
+    $this->drupalGet('node/add/article');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('Article ' . $edit['title[0][value]'] . ' has been created.');
 
     // Verify that the creation message contains a link to a node.

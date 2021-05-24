@@ -502,7 +502,8 @@ class ThemeTest extends BrowserTestBase {
     // Visit this theme's settings page.
     $this->drupalGet('admin/appearance/settings/test_theme_settings_features');
     $edit = [];
-    $this->drupalPostForm('admin/appearance/settings/test_theme_settings_features', $edit, 'Save configuration');
+    $this->drupalGet('admin/appearance/settings/test_theme_settings_features');
+    $this->submitForm($edit, 'Save configuration');
     $this->assertSession()->pageTextContains('The configuration options have been saved.');
   }
 

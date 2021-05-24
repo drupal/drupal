@@ -132,14 +132,16 @@ class DateTimeTest extends BrowserTestBase {
     $edit = [
       'date_format_pattern' => 'Y m',
     ];
-    $this->drupalPostForm($this->getUrl(), $edit, 'Save format');
+    $this->drupalGet($this->getUrl());
+    $this->submitForm($edit, 'Save format');
     // Verify that the user is redirected to the correct page.
     $this->assertSession()->addressEquals(Url::fromRoute('entity.date_format.collection'));
     $this->assertSession()->pageTextContains('Custom date format updated.');
 
     // Delete custom date format.
     $this->clickLink(t('Delete'));
-    $this->drupalPostForm('admin/config/regional/date-time/formats/manage/' . $date_format_id . '/delete', [], 'Delete');
+    $this->drupalGet('admin/config/regional/date-time/formats/manage/' . $date_format_id . '/delete');
+    $this->submitForm([], 'Delete');
     // Verify that the user is redirected to the correct page.
     $this->assertSession()->addressEquals(Url::fromRoute('entity.date_format.collection'));
     $this->assertRaw(t('The date format %format has been deleted.', ['%format' => $name]));
@@ -254,11 +256,13 @@ class DateTimeTest extends BrowserTestBase {
       'field_dt[0][value][hour]' => '1',
       'field_dt[0][value][minute]' => '30',
     ];
-    $this->drupalPostForm('node/add/page_with_date', $edit, 'Save');
+    $this->drupalGet('node/add/page_with_date');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('Selected combination of day and month is not valid.');
 
     $edit['field_dt[0][value][day]'] = '29';
-    $this->drupalPostForm('node/add/page_with_date', $edit, 'Save');
+    $this->drupalGet('node/add/page_with_date');
+    $this->submitForm($edit, 'Save');
     $this->assertNoText('Selected combination of day and month is not valid.');
 
     $this->drupalGet('node/1');

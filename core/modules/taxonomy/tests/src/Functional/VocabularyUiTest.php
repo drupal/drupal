@@ -65,12 +65,14 @@ class VocabularyUiTest extends TaxonomyTestBase {
 
     // Try to submit a vocabulary with a duplicate machine name.
     $edit['vid'] = $vid;
-    $this->drupalPostForm('admin/structure/taxonomy/add', $edit, 'Save');
+    $this->drupalGet('admin/structure/taxonomy/add');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
 
     // Try to submit an invalid machine name.
     $edit['vid'] = '!&^%';
-    $this->drupalPostForm('admin/structure/taxonomy/add', $edit, 'Save');
+    $this->drupalGet('admin/structure/taxonomy/add');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('The machine-readable name must contain only lowercase letters, numbers, and underscores.');
 
     // Ensure that vocabulary titles are escaped properly.
@@ -141,7 +143,8 @@ class VocabularyUiTest extends TaxonomyTestBase {
       'name' => $this->randomMachineName(),
       'vid' => $vid,
     ];
-    $this->drupalPostForm('admin/structure/taxonomy/add', $edit, 'Save');
+    $this->drupalGet('admin/structure/taxonomy/add');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('Created new vocabulary');
 
     // Check the created vocabulary.

@@ -72,7 +72,8 @@ class InstallUninstallTest extends ModuleTestBase {
     $this->assertModuleNotInstalled('help');
     $edit = [];
     $edit["modules[help][enable]"] = TRUE;
-    $this->drupalPostForm('admin/modules', $edit, 'Install');
+    $this->drupalGet('admin/modules');
+    $this->submitForm($edit, 'Install');
     $this->assertSession()->pageTextContains('has been enabled');
     $this->assertSession()->pageTextContains('hook_modules_installed fired for help');
     $this->assertModuleSuccessfullyInstalled('help');

@@ -45,7 +45,8 @@ class ExperimentalModuleTest extends BrowserTestBase {
     // There should be no confirmation form and no experimental module warning.
     $edit = [];
     $edit["modules[test_page_test][enable]"] = TRUE;
-    $this->drupalPostForm('admin/modules', $edit, 'Install');
+    $this->drupalGet('admin/modules');
+    $this->submitForm($edit, 'Install');
     $this->assertSession()->pageTextContains('Module Test page has been enabled.');
     $this->assertNoText('Experimental modules are provided for testing purposes only.');
 

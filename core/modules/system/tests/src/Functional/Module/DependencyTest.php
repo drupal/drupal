@@ -41,7 +41,8 @@ class DependencyTest extends ModuleTestBase {
     // Attempt to enable Content Translation without Language enabled.
     $edit = [];
     $edit['modules[content_translation][enable]'] = 'content_translation';
-    $this->drupalPostForm('admin/modules', $edit, 'Install');
+    $this->drupalGet('admin/modules');
+    $this->submitForm($edit, 'Install');
     $this->assertSession()->pageTextContains('Some required modules must be enabled');
 
     $this->assertModules(['content_translation', 'language'], FALSE);
@@ -218,13 +219,15 @@ class DependencyTest extends ModuleTestBase {
     // Uninstall the forum module, and check that taxonomy now can also be
     // uninstalled.
     $edit = ['uninstall[forum]' => 'forum'];
-    $this->drupalPostForm('admin/modules/uninstall', $edit, 'Uninstall');
+    $this->drupalGet('admin/modules/uninstall');
+    $this->submitForm($edit, 'Uninstall');
     $this->submitForm([], 'Uninstall');
     $this->assertSession()->pageTextContains('The selected modules have been uninstalled.');
 
     // Uninstall comment module.
     $edit = ['uninstall[comment]' => 'comment'];
-    $this->drupalPostForm('admin/modules/uninstall', $edit, 'Uninstall');
+    $this->drupalGet('admin/modules/uninstall');
+    $this->submitForm($edit, 'Uninstall');
     $this->submitForm([], 'Uninstall');
     $this->assertSession()->pageTextContains('The selected modules have been uninstalled.');
   }

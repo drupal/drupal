@@ -304,7 +304,8 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
     $this->drupalGet('admin/structure/views/view/content/translate/es/edit');
     // cSpell:disable-next-line
     $this->assertSession()->pageTextContains('Contenido');
-    $this->drupalPostForm('admin/config/regional/translate', ['string' => 'Full comment'], 'Filter');
+    $this->drupalGet('admin/config/regional/translate');
+    $this->submitForm(['string' => 'Full comment'], 'Filter');
     // cSpell:disable-next-line
     $this->assertSession()->pageTextContains('Comentario completo');
 

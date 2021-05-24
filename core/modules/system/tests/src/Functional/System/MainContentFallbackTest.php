@@ -71,7 +71,8 @@ class MainContentFallbackTest extends BrowserTestBase {
     $this->drupalLogin($this->adminUser);
     $edit = [];
     $edit['modules[block][enable]'] = 'block';
-    $this->drupalPostForm('admin/modules', $edit, 'Install');
+    $this->drupalGet('admin/modules');
+    $this->submitForm($edit, 'Install');
     $this->assertSession()->pageTextContains('Module Block has been enabled.');
     $this->rebuildContainer();
     $this->assertTrue(\Drupal::moduleHandler()->moduleExists('block'), 'Block module re-enabled.');

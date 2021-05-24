@@ -135,13 +135,15 @@ class SiteMaintenanceTest extends BrowserTestBase {
     $edit = [
       'name' => $this->user->getAccountName(),
     ];
-    $this->drupalPostForm('user/password', $edit, 'Submit');
+    $this->drupalGet('user/password');
+    $this->submitForm($edit, 'Submit');
     $mails = $this->drupalGetMails();
     $start = strpos($mails[0]['body'], 'user/reset/' . $this->user->id());
     $path = substr($mails[0]['body'], $start, 66 + strlen($this->user->id()));
 
     // Log in with temporary login link.
-    $this->drupalPostForm($path, [], 'Log in');
+    $this->drupalGet($path);
+    $this->submitForm([], 'Log in');
     $this->assertSession()->pageTextContains($user_message);
 
     // Regression test to check if title displays in Bartik on maintenance page.
