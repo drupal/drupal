@@ -162,7 +162,7 @@ class DemoUmamiProfileTest extends BrowserTestBase {
     $nodes = $this->container->get('entity_type.manager')
       ->getStorage('node')
       ->loadByProperties(['title' => 'Deep mediterranean quiche']);
-    /* @var \Drupal\node\Entity\Node $recipe_node */
+    /** @var \Drupal\node\Entity\Node $recipe_node */
     $recipe_node = reset($nodes);
 
     // Check when editing a node, the warning is visible.

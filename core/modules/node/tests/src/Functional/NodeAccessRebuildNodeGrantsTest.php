@@ -74,14 +74,14 @@ class NodeAccessRebuildNodeGrantsTest extends NodeTestBase {
       $this->assertTrue($grant_storage->access($node, 'view', $this->adminUser)->isAllowed(), 'Prior to rebuilding node access the grant storage returns allowed for the admin user.');
     }
 
-    $this->assertEqual(1, \Drupal::service('node.grant_storage')->checkAll($this->webUser), 'There is an all realm access record');
+    $this->assertEquals(1, \Drupal::service('node.grant_storage')->checkAll($this->webUser), 'There is an all realm access record');
     $this->assertTrue(\Drupal::state()->get('node.node_access_needs_rebuild'), 'Node access permissions need to be rebuilt');
 
     // Rebuild permissions.
     $this->drupalGet('admin/reports/status');
     $this->clickLink(t('Rebuild permissions'));
     $this->submitForm([], 'Rebuild permissions');
-    $this->assertText('The content access permissions have been rebuilt.');
+    $this->assertSession()->pageTextContains('The content access permissions have been rebuilt.');
 
     // Test if the rebuild by user that cannot bypass node access and does not
     // have access to the nodes has been successful.
@@ -108,7 +108,7 @@ class NodeAccessRebuildNodeGrantsTest extends NodeTestBase {
    */
   public function testNodeAccessRebuildNoAccessModules() {
     // Default realm access is present.
-    $this->assertEqual(1, \Drupal::service('node.grant_storage')->count(), 'There is an all realm access record');
+    $this->assertEquals(1, \Drupal::service('node.grant_storage')->count(), 'There is an all realm access record');
 
     // No need to rebuild permissions.
     $this->assertNull(\Drupal::state()->get('node.node_access_needs_rebuild'), 'Node access permissions need to be rebuilt');
@@ -117,11 +117,11 @@ class NodeAccessRebuildNodeGrantsTest extends NodeTestBase {
     $this->drupalGet('admin/reports/status');
     $this->clickLink(t('Rebuild permissions'));
     $this->submitForm([], 'Rebuild permissions');
-    $this->assertText('Content permissions have been rebuilt.');
+    $this->assertSession()->pageTextContains('Content permissions have been rebuilt.');
     $this->assertNull(\Drupal::state()->get('node.node_access_needs_rebuild'), 'Node access permissions have been rebuilt');
 
     // Default realm access is still present.
-    $this->assertEqual(1, \Drupal::service('node.grant_storage')->count(), 'There is an all realm access record');
+    $this->assertEquals(1, \Drupal::service('node.grant_storage')->count(), 'There is an all realm access record');
   }
 
 }

@@ -62,7 +62,7 @@ class CommentFieldsTest extends CommentTestBase {
     // Test adding a field that defaults to CommentItemInterface::CLOSED.
     $this->addDefaultCommentField('node', 'test_node_type', 'who_likes_ponies', CommentItemInterface::CLOSED, 'who_likes_ponies');
     $field = FieldConfig::load('node.test_node_type.who_likes_ponies');
-    $this->assertEqual(CommentItemInterface::CLOSED, $field->getDefaultValueLiteral()[0]['status']);
+    $this->assertEquals(CommentItemInterface::CLOSED, $field->getDefaultValueLiteral()[0]['status']);
   }
 
   /**
@@ -163,7 +163,7 @@ class CommentFieldsTest extends CommentTestBase {
     $edit = [];
     $this->drupalPostForm('admin/config/people/accounts/fields/user.user.field_user_comment/storage', $edit, 'Save field settings');
     // We should get an error message.
-    $this->assertText('An illegal choice has been detected. Please contact the site administrator.');
+    $this->assertSession()->pageTextContains('An illegal choice has been detected. Please contact the site administrator.');
 
     // Create a comment type for users.
     $bundle = CommentType::create([

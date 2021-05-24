@@ -35,8 +35,8 @@ class UserFieldsAccessChangeTest extends UserTestBase {
     $this->drupalGet('test_user_fields_access');
 
     // User has access to name and created date by default.
-    $this->assertText('Name');
-    $this->assertText('Created');
+    $this->assertSession()->pageTextContains('Name');
+    $this->assertSession()->pageTextContains('Created');
 
     // User does not by default have access to init, mail and status.
     $this->assertNoText('Init');
@@ -49,9 +49,9 @@ class UserFieldsAccessChangeTest extends UserTestBase {
     $this->drupalGet('test_user_fields_access');
 
     // Access for init, mail and status is added in hook_entity_field_access().
-    $this->assertText('Init');
-    $this->assertText('Email');
-    $this->assertText('Status');
+    $this->assertSession()->pageTextContains('Init');
+    $this->assertSession()->pageTextContains('Email');
+    $this->assertSession()->pageTextContains('Status');
   }
 
   /**
@@ -70,7 +70,7 @@ class UserFieldsAccessChangeTest extends UserTestBase {
 
     // No access, so no link.
     $this->drupalGet('test_user_fields_access');
-    $this->assertText($test_user->getAccountName());
+    $this->assertSession()->pageTextContains($test_user->getAccountName());
     $result = $this->xpath($xpath);
     $this->assertCount(0, $result, 'User is not a link');
 

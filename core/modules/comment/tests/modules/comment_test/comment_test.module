@@ -13,7 +13,7 @@ use Drupal\Core\Url;
  * Implements hook_entity_type_alter().
  */
 function comment_test_entity_type_alter(array &$entity_types) {
-  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   if (\Drupal::languageManager()->isMultilingual()) {
     // Enable language handling for comment fields.
     $translation = $entity_types['comment']->get('translation');

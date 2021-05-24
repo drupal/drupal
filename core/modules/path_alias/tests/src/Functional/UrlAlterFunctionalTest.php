@@ -59,7 +59,7 @@ class UrlAlterFunctionalTest extends BrowserTestBase {
     // Test adding an alias via the UI.
     $edit = ['path[0][value]' => "/user/$uid/edit", 'alias[0][value]' => '/alias/test2'];
     $this->drupalPostForm('admin/config/search/path/add', $edit, 'Save');
-    $this->assertText('The alias has been saved.');
+    $this->assertSession()->pageTextContains('The alias has been saved.');
     $this->drupalGet('alias/test2');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertUrlOutboundAlter("/user/$uid/edit", '/alias/test2');
@@ -71,7 +71,7 @@ class UrlAlterFunctionalTest extends BrowserTestBase {
     // Test that 'forum' is altered to 'community' correctly, both at the root
     // level and for a specific existing forum.
     $this->drupalGet('community');
-    $this->assertText('General discussion');
+    $this->assertSession()->pageTextContains('General discussion');
     $this->assertUrlOutboundAlter('/forum', '/community');
     $forum_vid = $this->config('forum.settings')->get('vocabulary');
     $term_name = $this->randomMachineName();
@@ -81,7 +81,7 @@ class UrlAlterFunctionalTest extends BrowserTestBase {
     ]);
     $term->save();
     $this->drupalGet("community/" . $term->id());
-    $this->assertText($term_name);
+    $this->assertSession()->pageTextContains($term_name);
     $this->assertUrlOutboundAlter("/forum/" . $term->id(), "/community/" . $term->id());
 
     // Test outbound query string altering.

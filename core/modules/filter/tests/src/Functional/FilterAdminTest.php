@@ -175,7 +175,7 @@ class FilterAdminTest extends BrowserTestBase {
       'name' => 'New format',
     ];
     $this->drupalPostForm('admin/config/content/formats/add', $edit, 'Save configuration');
-    $this->assertText('The machine-readable name is already in use. It must be unique.');
+    $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
 
     // Attempt to create a format of the same human readable name as the
     // disabled format but with a different machine name.
@@ -251,7 +251,7 @@ class FilterAdminTest extends BrowserTestBase {
       }
     }
     // Ensure that the second filter is now before the first filter.
-    $this->assertEqual($filter_format->filters($second_filter)->weight + 1, $filter_format->filters($first_filter)->weight, 'Order confirmed in configuration.');
+    $this->assertEquals($filter_format->filters($second_filter)->weight + 1, $filter_format->filters($first_filter)->weight, 'Order confirmed in configuration.');
 
     // Add format.
     $edit = [];
@@ -302,7 +302,7 @@ class FilterAdminTest extends BrowserTestBase {
     $edit['body[0][value]'] = $text;
     $edit['body[0][format]'] = $basic;
     $this->drupalPostForm('node/add/page', $edit, 'Save');
-    $this->assertText('Basic page ' . $edit['title[0][value]'] . ' has been created.');
+    $this->assertSession()->pageTextContains('Basic page ' . $edit['title[0][value]'] . ' has been created.');
 
     // Verify that the creation message contains a link to a node.
     $this->assertSession()->elementExists('xpath', '//div[contains(@class, "messages")]//a[contains(@href, "node/")]');
@@ -428,7 +428,7 @@ class FilterAdminTest extends BrowserTestBase {
     // The format is used and we should see the static text instead of the body
     // value.
     $this->drupalGet($node->toUrl());
-    $this->assertText('filtered text');
+    $this->assertSession()->pageTextContains('filtered text');
 
     // Disable the format.
     $format->disable()->save();

@@ -83,7 +83,7 @@ class CronRunTest extends BrowserTestBase {
 
     // Disable cron through the interface by setting the interval to zero.
     $this->drupalPostForm('admin/config/system/cron', ['interval' => 0], 'Save configuration');
-    $this->assertText('The configuration options have been saved.');
+    $this->assertSession()->pageTextContains('The configuration options have been saved.');
     $this->drupalLogout();
 
     // Test if cron does not run when the cron interval is set to zero.
@@ -103,7 +103,7 @@ class CronRunTest extends BrowserTestBase {
     // The common_test_cron_helper module sets the 'common_test_cron' variable.
     $this->cronRun();
     $result = \Drupal::state()->get('common_test.cron');
-    $this->assertEqual('success', $result, 'Cron correctly handles exceptions thrown during hook_cron() invocations.');
+    $this->assertEquals('success', $result, 'Cron correctly handles exceptions thrown during hook_cron() invocations.');
   }
 
   /**
@@ -122,11 +122,11 @@ class CronRunTest extends BrowserTestBase {
     \Drupal::state()->set('system.cron_last', $cron_last);
 
     $this->submitForm([], 'Save configuration');
-    $this->assertText('The configuration options have been saved.');
+    $this->assertSession()->pageTextContains('The configuration options have been saved.');
     $this->assertSession()->addressEquals('admin/config/system/cron');
 
     // Check that cron does not run when saving the configuration form.
-    $this->assertEqual($cron_last, \Drupal::state()->get('system.cron_last'), 'Cron does not run when saving the configuration form.');
+    $this->assertEquals($cron_last, \Drupal::state()->get('system.cron_last'), 'Cron does not run when saving the configuration form.');
 
     // Check that cron runs when triggered manually.
     $this->submitForm([], 'Run cron');
@@ -147,7 +147,7 @@ class CronRunTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/status');
     $this->clickLink(t('Run cron'));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('Cron ran successfully.');
+    $this->assertSession()->pageTextContains('Cron ran successfully.');
   }
 
 }

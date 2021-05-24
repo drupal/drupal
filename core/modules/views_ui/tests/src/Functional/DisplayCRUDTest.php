@@ -132,7 +132,7 @@ class DisplayCRUDTest extends UITestBase {
     $this->submitForm([], 'Duplicate as Block');
     $this->assertSession()->linkByHrefExists($path_prefix . '/block_1', 0, 'Make sure after duplicating the new display appears in the UI');
     $this->assertSession()->addressEquals($path_prefix . '/block_1');
-    $this->assertText('Block settings');
+    $this->assertSession()->pageTextContains('Block settings');
     $this->assertNoText('Page settings');
 
     $this->submitForm([], 'Save');
@@ -141,15 +141,15 @@ class DisplayCRUDTest extends UITestBase {
 
     $page_2 = $view->displayHandlers->get('page_2');
     $this->assertNotEmpty($page_2, 'The new page display got saved.');
-    $this->assertEqual('Page', $page_2->display['display_title']);
-    $this->assertEqual($path, $page_2->display['display_options']['path']);
+    $this->assertEquals('Page', $page_2->display['display_title']);
+    $this->assertEquals($path, $page_2->display['display_options']['path']);
     $block_1 = $view->displayHandlers->get('block_1');
     $this->assertNotEmpty($block_1, 'The new block display got saved.');
-    $this->assertEqual('block', $block_1->display['display_plugin']);
-    $this->assertEqual('Block', $block_1->display['display_title'], 'The new display title got generated as expected.');
+    $this->assertEquals('block', $block_1->display['display_plugin']);
+    $this->assertEquals('Block', $block_1->display['display_title'], 'The new display title got generated as expected.');
     $this->assertFalse(isset($block_1->display['display_options']['path']));
-    $this->assertEqual($random_title, $block_1->getOption('title'), 'The overridden title option from the display got copied into the duplicate');
-    $this->assertEqual($random_css, $block_1->getOption('css_class'), 'The overridden css_class option from the display got copied into the duplicate');
+    $this->assertEquals($random_title, $block_1->getOption('title'), 'The overridden title option from the display got copied into the duplicate');
+    $this->assertEquals($random_css, $block_1->getOption('css_class'), 'The overridden css_class option from the display got copied into the duplicate');
 
     // Test duplicating a display after changing the machine name.
     $view_id = $view->id();

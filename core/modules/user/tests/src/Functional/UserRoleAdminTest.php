@@ -69,7 +69,7 @@ class UserRoleAdminTest extends BrowserTestBase {
     $this->assertIsObject($role);
 
     // Check that the role was created in site default language.
-    $this->assertEqual($default_langcode, $role->language()->getId());
+    $this->assertEquals($default_langcode, $role->language()->getId());
 
     // Try adding a duplicate role.
     $this->drupalPostForm('admin/people/roles/add', $edit, 'Save');
@@ -82,7 +82,7 @@ class UserRoleAdminTest extends BrowserTestBase {
     $this->assertRaw(t('Role %label has been updated.', ['%label' => $role_name]));
     \Drupal::entityTypeManager()->getStorage('user_role')->resetCache([$role->id()]);
     $new_role = Role::load($role->id());
-    $this->assertEqual($role_name, $new_role->label(), 'The role name has been successfully changed.');
+    $this->assertEquals($role_name, $new_role->label(), 'The role name has been successfully changed.');
 
     // Test deleting a role.
     $this->drupalGet("admin/people/roles/manage/{$role->id()}");
@@ -122,14 +122,14 @@ class UserRoleAdminTest extends BrowserTestBase {
       $weight--;
     }
     $this->drupalPostForm('admin/people/roles', $edit, 'Save');
-    $this->assertText('The role settings have been updated.');
+    $this->assertSession()->pageTextContains('The role settings have been updated.');
 
     // Load up the user roles with the new weights.
     $roles = user_roles();
     $rids = [];
     // Test that the role weights have been correctly saved.
     foreach ($roles as $role) {
-      $this->assertEqual($role->getWeight(), $new_role_weights[$role->id()]);
+      $this->assertEquals($role->getWeight(), $new_role_weights[$role->id()]);
       $rids[] = $role->id();
     }
     // The order of the roles should be reversed.

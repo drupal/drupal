@@ -85,7 +85,7 @@ class ExternalFormUrlTest extends KernelTestBase implements FormInterface {
     $this->setRawContent($markup);
     $elements = $this->xpath('//form/@action');
     $action = (string) $elements[0];
-    $this->assertEqual($original_request->getSchemeAndHttpHost() . '//example.org', $action);
+    $this->assertEquals($original_request->getSchemeAndHttpHost() . '//example.org', $action);
 
     // Create a new request which has a request uri with a single leading slash
     // and make it the master request.
@@ -100,7 +100,7 @@ class ExternalFormUrlTest extends KernelTestBase implements FormInterface {
     $this->setRawContent($markup);
     $elements = $this->xpath('//form/@action');
     $action = (string) $elements[0];
-    $this->assertEqual('/example.org', $action);
+    $this->assertEquals('/example.org', $action);
   }
 
 }

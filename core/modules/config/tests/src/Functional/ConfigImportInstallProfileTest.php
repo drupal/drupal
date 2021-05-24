@@ -60,8 +60,8 @@ class ConfigImportInstallProfileTest extends BrowserTestBase {
     $sync->write('core.extension', $core);
 
     $this->drupalPostForm('admin/config/development/configuration', [], 'Import all');
-    $this->assertText('The configuration cannot be imported because it failed validation for the following reasons:');
-    $this->assertText('Unable to uninstall the Testing config import profile since it is the install profile.');
+    $this->assertSession()->pageTextContains('The configuration cannot be imported because it failed validation for the following reasons:');
+    $this->assertSession()->pageTextContains('Unable to uninstall the Testing config import profile since it is the install profile.');
 
     // Uninstall dependencies of testing_config_import.
     $core['module']['testing_config_import'] = 0;
@@ -75,7 +75,7 @@ class ConfigImportInstallProfileTest extends BrowserTestBase {
     $theme['default'] = 'classy';
     $sync->write('system.theme', $theme);
     $this->drupalPostForm('admin/config/development/configuration', [], 'Import all');
-    $this->assertText('The configuration was imported successfully.');
+    $this->assertSession()->pageTextContains('The configuration was imported successfully.');
     $this->rebuildContainer();
     $this->assertFalse(\Drupal::moduleHandler()->moduleExists('syslog'), 'The syslog module has been uninstalled.');
     $this->assertFalse(\Drupal::service('theme_handler')->themeExists('stark'), 'The stark theme has been uninstalled.');

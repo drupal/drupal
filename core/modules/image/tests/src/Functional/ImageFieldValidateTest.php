@@ -148,15 +148,15 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
       '%height' => $image_that_is_too_small_file->getHeight(),
       ]));
     $this->uploadNodeImage($image_that_is_too_big, $field_names[0], 'article');
-    $this->assertText('The image was resized to fit within the maximum allowed dimensions of 100x100 pixels.');
+    $this->assertSession()->pageTextContains('The image was resized to fit within the maximum allowed dimensions of 100x100 pixels.');
     $this->uploadNodeImage($image_that_is_too_small, $field_names[1], 'article');
     $this->assertRaw(t('The specified file %name could not be uploaded.', ['%name' => $image_that_is_too_small->filename]));
     $this->uploadNodeImage($image_that_is_too_big, $field_names[1], 'article');
-    $this->assertText('The image was resized to fit within the maximum allowed width of 100 pixels.');
+    $this->assertSession()->pageTextContains('The image was resized to fit within the maximum allowed width of 100 pixels.');
     $this->uploadNodeImage($image_that_is_too_small, $field_names[2], 'article');
     $this->assertRaw(t('The specified file %name could not be uploaded.', ['%name' => $image_that_is_too_small->filename]));
     $this->uploadNodeImage($image_that_is_too_big, $field_names[2], 'article');
-    $this->assertText('The image was resized to fit within the maximum allowed height of 100 pixels.');
+    $this->assertSession()->pageTextContains('The image was resized to fit within the maximum allowed height of 100 pixels.');
   }
 
   /**
@@ -186,8 +186,8 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
 
     $this->assertTrue(isset($elements[0]), 'Required marker is shown for the required title text.');
 
-    $this->assertText('Alternative text field is required.');
-    $this->assertText('Title field is required.');
+    $this->assertSession()->pageTextContains('Alternative text field is required.');
+    $this->assertSession()->pageTextContains('Title field is required.');
 
     $instance->setSetting('alt_field_required', 0);
     $instance->setSetting('title_field_required', 0);

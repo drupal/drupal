@@ -558,13 +558,13 @@ abstract class ResourceTestBase extends BrowserTestBase {
         $cacheability->addCacheableDependency($entity);
         if ($entity instanceof FieldableEntityInterface) {
           foreach ($entity as $field_name => $field_item_list) {
-            /* @var \Drupal\Core\Field\FieldItemListInterface $field_item_list */
+            /** @var \Drupal\Core\Field\FieldItemListInterface $field_item_list */
             if (is_null($sparse_fieldset) || in_array($field_name, $sparse_fieldset)) {
               $field_access = static::entityFieldAccess($entity, $field_name, 'view', $account);
               $cacheability->addCacheableDependency($field_access);
               if ($field_access->isAllowed()) {
                 foreach ($field_item_list as $field_item) {
-                  /* @var \Drupal\Core\Field\FieldItemInterface $field_item */
+                  /** @var \Drupal\Core\Field\FieldItemInterface $field_item */
                   foreach (TypedDataInternalPropertiesHelper::getNonInternalProperties($field_item) as $property) {
                     $cacheability->addCacheableDependency(CacheableMetadata::createFromObject($property));
                   }
@@ -1362,9 +1362,9 @@ abstract class ResourceTestBase extends BrowserTestBase {
     // Fetches actual responses as an array keyed by relationship field name.
     $related_responses = $this->getRelatedResponses($relationship_field_names, $request_options);
     foreach ($relationship_field_names as $relationship_field_name) {
-      /* @var \Drupal\jsonapi\ResourceResponse $expected_resource_response */
+      /** @var \Drupal\jsonapi\ResourceResponse $expected_resource_response */
       $expected_resource_response = $expected_relationship_responses[$relationship_field_name];
-      /* @var \Psr\Http\Message\ResponseInterface $actual_response */
+      /** @var \Psr\Http\Message\ResponseInterface $actual_response */
       $actual_response = $related_responses[$relationship_field_name];
       // Dynamic Page Cache miss because cache should vary based on the
       // 'include' query param.
@@ -1428,7 +1428,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @see ::testRelationships
    */
   protected function doTestRelationshipMutation(array $request_options) {
-    /* @var \Drupal\Core\Entity\FieldableEntityInterface $resource */
+    /** @var \Drupal\Core\Entity\FieldableEntityInterface $resource */
     $resource = $this->createAnotherEntity('dupe');
     $resource->set('field_jsonapi_test_entity_ref', NULL);
     $violations = $resource->validate();
@@ -1441,7 +1441,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $target_identifier = static::toResourceIdentifier($target_resource);
     $resource_identifier = static::toResourceIdentifier($resource);
     $relationship_field_name = 'field_jsonapi_test_entity_ref';
-    /* @var \Drupal\Core\Access\AccessResultReasonInterface $update_access */
+    /** @var \Drupal\Core\Access\AccessResultReasonInterface $update_access */
     $update_access = static::entityAccess($resource, 'update', $this->account)
       ->andIf(static::entityFieldAccess($resource, $relationship_field_name, 'edit', $this->account));
     $url = Url::fromRoute(sprintf("jsonapi.{$resource_identifier['type']}.{$relationship_field_name}.relationship.patch"), [
@@ -1750,7 +1750,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   protected function getExpectedGetRelationshipDocumentData($relationship_field_name, EntityInterface $entity = NULL) {
     $entity = $entity ?: $this->entity;
     $internal_field_name = $this->resourceType->getInternalName($relationship_field_name);
-    /* @var \Drupal\Core\Field\FieldItemListInterface $field */
+    /** @var \Drupal\Core\Field\FieldItemListInterface $field */
     $field = $entity->{$internal_field_name};
     $is_multiple = $field->getFieldDefinition()->getFieldStorageDefinition()->getCardinality() !== 1;
     if ($field->isEmpty()) {
@@ -1811,7 +1811,6 @@ abstract class ResourceTestBase extends BrowserTestBase {
   protected function getExpectedRelatedResponse($relationship_field_name, array $request_options, EntityInterface $entity) {
     // Get the relationships responses which contain resource identifiers for
     // every related resource.
-    /* @var \Drupal\jsonapi\ResourceResponse[] $relationship_responses */
     $base_resource_identifier = static::toResourceIdentifier($entity);
     $internal_name = $this->resourceType->getInternalName($relationship_field_name);
     $access = AccessResult::neutral()->addCacheContexts($entity->getEntityType()->isRevisionable() ? ['url.query_args:resourceVersion'] : []);
@@ -2732,7 +2731,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $entity = $this->entityLoadUnchanged($this->entity->id());
 
     // Set up test data.
-    /* @var \Drupal\Core\Entity\FieldableEntityInterface $entity */
+    /** @var \Drupal\Core\Entity\FieldableEntityInterface $entity */
     $entity->set('field_revisionable_number', 42);
     $entity->save();
     $original_revision_id = (int) $entity->getRevisionId();
@@ -2882,7 +2881,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $workflow->save();
 
     // Ensure the test entity has content_moderation fields attached to it.
-    /* @var \Drupal\Core\Entity\FieldableEntityInterface|\Drupal\Core\Entity\TranslatableRevisionableInterface $entity */
+    /** @var \Drupal\Core\Entity\FieldableEntityInterface|\Drupal\Core\Entity\TranslatableRevisionableInterface $entity */
     $entity = $this->entityStorage->load($entity->id());
 
     // Set the published moderation state on the test entity.
@@ -3267,7 +3266,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       ? iterator_to_array($entity)
       : [];
     return array_reduce($fields, function ($field_names, $field) {
-      /* @var \Drupal\Core\Field\FieldItemListInterface $field */
+      /** @var \Drupal\Core\Field\FieldItemListInterface $field */
       if (static::isReferenceFieldDefinition($field->getFieldDefinition())) {
         $field_names[] = $this->resourceType->getPublicName($field->getName());
       }
@@ -3385,7 +3384,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *   otherwise.
    */
   protected static function isReferenceFieldDefinition(FieldDefinitionInterface $field_definition) {
-    /* @var \Drupal\Core\Field\TypedData\FieldItemDataDefinition $item_definition */
+    /** @var \Drupal\Core\Field\TypedData\FieldItemDataDefinition $item_definition */
     $item_definition = $field_definition->getItemDefinition();
     $main_property = $item_definition->getMainPropertyName();
     $property_definition = $item_definition->getPropertyDefinition($main_property);
