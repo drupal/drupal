@@ -60,7 +60,7 @@ class ModerationRevisionRevertTest extends BrowserTestBase {
   }
 
   /**
-   * Test that reverting a revision works.
+   * Tests that reverting a revision works.
    */
   public function testEditingAfterRevertRevision() {
     // Create a draft.

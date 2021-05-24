@@ -31,7 +31,7 @@ class UrlAlterFunctionalTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test that URL altering works and that it occurs in the correct order.
+   * Tests that URL altering works and that it occurs in the correct order.
    */
   public function testUrlAlter() {
     // Ensure that the path_alias table exists after Drupal installation.

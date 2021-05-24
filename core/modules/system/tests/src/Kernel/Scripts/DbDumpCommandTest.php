@@ -45,7 +45,7 @@ class DbDumpCommandTest extends KernelTestBase {
   }
 
   /**
-   * Test the command directly.
+   * Tests the command directly.
    */
   public function testDbDumpCommand() {
     $command = new DbDumpCommand();
@@ -65,7 +65,7 @@ class DbDumpCommandTest extends KernelTestBase {
   }
 
   /**
-   * Test schema only option.
+   * Tests schema only option.
    */
   public function testSchemaOnly() {
     $command = new DbDumpCommand();

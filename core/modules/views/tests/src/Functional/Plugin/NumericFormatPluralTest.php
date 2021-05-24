@@ -44,7 +44,7 @@ class NumericFormatPluralTest extends ViewTestBase {
   }
 
   /**
-   * Test plural formatting setting on a numeric views handler.
+   * Tests plural formatting setting on a numeric views handler.
    */
   public function testNumericFormatPlural() {
     // Create a file.

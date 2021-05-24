@@ -171,7 +171,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
   }
 
   /**
-   * Test that media in ER fields use the Rendered Entity formatter by default.
+   * Tests that media in ER fields use the Rendered Entity formatter by default.
    */
   public function testRenderedEntityReferencedMedia() {
     $page = $this->getSession()->getPage();
@@ -541,7 +541,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
   }
 
   /**
-   * Test the media collection route.
+   * Tests the media collection route.
    */
   public function testMediaCollectionRoute() {
     /** @var \Drupal\Core\Entity\EntityStorageInterface $media_storage */

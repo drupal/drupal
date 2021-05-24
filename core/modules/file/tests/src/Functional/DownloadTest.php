@@ -23,7 +23,7 @@ class DownloadTest extends FileManagedTestBase {
   }
 
   /**
-   * Test the public file transfer system.
+   * Tests the public file transfer system.
    */
   public function testPublicFileTransfer() {
     // Test generating a URL to a created file.
@@ -47,14 +47,14 @@ class DownloadTest extends FileManagedTestBase {
   }
 
   /**
-   * Test the private file transfer system.
+   * Tests the private file transfer system.
    */
   public function testPrivateFileTransferWithoutPageCache() {
     $this->doPrivateFileTransferTest();
   }
 
   /**
-   * Test the private file transfer system.
+   * Tests the private file transfer system.
    */
   protected function doPrivateFileTransferTest() {
     // Set file downloads to private so handler functions get called.
@@ -109,7 +109,7 @@ class DownloadTest extends FileManagedTestBase {
   }
 
   /**
-   * Test file_create_url().
+   * Tests file_create_url().
    */
   public function testFileCreateUrl() {
     // "Special" ASCII characters.

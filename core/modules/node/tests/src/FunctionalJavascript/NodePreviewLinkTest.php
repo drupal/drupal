@@ -46,7 +46,7 @@ class NodePreviewLinkTest extends WebDriverTestBase {
   }
 
   /**
-   * Test the behavior of clicking preview links.
+   * Tests the behavior of clicking preview links.
    */
   public function testPreviewLinks() {
     $assertSession = $this->assertSession();

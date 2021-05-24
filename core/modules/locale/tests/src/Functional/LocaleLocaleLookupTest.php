@@ -49,7 +49,7 @@ class LocaleLocaleLookupTest extends BrowserTestBase {
   }
 
   /**
-   * Test language fallback defaults.
+   * Tests language fallback defaults.
    */
   public function testLanguageFallbackDefaults() {
     $this->drupalGet('');
@@ -63,7 +63,7 @@ class LocaleLocaleLookupTest extends BrowserTestBase {
   }
 
   /**
-   * Test old plural style @count[number] fix.
+   * Tests old plural style @count[number] fix.
    *
    * @dataProvider providerTestFixOldPluralStyle
    */

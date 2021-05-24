@@ -76,7 +76,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
   }
 
   /**
-   * Test import of standalone .po files.
+   * Tests import of standalone .po files.
    */
   public function testStandalonePoFile() {
     // Try importing a .po file.
@@ -254,7 +254,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
   }
 
   /**
-   * Test msgctxt context support.
+   * Tests msgctxt context support.
    */
   public function testLanguageContext() {
     // Try importing a .po file.
@@ -269,7 +269,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
   }
 
   /**
-   * Test empty msgstr at end of .po file see #611786.
+   * Tests empty msgstr at end of .po file see #611786.
    */
   public function testEmptyMsgstr() {
     $langcode = 'hu';
@@ -385,7 +385,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
   }
 
   /**
-   * Test the translation are imported when a new language is created.
+   * Tests the translation are imported when a new language is created.
    */
   public function testCreatedLanguageTranslation() {
     // Import a .po file to add de language.
