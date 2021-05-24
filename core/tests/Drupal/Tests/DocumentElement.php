@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests;
 
+use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\Mink\Element\TraversableElement;
 use Drupal\Component\Utility\Xss;
 
@@ -49,19 +50,34 @@ class DocumentElement extends TraversableElement {
    * {@inheritdoc}
    */
   public function getText() {
-    // Trying to simulate what the user sees, given that, it removes:
-    // - all text inside the head tags
-    // - Drupal settings json.
-    $raw_content = preg_replace([
-      '@<head>(.+?)</head>@si',
-      '@<script type="application/json" data-drupal-selector="drupal-settings-json">([^<]*)</script>@',
-    ], '', $this->getContent());
-    // Use Xss::filter() to:
-    // - remove inline JavaScript
-    // - fix all HTML entities
-    // - remove dangerous protocols
-    // - filter out all HTML tags, as they are not visible in a normal browser.
-    return Xss::filter($raw_content, []);
+    if ($this->getDriver() instanceof BrowserKitDriver) {
+      // Trying to simulate what the user sees, given that, it removes:
+      // - all text inside the head tags
+      // - Drupal settings json.
+      $raw_content = preg_replace([
+        '@<head>(.+?)</head>@si',
+        '@<script type="application/json" data-drupal-selector="drupal-settings-json">([^<]*)</script>@',
+      ], '', $this->getContent());
+      // Use Xss::filter() to:
+      // - remove inline JavaScript
+      // - fix all HTML entities
+      // - remove dangerous protocols
+      // - filter out all HTML tags, as they are not visible in a normal browser.
+      $text = Xss::filter($raw_content, []);
+      // To match \Behat\Mink\Element\Element::getText() include the page title,
+      // remove new lines and normalize spaces.
+      $title_element = $this->find('css', 'title');
+      if ($title_element) {
+        $text = $title_element->getText() . ' ' . $text;
+      }
+      $text = str_replace("\n", ' ', $text);
+      $text = preg_replace('/ {2,}/', ' ', $text);
+      return trim($text);
+    }
+
+    // If using a real browser fallback to the \Behat\Mink\Element\Element
+    // implementation.
+    return parent::getText();
   }
 
 }

@@ -128,20 +128,20 @@ class ConfigurableLanguageManagerTest extends BrowserTestBase {
     // See if the full view of the node in english is present and the
     // string in the Powered By Block is in English.
     $this->drupalGet('/node/1');
-    $assert_session->responseContains('English');
+    $assert_session->pageTextContains('English');
     $assert_session->pageTextContains('Powered by');
 
     // Load the spanish node page again and see if both the node and the string
     // are translated.
     $this->drupalGet('/es/node/1');
-    $assert_session->responseContains('Español');
+    $assert_session->pageTextContains('Español');
     $assert_session->pageTextContains('Funciona con');
     $assert_session->pageTextNotContains('Powered by');
 
     // Check if the Powered by string is shown in English on an
     // administration page, and the node content is shown in Spanish.
     $this->drupalGet('/es/node/1/edit');
-    $assert_session->responseContains('Español');
+    $assert_session->pageTextContains('Español');
     $assert_session->pageTextContains('Powered by');
     $assert_session->pageTextNotContains('Funciona con');
   }
@@ -169,27 +169,27 @@ class ConfigurableLanguageManagerTest extends BrowserTestBase {
     // See if the full view of the node in english is present and the
     // string in the Powered By Block is in English.
     $this->drupalGet('/node/1');
-    $assert_session->responseContains('English');
+    $assert_session->pageTextContains('English');
     $assert_session->pageTextContains('Powered by');
 
     // The language session variable has not been set yet, so
     // The string should be in Spanish.
     $this->drupalGet('/es/node/1');
-    $assert_session->responseContains('Español');
+    $assert_session->pageTextContains('Español');
     $assert_session->pageTextNotContains('Powered by');
     $assert_session->pageTextContains('Funciona con');
 
     // Set the session language to Spanish but load the English node page.
     $this->drupalGet('/node/1', ['query' => ['language' => 'es']]);
-    $assert_session->responseContains('English');
-    $assert_session->responseNotContains('Español');
+    $assert_session->pageTextContains('English');
+    $assert_session->pageTextNotContains('Español');
     $assert_session->pageTextContains('Funciona con');
     $assert_session->pageTextNotContains('Powered by');
 
     // Set the session language to English but load the node page in Spanish.
     $this->drupalGet('/es/node/1', ['query' => ['language' => 'en']]);
-    $assert_session->responseNotContains('English');
-    $assert_session->responseContains('Español');
+    $assert_session->pageTextNotContains('English');
+    $assert_session->pageTextContains('Español');
     $assert_session->pageTextNotContains('Funciona con');
     $assert_session->pageTextContains('Powered by');
   }

@@ -192,7 +192,7 @@ class WorkflowUiTest extends BrowserTestBase {
     $workflow = $workflow_storage->loadUnchanged('test');
     $this->assertTrue($workflow->getTypePlugin()->hasTransitionFromStateToState('published', 'published'), 'Can transition from published to published');
     $this->clickLink('Delete');
-    $this->assertSession()->responseContains('Are you sure you want to delete Save and publish from Test?');
+    $this->assertSession()->pageTextContains('Are you sure you want to delete Save and publish from Test?');
     $this->submitForm([], 'Delete');
     $workflow = $workflow_storage->loadUnchanged('test');
     $this->assertFalse($workflow->getTypePlugin()->hasTransitionFromStateToState('published', 'published'), 'Cannot transition from published to published');
@@ -253,7 +253,7 @@ class WorkflowUiTest extends BrowserTestBase {
 
     // Delete the Draft state.
     $this->clickLink('Delete');
-    $this->assertSession()->responseContains('Are you sure you want to delete Draft from Test?');
+    $this->assertSession()->pageTextContains('Are you sure you want to delete Draft from Test?');
     $this->submitForm([], 'Delete');
     $this->assertSession()->pageTextContains('State Draft deleted.');
     $workflow = $workflow_storage->loadUnchanged('test');
@@ -264,7 +264,7 @@ class WorkflowUiTest extends BrowserTestBase {
     // be for the workflow.
     $this->assertSession()->linkByHrefNotExists($published_delete_link);
     $this->clickLink('Delete');
-    $this->assertSession()->responseContains('Are you sure you want to delete Test?');
+    $this->assertSession()->pageTextContains('Are you sure you want to delete Test?');
     $this->submitForm([], 'Delete');
     $this->assertSession()->pageTextContains('Workflow Test deleted.');
     $this->assertSession()->pageTextContains('There are no workflows yet.');
