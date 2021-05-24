@@ -75,7 +75,7 @@ class ForumIndexTest extends BrowserTestBase {
 
     // Verify that the node appears on the index.
     $this->drupalGet('forum/' . $tid);
-    $this->assertText($title);
+    $this->assertSession()->pageTextContains($title);
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'node_list');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:node.type.forum');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'comment_list');
@@ -88,7 +88,7 @@ class ForumIndexTest extends BrowserTestBase {
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->submitForm($edit, 'Save');
     $this->drupalGet('node/' . $node->id());
-    $this->assertText('Access denied');
+    $this->assertSession()->pageTextContains('Access denied');
 
     // Verify that the node no longer appears on the index.
     $this->drupalGet('forum/' . $tid);

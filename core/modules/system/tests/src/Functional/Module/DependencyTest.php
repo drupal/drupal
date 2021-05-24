@@ -42,7 +42,7 @@ class DependencyTest extends ModuleTestBase {
     $edit = [];
     $edit['modules[content_translation][enable]'] = 'content_translation';
     $this->drupalPostForm('admin/modules', $edit, 'Install');
-    $this->assertText('Some required modules must be enabled');
+    $this->assertSession()->pageTextContains('Some required modules must be enabled');
 
     $this->assertModules(['content_translation', 'language'], FALSE);
 
@@ -50,7 +50,7 @@ class DependencyTest extends ModuleTestBase {
     $this->assertNoModuleConfig('language');
 
     $this->submitForm([], 'Continue');
-    $this->assertText('2 modules have been enabled: Content Translation, Language.');
+    $this->assertSession()->pageTextContains('2 modules have been enabled: Content Translation, Language.');
     $this->assertModules(['content_translation', 'language'], TRUE);
 
     // Assert that the language YAML files were created.
@@ -145,7 +145,7 @@ class DependencyTest extends ModuleTestBase {
     $this->submitForm($edit, 'Install');
 
     // Makes sure the modules were NOT installed.
-    $this->assertText('Requirements 1 Test failed requirements');
+    $this->assertSession()->pageTextContains('Requirements 1 Test failed requirements');
     $this->assertModules(['requirements1_test'], FALSE);
     $this->assertModules(['requirements2_test'], FALSE);
 
@@ -178,7 +178,7 @@ class DependencyTest extends ModuleTestBase {
     $this->assertModules(['color'], FALSE);
     // Note that dependencies are sorted alphabetically in the confirmation
     // message.
-    $this->assertText('You must enable the Configuration Manager, Help modules to install Color.');
+    $this->assertSession()->pageTextContains('You must enable the Configuration Manager, Help modules to install Color.');
 
     $edit['modules[config][enable]'] = 'config';
     $edit['modules[help][enable]'] = 'help';
@@ -220,13 +220,13 @@ class DependencyTest extends ModuleTestBase {
     $edit = ['uninstall[forum]' => 'forum'];
     $this->drupalPostForm('admin/modules/uninstall', $edit, 'Uninstall');
     $this->submitForm([], 'Uninstall');
-    $this->assertText('The selected modules have been uninstalled.');
+    $this->assertSession()->pageTextContains('The selected modules have been uninstalled.');
 
     // Uninstall comment module.
     $edit = ['uninstall[comment]' => 'comment'];
     $this->drupalPostForm('admin/modules/uninstall', $edit, 'Uninstall');
     $this->submitForm([], 'Uninstall');
-    $this->assertText('The selected modules have been uninstalled.');
+    $this->assertSession()->pageTextContains('The selected modules have been uninstalled.');
   }
 
 }

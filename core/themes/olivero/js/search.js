@@ -6,8 +6,8 @@
 **/
 
 (function (Drupal) {
-  var searchWideButton = document.querySelector('.header-nav__search-button');
-  var searchWideWrapper = document.querySelector('.search-wide__wrapper');
+  var searchWideButton = document.querySelector('[data-drupal-selector="block-search-wide-button"]');
+  var searchWideWrapper = document.querySelector('[data-drupal-selector="block-search-wide-wrapper"]');
 
   function searchIsVisible() {
     return searchWideWrapper.classList.contains('is-active');
@@ -44,9 +44,9 @@
     }
   });
   document.addEventListener('click', function (e) {
-    if (e.target.matches('.header-nav__search-button, .header-nav__search-button *')) {
+    if (e.target.matches('[data-drupal-selector="block-search-wide-button"], [data-drupal-selector="block-search-wide-button"] *')) {
       toggleSearchVisibility(!searchIsVisible());
-    } else if (searchIsVisible() && !e.target.matches('.search-wide__wrapper, .search-wide__wrapper *')) {
+    } else if (searchIsVisible() && !e.target.matches('[data-drupal-selector="block-search-wide-wrapper"], [data-drupal-selector="block-search-wide-wrapper"] *')) {
       toggleSearchVisibility(false);
     }
   });

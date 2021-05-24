@@ -51,7 +51,7 @@ class MainContentFallbackTest extends BrowserTestBase {
     $this->drupalGet('admin/modules/uninstall');
     $this->submitForm($edit, 'Uninstall');
     $this->submitForm([], 'Uninstall');
-    $this->assertText('The selected modules have been uninstalled.');
+    $this->assertSession()->pageTextContains('The selected modules have been uninstalled.');
     $this->rebuildContainer();
     $this->assertFalse(\Drupal::moduleHandler()->moduleExists('block'), 'Block module uninstall.');
 
@@ -61,7 +61,7 @@ class MainContentFallbackTest extends BrowserTestBase {
     $this->drupalGet('admin/config/system/site-information');
     $this->assertSession()->fieldExists('site_name');
     $this->drupalGet('system-test/main-content-fallback');
-    $this->assertText('Content to test main content fallback');
+    $this->assertSession()->pageTextContains('Content to test main content fallback');
     // Request a user* page and see if it is displayed.
     $this->drupalLogin($this->webUser);
     $this->drupalGet('user/' . $this->webUser->id() . '/edit');
@@ -72,7 +72,7 @@ class MainContentFallbackTest extends BrowserTestBase {
     $edit = [];
     $edit['modules[block][enable]'] = 'block';
     $this->drupalPostForm('admin/modules', $edit, 'Install');
-    $this->assertText('Module Block has been enabled.');
+    $this->assertSession()->pageTextContains('Module Block has been enabled.');
     $this->rebuildContainer();
     $this->assertTrue(\Drupal::moduleHandler()->moduleExists('block'), 'Block module re-enabled.');
   }

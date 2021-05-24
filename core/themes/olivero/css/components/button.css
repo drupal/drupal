@@ -128,6 +128,7 @@
   padding-left: 1.125rem;
   padding-right: 1.125rem;
   font-size: 1rem;
+  line-height: normal;
 }
 
 .button--primary {

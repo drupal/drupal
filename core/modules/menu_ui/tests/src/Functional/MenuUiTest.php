@@ -162,11 +162,11 @@ class MenuUiTest extends BrowserTestBase {
     $this->drupalGet("admin/structure/menu/link/{$id}/edit");
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('The menu link has been saved.');
+    $this->assertSession()->pageTextContains('The menu link has been saved.');
     $menu_link_manager->resetDefinitions();
 
     $instance = $menu_link_manager->createInstance($instance->getPluginId());
-    $this->assertEqual($edit['weight'], $instance->getWeight(), 'Saving an existing link updates the weight.');
+    $this->assertEquals($edit['weight'], $instance->getWeight(), 'Saving an existing link updates the weight.');
     $this->resetMenuLink($instance, $old_weight);
   }
 
@@ -239,12 +239,12 @@ class MenuUiTest extends BrowserTestBase {
     // Verify that the confirmation message is displayed.
     $this->assertRaw(t('Menu %label has been added.', ['%label' => $label]));
     $this->drupalGet('admin/structure/menu');
-    $this->assertText($label);
+    $this->assertSession()->pageTextContains($label);
 
     // Confirm that the custom menu block is available.
     $this->drupalGet('admin/structure/block/list/' . $this->config('system.theme')->get('default'));
     $this->clickLink('Place block');
-    $this->assertText($label);
+    $this->assertSession()->pageTextContains($label);
 
     // Enable the block.
     $block = $this->drupalPlaceBlock('system_menu_block:' . $menu_name);
@@ -279,7 +279,7 @@ class MenuUiTest extends BrowserTestBase {
 
     // Try to delete the main menu.
     $this->drupalGet('admin/structure/menu/manage/main/delete');
-    $this->assertText('You are not authorized to access this page.');
+    $this->assertSession()->pageTextContains('You are not authorized to access this page.');
   }
 
   /**
@@ -587,7 +587,7 @@ class MenuUiTest extends BrowserTestBase {
     $default_theme = $this->config('system.theme')->get('default');
     $this->drupalget('admin/structure/block/list/' . $default_theme);
     $this->clickLink('Place block');
-    $this->assertText($edit['label']);
+    $this->assertSession()->pageTextContains($edit['label']);
   }
 
   /**
@@ -659,7 +659,7 @@ class MenuUiTest extends BrowserTestBase {
     // Add menu link.
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('The menu link has been saved.');
+    $this->assertSession()->pageTextContains('The menu link has been saved.');
 
     $menu_links = \Drupal::entityTypeManager()->getStorage('menu_link_content')->loadByProperties(['title' => $title]);
 
@@ -806,10 +806,10 @@ class MenuUiTest extends BrowserTestBase {
     $this->drupalGet("admin/structure/menu/item/{$mlid}/edit");
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('The menu link has been saved.');
+    $this->assertSession()->pageTextContains('The menu link has been saved.');
     // Verify menu link.
     $this->drupalGet('admin/structure/menu/manage/' . $item->getMenuName());
-    $this->assertText($title);
+    $this->assertSession()->pageTextContains($title);
   }
 
   /**
@@ -829,7 +829,7 @@ class MenuUiTest extends BrowserTestBase {
 
     // Verify menu link.
     $instance = \Drupal::service('plugin.manager.menu.link')->createInstance($menu_link->getPluginId());
-    $this->assertEqual($old_weight, $instance->getWeight(), 'Resets to the old weight.');
+    $this->assertEquals($old_weight, $instance->getWeight(), 'Resets to the old weight.');
   }
 
   /**
@@ -869,7 +869,7 @@ class MenuUiTest extends BrowserTestBase {
 
     // Verify menu link is displayed.
     $this->drupalGet('');
-    $this->assertText($item->getTitle());
+    $this->assertSession()->pageTextContains($item->getTitle());
   }
 
   /**
@@ -990,21 +990,21 @@ class MenuUiTest extends BrowserTestBase {
     $this->drupalGet('admin/help/menu');
     $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
-      $this->assertText('Menu', 'Menu help was displayed');
+      $this->assertSession()->pageTextContains('Menu', 'Menu help was displayed');
     }
 
     // View menu build overview page.
     $this->drupalGet('admin/structure/menu');
     $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
-      $this->assertText('Menus', 'Menu build overview page was displayed');
+      $this->assertSession()->pageTextContains('Menus', 'Menu build overview page was displayed');
     }
 
     // View tools menu customization page.
     $this->drupalGet('admin/structure/menu/manage/' . $this->menu->id());
     $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
-      $this->assertText('Tools', 'Tools menu page was displayed');
+      $this->assertSession()->pageTextContains('Tools', 'Tools menu page was displayed');
     }
 
     // View menu edit page for a static link.
@@ -1012,14 +1012,14 @@ class MenuUiTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/menu/link/' . $item->getPluginId() . '/edit');
     $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
-      $this->assertText('Edit menu item', 'Menu edit page was displayed');
+      $this->assertSession()->pageTextContains('Edit menu item', 'Menu edit page was displayed');
     }
 
     // View add menu page.
     $this->drupalGet('admin/structure/menu/add');
     $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
-      $this->assertText('Menus', 'Add menu page was displayed');
+      $this->assertSession()->pageTextContains('Menus', 'Add menu page was displayed');
     }
   }
 
@@ -1036,8 +1036,8 @@ class MenuUiTest extends BrowserTestBase {
     ], 'Save block');
     $block = Block::load($block_id);
     $settings = $block->getPlugin()->getConfiguration();
-    $this->assertEqual(3, $settings['depth']);
-    $this->assertEqual(2, $settings['level']);
+    $this->assertEquals(3, $settings['depth']);
+    $this->assertEquals(2, $settings['level']);
     // Reset settings.
     $block->getPlugin()->setConfigurationValue('depth', 0);
     $block->getPlugin()->setConfigurationValue('level', 1);

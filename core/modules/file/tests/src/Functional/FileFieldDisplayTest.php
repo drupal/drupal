@@ -96,7 +96,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
       $field_name . '[0][display]' => TRUE,
     ];
     $this->drupalPostForm('node/' . $nid . '/edit', $edit, 'Save');
-    $this->assertText($description);
+    $this->assertSession()->pageTextContains($description);
 
     // Ensure the filename in the link's title attribute is escaped.
     $this->assertRaw('title="escaped-&amp;-text.txt"');
@@ -189,7 +189,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     $this->submitForm($edit, 'Save');
     $node = $this->drupalGetNodeByTitle($title);
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertText('The description may be used as the label of the link to the file.');
+    $this->assertSession()->pageTextContains('The description may be used as the label of the link to the file.');
   }
 
   /**

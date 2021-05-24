@@ -358,7 +358,7 @@ class StyleSerializerTest extends ViewTestBase {
     $result2 = Json::decode($this->drupalGet('test/serialize/entity', ['query' => ['_format' => 'json']]));
     $this->addRequestWithFormat('json');
     $this->assertSession()->responseHeaderEquals('content-type', 'application/json');
-    $this->assertEqual($result1, $result2);
+    $this->assertEquals($result1, $result2);
     $this->assertCacheContexts($cache_contexts);
     $this->assertCacheTags($cache_tags);
     $this->assertNotEmpty($render_cache->get($original));
@@ -497,7 +497,7 @@ class StyleSerializerTest extends ViewTestBase {
 
     $edit = ['row_options[field_options][name][alias]' => $alias_map['name'], 'row_options[field_options][nothing][alias]' => $alias_map['nothing']];
     $this->drupalPostForm($row_options, $edit, 'Apply');
-    $this->assertText('The machine-readable name must contain only letters, numbers, dashes and underscores.');
+    $this->assertSession()->pageTextContains('The machine-readable name must contain only letters, numbers, dashes and underscores.');
 
     // Change the map alias value to a valid one.
     $alias_map['nothing'] = $this->randomMachineName();
@@ -640,7 +640,7 @@ class StyleSerializerTest extends ViewTestBase {
     $this->executeView($view);
     $build = $view->preview();
     $rendered_xml = $build['#plain_text'];
-    $this->assertEqual($expected, $rendered_xml, 'Ensure we preview xml when we change the request format.');
+    $this->assertEquals($expected, $rendered_xml, 'Ensure we preview xml when we change the request format.');
   }
 
   /**
@@ -666,8 +666,8 @@ class StyleSerializerTest extends ViewTestBase {
     $node = $this->drupalCreateNode();
 
     $result = Json::decode($this->drupalGet('test/serialize/node-field', ['query' => ['_format' => 'json']]));
-    $this->assertEqual($node->id(), $result[0]['nid']);
-    $this->assertEqual($node->body->processed, $result[0]['body']);
+    $this->assertEquals($node->id(), $result[0]['nid']);
+    $this->assertEquals($node->body->processed, $result[0]['body']);
 
     // Make sure that serialized fields are not exposed to XSS.
     $node = $this->drupalCreateNode();
@@ -677,7 +677,7 @@ class StyleSerializerTest extends ViewTestBase {
     ];
     $node->save();
     $result = Json::decode($this->drupalGet('test/serialize/node-field', ['query' => ['_format' => 'json']]));
-    $this->assertEqual($node->id(), $result[1]['nid']);
+    $this->assertEquals($node->id(), $result[1]['nid']);
     $this->assertStringNotContainsString("<script", $this->getSession()->getPage()->getContent(), "No script tag is present in the raw page contents.");
 
     $this->drupalLogin($this->adminUser);
@@ -726,7 +726,7 @@ class StyleSerializerTest extends ViewTestBase {
 
     $result = Json::decode($this->drupalGet('test/serialize/node-field', ['query' => ['_format' => 'json']]));
     $this->assertSame($node->body->count(), count($result[2]['body']), 'Expected count of values');
-    $this->assertEqual($result[2]['body'], array_map(function ($item) {
+    $this->assertEquals($result[2]['body'], array_map(function ($item) {
       return $item['value'];
     }, $node->body->getValue()), 'Expected raw body values found.');
   }
@@ -777,7 +777,7 @@ class StyleSerializerTest extends ViewTestBase {
     // Check if the field_group_rows field is grouped.
     $expected = [];
     $expected[] = [$field_name => implode(', ', $grouped_field_values)];
-    $this->assertEqual($serializer->serialize($expected, 'json'), (string) $this->renderer->renderRoot($build));
+    $this->assertEquals($serializer->serialize($expected, 'json'), (string) $this->renderer->renderRoot($build));
     // Set the group rows setting to false.
     $view = Views::getView('test_serializer_node_display_field');
     $view->setDisplay('rest_export_1');
@@ -789,7 +789,7 @@ class StyleSerializerTest extends ViewTestBase {
     foreach ($grouped_field_values as $grouped_field_value) {
       $expected[] = [$field_name => $grouped_field_value];
     }
-    $this->assertEqual($serializer->serialize($expected, 'json'), (string) $this->renderer->renderRoot($build));
+    $this->assertEquals($serializer->serialize($expected, 'json'), (string) $this->renderer->renderRoot($build));
   }
 
   /**
@@ -823,7 +823,7 @@ class StyleSerializerTest extends ViewTestBase {
       ],
     ];
 
-    $this->assertEqual($expected, $result, 'Querying a view with no exposed filter returns all nodes.');
+    $this->assertEquals($expected, $result, 'Querying a view with no exposed filter returns all nodes.');
 
     // Test that title starts with 'Node 11' query finds 2 of the 3 nodes.
     $result = Json::decode($this->drupalGet('test/serialize/node-exposed-filter', ['query' => ['_format' => 'json', 'title' => 'Node 11']]));
@@ -848,7 +848,7 @@ class StyleSerializerTest extends ViewTestBase {
       'url',
     ];
 
-    $this->assertEqual($expected, $result, 'Querying a view with a starts with exposed filter on the title returns nodes whose title starts with value provided.');
+    $this->assertEquals($expected, $result, 'Querying a view with a starts with exposed filter on the title returns nodes whose title starts with value provided.');
     $this->assertCacheContexts($cache_contexts);
   }
 

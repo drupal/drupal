@@ -48,7 +48,7 @@ class StackSessionHandlerIntegrationTest extends BrowserTestBase {
       ['END', NULL, 'close'],
       ['END', 'test_argument', 'close'],
     ];
-    $this->assertEqual($expect_trace, $actual_trace);
+    $this->assertEquals($expect_trace, $actual_trace);
   }
 
 }

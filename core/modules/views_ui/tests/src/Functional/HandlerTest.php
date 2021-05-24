@@ -249,7 +249,7 @@ class HandlerTest extends UITestBase {
       ];
 
       foreach ($original_configuration as $key => $value) {
-        $this->assertText($key . ': ' . $value);
+        $this->assertSession()->pageTextContains($key . ': ' . $value);
       }
     }
   }

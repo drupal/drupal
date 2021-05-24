@@ -323,7 +323,7 @@ class OptionsFieldUITest extends FieldTestBase {
     $this->assertNoRaw('&amp;lt;');
 
     if (is_string($result)) {
-      $this->assertText($result);
+      $this->assertSession()->pageTextContains($result);
     }
     else {
       $field_storage = FieldStorageConfig::loadByName('node', $this->fieldName);
@@ -348,7 +348,7 @@ class OptionsFieldUITest extends FieldTestBase {
     ];
 
     $this->drupalPostForm($this->adminPath, $edit, 'Save field settings');
-    $this->assertText('Updated field ' . $this->fieldName . ' field settings.');
+    $this->assertSession()->pageTextContains('Updated field ' . $this->fieldName . ' field settings.');
 
     // Select a default value.
     $edit = [

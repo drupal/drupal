@@ -377,7 +377,7 @@ function rdf_preprocess_node(&$variables) {
  * Implements hook_preprocess_HOOK() for user templates.
  */
 function rdf_preprocess_user(&$variables) {
-  /** @var $account \Drupal\user\UserInterface */
+  /** @var \Drupal\user\UserInterface $account */
   $account = $variables['elements']['#user'];
   $uri = $account->toUrl();
   $mapping = rdf_get_mapping('user', 'user');

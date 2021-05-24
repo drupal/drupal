@@ -37,8 +37,8 @@ class ContentTranslationUISkipTest extends BrowserTestBase {
     $this->drupalGet('admin/config/regional/content-language');
 
     // Check the message regarding UI integration.
-    $this->assertText('Test entity - Translatable skip UI check');
-    $this->assertText('Test entity - Translatable check UI (Translation is not supported)');
+    $this->assertSession()->pageTextContains('Test entity - Translatable skip UI check');
+    $this->assertSession()->pageTextContains('Test entity - Translatable check UI (Translation is not supported)');
   }
 
 }

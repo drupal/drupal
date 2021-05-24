@@ -34,14 +34,14 @@ class CachedDataUITest extends UITestBase {
     $this->drupalGet('admin/structure/views/view/test_view/edit');
     // Make sure we have 'changes' to the view.
     $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/title', [], 'Apply');
-    $this->assertText('You have unsaved changes.');
-    $this->assertEqual($views_admin_user_uid, $temp_store->getMetadata('test_view')->getOwnerId(), 'View cache has been saved.');
+    $this->assertSession()->pageTextContains('You have unsaved changes.');
+    $this->assertEquals($views_admin_user_uid, $temp_store->getMetadata('test_view')->getOwnerId(), 'View cache has been saved.');
 
     $view_cache = $temp_store->get('test_view');
     // The view should be enabled.
     $this->assertTrue($view_cache->status(), 'The view is enabled.');
     // The view should now be locked.
-    $this->assertEqual($views_admin_user_uid, $temp_store->getMetadata('test_view')->getOwnerId(), 'The view is locked.');
+    $this->assertEquals($views_admin_user_uid, $temp_store->getMetadata('test_view')->getOwnerId(), 'The view is locked.');
 
     // Cancel the view edit and make sure the cache is deleted.
     $this->submitForm([], 'Cancel');

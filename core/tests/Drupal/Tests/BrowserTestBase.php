@@ -141,7 +141,7 @@ abstract class BrowserTestBase extends TestCase {
    */
   protected $customTranslations;
 
-  /*
+  /**
    * Mink class for the default driver to use.
    *
    * Should be a fully-qualified class name that implements
@@ -153,7 +153,7 @@ abstract class BrowserTestBase extends TestCase {
    */
   protected $minkDefaultDriverClass = BrowserKitDriver::class;
 
-  /*
+  /**
    * Mink default driver params.
    *
    * If it's an array its contents are used as constructor params when default
@@ -162,7 +162,6 @@ abstract class BrowserTestBase extends TestCase {
    * Can be overridden using the environment variable MINK_DRIVER_ARGS. In this
    * case that variable should be a JSON array, for example:
    * '["firefox", null, "http://localhost:4444/wd/hub"]'.
-   *
    *
    * @var array
    */
@@ -516,7 +515,7 @@ abstract class BrowserTestBase extends TestCase {
    *   exception.
    */
   protected function getHttpClient() {
-    /* @var $mink_driver \Behat\Mink\Driver\DriverInterface */
+    /** @var \Behat\Mink\Driver\DriverInterface $mink_driver */
     $mink_driver = $this->getSession()->getDriver();
     if ($this->isTestUsingGuzzleClient()) {
       return $mink_driver->getClient()->getClient();
@@ -540,7 +539,7 @@ abstract class BrowserTestBase extends TestCase {
       $select = $this->assertSession()->selectExists($select, $container);
     }
     $options = [];
-    /* @var \Behat\Mink\Element\NodeElement $option */
+    /** @var \Behat\Mink\Element\NodeElement $option */
     foreach ($select->findAll('xpath', '//option') as $option) {
       $label = $option->getText();
       $value = $option->getAttribute('value') ?: $label;

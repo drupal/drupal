@@ -45,7 +45,7 @@ class UrlTest extends BrowserTestBase {
     $this->submitForm($edit, 'Submit');
     $values = Json::decode($this->getSession()->getPage()->getContent());
     $this->assertSame('', $values['url']);
-    $this->assertEqual('http://example.com/', $values['url_required']);
+    $this->assertEquals('http://example.com/', $values['url_required']);
 
     $edit = [];
     $edit['url'] = 'http://foo.bar.example.com/';
@@ -53,8 +53,8 @@ class UrlTest extends BrowserTestBase {
     $this->drupalGet('form-test/url');
     $this->submitForm($edit, 'Submit');
     $values = Json::decode($this->getSession()->getPage()->getContent());
-    $this->assertEqual($edit['url'], $values['url']);
-    $this->assertEqual($edit['url_required'], $values['url_required']);
+    $this->assertEquals($edit['url'], $values['url']);
+    $this->assertEquals($edit['url_required'], $values['url_required']);
   }
 
 }

@@ -27,7 +27,7 @@ class HookRequirementsTest extends ModuleTestBase {
     $this->submitForm($edit, 'Install');
 
     // Makes sure the module was NOT installed.
-    $this->assertText('Requirements 1 Test failed requirements');
+    $this->assertSession()->pageTextContains('Requirements 1 Test failed requirements');
     $this->assertModules(['requirements1_test'], FALSE);
   }
 

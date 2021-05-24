@@ -236,7 +236,7 @@ class DisplayBlockTest extends ViewTestBase {
 
     $block = $storage->load('views_block__test_view_block_block_1_4');
     $config = $block->getPlugin()->getConfiguration();
-    $this->assertEqual(10, $config['items_per_page'], "'Items per page' is properly saved.");
+    $this->assertEquals(10, $config['items_per_page'], "'Items per page' is properly saved.");
 
     $edit['settings[override][items_per_page]'] = 5;
     $this->drupalPostForm('admin/structure/block/manage/views_block__test_view_block_block_1_4', $edit, 'Save block');
@@ -244,7 +244,7 @@ class DisplayBlockTest extends ViewTestBase {
     $block = $storage->load('views_block__test_view_block_block_1_4');
 
     $config = $block->getPlugin()->getConfiguration();
-    $this->assertEqual(5, $config['items_per_page'], "'Items per page' is properly saved.");
+    $this->assertEquals(5, $config['items_per_page'], "'Items per page' is properly saved.");
 
     // Tests the override of the label capability.
     $edit = ['region' => 'content'];
@@ -255,7 +255,7 @@ class DisplayBlockTest extends ViewTestBase {
 
     $block = $storage->load('views_block__test_view_block_block_1_5');
     $config = $block->getPlugin()->getConfiguration();
-    $this->assertEqual('Custom title', $config['views_label'], "'Label' is properly saved.");
+    $this->assertEquals('Custom title', $config['views_label'], "'Label' is properly saved.");
   }
 
   /**

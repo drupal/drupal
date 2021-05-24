@@ -193,7 +193,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
         // status first.
         $status = !$index;
         $translation = $entity->getTranslation($langcode);
-        $this->assertEqual($status, $this->manager->getTranslationMetadata($translation)->isPublished(), 'The translation has been correctly unpublished.');
+        $this->assertEquals($status, $this->manager->getTranslationMetadata($translation)->isPublished(), 'The translation has been correctly unpublished.');
       }
     }
   }
@@ -238,10 +238,10 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     foreach ($this->langcodes as $langcode) {
       $translation = $entity->getTranslation($langcode);
       $metadata = $this->manager->getTranslationMetadata($translation);
-      $this->assertEqual($values[$langcode]['uid'], $metadata->getAuthor()->id(), 'Translation author correctly stored.');
-      $this->assertEqual($values[$langcode]['created'], $metadata->getCreatedTime(), 'Translation date correctly stored.');
-      $this->assertEqual($values[$langcode]['sticky'], $translation->isSticky(), 'Sticky of Translation correctly stored.');
-      $this->assertEqual($values[$langcode]['promote'], $translation->isPromoted(), 'Promoted of Translation correctly stored.');
+      $this->assertEquals($values[$langcode]['uid'], $metadata->getAuthor()->id(), 'Translation author correctly stored.');
+      $this->assertEquals($values[$langcode]['created'], $metadata->getCreatedTime(), 'Translation date correctly stored.');
+      $this->assertEquals($values[$langcode]['sticky'], $translation->isSticky(), 'Sticky of Translation correctly stored.');
+      $this->assertEquals($values[$langcode]['promote'], $translation->isPromoted(), 'Promoted of Translation correctly stored.');
     }
   }
 
@@ -403,7 +403,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $languages = $this->container->get('language_manager')->getLanguages();
     foreach ($this->langcodes as $langcode) {
       $this->drupalGet($path, ['language' => $languages[$langcode]]);
-      $this->assertText($values[$langcode]['title'][0]['value']);
+      $this->assertSession()->pageTextContains($values[$langcode]['title'][0]['value']);
     }
   }
 
@@ -537,7 +537,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Contents should be in English, of correct revision.
-    $this->assertText('First rev en title');
+    $this->assertSession()->pageTextContains('First rev en title');
     $this->assertNoText('First rev fr title');
 
     // Get a French view.
@@ -550,7 +550,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Contents should be in French, of correct revision.
-    $this->assertText('First rev fr title');
+    $this->assertSession()->pageTextContains('First rev fr title');
     $this->assertNoText('First rev en title');
   }
 

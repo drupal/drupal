@@ -27,7 +27,7 @@
  * @event drupalTabbingContextDeactivated
  */
 
-(function ($, Drupal) {
+(function ($, Drupal, { tabbable, isTabbable }) {
   /**
    * Provides an API for managing page tabbing order modifications.
    *
@@ -116,9 +116,9 @@
        * Makes elements outside of the specified set of elements unreachable via
        * the tab key.
        *
-       * @param {jQuery} elements
+       * @param {jQuery|Selector|Element|ElementArray|object|selection} elements
        *   The set of elements to which tabbing should be constrained. Can also
-       *   be a jQuery-compatible selector string.
+       *   be any jQuery-compatible argument.
        *
        * @return {Drupal~TabbingContext}
        *   The TabbingContext instance.
@@ -136,13 +136,19 @@
 
         // The "active tabbing set" are the elements tabbing should be constrained
         // to.
-        const $elements = $(elements).find(':tabbable').addBack(':tabbable');
+        let tabbableElements = [];
+        $(elements).each((index, rootElement) => {
+          tabbableElements = [...tabbableElements, ...tabbable(rootElement)];
+          if (isTabbable(rootElement)) {
+            tabbableElements = [...tabbableElements, rootElement];
+          }
+        });
 
         const tabbingContext = new TabbingContext({
           // The level is the current height of the stack before this new
           // tabbingContext is pushed on top of the stack.
           level: this.stack.length,
-          $tabbableElements: $elements,
+          $tabbableElements: $(tabbableElements),
         });
 
         this.stack.push(tabbingContext);
@@ -196,7 +202,7 @@
         const $set = tabbingContext.$tabbableElements;
         const level = tabbingContext.level;
         // Determine which elements are reachable via tabbing by default.
-        const $disabledSet = $(':tabbable')
+        const $disabledSet = $(tabbable(document.body))
           // Exclude elements of the active tabbing set.
           .not($set);
         // Set the disabled set on the tabbingContext.
@@ -364,4 +370,4 @@
    * @type {Drupal~TabbingManager}
    */
   Drupal.tabbingManager = new TabbingManager();
-})(jQuery, Drupal);
+})(jQuery, Drupal, window.tabbable);
