@@ -86,6 +86,9 @@
         $('body').css({
           'padding-top': this.model.get('height'),
         });
+        $('html').css({
+          'scroll-padding-top': this.model.get('height'),
+        });
 
         this.triggerDisplace();
       },
