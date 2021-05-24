@@ -148,7 +148,8 @@ class ShortcutSetsTest extends ShortcutTestBase {
    */
   public function testShortcutSetSwitchNoSetName() {
     $edit = ['set' => 'new'];
-    $this->drupalPostForm('user/' . $this->adminUser->id() . '/shortcuts', $edit, 'Change set');
+    $this->drupalGet('user/' . $this->adminUser->id() . '/shortcuts');
+    $this->submitForm($edit, 'Change set');
     $this->assertSession()->pageTextContains('The new set label is required.');
     $current_set = shortcut_current_displayed_set($this->adminUser);
     $this->assertEquals($this->set->id(), $current_set->id(), 'Attempting to switch to a new shortcut set without providing a set name does not succeed.');

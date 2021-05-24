@@ -96,7 +96,8 @@ class EntityTranslationFormTest extends BrowserTestBase {
     $edit['title[0][value]'] = $this->randomMachineName(8);
     $edit['body[0][value]'] = $this->randomMachineName(16);
     $edit['langcode[0][value]'] = $langcode;
-    $this->drupalPostForm('node/add/page', $edit, 'Save');
+    $this->drupalGet('node/add/page');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('Basic page ' . $edit['title[0][value]'] . ' has been created.');
 
     // Verify that the creation message contains a link to a node.

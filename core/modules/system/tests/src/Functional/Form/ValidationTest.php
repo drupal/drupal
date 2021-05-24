@@ -80,7 +80,8 @@ class ValidationTest extends BrowserTestBase {
    * Tests that a form with a disabled CSRF token can be validated.
    */
   public function testDisabledToken() {
-    $this->drupalPostForm('form-test/validate-no-token', [], 'Save');
+    $this->drupalGet('form-test/validate-no-token');
+    $this->submitForm([], 'Save');
     $this->assertSession()->pageTextContains('The form_test_validate_no_token form has been submitted successfully.');
   }
 
@@ -112,29 +113,37 @@ class ValidationTest extends BrowserTestBase {
     // #limit_validation_errors) and ensure that the title field is not
     // validated, but the #element_validate handler for the 'test' field
     // is triggered.
-    $this->drupalPostForm($path, $edit, 'Partial validate');
+    $this->drupalGet($path);
+    $this->submitForm($edit, 'Partial validate');
     $this->assertNoText('Title field is required.');
     $this->assertSession()->pageTextContains('Test element is invalid');
 
     // Edge case of #limit_validation_errors containing numeric indexes: same
     // thing with the 'Partial validate (numeric index)' button and the
     // 'test_numeric_index' field.
-    $this->drupalPostForm($path, $edit, 'Partial validate (numeric index)');
+    $this->drupalGet($path);
+    $this->submitForm($edit, 'Partial validate (numeric index)');
     $this->assertNoText('Title field is required.');
     $this->assertSession()->pageTextContains('Test (numeric index) element is invalid');
 
     // Ensure something like 'foobar' isn't considered "inside" 'foo'.
-    $this->drupalPostForm($path, $edit, 'Partial validate (substring)');
+    $this->drupalGet($path);
+    $this->submitForm($edit, 'Partial validate (substring)');
     $this->assertNoText('Title field is required.');
     $this->assertSession()->pageTextContains('Test (substring) foo element is invalid');
 
     // Ensure not validated values are not available to submit handlers.
-    $this->drupalPostForm($path, ['title' => '', 'test' => 'valid'], 'Partial validate');
+    $this->drupalGet($path);
+    $this->submitForm([
+      'title' => '',
+      'test' => 'valid',
+    ], 'Partial validate');
     $this->assertSession()->pageTextContains('Only validated values appear in the form values.');
 
     // Now test full form validation and ensure that the #element_validate
     // handler is still triggered.
-    $this->drupalPostForm($path, $edit, 'Full validate');
+    $this->drupalGet($path);
+    $this->submitForm($edit, 'Full validate');
     $this->assertSession()->pageTextContains('Title field is required.');
     $this->assertSession()->pageTextContains('Test element is invalid');
   }

@@ -108,7 +108,8 @@ class SearchNumberMatchingTest extends BrowserTestBase {
         // "not keyword" when searching.
         $number = ltrim($number, '-');
 
-        $this->drupalPostForm('search/node', ['keys' => $number], 'Search');
+        $this->drupalGet('search/node');
+        $this->submitForm(['keys' => $number], 'Search');
         $this->assertSession()->pageTextContains($node->label());
       }
     }

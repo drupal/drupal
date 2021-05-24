@@ -673,14 +673,16 @@ class FormTest extends BrowserTestBase {
    * Tests default value handling of #type 'range' elements.
    */
   public function testRange() {
-    $this->drupalPostForm('form-test/range', [], 'Submit');
+    $this->drupalGet('form-test/range');
+    $this->submitForm([], 'Submit');
     $values = json_decode($this->getSession()->getPage()->getContent());
     $this->assertEquals(18, $values->with_default_value);
     $this->assertEquals(10.5, $values->float);
     $this->assertEquals(6, $values->integer);
     $this->assertEquals(6.9, $values->offset);
 
-    $this->drupalPostForm('form-test/range/invalid', [], 'Submit');
+    $this->drupalGet('form-test/range/invalid');
+    $this->submitForm([], 'Submit');
     // Verify that the 'range' element has the error class.
     $this->assertSession()->elementExists('xpath', '//input[@type="range" and contains(@class, "error")]');
   }
