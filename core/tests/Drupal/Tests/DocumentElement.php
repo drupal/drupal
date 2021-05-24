@@ -64,12 +64,16 @@ class DocumentElement extends TraversableElement {
       // - remove dangerous protocols
       // - filter out all HTML tags, as they are not visible in a normal browser.
       $text = Xss::filter($raw_content, []);
-      // To match \Behat\Mink\Element\Element::getText() include the page title,
-      // remove new lines and normalize spaces.
+      // To match \Behat\Mink\Element\Element::getText() include the page title.
       $title_element = $this->find('css', 'title');
       if ($title_element) {
         $text = $title_element->getText() . ' ' . $text;
       }
+      // To match what the user sees and \Behat\Mink\Element\Element::getText()
+      // decode HTML entities.
+      $text = html_entity_decode($text);
+      // To match \Behat\Mink\Element\Element::getText() remove new lines and
+      // normalize spaces.
       $text = str_replace("\n", ' ', $text);
       $text = preg_replace('/ {2,}/', ' ', $text);
       return trim($text);
