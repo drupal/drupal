@@ -99,8 +99,10 @@ class DateFilterTest extends ViewTestBase {
     $edit = [];
     $edit['options[operator]'] = '>';
     $edit['options[expose][operator_list][]'] = ['>', '>=', 'between'];
-    $this->drupalPostForm('admin/structure/views/nojs/handler/test_exposed_filter_datetime/default/filter/field_date_value', $edit, 'Apply');
-    $this->drupalPostForm('admin/structure/views/view/test_exposed_filter_datetime/edit/default', [], 'Save');
+    $this->drupalGet('admin/structure/views/nojs/handler/test_exposed_filter_datetime/default/filter/field_date_value');
+    $this->submitForm($edit, 'Apply');
+    $this->drupalGet('admin/structure/views/view/test_exposed_filter_datetime/edit/default');
+    $this->submitForm([], 'Save');
 
     $this->drupalGet('test_exposed_filter_datetime');
     $this->assertSession()->statusCodeEquals(200);

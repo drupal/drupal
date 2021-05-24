@@ -124,7 +124,8 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
     $this->assertText('Test Article - New title');
     $this->assertText('Test 1');
     $this->assertRaw('0.01');
-    $this->drupalPostForm('node/8/edit', [], 'Save (this translation)');
+    $this->drupalGet('node/8/edit');
+    $this->submitForm([], 'Save (this translation)');
     $this->assertSession()->statusCodeEquals(200);
     $this->drupalGet('node/8/edit', ['language' => $spanish]);
     $this->assertText('Test title Spanish');

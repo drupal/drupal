@@ -91,7 +91,8 @@ class SearchAdvancedSearchFormTest extends BrowserTestBase {
       'negative' => 'fish snake',
       'type[page]' => 'page',
     ];
-    $this->drupalPostForm('search/node', $edit, 'edit-submit--2');
+    $this->drupalGet('search/node');
+    $this->submitForm($edit, 'edit-submit--2');
 
     // Test that the encoded query appears in the page title. Only test the
     // part not including the quote, because assertText() cannot seem to find

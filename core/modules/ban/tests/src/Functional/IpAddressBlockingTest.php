@@ -38,7 +38,8 @@ class IpAddressBlockingTest extends BrowserTestBase {
     // Ban a valid IP address.
     $edit = [];
     $edit['ip'] = '1.2.3.3';
-    $this->drupalPostForm('admin/config/people/ban', $edit, 'Add');
+    $this->drupalGet('admin/config/people/ban');
+    $this->submitForm($edit, 'Add');
     $ip = $connection->select('ban_ip', 'bi')->fields('bi', ['iid'])->condition('ip', $edit['ip'])->execute()->fetchField();
     $this->assertNotEmpty($ip, 'IP address found in database.');
     $this->assertRaw(t('The IP address %ip has been banned.', ['%ip' => $edit['ip']]));

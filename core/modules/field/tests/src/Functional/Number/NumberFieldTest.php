@@ -434,7 +434,8 @@ class NumberFieldTest extends BrowserTestBase {
     $edit = [
       'settings[min]' => $minimum_value,
     ];
-    $this->drupalPostForm($field_configuration_url, $edit, 'Save settings');
+    $this->drupalGet($field_configuration_url);
+    $this->submitForm($edit, 'Save settings');
     // Check if an error message is shown.
     $this->assertNoRaw(t('%name is not a valid number.', ['%name' => t('Minimum')]));
     // Check if a success message is shown.

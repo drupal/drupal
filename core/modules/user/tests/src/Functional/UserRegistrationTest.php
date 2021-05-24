@@ -62,7 +62,8 @@ class UserRegistrationTest extends BrowserTestBase {
     $edit = [];
     $edit['name'] = $name = $this->randomMachineName();
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
-    $this->drupalPostForm('user/register', $edit, 'Create new account');
+    $this->drupalGet('user/register');
+    $this->submitForm($edit, 'Create new account');
     $this->container->get('entity_type.manager')->getStorage('user')->resetCache();
     $accounts = $storage->loadByProperties(['name' => $name, 'mail' => $mail]);
     $new_user = reset($accounts);
@@ -210,7 +211,8 @@ class UserRegistrationTest extends BrowserTestBase {
     $edit['pass[pass2]'] = $edit['pass[pass1]'] = $this->randomMachineName();
 
     // Create one account.
-    $this->drupalPostForm('user/register', $edit, 'Create new account');
+    $this->drupalGet('user/register');
+    $this->submitForm($edit, 'Create new account');
     $this->assertSession()->statusCodeEquals(200);
 
     $user_storage = \Drupal::entityTypeManager()->getStorage('user');
@@ -223,7 +225,8 @@ class UserRegistrationTest extends BrowserTestBase {
     $edit['mail'] = $edit['name'] . '@example.com';
     $edit['pass[pass2]'] = $edit['pass[pass1]'] = $this->randomMachineName();
 
-    $this->drupalPostForm('user/register', $edit, 'Create new account');
+    $this->drupalGet('user/register');
+    $this->submitForm($edit, 'Create new account');
     $this->assertSession()->statusCodeEquals(200);
 
     $this->assertNotEmpty($user_storage->loadByProperties(['name' => $edit['name']]));
@@ -279,11 +282,13 @@ class UserRegistrationTest extends BrowserTestBase {
     $account = $this->drupalCreateUser();
 
     $edit = ['mail' => 'test@example.com', 'name' => $account->getAccountName()];
-    $this->drupalPostForm('user/register', $edit, 'Create new account');
+    $this->drupalGet('user/register');
+    $this->submitForm($edit, 'Create new account');
     $this->assertRaw(new FormattableMarkup('The username %value is already taken.', ['%value' => $account->getAccountName()]));
 
     $edit = ['mail' => $account->getEmail(), 'name' => $this->randomString()];
-    $this->drupalPostForm('user/register', $edit, 'Create new account');
+    $this->drupalGet('user/register');
+    $this->submitForm($edit, 'Create new account');
     $this->assertRaw(new FormattableMarkup('The email address %value is already taken.', ['%value' => $account->getEmail()]));
   }
 

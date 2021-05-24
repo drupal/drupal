@@ -56,7 +56,8 @@ class FilterUITest extends UITestBase {
     $edit = [
       'options[expose][reduce]' => TRUE,
     ];
-    $this->drupalPostForm($path, $edit, 'Apply');
+    $this->drupalGet($path);
+    $this->submitForm($edit, 'Apply');
 
     // Verifies that the option was saved as expected.
     $this->drupalGet($path);

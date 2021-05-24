@@ -48,7 +48,8 @@ class MainContentFallbackTest extends BrowserTestBase {
     $edit = [];
     // Uninstall the block module.
     $edit['uninstall[block]'] = 'block';
-    $this->drupalPostForm('admin/modules/uninstall', $edit, 'Uninstall');
+    $this->drupalGet('admin/modules/uninstall');
+    $this->submitForm($edit, 'Uninstall');
     $this->submitForm([], 'Uninstall');
     $this->assertText('The selected modules have been uninstalled.');
     $this->rebuildContainer();

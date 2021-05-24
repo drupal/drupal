@@ -243,7 +243,8 @@ class DisplayTest extends UITestBase {
     $display_title = "'<test>'";
     $this->drupalGet('admin/structure/views/view/test_display');
     $display_title_path = 'admin/structure/views/nojs/display/test_display/block_1/display_title';
-    $this->drupalPostForm($display_title_path, ['display_title' => $display_title], 'Apply');
+    $this->drupalGet($display_title_path);
+    $this->submitForm(['display_title' => $display_title], 'Apply');
 
     // Ensure that the title is escaped as expected.
     $this->assertSession()->assertEscaped($display_title);
@@ -274,7 +275,8 @@ class DisplayTest extends UITestBase {
     $this->assertText('All displays');
 
     // Remove a display and test if the override option is hidden.
-    $this->drupalPostForm('admin/structure/views/view/test_display/edit/block_1', [], 'Delete Block');
+    $this->drupalGet('admin/structure/views/view/test_display/edit/block_1');
+    $this->submitForm([], 'Delete Block');
     $this->submitForm([], 'Save');
 
     $this->drupalGet('admin/structure/views/nojs/handler/test_display/page_1/field/title');

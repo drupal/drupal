@@ -304,7 +304,8 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
 
     // Add two entries in the body.
     $edit = ['title[0][value]' => 'Cardinality', 'body[0][value]' => 'Body 1', 'body[1][value]' => 'Body 2'];
-    $this->drupalPostForm('node/add/article', $edit, 'Save');
+    $this->drupalGet('node/add/article');
+    $this->submitForm($edit, 'Save');
 
     // Assert that you can't set the cardinality to a lower number than the
     // highest delta of this field.
@@ -335,21 +336,24 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       'cardinality' => 'number',
       'cardinality_number' => 1,
     ];
-    $this->drupalPostForm($field_edit_path, $edit, 'Save field settings');
+    $this->drupalGet($field_edit_path);
+    $this->submitForm($edit, 'Save field settings');
     $this->assertRaw(t('There are @count entities with @delta or more values in this field.', ['@count' => 2, '@delta' => 2]));
 
     $edit = [
       'cardinality' => 'number',
       'cardinality_number' => 2,
     ];
-    $this->drupalPostForm($field_edit_path, $edit, 'Save field settings');
+    $this->drupalGet($field_edit_path);
+    $this->submitForm($edit, 'Save field settings');
     $this->assertRaw(t('There is @count entity with @delta or more values in this field.', ['@count' => 1, '@delta' => 3]));
 
     $edit = [
       'cardinality' => 'number',
       'cardinality_number' => 3,
     ];
-    $this->drupalPostForm($field_edit_path, $edit, 'Save field settings');
+    $this->drupalGet($field_edit_path);
+    $this->submitForm($edit, 'Save field settings');
 
     // Test the cardinality validation is not access sensitive.
 
@@ -357,7 +361,8 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $edit = [
       'cardinality' => (string) FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ];
-    $this->drupalPostForm($field_edit_path, $edit, 'Save field settings');
+    $this->drupalGet($field_edit_path);
+    $this->submitForm($edit, 'Save field settings');
     $node = $this->drupalCreateNode([
       'private' => TRUE,
       'uid' => 0,
@@ -377,19 +382,22 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       'cardinality' => 'number',
       'cardinality_number' => 2,
     ];
-    $this->drupalPostForm($field_edit_path, $edit, 'Save field settings');
+    $this->drupalGet($field_edit_path);
+    $this->submitForm($edit, 'Save field settings');
     $this->assertRaw(t('There are @count entities with @delta or more values in this field.', ['@count' => 2, '@delta' => 3]));
     $edit = [
       'cardinality' => 'number',
       'cardinality_number' => 3,
     ];
-    $this->drupalPostForm($field_edit_path, $edit, 'Save field settings');
+    $this->drupalGet($field_edit_path);
+    $this->submitForm($edit, 'Save field settings');
     $this->assertRaw(t('There is @count entity with @delta or more values in this field.', ['@count' => 1, '@delta' => 4]));
     $edit = [
       'cardinality' => 'number',
       'cardinality_number' => 4,
     ];
-    $this->drupalPostForm($field_edit_path, $edit, 'Save field settings');
+    $this->drupalGet($field_edit_path);
+    $this->submitForm($edit, 'Save field settings');
   }
 
   /**
@@ -713,7 +721,8 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       'new_storage_type' => 'entity_reference',
     ];
     $url = 'admin/structure/types/manage/' . $this->contentType . '/fields/add-field';
-    $this->drupalPostForm($url, $edit, 'Save and continue');
+    $this->drupalGet($url);
+    $this->submitForm($edit, 'Save and continue');
 
     $this->assertText('The machine-readable name is already in use. It must be unique.');
     $this->assertSession()->addressEquals($url);
@@ -726,7 +735,8 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $options = [
       'query' => ['destinations' => ['http://example.com']],
     ];
-    $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.body/storage', [], 'Save field settings', $options);
+    $this->drupalGet('admin/structure/types/manage/article/fields/node.article.body/storage', $options);
+    $this->submitForm([], 'Save field settings');
     // The external redirect should not fire.
     $this->assertSession()->addressEquals('admin/structure/types/manage/article/fields/node.article.body/storage?destinations%5B0%5D=http%3A//example.com');
     $this->assertSession()->statusCodeEquals(200);
@@ -777,7 +787,8 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $edit = [
       'description' => '<strong>Test with an upload field.',
     ];
-    $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.field_image', $edit, 'Save settings');
+    $this->drupalGet('admin/structure/types/manage/article/fields/node.article.field_image');
+    $this->submitForm($edit, 'Save settings');
 
     // Check that hook_field_widget_single_element_form_alter() does believe
     // this is the default value form.
@@ -787,7 +798,8 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $edit = [
       'description' => '<em>Test with a non upload field.',
     ];
-    $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.field_tags', $edit, 'Save settings');
+    $this->drupalGet('admin/structure/types/manage/article/fields/node.article.field_tags');
+    $this->submitForm($edit, 'Save settings');
 
     $this->drupalGet('node/add/article');
     $this->assertRaw('<strong>Test with an upload field.</strong>');

@@ -49,7 +49,8 @@ class FilterHooksTest extends BrowserTestBase {
     $edit['format'] = mb_strtolower($this->randomMachineName());
     $edit['name'] = $name;
     $edit['roles[' . RoleInterface::ANONYMOUS_ID . ']'] = 1;
-    $this->drupalPostForm('admin/config/content/formats/add', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/content/formats/add');
+    $this->submitForm($edit, 'Save configuration');
     $this->assertRaw(t('Added text format %format.', ['%format' => $name]));
     $this->assertText('hook_filter_format_insert invoked.');
 
@@ -58,7 +59,8 @@ class FilterHooksTest extends BrowserTestBase {
     // Update text format.
     $edit = [];
     $edit['roles[' . RoleInterface::AUTHENTICATED_ID . ']'] = 1;
-    $this->drupalPostForm('admin/config/content/formats/manage/' . $format_id, $edit, 'Save configuration');
+    $this->drupalGet('admin/config/content/formats/manage/' . $format_id);
+    $this->submitForm($edit, 'Save configuration');
     $this->assertRaw(t('The text format %format has been updated.', ['%format' => $name]));
     $this->assertText('hook_filter_format_update invoked.');
 

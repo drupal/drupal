@@ -105,7 +105,8 @@ class UserCreateTest extends BrowserTestBase {
         'pass[pass2]' => $pass,
         'notify' => $notify,
       ];
-      $this->drupalPostForm('admin/people/create', $edit, 'Create new account');
+      $this->drupalGet('admin/people/create');
+      $this->submitForm($edit, 'Create new account');
 
       if ($notify) {
         $this->assertText('A welcome message with further instructions has been emailed to the new user ' . $edit['name'] . '.');

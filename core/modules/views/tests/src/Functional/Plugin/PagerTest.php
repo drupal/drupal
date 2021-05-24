@@ -64,7 +64,8 @@ class PagerTest extends ViewTestBase {
     $edit = [
       'pager[type]' => 'some',
     ];
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/pager', $edit, 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/display/test_view/default/pager');
+    $this->submitForm($edit, 'Apply');
 
     $items_per_page = $this->assertSession()->fieldExists("pager_options[items_per_page]");
     $this->assertSession()->fieldValueEquals("pager_options[items_per_page]", 10);
@@ -79,7 +80,8 @@ class PagerTest extends ViewTestBase {
     $edit = [
       'pager[type]' => 'none',
     ];
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/pager', $edit, 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/display/test_view/default/pager');
+    $this->submitForm($edit, 'Apply');
 
     $offset = $this->assertSession()->fieldExists("pager_options[offset]");
     $this->assertSession()->fieldValueEquals("pager_options[offset]", 0);
@@ -89,7 +91,8 @@ class PagerTest extends ViewTestBase {
     $edit = [
       'pager[type]' => 'full',
     ];
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/pager', $edit, 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/display/test_view/default/pager');
+    $this->submitForm($edit, 'Apply');
 
     $items_per_page = $this->assertSession()->fieldExists("pager_options[items_per_page]");
     $this->assertSession()->fieldValueEquals("pager_options[items_per_page]", 10);
@@ -453,7 +456,8 @@ class PagerTest extends ViewTestBase {
       'translation[config_names][views.view.content][display][default][display_options][pager][options][tags][next]' => 'Volgende ›',
       'translation[config_names][views.view.content][display][default][display_options][pager][options][tags][last]' => 'Laatste »',
     ];
-    $this->drupalPostForm('admin/structure/views/view/content/translate/nl/edit', $edit, 'Save translation');
+    $this->drupalGet('admin/structure/views/view/content/translate/nl/edit');
+    $this->submitForm($edit, 'Save translation');
 
     // We create 11 nodes, this will give us 3 pages.
     $this->drupalCreateContentType(['type' => 'page']);

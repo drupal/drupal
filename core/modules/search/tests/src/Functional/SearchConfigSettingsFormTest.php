@@ -70,7 +70,8 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
     // also needs the word "pizza" so we can use it as the search keyword.
     $body_key = 'body[0][value]';
     $edit[$body_key] = Link::fromTextAndUrl($node->label(), $node->toUrl())->toString() . ' pizza sandwich';
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm($edit, 'Save');
 
     $this->container->get('plugin.manager.search')->createInstance('node_search')->updateIndex();
 
@@ -196,7 +197,8 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
       // Run a search from the search block on the node page. Verify you get
       // to this plugin's search results page.
       $terms = ['keys' => $info['keys']];
-      $this->drupalPostForm('node', $terms, 'Search');
+      $this->drupalGet('node');
+      $this->submitForm($terms, 'Search');
       $current = $this->getURL();
       $expected = Url::fromRoute('search.view_' . $entity->id(), [], ['query' => ['keys' => $info['keys']], 'absolute' => TRUE])->toString();
       $this->assertEqual($expected, $current, 'Block redirected to right search page');
@@ -302,7 +304,8 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
       'entities[' . $first_id . '][weight]' => 10,
       'entities[' . $second_id . '][weight]' => -10,
     ];
-    $this->drupalPostForm('admin/config/search/pages', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/search/pages');
+    $this->submitForm($edit, 'Save configuration');
     $this->drupalGet('search');
     $elements = $this->xpath('//*[contains(@class, :class)]//a', [':class' => 'tabs primary']);
     $this->assertSame(Url::fromRoute('search.view_' . $second_id)->toString(), $elements[0]->getAttribute('href'));

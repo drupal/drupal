@@ -78,7 +78,8 @@ class VocabularyUiTest extends TaxonomyTestBase {
     $edit['name'] = 'Don\'t Panic';
     $edit['description'] = $this->randomMachineName();
     $edit['vid'] = 'don_t_panic';
-    $this->drupalPostForm('admin/structure/taxonomy/add', $edit, 'Save');
+    $this->drupalGet('admin/structure/taxonomy/add');
+    $this->submitForm($edit, 'Save');
 
     $site_name = $this->config('system.site')->get('name');
     $this->assertSession()->titleEquals("Don't Panic | $site_name");
@@ -101,7 +102,8 @@ class VocabularyUiTest extends TaxonomyTestBase {
       $edit['vocabularies[' . $key . '][weight]'] = $weight;
     }
     // Saving the new weights via the interface.
-    $this->drupalPostForm('admin/structure/taxonomy', $edit, 'Save');
+    $this->drupalGet('admin/structure/taxonomy');
+    $this->submitForm($edit, 'Save');
 
     // Load the vocabularies from the database.
     $this->container->get('entity_type.manager')->getStorage('taxonomy_vocabulary')->resetCache();

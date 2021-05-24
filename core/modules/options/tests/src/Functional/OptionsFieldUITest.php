@@ -317,7 +317,8 @@ class OptionsFieldUITest extends FieldTestBase {
    */
   public function assertAllowedValuesInput($input_string, $result, $message) {
     $edit = ['settings[allowed_values]' => $input_string];
-    $this->drupalPostForm($this->adminPath, $edit, 'Save field settings');
+    $this->drupalGet($this->adminPath);
+    $this->submitForm($edit, 'Save field settings');
     // Verify that the page does not have double escaped HTML tags.
     $this->assertNoRaw('&amp;lt;');
 
@@ -362,7 +363,8 @@ class OptionsFieldUITest extends FieldTestBase {
         "fields[$this->fieldName][type]" => $formatter,
         "fields[$this->fieldName][region]" => 'content',
       ];
-      $this->drupalPostForm('admin/structure/types/manage/' . $this->typeName . '/display', $edit, 'Save');
+      $this->drupalGet('admin/structure/types/manage/' . $this->typeName . '/display');
+      $this->submitForm($edit, 'Save');
       $this->drupalGet('node/' . $node->id());
 
       if ($formatter == 'list_default') {

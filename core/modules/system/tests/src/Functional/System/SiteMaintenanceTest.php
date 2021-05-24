@@ -69,7 +69,8 @@ class SiteMaintenanceTest extends BrowserTestBase {
     $edit = [
       'maintenance_mode' => 1,
     ];
-    $this->drupalPostForm('admin/config/development/maintenance', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/development/maintenance');
+    $this->submitForm($edit, 'Save configuration');
 
     $admin_message = t('Operating in maintenance mode. <a href=":url">Go online.</a>', [':url' => Url::fromRoute('system.site_maintenance_mode')->toString()]);
     $user_message = 'Operating in maintenance mode.';

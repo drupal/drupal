@@ -85,7 +85,8 @@ class UninstallTest extends BrowserTestBase {
     // Uninstall module_test.
     $edit = [];
     $edit['uninstall[module_test]'] = TRUE;
-    $this->drupalPostForm('admin/modules/uninstall', $edit, 'Uninstall');
+    $this->drupalGet('admin/modules/uninstall');
+    $this->submitForm($edit, 'Uninstall');
     $this->assertNoText('Configuration deletions');
     $this->assertText('Configuration updates');
     $this->assertText($node_type->label());
@@ -166,7 +167,8 @@ class UninstallTest extends BrowserTestBase {
     $this->drupalGet('admin/modules/uninstall');
     $this->assertText('Module installer config test');
     $edit['uninstall[module_installer_config_test]'] = TRUE;
-    $this->drupalPostForm('admin/modules/uninstall', $edit, 'Uninstall');
+    $this->drupalGet('admin/modules/uninstall');
+    $this->submitForm($edit, 'Uninstall');
     $this->submitForm([], 'Uninstall');
     $this->assertText('The selected modules have been uninstalled.');
     $this->assertNoText('Module installer config test');

@@ -61,7 +61,8 @@ class ImportOpmlTest extends AggregatorTestBase {
     $before = $count_query->execute();
 
     $edit = [];
-    $this->drupalPostForm('admin/config/services/aggregator/add/opml', $edit, 'Import');
+    $this->drupalGet('admin/config/services/aggregator/add/opml');
+    $this->submitForm($edit, 'Import');
     $this->assertRaw(t('<em>Either</em> upload a file or enter a URL.'));
 
     $path = $this->getEmptyOpml();
@@ -112,7 +113,8 @@ class ImportOpmlTest extends AggregatorTestBase {
       'files[upload]' => $this->getValidOpml($feeds),
       'refresh'       => '900',
     ];
-    $this->drupalPostForm('admin/config/services/aggregator/add/opml', $edit, 'Import');
+    $this->drupalGet('admin/config/services/aggregator/add/opml');
+    $this->submitForm($edit, 'Import');
     // Verify that a duplicate URL was identified.
     $this->assertRaw(t('A feed with the URL %url already exists.', ['%url' => $feeds[0]['url[0][value]']]));
     // Verify that a duplicate title was identified.

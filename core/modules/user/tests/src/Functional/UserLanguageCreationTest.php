@@ -63,7 +63,8 @@ class UserLanguageCreationTest extends BrowserTestBase {
       'pass[pass2]' => $username,
     ];
 
-    $this->drupalPostForm($langcode . '/admin/people/create', $edit, 'Create new account');
+    $this->drupalGet($langcode . '/admin/people/create');
+    $this->submitForm($edit, 'Create new account');
 
     $user = user_load_by_name($username);
     $this->assertEqual($langcode, $user->getPreferredLangcode(), 'New user has correct preferred language set.');
@@ -81,7 +82,8 @@ class UserLanguageCreationTest extends BrowserTestBase {
       'mail' => $this->randomMachineName(4) . '@example.com',
     ];
 
-    $this->drupalPostForm($langcode . '/user/register', $edit, 'Create new account');
+    $this->drupalGet($langcode . '/user/register');
+    $this->submitForm($edit, 'Create new account');
 
     $user = user_load_by_name($username);
     $this->assertEqual($langcode, $user->getPreferredLangcode(), 'New user has correct preferred language set.');
@@ -102,7 +104,8 @@ class UserLanguageCreationTest extends BrowserTestBase {
       'pass[pass2]' => $user->passRaw,
     ];
 
-    $this->drupalPostForm($user_edit, $edit, 'Save');
+    $this->drupalGet($user_edit);
+    $this->submitForm($edit, 'Save');
 
     $this->drupalLogin($user);
     $this->drupalGet($user_edit);

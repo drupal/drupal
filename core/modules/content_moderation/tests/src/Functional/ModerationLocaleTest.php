@@ -44,7 +44,8 @@ class ModerationLocaleTest extends ModerationStateTestBase {
       $edit = [
         'predefined_langcode' => $langcode,
       ];
-      $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
+      $this->drupalGet('admin/config/regional/language/add');
+      $this->submitForm($edit, 'Add language');
     }
 
     // Enable content translation on articles.
@@ -183,7 +184,8 @@ class ModerationLocaleTest extends ModerationStateTestBase {
     $this->assertEqual('New draft of translated node', $french_node->getTitle(), 'The draft has replaced the published revision.');
 
     // Publish the English article before testing the archive transition.
-    $this->drupalPostForm('node/' . $english_node->id() . '/edit', [
+    $this->drupalGet('node/' . $english_node->id() . '/edit');
+    $this->submitForm([
       'moderation_state[0][state]' => 'published',
     ], 'Save (this translation)');
     $this->assertText('Article Another node has been updated.');

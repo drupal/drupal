@@ -1020,7 +1020,8 @@ class DateRangeFieldTest extends DateTestBase {
       'default_value_input[default_date_type]' => 'now',
       'default_value_input[default_end_date_type]' => 'now',
     ];
-    $this->drupalPostForm('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name, $field_edit, 'Save settings');
+    $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
+    $this->submitForm($field_edit, 'Save settings');
 
     // Check that default value is selected in default value form.
     $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
@@ -1070,7 +1071,8 @@ class DateRangeFieldTest extends DateTestBase {
       'default_value_input[default_end_date_type]' => 'relative',
       'default_value_input[default_end_date]' => '+90 days',
     ];
-    $this->drupalPostForm('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name, $field_edit, 'Save settings');
+    $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
+    $this->submitForm($field_edit, 'Save settings');
 
     // Check that default value is selected in default value form.
     $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
@@ -1100,7 +1102,8 @@ class DateRangeFieldTest extends DateTestBase {
       'default_value_input[default_date_type]' => '',
       'default_value_input[default_end_date_type]' => '',
     ];
-    $this->drupalPostForm('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name, $field_edit, 'Save settings');
+    $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
+    $this->submitForm($field_edit, 'Save settings');
 
     // Check that default value is selected in default value form.
     $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
@@ -1136,7 +1139,8 @@ class DateRangeFieldTest extends DateTestBase {
       'default_value_input[default_date_type]' => 'now',
       'default_value_input[default_end_date_type]' => '',
     ];
-    $this->drupalPostForm('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name, $field_edit, 'Save settings');
+    $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
+    $this->submitForm($field_edit, 'Save settings');
 
     // Make sure only the start value is populated on node add page.
     $this->drupalGet('node/add/date_content');
@@ -1148,7 +1152,8 @@ class DateRangeFieldTest extends DateTestBase {
       'default_value_input[default_date_type]' => '',
       'default_value_input[default_end_date_type]' => 'now',
     ];
-    $this->drupalPostForm('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name, $field_edit, 'Save settings');
+    $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
+    $this->submitForm($field_edit, 'Save settings');
 
     // Make sure only the start value is populated on node add page.
     $this->drupalGet('node/add/date_content');
@@ -1406,7 +1411,8 @@ class DateRangeFieldTest extends DateTestBase {
       $field_name . '[0][value][date]' => '2016-04-01',
       $field_name . '[0][end_value][date]' => '2016-04-02',
     ];
-    $this->drupalPostForm('node/add/date_content', $edit, 'Save');
+    $this->drupalGet('node/add/date_content');
+    $this->submitForm($edit, 'Save');
     $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name . '/storage');
     $result = $this->xpath("//*[@id='edit-settings-datetime-type' and contains(@disabled, 'disabled')]");
     $this->assertCount(1, $result, "Changing datetime setting is disabled.");

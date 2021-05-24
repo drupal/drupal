@@ -123,7 +123,8 @@ class SearchPageCacheTagsTest extends BrowserTestBase {
 
     // User search results.
     $edit['keys'] = $this->searchingUser->getAccountName();
-    $this->drupalPostForm('search/user', $edit, 'Search');
+    $this->drupalGet('search/user');
+    $this->submitForm($edit, 'Search');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:search.page.user_search');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'user_list');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'user:2');
@@ -173,7 +174,8 @@ class SearchPageCacheTagsTest extends BrowserTestBase {
       'title[0][value]' => 'Llama shop',
       'field_test__ref[0][target_id]' => $this->node->getTitle(),
     ];
-    $this->drupalPostForm('node/add/' . $type->id(), $edit, 'Save');
+    $this->drupalGet('node/add/' . $type->id());
+    $this->submitForm($edit, 'Save');
 
     // Test that the value of the entity reference field is shown.
     $this->drupalGet('node/2');

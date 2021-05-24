@@ -147,7 +147,8 @@ class NodeBlockFunctionalTest extends NodeTestBase {
       'visibility[node_type][bundles][article]' => 'article',
     ];
     $theme = \Drupal::service('theme_handler')->getDefault();
-    $this->drupalPostForm("admin/structure/block/add/system_powered_by_block/$theme", $edit, 'Save block');
+    $this->drupalGet("admin/structure/block/add/system_powered_by_block/{$theme}");
+    $this->submitForm($edit, 'Save block');
 
     $block = Block::load($edit['id']);
     $visibility = $block->getVisibility();
@@ -210,7 +211,8 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->assertSession()->pageTextContains('Displaying node #' . $node1->id() . ', revision #' . $node1->getRevisionId() . ': Node revision 2 title');
 
     // Assert that the preview page displays the block as well.
-    $this->drupalPostForm('node/' . $node1->id() . '/edit', [], 'Preview');
+    $this->drupalGet('node/' . $node1->id() . '/edit');
+    $this->submitForm([], 'Preview');
     $this->assertSession()->pageTextContains($label);
     // The previewed node object has no revision ID.
     $this->assertSession()->pageTextContains('Displaying node #' . $node1->id() . ', revision #: Node revision 2 title');

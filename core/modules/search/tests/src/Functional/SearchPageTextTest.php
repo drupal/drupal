@@ -57,7 +57,8 @@ class SearchPageTextTest extends BrowserTestBase {
     $this->drupalLogin($this->drupalCreateUser(['administer search']));
 
     $keys['label'] = '<script>alert("Don\'t Panic");</script>';
-    $this->drupalPostForm('admin/config/search/pages/manage/node_search', $keys, 'Save search page');
+    $this->drupalGet('admin/config/search/pages/manage/node_search');
+    $this->submitForm($keys, 'Save search page');
 
     $this->drupalLogin($this->searchingUser);
     $this->drupalGet('search/node');

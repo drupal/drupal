@@ -107,7 +107,8 @@ class DateTimeTest extends BrowserTestBase {
       'label' => $name,
       'date_format_pattern' => $date_format,
     ];
-    $this->drupalPostForm('admin/config/regional/date-time/formats/add', $edit, 'Add format');
+    $this->drupalGet('admin/config/regional/date-time/formats/add');
+    $this->submitForm($edit, 'Add format');
     // Verify that the user is redirected to the correct page.
     $this->assertSession()->addressEquals(Url::fromRoute('entity.date_format.collection'));
     // Check that date format added confirmation message appears.
@@ -156,7 +157,8 @@ class DateTimeTest extends BrowserTestBase {
       'label' => $name,
       'date_format_pattern' => $date_format,
     ];
-    $this->drupalPostForm('admin/config/regional/date-time/formats/add', $edit, 'Add format');
+    $this->drupalGet('admin/config/regional/date-time/formats/add');
+    $this->submitForm($edit, 'Add format');
     // Verify that the user is redirected to the correct page.
     $this->assertSession()->addressEquals(Url::fromRoute('entity.date_format.collection'));
     $this->assertText('Custom date format added.');
@@ -185,7 +187,8 @@ class DateTimeTest extends BrowserTestBase {
       'label' => $name,
       'date_format_pattern' => $date_format,
     ];
-    $this->drupalPostForm('admin/config/regional/date-time/formats/add', $edit, 'Add format');
+    $this->drupalGet('admin/config/regional/date-time/formats/add');
+    $this->submitForm($edit, 'Add format');
     // Verify that the user is redirected to the correct page.
     $this->assertSession()->addressEquals(Url::fromRoute('entity.date_format.collection'));
     $this->assertText('Custom date format added.');
@@ -210,7 +213,8 @@ class DateTimeTest extends BrowserTestBase {
       'label' => 'dt',
       'field_name' => 'dt',
     ];
-    $this->drupalPostForm('admin/structure/types/manage/page_with_date/fields/add-field', $edit, 'Save and continue');
+    $this->drupalGet('admin/structure/types/manage/page_with_date/fields/add-field');
+    $this->submitForm($edit, 'Save and continue');
     // Check that the new datetime field was created, and process is now set
     // to continue for configuration.
     $this->assertText('These settings apply to the');
@@ -221,7 +225,8 @@ class DateTimeTest extends BrowserTestBase {
       'cardinality' => 'number',
       'cardinality_number' => '1',
     ];
-    $this->drupalPostForm('admin/structure/types/manage/page_with_date/fields/node.page_with_date.field_dt/storage', $edit, 'Save field settings');
+    $this->drupalGet('admin/structure/types/manage/page_with_date/fields/node.page_with_date.field_dt/storage');
+    $this->submitForm($edit, 'Save field settings');
 
     $this->drupalGet('admin/structure/types/manage/page_with_date/fields');
     $this->assertText('field_dt');
@@ -231,7 +236,8 @@ class DateTimeTest extends BrowserTestBase {
       'fields[field_dt][type]' => 'datetime_datelist',
       'fields[field_dt][region]' => 'content',
     ];
-    $this->drupalPostForm('admin/structure/types/manage/page_with_date/form-display', $edit, 'Save');
+    $this->drupalGet('admin/structure/types/manage/page_with_date/form-display');
+    $this->submitForm($edit, 'Save');
     $this->drupalLogout();
 
     // Now log in as a regular editor.

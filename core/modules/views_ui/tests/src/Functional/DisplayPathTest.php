@@ -79,12 +79,16 @@ class DisplayPathTest extends UITestBase {
   public function doPathXssFilterTest() {
     $this->drupalGet('admin/structure/views/view/test_view');
     $this->submitForm([], 'Add Page');
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_2/path', ['path' => '<object>malformed_path</object>'], 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/display/test_view/page_2/path');
+    $this->submitForm(['path' => '<object>malformed_path</object>'], 'Apply');
     $this->submitForm([], 'Add Page');
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_3/path', ['path' => '<script>alert("hello");</script>'], 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/display/test_view/page_3/path');
+    $this->submitForm(['path' => '<script>alert("hello");</script>'], 'Apply');
     $this->submitForm([], 'Add Page');
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_4/path', ['path' => '<script>alert("hello I have placeholders %");</script>'], 'Apply');
-    $this->drupalPostForm('admin/structure/views/view/test_view', [], 'Save');
+    $this->drupalGet('admin/structure/views/nojs/display/test_view/page_4/path');
+    $this->submitForm(['path' => '<script>alert("hello I have placeholders %");</script>'], 'Apply');
+    $this->drupalGet('admin/structure/views/view/test_view');
+    $this->submitForm([], 'Save');
     $this->drupalGet('admin/structure/views');
     // The anchor text should be escaped.
     $this->assertSession()->assertEscaped('/<object>malformed_path</object>');
@@ -211,7 +215,8 @@ class DisplayPathTest extends UITestBase {
       'link[0][uri]' => '/admin/foo',
       'menu_parent' => 'admin:system.admin',
     ];
-    $this->drupalPostForm('admin/structure/menu/manage/admin/add', $edit, 'Save');
+    $this->drupalGet('admin/structure/menu/manage/admin/add');
+    $this->submitForm($edit, 'Save');
 
     $menu_items = \Drupal::entityTypeManager()->getStorage('menu_link_content')->getQuery()
       ->accessCheck(FALSE)
@@ -229,7 +234,8 @@ class DisplayPathTest extends UITestBase {
     $edit['page[create]'] = TRUE;
     $edit['page[path]'] = 'admin/foo';
 
-    $this->drupalPostForm('admin/structure/views/add', $edit, 'Save and edit');
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm($edit, 'Save and edit');
 
     $parameters = new MenuTreeParameters();
     $parameters->addCondition('id', $menu_link_content->getPluginId());

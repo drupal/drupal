@@ -121,7 +121,8 @@ class SearchNodeUpdateAndDeletionTest extends BrowserTestBase {
     $this->assertFalse($search_index_dataset, 'Node info successfully removed from search_index');
 
     // Search again to verify the node doesn't appear anymore.
-    $this->drupalPostForm('search/node', $edit, 'Search');
+    $this->drupalGet('search/node');
+    $this->submitForm($edit, 'Search');
     $this->assertNoText($node->label());
   }
 

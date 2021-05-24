@@ -58,7 +58,8 @@ class SettingsTest extends UITestBase {
     $view['page[create]'] = TRUE;
     $view['page[title]'] = $this->randomMachineName(16);
     $view['page[path]'] = $this->randomMachineName(16);
-    $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm($view, 'Save and edit');
 
     // Configure to not always show the default display.
     // If you have a view without a page or block the default display should be
@@ -66,15 +67,18 @@ class SettingsTest extends UITestBase {
     $edit = [
       'ui_show_default_display' => FALSE,
     ];
-    $this->drupalPostForm('admin/structure/views/settings', $edit, 'Save configuration');
+    $this->drupalGet('admin/structure/views/settings');
+    $this->submitForm($edit, 'Save configuration');
 
     $view['page[create]'] = FALSE;
-    $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm($view, 'Save and edit');
 
     // Create a view with an additional display, so default should be hidden.
     $view['page[create]'] = TRUE;
     $view['id'] = strtolower($this->randomMachineName());
-    $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm($view, 'Save and edit');
 
     $this->assertSession()->linkNotExists('Default');
 
@@ -85,28 +89,34 @@ class SettingsTest extends UITestBase {
     $edit = [
       'ui_show_display_embed' => TRUE,
     ];
-    $this->drupalPostForm('admin/structure/views/settings', $edit, 'Save configuration');
+    $this->drupalGet('admin/structure/views/settings');
+    $this->submitForm($edit, 'Save configuration');
 
     $view['id'] = strtolower($this->randomMachineName());
-    $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm($view, 'Save and edit');
     $this->assertSession()->buttonExists('edit-displays-top-add-display-embed');
 
     $edit = [
       'ui_show_display_embed' => FALSE,
     ];
-    $this->drupalPostForm('admin/structure/views/settings', $edit, 'Save configuration');
+    $this->drupalGet('admin/structure/views/settings');
+    $this->submitForm($edit, 'Save configuration');
 
-    $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm($view, 'Save and edit');
     $this->assertSession()->buttonNotExists('edit-displays-top-add-display-embed');
 
     // Configure to hide/show the sql at the preview.
     $edit = [
       'ui_show_sql_query_enabled' => FALSE,
     ];
-    $this->drupalPostForm('admin/structure/views/settings', $edit, 'Save configuration');
+    $this->drupalGet('admin/structure/views/settings');
+    $this->submitForm($edit, 'Save configuration');
 
     $view['id'] = strtolower($this->randomMachineName());
-    $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm($view, 'Save and edit');
 
     // Verify that the views sql is hidden.
     $this->submitForm([], 'Update preview');
@@ -115,10 +125,12 @@ class SettingsTest extends UITestBase {
     $edit = [
       'ui_show_sql_query_enabled' => TRUE,
     ];
-    $this->drupalPostForm('admin/structure/views/settings', $edit, 'Save configuration');
+    $this->drupalGet('admin/structure/views/settings');
+    $this->submitForm($edit, 'Save configuration');
 
     $view['id'] = strtolower($this->randomMachineName());
-    $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm($view, 'Save and edit');
 
     // Verify that the views sql is shown.
     $this->submitForm([], 'Update preview');
