@@ -93,7 +93,8 @@ class ImportOpmlTest extends AggregatorTestBase {
 
     // Attempting to upload invalid XML.
     $form['files[upload]'] = $this->getInvalidOpml();
-    $this->drupalPostForm('admin/config/services/aggregator/add/opml', $form, 'Import');
+    $this->drupalGet('admin/config/services/aggregator/add/opml');
+    $this->submitForm($edit, 'Import');
     $this->assertSession()->pageTextContains('No new feed has been added.');
 
     // Attempting to load empty OPML from remote URL

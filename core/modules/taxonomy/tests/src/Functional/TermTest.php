@@ -228,7 +228,7 @@ class TermTest extends TaxonomyTestBase {
     // Ensure that term is displayed when previewing the node.
     $this->assertSession()->pageTextContainsOnce($term2->getName());
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->submitForm($edit, 'Preview');
+    $this->submitForm([], 'Preview');
     // Ensure that term is displayed when previewing the node again.
     $this->assertSession()->pageTextContainsOnce($term2->getName());
   }
