@@ -234,7 +234,7 @@ class ThemeTest extends BrowserTestBase {
   }
 
   /**
-   * Tests the theme settings logo form.
+   * Test the theme settings logo form.
    */
   public function testThemeSettingsLogo() {
     // Visit Bartik's theme settings page to replace the logo.
@@ -281,7 +281,7 @@ class ThemeTest extends BrowserTestBase {
   }
 
   /**
-   * Tests the administration theme functionality.
+   * Test the administration theme functionality.
    */
   public function testAdministrationTheme() {
     $this->container->get('theme_installer')->install(['seven']);

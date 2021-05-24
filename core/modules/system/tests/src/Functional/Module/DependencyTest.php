@@ -71,8 +71,7 @@ class DependencyTest extends ModuleTestBase {
   }
 
   /**
-   * Tests enabling a module that depends on an incompatible version of a
-   * module.
+   * Test enabling a module that depends on an incompatible version of a module.
    */
   public function testIncompatibleModuleVersionDependency() {
     // Test that the system_incompatible_module_version_dependencies_test is

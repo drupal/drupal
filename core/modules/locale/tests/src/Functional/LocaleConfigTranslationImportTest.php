@@ -87,7 +87,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
   }
 
   /**
-   * Tests update changes configuration translations if enabled after language.
+   * Test update changes configuration translations if enabled after language.
    */
   public function testConfigTranslationModuleInstall() {
 

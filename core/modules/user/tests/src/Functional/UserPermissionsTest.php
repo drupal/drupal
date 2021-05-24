@@ -104,7 +104,7 @@ class UserPermissionsTest extends BrowserTestBase {
   }
 
   /**
-   * Tests assigning of permissions for the administrator role.
+   * Test assigning of permissions for the administrator role.
    */
   public function testAdministratorRole() {
     $this->drupalLogin($this->adminUser);

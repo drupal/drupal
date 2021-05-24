@@ -469,7 +469,7 @@ class LayoutBuilderTest extends BrowserTestBase {
   }
 
   /**
-   * Tests that layout builder checks entity view access.
+   * Test that layout builder checks entity view access.
    */
   public function testAccess() {
     $assert_session = $this->assertSession();

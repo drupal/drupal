@@ -650,7 +650,7 @@ class LinkFieldTest extends BrowserTestBase {
   }
 
   /**
-   * Tests '#link_type' property exists on 'link_default' widget.
+   * Test '#link_type' property exists on 'link_default' widget.
    *
    * Make sure the 'link_default' widget exposes a '#link_type' property on
    * its element. Modules can use it to understand if a text form element is

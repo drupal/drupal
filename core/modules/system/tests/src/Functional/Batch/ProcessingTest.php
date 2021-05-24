@@ -1,4 +1,4 @@
-<?php
+\<?php
 
 namespace Drupal\Tests\system\Functional\Batch;
 
@@ -194,7 +194,7 @@ class ProcessingTest extends BrowserTestBase {
   }
 
   /**
-   * Tests form submission during a batch operation.
+   * Test form submission during a batch operation.
    */
   public function testDrupalFormSubmitInBatch() {
     // Displaying the page triggers a batch that programmatically submits a

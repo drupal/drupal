@@ -555,7 +555,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   }
 
   /**
-   * Tests title is not escaped (but XSS-filtered) for details form element.
+   * Test that title is not escaped (but XSS-filtered) for details form element.
    */
   public function testDetailsTitleIsNotEscaped() {
     $this->drupalLogin($this->administrator);

@@ -688,7 +688,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
   }
 
   /**
-   * Tests translation of plural strings with multiple plural forms in config.
+   * Test translation of plural strings with multiple plural forms in config.
    */
   public function testPluralConfigStrings() {
     $this->drupalLogin($this->adminUser);

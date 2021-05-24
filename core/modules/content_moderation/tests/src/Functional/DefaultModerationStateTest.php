@@ -43,7 +43,7 @@ class DefaultModerationStateTest extends ModerationStateTestBase {
   }
 
   /**
-   * Tests access to deleting the default state.
+   * Test access to deleting the default state.
    */
   public function testDeleteDefaultStateAccess() {
     $this->drupalGet('admin/config/workflow/workflows/manage/editorial/state/archived/delete');

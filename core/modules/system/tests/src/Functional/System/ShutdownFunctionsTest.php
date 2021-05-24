@@ -32,7 +32,7 @@ class ShutdownFunctionsTest extends BrowserTestBase {
   }
 
   /**
-   * Tests shutdown functions.
+   * Test shutdown functions.
    */
   public function testShutdownFunctions() {
     $arg1 = $this->randomMachineName();

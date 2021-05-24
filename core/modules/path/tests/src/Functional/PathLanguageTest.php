@@ -81,7 +81,7 @@ class PathLanguageTest extends PathTestBase {
   }
 
   /**
-   * Tests alias functionality through the admin interfaces.
+   * Test alias functionality through the admin interfaces.
    */
   public function testAliasTranslation() {
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
