@@ -68,13 +68,15 @@ EOD;
       'import' => $import,
     ];
     // Attempt an import with a missing ID.
-    $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, 'Import');
+    $this->drupalGet('admin/config/development/configuration/single/import');
+    $this->submitForm($edit, 'Import');
     $this->assertSession()->pageTextContains('Missing ID key "id" for this Test configuration import.');
 
     // Perform an import with no specified UUID and a unique ID.
     $this->assertNull($storage->load('first'));
     $edit['import'] = "id: first\n" . $edit['import'];
-    $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, 'Import');
+    $this->drupalGet('admin/config/development/configuration/single/import');
+    $this->submitForm($edit, 'Import');
     $this->assertRaw(t('Are you sure you want to create a new %name @type?', ['%name' => 'first', '@type' => 'test configuration']));
     $this->submitForm([], 'Confirm');
     $entity = $storage->load('first');
@@ -84,17 +86,20 @@ EOD;
     $this->assertRaw(t('The configuration was imported successfully.'));
 
     // Attempt an import with an existing ID but missing UUID.
-    $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, 'Import');
+    $this->drupalGet('admin/config/development/configuration/single/import');
+    $this->submitForm($edit, 'Import');
     $this->assertSession()->pageTextContains('An entity with this machine name already exists but the import did not specify a UUID.');
 
     // Attempt an import with a mismatched UUID and existing ID.
     $edit['import'] .= "\nuuid: " . $uuid->generate();
-    $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, 'Import');
+    $this->drupalGet('admin/config/development/configuration/single/import');
+    $this->submitForm($edit, 'Import');
     $this->assertSession()->pageTextContains('An entity with this machine name already exists but the UUID does not match.');
 
     // Attempt an import with a custom ID.
     $edit['custom_entity_id'] = 'custom_id';
-    $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, 'Import');
+    $this->drupalGet('admin/config/development/configuration/single/import');
+    $this->submitForm($edit, 'Import');
     $this->assertRaw(t('Are you sure you want to create a new %name @type?', ['%name' => 'custom_id', '@type' => 'test configuration']));
     $this->submitForm([], 'Confirm');
     $this->assertRaw(t('The configuration was imported successfully.'));
@@ -234,11 +239,13 @@ EOD;
       'config_name' => 'core.extension',
       'import' => Yaml::encode($config_data),
     ];
-    $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, 'Import');
+    $this->drupalGet('admin/config/development/configuration/single/import');
+    $this->submitForm($edit, 'Import');
     $this->assertSession()->pageTextContains('Can not uninstall the Configuration module as part of a configuration synchronization through the user interface.');
 
     // Try to import without any values.
-    $this->drupalPostForm('admin/config/development/configuration/single/import', [], 'Import');
+    $this->drupalGet('admin/config/development/configuration/single/import');
+    $this->submitForm([], 'Import');
     $this->assertSession()->pageTextContains('Configuration type field is required.');
     $this->assertSession()->pageTextContains('Paste your configuration here field is required.');
   }

@@ -518,7 +518,8 @@ class ConfigImportUITest extends BrowserTestBase {
     $core['theme']['does_not_exist'] = 0;
     $sync->write('core.extension', $core);
 
-    $this->drupalPostForm('admin/config/development/configuration', [], 'Import all');
+    $this->drupalGet('admin/config/development/configuration');
+    $this->submitForm([], 'Import all');
     $this->assertSession()->pageTextContains('The configuration cannot be imported because it failed validation for the following reasons:');
     $this->assertSession()->pageTextContains('Unable to uninstall the Text module since the Node module is installed.');
     $this->assertSession()->pageTextContains('Unable to uninstall the Theme test base theme theme since the Theme test subtheme theme is installed.');

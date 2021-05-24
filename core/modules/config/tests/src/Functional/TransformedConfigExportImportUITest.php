@@ -90,7 +90,8 @@ class TransformedConfigExportImportUITest extends BrowserTestBase {
     $this->assertEquals($newSlogan, $this->config('system.site')->get('slogan'));
 
     // Sync the configuration.
-    $this->drupalPostForm('admin/config/development/configuration', [], 'Import all');
+    $this->drupalGet('admin/config/development/configuration');
+    $this->submitForm([], 'Import all');
     $this->assertEquals('Drupal Arrr', $this->config('system.site')->get('name'));
     $this->assertEquals($originalSlogan . " Arrr", $this->config('system.site')->get('slogan'));
 

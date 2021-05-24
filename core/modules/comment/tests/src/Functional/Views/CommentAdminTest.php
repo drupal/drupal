@@ -124,7 +124,8 @@ class CommentAdminTest extends CommentBrowserTestBase {
     $this->assertSession()->pageTextContains('Unapproved comments (0)');
 
     // Test message when no comments selected.
-    $this->drupalPostForm('admin/content/comment', [], 'Apply to selected items');
+    $this->drupalGet('admin/content/comment');
+    $this->submitForm([], 'Apply to selected items');
     $this->assertSession()->pageTextContains('Select one or more comments to perform the update on.');
 
     $subject_link = $this->xpath('//table/tbody/tr/td/a[contains(@href, :href) and contains(@title, :title) and text()=:text]', [

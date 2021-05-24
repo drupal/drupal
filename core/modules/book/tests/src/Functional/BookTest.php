@@ -160,7 +160,8 @@ class BookTest extends BrowserTestBase {
 
     // Log in as a user with access to the book outline and save the form.
     $this->drupalLogin($this->adminUser);
-    $this->drupalPostForm('admin/structure/book/' . $book->id(), [], 'Save book pages');
+    $this->drupalGet('admin/structure/book/' . $book->id());
+    $this->submitForm([], 'Save book pages');
     $this->assertSession()->pageTextContains('Updated book ' . $book->label() . '.');
   }
 
@@ -297,7 +298,8 @@ class BookTest extends BrowserTestBase {
     // Give anonymous users the permission 'node test view'.
     $edit = [];
     $edit[RoleInterface::ANONYMOUS_ID . '[node test view]'] = TRUE;
-    $this->drupalPostForm('admin/people/permissions/' . RoleInterface::ANONYMOUS_ID, $edit, 'Save permissions');
+    $this->drupalGet('admin/people/permissions/' . RoleInterface::ANONYMOUS_ID);
+    $this->submitForm($edit, 'Save permissions');
     $this->assertSession()->pageTextContains('The changes have been saved.');
 
     // Test correct display of the block.
@@ -398,7 +400,8 @@ class BookTest extends BrowserTestBase {
     // Give anonymous users the permission 'node test view'.
     $edit = [];
     $edit[RoleInterface::ANONYMOUS_ID . '[node test view]'] = TRUE;
-    $this->drupalPostForm('admin/people/permissions/' . RoleInterface::ANONYMOUS_ID, $edit, 'Save permissions');
+    $this->drupalGet('admin/people/permissions/' . RoleInterface::ANONYMOUS_ID);
+    $this->submitForm($edit, 'Save permissions');
     $this->assertSession()->pageTextContains('The changes have been saved.');
 
     // Create a book.

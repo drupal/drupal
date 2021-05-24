@@ -175,7 +175,8 @@ class CommentPreviewTest extends CommentTestBase {
     $this->assertSession()->fieldValueEquals('date[time]', $edit['date[time]']);
 
     // Check that saving a comment produces a success message.
-    $this->drupalPostForm('comment/' . $comment->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('comment/' . $comment->id() . '/edit');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('Your comment has been posted.');
 
     // Check that the comment fields are correct after loading the saved comment.
