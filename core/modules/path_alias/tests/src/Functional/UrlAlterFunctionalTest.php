@@ -58,7 +58,8 @@ class UrlAlterFunctionalTest extends BrowserTestBase {
 
     // Test adding an alias via the UI.
     $edit = ['path[0][value]' => "/user/$uid/edit", 'alias[0][value]' => '/alias/test2'];
-    $this->drupalPostForm('admin/config/search/path/add', $edit, 'Save');
+    $this->drupalGet('admin/config/search/path/add');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('The alias has been saved.');
     $this->drupalGet('alias/test2');
     $this->assertSession()->statusCodeEquals(200);

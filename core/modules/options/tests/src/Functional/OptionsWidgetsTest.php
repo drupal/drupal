@@ -334,7 +334,8 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->assertSame('- None -', $option->getText());
     // Submit form: Unselect the option.
     $edit = ['card_1' => '_none'];
-    $this->drupalPostForm('entity_test/manage/' . $entity->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
+    $this->submitForm($edit, 'Save');
     $this->assertFieldValues($entity_init, 'card_1', []);
 
     // Test optgroups.
@@ -365,7 +366,8 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Submit form: Unselect the option.
     $edit = ['card_1' => '_none'];
-    $this->drupalPostForm('entity_test/manage/' . $entity->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
+    $this->submitForm($edit, 'Save');
     $this->assertFieldValues($entity_init, 'card_1', []);
   }
 
@@ -439,12 +441,14 @@ class OptionsWidgetsTest extends FieldTestBase {
     // Check that the 'none' option has no effect if actual options are selected
     // as well.
     $edit = ['card_2[]' => ['_none' => '_none', 0 => 0]];
-    $this->drupalPostForm('entity_test/manage/' . $entity->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
+    $this->submitForm($edit, 'Save');
     $this->assertFieldValues($entity_init, 'card_2', [0]);
 
     // Check that selecting the 'none' option empties the field.
     $edit = ['card_2[]' => ['_none' => '_none']];
-    $this->drupalPostForm('entity_test/manage/' . $entity->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
+    $this->submitForm($edit, 'Save');
     $this->assertFieldValues($entity_init, 'card_2', []);
 
     // A required select list does not have an empty key.
@@ -487,7 +491,8 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Submit form: Unselect the option.
     $edit = ['card_2[]' => ['_none' => '_none']];
-    $this->drupalPostForm('entity_test/manage/' . $entity->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
+    $this->submitForm($edit, 'Save');
     $this->assertFieldValues($entity_init, 'card_2', []);
   }
 
