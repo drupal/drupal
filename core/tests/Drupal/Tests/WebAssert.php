@@ -109,7 +109,8 @@ class WebAssert extends MinkWebAssert {
    *   (Optional) the failure message.
    */
   public function pageTextMatchesCount(int $count, string $regex, string $message = ''): void {
-    $matches = preg_match_all($regex, $this->getCleanedUpPageText(TRUE));
+    $actual = preg_replace('/\s+/u', ' ', $this->session->getPage()->getText());
+    $matches = preg_match_all($regex, $actual);
     if ($message === '') {
       $message = "Failed asserting that the page matches the pattern '$regex' $count time(s), $matches found.";
     }
@@ -877,48 +878,13 @@ class WebAssert extends MinkWebAssert {
   }
 
   /**
-   * Returns a Drupal's page text cleaned up of script tags.
-   *
-   * @param bool $pack
-   *   (Optional) If TRUE, packs contiguous spaces and newlines into a single
-   *   space. Defaults to FALSE.
-   *
-   * @return string
-   *   The cleaned up page text.
-   */
-  private function getCleanedUpPageText(bool $pack = FALSE): string {
-    $dom = new \DOMDocument();
-    // Suppress libxml warnings when loading HTML 5 content.
-    @$dom->loadHTML($this->session->getPage()->getHtml());
-    // global $xxx;
-    // if ($xxx) dump(['********pre-', $this->session->getPage()->getHtml(), $dom->textContent]);
-    $body = $dom->getElementsByTagName('body')[0];
-    // if ($xxx) dump(['********body', $dom->saveHTML($body)]);
-    if (!$body) {
-      return '';
-    }
-    $items = $body->getElementsByTagName('script');
-    while ($items->count() > 0) {
-      $items->item(0)->parentNode->removeChild($items->item(0));
-      $items = $body->getElementsByTagName('script');
-    }
-    // if ($xxx) dump(['********post', ($pack ? preg_replace('/\s+/u', ' ', $body->textContent) : $body->textContent)]);
-    return $pack ? preg_replace('/\s+/u', ' ', $body->textContent) : $body->textContent;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function pageTextContains($text) {
     if (func_num_args() > 1) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than one argument is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
-    $regex = '/' . preg_quote($text, '/') . '/ui';
-    if ((bool) preg_match($regex, $this->getCleanedUpPageText(TRUE))) {
-      return;
-    }
-    $message = sprintf('The text "%s" was not found anywhere in the text of the current page.', $text);
-    throw new ResponseTextException($message, $this->session->getDriver());
+    return parent::pageTextContains($text);
   }
 
   /**
@@ -928,12 +894,7 @@ class WebAssert extends MinkWebAssert {
     if (func_num_args() > 1) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than one argument is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
-    $regex = '/' . preg_quote($text, '/') . '/ui';
-    if (!preg_match($regex, $this->getCleanedUpPageText(TRUE))) {
-      return;
-    }
-    $message = sprintf('The text "%s" appears in the text of this page, but it should not.', $text);
-    throw new ResponseTextException($message, $this->session->getDriver());
+    return parent::pageTextNotContains($text);
   }
 
   /**
@@ -943,11 +904,7 @@ class WebAssert extends MinkWebAssert {
     if (func_num_args() > 1) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than one argument is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
-    if ((bool) preg_match($regex, $this->getCleanedUpPageText(TRUE))) {
-      return;
-    }
-    $message = sprintf('The pattern %s was not found anywhere in the text of the current page.', $regex);
-    throw new ResponseTextException($message, $this->session->getDriver());
+    return parent::pageTextMatches($regex);
   }
 
   /**
@@ -957,11 +914,7 @@ class WebAssert extends MinkWebAssert {
     if (func_num_args() > 1) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than one argument is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
-    if (!preg_match($regex, $this->getCleanedUpPageText(TRUE))) {
-      return;
-    }
-    $message = sprintf('The pattern %s was found in the text of the current page, but it should not.', $regex);
-    throw new ResponseTextException($message, $this->session->getDriver());
+    return parent::pageTextNotMatches($regex);
   }
 
   /**

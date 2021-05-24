@@ -50,7 +50,6 @@ class WebAssertArgumentsTest extends UnitTestCase {
     parent::setUp();
 
     $this->page = $this->prophesize(DocumentElement::class);
-    $this->page->getHtml()->willReturn('<body/>');
     $this->session = $this->prophesize(Session::class);
     $this->session->getPage()->willReturn($this->page->reveal());
     $this->webAssert = new WebAssert($this->getSession());
@@ -219,7 +218,7 @@ class WebAssertArgumentsTest extends UnitTestCase {
    */
   public function testPageTextContainsOnce(): void {
     $this->expectDeprecation('Calling Drupal\Tests\WebAssert::pageTextContainsOnce with more than one argument is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537');
-    $this->page->getHtml()->willReturn('<body>foo bar bar</body>');
+    $this->page->getText()->willReturn('foo bar bar');
     $this->webAssert->pageTextContainsOnce('foo', 'Extra argument');
   }
 
@@ -345,7 +344,7 @@ class WebAssertArgumentsTest extends UnitTestCase {
    */
   public function testPageTextContains(): void {
     $this->expectDeprecation('Calling Drupal\Tests\WebAssert::pageTextContains with more than one argument is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537');
-    $this->page->getHtml()->willReturn('<body>foo bar bar</body>');
+    $this->page->getText()->willReturn('foo bar bar');
     $this->webAssert->pageTextContains('foo', 'Extra argument');
   }
 
@@ -354,7 +353,7 @@ class WebAssertArgumentsTest extends UnitTestCase {
    */
   public function testPageTextNotContains(): void {
     $this->expectDeprecation('Calling Drupal\Tests\WebAssert::pageTextNotContains with more than one argument is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537');
-    $this->page->getHtml()->willReturn('<body>foo bar bar</body>');
+    $this->page->getText()->willReturn('foo bar bar');
     $this->webAssert->pageTextNotContains('qux', 'Extra argument');
   }
 
@@ -363,7 +362,7 @@ class WebAssertArgumentsTest extends UnitTestCase {
    */
   public function testPageTextMatches(): void {
     $this->expectDeprecation('Calling Drupal\Tests\WebAssert::pageTextMatches with more than one argument is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537');
-    $this->page->getHtml()->willReturn('<body>foo bar bar</body>');
+    $this->page->getText()->willReturn('foo bar bar');
     $this->webAssert->pageTextMatches('/foo/', 'Extra argument');
   }
 
@@ -372,7 +371,7 @@ class WebAssertArgumentsTest extends UnitTestCase {
    */
   public function testPageTextNotMatches(): void {
     $this->expectDeprecation('Calling Drupal\Tests\WebAssert::pageTextNotMatches with more than one argument is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537');
-    $this->page->getHtml()->willReturn('<body>foo bar bar</body>');
+    $this->page->getText()->willReturn('foo bar bar');
     $this->webAssert->pageTextNotMatches('/qux/', 'Extra argument');
   }
 
