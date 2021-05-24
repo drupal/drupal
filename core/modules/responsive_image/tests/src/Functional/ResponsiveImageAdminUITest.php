@@ -39,7 +39,7 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
   }
 
   /**
-   * Test responsive image administration functionality.
+   * Tests responsive image administration functionality.
    */
   public function testResponsiveImageAdmin() {
     // We start without any default styles.

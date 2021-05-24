@@ -37,7 +37,7 @@ class MigrateNodeTaxonomyTest extends MigrateDrupal7TestBase {
   }
 
   /**
-   * Test node migration from Drupal 7 to 8.
+   * Tests node migration from Drupal 7 to 8.
    */
   public function testMigration() {
     $node = Node::load(2);

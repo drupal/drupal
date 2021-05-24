@@ -48,7 +48,7 @@ class LocaleExportTest extends BrowserTestBase {
   }
 
   /**
-   * Test exportation of translations.
+   * Tests exportation of translations.
    */
   public function testExportTranslation() {
     $file_system = \Drupal::service('file_system');
@@ -121,7 +121,7 @@ class LocaleExportTest extends BrowserTestBase {
   }
 
   /**
-   * Test exportation of translation template file.
+   * Tests exportation of translation template file.
    */
   public function testExportTranslationTemplateFile() {
     // Load an admin page with JavaScript so _drupal_add_library() fires at

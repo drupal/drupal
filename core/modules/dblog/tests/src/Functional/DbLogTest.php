@@ -105,7 +105,7 @@ class DbLogTest extends BrowserTestBase {
   }
 
   /**
-   * Test individual log event page.
+   * Tests individual log event page.
    */
   public function testLogEventPage() {
     // Login the admin user.
@@ -184,7 +184,7 @@ class DbLogTest extends BrowserTestBase {
   }
 
   /**
-   * Test not-existing log event page.
+   * Tests not-existing log event page.
    */
   public function testLogEventNotFoundPage() {
     // Login the admin user.
@@ -197,7 +197,7 @@ class DbLogTest extends BrowserTestBase {
   }
 
   /**
-   * Test individual log event page with missing log attributes.
+   * Tests individual log event page with missing log attributes.
    *
    * In some cases few log attributes are missing. For example:
    * - Missing referer: When request is made to a specific url directly and
@@ -858,7 +858,7 @@ class DbLogTest extends BrowserTestBase {
   }
 
   /**
-   * Test sorting for entries with the same timestamp.
+   * Tests sorting for entries with the same timestamp.
    */
   public function testSameTimestampEntries() {
     $this->drupalLogin($this->adminUser);

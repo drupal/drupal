@@ -22,7 +22,7 @@ class UserSubAdminTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test create and cancel forms as 'sub-admin'.
+   * Tests create and cancel forms as 'sub-admin'.
    */
   public function testSubAdmin() {
     $user = $this->drupalCreateUser(['sub-admin']);

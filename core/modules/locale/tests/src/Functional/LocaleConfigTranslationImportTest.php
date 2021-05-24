@@ -33,7 +33,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
   }
 
   /**
-   * Test update changes configuration translations if enabled after language.
+   * Tests update changes configuration translations if enabled after language.
    */
   public function testConfigTranslationImport() {
     $admin_user = $this->drupalCreateUser([
@@ -85,7 +85,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
   }
 
   /**
-   * Test update changes configuration translations if enabled after language.
+   * Tests update changes configuration translations if enabled after language.
    */
   public function testConfigTranslationModuleInstall() {
 
@@ -156,7 +156,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
   }
 
   /**
-   * Test removing a string from Locale deletes configuration translations.
+   * Tests removing a string from Locale deletes configuration translations.
    */
   public function testLocaleRemovalAndConfigOverrideDelete() {
     // Enable the locale module.
@@ -201,7 +201,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
   }
 
   /**
-   * Test removing a string from Locale changes configuration translations.
+   * Tests removing a string from Locale changes configuration translations.
    */
   public function testLocaleRemovalAndConfigOverridePreserve() {
     // Enable the locale module.

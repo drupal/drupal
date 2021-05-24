@@ -140,7 +140,7 @@ class ArgumentDefaultTest extends ViewTestBase {
   // function testArgumentDefaultPhp() {}
 
   /**
-   * Test node default argument.
+   * Tests node default argument.
    */
   public function testArgumentDefaultNode() {
     // Create a user that has permission to place a view block.

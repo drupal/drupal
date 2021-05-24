@@ -39,7 +39,7 @@ class FieldHelpTest extends BrowserTestBase {
   }
 
   /**
-   * Test the Field module's help page.
+   * Tests the Field module's help page.
    */
   public function testFieldHelp() {
     // Log in the admin user.

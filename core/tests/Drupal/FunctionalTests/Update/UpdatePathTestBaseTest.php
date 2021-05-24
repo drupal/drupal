@@ -80,7 +80,7 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
   }
 
   /**
-   * Test that updates are properly run.
+   * Tests that updates are properly run.
    */
   public function testUpdateHookN() {
     $connection = Database::getConnection();
@@ -213,7 +213,7 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
   }
 
   /**
-   * Test the database fixtures are setup correctly.
+   * Tests the database fixtures are setup correctly.
    */
   public function testFixturesSetup() {
     $this->assertCount(3, $this->databaseDumpFiles);

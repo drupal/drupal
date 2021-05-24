@@ -78,7 +78,7 @@ class TwigTransTest extends BrowserTestBase {
   }
 
   /**
-   * Test Twig "trans" tags.
+   * Tests Twig "trans" tags.
    */
   public function testTwigTransTags() {
     // Run this once without and once with Twig debug because trans can work
@@ -98,7 +98,7 @@ class TwigTransTest extends BrowserTestBase {
   }
 
   /**
-   * Test empty Twig "trans" tags.
+   * Tests empty Twig "trans" tags.
    */
   public function testEmptyTwigTransTags() {
     $elements = [

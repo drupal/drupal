@@ -51,7 +51,7 @@ class UserPermissionsTest extends BrowserTestBase {
   }
 
   /**
-   * Test changing user permissions through the permissions page.
+   * Tests changing user permissions through the permissions page.
    */
   public function testUserPermissionChanges() {
     $permissions_hash_generator = $this->container->get('user_permissions_hash_generator');
@@ -102,7 +102,7 @@ class UserPermissionsTest extends BrowserTestBase {
   }
 
   /**
-   * Test assigning of permissions for the administrator role.
+   * Tests assigning of permissions for the administrator role.
    */
   public function testAdministratorRole() {
     $this->drupalLogin($this->adminUser);

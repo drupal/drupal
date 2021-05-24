@@ -57,8 +57,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
   }
 
   /**
-   * Test creating an image style with a numeric name and ensuring it can be
-   * applied to an image.
+   * Tests creating an image style with a numeric name.
    */
   public function testNumericStyleName() {
     $style_name = rand();
@@ -306,7 +305,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
   }
 
   /**
-   * Test deleting a style and choosing a replacement style.
+   * Tests deleting a style and choosing a replacement style.
    */
   public function testStyleReplacement() {
     // Create a new style.
@@ -422,7 +421,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
   }
 
   /**
-   * Test flush user interface.
+   * Tests flush user interface.
    */
   public function testFlushUserInterface() {
     $admin_path = 'admin/config/media/image-styles';

@@ -39,7 +39,7 @@ class NumberFieldTest extends BrowserTestBase {
   }
 
   /**
-   * Test decimal field.
+   * Tests decimal field.
    */
   public function testNumberDecimalField() {
     // Create a field with settings to validate.
@@ -127,7 +127,7 @@ class NumberFieldTest extends BrowserTestBase {
   }
 
   /**
-   * Test integer field.
+   * Tests integer field.
    */
   public function testNumberIntegerField() {
     $minimum = rand(-4000, -2000);
@@ -282,7 +282,7 @@ class NumberFieldTest extends BrowserTestBase {
   }
 
   /**
-   * Test float field.
+   * Tests float field.
    */
   public function testNumberFloatField() {
     // Create a field with settings to validate.

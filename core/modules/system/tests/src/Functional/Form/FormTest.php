@@ -369,7 +369,7 @@ class FormTest extends BrowserTestBase {
   }
 
   /**
-   * Test default value handling for checkboxes.
+   * Tests default value handling for checkboxes.
    *
    * @see _form_test_checkbox()
    */
@@ -718,7 +718,7 @@ class FormTest extends BrowserTestBase {
   }
 
   /**
-   * Test handling of disabled elements.
+   * Tests handling of disabled elements.
    *
    * @see _form_test_disabled_elements()
    */
@@ -862,7 +862,7 @@ class FormTest extends BrowserTestBase {
   }
 
   /**
-   * Test Form API protections against input forgery.
+   * Tests Form API protections against input forgery.
    *
    * @see \Drupal\form_test\Form\FormTestInputForgeryForm
    */
