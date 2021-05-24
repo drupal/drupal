@@ -41,9 +41,11 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $assert->pageTextContains("Style $style_label was created.");
 
     // Add two Ajax-enabled test effects.
-    $this->drupalPostForm($style_path, ['new' => 'image_module_test_ajax'], 'Add');
+    $this->drupalGet($style_path);
+    $this->submitForm(['new' => 'image_module_test_ajax'], 'Add');
     $this->submitForm($effect_edit, 'Add effect');
-    $this->drupalPostForm($style_path, ['new' => 'image_module_test_ajax'], 'Add');
+    $this->drupalGet($style_path);
+    $this->submitForm(['new' => 'image_module_test_ajax'], 'Add');
     $this->submitForm($effect_edit, 'Add effect');
 
     // Load the saved image style.
