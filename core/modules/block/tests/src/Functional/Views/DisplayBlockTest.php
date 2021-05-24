@@ -232,14 +232,16 @@ class DisplayBlockTest extends ViewTestBase {
     $edit = ['region' => 'content'];
     $edit['settings[override][items_per_page]'] = 10;
 
-    $this->drupalPostForm('admin/structure/block/add/views_block:test_view_block-block_1/' . $default_theme, $edit, 'Save block');
+    $this->drupalGet('admin/structure/block/add/views_block:test_view_block-block_1/' . $default_theme);
+    $this->submitForm($edit, 'Save block');
 
     $block = $storage->load('views_block__test_view_block_block_1_4');
     $config = $block->getPlugin()->getConfiguration();
     $this->assertEquals(10, $config['items_per_page'], "'Items per page' is properly saved.");
 
     $edit['settings[override][items_per_page]'] = 5;
-    $this->drupalPostForm('admin/structure/block/manage/views_block__test_view_block_block_1_4', $edit, 'Save block');
+    $this->drupalGet('admin/structure/block/manage/views_block__test_view_block_block_1_4');
+    $this->submitForm($edit, 'Save block');
 
     $block = $storage->load('views_block__test_view_block_block_1_4');
 

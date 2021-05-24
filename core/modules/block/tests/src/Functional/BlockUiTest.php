@@ -278,13 +278,15 @@ class BlockUiTest extends BrowserTestBase {
     $this->drupalGet($url);
     $this->assertSession()->fieldValueEquals('id', 'displaymessage');
     $edit = ['region' => 'content'];
-    $this->drupalPostForm($url, $edit, 'Save block');
+    $this->drupalGet($url);
+    $this->submitForm($edit, 'Save block');
     $this->assertSession()->pageTextContains('The block configuration has been saved.');
 
     // Now, check to make sure the form starts by autoincrementing correctly.
     $this->drupalGet($url);
     $this->assertSession()->fieldValueEquals('id', 'displaymessage_2');
-    $this->drupalPostForm($url, $edit, 'Save block');
+    $this->drupalGet($url);
+    $this->submitForm($edit, 'Save block');
     $this->assertSession()->pageTextContains('The block configuration has been saved.');
 
     // And verify that it continues working beyond just the first two.

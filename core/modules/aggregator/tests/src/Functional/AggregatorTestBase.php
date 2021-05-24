@@ -74,7 +74,8 @@ abstract class AggregatorTestBase extends BrowserTestBase {
    */
   public function createFeed($feed_url = NULL, array $edit = []) {
     $edit = $this->getFeedEditArray($feed_url, $edit);
-    $this->drupalPostForm('aggregator/sources/add', $edit, 'Save');
+    $this->drupalGet('aggregator/sources/add');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('The feed ' . $edit['title[0][value]'] . ' has been added.');
 
     // Verify that the creation message contains a link to a feed.
