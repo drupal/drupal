@@ -55,7 +55,7 @@ class MenuRouterTest extends BrowserTestBase {
   }
 
   /**
-   * Test local tasks with route placeholders.
+   * Tests local tasks with route placeholders.
    */
   protected function doTestHookMenuIntegration() {
     // Generate base path with random argument.
@@ -75,7 +75,7 @@ class MenuRouterTest extends BrowserTestBase {
   }
 
   /**
-   * Test title callback set to FALSE.
+   * Tests title callback set to FALSE.
    */
   protected function doTestTitleCallbackFalse() {
     $this->drupalGet('test-page');
@@ -160,7 +160,7 @@ class MenuRouterTest extends BrowserTestBase {
   }
 
   /**
-   * Test menu links that have optional placeholders.
+   * Tests menu links that have optional placeholders.
    */
   protected function doTestMenuOptionalPlaceholders() {
     $this->drupalGet('menu-test/optional');
@@ -187,7 +187,7 @@ class MenuRouterTest extends BrowserTestBase {
   }
 
   /**
-   * Test path containing "exotic" characters.
+   * Tests path containing "exotic" characters.
    */
   protected function doTestExoticPath() {
     // "Special" ASCII characters.
@@ -221,7 +221,7 @@ class MenuRouterTest extends BrowserTestBase {
   }
 
   /**
-   * Test that an authenticated user hitting 'user/login' gets redirected to
+   * Tests that an authenticated user hitting 'user/login' gets redirected to
    * 'user' and 'user/register' gets redirected to the user edit page.
    */
   public function testAuthUserUserLogin() {
@@ -264,7 +264,8 @@ class MenuRouterTest extends BrowserTestBase {
   }
 
   /**
-   * Test the theme negotiation when it is set to use an administrative theme.
+   * Tests the theme negotiation when it is set to use an administrative
+   * theme.
    */
   protected function doTestThemeCallbackAdministrative() {
     $this->drupalGet('menu-test/theme-callback/use-admin-theme');
@@ -273,7 +274,7 @@ class MenuRouterTest extends BrowserTestBase {
   }
 
   /**
-   * Test the theme negotiation when the site is in maintenance mode.
+   * Tests the theme negotiation when the site is in maintenance mode.
    */
   protected function doTestThemeCallbackMaintenanceMode() {
     $this->container->get('state')->set('system.maintenance_mode', TRUE);
@@ -296,7 +297,7 @@ class MenuRouterTest extends BrowserTestBase {
   }
 
   /**
-   * Test the theme negotiation when it is set to use an optional theme.
+   * Tests the theme negotiation when it is set to use an optional theme.
    */
   protected function doTestThemeCallbackOptionalTheme() {
     // Request a theme that is not installed.
@@ -319,7 +320,7 @@ class MenuRouterTest extends BrowserTestBase {
   }
 
   /**
-   * Test the theme negotiation when it is set to use a theme that does not exist.
+   * Tests the theme negotiation when it is set to use a theme that does not exist.
    */
   protected function doTestThemeCallbackFakeTheme() {
     $this->drupalGet('menu-test/theme-callback/use-fake-theme');
@@ -329,7 +330,7 @@ class MenuRouterTest extends BrowserTestBase {
   }
 
   /**
-   * Test the theme negotiation when no theme is requested.
+   * Tests the theme negotiation when no theme is requested.
    */
   protected function doTestThemeCallbackNoThemeRequested() {
     $this->drupalGet('menu-test/theme-callback/no-theme-requested');

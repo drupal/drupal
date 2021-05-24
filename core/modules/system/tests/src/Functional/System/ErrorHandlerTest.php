@@ -25,7 +25,7 @@ class ErrorHandlerTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test the error handler.
+   * Tests the error handler.
    */
   public function testErrorHandler() {
     $config = $this->config('system.logging');
@@ -93,7 +93,7 @@ class ErrorHandlerTest extends BrowserTestBase {
   }
 
   /**
-   * Test the exception handler.
+   * Tests the exception handler.
    */
   public function testExceptionHandler() {
     $error_exception = [

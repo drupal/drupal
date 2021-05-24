@@ -50,7 +50,7 @@ class EntityResolverTest extends NormalizerTestBase {
   }
 
   /**
-   * Test that fields referencing UUIDs can be denormalized.
+   * Tests that fields referencing UUIDs can be denormalized.
    */
   public function testUuidEntityResolver() {
     // Create an entity to get the UUID from.

@@ -647,7 +647,7 @@ class LinkFieldTest extends BrowserTestBase {
   }
 
   /**
-   * Test '#link_type' property exists on 'link_default' widget.
+   * Tests '#link_type' property exists on 'link_default' widget.
    *
    * Make sure the 'link_default' widget exposes a '#link_type' property on
    * its element. Modules can use it to understand if a text form element is
@@ -752,7 +752,7 @@ class LinkFieldTest extends BrowserTestBase {
   }
 
   /**
-   * Test <nolink> and <none> as link uri.
+   * Tests <nolink> and <none> as link uri.
    */
   public function testNoLinkUri() {
     $field_name = mb_strtolower($this->randomMachineName());

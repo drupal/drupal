@@ -250,7 +250,7 @@ class ConfigEntityListTest extends BrowserTestBase {
   }
 
   /**
-   * Test paging.
+   * Tests paging.
    */
   public function testPager() {
     $this->drupalLogin($this->drupalCreateUser([

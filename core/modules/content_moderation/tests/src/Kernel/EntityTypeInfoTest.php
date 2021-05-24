@@ -78,7 +78,7 @@ class EntityTypeInfoTest extends KernelTestBase {
   }
 
   /**
-   * Test the correct entity types have moderation added.
+   * Tests the correct entity types have moderation added.
    *
    * @covers ::entityTypeAlter
    *
@@ -129,7 +129,7 @@ class EntityTypeInfoTest extends KernelTestBase {
   }
 
   /**
-   * Test entity base field provider.
+   * Tests entity base field provider.
    */
   public function testEntityBaseFieldProvider() {
     $this->enableModeration('entity_test_mulrev', 'entity_test_mulrev');

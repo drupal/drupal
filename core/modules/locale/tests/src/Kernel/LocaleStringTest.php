@@ -48,7 +48,7 @@ class LocaleStringTest extends KernelTestBase {
   }
 
   /**
-   * Test CRUD API.
+   * Tests CRUD API.
    */
   public function testStringCrudApi() {
     // Create source string.
@@ -119,7 +119,7 @@ class LocaleStringTest extends KernelTestBase {
   }
 
   /**
-   * Test Search API loading multiple objects.
+   * Tests Search API loading multiple objects.
    */
   public function testStringSearchApi() {
     $language_count = 3;

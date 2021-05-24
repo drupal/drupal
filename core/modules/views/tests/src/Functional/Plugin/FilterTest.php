@@ -56,7 +56,7 @@ class FilterTest extends ViewTestBase {
   }
 
   /**
-   * Test query of the row plugin.
+   * Tests query of the row plugin.
    */
   public function testFilterQuery() {
     // Check that we can find the test filter plugin.
@@ -151,7 +151,7 @@ class FilterTest extends ViewTestBase {
   }
 
   /**
-   * Test no error message is displayed when all options are selected in an
+   * Tests no error message is displayed when all options are selected in an
    * exposed filter.
    */
   public function testInOperatorSelectAllOptions() {

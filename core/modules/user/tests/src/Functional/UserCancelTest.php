@@ -75,7 +75,7 @@ class UserCancelTest extends BrowserTestBase {
   }
 
   /**
-   * Test ability to change the permission for canceling users.
+   * Tests ability to change the permission for canceling users.
    */
   public function testUserCancelChangePermission() {
     \Drupal::service('module_installer')->install(['user_form_test']);

@@ -83,7 +83,7 @@ class ContentTranslationLanguageChangeTest extends NodeTestBase {
   }
 
   /**
-   * Test that the source language is properly set when changing.
+   * Tests that the source language is properly set when changing.
    */
   public function testLanguageChange() {
     // Create a node in English.
@@ -118,7 +118,7 @@ class ContentTranslationLanguageChangeTest extends NodeTestBase {
   }
 
   /**
-   * Test that title does not change on ajax call with new language value.
+   * Tests that title does not change on ajax call with new language value.
    */
   public function testTitleDoesNotChangesOnChangingLanguageWidgetAndTriggeringAjaxCall() {
     // Create a node in English.

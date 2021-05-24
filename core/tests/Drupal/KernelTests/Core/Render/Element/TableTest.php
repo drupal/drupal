@@ -111,7 +111,7 @@ class TableTest extends KernelTestBase {
   }
 
   /**
-   * Test that the 'footer' option works correctly.
+   * Tests that the 'footer' option works correctly.
    */
   public function testThemeTableFooter() {
     $footer = [

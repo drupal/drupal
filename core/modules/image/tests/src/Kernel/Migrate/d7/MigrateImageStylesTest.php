@@ -29,7 +29,7 @@ class MigrateImageStylesTest extends MigrateDrupal7TestBase {
   }
 
   /**
-   * Test the image styles migration.
+   * Tests the image styles migration.
    */
   public function testImageStylesMigration() {
     $this->assertEntity('custom_image_style_1', "Custom image style 1", ['image_scale_and_crop', 'image_desaturate'], [['width' => 55, 'height' => 55, 'anchor' => 'center-center'], []]);

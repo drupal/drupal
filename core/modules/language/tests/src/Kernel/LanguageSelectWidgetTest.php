@@ -61,7 +61,7 @@ class LanguageSelectWidgetTest extends KernelTestBase {
   }
 
   /**
-   * Test the widget without the locked languages.
+   * Tests the widget without the locked languages.
    */
   public function testWithoutIncludedLockedLanguage() {
     $this->entityFormDisplay->setComponent('langcode', [

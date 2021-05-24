@@ -23,7 +23,7 @@ class MailCaptureTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test to see if the wrapper function is executed correctly.
+   * Tests to see if the wrapper function is executed correctly.
    */
   public function testMailSend() {
     // Create an email.

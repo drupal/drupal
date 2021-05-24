@@ -34,7 +34,7 @@ class ImageDimensionsTest extends BrowserTestBase {
   protected $profile = 'testing';
 
   /**
-   * Test styled image dimensions cumulatively.
+   * Tests styled image dimensions cumulatively.
    */
   public function testImageDimensions() {
     $image_factory = $this->container->get('image.factory');

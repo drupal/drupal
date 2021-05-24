@@ -86,7 +86,7 @@ class WorkflowUiTest extends BrowserTestBase {
   }
 
   /**
-   * Test the machine name validation of the state add form.
+   * Tests the machine name validation of the state add form.
    */
   public function testStateMachineNameValidation() {
     Workflow::create([
@@ -283,7 +283,7 @@ class WorkflowUiTest extends BrowserTestBase {
   }
 
   /**
-   * Test the workflow configuration form.
+   * Tests the workflow configuration form.
    */
   public function testWorkflowConfigurationForm() {
     $workflow = Workflow::create(['id' => 'test', 'type' => 'workflow_type_complex_test', 'label' => 'Test']);
@@ -306,7 +306,7 @@ class WorkflowUiTest extends BrowserTestBase {
   }
 
   /**
-   * Test a workflow, state, and transition can have a numeric ID and label.
+   * Tests a workflow, state, and transition can have a numeric ID and label.
    */
   public function testNumericIds() {
     $this->drupalLogin($this->createUser(['administer workflows']));
@@ -335,7 +335,7 @@ class WorkflowUiTest extends BrowserTestBase {
   }
 
   /**
-   * Test the sorting of states and transitions by weight and label.
+   * Tests the sorting of states and transitions by weight and label.
    */
   public function testSorting() {
     $workflow = Workflow::create(['id' => 'test', 'type' => 'workflow_type_complex_test', 'label' => 'Test']);

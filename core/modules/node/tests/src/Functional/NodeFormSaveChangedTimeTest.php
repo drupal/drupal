@@ -58,7 +58,7 @@ class NodeFormSaveChangedTimeTest extends BrowserTestBase {
   }
 
   /**
-   * Test the changed time after API and FORM save without changes.
+   * Tests the changed time after API and FORM save without changes.
    */
   public function testChangedTimeAfterSaveWithoutChanges() {
     $storage = $this->container->get('entity_type.manager')->getStorage('node');

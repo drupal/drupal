@@ -18,7 +18,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test the validation message is displayed only once for ajax uploads.
+   * Tests the validation message is displayed only once for ajax uploads.
    */
   public function testAJAXValidationMessage() {
     $field_name = strtolower($this->randomMachineName());

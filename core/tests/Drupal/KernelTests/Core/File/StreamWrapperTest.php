@@ -46,7 +46,7 @@ class StreamWrapperTest extends FileTestBase {
   }
 
   /**
-   * Test the getClassName() function.
+   * Tests the getClassName() function.
    */
   public function testGetClassName() {
     // Check the dummy scheme.
@@ -56,7 +56,7 @@ class StreamWrapperTest extends FileTestBase {
   }
 
   /**
-   * Test the getViaScheme() method.
+   * Tests the getViaScheme() method.
    */
   public function testGetInstanceByScheme() {
     $instance = \Drupal::service('stream_wrapper_manager')->getViaScheme($this->scheme);
@@ -67,7 +67,7 @@ class StreamWrapperTest extends FileTestBase {
   }
 
   /**
-   * Test the getViaUri() and getViaScheme() methods and target functions.
+   * Tests the getViaUri() and getViaScheme() methods and target functions.
    */
   public function testUriFunctions() {
     $config = $this->config('system.file');
@@ -107,7 +107,7 @@ class StreamWrapperTest extends FileTestBase {
   }
 
   /**
-   * Test some file handle functions.
+   * Tests some file handle functions.
    */
   public function testFileFunctions() {
     $filename = 'public://' . $this->randomMachineName();
@@ -139,7 +139,7 @@ class StreamWrapperTest extends FileTestBase {
   }
 
   /**
-   * Test the scheme functions.
+   * Tests the scheme functions.
    */
   public function testGetValidStreamScheme() {
 

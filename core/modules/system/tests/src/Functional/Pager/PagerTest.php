@@ -79,7 +79,8 @@ class PagerTest extends BrowserTestBase {
   }
 
   /**
-   * Test proper functioning of the query parameters and the pager cache context.
+   * Tests proper functioning of the query parameters and the pager cache
+   * context.
    */
   public function testPagerQueryParametersAndCacheContext() {
     // First page.
@@ -108,7 +109,7 @@ class PagerTest extends BrowserTestBase {
   }
 
   /**
-   * Test proper functioning of multiple pagers.
+   * Tests proper functioning of multiple pagers.
    */
   public function testMultiplePagers() {
     // First page.
@@ -191,7 +192,7 @@ class PagerTest extends BrowserTestBase {
   }
 
   /**
-   * Test proper functioning of the ellipsis.
+   * Tests proper functioning of the ellipsis.
    */
   public function testPagerEllipsis() {
     // Insert 100 extra log messages to get 9 pages.

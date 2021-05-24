@@ -21,7 +21,7 @@ class FlattenTest extends MigrateProcessTestCase {
   }
 
   /**
-   * Test that various array flatten operations work properly.
+   * Tests that various array flatten operations work properly.
    *
    * @dataProvider providerTestFlatten
    */

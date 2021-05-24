@@ -42,7 +42,7 @@ class NumberFieldTest extends WebDriverTestBase {
   }
 
   /**
-   * Test default formatter behavior.
+   * Tests default formatter behavior.
    */
   public function testNumberFormatter() {
     $type = mb_strtolower($this->randomMachineName());

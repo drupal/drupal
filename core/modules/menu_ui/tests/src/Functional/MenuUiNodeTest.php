@@ -65,7 +65,7 @@ class MenuUiNodeTest extends BrowserTestBase {
   }
 
   /**
-   * Test creating, editing, deleting menu links via node form widget.
+   * Tests creating, editing, deleting menu links via node form widget.
    */
   public function testMenuNodeFormWidget() {
     // Verify that cacheability metadata is bubbled from the menu link tree

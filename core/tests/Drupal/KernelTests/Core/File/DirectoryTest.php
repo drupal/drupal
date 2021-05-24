@@ -17,7 +17,7 @@ use Drupal\Core\File\FileSystemInterface;
 class DirectoryTest extends FileTestBase {
 
   /**
-   * Test local directory handling functions.
+   * Tests local directory handling functions.
    */
   public function testFileCheckLocalDirectoryHandling() {
     $site_path = $this->container->getParameter('site.path');
@@ -58,7 +58,7 @@ class DirectoryTest extends FileTestBase {
   }
 
   /**
-   * Test directory handling functions.
+   * Tests directory handling functions.
    */
   public function testFileCheckDirectoryHandling() {
     // A directory to operate on.

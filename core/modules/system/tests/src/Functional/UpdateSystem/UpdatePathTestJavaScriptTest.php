@@ -27,7 +27,7 @@ class UpdatePathTestJavaScriptTest extends BrowserTestBase {
   }
 
   /**
-   * Test JavaScript loading at update.php.
+   * Tests JavaScript loading at update.php.
    *
    * @see ::doPreUpdateTests
    */

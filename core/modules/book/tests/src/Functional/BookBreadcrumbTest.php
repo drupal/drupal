@@ -155,7 +155,7 @@ class BookBreadcrumbTest extends BrowserTestBase {
   }
 
   /**
-   * Test that the breadcrumb is updated when book content changes.
+   * Tests that the breadcrumb is updated when book content changes.
    */
   public function testBreadcrumbTitleUpdates() {
     // Create a new book.
@@ -190,7 +190,7 @@ class BookBreadcrumbTest extends BrowserTestBase {
   }
 
   /**
-   * Test that the breadcrumb is updated when book access changes.
+   * Tests that the breadcrumb is updated when book access changes.
    */
   public function testBreadcrumbAccessUpdates() {
     // Create a new book.

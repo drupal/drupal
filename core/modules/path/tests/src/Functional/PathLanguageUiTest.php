@@ -93,7 +93,7 @@ class PathLanguageUiTest extends PathTestBase {
   }
 
   /**
-   * Test that language unspecific aliases are shown and saved in the node form.
+   * Tests language unspecific aliases are shown and saved in the node form.
    */
   public function testNotSpecifiedNode() {
     // Create test node.

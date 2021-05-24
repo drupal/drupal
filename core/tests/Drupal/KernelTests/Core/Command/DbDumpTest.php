@@ -147,7 +147,7 @@ class DbDumpTest extends KernelTestBase {
   }
 
   /**
-   * Test the command directly.
+   * Tests the command directly.
    */
   public function testDbDumpCommand() {
     $application = new DbDumpApplication();
@@ -176,7 +176,7 @@ class DbDumpTest extends KernelTestBase {
   }
 
   /**
-   * Test loading the script back into the database.
+   * Tests loading the script back into the database.
    */
   public function testScriptLoad() {
     // Generate the script.

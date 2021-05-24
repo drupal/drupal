@@ -401,7 +401,8 @@ class TaggedHandlersPassTest extends UnitTestCase {
   }
 
   /**
-   * Tests consumer method with priority and extra parameters in different order.
+   * Tests consumer method with priority and extra parameters in different
+   * order.
    *
    * @covers ::process
    */

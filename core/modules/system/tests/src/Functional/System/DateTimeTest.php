@@ -50,7 +50,7 @@ class DateTimeTest extends BrowserTestBase {
   }
 
   /**
-   * Test time zones and DST handling.
+   * Tests time zones and DST handling.
    */
   public function testTimeZoneHandling() {
     // Setup date/time settings for Honolulu time.
@@ -91,7 +91,7 @@ class DateTimeTest extends BrowserTestBase {
   }
 
   /**
-   * Test date format configuration.
+   * Tests date format configuration.
    */
   public function testDateFormatConfiguration() {
     // Confirm 'no custom date formats available' message appears.
@@ -195,7 +195,7 @@ class DateTimeTest extends BrowserTestBase {
   }
 
   /**
-   * Test handling case with invalid data in selectors (like February, 31st).
+   * Tests handling case with invalid data in selectors (like February, 31st).
    */
   public function testEnteringDateTimeViaSelectors() {
 

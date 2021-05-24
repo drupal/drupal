@@ -33,7 +33,7 @@ class TestSettingSummariesContentType extends WebDriverTestBase {
   }
 
   /**
-   * Test a vertical tab 'Workflow' summary.
+   * Tests a vertical tab 'Workflow' summary.
    */
   public function testWorkflowSummary() {
     $this->drupalGet('admin/structure/types/manage/test');

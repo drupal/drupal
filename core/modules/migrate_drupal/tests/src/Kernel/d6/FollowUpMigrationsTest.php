@@ -37,7 +37,7 @@ class FollowUpMigrationsTest extends MigrateNodeTestBase {
   }
 
   /**
-   * Test entity reference translations.
+   * Tests entity reference translations.
    */
   public function testEntityReferenceTranslations() {
     // Test the entity reference field before the follow-up migrations.

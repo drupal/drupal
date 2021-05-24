@@ -49,7 +49,7 @@ class ModerationStateAccessTest extends BrowserTestBase {
   }
 
   /**
-   * Test the view operation access handler with the view permission.
+   * Tests the view operation access handler with the view permission.
    */
   public function testViewShowsCorrectStates() {
     $permissions = [

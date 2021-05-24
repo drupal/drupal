@@ -65,7 +65,7 @@ class UserBlocksTest extends BrowserTestBase {
   }
 
   /**
-   * Test the user login block.
+   * Tests the user login block.
    */
   public function testUserLoginBlock() {
     // Create a user with some permission that anonymous users lack.

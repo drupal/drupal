@@ -175,7 +175,7 @@ class EntityConverterLatestRevisionTest extends KernelTestBase {
   }
 
   /**
-   * Test the latest revision flag and non-revisionable entities.
+   * Tests the latest revision flag and non-revisionable entities.
    */
   public function testConvertNonRevisionableEntityType() {
     $entity = EntityTest::create();

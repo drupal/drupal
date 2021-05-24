@@ -24,7 +24,7 @@ class RebuildScriptTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test redirect in rebuild.php.
+   * Tests redirect in rebuild.php.
    */
   public function testRebuild() {
     $cache = $this->container->get('cache.default');

@@ -22,7 +22,7 @@ class CommentRowTest extends CommentTestBase {
   public static $testViews = ['test_comment_row'];
 
   /**
-   * Test comment row.
+   * Tests comment row.
    */
   public function testCommentRow() {
     $this->drupalGet('test-comment-row');

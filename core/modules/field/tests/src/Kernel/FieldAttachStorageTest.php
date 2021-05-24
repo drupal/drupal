@@ -71,7 +71,7 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
   }
 
   /**
-   * Test the 'multiple' load feature.
+   * Tests the 'multiple' load feature.
    */
   public function testFieldAttachLoadMultiple() {
     $entity_type = 'entity_test_rev';
@@ -190,7 +190,7 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
   }
 
   /**
-   * Test insert with empty or NULL fields, with default value.
+   * Tests insert with empty or NULL fields, with default value.
    */
   public function testFieldAttachSaveEmptyDataDefaultValue() {
     $entity_type = 'entity_test_rev';
@@ -223,7 +223,7 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
   }
 
   /**
-   * Test entity deletion.
+   * Tests entity deletion.
    */
   public function testFieldAttachDelete() {
     $entity_type = 'entity_test_rev';
@@ -283,7 +283,7 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
   }
 
   /**
-   * Test entity_bundle_create().
+   * Tests entity_bundle_create().
    */
   public function testEntityCreateBundle() {
     $entity_type = 'entity_test_rev';
@@ -311,7 +311,7 @@ class FieldAttachStorageTest extends FieldKernelTestBase {
   }
 
   /**
-   * Test entity_bundle_delete().
+   * Tests entity_bundle_delete().
    */
   public function testEntityDeleteBundle() {
     $entity_type = 'entity_test_rev';

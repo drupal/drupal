@@ -40,7 +40,7 @@ class LocalePathTest extends BrowserTestBase {
   }
 
   /**
-   * Test if a language can be associated with a path alias.
+   * Tests if a language can be associated with a path alias.
    */
   public function testPathLanguageConfiguration() {
     // User to add and remove language.

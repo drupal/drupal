@@ -12,7 +12,7 @@ use Drupal\Tests\UnitTestCase;
 class EventBaseTest extends UnitTestCase {
 
   /**
-   * Test getMigration method.
+   * Tests getMigration method.
    *
    * @covers ::__construct
    * @covers ::getMigration
@@ -26,7 +26,7 @@ class EventBaseTest extends UnitTestCase {
   }
 
   /**
-   * Test logging a message.
+   * Tests logging a message.
    *
    * @covers ::__construct
    * @covers ::logMessage

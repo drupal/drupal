@@ -61,7 +61,7 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
   }
 
   /**
-   * Test path prefix language negotiation and outbound path processing.
+   * Tests path prefix language negotiation and outbound path processing.
    *
    * @dataProvider providerTestPathPrefix
    */
@@ -150,7 +150,7 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
   }
 
   /**
-   * Test domain language negotiation and outbound path processing.
+   * Tests domain language negotiation and outbound path processing.
    *
    * @dataProvider providerTestDomain
    */

@@ -59,7 +59,7 @@ class QueryTest extends ViewsKernelTestBase {
   }
 
   /**
-   * Test methods provided by the QueryPluginBase.
+   * Tests methods provided by the QueryPluginBase.
    *
    * @see \Drupal\views\Plugin\views\query\QueryPluginBase
    */

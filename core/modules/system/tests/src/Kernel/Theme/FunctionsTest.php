@@ -418,7 +418,7 @@ class FunctionsTest extends KernelTestBase {
   }
 
   /**
-   * Test the use of Link::preRenderLinks() on a nested array of links.
+   * Tests the use of Link::preRenderLinks() on a nested array of links.
    *
    * @see \Drupal\Core\Render\Element\Link::preRenderLinks()
    */

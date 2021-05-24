@@ -31,7 +31,7 @@ class CronRunTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test cron runs.
+   * Tests cron runs.
    */
   public function testCronRun() {
     // Run cron anonymously without any cron key.

@@ -35,7 +35,7 @@ class BlockFormInBlockTest extends BrowserTestBase {
   }
 
   /**
-   * Test to see if form in block's redirect isn't cached.
+   * Tests to see if form in block's redirect isn't cached.
    */
   public function testCachePerPage() {
     $form_values = ['email' => 'test@example.com'];
@@ -65,7 +65,7 @@ class BlockFormInBlockTest extends BrowserTestBase {
   }
 
   /**
-   * Test the actual placeholders.
+   * Tests the actual placeholders.
    */
   public function testPlaceholders() {
     $this->drupalGet('test-multiple-forms');

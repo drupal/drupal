@@ -54,7 +54,7 @@ class SyslogTest extends KernelTestBase {
   }
 
   /**
-   * Test severity level logging.
+   * Tests severity level logging.
    *
    * @covers ::log
    */

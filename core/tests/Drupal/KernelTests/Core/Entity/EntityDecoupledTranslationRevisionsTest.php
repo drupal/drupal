@@ -193,7 +193,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test decoupled default revisions.
+   * Tests decoupled default revisions.
    *
    * @param array[] $sequence
    *   An array with arrays of arguments for the ::doSaveNewRevision() method as

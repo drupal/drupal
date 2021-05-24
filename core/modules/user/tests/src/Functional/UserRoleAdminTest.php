@@ -45,7 +45,7 @@ class UserRoleAdminTest extends BrowserTestBase {
   }
 
   /**
-   * Test adding, renaming and deleting roles.
+   * Tests adding, renaming and deleting roles.
    */
   public function testRoleAdministration() {
     $this->drupalLogin($this->adminUser);
@@ -104,7 +104,7 @@ class UserRoleAdminTest extends BrowserTestBase {
   }
 
   /**
-   * Test user role weight change operation and ordering.
+   * Tests user role weight change operation and ordering.
    */
   public function testRoleWeightOrdering() {
     $this->drupalLogin($this->adminUser);

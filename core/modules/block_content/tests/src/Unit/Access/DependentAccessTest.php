@@ -42,7 +42,7 @@ class DependentAccessTest extends UnitTestCase {
   }
 
   /**
-   * Test that the previous dependency is replaced when using set.
+   * Tests that the previous dependency is replaced when using set.
    *
    * @covers ::setAccessDependency
    *

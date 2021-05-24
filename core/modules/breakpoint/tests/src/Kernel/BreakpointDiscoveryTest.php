@@ -28,7 +28,7 @@ class BreakpointDiscoveryTest extends KernelTestBase {
   }
 
   /**
-   * Test the breakpoint group created for a theme.
+   * Tests the breakpoint group created for a theme.
    */
   public function testThemeBreakpoints() {
     // Verify the breakpoint group for breakpoint_theme_test was created.
@@ -93,7 +93,7 @@ class BreakpointDiscoveryTest extends KernelTestBase {
   }
 
   /**
-   * Test the custom breakpoint group provided by a theme and a module.
+   * Tests the custom breakpoint group provided by a theme and a module.
    */
   public function testCustomBreakpointGroups() {
     // Verify the breakpoint group for breakpoint_theme_test.group2 was created.
@@ -145,7 +145,7 @@ class BreakpointDiscoveryTest extends KernelTestBase {
   }
 
   /**
-   * Test the breakpoint group created for a module.
+   * Tests the breakpoint group created for a module.
    */
   public function testModuleBreakpoints() {
     $expected_breakpoints = [
@@ -181,7 +181,7 @@ class BreakpointDiscoveryTest extends KernelTestBase {
   }
 
   /**
-   * Test the collection of breakpoint groups.
+   * Tests the collection of breakpoint groups.
    */
   public function testBreakpointGroups() {
     $expected = [

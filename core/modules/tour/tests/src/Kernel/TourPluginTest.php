@@ -38,7 +38,7 @@ class TourPluginTest extends KernelTestBase {
   }
 
   /**
-   * Test tour plugins.
+   * Tests tour plugins.
    */
   public function testTourPlugins() {
     $this->assertCount(1, $this->pluginManager->getDefinitions(), 'Only tour plugins for the enabled modules were returned.');

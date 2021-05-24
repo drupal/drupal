@@ -46,7 +46,7 @@ class CommentNodeAccessTest extends CommentTestBase {
   }
 
   /**
-   * Test that threaded comments can be viewed.
+   * Tests that threaded comments can be viewed.
    */
   public function testThreadedCommentView() {
     // Set comments to have subject required and preview disabled.

@@ -124,7 +124,7 @@ class EntityDisplayTest extends KernelTestBase {
   }
 
   /**
-   * Test sorting of components by name on basic CRUD operations.
+   * Tests sorting of components by name on basic CRUD operations.
    */
   public function testEntityDisplayCRUDSort() {
     $display = EntityViewDisplay::create([
@@ -476,7 +476,7 @@ class EntityDisplayTest extends KernelTestBase {
   }
 
   /**
-   * Test getDisplayModeOptions().
+   * Tests getDisplayModeOptions().
    */
   public function testGetDisplayModeOptions() {
     NodeType::create(['type' => 'article'])->save();

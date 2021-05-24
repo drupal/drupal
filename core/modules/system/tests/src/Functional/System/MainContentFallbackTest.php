@@ -42,7 +42,7 @@ class MainContentFallbackTest extends BrowserTestBase {
   }
 
   /**
-   * Test availability of main content: Drupal falls back to SimplePageVariant.
+   * Tests availability of main content: Drupal falls back to SimplePageVariant.
    */
   public function testMainContentFallback() {
     $edit = [];

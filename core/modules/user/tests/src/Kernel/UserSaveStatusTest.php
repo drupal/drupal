@@ -25,7 +25,7 @@ class UserSaveStatusTest extends KernelTestBase {
   }
 
   /**
-   * Test SAVED_NEW and SAVED_UPDATED statuses for user entity type.
+   * Tests SAVED_NEW and SAVED_UPDATED statuses for user entity type.
    */
   public function testUserSaveStatus() {
     // Create a new user.

@@ -27,7 +27,7 @@ class ThemeTest extends KernelTestBase {
   }
 
   /**
-   * Test attribute merging.
+   * Tests attribute merging.
    *
    * Render arrays that use a render element and templates (and hence call
    * template_preprocess()) must ensure the attributes at different occasions
@@ -49,7 +49,7 @@ class ThemeTest extends KernelTestBase {
   }
 
   /**
-   * Test that ThemeManager renders the expected data types.
+   * Tests that ThemeManager renders the expected data types.
    */
   public function testThemeDataTypes() {
     // theme_test_false is an implemented theme hook so \Drupal::theme() service
@@ -74,7 +74,7 @@ class ThemeTest extends KernelTestBase {
   }
 
   /**
-   * Test function theme_get_suggestions() for SA-CORE-2009-003.
+   * Tests function theme_get_suggestions() for SA-CORE-2009-003.
    */
   public function testThemeSuggestions() {
     // Set the front page as something random otherwise the CLI
@@ -101,7 +101,7 @@ class ThemeTest extends KernelTestBase {
   }
 
   /**
-   * Test the listInfo() function.
+   * Tests the listInfo() function.
    */
   public function testListThemes() {
     $this->container->get('theme_installer')->install(['test_subtheme']);

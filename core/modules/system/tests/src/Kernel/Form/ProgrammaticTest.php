@@ -21,7 +21,7 @@ class ProgrammaticTest extends KernelTestBase {
   protected static $modules = ['form_test'];
 
   /**
-   * Test the programmatic form submission workflow.
+   * Tests the programmatic form submission workflow.
    */
   public function testSubmissionWorkflow() {
     // Backup the current batch status and reset it to avoid conflicts while
@@ -91,7 +91,7 @@ class ProgrammaticTest extends KernelTestBase {
   }
 
   /**
-   * Test the programmed_bypass_access_check flag.
+   * Tests the programmed_bypass_access_check flag.
    */
   public function testProgrammaticAccessBypass() {
     $form_state = (new FormState())->setValues([

@@ -24,7 +24,7 @@ class MigrateUserPictureFieldTest extends MigrateDrupal7TestBase {
   }
 
   /**
-   * Test the user picture field migration.
+   * Tests the user picture field migration.
    */
   public function testUserPictureField() {
     /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */

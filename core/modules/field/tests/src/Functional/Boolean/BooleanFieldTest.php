@@ -180,7 +180,7 @@ class BooleanFieldTest extends BrowserTestBase {
   }
 
   /**
-   * Test field access.
+   * Tests field access.
    */
   public function testFormAccess() {
     $on = 'boolean_on';

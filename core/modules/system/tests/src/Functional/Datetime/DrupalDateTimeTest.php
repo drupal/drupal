@@ -32,7 +32,7 @@ class DrupalDateTimeTest extends BrowserTestBase {
   }
 
   /**
-   * Test that the AJAX Timezone Callback can deal with various formats.
+   * Tests that the AJAX Timezone Callback can deal with various formats.
    */
   public function testSystemTimezone() {
     $options = [
@@ -46,7 +46,7 @@ class DrupalDateTimeTest extends BrowserTestBase {
   }
 
   /**
-   * Test that DrupalDateTime can detect the right timezone to use.
+   * Tests that DrupalDateTime can detect the right timezone to use.
    * Test with a variety of less commonly used timezone names to
    * help ensure that the system timezone will be different than the
    * stated timezones.

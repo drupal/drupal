@@ -27,7 +27,7 @@ class ReadOnlyStreamWrapperTest extends FileTestBase {
   protected $classname = 'Drupal\file_test\StreamWrapper\DummyReadOnlyStreamWrapper';
 
   /**
-   * Test read-only specific behavior.
+   * Tests read-only specific behavior.
    */
   public function testReadOnlyBehavior() {
     $type = DummyReadOnlyStreamWrapper::getType();

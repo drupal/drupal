@@ -198,7 +198,7 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
   }
 
   /**
-   * Test that a security warning appears if iFrame domain is not set.
+   * Tests that a security warning appears if iFrame domain is not set.
    */
   public function testOEmbedSecurityWarning() {
     $media_type_id = 'test_media_oembed_type';

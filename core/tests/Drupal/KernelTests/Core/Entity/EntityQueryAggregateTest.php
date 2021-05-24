@@ -108,7 +108,7 @@ class EntityQueryAggregateTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test aggregation support.
+   * Tests aggregation support.
    */
   public function testAggregation() {
     // Apply a simple groupby.

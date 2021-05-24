@@ -62,7 +62,7 @@ class TourTest extends TourTestBasic {
   }
 
   /**
-   * Test tour functionality.
+   * Tests tour functionality.
    */
   public function testTourFunctionality() {
     // Navigate to tour-test-1 and verify the tour_test_1 tip is found with appropriate classes.

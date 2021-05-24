@@ -84,7 +84,7 @@ class InternalTest extends KernelTestBase {
   }
 
   /**
-   * Test the format tags settings.
+   * Tests the format tags settings.
    *
    * @dataProvider formatTagsSettingsTestCases
    */

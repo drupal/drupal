@@ -24,7 +24,7 @@ class DialogTest extends WebDriverTestBase {
   protected $defaultTheme = 'classy';
 
   /**
-   * Test sending non-JS and AJAX requests to open and manipulate modals.
+   * Tests sending non-JS and AJAX requests to open and manipulate modals.
    */
   public function testDialog() {
     $this->drupalLogin($this->drupalCreateUser(['administer contact forms']));

@@ -28,7 +28,7 @@ class FeedFetcherPluginTest extends AggregatorTestBase {
   }
 
   /**
-   * Test fetching functionality.
+   * Tests fetching functionality.
    */
   public function testfetch() {
     // Create feed with local url.

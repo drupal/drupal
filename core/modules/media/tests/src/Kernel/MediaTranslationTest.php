@@ -49,7 +49,7 @@ class MediaTranslationTest extends MediaKernelTestBase {
   }
 
   /**
-   * Test translatable fields storage/retrieval.
+   * Tests translatable fields storage/retrieval.
    */
   public function testTranslatableFieldSaveLoad() {
     /** @var \Drupal\Core\Entity\EntityTypeInterface $entity_type */

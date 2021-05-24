@@ -46,7 +46,7 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
   }
 
   /**
-   * Test basic media display.
+   * Tests basic media display.
    */
   public function testMediaDisplay() {
     $assert_session = $this->assertSession();

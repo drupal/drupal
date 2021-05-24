@@ -49,7 +49,7 @@ class FrontPageTest extends BrowserTestBase {
   }
 
   /**
-   * Test front page functionality.
+   * Tests front page functionality.
    */
   public function testDrupalFrontPage() {
     // Create a promoted node to test the <title> tag on the front page view.

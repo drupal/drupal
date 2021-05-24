@@ -20,7 +20,7 @@ class UpdatePathNewDependencyTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test that a module can add services that depend on new modules.
+   * Tests that a module can add services that depend on new modules.
    */
   public function testUpdateNewDependency() {
     // The new_dependency_test before the update is just an empty info.yml file.

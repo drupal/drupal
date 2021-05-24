@@ -14,7 +14,7 @@ use Drupal\language\Exception\DeleteDefaultLanguageException;
 class LanguageDependencyInjectionTest extends LanguageTestBase {
 
   /**
-   * Test dependency injected languages against a new Language object.
+   * Tests dependency injected languages against a new Language object.
    *
    * @see \Drupal\Core\Language\LanguageInterface
    */
@@ -25,8 +25,7 @@ class LanguageDependencyInjectionTest extends LanguageTestBase {
   }
 
   /**
-   * Test dependency injected Language object against a new default language
-   * object.
+   * Tests dependency injected Language object.
    *
    * @see \Drupal\Core\Language\Language
    */

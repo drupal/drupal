@@ -34,7 +34,7 @@ class DependencyHookInvocationTest extends BrowserTestBase {
   }
 
   /**
-   * Test the structure of the array returned by hook_update_dependencies().
+   * Tests the structure of the array returned by hook_update_dependencies().
    */
   public function testHookUpdateDependencies() {
     $update_dependencies = update_retrieve_dependencies();

@@ -29,7 +29,7 @@ class MigrateAggregatorItemTest extends MigrateDrupal7TestBase {
   }
 
   /**
-   * Test Drupal 7 aggregator item migration to Drupal 8.
+   * Tests Drupal 7 aggregator item migration to Drupal 8.
    */
   public function testAggregatorItem() {
     // Since the feed items can change as the fixture is updated normally,
