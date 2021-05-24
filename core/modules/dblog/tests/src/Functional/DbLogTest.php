@@ -6,6 +6,7 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
@@ -905,6 +906,39 @@ class DbLogTest extends BrowserTestBase {
     $message = new FormattableMarkup('%type: @message in %function (line', $error_user_notice);
     $this->assertRaw($message);
     $this->assertRaw('<pre class="backtrace">');
+  }
+
+  /**
+   * Test to ensure that proper message is displayed when the exception is thrown.
+   */
+  public function testModuleInstallerErrorMessagesText() {
+    $this->drupalLogin($this->adminUser);
+    \Drupal::service('module_installer')->install(['contact_storage_test']);
+
+    $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+
+    $original = $entity_definition_update_manager->getEntityType('contact_message');
+    $entity_definition_update_manager->uninstallEntityType($original);
+
+    // Update the entity type definition and make it use the default SQL storage.
+    // @see contact_storage_test_entity_type_alter()
+    $entity_type = clone $original;
+    $entity_type->setStorageClass(SqlContentEntityStorage::class);
+    $keys = $entity_type->getKeys();
+    $keys['id'] = 'id';
+    $entity_type->set('entity_keys', $keys);
+    $entity_type->set('base_table', 'contact_message');
+    $entity_definition_update_manager->installEntityType($entity_type);
+
+    /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $field_manager */
+    $field_manager = \Drupal::service('entity_field.manager');
+
+    $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+    $field_definition = $field_manager->getFieldStorageDefinitions('contact_message')['created'];
+    $entity_definition_update_manager->installFieldStorageDefinition('created', 'contact_message', 'contact_storage', $field_definition);
+    $this->drupalGet('admin/reports/dblog');
+    $this->clickLink('An error occurred while notifying the creation of the…', 0);
+    $this->assertSession()->pageTextContains("An error occurred while notifying the creation of the created field storage definition: \"Exception thrown while performing a schema update. Cannot add field 'contact_message.created': table doesn't exist.\" in Drupal\Core\Entity\Sql\SqlContentEntityStorage->wrapSchemaException() (line 1576 of /var/www/html/core/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php).");
   }
 
 }

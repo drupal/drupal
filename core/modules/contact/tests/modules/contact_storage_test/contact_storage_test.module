@@ -23,6 +23,12 @@ function contact_storage_test_entity_base_field_info(EntityTypeInterface $entity
       ->setReadOnly(TRUE)
       ->setSetting('unsigned', TRUE);
 
+    $fields['created'] = BaseFieldDefinition::create('created')
+      ->setLabel(t('Created'))
+      ->setDescription(t('The time that the message was created.'))
+      ->setTranslatable(TRUE)
+      ->setReadOnly(TRUE);
+
     return $fields;
   }
 }
