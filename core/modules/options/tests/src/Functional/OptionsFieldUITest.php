@@ -347,14 +347,16 @@ class OptionsFieldUITest extends FieldTestBase {
         0|$off",
     ];
 
-    $this->drupalPostForm($this->adminPath, $edit, 'Save field settings');
+    $this->drupalGet($this->adminPath);
+    $this->submitForm($edit, 'Save field settings');
     $this->assertSession()->pageTextContains('Updated field ' . $this->fieldName . ' field settings.');
 
     // Select a default value.
     $edit = [
       $this->fieldName => '1',
     ];
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm($edit, 'Save');
 
     // Check the node page and see if the values are correct.
     $file_formatters = ['list_default', 'list_key'];

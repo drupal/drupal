@@ -310,7 +310,8 @@ class PagePreviewTest extends NodeTestBase {
     $edit = [
       $title_key => $this->randomMachineName(8),
     ];
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Preview');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm($edit, 'Preview');
     $this->assertSession()->pageTextContains($edit[$title_key]);
     $this->clickLink(t('Back to content editing'));
     $this->assertSession()->fieldValueEquals($title_key, $edit[$title_key]);
@@ -498,7 +499,8 @@ class PagePreviewTest extends NodeTestBase {
     $node = $this->drupalCreateNode([]);
 
     $edit = [$title_key => 'New page title'];
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Preview');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm($edit, 'Preview');
     $this->assertSession()->pageTextContains($edit[$title_key]);
 
     $user2 = $this->drupalCreateUser(['edit any page content']);

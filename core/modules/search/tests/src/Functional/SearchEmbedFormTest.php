@@ -62,7 +62,8 @@ class SearchEmbedFormTest extends BrowserTestBase {
    */
   public function testEmbeddedForm() {
     // First verify we can submit the form from the module's page.
-    $this->drupalPostForm('search_embedded_form', ['name' => 'John'], 'Send away');
+    $this->drupalGet('search_embedded_form');
+    $this->submitForm(['name' => 'John'], 'Send away');
     $this->assertSession()->pageTextContains('Test form was submitted');
     $count = \Drupal::state()->get('search_embedded_form.submit_count');
     $this->assertEquals($this->submitCount + 1, $count, 'Form submission count is correct');

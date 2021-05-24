@@ -216,7 +216,8 @@ class PathAliasTest extends PathTestBase {
     $edit = [];
     $edit['alias[0][value]'] = $node4_alias;
     $edit['path[0][value]'] = '/node/' . $node2->id();
-    $this->drupalPostForm('admin/config/search/path/edit/' . $pid, $edit, 'Save');
+    $this->drupalGet('admin/config/search/path/edit/' . $pid);
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('The alias has been saved.');
     $this->drupalGet($edit['alias[0][value]']);
     // Previous alias should no longer work.

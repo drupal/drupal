@@ -163,7 +163,8 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
       'langcode' => 'fr',
       'translation' => 'translated',
     ];
-    $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
+    $this->drupalGet('admin/config/regional/translate');
+    $this->submitForm($search, 'Filter');
     $this->assertSession()->pageTextContains('No strings available.');
 
     // This import should not have changed number of plural forms.
@@ -226,7 +227,8 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
       'langcode' => 'fr',
       'translation' => 'translated',
     ];
-    $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
+    $this->drupalGet('admin/config/regional/translate');
+    $this->submitForm($search, 'Filter');
     $this->assertSession()->pageTextContains('No strings available.');
 
     // Try importing a .po file with overriding strings, and ensure existing
@@ -294,7 +296,8 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
       'translation' => 'untranslated',
     ];
     // Check that search finds the string as untranslated.
-    $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
+    $this->drupalGet('admin/config/regional/translate');
+    $this->submitForm($search, 'Filter');
     $this->assertSession()->pageTextContains($str);
   }
 
@@ -351,7 +354,8 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
         'langcode' => $langcode,
         'translation' => 'all',
       ];
-      $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
+      $this->drupalGet('admin/config/regional/translate');
+      $this->submitForm($search, 'Filter');
       $this->assertSession()->pageTextContains($config_string[1]);
     }
 

@@ -103,7 +103,8 @@ class SearchLanguageTest extends BrowserTestBase {
   public function testLanguages() {
     // Add predefined language.
     $edit = ['predefined_langcode' => 'fr'];
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
+    $this->drupalGet('admin/config/regional/language/add');
+    $this->submitForm($edit, 'Add language');
     $this->assertSession()->pageTextContains('French');
 
     // Now we should have languages displayed.

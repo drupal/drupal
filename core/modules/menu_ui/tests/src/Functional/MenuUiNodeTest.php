@@ -111,7 +111,8 @@ class MenuUiNodeTest extends BrowserTestBase {
       'menu_options[tools]' => 1,
       'menu_parent' => 'main:',
     ];
-    $this->drupalPostForm('admin/structure/types/manage/page', $edit, 'Save content type');
+    $this->drupalGet('admin/structure/types/manage/page');
+    $this->submitForm($edit, 'Save content type');
     $this->assertSession()->pageTextContains('The selected menu link is not under one of the selected menus.');
     $this->assertNoRaw(t('The content type %name has been updated.', ['%name' => 'Basic page']));
 

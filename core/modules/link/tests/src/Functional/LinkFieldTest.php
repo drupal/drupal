@@ -239,7 +239,8 @@ class LinkFieldTest extends BrowserTestBase {
       $edit = [
         "{$field_name}[0][uri]" => $invalid_value,
       ];
-      $this->drupalPostForm('entity_test/add', $edit, 'Save');
+      $this->drupalGet('entity_test/add');
+      $this->submitForm($edit, 'Save');
       $this->assertSession()->responseContains(strtr($error_message, ['@link_path' => $invalid_value]));
     }
   }
@@ -360,7 +361,8 @@ class LinkFieldTest extends BrowserTestBase {
     $edit = [
       "{$field_name}[0][title]" => $title,
     ];
-    $this->drupalPostForm("entity_test/manage/$id/edit", $edit, 'Save');
+    $this->drupalGet("entity_test/manage/{$id}/edit");
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been updated.');
 
     $output = $this->renderTestEntity($id);

@@ -462,7 +462,8 @@ class LocaleUpdateTest extends LocaleUpdateBase {
       'langcode' => $langcode,
       'translation' => 'all',
     ];
-    $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
+    $this->drupalGet('admin/config/regional/translate');
+    $this->submitForm($search, 'Filter');
     $this->assertSession()->pageTextContains('Multiline translation string to make sure that import works with it.');
 
     // Ensure 'Allowed HTML source string' was imported but the translation for
@@ -473,7 +474,8 @@ class LocaleUpdateTest extends LocaleUpdateBase {
       'langcode' => $langcode,
       'translation' => 'all',
     ];
-    $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
+    $this->drupalGet('admin/config/regional/translate');
+    $this->submitForm($search, 'Filter');
     $this->assertSession()->pageTextContains('Allowed HTML source string');
     $this->assertNoText('Another allowed HTML source string');
   }

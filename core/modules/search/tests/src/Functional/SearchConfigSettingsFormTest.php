@@ -91,35 +91,42 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('There are 0 items left to index.');
 
     // Test the re-index button.
-    $this->drupalPostForm('admin/config/search/pages', [], 'Re-index site');
+    $this->drupalGet('admin/config/search/pages');
+    $this->submitForm([], 'Re-index site');
     $this->assertSession()->pageTextContains('Are you sure you want to re-index the site');
-    $this->drupalPostForm('admin/config/search/pages/reindex', [], 'Re-index site');
+    $this->drupalGet('admin/config/search/pages/reindex');
+    $this->submitForm([], 'Re-index site');
     $this->assertSession()->pageTextContains('All search indexes will be rebuilt');
     $this->drupalGet('admin/config/search/pages');
     $this->assertSession()->pageTextContains('There is 1 item left to index.');
 
     // Test that the form saves with the default values.
-    $this->drupalPostForm('admin/config/search/pages', [], 'Save configuration');
+    $this->drupalGet('admin/config/search/pages');
+    $this->submitForm([], 'Save configuration');
     $this->assertSession()->pageTextContains('The configuration options have been saved.');
 
     // Test that the form does not save with an invalid word length.
     $edit = [
       'minimum_word_size' => $this->randomMachineName(3),
     ];
-    $this->drupalPostForm('admin/config/search/pages', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/search/pages');
+    $this->submitForm($edit, 'Save configuration');
     $this->assertNoText('The configuration options have been saved.');
 
     // Test logging setting. It should be off by default.
     $text = $this->randomMachineName(5);
-    $this->drupalPostForm('search/node', ['keys' => $text], 'Search');
+    $this->drupalGet('search/node');
+    $this->submitForm(['keys' => $text], 'Search');
     $this->drupalGet('admin/reports/dblog');
     $this->assertSession()->linkNotExists('Searched Content for ' . $text . '.', 'Search was not logged');
 
     // Turn on logging.
     $edit = ['logging' => TRUE];
-    $this->drupalPostForm('admin/config/search/pages', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/search/pages');
+    $this->submitForm($edit, 'Save configuration');
     $text = $this->randomMachineName(5);
-    $this->drupalPostForm('search/node', ['keys' => $text], 'Search');
+    $this->drupalGet('search/node');
+    $this->submitForm(['keys' => $text], 'Search');
     $this->drupalGet('admin/reports/dblog');
     $this->assertSession()->linkExists('Searched Content for ' . $text . '.', 0, 'Search was logged');
 

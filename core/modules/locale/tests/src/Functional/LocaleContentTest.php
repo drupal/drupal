@@ -142,7 +142,8 @@ class LocaleContentTest extends BrowserTestBase {
     $edit = [
       'langcode[0][value]' => 'en',
     ];
-    $this->drupalPostForm($path, $edit, 'Save');
+    $this->drupalGet($path);
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains($node_title . ' has been updated.');
 
     // Verify that the creation message contains a link to a node.

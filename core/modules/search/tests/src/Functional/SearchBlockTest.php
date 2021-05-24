@@ -116,7 +116,8 @@ class SearchBlockTest extends BrowserTestBase {
 
     // Test that after entering a too-short keyword in the form, you can then
     // search again with a longer keyword. First test using the block form.
-    $this->drupalPostForm('node', ['keys' => $this->randomMachineName(1)], 'Search');
+    $this->drupalGet('node');
+    $this->submitForm(['keys' => $this->randomMachineName(1)], 'Search');
     $this->assertSession()->pageTextContains('You must include at least one keyword to match in the content');
     $this->assertNoText('Please enter some keywords');
     $this->submitForm(['keys' => $this->randomMachineName()], 'Search', 'search-block-form');

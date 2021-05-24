@@ -227,7 +227,8 @@ class SearchCommentTest extends BrowserTestBase {
     $this->cronRun();
 
     // Search for $title.
-    $this->drupalPostForm('search/node', $edit, 'Search');
+    $this->drupalGet('search/node');
+    $this->submitForm($edit, 'Search');
     $this->assertSession()->pageTextContains('Your search yielded no results.');
   }
 
@@ -365,12 +366,14 @@ class SearchCommentTest extends BrowserTestBase {
 
     // Search for 'comment'. Should be no results.
     $this->drupalLogin($user);
-    $this->drupalPostForm('search/node', ['keys' => 'comment'], 'Search');
+    $this->drupalGet('search/node');
+    $this->submitForm(['keys' => 'comment'], 'Search');
     $this->assertSession()->pageTextContains('Your search yielded no results');
 
     // Search for the node title. Should be found, and 'Add new comment' should
     // not be part of the search snippet.
-    $this->drupalPostForm('search/node', ['keys' => 'short'], 'Search');
+    $this->drupalGet('search/node');
+    $this->submitForm(['keys' => 'short'], 'Search');
     $this->assertSession()->pageTextContains($node->label());
     $this->assertNoText('Add new comment');
   }
