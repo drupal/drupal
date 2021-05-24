@@ -23,10 +23,11 @@ class HookRequirementsTest extends ModuleTestBase {
     // Attempt to install the requirements1_test module.
     $edit = [];
     $edit['modules[requirements1_test][enable]'] = 'requirements1_test';
-    $this->drupalPostForm('admin/modules', $edit, 'Install');
+    $this->drupalGet('admin/modules');
+    $this->submitForm($edit, 'Install');
 
     // Makes sure the module was NOT installed.
-    $this->assertText('Requirements 1 Test failed requirements');
+    $this->assertSession()->pageTextContains('Requirements 1 Test failed requirements');
     $this->assertModules(['requirements1_test'], FALSE);
   }
 

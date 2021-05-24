@@ -36,7 +36,7 @@ class PathMatcherTest extends UnitTestCase {
   }
 
   /**
-   * Test that standard paths works with multiple patterns.
+   * Tests that standard paths works with multiple patterns.
    *
    * @dataProvider getMatchPathData
    */

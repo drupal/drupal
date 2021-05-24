@@ -246,11 +246,11 @@ class ConfigEntityListTest extends BrowserTestBase {
     $this->assertSession()->elementNotExists('xpath', '//td[text() = "dotted.default"]');
 
     // Confirm that the empty text is displayed.
-    $this->assertText('There are no test configuration entities yet.');
+    $this->assertSession()->pageTextContains('There are no test configuration entities yet.');
   }
 
   /**
-   * Test paging.
+   * Tests paging.
    */
   public function testPager() {
     $this->drupalLogin($this->drupalCreateUser([

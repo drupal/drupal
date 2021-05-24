@@ -62,7 +62,7 @@ class FieldCrudTest extends FieldKernelTestBase {
   // and for testUpdateField
 
   /**
-   * Test the creation of a field.
+   * Tests the creation of a field.
    */
   public function testCreateField() {
     $field = FieldConfig::create($this->fieldDefinition);
@@ -92,10 +92,10 @@ class FieldCrudTest extends FieldKernelTestBase {
     $this->assertSame('', $config['description'], 'Description defaults to empty string.');
 
     // Check that default settings are set.
-    $this->assertEqual($config['settings'], $field_type_manager->getDefaultFieldSettings($this->fieldStorageDefinition['type']), 'Default field settings have been written.');
+    $this->assertEquals($config['settings'], $field_type_manager->getDefaultFieldSettings($this->fieldStorageDefinition['type']), 'Default field settings have been written.');
 
     // Check that the denormalized 'field_type' was properly written.
-    $this->assertEqual($config['field_type'], $this->fieldStorageDefinition['type']);
+    $this->assertEquals($config['field_type'], $this->fieldStorageDefinition['type']);
 
     // Guarantee that the field/bundle combination is unique.
     try {
@@ -195,7 +195,7 @@ class FieldCrudTest extends FieldKernelTestBase {
   }
 
   /**
-   * Test creating a field with custom storage set.
+   * Tests creating a field with custom storage set.
    */
   public function testCreateFieldCustomStorage() {
     $field_name = mb_strtolower($this->randomMachineName());
@@ -233,7 +233,7 @@ class FieldCrudTest extends FieldKernelTestBase {
   }
 
   /**
-   * Test reading back a field definition.
+   * Tests reading back a field definition.
    */
   public function testReadField() {
     FieldConfig::create($this->fieldDefinition)->save();
@@ -246,7 +246,7 @@ class FieldCrudTest extends FieldKernelTestBase {
   }
 
   /**
-   * Test the update of a field.
+   * Tests the update of a field.
    */
   public function testUpdateField() {
     FieldConfig::create($this->fieldDefinition)->save();
@@ -260,15 +260,15 @@ class FieldCrudTest extends FieldKernelTestBase {
     $field->save();
 
     $field_new = FieldConfig::load('entity_test.' . $this->fieldDefinition['bundle'] . '.' . $this->fieldDefinition['field_name']);
-    $this->assertEqual($field->isRequired(), $field_new->isRequired(), '"required" change is saved');
-    $this->assertEqual($field->getLabel(), $field_new->getLabel(), '"label" change is saved');
-    $this->assertEqual($field->getDescription(), $field_new->getDescription(), '"description" change is saved');
+    $this->assertEquals($field->isRequired(), $field_new->isRequired(), '"required" change is saved');
+    $this->assertEquals($field->getLabel(), $field_new->getLabel(), '"label" change is saved');
+    $this->assertEquals($field->getDescription(), $field_new->getDescription(), '"description" change is saved');
 
     // TODO: test failures.
   }
 
   /**
-   * Test the deletion of a field with no data.
+   * Tests the deletion of a field with no data.
    */
   public function testDeleteFieldNoData() {
     // Deleting and purging fields with data is tested in

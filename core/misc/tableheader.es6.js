@@ -144,7 +144,8 @@
      *
      * @ignore
      */
-    'columnschange.TableHeader drupalToolbarTrayChange': tableHeaderResizeHandler,
+    'columnschange.TableHeader drupalToolbarTrayChange':
+      tableHeaderResizeHandler,
 
     /**
      * Recalculate TableHeader.topOffset when viewport is resized.
@@ -209,6 +210,8 @@
        * @fires event:tableheaderCreateSticky
        */
       createSticky() {
+        // For caching purposes.
+        this.$html = $('html');
         // Clone the table header so it inherits original jQuery properties.
         const $stickyHeader = this.$originalHeader.clone(true);
         // Hide the table to avoid a flash of the header clone upon page load.
@@ -259,6 +262,12 @@
           const containerAmountScrolled = stickyParent.scrollLeft;
           css.left = `${containerLeftOffset - containerAmountScrolled}px`;
         }
+
+        this.$html.css(
+          'scroll-padding-top',
+          displace.offsets.top +
+            (this.stickyVisible ? this.$stickyTable.height() : 0),
+        );
 
         return this.$stickyTable.css(css);
       },

@@ -41,7 +41,7 @@ class MediaAccessTest extends MediaFunctionalTestBase {
   }
 
   /**
-   * Test some access control functionality.
+   * Tests some access control functionality.
    */
   public function testMediaAccess() {
     $assert_session = $this->assertSession();
@@ -193,7 +193,7 @@ class MediaAccessTest extends MediaFunctionalTestBase {
   }
 
   /**
-   * Test view access control on the canonical page.
+   * Tests view access control on the canonical page.
    */
   public function testCanonicalMediaAccess() {
     $media_type = $this->createMediaType('test');

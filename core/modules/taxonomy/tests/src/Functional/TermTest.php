@@ -91,7 +91,7 @@ class TermTest extends TaxonomyTestBase {
   }
 
   /**
-   * Test terms in a single and multiple hierarchy.
+   * Tests terms in a single and multiple hierarchy.
    */
   public function testTaxonomyTermHierarchy() {
     // Create two taxonomy terms.
@@ -108,7 +108,8 @@ class TermTest extends TaxonomyTestBase {
     // Edit $term2, setting $term1 as parent.
     $edit = [];
     $edit['parent[]'] = [$term1->id()];
-    $this->drupalPostForm('taxonomy/term/' . $term2->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('taxonomy/term/' . $term2->id() . '/edit');
+    $this->submitForm($edit, 'Save');
 
     // Check the hierarchy.
     $children = $taxonomy_storage->loadChildren($term1->id());
@@ -161,16 +162,16 @@ class TermTest extends TaxonomyTestBase {
 
     // Get Page 1. Parent term and terms 1-13 are displayed.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
-    $this->assertText($term1->getName());
+    $this->assertSession()->pageTextContains($term1->getName());
     for ($x = 1; $x <= 13; $x++) {
-      $this->assertText($terms_array[$x]->getName());
+      $this->assertSession()->pageTextContains($terms_array[$x]->getName());
     }
 
     // Get Page 2. Parent term and terms 1-18 are displayed.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview', ['query' => ['page' => 1]]);
-    $this->assertText($term1->getName());
+    $this->assertSession()->pageTextContains($term1->getName());
     for ($x = 1; $x <= 18; $x++) {
-      $this->assertText($terms_array[$x]->getName());
+      $this->assertSession()->pageTextContains($terms_array[$x]->getName());
     }
 
     // Get Page 3. No parent term and no terms <18 are displayed. Terms 18-25
@@ -181,12 +182,12 @@ class TermTest extends TaxonomyTestBase {
       $this->assertNoText($terms_array[$x]->getName());
     }
     for ($x = 18; $x <= 25; $x++) {
-      $this->assertText($terms_array[$x]->getName());
+      $this->assertSession()->pageTextContains($terms_array[$x]->getName());
     }
   }
 
   /**
-   * Test that hook_node_$op implementations work correctly.
+   * Tests that hook_node_$op implementations work correctly.
    *
    * Save & edit a node and assert that taxonomy terms are saved/loaded properly.
    */
@@ -200,36 +201,40 @@ class TermTest extends TaxonomyTestBase {
     $edit['title[0][value]'] = $this->randomMachineName();
     $edit['body[0][value]'] = $this->randomMachineName();
     $edit[$this->field->getName() . '[]'] = $term1->id();
-    $this->drupalPostForm('node/add/article', $edit, 'Save');
+    $this->drupalGet('node/add/article');
+    $this->submitForm($edit, 'Save');
 
     // Check that the term is displayed when the node is viewed.
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->drupalGet('node/' . $node->id());
-    $this->assertText($term1->getName());
+    $this->assertSession()->pageTextContains($term1->getName());
 
     $this->clickLink(t('Edit'));
-    $this->assertText($term1->getName());
+    $this->assertSession()->pageTextContains($term1->getName());
     $this->submitForm([], 'Save');
-    $this->assertText($term1->getName());
+    $this->assertSession()->pageTextContains($term1->getName());
 
     // Edit the node with a different term.
     $edit[$this->field->getName() . '[]'] = $term2->id();
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm($edit, 'Save');
 
     $this->drupalGet('node/' . $node->id());
-    $this->assertText($term2->getName());
+    $this->assertSession()->pageTextContains($term2->getName());
 
     // Preview the node.
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Preview');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm($edit, 'Preview');
     // Ensure that term is displayed when previewing the node.
     $this->assertSession()->pageTextContainsOnce($term2->getName());
-    $this->drupalPostForm('node/' . $node->id() . '/edit', [], 'Preview');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm([], 'Preview');
     // Ensure that term is displayed when previewing the node again.
     $this->assertSession()->pageTextContainsOnce($term2->getName());
   }
 
   /**
-   * Test term creation with a free-tagging vocabulary from the node form.
+   * Tests term creation with a free-tagging vocabulary from the node form.
    */
   public function testNodeTermCreationAndDeletion() {
     // Enable tags in the vocabulary.
@@ -267,7 +272,7 @@ class TermTest extends TaxonomyTestBase {
     // Preview and verify the terms appear but are not created.
     $this->submitForm($edit, 'Preview');
     foreach ($terms as $term) {
-      $this->assertText($term);
+      $this->assertSession()->pageTextContains($term);
     }
     $tree = $this->container->get('entity_type.manager')->getStorage('taxonomy_term')->loadTree($this->vocabulary->id());
     $this->assertTrue(empty($tree), 'The terms are not created on preview.');
@@ -276,14 +281,15 @@ class TermTest extends TaxonomyTestBase {
     taxonomy_terms_static_reset();
 
     // Save, creating the terms.
-    $this->drupalPostForm('node/add/article', $edit, 'Save');
-    $this->assertText('Article ' . $edit['title[0][value]'] . ' has been created.');
+    $this->drupalGet('node/add/article');
+    $this->submitForm($edit, 'Save');
+    $this->assertSession()->pageTextContains('Article ' . $edit['title[0][value]'] . ' has been created.');
 
     // Verify that the creation message contains a link to a node.
     $this->assertSession()->elementExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "node/")]');
 
     foreach ($terms as $term) {
-      $this->assertText($term);
+      $this->assertSession()->pageTextContains($term);
     }
 
     // Get the created terms.
@@ -297,9 +303,10 @@ class TermTest extends TaxonomyTestBase {
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
 
     // Test editing the node.
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm($edit, 'Save');
     foreach ($terms as $term) {
-      $this->assertText($term);
+      $this->assertSession()->pageTextContains($term);
     }
 
     // Delete term 1 from the term edit page.
@@ -316,7 +323,7 @@ class TermTest extends TaxonomyTestBase {
     $term_names = [$term_objects['term3']->getName(), $term_objects['term4']->getName()];
     $this->drupalGet('node/' . $node->id());
     foreach ($term_names as $term_name) {
-      $this->assertText($term_name);
+      $this->assertSession()->pageTextContains($term_name);
     }
     $this->assertNoText($term_objects['term1']->getName());
     $this->assertNoText($term_objects['term2']->getName());
@@ -336,7 +343,8 @@ class TermTest extends TaxonomyTestBase {
     $edit['parent[]'] = [0];
 
     // Create the term to edit.
-    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add', $edit, 'Save');
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
+    $this->submitForm($edit, 'Save');
 
     $terms = taxonomy_term_load_multiple_by_name($edit['name[0][value]']);
     $term = reset($terms);
@@ -349,7 +357,7 @@ class TermTest extends TaxonomyTestBase {
 
     // Verify that the randomly generated term is present.
     $this->assertRaw($edit['name[0][value]']);
-    $this->assertText($edit['description[0][value]']);
+    $this->assertSession()->pageTextContains($edit['description[0][value]']);
 
     $edit = [
       'name[0][value]' => $this->randomMachineName(14),
@@ -357,11 +365,12 @@ class TermTest extends TaxonomyTestBase {
     ];
 
     // Edit the term.
-    $this->drupalPostForm('taxonomy/term/' . $term->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('taxonomy/term/' . $term->id() . '/edit');
+    $this->submitForm($edit, 'Save');
 
     // Check that the term is still present at admin UI after edit.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
-    $this->assertText($edit['name[0][value]']);
+    $this->assertSession()->pageTextContains($edit['name[0][value]']);
     $this->assertSession()->linkExists('Edit');
 
     // Check the term link can be clicked through to the term page.
@@ -370,8 +379,8 @@ class TermTest extends TaxonomyTestBase {
 
     // View the term and check that it is correct.
     $this->drupalGet('taxonomy/term/' . $term->id());
-    $this->assertText($edit['name[0][value]']);
-    $this->assertText($edit['description[0][value]']);
+    $this->assertSession()->pageTextContains($edit['name[0][value]']);
+    $this->assertSession()->pageTextContains($edit['description[0][value]']);
 
     // Did this page request display a 'term-listing-heading'?
     $this->assertSession()->elementExists('xpath', '//div[contains(@class, "field--name-description")]');
@@ -385,7 +394,7 @@ class TermTest extends TaxonomyTestBase {
     $value = $this->randomMachineName();
     $term->setDescription($value);
     $term->save();
-    $this->assertEqual("<p>{$value}</p>\n", $term->description->processed);
+    $this->assertEquals("<p>{$value}</p>\n", $term->description->processed);
 
     // Check that the term feed page is working.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/feed');
@@ -439,7 +448,7 @@ class TermTest extends TaxonomyTestBase {
       $node = $assert->hiddenFieldExists($field);
       $node->setValue($value);
     }
-    // Edit non-hidden elements within drupalPostForm().
+    // Edit non-hidden elements within submitForm().
     $edit = [
       'terms[tid:' . $term2->id() . ':0][weight]' => 0,
       'terms[tid:' . $term3->id() . ':0][weight]' => 1,
@@ -449,11 +458,12 @@ class TermTest extends TaxonomyTestBase {
 
     $taxonomy_storage->resetCache();
     $terms = $taxonomy_storage->loadTree($this->vocabulary->id());
-    $this->assertEqual($term2->id(), $terms[0]->tid, 'Term 2 was moved above term 1.');
-    $this->assertEqual([$term2->id()], $terms[1]->parents, 'Term 3 was made a child of term 2.');
-    $this->assertEqual($term1->id(), $terms[2]->tid, 'Term 1 was moved below term 2.');
+    $this->assertEquals($term2->id(), $terms[0]->tid, 'Term 2 was moved above term 1.');
+    $this->assertEquals([$term2->id()], $terms[1]->parents, 'Term 3 was made a child of term 2.');
+    $this->assertEquals($term1->id(), $terms[2]->tid, 'Term 1 was moved below term 2.');
 
-    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview', [], 'Reset to alphabetical');
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
+    $this->submitForm([], 'Reset to alphabetical');
     // Submit confirmation form.
     $this->submitForm([], 'Reset to alphabetical');
     // Ensure form redirected back to overview.
@@ -461,14 +471,14 @@ class TermTest extends TaxonomyTestBase {
 
     $taxonomy_storage->resetCache();
     $terms = $taxonomy_storage->loadTree($this->vocabulary->id(), 0, NULL, TRUE);
-    $this->assertEqual($term1->id(), $terms[0]->id(), 'Term 1 was moved to back above term 2.');
-    $this->assertEqual($term2->id(), $terms[1]->id(), 'Term 2 was moved to back below term 1.');
-    $this->assertEqual($term3->id(), $terms[2]->id(), 'Term 3 is still below term 2.');
-    $this->assertEqual([$term2->id()], $terms[2]->parents, 'Term 3 is still a child of term 2.');
+    $this->assertEquals($term1->id(), $terms[0]->id(), 'Term 1 was moved to back above term 2.');
+    $this->assertEquals($term2->id(), $terms[1]->id(), 'Term 2 was moved to back below term 1.');
+    $this->assertEquals($term3->id(), $terms[2]->id(), 'Term 3 is still below term 2.');
+    $this->assertEquals([$term2->id()], $terms[2]->parents, 'Term 3 is still a child of term 2.');
   }
 
   /**
-   * Test saving a term with multiple parents through the UI.
+   * Tests saving a term with multiple parents through the UI.
    */
   public function testTermMultipleParentsInterface() {
     // Add a new term to the vocabulary so that we can have multiple parents.
@@ -481,23 +491,24 @@ class TermTest extends TaxonomyTestBase {
       'parent[]' => [0, $parent->id()],
     ];
     // Save the new term.
-    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add', $edit, 'Save');
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
+    $this->submitForm($edit, 'Save');
 
     // Check that the term was successfully created.
     $terms = taxonomy_term_load_multiple_by_name($edit['name[0][value]']);
     $term = reset($terms);
     $this->assertNotNull($term, 'Term found in database.');
-    $this->assertEqual($edit['name[0][value]'], $term->getName(), 'Term name was successfully saved.');
-    $this->assertEqual($edit['description[0][value]'], $term->getDescription(), 'Term description was successfully saved.');
+    $this->assertEquals($edit['name[0][value]'], $term->getName(), 'Term name was successfully saved.');
+    $this->assertEquals($edit['description[0][value]'], $term->getDescription(), 'Term description was successfully saved.');
     // Check that the parent tid is still there. The other parent (<root>) is
     // not added by \Drupal\taxonomy\TermStorageInterface::loadParents().
     $parents = $this->container->get('entity_type.manager')->getStorage('taxonomy_term')->loadParents($term->id());
     $parent = reset($parents);
-    $this->assertEqual($edit['parent[]'][1], $parent->id(), 'Term parents were successfully saved.');
+    $this->assertEquals($edit['parent[]'][1], $parent->id(), 'Term parents were successfully saved.');
   }
 
   /**
-   * Test taxonomy_term_load_multiple_by_name().
+   * Tests taxonomy_term_load_multiple_by_name().
    */
   public function testTaxonomyGetTermByName() {
     $term = $this->createTerm($this->vocabulary);
@@ -575,7 +586,8 @@ class TermTest extends TaxonomyTestBase {
     $edit['title[0][value]'] = $this->randomMachineName(8);
     $edit['body[0][value]'] = $this->randomMachineName(16);
     $edit[$this->field->getName() . '[target_id]'] = $term->getName();
-    $this->drupalPostForm('node/add/article', $edit, 'Save');
+    $this->drupalGet('node/add/article');
+    $this->submitForm($edit, 'Save');
 
     // Check that the term is displayed when editing and saving the node with no
     // changes.
@@ -596,7 +608,8 @@ class TermTest extends TaxonomyTestBase {
     ];
 
     // Create the term.
-    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add', $edit, 'Save');
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
+    $this->submitForm($edit, 'Save');
 
     $terms = taxonomy_term_load_multiple_by_name($edit['name[0][value]']);
     $term = reset($terms);

@@ -23,3 +23,6 @@ process:
   third_party_settings/content_translation/bundle_settings/untranslatable_fields_hide: constants/hide
 destination:
   plugin: entity:language_content_settings
+migration_dependencies:
+  required:
+    - language

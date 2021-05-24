@@ -51,7 +51,7 @@ class UpdatesWith7xTest extends BrowserTestBase {
   public function testWith7x() {
     // Ensure that the minimum schema version is 8000, despite 7200 update
     // hooks and a 7XXX hook_update_last_removed().
-    $this->assertEqual(8000, drupal_get_installed_schema_version('update_test_with_7x'));
+    $this->assertEquals(8000, drupal_get_installed_schema_version('update_test_with_7x'));
 
     // Try to manually set the schema version to 7110 and ensure that no
     // updates are allowed.
@@ -62,7 +62,7 @@ class UpdatesWith7xTest extends BrowserTestBase {
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->updateRequirementsProblem();
     $this->clickLink(t('Continue'));
-    $this->assertText('Some of the pending updates cannot be applied because their dependencies were not met.');
+    $this->assertSession()->pageTextContains('Some of the pending updates cannot be applied because their dependencies were not met.');
   }
 
 }

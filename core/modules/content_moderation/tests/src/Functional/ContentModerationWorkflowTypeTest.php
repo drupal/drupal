@@ -39,7 +39,7 @@ class ContentModerationWorkflowTypeTest extends BrowserTestBase {
   }
 
   /**
-   * Test creating a new workflow using the content moderation plugin.
+   * Tests creating a new workflow using the content moderation plugin.
    */
   public function testNewWorkflow() {
     $types[] = $this->createContentType();
@@ -48,7 +48,8 @@ class ContentModerationWorkflowTypeTest extends BrowserTestBase {
 
     $entity_bundle_info = \Drupal::service('entity_type.bundle.info');
 
-    $this->drupalPostForm('admin/config/workflow/workflows/add', [
+    $this->drupalGet('admin/config/workflow/workflows/add');
+    $this->submitForm([
       'label' => 'Test',
       'id' => 'test',
       'workflow_type' => 'content_moderation',

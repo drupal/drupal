@@ -37,16 +37,19 @@ class LanguagePathMonolingualTest extends BrowserTestBase {
     // Enable French language.
     $edit = [];
     $edit['predefined_langcode'] = 'fr';
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
+    $this->drupalGet('admin/config/regional/language/add');
+    $this->submitForm($edit, 'Add language');
 
     // Make French the default language.
     $edit = [
       'site_default_language' => 'fr',
     ];
-    $this->drupalPostForm('admin/config/regional/language', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/regional/language');
+    $this->submitForm($edit, 'Save configuration');
 
     // Delete English.
-    $this->drupalPostForm('admin/config/regional/language/delete/en', [], 'Delete');
+    $this->drupalGet('admin/config/regional/language/delete/en');
+    $this->submitForm([], 'Delete');
 
     // Changing the default language causes a container rebuild. Therefore need
     // to rebuild the container in the test environment.
@@ -55,11 +58,12 @@ class LanguagePathMonolingualTest extends BrowserTestBase {
     // Verify that French is the only language.
     $this->container->get('language_manager')->reset();
     $this->assertFalse(\Drupal::languageManager()->isMultilingual(), 'Site is mono-lingual');
-    $this->assertEqual('fr', \Drupal::languageManager()->getDefaultLanguage()->getId(), 'French is the default language');
+    $this->assertEquals('fr', \Drupal::languageManager()->getDefaultLanguage()->getId(), 'French is the default language');
 
     // Set language detection to URL.
     $edit = ['language_interface[enabled][language-url]' => TRUE];
-    $this->drupalPostForm('admin/config/regional/language/detection', $edit, 'Save settings');
+    $this->drupalGet('admin/config/regional/language/detection');
+    $this->submitForm($edit, 'Save settings');
     $this->drupalPlaceBlock('local_actions_block');
   }
 
@@ -76,7 +80,7 @@ class LanguagePathMonolingualTest extends BrowserTestBase {
     // Verify that links in this page can be followed and work.
     $this->clickLink(t('Languages'));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('Add language');
+    $this->assertSession()->pageTextContains('Add language');
   }
 
 }

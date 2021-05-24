@@ -189,7 +189,7 @@ class UserAuthTest extends UnitTestCase {
   }
 
   /**
-   * Tests the authenticate method with a correct password and new password hash.
+   * Tests the authenticate method with a correct password & new password hash.
    *
    * @covers ::authenticate
    */
