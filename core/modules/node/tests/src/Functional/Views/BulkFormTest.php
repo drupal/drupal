@@ -219,7 +219,7 @@ class BulkFormTest extends NodeTestBase {
   }
 
   /**
-   * Test multiple deletion.
+   * Tests multiple deletion.
    */
   public function testBulkDeletion() {
     // Select a bunch of translated and untranslated nodes and check that

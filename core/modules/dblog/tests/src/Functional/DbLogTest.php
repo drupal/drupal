@@ -105,7 +105,7 @@ class DbLogTest extends BrowserTestBase {
   }
 
   /**
-   * Test individual log event page.
+   * Tests individual log event page.
    */
   public function testLogEventPage() {
     // Login the admin user.
@@ -184,7 +184,7 @@ class DbLogTest extends BrowserTestBase {
   }
 
   /**
-   * Test not-existing log event page.
+   * Tests not-existing log event page.
    */
   public function testLogEventNotFoundPage() {
     // Login the admin user.
@@ -197,7 +197,7 @@ class DbLogTest extends BrowserTestBase {
   }
 
   /**
-   * Test individual log event page with missing log attributes.
+   * Tests individual log event page with missing log attributes.
    *
    * In some cases few log attributes are missing. For example:
    * - Missing referer: When request is made to a specific url directly and
@@ -255,7 +255,8 @@ class DbLogTest extends BrowserTestBase {
     // Change the database log row limit.
     $edit = [];
     $edit['dblog_row_limit'] = $row_limit;
-    $this->drupalPostForm('admin/config/development/logging', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/development/logging');
+    $this->submitForm($edit, 'Save configuration');
     $this->assertSession()->statusCodeEquals(200);
 
     // Check row limit variable.
@@ -419,7 +420,8 @@ class DbLogTest extends BrowserTestBase {
     $edit['pass[pass1]'] = $pass;
     $edit['pass[pass2]'] = $pass;
     $edit['status'] = 1;
-    $this->drupalPostForm('admin/people/create', $edit, 'Create new account');
+    $this->drupalGet('admin/people/create');
+    $this->submitForm($edit, 'Create new account');
     $this->assertSession()->statusCodeEquals(200);
     // Retrieve the user object.
     $user = user_load_by_name($name);
@@ -442,7 +444,8 @@ class DbLogTest extends BrowserTestBase {
     $this->drupalLogin($this->adminUser);
     // Delete the user created at the start of this test.
     // We need to POST here to invoke batch_process() in the internal browser.
-    $this->drupalPostForm('user/' . $user->id() . '/cancel', ['user_cancel_method' => 'user_cancel_reassign'], 'Cancel account');
+    $this->drupalGet('user/' . $user->id() . '/cancel');
+    $this->submitForm(['user_cancel_method' => 'user_cancel_reassign'], 'Cancel account');
 
     // View the database log report.
     $this->drupalGet('admin/reports/dblog');
@@ -502,17 +505,20 @@ class DbLogTest extends BrowserTestBase {
     // (which is not triggered by drupalCreateNode).
     $edit = $this->getContent($type);
     $title = $edit['title[0][value]'];
-    $this->drupalPostForm('node/add/' . $type, $edit, 'Save');
+    $this->drupalGet('node/add/' . $type);
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
     // Retrieve the node object.
     $node = $this->drupalGetNodeByTitle($title);
     $this->assertNotNull($node, new FormattableMarkup('Node @title was loaded', ['@title' => $title]));
     // Edit the node.
     $edit = $this->getContentUpdate($type);
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
     // Delete the node.
-    $this->drupalPostForm('node/' . $node->id() . '/delete', [], 'Delete');
+    $this->drupalGet('node/' . $node->id() . '/delete');
+    $this->submitForm([], 'Delete');
     $this->assertSession()->statusCodeEquals(200);
     // View the node (to generate page not found event).
     $this->drupalGet('node/' . $node->id());
@@ -858,7 +864,7 @@ class DbLogTest extends BrowserTestBase {
   }
 
   /**
-   * Test sorting for entries with the same timestamp.
+   * Tests sorting for entries with the same timestamp.
    */
   public function testSameTimestampEntries() {
     $this->drupalLogin($this->adminUser);

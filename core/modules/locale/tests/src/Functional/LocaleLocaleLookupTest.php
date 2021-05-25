@@ -43,12 +43,13 @@ class LocaleLocaleLookupTest extends BrowserTestBase {
    */
   public function testCircularDependency() {
     // Ensure that we can enable early_translation_test on a non-english site.
-    $this->drupalPostForm('admin/modules', ['modules[early_translation_test][enable]' => TRUE], 'Install');
+    $this->drupalGet('admin/modules');
+    $this->submitForm(['modules[early_translation_test][enable]' => TRUE], 'Install');
     $this->assertSession()->statusCodeEquals(200);
   }
 
   /**
-   * Test language fallback defaults.
+   * Tests language fallback defaults.
    */
   public function testLanguageFallbackDefaults() {
     $this->drupalGet('');
@@ -62,7 +63,7 @@ class LocaleLocaleLookupTest extends BrowserTestBase {
   }
 
   /**
-   * Test old plural style @count[number] fix.
+   * Tests old plural style @count[number] fix.
    *
    * @dataProvider providerTestFixOldPluralStyle
    */

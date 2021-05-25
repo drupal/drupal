@@ -58,7 +58,7 @@ class CommentRestExportTest extends CommentTestBase {
   }
 
   /**
-   * Test comment row.
+   * Tests comment row.
    */
   public function testCommentRestExport() {
     $this->drupalGet(sprintf('node/%d/comments', $this->nodeUserCommented->id()), ['query' => ['_format' => 'hal_json']]);

@@ -65,7 +65,7 @@ class ValidationTest extends BrowserTestBase {
     $this->drupalLogin($this->drupalCreateUser());
     $this->drupalGet('form-test/validate');
     // $this->assertSession()->fieldExists() does not recognize hidden fields,
-    // which breaks $this->drupalPostForm() if we try to change the value of a
+    // which breaks $this->submitForm() if we try to change the value of a
     // hidden field such as form_token.
     $this->assertSession()
       ->elementExists('css', 'input[name="form_token"]')
@@ -80,7 +80,8 @@ class ValidationTest extends BrowserTestBase {
    * Tests that a form with a disabled CSRF token can be validated.
    */
   public function testDisabledToken() {
-    $this->drupalPostForm('form-test/validate-no-token', [], 'Save');
+    $this->drupalGet('form-test/validate-no-token');
+    $this->submitForm([], 'Save');
     $this->assertSession()->pageTextContains('The form_test_validate_no_token form has been submitted successfully.');
   }
 
@@ -112,29 +113,37 @@ class ValidationTest extends BrowserTestBase {
     // #limit_validation_errors) and ensure that the title field is not
     // validated, but the #element_validate handler for the 'test' field
     // is triggered.
-    $this->drupalPostForm($path, $edit, 'Partial validate');
+    $this->drupalGet($path);
+    $this->submitForm($edit, 'Partial validate');
     $this->assertNoText('Title field is required.');
     $this->assertSession()->pageTextContains('Test element is invalid');
 
     // Edge case of #limit_validation_errors containing numeric indexes: same
     // thing with the 'Partial validate (numeric index)' button and the
     // 'test_numeric_index' field.
-    $this->drupalPostForm($path, $edit, 'Partial validate (numeric index)');
+    $this->drupalGet($path);
+    $this->submitForm($edit, 'Partial validate (numeric index)');
     $this->assertNoText('Title field is required.');
     $this->assertSession()->pageTextContains('Test (numeric index) element is invalid');
 
     // Ensure something like 'foobar' isn't considered "inside" 'foo'.
-    $this->drupalPostForm($path, $edit, 'Partial validate (substring)');
+    $this->drupalGet($path);
+    $this->submitForm($edit, 'Partial validate (substring)');
     $this->assertNoText('Title field is required.');
     $this->assertSession()->pageTextContains('Test (substring) foo element is invalid');
 
     // Ensure not validated values are not available to submit handlers.
-    $this->drupalPostForm($path, ['title' => '', 'test' => 'valid'], 'Partial validate');
+    $this->drupalGet($path);
+    $this->submitForm([
+      'title' => '',
+      'test' => 'valid',
+    ], 'Partial validate');
     $this->assertSession()->pageTextContains('Only validated values appear in the form values.');
 
     // Now test full form validation and ensure that the #element_validate
     // handler is still triggered.
-    $this->drupalPostForm($path, $edit, 'Full validate');
+    $this->drupalGet($path);
+    $this->submitForm($edit, 'Full validate');
     $this->assertSession()->pageTextContains('Title field is required.');
     $this->assertSession()->pageTextContains('Test element is invalid');
   }
@@ -152,7 +161,8 @@ class ValidationTest extends BrowserTestBase {
       'textfield' => 'invalid',
       'tel' => 'valid',
     ];
-    $this->drupalPostForm('form-test/pattern', $edit, 'Submit');
+    $this->drupalGet('form-test/pattern');
+    $this->submitForm($edit, 'Submit');
     $this->assertRaw($textfield_error);
     $this->assertNoRaw($tel_error);
     $this->assertNoRaw($password_error);
@@ -163,7 +173,8 @@ class ValidationTest extends BrowserTestBase {
       'tel' => '818937',
       'password' => '0100110',
     ];
-    $this->drupalPostForm('form-test/pattern', $edit, 'Submit');
+    $this->drupalGet('form-test/pattern');
+    $this->submitForm($edit, 'Submit');
     $this->assertNoRaw($textfield_error);
     $this->assertRaw($tel_error);
     $this->assertNoRaw($password_error);
@@ -173,7 +184,8 @@ class ValidationTest extends BrowserTestBase {
       'textfield' => '',
       'tel' => '',
     ];
-    $this->drupalPostForm('form-test/pattern', $edit, 'Submit');
+    $this->drupalGet('form-test/pattern');
+    $this->submitForm($edit, 'Submit');
     $this->assertNoRaw($textfield_error);
     $this->assertNoRaw($tel_error);
     $this->assertNoRaw($password_error);
@@ -182,7 +194,8 @@ class ValidationTest extends BrowserTestBase {
     $edit = [
       'password' => $this->randomMachineName(),
     ];
-    $this->drupalPostForm('form-test/pattern', $edit, 'Submit');
+    $this->drupalGet('form-test/pattern');
+    $this->submitForm($edit, 'Submit');
     $this->assertNoRaw($textfield_error);
     $this->assertNoRaw($tel_error);
     $this->assertRaw($password_error);
@@ -194,7 +207,8 @@ class ValidationTest extends BrowserTestBase {
       'tel' => '',
       'url' => 'http://www.example.com/',
     ];
-    $this->drupalPostForm('form-test/pattern', $edit, 'Submit');
+    $this->drupalGet('form-test/pattern');
+    $this->submitForm($edit, 'Submit');
     $this->assertNoRaw(t('%name field is not in the right format.', ['%name' => 'Client side validation']));
   }
 
@@ -208,7 +222,8 @@ class ValidationTest extends BrowserTestBase {
 
     // Verify that a custom #required error can be set.
     $edit = [];
-    $this->drupalPostForm('form-test/validate-required', $edit, 'Submit');
+    $this->drupalGet('form-test/validate-required');
+    $this->submitForm($edit, 'Submit');
 
     foreach (Element::children($form) as $key) {
       if (isset($form[$key]['#required_error'])) {
@@ -228,7 +243,8 @@ class ValidationTest extends BrowserTestBase {
       'checkboxes[foo]' => TRUE,
       'select' => 'foo',
     ];
-    $this->drupalPostForm('form-test/validate-required', $edit, 'Submit');
+    $this->drupalGet('form-test/validate-required');
+    $this->submitForm($edit, 'Submit');
 
     foreach (Element::children($form) as $key) {
       if (isset($form[$key]['#required_error'])) {

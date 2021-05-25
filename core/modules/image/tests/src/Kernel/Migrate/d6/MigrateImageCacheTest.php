@@ -42,7 +42,7 @@ class MigrateImageCacheTest extends MigrateDrupal6TestBase {
   }
 
   /**
-   * Test basic passing migrations.
+   * Tests basic passing migrations.
    */
   public function testPassingMigration() {
     $this->executeMigration('d6_imagecache_presets');
@@ -79,7 +79,7 @@ class MigrateImageCacheTest extends MigrateDrupal6TestBase {
   }
 
   /**
-   * Test that missing actions causes failures.
+   * Tests that missing actions causes failures.
    */
   public function testMissingEffectPlugin() {
     Database::getConnection('default', 'migrate')->insert("imagecache_action")
@@ -107,7 +107,7 @@ class MigrateImageCacheTest extends MigrateDrupal6TestBase {
   }
 
   /**
-   * Test that missing action's causes failures.
+   * Tests that missing action's causes failures.
    */
   public function testInvalidCropValues() {
     Database::getConnection('default', 'migrate')->insert("imagecache_action")

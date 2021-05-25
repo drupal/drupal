@@ -56,7 +56,7 @@ class TermTranslationTest extends TaxonomyTestBase {
   }
 
   /**
-   * Test translated breadcrumbs.
+   * Tests translated breadcrumbs.
    */
   public function testTranslatedBreadcrumbs() {
     // Ensure non-translated breadcrumb is correct.
@@ -90,7 +90,7 @@ class TermTranslationTest extends TaxonomyTestBase {
   }
 
   /**
-   * Test translation of terms are showed in the node.
+   * Tests translation of terms are showed in the node.
    */
   public function testTermsTranslation() {
 
