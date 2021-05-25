@@ -115,6 +115,8 @@ libraries-override:
 libraries-extend:
   ckeditor/drupal.ckeditor:
     - claro/ckeditor-editor
+  ckeditor/drupal.ckeditor.admin:
+    - claro/ckeditor-admin
   core/ckeditor:
     - claro/ckeditor-dialog
   core/drupal.collapse:
