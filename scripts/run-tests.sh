@@ -156,7 +156,7 @@ All arguments are long options.
 
   --verbose   Output detailed assertion messages in addition to summary.
 
-  --no_pass   When paired with --verbose, to not print the detailed
+  --no_pass   When paired with --verbose, do not print the detailed
               messages for passing tests.
 
   <test1>[,<test2>[,<test3> ...]]
