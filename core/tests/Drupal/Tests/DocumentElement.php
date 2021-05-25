@@ -71,7 +71,7 @@ class DocumentElement extends TraversableElement {
       }
       // To match what the user sees and \Behat\Mink\Element\Element::getText()
       // decode HTML entities.
-      $text = html_entity_decode($text);
+      $text = html_entity_decode($text, ENT_QUOTES);
       // To match \Behat\Mink\Element\Element::getText() remove new lines and
       // normalize spaces.
       $text = str_replace("\n", ' ', $text);
