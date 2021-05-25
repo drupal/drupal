@@ -50,6 +50,11 @@ class TypedDataManager extends DefaultPluginManager implements TypedDataManagerI
   protected $classResolver;
 
   /**
+   * {@inheritdoc}
+   */
+  protected $disallowDots = FALSE;
+
+  /**
    * Constructs a new TypedDataManager.
    *
    * @param \Traversable $namespaces

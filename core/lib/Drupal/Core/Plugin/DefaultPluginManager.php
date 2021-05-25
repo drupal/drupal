@@ -104,6 +104,13 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
   protected $additionalAnnotationNamespaces = [];
 
   /**
+   * Whether or not dots should be allowed in plugin IDs.
+   *
+   * @var bool
+   */
+  protected $disallowDots = TRUE;
+
+  /**
    * Creates the discovery object.
    *
    * @param string|bool $subdir
@@ -252,7 +259,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
       $definition['class'] = ltrim($definition['class'], '\\');
     }
 
-    if (strpos($plugin_id, '.') !== FALSE) {
+    if ($this->disallowDots && strpos($plugin_id, '.') !== FALSE) {
       trigger_error(sprintf('The "." in the plugin ID "%s" will cause problems if you attempt to store configured plugins via the Configuration API', $plugin_id), E_USER_WARNING);
     }
   }
