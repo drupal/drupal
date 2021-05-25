@@ -147,13 +147,13 @@ class ReadinessCheckerManager {
   }
 
   /**
-   * Gets the timestamp of the most recent run.
+   * Gets the timestamp of the last run.
    *
    * @return int|null
-   *   The timestamp of the most recently completed run, or NULL if no run has
+   *   The timestamp of the last completed run, or NULL if no run has
    *   been completed.
    */
-  public function getMostRecentRunTime(): ?int {
+  public function getLastRunTime(): ?int {
     return $this->keyValueExpirable->get('readiness_check_timestamp');
   }
 

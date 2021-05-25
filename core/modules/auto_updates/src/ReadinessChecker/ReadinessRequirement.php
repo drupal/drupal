@@ -75,7 +75,7 @@ final class ReadinessRequirement implements ContainerInjectionInterface {
   public function getRequirements(): array {
     $run_link = $this->createRunLink();
 
-    $last_check_timestamp = $this->readinessCheckerManager->getMostRecentRunTime();
+    $last_check_timestamp = $this->readinessCheckerManager->getLastRunTime();
     if ($last_check_timestamp === NULL) {
       $requirement['title'] = $this->t('Update readiness checks');
       $requirement['severity'] = SystemManager::REQUIREMENT_WARNING;

@@ -23,7 +23,7 @@ function auto_updates_cron() {
   /** @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager $checker_manager */
   $checker_manager = \Drupal::service('auto_updates.readiness_checker_manager');
   $last_results = $checker_manager->getResults();
-  $last_run_time = $checker_manager->getMostRecentRunTime();
+  $last_run_time = $checker_manager->getLastRunTime();
   // Do not run readiness checks more than once an hour unless there are no
   // results available.
   if ($last_results === NULL || !$last_run_time || \Drupal::time()->getRequestTime() - $last_run_time > 3600) {
