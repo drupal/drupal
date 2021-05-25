@@ -156,7 +156,8 @@ class ContentEntityFormFieldValidationFilteringTest extends BrowserTestBase {
     $field_config->setRequired(TRUE);
     $field_config->save();
 
-    $this->drupalPostForm($this->entityTypeId . '/add', [], 'Add another item');
+    $this->drupalGet($this->entityTypeId . '/add');
+    $this->submitForm([], 'Add another item');
     $assert_session->pageTextContains('Test multiple (value 1) field is required.');
 
     // Check that saving the form without entering any value for the required

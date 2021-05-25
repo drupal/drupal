@@ -40,7 +40,7 @@ class LocalePathTest extends BrowserTestBase {
   }
 
   /**
-   * Test if a language can be associated with a path alias.
+   * Tests if a language can be associated with a path alias.
    */
   public function testPathLanguageConfiguration() {
     // User to add and remove language.
@@ -67,11 +67,13 @@ class LocalePathTest extends BrowserTestBase {
       'label' => $name,
       'direction' => LanguageInterface::DIRECTION_LTR,
     ];
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add custom language');
+    $this->drupalGet('admin/config/regional/language/add');
+    $this->submitForm($edit, 'Add custom language');
 
     // Set path prefix.
     $edit = ["prefix[$langcode]" => $prefix];
-    $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/regional/language/detection/url');
+    $this->submitForm($edit, 'Save configuration');
 
     // Check that the "xx" front page is readily available because path prefix
     // negotiation is pre-configured.
@@ -89,7 +91,8 @@ class LocalePathTest extends BrowserTestBase {
       'alias[0][value]' => '/' . $english_path,
       'langcode[0][value]' => 'en',
     ];
-    $this->drupalPostForm($path, $edit, 'Save');
+    $this->drupalGet($path);
+    $this->submitForm($edit, 'Save');
 
     // Create a path alias in new custom language.
     $custom_language_path = $this->randomMachineName(8);
@@ -98,7 +101,8 @@ class LocalePathTest extends BrowserTestBase {
       'alias[0][value]' => '/' . $custom_language_path,
       'langcode[0][value]' => $langcode,
     ];
-    $this->drupalPostForm($path, $edit, 'Save');
+    $this->drupalGet($path);
+    $this->submitForm($edit, 'Save');
 
     // Confirm English language path alias works.
     $this->drupalGet($english_path);

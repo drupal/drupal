@@ -42,7 +42,7 @@ class NodeFieldAccessTest extends EntityKernelTestBase {
   protected $readOnlyFields = ['changed', 'revision_uid', 'revision_timestamp'];
 
   /**
-   * Test permissions on nodes status field.
+   * Tests permissions on nodes status field.
    */
   public function testAccessToAdministrativeFields() {
 

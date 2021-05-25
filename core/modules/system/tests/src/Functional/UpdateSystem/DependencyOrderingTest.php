@@ -34,7 +34,7 @@ class DependencyOrderingTest extends BrowserTestBase {
   }
 
   /**
-   * Test that updates within a single module run in the correct order.
+   * Tests that updates within a single module run in the correct order.
    */
   public function testUpdateOrderingSingleModule() {
     $starting_updates = [
@@ -50,7 +50,7 @@ class DependencyOrderingTest extends BrowserTestBase {
   }
 
   /**
-   * Test that dependencies between modules are resolved correctly.
+   * Tests that dependencies between modules are resolved correctly.
    */
   public function testUpdateOrderingModuleInterdependency() {
     $starting_updates = [

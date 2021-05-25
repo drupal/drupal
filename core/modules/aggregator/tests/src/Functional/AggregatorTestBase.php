@@ -74,7 +74,8 @@ abstract class AggregatorTestBase extends BrowserTestBase {
    */
   public function createFeed($feed_url = NULL, array $edit = []) {
     $edit = $this->getFeedEditArray($feed_url, $edit);
-    $this->drupalPostForm('aggregator/sources/add', $edit, 'Save');
+    $this->drupalGet('aggregator/sources/add');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('The feed ' . $edit['title[0][value]'] . ' has been added.');
 
     // Verify that the creation message contains a link to a feed.
@@ -96,7 +97,8 @@ abstract class AggregatorTestBase extends BrowserTestBase {
    *   Feed object representing the feed.
    */
   public function deleteFeed(FeedInterface $feed) {
-    $this->drupalPostForm('aggregator/sources/' . $feed->id() . '/delete', [], 'Delete');
+    $this->drupalGet('aggregator/sources/' . $feed->id() . '/delete');
+    $this->submitForm([], 'Delete');
     $this->assertRaw(t('The feed %title has been deleted.', ['%title' => $feed->label()]));
   }
 
@@ -218,7 +220,8 @@ abstract class AggregatorTestBase extends BrowserTestBase {
    *   Feed object representing the feed.
    */
   public function deleteFeedItems(FeedInterface $feed) {
-    $this->drupalPostForm('admin/config/services/aggregator/delete/' . $feed->id(), [], 'Delete items');
+    $this->drupalGet('admin/config/services/aggregator/delete/' . $feed->id());
+    $this->submitForm([], 'Delete items');
     $this->assertRaw(t('The news items from %title have been deleted.', ['%title' => $feed->label()]));
   }
 
@@ -390,7 +393,8 @@ EOF;
       $edit = [];
       $edit['title[0][value]'] = $this->randomMachineName();
       $edit['body[0][value]'] = $this->randomMachineName();
-      $this->drupalPostForm('node/add/article', $edit, 'Save');
+      $this->drupalGet('node/add/article');
+      $this->submitForm($edit, 'Save');
     }
   }
 

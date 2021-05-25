@@ -39,14 +39,14 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
   protected $defaultTheme = 'classy';
 
   /**
-   * Test image formatters on node display for public files.
+   * Tests image formatters on node display for public files.
    */
   public function testImageFieldFormattersPublic() {
     $this->_testImageFieldFormatters('public');
   }
 
   /**
-   * Test image formatters on node display for private files.
+   * Tests image formatters on node display for private files.
    */
   public function testImageFieldFormattersPrivate() {
     // Remove access content permission from anonymous users.
@@ -55,7 +55,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
   }
 
   /**
-   * Test image formatters on node display.
+   * Tests image formatters on node display.
    */
   public function _testImageFieldFormatters($scheme) {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
@@ -301,7 +301,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       $field_name . '[0][alt]' => $image['#alt'],
       $field_name . '[0][title]' => $image['#title'],
     ];
-    $this->drupalPostForm('node/' . $nid . '/edit', $edit, 'Save');
+    $this->drupalGet('node/' . $nid . '/edit');
+    $this->submitForm($edit, 'Save');
     $default_output = str_replace("\n", NULL, $renderer->renderRoot($image));
     $this->assertRaw($default_output);
 
@@ -311,7 +312,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       $field_name . '[0][alt]' => $this->randomMachineName($test_size),
       $field_name . '[0][title]' => $this->randomMachineName($test_size),
     ];
-    $this->drupalPostForm('node/' . $nid . '/edit', $edit, 'Save');
+    $this->drupalGet('node/' . $nid . '/edit');
+    $this->submitForm($edit, 'Save');
     $schema = $field->getFieldStorageDefinition()->getSchema();
     $this->assertRaw(t('Alternative text cannot be longer than %max characters but is currently %length characters long.', [
       '%max' => $schema['columns']['alt']['length'],
@@ -329,11 +331,15 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // 1, so we need to make sure the file widget prevents these notices by
     // providing all settings, even if they are not used.
     // @see FileWidget::formMultipleElements().
-    $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.' . $field_name . '/storage', ['cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED], 'Save field settings');
+    $this->drupalGet('admin/structure/types/manage/article/fields/node.article.' . $field_name . '/storage');
+    $this->submitForm([
+      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
+    ], 'Save field settings');
     $edit = [
       'files[' . $field_name . '_1][]' => \Drupal::service('file_system')->realpath($test_image->uri),
     ];
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm($edit, 'Save');
     // Add the required alt text.
     $this->submitForm([$field_name . '[1][alt]' => $alt], 'Save');
     $this->assertSession()->pageTextContains('Article ' . $node->getTitle() . ' has been updated.');
@@ -349,7 +355,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
   }
 
   /**
-   * Test use of a default image with an image field.
+   * Tests use of a default image with an image field.
    */
   public function testImageFieldDefaultImage() {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
@@ -380,7 +386,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       'settings[default_image][alt]' => $alt,
       'settings[default_image][title]' => $title,
     ];
-    $this->drupalPostForm("admin/structure/types/manage/article/fields/node.article.$field_name/storage", $edit, 'Save field settings');
+    $this->drupalGet("admin/structure/types/manage/article/fields/node.article.{$field_name}/storage");
+    $this->submitForm($edit, 'Save field settings');
     // Clear field definition cache so the new default image is detected.
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
     $field_storage = FieldStorageConfig::loadByName('node', $field_name);
@@ -452,7 +459,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       'settings[default_image][alt]' => $alt,
       'settings[default_image][title]' => $title,
     ];
-    $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.' . $private_field_name . '/storage', $edit, 'Save field settings');
+    $this->drupalGet('admin/structure/types/manage/article/fields/node.article.' . $private_field_name . '/storage');
+    $this->submitForm($edit, 'Save field settings');
     // Clear field definition cache so the new default image is detected.
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 

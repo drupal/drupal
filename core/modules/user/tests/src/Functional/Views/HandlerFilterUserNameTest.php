@@ -105,7 +105,8 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     $edit = [
       'options[value]' => implode(', ', $users),
     ];
-    $this->drupalPostForm($path, $edit, 'Apply');
+    $this->drupalGet($path);
+    $this->submitForm($edit, 'Apply');
     $this->assertRaw(t('There are no users matching "%value".', ['%value' => implode(', ', $users)]));
 
     // Pass in an invalid username and a valid username.
@@ -116,7 +117,8 @@ class HandlerFilterUserNameTest extends ViewTestBase {
       'options[value]' => implode(', ', $users),
     ];
     $users = [$users[0]];
-    $this->drupalPostForm($path, $edit, 'Apply');
+    $this->drupalGet($path);
+    $this->submitForm($edit, 'Apply');
     $this->assertRaw(t('There are no users matching "%value".', ['%value' => implode(', ', $users)]));
 
     // Pass in just valid usernames.
@@ -125,7 +127,8 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     $edit = [
       'options[value]' => implode(', ', $users),
     ];
-    $this->drupalPostForm($path, $edit, 'Apply');
+    $this->drupalGet($path);
+    $this->submitForm($edit, 'Apply');
     $this->assertNoRaw(t('There are no users matching "%value".', ['%value' => implode(', ', $users)]));
   }
 

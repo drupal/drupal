@@ -278,16 +278,19 @@ class HandlerTest extends ViewTestBase {
     $this->assertEquals($expected_options, $options);
 
     // Remove the relationship and make sure no relationship option appears.
-    $this->drupalPostForm('admin/structure/views/nojs/handler/test_handler_relationships/default/relationship/nid', [], 'Remove');
+    $this->drupalGet('admin/structure/views/nojs/handler/test_handler_relationships/default/relationship/nid');
+    $this->submitForm([], 'Remove');
     $this->drupalGet($handler_options_path);
     $this->assertSession()->fieldNotExists($relationship_name);
 
     // Create a view of comments with node relationship.
     View::create(['base_table' => 'comment_field_data', 'id' => 'test_get_entity_type'])->save();
-    $this->drupalPostForm('admin/structure/views/nojs/add-handler/test_get_entity_type/default/relationship', ['name[comment_field_data.node]' => 'comment_field_data.node'], 'Add and configure relationships');
+    $this->drupalGet('admin/structure/views/nojs/add-handler/test_get_entity_type/default/relationship');
+    $this->submitForm(['name[comment_field_data.node]' => 'comment_field_data.node'], 'Add and configure relationships');
     $this->submitForm([], 'Apply');
     // Add a content type filter.
-    $this->drupalPostForm('admin/structure/views/nojs/add-handler/test_get_entity_type/default/filter', ['name[node_field_data.type]' => 'node_field_data.type'], 'Add and configure filter criteria');
+    $this->drupalGet('admin/structure/views/nojs/add-handler/test_get_entity_type/default/filter');
+    $this->submitForm(['name[node_field_data.type]' => 'node_field_data.type'], 'Add and configure filter criteria');
     $this->assertTrue($this->assertSession()->optionExists('edit-options-relationship', 'node')->isSelected());
     $this->submitForm(['options[value][page]' => 'page'], 'Apply');
     // Check content type filter options.
