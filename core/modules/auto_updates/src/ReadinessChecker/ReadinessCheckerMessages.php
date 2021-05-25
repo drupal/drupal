@@ -114,7 +114,7 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
     else {
       // Warnings are not displayed if there are any errors.
       if (!$this->displayResultsForSeverity(SystemManager::REQUIREMENT_ERROR)) {
-        !$this->displayResultsForSeverity(SystemManager::REQUIREMENT_WARNING);
+        $this->displayResultsForSeverity(SystemManager::REQUIREMENT_WARNING);
       }
     }
   }
