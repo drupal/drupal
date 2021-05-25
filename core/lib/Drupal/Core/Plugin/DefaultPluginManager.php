@@ -251,6 +251,10 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
     elseif (is_array($definition) && isset($definition['class'])) {
       $definition['class'] = ltrim($definition['class'], '\\');
     }
+
+    if (strpos($plugin_id, '.') !== FALSE) {
+      trigger_error(sprintf('The "." in the plugin ID "%s" will cause problems if you attempt to store configured plugins via the Configuration API', $plugin_id), E_USER_WARNING);
+    }
   }
 
   /**
