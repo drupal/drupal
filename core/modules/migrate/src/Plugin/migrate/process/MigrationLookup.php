@@ -204,9 +204,7 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
       if (isset($this->configuration['source_ids'][$lookup_migration_id])) {
         $lookup_value = array_values($row->getMultiple($this->configuration['source_ids'][$lookup_migration_id]));
       }
-      if (!is_array($lookup_value)) {
-        $lookup_value = (array) $lookup_value;
-      }
+      $lookup_value = (array) $lookup_value;
       $this->skipInvalid($lookup_value);
       $source_id_values[$lookup_migration_id] = $lookup_value;
 
