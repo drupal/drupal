@@ -99,7 +99,7 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
   /**
    * Displays the checker results messages on admin pages.
    */
-  public function adminPageMessages(): void {
+  public function displayAdminPageMessages(): void {
     if (!$this->displayResultsOnCurrentPage()) {
       return;
     }
