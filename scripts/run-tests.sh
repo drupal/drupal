@@ -156,6 +156,9 @@ All arguments are long options.
 
   --verbose   Output detailed assertion messages in addition to summary.
 
+  --no_pass   When paired with --verbose, to not print the detailed
+              messages for passing tests.
+
   <test1>[,<test2>[,<test3> ...]]
 
               One or more tests to be run. By default, these are interpreted
@@ -200,6 +203,7 @@ function simpletest_script_parse_args() {
     'color' => FALSE,
     'verbose' => FALSE,
     'test_names' => array(),
+    'no_pass' => FALSE,
     // Used internally.
     'test-id' => 0,
     'execute-test' => '',
@@ -274,7 +278,7 @@ function simpletest_script_init($server_software) {
     list($php, ) = explode(' ', $sudo, 2);
   }
   else {
-    simpletest_script_print_error('Unable to automatically determine the path to the PHP interpreter. Supply the --php command line argument.');
+    simpletest_script_print_error('Unable to automaticpally determine the path to the PHP interpreter. Supply the --php command line argument.');
     simpletest_script_help();
     exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
   }
