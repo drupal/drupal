@@ -36,5 +36,4 @@ class RequestStack extends SymfonyRequestStack {
     return $this->getMainRequest();
   }
 
-
 }
