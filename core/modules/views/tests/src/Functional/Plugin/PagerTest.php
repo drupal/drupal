@@ -64,7 +64,8 @@ class PagerTest extends ViewTestBase {
     $edit = [
       'pager[type]' => 'some',
     ];
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/pager', $edit, 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/display/test_view/default/pager');
+    $this->submitForm($edit, 'Apply');
 
     $items_per_page = $this->assertSession()->fieldExists("pager_options[items_per_page]");
     $this->assertSession()->fieldValueEquals("pager_options[items_per_page]", 10);
@@ -79,7 +80,8 @@ class PagerTest extends ViewTestBase {
     $edit = [
       'pager[type]' => 'none',
     ];
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/pager', $edit, 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/display/test_view/default/pager');
+    $this->submitForm($edit, 'Apply');
 
     $offset = $this->assertSession()->fieldExists("pager_options[offset]");
     $this->assertSession()->fieldValueEquals("pager_options[offset]", 0);
@@ -89,7 +91,8 @@ class PagerTest extends ViewTestBase {
     $edit = [
       'pager[type]' => 'full',
     ];
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/pager', $edit, 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/display/test_view/default/pager');
+    $this->submitForm($edit, 'Apply');
 
     $items_per_page = $this->assertSession()->fieldExists("pager_options[items_per_page]");
     $this->assertSession()->fieldValueEquals("pager_options[items_per_page]", 10);
@@ -119,14 +122,16 @@ class PagerTest extends ViewTestBase {
     $edit = [
       'pager_options[items_per_page]' => 20,
     ];
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/pager_options', $edit, 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/display/test_view/default/pager_options');
+    $this->submitForm($edit, 'Apply');
     $this->assertSession()->pageTextContains('20 items');
 
     // Change type and check whether the type is new type is stored.
     $edit = [
       'pager[type]' => 'mini',
     ];
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/pager', $edit, 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/display/test_view/default/pager');
+    $this->submitForm($edit, 'Apply');
     $this->drupalGet('admin/structure/views/view/test_view/edit');
     $this->assertSession()->pageTextContains('Mini');
 
@@ -141,36 +146,42 @@ class PagerTest extends ViewTestBase {
     $edit = [
       'pager[type]' => 'full',
     ];
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_store_pager_settings/default/pager', $edit, 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/display/test_store_pager_settings/default/pager');
+    $this->submitForm($edit, 'Apply');
     $this->drupalGet('admin/structure/views/view/test_store_pager_settings/edit');
     $this->assertSession()->pageTextContains('Full');
 
     $edit = [
       'pager_options[items_per_page]' => 20,
     ];
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_store_pager_settings/default/pager_options', $edit, 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/display/test_store_pager_settings/default/pager_options');
+    $this->submitForm($edit, 'Apply');
     $this->assertSession()->pageTextContains('20 items');
 
     // add new display and test the settings again, by override it.
     $edit = [];
     // Add a display and override the pager settings.
-    $this->drupalPostForm('admin/structure/views/view/test_store_pager_settings/edit', $edit, 'Add Page');
+    $this->drupalGet('admin/structure/views/view/test_store_pager_settings/edit');
+    $this->submitForm($edit, 'Add Page');
     $edit = [
       'override[dropdown]' => 'page_1',
     ];
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_store_pager_settings/page_1/pager', $edit, 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/display/test_store_pager_settings/page_1/pager');
+    $this->submitForm($edit, 'Apply');
 
     $edit = [
       'pager[type]' => 'mini',
     ];
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_store_pager_settings/page_1/pager', $edit, 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/display/test_store_pager_settings/page_1/pager');
+    $this->submitForm($edit, 'Apply');
     $this->drupalGet('admin/structure/views/view/test_store_pager_settings/edit/page_1');
     $this->assertSession()->pageTextContains('Mini');
 
     $edit = [
       'pager_options[items_per_page]' => 10,
     ];
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_store_pager_settings/default/pager_options', $edit, 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/display/test_store_pager_settings/default/pager_options');
+    $this->submitForm($edit, 'Apply');
     $this->assertSession()->pageTextContains('10 items');
     $this->drupalGet('admin/structure/views/view/test_store_pager_settings/edit/page_1');
     $this->assertSession()->pageTextContains('20 items');
@@ -363,7 +374,7 @@ class PagerTest extends ViewTestBase {
   }
 
   /**
-   * Test the api functions on the view object.
+   * Tests the api functions on the view object.
    */
   public function testPagerApi() {
     $view = Views::getView('test_pager_full');
@@ -453,7 +464,8 @@ class PagerTest extends ViewTestBase {
       'translation[config_names][views.view.content][display][default][display_options][pager][options][tags][next]' => 'Volgende ›',
       'translation[config_names][views.view.content][display][default][display_options][pager][options][tags][last]' => 'Laatste »',
     ];
-    $this->drupalPostForm('admin/structure/views/view/content/translate/nl/edit', $edit, 'Save translation');
+    $this->drupalGet('admin/structure/views/view/content/translate/nl/edit');
+    $this->submitForm($edit, 'Save translation');
 
     // We create 11 nodes, this will give us 3 pages.
     $this->drupalCreateContentType(['type' => 'page']);

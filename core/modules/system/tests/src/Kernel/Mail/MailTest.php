@@ -89,7 +89,7 @@ class MailTest extends KernelTestBase {
   }
 
   /**
-   * Test that message sending may be canceled.
+   * Tests that message sending may be canceled.
    *
    * @see mail_cancel_test_mail_alter()
    */

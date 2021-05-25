@@ -55,7 +55,7 @@ class EntityStateChangeValidationTest extends KernelTestBase {
   }
 
   /**
-   * Test valid transitions.
+   * Tests valid transitions.
    *
    * @covers ::validate
    */
@@ -85,7 +85,7 @@ class EntityStateChangeValidationTest extends KernelTestBase {
   }
 
   /**
-   * Test invalid transitions.
+   * Tests invalid transitions.
    *
    * @covers ::validate
    */
@@ -115,7 +115,7 @@ class EntityStateChangeValidationTest extends KernelTestBase {
   }
 
   /**
-   * Test validation with an invalid state.
+   * Tests validation with an invalid state.
    */
   public function testInvalidState() {
     $node_type = NodeType::create([
@@ -138,7 +138,7 @@ class EntityStateChangeValidationTest extends KernelTestBase {
   }
 
   /**
-   * Test validation with content that has no initial state or an invalid state.
+   * Tests validation with no initial state or an invalid state.
    */
   public function testInvalidStateWithoutExisting() {
     $this->setCurrentUser($this->adminUser);
@@ -187,7 +187,7 @@ class EntityStateChangeValidationTest extends KernelTestBase {
   }
 
   /**
-   * Test state transition validation with multiple languages.
+   * Tests state transition validation with multiple languages.
    */
   public function testInvalidStateMultilingual() {
     $this->setCurrentUser($this->adminUser);

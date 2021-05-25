@@ -197,7 +197,7 @@ class ConnectionTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that the method ::condition() returns a Condition object.
+   * Tests that the method ::condition() returns a Condition object.
    */
   public function testCondition() {
     $connection = Database::getConnection('default', 'default');

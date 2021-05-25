@@ -144,7 +144,8 @@ class BooleanFieldTest extends BrowserTestBase {
     $edit = [
       'settings[on_label]' => $on,
     ];
-    $this->drupalPostForm('entity_test/structure/entity_test/fields/entity_test.entity_test.' . $field_name, $edit, 'Save settings');
+    $this->drupalGet('entity_test/structure/entity_test/fields/entity_test.entity_test.' . $field_name);
+    $this->submitForm($edit, 'Save settings');
     // Check if we see the updated labels in the creation form.
     $this->drupalGet('entity_test/add');
     $this->assertRaw($on);
@@ -180,7 +181,7 @@ class BooleanFieldTest extends BrowserTestBase {
   }
 
   /**
-   * Test field access.
+   * Tests field access.
    */
   public function testFormAccess() {
     $on = 'boolean_on';

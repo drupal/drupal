@@ -411,7 +411,7 @@ class DisplayTest extends ViewTestBase {
   }
 
   /**
-   * Test translation rendering settings based on entity translatability.
+   * Tests translation rendering settings based on entity translatability.
    */
   public function testTranslationSetting() {
     \Drupal::service('module_installer')->install(['file']);

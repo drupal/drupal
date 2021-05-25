@@ -31,7 +31,7 @@ class CronRunTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test cron runs.
+   * Tests cron runs.
    */
   public function testCronRun() {
     // Run cron anonymously without any cron key.
@@ -82,7 +82,8 @@ class CronRunTest extends BrowserTestBase {
     $this->assertLessThan(\Drupal::state()->get('system.cron_last'), $cron_last);
 
     // Disable cron through the interface by setting the interval to zero.
-    $this->drupalPostForm('admin/config/system/cron', ['interval' => 0], 'Save configuration');
+    $this->drupalGet('admin/config/system/cron');
+    $this->submitForm(['interval' => 0], 'Save configuration');
     $this->assertSession()->pageTextContains('The configuration options have been saved.');
     $this->drupalLogout();
 

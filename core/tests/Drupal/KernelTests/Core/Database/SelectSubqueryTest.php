@@ -97,7 +97,8 @@ class SelectSubqueryTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that we can use a subquery with a relational operator in a WHERE clause.
+   * Tests that we can use a subquery with a relational operator in a WHERE
+   * clause.
    */
   public function testConditionSubquerySelect2() {
     // Create a subquery, which is just a normal query object.
@@ -118,7 +119,8 @@ class SelectSubqueryTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that we can use 2 subqueries with a relational operator in a WHERE clause.
+   * Tests that we can use 2 subqueries with a relational operator in a WHERE
+   * clause.
    */
   public function testConditionSubquerySelect3() {
     // Create subquery 1, which is just a normal query object.
@@ -144,7 +146,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
   }
 
   /**
-   * Test that we can use multiple subqueries.
+   * Tests that we can use multiple subqueries.
    *
    * This test uses a subquery at the left hand side and multiple subqueries at
    * the right hand side. The test query may not be that logical but that's due

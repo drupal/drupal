@@ -160,7 +160,7 @@ EOT;
   }
 
   /**
-   * Test appending to an unmanaged file, and confirm it is not .gitignored.
+   * Tests appending to an unmanaged file, and confirm it is not .gitignored.
    *
    * If we append to an unmanaged (not scaffolded) file, and we are managing
    * .gitignore files, then we expect that the unmanaged file should not be

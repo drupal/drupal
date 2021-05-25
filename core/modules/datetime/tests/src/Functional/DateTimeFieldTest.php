@@ -667,7 +667,7 @@ class DateTimeFieldTest extends DateTestBase {
   }
 
   /**
-   * Test default value functionality.
+   * Tests default value functionality.
    */
   public function testDefaultValue() {
     // Create a test content type.
@@ -700,7 +700,8 @@ class DateTimeFieldTest extends DateTestBase {
       $field_edit = [
         'default_value_input[default_date_type]' => 'now',
       ];
-      $this->drupalPostForm('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name, $field_edit, 'Save settings');
+      $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
+      $this->submitForm($field_edit, 'Save settings');
 
       // Check that default value is selected in default value form.
       $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
@@ -726,7 +727,8 @@ class DateTimeFieldTest extends DateTestBase {
         'default_value_input[default_date_type]' => 'relative',
         'default_value_input[default_date]' => 'invalid date',
       ];
-      $this->drupalPostForm('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name, $field_edit, 'Save settings');
+      $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
+      $this->submitForm($field_edit, 'Save settings');
 
       $this->assertSession()->pageTextContains('The relative date value entered is invalid.');
 
@@ -735,7 +737,8 @@ class DateTimeFieldTest extends DateTestBase {
         'default_value_input[default_date_type]' => 'relative',
         'default_value_input[default_date]' => '+90 days',
       ];
-      $this->drupalPostForm('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name, $field_edit, 'Save settings');
+      $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
+      $this->submitForm($field_edit, 'Save settings');
 
       // Check that default value is selected in default value form.
       $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
@@ -761,7 +764,8 @@ class DateTimeFieldTest extends DateTestBase {
       $field_edit = [
         'default_value_input[default_date_type]' => '',
       ];
-      $this->drupalPostForm('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name, $field_edit, 'Save settings');
+      $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
+      $this->submitForm($field_edit, 'Save settings');
 
       // Check that default value is selected in default value form.
       $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
@@ -785,7 +789,7 @@ class DateTimeFieldTest extends DateTestBase {
   }
 
   /**
-   * Test that invalid values are caught and marked as invalid.
+   * Tests that invalid values are caught and marked as invalid.
    */
   public function testInvalidField() {
     // Change the field to a datetime field.
@@ -911,7 +915,8 @@ class DateTimeFieldTest extends DateTestBase {
       'body[0][value]' => $this->randomString(),
       $field_name . '[0][value][date]' => '2016-04-01',
     ];
-    $this->drupalPostForm('node/add/date_content', $edit, 'Save');
+    $this->drupalGet('node/add/date_content');
+    $this->submitForm($edit, 'Save');
     $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name . '/storage');
     $result = $this->xpath("//*[@id='edit-settings-datetime-type' and contains(@disabled, 'disabled')]");
     $this->assertCount(1, $result, "Changing datetime setting is disabled.");
