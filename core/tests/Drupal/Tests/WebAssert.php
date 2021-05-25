@@ -17,7 +17,6 @@ use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Constraint\ArrayHasKey;
 use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\Constraint\IsIdentical;
-use PHPUnit\Framework\Constraint\IsEqual;
 use PHPUnit\Framework\Constraint\LogicalNot;
 
 /**
