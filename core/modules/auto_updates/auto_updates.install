@@ -5,7 +5,7 @@
  * Contains install and update functions for Automatic Updates.
  */
 
-use Drupal\auto_updates\ReadinessChecker\ReadinessRequirement;
+use Drupal\auto_updates\ReadinessChecker\ReadinessRequirements;
 
 /**
  * Implements hook_requirements().
@@ -15,7 +15,7 @@ function auto_updates_requirements($phase) {
     return [];
   }
 
-  /** @var \Drupal\auto_updates\ReadinessChecker\ReadinessRequirement $readiness_requirement */
-  $readiness_requirement = \Drupal::classResolver(ReadinessRequirement::class);
+  /** @var \Drupal\auto_updates\ReadinessChecker\ReadinessRequirements $readiness_requirement */
+  $readiness_requirement = \Drupal::classResolver(ReadinessRequirements::class);
   return $readiness_requirement->getRequirements();
 }

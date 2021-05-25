@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   This class implements logic to output the messages from readiness checkers
  *   on the status report page. It should not be called directly.
  */
-final class ReadinessRequirement implements ContainerInjectionInterface {
+final class ReadinessRequirements implements ContainerInjectionInterface {
 
   use StringTranslationTrait;
   use ReadinessTrait;
