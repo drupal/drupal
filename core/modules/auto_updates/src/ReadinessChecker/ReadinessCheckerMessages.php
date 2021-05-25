@@ -51,11 +51,11 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
   protected $currentUser;
 
   /**
-   * The current route.
+   * The current route match.
    *
    * @var \Drupal\Core\Routing\CurrentRouteMatch
    */
-  protected $currentRoute;
+  protected $currentRouteMatch;
 
   /**
    * Constructs a ReadinessRequirement object.
@@ -70,16 +70,16 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
    *   The current user.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $translation
    *   The translation service.
-   * @param \Drupal\Core\Routing\CurrentRouteMatch $current_route
-   *   The current route.
+   * @param \Drupal\Core\Routing\CurrentRouteMatch $current_route_match
+   *   The current route match.
    */
-  public function __construct(ReadinessCheckerManager $readiness_checker_manager, MessengerInterface $messenger, AdminContext $admin_context, AccountProxyInterface $current_user, TranslationInterface $translation, CurrentRouteMatch $current_route) {
+  public function __construct(ReadinessCheckerManager $readiness_checker_manager, MessengerInterface $messenger, AdminContext $admin_context, AccountProxyInterface $current_user, TranslationInterface $translation, CurrentRouteMatch $current_route_match) {
     $this->readinessCheckerManager = $readiness_checker_manager;
     $this->setMessenger($messenger);
     $this->adminContext = $admin_context;
     $this->currentUser = $current_user;
     $this->setStringTranslation($translation);
-    $this->currentRoute = $current_route;
+    $this->currentRouteMatch = $current_route_match;
   }
 
   /**
@@ -140,7 +140,7 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
         'update.confirmation_page',
       ];
       // These routes don't need additional nagging.
-      return !in_array($this->currentRoute->getRouteName(), $disabled_routes, TRUE);
+      return !in_array($this->currentRouteMatch->getRouteName(), $disabled_routes, TRUE);
     }
     return FALSE;
   }
