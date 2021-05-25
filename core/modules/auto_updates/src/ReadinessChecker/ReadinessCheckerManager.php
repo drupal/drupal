@@ -39,7 +39,7 @@ class ReadinessCheckerManager {
    *
    * @var int
    */
-  protected $storeResultsHours;
+  protected $resultsTimeToLive;
 
   /**
    * Constructs a ReadinessCheckerManager.
@@ -48,13 +48,13 @@ class ReadinessCheckerManager {
    *   The key/value expirable factory.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
-   * @param int $store_results_hours
+   * @param int $results_time_to_live
    *   The number of hours to store results.
    */
-  public function __construct(KeyValueExpirableFactoryInterface $key_value_expirable_factory, TimeInterface $time, int $store_results_hours) {
+  public function __construct(KeyValueExpirableFactoryInterface $key_value_expirable_factory, TimeInterface $time, int $results_time_to_live) {
     $this->keyValueExpirable = $key_value_expirable_factory->get('auto_updates');
     $this->time = $time;
-    $this->storeResultsHours = $store_results_hours;
+    $this->resultsTimeToLive = $results_time_to_live;
   }
 
   /**
@@ -90,7 +90,7 @@ class ReadinessCheckerManager {
         'results' => $results,
         'checkers' => $this->getCurrentCheckerIds(),
       ],
-      $this->storeResultsHours * 60 * 60
+      $this->resultsTimeToLive * 60 * 60
     );
     $this->keyValueExpirable->set('readiness_check_timestamp', $this->time->getRequestTime());
     return $this;
