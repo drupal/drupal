@@ -101,6 +101,10 @@ class ReadinessCheckerManager {
   /**
    * Runs the readiness checkers if there no stored valid results.
    *
+   * The stored results are considered invalid if the currently available
+   * readiness checkers are no longer the same as the last time the checkers
+   * were run.
+   *
    * @return $this
    *
    * @see self::getResults()
@@ -122,7 +126,7 @@ class ReadinessCheckerManager {
    * @return \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[]|
    *   The result objects for the readiness checkers or NULL if no results are
    *   available or if the stored results are no longer valid. The stored
-   *   results are not considered valid if the currently available readiness
+   *   results are considered invalid if the currently available readiness
    *   checkers are no longer the same as the last time the checkers were run.
    */
   public function getResults(?int $severity = NULL): ?array {
