@@ -350,7 +350,7 @@ class ConfigSchemaTest extends KernelTestBase {
   }
 
   /**
-   * Test configuration value data type enforcement using schemas.
+   * Tests configuration value data type enforcement using schemas.
    */
   public function testConfigSaveWithSchema() {
     $untyped_values = [

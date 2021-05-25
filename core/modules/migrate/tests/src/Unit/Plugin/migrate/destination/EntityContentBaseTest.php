@@ -23,7 +23,7 @@ use Drupal\migrate\Row;
 class EntityContentBaseTest extends EntityTestBase {
 
   /**
-   * Test basic entity save.
+   * Tests basic entity save.
    *
    * @covers ::import
    */
@@ -52,7 +52,7 @@ class EntityContentBaseTest extends EntityTestBase {
   }
 
   /**
-   * Test row skipping when we can't get an entity to save.
+   * Tests row skipping when we can't get an entity to save.
    *
    * @covers ::import
    */
@@ -71,7 +71,7 @@ class EntityContentBaseTest extends EntityTestBase {
   }
 
   /**
-   * Test that translation destination fails for untranslatable entities.
+   * Tests that translation destination fails for untranslatable entities.
    */
   public function testUntranslatable() {
     // An entity type without a language.

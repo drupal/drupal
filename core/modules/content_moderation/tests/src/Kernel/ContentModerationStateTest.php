@@ -478,7 +478,7 @@ class ContentModerationStateTest extends KernelTestBase {
   }
 
   /**
-   * Test changing the language of content without adding a translation.
+   * Tests changing the language of content without adding a translation.
    */
   public function testChangingContentLangcode() {
     $this->createContentType([
@@ -613,7 +613,7 @@ class ContentModerationStateTest extends KernelTestBase {
   }
 
   /**
-   * Test the content moderation workflow dependencies for non-config bundles.
+   * Tests the content moderation workflow dependencies for non-config bundles.
    */
   public function testWorkflowNonConfigBundleDependencies() {
     // Create a bundle not based on any particular configuration.
@@ -648,7 +648,7 @@ class ContentModerationStateTest extends KernelTestBase {
   }
 
   /**
-   * Test the revision default state of the moderation state entity revisions.
+   * Tests the revision default state of the moderation state entity revisions.
    *
    * @param string $entity_type_id
    *   The ID of entity type to be tested.

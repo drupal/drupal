@@ -65,10 +65,12 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
       'label' => $name,
       'direction' => LanguageInterface::DIRECTION_LTR,
     ];
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add custom language');
+    $this->drupalGet('admin/config/regional/language/add');
+    $this->submitForm($edit, 'Add custom language');
     // Set path prefix.
     $edit = ["prefix[$this->langcode]" => $this->langcode];
-    $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/regional/language/detection/url');
+    $this->submitForm($edit, 'Save configuration');
   }
 
   /**
@@ -87,13 +89,15 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
       'langcode' => $this->langcode,
       'translation' => 'all',
     ];
-    $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
+    $this->drupalGet('admin/config/regional/translate');
+    $this->submitForm($search, 'Filter');
     $textarea = $this->assertSession()->elementExists('xpath', '//textarea');
     $lid = $textarea->getAttribute('name');
     $edit = [
       $lid => $message,
     ];
-    $this->drupalPostForm('admin/config/regional/translate', $edit, 'Save translations');
+    $this->drupalGet('admin/config/regional/translate');
+    $this->submitForm($edit, 'Save translations');
 
     // Get translation and check we've only got the message.
     $translation = \Drupal::languageManager()->getLanguageConfigOverride($this->langcode, 'system.maintenance')->get();
@@ -110,13 +114,15 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
       'langcode' => $this->langcode,
       'translation' => 'all',
     ];
-    $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
+    $this->drupalGet('admin/config/regional/translate');
+    $this->submitForm($search, 'Filter');
     $textarea = $this->assertSession()->elementExists('xpath', '//textarea');
     $lid = $textarea->getAttribute('name');
     $edit = [
       $lid => 'D',
     ];
-    $this->drupalPostForm('admin/config/regional/translate', $edit, 'Save translations');
+    $this->drupalGet('admin/config/regional/translate');
+    $this->submitForm($edit, 'Save translations');
 
     $translation = \Drupal::languageManager()->getLanguageConfigOverride($this->langcode, 'core.date_format.medium')->get();
     $this->assertEquals('D', $translation['pattern'], 'Got the right date format pattern after translation.');
@@ -131,7 +137,8 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
     $this->assertNull($string, 'Configuration strings have been created upon installation.');
 
     // Enable the image module.
-    $this->drupalPostForm('admin/modules', ['modules[image][enable]' => "1"], 'Install');
+    $this->drupalGet('admin/modules');
+    $this->submitForm(['modules[image][enable]' => "1"], 'Install');
     $this->rebuildContainer();
 
     $string = $this->storage->findString(['source' => 'Medium (220×220)', 'context' => '', 'type' => 'configuration']);
@@ -155,13 +162,15 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
       'langcode' => $this->langcode,
       'translation' => 'all',
     ];
-    $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
+    $this->drupalGet('admin/config/regional/translate');
+    $this->submitForm($search, 'Filter');
     $textarea = $this->assertSession()->elementExists('xpath', '//textarea');
     $lid = $textarea->getAttribute('name');
     $edit = [
       $lid => $image_style_label,
     ];
-    $this->drupalPostForm('admin/config/regional/translate', $edit, 'Save translations');
+    $this->drupalGet('admin/config/regional/translate');
+    $this->submitForm($edit, 'Save translations');
 
     // Check the right single translation has been created.
     $translations = $this->storage->getTranslations(['language' => $this->langcode, 'type' => 'configuration', 'name' => 'image.style.medium']);
@@ -175,7 +184,8 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
     $this->assertEquals($image_style_label, $translation['label'], 'Got the right translation for image style name after translation');
 
     // Uninstall the module.
-    $this->drupalPostForm('admin/modules/uninstall', ['uninstall[image]' => "image"], 'Uninstall');
+    $this->drupalGet('admin/modules/uninstall');
+    $this->submitForm(['uninstall[image]' => "image"], 'Uninstall');
     $this->submitForm([], 'Uninstall');
 
     // Ensure that the translated configuration has been removed.
@@ -189,13 +199,15 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
       'langcode' => $this->langcode,
       'translation' => 'all',
     ];
-    $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
+    $this->drupalGet('admin/config/regional/translate');
+    $this->submitForm($search, 'Filter');
     $textarea = $this->assertSession()->elementExists('xpath', '//textarea');
     $lid = $textarea->getAttribute('name');
     $edit = [
       $lid => $category_label,
     ];
-    $this->drupalPostForm('admin/config/regional/translate', $edit, 'Save translations');
+    $this->drupalGet('admin/config/regional/translate');
+    $this->submitForm($edit, 'Save translations');
 
     // Check if this category displayed in this language will use the
     // translation. This test ensures the entity loaded from the request
@@ -209,17 +221,19 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
   }
 
   /**
-   * Test translatability of optional configuration in locale.
+   * Tests translatability of optional configuration in locale.
    */
   public function testOptionalConfiguration() {
     $this->assertNodeConfig(FALSE, FALSE);
     // Enable the node module.
-    $this->drupalPostForm('admin/modules', ['modules[node][enable]' => "1"], 'Install');
+    $this->drupalGet('admin/modules');
+    $this->submitForm(['modules[node][enable]' => "1"], 'Install');
     $this->submitForm([], 'Continue');
     $this->rebuildContainer();
     $this->assertNodeConfig(TRUE, FALSE);
     // Enable the views module (which node provides some optional config for).
-    $this->drupalPostForm('admin/modules', ['modules[views][enable]' => "1"], 'Install');
+    $this->drupalGet('admin/modules');
+    $this->submitForm(['modules[views][enable]' => "1"], 'Install');
     $this->rebuildContainer();
     $this->assertNodeConfig(TRUE, TRUE);
   }

@@ -86,7 +86,8 @@ class FieldUIRouteTest extends BrowserTestBase {
     $this->container->get('router.builder')->rebuildIfNeeded();
 
     $edit = ['display_modes_custom[test]' => TRUE];
-    $this->drupalPostForm('admin/config/people/accounts/display', $edit, 'Save');
+    $this->drupalGet('admin/config/people/accounts/display');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->linkExists('Test');
 
     // Create new form mode and verify it's available on the Manage Form
@@ -99,7 +100,8 @@ class FieldUIRouteTest extends BrowserTestBase {
     $this->container->get('router.builder')->rebuildIfNeeded();
 
     $edit = ['display_modes_custom[test]' => TRUE];
-    $this->drupalPostForm('admin/config/people/accounts/form-display', $edit, 'Save');
+    $this->drupalGet('admin/config/people/accounts/form-display');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->linkExists('Test');
   }
 

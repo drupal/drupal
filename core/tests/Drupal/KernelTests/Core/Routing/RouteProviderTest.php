@@ -640,7 +640,7 @@ class RouteProviderTest extends KernelTestBase {
   }
 
   /**
-   * Test RouteProvider::getRouteByName() and RouteProvider::getRoutesByNames().
+   * Tests RouteProvider::getRouteByName() & RouteProvider::getRoutesByNames().
    */
   public function testRouteByName() {
     $connection = Database::getConnection();

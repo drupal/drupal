@@ -36,7 +36,8 @@ class WizardTest extends WizardTestBase {
     $view['rest_export[create]'] = TRUE;
     $view['rest_export[path]'] = $this->randomMachineName(255);
 
-    $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm($view, 'Save and edit');
 
     $this->assertSession()->pageTextContains('Machine-readable name cannot be longer than 128 characters but is currently 129 characters long.');
     $this->assertSession()->pageTextContains('Path cannot be longer than 254 characters but is currently 255 characters long.');
@@ -60,7 +61,8 @@ class WizardTest extends WizardTestBase {
 
     // Make sure the view saving was successful and the browser got redirected
     // to the edit page.
-    $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm($view, 'Save and edit');
     $this->assertSession()->addressEquals('admin/structure/views/view/' . $view['id']);
     // Assert that the page title is correctly truncated.
     $this->assertSession()->pageTextContains(views_ui_truncate($view['page[title]'], 32));

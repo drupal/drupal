@@ -29,7 +29,7 @@ class MigrateSystemMaintenanceTranslationTest extends MigrateDrupal6TestBase {
   }
 
   /**
-   * Tests migration of system (maintenance) variables to system.maintenance.yml.
+   * Tests migration of system variables to system.maintenance.yml.
    */
   public function testSystemMaintenance() {
     $config = \Drupal::service('language_manager')->getLanguageConfigOverride('fr', 'system.maintenance');

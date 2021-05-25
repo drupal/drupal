@@ -23,7 +23,7 @@ class RowRssTest extends CommentTestBase {
   public static $testViews = ['test_comment_rss'];
 
   /**
-   * Test comment rss output.
+   * Tests comment rss output.
    */
   public function testRssRow() {
     $this->drupalGet('test-comment-rss');

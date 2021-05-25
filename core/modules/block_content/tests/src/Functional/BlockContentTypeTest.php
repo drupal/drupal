@@ -149,9 +149,11 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $this->assertSession()->addressEquals(Url::fromRoute('block_content.add_form', ['block_content_type' => 'basic']));
 
     // Remove the body field.
-    $this->drupalPostForm('admin/structure/block/block-content/manage/basic/fields/block_content.basic.body/delete', [], 'Delete');
+    $this->drupalGet('admin/structure/block/block-content/manage/basic/fields/block_content.basic.body/delete');
+    $this->submitForm([], 'Delete');
     // Resave the settings for this type.
-    $this->drupalPostForm('admin/structure/block/block-content/manage/basic', [], 'Save');
+    $this->drupalGet('admin/structure/block/block-content/manage/basic');
+    $this->submitForm([], 'Save');
     // Check that the body field doesn't exist.
     $this->drupalGet('block/add/basic');
     $this->assertEmpty($this->cssSelect('#edit-body-0-value'), 'Body field was not found.');
