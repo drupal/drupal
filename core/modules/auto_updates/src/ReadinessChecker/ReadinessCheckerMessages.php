@@ -161,16 +161,22 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
       return FALSE;
     }
     $failure_message = $this->getFailureMessageForSeverity($severity);
-    $severity === SystemManager::REQUIREMENT_ERROR ?
-      $this->messenger()->addError($failure_message) :
+    if ($severity === SystemManager::REQUIREMENT_ERROR) {
+      $this->messenger()->addError($failure_message);
+    }
+    else {
       $this->messenger()->addWarning($failure_message);
+    }
 
     foreach ($results as $result) {
       $messages = $result->getMessages();
       $message = count($messages) === 1 ? $messages[0] : $result->getSummary();
-      $severity === SystemManager::REQUIREMENT_ERROR ?
-        $this->messenger()->addError($message) :
+      if ($severity === SystemManager::REQUIREMENT_ERROR) {
+        $this->messenger()->addError($message);
+      }
+      else {
         $this->messenger()->addWarning($message);
+      }
     }
     return TRUE;
   }
