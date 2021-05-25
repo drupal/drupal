@@ -1,0 +1,17 @@
+/**
+ * @file
+ * Claro specific styling for CKEditor admin.
+ */
+
+@import "../base/variables.pcss.css";
+
+/*
+ * This rule is needed to provide Claro's green focus outline. There is a style
+ * in the CKEditor module CSS that adds a box-shadow at a higher specificity
+ * than Claro's focus outline styling. This is added at one higher degree of
+ * specificity.
+ * @see core/modules/ckeditor/css/ckeditor.admin.css
+ */
+.ckeditor-toolbar-disabled .ckeditor-buttons li a:focus {
+  box-shadow: var(--focus-box-shadow);
+}
