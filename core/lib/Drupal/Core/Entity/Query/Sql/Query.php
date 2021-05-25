@@ -132,8 +132,15 @@ class Query extends QueryBase implements QueryInterface {
     // Add a self-join to the base revision table if we're querying only the
     // latest revisions.
     if ($this->latestRevision && $revision_field) {
-      $this->sqlQuery->leftJoin($base_table, 'base_table_2', "[base_table].[$id_field] = [base_table_2].[$id_field] AND [base_table].[$revision_field] < [base_table_2].[$revision_field]");
-      $this->sqlQuery->isNull("base_table_2.$id_field");
+      // @todo Make it possible to put an expression before a field in core.
+      unset($this->sqlFields["base_table.$revision_field"]);
+      unset($this->sqlFields["base_table.$id_field"]);
+
+      $this->sqlQuery->addExpression("MAX(\"base_table\".\"$revision_field\")", $revision_field);
+      $this->sqlQuery->addExpression("\"base_table\".\"$id_field\"", $id_field);
+
+      $group_by = "base_table.$id_field";
+      $this->sqlGroupBy[$group_by] = $group_by;
     }
 
     if (is_null($this->accessCheck)) {
