@@ -31,8 +31,7 @@ class RequestStack extends SymfonyRequestStack {
    * {@inheritdoc}
    */
   public function getMasterRequest() {
-    trigger_deprecation('symfony/http-foundation', '5.3', '"%s()" is deprecated, use "getMainRequest()" instead.', __METHOD__);
-
+    @trigger_error('Drupal\Core\Http\RequestStack::getMasterRequest() is deprecated, use getMainRequest() instead.', E_USER_DEPRECATED);
     return $this->getMainRequest();
   }
 
