@@ -58,10 +58,10 @@ class ReadinessCheckerManager {
   }
 
   /**
-   * Appends a checker to the checker chain.
+   * Adds a readiness checker.
    *
    * @param \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerInterface $checker
-   *   The checker interface to be appended to the checker chain.
+   *   The checker to add.
    * @param int $priority
    *   (optional) The priority of the checker being added. Defaults to 0.
    *   Readiness checkers with higher priorities will run first.
