@@ -10,12 +10,13 @@ use Behat\Mink\Element\TraversableElement;
 use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\Mink\Session;
 use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Url;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Constraint\ArrayHasKey;
-use PHPUnit\Framework\Constraint\IsIdentical;
 use PHPUnit\Framework\Constraint\IsEqual;
+use PHPUnit\Framework\Constraint\IsIdentical;
 use PHPUnit\Framework\Constraint\LogicalNot;
 
 /**
@@ -60,6 +61,25 @@ class WebAssert extends MinkWebAssert {
       $url = "/$url";
     }
     return parent::cleanUrl($url);
+  }
+
+  /**
+   * Returns the querystring parameters of an URL.
+   *
+   * @param Drupal\Core\Url|string $url
+   *   An URL object or string.
+   *
+   * @return array
+   *   An associative array of querystring parameters, having the parameter
+   *   names as keys and the parameter values as values.
+   */
+  private function getUrlQueryStringParameters($url): array {
+    if ($url instanceof Url) {
+      $url = $url->setAbsolute()->toString();
+    }
+    $query = parse_url($url, PHP_URL_QUERY) ?? '';
+    parse_str($query, $parameters);
+    return $parameters ?? [];
   }
 
   /**
@@ -765,6 +785,28 @@ class WebAssert extends MinkWebAssert {
       @trigger_error('Calling ' . __METHOD__ . ' with more than one argument is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::addressNotEquals($page);
+  }
+
+  /**
+   * Asserts that the querystring parameters equal an expected set.
+   *
+   * @param Drupal\Core\Url|string $url
+   *   The expectation URL object or string. Non-empty string querystring
+   *   must start with a question mark.
+   */
+  public function urlQueryStringEquals($url): void {
+    if (func_num_args() > 1) {
+      throw new \ArgumentCountError('Called ' . __METHOD__ . ' with more than one argument');
+    }
+    $expected_parameters = $this->getUrlQueryStringParameters($url);
+    $actual_parameters = $this->getUrlQueryStringParameters($this->session->getCurrentUrl());
+    $message = sprintf(
+      "Querystring should be equal to '%s', found '%s'.",
+      UrlHelper::buildQuery($expected_parameters),
+      UrlHelper::buildQuery($actual_parameters)
+    );
+    $constraint = new IsEqual($expected_parameters);
+    Assert::assertThat($actual_parameters, $constraint, $message);
   }
 
   /**

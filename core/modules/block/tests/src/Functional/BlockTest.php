@@ -277,7 +277,8 @@ class BlockTest extends BlockTestBase {
       $this->drupalGet('admin/structure/block/add/system_powered_by_block');
       $this->submitForm($block, 'Save block');
       $this->assertSession()->pageTextContains('The block configuration has been saved.');
-      $this->assertSession()->addressEquals('admin/structure/block/list/' . $theme . '?block-placement=' . Html::getClass($block['id']));
+      $this->assertSession()->addressEquals('admin/structure/block/list/' . $theme);
+      $this->assertSession()->urlQueryStringEquals('?block-placement=' . Html::getClass($block['id']));
 
       // Set the default theme and ensure the block is placed.
       $theme_settings->set('default', $theme)->save();

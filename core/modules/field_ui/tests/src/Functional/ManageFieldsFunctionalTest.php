@@ -748,7 +748,8 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/types/manage/article/fields/node.article.body/storage', $options);
     $this->submitForm([], 'Save field settings');
     // The external redirect should not fire.
-    $this->assertSession()->addressEquals('admin/structure/types/manage/article/fields/node.article.body/storage?destinations%5B0%5D=http%3A//example.com');
+    $this->assertSession()->addressEquals('admin/structure/types/manage/article/fields/node.article.body/storage');
+    $this->assertSession()->urlQueryStringEquals('?destinations%5B0%5D=http%3A//example.com');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertRaw('Attempt to update field <em class="placeholder">Body</em> failed: <em class="placeholder">The internal path component &#039;http://example.com&#039; is external. You are not allowed to specify an external URL together with internal:/.</em>.');
   }

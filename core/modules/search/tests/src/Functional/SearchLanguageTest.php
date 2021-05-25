@@ -117,6 +117,7 @@ class SearchLanguageTest extends BrowserTestBase {
     $this->drupalGet('search/node');
     $this->submitForm([], 'edit-submit--2');
     $this->assertSession()->addressEquals(Url::fromRoute('search.view_node_search', [], ['query' => ['keys' => '']]));
+    $this->assertSession()->urlQueryStringEquals('?keys=');
 
     // Pick French and ensure it is selected.
     $edit = ['language[fr]' => TRUE];

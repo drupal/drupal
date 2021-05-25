@@ -2,6 +2,7 @@
 
 namespace Drupal\FunctionalTests;
 
+use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Behat\Mink\Exception\ResponseTextException;
 use PHPUnit\Framework\AssertionFailedError;
@@ -18,6 +19,7 @@ class WebAssertTest extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
+    'dblog',
     'test_page_test',
   ];
 
@@ -52,6 +54,37 @@ class WebAssertTest extends BrowserTestBase {
     $this->expectException(AssertionFailedError::class);
     $this->expectExceptionMessage("Failed asserting that the response does not have a 'Null-Header' header.");
     $this->assertSession()->responseHeaderDoesNotExist('Null-Header');
+  }
+
+  /**
+   * @covers ::urlQueryStringEquals
+   */
+  public function testUrlQueryStringEquals() {
+    // Insert 300 log messages.
+    $logger = $this->container->get('logger.factory')->get('pager_test');
+    for ($i = 0; $i < 300; $i++) {
+      $logger->debug($this->randomString());
+    }
+
+    // Get to the db log report.
+    $this->drupalLogin($this->drupalCreateUser([
+      'access site reports',
+    ]));
+    $this->drupalGet('admin/reports/dblog');
+    $this->assertSession()->urlQueryStringEquals('admin/reports/dblog');
+    $this->assertSession()->urlQueryStringEquals('?');
+    $this->assertSession()->urlQueryStringEquals('');
+    $this->assertSession()->urlQueryStringEquals(Url::fromRoute('dblog.overview'));
+
+    // Go to the second page, we expect the querystring to change to '?page=1'.
+    $this->drupalGet('admin/reports/dblog', ['query' => ['page' => 1]]);
+    $this->assertSession()->urlQueryStringEquals('admin/reports/dblog?page=1');
+    $this->assertSession()->urlQueryStringEquals('?page=1');
+    $this->assertSession()->urlQueryStringEquals(Url::fromRoute('dblog.overview', [], ['query' => ['page' => 1]]));
+
+    $this->expectException(AssertionFailedError::class);
+    $this->expectExceptionMessage("Querystring should be equal to '', found 'page=1'.");
+    $this->assertSession()->urlQueryStringEquals('admin/reports/dblog');
   }
 
   /**
