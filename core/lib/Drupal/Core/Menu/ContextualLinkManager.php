@@ -80,6 +80,11 @@ class ContextualLinkManager extends DefaultPluginManager implements ContextualLi
   protected $pluginsByGroup;
 
   /**
+   * {@inheritdoc}
+   */
+  protected $disallowDots = FALSE;
+
+  /**
    * Constructs a new ContextualLinkManager instance.
    *
    * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
