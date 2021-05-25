@@ -50,7 +50,8 @@ class DocumentElement extends TraversableElement {
    */
   public function getText() {
     if ($this->getDriver() instanceof BrowserKitDriver) {
-      // Trying to simulate what the user sees, given that, it removes:
+      // Work around https://github.com/minkphp/MinkBrowserKitDriver/issues/153.
+      // To simulate what the user sees, it removes:
       // - all text inside the head tags
       // - Drupal settings json.
       $raw_content = preg_replace([
@@ -59,7 +60,8 @@ class DocumentElement extends TraversableElement {
       ], '', $this->getContent());
       // Filter out all HTML tags, as they are not visible in a normal browser.
       $text = strip_tags($raw_content);
-      // To match \Behat\Mink\Element\Element::getText() include the page title.
+      // To preserve BC and match \Behat\Mink\Element\Element::getText() include
+      // the page title.
       $title_element = $this->find('css', 'title');
       if ($title_element) {
         $text = $title_element->getText() . ' ' . $text;
