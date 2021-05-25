@@ -74,7 +74,7 @@ class ReadinessCheckerResult {
    *
    * @return static
    */
-  public static function createErrorResult(ReadinessCheckerInterface $readiness_checker, array $messages, ?TranslatableMarkup $summary = NULL): ReadinessCheckerResult {
+  public static function createErrorResult(ReadinessCheckerInterface $readiness_checker, array $messages, ?TranslatableMarkup $summary = NULL): self {
     return new static(
       $readiness_checker,
       SystemManager::REQUIREMENT_ERROR,
@@ -96,7 +96,7 @@ class ReadinessCheckerResult {
    *
    * @return static
    */
-  public static function createWarningResult(ReadinessCheckerInterface $readiness_checker, array $messages, ?TranslatableMarkup $summary = NULL): ReadinessCheckerResult {
+  public static function createWarningResult(ReadinessCheckerInterface $readiness_checker, array $messages, ?TranslatableMarkup $summary = NULL): self {
     return new static(
       $readiness_checker,
       SystemManager::REQUIREMENT_WARNING,
