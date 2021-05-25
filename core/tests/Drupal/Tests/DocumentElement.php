@@ -4,7 +4,6 @@ namespace Drupal\Tests;
 
 use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\Mink\Element\TraversableElement;
-use Drupal\Component\Utility\Xss;
 
 /**
  * Document element.
@@ -58,12 +57,8 @@ class DocumentElement extends TraversableElement {
         '@<head>(.+?)</head>@si',
         '@<script type="application/json" data-drupal-selector="drupal-settings-json">([^<]*)</script>@',
       ], '', $this->getContent());
-      // Use Xss::filter() to:
-      // - remove inline JavaScript
-      // - fix all HTML entities
-      // - remove dangerous protocols
-      // - filter out all HTML tags, as they are not visible in a normal browser.
-      $text = Xss::filter($raw_content, []);
+      // Filter out all HTML tags, as they are not visible in a normal browser.
+      $text = strip_tags($raw_content);
       // To match \Behat\Mink\Element\Element::getText() include the page title.
       $title_element = $this->find('css', 'title');
       if ($title_element) {
