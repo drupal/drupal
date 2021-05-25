@@ -64,7 +64,9 @@ class ReadinessCheckerManager {
    *   The checker to add.
    * @param int $priority
    *   (optional) The priority of the checker being added. Defaults to 0.
-   *   Readiness checkers with higher priorities will run first.
+   *   Readiness checkers with higher priorities will run first. It is not
+   *   possible to sort checkers that have same priority. The relative order of
+   *   checkers with the same priority should not be relied on.
    */
   public function addChecker(ReadinessCheckerInterface $checker, int $priority = 0): void {
     $this->checkersByPriority[$priority][] = $checker;
