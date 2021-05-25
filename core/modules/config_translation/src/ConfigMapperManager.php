@@ -47,6 +47,11 @@ class ConfigMapperManager extends DefaultPluginManager implements ConfigMapperMa
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $disallowDots = FALSE;
+
+  /**
    * Constructs a ConfigMapperManager.
    *
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend

@@ -97,6 +97,11 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
   protected $instances = [];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $disallowDots = FALSE;
+
+  /**
    * Constructs a LocalActionManager object.
    *
    * @param \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface $argument_resolver

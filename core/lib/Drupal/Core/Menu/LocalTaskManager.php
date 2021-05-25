@@ -107,6 +107,11 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
   protected $account;
 
   /**
+   * {@inheritdoc}
+   */
+  protected $disallowDots = FALSE;
+
+  /**
    * Constructs a \Drupal\Core\Menu\LocalTaskManager object.
    *
    * @param \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface $argument_resolver

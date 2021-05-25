@@ -89,6 +89,11 @@ class BreakpointManager extends DefaultPluginManager implements BreakpointManage
   protected $instances = [];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $disallowDots = FALSE;
+
+  /**
    * Constructs a new BreakpointManager instance.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
