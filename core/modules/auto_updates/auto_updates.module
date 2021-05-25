@@ -5,14 +5,14 @@
  * Contains hook implementations for Automatic Updates.
  */
 
-use Drupal\auto_updates\ReadinessChecker\ReadinessCheckerMessages;
+use Drupal\auto_updates\ReadinessChecker\AdminReadinessMessages;
 
 /**
  * Implements hook_page_top().
  */
 function auto_updates_page_top() {
-  /** @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerMessages $readiness_messages */
-  $readiness_messages = \Drupal::classResolver(ReadinessCheckerMessages::class);
+  /** @var \Drupal\auto_updates\ReadinessChecker\AdminReadinessMessages $readiness_messages */
+  $readiness_messages = \Drupal::classResolver(AdminReadinessMessages::class);
   $readiness_messages->displayAdminPageMessages();
 }
 

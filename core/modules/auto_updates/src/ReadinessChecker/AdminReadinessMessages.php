@@ -22,7 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   This class implements logic to output the messages from readiness checkers
  *   on admin pages. It should not be called directly.
  */
-final class ReadinessCheckerMessages implements ContainerInjectionInterface {
+final class AdminReadinessMessages implements ContainerInjectionInterface {
 
   use MessengerTrait;
   use StringTranslationTrait;
