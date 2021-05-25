@@ -127,6 +127,7 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
    */
   protected function displayResultsOnCurrentPage(): bool {
     if ($this->adminContext->isAdminRoute() && $this->currentUser->hasPermission('administer site configuration')) {
+      // These routes don't need additional nagging.
       $disabled_routes = [
         'update.theme_update',
         'system.theme_install',
@@ -139,7 +140,6 @@ final class ReadinessCheckerMessages implements ContainerInjectionInterface {
         'system.status',
         'update.confirmation_page',
       ];
-      // These routes don't need additional nagging.
       return !in_array($this->currentRouteMatch->getRouteName(), $disabled_routes, TRUE);
     }
     return FALSE;
