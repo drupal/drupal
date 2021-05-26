@@ -74,7 +74,8 @@ class NodeFormSaveChangedTimeTest extends BrowserTestBase {
     sleep(1);
 
     // Save the node on the regular node edit form.
-    $this->drupalPostForm('node/1/edit', [], 'Save');
+    $this->drupalGet('node/1/edit');
+    $this->submitForm([], 'Save');
 
     $storage->resetCache([1]);
     $node = $storage->load(1);

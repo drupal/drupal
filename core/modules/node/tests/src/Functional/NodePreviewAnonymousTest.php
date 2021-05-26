@@ -56,7 +56,8 @@ class NodePreviewAnonymousTest extends BrowserTestBase {
       $title_key => $this->randomMachineName(),
       $body_key => $this->randomMachineName(),
     ];
-    $this->drupalPostForm('node/add/page', $edit, 'Preview');
+    $this->drupalGet('node/add/page');
+    $this->submitForm($edit, 'Preview');
 
     // Check that the preview is displaying the title, body and term.
     $this->assertSession()->linkExists('Back to content editing');

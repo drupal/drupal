@@ -176,7 +176,8 @@ class FormTest extends FieldTestBase {
     $edit = [
       "{$field_name}[0][value]" => $value,
     ];
-    $this->drupalPostForm('entity_test/manage/' . $id . '/edit', $edit, 'Save');
+    $this->drupalGet('entity_test/manage/' . $id . '/edit');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been updated.');
     $this->container->get('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);
     $entity = EntityTest::load($id);
@@ -230,7 +231,8 @@ class FormTest extends FieldTestBase {
 
     // Submit with missing required value.
     $edit = [];
-    $this->drupalPostForm('entity_test/add', $edit, 'Save');
+    $this->drupalGet('entity_test/add');
+    $this->submitForm($edit, 'Save');
     $this->assertRaw(t('@name field is required.', ['@name' => $this->field['label']]));
 
     // Create an entity
@@ -250,7 +252,8 @@ class FormTest extends FieldTestBase {
     $edit = [
       "{$field_name}[0][value]" => $value,
     ];
-    $this->drupalPostForm('entity_test/manage/' . $id . '/edit', $edit, 'Save');
+    $this->drupalGet('entity_test/manage/' . $id . '/edit');
+    $this->submitForm($edit, 'Save');
     $this->assertRaw(t('@name field is required.', ['@name' => $this->field['label']]));
   }
 
@@ -558,7 +561,8 @@ class FormTest extends FieldTestBase {
       "{$field_name}[0][value]" => 2,
       'revision' => TRUE,
     ];
-    $this->drupalPostForm($entity_type . '/manage/' . $id . '/edit', $edit, 'Save');
+    $this->drupalGet($entity_type . '/manage/' . $id . '/edit');
+    $this->submitForm($edit, 'Save');
 
     // Check that the new revision has the expected values.
     $storage->resetCache([$id]);
@@ -640,7 +644,8 @@ class FormTest extends FieldTestBase {
 
     // Create a new revision.
     $edit = ['revision' => TRUE];
-    $this->drupalPostForm($entity_type . '/manage/' . $id . '/edit', $edit, 'Save');
+    $this->drupalGet($entity_type . '/manage/' . $id . '/edit');
+    $this->submitForm($edit, 'Save');
 
     // Check that the expected value has been carried over to the new revision.
     $storage->resetCache([$id]);

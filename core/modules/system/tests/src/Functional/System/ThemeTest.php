@@ -107,7 +107,8 @@ class ThemeTest extends BrowserTestBase {
         'default_logo' => FALSE,
         'logo_path' => $input,
       ];
-      $this->drupalPostForm('admin/appearance/settings', $edit, 'Save configuration');
+      $this->drupalGet('admin/appearance/settings');
+      $this->submitForm($edit, 'Save configuration');
       $this->assertNoText('The custom logo path is invalid.');
       $this->assertSession()->fieldValueEquals('logo_path', $expected['form']);
 
@@ -186,7 +187,8 @@ class ThemeTest extends BrowserTestBase {
       'logo_path' => '',
       'files[logo_upload]' => \Drupal::service('file_system')->realpath($file->uri),
     ];
-    $this->drupalPostForm('admin/appearance/settings', $edit, 'Save configuration');
+    $this->drupalGet('admin/appearance/settings');
+    $this->submitForm($edit, 'Save configuration');
 
     $uploaded_filename = 'public://' . $this->getSession()->getPage()->findField('logo_path')->getValue();
 
@@ -225,7 +227,8 @@ class ThemeTest extends BrowserTestBase {
       'default_favicon' => TRUE,
       'favicon_path' => 'public://whatever.ico',
     ];
-    $this->drupalPostForm('admin/appearance/settings', $edit, 'Save configuration');
+    $this->drupalGet('admin/appearance/settings');
+    $this->submitForm($edit, 'Save configuration');
     $this->assertNoText('The custom logo path is invalid.');
     $this->assertNoText('The custom favicon path is invalid.');
   }
@@ -241,7 +244,8 @@ class ThemeTest extends BrowserTestBase {
       'default_logo' => FALSE,
       'logo_path' => 'core/misc/druplicon.png',
     ];
-    $this->drupalPostForm('admin/appearance/settings/bartik', $edit, 'Save configuration');
+    $this->drupalGet('admin/appearance/settings/bartik');
+    $this->submitForm($edit, 'Save configuration');
     $this->assertSession()->fieldValueEquals('default_logo', FALSE);
     $this->assertSession()->fieldValueEquals('logo_path', 'core/misc/druplicon.png');
 
@@ -269,7 +273,8 @@ class ThemeTest extends BrowserTestBase {
     $this->drupalLogin($this->adminUser);
     // Save Bartik's theme settings which should invalidate the 'rendered' cache
     // tag in \Drupal\system\EventSubscriber\ConfigCacheTag.
-    $this->drupalPostForm('admin/appearance/settings/bartik', [], 'Save configuration');
+    $this->drupalGet('admin/appearance/settings/bartik');
+    $this->submitForm([], 'Save configuration');
     $this->drupalLogout();
     $this->drupalGet('');
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'MISS');
@@ -286,7 +291,8 @@ class ThemeTest extends BrowserTestBase {
       'admin_theme' => 'seven',
       'use_admin_theme' => TRUE,
     ];
-    $this->drupalPostForm('admin/appearance', $edit, 'Save configuration');
+    $this->drupalGet('admin/appearance');
+    $this->submitForm($edit, 'Save configuration');
 
     // Check that the administration theme is used on an administration page.
     $this->drupalGet('admin/config');
@@ -308,7 +314,8 @@ class ThemeTest extends BrowserTestBase {
     $edit = [
       'use_admin_theme' => FALSE,
     ];
-    $this->drupalPostForm('admin/appearance', $edit, 'Save configuration');
+    $this->drupalGet('admin/appearance');
+    $this->submitForm($edit, 'Save configuration');
 
     // Check that the administration theme is used on an administration page.
     $this->drupalGet('admin/config');
@@ -332,7 +339,8 @@ class ThemeTest extends BrowserTestBase {
       'admin_theme' => '',
       'use_admin_theme' => FALSE,
     ];
-    $this->drupalPostForm('admin/appearance', $edit, 'Save configuration');
+    $this->drupalGet('admin/appearance');
+    $this->submitForm($edit, 'Save configuration');
 
     // Check that the site default theme used on administration page.
     $this->drupalGet('admin');
@@ -406,7 +414,8 @@ class ThemeTest extends BrowserTestBase {
       'admin_theme' => 'seven',
       'use_admin_theme' => TRUE,
     ];
-    $this->drupalPostForm('admin/appearance', $edit, 'Save configuration');
+    $this->drupalGet('admin/appearance');
+    $this->submitForm($edit, 'Save configuration');
     $this->drupalGet('admin/appearance');
     $this->clickLink(t('Set as default'));
 
@@ -425,7 +434,8 @@ class ThemeTest extends BrowserTestBase {
       'admin_theme' => 'stark',
       'use_admin_theme' => TRUE,
     ];
-    $this->drupalPostForm('admin/appearance', $edit, 'Save configuration');
+    $this->drupalGet('admin/appearance');
+    $this->submitForm($edit, 'Save configuration');
 
     // Check that seven can be uninstalled now.
     $this->assertRaw('Uninstall Seven theme');
@@ -492,7 +502,8 @@ class ThemeTest extends BrowserTestBase {
     // Visit this theme's settings page.
     $this->drupalGet('admin/appearance/settings/test_theme_settings_features');
     $edit = [];
-    $this->drupalPostForm('admin/appearance/settings/test_theme_settings_features', $edit, 'Save configuration');
+    $this->drupalGet('admin/appearance/settings/test_theme_settings_features');
+    $this->submitForm($edit, 'Save configuration');
     $this->assertSession()->pageTextContains('The configuration options have been saved.');
   }
 

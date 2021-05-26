@@ -37,14 +37,16 @@ class RedirectTest extends BrowserTestBase {
       'redirection' => TRUE,
       'destination' => $this->randomMachineName(),
     ];
-    $this->drupalPostForm($path, $edit, 'Submit');
+    $this->drupalGet($path);
+    $this->submitForm($edit, 'Submit');
     $this->assertSession()->addressEquals($edit['destination']);
 
     // Test without redirection.
     $edit = [
       'redirection' => FALSE,
     ];
-    $this->drupalPostForm($path, $edit, 'Submit');
+    $this->drupalGet($path);
+    $this->submitForm($edit, 'Submit');
     $this->assertSession()->addressEquals($path);
 
     // Test redirection with query parameters.
@@ -52,14 +54,16 @@ class RedirectTest extends BrowserTestBase {
       'redirection' => TRUE,
       'destination' => $this->randomMachineName(),
     ];
-    $this->drupalPostForm($path, $edit, 'Submit', $options);
+    $this->drupalGet($path, $options);
+    $this->submitForm($edit, 'Submit');
     $this->assertSession()->addressEquals($edit['destination']);
 
     // Test without redirection but with query parameters.
     $edit = [
       'redirection' => FALSE,
     ];
-    $this->drupalPostForm($path, $edit, 'Submit', $options);
+    $this->drupalGet($path, $options);
+    $this->submitForm($edit, 'Submit');
     // When redirect is set to FALSE, there should be no redirection, and the
     // query parameters should be passed along.
     $this->assertSession()->addressEquals($path . '?foo=bar');
@@ -69,7 +73,8 @@ class RedirectTest extends BrowserTestBase {
       'redirection' => TRUE,
       'destination' => '',
     ];
-    $this->drupalPostForm($path, $edit, 'Submit');
+    $this->drupalGet($path);
+    $this->submitForm($edit, 'Submit');
     $this->assertSession()->addressEquals($path);
 
     // Test redirection back to the original path with query parameters.
@@ -77,7 +82,8 @@ class RedirectTest extends BrowserTestBase {
       'redirection' => TRUE,
       'destination' => '',
     ];
-    $this->drupalPostForm($path, $edit, 'Submit', $options);
+    $this->drupalGet($path, $options);
+    $this->submitForm($edit, 'Submit');
     // When using an empty redirection string, there should be no redirection,
     // and the query parameters should be passed along.
     $this->assertSession()->addressEquals($path . '?foo=bar');

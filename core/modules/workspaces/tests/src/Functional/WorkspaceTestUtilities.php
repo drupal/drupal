@@ -58,7 +58,8 @@ trait WorkspaceTestUtilities {
    *   The workspace that was just created.
    */
   protected function createWorkspaceThroughUi($label, $id, $parent = '_none') {
-    $this->drupalPostForm('/admin/config/workflow/workspaces/add', [
+    $this->drupalGet('/admin/config/workflow/workspaces/add');
+    $this->submitForm([
       'id' => $id,
       'label' => $label,
       'parent' => $parent,

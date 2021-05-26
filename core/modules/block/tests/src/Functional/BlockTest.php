@@ -85,7 +85,8 @@ class BlockTest extends BlockTestBase {
     $block_id = $edit['id'];
     // Set the block to be shown only to authenticated users.
     $edit['visibility[user_role][roles][' . RoleInterface::AUTHENTICATED_ID . ']'] = TRUE;
-    $this->drupalPostForm('admin/structure/block/add/' . $block_name . '/' . $default_theme, $edit, 'Save block');
+    $this->drupalGet('admin/structure/block/add/' . $block_name . '/' . $default_theme);
+    $this->submitForm($edit, 'Save block');
     $this->clickLink('Configure');
     $this->assertSession()->checkboxChecked('edit-visibility-user-role-roles-authenticated');
 
@@ -121,7 +122,8 @@ class BlockTest extends BlockTestBase {
     ];
     // Set the block to be hidden on any user path, and to be shown only to
     // authenticated users.
-    $this->drupalPostForm('admin/structure/block/add/' . $block_name . '/' . $default_theme, $edit, 'Save block');
+    $this->drupalGet('admin/structure/block/add/' . $block_name . '/' . $default_theme);
+    $this->submitForm($edit, 'Save block');
     $this->assertSession()->pageTextContains('The block configuration has been saved.');
 
     // Confirm that block was not displayed according to block visibility
@@ -176,7 +178,8 @@ class BlockTest extends BlockTestBase {
         'settings[label]' => $title,
       ];
       // Create the block using the link parsed from the library page.
-      $this->drupalPostForm($this->getAbsoluteUrl($links[0]->getAttribute('href')), $edit, 'Save block');
+      $this->drupalGet($this->getAbsoluteUrl($links[0]->getAttribute('href')));
+      $this->submitForm($edit, 'Save block');
 
       // Ensure that the block was created with the expected weight.
       /** @var \Drupal\block\BlockInterface $block */
@@ -205,7 +208,13 @@ class BlockTest extends BlockTestBase {
     $block['region'] = 'header';
 
     // Set block title to confirm that interface works and override any custom titles.
-    $this->drupalPostForm('admin/structure/block/add/' . $block['id'] . '/' . $block['theme'], ['settings[label]' => $block['settings[label]'], 'settings[label_display]' => $block['settings[label_display]'], 'id' => $block['id'], 'region' => $block['region']], 'Save block');
+    $this->drupalGet('admin/structure/block/add/' . $block['id'] . '/' . $block['theme']);
+    $this->submitForm([
+      'settings[label]' => $block['settings[label]'],
+      'settings[label_display]' => $block['settings[label_display]'],
+      'id' => $block['id'],
+      'region' => $block['region'],
+    ], 'Save block');
     $this->assertSession()->pageTextContains('The block configuration has been saved.');
     // Check to see if the block was created by checking its configuration.
     $instance = Block::load($block['id']);
@@ -265,7 +274,8 @@ class BlockTest extends BlockTestBase {
       $block['id'] = strtolower($this->randomMachineName());
       $block['theme'] = $theme;
       $block['region'] = 'content';
-      $this->drupalPostForm('admin/structure/block/add/system_powered_by_block', $block, 'Save block');
+      $this->drupalGet('admin/structure/block/add/system_powered_by_block');
+      $this->submitForm($block, 'Save block');
       $this->assertSession()->pageTextContains('The block configuration has been saved.');
       $this->assertSession()->addressEquals('admin/structure/block/list/' . $theme . '?block-placement=' . Html::getClass($block['id']));
 
@@ -308,7 +318,8 @@ class BlockTest extends BlockTestBase {
       'region' => 'sidebar_first',
       'settings[label]' => $title,
     ];
-    $this->drupalPostForm('admin/structure/block/add/' . $block_name . '/' . $default_theme, $edit, 'Save block');
+    $this->drupalGet('admin/structure/block/add/' . $block_name . '/' . $default_theme);
+    $this->submitForm($edit, 'Save block');
     $this->assertSession()->pageTextContains('The block configuration has been saved.');
 
     // Confirm that the block is not displayed by default.
@@ -318,7 +329,8 @@ class BlockTest extends BlockTestBase {
     $edit = [
       'settings[label_display]' => TRUE,
     ];
-    $this->drupalPostForm('admin/structure/block/manage/' . $id, $edit, 'Save block');
+    $this->drupalGet('admin/structure/block/manage/' . $id);
+    $this->submitForm($edit, 'Save block');
     $this->assertSession()->pageTextContains('The block configuration has been saved.');
 
     $this->drupalGet('admin/structure/block/manage/' . $id);
@@ -346,7 +358,8 @@ class BlockTest extends BlockTestBase {
     $block += ['theme' => $this->config('system.theme')->get('default')];
     $edit = [];
     $edit['blocks[' . $block['id'] . '][region]'] = $region;
-    $this->drupalPostForm('admin/structure/block', $edit, 'Save blocks');
+    $this->drupalGet('admin/structure/block');
+    $this->submitForm($edit, 'Save blocks');
 
     // Confirm that the block was moved to the proper region.
     $this->assertSession()->pageTextContains('The block settings have been updated.');
