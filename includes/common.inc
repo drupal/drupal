@@ -2696,6 +2696,19 @@ function drupal_deliver_html_page($page_callback_result) {
     drupal_add_http_header('X-Frame-Options', $frame_options);
   }
 
+  if (variable_get('block_interest_cohort', TRUE)) {
+    $permissions_policy = drupal_get_http_header('Permissions-Policy');
+    if (is_null($permissions_policy)) {
+      drupal_add_http_header('Permissions-Policy', 'interest-cohort=()');
+    }
+    else {
+      // Only add interest-cohort if the header does not contain it already.
+      if (strpos($permissions_policy, 'interest-cohort') === FALSE) {
+        drupal_add_http_header('Permissions-Policy', ', interest-cohort=()', TRUE);
+      }
+    }
+  }
+
   // Menu status constants are integers; page content is a string or array.
   if (is_int($page_callback_result)) {
     // @todo: Break these up into separate functions?

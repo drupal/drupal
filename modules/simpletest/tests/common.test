@@ -3244,3 +3244,56 @@ class DrupalGetQueryArrayTestCase extends DrupalWebTestCase {
   }
 
 }
+
+/**
+ * Test for block_interest_cohort.
+ */
+class BlockInterestCohortTest extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Block Interest Cohort',
+      'description' => 'Check Permissions-Policy header to disable Google FLoC',
+      'group' => 'System',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('common_test');
+  }
+
+  /**
+   * Tests that FLoC is blocked by default.
+   */
+  function testDefaultBlocking() {
+    $this->drupalGet('node');
+    $this->assertEqual($this->drupalGetHeader('Permissions-Policy'), 'interest-cohort=()', 'FLoC is blocked by default.');
+  }
+
+  /**
+   * Tests that an existing interest-cohort policy is not overwritten.
+   */
+  function testExistingInterestCohortPolicy() {
+    $this->drupalGet('common-test/existing_interest_cohort_policy');
+    $this->assertEqual($this->drupalGetHeader('Permissions-Policy'), 'interest-cohort=*', 'Existing interest-cohort policy is not overwritten.');
+  }
+
+  /**
+   * Tests that an existing header is appended to correctly.
+   */
+  function testExistingPolicyHeader() {
+    $this->drupalGet('common-test/existing_permissions_policy_header');
+    $this->assertTrue((strpos($this->drupalGetHeader('Permissions-Policy'), 'geolocation=()') !== FALSE), 'The existing header is appended to.');
+    $this->assertTrue((strpos($this->drupalGetHeader('Permissions-Policy'), 'interest-cohort=()') !== FALSE), 'The interest-cohort policy is appended to existing header.');
+  }
+
+  /**
+   * Tests that FLoC blocking can be disabled.
+   */
+  function testDisableBlocking() {
+    variable_set('block_interest_cohort', FALSE);
+    $this->drupalGet('node');
+    $this->assertFalse($this->drupalGetHeader('Permissions-Policy'), 'FLoC blocking can be disabled.');
+  }
+
+}
