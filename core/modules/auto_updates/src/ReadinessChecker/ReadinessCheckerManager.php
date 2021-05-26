@@ -164,7 +164,7 @@ class ReadinessCheckerManager {
    *   A sorted array of checker objects ordered by priority.
    */
   protected function getSortedCheckers(): array {
-    return array_merge(...$this->checkersByPriority);
+    return $this->checkersByPriority ? array_merge(...$this->checkersByPriority) : [];
   }
 
   /**

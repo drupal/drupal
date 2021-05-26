@@ -51,7 +51,7 @@ class ReadinessCheckerResultTest extends UnitTestCase {
     $checker = $checker->reveal();
     $checker->_serviceId = 'the_id';
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('If more than 1 messages is provided the summary is required.');
+    $this->expectExceptionMessage('If more than one message is provided, a summary is required.');
     ReadinessCheckerResult::createWarningResult($checker, ['Something is wrong', 'Something else is also wrong'], NULL);
   }
 
@@ -63,7 +63,7 @@ class ReadinessCheckerResultTest extends UnitTestCase {
     $checker = $checker->reveal();
     $checker->_serviceId = 'the_id';
     $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('If more than 1 messages is provided the summary is required.');
+    $this->expectExceptionMessage('If more than one message is provided, a summary is required.');
     ReadinessCheckerResult::createErrorResult($checker, ['Something is wrong', 'Something else is also wrong'], NULL);
   }
 
