@@ -32,7 +32,10 @@ class LayoutBuilderAccessCheck implements AccessInterface {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  public function access(SectionStorageInterface $section_storage, AccountInterface $account, Route $route) {
+  public function access(AccountInterface $account, Route $route, SectionStorageInterface $section_storage = NULL) {
+    if (!isset($section_storage)) {
+      return AccessResult::neutral();
+    }
     $operation = $route->getRequirement('_layout_builder_access');
     $access = $section_storage->access($operation, $account, TRUE);
 
