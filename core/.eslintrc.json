@@ -13,7 +13,6 @@
     "Drupal": true,
     "drupalSettings": true,
     "drupalTranslations": true,
-    "drupalUtils": true,
     "jQuery": true,
     "_": true,
     "Cookies": true,

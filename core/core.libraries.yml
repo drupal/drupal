@@ -60,14 +60,6 @@ drupalSettings:
       currentLanguage: null
     pluralDelimiter: null
 
-drupalUtils:
-  version: VERSION
-  js:
-    misc/drupalUtils.js: {}
-  css:
-    component:
-      misc/drupalUtils.css: {}
-
 drupal.active-link:
   version: VERSION
   js:
@@ -459,7 +451,7 @@ jquery:
   js:
     assets/vendor/jquery/jquery.min.js: { minified: true, weight: -20 }
   dependencies:
-    - core/jquery.drupalUtils
+    - core/jquery.show-hide
 
 jquery.cookie:
   version: VERSION
@@ -471,12 +463,10 @@ jquery.cookie:
     - core/js-cookie
   deprecated: The %library_id% asset library is deprecated in Drupal 9.0.0 and will be removed in Drupal 10.0.0. Use the core/js-cookie library instead. See https://www.drupal.org/node/3104677
 
-jquery.drupalUtils:
+jquery.show-hide:
   version: VERSION
   js:
-    misc/jquery.drupalUtils.shim.js: {}
-  dependencies:
-    - core/drupalUtils
+    misc/jquery.show-hidden.shim.js: {}
 
 jquery.farbtastic:
   remote: https://github.com/mattfarina/farbtastic

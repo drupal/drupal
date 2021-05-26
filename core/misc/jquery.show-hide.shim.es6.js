@@ -1,9 +1,9 @@
 /**
  * @file
- * Shims jQuery functions to their drupalUtils equivalent.
+ * Defines a backwards-compatible shim for jQuery .show, .hide, .toggle.
  */
 
-(($, $$) => {
+(($) => {
   const originalHide = $.fn.hide;
   $.fn.hide = function (...args) {
     if (args.length) {
@@ -15,7 +15,7 @@
 
     this.each((index, item) => {
       if (item instanceof Element) {
-        $$.hide(item, ...args);
+        item.setAttribute('hidden', '');
       }
     });
     return this;
@@ -32,7 +32,7 @@
 
     this.each((index, item) => {
       if (item instanceof Element) {
-        $$.show(item);
+        item.removeAttribute('hidden');
       }
     });
     return this;
@@ -46,7 +46,15 @@
     ) {
       this.each((index, item) => {
         if (item instanceof Element) {
-          $$.toggle(item, ...args);
+          if (args.length === 0) {
+            element.hasAttribute('hidden')
+              ? item.removeAttribute('hidden')
+              : item.setAttribute('hidden', '');
+          } else {
+            $args[0]
+              ? item.removeAttribute('hidden')
+              : item.setAttribute('hidden', '');
+          }
         }
       });
       return this;
@@ -65,4 +73,4 @@
 
     return originalFadeIn.apply(this, args);
   };
-})(jQuery, drupalUtils);
+})(jQuery);

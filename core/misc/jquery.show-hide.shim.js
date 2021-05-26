@@ -84,4 +84,4 @@
 
     return originalFadeIn.apply(this, args);
   };
-})(jQuery, drupalUtils);
+})(jQuery);
