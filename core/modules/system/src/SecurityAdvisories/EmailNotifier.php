@@ -27,7 +27,7 @@ final class EmailNotifier {
   /**
    * State key used to store a hash of the last links emailed.
    */
-  protected const LAST_LINKS_STATE_KEY = 'system.last_advisories_hash';
+  protected const LAST_EMAILED_ADVISORIES_STATE_KEY = 'system.last_emailed_advisories_hash';
 
   /**
    * The mail manager.
@@ -118,7 +118,7 @@ final class EmailNotifier {
 
     $advisories_hash = hash('sha256', serialize($advisories));
     // Return if the links are the same as the last links sent.
-    if ($advisories_hash === $this->state->get(static::LAST_LINKS_STATE_KEY)) {
+    if ($advisories_hash === $this->state->get(static::LAST_EMAILED_ADVISORIES_STATE_KEY)) {
       return;
     }
 
@@ -141,7 +141,7 @@ final class EmailNotifier {
       $params['langcode'] = $users ? reset($users)->getPreferredLangcode() : $default_langcode;
       $this->mailManager->mail('system', 'advisory_notify', $email, $params['langcode'], $params);
     }
-    $this->state->set(static::LAST_LINKS_STATE_KEY, $advisories_hash);
+    $this->state->set(static::LAST_EMAILED_ADVISORIES_STATE_KEY, $advisories_hash);
   }
 
 }

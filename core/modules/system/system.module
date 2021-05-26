@@ -253,9 +253,7 @@ function system_theme() {
       'variables' => ['error_message' => []],
     ],
     'system_advisory_notification' => [
-      'variables' => [
-      'advisory_links' => [],
-      ],
+      'variables' => ['advisory_links' => []],
     ],
   ]);
 }
