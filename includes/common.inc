@@ -2704,7 +2704,7 @@ function drupal_deliver_html_page($page_callback_result) {
     else {
       // Only add interest-cohort if the header does not contain it already.
       if (strpos($permissions_policy, 'interest-cohort') === FALSE) {
-        drupal_add_http_header('Permissions-Policy', ', interest-cohort=()', TRUE);
+        drupal_add_http_header('Permissions-Policy', 'interest-cohort=()', TRUE);
       }
     }
   }

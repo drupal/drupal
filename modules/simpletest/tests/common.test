@@ -3283,8 +3283,7 @@ class BlockInterestCohortTest extends DrupalWebTestCase {
    */
   function testExistingPolicyHeader() {
     $this->drupalGet('common-test/existing_permissions_policy_header');
-    $this->assertTrue((strpos($this->drupalGetHeader('Permissions-Policy'), 'geolocation=()') !== FALSE), 'The existing header is appended to.');
-    $this->assertTrue((strpos($this->drupalGetHeader('Permissions-Policy'), 'interest-cohort=()') !== FALSE), 'The interest-cohort policy is appended to existing header.');
+    $this->assertTrue((strpos($this->drupalGetHeader('Permissions-Policy'), 'geolocation=(),interest-cohort=()') !== FALSE), 'The existing header is appended to.');
   }
 
   /**
