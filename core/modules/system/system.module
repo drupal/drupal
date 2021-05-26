@@ -254,7 +254,7 @@ function system_theme() {
     ],
     'system_advisory_notification' => [
       'variables' => [
-        'advisories' => [],
+      'advisory_links' => [],
       ],
     ],
   ]);
@@ -1082,7 +1082,7 @@ function system_cron() {
     $fetcher->getSecurityAdvisories();
 
     /** @var \Drupal\system\SecurityAdvisories\EmailNotifier $notify */
-    $notify = \Drupal::service('system.sa_notifier');
+    $notify = \Drupal::service('system.sa_email_notifier');
     // Any exceptions encountered retrieving advisories will be caught and
     // logged.
     // @see \Drupal\Core\Cron::invokeCronHandlers()
@@ -1095,8 +1095,9 @@ function system_cron() {
  */
 function system_mail($key, &$message, $params) {
   if ($key === 'advisory_notify') {
+    // Create the email for security advisories.
+    // @see \Drupal\system\SecurityAdvisories\EmailNotifier::send()
     $renderer = \Drupal::service('renderer');
-
     $message['subject'] = $params['subject'];
     $message['body'][] = $renderer->render($params['body']);
     return;

@@ -19,15 +19,15 @@
 </p>
 <p>{{ 'Critical security announcements:'|t }}</p>
 <ul>
-  {% for advisory in advisories %}
-    <li>{{ advisory }}</li>
+  {% for advisory_link in advisory_links %}
+    <li>{{ advisory_link }}</li>
   {% endfor %}
 </ul>
 <p>
   {{ 'To see all public service announcements, visit <a href=":uri">:uri</a>.'|t({':uri': 'https://www.drupal.org/security/psa'}) }}
 </p>
 <p>
-  {% set settings_link = path('update.settings') %}
+  {% set settings_link = path('system.site_information_settings') %}
   {% trans %}
     To change how you are notified, you may <a href="{{ settings_link }}">configure email notifications</a>.
   {% endtrans %}

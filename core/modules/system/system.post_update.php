@@ -197,3 +197,20 @@ function system_post_update_service_advisory_settings() {
   $config = \Drupal::configFactory()->getEditable('system.advisories');
   $config->set('interval_hours', 6)->set('enabled', TRUE)->save();
 }
+
+/**
+ * Add new email to security advisory retrieval settings.
+ */
+function system_post_update_service_advisory_email_settings() {
+  $config_factory = \Drupal::configFactory();
+  $advisories_config = \Drupal::configFactory()->getEditable('system.advisories');
+
+  if (\Drupal::moduleHandler()->moduleExists('update')) {
+    $update_config = $config_factory->get('update.settings');
+    $default_emails = $update_config->get('notification.emails') ?? [];
+  }
+  else {
+    $default_emails = [];
+  }
+  $advisories_config->set('emails', $default_emails)->save();
+}

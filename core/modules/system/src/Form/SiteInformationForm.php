@@ -2,6 +2,7 @@
 
 namespace Drupal\system\Form;
 
+use Drupal\Component\Utility\EmailValidatorInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -39,6 +40,13 @@ class SiteInformationForm extends ConfigFormBase {
   protected $requestContext;
 
   /**
+   * The email validator.
+   *
+   * @var \Drupal\Component\Utility\EmailValidator
+   */
+  protected $emailValidator;
+
+  /**
    * Constructs a SiteInformationForm object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -49,12 +57,15 @@ class SiteInformationForm extends ConfigFormBase {
    *   The path validator.
    * @param \Drupal\Core\Routing\RequestContext $request_context
    *   The request context.
+   * @param \Drupal\Component\Utility\EmailValidatorInterface $email_validator
+   *   The email validator.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, AliasManagerInterface $alias_manager, PathValidatorInterface $path_validator, RequestContext $request_context) {
+  public function __construct(ConfigFactoryInterface $config_factory, AliasManagerInterface $alias_manager, PathValidatorInterface $path_validator, RequestContext $request_context, EmailValidatorInterface $email_validator) {
     parent::__construct($config_factory);
     $this->aliasManager = $alias_manager;
     $this->pathValidator = $path_validator;
     $this->requestContext = $request_context;
+    $this->emailValidator = $email_validator;
   }
 
   /**
@@ -65,7 +76,8 @@ class SiteInformationForm extends ConfigFormBase {
       $container->get('config.factory'),
       $container->get('path_alias.manager'),
       $container->get('path.validator'),
-      $container->get('router.request_context')
+      $container->get('router.request_context'),
+      $container->get('email.validator')
     );
   }
 
@@ -80,7 +92,7 @@ class SiteInformationForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   protected function getEditableConfigNames() {
-    return ['system.site'];
+    return ['system.site', 'system.advisories'];
   }
 
   /**
@@ -88,6 +100,7 @@ class SiteInformationForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $site_config = $this->config('system.site');
+    $advisories_config = $this->config('system.advisories');
     $site_mail = $site_config->get('mail');
     if (empty($site_mail)) {
       $site_mail = ini_get('sendmail_from');
@@ -117,6 +130,14 @@ class SiteInformationForm extends ConfigFormBase {
       '#default_value' => $site_mail,
       '#description' => $this->t("The <em>From</em> address in automated emails sent during registration and new password requests, and other notifications. (Use an address ending in your site's domain to help prevent this email being flagged as spam.)"),
       '#required' => TRUE,
+    ];
+    $advisories_emails = $advisories_config->get('emails');
+    $form['site_information']['advisory_emails'] = [
+      '#type' => 'textarea',
+      '#title' => $this->t('Email addresses to notify for critical security information about the site.'),
+      '#rows' => 4,
+      '#default_value' => implode("\n", $advisories_emails),
+      '#description' => $this->t('These emails will be notified when critical security information such as highly critical security advisories are available. Put each address on a separate line. If blank, no emails will be sent.'),
     ];
     $form['front_page'] = [
       '#type' => 'details',
@@ -198,6 +219,37 @@ class SiteInformationForm extends ConfigFormBase {
       $form_state->setErrorByName('site_404', $this->t("Either the path '%path' is invalid or you do not have access to it.", ['%path' => $form_state->getValue('site_404')]));
     }
 
+    $form_state->set('advisory_emails', []);
+    if (!$form_state->isValueEmpty('advisory_emails')) {
+      $valid = [];
+      $invalid = [];
+      foreach (explode("\n", trim($form_state->getValue('advisory_emails'))) as $email) {
+        $email = trim($email);
+        if (!empty($email)) {
+          if ($this->emailValidator->isValid($email)) {
+            $valid[] = $email;
+          }
+          else {
+            $invalid[] = $email;
+          }
+        }
+      }
+      if (empty($invalid)) {
+        $form_state->set('advisory_emails', $valid);
+      }
+      else {
+        $form_state->setErrorByName(
+          'update_notify_emails',
+          $this->formatPlural(
+            count($invalid),
+            '%emails is not a valid email address.',
+            '%emails are not valid email addresses.',
+            ['%emails' => implode(', ', $invalid)]
+          )
+        );
+      }
+    }
+
     parent::validateForm($form, $form_state);
   }
 
@@ -212,6 +264,9 @@ class SiteInformationForm extends ConfigFormBase {
       ->set('page.front', $form_state->getValue('site_frontpage'))
       ->set('page.403', $form_state->getValue('site_403'))
       ->set('page.404', $form_state->getValue('site_404'))
+      ->save();
+    $this->config('system.advisories')
+      ->set('emails', $form_state->get('advisory_emails'))
       ->save();
 
     parent::submitForm($form, $form_state);

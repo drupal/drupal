@@ -118,6 +118,7 @@ class SecurityAdvisoryTest extends BrowserTestBase {
    * Tests that a security advisory is displayed.
    */
   public function testPsa(): void {
+    $security_advisor_fetcher = $this->container->get('system.sa_fetcher');
     $assert = $this->assertSession();
     // Setup test PSA endpoint.
     AdvisoriesTestHttpClient::setTestEndpoint($this->workingEndpointMixed);
@@ -162,7 +163,7 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     $this->assertStatusReportLinks($mixed_advisory_links, REQUIREMENT_ERROR);
 
     // Tests transmit errors with a JSON endpoint.
-    $this->tempStore->delete('advisories_response');
+    $security_advisor_fetcher->deleteStoredResponse();
     $this->assertAdvisoriesNotDisplayed($mixed_advisory_links);
 
     // Test that the site status report displays an error.
@@ -224,11 +225,11 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     // and is not.
     // @todo Email setting still come from update module. Add a new settings and
     // form element to system module?
-    $this->config('update.settings')
-      ->set('notification.emails', [
-        'admin@example.com',
-        'GracieDog@example.com',
-      ])
+    $emails = $this->config('system.advisories')->get('emails');
+    $this->assertEquals(['admin@example.com'], $emails);
+    $emails[] = 'GracieDog@example.com';
+    $this->config('system.advisories')
+      ->set('emails', $emails)
       ->save();
 
     $mixed_advisory_links = [
@@ -259,14 +260,14 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     $this->assertMailString('body', 'Generic Module1 Project - Moderately critical - Access bypass - SA-CONTRIB-2019-02-02', 1);
     $this->assertMailString('body', 'To see all public service announcements, visit https://www.drupal.org/security/psa', 1);
     $this->assertMailString('body', 'To change how you are notified, you may configure email notifications', 1);
-    $this->assertMailString('body', $this->baseUrl . '/admin/reports/updates/settings', 1);
+    $this->assertMailString('body', $this->baseUrl . '/admin/config/system/site-information', 1);
 
     // Deleting the security advisory cache will not result in another email if
     // the messages have not changed.
     // @todo Replace deleting the cache directly in the test with faking a later
     //   date and letting the cache item expire in
     //   https://www.drupal.org/node/3113971.
-    $this->tempStore->delete('advisories_response');
+    $this->container->get('system.sa_fetcher')->deleteStoredResponse();
     $this->container->get('state')->set('system.test_mail_collector', []);
     $this->cronRun();
     $this->assertAdvisoryEmailCount(0);

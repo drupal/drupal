@@ -1,2 +1,3 @@
 enabled: true
 interval_hours: 6
+emails: []

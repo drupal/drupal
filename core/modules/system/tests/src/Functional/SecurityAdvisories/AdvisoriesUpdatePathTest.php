@@ -17,6 +17,7 @@ class AdvisoriesUpdatePathTest extends UpdatePathTestBase {
   protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
       dirname(__DIR__, 3) . '/fixtures/update/drupal-8.8.0.filled.standard.php.gz',
+      dirname(__DIR__, 3) . '/fixtures/update/add-update-emails.php',
     ];
   }
 
@@ -30,6 +31,7 @@ class AdvisoriesUpdatePathTest extends UpdatePathTestBase {
 
     $this->assertSame(6, $this->config('system.advisories')->get('interval_hours'));
     $this->assertSame(TRUE, $this->config('system.advisories')->get('enabled'));
+    $this->assertSame(['graciepup@example.com'], $this->config('system.advisories')->get('emails'));
   }
 
 }

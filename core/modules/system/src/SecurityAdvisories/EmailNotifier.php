@@ -27,7 +27,7 @@ final class EmailNotifier {
   /**
    * State key used to store a hash of the last links emailed.
    */
-  protected const LAST_EMAILED_ADVISORIES_STATE_KEY = 'system.last_emailed_advisories_hash';
+  protected const LAST_LINKS_STATE_KEY = 'system.last_advisories_hash';
 
   /**
    * The mail manager.
@@ -106,7 +106,7 @@ final class EmailNotifier {
    *   Thrown if an error occurs while retrieving security advisories.
    */
   public function send(): void {
-    $notify_emails = $this->configFactory->get('update.settings')->get('notification.emails');
+    $notify_emails = $this->configFactory->get('system.advisories')->get('emails');
     if (!$notify_emails) {
       return;
     }
@@ -133,7 +133,7 @@ final class EmailNotifier {
     }, $advisories);
     $params['body'] = [
       '#theme' => 'system_advisory_notification',
-      '#advisories' => $advisory_links,
+      '#advisory_links' => $advisory_links,
     ];
     $default_langcode = $this->languageManager->getDefaultLanguage()->getId();
     foreach ($notify_emails as $email) {

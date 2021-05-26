@@ -243,6 +243,13 @@ class SiteConfigureForm extends ConfigFormBase {
       '#access' => empty($install_state['config_install_path']),
     ];
 
+    $form['security_notifications'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Receive email notifications for highly critical security advisories.'),
+      '#default_value' => 1,
+      '#access' => empty($install_state['config_install_path']),
+    ];
+
     $form['update_notifications'] = [
       '#type' => 'fieldgroup',
       '#title' => $this->t('Update notifications'),
@@ -320,6 +327,10 @@ class SiteConfigureForm extends ConfigFormBase {
         $this->resetConfigFactory();
         $this->config('update.settings')->set('notification.emails', [$account_values['mail']])->save(TRUE);
       }
+    }
+
+    if ($form_state->getValue('security_notifications')) {
+      $this->configFactory()->getEditable('system.advisories')->set('emails', [$account_values['mail']])->save(TRUE);
     }
 
     // We precreated user 1 with placeholder values. Let's save the real values.

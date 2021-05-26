@@ -307,6 +307,12 @@ system.advisories:
   type: config_object
   label: 'Security advisory settings'
   mapping:
+    emails:
+      type: sequence
+      label: 'Email addresses to notify when security advisories are available'
+      sequence:
+        type: email
+        label: 'Emails'
     enabled:
       type: boolean
       label: 'Display critical security advisories'
