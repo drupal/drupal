@@ -55,8 +55,8 @@ EOF;
    */
   public function testConfigSync() {
     $this->assertSession()->titleEquals('Requirements problem | Drupal');
-    $this->assertText($this->profile);
-    $this->assertText('The selected profile has a hook_install() implementation and therefore can not be installed from configuration.');
+    $this->assertSession()->pageTextContains($this->profile);
+    $this->assertSession()->pageTextContains('The selected profile has a hook_install() implementation and therefore can not be installed from configuration.');
   }
 
 }

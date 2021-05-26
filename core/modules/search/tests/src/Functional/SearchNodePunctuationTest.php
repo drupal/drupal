@@ -60,8 +60,9 @@ class SearchNodePunctuationTest extends BrowserTestBase {
 
     // Submit a phrase wrapped in double quotes to include the punctuation.
     $edit = ['keys' => '"bunny\'s"'];
-    $this->drupalPostForm('search/node', $edit, 'Search');
-    $this->assertText($node->label());
+    $this->drupalGet('search/node');
+    $this->submitForm($edit, 'Search');
+    $this->assertSession()->pageTextContains($node->label());
 
     // Check if the author is linked correctly to the user profile page.
     $username = $node->getOwner()->getAccountName();
@@ -69,14 +70,16 @@ class SearchNodePunctuationTest extends BrowserTestBase {
 
     // Search for "&" and verify entities are not broken up in the output.
     $edit = ['keys' => '&'];
-    $this->drupalPostForm('search/node', $edit, 'Search');
+    $this->drupalGet('search/node');
+    $this->submitForm($edit, 'Search');
     $this->assertNoRaw('<strong>&</strong>amp;');
-    $this->assertText('You must include at least one keyword');
+    $this->assertSession()->pageTextContains('You must include at least one keyword');
 
     $edit = ['keys' => '&amp;'];
-    $this->drupalPostForm('search/node', $edit, 'Search');
+    $this->drupalGet('search/node');
+    $this->submitForm($edit, 'Search');
     $this->assertNoRaw('<strong>&</strong>amp;');
-    $this->assertText('You must include at least one keyword');
+    $this->assertSession()->pageTextContains('You must include at least one keyword');
   }
 
 }

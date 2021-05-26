@@ -14,10 +14,10 @@ backbone:
 
 ckeditor:
   remote: https://github.com/ckeditor/ckeditor4
-  version: "4.15.1"
+  version: "4.16.0"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://raw.githubusercontent.com/ckeditor/ckeditor4/4.15.1/LICENSE.md
+    url: https://raw.githubusercontent.com/ckeditor/ckeditor4/4.16.0/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor/ckeditor.js: { preprocess: false, minified: true }
@@ -443,10 +443,10 @@ es6-promise:
 
 jquery:
   remote: https://github.com/jquery/jquery
-  version: "3.5.1"
+  version: "3.6.0"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/jquery/jquery/3.5.1/LICENSE.txt
+    url: https://raw.githubusercontent.com/jquery/jquery/3.6.0/LICENSE.txt
     gpl-compatible: true
   js:
     assets/vendor/jquery/jquery.min.js: { minified: true, weight: -20 }
@@ -503,8 +503,19 @@ jquery.joyride:
     gpl-compatible: true
   js:
     assets/vendor/jquery-joyride/jquery.joyride-2.1.js: { }
+  deprecated: The "%library_id%" asset library is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use the core/shepherd library instead. See https://www.drupal.org/node/3195234
   dependencies:
     - core/jquery
+
+shepherd:
+  remote: https://github.com/shipshapecode/shepherd
+  version: "8.3.1"
+  license:
+    name: MIT
+    url: https://raw.githubusercontent.com/shipshapecode/shepherd/v8.3.1/LICENSE
+    gpl-compatible: true
+  js:
+    assets/vendor/shepherd/shepherd.min.js: { minified: true }
 
 jquery.once:
   remote: https://github.com/RobLoach/jquery-once
@@ -766,10 +777,10 @@ popperjs:
 
 sortable:
   remote: https://github.com/SortableJS/Sortable
-  version: "1.10.2"
+  version: "1.13.0"
   license:
     name: MIT
-    url: https://raw.githubusercontent.com/SortableJS/Sortable/1.10.2/LICENSE
+    url: https://raw.githubusercontent.com/SortableJS/Sortable/1.13.0/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/sortable/Sortable.min.js: { minified: true }

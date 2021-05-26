@@ -42,7 +42,7 @@ function action_help($route_name, RouteMatchInterface $route_match) {
  * Implements hook_entity_type_build().
  */
 function action_entity_type_build(array &$entity_types) {
-  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   $entity_types['action']
     ->setFormClass('add', ActionAddForm::class)
     ->setFormClass('edit', ActionEditForm::class)

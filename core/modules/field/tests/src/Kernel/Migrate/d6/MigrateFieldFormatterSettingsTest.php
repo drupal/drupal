@@ -41,7 +41,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
   }
 
   /**
-   * Test that migrated entity display settings can be loaded using D8 API's.
+   * Tests that migrated entity display settings can be loaded using D8 API's.
    */
   public function testEntityDisplaySettings() {
     // Run tests.

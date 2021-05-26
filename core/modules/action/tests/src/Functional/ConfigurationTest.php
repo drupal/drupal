@@ -37,7 +37,8 @@ class ConfigurationTest extends BrowserTestBase {
     // Make a POST request to admin/config/system/actions.
     $edit = [];
     $edit['action'] = 'action_goto_action';
-    $this->drupalPostForm('admin/config/system/actions', $edit, 'Create');
+    $this->drupalGet('admin/config/system/actions');
+    $this->submitForm($edit, 'Create');
     $this->assertSession()->statusCodeEquals(200);
 
     // Make a POST request to the individual action configuration page.
@@ -46,15 +47,16 @@ class ConfigurationTest extends BrowserTestBase {
     $edit['label'] = $action_label;
     $edit['id'] = strtolower($action_label);
     $edit['url'] = 'admin';
-    $this->drupalPostForm('admin/config/system/actions/add/action_goto_action', $edit, 'Save');
+    $this->drupalGet('admin/config/system/actions/add/action_goto_action');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
 
     $action_id = $edit['id'];
 
     // Make sure that the new complex action was saved properly.
-    $this->assertText('The action has been successfully saved.');
+    $this->assertSession()->pageTextContains('The action has been successfully saved.');
     // The action label appears on the configuration page.
-    $this->assertText($action_label);
+    $this->assertSession()->pageTextContains($action_label);
 
     // Make another POST request to the action edit page.
     $this->clickLink(t('Configure'));
@@ -67,12 +69,12 @@ class ConfigurationTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Make sure that the action updated properly.
-    $this->assertText('The action has been successfully saved.');
+    $this->assertSession()->pageTextContains('The action has been successfully saved.');
     // The old action label does NOT appear on the configuration page.
     $this->assertNoText($action_label);
     // The action label appears on the configuration page after we've updated
     // the complex action.
-    $this->assertText($new_action_label);
+    $this->assertSession()->pageTextContains($new_action_label);
 
     // Make sure the URL appears when re-editing the action.
     $this->clickLink(t('Configure'));

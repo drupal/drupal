@@ -52,9 +52,10 @@ class ConfigSingleImportExportTest extends BrowserTestBase {
       'import' => '{{{',
     ];
 
-    $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, 'Import');
+    $this->drupalGet('admin/config/development/configuration/single/import');
+    $this->submitForm($edit, 'Import');
     // Assert the static portion of the error since different parsers could give different text in their error.
-    $this->assertText('The import failed with the following message: ');
+    $this->assertSession()->pageTextContains('The import failed with the following message: ');
 
     $import = <<<EOD
 label: First
@@ -67,13 +68,15 @@ EOD;
       'import' => $import,
     ];
     // Attempt an import with a missing ID.
-    $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, 'Import');
-    $this->assertText('Missing ID key "id" for this Test configuration import.');
+    $this->drupalGet('admin/config/development/configuration/single/import');
+    $this->submitForm($edit, 'Import');
+    $this->assertSession()->pageTextContains('Missing ID key "id" for this Test configuration import.');
 
     // Perform an import with no specified UUID and a unique ID.
     $this->assertNull($storage->load('first'));
     $edit['import'] = "id: first\n" . $edit['import'];
-    $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, 'Import');
+    $this->drupalGet('admin/config/development/configuration/single/import');
+    $this->submitForm($edit, 'Import');
     $this->assertRaw(t('Are you sure you want to create a new %name @type?', ['%name' => 'first', '@type' => 'test configuration']));
     $this->submitForm([], 'Confirm');
     $entity = $storage->load('first');
@@ -83,17 +86,20 @@ EOD;
     $this->assertRaw(t('The configuration was imported successfully.'));
 
     // Attempt an import with an existing ID but missing UUID.
-    $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, 'Import');
-    $this->assertText('An entity with this machine name already exists but the import did not specify a UUID.');
+    $this->drupalGet('admin/config/development/configuration/single/import');
+    $this->submitForm($edit, 'Import');
+    $this->assertSession()->pageTextContains('An entity with this machine name already exists but the import did not specify a UUID.');
 
     // Attempt an import with a mismatched UUID and existing ID.
     $edit['import'] .= "\nuuid: " . $uuid->generate();
-    $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, 'Import');
-    $this->assertText('An entity with this machine name already exists but the UUID does not match.');
+    $this->drupalGet('admin/config/development/configuration/single/import');
+    $this->submitForm($edit, 'Import');
+    $this->assertSession()->pageTextContains('An entity with this machine name already exists but the UUID does not match.');
 
     // Attempt an import with a custom ID.
     $edit['custom_entity_id'] = 'custom_id';
-    $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, 'Import');
+    $this->drupalGet('admin/config/development/configuration/single/import');
+    $this->submitForm($edit, 'Import');
     $this->assertRaw(t('Are you sure you want to create a new %name @type?', ['%name' => 'custom_id', '@type' => 'test configuration']));
     $this->submitForm([], 'Confirm');
     $this->assertRaw(t('The configuration was imported successfully.'));
@@ -112,7 +118,8 @@ EOD;
     ];
     $second_uuid = $uuid->generate();
     $edit['import'] .= "\nuuid: " . $second_uuid;
-    $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, 'Import');
+    $this->drupalGet('admin/config/development/configuration/single/import');
+    $this->submitForm($edit, 'Import');
     $this->assertRaw(t('Are you sure you want to create a new %name @type?', ['%name' => 'second', '@type' => 'test configuration']));
     $this->submitForm([], 'Confirm');
     $entity = $storage->load('second');
@@ -135,7 +142,8 @@ EOD;
       'config_type' => 'config_test',
       'import' => $import,
     ];
-    $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, 'Import');
+    $this->drupalGet('admin/config/development/configuration/single/import');
+    $this->submitForm($edit, 'Import');
     $this->assertRaw(t('Are you sure you want to update the %name @type?', ['%name' => 'second', '@type' => 'test configuration']));
     $this->submitForm([], 'Confirm');
     $entity = $storage->load('second');
@@ -158,7 +166,8 @@ EOD;
       'config_type' => 'config_test',
       'import' => $import,
     ];
-    $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, 'Import');
+    $this->drupalGet('admin/config/development/configuration/single/import');
+    $this->submitForm($edit, 'Import');
     $this->assertRaw(t('Configuration %name depends on the %owner module that will not be installed after import.', ['%name' => 'config_test.dynamic.second', '%owner' => 'does_not_exist']));
 
     // Try to preform an update which would create a PHP object if Yaml parsing
@@ -176,7 +185,8 @@ EOD;
       'config_type' => 'config_test',
       'import' => $import,
     ];
-    $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, 'Import');
+    $this->drupalGet('admin/config/development/configuration/single/import');
+    $this->submitForm($edit, 'Import');
     if (extension_loaded('yaml')) {
       // If the yaml extension is loaded it will work but not create the PHP
       // object.
@@ -212,11 +222,12 @@ EOD;
       'config_name' => $config->getName(),
       'import' => Yaml::encode($config->get()),
     ];
-    $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, 'Import');
+    $this->drupalGet('admin/config/development/configuration/single/import');
+    $this->submitForm($edit, 'Import');
     $this->assertRaw(t('Are you sure you want to update the %name @type?', ['%name' => $config->getName(), '@type' => 'simple configuration']));
     $this->submitForm([], 'Confirm');
     $this->drupalGet('');
-    $this->assertText('Test simple import');
+    $this->assertSession()->pageTextContains('Test simple import');
 
     // Ensure that ConfigImporter validation is running when importing simple
     // configuration.
@@ -228,13 +239,15 @@ EOD;
       'config_name' => 'core.extension',
       'import' => Yaml::encode($config_data),
     ];
-    $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, 'Import');
-    $this->assertText('Can not uninstall the Configuration module as part of a configuration synchronization through the user interface.');
+    $this->drupalGet('admin/config/development/configuration/single/import');
+    $this->submitForm($edit, 'Import');
+    $this->assertSession()->pageTextContains('Can not uninstall the Configuration module as part of a configuration synchronization through the user interface.');
 
     // Try to import without any values.
-    $this->drupalPostForm('admin/config/development/configuration/single/import', [], 'Import');
-    $this->assertText('Configuration type field is required.');
-    $this->assertText('Paste your configuration here field is required.');
+    $this->drupalGet('admin/config/development/configuration/single/import');
+    $this->submitForm([], 'Import');
+    $this->assertSession()->pageTextContains('Configuration type field is required.');
+    $this->assertSession()->pageTextContains('Paste your configuration here field is required.');
   }
 
   /**

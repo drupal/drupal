@@ -77,7 +77,8 @@ class DisplayBlockTest extends ViewTestBase {
     $edit['description'] = $this->randomString();
     $edit['block[create]'] = TRUE;
     $edit['block[style][row_plugin]'] = 'fields';
-    $this->drupalPostForm('admin/structure/views/add', $edit, 'Save and edit');
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm($edit, 'Save and edit');
 
     $pattern = '//tr[.//td[text()=:category] and .//td//a[contains(@href, :href)]]';
 
@@ -96,7 +97,8 @@ class DisplayBlockTest extends ViewTestBase {
     $this->assertTrue(!empty($elements), 'The test block appears in the category for its base table.');
 
     // Duplicate the block before changing the category.
-    $this->drupalPostForm('admin/structure/views/view/' . $edit['id'] . '/edit/block_1', [], 'Duplicate Block');
+    $this->drupalGet('admin/structure/views/view/' . $edit['id'] . '/edit/block_1');
+    $this->submitForm([], 'Duplicate Block');
     $this->assertSession()->addressEquals('admin/structure/views/view/' . $edit['id'] . '/edit/block_2');
 
     // Change the block category to a random string.
@@ -195,7 +197,7 @@ class DisplayBlockTest extends ViewTestBase {
   }
 
   /**
-   * Test the block form for a Views block.
+   * Tests the block form for a Views block.
    */
   public function testViewsBlockForm() {
     $this->drupalLogin($this->drupalCreateUser(['administer blocks']));
@@ -217,7 +219,8 @@ class DisplayBlockTest extends ViewTestBase {
 
     for ($i = 2; $i <= 3; $i++) {
       // Place the same block again and make sure we have a new ID.
-      $this->drupalPostForm('admin/structure/block/add/views_block:test_view_block-block_1/' . $default_theme, $edit, 'Save block');
+      $this->drupalGet('admin/structure/block/add/views_block:test_view_block-block_1/' . $default_theme);
+      $this->submitForm($edit, 'Save block');
       $block = $storage->load('views_block__test_view_block_block_1_' . $i);
       // This will only return a result if our new block has been created with the
       // expected machine name.
@@ -229,29 +232,32 @@ class DisplayBlockTest extends ViewTestBase {
     $edit = ['region' => 'content'];
     $edit['settings[override][items_per_page]'] = 10;
 
-    $this->drupalPostForm('admin/structure/block/add/views_block:test_view_block-block_1/' . $default_theme, $edit, 'Save block');
+    $this->drupalGet('admin/structure/block/add/views_block:test_view_block-block_1/' . $default_theme);
+    $this->submitForm($edit, 'Save block');
 
     $block = $storage->load('views_block__test_view_block_block_1_4');
     $config = $block->getPlugin()->getConfiguration();
-    $this->assertEqual(10, $config['items_per_page'], "'Items per page' is properly saved.");
+    $this->assertEquals(10, $config['items_per_page'], "'Items per page' is properly saved.");
 
     $edit['settings[override][items_per_page]'] = 5;
-    $this->drupalPostForm('admin/structure/block/manage/views_block__test_view_block_block_1_4', $edit, 'Save block');
+    $this->drupalGet('admin/structure/block/manage/views_block__test_view_block_block_1_4');
+    $this->submitForm($edit, 'Save block');
 
     $block = $storage->load('views_block__test_view_block_block_1_4');
 
     $config = $block->getPlugin()->getConfiguration();
-    $this->assertEqual(5, $config['items_per_page'], "'Items per page' is properly saved.");
+    $this->assertEquals(5, $config['items_per_page'], "'Items per page' is properly saved.");
 
     // Tests the override of the label capability.
     $edit = ['region' => 'content'];
     $edit['settings[views_label_checkbox]'] = 1;
     $edit['settings[views_label]'] = 'Custom title';
-    $this->drupalPostForm('admin/structure/block/add/views_block:test_view_block-block_1/' . $default_theme, $edit, 'Save block');
+    $this->drupalGet('admin/structure/block/add/views_block:test_view_block-block_1/' . $default_theme);
+    $this->submitForm($edit, 'Save block');
 
     $block = $storage->load('views_block__test_view_block_block_1_5');
     $config = $block->getPlugin()->getConfiguration();
-    $this->assertEqual('Custom title', $config['views_label'], "'Label' is properly saved.");
+    $this->assertEquals('Custom title', $config['views_label'], "'Label' is properly saved.");
   }
 
   /**

@@ -12,7 +12,7 @@ use Drupal\Core\File\FileSystemInterface;
 class FileSaveDataTest extends FileTestBase {
 
   /**
-   * Test the file_unmanaged_save_data() function.
+   * Tests the file_unmanaged_save_data() function.
    */
   public function testFileSaveData() {
     $contents = $this->randomMachineName(8);
@@ -25,8 +25,8 @@ class FileSaveDataTest extends FileTestBase {
     // Provide a filename.
     $filepath = $file_system->saveData($contents, 'public://asdf.txt', FileSystemInterface::EXISTS_REPLACE);
     $this->assertNotFalse($filepath, 'Unnamed file saved correctly.');
-    $this->assertEqual('asdf.txt', \Drupal::service('file_system')->basename($filepath), 'File was named correctly.');
-    $this->assertEqual($contents, file_get_contents($filepath), 'Contents of the file are correct.');
+    $this->assertEquals('asdf.txt', \Drupal::service('file_system')->basename($filepath), 'File was named correctly.');
+    $this->assertEquals($contents, file_get_contents($filepath), 'Contents of the file are correct.');
     $this->assertFilePermissions($filepath, 0777);
   }
 

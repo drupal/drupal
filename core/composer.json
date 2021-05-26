@@ -201,7 +201,9 @@
             "lib/Drupal/Core/Installer/InstallerRedirectTrait.php",
             "lib/Drupal/Core/Site/Settings.php"
         ],
-        "files": [ "includes/bootstrap.inc" ]
+        "files": [
+            "includes/bootstrap.inc"
+        ]
     },
     "config": {
         "preferred-install": "dist"

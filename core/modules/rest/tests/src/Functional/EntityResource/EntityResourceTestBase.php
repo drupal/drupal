@@ -404,7 +404,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   }
 
   /**
-   * Test a GET request for an entity, plus edge cases to ensure good DX.
+   * Tests a GET request for an entity, plus edge cases to ensure good DX.
    */
   public function testGet() {
     $this->initAuthentication();

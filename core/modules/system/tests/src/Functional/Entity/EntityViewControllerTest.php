@@ -130,7 +130,7 @@ class EntityViewControllerTest extends BrowserTestBase {
     $entity_test = $this->createTestEntity('entity_test_view_builder');
     $entity_test->save();
     $this->drupalGet('entity_test_view_builder/' . $entity_test->id());
-    $this->assertText($entity_test->label());
+    $this->assertSession()->pageTextContains($entity_test->label());
   }
 
   /**

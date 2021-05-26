@@ -31,7 +31,7 @@ class MenuLinkReorderTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test creating, editing, deleting menu links via node form widget.
+   * Tests creating, editing, deleting menu links via node form widget.
    */
   public function testDefaultMenuLinkReorder() {
 
@@ -54,14 +54,16 @@ class MenuLinkReorderTest extends BrowserTestBase {
     $edit = [
       'links[menu_plugin_id:test_page_test.front_page][weight]' => -10,
     ];
-    $this->drupalPostForm('admin/structure/menu/manage/main', $edit, 'Save');
+    $this->drupalGet('admin/structure/menu/manage/main');
+    $this->submitForm($edit, 'Save');
 
     // The link is still there.
     $this->drupalGet('test-page');
     $this->assertSession()->linkExists('Home');
 
     // Clear all caches.
-    $this->drupalPostForm('admin/config/development/performance', [], 'Clear all caches');
+    $this->drupalGet('admin/config/development/performance');
+    $this->submitForm([], 'Clear all caches');
 
     // Clearing all caches should not affect the state of the menu link.
     $this->drupalGet('test-page');

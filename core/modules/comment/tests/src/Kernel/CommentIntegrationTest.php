@@ -147,7 +147,7 @@ class CommentIntegrationTest extends KernelTestBase {
   }
 
   /**
-   * Test the default owner of comment entities.
+   * Tests the default owner of comment entities.
    */
   public function testCommentDefaultOwner() {
     $comment = Comment::create([

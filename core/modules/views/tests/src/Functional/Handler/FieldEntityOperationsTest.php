@@ -74,7 +74,7 @@ class FieldEntityOperationsTest extends ViewTestBase {
     ]);
     $this->drupalLogin($admin_user);
     $this->drupalGet('test-entity-operations');
-    /** @var $entity \Drupal\entity_test\Entity\EntityTest */
+    /** @var \Drupal\entity_test\Entity\EntityTest $entity */
     foreach ($entities as $entity) {
       /** @var \Drupal\Core\Language\LanguageInterface $language */
       foreach ($entity->getTranslationLanguages() as $language) {
@@ -93,7 +93,7 @@ class FieldEntityOperationsTest extends ViewTestBase {
           $base_path = \Drupal::request()->getBasePath();
           $parts = explode('/', str_replace($base_path, '', $operation['url']->toString()));
           $expected_prefix = ($language->getId() != 'en' ? $language->getId() : 'node');
-          $this->assertEqual($expected_prefix, $parts[1], 'Entity operation links to the correct language for the entity.');
+          $this->assertEquals($expected_prefix, $parts[1], 'Entity operation links to the correct language for the entity.');
         }
       }
     }

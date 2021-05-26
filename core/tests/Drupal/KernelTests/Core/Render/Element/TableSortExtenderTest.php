@@ -33,7 +33,7 @@ class TableSortExtenderTest extends KernelTestBase {
     $request->query->replace([]);
     \Drupal::getContainer()->get('request_stack')->push($request);
     $ts = TableSort::getContextFromRequest($headers, $request);
-    $this->assertEqual($expected_ts, $ts, 'Simple table headers sorted correctly.');
+    $this->assertEquals($expected_ts, $ts, 'Simple table headers sorted correctly.');
 
     // Test with simple table headers plus $_GET parameters that should _not_
     // override the default.
@@ -45,7 +45,7 @@ class TableSortExtenderTest extends KernelTestBase {
     ]);
     \Drupal::getContainer()->get('request_stack')->push($request);
     $ts = TableSort::getContextFromRequest($headers, $request);
-    $this->assertEqual($expected_ts, $ts, 'Simple table headers plus non-overriding $_GET parameters sorted correctly.');
+    $this->assertEquals($expected_ts, $ts, 'Simple table headers plus non-overriding $_GET parameters sorted correctly.');
 
     // Test with simple table headers plus $_GET parameters that _should_
     // override the default.
@@ -60,7 +60,7 @@ class TableSortExtenderTest extends KernelTestBase {
     $expected_ts['sort'] = 'desc';
     $expected_ts['query'] = ['alpha' => 'beta'];
     $ts = TableSort::getContextFromRequest($headers, $request);
-    $this->assertEqual($expected_ts, $ts, 'Simple table headers plus $_GET parameters sorted correctly.');
+    $this->assertEquals($expected_ts, $ts, 'Simple table headers plus $_GET parameters sorted correctly.');
 
     // Test complex table headers.
 
@@ -91,7 +91,7 @@ class TableSortExtenderTest extends KernelTestBase {
       'sort' => 'desc',
       'query' => [],
     ];
-    $this->assertEqual($expected_ts, $ts, 'Complex table headers sorted correctly.');
+    $this->assertEquals($expected_ts, $ts, 'Complex table headers sorted correctly.');
 
     // Test complex table headers plus $_GET parameters that should _not_
     // override the default.
@@ -109,7 +109,7 @@ class TableSortExtenderTest extends KernelTestBase {
       'sort' => 'asc',
       'query' => [],
     ];
-    $this->assertEqual($expected_ts, $ts, 'Complex table headers plus non-overriding $_GET parameters sorted correctly.');
+    $this->assertEquals($expected_ts, $ts, 'Complex table headers plus non-overriding $_GET parameters sorted correctly.');
 
     // Test complex table headers plus $_GET parameters that _should_
     // override the default.

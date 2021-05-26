@@ -58,7 +58,8 @@ class ContactLanguageTest extends BrowserTestBase {
     $settings_path = 'admin/config/regional/content-language';
     $edit['entity_types[contact_message]'] = TRUE;
     $edit['settings[contact_message][feedback][settings][language][language_alterable]'] = TRUE;
-    $this->drupalPostForm($settings_path, $edit, 'Save configuration');
+    $this->drupalGet($settings_path);
+    $this->submitForm($edit, 'Save configuration');
 
     // Ensure that contact form now shows the language select.
     $this->drupalGet('contact');
