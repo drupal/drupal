@@ -1,6 +1,37 @@
 CKEditor 4 Changelog
 ====================
 
+## CKEditor 4.17
+
+New Features:
+
+* [#4461](https://github.com/ckeditor/ckeditor4/issues/4461): Introduced possibility to delay editor initialization while it is in detached DOM element.
+
+Fixed Issues:
+
+* [#3757](https://github.com/ckeditor/ckeditor4/issues/3757): [Firefox] Fixed: images pasted from [clipboard](https://ckeditor.com/cke4/addon/clipboard) are not inserted as Base64-encoded images.
+* [#4604](https://github.com/ckeditor/ckeditor4/issues/4604): Fixed: [`CKEDITOR.plugins.clipboard.dataTransfer#getTypes()`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_plugins_clipboard_dataTransfer.html#method-getTypes) returns no types.
+* [#4597](https://github.com/ckeditor/ckeditor4/issues/4597): Fixed: Incorrect color conversion for HSL/HSLA values in [`CKEDITOR.tools.color`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_tools_color.html).
+* [#4596](https://github.com/ckeditor/ckeditor4/issues/4596): Fixed: Incorrect handling of HSL/HSLA values in [`CKEDITOR.tools.color`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_tools_color.html).
+
+**API Changes:**
+
+* [#4604](https://github.com/ckeditor/ckeditor4/issues/4604): Added the [`CKEDITOR.plugins.clipboard.dataTransfer#isFileTransfer()`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_plugins_clipboard_dataTransfer.html#method-isFileTransfer) method.
+* [#4583](https://github.com/ckeditor/ckeditor4/issues/4583): Added support for new, comma-less color syntax to [`CKEDITOR.tools.color`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_tools_color.html).
+* [#4467](https://github.com/ckeditor/ckeditor4/issues/4467): Inserting content next to block [widgets](https://ckeditor.com/cke4/addon/widget) using keyboard navigation is now possible. Thanks to [bunglegrind](https://github.com/bunglegrind)!
+
+## CKEditor 4.16.1
+
+Fixed Issues:
+* [#4617](https://github.com/ckeditor/ckeditor4/issues/4617): Fixed: [Autocomplete](https://ckeditor.com/cke4/addon/autocomplete) is not accessible in inline editors.
+* [#4493](https://github.com/ckeditor/ckeditor4/issues/4493): Fixed: The [drop-down](https://ckeditor.com/cke4/addon/richcombo) label does not reflect the current value of the drop-down.
+* [#1572](https://github.com/ckeditor/ckeditor4/issues/1572): Fixed: A paragraph before or after a [widget](https://ckeditor.com/cke4/addon/widget) cannot be removed. Thanks to [bunglegrind](https://github.com/bunglegrind)!
+* [#4301](https://github.com/ckeditor/ckeditor4/issues/4301): Fixed: Pasted content is overwritten when pasted in an initially empty editor with the [`div` Enter mode](https://ckeditor.com/docs/ckeditor4/latest/features/enterkey.html).
+* [#4351](https://github.com/ckeditor/ckeditor4/issues/4351): Fixed: Incorrect values for RGBA/HSLA colors in [Color Dialog](https://ckeditor.com/cke4/addon/colordialog).
+* [#4509](https://github.com/ckeditor/ckeditor4/issues/4509): Fixed: Incorrect handling of drag & drop inside [widgets](https://ckeditor.com/cke4/addon/widget) and nested editables.
+* [#4611](https://github.com/ckeditor/ckeditor4/issues/4611): [Android, iOS] Fixed: Incorrect hover styles for buttons in the toolbar on mobile devices.
+* [#4652](https://github.com/ckeditor/ckeditor4/issues/4652): Fixed: [Event data](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_eventInfo.html) set to `false` is treated as an event cancelation.
+
 ## CKEditor 4.16
 
 **Security Updates:**
