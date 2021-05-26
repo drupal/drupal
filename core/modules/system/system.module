@@ -254,7 +254,7 @@ function system_theme() {
     ],
     'system_advisory_notification' => [
       'variables' => [
-      'advisories' => [],
+        'advisories' => [],
       ],
     ],
   ]);
