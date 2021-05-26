@@ -43,7 +43,8 @@ trait LayoutBuilderRoutesTrait {
     $requirements['_layout_builder_access'] = 'view';
     // Trigger the layout builder RouteEnhancer.
     $options['_layout_builder'] = TRUE;
-    // Trigger the layout builder param converter.
+    // Trigger the layout builder param converter if the section storage is a
+    // parameter.
     $parameters['section_storage']['layout_builder_tempstore'] = strpos($path, '{section_storage}') !== FALSE;
     // Merge the passed in options in after Layout Builder's parameters.
     $options = NestedArray::mergeDeep(['parameters' => $parameters], $options);
