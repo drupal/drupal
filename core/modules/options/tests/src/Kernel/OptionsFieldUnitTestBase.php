@@ -49,7 +49,7 @@ abstract class OptionsFieldUnitTestBase extends FieldKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->container->get('router.builder')->rebuild();
 

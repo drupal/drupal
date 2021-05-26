@@ -55,7 +55,7 @@ abstract class UpdateTestBase extends BrowserTestBase {
    */
   protected $updateProject;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Change the root path which Update Manager uses to install and update

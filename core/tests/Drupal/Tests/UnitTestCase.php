@@ -38,7 +38,7 @@ abstract class UnitTestCase extends TestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     // Ensure that an instantiated container in the global state of \Drupal from
     // a previous test does not leak into this test.

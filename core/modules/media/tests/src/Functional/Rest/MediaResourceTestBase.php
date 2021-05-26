@@ -41,7 +41,7 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     \Drupal::configFactory()

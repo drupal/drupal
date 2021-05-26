@@ -89,7 +89,7 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     $this->fileStorage = $this->container->get('entity_type.manager')

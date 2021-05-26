@@ -56,7 +56,7 @@ trait MediaFunctionalTestTrait {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Have two users ready to be used in tests.

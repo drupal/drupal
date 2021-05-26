@@ -125,7 +125,7 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
    * then needed to set various things such as the config directories and the
    * container that would normally be done via the installer.
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUpAppRoot();
     $this->zlibInstalled = function_exists('gzopen');
 

@@ -21,7 +21,7 @@ class TestSiteMultilingualInstallTestScript implements TestSetupInterface, TestP
   /**
    * {@inheritdoc}
    */
-  public function setup() {
+  public function setUp(): void {
     \Drupal::service('module_installer')->install(['test_page_test']);
   }
 

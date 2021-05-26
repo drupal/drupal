@@ -25,7 +25,7 @@ abstract class HelpTopicTranslatedTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // These tests rely on some markup from the 'Seven' theme.

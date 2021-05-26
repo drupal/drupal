@@ -180,7 +180,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     // Calculate REST Resource config entity ID.

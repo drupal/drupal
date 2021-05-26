@@ -33,7 +33,7 @@ abstract class OptionsDynamicValuesTestBase extends FieldTestBase {
    */
   protected $fieldStorage;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $field_name = 'test_options';

@@ -35,7 +35,7 @@ abstract class FileTestBase extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     // \Drupal\KernelTests\KernelTestBase::bootKernel() sets a global override
     // for the default scheme because core relies on it in

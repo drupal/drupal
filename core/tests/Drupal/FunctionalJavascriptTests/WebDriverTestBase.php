@@ -79,7 +79,7 @@ abstract class WebDriverTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function tearDown() {
+  protected function tearDown(): void {
     if ($this->mink) {
       // Wait for all requests to finish. It is possible that an AJAX request is
       // still on-going.

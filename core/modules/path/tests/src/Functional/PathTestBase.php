@@ -19,7 +19,7 @@ abstract class PathTestBase extends BrowserTestBase {
    */
   protected static $modules = ['node', 'path'];
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create Basic page and Article node types.

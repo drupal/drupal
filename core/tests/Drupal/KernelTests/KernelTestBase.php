@@ -219,7 +219,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   /**
    * {@inheritdoc}
    */
-  public static function setUpBeforeClass() {
+  public static function setUpBeforeClass(): void {
     parent::setUpBeforeClass();
 
     // Change the current dir to DRUPAL_ROOT.
@@ -229,7 +229,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Allow tests to compare MarkupInterface objects via assertEquals().
@@ -583,7 +583,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   /**
    * {@inheritdoc}
    */
-  protected function assertPostConditions() {
+  protected function assertPostConditions(): void {
     // Execute registered Drupal shutdown functions prior to tearing down.
     // @see _drupal_shutdown_function()
     $callbacks = &drupal_register_shutdown_function();
@@ -603,7 +603,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   /**
    * {@inheritdoc}
    */
-  protected function tearDown() {
+  protected function tearDown(): void {
     // Destroy the testing kernel.
     if (isset($this->kernel)) {
       $this->kernel->shutdown();

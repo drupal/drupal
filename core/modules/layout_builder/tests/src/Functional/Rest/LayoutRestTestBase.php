@@ -43,7 +43,7 @@ abstract class LayoutRestTestBase extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
     $assert_session = $this->assertSession();
 

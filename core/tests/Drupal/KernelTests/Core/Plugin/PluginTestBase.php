@@ -29,7 +29,7 @@ abstract class PluginTestBase extends KernelTestBase {
   protected $defaultsTestPluginManager;
   protected $defaultsTestPluginExpectedDefinitions;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Real modules implementing plugin types may expose a module-specific API
