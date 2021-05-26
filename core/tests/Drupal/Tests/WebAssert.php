@@ -894,7 +894,7 @@ class WebAssert extends MinkWebAssert {
     if (func_num_args() > 1) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than one argument is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
-    return parent::pageTextNotContains($text);
+    return $this->elementTextNotContains('xpath', '//body', $text);
   }
 
   /**
