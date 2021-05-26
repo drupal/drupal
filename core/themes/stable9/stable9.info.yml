@@ -80,6 +80,11 @@ libraries-override:
         misc/dialog/off-canvas.dropbutton.css: css/core/dialog/off-canvas.dropbutton.css
         misc/dialog/off-canvas.layout.css: css/core/dialog/off-canvas.layout.css
 
+  core/drupalUtils:
+    css:
+      component:
+        misc/drupalUtils.css: css/core/drupalUtils.css
+
   core/drupal.dropbutton:
     css:
       component:

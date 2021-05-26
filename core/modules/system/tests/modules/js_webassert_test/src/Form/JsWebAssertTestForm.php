@@ -209,7 +209,7 @@ class JsWebAssertTestForm extends FormBase {
       '#value' => 'Added WaitForElementVisible',
       '#button_type' => 'primary',
       '#attributes' => [
-        'style' => ['display: none;'],
+        'hidden' => '',
       ],
     ];
     return $form;
