@@ -116,11 +116,11 @@ class QuickEditController extends ControllerBase {
    *   The JSON response.
    */
   public function metadata(Request $request) {
-    $fields = $request->request->get('fields');
-    if (!isset($fields)) {
+    $fields = $request->request->all('fields');
+    if (empty($fields)) {
       throw new NotFoundHttpException();
     }
-    $entities = $request->request->get('entities');
+    $entities = $request->request->all('entities');
 
     $metadata = [];
     foreach ($fields as $field) {
@@ -147,7 +147,7 @@ class QuickEditController extends ControllerBase {
 
       // If the entity information for this field is requested, include it.
       $entity_id = $entity->getEntityTypeId() . '/' . $entity_id;
-      if (is_array($entities) && in_array($entity_id, $entities) && !isset($metadata[$entity_id])) {
+      if (in_array($entity_id, $entities) && !isset($metadata[$entity_id])) {
         $metadata[$entity_id] = $this->metadataGenerator->generateEntityMetadata($entity);
       }
 
@@ -168,8 +168,8 @@ class QuickEditController extends ControllerBase {
    */
   public function attachments(Request $request) {
     $response = new AjaxResponse();
-    $editors = $request->request->get('editors');
-    if (!isset($editors)) {
+    $editors = $request->request->all('editors');
+    if (empty($editors)) {
       throw new NotFoundHttpException();
     }
 
@@ -229,7 +229,7 @@ class QuickEditController extends ControllerBase {
 
       // Re-render the updated field for other view modes (i.e. for other
       // instances of the same logical field on the user's page).
-      $other_view_mode_ids = $request->request->get('other_view_modes') ?: [];
+      $other_view_mode_ids = $request->request->all('other_view_modes');
       $other_view_modes = array_map($render_field_in_view_mode, array_combine($other_view_mode_ids, $other_view_mode_ids));
 
       $response->addCommand(new FieldFormSavedCommand($output, $other_view_modes));

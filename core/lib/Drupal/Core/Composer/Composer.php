@@ -63,7 +63,6 @@ class Composer {
     'symfony/browser-kit' => ['Tests'],
     'symfony/console' => ['Tests'],
     'symfony/css-selector' => ['Tests'],
-    'symfony/debug' => ['Tests'],
     'symfony/dependency-injection' => ['Tests'],
     'symfony/dom-crawler' => ['Tests'],
     'symfony/filesystem' => ['Tests'],

@@ -49,7 +49,7 @@ class PathValidatorTest extends KernelTestBase {
       'PATCH',
       'DELETE',
       // Used in CLI context.
-      NULL,
+      '',
       // If no request was even pushed onto the request stack, and hence.
       FALSE,
     ];
