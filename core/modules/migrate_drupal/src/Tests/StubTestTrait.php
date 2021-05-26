@@ -10,8 +10,7 @@ use Drupal\migrate\Row;
 trait StubTestTrait {
 
   /**
-   * Test that creating a stub of the given entity type results in a valid
-   * entity.
+   * Tests that a stub of the given entity type results in a valid entity.
    *
    * @param string $entity_type_id
    *   The entity type we are stubbing.

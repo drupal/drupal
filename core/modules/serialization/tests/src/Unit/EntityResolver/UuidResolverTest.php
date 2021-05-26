@@ -36,7 +36,7 @@ class UuidResolverTest extends UnitTestCase {
   }
 
   /**
-   * Test resolve() with a class using the incorrect interface.
+   * Tests resolve() with a class using the incorrect interface.
    */
   public function testResolveNotInInterface() {
     $this->entityRepository->expects($this->never())
@@ -47,7 +47,7 @@ class UuidResolverTest extends UnitTestCase {
   }
 
   /**
-   * Test resolve() with a class using the correct interface but no UUID.
+   * Tests resolve() with a class using the correct interface but no UUID.
    */
   public function testResolveNoUuid() {
     $this->entityRepository->expects($this->never())
@@ -62,7 +62,7 @@ class UuidResolverTest extends UnitTestCase {
   }
 
   /**
-   * Test resolve() with correct interface but no matching entity for the UUID.
+   * Tests resolve() with correct interface but no matching entity for the UUID.
    */
   public function testResolveNoEntity() {
     $uuid = '392eab92-35c2-4625-872d-a9dab4da008e';
@@ -82,7 +82,7 @@ class UuidResolverTest extends UnitTestCase {
   }
 
   /**
-   * Test resolve() when a UUID corresponds to an entity.
+   * Tests resolve() when a UUID corresponds to an entity.
    */
   public function testResolveWithEntity() {
     $uuid = '392eab92-35c2-4625-872d-a9dab4da008e';

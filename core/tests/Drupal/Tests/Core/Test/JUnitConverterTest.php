@@ -22,7 +22,7 @@ use org\bovigo\vfs\vfsStream;
 class JUnitConverterTest extends UnitTestCase {
 
   /**
-   * Test errors reported.
+   * Tests errors reported.
    * @covers ::xmlToRows
    */
   public function testXmlToRowsWithErrors() {

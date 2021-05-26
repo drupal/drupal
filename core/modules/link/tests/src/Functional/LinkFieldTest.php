@@ -217,7 +217,8 @@ class LinkFieldTest extends BrowserTestBase {
       $edit = [
         "{$field_name}[0][uri]" => $uri,
       ];
-      $this->drupalPostForm('entity_test/add', $edit, 'Save');
+      $this->drupalGet('entity_test/add');
+      $this->submitForm($edit, 'Save');
       preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
       $id = $match[1];
       $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
@@ -238,7 +239,8 @@ class LinkFieldTest extends BrowserTestBase {
       $edit = [
         "{$field_name}[0][uri]" => $invalid_value,
       ];
-      $this->drupalPostForm('entity_test/add', $edit, 'Save');
+      $this->drupalGet('entity_test/add');
+      $this->submitForm($edit, 'Save');
       $this->assertSession()->responseContains(strtr($error_message, ['@link_path' => $invalid_value]));
     }
   }
@@ -359,7 +361,8 @@ class LinkFieldTest extends BrowserTestBase {
     $edit = [
       "{$field_name}[0][title]" => $title,
     ];
-    $this->drupalPostForm("entity_test/manage/$id/edit", $edit, 'Save');
+    $this->drupalGet("entity_test/manage/{$id}/edit");
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been updated.');
 
     $output = $this->renderTestEntity($id);
@@ -647,7 +650,7 @@ class LinkFieldTest extends BrowserTestBase {
   }
 
   /**
-   * Test '#link_type' property exists on 'link_default' widget.
+   * Tests '#link_type' property exists on 'link_default' widget.
    *
    * Make sure the 'link_default' widget exposes a '#link_type' property on
    * its element. Modules can use it to understand if a text form element is
@@ -752,7 +755,7 @@ class LinkFieldTest extends BrowserTestBase {
   }
 
   /**
-   * Test <nolink> and <none> as link uri.
+   * Tests <nolink> and <none> as link uri.
    */
   public function testNoLinkUri() {
     $field_name = mb_strtolower($this->randomMachineName());
@@ -797,7 +800,8 @@ class LinkFieldTest extends BrowserTestBase {
       "{$field_name}[0][uri]" => '<nolink>',
     ];
 
-    $this->drupalPostForm('/entity_test/add', $edit, 'Save');
+    $this->drupalGet('/entity_test/add');
+    $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $output = $this->renderTestEntity($id);
@@ -810,7 +814,8 @@ class LinkFieldTest extends BrowserTestBase {
       "{$field_name}[0][uri]" => '<none>',
     ];
 
-    $this->drupalPostForm('/entity_test/add', $edit, 'Save');
+    $this->drupalGet('/entity_test/add');
+    $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $output = $this->renderTestEntity($id);

@@ -75,7 +75,7 @@ class BlockCacheTest extends BrowserTestBase {
   }
 
   /**
-   * Test "user.roles" cache context.
+   * Tests "user.roles" cache context.
    */
   public function testCachePerRole() {
     \Drupal::state()->set('block_test.cache_contexts', ['user.roles']);
@@ -127,7 +127,7 @@ class BlockCacheTest extends BrowserTestBase {
   }
 
   /**
-   * Test a cacheable block without any additional cache context.
+   * Tests a cacheable block without any additional cache context.
    */
   public function testCachePermissions() {
     // user.permissions is a required context, so a user with different
@@ -155,7 +155,7 @@ class BlockCacheTest extends BrowserTestBase {
   }
 
   /**
-   * Test non-cacheable block.
+   * Tests non-cacheable block.
    */
   public function testNoCache() {
     \Drupal::state()->set('block_test.cache_max_age', 0);
@@ -176,7 +176,7 @@ class BlockCacheTest extends BrowserTestBase {
   }
 
   /**
-   * Test "user" cache context.
+   * Tests "user" cache context.
    */
   public function testCachePerUser() {
     \Drupal::state()->set('block_test.cache_contexts', ['user']);
@@ -208,7 +208,7 @@ class BlockCacheTest extends BrowserTestBase {
   }
 
   /**
-   * Test "url" cache context.
+   * Tests "url" cache context.
    */
   public function testCachePerPage() {
     \Drupal::state()->set('block_test.cache_contexts', ['url']);

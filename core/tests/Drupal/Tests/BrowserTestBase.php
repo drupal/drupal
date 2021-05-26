@@ -706,18 +706,18 @@ abstract class BrowserTestBase extends TestCase {
   }
 
   /**
-   * Transforms a nested array into a flat array suitable for drupalPostForm().
+   * Transforms a nested array into a flat array suitable for submitForm().
    *
    * @param array $values
    *   A multi-dimensional form values array to convert.
    *
    * @return array
-   *   The flattened $edit array suitable for BrowserTestBase::drupalPostForm().
+   *   The flattened $edit array suitable for BrowserTestBase::submitForm().
    */
   protected function translatePostValues(array $values) {
     $edit = [];
     // The easiest and most straightforward way to translate values suitable for
-    // BrowserTestBase::drupalPostForm() is to actually build the POST data
+    // BrowserTestBase::submitForm() is to actually build the POST data
     // string and convert the resulting key/value pairs back into a flat array.
     $query = http_build_query($values);
     foreach (explode('&', $query) as $item) {

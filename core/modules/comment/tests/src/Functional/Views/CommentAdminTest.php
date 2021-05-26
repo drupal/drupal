@@ -36,7 +36,7 @@ class CommentAdminTest extends CommentBrowserTestBase {
   }
 
   /**
-   * Test comment approval functionality through admin/content/comment.
+   * Tests comment approval functionality through admin/content/comment.
    */
   public function testApprovalAdminInterface() {
     // Set anonymous comments to require approval.
@@ -65,7 +65,8 @@ class CommentAdminTest extends CommentBrowserTestBase {
     $body = $this->getRandomGenerator()->sentences(4);
     $subject = Unicode::truncate(trim(Html::decodeEntities(strip_tags($body))), 29, TRUE, TRUE);
     $author_name = $this->randomMachineName();
-    $this->drupalPostForm('comment/reply/node/' . $this->node->id() . '/comment', [
+    $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment');
+    $this->submitForm([
       'name' => $author_name,
       'comment_body[0][value]' => $body,
     ], 'Save');
@@ -91,7 +92,8 @@ class CommentAdminTest extends CommentBrowserTestBase {
     $edit = [];
     $edit['action'] = 'comment_publish_action';
     $edit['comment_bulk_form[0]'] = $anonymous_comment4->id();
-    $this->drupalPostForm('admin/content/comment/approval', $edit, 'Apply to selected items');
+    $this->drupalGet('admin/content/comment/approval');
+    $this->submitForm($edit, 'Apply to selected items');
 
     $this->assertSession()->pageTextContains('Publish comment was applied to 1 item.');
     $this->drupalLogout();
@@ -122,7 +124,8 @@ class CommentAdminTest extends CommentBrowserTestBase {
     $this->assertSession()->pageTextContains('Unapproved comments (0)');
 
     // Test message when no comments selected.
-    $this->drupalPostForm('admin/content/comment', [], 'Apply to selected items');
+    $this->drupalGet('admin/content/comment');
+    $this->submitForm([], 'Apply to selected items');
     $this->assertSession()->pageTextContains('Select one or more comments to perform the update on.');
 
     $subject_link = $this->xpath('//table/tbody/tr/td/a[contains(@href, :href) and contains(@title, :title) and text()=:text]', [

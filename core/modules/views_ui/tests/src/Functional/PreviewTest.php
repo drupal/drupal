@@ -78,7 +78,8 @@ class PreviewTest extends UITestBase {
     $view['page[path]'] = $this->randomMachineName(16);
     $view['page[feed]'] = 1;
     $view['page[feed_properties][path]'] = $this->randomMachineName(16);
-    $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm($view, 'Save and edit');
     $this->clickLink(t('Feed'));
     $this->submitForm([], 'Update preview');
     $this->assertSession()->elementTextContains('xpath', '//div[@id="views-live-preview"]/pre', '<title>' . $view['page[title]'] . '</title>');
@@ -118,7 +119,8 @@ SQL;
     $this->assertLessThan(strpos($this->getSession()->getPage()->getContent(), 'views-query-info'), strpos($this->getSession()->getPage()->getContent(), 'view-test-preview'), 'Statistics shown below the preview.');
 
     // Test that the preview title isn't double escaped.
-    $this->drupalPostForm("admin/structure/views/nojs/display/test_preview/default/title", $edit = ['title' => 'Double & escaped'], 'Apply');
+    $this->drupalGet("admin/structure/views/nojs/display/test_preview/default/title");
+    $this->submitForm($edit = ['title' => 'Double & escaped'], 'Apply');
     $this->submitForm([], 'Update preview');
     $this->assertSession()->elementsCount('xpath', '//div[@id="views-live-preview"]/div[contains(@class, views-query-info)]//td[text()="Double & escaped"]', 1);
   }

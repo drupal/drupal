@@ -473,7 +473,8 @@ class UpdateScriptTest extends BrowserTestBase {
       $edit = [
         "modules[$extension_machine_name][enable]" => $extension_machine_name,
       ];
-      $this->drupalPostForm('admin/modules', $edit, 'Install');
+      $this->drupalGet('admin/modules');
+      $this->submitForm($edit, 'Install');
     }
     elseif ($extension_type === 'theme') {
       $this->drupalGet('admin/appearance');

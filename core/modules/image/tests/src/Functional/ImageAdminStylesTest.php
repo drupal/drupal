@@ -57,8 +57,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
   }
 
   /**
-   * Test creating an image style with a numeric name and ensuring it can be
-   * applied to an image.
+   * Tests creating an image style with a numeric name.
    */
   public function testNumericStyleName() {
     $style_name = rand();
@@ -67,7 +66,8 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       'name' => $style_name,
       'label' => $style_label,
     ];
-    $this->drupalPostForm('admin/config/media/image-styles/add', $edit, 'Create new style');
+    $this->drupalGet('admin/config/media/image-styles/add');
+    $this->submitForm($edit, 'Create new style');
     $this->assertRaw(t('Style %name was created.', ['%name' => $style_label]));
     $options = image_style_options();
     $this->assertArrayHasKey($style_name, $options);
@@ -118,7 +118,8 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       'name' => $style_name,
       'label' => $style_label,
     ];
-    $this->drupalPostForm($admin_path . '/add', $edit, 'Create new style');
+    $this->drupalGet($admin_path . '/add');
+    $this->submitForm($edit, 'Create new style');
     $this->assertRaw(t('Style %name was created.', ['%name' => $style_label]));
 
     // Ensure that the expected entity operations are there.
@@ -136,7 +137,8 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
         $edit_data['data[' . $field . ']'] = $value;
       }
       // Add the effect.
-      $this->drupalPostForm($style_path, ['new' => $effect], 'Add');
+      $this->drupalGet($style_path);
+      $this->submitForm(['new' => $effect], 'Add');
       if (!empty($edit)) {
         $this->submitForm($edit_data, 'Add effect');
       }
@@ -209,7 +211,8 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $image_path = $this->createSampleImage($style);
     $this->assertEquals(1, $this->getImageCount($style), new FormattableMarkup('Image style %style image %file successfully generated.', ['%style' => $style->label(), '%file' => $image_path]));
 
-    $this->drupalPostForm($style_path, $edit, 'Save');
+    $this->drupalGet($style_path);
+    $this->submitForm($edit, 'Save');
 
     // Note that after changing the style name, the style path is changed.
     $style_path = 'admin/config/media/image-styles/manage/' . $style_name;
@@ -249,7 +252,8 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->assertEquals(1, $this->getImageCount($style), new FormattableMarkup('Image style %style image %file successfully generated.', ['%style' => $style->label(), '%file' => $image_path]));
 
     // Delete the 'image_crop' effect from the style.
-    $this->drupalPostForm($style_path . '/effects/' . $uuids['image_crop'] . '/delete', [], 'Delete');
+    $this->drupalGet($style_path . '/effects/' . $uuids['image_crop'] . '/delete');
+    $this->submitForm([], 'Delete');
     // Confirm that the form submission was successful.
     $this->assertSession()->statusCodeEquals(200);
     $image_crop_effect = $style->getEffect($uuids['image_crop']);
@@ -273,7 +277,8 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       'data[random]' => 0,
       'data[bgcolor]' => '',
     ];
-    $this->drupalPostForm($style_path, ['new' => 'image_rotate'], 'Add');
+    $this->drupalGet($style_path);
+    $this->submitForm(['new' => 'image_rotate'], 'Add');
     $this->submitForm($edit, 'Add effect');
     $entity_type_manager = $this->container->get('entity_type.manager');
     $style = $entity_type_manager->getStorage('image_style')->loadUnchanged($style_name);
@@ -282,7 +287,8 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     // Style deletion form.
 
     // Delete the style.
-    $this->drupalPostForm($style_path . '/delete', [], 'Delete');
+    $this->drupalGet($style_path . '/delete');
+    $this->submitForm([], 'Delete');
 
     // Confirm the style directory has been removed.
     $directory = 'public://styles/' . $style_name;
@@ -306,7 +312,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
   }
 
   /**
-   * Test deleting a style and choosing a replacement style.
+   * Tests deleting a style and choosing a replacement style.
    */
   public function testStyleReplacement() {
     // Create a new style.
@@ -347,7 +353,8 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       'name' => $new_style_name,
       'label' => $new_style_label,
     ];
-    $this->drupalPostForm($style_path . $style_name, $edit, 'Save');
+    $this->drupalGet($style_path . $style_name);
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('Changes to the style have been saved.');
     $this->drupalGet('node/' . $nid);
 
@@ -359,7 +366,8 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $edit = [
       'replacement' => 'thumbnail',
     ];
-    $this->drupalPostForm($style_path . $new_style_name . '/delete', $edit, 'Delete');
+    $this->drupalGet($style_path . $new_style_name . '/delete');
+    $this->submitForm($edit, 'Delete');
     $message = t('The image style %name has been deleted.', ['%name' => $new_style_label]);
     $this->assertRaw($message);
 
@@ -422,7 +430,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
   }
 
   /**
-   * Test flush user interface.
+   * Tests flush user interface.
    */
   public function testFlushUserInterface() {
     $admin_path = 'admin/config/media/image-styles';
@@ -446,7 +454,8 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->assertSession()->linkByHrefExists($flush_path);
 
     // Flush the image style derivatives using the user interface.
-    $this->drupalPostForm($flush_path, [], 'Flush');
+    $this->drupalGet($flush_path);
+    $this->submitForm([], 'Flush');
 
     // The derivative image file should have been deleted.
     $this->assertEquals(0, $this->getImageCount($style));

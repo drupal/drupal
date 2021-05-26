@@ -40,7 +40,7 @@ class ValidatorTest extends FileManagedUnitTestBase {
   }
 
   /**
-   * Test the file_validate_extensions() function.
+   * Tests the file_validate_extensions() function.
    */
   public function testFileValidateExtensions() {
     $file = File::create(['filename' => 'asdf.txt']);
@@ -141,7 +141,7 @@ class ValidatorTest extends FileManagedUnitTestBase {
   }
 
   /**
-   * Test file_validate_size().
+   * Tests file_validate_size().
    */
   public function testFileValidateSize() {
     // Create a file with a size of 1000 bytes, and quotas of only 1 byte.

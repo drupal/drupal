@@ -62,7 +62,7 @@ class MenuLinkTest extends ViewTestBase {
   }
 
   /**
-   * Test that menu links using menu_link_content as parent are visible.
+   * Tests that menu links using menu_link_content as parent are visible.
    */
   public function testHierarchicalMenuLinkVisibility() {
     $this->drupalLogin($this->adminUser);
@@ -83,7 +83,8 @@ class MenuLinkTest extends ViewTestBase {
 
     // Alter the view's menu link in view page to use the menu link from the
     // node as parent.
-    $this->drupalPostForm("admin/structure/views/nojs/display/test_menu_link/page_1/menu", [
+    $this->drupalGet("admin/structure/views/nojs/display/test_menu_link/page_1/menu");
+    $this->submitForm([
       'menu[type]' => 'normal',
       'menu[title]' => 'Secondary level view page',
       'menu[parent]' => $parent_menu_value,

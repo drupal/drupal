@@ -41,7 +41,8 @@ class DisplayAttachmentTest extends UITestBase {
     $this->assertSession()->checkboxNotChecked("edit-displays-page-1");
 
     // Save the attachments and test the value on the view.
-    $this->drupalPostForm($attachment_display_url, ['displays[page_1]' => 1], 'Apply');
+    $this->drupalGet($attachment_display_url);
+    $this->submitForm(['displays[page_1]' => 1], 'Apply');
     // Options summary should be escaped.
     $this->assertSession()->assertEscaped('<em>Page</em>');
     $this->assertNoRaw('<em>Page</em>');
@@ -53,7 +54,11 @@ class DisplayAttachmentTest extends UITestBase {
     $view->initDisplay();
     $this->assertEquals(['page_1'], array_keys(array_filter($view->displayHandlers->get('attachment_1')->getOption('displays'))), 'The attached displays got saved as expected');
 
-    $this->drupalPostForm($attachment_display_url, ['displays[default]' => 1, 'displays[page_1]' => 1], 'Apply');
+    $this->drupalGet($attachment_display_url);
+    $this->submitForm([
+      'displays[default]' => 1,
+      'displays[page_1]' => 1,
+    ], 'Apply');
     $result = $this->xpath('//a[@id = :id]', [':id' => 'views-attachment-1-displays']);
     $this->assertEquals(t('Multiple displays'), $result[0]->getAttribute('title'));
     $this->submitForm([], 'Save');
@@ -78,13 +83,15 @@ class DisplayAttachmentTest extends UITestBase {
     $this->assertSession()->pageTextContains('Not defined');
 
     // Attach the Attachment to the Page display.
-    $this->drupalPostForm($attachment_display_url, ['displays[page_1]' => 1], 'Apply');
+    $this->drupalGet($attachment_display_url);
+    $this->submitForm(['displays[page_1]' => 1], 'Apply');
     $this->submitForm([], 'Save');
 
     // Open the Page display and mark it as deleted.
     $this->drupalGet($path_prefix . '/page_1');
     $this->assertSession()->buttonExists('edit-displays-settings-settings-content-tab-content-details-top-actions-delete');
-    $this->drupalPostForm($path_prefix . '/page_1', [], 'Delete Page');
+    $this->drupalGet($path_prefix . '/page_1');
+    $this->submitForm([], 'Delete Page');
 
     // Open the attachment display and save it.
     $this->drupalGet($path_prefix . '/attachment_1');

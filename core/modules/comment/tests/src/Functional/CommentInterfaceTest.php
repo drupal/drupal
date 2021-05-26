@@ -230,7 +230,7 @@ class CommentInterfaceTest extends CommentTestBase {
   }
 
   /**
-   * Test that the subject is automatically filled if disabled or left blank.
+   * Tests that the subject is automatically filled if disabled or left blank.
    *
    * When the subject field is blank or disabled, the first 29 characters of the
    * comment body are used for the subject. If this would break within a word,
@@ -253,7 +253,7 @@ class CommentInterfaceTest extends CommentTestBase {
   }
 
   /**
-   * Test that automatic subject is correctly created from HTML comment text.
+   * Tests that automatic subject is correctly created from HTML comment text.
    *
    * This is the same test as in CommentInterfaceTest::testAutoFilledSubject()
    * with the additional check that HTML is stripped appropriately prior to
