@@ -197,7 +197,8 @@ class ReadinessCheckerManagerTest extends KernelTestBase {
     // @see \Drupal\auto_updates_test\AutoUpdatesTestServiceProvider::alter().
     define('AUTO_UPDATES_TEST_SET_PRIORITY', 4);
 
-    // Rebuild the container to trigger the service to be duplicated.
+    // Rebuild the container to trigger the readiness checker services to be
+    // reordered.
     $kernel = $this->container->get('kernel');
     $this->container = $kernel->rebuildContainer();
     $expected_results = $unexpected_results;
