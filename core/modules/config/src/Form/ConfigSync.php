@@ -2,25 +2,26 @@
 
 namespace Drupal\config\Form;
 
-use Drupal\Core\Config\ConfigImporterException;
+use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Config\ConfigImporter;
+use Drupal\Core\Config\ConfigImporterException;
+use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Config\Importer\ConfigImporterBatch;
 use Drupal\Core\Config\ImportStorageTransformer;
+use Drupal\Core\Config\StorageComparer;
+use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
-use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Form\FormBase;
-use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Lock\LockBackendInterface;
-use Drupal\Core\Config\StorageComparer;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Construct the storage changes in a configuration synchronization form.
@@ -364,19 +365,20 @@ class ConfigSync extends FormBase {
     else {
       try {
         $sync_steps = $config_importer->initialize();
-        $batch = [
-          'operations' => [],
-          'finished' => [ConfigImporterBatch::class, 'finish'],
-          'title' => $this->t('Synchronizing configuration'),
-          'init_message' => $this->t('Starting configuration synchronization.'),
-          'progress_message' => $this->t('Completed step @current of @total.'),
-          'error_message' => $this->t('Configuration synchronization has encountered an error.'),
-        ];
+        $batch_builder = (new BatchBuilder())
+          ->setTitle($this->t('Synchronizing configuration'))
+          ->setFinishCallback([ConfigImporterBatch::class, 'finish'])
+          ->setInitMessage($this->t('Starting configuration synchronization.'))
+          ->setProgressMessage($this->t('Completed step @current of @total.'))
+          ->setErrorMessage($this->t('Configuration synchronization has encountered an error.'));
         foreach ($sync_steps as $sync_step) {
-          $batch['operations'][] = [[ConfigImporterBatch::class, 'process'], [$config_importer, $sync_step]];
+          $batch_builder->addOperation([
+            ConfigImporterBatch::class,
+            'process',
+          ], [$config_importer, $sync_step]);
         }
 
-        batch_set($batch);
+        batch_set($batch_builder->toArray());
       }
       catch (ConfigImporterException $e) {
         // There are validation errors.
