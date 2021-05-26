@@ -3,25 +3,25 @@
 namespace Drupal\config\Form;
 
 use Drupal\Core\Batch\BatchBuilder;
-use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\ConfigImporterException;
-use Drupal\Core\Config\ConfigManagerInterface;
+use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\Importer\ConfigImporterBatch;
 use Drupal\Core\Config\ImportStorageTransformer;
-use Drupal\Core\Config\StorageComparer;
-use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
+use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Lock\LockBackendInterface;
+use Drupal\Core\Config\StorageComparer;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Construct the storage changes in a configuration synchronization form.
