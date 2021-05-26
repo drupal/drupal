@@ -11,7 +11,7 @@
  * included to provide Ajax capabilities.
  */
 
-(function ($, window, Drupal, drupalSettings) {
+(function ($, window, Drupal, drupalSettings, { isFocusable, tabbable }) {
   /**
    * Attaches the Ajax behavior to each Ajax form element.
    *
@@ -999,8 +999,9 @@
       if (response[i].command && this.commands[response[i].command]) {
         this.commands[response[i].command](this, response[i], status);
         if (
-          response[i].command === 'invoke' &&
-          response[i].method === 'focus'
+          (response[i].command === 'invoke' &&
+            response[i].method === 'focus') ||
+          response[i].command === 'focusFirst'
         ) {
           focusChanged = true;
         }
@@ -1472,6 +1473,47 @@
     },
 
     /**
+     * Command to focus the first tabbable element within a container.
+     *
+     * If no tabbable elements are found and the container is focusable, then
+     * focus will move to that container.
+     *
+     * @param {Drupal.Ajax} [ajax]
+     *   {@link Drupal.Ajax} object created by {@link Drupal.ajax}.
+     * @param {object} response
+     *   The response from the Ajax request.
+     * @param {string} response.selector
+     *   A query selector string of the container to focus within.
+     * @param {number} [status]
+     *   The XMLHttpRequest status.
+     */
+    focusFirst(ajax, response, status) {
+      let focusChanged = false;
+      const container = document.querySelector(response.selector);
+      if (container) {
+        // Find all tabbable elements within the container.
+        const tabbableElements = tabbable(container);
+
+        // Move focus to the first tabbable item found.
+        if (tabbableElements.length) {
+          tabbableElements[0].focus();
+          focusChanged = true;
+        } else if (isFocusable(container)) {
+          // If no tabbable elements are found, but the container is focusable,
+          // move focus to the container.
+          container.focus();
+          focusChanged = true;
+        }
+      }
+
+      // If no items were available to receive focus, return focus to the
+      // triggering element.
+      if (ajax.hasOwnProperty('element') && !focusChanged) {
+        ajax.element.focus();
+      }
+    },
+
+    /**
      * Command to apply a jQuery method.
      *
      * @param {Drupal.Ajax} [ajax]
@@ -1580,4 +1622,4 @@
       messages.add(response.message, response.messageOptions);
     },
   };
-})(jQuery, window, Drupal, drupalSettings);
+})(jQuery, window, Drupal, drupalSettings, window.tabbable);

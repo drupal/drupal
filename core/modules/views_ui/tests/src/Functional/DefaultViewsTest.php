@@ -61,15 +61,19 @@ class DefaultViewsTest extends UITestBase {
     // displayed.
     $new_title = $this->randomMachineName(16);
     $edit = ['title' => $new_title];
-    $this->drupalPostForm('admin/structure/views/nojs/display/glossary/page_1/title', $edit, 'Apply');
-    $this->drupalPostForm('admin/structure/views/view/glossary/edit/page_1', [], 'Save');
+    $this->drupalGet('admin/structure/views/nojs/display/glossary/page_1/title');
+    $this->submitForm($edit, 'Apply');
+    $this->drupalGet('admin/structure/views/view/glossary/edit/page_1');
+    $this->submitForm([], 'Save');
     $this->drupalGet('glossary');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText($new_title);
+    $this->assertSession()->pageTextContains($new_title);
 
     // Save another view in the UI.
-    $this->drupalPostForm('admin/structure/views/nojs/display/archive/page_1/title', [], 'Apply');
-    $this->drupalPostForm('admin/structure/views/view/archive/edit/page_1', [], 'Save');
+    $this->drupalGet('admin/structure/views/nojs/display/archive/page_1/title');
+    $this->submitForm([], 'Apply');
+    $this->drupalGet('admin/structure/views/view/archive/edit/page_1');
+    $this->submitForm([], 'Save');
 
     // Check there is an enable link. i.e. The view has not been enabled after
     // editing.
@@ -83,7 +87,8 @@ class DefaultViewsTest extends UITestBase {
     // $this->drupalGet('admin/structure/views');
     // $this->assertSession()->linkExists('Revert');
     // $this->assertSession()->linkByHrefExists($revert_href);
-    // $this->drupalPostForm($revert_href, array(), 'Revert');
+    // $this->drupalGet($revert_href);
+    // $this->submitForm(array(), 'Revert');
     // $this->drupalGet('glossary');
     // $this->assertNoText($new_title);
 
@@ -141,7 +146,7 @@ class DefaultViewsTest extends UITestBase {
     // Ensure the view is no longer available.
     $this->drupalGet($edit_href);
     $this->assertSession()->statusCodeEquals(404);
-    $this->assertText('Page not found');
+    $this->assertSession()->pageTextContains('Page not found');
 
     // Delete all duplicated Glossary views.
     $this->drupalGet('admin/structure/views');
@@ -158,7 +163,7 @@ class DefaultViewsTest extends UITestBase {
     $this->submitForm([], 'Delete');
     $this->drupalGet('glossary');
     $this->assertSession()->statusCodeEquals(404);
-    $this->assertText('Page not found');
+    $this->assertSession()->pageTextContains('Page not found');
   }
 
   /**

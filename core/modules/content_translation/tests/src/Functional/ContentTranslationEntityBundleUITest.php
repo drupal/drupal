@@ -43,7 +43,8 @@ class ContentTranslationEntityBundleUITest extends BrowserTestBase {
     $this->drupalCreateContentType(['type' => 'article']);
     // Enable content translation.
     $edit = ['language_configuration[content_translation]' => TRUE];
-    $this->drupalPostForm('admin/structure/types/manage/article', $edit, 'Save content type');
+    $this->drupalGet('admin/structure/types/manage/article');
+    $this->submitForm($edit, 'Save content type');
 
     // Make sure add page does not inherit translation configuration from first
     // content type.
@@ -56,7 +57,8 @@ class ContentTranslationEntityBundleUITest extends BrowserTestBase {
       'type' => 'page',
       'language_configuration[content_translation]' => TRUE,
     ];
-    $this->drupalPostForm('admin/structure/types/add', $edit, 'Save and manage fields');
+    $this->drupalGet('admin/structure/types/add');
+    $this->submitForm($edit, 'Save and manage fields');
 
     // Make sure the settings are saved when creating the content type.
     $this->drupalGet('admin/structure/types/manage/page');

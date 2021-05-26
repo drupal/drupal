@@ -98,7 +98,7 @@ class ConfigImportRecreateTest extends KernelTestBase {
     // Verify that there is nothing more to import.
     $this->assertFalse($this->configImporter->reset()->hasUnprocessedConfigurationChanges());
     $content_type = NodeType::load($type_name);
-    $this->assertEqual('Node type one', $content_type->label());
+    $this->assertEquals('Node type one', $content_type->label());
   }
 
 }

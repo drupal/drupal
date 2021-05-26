@@ -46,28 +46,28 @@ class StreamWrapperTest extends FileTestBase {
   }
 
   /**
-   * Test the getClassName() function.
+   * Tests the getClassName() function.
    */
   public function testGetClassName() {
     // Check the dummy scheme.
-    $this->assertEqual($this->classname, \Drupal::service('stream_wrapper_manager')->getClass($this->scheme), 'Got correct class name for dummy scheme.');
+    $this->assertEquals($this->classname, \Drupal::service('stream_wrapper_manager')->getClass($this->scheme), 'Got correct class name for dummy scheme.');
     // Check core's scheme.
-    $this->assertEqual('Drupal\Core\StreamWrapper\PublicStream', \Drupal::service('stream_wrapper_manager')->getClass('public'), 'Got correct class name for public scheme.');
+    $this->assertEquals('Drupal\Core\StreamWrapper\PublicStream', \Drupal::service('stream_wrapper_manager')->getClass('public'), 'Got correct class name for public scheme.');
   }
 
   /**
-   * Test the getViaScheme() method.
+   * Tests the getViaScheme() method.
    */
   public function testGetInstanceByScheme() {
     $instance = \Drupal::service('stream_wrapper_manager')->getViaScheme($this->scheme);
-    $this->assertEqual($this->classname, get_class($instance), 'Got correct class type for dummy scheme.');
+    $this->assertEquals($this->classname, get_class($instance), 'Got correct class type for dummy scheme.');
 
     $instance = \Drupal::service('stream_wrapper_manager')->getViaScheme('public');
-    $this->assertEqual('Drupal\Core\StreamWrapper\PublicStream', get_class($instance), 'Got correct class type for public scheme.');
+    $this->assertEquals('Drupal\Core\StreamWrapper\PublicStream', get_class($instance), 'Got correct class type for public scheme.');
   }
 
   /**
-   * Test the getViaUri() and getViaScheme() methods and target functions.
+   * Tests the getViaUri() and getViaScheme() methods and target functions.
    */
   public function testUriFunctions() {
     $config = $this->config('system.file');
@@ -76,27 +76,27 @@ class StreamWrapperTest extends FileTestBase {
     $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
 
     $instance = $stream_wrapper_manager->getViaUri($this->scheme . '://foo');
-    $this->assertEqual($this->classname, get_class($instance), 'Got correct class type for dummy URI.');
+    $this->assertEquals($this->classname, get_class($instance), 'Got correct class type for dummy URI.');
 
     $instance = $stream_wrapper_manager->getViaUri('public://foo');
-    $this->assertEqual('Drupal\Core\StreamWrapper\PublicStream', get_class($instance), 'Got correct class type for public URI.');
+    $this->assertEquals('Drupal\Core\StreamWrapper\PublicStream', get_class($instance), 'Got correct class type for public URI.');
 
     // Test file_uri_target().
-    $this->assertEqual('foo/bar.txt', $stream_wrapper_manager::getTarget('public://foo/bar.txt'), 'Got a valid stream target from public://foo/bar.txt.');
-    $this->assertEqual('image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==', $stream_wrapper_manager::getTarget('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='), t('Got a valid stream target from a data URI.'));
+    $this->assertEquals('foo/bar.txt', $stream_wrapper_manager::getTarget('public://foo/bar.txt'), 'Got a valid stream target from public://foo/bar.txt.');
+    $this->assertEquals('image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==', $stream_wrapper_manager::getTarget('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='), t('Got a valid stream target from a data URI.'));
     $this->assertFalse($stream_wrapper_manager::getTarget('foo/bar.txt'), 'foo/bar.txt is not a valid stream.');
     $this->assertSame($stream_wrapper_manager::getTarget('public://'), '');
     $this->assertSame($stream_wrapper_manager::getTarget('data:'), '');
 
     // Test file_build_uri() and
     // Drupal\Core\StreamWrapper\LocalStream::getDirectoryPath().
-    $this->assertEqual('public://foo/bar.txt', file_build_uri('foo/bar.txt'), 'Expected scheme was added.');
-    $this->assertEqual(PublicStream::basePath(), $stream_wrapper_manager->getViaScheme('public')->getDirectoryPath(), 'Expected default directory path was returned.');
+    $this->assertEquals('public://foo/bar.txt', file_build_uri('foo/bar.txt'), 'Expected scheme was added.');
+    $this->assertEquals(PublicStream::basePath(), $stream_wrapper_manager->getViaScheme('public')->getDirectoryPath(), 'Expected default directory path was returned.');
     $file_system = \Drupal::service('file_system');
     assert($file_system instanceof FileSystemInterface);
-    $this->assertEqual($file_system->getTempDirectory(), $stream_wrapper_manager->getViaScheme('temporary')->getDirectoryPath(), 'Expected temporary directory path was returned.');
+    $this->assertEquals($file_system->getTempDirectory(), $stream_wrapper_manager->getViaScheme('temporary')->getDirectoryPath(), 'Expected temporary directory path was returned.');
     $config->set('default_scheme', 'private')->save();
-    $this->assertEqual('private://foo/bar.txt', file_build_uri('foo/bar.txt'), 'Got a valid URI from foo/bar.txt.');
+    $this->assertEquals('private://foo/bar.txt', file_build_uri('foo/bar.txt'), 'Got a valid URI from foo/bar.txt.');
 
     // Test file_create_url()
     // TemporaryStream::getExternalUrl() uses Url::fromRoute(), which needs
@@ -107,7 +107,7 @@ class StreamWrapperTest extends FileTestBase {
   }
 
   /**
-   * Test some file handle functions.
+   * Tests some file handle functions.
    */
   public function testFileFunctions() {
     $filename = 'public://' . $this->randomMachineName();
@@ -121,33 +121,33 @@ class StreamWrapperTest extends FileTestBase {
     $this->assertFalse(@stream_set_blocking($handle, 0), 'Unable to set to non blocking using a local stream wrapper.');
     $this->assertFalse(@stream_set_blocking($handle, 1), 'Unable to set to blocking using a local stream wrapper.');
     $this->assertFalse(@stream_set_timeout($handle, 1), 'Unable to set read time out using a local stream wrapper.');
-    $this->assertEqual(-1 /*EOF*/, @stream_set_write_buffer($handle, 512), 'Unable to set write buffer using a local stream wrapper.');
+    $this->assertEquals(-1 /*EOF*/, @stream_set_write_buffer($handle, 512), 'Unable to set write buffer using a local stream wrapper.');
 
     // This will test stream_cast().
     $read = [$handle];
     $write = NULL;
     $except = NULL;
-    $this->assertEqual(1, stream_select($read, $write, $except, 0), 'Able to cast a stream via stream_select.');
+    $this->assertEquals(1, stream_select($read, $write, $except, 0), 'Able to cast a stream via stream_select.');
 
     // This will test stream_truncate().
-    $this->assertEqual(1, ftruncate($handle, 0), 'Able to truncate a stream via ftruncate().');
+    $this->assertEquals(1, ftruncate($handle, 0), 'Able to truncate a stream via ftruncate().');
     fclose($handle);
-    $this->assertEqual(0, filesize($filename), 'Able to truncate a stream.');
+    $this->assertEquals(0, filesize($filename), 'Able to truncate a stream.');
 
     // Cleanup.
     unlink($filename);
   }
 
   /**
-   * Test the scheme functions.
+   * Tests the scheme functions.
    */
   public function testGetValidStreamScheme() {
 
     /** @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager */
     $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
 
-    $this->assertEqual('foo', $stream_wrapper_manager::getScheme('foo://pork//chops'), 'Got the correct scheme from foo://asdf');
-    $this->assertEqual('data', $stream_wrapper_manager::getScheme('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='), 'Got the correct scheme from a data URI.');
+    $this->assertEquals('foo', $stream_wrapper_manager::getScheme('foo://pork//chops'), 'Got the correct scheme from foo://asdf');
+    $this->assertEquals('data', $stream_wrapper_manager::getScheme('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='), 'Got the correct scheme from a data URI.');
     $this->assertFalse($stream_wrapper_manager::getScheme('foo/bar.txt'), 'foo/bar.txt is not a valid stream.');
     $this->assertTrue($stream_wrapper_manager->isValidScheme($stream_wrapper_manager::getScheme('public://asdf')), 'Got a valid stream scheme from public://asdf');
     $this->assertFalse($stream_wrapper_manager->isValidScheme($stream_wrapper_manager::getScheme('foo://asdf')), 'Did not get a valid stream scheme from foo://asdf');

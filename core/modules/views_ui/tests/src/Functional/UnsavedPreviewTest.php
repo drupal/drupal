@@ -10,10 +10,10 @@ namespace Drupal\Tests\views_ui\Functional;
 class UnsavedPreviewTest extends UITestBase {
 
   /**
-    * Views used by this test.
-    *
-    * @var array
-    */
+   * Views used by this test.
+   *
+   * @var array
+   */
   public static $testViews = ['content'];
 
   /**
@@ -66,7 +66,7 @@ class UnsavedPreviewTest extends UITestBase {
 
     $this->submitForm([], 'Update preview');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('This display has no path');
+    $this->assertSession()->pageTextContains('This display has no path');
 
     $this->drupalGet('admin/structure/views/view/content/edit/page_2');
     $this->assertSession()->statusCodeEquals(200);

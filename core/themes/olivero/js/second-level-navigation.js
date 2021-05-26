@@ -9,9 +9,9 @@
   var isDesktopNav = Drupal.olivero.isDesktopNav;
   var secondLevelNavMenus = document.querySelectorAll('.primary-nav__menu-item--has-children');
 
-  function toggleSubNav(topLevelMenuITem, toState) {
+  function toggleSubNav(topLevelMenuItem, toState) {
     var buttonSelector = '.primary-nav__button-toggle, .primary-nav__menu-link--button';
-    var button = topLevelMenuITem.querySelector(buttonSelector);
+    var button = topLevelMenuItem.querySelector(buttonSelector);
     var state = toState !== undefined ? toState : button.getAttribute('aria-expanded') !== 'true';
 
     if (state) {
@@ -19,19 +19,34 @@
         secondLevelNavMenus.forEach(function (el) {
           el.querySelector(buttonSelector).setAttribute('aria-expanded', 'false');
           el.querySelector('.primary-nav__menu--level-2').classList.remove('is-active-menu-parent');
+          el.querySelector('.primary-nav__menu-🥕').classList.remove('is-active-menu-parent');
         });
       }
 
       button.setAttribute('aria-expanded', 'true');
-      topLevelMenuITem.querySelector('.primary-nav__menu--level-2').classList.add('is-active-menu-parent');
+      topLevelMenuItem.querySelector('.primary-nav__menu--level-2').classList.add('is-active-menu-parent');
+      topLevelMenuItem.querySelector('.primary-nav__menu-🥕').classList.add('is-active-menu-parent');
     } else {
       button.setAttribute('aria-expanded', 'false');
-      topLevelMenuITem.classList.remove('is-touch-event');
-      topLevelMenuITem.querySelector('.primary-nav__menu--level-2').classList.remove('is-active-menu-parent');
+      topLevelMenuItem.classList.remove('is-touch-event');
+      topLevelMenuItem.querySelector('.primary-nav__menu--level-2').classList.remove('is-active-menu-parent');
+      topLevelMenuItem.querySelector('.primary-nav__menu-🥕').classList.remove('is-active-menu-parent');
     }
   }
 
   Drupal.olivero.toggleSubNav = toggleSubNav;
+
+  function handleBlur(e) {
+    if (!Drupal.olivero.isDesktopNav()) return;
+    setTimeout(function () {
+      var menuParentItem = e.target.closest('.primary-nav__menu-item--has-children');
+
+      if (!menuParentItem.contains(document.activeElement)) {
+        toggleSubNav(menuParentItem, false);
+      }
+    }, 200);
+  }
+
   secondLevelNavMenus.forEach(function (el) {
     var button = el.querySelector('.primary-nav__button-toggle, .primary-nav__menu-link--button');
     button.removeAttribute('aria-hidden');
@@ -60,10 +75,15 @@
         toggleSubNav(el, false);
       }
     });
+    el.addEventListener('blur', handleBlur, true);
   });
 
   function closeAllSubNav() {
     secondLevelNavMenus.forEach(function (el) {
+      if (el.contains(document.activeElement)) {
+        el.querySelector('.primary-nav__button-toggle, .primary-nav__menu-link--button').focus();
+      }
+
       toggleSubNav(el, false);
     });
   }
@@ -90,7 +110,7 @@
     }
   });
   document.addEventListener('touchstart', function (e) {
-    if (areAnySubNavsOpen() && !e.target.matches('.primary-nav__menu-item--has-children, .primary-nav__menu-item--has-children *')) {
+    if (areAnySubNavsOpen() && !e.target.matches('.header-nav, .header-nav *')) {
       closeAllSubNav();
     }
   }, {

@@ -21,9 +21,11 @@ use Drupal\Tests\PhpUnitCompatibilityTrait;
 use Drupal\Tests\TestRequirementsTrait;
 use Drupal\Tests\Traits\PhpUnitWarnings;
 use Drupal\TestTools\Comparator\MarkupInterfaceComparator;
+use Drupal\TestTools\Extension\SchemaInspector;
 use Drupal\TestTools\TestVarDumper;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
 use org\bovigo\vfs\vfsStream;
@@ -574,7 +576,22 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
       $container->getDefinition('password')
         ->setArguments([1]);
     }
-    TestServiceProvider::addRouteProvider($container);
+
+    // Add the on demand rebuild route provider service.
+    $route_provider_service_name = 'router.route_provider';
+    // While $container->get() does a recursive resolve, getDefinition() does
+    // not, so do it ourselves.
+    $id = $route_provider_service_name;
+    while ($container->hasAlias($id)) {
+      $id = (string) $container->getAlias($id);
+    }
+    $definition = $container->getDefinition($id);
+    $definition->clearTag('needs_destruction');
+    $container->setDefinition("simpletest.$route_provider_service_name", $definition);
+
+    $route_provider_definition = new Definition(RouteProvider::class);
+    $route_provider_definition->setPublic(TRUE);
+    $container->setDefinition($id, $route_provider_definition);
   }
 
   /**
@@ -715,14 +732,20 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    *   If $module is not enabled or the table schema cannot be found.
    */
   protected function installSchema($module, $tables) {
-    // drupal_get_module_schema() is technically able to install a schema
-    // of a non-enabled module, but its ability to load the module's .install
-    // file depends on many other factors. To prevent differences in test
-    // behavior and non-reproducible test failures, we only allow the schema of
-    // explicitly loaded/enabled modules to be installed.
-    if (!$this->container->get('module_handler')->moduleExists($module)) {
+    /** @var \Drupal\Core\Extension\ModuleHandlerInterface $module_handler */
+    $module_handler = $this->container->get('module_handler');
+    // Database connection schema is technically able to create database tables
+    // using any valid specification, for example of a non-enabled module. But
+    // ability to load the module's .install file depends on many other factors.
+    // To prevent differences in test behavior and non-reproducible test
+    // failures, we only allow the schema of explicitly loaded/enabled modules
+    // to be installed.
+    if (!$module_handler->moduleExists($module)) {
       throw new \LogicException("$module module is not enabled.");
     }
+    $specification = SchemaInspector::getTablesSpecification($module_handler, $module);
+    /** @var \Drupal\Core\Database\Schema $schema */
+    $schema = $this->container->get('database')->schema();
     $tables = (array) $tables;
     foreach ($tables as $table) {
       // The tables key_value and key_value_expire are lazy loaded and therefore
@@ -732,11 +755,10 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
         @trigger_error('Installing the tables key_value and key_value_expire with the method KernelTestBase::installSchema() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. The tables are now lazy loaded and therefore will be installed automatically when used. See https://www.drupal.org/node/3143286', E_USER_DEPRECATED);
         continue;
       }
-      $schema = drupal_get_module_schema($module, $table);
-      if (empty($schema)) {
+      if (empty($specification[$table])) {
         throw new \LogicException("$module module does not define a schema for table '$table'.");
       }
-      $this->container->get('database')->schema()->createTable($table, $schema);
+      $schema->createTable($table, $specification[$table]);
     }
   }
 

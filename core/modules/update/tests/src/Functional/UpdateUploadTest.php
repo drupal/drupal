@@ -57,7 +57,8 @@ class UpdateUploadTest extends UpdateTestBase {
       'files[project_upload]' => $invalidArchiveFile->uri,
     ];
     // This also checks that the correct archive extensions are allowed.
-    $this->drupalPostForm('admin/modules/install', $edit, 'Continue');
+    $this->drupalGet('admin/modules/install');
+    $this->submitForm($edit, 'Continue');
     $extensions = \Drupal::service('plugin.manager.archiver')->getExtensions();
     $this->assertSession()->pageTextContains(t('Only files with the following extensions are allowed: @archive_extensions.', ['@archive_extensions' => $extensions]));
     $this->assertSession()->addressEquals('admin/modules/install');
@@ -69,8 +70,9 @@ class UpdateUploadTest extends UpdateTestBase {
     $edit = [
       'files[project_upload]' => $validArchiveFile,
     ];
-    $this->drupalPostForm('admin/modules/install', $edit, 'Continue');
-    $this->assertText('AAA Update test is already present.');
+    $this->drupalGet('admin/modules/install');
+    $this->submitForm($edit, 'Continue');
+    $this->assertSession()->pageTextContains('AAA Update test is already present.');
     $this->assertSession()->addressEquals('admin/modules/install');
 
     // Ensure that a new module can be extracted and installed.
@@ -82,7 +84,8 @@ class UpdateUploadTest extends UpdateTestBase {
     $edit = [
       'files[project_upload]' => $validArchiveFile,
     ];
-    $this->drupalPostForm('admin/modules/install', $edit, 'Continue');
+    $this->drupalGet('admin/modules/install');
+    $this->submitForm($edit, 'Continue');
     // Check that submitting the form takes the user to authorize.php.
     $this->assertSession()->addressEquals('core/authorize.php');
     $this->assertSession()->titleEquals('Update manager | Drupal');
@@ -110,10 +113,11 @@ class UpdateUploadTest extends UpdateTestBase {
     // directly instead.
     $info_parser = new InfoParserDynamic(DRUPAL_ROOT);
     $info = $info_parser->parse($installedInfoFilePath);
-    $this->assertEqual('8.x-1.0', $info['version']);
+    $this->assertEquals('8.x-1.0', $info['version']);
 
     // Enable the module.
-    $this->drupalPostForm('admin/modules', ['modules[update_test_new_module][enable]' => TRUE], 'Install');
+    $this->drupalGet('admin/modules');
+    $this->submitForm(['modules[update_test_new_module][enable]' => TRUE], 'Install');
 
     // Define the update XML such that the new module downloaded above needs an
     // update from 8.x-1.0 to 8.x-1.1.
@@ -130,15 +134,16 @@ class UpdateUploadTest extends UpdateTestBase {
     $this->refreshUpdateStatus($xml_mapping);
 
     // Run the updates for the new module.
-    $this->drupalPostForm('admin/reports/updates/update', ['projects[update_test_new_module]' => TRUE], 'Download these updates');
+    $this->drupalGet('admin/reports/updates/update');
+    $this->submitForm(['projects[update_test_new_module]' => TRUE], 'Download these updates');
     $this->submitForm(['maintenance_mode' => FALSE], 'Continue');
-    $this->assertText('Update was completed successfully.');
+    $this->assertSession()->pageTextContains('Update was completed successfully.');
     $this->assertRaw(t('Added / updated %project_name successfully', ['%project_name' => 'update_test_new_module']));
 
     // Parse the info file again to check that the module has been updated to
     // 8.x-1.1.
     $info = $info_parser->parse($installedInfoFilePath);
-    $this->assertEqual('8.x-1.1', $info['version']);
+    $this->assertEquals('8.x-1.1', $info['version']);
   }
 
   /**
@@ -201,10 +206,10 @@ class UpdateUploadTest extends UpdateTestBase {
    */
   public function testUpdateDirectory() {
     $type = Updater::getUpdaterFromDirectory($this->root . '/core/modules/update/tests/modules/aaa_update_test');
-    $this->assertEqual('Drupal\\Core\\Updater\\Module', $type, 'Detected a Module');
+    $this->assertEquals('Drupal\\Core\\Updater\\Module', $type, 'Detected a Module');
 
     $type = Updater::getUpdaterFromDirectory($this->root . '/core/modules/update/tests/themes/update_test_basetheme');
-    $this->assertEqual('Drupal\\Core\\Updater\\Theme', $type, 'Detected a Theme.');
+    $this->assertEquals('Drupal\\Core\\Updater\\Theme', $type, 'Detected a Theme.');
   }
 
 }

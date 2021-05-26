@@ -116,7 +116,8 @@ class ColorTest extends BrowserTestBase {
     $this->assertSession()->pageTextContainsOnce('Color set');
     $edit['scheme'] = '';
     $edit[$test_values['palette_input']] = '#123456';
-    $this->drupalPostForm($settings_path, $edit, 'Save configuration');
+    $this->drupalGet($settings_path);
+    $this->submitForm($edit, 'Save configuration');
 
     $this->drupalGet('<front>');
     $stylesheets = $this->config('color.theme.' . $theme)->get('stylesheets');
@@ -130,7 +131,8 @@ class ColorTest extends BrowserTestBase {
     $this->drupalGet($settings_path);
     $this->assertSession()->statusCodeEquals(200);
     $edit['scheme'] = $test_values['scheme'];
-    $this->drupalPostForm($settings_path, $edit, 'Save configuration');
+    $this->drupalGet($settings_path);
+    $this->submitForm($edit, 'Save configuration');
 
     $this->drupalGet('<front>');
     $stylesheets = $this->config('color.theme.' . $theme)->get('stylesheets');
@@ -168,19 +170,20 @@ class ColorTest extends BrowserTestBase {
 
     foreach ($this->colorTests as $color => $is_valid) {
       $edit['palette[bg]'] = $color;
-      $this->drupalPostForm($settings_path, $edit, 'Save configuration');
+      $this->drupalGet($settings_path);
+      $this->submitForm($edit, 'Save configuration');
 
       if ($is_valid) {
-        $this->assertText('The configuration options have been saved.');
+        $this->assertSession()->pageTextContains('The configuration options have been saved.');
       }
       else {
-        $this->assertText('You must enter a valid hexadecimal color value for Main background.');
+        $this->assertSession()->pageTextContains('You must enter a valid hexadecimal color value for Main background.');
       }
     }
   }
 
   /**
-   * Test whether the custom logo is used in the color preview.
+   * Tests whether the custom logo is used in the color preview.
    */
   public function testLogoSettingOverride() {
     $this->drupalLogin($this->bigUser);
@@ -188,7 +191,8 @@ class ColorTest extends BrowserTestBase {
       'default_logo' => FALSE,
       'logo_path' => 'core/misc/druplicon.png',
     ];
-    $this->drupalPostForm('admin/appearance/settings', $edit, 'Save configuration');
+    $this->drupalGet('admin/appearance/settings');
+    $this->submitForm($edit, 'Save configuration');
 
     // Ensure that the overridden logo is present in Bartik, which is colorable.
     $this->drupalGet('admin/appearance/settings/bartik');
@@ -196,7 +200,7 @@ class ColorTest extends BrowserTestBase {
   }
 
   /**
-   * Test whether the scheme can be set, viewed anonymously and reset.
+   * Tests whether the scheme can be set, viewed anonymously and reset.
    */
   public function testOverrideAndResetScheme() {
     $settings_path = 'admin/appearance/settings/bartik';
@@ -216,7 +220,8 @@ class ColorTest extends BrowserTestBase {
     // Log in and set the color scheme to 'slate'.
     $this->drupalLogin($this->bigUser);
     $edit['scheme'] = 'slate';
-    $this->drupalPostForm($settings_path, $edit, 'Save configuration');
+    $this->drupalGet($settings_path);
+    $this->submitForm($edit, 'Save configuration');
 
     // Visit the homepage and ensure color changes.
     $this->drupalLogout();
@@ -229,7 +234,8 @@ class ColorTest extends BrowserTestBase {
     // Log in and set the color scheme back to default (delete config).
     $this->drupalLogin($this->bigUser);
     $edit['scheme'] = 'default';
-    $this->drupalPostForm($settings_path, $edit, 'Save configuration');
+    $this->drupalGet($settings_path);
+    $this->submitForm($edit, 'Save configuration');
 
     // Log out and ensure there is no color and we have the original logo.
     $this->drupalLogout();

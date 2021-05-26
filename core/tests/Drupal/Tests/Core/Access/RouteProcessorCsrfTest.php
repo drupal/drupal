@@ -37,8 +37,8 @@ class RouteProcessorCsrfTest extends UnitTestCase {
   }
 
   /**
- * Tests the processOutbound() method with no _csrf_token route requirement.
- */
+   * Tests the processOutbound() method with no _csrf_token route requirement.
+   */
   public function testProcessOutboundNoRequirement() {
     $this->csrfToken->expects($this->never())
       ->method('get');
