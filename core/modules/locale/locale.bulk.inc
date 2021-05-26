@@ -154,6 +154,7 @@ function locale_translate_batch_build(array $files, array $options) {
     }
     // Save the translation status of all files.
     $batch_builder->addOperation('locale_translate_batch_import_save', []);
+
     // Add a final step to refresh JavaScript and configuration strings.
     $batch_builder->addOperation('locale_translate_batch_refresh', []);
 
