@@ -34,7 +34,7 @@ function locale_translation_batch_update_build($projects = [], $langcodes = [], 
   $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
   $status_options = $options;
   $status_options['finish_feedback'] = FALSE;
-  
+
   $batch_builder = (new BatchBuilder())
     ->setFile(drupal_get_path('module', 'locale') . '/locale.batch.inc')
     ->setTitle(t('Updating translations'))
