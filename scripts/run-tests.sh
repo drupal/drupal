@@ -278,7 +278,7 @@ function simpletest_script_init($server_software) {
     list($php, ) = explode(' ', $sudo, 2);
   }
   else {
-    simpletest_script_print_error('Unable to automaticpally determine the path to the PHP interpreter. Supply the --php command line argument.');
+    simpletest_script_print_error('Unable to automatically determine the path to the PHP interpreter. Supply the --php command line argument.');
     simpletest_script_help();
     exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
   }
