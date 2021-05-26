@@ -15,11 +15,10 @@ class AutoUpdatesTestServiceProvider implements ServiceModifierInterface {
    */
   public function alter(ContainerBuilder $container): void {
     // We cannot use the state service here because the container is still being
-    // built.
-    if (defined('AUTO_UPDATES_TEST_DUPLICATE_SERVICE')) {
-      $definition = $container->getDefinition('auto_updates_test.checker');
-      $container->setDefinition('auto_updates_test.checker_duplicate', $definition);
-    }
+    // built. Therefore, our tests define a constant to trigger service
+    // definition to be altered.
+    // @see \Drupal\Tests\auto_updates\Kernel\ReadinessChecker\ReadinessCheckerManagerTest::testGetResults()
+    // @see \Drupal\Tests\auto_updates\Kernel\ReadinessChecker\ReadinessCheckerManagerTest::testRunIfNeeded()
     if (defined('AUTO_UPDATES_TEST_SET_PRIORITY')) {
       $definition = $container->getDefinition('auto_updates_test.checker');
       $tags = $definition->getTags();
