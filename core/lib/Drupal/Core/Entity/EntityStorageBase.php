@@ -393,7 +393,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
     $entities = [];
     foreach ($records as $record) {
       $entity_class = $this->getEntityClass();
-      /* @var $entity \Drupal\Core\Entity\EntityInterface */
+      /** @var $entity \Drupal\Core\Entity\EntityInterface */
       $entity = new $entity_class($record, $this->entityTypeId);
       $entities[$entity->id()] = $entity;
     }
