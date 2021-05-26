@@ -17,8 +17,9 @@ interface AccessResultReasonInterface extends AccessResultInterface {
   /**
    * Gets the reason for this access result.
    *
-   * @return string|null
-   *   The reason of this access result or NULL if no reason is provided.
+   * @return string
+   *   The reason of this access result or an empty string if no reason is
+   *   provided.
    */
   public function getReason();
 
