@@ -148,7 +148,6 @@ function locale_translate_batch_build(array $files, array $options) {
       ->setFile(drupal_get_path('module', 'locale') . '/locale.bulk.inc')
       ->setTitle(t('Importing interface translations'))
       ->setErrorMessage(t('Error importing interface translations'));
-
     foreach ($files as $file) {
       // We call locale_translate_batch_import for every batch operation.
       $batch_builder->addOperation('locale_translate_batch_import', [$file, $options]);
@@ -567,13 +566,11 @@ function locale_config_batch_update_components(array $options, array $langcodes 
  */
 function locale_config_batch_build(array $names, array $langcodes, array $options = []) {
   $options += ['finish_feedback' => TRUE];
-
   $batch_builder = (new BatchBuilder())
     ->setFile(drupal_get_path('module', 'locale') . '/locale.bulk.inc')
     ->setTitle(t('Updating configuration translations'))
     ->setInitMessage(t('Starting configuration update'))
     ->setErrorMessage(t('Error updating configuration translations'));
-
   $i = 0;
   $batch_names = [];
   foreach ($names as $name) {
