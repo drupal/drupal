@@ -3,6 +3,7 @@
 namespace Drupal\Tests\jsonapi\Kernel\Controller;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Http\InputBag;
 use Drupal\jsonapi\CacheableResourceResponse;
 use Drupal\jsonapi\ResourceType\ResourceType;
 use Drupal\jsonapi\JsonApiResource\Data;
@@ -13,7 +14,6 @@ use Drupal\Tests\jsonapi\Kernel\JsonapiKernelTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -186,7 +186,7 @@ class EntityResourceTest extends JsonapiKernelTestBase {
    */
   public function testGetPagedCollection() {
     $request = Request::create('/jsonapi/node/article');
-    $request->query = new ParameterBag([
+    $request->query = new InputBag([
       'sort' => 'nid',
       'page' => [
         'offset' => 1,
@@ -215,7 +215,7 @@ class EntityResourceTest extends JsonapiKernelTestBase {
    */
   public function testGetEmptyCollection() {
     $request = Request::create('/jsonapi/node/article');
-    $request->query = new ParameterBag(['filter' => ['id' => 'invalid']]);
+    $request->query = new InputBag(['filter' => ['id' => 'invalid']]);
 
     // Get the response.
     $resource_type = new ResourceType('node', 'article', NULL);
