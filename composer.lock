@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5e658e150305bd8c42a49e766211d9c0",
+    "content-hash": "a21f5caf56f7a0d3a198f41c3fb84eac",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -534,12 +534,12 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "8d19de4587f2e384aad845327980c8793690bbc6"
+                "reference": "8c4a55a02c2380b587e1d59919848c0305c237ff"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
                 "composer/semver": "^3.0",
-                "doctrine/annotations": "^1.4",
+                "doctrine/annotations": "^1.12",
                 "doctrine/reflection": "^1.1",
                 "egulias/email-validator": "^2.0",
                 "ext-date": "*",
