@@ -137,6 +137,8 @@ trait DeprecationListenerTrait {
       // Deprecation introduced in Symfony 5.
       'Since symfony/http-foundation 5.3: "Symfony\Component\HttpFoundation\RequestStack::getMasterRequest()" is deprecated, use "getMainRequest()" instead.',
       'Since symfony/http-kernel 5.3: "Symfony\Component\HttpKernel\Event\KernelEvent::isMasterRequest()" is deprecated, use "isMainRequest()" instead.',
+      'Since symfony/http-kernel 5.3: Passing null as $message to "Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException::__construct()" is deprecated, pass an empty string instead.',
+      'Since symfony/http-kernel 5.3: Passing null as $message to "Symfony\Component\HttpKernel\Exception\BadRequestHttpException::__construct()" is deprecated, pass an empty string instead.',
     ];
   }
 
