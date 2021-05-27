@@ -432,7 +432,7 @@ abstract class BuildTestBase extends TestCase {
       }
       usleep(1000);
     }
-    throw new \RuntimeException(sprintf("Unable to start the web server.\nERROR OUTPUT:\n%s", $ps->getErrorOutput()));
+    throw new \RuntimeException(sprintf("Unable to start the web server.\nCODE: %d\nOUTPUT:\n%s\n\nERROR OUTPUT:\n%s", $ps->getExitCode(), $ps->getOutput(), $ps->getErrorOutput()));
   }
 
   /**
