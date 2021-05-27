@@ -100,12 +100,7 @@ function _menu_overview_tree_form($tree) {
       $form[$mlid]['#item'] = $item;
       $form[$mlid]['#attributes'] = $item['hidden'] ? array('class' => array('menu-disabled')) : array('class' => array('menu-enabled'));
       $form[$mlid]['title']['#markup'] = l($item['title'], $item['href'], $item['localized_options']);
-      if ($item['hidden']) {
-        $form[$mlid]['title']['#markup'] .= ' (' . t('disabled') . ')';
-      }
-      elseif ($item['link_path'] == 'user' && $item['module'] == 'system') {
-        $form[$mlid]['title']['#markup'] .= ' (' . t('logged in users only') . ')';
-      }
+      menu_add_link_labels($form[$mlid]['title']['#markup'], $item);
 
       $form[$mlid]['hidden'] = array(
         '#type' => 'checkbox',

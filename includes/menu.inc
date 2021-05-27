@@ -1500,13 +1500,25 @@ function menu_tree_check_access(&$tree, $node_links = array()) {
     $nids = array_keys($node_links);
     $select = db_select('node', 'n');
     $select->addField('n', 'nid');
-    $select->condition('n.status', 1);
+    // When a menu administrator who we know has permission to see unpublished
+    // nodes is administering the menu, included the unpublished nodes in the
+    // tree, with a special flag so that the Menu module can label them.
+    // Otherwise, exclude these nodes from the tree.
+    if (!empty($GLOBALS['menu_admin']) && user_access('bypass node access')) {
+      $select->addField('n', 'status');
+    }
+    else {
+      $select->condition('n.status', 1);
+    }
     $select->condition('n.nid', $nids, 'IN');
     $select->addTag('node_access');
-    $nids = $select->execute()->fetchCol();
-    foreach ($nids as $nid) {
-      foreach ($node_links[$nid] as $mlid => $link) {
-        $node_links[$nid][$mlid]['access'] = TRUE;
+    $node_objects = $select->execute()->fetchAll();
+    foreach ($node_objects as $node_object) {
+      foreach ($node_links[$node_object->nid] as $mlid => $link) {
+        $node_links[$node_object->nid][$mlid]['access'] = TRUE;
+        if (isset($node_object->status)) {
+          $node_links[$node_object->nid][$mlid]['node_unpublished'] = !$node_object->status;
+        }
       }
     }
   }
