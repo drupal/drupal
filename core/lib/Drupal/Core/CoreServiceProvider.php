@@ -19,6 +19,7 @@ use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\Compiler\ModifyServiceDefinitionsPass;
+use Drupal\Core\DependencyInjection\Compiler\MimeTypePass;
 use Drupal\Core\DependencyInjection\Compiler\TaggedHandlersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterEventSubscribersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterAccessChecksPass;
@@ -73,6 +74,7 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
 
     // Collect tagged handler services as method calls on consumer services.
     $container->addCompilerPass(new TaggedHandlersPass());
+    $container->addCompilerPass(new MimeTypePass());
     $container->addCompilerPass(new RegisterStreamWrappersPass());
     $container->addCompilerPass(new GuzzleMiddlewarePass());
 

@@ -60,13 +60,13 @@ class ContextualController implements ContainerInjectionInterface {
    * @see contextual_preprocess()
    */
   public function render(Request $request) {
-    $ids = $request->request->all('ids');
-    if (empty($ids)) {
+    $ids = $request->request->get('ids');
+    if (!isset($ids)) {
       throw new BadRequestHttpException('No contextual ids specified.');
     }
 
-    $tokens = $request->request->all('tokens');
-    if (empty($tokens)) {
+    $tokens = $request->request->get('tokens');
+    if (!isset($tokens)) {
       throw new BadRequestHttpException('No contextual ID tokens specified.');
     }
 
