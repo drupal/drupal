@@ -14,7 +14,7 @@ class BigPipeTestController implements TrustedCallbackInterface {
    * @return array
    */
   public function test() {
-    $has_session = \Drupal::service('session_configuration')->hasSession(\Drupal::requestStack()->getMasterRequest());
+    $has_session = \Drupal::service('session_configuration')->hasSession(\Drupal::requestStack()->getMainRequest());
 
     $build = [];
 
