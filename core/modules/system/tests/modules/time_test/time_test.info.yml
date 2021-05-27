@@ -1,0 +1,5 @@
+name: Time test module
+description: Allows setting the request time for tests
+type: module
+package: Testing
+version: VERSION
