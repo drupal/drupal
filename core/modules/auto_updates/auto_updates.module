@@ -40,7 +40,7 @@ function auto_updates_modules_installed() {
   // case they provide readiness checker services.
   /** @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager $checker_manager */
   $checker_manager = \Drupal::service('auto_updates.readiness_checker_manager');
-  $checker_manager->runIfNoStoredValidResults();
+  $checker_manager->runIfNoStoredResults();
 }
 
 /**
@@ -51,5 +51,5 @@ function auto_updates_modules_uninstalled() {
   // case they provided readiness checker services.
   /** @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerManager $checker_manager */
   $checker_manager = \Drupal::service('auto_updates.readiness_checker_manager');
-  $checker_manager->runIfNoStoredValidResults();
+  $checker_manager->runIfNoStoredResults();
 }

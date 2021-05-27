@@ -101,15 +101,12 @@ class ReadinessCheckerManager {
   /**
    * Runs the readiness checkers if there no stored valid results.
    *
-   * The stored results are considered invalid if the currently available
-   * readiness checkers are no longer the same as the last time the checkers
-   * were run.
-   *
    * @return $this
    *
    * @see self::getResults()
+   * @see self::getStoredValidResults()
    */
-  public function runIfNoStoredValidResults(): self {
+  public function runIfNoStoredResults(): self {
     if ($this->getResults() === NULL) {
       $this->run();
     }
@@ -125,23 +122,38 @@ class ReadinessCheckerManager {
    *
    * @return \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[]|
    *   The result objects for the readiness checkers or NULL if no results are
-   *   available or if the stored results are no longer valid. The stored
-   *   results are considered invalid if the currently available readiness
-   *   checkers are no longer the same as the last time the checkers were run.
+   *   available or if the stored results are no longer valid.
+   *
+   * @see self::getStoredValidResults()
    */
   public function getResults(?int $severity = NULL): ?array {
-    $last_run = $this->keyValueExpirable->get('readiness_check_last_run');
-
-    // If the checkers have not changed return the results.
-    if ($last_run && $last_run['checkers'] === $this->getCurrentCheckerIds()) {
-      /** @var \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[] $results */
-      $results = $last_run['results'];
+    $results = $this->getStoredValidResults();
+    if ($results !== NULL) {
       if ($severity !== NULL) {
         $results = array_filter($results, function ($result) use ($severity) {
           return $result->getSeverity() === $severity;
         });
       }
       return $results;
+    }
+    return NULL;
+  }
+
+  /**
+   * Gets stored valid results, if any.
+   *
+   * The stored results are considered valid if the currently available
+   * readiness checkers are the same as the last time the checkers were run.
+   *
+   * @return \Drupal\auto_updates\ReadinessChecker\ReadinessCheckerResult[]|null
+   *   The stored results if available and still valid, otherwise null.
+   */
+  protected function getStoredValidResults(): ?array {
+    $last_run = $this->keyValueExpirable->get('readiness_check_last_run');
+
+    // If the checkers have not changed return the results.
+    if ($last_run && $last_run['checkers'] === $this->getCurrentCheckerIds()) {
+      return $last_run['results'];
     }
     return NULL;
   }
