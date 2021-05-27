@@ -937,9 +937,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     }
 
     // The request stack is preserved across container rebuilds. Reinject the
-    // new session into the master request if one was present before.
+    // new session into the main request if one was present before.
     if (($request_stack = $this->container->get('request_stack', ContainerInterface::NULL_ON_INVALID_REFERENCE))) {
-      if ($request = $request_stack->getMasterRequest()) {
+      if ($request = $request_stack->getMainRequest()) {
         $subrequest = TRUE;
         if ($request->hasSession()) {
           $request->setSession($this->container->get('session'));
