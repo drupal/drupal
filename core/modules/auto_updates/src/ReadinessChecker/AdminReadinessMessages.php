@@ -112,7 +112,8 @@ final class AdminReadinessMessages implements ContainerInjectionInterface {
       }
     }
     else {
-      // Warnings are not displayed if there are any errors.
+      // Display errors, if there are any. If there aren't, then display
+      // warnings, if there are any.
       if (!$this->displayResultsForSeverity(SystemManager::REQUIREMENT_ERROR)) {
         $this->displayResultsForSeverity(SystemManager::REQUIREMENT_WARNING);
       }
