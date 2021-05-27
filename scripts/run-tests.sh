@@ -156,6 +156,9 @@ All arguments are long options.
 
   --verbose   Output detailed assertion messages in addition to summary.
 
+  --fail-only When paired with --verbose, do not print the detailed
+              messages for passing tests.
+
   <test1>[,<test2>[,<test3> ...]]
 
               One or more tests to be run. By default, these are interpreted
@@ -200,6 +203,7 @@ function simpletest_script_parse_args() {
     'color' => FALSE,
     'verbose' => FALSE,
     'test_names' => array(),
+    'fail-only' => FALSE,
     // Used internally.
     'test-id' => 0,
     'execute-test' => '',
@@ -677,7 +681,7 @@ function simpletest_script_reporter_display_results() {
     $results = db_query("SELECT * FROM {simpletest} WHERE test_id = :test_id ORDER BY test_class, message_id", array(':test_id' => $test_id));
     $test_class = '';
     foreach ($results as $result) {
-      if (isset($results_map[$result->status])) {
+      if (isset($results_map[$result->status]) && (!$args['fail-only'] || $result->status !== 'pass')) {
         if ($result->test_class != $test_class) {
           // Display test class every time results are for new test class.
           echo "\n\n---- $result->test_class ----\n\n\n";
