@@ -1069,7 +1069,8 @@ class CascadingStylesheetsUnitTest extends DrupalUnitTestCase {
       'css_input_without_import.css',
       'css_input_with_import.css',
       'css_subfolder/css_input_with_import.css',
-      'comment_hacks.css'
+      'comment_hacks.css',
+      'quotes.css',
     );
     $path = drupal_get_path('module', 'simpletest') . '/files/css_test_files';
     foreach ($testfiles as $file) {

@@ -3864,8 +3864,10 @@ function drupal_load_stylesheet_content($contents, $optimize = FALSE) {
     // whitespace.
     // @see http://php.net/manual/regexp.reference.subpatterns.php
     $contents = preg_replace('<
+      # Do not strip any space from within single or double quotes
+        (' . $double_quot . '|' . $single_quot . ')
       # Strip leading and trailing whitespace.
-        \s*([@{};,])\s*
+      | \s*([@{};,])\s*
       # Strip only leading whitespace from:
       # - Closing parenthesis: Retain "@media (bar) and foo".
       | \s+([\)])
@@ -3873,11 +3875,11 @@ function drupal_load_stylesheet_content($contents, $optimize = FALSE) {
       # - Opening parenthesis: Retain "@media (bar) and foo".
       # - Colon: Retain :pseudo-selectors.
       | ([\(:])\s+
-    >xS',
-      // Only one of the three capturing groups will match, so its reference
+    >xSs',
+      // Only one of the four capturing groups will match, so its reference
       // will contain the wanted value and the references for the
       // two non-matching groups will be replaced with empty strings.
-      '$1$2$3',
+      '$1$2$3$4',
       $contents
     );
     // End the file with a new line.
