@@ -437,7 +437,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('GET'), $response, $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts(), 'MISS', FALSE);
     }
     else {
-      $this->assertResourceErrorResponse(404, 'No route found for "GET ' . str_replace($this->baseUrl, '', $this->getEntityResourceUrl()->setAbsolute()->toString()) . '"', $response);
+      $this->assertResourceErrorResponse(404, 'No route found for "GET ' . $this->getEntityResourceUrl()->setAbsolute()->toString() . '"', $response);
     }
 
     $this->provisionEntityResource();
@@ -723,7 +723,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // DX: 404 when resource not provisioned.
     $response = $this->request('POST', $url, $request_options);
-    $this->assertResourceErrorResponse(404, 'No route found for "POST ' . str_replace($this->baseUrl, '', $this->getEntityResourcePostUrl()->setAbsolute()->toString()) . '"', $response);
+    $this->assertResourceErrorResponse(404, 'No route found for "POST ' . $this->getEntityResourcePostUrl()->setAbsolute()->toString() . '"', $response);
 
     $this->provisionEntityResource();
     // Simulate the developer again forgetting the ?_format query string.
@@ -913,10 +913,10 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // DX: 404 when resource not provisioned, 405 if canonical route.
     $response = $this->request('PATCH', $url, $request_options);
     if ($has_canonical_url) {
-      $this->assertResourceErrorResponse(405, 'No route found for "PATCH ' . str_replace($this->baseUrl, '', $this->getEntityResourceUrl()->setAbsolute()->toString()) . '": Method Not Allowed (Allow: GET, POST, HEAD)', $response);
+      $this->assertResourceErrorResponse(405, 'No route found for "PATCH ' . $this->getEntityResourceUrl()->setAbsolute()->toString() . '": Method Not Allowed (Allow: GET, POST, HEAD)', $response);
     }
     else {
-      $this->assertResourceErrorResponse(404, 'No route found for "PATCH ' . str_replace($this->baseUrl, '', $this->getEntityResourceUrl()->setAbsolute()->toString()) . '"', $response);
+      $this->assertResourceErrorResponse(404, 'No route found for "PATCH ' . $this->getEntityResourceUrl()->setAbsolute()->toString() . '"', $response);
     }
 
     $this->provisionEntityResource();
@@ -1140,10 +1140,10 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $response = $this->request('DELETE', $url, $request_options);
     if ($has_canonical_url) {
       $this->assertSame(['GET, POST, HEAD'], $response->getHeader('Allow'));
-      $this->assertResourceErrorResponse(405, 'No route found for "DELETE ' . str_replace($this->baseUrl, '', $this->getEntityResourceUrl()->setAbsolute()->toString()) . '": Method Not Allowed (Allow: GET, POST, HEAD)', $response);
+      $this->assertResourceErrorResponse(405, 'No route found for "DELETE ' . $this->getEntityResourceUrl()->setAbsolute()->toString() . '": Method Not Allowed (Allow: GET, POST, HEAD)', $response);
     }
     else {
-      $this->assertResourceErrorResponse(404, 'No route found for "DELETE ' . str_replace($this->baseUrl, '', $this->getEntityResourceUrl()->setAbsolute()->toString()) . '"', $response);
+      $this->assertResourceErrorResponse(404, 'No route found for "DELETE ' . $this->getEntityResourceUrl()->setAbsolute()->toString() . '"', $response);
     }
 
     $this->provisionEntityResource();

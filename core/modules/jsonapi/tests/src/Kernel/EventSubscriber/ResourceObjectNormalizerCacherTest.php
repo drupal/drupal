@@ -9,6 +9,8 @@ use Drupal\jsonapi\JsonApiResource\ResourceObject;
 use Drupal\jsonapi\Normalizer\Value\CacheableNormalization;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 
 /**
@@ -92,8 +94,8 @@ class ResourceObjectNormalizerCacherTest extends KernelTestBase {
       ResourceObjectNormalizationCacher::RESOURCE_CACHE_SUBSET_FIELDS => [],
     ];
     $this->cacher->saveOnTerminate($resource_object, $normalization_parts);
-    $event = $this->prophesize(TerminateEvent::class);
-    $this->cacher->onTerminate($event->reveal());
+    $event = new TerminateEvent($this->container->get('kernel'), new Request(), new Response());
+    $this->cacher->onTerminate($event);
     $this->assertNotFalse((bool) $this->cacher->get($resource_object));
     Cache::invalidateTags([$cache_tag_to_invalidate]);
     $this->assertFalse((bool) $this->cacher->get($resource_object));

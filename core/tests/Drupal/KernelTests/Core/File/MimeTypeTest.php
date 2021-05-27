@@ -89,19 +89,4 @@ class MimeTypeTest extends FileTestBase {
     }
   }
 
-  /**
-   * Test deprecations.
-   *
-   * @group legacy
-   */
-  public function testFileMimeTypeDetectionDeprecation() {
-    $this->expectDeprecation('The "Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser" class is deprecated since Symfony 4.3, use "Symfony\Component\Mime\MimeTypes" instead.');
-    $this->expectDeprecation('The "Symfony\Component\HttpFoundation\File\MimeType\FileBinaryMimeTypeGuesser" class is deprecated since Symfony 4.3, use "Symfony\Component\Mime\FileBinaryMimeTypeGuesser" instead.');
-    $this->expectDeprecation('The "Symfony\Component\HttpFoundation\File\MimeType\FileinfoMimeTypeGuesser" class is deprecated since Symfony 4.3, use "Symfony\Component\Mime\FileinfoMimeTypeGuesser" instead.');
-    $this->expectDeprecation('Drupal\Core\File\MimeType\MimeTypeGuesser::guess() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use ::guessMimeType() instead. See https://www.drupal.org/node/3133341');
-    $guesser = $this->container->get('file.mime_type.guesser');
-    $output = $guesser->guess('public://test.jar');
-    $this->assertSame('application/java-archive', $output);
-  }
-
 }
