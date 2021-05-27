@@ -20,4 +20,9 @@
   {% for file in files %}
     <source {{ file.source_attributes }} />
   {% endfor %}
+  {% if tracks %}
+    {% for track in tracks %}
+      <track {{ track.track_attributes }} />
+    {% endfor %}
+  {% endif %}
 </video>
