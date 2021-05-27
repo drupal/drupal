@@ -403,6 +403,9 @@ abstract class BuildTestBase extends TestCase {
    *
    * @return \Symfony\Component\Process\Process
    *   The server process.
+   *
+   * @throws \RuntimeException
+   *   Thrown if we were unable to start a web server.
    */
   protected function instantiateServer($port, $working_dir = NULL) {
     $finder = new PhpExecutableFinder();
@@ -429,7 +432,7 @@ abstract class BuildTestBase extends TestCase {
       }
       usleep(1000);
     }
-    $this->assertCommandExitCode(0);
+    throw new \RuntimeException(sprintf("Unable to start the web server.\nOUTPUT:\n%s\n\nERROR OUTPUT:\n%s", $ps->getOutput(), $ps->getErrorOutput()));
   }
 
   /**
