@@ -25,6 +25,15 @@ class EntityTestViewsData extends EntityViewsData {
           'field_name' => 'computed_string_field',
         ],
       ];
+      $views_data['entity_test_computed_field']['computed_bundle_field'] = [
+        'title' => $this->t('Computed Bundle Field'),
+        'field' => [
+          'id' => 'field',
+          'default_formatter' => 'string',
+          'field_name' => 'computed_bundle_field',
+          'bundles' => ['entity_test_computed_field'],
+        ],
+      ];
     }
 
     if ($this->entityType->id() != 'entity_test') {

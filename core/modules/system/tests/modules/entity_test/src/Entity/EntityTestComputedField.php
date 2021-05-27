@@ -4,7 +4,10 @@ namespace Drupal\entity_test\Entity;
 
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\FieldDefinition;
+use Drupal\entity_test\FieldStorageDefinition;
 use Drupal\entity_test\Plugin\Field\ComputedReferenceTestFieldItemList;
+use Drupal\entity_test\Plugin\Field\ComputedTestBundleFieldItemList;
 use Drupal\entity_test\Plugin\Field\ComputedTestFieldItemList;
 
 /**
@@ -45,6 +48,29 @@ class EntityTestComputedField extends EntityTest {
       ->setComputed(TRUE)
       ->setSetting('target_type', 'entity_test')
       ->setClass(ComputedReferenceTestFieldItemList::class);
+
+    return $fields;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function bundleFieldDefinitions(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
+    $fields = parent::bundleFieldDefinitions($entity_type, $bundle, $base_field_definitions);
+
+    if ($bundle === $entity_type->id()) {
+      // @todo Use the proper FieldStorageDefinition class instead
+      //  https://www.drupal.org/node/2280639.
+      $storageDefinition = FieldStorageDefinition::create('string')
+        ->setName('computed_bundle_field')
+        ->setTargetEntityTypeId($entity_type->id())
+        ->setComputed(TRUE)
+        ->setClass(ComputedTestBundleFieldItemList::class);
+      $fields['computed_bundle_field'] = FieldDefinition::createFromFieldStorageDefinition($storageDefinition)
+        ->setLabel(t('A computed Bundle Field Test'))
+        ->setComputed(TRUE)
+        ->setClass(ComputedTestBundleFieldItemList::class);
+    }
 
     return $fields;
   }

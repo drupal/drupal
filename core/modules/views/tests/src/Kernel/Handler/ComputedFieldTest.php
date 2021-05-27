@@ -42,6 +42,7 @@ class ComputedFieldTest extends ViewsKernelTestBase {
    */
   public function testComputedFieldHandler() {
     \Drupal::state()->set('entity_test_computed_field_item_list_value', ['computed string']);
+    \Drupal::state()->set('entity_test_computed_bundle_field_item_list_value', ['some other string that is also computed']);
 
     $entity = EntityTestComputedField::create([]);
     $entity->save();
@@ -51,6 +52,7 @@ class ComputedFieldTest extends ViewsKernelTestBase {
     $rendered_view = $view->preview();
     $output = $this->container->get('renderer')->renderRoot($rendered_view);
     $this->assertStringContainsString('computed string', (string) $output);
+    $this->assertStringContainsString('some other string that is also computed', (string) $output);
   }
 
 }
