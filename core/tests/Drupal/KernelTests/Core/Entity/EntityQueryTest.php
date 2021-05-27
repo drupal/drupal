@@ -379,6 +379,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->getQuery()
       ->latestRevision()
       ->notExists("$figures.color")
+      ->accessCheck(TRUE)
       ->execute();
     $expected = [16 => '4', 8 => '8', 20 => '12'];
     $this->assertSame($expected, $results);
@@ -393,6 +394,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->getQuery()
       ->latestRevision()
       ->notExists("$figures.color")
+      ->accessCheck(TRUE)
       ->execute();
     $expected = [8 => '8', 20 => '12'];
     $this->assertSame($expected, $results);
