@@ -134,9 +134,6 @@ trait DeprecationListenerTrait {
       'assertDirectoryNotIsWritable() is deprecated and will be removed in PHPUnit 10. Refactor your code to use assertDirectoryIsNotWritable() instead.',
       'assertFileNotIsWritable() is deprecated and will be removed in PHPUnit 10. Refactor your code to use assertFileIsNotWritable() instead.',
       'The at() matcher has been deprecated. It will be removed in PHPUnit 10. Please refactor your test to not rely on the order in which methods are invoked.',
-      // Deprecation introduced in Symfony 5.
-      'Since symfony/http-kernel 5.3: Passing null as $message to "Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException::__construct()" is deprecated, pass an empty string instead.',
-      'Since symfony/http-kernel 5.3: Passing null as $message to "Symfony\Component\HttpKernel\Exception\BadRequestHttpException::__construct()" is deprecated, pass an empty string instead.',
     ];
   }
 
