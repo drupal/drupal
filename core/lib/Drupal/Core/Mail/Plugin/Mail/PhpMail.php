@@ -2,10 +2,11 @@
 
 namespace Drupal\Core\Mail\Plugin\Mail;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Mail\MailFormatHelper;
 use Drupal\Core\Mail\MailInterface;
 use Drupal\Core\Site\Settings;
+use Symfony\Component\Mime\Header\Headers;
+use Symfony\Component\Mime\Header\UnstructuredHeader;
 
 /**
  * Defines the default Drupal mail backend, using PHP's native mail() function.
@@ -17,6 +18,13 @@ use Drupal\Core\Site\Settings;
  * )
  */
 class PhpMail implements MailInterface {
+
+  /**
+   * A list of headers that can contain multiple email addresses.
+   *
+   * @see \Symfony\Component\Mime\Header\Headers::HEADER_CLASS_MAP
+   */
+  private const MAILBOX_LIST_HEADERS = ['from', 'to', 'reply-to', 'cc', 'bcc'];
 
   /**
    * The configuration factory.
@@ -75,13 +83,17 @@ class PhpMail implements MailInterface {
         unset($message['headers']['Return-Path']);
       }
     }
-    $mimeheaders = [];
+
+    $headers = new Headers();
     foreach ($message['headers'] as $name => $value) {
-      $mimeheaders[] = $name . ': ' . Unicode::mimeHeaderEncode($value);
+      if (in_array(strtolower($name), self::MAILBOX_LIST_HEADERS, TRUE)) {
+        $value = explode(',', $value);
+      }
+      $headers->addHeader($name, $value);
     }
     $line_endings = Settings::get('mail_line_endings', PHP_EOL);
     // Prepare mail commands.
-    $mail_subject = Unicode::mimeHeaderEncode($message['subject']);
+    $mail_subject = (new UnstructuredHeader('subject', $message['subject']))->getBodyAsString();
     // Note: email uses CRLF for line-endings. PHP's API requires LF
     // on Unix and CRLF on Windows. Drupal automatically guesses the
     // line-ending format appropriate for your system. If you need to
@@ -89,7 +101,8 @@ class PhpMail implements MailInterface {
     $mail_body = preg_replace('@\r?\n@', $line_endings, $message['body']);
     // For headers, PHP's API suggests that we use CRLF normally,
     // but some MTAs incorrectly replace LF with CRLF. See #234403.
-    $mail_headers = implode("\n", $mimeheaders);
+    $mail_headers = str_replace("\r\n", "\n", $headers->toString());
+    $mail_subject = str_replace("\r\n", "\n", $mail_subject);
 
     $request = \Drupal::request();
 

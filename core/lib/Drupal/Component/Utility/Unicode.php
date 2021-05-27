@@ -393,8 +393,14 @@ EOD;
    *
    * @return string
    *   The mime-encoded header.
+   *
+   * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+   *   \Symfony\Component\Mime\Header\UnstructuredHeader instead.
+   *
+   * @see https://www.drupal.org/node/3207439
    */
   public static function mimeHeaderEncode($string, $shorten = FALSE) {
+    @trigger_error('\Drupal\Component\Utility\Unicode::mimeHeaderEncode() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use \Symfony\Component\Mime\Header\UnstructuredHeader instead. See https://www.drupal.org/node/3207439', E_USER_DEPRECATED);
     if (preg_match('/[^\x20-\x7E]/', $string)) {
       // floor((75 - strlen("=?UTF-8?B??=")) * 0.75);
       $chunk_size = 47;
@@ -423,8 +429,14 @@ EOD;
    *
    * @return string
    *   The mime-decoded header.
+   *
+   * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+   *   iconv_mime_decode() instead.
+   *
+   * @see https://www.drupal.org/node/3207439
    */
   public static function mimeHeaderDecode($header) {
+    @trigger_error('\Drupal\Component\Utility\Unicode::mimeHeaderDecode() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use iconv_mime_decode() instead. See https://www.drupal.org/node/3207439', E_USER_DEPRECATED);
     $callback = function ($matches) {
       $data = (strtolower($matches[2]) == 'b') ? base64_decode($matches[3]) : str_replace('_', ' ', quoted_printable_decode($matches[3]));
       if (strtolower($matches[1]) != 'utf-8') {

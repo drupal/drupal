@@ -907,7 +907,6 @@ middlewares
 midgardmvc
 mikey
 milli
-mimeheaders
 mimetypes
 minifyzombies
 minimatch
