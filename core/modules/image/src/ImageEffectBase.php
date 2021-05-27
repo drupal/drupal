@@ -2,7 +2,6 @@
 
 namespace Drupal\image;
 
-use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Psr\Log\LoggerInterface;
@@ -19,7 +18,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @see plugin_api
  */
 abstract class ImageEffectBase extends PluginBase implements ImageEffectInterface, ContainerFactoryPluginInterface {
-  use DependencySerializationTrait;
 
   /**
    * The image effect ID.
