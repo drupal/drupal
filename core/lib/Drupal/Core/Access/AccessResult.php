@@ -304,10 +304,10 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
         $merge_other = TRUE;
       }
 
-      if ($this->isForbidden() && $this instanceof AccessResultReasonInterface && !is_null($this->getReason())) {
+      if ($this->isForbidden() && $this instanceof AccessResultReasonInterface && $this->getReason() !== '') {
         $result->setReason($this->getReason());
       }
-      elseif ($other->isForbidden() && $other instanceof AccessResultReasonInterface && !is_null($other->getReason())) {
+      elseif ($other->isForbidden() && $other instanceof AccessResultReasonInterface && $other->getReason() !== '') {
         $result->setReason($other->getReason());
       }
     }
@@ -323,10 +323,10 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
         $merge_other = TRUE;
       }
 
-      if ($this instanceof AccessResultReasonInterface && !is_null($this->getReason())) {
+      if ($this instanceof AccessResultReasonInterface && $this->getReason() !== '') {
         $result->setReason($this->getReason());
       }
-      elseif ($other instanceof AccessResultReasonInterface && !is_null($other->getReason())) {
+      elseif ($other instanceof AccessResultReasonInterface && $other->getReason() !== '') {
         $result->setReason($other->getReason());
       }
     }
