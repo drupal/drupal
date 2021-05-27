@@ -170,7 +170,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       'translation[config_names][system.site][slogan]' => $fr_site_slogan,
     ];
 
-    $this->drupalPostForm("$translation_base_url/fr/add", $edit, 'Save translation');
+    $this->drupalGet("{$translation_base_url}/fr/add");
+    $this->submitForm($edit, 'Save translation');
     $this->assertRaw(t('Successfully saved @language translation.', ['@language' => 'French']));
 
     // Check for edit, delete links (and no 'add' link) for French language.
@@ -202,14 +203,16 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       'langcode' => 'fr',
       'translation' => 'untranslated',
     ];
-    $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
+    $this->drupalGet('admin/config/regional/translate');
+    $this->submitForm($search, 'Filter');
 
     $textarea = $this->assertSession()->elementExists('xpath', '//textarea');
     $lid = $textarea->getAttribute('name');
     $edit = [
       $lid => $fr_site_name_label,
     ];
-    $this->drupalPostForm('admin/config/regional/translate', $edit, 'Save translations');
+    $this->drupalGet('admin/config/regional/translate');
+    $this->submitForm($edit, 'Save translations');
 
     // Ensure that the label is in French (and not in English).
     $this->drupalGet("fr/$translation_base_url/fr/edit");
@@ -247,7 +250,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       'translation[config_names][system.site][slogan]' => 'FR ' . $site_slogan,
     ];
     // First time, no overrides, so just Add link.
-    $this->drupalPostForm("$translation_base_url/fr/add", $edit, 'Save translation');
+    $this->drupalGet("{$translation_base_url}/fr/add");
+    $this->submitForm($edit, 'Save translation');
 
     // Read overridden file from active config.
     $override = \Drupal::languageManager()->getLanguageConfigOverride('fr', 'system.site');
@@ -323,7 +327,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       'recipients' => 'sales@example.com,support@example.com',
       'reply' => 'Thank you for your mail',
     ];
-    $this->drupalPostForm('admin/structure/contact/manage/feedback', $edit, 'Save');
+    $this->drupalGet('admin/structure/contact/manage/feedback');
+    $this->submitForm($edit, 'Save');
 
     // Ensure translation link is present.
     $translation_base_url = 'admin/structure/contact/manage/feedback/translate';
@@ -356,7 +361,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       ];
 
       // Save language specific version of form.
-      $this->drupalPostForm($translation_page_url, $edit, 'Save translation');
+      $this->drupalGet($translation_page_url);
+      $this->submitForm($edit, 'Save translation');
 
       // Expect translated values in language specific file.
       $override = \Drupal::languageManager()->getLanguageConfigOverride($langcode, 'contact.form.feedback');
@@ -458,7 +464,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       'id' => 'custom_medium',
       'date_format_pattern' => 'Y. m. d. H:i',
     ];
-    $this->drupalPostForm('admin/config/regional/date-time/formats/add', $edit, 'Add format');
+    $this->drupalGet('admin/config/regional/date-time/formats/add');
+    $this->submitForm($edit, 'Add format');
 
     // Test translating a default shipped format and our custom format.
     $formats = [
@@ -488,7 +495,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       ];
 
       // Save language specific version of form.
-      $this->drupalPostForm($translation_page_url, $edit, 'Save translation');
+      $this->drupalGet($translation_page_url);
+      $this->submitForm($edit, 'Save translation');
 
       // Get translation and check we've got the right value.
       $override = \Drupal::languageManager()->getLanguageConfigOverride('fr', 'core.date_format.' . $id);
@@ -529,7 +537,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       'translation[config_names][user.mail][status_blocked][body]' => 'Testing account blocked body.',
     ];
 
-    $this->drupalPostForm('admin/config/people/accounts/translate/fr/add', $edit, 'Save translation');
+    $this->drupalGet('admin/config/people/accounts/translate/fr/add');
+    $this->submitForm($edit, 'Save translation');
 
     // Make sure the changes are saved and loaded back properly.
     $this->drupalGet('admin/config/people/accounts/translate/fr/edit');
@@ -617,7 +626,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       'translation[config_names][views.view.frontpage][display][default][display_title]' => $display_settings_master . " FR",
       'translation[config_names][views.view.frontpage][display][default][display_options][title]' => $display_options_master . " FR",
     ];
-    $this->drupalPostForm("$translation_base_url/fr/add", $edit, 'Save translation');
+    $this->drupalGet("{$translation_base_url}/fr/add");
+    $this->submitForm($edit, 'Save translation');
     $this->assertRaw(t('Successfully saved @language translation.', ['@language' => 'French']));
 
     // Check for edit, delete links (and no 'add' link) for French language.
@@ -650,7 +660,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       // Import a .po file to add a new language with a given number of plural forms
       $name = \Drupal::service('file_system')->tempnam('temporary://', $langcode . '_') . '.po';
       file_put_contents($name, $this->getPoFile($data['plurals']));
-      $this->drupalPostForm('admin/config/regional/translate/import', [
+      $this->drupalGet('admin/config/regional/translate/import');
+      $this->submitForm([
         'langcode' => $langcode,
         'files[file]' => $name,
       ], 'Import');
@@ -686,7 +697,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     // This will also automatically add the 'sl' language.
     $name = \Drupal::service('file_system')->tempnam('temporary://', "sl_") . '.po';
     file_put_contents($name, $this->getPoFile(4));
-    $this->drupalPostForm('admin/config/regional/translate/import', [
+    $this->drupalGet('admin/config/regional/translate/import');
+    $this->submitForm([
       'langcode' => 'sl',
       'files[file]' => $name,
     ], 'Import');
@@ -713,7 +725,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       'translation[config_names][views.view.files][display][default][display_options][fields][count][format_plural_string][2]' => $field_value_plural . ' 2 SL',
       'translation[config_names][views.view.files][display][default][display_options][fields][count][format_plural_string][3]' => $field_value_plural . ' 3 SL',
     ];
-    $this->drupalPostForm($translation_url, $edit, 'Save translation');
+    $this->drupalGet($translation_url);
+    $this->submitForm($edit, 'Save translation');
 
     // Make sure the values have changed.
     $this->drupalGet($translation_url);
@@ -824,7 +837,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       'label' => $name,
       'direction' => Language::DIRECTION_LTR,
     ];
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add custom language');
+    $this->drupalGet('admin/config/regional/language/add');
+    $this->submitForm($edit, 'Add custom language');
 
     // Make sure there is no translation stored in locale storage before edit.
     $translation = $this->getTranslation('user.settings', 'anonymous', 'fr');
@@ -834,7 +848,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $edit = [
       'translation[config_names][user.settings][anonymous]' => 'Anonyme',
     ];
-    $this->drupalPostForm('admin/config/people/accounts/translate/fr/add', $edit, 'Save translation');
+    $this->drupalGet('admin/config/people/accounts/translate/fr/add');
+    $this->submitForm($edit, 'Save translation');
 
     // Make sure translation stored in locale storage after saved language
     // specific configuration translation.
@@ -845,7 +860,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $edit = [
       'translation[config_names][user.settings][anonymous]' => 'Anonymous',
     ];
-    $this->drupalPostForm('admin/config/people/accounts/translate/fr/edit', $edit, 'Save translation');
+    $this->drupalGet('admin/config/people/accounts/translate/fr/edit');
+    $this->submitForm($edit, 'Save translation');
 
     // Make sure there is no translation stored in locale storage after revert.
     $translation = $this->getTranslation('user.settings', 'anonymous', 'fr');
@@ -859,18 +875,21 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $this->drupalLogin($this->adminUser);
 
     // Delete French language
-    $this->drupalPostForm('admin/config/regional/language/delete/fr', [], 'Delete');
+    $this->drupalGet('admin/config/regional/language/delete/fr');
+    $this->submitForm([], 'Delete');
     $this->assertRaw(t('The %language (%langcode) language has been removed.', ['%language' => 'French', '%langcode' => 'fr']));
 
     // Change default language to Tamil.
     $edit = [
       'site_default_language' => 'ta',
     ];
-    $this->drupalPostForm('admin/config/regional/language', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/regional/language');
+    $this->submitForm($edit, 'Save configuration');
     $this->assertRaw(t('Configuration saved.'));
 
     // Delete English language
-    $this->drupalPostForm('admin/config/regional/language/delete/en', [], 'Delete');
+    $this->drupalGet('admin/config/regional/language/delete/en');
+    $this->submitForm([], 'Delete');
     $this->assertRaw(t('The %language (%langcode) language has been removed.', ['%language' => 'English', '%langcode' => 'en']));
 
     // Visit account setting translation page, this should not
@@ -924,7 +943,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       'translation[config_names][config_translation_test.content][animals][1]' => 'llama - FR',
       'translation[config_names][config_translation_test.content][animals][2]' => 'elephant - FR',
     ];
-    $this->drupalPostForm('admin/config/media/file-system/translate/fr/add', $edit, 'Save translation');
+    $this->drupalGet('admin/config/media/file-system/translate/fr/add');
+    $this->submitForm($edit, 'Save translation');
 
     $this->container->get('language.config_factory_override')
       ->setLanguage(new Language(['id' => 'fr']));
@@ -976,7 +996,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     ];
 
     // Save language specific version of form.
-    $this->drupalPostForm($translation_page_url, $edit, 'Save translation');
+    $this->drupalGet($translation_page_url);
+    $this->submitForm($edit, 'Save translation');
 
     // Get translation and check we've got the right value.
     $expected = [
@@ -1023,7 +1044,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $edit = [
       'translation[config_names][config_translation_test.content][content][format]' => 'full_html',
     ];
-    $this->drupalPostForm($translation_page_url, $edit, 'Save translation');
+    $this->drupalGet($translation_page_url);
+    $this->submitForm($edit, 'Save translation');
     $expected = [
       'value' => '<p><strong>Hello World</strong> - FR</p>',
       'format' => 'full_html',
@@ -1136,7 +1158,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       'site_name' => $site_name,
       'site_slogan' => $site_slogan,
     ];
-    $this->drupalPostForm('admin/config/system/site-information', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/system/site-information');
+    $this->submitForm($edit, 'Save configuration');
     $this->assertRaw(t('The configuration options have been saved.'));
   }
 

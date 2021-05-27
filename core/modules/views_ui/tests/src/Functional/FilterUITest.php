@@ -56,7 +56,8 @@ class FilterUITest extends UITestBase {
     $edit = [
       'options[expose][reduce]' => TRUE,
     ];
-    $this->drupalPostForm($path, $edit, 'Apply');
+    $this->drupalGet($path);
+    $this->submitForm($edit, 'Apply');
 
     // Verifies that the option was saved as expected.
     $this->drupalGet($path);
@@ -113,14 +114,16 @@ class FilterUITest extends UITestBase {
     $edit = [
       'options[expose][identifier]' => '',
     ];
-    $this->drupalPostForm($path, $edit, 'Apply');
+    $this->drupalGet($path);
+    $this->submitForm($edit, 'Apply');
     $this->assertSession()->pageTextContains('The identifier is required if the filter is exposed.');
 
     // Set the identifier to 'value'.
     $edit = [
       'options[expose][identifier]' => 'value',
     ];
-    $this->drupalPostForm($path, $edit, 'Apply');
+    $this->drupalGet($path);
+    $this->submitForm($edit, 'Apply');
     $this->assertSession()->pageTextContains('This identifier is not allowed.');
 
     // Try a few restricted values for the identifier.
@@ -128,7 +131,8 @@ class FilterUITest extends UITestBase {
       $edit = [
         'options[expose][identifier]' => $identifier,
       ];
-      $this->drupalPostForm($path, $edit, 'Apply');
+      $this->drupalGet($path);
+      $this->submitForm($edit, 'Apply');
       $this->assertSession()->pageTextContains('This identifier has illegal characters.');
     }
   }

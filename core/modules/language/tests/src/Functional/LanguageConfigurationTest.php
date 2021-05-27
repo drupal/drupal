@@ -122,7 +122,8 @@ class LanguageConfigurationTest extends BrowserTestBase {
 
     // Remove English language and add a new Language to check if langcode of
     // Language entity is 'en'.
-    $this->drupalPostForm('admin/config/regional/language/delete/en', [], 'Delete');
+    $this->drupalGet('admin/config/regional/language/delete/en');
+    $this->submitForm([], 'Delete');
     $this->rebuildContainer();
     $this->assertRaw(t('The %language (%langcode) language has been removed.', ['%language' => 'English', '%langcode' => 'en']));
 
@@ -145,7 +146,8 @@ class LanguageConfigurationTest extends BrowserTestBase {
     $edit = [
       'predefined_langcode' => 'de',
     ];
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
+    $this->drupalGet('admin/config/regional/language/add');
+    $this->submitForm($edit, 'Add language');
     $language = $this->config('language.entity.de')->get();
     $this->assertEquals('fr', $language['langcode']);
 
@@ -171,18 +173,21 @@ class LanguageConfigurationTest extends BrowserTestBase {
     $edit = [
       'predefined_langcode' => 'fr',
     ];
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
+    $this->drupalGet('admin/config/regional/language/add');
+    $this->submitForm($edit, 'Add language');
     $this->checkConfigurableLanguageWeight('after adding new language');
 
     // Re-ordering languages.
     $edit = [
       'languages[en][weight]' => $this->getHighestConfigurableLanguageWeight() + 1,
     ];
-    $this->drupalPostForm('admin/config/regional/language', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/regional/language');
+    $this->submitForm($edit, 'Save configuration');
     $this->checkConfigurableLanguageWeight('after re-ordering');
 
     // Remove predefined language.
-    $this->drupalPostForm('admin/config/regional/language/delete/fr', [], 'Delete');
+    $this->drupalGet('admin/config/regional/language/delete/fr');
+    $this->submitForm([], 'Delete');
     $this->checkConfigurableLanguageWeight('after deleting a language');
   }
 

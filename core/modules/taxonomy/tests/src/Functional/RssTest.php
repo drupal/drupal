@@ -102,7 +102,8 @@ class RssTest extends TaxonomyTestBase {
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName();
     $edit[$this->fieldName . '[]'] = $term1->id();
-    $this->drupalPostForm('node/add/article', $edit, 'Save');
+    $this->drupalGet('node/add/article');
+    $this->submitForm($edit, 'Save');
 
     // Check that the term is displayed when the RSS feed is viewed.
     $this->drupalGet('rss.xml');

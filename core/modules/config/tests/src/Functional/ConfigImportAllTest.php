@@ -117,7 +117,8 @@ class ConfigImportAllTest extends ModuleTestBase {
     }
 
     // Import the configuration thereby re-installing all the modules.
-    $this->drupalPostForm('admin/config/development/configuration', [], 'Import all');
+    $this->drupalGet('admin/config/development/configuration');
+    $this->submitForm([], 'Import all');
     // Modules have been installed that have services.
     $this->rebuildContainer();
 

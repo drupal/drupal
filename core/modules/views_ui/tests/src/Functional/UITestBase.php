@@ -64,7 +64,8 @@ abstract class UITestBase extends ViewTestBase {
 
     $view += $default;
 
-    $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm($view, 'Save and edit');
 
     return $default;
   }

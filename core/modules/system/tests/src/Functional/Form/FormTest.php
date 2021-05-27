@@ -175,7 +175,8 @@ class FormTest extends BrowserTestBase {
 
     // Attempt to submit the form with no required fields set.
     $edit = [];
-    $this->drupalPostForm('form-test/validate-required', $edit, 'Submit');
+    $this->drupalGet('form-test/validate-required');
+    $this->submitForm($edit, 'Submit');
 
     // The only error messages that should appear are the relevant 'required'
     // messages for each field.
@@ -352,7 +353,8 @@ class FormTest extends BrowserTestBase {
   public function testRequiredTextfieldNoTitle() {
     // Attempt to submit the form with no required field set.
     $edit = [];
-    $this->drupalPostForm('form-test/validate-required-no-title', $edit, 'Submit');
+    $this->drupalGet('form-test/validate-required-no-title');
+    $this->submitForm($edit, 'Submit');
     $this->assertNoRaw("The form_test_validate_required_form_no_title form was submitted successfully.");
 
     // Check the page for the error class on the textfield.
@@ -380,7 +382,8 @@ class FormTest extends BrowserTestBase {
   public function testCheckboxProcessing() {
     // First, try to submit without the required checkbox.
     $edit = [];
-    $this->drupalPostForm('form-test/checkbox', $edit, 'Submit');
+    $this->drupalGet('form-test/checkbox');
+    $this->submitForm($edit, 'Submit');
     $this->assertRaw(t('@name field is required.', ['@name' => 'required_checkbox']));
 
     // Now try to submit the form correctly.
@@ -645,7 +648,8 @@ class FormTest extends BrowserTestBase {
     // First test the number element type, then range.
     foreach (['form-test/number', 'form-test/number/range'] as $path) {
       // Post form and show errors.
-      $this->drupalPostForm($path, [], 'Submit');
+      $this->drupalGet($path);
+      $this->submitForm([], 'Submit');
 
       foreach ($expected as $element => $error) {
         // Create placeholder array.
@@ -673,14 +677,16 @@ class FormTest extends BrowserTestBase {
    * Tests default value handling of #type 'range' elements.
    */
   public function testRange() {
-    $this->drupalPostForm('form-test/range', [], 'Submit');
+    $this->drupalGet('form-test/range');
+    $this->submitForm([], 'Submit');
     $values = json_decode($this->getSession()->getPage()->getContent());
     $this->assertEquals(18, $values->with_default_value);
     $this->assertEquals(10.5, $values->float);
     $this->assertEquals(6, $values->integer);
     $this->assertEquals(6.9, $values->offset);
 
-    $this->drupalPostForm('form-test/range/invalid', [], 'Submit');
+    $this->drupalGet('form-test/range/invalid');
+    $this->submitForm([], 'Submit');
     // Verify that the 'range' element has the error class.
     $this->assertSession()->elementExists('xpath', '//input[@type="range" and contains(@class, "error")]');
   }
@@ -705,7 +711,8 @@ class FormTest extends BrowserTestBase {
       $edit = [
         'color' => $input,
       ];
-      $this->drupalPostForm('form-test/color', $edit, 'Submit');
+      $this->drupalGet('form-test/color');
+      $this->submitForm($edit, 'Submit');
       $result = json_decode($this->getSession()->getPage()->getContent());
       $this->assertEquals($expected, $result->color);
     }
@@ -716,7 +723,8 @@ class FormTest extends BrowserTestBase {
       $edit = [
         'color' => $input,
       ];
-      $this->drupalPostForm('form-test/color', $edit, 'Submit');
+      $this->drupalGet('form-test/color');
+      $this->submitForm($edit, 'Submit');
       $this->assertRaw(t('%name must be a valid color.', ['%name' => 'Color']));
     }
   }
@@ -749,11 +757,12 @@ class FormTest extends BrowserTestBase {
 
     // Submit the form with no input, as the browser does for disabled elements,
     // and fetch the $form_state->getValues() that is passed to the submit handler.
-    $this->drupalPostForm('form-test/disabled-elements', [], 'Submit');
+    $this->drupalGet('form-test/disabled-elements');
+    $this->submitForm([], 'Submit');
     $returned_values['normal'] = Json::decode($this->getSession()->getPage()->getContent());
 
     // Do the same with input, as could happen if JavaScript un-disables an
-    // element. drupalPostForm() emulates a browser by not submitting input for
+    // element. submitForm() emulates a browser by not submitting input for
     // disabled elements, so we need to un-disable those elements first.
     $this->drupalGet('form-test/disabled-elements');
     $disabled_elements = [];

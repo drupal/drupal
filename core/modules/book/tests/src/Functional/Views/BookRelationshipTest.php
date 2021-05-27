@@ -121,7 +121,8 @@ class BookRelationshipTest extends ViewTestBase {
     $edit['book[bid]'] = $book_nid;
 
     if ($parent !== NULL) {
-      $this->drupalPostForm('node/add/book', $edit, 'Change book (update list of parents)');
+      $this->drupalGet('node/add/book');
+      $this->submitForm($edit, 'Change book (update list of parents)');
 
       $edit['book[pid]'] = $parent;
       $this->submitForm($edit, 'Save');
@@ -130,7 +131,8 @@ class BookRelationshipTest extends ViewTestBase {
       $this->assertFalse(empty($parent_node->book['has_children']), 'Parent node is marked as having children');
     }
     else {
-      $this->drupalPostForm('node/add/book', $edit, 'Save');
+      $this->drupalGet('node/add/book');
+      $this->submitForm($edit, 'Save');
     }
 
     // Check to make sure the book node was created.

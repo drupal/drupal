@@ -78,7 +78,8 @@ class FieldUITest extends FieldTestBase {
     $this->assertSession()->fieldValueEquals('options[settings][trim_length]', $random_number);
 
     // Save the view and test whether the settings are saved.
-    $this->drupalPostForm('admin/structure/views/view/test_view_fieldapi', [], 'Save');
+    $this->drupalGet('admin/structure/views/view/test_view_fieldapi');
+    $this->submitForm([], 'Save');
     $view = Views::getView('test_view_fieldapi');
     $view->initHandlers();
     $this->assertEquals('text_trimmed', $view->field['field_name_0']->options['type']);
@@ -87,8 +88,10 @@ class FieldUITest extends FieldTestBase {
     // Now change the formatter back to 'default' which doesn't have any
     // settings. We want to ensure that the settings are empty then.
     $edit['options[type]'] = 'text_default';
-    $this->drupalPostForm('admin/structure/views/nojs/handler/test_view_fieldapi/default/field/field_name_0', $edit, 'Apply');
-    $this->drupalPostForm('admin/structure/views/view/test_view_fieldapi', [], 'Save');
+    $this->drupalGet('admin/structure/views/nojs/handler/test_view_fieldapi/default/field/field_name_0');
+    $this->submitForm($edit, 'Apply');
+    $this->drupalGet('admin/structure/views/view/test_view_fieldapi');
+    $this->submitForm([], 'Save');
     $view = Views::getView('test_view_fieldapi');
     $view->initHandlers();
     $this->assertEquals('text_default', $view->field['field_name_0']->options['type']);
@@ -105,7 +108,8 @@ class FieldUITest extends FieldTestBase {
   public function testHandlerUIAggregation() {
     // Enable aggregation.
     $edit = ['group_by' => '1'];
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view_fieldapi/default/group_by', $edit, 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/display/test_view_fieldapi/default/group_by');
+    $this->submitForm($edit, 'Apply');
 
     $url = "admin/structure/views/nojs/handler/test_view_fieldapi/default/field/field_name_0";
     $this->drupalGet($url);
@@ -139,7 +143,10 @@ class FieldUITest extends FieldTestBase {
     $field->save();
 
     $url = "admin/structure/views/nojs/add-handler/test_view_fieldapi/default/filter";
-    $this->drupalPostForm($url, ['name[node__' . $field_name . '.' . $field_name . '_value]' => TRUE], 'Add and configure filter criteria');
+    $this->drupalGet($url);
+    $this->submitForm([
+      'name[node__' . $field_name . '.' . $field_name . '_value]' => TRUE,
+    ], 'Add and configure filter criteria');
     $this->assertSession()->statusCodeEquals(200);
     // Verify that using a boolean field as a filter also results in using the
     // boolean plugin.

@@ -118,9 +118,8 @@ class NodeAccessTest extends ModerationStateTestBase {
 
     // Publish the node.
     $this->drupalLogin($this->adminUser);
-    $this->drupalPostForm($edit_path, [
-      'moderation_state[0][state]' => 'published',
-    ], 'Save');
+    $this->drupalGet($edit_path);
+    $this->submitForm(['moderation_state[0][state]' => 'published'], 'Save');
 
     // Ensure access works correctly for anonymous users.
     $this->drupalLogout();
@@ -135,7 +134,8 @@ class NodeAccessTest extends ModerationStateTestBase {
 
     // Create a pending revision for the 'Latest revision' tab.
     $this->drupalLogin($this->adminUser);
-    $this->drupalPostForm($edit_path, [
+    $this->drupalGet($edit_path);
+    $this->submitForm([
       'title[0][value]' => 'moderated content revised',
       'moderation_state[0][state]' => 'draft',
     ], 'Save');

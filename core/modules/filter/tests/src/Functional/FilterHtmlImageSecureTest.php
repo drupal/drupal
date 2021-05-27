@@ -143,7 +143,8 @@ class FilterHtmlImageSecureTest extends BrowserTestBase {
     $edit = [
       'comment_body[0][value]' => implode("\n", $comment),
     ];
-    $this->drupalPostForm('node/' . $this->node->id(), $edit, 'Save');
+    $this->drupalGet('node/' . $this->node->id());
+    $this->submitForm($edit, 'Save');
     foreach ($images as $image => $converted) {
       $found = FALSE;
       foreach ($this->xpath('//img[@testattribute="' . hash('sha256', $image) . '"]') as $element) {

@@ -105,7 +105,8 @@ class PrepareUninstallTest extends BrowserTestBase {
     $this->assertSession()->linkByHrefNotExists('admin/modules/uninstall/entity/taxonomy_term');
 
     // Uninstall the Taxonomy module.
-    $this->drupalPostForm('admin/modules/uninstall', ['uninstall[taxonomy]' => TRUE], 'Uninstall');
+    $this->drupalGet('admin/modules/uninstall');
+    $this->submitForm(['uninstall[taxonomy]' => TRUE], 'Uninstall');
     $this->submitForm([], 'Uninstall');
     $this->assertSession()->pageTextContains('The selected modules have been uninstalled.');
     $this->assertNoText('Enables the categorization of content.');
@@ -165,7 +166,8 @@ class PrepareUninstallTest extends BrowserTestBase {
     $this->assertSession()->linkByHrefNotExists('admin/modules/uninstall/entity/node');
 
     // Uninstall Node module.
-    $this->drupalPostForm('admin/modules/uninstall', ['uninstall[node]' => TRUE], 'Uninstall');
+    $this->drupalGet('admin/modules/uninstall');
+    $this->submitForm(['uninstall[node]' => TRUE], 'Uninstall');
     $this->submitForm([], 'Uninstall');
     $this->assertSession()->pageTextContains('The selected modules have been uninstalled.');
     $this->assertNoText('Allows content to be submitted to the site and displayed on pages.');

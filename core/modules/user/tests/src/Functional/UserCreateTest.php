@@ -105,7 +105,8 @@ class UserCreateTest extends BrowserTestBase {
         'pass[pass2]' => $pass,
         'notify' => $notify,
       ];
-      $this->drupalPostForm('admin/people/create', $edit, 'Create new account');
+      $this->drupalGet('admin/people/create');
+      $this->submitForm($edit, 'Create new account');
 
       if ($notify) {
         $this->assertSession()->pageTextContains('A welcome message with further instructions has been emailed to the new user ' . $edit['name'] . '.');
@@ -132,7 +133,8 @@ class UserCreateTest extends BrowserTestBase {
       'pass[pass2]' => 0,
       'notify' => FALSE,
     ];
-    $this->drupalPostForm('admin/people/create', $edit, 'Create new account');
+    $this->drupalGet('admin/people/create');
+    $this->submitForm($edit, 'Create new account');
     $this->assertSession()->pageTextContains("Created a new user account for $name. No email has been sent");
     $this->assertNoText('Password field is required');
   }

@@ -35,7 +35,8 @@ class ContentTranslationUntranslatableFieldsTest extends ContentTranslationPendi
     $edit = [
       'settings[' . $this->entityTypeId . '][' . $this->bundle . '][fields][' . $this->fieldName . ']' => 0,
     ];
-    $this->drupalPostForm('admin/config/regional/content-language', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/regional/content-language');
+    $this->submitForm($edit, 'Save configuration');
 
     /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager */
     $entity_field_manager = $this->container->get('entity_field.manager');
@@ -120,7 +121,8 @@ class ContentTranslationUntranslatableFieldsTest extends ContentTranslationPendi
     // language edit forms.
     $settings_key = 'settings[' . $this->entityTypeId . '][' . $this->bundle . '][settings][content_translation][untranslatable_fields_hide]';
     $settings_url = 'admin/config/regional/content-language';
-    $this->drupalPostForm($settings_url, [$settings_key => 1], 'Save configuration');
+    $this->drupalGet($settings_url);
+    $this->submitForm([$settings_key => 1], 'Save configuration');
 
     // Verify that the widget is displayed in the default language edit form,
     // but no clue is displayed.
@@ -145,7 +147,8 @@ class ContentTranslationUntranslatableFieldsTest extends ContentTranslationPendi
 
     // Configure untranslatable field widgets to be displayed on non-default
     // language edit forms.
-    $this->drupalPostForm($settings_url, [$settings_key => 0], 'Save configuration');
+    $this->drupalGet($settings_url);
+    $this->submitForm([$settings_key => 0], 'Save configuration');
 
     // Check that the widget is displayed along with its clue in the edit form
     // for both languages.

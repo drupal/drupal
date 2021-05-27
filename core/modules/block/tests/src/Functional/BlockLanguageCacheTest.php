@@ -67,7 +67,8 @@ class BlockLanguageCacheTest extends BrowserTestBase {
     // Create a menu in the default language.
     $edit['label'] = $this->randomMachineName();
     $edit['id'] = mb_strtolower($edit['label']);
-    $this->drupalPostForm('admin/structure/menu/add', $edit, 'Save');
+    $this->drupalGet('admin/structure/menu/add');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('Menu ' . $edit['label'] . ' has been added.');
 
     // Check that the block is listed for all languages.

@@ -49,7 +49,8 @@ class StorageTest extends UITestBase {
       'langcode' => 'fr',
     ];
 
-    $this->drupalPostForm("admin/structure/views/nojs/edit-details/$view_name/default", $edit, 'Apply');
+    $this->drupalGet("admin/structure/views/nojs/edit-details/{$view_name}/default");
+    $this->submitForm($edit, 'Apply');
     $this->submitForm([], 'Save');
 
     $view = Views::getView($view_name);
