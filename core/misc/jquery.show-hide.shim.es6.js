@@ -47,7 +47,7 @@
       this.each((index, item) => {
         if (item instanceof Element) {
           if (args.length === 0) {
-            element.hasAttribute('hidden')
+            item.hasAttribute('hidden')
               ? item.removeAttribute('hidden')
               : item.setAttribute('hidden', '');
           } else {
