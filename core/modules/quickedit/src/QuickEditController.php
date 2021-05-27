@@ -116,10 +116,10 @@ class QuickEditController extends ControllerBase {
    *   The JSON response.
    */
   public function metadata(Request $request) {
-    $fields = $request->request->all('fields');
-    if (empty($fields)) {
+    if (!$request->request->has('fields')) {
       throw new NotFoundHttpException();
     }
+    $fields = $request->request->all('fields');
     $entities = $request->request->all('entities');
 
     $metadata = [];
@@ -147,7 +147,7 @@ class QuickEditController extends ControllerBase {
 
       // If the entity information for this field is requested, include it.
       $entity_id = $entity->getEntityTypeId() . '/' . $entity_id;
-      if (in_array($entity_id, $entities) && !isset($metadata[$entity_id])) {
+      if (in_array($entity_id, $entities, TRUE) && !isset($metadata[$entity_id])) {
         $metadata[$entity_id] = $this->metadataGenerator->generateEntityMetadata($entity);
       }
 
@@ -168,10 +168,10 @@ class QuickEditController extends ControllerBase {
    */
   public function attachments(Request $request) {
     $response = new AjaxResponse();
-    $editors = $request->request->all('editors');
-    if (empty($editors)) {
+    if (!$request->request->has('editors')) {
       throw new NotFoundHttpException();
     }
+    $editors = $request->request->all('editors');
 
     $response->setAttachments($this->editorSelector->getEditorAttachments($editors));
 
