@@ -1,25 +1,6 @@
 CKEditor 4 Changelog
 ====================
 
-## CKEditor 4.17
-
-New Features:
-
-* [#4461](https://github.com/ckeditor/ckeditor4/issues/4461): Introduced possibility to delay editor initialization while it is in detached DOM element.
-
-Fixed Issues:
-
-* [#3757](https://github.com/ckeditor/ckeditor4/issues/3757): [Firefox] Fixed: images pasted from [clipboard](https://ckeditor.com/cke4/addon/clipboard) are not inserted as Base64-encoded images.
-* [#4604](https://github.com/ckeditor/ckeditor4/issues/4604): Fixed: [`CKEDITOR.plugins.clipboard.dataTransfer#getTypes()`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_plugins_clipboard_dataTransfer.html#method-getTypes) returns no types.
-* [#4597](https://github.com/ckeditor/ckeditor4/issues/4597): Fixed: Incorrect color conversion for HSL/HSLA values in [`CKEDITOR.tools.color`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_tools_color.html).
-* [#4596](https://github.com/ckeditor/ckeditor4/issues/4596): Fixed: Incorrect handling of HSL/HSLA values in [`CKEDITOR.tools.color`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_tools_color.html).
-
-**API Changes:**
-
-* [#4604](https://github.com/ckeditor/ckeditor4/issues/4604): Added the [`CKEDITOR.plugins.clipboard.dataTransfer#isFileTransfer()`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_plugins_clipboard_dataTransfer.html#method-isFileTransfer) method.
-* [#4583](https://github.com/ckeditor/ckeditor4/issues/4583): Added support for new, comma-less color syntax to [`CKEDITOR.tools.color`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_tools_color.html).
-* [#4467](https://github.com/ckeditor/ckeditor4/issues/4467): Inserting content next to block [widgets](https://ckeditor.com/cke4/addon/widget) using keyboard navigation is now possible. Thanks to [bunglegrind](https://github.com/bunglegrind)!
-
 ## CKEditor 4.16.1
 
 Fixed Issues:
