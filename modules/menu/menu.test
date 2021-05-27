@@ -222,6 +222,14 @@ class MenuTestCase extends DrupalWebTestCase {
     $this->assertMenuLink($item2['mlid'], array('depth' => 2, 'has_children' => 1, 'p1' => $item1['mlid'], 'p2' => $item2['mlid'], 'p3' => 0));
     $this->assertMenuLink($item3['mlid'], array('depth' => 3, 'has_children' => 0, 'p1' => $item1['mlid'], 'p2' => $item2['mlid'], 'p3' => $item3['mlid'], 'p4' => 0));
 
+    // Add 102 menu links with increasing weights, then make sure the last-added
+    // item's weight doesn't get changed because of the old hardcoded delta = 50
+    $items = array();
+    for ($i = -50; $i <= 51; $i++) {
+      $items[$i] = $this->addMenuLink(0, 'node/' . $node1->nid, $menu_name, TRUE, strval($i));
+    }
+    $this->assertMenuLink($items[51]['mlid'], array('weight' => '51'));
+
     // Verify menu links.
     $this->verifyMenuLink($item1, $node1);
     $this->verifyMenuLink($item2, $node2, $item1, $node1);
@@ -292,9 +300,10 @@ class MenuTestCase extends DrupalWebTestCase {
    * @param integer $plid Parent menu link id.
    * @param string $link Link path.
    * @param string $menu_name Menu name.
+   * @param string $weight Menu link weight
    * @return array Menu link created.
    */
-  function addMenuLink($plid = 0, $link = '<front>', $menu_name = 'navigation', $expanded = TRUE) {
+  function addMenuLink($plid = 0, $link = '<front>', $menu_name = 'navigation', $expanded = TRUE, $weight = '0') {
     // View add menu link page.
     $this->drupalGet("admin/structure/menu/manage/$menu_name/add");
     $this->assertResponse(200);
@@ -307,7 +316,7 @@ class MenuTestCase extends DrupalWebTestCase {
       'enabled' => TRUE, // Use this to disable the menu and test.
       'expanded' => $expanded, // Setting this to true should test whether it works when we do the std_user tests.
       'parent' =>  $menu_name . ':' . $plid,
-      'weight' => '0',
+      'weight' => $weight,
     );
 
     // Add menu link.

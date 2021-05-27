@@ -641,6 +641,39 @@ function _menu_parent_depth_limit($item) {
 }
 
 /**
+ * Calculate the delta for the weight element for a given set of menus.
+ *
+ * @param string|array $menu_names
+ *   Menu name or an array of menu names.
+ * @param int $max_delta
+ *   Optional maximum value.
+ *
+ * @return int
+ *   Delta value.
+ */
+function _menu_get_menu_weight_delta($menu_names, $max_delta = NULL) {
+
+  if (is_string($menu_names)) {
+    $menu_names = array($menu_names);
+  }
+
+  $weight_info = db_query("SELECT MAX(weight) AS max_weight, MIN(weight) as min_weight FROM {menu_links} WHERE menu_name IN (:menu_names)", array(':menu_names' => $menu_names))->fetchObject();
+
+  $delta = max(abs($weight_info->min_weight), abs($weight_info->max_weight)) + 1;
+
+  // Honor max param, if given.
+  if (!is_null($max_delta) && $delta > $max_delta) {
+    $delta = $max_delta;
+  }
+
+  // Provide a minimum.
+  if ($delta < 50) {
+    $delta = 50;
+  }
+  return $delta;
+}
+
+/**
  * Implements hook_form_BASE_FORM_ID_alter().
  *
  * Adds menu item fields to the node form.
@@ -726,10 +759,22 @@ function menu_form_node_form_alter(&$form, $form_state) {
     '#options' => $options,
     '#attributes' => array('class' => array('menu-parent-select')),
   );
+  // Get number of items in all possible parent menus so the weight selector is
+  // sized appropriately.
+  $menu_names = array_keys(menu_get_menus());
+  $menu_options = array();
+  foreach ($menu_names as $menu_name) {
+    if (isset($options[$menu_name . ':0'])) {
+      $menu_options[] = $menu_name;
+    }
+  }
+  // Make sure that we always have values in menu_options.
+  $menu_options = !empty($menu_options) ? $menu_options : $menu_names;
+
   $form['menu']['link']['weight'] = array(
     '#type' => 'weight',
     '#title' => t('Weight'),
-    '#delta' => 50,
+    '#delta' => _menu_get_menu_weight_delta($menu_options),
     '#default_value' => $link['weight'],
     '#description' => t('Menu links with smaller weights are displayed before links with larger weights.'),
   );
