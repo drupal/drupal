@@ -3,7 +3,6 @@
 namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\entity_test\Entity\EntityTestComputedField;
-use Drupal\entity_test\Entity\EntityTestComputedFieldBundle;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 
