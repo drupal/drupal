@@ -53,6 +53,16 @@ user.admin_permissions:
   requirements:
     _permission: 'administer permissions'
 
+user.admin_permissions.module:
+  path: '/admin/people/permissions/module/{modules}'
+  defaults:
+    _form: '\Drupal\user\Form\UserPermissionsModuleSpecificForm'
+    _title: 'Module Permissions'
+  requirements:
+    _permission: 'administer permissions'
+    # @todo Add custom access, checking that at least one module in the list
+    # has permissions.
+
 entity.user_role.edit_permissions_form:
   path: '/admin/people/permissions/{user_role}'
   defaults:
