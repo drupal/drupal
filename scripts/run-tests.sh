@@ -159,6 +159,21 @@ All arguments are long options.
   --fail-only When paired with --verbose, do not print the detailed
               messages for passing tests.
 
+  --cache     (Experimental) Cache result of setUp per installation profile.
+              This will create one cache entry per profile and is generally safe
+              to use.
+              To clear all cache entries use --clean.
+
+  --cache-modules
+
+              (Experimnetal) Cache result of setUp per installation profile and
+              installed modules. This will create one copy of the database
+              tables per module-combination and therefore this option should not
+              be used when running all tests. This is most useful for local
+              development of individulat test cases.
+              This option implies --cache and to clear all cache entries use
+              --clean.
+
   <test1>[,<test2>[,<test3> ...]]
 
               One or more tests to be run. By default, these are interpreted
@@ -202,6 +217,8 @@ function simpletest_script_parse_args() {
     'directory' => '',
     'color' => FALSE,
     'verbose' => FALSE,
+    'cache' => FALSE,
+    'cache-modules' => FALSE,
     'test_names' => array(),
     'fail-only' => FALSE,
     // Used internally.
@@ -384,6 +401,8 @@ function simpletest_script_execute_batch($test_id, $test_classes) {
  * Bootstrap Drupal and run a single test.
  */
 function simpletest_script_run_one_test($test_id, $test_class) {
+  global $args;
+
   try {
     // Bootstrap Drupal.
     drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
@@ -391,6 +410,8 @@ function simpletest_script_run_one_test($test_id, $test_class) {
     simpletest_classloader_register();
 
     $test = new $test_class($test_id);
+    $test->useSetupInstallationCache = !empty($args['cache']);
+    $test->useSetupModulesCache = !empty($args['cache-modules']);
     $test->run();
     $info = $test->getInfo();
 
@@ -426,6 +447,13 @@ function simpletest_script_command($test_id, $test_class) {
   if ($args['color']) {
     $command .= ' --color';
   }
+  if ($args['cache-modules']) {
+    $command .= ' --cache --cache-modules';
+  }
+  elseif ($args['cache']) {
+    $command .= ' --cache';
+  }
+
   $command .= " --php " . escapeshellarg($php) . " --test-id $test_id --execute-test " . escapeshellarg($test_class);
   return $command;
 }

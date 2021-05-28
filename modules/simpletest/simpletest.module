@@ -592,7 +592,8 @@ function simpletest_clean_temporary_directories() {
     $files = scandir('public://simpletest');
     foreach ($files as $file) {
       $path = 'public://simpletest/' . $file;
-      if (is_dir($path) && is_numeric($file)) {
+      // Ensure that cache directories are cleaned as well.
+      if (is_dir($path) && (is_numeric($file) || strpos($file, '1c') === 0)) {
         file_unmanaged_delete_recursive($path);
         $count++;
       }
