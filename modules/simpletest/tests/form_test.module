@@ -1022,6 +1022,16 @@ function form_label_test_form() {
     '#title_display' => 'attribute',
     '#required' => TRUE,
   );
+  // Button elements with and without name attribute.
+  $form['form_button_with_name'] = array(
+    '#type' => 'button',
+    '#value' => t('Button with name'),
+  );
+  $form['form_button_without_name'] = array(
+    '#type' => 'button',
+    '#value' => t('Button without name'),
+    '#name' => '',
+  );
 
   return $form;
 }

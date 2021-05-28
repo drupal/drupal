@@ -852,6 +852,12 @@ class FormsElementsLabelsTestCase extends DrupalWebTestCase {
     $this->assertEqual($elements[0]['title'], 'Checkboxes test' . ' (' . t('Required') . ')', 'Title attribute found.');
     $elements = $this->xpath('//div[@id="edit-form-radios-title-attribute"]');
     $this->assertEqual($elements[0]['title'], 'Radios test' . ' (' . t('Required') . ')', 'Title attribute found.');
+
+    // Check that empty name attribute is not printed on buttons.
+    $elements = $this->xpath('//input[@id="edit-form-button-with-name"]');
+    $this->assertTrue($elements[0]['name'] == 'op', 'Name attribute found.');
+    $elements = $this->xpath('//input[@id="edit-form-button-without-name"]');
+    $this->assertFalse(isset($elements[0]['name']), 'No name attribute found.');
   }
 }
 
