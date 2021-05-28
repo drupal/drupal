@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Database\Query;
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Connection;
 
 /**
@@ -130,6 +131,9 @@ class Select extends Query implements SelectInterface {
    *   Array of query options.
    */
   public function __construct(Connection $connection, $table, $alias = NULL, $options = []) {
+    // @todo Remove $options['return'] in D10.
+    // @see https://www.drupal.org/project/drupal/issues/3210310
+    $options['return'] = Database::RETURN_STATEMENT;
     parent::__construct($connection, $options);
     $conjunction = isset($options['conjunction']) ? $options['conjunction'] : 'AND';
     $this->condition = $this->connection->condition($conjunction);

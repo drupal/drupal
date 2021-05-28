@@ -20,7 +20,7 @@ abstract class Database {
    * This is used for queries that have no reasonable return value anyway, such
    * as INSERT statements to a table without a serial primary key.
    *
-   * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no
+   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
    *   replacement.
    *
    * @see https://www.drupal.org/node/3185520
@@ -30,7 +30,7 @@ abstract class Database {
   /**
    * Flag to indicate a query call should return the prepared statement.
    *
-   * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no
+   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
    *   replacement.
    *
    * @see https://www.drupal.org/node/3185520
@@ -40,7 +40,7 @@ abstract class Database {
   /**
    * Flag to indicate a query call should return the number of affected rows.
    *
-   * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no
+   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
    *   replacement.
    *
    * @see https://www.drupal.org/node/3185520
@@ -50,7 +50,7 @@ abstract class Database {
   /**
    * Flag to indicate a query call should return the "last insert id".
    *
-   * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no
+   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
    *   replacement.
    *
    * @see https://www.drupal.org/node/3185520

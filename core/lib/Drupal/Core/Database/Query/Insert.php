@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Database\Query;
 
+use Drupal\Core\Database\Database;
+
 /**
  * General class for an abstracted INSERT query.
  *
@@ -29,6 +31,11 @@ class Insert extends Query implements \Countable {
    *   Array of database options.
    */
   public function __construct($connection, $table, array $options = []) {
+    // @todo Remove $options['return'] in D10.
+    // @see https://www.drupal.org/project/drupal/issues/3210310
+    if (!isset($options['return'])) {
+      $options['return'] = Database::RETURN_INSERT_ID;
+    }
     parent::__construct($connection, $options);
     $this->table = $table;
   }
@@ -57,7 +64,6 @@ class Insert extends Query implements \Countable {
    *   That makes it safe to use in multi-insert loops.
    */
   public function execute() {
-    @trigger_error('Calling ' . __METHOD__ . ' is deprecated in drupal:9.2.0 and the method will be abstract from drupal:10.0.0. Database drivers must implement their own method without calling the parent instead. See https://www.drupal.org/node/3185520', E_USER_DEPRECATED);
 
     // If validation fails, simply return NULL. Note that validation routines
     // in preExecute() may throw exceptions instead.

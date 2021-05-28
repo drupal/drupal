@@ -14,6 +14,16 @@ use Drupal\Core\Database\Query\Select as QuerySelect;
  */
 class Select extends QuerySelect {
 
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(Connection $connection, $table, $alias = NULL, $options = []) {
+    // @todo Remove the __construct in D10.
+    // @see https://www.drupal.org/project/drupal/issues/3210310
+    parent::__construct($connection, $table, $alias, $options);
+    unset($options['return']);
+  }
+
   public function orderRandom() {
     $alias = $this->addExpression('RANDOM()', 'random_field');
     $this->orderBy($alias);
