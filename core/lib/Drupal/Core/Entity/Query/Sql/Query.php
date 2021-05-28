@@ -138,7 +138,7 @@ class Query extends QueryBase implements QueryInterface {
       $revision_subquery->groupBy("base_table.$id_field");
 
       // Restrict results only to latest ids
-      $this->sqlQuery->condition("base_table.$revision_field", $revision_subquery, " IN ");
+      $this->sqlQuery->condition("base_table.$revision_field", $revision_subquery, 'IN');
     }
 
     if (is_null($this->accessCheck)) {
