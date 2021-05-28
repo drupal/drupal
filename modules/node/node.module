@@ -3055,18 +3055,12 @@ function node_access($op, $node, $account = NULL) {
       $query->condition($nids);
       $query->range(0, 1);
 
-      $grants = db_or();
-      foreach (node_access_grants($op, $account) as $realm => $gids) {
-        foreach ($gids as $gid) {
-          $grants->condition(db_and()
-            ->condition('gid', $gid)
-            ->condition('realm', $realm)
-          );
-        }
-      }
+      $grants = node_add_node_grants_to_query(node_access_grants($op, $account));
+
       if (count($grants) > 0) {
         $query->condition($grants);
       }
+
       $result =  (bool) $query
         ->execute()
         ->fetchField();
@@ -3082,6 +3076,31 @@ function node_access($op, $node, $account = NULL) {
   }
 
   return FALSE;
+}
+
+/**
+ * Helper function to create the or condition for a node grants check.
+ *
+ * @param $account
+ *   The grants to add to the query, usually gotten via node_access_grants().
+ * @param $table_alias
+ *   Optional, the alias to the node access table.
+ *
+ * @return
+ *   TRUE if the operation may be performed, FALSE otherwise.
+ */
+function node_add_node_grants_to_query($node_access_grants, $table_alias = '') {
+  $grants = db_or();
+  $prefix = $table_alias ? $table_alias . '.' : '';
+  foreach ($node_access_grants as $realm => $gids) {
+    if (!empty($gids)) {
+      $grants->condition(db_and()
+        ->condition($prefix . 'gid', $gids, 'IN')
+        ->condition($prefix . 'realm', $realm)
+      );
+    }
+  }
+  return $grants;
 }
 
 /**
@@ -3252,15 +3271,8 @@ function node_access_view_all_nodes($account = NULL) {
       ->condition('nid', 0)
       ->condition('grant_view', 1, '>=');
 
-    $grants = db_or();
-    foreach (node_access_grants('view', $account) as $realm => $gids) {
-      foreach ($gids as $gid) {
-        $grants->condition(db_and()
-          ->condition('gid', $gid)
-          ->condition('realm', $realm)
-        );
-      }
-    }
+    $grants = node_add_node_grants_to_query(node_access_grants('view', $account));
+
     if (count($grants) > 0 ) {
       $query->condition($grants);
     }
@@ -3422,17 +3434,7 @@ function _node_query_node_access_alter($query, $type) {
       $subquery = db_select('node_access', 'na')
        ->fields('na', array('nid'));
 
-      $grant_conditions = db_or();
-      // If any grant exists for the specified user, then user has access
-      // to the node for the specified operation.
-      foreach ($grants as $realm => $gids) {
-        foreach ($gids as $gid) {
-          $grant_conditions->condition(db_and()
-            ->condition('na.gid', $gid)
-            ->condition('na.realm', $realm)
-          );
-        }
-      }
+      $grant_conditions = node_add_node_grants_to_query($grants, 'na');
 
       // Attach conditions to the subquery for nodes.
       if (count($grant_conditions->conditions())) {
