@@ -168,7 +168,7 @@ class SharedTempStore {
     $value = (object) [
       'owner' => $this->owner,
       'data' => $value,
-      'updated' => (int) $this->requestStack->getMasterRequest()->server->get('REQUEST_TIME'),
+      'updated' => (int) $this->requestStack->getMainRequest()->server->get('REQUEST_TIME'),
     ];
     $this->ensureAnonymousSession();
     $set = $this->storage->setWithExpireIfNotExists($key, $value, $this->expire);
@@ -228,7 +228,7 @@ class SharedTempStore {
     $value = (object) [
       'owner' => $this->owner,
       'data' => $value,
-      'updated' => (int) $this->requestStack->getMasterRequest()->server->get('REQUEST_TIME'),
+      'updated' => (int) $this->requestStack->getMainRequest()->server->get('REQUEST_TIME'),
     ];
     $this->ensureAnonymousSession();
     $this->storage->setWithExpire($key, $value, $this->expire);

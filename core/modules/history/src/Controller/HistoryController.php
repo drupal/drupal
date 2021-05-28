@@ -28,10 +28,10 @@ class HistoryController extends ControllerBase {
       throw new AccessDeniedHttpException();
     }
 
-    $nids = $request->request->get('node_ids');
-    if (!isset($nids)) {
+    if (!$request->request->has('node_ids')) {
       throw new NotFoundHttpException();
     }
+    $nids = $request->request->all('node_ids');
     return new JsonResponse(history_read_multiple($nids));
   }
 
