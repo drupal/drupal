@@ -844,9 +844,9 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    *   The URL to be used as the $form['#action'].
    */
   protected function buildFormAction() {
-    // @todo Use <current> instead of the master request in
+    // @todo Use <current> instead of the main request in
     //   https://www.drupal.org/node/2505339.
-    $request = $this->requestStack->getMasterRequest();
+    $request = $this->requestStack->getMainRequest();
     $request_uri = $request->getRequestUri();
 
     // Prevent cross site requests via the Form API by using an absolute URL

@@ -39,7 +39,7 @@ class LatestRevisionCheckTest extends UnitTestCase {
   }
 
   /**
-   * Test the access check of the LatestRevisionCheck service.
+   * Tests the access check of the LatestRevisionCheck service.
    *
    * @param string $entity_class
    *   The class of the entity to mock.

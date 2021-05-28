@@ -38,18 +38,18 @@ class FeedParserTest extends AggregatorTestBase {
     $feed->refreshItems();
     $this->drupalGet('aggregator/sources/' . $feed->id());
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('First example feed item title');
+    $this->assertSession()->pageTextContains('First example feed item title');
     $this->assertSession()->linkByHrefExists('http://example.com/example-turns-one');
-    $this->assertText('First example feed item description.');
+    $this->assertSession()->pageTextContains('First example feed item description.');
     $this->assertRaw('<img src="http://example.com/images/druplicon.png"');
 
     // Several additional items that include elements over 255 characters.
     $this->assertRaw("Second example feed item title.");
-    $this->assertText('Long link feed item title');
-    $this->assertText('Long link feed item description');
+    $this->assertSession()->pageTextContains('Long link feed item title');
+    $this->assertSession()->pageTextContains('Long link feed item description');
     $this->assertSession()->linkByHrefExists('http://example.com/tomorrow/and/tomorrow/and/tomorrow/creeps/in/this/petty/pace/from/day/to/day/to/the/last/syllable/of/recorded/time/and/all/our/yesterdays/have/lighted/fools/the/way/to/dusty/death/out/out/brief/candle/life/is/but/a/walking/shadow/a/poor/player/that/struts/and/frets/his/hour/upon/the/stage/and/is/heard/no/more/it/is/a/tale/told/by/an/idiot/full/of/sound/and/fury/signifying/nothing');
-    $this->assertText('Long author feed item title');
-    $this->assertText('Long author feed item description');
+    $this->assertSession()->pageTextContains('Long author feed item title');
+    $this->assertSession()->pageTextContains('Long author feed item description');
     $this->assertSession()->linkByHrefExists('http://example.com/long/author');
   }
 
@@ -61,26 +61,26 @@ class FeedParserTest extends AggregatorTestBase {
     $feed->refreshItems();
     $this->drupalGet('aggregator/sources/' . $feed->id());
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('Atom-Powered Robots Run Amok');
+    $this->assertSession()->pageTextContains('Atom-Powered Robots Run Amok');
     $this->assertSession()->linkByHrefExists('http://example.org/2003/12/13/atom03');
-    $this->assertText('Some text.');
+    $this->assertSession()->pageTextContains('Some text.');
     $item_ids = \Drupal::entityQuery('aggregator_item')
       ->accessCheck(FALSE)
       ->condition('link', 'http://example.org/2003/12/13/atom03')
       ->execute();
     $item = Item::load(array_values($item_ids)[0]);
-    $this->assertEqual('urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a', $item->getGuid(), 'Atom entry id element is parsed correctly.');
+    $this->assertEquals('urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a', $item->getGuid(), 'Atom entry id element is parsed correctly.');
 
     // Check for second feed entry.
-    $this->assertText('We tried to stop them, but we failed.');
+    $this->assertSession()->pageTextContains('We tried to stop them, but we failed.');
     $this->assertSession()->linkByHrefExists('http://example.org/2003/12/14/atom03');
-    $this->assertText('Some other text.');
+    $this->assertSession()->pageTextContains('Some other text.');
     $item_ids = \Drupal::entityQuery('aggregator_item')
       ->accessCheck(FALSE)
       ->condition('link', 'http://example.org/2003/12/14/atom03')
       ->execute();
     $item = Item::load(array_values($item_ids)[0]);
-    $this->assertEqual('urn:uuid:1225c695-cfb8-4ebb-bbbb-80da344efa6a', $item->getGuid(), 'Atom entry id element is parsed correctly.');
+    $this->assertEquals('urn:uuid:1225c695-cfb8-4ebb-bbbb-80da344efa6a', $item->getGuid(), 'Atom entry id element is parsed correctly.');
   }
 
   /**
@@ -104,7 +104,7 @@ class FeedParserTest extends AggregatorTestBase {
     $feed->refreshItems();
 
     // Make sure that the feed URL was updated correctly.
-    $this->assertEqual(Url::fromRoute('aggregator_test.feed', [], ['absolute' => TRUE])->toString(), $feed->getUrl());
+    $this->assertEquals(Url::fromRoute('aggregator_test.feed', [], ['absolute' => TRUE])->toString(), $feed->getUrl());
   }
 
   /**

@@ -117,14 +117,14 @@ class DistributionProfileExistingSettingsTest extends InstallerTestBase {
     $this->assertSession()->addressEquals('user/1');
     $this->assertSession()->statusCodeEquals(200);
     // Confirm that we are logged-in after installation.
-    $this->assertText($this->rootUser->getAccountName());
+    $this->assertSession()->pageTextContains($this->rootUser->getAccountName());
 
     // Confirm that Drupal recognizes this distribution as the current profile.
-    $this->assertEqual('my_distro', \Drupal::installProfile());
-    $this->assertEqual('my_distro', $this->config('core.extension')->get('profile'), 'The install profile has been written to core.extension configuration.');
+    $this->assertEquals('my_distro', \Drupal::installProfile());
+    $this->assertEquals('my_distro', $this->config('core.extension')->get('profile'), 'The install profile has been written to core.extension configuration.');
 
     $this->rebuildContainer();
-    $this->assertEqual('my_distro', \Drupal::installProfile());
+    $this->assertEquals('my_distro', \Drupal::installProfile());
   }
 
 }

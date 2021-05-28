@@ -133,6 +133,12 @@
    */
   function closeAllSubNav() {
     secondLevelNavMenus.forEach((el) => {
+      // Return focus to the toggle button if the submenu contains focus.
+      if (el.contains(document.activeElement)) {
+        el.querySelector(
+          '.primary-nav__button-toggle, .primary-nav__menu-link--button',
+        ).focus();
+      }
       toggleSubNav(el, false);
     });
   }

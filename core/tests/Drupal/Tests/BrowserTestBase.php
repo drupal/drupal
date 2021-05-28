@@ -515,7 +515,7 @@ abstract class BrowserTestBase extends TestCase {
    *   exception.
    */
   protected function getHttpClient() {
-    /* @var $mink_driver \Behat\Mink\Driver\DriverInterface */
+    /** @var \Behat\Mink\Driver\DriverInterface $mink_driver */
     $mink_driver = $this->getSession()->getDriver();
     if ($this->isTestUsingGuzzleClient()) {
       return $mink_driver->getClient()->getClient();
@@ -539,7 +539,7 @@ abstract class BrowserTestBase extends TestCase {
       $select = $this->assertSession()->selectExists($select, $container);
     }
     $options = [];
-    /* @var \Behat\Mink\Element\NodeElement $option */
+    /** @var \Behat\Mink\Element\NodeElement $option */
     foreach ($select->findAll('xpath', '//option') as $option) {
       $label = $option->getText();
       $value = $option->getAttribute('value') ?: $label;
@@ -706,18 +706,18 @@ abstract class BrowserTestBase extends TestCase {
   }
 
   /**
-   * Transforms a nested array into a flat array suitable for drupalPostForm().
+   * Transforms a nested array into a flat array suitable for submitForm().
    *
    * @param array $values
    *   A multi-dimensional form values array to convert.
    *
    * @return array
-   *   The flattened $edit array suitable for BrowserTestBase::drupalPostForm().
+   *   The flattened $edit array suitable for BrowserTestBase::submitForm().
    */
   protected function translatePostValues(array $values) {
     $edit = [];
     // The easiest and most straightforward way to translate values suitable for
-    // BrowserTestBase::drupalPostForm() is to actually build the POST data
+    // BrowserTestBase::submitForm() is to actually build the POST data
     // string and convert the resulting key/value pairs back into a flat array.
     $query = http_build_query($values);
     foreach (explode('&', $query) as $item) {

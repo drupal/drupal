@@ -197,7 +197,8 @@ abstract class FileFieldTestBase extends BrowserTestBase {
       'revision' => (string) (int) $new_revision,
     ];
 
-    $this->drupalPostForm('node/' . $nid . '/edit', [], 'Remove');
+    $this->drupalGet('node/' . $nid . '/edit');
+    $this->submitForm([], 'Remove');
     $this->submitForm($edit, 'Save');
   }
 
@@ -210,7 +211,8 @@ abstract class FileFieldTestBase extends BrowserTestBase {
       'revision' => (string) (int) $new_revision,
     ];
 
-    $this->drupalPostForm('node/' . $nid . '/edit', [], 'Remove');
+    $this->drupalGet('node/' . $nid . '/edit');
+    $this->submitForm([], 'Remove');
     $this->submitForm($edit, 'Save');
   }
 
@@ -221,7 +223,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
     $this->container->get('entity_type.manager')->getStorage('file')->resetCache();
     $db_file = File::load($file->id());
     $message = isset($message) ? $message : new FormattableMarkup('File %file exists in database at the correct path.', ['%file' => $file->getFileUri()]);
-    $this->assertEqual($file->getFileUri(), $db_file->getFileUri(), $message);
+    $this->assertEquals($file->getFileUri(), $db_file->getFileUri(), $message);
   }
 
   /**

@@ -40,7 +40,7 @@ class LocalePathTest extends BrowserTestBase {
   }
 
   /**
-   * Test if a language can be associated with a path alias.
+   * Tests if a language can be associated with a path alias.
    */
   public function testPathLanguageConfiguration() {
     // User to add and remove language.
@@ -67,16 +67,18 @@ class LocalePathTest extends BrowserTestBase {
       'label' => $name,
       'direction' => LanguageInterface::DIRECTION_LTR,
     ];
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add custom language');
+    $this->drupalGet('admin/config/regional/language/add');
+    $this->submitForm($edit, 'Add custom language');
 
     // Set path prefix.
     $edit = ["prefix[$langcode]" => $prefix];
-    $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/regional/language/detection/url');
+    $this->submitForm($edit, 'Save configuration');
 
     // Check that the "xx" front page is readily available because path prefix
     // negotiation is pre-configured.
     $this->drupalGet($prefix);
-    $this->assertText('Welcome to Drupal');
+    $this->assertSession()->pageTextContains('Welcome to Drupal');
 
     // Create a node.
     $node = $this->drupalCreateNode(['type' => 'page']);
@@ -89,7 +91,8 @@ class LocalePathTest extends BrowserTestBase {
       'alias[0][value]' => '/' . $english_path,
       'langcode[0][value]' => 'en',
     ];
-    $this->drupalPostForm($path, $edit, 'Save');
+    $this->drupalGet($path);
+    $this->submitForm($edit, 'Save');
 
     // Create a path alias in new custom language.
     $custom_language_path = $this->randomMachineName(8);
@@ -98,15 +101,16 @@ class LocalePathTest extends BrowserTestBase {
       'alias[0][value]' => '/' . $custom_language_path,
       'langcode[0][value]' => $langcode,
     ];
-    $this->drupalPostForm($path, $edit, 'Save');
+    $this->drupalGet($path);
+    $this->submitForm($edit, 'Save');
 
     // Confirm English language path alias works.
     $this->drupalGet($english_path);
-    $this->assertText($node->label());
+    $this->assertSession()->pageTextContains($node->label());
 
     // Confirm custom language path alias works.
     $this->drupalGet($prefix . '/' . $custom_language_path);
-    $this->assertText($node->label());
+    $this->assertSession()->pageTextContains($node->label());
 
     // Create a custom path.
     $custom_path = $this->randomMachineName(8);
@@ -114,10 +118,10 @@ class LocalePathTest extends BrowserTestBase {
     // Check priority of language for alias by source path.
     $path_alias = $this->createPathAlias('/node/' . $node->id(), '/' . $custom_path, LanguageInterface::LANGCODE_NOT_SPECIFIED);
     $lookup_path = $this->container->get('path_alias.manager')->getAliasByPath('/node/' . $node->id(), 'en');
-    $this->assertEqual('/' . $english_path, $lookup_path, 'English language alias has priority.');
+    $this->assertEquals('/' . $english_path, $lookup_path, 'English language alias has priority.');
     // Same check for language 'xx'.
     $lookup_path = $this->container->get('path_alias.manager')->getAliasByPath('/node/' . $node->id(), $prefix);
-    $this->assertEqual('/' . $custom_language_path, $lookup_path, 'Custom language alias has priority.');
+    $this->assertEquals('/' . $custom_language_path, $lookup_path, 'Custom language alias has priority.');
     $path_alias->delete();
 
     // Create language nodes to check priority of aliases.
@@ -141,11 +145,11 @@ class LocalePathTest extends BrowserTestBase {
 
     // Confirm that the custom path leads to the first node.
     $this->drupalGet($custom_path);
-    $this->assertText($first_node->label());
+    $this->assertSession()->pageTextContains($first_node->label());
 
     // Confirm that the custom path with prefix leads to the second node.
     $this->drupalGet($prefix . '/' . $custom_path);
-    $this->assertText($second_node->label());
+    $this->assertSession()->pageTextContains($second_node->label());
 
   }
 

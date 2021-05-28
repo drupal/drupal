@@ -3,7 +3,9 @@
 namespace Drupal\media_library;
 
 use Drupal\Component\Utility\Crypt;
+use Drupal\Core\Http\InputBag;
 use Drupal\Core\Site\Settings;
+use Symfony\Component\HttpFoundation\InputBag as SymfonyInputBag;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -94,15 +96,20 @@ class MediaLibraryState extends ParameterBag {
    */
   public static function fromRequest(Request $request) {
     $query = $request->query;
+    // Replace ParameterBag with InputBag for compatibility with Symfony 5.
+    // @todo Remove this when Symfony 4 is no longer supported.
+    if (!($query instanceof InputBag || $query instanceof SymfonyInputBag)) {
+      $query = new InputBag($query->all());
+    }
 
     // Create a MediaLibraryState object through the create method to make sure
     // all validation runs.
     $state = static::create(
       $query->get('media_library_opener_id'),
-      $query->get('media_library_allowed_types', []),
+      $query->all('media_library_allowed_types'),
       $query->get('media_library_selected_type'),
       $query->get('media_library_remaining'),
-      $query->get('media_library_opener_parameters', [])
+      $query->all('media_library_opener_parameters')
     );
 
     // The request parameters need to contain a valid hash to prevent a
@@ -222,7 +229,7 @@ class MediaLibraryState extends ParameterBag {
    *   The media type IDs.
    */
   public function getAllowedTypeIds() {
-    return $this->get('media_library_allowed_types');
+    return $this->all('media_library_allowed_types');
   }
 
   /**
@@ -266,7 +273,29 @@ class MediaLibraryState extends ParameterBag {
    *   An associative array of all opener-specific parameter values.
    */
   public function getOpenerParameters() {
-    return $this->get('media_library_opener_parameters', []);
+    return $this->all('media_library_opener_parameters');
+  }
+
+  /**
+   * Returns the parameters.
+   *
+   * @param string|null $key
+   *   The name of the parameter to return or null to get them all.
+   *
+   * @return array
+   *   An array of parameters.
+   */
+  public function all(string $key = NULL): array {
+    if ($key === NULL) {
+      return $this->parameters;
+    }
+
+    $value = $this->parameters[$key] ?? [];
+    if (!is_array($value)) {
+      throw new \UnexpectedValueException(sprintf('Unexpected value for parameter "%s": expecting "array", got "%s".', $key, get_debug_type($value)));
+    }
+
+    return $value;
   }
 
 }

@@ -52,7 +52,7 @@ class ViewsBulkTest extends ViewTestBase {
     // Login as administrator and go to admin/content.
     $this->drupalLogin($this->admin_user);
     $this->drupalGet('admin/content');
-    $this->assertText($node_1->getTitle());
+    $this->assertSession()->pageTextContains($node_1->getTitle());
 
     // Create second node now that the admin overview has been rendered.
     $node_2 = $this->drupalCreateNode([
@@ -64,7 +64,7 @@ class ViewsBulkTest extends ViewTestBase {
     // Now click 'Apply to selected items' and assert the first node is selected
     // on the confirm form.
     $this->submitForm(['node_bulk_form[0]' => TRUE], 'Apply to selected items');
-    $this->assertText($node_1->getTitle());
+    $this->assertSession()->pageTextContains($node_1->getTitle());
     $this->assertNoText($node_2->getTitle());
 
     // Change the pager limit to 2.
@@ -82,7 +82,7 @@ class ViewsBulkTest extends ViewTestBase {
     // Now click 'Apply to selected items' and assert the second node is
     // selected on the confirm form.
     $this->submitForm(['node_bulk_form[1]' => TRUE], 'Apply to selected items');
-    $this->assertText($node_1->getTitle());
+    $this->assertSession()->pageTextContains($node_1->getTitle());
     $this->assertNoText($node_3->getTitle());
   }
 

@@ -128,6 +128,7 @@
   padding-left: 1.125rem;
   padding-right: 1.125rem;
   font-size: 1rem;
+  line-height: normal;
 }
 
 .button--primary {
@@ -150,6 +151,11 @@
   .button--primary.is-disabled {
     color: #fff;
     background-color: #d7e1e8;
+  }
+
+#drupal-off-canvas input[type="submit"].button {
+    float: left;
+    width: auto;
   }
 
 .button--icon-back {

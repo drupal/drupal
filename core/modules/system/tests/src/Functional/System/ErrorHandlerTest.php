@@ -25,7 +25,7 @@ class ErrorHandlerTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test the error handler.
+   * Tests the error handler.
    */
   public function testErrorHandler() {
     $config = $this->config('system.logging');
@@ -93,7 +93,7 @@ class ErrorHandlerTest extends BrowserTestBase {
   }
 
   /**
-   * Test the exception handler.
+   * Tests the exception handler.
    */
   public function testExceptionHandler() {
     $error_exception = [
@@ -126,7 +126,7 @@ class ErrorHandlerTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(500);
     // We cannot use assertErrorMessage() since the exact error reported
     // varies from database to database. Check that the SQL string is displayed.
-    $this->assertText($error_pdo_exception['%type']);
+    $this->assertSession()->pageTextContains($error_pdo_exception['%type']);
     // Assert statement improved since static queries adds table alias in the
     // error message.
     $this->assertSession()->pageTextContains($error_pdo_exception['@message']);
