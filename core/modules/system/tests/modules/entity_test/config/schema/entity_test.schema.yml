@@ -27,3 +27,17 @@ entity_test.entity_test_bundle.*:
     description:
       type: text
       label: 'Description'
+
+entity_test.entity_test_comp_field_bundle.*:
+  type: config_entity
+  label: 'Entity test computed field bundle'
+  mapping:
+    label:
+      type: label
+      label: 'Label'
+    id:
+      type: string
+      label: 'Machine-readable name'
+    description:
+      type: text
+      label: 'Description'

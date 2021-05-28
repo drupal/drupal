@@ -31,7 +31,10 @@ class EntityTestViewsData extends EntityViewsData {
           'id' => 'field',
           'default_formatter' => 'string',
           'field_name' => 'computed_bundle_field',
-          'bundles' => ['entity_test_computed_field'],
+          'bundles' => [
+            'entity_test_comp_field_bundle',
+            'entity_test_comp_field_bundle_2',
+          ],
         ],
       ];
     }

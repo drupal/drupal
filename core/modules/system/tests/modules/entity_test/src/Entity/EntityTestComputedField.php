@@ -23,11 +23,13 @@ use Drupal\entity_test\Plugin\Field\ComputedTestFieldItemList;
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "name",
+ *     "bundle" = "type",
  *   },
  *   admin_permission = "administer entity_test content",
  *   links = {
  *     "add-form" = "/entity_test_computed_field/add",
  *   },
+ *   bundle_entity_type = "entity_test_comp_field_bundle"
  * )
  */
 class EntityTestComputedField extends EntityTest {
@@ -58,7 +60,12 @@ class EntityTestComputedField extends EntityTest {
   public static function bundleFieldDefinitions(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
     $fields = parent::bundleFieldDefinitions($entity_type, $bundle, $base_field_definitions);
 
-    if ($bundle === $entity_type->id()) {
+    $computed_field_bundles = [
+      'entity_test_comp_field_bundle',
+      'entity_test_comp_field_bundle_2',
+    ];
+
+    if (array_search($bundle, $computed_field_bundles) !== FALSE) {
       // @todo Use the proper FieldStorageDefinition class instead
       //  https://www.drupal.org/node/2280639.
       $storageDefinition = FieldStorageDefinition::create('string')
