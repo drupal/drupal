@@ -1811,6 +1811,27 @@ class FieldFormTestCase extends FieldTestCase {
   }
 
   /**
+   * Tests the position of the required label.
+   */
+  public function testFieldFormUnlimitedRequired() {
+    $this->field = $this->field_unlimited;
+    $this->field_name = $this->field['field_name'];
+    $this->instance['field_name'] = $this->field_name;
+    $this->instance['required'] = TRUE;
+    field_create_field($this->field);
+    field_create_instance($this->instance);
+
+    // Display creation form -> 1 widget.
+    $this->drupalGet('test-entity/add/test-bundle');
+    $result = $this->xpath("//label[not(contains(@class, 'element-invisible')) and contains(text(), :label)]/span/text()", array(':label' => $this->instance['label']));
+    $this->assertEqual($result[0], '*', 'Required symbol added to field label.');
+    // Check that the label of the field input is visually hidden and contains
+    // the field title and an indication of the delta for a11y.
+    $result = $this->xpath("//label[contains(@class, 'element-invisible') and contains(text(), :label)]/span/text()", array(':label' => $this->instance['label']));
+    $this->assertEqual($result[0], '*', 'Required symbol and field label are visually hidden.');
+  }
+
+  /**
    * Tests widget handling of multiple required radios.
    */
   function testFieldFormMultivalueWithRequiredRadio() {
