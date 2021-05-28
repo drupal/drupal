@@ -38,6 +38,15 @@ class UserPermissionsForm extends FormBase {
   protected $moduleHandler;
 
   /**
+   * The module list.
+   *
+   * A list of modules, or NULL to handle all installed modules.
+   *
+   * @var string[]|null
+   */
+  protected $moduleList = NULL;
+
+  /**
    * Constructs a new UserPermissionsForm.
    *
    * @param \Drupal\user\PermissionHandlerInterface $permission_handler
@@ -142,6 +151,14 @@ class UserPermissionsForm extends FormBase {
         array_slice($permissions_by_provider['node'], $offset)
       );
       unset($permissions_by_provider['system']['access content']);
+    }
+
+    // If $this->moduleList is not NULL, then restrict to the list.
+    if ($this->moduleList !== NULL) {
+      $permissions_by_provider = array_intersect_key(
+        $permissions_by_provider,
+        array_flip($this->moduleList)
+      );
     }
 
     foreach ($permissions_by_provider as $provider => $permissions) {
