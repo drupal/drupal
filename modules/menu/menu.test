@@ -295,6 +295,27 @@ class MenuTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Tries to use the navigation menu as the source for secondary links.
+   */
+  function testNavigationAsSecondaryMenu() {
+    $this->drupalLogin($this->big_user);
+
+    // Go to the menu settings page and make the navigation the source for the
+    // secondary menu.
+    $edit = array(
+      'menu_main_links_source' => 'main-menu',
+      'menu_secondary_links_source' => 'navigation',
+    );
+    $this->drupalGet('admin/structure/menu/settings');
+    $this->drupalPost(NULL, $edit, t('Save configuration'));
+
+    // Now visit the user page. There should be an 'Add content' link in the
+    // navigation block and one in the secondary menu.
+    $this->drupalGet('user');
+    $this->assertNoUniqueText(t('Add content'));
+  }
+
+  /**
    * Add a menu link using the menu module UI.
    *
    * @param integer $plid Parent menu link id.
