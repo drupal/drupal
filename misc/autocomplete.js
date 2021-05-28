@@ -17,7 +17,7 @@ Drupal.behaviors.autocomplete = {
       $($input[0].form).submit(Drupal.autocompleteSubmit);
       $input.parent()
         .attr('role', 'application')
-        .append($('<span class="element-invisible" aria-live="assertive"></span>')
+        .append($('<span class="element-invisible" aria-live="assertive" aria-atomic="true"></span>')
           .attr('id', $input.attr('id') + '-autocomplete-aria-live')
         );
       new Drupal.jsAC($input, acdb[uri]);
