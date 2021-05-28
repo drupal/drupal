@@ -107,6 +107,55 @@ class PathTestCase extends DrupalWebTestCase {
     $this->drupalGet($edit['alias']);
     $this->assertNoText($node1->title, 'Alias was successfully deleted.');
     $this->assertResponse(404);
+
+    // Create third and fourth test node.
+    $node3 = $this->drupalCreateNode();
+    $node4 = $this->drupalCreateNode();
+
+    // Give the node aliases a common first part.
+    $name = $this->randomName(4);
+
+    // Create aliases containing a slash.
+    $edit = array();
+    $edit['source'] = 'node/' . $node3->nid;
+    $alias3 = $name . '/' . $this->randomName(5);
+    $edit['alias'] = $alias3;
+    $this->drupalPost('admin/config/search/path/add', $edit, t('Save'));
+    $edit['source'] = 'node/' . $node4->nid;
+    $alias4 = $name . '/' . $this->randomName(4);
+    $edit['alias'] = $alias4;
+    $this->drupalPost('admin/config/search/path/add', $edit, t('Save'));
+
+    // Confirm that the aliases work.
+    $this->drupalGet($alias3);
+    $this->assertText($node3->title, 'Alias works.');
+    $this->assertResponse(200);
+    $this->drupalGet($alias4);
+    $this->assertText($node4->title, 'Alias works.');
+    $this->assertResponse(200);
+
+    // Confirm that filters containing slashes work.
+    $this->drupalGet('admin/config/search/path/list/' . $alias3);
+    $this->assertFieldByName('filter', $alias3);
+    $this->assertText($alias3, 'Searched-for alias with slash found.');
+    $this->assertNoText($alias4, 'Different alias with slash not found.');
+    $this->assertResponse(200);
+
+    // Delete aliases.
+    $pid = $this->getPID($alias3);
+    $this->drupalPost('admin/config/search/path/edit/' . $pid, array(), t('Delete'));
+    $this->drupalPost(NULL, array(), t('Confirm'));
+    $pid = $this->getPID($alias4);
+    $this->drupalPost('admin/config/search/path/edit/' . $pid, array(), t('Delete'));
+    $this->drupalPost(NULL, array(), t('Confirm'));
+
+    // Confirm that the aliases no longer work.
+    $this->drupalGet($alias3);
+    $this->assertNoText($node3->title, 'Alias was successfully deleted.');
+    $this->assertResponse(404);
+    $this->drupalGet($alias4);
+    $this->assertNoText($node4->title, 'Alias was successfully deleted.');
+    $this->assertResponse(404);
   }
 
   /**

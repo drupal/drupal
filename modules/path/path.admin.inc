@@ -11,7 +11,11 @@
  * When filter key passed, perform a standard search on the given key,
  * and return the list of matching URL aliases.
  */
-function path_admin_overview($keys = NULL) {
+function path_admin_overview() {
+  // Get search keys.
+  $args = func_get_args();
+  $keys = implode('/', $args);
+
   // Add the filter form above the overview table.
   $build['path_admin_filter_form'] = drupal_get_form('path_admin_filter_form', $keys);
   // Enable language column if locale is enabled or if we have any alias with language
