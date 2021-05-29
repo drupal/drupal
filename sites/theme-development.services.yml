@@ -1,0 +1,11 @@
+# Front-end theme development and debugging services.
+#
+# To activate this feature, follow the instructions at the top of the
+# 'example.settings.local.php' file, which sits next to this file. Then,
+# uncomment the line that references theme-development.services.yml
+parameters:
+  twig.config:
+    debug: true
+    auto_reload: null
+    cache: true
+  http.response.debug_cacheability_headers: true
