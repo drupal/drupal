@@ -33,6 +33,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ModulesListForm extends FormBase {
 
   use ModuleDependencyMessageTrait;
+  use ModulesEnabledTrait;
 
   /**
    * The current user.
@@ -472,11 +473,8 @@ class ModulesListForm extends FormBase {
     if (!empty($modules['install'])) {
       try {
         $this->moduleInstaller->install(array_keys($modules['install']));
-        $module_names = array_values($modules['install']);
-        $this->messenger()->addStatus($this->formatPlural(count($module_names), 'Module %name has been enabled.', '@count modules have been enabled: %names.', [
-          '%name' => $module_names[0],
-          '%names' => implode(', ', $module_names),
-        ]));
+        $this->messenger()
+          ->addStatus($this->modulesEnabledConfirmationMessage($modules['install']));
       }
       catch (PreExistingConfigException $e) {
         $config_objects = $e->flattenConfigObjects($e->getConfigObjects());
