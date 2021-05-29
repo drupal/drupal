@@ -2,6 +2,7 @@
 
 namespace Drupal\user\Form;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -24,6 +25,24 @@ class UserPermissionsModuleSpecificForm extends UserPermissionsForm {
   public function buildForm(array $form, FormStateInterface $form_state, $modules = '') {
     $this->moduleList = explode(',', $modules);
     return parent::buildForm($form, $form_state);
+  }
+
+  /**
+   * Checks that at least one module defines permissions.
+   *
+   * @param string $modules
+   *   (optional) One or more module names, comma-separated.
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
+   */
+  public function access($modules) {
+    foreach (explode(',', $modules) as $module) {
+      if ($this->permissionHandler->moduleProvidesPermissions($module)) {
+        return AccessResult::allowed();
+      }
+    }
+    return AccessResult::forbidden();
   }
 
 }
