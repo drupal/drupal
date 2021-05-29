@@ -855,7 +855,6 @@ abstract class Connection {
    * @see \Drupal\Core\Database\Connection::defaultOptions()
    */
   public function query($query, array $args = [], $options = []) {
-dump([$query, $args, $options]);
     // Use default values if not already set.
     $options += $this->defaultOptions();
 
