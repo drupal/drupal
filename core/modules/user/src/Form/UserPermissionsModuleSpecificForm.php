@@ -3,7 +3,6 @@
 namespace Drupal\user\Form;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\user\RoleInterface;
 
 /**
  * Provides the user permissions administration form for a specific role.
