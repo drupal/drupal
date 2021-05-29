@@ -227,6 +227,7 @@
                 "[web-root]/web.config": "assets/scaffold/files/web.config",
                 "[web-root]/sites/README.txt": "assets/scaffold/files/sites.README.txt",
                 "[web-root]/sites/development.services.yml": "assets/scaffold/files/development.services.yml",
+                "[web-root]/sites/theme-development.services.yml": "assets/scaffold/files/theme-development.services.yml",
                 "[web-root]/sites/example.settings.local.php": "assets/scaffold/files/example.settings.local.php",
                 "[web-root]/sites/example.sites.php": "assets/scaffold/files/example.sites.php",
                 "[web-root]/sites/default/default.services.yml": "assets/scaffold/files/default.services.yml",

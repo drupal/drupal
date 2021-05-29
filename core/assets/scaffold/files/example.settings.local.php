@@ -41,6 +41,14 @@ assert_options(ASSERT_ACTIVE, TRUE);
 $settings['container_yamls'][] = DRUPAL_ROOT . '/sites/development.services.yml';
 
 /**
+ * Enable theme development services.
+ *
+ * Note: theme debugging can break parts of Drupal. Not recommended in
+ * production environments. See https://www.drupal.org/project/drupal/issues/2914733
+ */
+# $settings['container_yamls'][] = DRUPAL_ROOT . '/sites/theme-development.services.yml';
+
+/**
  * Show all error messages, with backtrace information.
  *
  * In case the error level could not be fetched from the database, as for

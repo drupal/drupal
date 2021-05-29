@@ -153,6 +153,7 @@ class ComposerIntegrationTest extends UnitTestCase {
       ['web.config', 'assets/scaffold/files/web.config'],
       ['sites/README.txt', 'assets/scaffold/files/sites.README.txt'],
       ['sites/development.services.yml', 'assets/scaffold/files/development.services.yml'],
+      ['sites/theme-development.services.yml', 'assets/scaffold/files/theme-development.services.yml'],
       ['sites/example.settings.local.php', 'assets/scaffold/files/example.settings.local.php'],
       ['sites/example.sites.php', 'assets/scaffold/files/example.sites.php'],
       ['sites/default/default.services.yml', 'assets/scaffold/files/default.services.yml'],

@@ -534,7 +534,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "454ec5a15af2123c790974d1ad622bbb8ed61ec5"
+                "reference": "6ca551be1debee6fcb0b7279ff0016ce468b4c32"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -718,6 +718,7 @@
                         "[web-root]/web.config": "assets/scaffold/files/web.config",
                         "[web-root]/sites/README.txt": "assets/scaffold/files/sites.README.txt",
                         "[web-root]/sites/development.services.yml": "assets/scaffold/files/development.services.yml",
+                        "[web-root]/sites/theme-development.services.yml": "assets/scaffold/files/theme-development.services.yml",
                         "[web-root]/sites/example.settings.local.php": "assets/scaffold/files/example.settings.local.php",
                         "[web-root]/sites/example.sites.php": "assets/scaffold/files/example.sites.php",
                         "[web-root]/sites/default/default.services.yml": "assets/scaffold/files/default.services.yml",
