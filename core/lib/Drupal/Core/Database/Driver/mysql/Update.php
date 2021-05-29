@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\Core\Database\Driver\pgsql;
+namespace Drupal\Core\Database\Driver\mysql;
 
-use Drupal\Core\Database\Query\Merge as QueryMerge;
+use Drupal\Core\Database\Query\Update as QueryUpdate;
 
 /**
- * PostgreSQL implementation of \Drupal\Core\Database\Query\Merge.
+ * MySQL implementation of \Drupal\Core\Database\Query\Update.
  */
-class Merge extends QueryMerge {
+class Update extends QueryUpdate {
 
   /**
    * {@inheritdoc}

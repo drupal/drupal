@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\Core\Database\Driver\pgsql;
+namespace Drupal\Core\Database\Driver\mysql;
 
-use Drupal\Core\Database\Query\Merge as QueryMerge;
+use Drupal\Core\Database\Query\Truncate as QueryTruncate;
 
 /**
- * PostgreSQL implementation of \Drupal\Core\Database\Query\Merge.
+ * MySQL implementation of \Drupal\Core\Database\Query\Truncate.
  */
-class Merge extends QueryMerge {
+class Truncate extends QueryTruncate {
 
   /**
    * {@inheritdoc}

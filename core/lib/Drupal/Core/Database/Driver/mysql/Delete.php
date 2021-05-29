@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\Core\Database\Driver\pgsql;
+namespace Drupal\Core\Database\Driver\mysql;
 
-use Drupal\Core\Database\Query\Merge as QueryMerge;
+use Drupal\Core\Database\Query\Delete as QueryDelete;
 
 /**
- * PostgreSQL implementation of \Drupal\Core\Database\Query\Merge.
+ * MySQL implementation of \Drupal\Core\Database\Query\Delete.
  */
-class Merge extends QueryMerge {
+class Delete extends QueryDelete {
 
   /**
    * {@inheritdoc}

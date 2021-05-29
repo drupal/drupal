@@ -19,7 +19,7 @@ class Truncate extends QueryTruncate {
     // @todo Remove the __construct in D10.
     // @see https://www.drupal.org/project/drupal/issues/3210310
     parent::__construct($connection, $table, $options);
-    unset($options['return']);
+    unset($this->queryOptions['return']);
   }
 
   public function __toString() {
