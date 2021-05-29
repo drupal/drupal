@@ -264,12 +264,12 @@ class ModulesListForm extends FormBase {
     }
 
     // Generate link for module's permission, if the user has access to it.
-    $url = Url::fromRoute('user.admin_permissions.module', ['modules' => $module->getName()]);
-    if ($url->access($this->currentUser)) {
+    $route_parameters = ['modules' => $module->getName()];
+    if ($this->accessManager->checkNamedRoute('user.admin_permissions.module', $route_parameters, $this->currentUser)) {
       $row['links']['permissions'] = [
         '#type' => 'link',
         '#title' => $this->t('Permissions'),
-        '#url' => $url,
+        '#url' => Url::fromRoute('user.admin_permissions.module', $route_parameters),
         '#options' => ['attributes' => ['class' => ['module-link', 'module-link-permissions'], 'title' => $this->t('Configure permissions')]],
       ];
     }
