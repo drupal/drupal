@@ -1039,7 +1039,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    * {@inheritdoc}
    */
   public function getMenuNames() {
-    $query = $this->connection->select($this->table, $this->options);
+    $query = $this->connection->select($this->table, NULL, $this->options);
     $query->addField($this->table, 'menu_name');
     $query->distinct();
     return $this->safeExecuteSelect($query)->fetchAllKeyed(0, 0);
