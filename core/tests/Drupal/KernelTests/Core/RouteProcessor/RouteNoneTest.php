@@ -63,9 +63,9 @@ class RouteNoneTest extends KernelTestBase {
     $request_stack->push($request);
     $request_context->fromRequest($request);
     $url = GeneratedUrl::createFromObject($expected_cacheability)->setGeneratedUrl('');
-    $this->assertEqual($this->urlGenerator->generateFromRoute('<none>', [], [], TRUE, TRUE), $url);
+    $this->assertEquals($this->urlGenerator->generateFromRoute('<none>', [], [], TRUE, TRUE), $url);
     $url = GeneratedUrl::createFromObject($expected_cacheability)->setGeneratedUrl('#test-fragment');
-    $this->assertEqual($this->urlGenerator->generateFromRoute('<none>', [], ['fragment' => 'test-fragment'], TRUE), $url);
+    $this->assertEquals($this->urlGenerator->generateFromRoute('<none>', [], ['fragment' => 'test-fragment'], TRUE), $url);
 
     // Test request with subdir on other page.
     $server = [
@@ -80,9 +80,9 @@ class RouteNoneTest extends KernelTestBase {
     $request_stack->push($request);
     $request_context->fromRequest($request);
     $url = GeneratedUrl::createFromObject($expected_cacheability)->setGeneratedUrl('');
-    $this->assertEqual($this->urlGenerator->generateFromRoute('<none>', [], [], TRUE, TRUE), $url);
+    $this->assertEquals($this->urlGenerator->generateFromRoute('<none>', [], [], TRUE, TRUE), $url);
     $url = GeneratedUrl::createFromObject($expected_cacheability)->setGeneratedUrl('#test-fragment');
-    $this->assertEqual($this->urlGenerator->generateFromRoute('<none>', [], ['fragment' => 'test-fragment'], TRUE), $url);
+    $this->assertEquals($this->urlGenerator->generateFromRoute('<none>', [], ['fragment' => 'test-fragment'], TRUE), $url);
 
     // Test request without subdir on the homepage.
     $server = [
@@ -97,9 +97,9 @@ class RouteNoneTest extends KernelTestBase {
     $request_stack->push($request);
     $request_context->fromRequest($request);
     $url = GeneratedUrl::createFromObject($expected_cacheability)->setGeneratedUrl('');
-    $this->assertEqual($this->urlGenerator->generateFromRoute('<none>', [], [], TRUE, TRUE), $url);
+    $this->assertEquals($this->urlGenerator->generateFromRoute('<none>', [], [], TRUE, TRUE), $url);
     $url = GeneratedUrl::createFromObject($expected_cacheability)->setGeneratedUrl('#test-fragment');
-    $this->assertEqual($this->urlGenerator->generateFromRoute('<none>', [], ['fragment' => 'test-fragment'], TRUE), $url);
+    $this->assertEquals($this->urlGenerator->generateFromRoute('<none>', [], ['fragment' => 'test-fragment'], TRUE), $url);
 
     // Test request without subdir on other page.
     $server = [
@@ -114,9 +114,9 @@ class RouteNoneTest extends KernelTestBase {
     $request_stack->push($request);
     $request_context->fromRequest($request);
     $url = GeneratedUrl::createFromObject($expected_cacheability)->setGeneratedUrl('');
-    $this->assertEqual($this->urlGenerator->generateFromRoute('<none>', [], [], TRUE, TRUE), $url);
+    $this->assertEquals($this->urlGenerator->generateFromRoute('<none>', [], [], TRUE, TRUE), $url);
     $url = GeneratedUrl::createFromObject($expected_cacheability)->setGeneratedUrl('#test-fragment');
-    $this->assertEqual($this->urlGenerator->generateFromRoute('<none>', [], ['fragment' => 'test-fragment'], TRUE), $url);
+    $this->assertEquals($this->urlGenerator->generateFromRoute('<none>', [], ['fragment' => 'test-fragment'], TRUE), $url);
   }
 
 }

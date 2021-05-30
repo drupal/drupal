@@ -50,7 +50,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $test_file = $this->getTestFile('text');
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name, TRUE, ['private' => TRUE]);
     \Drupal::entityTypeManager()->getStorage('node')->resetCache([$nid]);
-    /* @var \Drupal\node\NodeInterface $node */
+    /** @var \Drupal\node\NodeInterface $node */
     $node = $node_storage->load($nid);
     $node_file = File::load($node->{$field_name}->target_id);
     // Ensure the file can be viewed.
@@ -83,10 +83,11 @@ class FilePrivateTest extends FileFieldTestBase {
     // Attempt to reuse the file when editing a node.
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName();
-    $this->drupalPostForm('node/add/' . $type_name, $edit, 'Save');
+    $this->drupalGet('node/add/' . $type_name);
+    $this->submitForm($edit, 'Save');
     $new_node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
 
-    // Can't use drupalPostForm() to set hidden fields.
+    // Can't use submitForm() to set hidden fields.
     $this->drupalGet('node/' . $new_node->id() . '/edit');
     $this->getSession()->getPage()->find('css', 'input[name="' . $field_name . '[0][fids]"]')->setValue($node_file->id());
     $this->getSession()->getPage()->pressButton(t('Save'));
@@ -98,7 +99,7 @@ class FilePrivateTest extends FileFieldTestBase {
     // that access is still denied.
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName();
-    // Can't use drupalPostForm() to set hidden fields.
+    // Can't use submitForm() to set hidden fields.
     $this->drupalGet('node/add/' . $type_name);
     $this->getSession()->getPage()->find('css', 'input[name="title[0][value]"]')->setValue($edit['title[0][value]']);
     $this->getSession()->getPage()->find('css', 'input[name="' . $field_name . '[0][fids]"]')->setValue($node_file->id());

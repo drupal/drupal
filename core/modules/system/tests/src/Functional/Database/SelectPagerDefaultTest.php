@@ -108,7 +108,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
     $ages = $outer_query
       ->execute()
       ->fetchCol();
-    $this->assertEqual([25, 26, 27, 28], $ages, 'Inner pager query returned the correct ages.');
+    $this->assertEquals([25, 26, 27, 28], $ages, 'Inner pager query returned the correct ages.');
   }
 
   /**
@@ -129,7 +129,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
     $ages = $query
       ->execute()
       ->fetchCol();
-    $this->assertEqual(['George', 'Ringo'], $ages, 'Pager query with having expression returned the correct ages.');
+    $this->assertEquals(['George', 'Ringo'], $ages, 'Pager query with having expression returned the correct ages.');
   }
 
   /**
@@ -156,7 +156,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
     $this->assertSame(2, PagerSelectExtender::$maxElement);
     $name = $query->execute()
       ->fetchField();
-    $this->assertEqual('Paul', $name, 'Pager query #1 with a specified element ID returned the correct results.');
+    $this->assertEquals('Paul', $name, 'Pager query #1 with a specified element ID returned the correct results.');
 
     // Setting an element smaller than the previous one should not collide with
     // the existing pager.
@@ -172,7 +172,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
     $this->assertSame(2, PagerSelectExtender::$maxElement);
     $name = $query->execute()
       ->fetchField();
-    $this->assertEqual('George', $name, 'Pager query #2 with a specified element ID returned the correct results.');
+    $this->assertEquals('George', $name, 'Pager query #2 with a specified element ID returned the correct results.');
 
     $query = $connection->select('test', 't')
       ->extend(PagerSelectExtender::class)
@@ -185,7 +185,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
     $this->assertSame(3, PagerSelectExtender::$maxElement);
     $name = $query->execute()
       ->fetchField();
-    $this->assertEqual('John', $name, 'Pager query #3 with a generated element ID returned the correct results.');
+    $this->assertEquals('John', $name, 'Pager query #3 with a generated element ID returned the correct results.');
 
   }
 

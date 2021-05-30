@@ -254,7 +254,7 @@ class ScaffoldTest extends TestCase {
   }
 
   /**
-   * Test values for testDrupalDrupalFileWasAppended.
+   * Provides test values for testDrupalDrupalFileWasAppended.
    */
   public function scaffoldAppendTestValues() {
     return array_merge(
@@ -277,7 +277,7 @@ include __DIR__ . "/settings-custom-additions.php";',
   }
 
   /**
-   * Test values to run both with $is_link FALSE and $is_link TRUE.
+   * Tests values to run both with $is_link FALSE and $is_link TRUE.
    *
    * @param bool $is_link
    *   Whether or not symlinking should be used.

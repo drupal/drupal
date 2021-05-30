@@ -45,7 +45,7 @@ class ThemeTest extends BrowserTestBase {
     drupal_theme_rebuild();
     for ($i = 0; $i < 2; $i++) {
       $this->drupalGet('theme-test/suggestion');
-      $this->assertText('Theme hook implementor=theme-test--suggestion.html.twig. Foo=template_preprocess_theme_test');
+      $this->assertSession()->pageTextContains('Theme hook implementor=theme-test--suggestion.html.twig. Foo=template_preprocess_theme_test');
     }
   }
 
@@ -96,7 +96,7 @@ class ThemeTest extends BrowserTestBase {
     $this->resetAll();
     // Visit page controller and confirm that the theme class is loaded.
     $this->drupalGet('/theme-test/test-theme-class');
-    $this->assertText('Loading ThemeClass was successful.');
+    $this->assertSession()->pageTextContains('Loading ThemeClass was successful.');
   }
 
   /**
@@ -138,7 +138,7 @@ class ThemeTest extends BrowserTestBase {
       ->set('default', 'test_theme')
       ->save();
     $this->drupalGet('theme-test/template-test');
-    $this->assertText('Success: Template overridden.');
+    $this->assertSession()->pageTextContains('Success: Template overridden.');
   }
 
   /**
@@ -151,7 +151,7 @@ class ThemeTest extends BrowserTestBase {
     $this->drupalGet('');
     $attributes = $this->xpath('/body[@theme_test_page_variable="Page variable is an array."]');
     $this->assertCount(1, $attributes, 'In template_preprocess_html(), the page variable is still an array (not rendered yet).');
-    $this->assertText('theme test page bottom markup');
+    $this->assertSession()->pageTextContains('theme test page bottom markup');
   }
 
   /**
@@ -189,7 +189,7 @@ class ThemeTest extends BrowserTestBase {
         'Flamingo',
       ];
       foreach ($expected_values as $key => $value) {
-        $this->assertEqual((string) $value, $items[$key]->getText());
+        $this->assertEquals((string) $value, $items[$key]->getText());
       }
     }
   }

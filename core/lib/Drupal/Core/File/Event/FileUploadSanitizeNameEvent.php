@@ -118,7 +118,7 @@ class FileUploadSanitizeNameEvent extends Event {
    *
    * @see \Drupal\system\EventSubscriber\SecurityFileUploadEventSubscriber
    */
-  public function stopPropagation() {
+  public function stopPropagation(): void {
     throw new \RuntimeException('Propagation cannot be stopped for the FileUploadSanitizeNameEvent');
   }
 

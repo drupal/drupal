@@ -294,14 +294,14 @@ class CKEditorTest extends KernelTestBase {
     $expected = $this->getDefaultInternalConfig();
     $expected['disallowedContent'] = $this->getDefaultDisallowedContentConfig();
     $expected['allowedContent'] = $this->getDefaultAllowedContentConfig();
-    $this->assertEqual($expected, $internal_plugin->getConfig($editor), '"Internal" plugin configuration built correctly for default toolbar.');
+    $this->assertEquals($expected, $internal_plugin->getConfig($editor), '"Internal" plugin configuration built correctly for default toolbar.');
 
     // Format dropdown/button enabled: new setting should be present.
     $settings = $editor->getSettings();
     $settings['toolbar']['rows'][0][0]['items'][] = 'Format';
     $editor->setSettings($settings);
     $expected['format_tags'] = 'p;h2;h3;h4;h5;h6';
-    $this->assertEqual($expected, $internal_plugin->getConfig($editor), '"Internal" plugin configuration built correctly for customized toolbar.');
+    $this->assertEquals($expected, $internal_plugin->getConfig($editor), '"Internal" plugin configuration built correctly for customized toolbar.');
   }
 
   /**
@@ -421,6 +421,45 @@ class CKEditorTest extends KernelTestBase {
   }
 
   /**
+   * Tests loading of theme's CKEditor stylesheets defined in the .info file.
+   */
+  public function testExternalStylesheets() {
+    /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
+    $theme_installer = \Drupal::service('theme_installer');
+    // Case 1: Install theme which has an absolute external CSS URL.
+    $theme_installer->install(['test_ckeditor_stylesheets_external']);
+    $this->config('system.theme')->set('default', 'test_ckeditor_stylesheets_external')->save();
+    $expected = [
+      'https://fonts.googleapis.com/css?family=Open+Sans',
+    ];
+    $this->assertSame($expected, _ckeditor_theme_css('test_ckeditor_stylesheets_external'));
+
+    // Case 2: Install theme which has an external protocol-relative CSS URL.
+    $theme_installer->install(['test_ckeditor_stylesheets_protocol_relative']);
+    $this->config('system.theme')->set('default', 'test_ckeditor_stylesheets_protocol_relative')->save();
+    $expected = [
+      '//fonts.googleapis.com/css?family=Open+Sans',
+    ];
+    $this->assertSame($expected, _ckeditor_theme_css('test_ckeditor_stylesheets_protocol_relative'));
+
+    // Case 3: Install theme which has a relative CSS URL.
+    $theme_installer->install(['test_ckeditor_stylesheets_relative']);
+    $this->config('system.theme')->set('default', 'test_ckeditor_stylesheets_relative')->save();
+    $expected = [
+      'core/modules/system/tests/themes/test_ckeditor_stylesheets_relative/css/yokotsoko.css',
+    ];
+    $this->assertSame($expected, _ckeditor_theme_css('test_ckeditor_stylesheets_relative'));
+
+    // Case 4: Install theme which has a Drupal root CSS URL.
+    $theme_installer->install(['test_ckeditor_stylesheets_drupal_root']);
+    $this->config('system.theme')->set('default', 'test_ckeditor_stylesheets_drupal_root')->save();
+    $expected = [
+      'core/modules/system/tests/themes/test_ckeditor_stylesheets_drupal_root/css/yokotsoko.css',
+    ];
+    $this->assertSame($expected, _ckeditor_theme_css('test_ckeditor_stylesheets_drupal_root'));
+  }
+
+  /**
    * Assert that CKEditor picks the expected language when French is default.
    *
    * @param string $langcode
@@ -440,7 +479,7 @@ class CKEditorTest extends KernelTestBase {
     // Test that we now get the expected language.
     $editor = Editor::load('filtered_html');
     $settings = $this->ckeditor->getJSSettings($editor);
-    $this->assertEqual($langcode, $settings['language']);
+    $this->assertEquals($langcode, $settings['language']);
   }
 
   protected function getDefaultInternalConfig() {

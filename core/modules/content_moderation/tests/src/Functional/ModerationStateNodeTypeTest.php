@@ -23,14 +23,14 @@ class ModerationStateNodeTypeTest extends ModerationStateTestBase {
   public function testNotModerated() {
     $this->drupalLogin($this->adminUser);
     $this->createContentTypeFromUi('Not moderated', 'not_moderated');
-    $this->assertText('The content type Not moderated has been added.');
+    $this->assertSession()->pageTextContains('The content type Not moderated has been added.');
     $this->grantUserPermissionToCreateContentOfType($this->adminUser, 'not_moderated');
     $this->drupalGet('node/add/not_moderated');
     $this->assertRaw('Save');
     $this->submitForm([
       'title[0][value]' => 'Test',
     ], 'Save');
-    $this->assertText('Not moderated Test has been created.');
+    $this->assertSession()->pageTextContains('Not moderated Test has been created.');
   }
 
   /**
@@ -65,7 +65,7 @@ class ModerationStateNodeTypeTest extends ModerationStateTestBase {
     $this->submitForm([
       'title[0][value]' => 'Test',
     ], 'Save');
-    $this->assertText('Not moderated Test has been created.');
+    $this->assertSession()->pageTextContains('Not moderated Test has been created.');
 
     // Check that the 'Create new revision' is not disabled.
     $this->drupalGet('/admin/structure/types/manage/not_moderated');
@@ -112,9 +112,8 @@ class ModerationStateNodeTypeTest extends ModerationStateTestBase {
     // Ensure checkboxes in the 'workflow' section can be altered, even when
     // 'revision' is enforced and disabled.
     $this->drupalGet('admin/structure/types/manage/moderated');
-    $this->drupalPostForm('admin/structure/types/manage/moderated', [
-     'options[promote]' => TRUE,
-    ], 'Save content type');
+    $this->drupalGet('admin/structure/types/manage/moderated');
+    $this->submitForm(['options[promote]' => TRUE], 'Save content type');
     $this->drupalGet('admin/structure/types/manage/moderated');
     $this->assertSession()->checkboxChecked('options[promote]');
   }

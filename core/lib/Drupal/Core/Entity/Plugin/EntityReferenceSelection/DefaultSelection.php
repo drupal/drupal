@@ -211,7 +211,7 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
           return !$field_definition->isComputed();
         });
         foreach ($bundle_fields as $field_name => $field_definition) {
-          /* @var \Drupal\Core\Field\FieldDefinitionInterface $field_definition */
+          /** @var \Drupal\Core\Field\FieldDefinitionInterface $field_definition */
           $columns = $field_definition->getFieldStorageDefinition()->getColumns();
           // If there is more than one column, display them all, otherwise just
           // display the field label.
@@ -440,6 +440,7 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
     $entity_type = $this->entityTypeManager->getDefinition($target_type);
 
     $query = $this->entityTypeManager->getStorage($target_type)->getQuery();
+    $query->accessCheck(TRUE);
 
     // If 'target_bundles' is NULL, all bundles are referenceable, no further
     // conditions are needed.
@@ -460,7 +461,6 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
     }
 
     // Add entity-access tag.
-    $query->accessCheck(TRUE);
     $query->addTag($target_type . '_access');
 
     // Add the Selection handler for system_query_entity_reference_alter().

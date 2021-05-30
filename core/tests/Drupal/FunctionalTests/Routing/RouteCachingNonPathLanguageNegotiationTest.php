@@ -54,7 +54,8 @@ class RouteCachingNonPathLanguageNegotiationTest extends BrowserTestBase {
       'language_interface[enabled][language-url]' => FALSE,
       'language_interface[enabled][language-session]' => TRUE,
     ];
-    $this->drupalPostForm('admin/config/regional/language/detection', $edit, 'Save settings');
+    $this->drupalGet('admin/config/regional/language/detection');
+    $this->submitForm($edit, 'Save settings');
 
     // A more common scenario is domain-based negotiation but that can not be
     // tested. Session negotiation by default is not considered by the URL

@@ -8,7 +8,9 @@
   Drupal.olivero = {};
 
   function isDesktopNav() {
-    const navButtons = document.querySelector('.mobile-buttons');
+    const navButtons = document.querySelector(
+      '[data-drupal-selector="mobile-buttons"]',
+    );
     return (
       window.getComputedStyle(navButtons).getPropertyValue('display') === 'none'
     );
@@ -16,26 +18,77 @@
 
   Drupal.olivero.isDesktopNav = isDesktopNav;
 
-  const wideNavButton = document.querySelector('.wide-nav-expand');
-  const siteHeaderFixable = document.querySelector('.site-header__fixable');
+  const stickyHeaderToggleButton = document.querySelector(
+    '[data-drupal-selector="sticky-header-toggle"]',
+  );
+  const siteHeaderFixable = document.querySelector(
+    '[data-drupal-selector="site-header-fixable"]',
+  );
 
-  function wideNavIsOpen() {
-    return wideNavButton.getAttribute('aria-expanded') === 'true';
+  function stickyHeaderIsEnabled() {
+    return stickyHeaderToggleButton.getAttribute('aria-checked') === 'true';
   }
 
-  function showWideNav() {
+  /**
+   * Save the current sticky header expanded state to localStorage, and set
+   * it to expire after two weeks.
+   *
+   * @param {boolean} expandedState - Current state of the sticky header button.
+   */
+  function setStickyHeaderStorage(expandedState) {
+    const now = new Date();
+
+    const item = {
+      value: expandedState,
+      expiry: now.getTime() + 20160000, // 2 weeks from now.
+    };
+    localStorage.setItem(
+      'Drupal.olivero.stickyHeaderState',
+      JSON.stringify(item),
+    );
+  }
+
+  /**
+   * Toggle the state of the sticky header between always pinned and
+   * only pinned when scrolled to the top of the viewport.
+   *
+   * @param {boolean} pinnedState - State to change the sticky header to.
+   */
+  function toggleStickyHeaderState(pinnedState) {
     if (isDesktopNav()) {
-      wideNavButton.setAttribute('aria-expanded', 'true');
-      siteHeaderFixable.classList.add('is-expanded');
+      if (pinnedState === true) {
+        siteHeaderFixable.classList.add('is-expanded');
+      } else {
+        siteHeaderFixable.classList.remove('is-expanded');
+      }
+
+      stickyHeaderToggleButton.setAttribute('aria-checked', pinnedState);
+      setStickyHeaderStorage(pinnedState);
     }
   }
 
-  // Resets the wide nav button to be closed (its default state).
-  function hideWideNav() {
-    if (isDesktopNav()) {
-      wideNavButton.setAttribute('aria-expanded', 'false');
-      siteHeaderFixable.classList.remove('is-expanded');
+  /**
+   * Return the sticky header's stored state from localStorage.
+   *
+   * @return {boolean} Stored state of the sticky header.
+   */
+  function getStickyHeaderStorage() {
+    const stickyHeaderState = localStorage.getItem(
+      'Drupal.olivero.stickyHeaderState',
+    );
+
+    if (!stickyHeaderState) return false;
+
+    const item = JSON.parse(stickyHeaderState);
+    const now = new Date();
+
+    // Compare the expiry time of the item with the current time.
+    if (now.getTime() > item.expiry) {
+      // If the item is expired, delete the item from storage and return null.
+      localStorage.removeItem('Drupal.olivero.stickyHeaderState');
+      return false;
     }
+    return item.value;
   }
 
   // Only enable scroll effects if the browser supports Intersection Observer.
@@ -45,7 +98,9 @@
     'IntersectionObserverEntry' in window &&
     'intersectionRatio' in window.IntersectionObserverEntry.prototype
   ) {
-    const fixableElements = document.querySelectorAll('.fixable');
+    const fixableElements = document.querySelectorAll(
+      '[data-drupal-selector="site-header-fixable"], [data-drupal-selector="social-bar-inner"]',
+    );
 
     function toggleDesktopNavVisibility(entries) {
       if (!isDesktopNav()) return;
@@ -80,7 +135,9 @@
     }
 
     function monitorNavPosition() {
-      const primaryNav = document.querySelector('.site-header');
+      const primaryNav = document.querySelector(
+        '[data-drupal-selector="site-header"]',
+      );
       const options = {
         rootMargin: getRootMargin(),
         threshold: [0.999, 1],
@@ -93,38 +150,31 @@
       observer.observe(primaryNav);
     }
 
-    wideNavButton.addEventListener('click', () => {
-      if (!wideNavIsOpen()) {
-        showWideNav();
-      } else {
-        hideWideNav();
-      }
+    stickyHeaderToggleButton.addEventListener('click', () => {
+      toggleStickyHeaderState(!stickyHeaderIsEnabled());
     });
 
-    siteHeaderFixable
-      .querySelector('.site-header__inner')
-      .addEventListener('focusin', showWideNav);
-
-    // If skip link is clicked, ensure that the wide navigation closes so the header will not be covered up.
-    document.querySelector('.skip-link').addEventListener('click', hideWideNav);
+    // If header is pinned open and a header element gains focus, scroll to the
+    // top of the page to ensure that the header elements can be seen.
+    document
+      .querySelector('[data-drupal-selector="site-header-inner"]')
+      .addEventListener('focusin', () => {
+        if (isDesktopNav() && !stickyHeaderIsEnabled()) {
+          const header = document.querySelector(
+            '[data-drupal-selector="site-header"]',
+          );
+          const headerNav = header.querySelector(
+            '[data-drupal-selector="header-nav"]',
+          );
+          const headerMargin = header.clientHeight - headerNav.clientHeight;
+          if (window.scrollY > headerMargin) {
+            window.scrollTo(0, headerMargin);
+          }
+        }
+      });
 
     monitorNavPosition();
+    setStickyHeaderStorage(getStickyHeaderStorage());
+    toggleStickyHeaderState(getStickyHeaderStorage());
   }
-
-  document.addEventListener('keyup', (e) => {
-    if (e.keyCode === 27) {
-      // Close the search form.
-      if (
-        'toggleSearchVisibility' in Drupal.olivero &&
-        'searchIsVisible' in Drupal.olivero &&
-        Drupal.olivero.searchIsVisible()
-      ) {
-        Drupal.olivero.toggleSearchVisibility(false);
-      }
-      // Close the wide nav.
-      else {
-        hideWideNav();
-      }
-    }
-  });
 })(Drupal);

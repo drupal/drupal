@@ -26,7 +26,7 @@ class NodeViewTest extends NodeTestBase {
     $this->drupalGet($node->toUrl());
 
     $result = $this->xpath('//link[@rel = "canonical"]');
-    $this->assertEqual($node->toUrl()->setAbsolute()->toString(), $result[0]->getAttribute('href'));
+    $this->assertEquals($node->toUrl()->setAbsolute()->toString(), $result[0]->getAttribute('href'));
 
     // Link relations are checked for access for anonymous users.
     $result = $this->xpath('//link[@rel = "version-history"]');
@@ -39,14 +39,14 @@ class NodeViewTest extends NodeTestBase {
     $this->drupalGet($node->toUrl());
 
     $result = $this->xpath('//link[@rel = "canonical"]');
-    $this->assertEqual($node->toUrl()->setAbsolute()->toString(), $result[0]->getAttribute('href'));
+    $this->assertEquals($node->toUrl()->setAbsolute()->toString(), $result[0]->getAttribute('href'));
 
     // Link relations are present regardless of access for authenticated users.
     $result = $this->xpath('//link[@rel = "version-history"]');
-    $this->assertEqual($node->toUrl('version-history')->setAbsolute()->toString(), $result[0]->getAttribute('href'));
+    $this->assertEquals($node->toUrl('version-history')->setAbsolute()->toString(), $result[0]->getAttribute('href'));
 
     $result = $this->xpath('//link[@rel = "edit-form"]');
-    $this->assertEqual($node->toUrl('edit-form')->setAbsolute()->toString(), $result[0]->getAttribute('href'));
+    $this->assertEquals($node->toUrl('edit-form')->setAbsolute()->toString(), $result[0]->getAttribute('href'));
 
     // Give anonymous users access to edit the node. Do this through the UI to
     // ensure caches are handled properly.
@@ -54,20 +54,21 @@ class NodeViewTest extends NodeTestBase {
     $edit = [
       'anonymous[edit own ' . $node->bundle() . ' content]' => TRUE,
     ];
-    $this->drupalPostForm('admin/people/permissions', $edit, 'Save permissions');
+    $this->drupalGet('admin/people/permissions');
+    $this->submitForm($edit, 'Save permissions');
     $this->drupalLogout();
 
     // Anonymous user's should now see the edit-form link but not the
     // version-history link.
     $this->drupalGet($node->toUrl());
     $result = $this->xpath('//link[@rel = "canonical"]');
-    $this->assertEqual($node->toUrl()->setAbsolute()->toString(), $result[0]->getAttribute('href'));
+    $this->assertEquals($node->toUrl()->setAbsolute()->toString(), $result[0]->getAttribute('href'));
 
     $result = $this->xpath('//link[@rel = "version-history"]');
     $this->assertEmpty($result, 'Version history not present for anonymous users without access.');
 
     $result = $this->xpath('//link[@rel = "edit-form"]');
-    $this->assertEqual($node->toUrl('edit-form')->setAbsolute()->toString(), $result[0]->getAttribute('href'));
+    $this->assertEquals($node->toUrl('edit-form')->setAbsolute()->toString(), $result[0]->getAttribute('href'));
   }
 
   /**
@@ -85,7 +86,7 @@ class NodeViewTest extends NodeTestBase {
     $this->drupalGet($node->toUrl());
 
     $links = $this->getSession()->getResponseHeaders()['Link'];
-    $this->assertEqual($expected, $links);
+    $this->assertEquals($expected, $links);
   }
 
   /**
@@ -98,8 +99,8 @@ class NodeViewTest extends NodeTestBase {
     $this->assertLessThan(strlen($title), mb_strlen($title, 'utf-8'));
     $node = $this->drupalCreateNode(['title' => $title]);
     $this->drupalGet($node->toUrl());
-    $result = $this->xpath('//span[contains(@class, "field--name-title")]');
-    $this->assertEqual($title, $result[0]->getText(), 'The passed title was returned.');
+    // Verify that the passed title was returned.
+    $this->assertSession()->elementTextEquals('xpath', '//span[contains(@class, "field--name-title")]', $title);
   }
 
 }
