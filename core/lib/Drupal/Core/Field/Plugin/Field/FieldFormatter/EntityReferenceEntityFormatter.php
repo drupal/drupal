@@ -61,6 +61,13 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
    * @see \Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceEntityFormatter::viewElements()
    *
    * @var array
+   *
+   * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. This is no
+   *   longer used. Instead use the private property $entity->_render_path to
+   *   keep track of the path taken by the renderer and detect recursion by
+   *   counting the number of times the renderer takes the same path.
+   *
+   * @see https://www.drupal.org/node/2940605
    */
   protected static $recursiveRenderDepth = [];
 
@@ -159,29 +166,9 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
     $elements = [];
 
     foreach ($this->getEntitiesToView($items, $langcode) as $delta => $entity) {
-      // Due to render caching and delayed calls, the viewElements() method
-      // will be called later in the rendering process through a '#pre_render'
-      // callback, so we need to generate a counter that takes into account
-      // all the relevant information about this field and the referenced
-      // entity that is being rendered.
-      $recursive_render_id = $items->getFieldDefinition()->getTargetEntityTypeId()
-        . $items->getFieldDefinition()->getTargetBundle()
-        . $items->getName()
-        // We include the referencing entity, so we can render default images
-        // without hitting recursive protections.
-        . $items->getEntity()->id()
-        . $entity->getEntityTypeId()
-        . $entity->id();
-
-      if (isset(static::$recursiveRenderDepth[$recursive_render_id])) {
-        static::$recursiveRenderDepth[$recursive_render_id]++;
-      }
-      else {
-        static::$recursiveRenderDepth[$recursive_render_id] = 1;
-      }
-
-      // Protect ourselves from recursive rendering.
-      if (static::$recursiveRenderDepth[$recursive_render_id] > static::RECURSIVE_RENDER_LIMIT) {
+      // Protect against infinite recursion.
+      $recursive_render_id = $items->getName() . ':' . $entity->id();
+      if (substr_count($entity->_render_path, $recursive_render_id) > static::RECURSIVE_RENDER_LIMIT) {
         $this->loggerFactory->get('entity')->error('Recursive rendering detected when rendering entity %entity_type: %entity_id, using the %field_name field on the %parent_entity_type:%parent_bundle %parent_entity_id entity. Aborting rendering.', [
           '%entity_type' => $entity->getEntityTypeId(),
           '%entity_id' => $entity->id(),
