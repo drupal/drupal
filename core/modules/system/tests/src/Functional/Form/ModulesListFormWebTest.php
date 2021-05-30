@@ -44,7 +44,7 @@ class ModulesListFormWebTest extends BrowserTestBase {
     $this->assertSession()->elementExists('xpath', "//a[contains(@href, '/system-test/configure/bar') and text()='Configure ']/span[contains(@class, 'visually-hidden') and text()='the System test module']");
 
     // Check that system_test's permissions link was rendered correctly.
-    $this->assertSession()->elementExists('xpath', "//a[contains(@href, '/admin/people/permissions#module-system_test') and @title='Configure permissions']");
+    $this->assertSession()->elementExists('xpath', "//a[contains(@href, '/admin/people/permissions/module/system_test') and @title='Configure permissions']");
 
     // Check that system_test's help link was rendered correctly.
     $this->assertSession()->elementExists('xpath', "//a[contains(@href, '/admin/help/system_test') and @title='Help']");
