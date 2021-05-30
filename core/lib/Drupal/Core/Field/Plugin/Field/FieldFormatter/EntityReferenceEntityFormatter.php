@@ -62,10 +62,10 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
    *
    * @var array
    *
-   * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. This is no
-   *   longer used. Instead use the private property $entity->_render_path to
-   *   keep track of the path taken by the renderer and detect recursion by
-   *   counting the number of times the renderer takes the same path.
+   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use the
+   *   private property $entity->_render_path instead to keep track of the path
+   *   taken by the renderer and detect recursion by counting the number of
+   *   times the renderer takes the same path.
    *
    * @see https://www.drupal.org/node/2940605
    */
