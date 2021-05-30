@@ -6,7 +6,6 @@ use Drupal\Core\Entity\BundleEntityFormBase;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Url;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -229,12 +228,7 @@ class NodeTypeForm extends BundleEntityFormBase {
     }
     elseif ($status == SAVED_NEW) {
       node_add_body_field($type);
-      $url = Url::fromRoute('user.admin_permissions.module', ['modules' => 'node']);
-      $t_args[':link'] = $url->toString();
-      $message = $url->access($this->currentUser())
-        ? $this->t('The content type %name has been added. Configure <a href=":link">related permissions</a>.', $t_args)
-        : $this->t('The content type %name has been added.', $t_args);
-      $this->messenger()->addStatus($message);
+      $this->messenger()->addStatus($this->t('The content type %name has been added.', $t_args));
       $context = array_merge($t_args, ['link' => $type->toLink($this->t('View'), 'collection')->toString()]);
       $this->logger('node')->notice('Added content type %name.', $context);
     }
