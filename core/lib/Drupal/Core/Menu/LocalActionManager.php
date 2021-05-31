@@ -129,7 +129,7 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
     $this->accessManager = $access_manager;
     $this->moduleHandler = $module_handler;
     $this->account = $account;
-    $this->alterInfo('menu_local_actions');
+    $this->alterInfo('local_actions');
     $this->setCacheBackend($cache_backend, 'local_action_plugins:' . $language_manager->getCurrentLanguage()->getId(), ['local_action']);
   }
 
@@ -198,6 +198,14 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
     $cacheability->applyTo($links);
 
     return $links;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function alterDefinitions(&$definitions) {
+    $this->moduleHandler->alterDeprecated('Deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use hook_local_actions_alter instead. See https://www.drupal.org/node/3216578.', 'menu_local_actions', $definitions);
+    parent::alterDefinitions($definitions);
   }
 
 }

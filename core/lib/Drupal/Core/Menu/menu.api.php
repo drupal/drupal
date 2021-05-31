@@ -118,7 +118,7 @@
  *   should appear on.
  *
  * Local actions from other modules can be altered using
- * hook_menu_local_actions_alter().
+ * hook_local_actions_alter().
  *
  * @todo Derivatives are in flux for these; when they are more stable, add
  *   documentation here.
@@ -338,12 +338,28 @@ function hook_menu_local_tasks_alter(&$data, $route_name, \Drupal\Core\Cache\Ref
  * @param array $local_actions
  *   The array of local action plugin definitions, keyed by plugin ID.
  *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
+ *   hook_local_actions_alter instead.
+ *
+ * @see https://www.drupal.org/node/3216578
+ *
+ * @ingroup menu
+ */
+function hook_menu_local_actions_alter(&$local_actions) {
+}
+
+/**
+ * Alter local actions plugins.
+ *
+ * @param array $local_actions
+ *   The array of local action plugin definitions, keyed by plugin ID.
+ *
  * @see \Drupal\Core\Menu\LocalActionInterface
  * @see \Drupal\Core\Menu\LocalActionManager
  *
  * @ingroup menu
  */
-function hook_menu_local_actions_alter(&$local_actions) {
+function hook_local_actions_alter(&$local_actions) {
 }
 
 /**
