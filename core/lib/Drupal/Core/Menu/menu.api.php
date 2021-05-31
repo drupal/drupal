@@ -347,6 +347,44 @@ function hook_menu_local_actions_alter(&$local_actions) {
 }
 
 /**
+ * Alter local actions displayed on the page before they are rendered.
+ *
+ * Each local task is an associative array containing:
+ * - #theme: The theme function to use to render.
+ * - #link: An associative array containing:
+ *   - title: The localized title of the link.
+ *   - url: a Url object.
+ *   - localized_options: An array of options to pass to
+ *     \Drupal\Core\Utility\LinkGeneratorInterface::generate().
+ * - #weight: The link's weight compared to other links.
+ *
+ * @param array &$data
+ *   An associative array containing all the local actions for the given route,
+ *   keyed by route name.
+ * @param string $route_appears
+ *   The name of the route that the local actions appear on.
+ *
+ * @see \Drupal\Core\Menu\LocalActionManager
+ */
+function hook_local_actions_alter(&$data, $route_appears) {
+  // Add an additional local action for a certain route.
+  if ($route_appears == 'my.route') {
+    $data['msk_node.add_page'] = [
+      '#theme' => 'menu_local_action',
+      '#link' => [
+        'title' => t('Add content to @title', ['@title' => $node->label()]),
+        'url' => Url::fromRoute('node.add_page', []),
+        'localized_options' => [
+          'attributes' => [
+            'title' => t('Add content'),
+          ],
+        ],
+      ],
+    ];
+  }
+}
+
+/**
  * Alter local tasks plugins.
  *
  * @param array $local_tasks
