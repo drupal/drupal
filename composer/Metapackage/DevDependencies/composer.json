@@ -27,7 +27,7 @@
         "symfony/filesystem": "^4.4",
         "symfony/finder": "^4.4",
         "symfony/lock": "^4.4",
-        "symfony/phpunit-bridge": "^5.3.0-rc1",
-        "symfony/var-dumper": "^5.3.0-rc1"
+        "symfony/phpunit-bridge": "^5.3.0",
+        "symfony/var-dumper": "^5.3.0"
     }
 }
