@@ -356,6 +356,7 @@ function hook_menu_local_actions_alter(&$local_actions) {
  *   - url: a Url object.
  *   - localized_options: An array of options to pass to
  *     \Drupal\Core\Utility\LinkGeneratorInterface::generate().
+ * - #access: The access result to see whether the link is accessible or not.
  * - #weight: The link's weight compared to other links.
  *
  * @param array &$data
@@ -366,17 +367,17 @@ function hook_menu_local_actions_alter(&$local_actions) {
  *
  * @see \Drupal\Core\Menu\LocalActionManager
  */
-function hook_local_actions_alter(&$data, $route_appears) {
+function hook_local_actions_render_alter(&$data, $route_appears) {
   // Add an additional local action for a certain route.
   if ($route_appears == 'my.route') {
-    $data['msk_node.add_page'] = [
+    $data['node.add_article'] = [
       '#theme' => 'menu_local_action',
       '#link' => [
-        'title' => t('Add content to @title', ['@title' => $node->label()]),
-        'url' => Url::fromRoute('node.add_page', []),
+        'title' => t('Add article'),
+        'url' => Url::fromRoute('node.add', ['node_type' => 'article']),
         'localized_options' => [
           'attributes' => [
-            'title' => t('Add content'),
+            'title' => t('Add article'),
           ],
         ],
       ],

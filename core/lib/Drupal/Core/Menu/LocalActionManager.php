@@ -198,10 +198,7 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
     $cacheability->applyTo($links);
 
     // Allow modules to alter local actions.
-    // @todo For consistency with local tasks, this hook should actually be
-    //   named hook_menu_local_actions_alter().
-    //   https://www.drupal.org/project/drupal/issues/3028616
-    $this->moduleHandler->alter('local_actions', $links, $route_appears);
+    $this->moduleHandler->alter('local_actions_render', $links, $route_appears);
 
     return $links;
   }

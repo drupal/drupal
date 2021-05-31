@@ -53,9 +53,9 @@ function menu_test_menu_local_tasks_alter(&$data, $route_name, RefinableCacheabl
 }
 
 /**
- * Implements hook_local_actions_alter().
+ * Implements hook_local_actions_render_alter().
  */
-function menu_test_local_actions_alter(array &$data, $route_appears) {
+function menu_test_local_actions_render_alter(array &$data, $route_appears) {
   // Change the link title for local_action2 if on test route 6.
   if ($route_appears === 'menu_test.local_action6') {
     $data['menu_test.local_action2']['#link']['title'] = 'Dynamic title override';
