@@ -361,7 +361,8 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
         }
         $this->taskData[$route_name]['tabs'] = $data;
         // Allow modules to alter local tasks.
-        $this->moduleHandler->alter('menu_local_tasks', $this->taskData[$route_name], $route_name, $cacheability);
+        $this->moduleHandler->alterDeprecated('Deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use menu_local_tasks_render instead. See https://www.drupal.org/node/xxx.', 'menu_local_tasks', $this->taskData[$route_name], $route_name, $cacheability);
+        $this->moduleHandler->alter('menu_local_tasks_render', $this->taskData[$route_name], $route_name, $cacheability);
         $this->taskData[$route_name]['cacheability'] = $cacheability;
       }
     }
