@@ -128,7 +128,7 @@ class AjaxResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
    *   An array of commands ready to be returned as JSON.
    */
   protected function buildAttachmentsCommands(AjaxResponse $response, Request $request) {
-    $ajax_page_state = $request->request->get('ajax_page_state');
+    $ajax_page_state = $request->request->all('ajax_page_state');
 
     // Aggregate CSS/JS if necessary, but only during normal site operation.
     $optimize_css = !defined('MAINTENANCE_MODE') && $this->config->get('css.preprocess');

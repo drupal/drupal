@@ -144,6 +144,12 @@ claro.tabledrag:
   js:
     js/tabledrag.js: {}
 
+ckeditor-admin:
+  version: VERSION
+  css:
+    theme:
+      css/theme/ckeditor.admin.css: {}
+
 ckeditor-dialog:
   version: VERSION
   css:

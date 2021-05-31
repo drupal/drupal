@@ -60,7 +60,7 @@ class WideModalRenderer extends ModalRenderer {
 
     // Determine the title: use the title provided by the main content if any,
     // otherwise get it from the routing information.
-    $options = $request->request->get('dialogOptions', []);
+    $options = $request->request->all('dialogOptions');
     // Override width option.
     switch ($this->mode) {
       case 'wide':

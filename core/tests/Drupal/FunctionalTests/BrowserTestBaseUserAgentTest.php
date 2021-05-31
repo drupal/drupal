@@ -24,7 +24,7 @@ class BrowserTestBaseUserAgentTest extends BrowserTestBase {
   protected $agent;
 
   /**
-   * Test validation of the User-Agent header we use to perform test requests.
+   * Tests validation of the User-Agent header we use to perform test requests.
    */
   public function testUserAgentValidation() {
     $assert_session = $this->assertSession();

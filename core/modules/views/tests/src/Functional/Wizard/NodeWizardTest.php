@@ -28,7 +28,8 @@ class NodeWizardTest extends WizardTestBase {
     $view['page[create]'] = FALSE;
     $view['show[wizard_key]'] = 'node';
     $view['page[style][row_plugin]'] = 'titles';
-    $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm($view, 'Save and edit');
 
     $view_storage_controller = \Drupal::entityTypeManager()->getStorage('view');
     /** @var \Drupal\views\Entity\View $view */

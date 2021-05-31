@@ -52,7 +52,7 @@ class SpaceUsedTest extends FileManagedUnitTestBase {
   }
 
   /**
-   * Test different users with the default status.
+   * Tests different users with the default status.
    */
   public function testFileSpaceUsed() {
     $file = $this->container->get('entity_type.manager')->getStorage('file');

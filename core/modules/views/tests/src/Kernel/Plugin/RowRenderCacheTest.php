@@ -81,7 +81,7 @@ class RowRenderCacheTest extends ViewsKernelTestBase {
   }
 
   /**
-   * Test complex field rewriting and uncacheable field handlers.
+   * Tests complex field rewriting and uncacheable field handlers.
    */
   public function testAdvancedCaching() {
     // Test that row field output is actually cached and with the proper cache
@@ -104,7 +104,7 @@ class RowRenderCacheTest extends ViewsKernelTestBase {
   }
 
   /**
-   * Test that rows are not cached when the none cache plugin is used.
+   * Tests that rows are not cached when the none cache plugin is used.
    */
   public function testNoCaching() {
     $this->setCurrentUser($this->regularUser);
