@@ -360,6 +360,20 @@ function hook_menu_local_actions_alter(&$local_actions) {
  * @ingroup menu
  */
 function hook_local_actions_alter(&$local_actions) {
+  $local_actions['my_module.article_add'] = [
+    'id' => 'my_module.article_add',
+    'title' => t('Add article'),
+    'route_name' => 'node.add',
+    'route_parameters' => [
+      'node_type' => 'article',
+    ],
+    'appears_on' => [
+      'my_route',
+    ],
+    'class' => \Drupal\Core\Menu\LocalActionDefault::class,
+    'options' => [],
+    'weight' => 50,
+  ];
 }
 
 /**
