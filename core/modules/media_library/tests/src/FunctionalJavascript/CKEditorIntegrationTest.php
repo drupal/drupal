@@ -224,6 +224,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $expected_tab_order = [
       'Show Image media (selected)',
       'Show Arrakis media',
+      'Selection',
     ];
     foreach ($tabs as $key => $tab) {
       $this->assertSame($expected_tab_order[$key], $tab->getText());

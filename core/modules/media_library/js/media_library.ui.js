@@ -85,7 +85,7 @@
     attach: function attach(context) {
       var $view = $(context).hasClass('.js-media-library-view') ? $(context) : $('.js-media-library-view', context);
       $view.closest('.views-element-container').attr('id', 'media-library-view');
-      $('.views-display-link-widget, .views-display-link-widget_table', context).once('media-library-views-display-link').on('click', function (e) {
+      $('.views-display-link-widget, .views-display-link-widget_table, .views-display-link-widget_selection, .views-display-link-widget_selection_table', context).once('media-library-views-display-link').on('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
         var $link = $(e.currentTarget);
@@ -148,6 +148,8 @@
 
       var $mediaItems = $('.js-media-library-item input[type="checkbox"]', $form);
 
+      var $currentSelectionLink = $('.media-library-menu-selection a', context);
+
       function disableItems($items) {
         $items.prop('disabled', true).closest('.js-media-library-item').addClass('media-library-item--disabled');
       }
@@ -161,6 +163,16 @@
           '@selected': currentSelection.length
         });
         $('.js-media-library-selected-count').html(selectItemsText);
+      }
+
+      function updateSelectionTabUrl() {
+        var currentSelectionLink = $currentSelectionLink[0];
+        var search = new URLSearchParams(currentSelectionLink.search);
+        search.set('media_library_selection_ids', currentSelection.join('+'));
+
+        var href = [currentSelectionLink.protocol, '//', currentSelectionLink.host, currentSelectionLink.pathname, '?', search.toString(), currentSelectionLink.hash];
+
+        $currentSelectionLink.attr('href', href.join());
       }
 
       $mediaItems.once('media-item-change').on('change', function (e) {
@@ -180,7 +192,7 @@
       });
       $('#media-library-modal-selection', $form).once('media-library-selection-change').on('change', function (e) {
         updateSelectionCount(settings.media_library.selection_remaining);
-
+        updateSelectionTabUrl();
         if (currentSelection.length === settings.media_library.selection_remaining) {
           disableItems($mediaItems.not(':checked'));
           enableItems($mediaItems.filter(':checked'));
