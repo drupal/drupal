@@ -6,12 +6,14 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\EntityReferenceSelection\SelectionWithAutocreateInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
+use Drupal\user\EntityOwnerInterface;
 use Drupal\views\Render\ViewsRenderPipelineMarkup;
 use Drupal\views\Views;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -27,7 +29,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  *   weight = 0
  * )
  */
-class ViewsSelection extends SelectionPluginBase implements ContainerFactoryPluginInterface {
+class ViewsSelection extends SelectionPluginBase implements ContainerFactoryPluginInterface, SelectionWithAutocreateInterface {
   use DeprecatedServicePropertyTrait;
   use StringTranslationTrait;
   /**
@@ -143,6 +145,13 @@ class ViewsSelection extends SelectionPluginBase implements ContainerFactoryPlug
     $entity_type = $this->entityTypeManager->getDefinition($this->configuration['target_type']);
     $view_storage = $this->entityTypeManager->getStorage('view');
 
+    // Merge-in default values.
+    $selection_handler_settings = $this->getConfiguration()['handler_settings'];
+    $selection_handler_settings += [
+      'auto_create' => FALSE,
+      'auto_create_bundle' => NULL,
+    ];
+
     $options = [];
     foreach ($displays as $data) {
       list($view_id, $display_id) = $data;
@@ -178,6 +187,35 @@ class ViewsSelection extends SelectionPluginBase implements ContainerFactoryPlug
         '#required' => FALSE,
         '#description' => $this->t('Provide a comma separated list of arguments to pass to the view.'),
       ];
+
+      $form['auto_create'] = array(
+        '#type' => 'checkbox',
+        '#title' => $this->t("Create referenced entities if they don't already exist"),
+        '#default_value' => $selection_handler_settings['auto_create'],
+        '#weight' => -2,
+      );
+      if ($entity_type->hasKey('bundle')) {
+        $entity_type = $this->configuration['target_type'];
+        $bundles = $this->entityManager->getBundleInfo($entity_type);
+        $bundle_options = array();
+        foreach ($bundles as $bundle_name => $bundle_info) {
+          $bundle_options[$bundle_name] = $bundle_info['label'];
+        }
+        natsort($bundle_options);
+        $form['auto_create_bundle'] = [
+          '#type' => 'select',
+          '#title' => $this->t('Store new items in'),
+          '#options' => $bundle_options,
+          '#default_value' => $selection_handler_settings['auto_create_bundle'],
+          '#access' => count($bundles) > 1,
+          '#states' => [
+            'visible' => [
+              ':input[name="settings[handler_settings][auto_create]"]' => ['checked' => TRUE],
+            ],
+          ],
+          '#weight' => -1,
+        ];
+      }
     }
     else {
       if ($this->currentUser->hasPermission('administer views') && $this->moduleHandler->moduleExists('views_ui')) {
@@ -321,6 +359,35 @@ class ViewsSelection extends SelectionPluginBase implements ContainerFactoryPlug
       $result = array_keys($entities);
     }
     return $result;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createNewEntity($entity_type_id, $bundle, $label, $uid) {
+    $entity_type = $this->entityManager->getDefinition($entity_type_id);
+    $bundle_key = $entity_type->getKey('bundle');
+    $label_key = $entity_type->getKey('label');
+    $entity = $this->entityManager->getStorage($entity_type_id)->create(array(
+      $bundle_key => $bundle,
+      $label_key => $label,
+    ));
+    if ($entity instanceof EntityOwnerInterface) {
+      $entity->setOwnerId($uid);
+    }
+    return $entity;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateReferenceableNewEntities(array $entities) {
+    return array_filter($entities, function ($entity) {
+      if (isset($this->configuration['handler_settings']['auto_create_bundle'])) {
+        return ($entity->bundle() === $this->configuration['handler_settings']['auto_create_bundle']);
+      }
+      return TRUE;
+    });
   }
 
   /**
