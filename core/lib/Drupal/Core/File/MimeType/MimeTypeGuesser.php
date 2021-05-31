@@ -7,6 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser as SymfonyMimeTypeGuesser;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface as LegacyMimeTypeGuesserInterface;
 use Symfony\Component\Mime\MimeTypeGuesserInterface as MimeTypeGuesserInterface;
+use Symfony\Component\Mime\MimeTypes as SymfonyMimeTypes;
 
 /**
  * Defines a MIME type guesser that also supports stream wrapper paths.
@@ -156,12 +157,20 @@ class MimeTypeGuesser implements LegacyMimeTypeGuesserInterface, MimeTypeGuesser
    * does not have these dependencies.
    *
    * @see \Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser
+   * @see \Symfony\Component\Mime\MimeTypes
    */
   public static function registerWithSymfonyGuesser(ContainerInterface $container) {
     // Reset state, so we do not store more and more services during test runs.
     SymfonyMimeTypeGuesser::reset();
     $singleton = SymfonyMimeTypeGuesser::getInstance();
     $singleton->register($container->get('file.mime_type.guesser'));
+
+    // This other service is used when sending back a file within a
+    // \Symfony\Component\HttpFoundation\BinaryFileResponse without specifying
+    // the Content-Type header.
+    $default = new SymfonyMimeTypes();
+    $default->registerGuesser($container->get('file.mime_type.guesser'));
+    SymfonyMimeTypes::setDefault($default);
   }
 
 }
