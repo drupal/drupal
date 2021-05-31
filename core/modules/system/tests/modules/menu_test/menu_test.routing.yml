@@ -139,6 +139,13 @@ menu_test.local_action8:
   requirements:
     _custom_access: '\Drupal\menu_test\Access\AccessCheck::menuLocalAction8'
 
+menu_test.local_action9:
+  path: '/menu-test-local-action9'
+  defaults:
+    _controller: '\Drupal\menu_test\TestControllers::test2'
+  requirements:
+    _access: 'TRUE'
+
 menu_test.contextual_test:
   path: '/menu-test-contextual/default'
   defaults:
