@@ -117,9 +117,10 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
     // Search for classes within all PSR-4 namespace locations.
     foreach ($this->getPluginNamespaces() as $namespace => $dirs) {
       foreach ($dirs as $dir) {
-        if (file_exists($dir)) {
+        $absolute_directory_path = DRUPAL_ROOT . '/' . $dir;
+        if (file_exists($absolute_directory_path)) {
           $iterator = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS)
+            new \RecursiveDirectoryIterator($absolute_directory_path, \RecursiveDirectoryIterator::SKIP_DOTS)
           );
           foreach ($iterator as $fileinfo) {
             if ($fileinfo->getExtension() == 'php') {
