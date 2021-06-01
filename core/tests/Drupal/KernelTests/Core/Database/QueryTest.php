@@ -2,6 +2,8 @@
 
 namespace Drupal\KernelTests\Core\Database;
 
+use Drupal\Core\Database\Database;
+
 /**
  * Tests Drupal's extended prepared statement syntax..
  *
@@ -158,6 +160,20 @@ class QueryTest extends DatabaseTestBase {
     // well.
     $result = $this->connection->query('SELECT [update] FROM {select}')->fetchObject();
     $this->assertEquals('Update value 1', $result->update);
+  }
+
+  /**
+   * Tests deprecation of the 'return' query option.
+   *
+   * @covers ::query
+   * @covers ::prepareStatement
+   *
+   * @group legacy
+   */
+  public function testReturnOptionDeprecation() {
+    $this->expectDeprecation('Passing "return" option to %squery is deprecated in drupal:9.3.0 and is removed in drupal:10.0.0. @todo. See https://www.drupal.org/node/3185520');
+    $this->expectDeprecation('Passing "return" option to %squeryprepareStatement is deprecated in drupal:9.3.0 and is removed in drupal:10.0.0. @todo. See https://www.drupal.org/node/3185520');
+    $this->assertIsInt($this->connection->query('INSERT INTO {sequences} () VALUES ()', [], ['return' => Database::RETURN_INSERT_ID]));
   }
 
 }
