@@ -43,7 +43,7 @@ class DiscoverServiceProvidersTest extends UnitTestCase {
   }
 
   /**
-   * Tests the exception when container_yamls is not set.
+   * Tests the service yamls are defined as expected on the kernel.
    */
   public function testDiscoverServiceNoContainerYamls() {
     new Settings([]);
@@ -57,11 +57,11 @@ class DiscoverServiceProvidersTest extends UnitTestCase {
       'app' => [
         'core' => $kernel->getAppRoot() . '/core/core.services.yml',
       ],
-      'site' => [
-      ],
+      'site' => [],
     ];
-    $this->assertAttributeSame($expect, 'serviceYamls', $kernel);
+    $this->assertSame($expect, $reflected_yamls->getValue($kernel));
   }
+
   /**
    * Tests discovery with user defined container yaml.
    *
@@ -77,6 +77,9 @@ class DiscoverServiceProvidersTest extends UnitTestCase {
     $kernel = new DrupalKernel('prod', new ClassLoader(), TRUE, 'web');
     $kernel->discoverServiceProviders();
 
+    $reflected_yamls = (new \ReflectionObject($kernel))->getProperty('serviceYamls');
+    $reflected_yamls->setAccessible(TRUE);
+
     $expect = [
       'app' => [
         'core' => $kernel->getAppRoot() . '/core/core.services.yml',
@@ -86,23 +89,6 @@ class DiscoverServiceProvidersTest extends UnitTestCase {
       ],
     ];
 
-    $this->assertAttributeSame($expect, 'serviceYamls', $kernel);
-  }
-
-  /**
-   * Tests the exception when container_yamls is not set.
-   */
-  public function testDiscoverServiceNoContainerYamlsWithRoot() {
-    new Settings([]);
-    $kernel = new DrupalKernel('prod', new ClassLoader(), TRUE, 'web');
-    $kernel->discoverServiceProviders();
-
-    $expect = [
-      'app' => [
-        'core' => $kernel->getAppRoot() . '/core/core.services.yml',
-      ],
-      'site' => [],
-    ];
     $this->assertSame($expect, $reflected_yamls->getValue($kernel));
   }
 
