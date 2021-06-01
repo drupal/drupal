@@ -42,7 +42,7 @@ class ToolkitSetupFormTest extends BrowserTestBase {
   }
 
   /**
-   * Test Image toolkit setup form.
+   * Tests Image toolkit setup form.
    */
   public function testToolkitSetupForm() {
     // Get form.

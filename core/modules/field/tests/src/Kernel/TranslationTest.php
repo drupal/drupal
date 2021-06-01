@@ -105,7 +105,7 @@ class TranslationTest extends FieldKernelTestBase {
   }
 
   /**
-   * Test translatable fields storage/retrieval.
+   * Tests translatable fields storage/retrieval.
    */
   public function testTranslatableFieldSaveLoad() {
     // Enable field translations for nodes.

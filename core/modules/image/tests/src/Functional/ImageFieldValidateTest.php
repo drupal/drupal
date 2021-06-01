@@ -23,7 +23,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test image validity.
+   * Tests image validity.
    */
   public function testValid() {
     $file_system = $this->container->get('file_system');
@@ -41,7 +41,8 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $this->assertFileExists($expected_path . '/' . $image_files[0]->filename);
 
     // Remove the image.
-    $this->drupalPostForm('node/' . $node . '/edit', [], 'Remove');
+    $this->drupalGet('node/' . $node . '/edit');
+    $this->submitForm([], 'Remove');
     $this->submitForm([], 'Save');
 
     // Get invalid image test files from simpletest.
@@ -60,7 +61,8 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $edit = [
       'files[' . $field_name . '_0]' => $file_system->realpath($zero_size_image->uri),
     ];
-    $this->drupalPostForm('node/' . $node . '/edit', $edit, 'Upload');
+    $this->drupalGet('node/' . $node . '/edit');
+    $this->submitForm($edit, 'Upload');
     $this->assertFileNotExists($expected_path . '/' . $zero_size_image->filename);
 
     // Try uploading an invalid image.
@@ -68,7 +70,8 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $edit = [
       'files[' . $field_name . '_0]' => $file_system->realpath($invalid_image->uri),
     ];
-    $this->drupalPostForm('node/' . $node . '/edit', $edit, 'Upload');
+    $this->drupalGet('node/' . $node . '/edit');
+    $this->submitForm($edit, 'Upload');
     $this->assertFileNotExists($expected_path . '/' . $invalid_image->filename);
 
     // Upload a valid image again.
@@ -76,12 +79,13 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $edit = [
       'files[' . $field_name . '_0]' => $file_system->realpath($valid_image->uri),
     ];
-    $this->drupalPostForm('node/' . $node . '/edit', $edit, 'Upload');
+    $this->drupalGet('node/' . $node . '/edit');
+    $this->submitForm($edit, 'Upload');
     $this->assertFileExists($expected_path . '/' . $valid_image->filename);
   }
 
   /**
-   * Test min/max resolution settings.
+   * Tests min/max resolution settings.
    */
   public function testResolution() {
     $field_names = [
@@ -160,7 +164,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
   }
 
   /**
-   * Test that required alt/title fields gets validated right.
+   * Tests that required alt/title fields gets validated right.
    */
   public function testRequiredAttributes() {
     $field_name = strtolower($this->randomMachineName());
@@ -196,7 +200,8 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $edit = [
       'title[0][value]' => $this->randomMachineName(),
     ];
-    $this->drupalPostForm('node/add/article', $edit, 'Save');
+    $this->drupalGet('node/add/article');
+    $this->submitForm($edit, 'Save');
 
     $this->assertNoText('Alternative text field is required.');
     $this->assertNoText('Title field is required.');
@@ -209,7 +214,8 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     $edit = [
       'title[0][value]' => $this->randomMachineName(),
     ];
-    $this->drupalPostForm('node/add/article', $edit, 'Save');
+    $this->drupalGet('node/add/article');
+    $this->submitForm($edit, 'Save');
 
     $this->assertNoText('Alternative text field is required.');
     $this->assertNoText('Title field is required.');

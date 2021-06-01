@@ -44,7 +44,7 @@ class StateFormatterTest extends KernelTestBase {
   }
 
   /**
-   * Test the embed field.
+   * Tests the embed field.
    *
    * @dataProvider formatterTestCases
    */

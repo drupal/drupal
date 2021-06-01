@@ -33,7 +33,8 @@ class CachedDataUITest extends UITestBase {
 
     $this->drupalGet('admin/structure/views/view/test_view/edit');
     // Make sure we have 'changes' to the view.
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/title', [], 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/display/test_view/default/title');
+    $this->submitForm([], 'Apply');
     $this->assertSession()->pageTextContains('You have unsaved changes.');
     $this->assertEquals($views_admin_user_uid, $temp_store->getMetadata('test_view')->getOwnerId(), 'View cache has been saved.');
 
@@ -50,7 +51,8 @@ class CachedDataUITest extends UITestBase {
     $this->assertSession()->addressEquals('admin/structure/views');
 
     // Log in with another user and make sure the view is locked and break.
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/title', [], 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/display/test_view/default/title');
+    $this->submitForm([], 'Apply');
     $this->drupalLogin($this->adminUser);
 
     $this->drupalGet('admin/structure/views/view/test_view/edit');
@@ -66,12 +68,15 @@ class CachedDataUITest extends UITestBase {
     $this->assertSession()->buttonExists('Save');
     $this->assertSession()->buttonExists('Cancel');
     // Test we can save the view.
-    $this->drupalPostForm('admin/structure/views/view/test_view/edit', [], 'Save');
+    $this->drupalGet('admin/structure/views/view/test_view/edit');
+    $this->submitForm([], 'Save');
     $this->assertRaw(t('The view %view has been saved.', ['%view' => 'Test view']));
 
     // Test that a deleted view has no tempstore data.
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/title', [], 'Apply');
-    $this->drupalPostForm('admin/structure/views/view/test_view/delete', [], 'Delete');
+    $this->drupalGet('admin/structure/views/nojs/display/test_view/default/title');
+    $this->submitForm([], 'Apply');
+    $this->drupalGet('admin/structure/views/view/test_view/delete');
+    $this->submitForm([], 'Delete');
     // No view tempstore data should be returned for this view after deletion.
     $this->assertNull($temp_store->getMetadata('test_view'), 'View tempstore data has been removed after deletion.');
   }

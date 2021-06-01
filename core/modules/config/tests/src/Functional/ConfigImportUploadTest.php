@@ -52,7 +52,8 @@ class ConfigImportUploadTest extends BrowserTestBase {
     // Attempt to upload a non-tar file.
     $text_file = $this->getTestFiles('text')[0];
     $edit = ['files[import_tarball]' => \Drupal::service('file_system')->realpath($text_file->uri)];
-    $this->drupalPostForm('admin/config/development/configuration/full/import', $edit, 'Upload');
+    $this->drupalGet('admin/config/development/configuration/full/import');
+    $this->submitForm($edit, 'Upload');
     $this->assertSession()->pageTextContains('Could not extract the contents of the tar file');
 
     // Make the sync directory read-only.

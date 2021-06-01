@@ -483,7 +483,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
   }
 
   /**
-   * Test the EditorMediaDialog's form elements' #access logic.
+   * Tests the EditorMediaDialog's form elements' #access logic.
    */
   public function testDialogAccess() {
     $page = $this->getSession()->getPage();
@@ -746,7 +746,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
   }
 
   /**
-   * Test that dialog loads appropriate translation's alt text.
+   * Tests that dialog loads appropriate translation's alt text.
    */
   public function testTranslationAlt() {
     \Drupal::service('module_installer')->install(['language', 'content_translation']);

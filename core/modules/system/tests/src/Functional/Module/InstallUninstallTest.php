@@ -72,7 +72,8 @@ class InstallUninstallTest extends ModuleTestBase {
     $this->assertModuleNotInstalled('help');
     $edit = [];
     $edit["modules[help][enable]"] = TRUE;
-    $this->drupalPostForm('admin/modules', $edit, 'Install');
+    $this->drupalGet('admin/modules');
+    $this->submitForm($edit, 'Install');
     $this->assertSession()->pageTextContains('has been enabled');
     $this->assertSession()->pageTextContains('hook_modules_installed fired for help');
     $this->assertModuleSuccessfullyInstalled('help');
@@ -105,7 +106,8 @@ class InstallUninstallTest extends ModuleTestBase {
       $edit = [];
       $package = $module->info['package'];
       $edit['modules[' . $name . '][enable]'] = TRUE;
-      $this->drupalPostForm('admin/modules', $edit, 'Install');
+      $this->drupalGet('admin/modules');
+      $this->submitForm($edit, 'Install');
 
       // Handle experimental modules, which require a confirmation screen.
       if ($package == 'Core (Experimental)') {
@@ -212,7 +214,8 @@ class InstallUninstallTest extends ModuleTestBase {
         $experimental = TRUE;
       }
     }
-    $this->drupalPostForm('admin/modules', $edit, 'Install');
+    $this->drupalGet('admin/modules');
+    $this->submitForm($edit, 'Install');
 
     // If there are experimental modules, click the confirm form.
     if ($experimental) {
@@ -257,7 +260,8 @@ class InstallUninstallTest extends ModuleTestBase {
   protected function assertSuccessfulUninstall($module, $package = 'Core') {
     $edit = [];
     $edit['uninstall[' . $module . ']'] = TRUE;
-    $this->drupalPostForm('admin/modules/uninstall', $edit, 'Uninstall');
+    $this->drupalGet('admin/modules/uninstall');
+    $this->submitForm($edit, 'Uninstall');
     $this->submitForm([], 'Uninstall');
     $this->assertSession()->pageTextContains('The selected modules have been uninstalled.');
     $this->assertModules([$module], FALSE);

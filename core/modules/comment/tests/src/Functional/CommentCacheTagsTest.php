@@ -96,7 +96,7 @@ class CommentCacheTagsTest extends EntityWithUriCacheTagsTestBase {
   }
 
   /**
-   * Test that comments correctly invalidate the cache tag of their host entity.
+   * Tests that comments invalidate the cache tag of their host entity.
    */
   public function testCommentEntity() {
     $this->verifyPageCache($this->entityTestCamelid->toUrl(), 'MISS');

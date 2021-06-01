@@ -117,7 +117,8 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     // Uninstall a module.
     $edit = [];
     $edit['uninstall[taxonomy]'] = TRUE;
-    $this->drupalPostForm('admin/modules/uninstall', $edit, 'Uninstall');
+    $this->drupalGet('admin/modules/uninstall');
+    $this->submitForm($edit, 'Uninstall');
     // Confirm the uninstall form.
     $this->submitForm([], 'Uninstall');
     $this->rebuildContainer();
@@ -129,7 +130,8 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     // Enable a module.
     $edit = [];
     $edit['modules[taxonomy][enable]'] = TRUE;
-    $this->drupalPostForm('admin/modules', $edit, 'Install');
+    $this->drupalGet('admin/modules');
+    $this->submitForm($edit, 'Install');
     $this->rebuildContainer();
 
     // Assert that the subtrees hash has been altered because the subtrees
@@ -147,7 +149,8 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     // Disable the link.
     $edit = [];
     $edit['enabled'] = FALSE;
-    $this->drupalPostForm("admin/structure/menu/link/" . $admin_menu_link_id . "/edit", $edit, 'Save');
+    $this->drupalGet("admin/structure/menu/link/" . $admin_menu_link_id . "/edit");
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('The menu link has been saved.');
 
@@ -168,7 +171,8 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
 
     $edit = [];
     $edit[$rid . '[administer taxonomy]'] = FALSE;
-    $this->drupalPostForm('admin/people/permissions', $edit, 'Save permissions');
+    $this->drupalGet('admin/people/permissions');
+    $this->submitForm($edit, 'Save permissions');
 
     // Assert that the subtrees hash has been altered because the subtrees
     // structure changed.
@@ -198,7 +202,8 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     $rid = $this->drupalCreateRole(['administer content types']);
 
     // Assign the role to the user.
-    $this->drupalPostForm('user/' . $this->adminUser->id() . '/edit', ["roles[$rid]" => $rid], 'Save');
+    $this->drupalGet('user/' . $this->adminUser->id() . '/edit');
+    $this->submitForm(["roles[{$rid}]" => $rid], 'Save');
     $this->assertSession()->pageTextContains('The changes have been saved.');
 
     // Assert that the subtrees hash has been altered because the subtrees
@@ -239,7 +244,8 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     $admin_user_2_hash = $this->getSubtreesHash();
 
     // Assign the role to the user.
-    $this->drupalPostForm('user/' . $admin_user_id . '/edit', ["roles[$rid]" => $rid], 'Save');
+    $this->drupalGet('user/' . $admin_user_id . '/edit');
+    $this->submitForm(["roles[{$rid}]" => $rid], 'Save');
     $this->assertSession()->pageTextContains('The changes have been saved.');
 
     // Log in adminUser and assert that the subtrees hash has changed.
@@ -282,7 +288,8 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
       'label' => $name,
       'direction' => LanguageInterface::DIRECTION_LTR,
     ];
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add custom language');
+    $this->drupalGet('admin/config/regional/language/add');
+    $this->submitForm($edit, 'Add custom language');
     t($name, [], ['langcode' => $langcode]);
     // Reset locale cache.
     $this->container->get('string_translation')->reset();
@@ -310,7 +317,8 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
       'langcode' => $langcode,
       'translation' => 'untranslated',
     ];
-    $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
+    $this->drupalGet('admin/config/regional/translate');
+    $this->submitForm($search, 'Filter');
     $this->assertNoText('No strings available');
     // Verify that search found the string as untranslated.
     $this->assertSession()->pageTextContains($name);
@@ -322,7 +330,8 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     $edit = [
       $lid => $translation,
     ];
-    $this->drupalPostForm('admin/config/regional/translate', $edit, 'Save translations');
+    $this->drupalGet('admin/config/regional/translate');
+    $this->submitForm($edit, 'Save translations');
     $this->assertSession()->pageTextContains('The strings have been saved.');
     // Verify that the user is redirected to the correct page.
     $this->assertSession()->addressEquals(Url::fromRoute('locale.translate_page'));
@@ -359,7 +368,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
   }
 
   /**
-   * Test that subtrees hashes vary by the language of the page.
+   * Tests that subtrees hashes vary by the language of the page.
    */
   public function testLanguageSwitching() {
     // Create a new language with the langcode 'xx'.
@@ -383,7 +392,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
   }
 
   /**
-   * Test that back to site link exists on admin pages, not on content pages.
+   * Tests that back to site link exists on admin pages, not on content pages.
    */
   public function testBackToSiteLink() {
     // Back to site link should exist in the markup.
@@ -402,7 +411,8 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
       'menu_parent' => 'admin:system.admin',
       'description[0][value]' => 'External URL & escaped',
     ];
-    $this->drupalPostForm('admin/structure/menu/manage/admin/add', $edit, 'Save');
+    $this->drupalGet('admin/structure/menu/manage/admin/add');
+    $this->submitForm($edit, 'Save');
 
     // Assert that the new menu link is shown on the menu link listing.
     $this->drupalGet('admin/structure/menu/manage/admin');

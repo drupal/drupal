@@ -37,7 +37,7 @@ class EntityListBuilderTest extends BrowserTestBase {
   }
 
   /**
-   * Test paging.
+   * Tests paging.
    */
   public function testPager() {
     // Create 51 test entities.
