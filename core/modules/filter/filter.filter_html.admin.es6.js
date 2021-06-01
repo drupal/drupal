@@ -277,7 +277,7 @@
       for (let t = 0; t < allowedTags.length; t++) {
         // Create a jQuery object, making it possible to easily retrieve the
         // tag name of the allowed tag, regardless of what attributes are set or
-        // what its required parent elments are.
+        // what its required parent elements are.
         const $tagObject = $(allowedTags[t]);
 
         // Parse the tag name from the jQuery object.
