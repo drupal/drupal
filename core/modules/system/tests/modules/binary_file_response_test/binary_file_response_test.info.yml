@@ -1,0 +1,5 @@
+name: 'Binary File Response test'
+type: module
+description: 'Support module for Batch Binary File Response tests.'
+package: Testing
+version: VERSION
