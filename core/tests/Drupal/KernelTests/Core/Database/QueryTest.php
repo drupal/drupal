@@ -4,6 +4,8 @@ namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\Database;
 
+// cSpell:ignore aquery aprepare
+
 /**
  * Tests Drupal's extended prepared statement syntax..
  *
