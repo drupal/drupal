@@ -173,7 +173,11 @@ class QueryTest extends DatabaseTestBase {
   public function testReturnOptionDeprecation() {
     $this->expectDeprecation('Passing "return" option to %squery is deprecated in drupal:9.3.0 and is removed in drupal:10.0.0. @todo. See https://www.drupal.org/node/3185520');
     $this->expectDeprecation('Passing "return" option to %squeryprepareStatement is deprecated in drupal:9.3.0 and is removed in drupal:10.0.0. @todo. See https://www.drupal.org/node/3185520');
-    $this->assertIsInt($this->connection->query('INSERT INTO {sequences} () VALUES ()', [], ['return' => Database::RETURN_INSERT_ID]));
+    $this->assertIsInt($this->connection->query('INSERT INTO {test} ([name], [age], [job]) VALUES (:name, :age, :job)', [
+      ':name' => 'Magoo',
+      ':age' => 56,
+      ':job' => 'Driver',
+    ], ['return' => Database::RETURN_INSERT_ID]));
   }
 
 }
