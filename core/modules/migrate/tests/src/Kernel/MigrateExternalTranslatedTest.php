@@ -51,7 +51,7 @@ class MigrateExternalTranslatedTest extends MigrateTestBase {
   }
 
   /**
-   * Test importing and rolling back our data.
+   * Tests importing and rolling back our data.
    */
   public function testMigrations() {
     /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */

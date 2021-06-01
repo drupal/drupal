@@ -13,7 +13,7 @@ use Drupal\file\Entity\File;
 class CopyTest extends FileManagedUnitTestBase {
 
   /**
-   * Test file copying in the normal, base case.
+   * Tests file copying in the normal, base case.
    */
   public function testNormal() {
     $contents = $this->randomMachineName(10);
@@ -26,13 +26,13 @@ class CopyTest extends FileManagedUnitTestBase {
 
     // Check the return status and that the contents changed.
     $this->assertNotFalse($result, 'File copied successfully.');
-    $this->assertEqual($contents, file_get_contents($result->getFileUri()), 'Contents of file were copied correctly.');
+    $this->assertEquals($contents, file_get_contents($result->getFileUri()), 'Contents of file were copied correctly.');
 
     // Check that the correct hooks were called.
     $this->assertFileHooksCalled(['copy', 'insert']);
 
     $this->assertDifferentFile($source, $result);
-    $this->assertEqual($result->getFileUri(), $desired_uri, 'The copied file entity has the desired filepath.');
+    $this->assertEquals($result->getFileUri(), $desired_uri, 'The copied file entity has the desired filepath.');
     $this->assertFileExists($source->getFileUri());
     $this->assertFileExists($result->getFileUri());
 
@@ -42,7 +42,7 @@ class CopyTest extends FileManagedUnitTestBase {
   }
 
   /**
-   * Test renaming when copying over a file that already exists.
+   * Tests renaming when copying over a file that already exists.
    */
   public function testExistingRename() {
     // Setup a file to overwrite.
@@ -57,7 +57,7 @@ class CopyTest extends FileManagedUnitTestBase {
 
     // Check the return status and that the contents changed.
     $this->assertNotFalse($result, 'File copied successfully.');
-    $this->assertEqual($contents, file_get_contents($result->getFileUri()), 'Contents of file were copied correctly.');
+    $this->assertEquals($contents, file_get_contents($result->getFileUri()), 'Contents of file were copied correctly.');
     $this->assertNotEquals($source->getFileUri(), $result->getFileUri(), 'Returned file path has changed from the original.');
 
     // Check that the correct hooks were called.
@@ -82,7 +82,7 @@ class CopyTest extends FileManagedUnitTestBase {
   }
 
   /**
-   * Test replacement when copying over a file that already exists.
+   * Tests replacement when copying over a file that already exists.
    */
   public function testExistingReplace() {
     // Setup a file to overwrite.
@@ -97,7 +97,7 @@ class CopyTest extends FileManagedUnitTestBase {
 
     // Check the return status and that the contents changed.
     $this->assertNotFalse($result, 'File copied successfully.');
-    $this->assertEqual($contents, file_get_contents($result->getFileUri()), 'Contents of file were overwritten.');
+    $this->assertEquals($contents, file_get_contents($result->getFileUri()), 'Contents of file were overwritten.');
     $this->assertDifferentFile($source, $result);
 
     // Check that the correct hooks were called.
@@ -120,7 +120,7 @@ class CopyTest extends FileManagedUnitTestBase {
   }
 
   /**
-   * Test that copying over an existing file fails when instructed to do so.
+   * Tests that copying over an existing file fails when instructed to do so.
    */
   public function testExistingError() {
     $contents = $this->randomMachineName(10);
@@ -134,7 +134,7 @@ class CopyTest extends FileManagedUnitTestBase {
 
     // Check the return status and that the contents were not changed.
     $this->assertFalse($result, 'File copy failed.');
-    $this->assertEqual($contents, file_get_contents($target->getFileUri()), 'Contents of file were not altered.');
+    $this->assertEquals($contents, file_get_contents($target->getFileUri()), 'Contents of file were not altered.');
 
     // Check that the correct hooks were called.
     $this->assertFileHooksCalled([]);

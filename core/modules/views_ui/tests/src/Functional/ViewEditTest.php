@@ -53,12 +53,14 @@ class ViewEditTest extends UITestBase {
 
     // Test that a long administrative comment is truncated.
     $edit = ['display_comment' => 'one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen'];
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/attachment_1/display_comment', $edit, 'Apply');
-    $this->assertText('one two three four five six seven eight nine ten eleven twelve thirteen fourteen...');
+    $this->drupalGet('admin/structure/views/nojs/display/test_view/attachment_1/display_comment');
+    $this->submitForm($edit, 'Apply');
+    $this->assertSession()->pageTextContains('one two three four five six seven eight nine ten eleven twelve thirteen fourteen...');
 
     // Change the machine name for the display from page_1 to test_1.
     $edit = ['display_id' => 'test_1'];
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/attachment_1/display_id', $edit, 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/display/test_view/attachment_1/display_id');
+    $this->submitForm($edit, 'Apply');
     $this->assertSession()->linkExists('test_1');
 
     // Save the view, and test the new ID has been saved.
@@ -71,7 +73,8 @@ class ViewEditTest extends UITestBase {
 
     // Set to the same machine name and save the View.
     $edit = ['display_id' => 'test_1'];
-    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/test_1/display_id', $edit, 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/display/test_view/test_1/display_id');
+    $this->submitForm($edit, 'Apply');
     $this->submitForm([], 'Save');
     $this->assertSession()->linkExists('test_1');
 
@@ -89,17 +92,20 @@ class ViewEditTest extends UITestBase {
     }
 
     $edit = ['display_id' => 'test 1'];
-    $this->drupalPostForm($machine_name_edit_url, $edit, 'Apply');
-    $this->assertText($error_text);
+    $this->drupalGet($machine_name_edit_url);
+    $this->submitForm($edit, 'Apply');
+    $this->assertSession()->pageTextContains($error_text);
 
     $edit = ['display_id' => 'test_1#'];
-    $this->drupalPostForm($machine_name_edit_url, $edit, 'Apply');
-    $this->assertText($error_text);
+    $this->drupalGet($machine_name_edit_url);
+    $this->submitForm($edit, 'Apply');
+    $this->assertSession()->pageTextContains($error_text);
 
     // Test using an existing display ID.
     $edit = ['display_id' => 'default'];
-    $this->drupalPostForm($machine_name_edit_url, $edit, 'Apply');
-    $this->assertText('Display id should be unique.');
+    $this->drupalGet($machine_name_edit_url);
+    $this->submitForm($edit, 'Apply');
+    $this->assertSession()->pageTextContains('Display id should be unique.');
 
     // Test that the display ID has not been changed.
     $this->drupalGet('admin/structure/views/view/test_view/edit/test_1');
@@ -112,7 +118,8 @@ class ViewEditTest extends UITestBase {
     $fields['fields[age][removed]'] = 1;
     $fields['fields[id][removed]'] = 1;
     $fields['fields[name][removed]'] = 1;
-    $this->drupalPostForm('admin/structure/views/nojs/rearrange/test_view/default/field', $fields, 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/rearrange/test_view/default/field');
+    $this->submitForm($fields, 'Apply');
     $this->submitForm([], 'Save');
     $this->submitForm([], 'Cancel');
     // Verify that no error message is displayed.
@@ -166,7 +173,7 @@ class ViewEditTest extends UITestBase {
       $this->drupalGet($langcode_url);
       $this->assertSession()->statusCodeEquals(200);
       if ($view_name == 'test_view') {
-        $this->assertText('The view is not based on a translatable entity type or the site is not multilingual.');
+        $this->assertSession()->pageTextContains('The view is not based on a translatable entity type or the site is not multilingual.');
       }
       else {
         $this->assertSession()->fieldValueEquals('rendering_language', '***LANGUAGE_entity_translation***');
@@ -192,25 +199,29 @@ class ViewEditTest extends UITestBase {
         $edit = [
           'authenticated[administer languages]' => TRUE,
         ];
-        $this->drupalPostForm('/admin/people/permissions', $edit, 'Save permissions');
+        $this->drupalGet('/admin/people/permissions');
+        $this->submitForm($edit, 'Save permissions');
         // Enable Content language negotiation so we have one more item
         // to select.
         $edit = [
           'language_content[configurable]' => TRUE,
         ];
-        $this->drupalPostForm('admin/config/regional/language/detection', $edit, 'Save settings');
+        $this->drupalGet('admin/config/regional/language/detection');
+        $this->submitForm($edit, 'Save settings');
 
         // Choose the new negotiation as the rendering language.
         $edit = [
           'rendering_language' => '***LANGUAGE_language_content***',
         ];
-        $this->drupalPostForm('/admin/structure/views/nojs/display/' . $view_name . '/' . $display . '/rendering_language', $edit, 'Apply');
+        $this->drupalGet('/admin/structure/views/nojs/display/' . $view_name . '/' . $display . '/rendering_language');
+        $this->submitForm($edit, 'Apply');
 
         // Disable language content negotiation.
         $edit = [
           'language_content[configurable]' => FALSE,
         ];
-        $this->drupalPostForm('admin/config/regional/language/detection', $edit, 'Save settings');
+        $this->drupalGet('admin/config/regional/language/detection');
+        $this->submitForm($edit, 'Save settings');
 
         // Check that the previous selection is listed and selected.
         $this->drupalGet($langcode_url);
@@ -234,7 +245,7 @@ class ViewEditTest extends UITestBase {
         $elements = $this->xpath('//div[@id="edit-options-value"]//input');
         // Compare values inside the option elements with expected values.
         for ($i = 0; $i < count($elements); $i++) {
-          $this->assertEqual($expected_elements[$i], $elements[$i]->getAttribute('value'));
+          $this->assertEquals($expected_elements[$i], $elements[$i]->getAttribute('value'));
         }
       }
     }
@@ -246,10 +257,12 @@ class ViewEditTest extends UITestBase {
   public function testRelationRepresentativeNode() {
     // Populate and submit the form.
     $edit["name[taxonomy_term_field_data.tid_representative]"] = TRUE;
-    $this->drupalPostForm('admin/structure/views/nojs/add-handler/test_groupwise_term_ui/default/relationship', $edit, 'Add and configure relationships');
+    $this->drupalGet('admin/structure/views/nojs/add-handler/test_groupwise_term_ui/default/relationship');
+    $this->submitForm($edit, 'Add and configure relationships');
     // Apply changes.
     $edit = [];
-    $this->drupalPostForm('admin/structure/views/nojs/handler/test_groupwise_term_ui/default/relationship/tid_representative', $edit, 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/handler/test_groupwise_term_ui/default/relationship/tid_representative');
+    $this->submitForm($edit, 'Apply');
   }
 
 }

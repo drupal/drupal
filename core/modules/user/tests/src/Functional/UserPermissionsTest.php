@@ -51,7 +51,7 @@ class UserPermissionsTest extends BrowserTestBase {
   }
 
   /**
-   * Test changing user permissions through the permissions page.
+   * Tests changing user permissions through the permissions page.
    */
   public function testUserPermissionChanges() {
     $permissions_hash_generator = $this->container->get('user_permissions_hash_generator');
@@ -72,8 +72,9 @@ class UserPermissionsTest extends BrowserTestBase {
     $this->assertFalse($account->hasPermission('administer users'), 'User does not have "administer users" permission.');
     $edit = [];
     $edit[$rid . '[administer users]'] = TRUE;
-    $this->drupalPostForm('admin/people/permissions', $edit, 'Save permissions');
-    $this->assertText('The changes have been saved.');
+    $this->drupalGet('admin/people/permissions');
+    $this->submitForm($edit, 'Save permissions');
+    $this->assertSession()->pageTextContains('The changes have been saved.');
     $storage->resetCache();
     $this->assertTrue($account->hasPermission('administer users'), 'User now has "administer users" permission.');
     $current_permissions_hash = $permissions_hash_generator->generate($account);
@@ -85,8 +86,9 @@ class UserPermissionsTest extends BrowserTestBase {
     $this->assertTrue($account->hasPermission('access user profiles'), 'User has "access user profiles" permission.');
     $edit = [];
     $edit[$rid . '[access user profiles]'] = FALSE;
-    $this->drupalPostForm('admin/people/permissions', $edit, 'Save permissions');
-    $this->assertText('The changes have been saved.');
+    $this->drupalGet('admin/people/permissions');
+    $this->submitForm($edit, 'Save permissions');
+    $this->assertSession()->pageTextContains('The changes have been saved.');
     $storage->resetCache();
     $this->assertFalse($account->hasPermission('access user profiles'), 'User no longer has "access user profiles" permission.');
     $current_permissions_hash = $permissions_hash_generator->generate($account);
@@ -102,7 +104,7 @@ class UserPermissionsTest extends BrowserTestBase {
   }
 
   /**
-   * Test assigning of permissions for the administrator role.
+   * Tests assigning of permissions for the administrator role.
    */
   public function testAdministratorRole() {
     $this->drupalLogin($this->adminUser);
@@ -116,7 +118,8 @@ class UserPermissionsTest extends BrowserTestBase {
     // Set the user's role to be the administrator role.
     $edit = [];
     $edit['user_admin_role'] = $this->rid;
-    $this->drupalPostForm('admin/config/people/accounts', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/people/accounts');
+    $this->submitForm($edit, 'Save configuration');
 
     \Drupal::entityTypeManager()->getStorage('user_role')->resetCache();
     $this->assertTrue(Role::load($this->rid)->isAdmin());
@@ -130,7 +133,8 @@ class UserPermissionsTest extends BrowserTestBase {
     // Ensure that selecting '- None -' removes the admin role.
     $edit = [];
     $edit['user_admin_role'] = '';
-    $this->drupalPostForm('admin/config/people/accounts', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/people/accounts');
+    $this->submitForm($edit, 'Save configuration');
 
     \Drupal::entityTypeManager()->getStorage('user_role')->resetCache();
     \Drupal::configFactory()->reset();
@@ -186,14 +190,14 @@ class UserPermissionsTest extends BrowserTestBase {
     // to 'access site reports'.
     $this->drupalGet('admin/people/permissions');
     $next_row = $this->xpath('//tr[@data-drupal-selector=\'edit-permissions-access-content\']/following-sibling::tr[1]');
-    $this->assertEqual('edit-permissions-access-site-reports', $next_row[0]->getAttribute('data-drupal-selector'));
+    $this->assertEquals('edit-permissions-access-site-reports', $next_row[0]->getAttribute('data-drupal-selector'));
 
     // When Node is installed the 'access content' permission is listed next to
     // to 'view own unpublished content'.
     \Drupal::service('module_installer')->install(['node']);
     $this->drupalGet('admin/people/permissions');
     $next_row = $this->xpath('//tr[@data-drupal-selector=\'edit-permissions-access-content\']/following-sibling::tr[1]');
-    $this->assertEqual('edit-permissions-view-own-unpublished-content', $next_row[0]->getAttribute('data-drupal-selector'));
+    $this->assertEquals('edit-permissions-view-own-unpublished-content', $next_row[0]->getAttribute('data-drupal-selector'));
   }
 
 }

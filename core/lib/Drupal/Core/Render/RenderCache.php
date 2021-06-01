@@ -281,7 +281,7 @@ class RenderCache implements RenderCacheInterface {
    * @see \Drupal\Core\Cache\CacheBackendInterface::set()
    */
   protected function maxAgeToExpire($max_age) {
-    return ($max_age === Cache::PERMANENT) ? Cache::PERMANENT : (int) $this->requestStack->getMasterRequest()->server->get('REQUEST_TIME') + $max_age;
+    return ($max_age === Cache::PERMANENT) ? Cache::PERMANENT : (int) $this->requestStack->getMainRequest()->server->get('REQUEST_TIME') + $max_age;
   }
 
   /**

@@ -105,7 +105,8 @@ class ThemeUiTest extends BrowserTestBase {
     foreach ($first_modules as $module) {
       $first_module_form_post["modules[$module][enable]"] = 1;
     }
-    $this->drupalPostForm('admin/modules', $first_module_form_post, 'Install');
+    $this->drupalGet('admin/modules');
+    $this->submitForm($first_module_form_post, 'Install');
     $assert_module_enabled_message($first_modules);
 
     $this->drupalGet('admin/appearance');
@@ -124,7 +125,8 @@ class ThemeUiTest extends BrowserTestBase {
     foreach ($second_modules as $module) {
       $second_module_form_post["modules[$module][enable]"] = 1;
     }
-    $this->drupalPostForm('admin/modules', $second_module_form_post, 'Install');
+    $this->drupalGet('admin/modules');
+    $this->submitForm($second_module_form_post, 'Install');
     $assert_module_enabled_message($second_modules);
 
     // The theme should now be installable, so install it.
@@ -176,7 +178,8 @@ class ThemeUiTest extends BrowserTestBase {
       $to_uninstall["uninstall[$attribute]"] = 1;
     }
     if (!empty($to_uninstall)) {
-      $this->drupalPostForm('admin/modules/uninstall', $to_uninstall, 'Uninstall');
+      $this->drupalGet('admin/modules/uninstall');
+      $this->submitForm($to_uninstall, 'Uninstall');
       $assert_session->pageTextContains('The following modules will be completely uninstalled from your site, and all data from these modules will be lost!');
       $assert_session->pageTextContains('Would you like to continue with uninstalling the above?');
       foreach ($module_names as $module_name) {
@@ -357,7 +360,7 @@ class ThemeUiTest extends BrowserTestBase {
       $incompatible_info = $info + $incompatible_update;
       file_put_contents($file_path, Yaml::encode($incompatible_info));
       $this->drupalGet('admin/appearance');
-      $this->assertText($incompatible_themes_message);
+      $this->assertSession()->pageTextContains($incompatible_themes_message);
 
       file_put_contents($file_path, Yaml::encode($compatible_info));
       $this->drupalGet('admin/appearance');

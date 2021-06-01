@@ -94,7 +94,7 @@ class DistributionProfileTranslationQueryTest extends InstallerTestBase {
 
     // Check the language direction.
     $direction = $this->getSession()->getPage()->find('xpath', '/@dir')->getText();
-    $this->assertEqual('ltr', $direction);
+    $this->assertEquals('ltr', $direction);
 
     // Verify that the distribution name appears.
     $this->assertRaw($this->info['distribution']['name']);
@@ -114,11 +114,11 @@ class DistributionProfileTranslationQueryTest extends InstallerTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Confirm that we are logged-in after installation.
-    $this->assertText($this->rootUser->getDisplayName());
+    $this->assertSession()->pageTextContains($this->rootUser->getDisplayName());
 
     // Verify German was configured but not English.
     $this->drupalGet('admin/config/regional/language');
-    $this->assertText('German');
+    $this->assertSession()->pageTextContains('German');
     $this->assertNoText('English');
   }
 

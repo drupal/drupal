@@ -1,5 +1,5 @@
 <?php
-// @codingStandardsIgnoreFile
+// phpcs:ignoreFile
 
 /**
  * This file was generated via php core/scripts/generate-proxy-class.php 'Drupal\field\FieldUninstallValidator' "core/modules/field/src".
