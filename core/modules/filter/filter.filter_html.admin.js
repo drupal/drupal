@@ -144,6 +144,7 @@
         attributes = $tagObject.prop('attributes');
 
         for (var i = 0; i < attributes.length; i++) {
+          attribute = attributes.item(i);
           var attributeName = attribute.nodeName;
 
           if (attributeName === 'class') {

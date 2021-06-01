@@ -291,8 +291,8 @@
         // Add the attribute restrictions.
         attributes = $tagObject.prop('attributes');
         for (let i = 0; i < attributes.length; i++) {
+          attribute = attributes.item(i);
           const attributeName = attribute.nodeName;
-
           // @todo Drupal.FilterHtmlRule does not allow for generic attribute
           //   value restrictions, only for the "class" and "style" attribute's
           //   values. The filter_html filter always disallows the "style"
