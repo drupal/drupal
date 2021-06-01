@@ -64,7 +64,6 @@ class Insert extends Query implements \Countable {
    *   That makes it safe to use in multi-insert loops.
    */
   public function execute() {
-
     // If validation fails, simply return NULL. Note that validation routines
     // in preExecute() may throw exceptions instead.
     if (!$this->preExecute()) {
