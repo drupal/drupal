@@ -178,10 +178,10 @@
       // @todo Add media library specific classes and data attributes to the
       //    media library display links when we can alter display links.
       //    https://www.drupal.org/project/drupal/issues/3036694
-        $(
-          '.views-display-link-widget, .views-display-link-widget_table, .views-display-link-widget_selection, .views-display-link-widget_selection_table',
-          context,
-        )
+      $(
+        '.views-display-link-widget, .views-display-link-widget_table, .views-display-link-widget_selection, .views-display-link-widget_selection_table',
+        context,
+      )
         .once('media-library-views-display-link')
         .on('click', (e) => {
           e.preventDefault();

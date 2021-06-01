@@ -165,9 +165,9 @@ class MediaLibraryUiBuilder {
           $state,
           $state->get('views_display_id', 'widget'),
           [$state->getSelectedTypeId()]
-        ),
-      ];
-    }
+      ),
+    ];
+  }
 
   /**
    * Build the current selection overview.
@@ -263,7 +263,7 @@ class MediaLibraryUiBuilder {
       return [];
     }
 
-    // @todo: Add a class to the li element.
+    // @todo Add a class to the li element.
     //   https://www.drupal.org/project/drupal/issues/3029227
     $menu = [
       '#theme' => 'links__media_library_menu',
@@ -399,7 +399,6 @@ class MediaLibraryUiBuilder {
     $view_request = $view_executable->getRequest();
     $view_request->query->add($state->all());
     $view_executable->setRequest($view_request);
-
 
     // Make sure the state parameters are set in the request so the view can
     // pass the parameters along in the pager, filters etc.
