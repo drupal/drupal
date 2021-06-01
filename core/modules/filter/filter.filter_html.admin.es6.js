@@ -272,13 +272,41 @@
       let rule;
       let attributes;
       let attribute;
+      let currentTag;
       const allowedTags = setting.match(/(<[^>]+>)/g);
       const sandbox = document.createElement('div');
       const rules = {};
       for (let t = 0; t < allowedTags.length; t++) {
         // Let the browser do the parsing work for us.
-        sandbox.innerHTML = allowedTags[t];
-        node = sandbox.firstChild;
+        currentTag = allowedTags[t];
+        // Table tags need to be wrapped in a <table>.
+        if (
+          [
+            '<caption>',
+            '<tbody>',
+            '<thead>',
+            '<tfoot>',
+            '<th>',
+            '<td>',
+            '<tr>',
+          ].indexOf(currentTag) === -1
+        ) {
+          sandbox.innerHTML = currentTag;
+          node = sandbox.firstChild;
+        } else {
+          sandbox.innerHTML = '<table>' + currentTag;
+          switch (currentTag) {
+            case '<th>':
+            case '<td>':
+              node = sandbox.firstChild.firstChild.firstChild.firstChild;
+              break;
+            case '<tr>':
+              node = sandbox.firstChild.firstChild.firstChild;
+              break;
+            default:
+              node = sandbox.firstChild.firstChild;
+          }
+        }
         tag = node.tagName.toLowerCase();
 
         // Build the Drupal.FilterHtmlRule object.
