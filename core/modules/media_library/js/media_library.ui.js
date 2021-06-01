@@ -147,7 +147,6 @@
       }
 
       var $mediaItems = $('.js-media-library-item input[type="checkbox"]', $form);
-
       var $currentSelectionLink = $('.media-library-menu-selection a', context);
 
       function disableItems($items) {
@@ -169,9 +168,7 @@
         var currentSelectionLink = $currentSelectionLink[0];
         var search = new URLSearchParams(currentSelectionLink.search);
         search.set('media_library_selection_ids', currentSelection.join('+'));
-
         var href = [currentSelectionLink.protocol, '//', currentSelectionLink.host, currentSelectionLink.pathname, '?', search.toString(), currentSelectionLink.hash];
-
         $currentSelectionLink.attr('href', href.join());
       }
 
@@ -193,6 +190,7 @@
       $('#media-library-modal-selection', $form).once('media-library-selection-change').on('change', function (e) {
         updateSelectionCount(settings.media_library.selection_remaining);
         updateSelectionTabUrl();
+
         if (currentSelection.length === settings.media_library.selection_remaining) {
           disableItems($mediaItems.not(':checked'));
           enableItems($mediaItems.filter(':checked'));
