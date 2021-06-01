@@ -50,7 +50,7 @@
 
 .action-link {
   display: inline-block;
-  padding: calc(0.75rem - 1px) 1rem;
+  padding: calc(0.6875rem - 1px) 1rem;
   cursor: pointer;
   text-decoration: none;
   color: #545560;

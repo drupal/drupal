@@ -13,8 +13,8 @@
 .form-element {
   box-sizing: border-box;
   max-width: 100%;
-  min-height: var(--input-min-height);
-  padding: calc(0.75rem - 1px) calc(1rem - 1px);
+  min-height: 2.875rem;
+  padding: calc(0.6875rem - 1px) calc(1rem - 1px);
   color: #222330;
   border: 1px solid #8e929c;
   border-radius: 0.125rem;
@@ -48,7 +48,7 @@
 .claro-form-elements-small .form-element,
 .form-element--small,
 .form-element[name$="][_weight]"] {
-  min-height: var(--input-min-height--small);
+  min-height: 1.875rem;
   padding: calc(0.5rem - 2px) calc(1rem - 1px);
   font-size: 0.79rem;
   line-height: 1.3125rem;
