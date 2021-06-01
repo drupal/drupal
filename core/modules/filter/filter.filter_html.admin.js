@@ -129,47 +129,21 @@
       return autoAllowedTags;
     },
     _parseSetting: function _parseSetting(setting) {
-      var node;
       var tag;
       var rule;
       var attributes;
       var attribute;
-      var currentTag;
       var allowedTags = setting.match(/(<[^>]+>)/g);
-      var sandbox = document.createElement('div');
       var rules = {};
 
       for (var t = 0; t < allowedTags.length; t++) {
-        currentTag = allowedTags[t];
-
-        if (['<caption>', '<tbody>', '<thead>', '<tfoot>', '<th>', '<td>', '<tr>'].indexOf(currentTag) === -1) {
-          sandbox.innerHTML = currentTag;
-          node = sandbox.firstChild;
-        } else {
-          sandbox.innerHTML = '<table>' + currentTag;
-
-          switch (currentTag) {
-            case '<th>':
-            case '<td>':
-              node = sandbox.firstChild.firstChild.firstChild.firstChild;
-              break;
-
-            case '<tr>':
-              node = sandbox.firstChild.firstChild.firstChild;
-              break;
-
-            default:
-              node = sandbox.firstChild.firstChild;
-          }
-        }
-
-        tag = node.tagName.toLowerCase();
+        var $tagObject = $(allowedTags[t]);
+        tag = $tagObject.prop('tagName').toLowerCase();
         rule = new Drupal.FilterHTMLRule();
         rule.restrictedTags.tags = [tag];
-        attributes = node.attributes;
+        attributes = $tagObject.prop('attributes');
 
         for (var i = 0; i < attributes.length; i++) {
-          attribute = attributes.item(i);
           var attributeName = attribute.nodeName;
 
           if (attributeName === 'class') {
