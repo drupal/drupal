@@ -20,7 +20,7 @@ class JavascriptStatesTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['form_test'];
+  protected static $modules = ['form_test', 'ajax_forms_test'];
 
   /**
    * {@inheritdoc}
@@ -320,6 +320,47 @@ class JavascriptStatesTest extends WebDriverTestBase {
     // Change state: fill the textfield.
     $textfield_trigger->setValue('filled');
     $this->assertTrue($item_visible_value2_and_textfield->isVisible());
+  }
+
+  /**
+   * Tests form states in form with ajax submit.
+   */
+  public function testAjaxJavascriptStates() {
+    $this->drupalGet('ajax_forms_test_states_form');
+    $page = $this->getSession()->getPage();
+
+    // Make sure that before ajax request behaviour is as expected.
+    $page->selectFieldOption('num', 'Second');
+    $page->selectFieldOption('color', 'Green');
+    // Field that is dependent on the above selections of radios is visible.
+    $textfield4 = $this->assertSession()->elementExists('css', '#edit-textfield4');
+    $this->assertTrue($textfield4->isVisible());
+    // Another (random) field is invisible.
+    $textfield1 = $this->assertSession()->elementExists('css', '#edit-textfield1');
+    $this->assertFalse($textfield1->isVisible());
+    // The extra textfields are not added on first form load.
+    $this->assertSession()->elementNotExists('xpath', '//div[@id="states-bug-data-wrapper"]//input[@data-drupal-selector="edit-extra-textfield4"]');
+
+    // Now trigger AJAX submit.
+    $submit = $page->findButton('edit-submit');
+    $submit->click();
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    // Extra textfields are now added (selected with xpath because IDs are
+    // variable); their shown/hidden states are the same as the original ones.
+    $extra_textfield4 = $this->assertSession()->elementExists('xpath', '//div[@id="states-bug-data-wrapper"]//input[@data-drupal-selector="edit-extra-textfield4"]');
+    $this->assertTrue($extra_textfield4->isVisible());
+    $extra_textfield1 = $this->assertSession()->elementExists('xpath', '//div[@id="states-bug-data-wrapper"]//input[@data-drupal-selector="edit-extra-textfield1"]');
+    $this->assertFalse($extra_textfield1->isVisible());
+
+    // Change values on which state of textfields depends.
+    $page->selectFieldOption('num', 'First');
+    // Field that was visible should not be now.
+    $this->assertFalse($textfield4->isVisible());
+    // According to state API rules for form fields, this one should be visible.
+    $textfield2 = $this->assertSession()->elementExists('css', '#edit-textfield2');
+    $this->assertTrue($textfield2->isVisible());
+    $extra_textfield2 = $this->assertSession()->elementExists('xpath', '//div[@id="states-bug-data-wrapper"]//input[@data-drupal-selector="edit-extra-textfield2"]');
+    $this->assertTrue($extra_textfield2->isVisible());
   }
 
 }
