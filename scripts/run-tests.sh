@@ -156,8 +156,8 @@ All arguments are long options.
 
   --verbose   Output detailed assertion messages in addition to summary.
 
-  --fail-only When paired with --verbose, do not print the detailed
-              messages for passing tests.
+  --fail-only When paired with --verbose, do not print the detailed messages
+              for passing tests.
 
   --cache     (Experimental) Cache result of setUp per installation profile.
               This will create one cache entry per profile and is generally safe
@@ -166,13 +166,12 @@ All arguments are long options.
 
   --cache-modules
 
-              (Experimnetal) Cache result of setUp per installation profile and
+              (Experimental) Cache result of setUp per installation profile and
               installed modules. This will create one copy of the database
               tables per module-combination and therefore this option should not
               be used when running all tests. This is most useful for local
-              development of individulat test cases.
-              This option implies --cache and to clear all cache entries use
-              --clean.
+              development of individual test cases. This option implies --cache.
+              To clear all cache entries use --clean.
 
   <test1>[,<test2>[,<test3> ...]]
 
