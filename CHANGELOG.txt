@@ -1,5 +1,8 @@
-Drupal 7.xx, xxxx-xx-xx (development version)
+Drupal 7.81, 2021-06-02
 -----------------------
+- Block Google FLoC by default
+- Testing and accessibility enhancements
+- Various bug fixes, optimizations and improvements
 
 Drupal 7.80, 2021-04-20
 -----------------------
