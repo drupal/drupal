@@ -6,9 +6,7 @@
 **/
 
 (function ($, Drupal) {
-  var states = {
-    postponed: []
-  };
+  var states = {};
   Drupal.states = states;
 
   function invert(a, invertState) {
@@ -54,10 +52,6 @@
       for (var i = 0; i < il; i++) {
         _loop(i);
       }
-
-      while (states.postponed.length) {
-        states.postponed.shift()();
-      }
     }
   };
 
@@ -72,6 +66,7 @@
     Object.keys(this.dependees || {}).forEach(function (selector) {
       _this.initializeDependee(selector, _this.dependees[selector]);
     });
+    this.reevaluate();
   };
 
   states.Dependent.comparisons = {
@@ -99,7 +94,8 @@
 
         state = states.State.sanitize(state);
         _this2.values[selector][state.name] = null;
-        $(selector).on("state:".concat(state), {
+        var $dependee = $(selector);
+        $dependee.on("state:".concat(state), {
           selector: selector,
           state: state
         }, function (e) {
@@ -109,6 +105,10 @@
           selector: selector,
           state: state
         });
+
+        if ($dependee.data("trigger:".concat(state.name)) !== undefined) {
+          _this2.values[selector][state.name] = $dependee.data("trigger:".concat(state.name));
+        }
       });
     },
     compare: function compare(reference, selector, state) {
@@ -206,7 +206,7 @@
     if (this.state in states.Trigger.states) {
       this.element = $(this.selector);
 
-      if (!this.element.data("trigger:".concat(this.state))) {
+      if (this.element.data("trigger:".concat(this.state)) === undefined) {
         this.initialize();
       }
     }
@@ -219,17 +219,17 @@
       var trigger = states.Trigger.states[this.state];
 
       if (typeof trigger === 'function') {
+        this.element.data("trigger:".concat(this.state), null);
         trigger.call(window, this.element);
       } else {
         Object.keys(trigger || {}).forEach(function (event) {
           _this3.defaultTrigger(event, trigger[event]);
         });
       }
-
-      this.element.data("trigger:".concat(this.state), true);
     },
     defaultTrigger: function defaultTrigger(event, valueFn) {
       var oldValue = valueFn.call(this.element);
+      this.element.data("trigger:".concat(this.state), oldValue);
       this.element.on(event, $.proxy(function (e) {
         var value = valueFn.call(this.element, e);
 
@@ -240,14 +240,8 @@
             oldValue: oldValue
           });
           oldValue = value;
+          this.element.data("trigger:".concat(this.state), value);
         }
-      }, this));
-      states.postponed.push($.proxy(function () {
-        this.element.trigger({
-          type: "state:".concat(this.state),
-          value: oldValue,
-          oldValue: null
-        });
       }, this));
     }
   };
