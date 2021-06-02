@@ -3,7 +3,6 @@
 namespace Drupal\Tests\Core\Theme;
 
 use Drupal\Core\Access\CsrfTokenGenerator;
-use Drupal\Core\Http\InputBag;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Theme\AjaxBasePageNegotiator;
 use Drupal\Tests\UnitTestCase;
@@ -56,7 +55,6 @@ class AjaxBasePageNegotiatorTest extends UnitTestCase {
    */
   public function testApplies($request_data, $expected) {
     $request = new Request([], $request_data);
-    $request->request = new InputBag($request->request->all());
     $route_match = RouteMatch::createFromRequest($request);
     $this->requestStack->push($request);
 
@@ -81,7 +79,6 @@ class AjaxBasePageNegotiatorTest extends UnitTestCase {
     $theme_token = 'valid_theme_token';
 
     $request = new Request([], ['ajax_page_state' => ['theme' => $theme, 'theme_token' => $theme_token]]);
-    $request->request = new InputBag($request->request->all());
     $this->requestStack->push($request);
     $route_match = RouteMatch::createFromRequest($request);
 
@@ -99,7 +96,6 @@ class AjaxBasePageNegotiatorTest extends UnitTestCase {
     $theme_token = 'invalid_theme_token';
 
     $request = new Request([], ['ajax_page_state' => ['theme' => $theme, 'theme_token' => $theme_token]]);
-    $request->request = new InputBag($request->request->all());
     $this->requestStack->push($request);
     $route_match = RouteMatch::createFromRequest($request);
 
@@ -119,7 +115,6 @@ class AjaxBasePageNegotiatorTest extends UnitTestCase {
     $theme_token = '';
 
     $request = new Request([], ['ajax_page_state' => ['theme' => $theme, 'theme_token' => $theme_token]]);
-    $request->request = new InputBag($request->request->all());
     $this->requestStack->push($request);
     $route_match = RouteMatch::createFromRequest($request);
 

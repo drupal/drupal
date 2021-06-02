@@ -146,10 +146,10 @@ class ResourceResponseSubscriber implements EventSubscriberInterface {
       'account' => NULL,
       'sparse_fieldset' => NULL,
     ];
-    if ($request->query->has('fields')) {
+    if ($request->query->get('fields')) {
       $context['sparse_fieldset'] = array_map(function ($item) {
         return explode(',', $item);
-      }, $request->query->all('fields'));
+      }, $request->query->get('fields'));
     }
     return $context;
   }
