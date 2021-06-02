@@ -466,7 +466,7 @@ jquery.cookie:
 jquery.show-hide:
   version: VERSION
   js:
-    misc/jquery.show-hidden.shim.js: {}
+    misc/jquery.show-hide.shim.js: {}
 
 jquery.farbtastic:
   remote: https://github.com/mattfarina/farbtastic
