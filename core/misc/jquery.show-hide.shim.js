@@ -5,7 +5,7 @@
 * @preserve
 **/
 
-(function ($, $$) {
+(function ($) {
   var originalHide = $.fn.hide;
 
   $.fn.hide = function () {
@@ -22,7 +22,7 @@
 
     this.each(function (index, item) {
       if (item instanceof Element) {
-        $$.hide.apply($$, [item].concat(args));
+        item.setAttribute('hidden', '');
       }
     });
     return this;
@@ -44,7 +44,7 @@
 
     this.each(function (index, item) {
       if (item instanceof Element) {
-        $$.show(item);
+        item.removeAttribute('hidden');
       }
     });
     return this;
@@ -60,7 +60,17 @@
     if (args.length === 0 || args.length === 1 && typeof args[0] === 'boolean') {
       this.each(function (index, item) {
         if (item instanceof Element) {
-          $$.toggle.apply($$, [item].concat(args));
+          if (args.length === 0) {
+            if (item.hasAttribute('hidden')) {
+              item.removeAttribute('hidden');
+            } else {
+              item.setAttribute('hidden', '');
+            }
+          } else if (args[0]) {
+            item.removeAttribute('hidden');
+          } else if (!args[0]) {
+            item.setAttribute('hidden', '');
+          }
         }
       });
       return this;

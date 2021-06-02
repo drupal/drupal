@@ -47,13 +47,15 @@
       this.each((index, item) => {
         if (item instanceof Element) {
           if (args.length === 0) {
-            item.hasAttribute('hidden')
-              ? item.removeAttribute('hidden')
-              : item.setAttribute('hidden', '');
-          } else {
-            $args[0]
-              ? item.removeAttribute('hidden')
-              : item.setAttribute('hidden', '');
+            if (item.hasAttribute('hidden')) {
+              item.removeAttribute('hidden');
+            } else {
+              item.setAttribute('hidden', '');
+            }
+          } else if (args[0]) {
+            item.removeAttribute('hidden');
+          } else if (!args[0]) {
+            item.setAttribute('hidden', '');
           }
         }
       });
