@@ -5,7 +5,8 @@ namespace Drupal\taxonomy\Plugin\migrate\source\d6;
 /**
  * Drupal 6 term/node relationships (non-current revision) source from database.
  *
- * For available configuration keys, refer to the parent classes:
+ * For available configuration keys, refer to the parent classes.
+ *
  * @see \Drupal\taxonomy\Plugin\migrate\source\d6\TermNode
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase

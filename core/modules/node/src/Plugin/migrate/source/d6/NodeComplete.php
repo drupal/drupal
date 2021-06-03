@@ -5,7 +5,8 @@ namespace Drupal\node\Plugin\migrate\source\d6;
 /**
  * Drupal 6 all node revisions source, including translation revisions.
  *
- * For available configuration keys, refer to the parent classes:
+ * For available configuration keys, refer to the parent classes.
+ *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  *

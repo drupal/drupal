@@ -9,7 +9,8 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 /**
  * Drupal 6 vocabularies source from database.
  *
- * For available configuration keys, refer to the parent classes:
+ * For available configuration keys, refer to the parent classes.
+ *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  *
