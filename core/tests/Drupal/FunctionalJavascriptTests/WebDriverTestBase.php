@@ -46,7 +46,7 @@ abstract class WebDriverTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
+  protected function setUp() {
     parent::setUp();
     $class = get_class($this);
 
@@ -137,8 +137,7 @@ abstract class WebDriverTestBase extends BrowserTestBase {
       }
       if ($this->failOnJavascriptConsoleErrors) {
         $errors = $this->getSession()->evaluateScript("JSON.parse(sessionStorage.getItem('js_testing_log_test.errors') || JSON.stringify([]))");
-        $this->assertEquals([], $errors, 'Javascript errors found.');
-        // trigger_error("Javascript errors, ". implode('::', $errors), E_USER_WARNING);
+        $this->assertEmpty($errors, "Javascript errors found:\n" . implode("\n", $errors));
       }
 
     }
