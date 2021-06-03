@@ -6,6 +6,8 @@ use Drupal\Core\Entity\Query\Sql\QueryAggregate as BaseQueryAggregate;
 
 /**
  * Alters aggregate entity queries to use a workspace revision if possible.
+ *
+ * @see \Drupal\workspaces\EntityQuery\Query
  */
 class QueryAggregate extends BaseQueryAggregate {
 

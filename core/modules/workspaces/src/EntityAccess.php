@@ -34,16 +34,26 @@ class EntityAccess implements ContainerInjectionInterface {
   protected $workspaceManager;
 
   /**
+   * The workspace association service.
+   *
+   * @var \Drupal\workspaces\WorkspaceAssociationInterface
+   */
+  protected $workspaceAssociation;
+
+  /**
    * Constructs a new EntityAccess instance.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager service.
    * @param \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager
    *   The workspace manager service.
+   * @param \Drupal\workspaces\WorkspaceAssociationInterface $workspace_association
+   *   The workspace association service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, WorkspaceManagerInterface $workspace_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, WorkspaceManagerInterface $workspace_manager, WorkspaceAssociationInterface $workspace_association) {
     $this->entityTypeManager = $entity_type_manager;
     $this->workspaceManager = $workspace_manager;
+    $this->workspaceAssociation = $workspace_association;
   }
 
   /**
@@ -52,7 +62,8 @@ class EntityAccess implements ContainerInjectionInterface {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity_type.manager'),
-      $container->get('workspaces.manager')
+      $container->get('workspaces.manager'),
+      $container->get('workspaces.association')
     );
   }
 
@@ -77,6 +88,16 @@ class EntityAccess implements ContainerInjectionInterface {
     // belong to a workspace.
     if ($entity->getEntityTypeId() === 'workspace' || !$this->workspaceManager->isEntityTypeSupported($entity->getEntityType()) || !$this->workspaceManager->hasActiveWorkspace()) {
       return AccessResult::neutral();
+    }
+
+    // Prevent the deletion of entities with a published default revision.
+    if ($operation === 'delete') {
+      $active_workspace = $this->workspaceManager->getActiveWorkspace();
+      $is_deletable = $this->workspaceAssociation->isEntityDeletable($entity, $active_workspace);
+
+      return AccessResult::forbiddenIf(!$is_deletable)
+        ->addCacheableDependency($entity)
+        ->addCacheableDependency($active_workspace);
     }
 
     return $this->bypassAccessResult($account);

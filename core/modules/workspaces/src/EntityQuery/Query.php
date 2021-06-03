@@ -6,6 +6,20 @@ use Drupal\Core\Entity\Query\Sql\Query as BaseQuery;
 
 /**
  * Alters entity queries to use a workspace revision instead of the default one.
+ *
+ * Code that needs to bypass this behavior and get the un-altered result of an
+ * entity query can either be executed outside of a workspace context:
+ * @code
+ * \Drupal::service('workspaces.manager')->executeOutsideWorkspace(function () {
+ *   // Execute an entity query that will return default revisions.
+ * });
+ * @endcode
+ * or pass 'skip_workspaces_alter' with a value of TRUE as query metadata:
+ * @code
+ * \Drupal::entityTypeManager()->getStorage('<entity_type_id>')->getQuery()
+ *   ->addMetaData('skip_workspaces_alter', TRUE)
+ *   ->execute;
+ * @endcode
  */
 class Query extends BaseQuery {
 

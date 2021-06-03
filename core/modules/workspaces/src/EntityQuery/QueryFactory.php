@@ -10,6 +10,8 @@ use Drupal\workspaces\WorkspaceManagerInterface;
 
 /**
  * Workspaces-specific entity query implementation.
+ *
+ * @see \Drupal\workspaces\EntityQuery\Query
  */
 class QueryFactory extends BaseQueryFactory {
 

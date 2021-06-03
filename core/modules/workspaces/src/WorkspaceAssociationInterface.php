@@ -116,4 +116,17 @@ interface WorkspaceAssociationInterface {
    */
   public function initializeWorkspace(WorkspaceInterface $workspace);
 
+  /**
+   * Determines whether an entity can be deleted in the given workspace.
+   *
+   * @param \Drupal\Core\Entity\RevisionableInterface $entity
+   *   The entity object which needs to be checked.
+   * @param \Drupal\workspaces\WorkspaceInterface $workspace
+   *   The workspace in which the entity needs to be checked.
+   *
+   * @return bool
+   *   TRUE if the entity can be deleted, FALSE otherwise.
+   */
+  public function isEntityDeletable(RevisionableInterface $entity, WorkspaceInterface $workspace);
+
 }

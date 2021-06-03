@@ -39,6 +39,16 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface {
   protected $workspaceRepository;
 
   /**
+   * A multidimensional array of entity IDs that can be deleted in a workspace.
+   *
+   * The first level keys are workspace IDs, the second level keys are entity
+   * type IDs, and the third level array contains entity IDs.
+   *
+   * @var array
+   */
+  protected $deletableEntityIds = [];
+
+  /**
    * Constructs a WorkspaceAssociation object.
    *
    * @param \Drupal\Core\Database\Connection $connection
@@ -114,6 +124,8 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface {
       watchdog_exception('workspaces', $e);
       throw $e;
     }
+
+    $this->deletableEntityIds = [];
   }
 
   /**
@@ -179,7 +191,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface {
     $query
       ->fields('revision', [$revision_id_field, $id_field])
       ->condition("revision.$workspace_field", $workspace_id)
-      ->where("[revision].[$revision_id_field] > [base].[$revision_id_field]")
+      ->where("[revision].[$revision_id_field] >= [base].[$revision_id_field]")
       ->orderBy("revision.$revision_id_field", 'ASC');
 
     // Restrict the result to a set of entity ID's if provided.
@@ -225,6 +237,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface {
     }
 
     $query->execute();
+    $this->deletableEntityIds = [];
   }
 
   /**
@@ -244,6 +257,64 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface {
       $indexed_rows->condition('workspace', $parent_id);
       $this->database->insert(static::TABLE)->from($indexed_rows)->execute();
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isEntityDeletable(RevisionableInterface $entity, WorkspaceInterface $workspace) {
+    // Initialize all the deletable entity IDs upfront for performance reasons.
+    // This is needed for admin listing pages, which usually do this check for
+    // at least 50 entities.
+    if (!isset($this->deletableEntityIds[$workspace->id()][$entity->getEntityTypeId()])) {
+      // First, get all the entity IDs for the entities where the default
+      // revision is unpublished.
+      $unpublished_default_revisions = $this->entityTypeManager->getStorage($entity->getEntityTypeId())
+        ->getQuery()
+        ->accessCheck(FALSE)
+        ->condition($entity->getEntityType()->getKey('published'), 0)
+        ->addMetaData('skip_workspaces_alter', TRUE)
+        ->execute();
+
+      // If there are no unpublished default revisions, the entity can not be
+      // deleted.
+      if (!$unpublished_default_revisions) {
+        $this->deletableEntityIds[$workspace->id()][$entity->getEntityTypeId()] = [];
+        return FALSE;
+      }
+
+      // Next, get the revisions count for all the entity IDs found above.
+      $id_key = $entity->getEntityType()->getKey('id');
+      $revision_id_key = $entity->getEntityType()->getKey('revision');
+      $revision_count_key = 'revision_count';
+      $revisions_count = $this->entityTypeManager->getStorage($entity->getEntityTypeId())
+        ->getAggregateQuery()
+        ->allRevisions()
+        ->accessCheck(FALSE)
+        ->condition($id_key, $unpublished_default_revisions, 'IN')
+        ->aggregate($revision_id_key, 'COUNT', NULL, $revision_count_key)
+        ->groupBy($id_key)
+        ->execute();
+
+      // Now get all the revisions associated with the given workspace.
+      $associated_revisions = $this->getAssociatedRevisions($workspace->id(), $entity->getEntityTypeId(), $unpublished_default_revisions);
+
+      // Create an array containing the number of workspace-specific revisions
+      // for each associated entity, keyed by entity ID.
+      $associated_revisions_count = array_count_values($associated_revisions) + array_fill_keys($unpublished_default_revisions, 0);
+
+      // Finally, compare the number of workspace-specific revisions with the
+      // total number of revisions for each entity. If they match, it means that
+      // the entity was created and edited in a single workspace, and therefore
+      // can be deleted.
+      foreach ($revisions_count as $revision_count_value) {
+        if ((int) $revision_count_value[$revision_count_key] === $associated_revisions_count[$revision_count_value[$id_key]]) {
+          $this->deletableEntityIds[$workspace->id()][$entity->getEntityTypeId()][$revision_count_value[$id_key]] = $revision_count_value[$id_key];
+        }
+      }
+    }
+
+    return isset($this->deletableEntityIds[$workspace->id()][$entity->getEntityTypeId()][$entity->id()]);
   }
 
 }
