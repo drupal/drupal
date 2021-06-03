@@ -88,16 +88,16 @@ class WorkspaceEntityDeleteTest extends BrowserTestBase {
 
     // Edit $unpublished_stage in Dev and check that it is no longer deletable
     // in Stage.
-    $this->drupalPostForm($unpublished_stage->toUrl('edit-form')->toString(), [], 'Save');
+    $this->submitForm([], 'Save');
     $this->switchToWorkspace($stage);
     $this->drupalGet('admin/content');
     $assert_session->linkByHrefNotExists($unpublished_stage->toUrl('delete-form')->toString());
 
     // Add a new revision for each node and check that their 'deletable' status
     // remains unchanged.
-    $this->drupalPostForm($published_live->toUrl('edit-form')->toString(), [], 'Save');
-    $this->drupalPostForm($unpublished_live->toUrl('edit-form')->toString(), [], 'Save');
-    $this->drupalPostForm($published_stage->toUrl('edit-form')->toString(), [], 'Save');
+    $this->submitForm([], 'Save');
+    $this->submitForm([], 'Save');
+    $this->submitForm([], 'Save');
 
     $this->drupalGet('admin/content');
     $assert_session->linkByHrefNotExists($published_live->toUrl('delete-form')->toString());
