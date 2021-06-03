@@ -7,7 +7,8 @@ use Drupal\migrate_drupal\Plugin\migrate\source\Variable;
 /**
  * Drupal 6/7 contact settings source from database.
  *
- * For available configuration keys, refer to the parent classes:
+ * For available configuration keys, refer to the parent classes.
+ *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  *

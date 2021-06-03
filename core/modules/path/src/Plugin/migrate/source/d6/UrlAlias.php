@@ -7,7 +7,8 @@ use Drupal\path\Plugin\migrate\source\UrlAliasBase;
 /**
  * Drupal 6 URL aliases source from database.
  *
- * For available configuration keys, refer to the parent classes:
+ * For available configuration keys, refer to the parent classes.
+ *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  *
