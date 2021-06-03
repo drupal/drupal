@@ -8,7 +8,8 @@ use Drupal\migrate\Row;
 /**
  * Drupal 7 all node revisions source, including translation revisions.
  *
- * For available configuration keys, refer to the parent classes:
+ * For available configuration keys, refer to the parent classes.
+ *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  *

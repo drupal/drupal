@@ -25,7 +25,8 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  * the source database. Source rows include only terms that belongs to
  * vocabulary with 'vid' equal 7.
  *
- * For additional configuration keys, refer to the parent classes:
+ * For additional configuration keys, refer to the parent classes.
+ *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  *
