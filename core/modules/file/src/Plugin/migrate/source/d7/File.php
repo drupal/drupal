@@ -27,6 +27,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  * @see d7_file.yml
  *
  * For additional configuration keys, refer to the parent classes.
+ *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  *
