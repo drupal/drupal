@@ -3,7 +3,7 @@
  * Extends table select functionality for Claro.
  */
 
-(($, Drupal) => {
+(($, Drupal, { tabbable }) => {
   Drupal.ClaroBulkActions = class {
     constructor(bulkActions) {
       this.bulkActions = bulkActions;
@@ -17,7 +17,7 @@
       this.selectAll = this.form.querySelectorAll(
         '.select-all > [type="checkbox"]',
       );
-      this.$tabbable = $(this.form).find(':tabbable');
+      this.$tabbable = $(tabbable(this.form));
       this.bulkActionsSticky = false;
       this.scrollingTimeout = '';
       this.ignoreScrollEvent = false;
@@ -69,7 +69,7 @@
         // this spacer is beneath the viewport. If an element beneath
         // the viewport receives focus and the previously focused element was
         // above the spacer, some browsers have difficulty determining how much
-        // scrolling is neccessary to bring the newly focused element into view.
+        // scrolling is necessary to bring the newly focused element into view.
         // To prevent this potential miscalculation, the spacer is momentarily
         // removed when blur occurs on rows preceding it. The spacer is
         // reintroduced immediately after the next item receives focus.
@@ -218,7 +218,7 @@
                 row.parentNode.insertBefore(spacer, row);
 
                 // Will be used to determine if a scroll position change
-                // occured due to adding the spacer.
+                // occurred due to adding the spacer.
                 const newScrollTop =
                   window.pageYOffset || document.documentElement.scrollTop;
 
@@ -369,4 +369,4 @@
       );
     },
   };
-})(jQuery, Drupal);
+})(jQuery, Drupal, window.tabbable);

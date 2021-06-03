@@ -11,7 +11,9 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-(function ($, Drupal) {
+(function ($, Drupal, _ref) {
+  var tabbable = _ref.tabbable;
+
   Drupal.ClaroBulkActions = function () {
     function _class(bulkActions) {
       var _this = this;
@@ -25,7 +27,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       });
       this.checkboxes = this.form.querySelectorAll('[class$="bulk-form"]:not(.select-all) input[type="checkbox"]');
       this.selectAll = this.form.querySelectorAll('.select-all > [type="checkbox"]');
-      this.$tabbable = $(this.form).find(':tabbable');
+      this.$tabbable = $(tabbable(this.form));
       this.bulkActionsSticky = false;
       this.scrollingTimeout = '';
       this.ignoreScrollEvent = false;
@@ -221,4 +223,4 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       });
     }
   };
-})(jQuery, Drupal);
+})(jQuery, Drupal, window.tabbable);

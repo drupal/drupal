@@ -310,7 +310,7 @@ tableselect:
     - core/drupal.debounce
     - core/drupal.nodelist.foreach
     - core/drupal.element.closest
-    - tabbable.jquery.shim
+    - core/tabbable
 
 classy.book-navigation:
   version: VERSION
