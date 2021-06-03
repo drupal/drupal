@@ -299,6 +299,19 @@ filter:
     component:
       css/theme/filter.theme.css: {}
 
+tableselect:
+  version: VERSION
+  js:
+    js/tableselect.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupal.announce
+    - core/drupal.debounce
+    - core/drupal.nodelist.foreach
+    - core/drupal.element.closest
+    - tabbable.jquery.shim
+
 classy.book-navigation:
   version: VERSION
   css:
