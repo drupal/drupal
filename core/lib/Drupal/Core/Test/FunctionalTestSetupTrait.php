@@ -587,7 +587,7 @@ trait FunctionalTestSetupTrait {
     $valid_url_schemes = ['http', 'https'];
     if (!in_array(strtolower($parsed_url['scheme']), $valid_url_schemes)) {
       throw new \Exception(
-        'You must provide valid SIMPLETEST_BASE_URL environment variable to run some PHPUnit based functional tests.'
+        'You must provide valid scheme for the SIMPLETEST_BASE_URL environment variable. Valid schems are: http, https.'
       );
     }
 
