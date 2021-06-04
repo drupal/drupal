@@ -317,11 +317,14 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
       '#attached' => [
         'library' => ['media_library/widget'],
       ],
-      '#element_validate' => [[static::class, 'validateRequired']],
       '#theme_wrappers' => [
         'fieldset__media_library_widget',
       ],
     ];
+
+    if ($this->fieldDefinition->isRequired()) {
+      $element['#element_validate'][] = [static::class, 'validateRequired'];
+    }
 
     // When the list of allowed types in the field configuration is null,
     // ::getAllowedMediaTypeIdsSorted() returns all existing media types. When
@@ -945,8 +948,6 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
   /**
    * Validates whether the widget is required and contains values.
    *
-   * This callback checks if the media library widget is required and
-   *
    * @param array $element
    *   The form element.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
@@ -964,7 +965,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
     // Trigger error if the field is required and no media is present. Although
     // the Form API's default validation would also catch this, the validation
     // error message is too vague, so a more precise one is provided here.
-    if (!empty($element['#required']) && $field_state['items_count'] === 0) {
+    if ($field_state['items_count'] === 0) {
       $form_state->setError($element, new TranslatableMarkup('@name field is required.', ['@name' => $element['#title']]));
     }
   }
