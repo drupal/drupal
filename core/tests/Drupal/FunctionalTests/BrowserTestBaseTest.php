@@ -845,7 +845,6 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $assert_session->pageContainsNoDuplicateId();
   }
 
-
   /**
    * Tests assertEscaped() and assertUnescaped().
    *
