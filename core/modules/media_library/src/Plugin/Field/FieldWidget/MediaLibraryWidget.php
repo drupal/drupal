@@ -18,7 +18,6 @@ use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\field_ui\FieldUI;
 use Drupal\media\Entity\Media;
@@ -966,7 +965,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
     // the Form API's default validation would also catch this, the validation
     // error message is too vague, so a more precise one is provided here.
     if ($field_state['items_count'] === 0) {
-      $form_state->setError($element, new TranslatableMarkup('@name field is required.', ['@name' => $element['#title']]));
+      $form_state->setError($element, t('@name field is required.', ['@name' => $element['#title']]));
     }
   }
 

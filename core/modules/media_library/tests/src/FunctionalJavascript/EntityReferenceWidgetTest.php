@@ -465,7 +465,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     $this->drupalGet('node/add/basic_page');
 
     $page->fillField('title[0][value]', 'My page');
-    $page->clickLink('Save');
+    $page->pressButton('Save');
 
     // Check that a clear error message is shown.
     $assert_session->pageTextNotContains('This value should not be null');
