@@ -266,8 +266,7 @@ class MenuRouterTest extends BrowserTestBase {
   }
 
   /**
-   * Tests the theme negotiation when it is set to use an administrative
-   * theme.
+   * Tests the theme negotiation when it is set to use an administrative theme.
    */
   protected function doTestThemeCallbackAdministrative() {
     $this->drupalGet('menu-test/theme-callback/use-admin-theme');

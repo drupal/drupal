@@ -192,8 +192,7 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
   }
 
   /**
-   * Tests that the delete all operation is propagated to all backends in the
-   * chain.
+   * Tests the delete all operation is propagated to all backends in the chain.
    */
   public function testDeleteAllPropagation() {
     // Set both expiring and permanent keys.

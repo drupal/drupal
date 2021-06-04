@@ -451,8 +451,7 @@ class UrlGeneratorTest extends UnitTestCase {
   }
 
   /**
-   * Tests that the 'scheme' route requirement is respected during url
-   * generation.
+   * Tests the 'scheme' route requirement is respected during url generation.
    */
   public function testUrlGenerationWithHttpsRequirement() {
     $url = $this->generator->generate('test_4', [], TRUE);
