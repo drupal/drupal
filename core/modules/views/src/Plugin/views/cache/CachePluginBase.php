@@ -80,11 +80,10 @@ abstract class CachePluginBase extends PluginBase {
   }
 
   /**
-   * Determine cache expiration time.
+   * Gets the maximum expiration time in the cache table of the cache type.
    *
-   * Plugins must override this to implement expiration in the cache table. The
-   * default is CACHE_PERMANENT, indicating that the item will not be removed
-   * automatically from cache.
+   * Plugins must override this to set a cache expiration time that is different
+   * than the default. Defaults to Cache::CACHE_PERMANENT.
    *
    * @param $type
    *   The cache type, either 'query', 'result'.
