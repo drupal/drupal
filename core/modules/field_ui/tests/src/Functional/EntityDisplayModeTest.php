@@ -52,7 +52,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
     $this->drupalLogin($this->drupalCreateUser(['administer display modes']));
     $this->drupalGet('admin/structure/display-modes/view');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('Add view mode');
+    $this->assertSession()->pageTextContains('Add view mode');
     $this->assertSession()->linkByHrefExists('admin/structure/display-modes/view/add');
     $this->assertSession()->linkByHrefExists('admin/structure/display-modes/view/add/entity_test');
 
@@ -107,7 +107,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
     $this->drupalLogin($this->drupalCreateUser(['administer display modes']));
     $this->drupalGet('admin/structure/display-modes/form');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('Add form mode');
+    $this->assertSession()->pageTextContains('Add form mode');
     $this->assertSession()->linkByHrefExists('admin/structure/display-modes/form/add');
 
     $this->drupalGet('admin/structure/display-modes/form/add/entity_test_no_label');
@@ -192,7 +192,8 @@ class EntityDisplayModeTest extends BrowserTestBase {
     $edit = [
       'label' => 'Breezer',
     ];
-    $this->drupalPostForm('admin/structure/display-modes/view/manage/node.teaser', $edit, 'Save');
+    $this->drupalGet('admin/structure/display-modes/view/manage/node.teaser');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('Saved the Breezer view mode.');
 
     // Re-open the display settings for the article content type and verify

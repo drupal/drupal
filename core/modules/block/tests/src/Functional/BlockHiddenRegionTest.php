@@ -51,7 +51,7 @@ class BlockHiddenRegionTest extends BrowserTestBase {
 
     // Ensure that the search form block is displayed.
     $this->drupalGet('');
-    $this->assertText('Search');
+    $this->assertSession()->pageTextContains('Search');
 
     // Install "block_test_theme" and set it as the default theme.
     $theme = 'block_test_theme';
@@ -71,7 +71,7 @@ class BlockHiddenRegionTest extends BrowserTestBase {
 
     // Ensure that the search form block is displayed.
     $this->drupalGet('');
-    $this->assertText('Search');
+    $this->assertSession()->pageTextContains('Search');
   }
 
 }

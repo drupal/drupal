@@ -37,8 +37,9 @@ class DateFormatsMachineNameTest extends BrowserTestBase {
       'id' => 'something.bad',
       'date_format_pattern' => 'Y-m-d',
     ];
-    $this->drupalPostForm('admin/config/regional/date-time/formats/add', $edit, 'Add format');
-    $this->assertText('The machine-readable name must be unique, and can only contain lowercase letters, numbers, and underscores. Additionally, it can not be the reserved word "custom".');
+    $this->drupalGet('admin/config/regional/date-time/formats/add');
+    $this->submitForm($edit, 'Add format');
+    $this->assertSession()->pageTextContains('The machine-readable name must be unique, and can only contain lowercase letters, numbers, and underscores. Additionally, it can not be the reserved word "custom".');
 
     // Try to create a date format with the reserved machine name "custom".
     $edit = [
@@ -46,8 +47,9 @@ class DateFormatsMachineNameTest extends BrowserTestBase {
       'id' => 'custom',
       'date_format_pattern' => 'Y-m-d',
     ];
-    $this->drupalPostForm('admin/config/regional/date-time/formats/add', $edit, 'Add format');
-    $this->assertText('The machine-readable name must be unique, and can only contain lowercase letters, numbers, and underscores. Additionally, it can not be the reserved word "custom".');
+    $this->drupalGet('admin/config/regional/date-time/formats/add');
+    $this->submitForm($edit, 'Add format');
+    $this->assertSession()->pageTextContains('The machine-readable name must be unique, and can only contain lowercase letters, numbers, and underscores. Additionally, it can not be the reserved word "custom".');
 
     // Try to create a date format with a machine name, "fallback", that
     // already exists.
@@ -56,8 +58,9 @@ class DateFormatsMachineNameTest extends BrowserTestBase {
       'id' => 'fallback',
       'date_format_pattern' => 'j/m/Y',
     ];
-    $this->drupalPostForm('admin/config/regional/date-time/formats/add', $edit, 'Add format');
-    $this->assertText('The machine-readable name is already in use. It must be unique.');
+    $this->drupalGet('admin/config/regional/date-time/formats/add');
+    $this->submitForm($edit, 'Add format');
+    $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
 
     // Create a date format with a machine name distinct from the previous two.
     $id = mb_strtolower($this->randomMachineName(16));
@@ -66,8 +69,9 @@ class DateFormatsMachineNameTest extends BrowserTestBase {
       'id' => $id,
       'date_format_pattern' => 'd/m/Y',
     ];
-    $this->drupalPostForm('admin/config/regional/date-time/formats/add', $edit, 'Add format');
-    $this->assertText('Custom date format added.');
+    $this->drupalGet('admin/config/regional/date-time/formats/add');
+    $this->submitForm($edit, 'Add format');
+    $this->assertSession()->pageTextContains('Custom date format added.');
 
     // Try to create a date format with same machine name as the previous one.
     $edit = [
@@ -75,8 +79,9 @@ class DateFormatsMachineNameTest extends BrowserTestBase {
       'id' => $id,
       'date_format_pattern' => 'd-m-Y',
     ];
-    $this->drupalPostForm('admin/config/regional/date-time/formats/add', $edit, 'Add format');
-    $this->assertText('The machine-readable name is already in use. It must be unique.');
+    $this->drupalGet('admin/config/regional/date-time/formats/add');
+    $this->submitForm($edit, 'Add format');
+    $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
   }
 
 }

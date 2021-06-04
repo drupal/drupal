@@ -163,7 +163,8 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends BrowserTestBase {
 
     // Disable translation for referrer content type.
     $this->drupalLogin($this->rootUser);
-    $this->drupalPostForm('admin/config/regional/content-language', ['settings[node][referrer][translatable]' => FALSE], 'Save configuration');
+    $this->drupalGet('admin/config/regional/content-language');
+    $this->submitForm(['settings[node][referrer][translatable]' => FALSE], 'Save configuration');
     $this->drupalLogout();
 
     // Create a referrer entity without translation.
@@ -180,13 +181,13 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends BrowserTestBase {
     $translation_url = $this->referrerEntity->toUrl('canonical', ['language' => ConfigurableLanguage::load($this->translateToLangcode)]);
 
     $this->drupalGet($url);
-    $this->assertText($this->labelOfNotTranslatedReference);
-    $this->assertText($this->originalLabel);
+    $this->assertSession()->pageTextContains($this->labelOfNotTranslatedReference);
+    $this->assertSession()->pageTextContains($this->originalLabel);
     $this->assertNoText($this->translatedLabel);
     $this->drupalGet($translation_url);
-    $this->assertText($this->labelOfNotTranslatedReference);
+    $this->assertSession()->pageTextContains($this->labelOfNotTranslatedReference);
     $this->assertNoText($this->originalLabel);
-    $this->assertText($this->translatedLabel);
+    $this->assertSession()->pageTextContains($this->translatedLabel);
   }
 
   /**

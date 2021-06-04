@@ -90,7 +90,8 @@
           // CKEDITOR.style is an immutable object: we cannot modify its
           // definition to extend requiredContent. Hence we get the definition,
           // modify it, and pass it to a new CKEDITOR.style instance.
-          const requiredContent = widgetDefinition.requiredContent.getDefinition();
+          const requiredContent =
+            widgetDefinition.requiredContent.getDefinition();
           requiredContent.attributes['data-align'] = '';
           requiredContent.attributes['data-caption'] = '';
           widgetDefinition.requiredContent = new CKEDITOR.style(
@@ -284,8 +285,8 @@
               // widget.data.hasCaption as "changed" (e.g. when hasCaption === 0
               // instead of hasCaption === false). This causes image2's "state
               // shifter" to enter the wrong branch of the algorithm and blow up.
-              dialogReturnValues.attributes.hasCaption = !!dialogReturnValues
-                .attributes.hasCaption;
+              dialogReturnValues.attributes.hasCaption =
+                !!dialogReturnValues.attributes.hasCaption;
 
               const actualWidget = saveCallback(dialogReturnValues);
 

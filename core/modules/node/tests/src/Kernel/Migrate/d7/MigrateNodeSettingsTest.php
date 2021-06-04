@@ -34,7 +34,7 @@ class MigrateNodeSettingsTest extends MigrateDrupal7TestBase {
    */
   public function testAggregatorSettings() {
     $config = $this->config('node.settings');
-    $this->assertEqual(1, $config->get('use_admin_theme'));
+    $this->assertEquals(1, $config->get('use_admin_theme'));
   }
 
 }

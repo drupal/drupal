@@ -58,7 +58,7 @@ class ViewsThemeIntegrationTest extends ViewTestBase {
     $this->config('system.theme')
       ->set('default', 'test_basetheme')
       ->save();
-    $this->assertEqual('test_basetheme', $this->config('system.theme')->get('default'));
+    $this->assertEquals('test_basetheme', $this->config('system.theme')->get('default'));
 
     // Make sure a views rendered page is touched.
     $this->drupalGet('test_page_display_200');
@@ -71,7 +71,7 @@ class ViewsThemeIntegrationTest extends ViewTestBase {
     $this->config('system.theme')
       ->set('default', 'test_subtheme')
       ->save();
-    $this->assertEqual('test_subtheme', $this->config('system.theme')->get('default'));
+    $this->assertEquals('test_subtheme', $this->config('system.theme')->get('default'));
 
     // Make sure a views rendered page is touched.
     $this->drupalGet('test_page_display_200');

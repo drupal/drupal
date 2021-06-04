@@ -56,7 +56,7 @@ class TermTranslationTest extends TaxonomyTestBase {
   }
 
   /**
-   * Test translated breadcrumbs.
+   * Tests translated breadcrumbs.
    */
   public function testTranslatedBreadcrumbs() {
     // Ensure non-translated breadcrumb is correct.
@@ -90,7 +90,7 @@ class TermTranslationTest extends TaxonomyTestBase {
   }
 
   /**
-   * Test translation of terms are showed in the node.
+   * Tests translation of terms are showed in the node.
    */
   public function testTermsTranslation() {
 
@@ -106,15 +106,15 @@ class TermTranslationTest extends TaxonomyTestBase {
 
     // Test terms are listed.
     $this->drupalget('node/add/article');
-    $this->assertText('one');
-    $this->assertText('two');
-    $this->assertText('three');
+    $this->assertSession()->pageTextContains('one');
+    $this->assertSession()->pageTextContains('two');
+    $this->assertSession()->pageTextContains('three');
 
     // Test terms translated are listed.
     $this->drupalget('hu/node/add/article');
-    $this->assertText('translatedOne');
-    $this->assertText('translatedTwo');
-    $this->assertText('translatedThree');
+    $this->assertSession()->pageTextContains('translatedOne');
+    $this->assertSession()->pageTextContains('translatedTwo');
+    $this->assertSession()->pageTextContains('translatedThree');
   }
 
   /**

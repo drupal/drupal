@@ -26,6 +26,6 @@ function config_entity_static_cache_test_config_test_load($entities) {
  * Implements hook_entity_type_alter().
  */
 function config_entity_static_cache_test_entity_type_alter(array &$entity_types) {
-  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   $entity_types['config_test']->set('static_cache', TRUE);
 }

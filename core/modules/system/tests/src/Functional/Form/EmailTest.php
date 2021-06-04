@@ -31,24 +31,27 @@ class EmailTest extends BrowserTestBase {
     $edit = [];
     $edit['email'] = 'invalid';
     $edit['email_required'] = ' ';
-    $this->drupalPostForm('form-test/email', $edit, 'Submit');
+    $this->drupalGet('form-test/email');
+    $this->submitForm($edit, 'Submit');
     $this->assertRaw(t('The email address %mail is not valid.', ['%mail' => 'invalid']));
     $this->assertRaw(t('@name field is required.', ['@name' => 'Address']));
 
     $edit = [];
     $edit['email_required'] = '  foo.bar@example.com ';
-    $this->drupalPostForm('form-test/email', $edit, 'Submit');
+    $this->drupalGet('form-test/email');
+    $this->submitForm($edit, 'Submit');
     $values = Json::decode($this->getSession()->getPage()->getContent());
     $this->assertSame('', $values['email']);
-    $this->assertEqual('foo.bar@example.com', $values['email_required']);
+    $this->assertEquals('foo.bar@example.com', $values['email_required']);
 
     $edit = [];
     $edit['email'] = 'foo@example.com';
     $edit['email_required'] = 'example@drupal.org';
-    $this->drupalPostForm('form-test/email', $edit, 'Submit');
+    $this->drupalGet('form-test/email');
+    $this->submitForm($edit, 'Submit');
     $values = Json::decode($this->getSession()->getPage()->getContent());
-    $this->assertEqual('foo@example.com', $values['email']);
-    $this->assertEqual('example@drupal.org', $values['email_required']);
+    $this->assertEquals('foo@example.com', $values['email']);
+    $this->assertEquals('example@drupal.org', $values['email_required']);
   }
 
 }

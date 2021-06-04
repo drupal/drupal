@@ -68,8 +68,10 @@
    *   This document's body element.
    */
   function initQuickEdit(bodyElement) {
-    Drupal.quickedit.collections.entities = new Drupal.quickedit.EntityCollection();
-    Drupal.quickedit.collections.fields = new Drupal.quickedit.FieldCollection();
+    Drupal.quickedit.collections.entities =
+      new Drupal.quickedit.EntityCollection();
+    Drupal.quickedit.collections.fields =
+      new Drupal.quickedit.FieldCollection();
 
     // Instantiate AppModel (application state) and AppView, which is the
     // controller of the whole in-place editing experience.
@@ -701,9 +703,8 @@
 
   // Clear the Quick Edit metadata cache whenever the current user's set of
   // permissions changes.
-  const permissionsHashKey = Drupal.quickedit.metadata._prefixFieldID(
-    'permissionsHash',
-  );
+  const permissionsHashKey =
+    Drupal.quickedit.metadata._prefixFieldID('permissionsHash');
   const permissionsHashValue = storage.getItem(permissionsHashKey);
   const permissionsHash = drupalSettings.user.permissionsHash;
   if (permissionsHashValue !== permissionsHash) {

@@ -110,7 +110,7 @@ abstract class FileTestBase extends KernelTestBase {
     if (!isset($message)) {
       $message = t('Expected file permission to be %expected, actually were %actual.', ['%actual' => decoct($actual_mode), '%expected' => decoct($expected_mode)]);
     }
-    $this->assertEqual($expected_mode, $actual_mode, $message);
+    $this->assertEquals($expected_mode, $actual_mode, $message);
   }
 
   /**
@@ -146,7 +146,7 @@ abstract class FileTestBase extends KernelTestBase {
     if (!isset($message)) {
       $message = t('Expected directory permission to be %expected, actually were %actual.', ['%actual' => decoct($actual_mode), '%expected' => decoct($expected_mode)]);
     }
-    $this->assertEqual($expected_mode, $actual_mode, $message);
+    $this->assertEquals($expected_mode, $actual_mode, $message);
   }
 
   /**

@@ -65,7 +65,7 @@ class ViewsIntegrationTest extends ViewsKernelTestBase {
       }
       $message_vars = $entry['variables'];
       unset($message_vars['link']);
-      $this->assertEqual(new FormattableMarkup($entry['message'], $message_vars), $view->style_plugin->getField($index, 'message'));
+      $this->assertEquals(new FormattableMarkup($entry['message'], $message_vars), $view->style_plugin->getField($index, 'message'));
       $link_field = $view->style_plugin->getField($index, 'link');
       // The 3rd entry contains some unsafe markup that needs to get filtered.
       if ($index == 2) {
@@ -73,7 +73,7 @@ class ViewsIntegrationTest extends ViewsKernelTestBase {
         // that some filtering actually happened.
         $this->assertNotEquals($entry['variables']['link'], $link_field);
       }
-      $this->assertEqual(Xss::filterAdmin($entry['variables']['link']), $link_field);
+      $this->assertEquals(Xss::filterAdmin($entry['variables']['link']), $link_field);
     }
 
     // Disable replacing variables and check that the tokens aren't replaced.
@@ -84,7 +84,7 @@ class ViewsIntegrationTest extends ViewsKernelTestBase {
     $view->initStyle();
     $view->field['message']->options['replace_variables'] = FALSE;
     foreach ($entries as $index => $entry) {
-      $this->assertEqual($entry['message'], $view->style_plugin->getField($index, 'message'));
+      $this->assertEquals($entry['message'], $view->style_plugin->getField($index, 'message'));
     }
   }
 
@@ -102,7 +102,7 @@ class ViewsIntegrationTest extends ViewsKernelTestBase {
   }
 
   /**
-   * Test views can be filtered by severity and log type.
+   * Tests views can be filtered by severity and log type.
    */
   public function testFiltering() {
     // Remove the watchdog entries added by the potential batch process.

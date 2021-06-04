@@ -58,12 +58,12 @@ class ViewsEscapingTest extends ViewTestBase {
     $this->config('system.theme')
       ->set('default', 'views_test_theme')
       ->save();
-    $this->assertEqual('views_test_theme', $this->config('system.theme')->get('default'));
+    $this->assertEquals('views_test_theme', $this->config('system.theme')->get('default'));
 
     $this->drupalGet('test_page_display_200');
 
     // Assert that we are using the correct template.
-    $this->assertText('force');
+    $this->assertSession()->pageTextContains('force');
 
     // Assert that there are no escaped '<'s characters.
     $this->assertSession()->assertNoEscaped('<');

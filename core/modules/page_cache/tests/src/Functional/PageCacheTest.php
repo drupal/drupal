@@ -47,7 +47,7 @@ class PageCacheTest extends BrowserTestBase {
   }
 
   /**
-   * Test that cache tags are properly persisted.
+   * Tests that cache tags are properly persisted.
    *
    * Since tag based invalidation works, we know that our tag properly
    * persisted.
@@ -84,7 +84,7 @@ class PageCacheTest extends BrowserTestBase {
   }
 
   /**
-   * Test that the page cache doesn't depend on cacheability headers.
+   * Tests that the page cache doesn't depend on cacheability headers.
    */
   public function testPageCacheTagsIndependentFromCacheabilityHeaders() {
     // Disable the cacheability headers.
@@ -326,7 +326,7 @@ class PageCacheTest extends BrowserTestBase {
 
     // 1. anonymous user, without permission.
     $this->drupalGet($content_url);
-    $this->assertText('Permission to pet llamas: no!');
+    $this->assertSession()->pageTextContains('Permission to pet llamas: no!');
     $this->assertCacheContext('user.permissions');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:user.role.anonymous');
     $this->drupalGet($route_access_url);
@@ -336,7 +336,7 @@ class PageCacheTest extends BrowserTestBase {
     // 2. anonymous user, with permission.
     user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['pet llamas']);
     $this->drupalGet($content_url);
-    $this->assertText('Permission to pet llamas: yes!');
+    $this->assertSession()->pageTextContains('Permission to pet llamas: yes!');
     $this->assertCacheContext('user.permissions');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:user.role.anonymous');
     $this->drupalGet($route_access_url);
@@ -347,7 +347,7 @@ class PageCacheTest extends BrowserTestBase {
     $auth_user = $this->drupalCreateUser();
     $this->drupalLogin($auth_user);
     $this->drupalGet($content_url);
-    $this->assertText('Permission to pet llamas: no!');
+    $this->assertSession()->pageTextContains('Permission to pet llamas: no!');
     $this->assertCacheContext('user.permissions');
     $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'config:user.role.authenticated');
     $this->drupalGet($route_access_url);
@@ -357,7 +357,7 @@ class PageCacheTest extends BrowserTestBase {
     // 4. authenticated user, with permission.
     user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ['pet llamas']);
     $this->drupalGet($content_url);
-    $this->assertText('Permission to pet llamas: yes!');
+    $this->assertSession()->pageTextContains('Permission to pet llamas: yes!');
     $this->assertCacheContext('user.permissions');
     $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'config:user.role.authenticated');
     $this->drupalGet($route_access_url);
@@ -469,7 +469,7 @@ class PageCacheTest extends BrowserTestBase {
   }
 
   /**
-   * Test the setting of forms to be immutable.
+   * Tests the setting of forms to be immutable.
    */
   public function testFormImmutability() {
     // Install the module that provides the test form.
@@ -481,7 +481,7 @@ class PageCacheTest extends BrowserTestBase {
 
     $this->drupalGet('page_cache_form_test_immutability');
 
-    $this->assertText("Immutable: TRUE");
+    $this->assertSession()->pageTextContains("Immutable: TRUE");
 
     // The immutable flag is set unconditionally by system_form_alter(), set
     // a flag to tell page_cache_form_test_module_implements_alter() to disable
@@ -492,7 +492,7 @@ class PageCacheTest extends BrowserTestBase {
 
     $this->drupalGet('page_cache_form_test_immutability');
 
-    $this->assertText("Immutable: FALSE");
+    $this->assertSession()->pageTextContains("Immutable: FALSE");
   }
 
   /**
@@ -559,26 +559,26 @@ class PageCacheTest extends BrowserTestBase {
     $response_body = $this->drupalGet($url_a);
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'MISS');
     $this->assertSession()->responseHeaderEquals('Foo', 'bar');
-    $this->assertEqual('The following header was set: <em class="placeholder">Foo</em>: <em class="placeholder">bar</em>', $response_body);
+    $this->assertEquals('The following header was set: <em class="placeholder">Foo</em>: <em class="placeholder">bar</em>', $response_body);
     $response = $client->request('HEAD', $url_a);
-    $this->assertEqual('HIT', $response->getHeaderLine('X-Drupal-Cache'), 'Page was cached.');
-    $this->assertEqual('bar', $response->getHeaderLine('Foo'), 'Custom header was sent.');
-    $this->assertEqual('', $response->getBody()->getContents());
+    $this->assertEquals('HIT', $response->getHeaderLine('X-Drupal-Cache'), 'Page was cached.');
+    $this->assertEquals('bar', $response->getHeaderLine('Foo'), 'Custom header was sent.');
+    $this->assertEquals('', $response->getBody()->getContents());
 
     // HEAD, then GET.
     $url_b = $this->buildUrl('system-test/set-header', ['query' => ['name' => 'Foo', 'value' => 'baz']]);
     $response = $client->request('HEAD', $url_b);
-    $this->assertEqual('MISS', $response->getHeaderLine('X-Drupal-Cache'), 'Page was not cached.');
-    $this->assertEqual('baz', $response->getHeaderLine('Foo'), 'Custom header was sent.');
-    $this->assertEqual('', $response->getBody()->getContents());
+    $this->assertEquals('MISS', $response->getHeaderLine('X-Drupal-Cache'), 'Page was not cached.');
+    $this->assertEquals('baz', $response->getHeaderLine('Foo'), 'Custom header was sent.');
+    $this->assertEquals('', $response->getBody()->getContents());
     $response_body = $this->drupalGet($url_b);
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
     $this->assertSession()->responseHeaderEquals('Foo', 'baz');
-    $this->assertEqual('The following header was set: <em class="placeholder">Foo</em>: <em class="placeholder">baz</em>', $response_body);
+    $this->assertEquals('The following header was set: <em class="placeholder">Foo</em>: <em class="placeholder">baz</em>', $response_body);
   }
 
   /**
-   * Test a cacheable response with custom cache control.
+   * Tests a cacheable response with custom cache control.
    */
   public function testCacheableWithCustomCacheControl() {
     $config = $this->config('system.performance');
@@ -591,7 +591,7 @@ class PageCacheTest extends BrowserTestBase {
   }
 
   /**
-   * Test that URLs are cached in a not normalized form.
+   * Tests that URLs are cached in a not normalized form.
    */
   public function testNoUrlNormalization() {
 

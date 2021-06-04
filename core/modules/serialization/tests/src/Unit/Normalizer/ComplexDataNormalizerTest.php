@@ -52,7 +52,7 @@ class ComplexDataNormalizerTest extends UnitTestCase {
   }
 
   /**
-   * Test normalizing complex data.
+   * Tests normalizing complex data.
    *
    * @covers ::normalize
    */
@@ -80,7 +80,7 @@ class ComplexDataNormalizerTest extends UnitTestCase {
   }
 
   /**
-   * Test normalize() where $object does not implement ComplexDataInterface.
+   * Tests normalize() where $object does not implement ComplexDataInterface.
    *
    * Normalizers extending ComplexDataNormalizer may have a different supported
    * class.

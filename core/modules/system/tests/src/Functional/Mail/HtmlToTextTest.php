@@ -57,11 +57,11 @@ class HtmlToTextTest extends BrowserTestBase {
     $tested_tags = implode(', ', array_unique($matches[1]));
     $message .= ' (' . $tested_tags . ')';
     $result = MailFormatHelper::htmlToText($html, $allowed_tags);
-    $this->assertEqual($text, $result, Html::escape($message));
+    $this->assertEquals($text, $result, Html::escape($message));
   }
 
   /**
-   * Test supported tags of \Drupal\Core\Mail\MailFormatHelper::htmlToText().
+   * Tests supported tags of \Drupal\Core\Mail\MailFormatHelper::htmlToText().
    */
   public function testTags() {
     global $base_path, $base_url;
@@ -190,7 +190,7 @@ class HtmlToTextTest extends BrowserTestBase {
   }
 
   /**
-   * Test that whitespace is collapsed.
+   * Tests that whitespace is collapsed.
    */
   public function testDrupalHtmltoTextCollapsesWhitespace() {
     $input = "<p>Drupal  Drupal\n\nDrupal<pre>Drupal  Drupal\n\nDrupal</pre>Drupal  Drupal\n\nDrupal</p>";
@@ -205,9 +205,9 @@ class HtmlToTextTest extends BrowserTestBase {
   }
 
   /**
-   * Test Drupal HTML to text block tag to new line.
+   * Tests Drupal HTML to text block tag to new line.
    *
-   * Test that text separated by block-level tags in HTML get separated by
+   * Tests that text separated by block-level tags in HTML get separated by
    * (at least) a newline in the plaintext version.
    */
   public function testDrupalHtmlToTextBlockTagToNewline() {
@@ -244,7 +244,7 @@ EOT;
   }
 
   /**
-   * Test that headers are properly separated from surrounding text.
+   * Tests that headers are properly separated from surrounding text.
    */
   public function testHeaderSeparation() {
     $html = 'Drupal<h1>Drupal</h1>Drupal';
@@ -269,7 +269,7 @@ EOT;
   }
 
   /**
-   * Test that footnote references are properly generated.
+   * Tests that footnote references are properly generated.
    */
   public function testFootnoteReferences() {
     global $base_path, $base_url;
@@ -298,9 +298,9 @@ EOT;
   }
 
   /**
-   * Test Drupal HTML to text paragraphs.
+   * Tests Drupal HTML to text paragraphs.
    *
-   * Test that combinations of paragraph breaks, line breaks, linefeeds,
+   * Tests that combinations of paragraph breaks, line breaks, linefeeds,
    * and spaces are properly handled.
    */
   public function testDrupalHtmlToTextParagraphs() {
@@ -370,11 +370,11 @@ EOT;
   public function testUsenetSignature() {
     $text = "Hi there!\n-- \nHerp Derp";
     $mail_lines = explode("\n", MailFormatHelper::wrapMail($text));
-    $this->assertEqual("-- ", $mail_lines[1], 'Trailing whitespace not removed for dash-dash-space signatures.');
+    $this->assertEquals("-- ", $mail_lines[1], 'Trailing whitespace not removed for dash-dash-space signatures.');
 
     $text = "Hi there!\n--  \nHerp Derp";
     $mail_lines = explode("\n", MailFormatHelper::wrapMail($text));
-    $this->assertEqual("--", $mail_lines[1], 'Trailing whitespace removed for incorrect dash-dash-space signatures.');
+    $this->assertEquals("--", $mail_lines[1], 'Trailing whitespace removed for incorrect dash-dash-space signatures.');
   }
 
 }

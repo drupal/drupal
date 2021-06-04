@@ -48,7 +48,7 @@ class LocaleExportTest extends BrowserTestBase {
   }
 
   /**
-   * Test exportation of translations.
+   * Tests exportation of translations.
    */
   public function testExportTranslation() {
     $file_system = \Drupal::service('file_system');
@@ -56,16 +56,16 @@ class LocaleExportTest extends BrowserTestBase {
     // This will also automatically add the 'fr' language.
     $name = $file_system->tempnam('temporary://', "po_") . '.po';
     file_put_contents($name, $this->getPoFile());
-    $this->drupalPostForm('admin/config/regional/translate/import', [
+    $this->drupalGet('admin/config/regional/translate/import');
+    $this->submitForm([
       'langcode' => 'fr',
       'files[file]' => $name,
     ], 'Import');
     $file_system->unlink($name);
 
     // Get the French translations.
-    $this->drupalPostForm('admin/config/regional/translate/export', [
-      'langcode' => 'fr',
-    ], 'Export');
+    $this->drupalGet('admin/config/regional/translate/export');
+    $this->submitForm(['langcode' => 'fr'], 'Export');
 
     // Ensure we have a translation file.
     $this->assertRaw('# French translation of Drupal');
@@ -75,7 +75,8 @@ class LocaleExportTest extends BrowserTestBase {
     // Import some more French translations which will be marked as customized.
     $name = $file_system->tempnam('temporary://', "po2_") . '.po';
     file_put_contents($name, $this->getCustomPoFile());
-    $this->drupalPostForm('admin/config/regional/translate/import', [
+    $this->drupalGet('admin/config/regional/translate/import');
+    $this->submitForm([
       'langcode' => 'fr',
       'files[file]' => $name,
       'customized' => 1,
@@ -90,7 +91,8 @@ class LocaleExportTest extends BrowserTestBase {
       ->save();
 
     // Export only customized French translations.
-    $this->drupalPostForm('admin/config/regional/translate/export', [
+    $this->drupalGet('admin/config/regional/translate/export');
+    $this->submitForm([
       'langcode' => 'fr',
       'content_options[not_customized]' => FALSE,
       'content_options[customized]' => TRUE,
@@ -105,7 +107,8 @@ class LocaleExportTest extends BrowserTestBase {
     $this->assertNoRaw('msgid "February"');
 
     // Export only untranslated French translations.
-    $this->drupalPostForm('admin/config/regional/translate/export', [
+    $this->drupalGet('admin/config/regional/translate/export');
+    $this->submitForm([
       'langcode' => 'fr',
       'content_options[not_customized]' => FALSE,
       'content_options[customized]' => FALSE,
@@ -121,7 +124,7 @@ class LocaleExportTest extends BrowserTestBase {
   }
 
   /**
-   * Test exportation of translation template file.
+   * Tests exportation of translation template file.
    */
   public function testExportTranslationTemplateFile() {
     // Load an admin page with JavaScript so _drupal_add_library() fires at
@@ -129,7 +132,8 @@ class LocaleExportTest extends BrowserTestBase {
     // the locales_source table gets populated with something.
     $this->drupalGet('admin/config/regional/language');
     // Get the translation template file.
-    $this->drupalPostForm('admin/config/regional/translate/export', [], 'Export');
+    $this->drupalGet('admin/config/regional/translate/export');
+    $this->submitForm([], 'Export');
     // Ensure we have a translation file.
     $this->assertRaw('# LANGUAGE translation of PROJECT');
   }

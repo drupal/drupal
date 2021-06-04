@@ -14,7 +14,7 @@ use Drupal\Tests\UnitTestCase;
 class NullStorageTest extends UnitTestCase {
 
   /**
-   * Test createCollection.
+   * Tests createCollection.
    */
   public function testCollection() {
     $nullStorage = new NullStorage();
