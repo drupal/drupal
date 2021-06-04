@@ -455,6 +455,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
    */
   public function testEmptyErrorMessage() {
     $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
 
     // Make field_unlimited_media required.
     $field_config = FieldConfig::loadByName('node', 'basic_page', 'field_unlimited_media');
@@ -464,9 +465,8 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     // Visit a node create page.
     $this->drupalGet('node/add/basic_page');
 
-    $this->submitForm([
-      'title[0][value]' => 'My page',
-    ], 'Save');
+    $page->fillField('title[0][value]', 'My page');
+    $page->clickLink('Save');
 
     // Check that a clear error message is shown.
     $assert_session->pageTextNotContains('This value should not be null');

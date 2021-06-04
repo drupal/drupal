@@ -23,8 +23,8 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\field_ui\FieldUI;
 use Drupal\media\Entity\Media;
-use Drupal\media_library\MediaLibraryUiBuilder;
 use Drupal\media_library\MediaLibraryState;
+use Drupal\media_library\MediaLibraryUiBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
@@ -318,7 +318,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
       '#attached' => [
         'library' => ['media_library/widget'],
       ],
-      '#element_validate' => [[static::class, 'validateMediaLibraryWidget']],
+      '#element_validate' => [[static::class, 'validateRequired']],
       '#theme_wrappers' => [
         'fieldset__media_library_widget',
       ],
@@ -944,7 +944,9 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
   }
 
   /**
-   * Validation checks specific to the Media Library widget in a parent form.
+   * Validates whether the widget is required and contains values.
+   *
+   * This callback checks if the media library widget is required and
    *
    * @param array $element
    *   The form element.
@@ -953,22 +955,18 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
    * @param array $form
    *   The form array.
    */
-  public static function validateMediaLibraryWidget(array $element, FormStateInterface $form_state, array $form) {
+  public static function validateRequired(array $element, FormStateInterface $form_state, array $form) {
     // If a remove button triggered submit, this validation isn't needed.
     if (in_array([static::class, 'removeItem'], $form_state->getSubmitHandlers(), TRUE)) {
       return;
     }
 
-    $media = static::getNewMediaItems($element, $form_state);
-
+    $field_state = static::getFieldState($element, $form_state);
     // Trigger error if the field is required and no media is present. Although
     // the Form API's default validation would also catch this, the validation
     // error message is too vague, so a more precise one is provided here.
-    $selection_count = !empty($element['selection']) ? count(Element::children($element['selection'])) : 0;
-    if (empty($media) && $selection_count === 0 && !empty($element['#required'])) {
-      $form_state->setError($element, new TranslatableMarkup('@name field is required.',
-        ['@name' => $element['#title']]));
-      return;
+    if (!empty($element['#required']) && $field_state['items_count'] === 0) {
+      $form_state->setError($element, new TranslatableMarkup('@name field is required.', ['@name' => $element['#title']]));
     }
   }
 
