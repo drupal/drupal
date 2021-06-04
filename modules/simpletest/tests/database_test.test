@@ -876,6 +876,7 @@ class DatabaseUpdateTestCase extends DatabaseTestCase {
       ->execute();
     $this->assertIdentical($num_rows, 3, 'Number of affected rows are returned.');
   }
+}
 
 /**
  * Tests for more complex update statements.
