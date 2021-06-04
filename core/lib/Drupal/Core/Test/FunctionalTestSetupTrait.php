@@ -585,7 +585,7 @@ trait FunctionalTestSetupTrait {
     $port = isset($parsed_url['port']) ? $parsed_url['port'] : 80;
 
     $valid_url_schemes = ['http', 'https'];
-    if (!in_array(strtolower($parsed_url['scheme']), $valid_url_schemes)) {
+    if (!in_array(strtolower($parsed_url['scheme']), $valid_url_schemes, TRUE)) {
       throw new \Exception(
         'You must provide valid scheme for the SIMPLETEST_BASE_URL environment variable. Valid schema are: http, https.'
       );
