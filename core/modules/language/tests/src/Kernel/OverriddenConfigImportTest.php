@@ -69,7 +69,7 @@ class OverriddenConfigImportTest extends KernelTestBase {
 
     // Also make a change to the same config object, but using a language
     // override.
-    /* @var \Drupal\Core\Config\StorageInterface $overridden_sync */
+    /** @var \Drupal\Core\Config\StorageInterface $overridden_sync */
     $overridden_sync = $sync->createCollection('language.fr');
     $overridden_sync->write('system.site', ['name' => 'French site name']);
 

@@ -28,7 +28,7 @@ class NodeTemplateSuggestionsTest extends NodeTestBase {
     $variables['elements'] = $build;
     $suggestions = \Drupal::moduleHandler()->invokeAll('theme_suggestions_node', [$variables]);
 
-    $this->assertEqual(['node__full', 'node__page', 'node__page__full', 'node__' . $node->id(), 'node__' . $node->id() . '__full'], $suggestions, 'Found expected node suggestions.');
+    $this->assertEquals(['node__full', 'node__page', 'node__page__full', 'node__' . $node->id(), 'node__' . $node->id() . '__full'], $suggestions, 'Found expected node suggestions.');
 
     // Change the view mode.
     $view_mode = 'node.my_custom_view_mode';
@@ -37,7 +37,7 @@ class NodeTemplateSuggestionsTest extends NodeTestBase {
     $variables['elements'] = $build;
     $suggestions = \Drupal::moduleHandler()->invokeAll('theme_suggestions_node', [$variables]);
 
-    $this->assertEqual(['node__node_my_custom_view_mode', 'node__page', 'node__page__node_my_custom_view_mode', 'node__' . $node->id(), 'node__' . $node->id() . '__node_my_custom_view_mode'], $suggestions, 'Found expected node suggestions.');
+    $this->assertEquals(['node__node_my_custom_view_mode', 'node__page', 'node__page__node_my_custom_view_mode', 'node__' . $node->id(), 'node__' . $node->id() . '__node_my_custom_view_mode'], $suggestions, 'Found expected node suggestions.');
   }
 
 }

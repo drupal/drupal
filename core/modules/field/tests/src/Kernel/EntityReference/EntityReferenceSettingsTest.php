@@ -115,7 +115,7 @@ class EntityReferenceSettingsTest extends KernelTestBase {
     // Check that the 'target_bundle' setting contains the vocabulary.
     $field_config = FieldConfig::loadByName('node', $this->nodeType->id(), $name);
     $actual_handler_settings = $field_config->getSetting('handler_settings');
-    $this->assertEqual($handler_settings, $actual_handler_settings);
+    $this->assertEquals($handler_settings, $actual_handler_settings);
 
     // Delete the vocabulary.
     $vocabularies[0]->delete();
@@ -159,7 +159,7 @@ class EntityReferenceSettingsTest extends KernelTestBase {
     // Check that the 'target_bundle' setting contains the custom bundle.
     $field_config = FieldConfig::loadByName('node', $this->nodeType->id(), $name);
     $actual_handler_settings = $field_config->getSetting('handler_settings');
-    $this->assertEqual($handler_settings, $actual_handler_settings);
+    $this->assertEquals($handler_settings, $actual_handler_settings);
 
     // Delete the custom bundle.
     entity_test_delete_bundle($this->customBundle, 'entity_test');

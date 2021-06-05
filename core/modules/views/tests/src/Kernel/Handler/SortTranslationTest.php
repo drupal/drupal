@@ -93,7 +93,7 @@ class SortTranslationTest extends ViewsKernelTestBase {
   }
 
   /**
-   * Test sorting on an untranslated field.
+   * Tests sorting on an untranslated field.
    */
   public function testSortbyUntranslatedIntegerField() {
     $map = [

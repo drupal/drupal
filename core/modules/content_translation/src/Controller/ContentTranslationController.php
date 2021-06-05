@@ -68,7 +68,7 @@ class ContentTranslationController extends ControllerBase {
    */
   public function prepareTranslation(ContentEntityInterface $entity, LanguageInterface $source, LanguageInterface $target) {
     $source_langcode = $source->getId();
-    /* @var \Drupal\Core\Entity\ContentEntityInterface $source_translation */
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $source_translation */
     $source_translation = $entity->getTranslation($source_langcode);
     $target_translation = $entity->addTranslation($target->getId(), $source_translation->toArray());
 

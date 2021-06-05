@@ -182,7 +182,7 @@ class ConditionTest extends UnitTestCase {
   }
 
   /**
-   * Test that the core Condition can be overridden.
+   * Tests that the core Condition can be overridden.
    */
   public function testContribCondition() {
     $mockCondition = $this->getMockBuilder(Condition::class)

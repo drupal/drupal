@@ -31,7 +31,7 @@ class FeedProcessorPluginTest extends AggregatorTestBase {
   }
 
   /**
-   * Test processing functionality.
+   * Tests processing functionality.
    */
   public function testProcess() {
     $feed = $this->createFeed();
@@ -43,7 +43,7 @@ class FeedProcessorPluginTest extends AggregatorTestBase {
   }
 
   /**
-   * Test deleting functionality.
+   * Tests deleting functionality.
    */
   public function testDelete() {
     $feed = $this->createFeed();
@@ -55,7 +55,7 @@ class FeedProcessorPluginTest extends AggregatorTestBase {
   }
 
   /**
-   * Test post-processing functionality.
+   * Tests post-processing functionality.
    */
   public function testPostProcess() {
     $feed = $this->createFeed(NULL, ['refresh' => 1800]);
@@ -66,7 +66,7 @@ class FeedProcessorPluginTest extends AggregatorTestBase {
     // Reload the feed to get new values.
     $feed = Feed::load($feed_id);
     // Make sure its refresh rate doubled.
-    $this->assertEqual(3600, $feed->getRefreshRate());
+    $this->assertEquals(3600, $feed->getRefreshRate());
   }
 
 }

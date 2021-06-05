@@ -85,6 +85,7 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
    * {@inheritdoc}
    */
   public function getForm(ViewEntityInterface $view, $display_id, $js) {
+    /** @var \Drupal\Core\Form\FormStateInterface $form_state */
     $form_state = $this->getFormState($view, $display_id, $js);
     $view = $form_state->get('view');
     $form_key = $form_state->get('form_key');
@@ -137,7 +138,6 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
 
       // Build the new form state for the next form in the stack.
       $reflection = new \ReflectionClass($view::$forms[$top[1]]);
-      /** @var $form_state \Drupal\Core\Form\FormStateInterface */
       $form_state = $reflection->newInstanceArgs(array_slice($top, 3, 2))->getFormState($view, $top[2], $form_state->get('ajax'));
       $form_class = get_class($form_state->getFormObject());
 

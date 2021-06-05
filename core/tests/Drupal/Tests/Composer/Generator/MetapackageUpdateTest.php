@@ -18,7 +18,7 @@ use PHPUnit\Framework\TestCase;
 class MetapackageUpdateTest extends TestCase {
 
   /**
-   * Test data for testUpdated.
+   * Provides test data for testUpdated.
    */
   public function updatedTestData() {
     return [
@@ -38,7 +38,7 @@ class MetapackageUpdateTest extends TestCase {
   }
 
   /**
-   * Test to see if the generated metapackages are in sync with composer.lock.
+   * Tests to see if the generated metapackages are in sync with composer.lock.
    *
    * Note that this is not a test of code correctness, but rather it merely
    * confirms if the package builder was used on the most recent set of

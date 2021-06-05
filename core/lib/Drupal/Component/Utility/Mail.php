@@ -2,6 +2,8 @@
 
 namespace Drupal\Component\Utility;
 
+@trigger_error('\Drupal\Component\Utility\Mail is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. See https://www.drupal.org/node/3207439', E_USER_DEPRECATED);
+
 /**
  * Provides helpers to ensure emails are compliant with RFCs.
  *
@@ -29,8 +31,15 @@ class Mail {
    * @return string
    *   A RFC compliant version of the string, ready to be used as
    *   "display-name" in mail originator header fields.
+   *
+   * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+   *   \Symfony\Component\Mime\Header\MailboxHeader instead.
+   *
+   * @see https://www.drupal.org/node/3207439
    */
   public static function formatDisplayName($string) {
+    @trigger_error('\Drupal\Component\Utility\Mail::formatDisplayName() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use \Symfony\Component\Mime\Header\MailboxHeader instead. See https://www.drupal.org/node/3207439', E_USER_DEPRECATED);
+
     // Make sure we don't process html-encoded characters. They may create
     // unneeded trouble if left encoded, besides they will be correctly
     // processed if decoded.

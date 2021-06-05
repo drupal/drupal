@@ -1,0 +1,7 @@
+name: Media Embed plugin test
+description: 'Provides functionality to test embedding media items in CKEditor.'
+type: module
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:media
