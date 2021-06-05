@@ -22,8 +22,8 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  * @endcode
  *
  * In this example the relations between nodes and terms are retrieved from
- * the source database. Source rows include only terms that belong to
- * the vocabulary with 'vid' equal to 7.
+ * the source database. Source rows include only terms that belong to the
+ * vocabulary with 'vid' equal to 7.
  *
  * For additional configuration keys, refer to the parent classes.
  *
