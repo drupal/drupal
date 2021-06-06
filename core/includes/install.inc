@@ -1165,8 +1165,6 @@ function install_profile_info($profile, $langcode = 'en') {
  * @see \Drupal\Core\Site\Settings::initialize()
  */
 function db_installer_object($driver, $namespace = NULL) {
-  // We cannot use Database::getConnection->getDriverClass() here, because
-  // the connection object is not yet functional.
   if ($namespace) {
     $task_class = $namespace . "\\Install\\Tasks";
     return new $task_class();

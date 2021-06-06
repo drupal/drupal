@@ -45,6 +45,7 @@ trait LoggedStatementsTrait {
    */
   public function getDriverClass($class) {
     static $fixed_namespace;
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use fully qualified class names in the methods that return database operations instead. See https://www.drupal.org/node/3217534', E_USER_DEPRECATED);
     if (!$fixed_namespace) {
       // Override because we've altered the namespace in
       // \Drupal\KernelTests\Core\Cache\EndOfTransactionQueriesTest::getDatabaseConnectionInfo()

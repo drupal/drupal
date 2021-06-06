@@ -218,16 +218,8 @@ class SelectExtender implements SelectInterface {
    * {@inheritdoc}
    */
   public function extend($extender_name) {
-    // We cannot call $this->query->extend(), because with multiple extenders
-    // you will replace all the earlier extenders with the last extender,
-    // instead of creating list of objects that extend each other.
-    $parts = explode('\\', $extender_name);
-    $class = end($parts);
-    $driver_class = $this->connection->getDriverClass($class);
-    if ($driver_class !== $class) {
-      return new $driver_class($this, $this->connection);
-    }
-    return new $extender_name($this, $this->connection);
+    $driver_override_class = $this->connection->getDriverOverrideClass($extender_name);
+    return new $driver_override_class($this, $this->connection);
   }
 
   /* Alter accessors to expose the query data to alter hooks. */
