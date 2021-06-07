@@ -38,11 +38,11 @@ class TestSiteOliveroInstallTestScript implements TestSetupInterface {
     $article_no_comments->save();
 
     // Create an article that will have comments
-    $article_no_comments = Node::create(['type' => 'article']);
-    $article_no_comments->set('title', 'Article with comments');
+    $article_with_comments = Node::create(['type' => 'article']);
+    $article_with_comments->set('title', 'Article with comments');
     // Enable comments
-    $article_no_comments->set('comment', 2);
-    $article_no_comments->save();
+    $article_with_comments->set('comment', 2);
+    $article_with_comments->save();
 
     $values = [
       // These values are for the entity that you're creating the comment for, not the comment itself.
