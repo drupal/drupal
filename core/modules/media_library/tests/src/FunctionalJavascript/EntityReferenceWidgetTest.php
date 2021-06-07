@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\media_library\FunctionalJavascript;
 
-use Drupal\field\Entity\FieldConfig;
-
 /**
  * Tests the Media library entity reference widget.
  *
