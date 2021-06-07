@@ -1763,3 +1763,7 @@ services:
   pager.parameters:
     class: Drupal\Core\Pager\PagerParameters
     arguments: ['@request_stack']
+  select_extender_factory.pager:
+    class: Drupal\Core\Database\Query\PagerSelectExtenderFactory
+    tags:
+      - { name: backend_overridable }

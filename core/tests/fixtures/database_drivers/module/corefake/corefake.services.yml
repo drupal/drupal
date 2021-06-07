@@ -1,0 +1,3 @@
+services:
+  corefakeWithAllCustomClasses.select_extender_factory.pager:
+    class: Drupal\corefake\PagerSelectExtenderFactory

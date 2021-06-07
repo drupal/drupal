@@ -6,7 +6,6 @@ use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\Query\PagerSelectExtender;
 use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -221,7 +220,7 @@ class HelpSearch extends SearchPluginBase implements AccessibleInterface, Search
       // Restrict the search to the current interface language.
       ->condition('i.langcode', $this->languageManager->getCurrentLanguage()->getId())
       ->extend(SearchQuery::class)
-      ->extend(PagerSelectExtender::class);
+      ->extend('pager');
     $query->innerJoin('help_search_items', 'hsi', '[i].[sid] = [hsi].[sid] AND [i].[type] = :type', [':type' => $this->getType()]);
     if ($denied_permissions) {
       $query->condition('hsi.permission', $denied_permissions, 'NOT IN');

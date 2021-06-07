@@ -114,6 +114,7 @@ class SelectExtenderTest extends KernelTestBase {
    * @covers ::extend
    * @covers \Drupal\Core\Database\Query\SelectExtender::extend
    * @dataProvider providerExtend
+   * @group legacy
    */
   public function testExtend(string $expected, string $namespace, string $extend): void {
     $additional_class_loader = new ClassLoader();
