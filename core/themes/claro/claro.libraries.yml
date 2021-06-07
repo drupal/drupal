@@ -299,6 +299,11 @@ filter:
     component:
       css/theme/filter.theme.css: {}
 
+ie11-focus:
+  version: VERSION
+  js:
+    js/ie11-focus.js: {}
+
 classy.book-navigation:
   version: VERSION
   css:
