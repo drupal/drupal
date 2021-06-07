@@ -154,7 +154,7 @@ function text_summary($text, $format = NULL, $size = NULL) {
 
   // If filter_html or filter_htmlcorrector is enabled, normalize the output.
   if (isset($format)) {
-    $filter_enabled = function ($filter) use ($filters) {
+    $filter_enabled = function (string $filter) use ($filters) : bool {
       return $filters->has($filter) && $filters->get($filter)->status;
     };
     if ($filter_enabled('filter_html') || $filter_enabled('filter_htmlcorrector')) {
