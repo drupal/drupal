@@ -153,8 +153,10 @@ class FileUploadForm extends AddFormBase {
       // @todo Move validation in https://www.drupal.org/node/2988215
       '#process' => array_merge(['::validateUploadElement'], $process, ['::processUploadElement']),
       '#upload_validators' => $item->getUploadValidators(),
-      '#multiple' => $slots > 1 || $slots === FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
-      '#cardinality' => $slots,
+      '#multiple' => TRUE,
+      // Do not limit the number uploaded.  There is validation based on the
+      // number selected in the media library that prevents overages.
+      '#cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
       '#remaining_slots' => $slots,
     ];
 
