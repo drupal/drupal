@@ -1765,5 +1765,6 @@ services:
     arguments: ['@request_stack']
   select_extender_factory.pager:
     class: Drupal\Core\Database\Query\PagerSelectExtenderFactory
+    arguments: ['@pager.manager']
     tags:
       - { name: backend_overridable }
