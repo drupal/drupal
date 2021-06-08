@@ -4,6 +4,7 @@ namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Utility\TableSort;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Query extender class for tablesort queries.

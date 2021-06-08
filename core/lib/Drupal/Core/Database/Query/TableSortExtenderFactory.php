@@ -39,7 +39,7 @@ class TableSortExtenderFactory {
    *   A query extender for tablesort queries.
    */
   public function get(SelectInterface $query, Connection $connection): TableSortExtender {
-    return new PagerSelectExtender($query, $connection, $this->requestStack);
+    return new TableSortExtender($query, $connection, $this->requestStack);
   }
 
 }
