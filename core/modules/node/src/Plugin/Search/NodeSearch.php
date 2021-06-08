@@ -261,7 +261,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
     // Build matching conditions.
     $query = $this->databaseReplica
       ->select('search_index', 'i')
-      ->extend(SearchQuery::class)
+      ->extend('search_query')
       ->extend('pager');
     $query->join('node_field_data', 'n', '[n].[nid] = [i].[sid] AND [n].[langcode] = [i].[langcode]');
     $query->condition('n.status', 1)

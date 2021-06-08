@@ -16,3 +16,15 @@ services:
   search.text_processor:
     class: Drupal\search\SearchTextProcessor
     arguments: ['@transliteration', '@config.factory', '@module_handler']
+
+  select_extender_factory.search_query:
+    class: Drupal\search\SearchQueryFactory
+    arguments: ['@config.factory', '@search.text_processor']
+    tags:
+      - { name: backend_overridable }
+
+  select_extender_factory.views_search_query:
+    class: Drupal\search\ViewsSearchQueryFactory
+    arguments: ['@config.factory', '@search.text_processor']
+    tags:
+      - { name: backend_overridable }

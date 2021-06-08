@@ -17,7 +17,6 @@ use Drupal\help_topics\SearchableHelpInterface;
 use Drupal\search\Plugin\SearchIndexingInterface;
 use Drupal\search\Plugin\SearchPluginBase;
 use Drupal\search\SearchIndexInterface;
-use Drupal\search\SearchQuery;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -219,7 +218,7 @@ class HelpSearch extends SearchPluginBase implements AccessibleInterface, Search
       ->select('search_index', 'i')
       // Restrict the search to the current interface language.
       ->condition('i.langcode', $this->languageManager->getCurrentLanguage()->getId())
-      ->extend(SearchQuery::class)
+      ->extend('search_query')
       ->extend('pager');
     $query->innerJoin('help_search_items', 'hsi', '[i].[sid] = [hsi].[sid] AND [i].[type] = :type', [':type' => $this->getType()]);
     if ($denied_permissions) {
