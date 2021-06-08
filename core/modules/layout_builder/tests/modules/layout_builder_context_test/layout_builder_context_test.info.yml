@@ -1,0 +1,5 @@
+name: 'Layout builder test contexts'
+type: module
+description: 'Provides layout builder test contexts'
+package: Testing
+version: VERSION
