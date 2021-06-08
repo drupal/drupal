@@ -44,10 +44,7 @@ class JavascriptErrorsTest extends WebDriverTestBase {
       parent::tearDown();
     }
     catch (ExpectationFailedException $exception) {
-      $this->assertStringStartsWith('Javascript errors found:', $exception->getMessage());
-      $errors = $exception->getComparisonFailure()->getActual();
-      $this->assertCount(1, $errors);
-      $this->assertStringStartsWith('Error: A manually thrown error.', $errors[0]);
+      $this->assertStringStartsWith("Javascript errors found:\nError: A manually thrown error.", $exception->getMessage());
       return;
     }
     $this->fail('Expected Javascript errors fail.');
