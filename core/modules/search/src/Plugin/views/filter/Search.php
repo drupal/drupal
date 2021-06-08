@@ -3,7 +3,6 @@
 namespace Drupal\search\Plugin\views\filter;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\search\ViewsSearchQuery;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;

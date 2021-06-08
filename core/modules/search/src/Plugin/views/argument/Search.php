@@ -2,7 +2,6 @@
 
 namespace Drupal\search\Plugin\views\argument;
 
-use Drupal\search\ViewsSearchQuery;
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
