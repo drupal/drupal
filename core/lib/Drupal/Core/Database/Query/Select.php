@@ -318,7 +318,7 @@ class Select extends Query implements SelectInterface {
    * {@inheritdoc}
    */
   public function extend($extender_name) {
-    if ($extender_name === PagerSelectExtender::class) {
+    if ($extender_name === PagerSelectExtender::class || $extender_name === TableSortExtender::class) {
       @trigger_error("Passing $extender_name to " . __METHOD__ . '() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use the appropriate service. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
     }
 

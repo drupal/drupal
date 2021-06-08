@@ -11,10 +11,25 @@ use Drupal\Core\Utility\TableSort;
 class TableSortExtender extends SelectExtender {
 
   /**
-   * {@inheritdoc}
+   * The request stack.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
    */
-  public function __construct(SelectInterface $query, Connection $connection) {
+  protected $requestStack;
+
+  /**
+   * Constructs a TableSortExtender object.
+   *
+   * @param \Drupal\Core\Database\Query\SelectInterface $query
+   *   Select query object.
+   * @param \Drupal\Core\Database\Connection $connection
+   *   Database connection object.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack.
+   */
+  public function __construct(SelectInterface $query, Connection $connection, RequestStack $request_stack = NULL) {
     parent::__construct($query, $connection);
+    $this->requestStack = $request_stack;
 
     // Add convenience tag to mark that this is an extended query. We have to
     // do this in the constructor to ensure that it is set before preExecute()
@@ -34,7 +49,7 @@ class TableSortExtender extends SelectExtender {
    * @see table.html.twig
    */
   public function orderByHeader(array $header) {
-    $context = TableSort::getContextFromRequest($header, \Drupal::request());
+    $context = TableSort::getContextFromRequest($header, $this->requestStack->getCurrentRequest());
     if (!empty($context['sql'])) {
       // Based on code from \Drupal\Core\Database\Connection::escapeTable(),
       // but this can also contain a dot.

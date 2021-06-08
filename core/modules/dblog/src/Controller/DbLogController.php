@@ -9,7 +9,6 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\Query\TableSortExtender;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
@@ -163,7 +162,7 @@ class DbLogController extends ControllerBase {
 
     $query = $this->database->select('watchdog', 'w')
       ->extend('pager')
-      ->extend(TableSortExtender::class);
+      ->extend('table_sort');
     $query->fields('w', [
       'wid',
       'uid',
@@ -429,7 +428,7 @@ class DbLogController extends ControllerBase {
 
     $query = $this->database->select('watchdog', 'w')
       ->extend('pager')
-      ->extend(TableSortExtender::class);
+      ->extend('table_sort');
     $query->addExpression('COUNT([wid])', 'count');
     $query = $query
       ->fields('w', ['message', 'variables'])
