@@ -9,8 +9,8 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
+use Drupal\Core\Plugin\Discovery\YamlRecursiveDirectoryDiscovery;
 use Drupal\migrate\Plugin\Discovery\ProviderFilterDecorator;
-use Drupal\Core\Plugin\Discovery\YamlDirectoryDiscovery;
 use Drupal\Core\Plugin\Factory\ContainerFactory;
 use Drupal\migrate\MigrateBuildDependencyInterface;
 
@@ -72,7 +72,8 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
         return [$directory . '/migrations'];
       }, $this->moduleHandler->getModuleDirectories());
 
-      $yaml_discovery = new YamlDirectoryDiscovery($directories, 'migrate');
+      // Retrieves *.yml files but gets rid of /migrations/state/*.yml files.
+      $yaml_discovery = new YamlRecursiveDirectoryDiscovery($directories, 'migrate', 'id', '#/migrations/state/#');
       // This gets rid of migrations which try to use a non-existent source
       // plugin. The common case for this is if the source plugin has, or
       // specifies, a non-existent provider.

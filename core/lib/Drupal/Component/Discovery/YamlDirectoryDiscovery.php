@@ -42,6 +42,13 @@ class YamlDirectoryDiscovery implements DiscoverableInterface {
   protected $idKey;
 
   /**
+   * The pattern used to exclude discovered files or directories.
+   *
+   * @var string
+   */
+  protected $excludePattern;
+
+  /**
    * Constructs a YamlDirectoryDiscovery object.
    *
    * @param array $directories
@@ -54,11 +61,14 @@ class YamlDirectoryDiscovery implements DiscoverableInterface {
    * @param string $key
    *   (optional) The key contained in the discovered data that identifies it.
    *   Defaults to 'id'.
+   * @param string $exclude_pattern
+   *   (optional) The regexp pattern used to exclude discovered files.
    */
-  public function __construct(array $directories, $file_cache_key_suffix, $key = 'id') {
+  public function __construct(array $directories, $file_cache_key_suffix, $key = 'id', $exclude_pattern = '') {
     $this->directories = $directories;
     $this->fileCacheKeySuffix = $file_cache_key_suffix;
     $this->idKey = $key;
+    $this->excludePattern = $exclude_pattern;
   }
 
   /**
@@ -130,6 +140,9 @@ class YamlDirectoryDiscovery implements DiscoverableInterface {
         if (is_dir($directory)) {
           /** @var \SplFileInfo $fileInfo */
           foreach ($this->getDirectoryIterator($directory) as $fileInfo) {
+            if ($this->excludePattern && preg_match($this->excludePattern, $fileInfo->getPathname())) {
+              continue;
+            }
             $file_list[$fileInfo->getPathname()] = $provider;
           }
         }
