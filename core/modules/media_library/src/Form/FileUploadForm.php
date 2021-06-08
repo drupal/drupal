@@ -171,6 +171,14 @@ class FileUploadForm extends AddFormBase {
     // @see \Drupal\file\Plugin\Field\FieldWidget\FileWidget::formElement()
     $form['container']['upload']['#description'] = $this->renderer->renderPlain($file_upload_help);
 
+    // Add container for displaying messages inside the dialog.
+    $form['messages'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => ['js-media-library-messages'],
+      ],
+    ];
+
     return $form;
   }
 
