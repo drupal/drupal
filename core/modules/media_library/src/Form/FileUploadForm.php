@@ -154,8 +154,9 @@ class FileUploadForm extends AddFormBase {
       '#process' => array_merge(['::validateUploadElement'], $process, ['::processUploadElement']),
       '#upload_validators' => $item->getUploadValidators(),
       '#multiple' => TRUE,
-      // Do not limit the number uploaded.  There is validation based on the
+      // Do not limit the number uploaded. There is validation based on the
       // number selected in the media library that prevents overages.
+      // @see Drupal\media_library\Form\AddFormBase::updateLibrary()
       '#cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
       '#remaining_slots' => $slots,
     ];
