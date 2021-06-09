@@ -324,7 +324,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
     $this->verifySearchPageOperations($second_id, TRUE, TRUE, TRUE, FALSE);
 
     // Change the default search page.
-    $this->clickLink(t('Set as default'));
+    $this->xpath('//a[normalize-space(text()[1])="Set" and normalize-space(text()[2])="as default"]')[0]->click();
     $this->assertRaw(t('The default search page is now %label. Be sure to check the ordering of your search pages.', ['%label' => $second['label']]));
     $this->verifySearchPageOperations($first_id, TRUE, TRUE, TRUE, FALSE);
     $this->verifySearchPageOperations($second_id, TRUE, FALSE, FALSE, FALSE);

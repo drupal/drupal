@@ -350,11 +350,11 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
     $operations = parent::getDefaultOperations($entity);
 
     if (isset($operations['edit'])) {
-      $operations['edit']['title'] = $this->t('Configure');
+      $operations['edit']['title'] = $this->t('Configure <span class="visually-hidden">block "@label"</span>', ['@label' => $entity->label()]);
     }
 
     if (isset($operations['delete'])) {
-      $operations['delete']['title'] = $this->t('Remove');
+      $operations['delete']['title'] = $this->t('Remove <span class="visually-hidden">block "@label"</span>', ['@label' => $entity->label()]);
     }
     return $operations;
   }

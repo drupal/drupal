@@ -32,7 +32,7 @@ class ResponsiveImageStyleListBuilder extends ConfigEntityListBuilder {
   public function getDefaultOperations(EntityInterface $entity) {
     $operations = parent::getDefaultOperations($entity);
     $operations['duplicate'] = [
-      'title' => t('Duplicate'),
+      'title' => t('Duplicate <span class="visually-hidden">responsive image style "@label"</span>', ['@label' => $entity->label()]),
       'weight' => 15,
       'url' => $entity->toUrl('duplicate-form'),
     ];

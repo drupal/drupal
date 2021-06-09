@@ -161,7 +161,7 @@ class ViewListBuilder extends ConfigEntityListBuilder {
 
     if ($entity->hasLinkTemplate('duplicate-form')) {
       $operations['duplicate'] = [
-        'title' => $this->t('Duplicate'),
+        'title' => $this->t('Duplicate <span class="visually-hidden">view "@label"</span>', ['@label' => $entity->label()]),
         'weight' => 15,
         'url' => $entity->toUrl('duplicate-form'),
       ];

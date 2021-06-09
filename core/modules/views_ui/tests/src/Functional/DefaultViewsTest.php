@@ -92,9 +92,10 @@ class DefaultViewsTest extends UITestBase {
     // $this->drupalGet('glossary');
     // $this->assertNoText($new_title);
 
-    // Duplicate the view and check that the normal schema of duplicated views is used.
+    // Duplicate the view and check that the normal schema of duplicated
+    // views is used.
     $this->drupalGet('admin/structure/views');
-    $this->clickViewsOperationLink('Duplicate', '/glossary');
+    $this->clickViewsOperationLink(t('Duplicate <span class="visually-hidden">view "@label"</span>', ['@label' => 'Glossary']), '/glossary');
     $edit = [
       'id' => 'duplicate_of_glossary',
     ];
@@ -104,7 +105,9 @@ class DefaultViewsTest extends UITestBase {
 
     // Duplicate a view and set a custom name.
     $this->drupalGet('admin/structure/views');
-    $this->clickViewsOperationLink('Duplicate', '/glossary');
+    $this->clickViewsOperationLink(t('Duplicate <span class="visually-hidden">view "@label"</span>', ['@label' => 'Glossary']), '/glossary');
+    $this->assertUrl('admin/structure/views/view/glossary/duplicate');
+
     $random_name = strtolower($this->randomMachineName());
     $this->submitForm(['id' => $random_name], 'Duplicate');
     $this->assertSession()->addressEquals("admin/structure/views/view/$random_name");
@@ -225,34 +228,31 @@ class DefaultViewsTest extends UITestBase {
    * various views listing pages, and they might have tokens in them. So we
    * need special code to find the correct one to click.
    *
-   * @param $label
+   * @param string $label
    *   Text between the anchor tags of the desired link.
-   * @param $unique_href_part
+   * @param string $unique_href_part
    *   A unique string that is expected to occur within the href of the desired
    *   link. For example, if the link URL is expected to look like
    *   "admin/structure/views/view/glossary/*", then "/glossary/" could be
    *   passed as the expected unique string.
    *
-   * @return
+   * @return object|bool
    *   The page content that results from clicking on the link, or FALSE on
    *   failure. Failure also results in a failed assertion.
    */
   public function clickViewsOperationLink($label, $unique_href_part) {
-    $links = $this->xpath('//a[normalize-space(text())=:label]', [':label' => (string) $label]);
-    foreach ($links as $link_index => $link) {
+    // Remove HTML with their content and trim the label just
+    // like normalize-space() and text() are doing in the xpath query.
+    $operation_label = trim(preg_replace('@<(\w+)\b.*?>.*?</\1>@si', '', (string) $label));
+    $links = $this->xpath('//a[normalize-space(text())=:label]', [':label' => $operation_label]);
+    foreach ($links as $link) {
       $position = strpos($link->getAttribute('href'), $unique_href_part);
       if ($position !== FALSE) {
-        $index = $link_index;
-        break;
+        return $link->click();
       }
     }
-    $this->assertTrue(isset($index), new FormattableMarkup('Link to "@label" containing @part found.', ['@label' => $label, '@part' => $unique_href_part]));
-    if (isset($index)) {
-      return $this->clickLink((string) $label, $index);
-    }
-    else {
-      return FALSE;
-    }
+    $this->fail(format_string('Link to "@label" containing @part found.', ['@label' => $label, '@part' => $unique_href_part]));
+    return FALSE;
   }
 
 }
