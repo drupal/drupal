@@ -113,6 +113,21 @@ function locale_test_locale_translation_projects_alter(&$projects) {
         'project_type' => 'module',
         'project_status' => TRUE,
       ],
+      'contrib_module_four' => [
+        'name' => 'contrib_module_four',
+        'info' => [
+          'name' => 'Contributed module four',
+          'interface translation server pattern' => $remote_url . '%core/%project/%project-%version.%language._po',
+          'package' => 'Other',
+          'version' => '8.x-1.0',
+          'project' => 'contrib_module_four',
+          'datestamp' => '1344471537',
+          '_info_file_ctime' => 1348767306,
+        ],
+        'datestamp' => '1344471537',
+        'project_type' => 'module',
+        'project_status' => TRUE,
+      ],
       'locale_test' => [
         'name' => 'locale_test',
         'info' => [
