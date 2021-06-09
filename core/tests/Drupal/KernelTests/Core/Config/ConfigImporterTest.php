@@ -113,7 +113,7 @@ class ConfigImporterTest extends KernelTestBase {
       $expected = static::FAIL_MESSAGE . PHP_EOL . 'Site UUID in source storage does not match the target storage.';
       $this->assertEquals($expected, $actual_message);
       foreach ($expected_error_log as $log_row) {
-        $this->assertRegExp("/$log_row/", $actual_message);
+        $this->assertMatchesRegularExpression("/$log_row/", $actual_message);
       }
     }
   }

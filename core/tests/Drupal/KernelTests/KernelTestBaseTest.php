@@ -32,7 +32,7 @@ class KernelTestBaseTest extends KernelTestBase {
    * @covers ::bootEnvironment
    */
   public function testBootEnvironment() {
-    $this->assertRegExp('/^test\d{8}$/', $this->databasePrefix);
+    $this->assertMatchesRegularExpression('/^test\d{8}$/', $this->databasePrefix);
     $this->assertStringStartsWith('vfs://root/sites/simpletest/', $this->siteDirectory);
     $this->assertEquals([
       'root' => [
@@ -226,8 +226,8 @@ class KernelTestBaseTest extends KernelTestBase {
     $output = \Drupal::service('renderer')->renderRoot($build);
     $this->assertEquals('core', \Drupal::theme()->getActiveTheme()->getName());
 
-    $this->assertRegExp($expected, (string) $build['#children']);
-    $this->assertRegExp($expected, (string) $output);
+    $this->assertMatchesRegularExpression($expected, (string) $build['#children']);
+    $this->assertMatchesRegularExpression($expected, (string) $output);
   }
 
   /**

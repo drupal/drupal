@@ -180,7 +180,7 @@ class DbLogTest extends BrowserTestBase {
     $message = $table[0]->findAll('xpath', "//tr/th[contains(text(), 'Message')]/../td");
     $this->assertCount(1, $message);
     $regex = "@Path: .+admin/reports\. Drupal\\\\Core\\\\Http\\\\Exception\\\\CacheableAccessDeniedHttpException: The 'access site reports' permission is required\. in Drupal\\\\Core\\\\Routing\\\\AccessAwareRouter->checkAccess\(\) \(line \d+ of .+/core/lib/Drupal/Core/Routing/AccessAwareRouter\.php\)\.@";
-    $this->assertRegExp($regex, $message[0]->getText());
+    $this->assertMatchesRegularExpression($regex, $message[0]->getText());
   }
 
   /**
