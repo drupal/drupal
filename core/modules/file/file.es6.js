@@ -174,8 +174,6 @@
       const $messageWrapper = $(this)
         .closest('div.js-form-managed-file')
         .find('[data-drupal-messages]');
-      // Remove any previous errors.
-
       // Add client side validation for the input[type=file].
       const extensionPattern = event.data.extensions.replace(/,\s*/g, '|');
       if (extensionPattern.length > 1 && this.value.length > 0) {

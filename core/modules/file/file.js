@@ -18,6 +18,7 @@
           });
           $context.find(selector).once('fileMessages').closest('div.js-form-managed-file').prepend($wrapper);
         }
+
         $context.find(selector).once('fileValidate').on('change.fileValidate', {
           extensions: elements[selector]
         }, Drupal.file.validateExtension);
@@ -76,7 +77,6 @@
   };
   Drupal.file = Drupal.file || {
     validateExtension: function validateExtension(event) {
-
       event.preventDefault();
       var $messageWrapper = $(this).closest('div.js-form-managed-file').find('[data-drupal-messages]');
       var extensionPattern = event.data.extensions.replace(/,\s*/g, '|');
@@ -94,7 +94,7 @@
           var messagesId = $messages.add(error, {
             type: 'error'
           });
-          $('[data-drupal-message-id=' + messagesId + ']').addClass('file-upload-js-error');
+          $("[data-drupal-message-id=".concat(messagesId, "]")).addClass('file-upload-js-error');
           this.value = '';
           event.stopImmediatePropagation();
         }
