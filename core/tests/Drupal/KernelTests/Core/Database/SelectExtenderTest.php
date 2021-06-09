@@ -19,7 +19,7 @@ class SelectExtenderTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['search'];
+  protected static $modules = ['database_test', 'search'];
 
   /**
    * Data provider for testExtendLegacy().
@@ -122,7 +122,9 @@ class SelectExtenderTest extends KernelTestBase {
    * @group legacy
    */
   public function testExtendLegacy(string $expected, string $namespace, string $extend): void {
-    $this->expectDeprecation("Passing %A as a fully qualified class name to %A is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Pass the appropriate suffix for a \'select_extender_factory\' service instead. See https://www.drupal.org/node/3218001", E_USER_DEPRECATED);
+    $this->expectDeprecation("Passing '%A' as a fully qualified class name to %A is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Pass the appropriate suffix for a 'select_extender_factory' service instead. See https://www.drupal.org/node/3218001", E_USER_DEPRECATED);
+    $this->expectDeprecation("Passing '%A' as a fully qualified class name to %A is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Pass the appropriate suffix for a 'select_extender_factory' service instead. See https://www.drupal.org/node/3218001", E_USER_DEPRECATED);
+    $this->expectDeprecation("Passing '%A' as a fully qualified class name to %A is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Pass the appropriate suffix for a 'select_extender_factory' service instead. See https://www.drupal.org/node/3218001", E_USER_DEPRECATED);
 
     $additional_class_loader = new ClassLoader();
     $additional_class_loader->addPsr4("Drupal\\corefake\\Driver\\Database\\corefake\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/module/corefake/src/Driver/Database/corefake");
@@ -193,7 +195,7 @@ class SelectExtenderTest extends KernelTestBase {
     $this->assertEquals($expected, get_class($select));
 
     // Get an instance of the class \Drupal\Core\Database\Query\SelectExtender.
-    $select_extender = $connection->select('test')->extend(SelectExtender::class);
+    $select_extender = $connection->select('test')->extend('test_extender');
     $this->assertEquals(SelectExtender::class, get_class($select_extender));
 
     // Tests the method \Drupal\Core\Database\Query\SelectExtender::extend().
