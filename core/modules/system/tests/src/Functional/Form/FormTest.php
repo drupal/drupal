@@ -130,7 +130,7 @@ class FormTest extends BrowserTestBase {
             $this->assertTrue(isset($errors[$element]), "Check empty($key) '$type' field '$element'");
             if (!empty($form_output)) {
               // Make sure the form element is marked as required.
-              $this->assertRegExp($required_marker_preg, (string) $form_output, "Required '$type' field is marked as required");
+              $this->assertMatchesRegularExpression($required_marker_preg, (string) $form_output, "Required '$type' field is marked as required");
             }
           }
           else {

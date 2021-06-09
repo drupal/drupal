@@ -71,7 +71,7 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
    */
   public function testPhpUnitCommand() {
     $runner = new PhpUnitTestRunner($this->root, sys_get_temp_dir());
-    $this->assertRegExp('/phpunit/', $runner->phpUnitCommand());
+    $this->assertMatchesRegularExpression('/phpunit/', $runner->phpUnitCommand());
   }
 
   /**

@@ -152,7 +152,7 @@ class TestSiteApplicationTest extends UnitTestCase {
     $this->assertStringContainsString('Successfully installed a test site', $process->getOutput());
     $this->assertSame(0, $process->getExitCode());
     $regex = '/Database prefix\s+([^\s]*)/';
-    $this->assertRegExp($regex, $process->getOutput());
+    $this->assertMatchesRegularExpression($regex, $process->getOutput());
     preg_match('/Database prefix\s+([^\s]*)/', $process->getOutput(), $matches);
     $other_db_prefix = $matches[1];
     $other_key = $this->addTestDatabase($other_db_prefix);

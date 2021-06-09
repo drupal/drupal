@@ -47,7 +47,7 @@ class MigrateAggregatorFeedTest extends MigrateDrupal7TestBase {
     $this->assertNull($feed->getImage());
     // As with getLastCheckedTime(), the etag can change as the fixture is
     // updated normally, so assert that its format is correct.
-    $this->assertRegExp('/^"[a-z0-9]{32}"$/', $feed->getEtag());
+    $this->assertMatchesRegularExpression('/^"[a-z0-9]{32}"$/', $feed->getEtag());
     $this->assertSame('0', $feed->getLastModified());
   }
 
