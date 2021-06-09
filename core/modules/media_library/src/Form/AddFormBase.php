@@ -790,7 +790,7 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
    *   The current form state.
    *
    * @return int
-   *   The number of medias courrently selected.
+   *   The number of medias currently selected.
    */
   private function getNumberOfMediasSelected(array $media_ids, FormStateInterface $form_state) {
     $selected_count = count($media_ids);
