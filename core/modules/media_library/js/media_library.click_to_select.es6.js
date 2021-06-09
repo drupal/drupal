@@ -15,15 +15,7 @@
     attach(context) {
       $('.js-click-to-select-trigger', context)
         .once('media-library-click-to-select')
-        .on('click', (event) => {
-          // Links inside the trigger should not be click-able.
-          event.preventDefault();
-          // Click the hidden checkbox when the trigger is clicked.
-          const $input = $(event.currentTarget)
-            .closest('.js-click-to-select')
-            .find('.js-click-to-select-checkbox input');
-          $input.prop('checked', !$input.prop('checked')).trigger('change');
-        });
+        .on('click', Drupal.MediaLibrary.onSelectMediaItem);
 
       $('.js-click-to-select-checkbox input', context)
         .once('media-library-click-to-select')

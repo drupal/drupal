@@ -7,10 +7,6 @@
 
 (function ($, Drupal, window, _ref) {
   var tabbable = _ref.tabbable;
-  Drupal.MediaLibrary = {
-    currentSelection: []
-  };
-
   Drupal.AjaxCommands.prototype.updateMediaLibrarySelection = function (ajax, response, status) {
     Object.values(response.mediaIds).forEach(function (value) {
       Drupal.MediaLibrary.currentSelection.push(value);
@@ -149,11 +145,17 @@
       var $mediaItems = $('.js-media-library-item input[type="checkbox"]', $form);
 
       function disableItems($items) {
-        $items.prop('disabled', true).closest('.js-media-library-item').addClass('media-library-item--disabled');
+        $items.prop('disabled', true).closest('.js-media-library-item').addClass('media-library-item--disabled').find('.js-click-to-select-trigger').off('click').closest('.js-media-library-item').find('a').attr('data-href', function () {
+          return this.getAttribute('href');
+        }).removeAttr('href');
       }
 
       function enableItems($items) {
-        $items.prop('disabled', false).closest('.js-media-library-item').removeClass('media-library-item--disabled');
+        $items.prop('disabled', false).closest('.media-library-item--disabled').removeClass('media-library-item--disabled').find('.js-click-to-select-trigger').on('click', Drupal.MediaLibrary.onSelectMediaItem).closest('.js-media-library-item').find('a').attr('href', function () {
+          if (this.hasAttribute('data-href')) {
+            return this.getAttribute('data-href');
+          }
+        }).removeAttr('data-href');
       }
 
       function updateSelectionCount(remaining) {

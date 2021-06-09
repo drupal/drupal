@@ -1,10 +1,16 @@
-click_to_select:
+main:
+  version: VERSION
+  js:
+    js/media_library.main.js: {}
+
+  click_to_select:
   version: VERSION
   js:
     js/media_library.click_to_select.js: {}
   dependencies:
     - core/drupal
     - core/jquery.once
+    - media_library/main
 
 view:
   version: VERSION
@@ -13,6 +19,7 @@ view:
   dependencies:
     - core/drupal.announce
     - core/drupal.checkbox
+    - media_library/main
     - media_library/click_to_select
 
 widget:
@@ -21,6 +28,7 @@ widget:
     js/media_library.widget.js: {}
   dependencies:
     - core/drupal.dialog.ajax
+    - media_library/main
     - core/jquery.once
     - core/sortable
     - core/drupal.nodelist.foreach

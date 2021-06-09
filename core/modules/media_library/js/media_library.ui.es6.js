@@ -3,19 +3,6 @@
  */
 (($, Drupal, window, { tabbable }) => {
   /**
-   * Wrapper object for the current state of the media library.
-   */
-  Drupal.MediaLibrary = {
-    /**
-     * When a user interacts with the media library we want the selection to
-     * persist as long as the media library modal is opened. We temporarily
-     * store the selected items while the user filters the media library view or
-     * navigates to different tabs.
-     */
-    currentSelection: [],
-  };
-
-  /**
    * Command to update the current media library selection.
    *
    * @param {Drupal.Ajax} [ajax]
@@ -277,7 +264,20 @@
         $items
           .prop('disabled', true)
           .closest('.js-media-library-item')
-          .addClass('media-library-item--disabled');
+          .addClass('media-library-item--disabled')
+          .find('.js-click-to-select-trigger')
+          // Click events must be removed, otherwise some screen readers will
+          // still consider the element "clickable" even when it's disabled.
+          .off('click')
+          .closest('.js-media-library-item')
+          .find('a')
+          // Store href in a data attribute so it can be removed but replaced
+          // if the element is re-enabled. This prevents screenreaders from
+          // interpreting the link as clickable or focusable.
+          .attr('data-href', function() {
+            return this.getAttribute('href');
+          })
+          .removeAttr('href');
       }
 
       /**
@@ -289,8 +289,18 @@
       function enableItems($items) {
         $items
           .prop('disabled', false)
+          .closest('.media-library-item--disabled')
+          .removeClass('media-library-item--disabled')
+          .find('.js-click-to-select-trigger')
+          .on('click', Drupal.MediaLibrary.onSelectMediaItem)
           .closest('.js-media-library-item')
-          .removeClass('media-library-item--disabled');
+          .find('a')
+          .attr('href', function() {
+            if (this.hasAttribute('data-href')) {
+              return this.getAttribute('data-href');
+            }
+          })
+          .removeAttr('data-href');          
       }
 
       /**
