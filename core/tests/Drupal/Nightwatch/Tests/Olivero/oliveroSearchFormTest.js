@@ -1,9 +1,9 @@
 const mobileNavButtonSelector = 'button.mobile-nav-button';
 const headerNavSelector = '#header-nav';
-const searchButtonSelector = 'button.header-nav__search-button';
+const searchButtonSelector = 'button.block-search-wide__button';
 const searchFormSelector = '.search-form.search-block-form';
-const searchWideSelector = '.search-wide__wrapper';
-const searchNarrowSelector = '.search-narrow__wrapper';
+const searchWideSelector = '.block-search-wide__wrapper';
+const searchNarrowSelector = '.block-search-narrow';
 
 module.exports = {
   '@tags': ['core', 'olivero'],
@@ -13,14 +13,6 @@ module.exports = {
         setupFile:
           'core/tests/Drupal/TestSite/TestSiteOliveroInstallTestScript.php',
         installProfile: 'minimal',
-      })
-      .drupalLoginAsAdmin(() => {
-        browser
-          .drupalRelativeURL('/admin/modules')
-          .setValue('input[type="search"]', 'Search')
-          .waitForElementVisible('input[name="modules[search][enable]"]', 1000)
-          .click('input[name="modules[search][enable]"]')
-          .click('input[type="submit"]'); // Submit module form.
       })
       // Create user that can search.
       .drupalCreateUser({
@@ -38,6 +30,7 @@ module.exports = {
       .resizeWindow(1400, 800)
       .drupalRelativeURL('/')
       .click(searchButtonSelector)
+      .waitForElementVisible(`${searchWideSelector}`)
       .waitForElementVisible(`${searchWideSelector} ${searchFormSelector}`)
       .assert.attributeContains(
         `${searchWideSelector} ${searchFormSelector} input[name=keys]`,
