@@ -311,7 +311,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
     ];
     // Check that update directories does not exists.
     foreach ($directories as $directory) {
-      $this->assertDirectoryNotExists($directory);
+      $this->assertDirectoryDoesNotExist($directory);
     }
 
     // Method must not fail if update directories do not exists.

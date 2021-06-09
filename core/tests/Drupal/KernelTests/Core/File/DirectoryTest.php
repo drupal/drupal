@@ -64,7 +64,7 @@ class DirectoryTest extends FileTestBase {
     // A directory to operate on.
     $default_scheme = 'public';
     $directory = $default_scheme . '://' . $this->randomMachineName() . '/' . $this->randomMachineName();
-    $this->assertDirectoryNotExists($directory);
+    $this->assertDirectoryDoesNotExist($directory);
 
     // Non-existent directory.
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
