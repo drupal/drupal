@@ -101,6 +101,32 @@ class EntityViewController implements ContainerInjectionInterface, TrustedCallba
     $page['#entity_type'] = $_entity->getEntityTypeId();
     $page['#' . $page['#entity_type']] = $_entity;
 
+    // Add canonical and shortlink links if the entity has a canonical
+    // link template and is not new.
+    if ($_entity->hasLinkTemplate('canonical') && !$_entity->isNew()) {
+
+      $url = $_entity->toUrl('canonical')->setAbsolute(TRUE);
+      $page['#attached']['html_head_link'][] = [
+        [
+          'rel' => 'canonical',
+          'href' => $url->toString(),
+        ],
+        TRUE,
+      ];
+
+      // Set the non-aliased canonical path as a default shortlink.
+      $page['#attached']['html_head_link'][] = [
+        [
+          'rel' => 'shortlink',
+          'href' => $url->setOption('alias', TRUE)->toString(),
+        ],
+        TRUE,
+      ];
+
+      // Since this generates absolute URLs, it can only be cached "per site".
+      $page['#cache']['contexts'][] = 'url.site';
+    }
+
     return $page;
   }
 

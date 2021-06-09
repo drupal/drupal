@@ -138,7 +138,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->assertSession()->pageTextContains($node3->label());
     $this->assertSession()->pageTextContains($node4->label());
 
-    $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'user']);
+    $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'url.site', 'user']);
 
     // Enable the "Powered by Drupal" block only on article nodes.
     $edit = [
@@ -165,7 +165,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $label = $block->label();
     // Check that block is not displayed on the front page.
     $this->assertNoText($label);
-    $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'user', 'route']);
+    $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'url.site', 'user', 'route']);
 
     // Ensure that a page that does not have a node context can still be cached,
     // the front page is the user page which is already cached from the login
