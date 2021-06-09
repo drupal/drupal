@@ -199,7 +199,7 @@ EOF;
     $this->makePoFile('remote/all/contrib_module_one', 'contrib_module_one-8.x-1.1.de._po', $this->timestampNew, $translations_one);
     $this->makePoFile('remote/all/contrib_module_two', 'contrib_module_two-8.x-2.0-beta4.de._po', $this->timestampOld, $translations_two);
     $this->makePoFile('remote/all/contrib_module_three', 'contrib_module_three-8.x-1.0.de._po', $this->timestampOld, $translations_three);
-    $this->makePoFile('remote/8.x/contrib_module_four', 'contrib_module_four-8.x-1.0.de._po', $this->timestampOld, $translations_four);
+    $this->makePoFile('remote/all/contrib_module_four', 'contrib_module_four-8.x-1.0.de._po', $this->timestampOld, $translations_four);
 
     // Add a number of files to the local file system to serve as local
     // translation files and match the project definitions set in
