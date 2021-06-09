@@ -215,6 +215,14 @@ class SearchQuery extends SelectExtender {
    *   The search text processor service.
    */
   public function __construct(SelectInterface $query, Connection $connection, ConfigFactoryInterface $config_factory = NULL, SearchTextProcessorInterface $search_text_processor = NULL) {
+    if (is_null($config_factory)) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $config_factory argument is deprecated in drupal:9.3.0 and will be required in drupal:10.0.0. Use the relevant service to instantiate extenders. See https://www.drupal.org/node/3218001', E_USER_DEPRECATED);
+      $config_factory = \Drupal::service('config.factory');
+    }
+    if (is_null($search_text_processor)) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $search_text_processor argument is deprecated in drupal:9.3.0 and will be required in drupal:10.0.0. Use the relevant service to instantiate extenders. See https://www.drupal.org/node/3218001', E_USER_DEPRECATED);
+      $search_text_processor = \Drupal::service('search.text_processor');
+    }
     parent::__construct($query, $connection);
     $this->configFactory = $config_factory;
     $this->searchTextProcessor = $search_text_processor;

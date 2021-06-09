@@ -68,6 +68,10 @@ class PagerSelectExtender extends SelectExtender {
    *   The pager manager service.
    */
   public function __construct(SelectInterface $query, Connection $connection, PagerManagerInterface $pager_manager = NULL) {
+    if (is_null($pager_manager)) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $pager_manager argument is deprecated in drupal:9.3.0 and will be required in drupal:10.0.0. Use the relevant service to instantiate extenders. See https://www.drupal.org/node/3218001', E_USER_DEPRECATED);
+      $pager_manager = \Drupal::service('pager.manager');
+    }
     parent::__construct($query, $connection);
     $this->pagerManager = $pager_manager;
 

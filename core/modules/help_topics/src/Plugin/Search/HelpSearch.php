@@ -17,6 +17,7 @@ use Drupal\help_topics\SearchableHelpInterface;
 use Drupal\search\Plugin\SearchIndexingInterface;
 use Drupal\search\Plugin\SearchPluginBase;
 use Drupal\search\SearchIndexInterface;
+use Drupal\search\SearchQuery;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

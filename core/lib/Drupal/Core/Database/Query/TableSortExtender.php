@@ -29,6 +29,10 @@ class TableSortExtender extends SelectExtender {
    *   The request stack.
    */
   public function __construct(SelectInterface $query, Connection $connection, RequestStack $request_stack = NULL) {
+    if (is_null($request_stack)) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $request_stack argument is deprecated in drupal:9.3.0 and will be required in drupal:10.0.0. Use the relevant service to instantiate extenders. See https://www.drupal.org/node/3218001', E_USER_DEPRECATED);
+      $request_stack = \Drupal::service('request_stack');
+    }
     parent::__construct($query, $connection);
     $this->requestStack = $request_stack;
 
