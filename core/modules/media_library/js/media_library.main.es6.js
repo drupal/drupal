@@ -20,7 +20,7 @@
      * @param {object} event
      *   The click event.
      */
-    onSelectMediaItem: event => {
+    onSelectMediaItem: (event) => {
       // Links inside the trigger should not be click-able.
       event.preventDefault();
       // Click the hidden checkbox when the trigger is clicked.

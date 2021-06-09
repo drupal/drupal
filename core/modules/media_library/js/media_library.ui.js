@@ -7,6 +7,7 @@
 
 (function ($, Drupal, window, _ref) {
   var tabbable = _ref.tabbable;
+
   Drupal.AjaxCommands.prototype.updateMediaLibrarySelection = function (ajax, response, status) {
     Object.values(response.mediaIds).forEach(function (value) {
       Drupal.MediaLibrary.currentSelection.push(value);
