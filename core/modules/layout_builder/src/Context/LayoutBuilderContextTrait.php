@@ -49,7 +49,7 @@ trait LayoutBuilderContextTrait {
   }
 
   /**
-   * Returns all populated contexts, both global and section_storage-specific.
+   * Returns all populated contexts, both global and section storage-specific.
    *
    * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
    *   The section storage.
