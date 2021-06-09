@@ -81,7 +81,7 @@ class SitesDirectoryHardeningTest extends BrowserTestBase {
 
     // Verify that site directory and the settings.php remain protected when
     // automatically enforcing file permissions is enabled.
-    $this->assertDirectoryNotIsWritable($site_path);
+    $this->assertDirectoryIsNotWritable($site_path);
     $this->assertFileNotIsWritable($settings_file);
   }
 
