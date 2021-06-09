@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\layout_builder_context_test\ContextProvider;
+namespace Drupal\layout_builder_test\ContextProvider;
 
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;

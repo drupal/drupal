@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\layout_builder_context_test\Plugin\Block;
+namespace Drupal\layout_builder_test\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 
