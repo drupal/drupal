@@ -41,6 +41,7 @@ class MysqlDateSql implements DateSqlInterface {
     'i' => '%i',
     's' => '%s',
     'A' => '%p',
+    'o' => '%x',
   ];
 
   /**
