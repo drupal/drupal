@@ -49,6 +49,7 @@ class HistoryTest extends BrowserTestBase {
 
     $this->user = $this->drupalCreateUser([
       'create page content',
+      'edit own page content',
       'access content',
     ]);
     $this->drupalLogin($this->user);
@@ -103,6 +104,11 @@ class HistoryTest extends BrowserTestBase {
   public function testHistory() {
     $nid = $this->testNode->id();
 
+    // Verify that previews of new entities do not create the history.
+    $this->drupalGet("node/add/page");
+    $this->submitForm(['title[0][value]' => 'Unsaved page'], 'Preview');
+    $this->assertArrayNotHasKey('ajaxPageState', $this->getDrupalSettings());
+
     // Retrieve "last read" timestamp for test node, for the current user.
     $response = $this->getNodeReadTimestamps([$nid]);
     $this->assertEquals(200, $response->getStatusCode());
@@ -134,6 +140,11 @@ class HistoryTest extends BrowserTestBase {
     $response = $this->getNodeReadTimestamps([]);
     $this->assertEquals(404, $response->getStatusCode());
 
+    // Verify that previews of existing entities do not update the history.
+    $this->drupalGet("node/$nid/edit");
+    $this->submitForm([], 'Preview');
+    $this->assertArrayNotHasKey('ajaxPageState', $this->getDrupalSettings());
+
     // Accessing either endpoint as the anonymous user should return a 403.
     $this->drupalLogout();
     $response = $this->getNodeReadTimestamps([$nid]);
@@ -142,6 +153,13 @@ class HistoryTest extends BrowserTestBase {
     $this->assertEquals(403, $response->getStatusCode());
     $response = $this->markNodeAsRead($nid);
     $this->assertEquals(403, $response->getStatusCode());
+
+    // Additional check to ensure that we did not forget to verify anything.
+    $rows = \Drupal::database()->query('SELECT * FROM {history}')->fetchAll();
+    $this->assertCount(1, $rows);
+    $this->assertSame($this->user->id(), $rows[0]->uid);
+    $this->assertSame($this->testNode->id(), $rows[0]->nid);
+    $this->assertSame($timestamp, (int) $rows[0]->timestamp);
   }
 
 }
