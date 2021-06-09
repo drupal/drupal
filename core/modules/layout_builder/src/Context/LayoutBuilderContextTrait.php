@@ -57,7 +57,7 @@ trait LayoutBuilderContextTrait {
    * @return \Drupal\Core\Plugin\Context\ContextInterface[]
    *   The array of context objects.
    */
-  protected function getPopulatedContexts(SectionStorageInterface $section_storage) : array {
+  protected function getPopulatedContexts(SectionStorageInterface $section_storage): array {
     // Get all known globally available contexts IDs.
     $available_context_ids = array_keys($this->contextRepository()->getAvailableContexts());
     // Filter to those that are populated.
