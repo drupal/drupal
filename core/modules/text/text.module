@@ -67,7 +67,7 @@ function text_summary($text, $format = NULL, $size = NULL) {
     $size = \Drupal::config('text.settings')->get('default_summary_length');
   }
 
-  // Find where the delimiter is in the body
+  // Find where the delimiter is in the body.
   $delimiter = strpos($text, '<!--break-->');
 
   // If the size is zero, and there is no delimiter, the entire body is the summary.
@@ -152,9 +152,14 @@ function text_summary($text, $format = NULL, $size = NULL) {
     }
   }
 
-  // If the htmlcorrector filter is present, apply it to the generated summary.
-  if (isset($format) && $filters->has('filter_htmlcorrector') && $filters->get('filter_htmlcorrector')->status) {
-    $summary = Html::normalize($summary);
+  // If filter_html or filter_htmlcorrector is enabled, normalize the output.
+  if (isset($format)) {
+    $filter_enabled = function (string $filter) use ($filters) : bool {
+      return $filters->has($filter) && $filters->get($filter)->status;
+    };
+    if ($filter_enabled('filter_html') || $filter_enabled('filter_htmlcorrector')) {
+      $summary = Html::normalize($summary);
+    }
   }
 
   return $summary;

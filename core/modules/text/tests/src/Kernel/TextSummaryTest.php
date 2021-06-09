@@ -7,6 +7,7 @@ use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\filter\Render\FilteredMarkup;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\user\Traits\UserCreationTrait;
@@ -301,6 +302,49 @@ class TextSummaryTest extends KernelTestBase {
     $this->assertCount(1, $violations);
     $this->assertEquals('test_textwithsummary.0.summary', $violations[0]->getPropertyPath());
     $this->assertEquals('The summary field is required for A text field', $violations[0]->getMessage());
+  }
+
+  /**
+   * Test text normalization when filter_html or filter_htmlcorrector enabled.
+   */
+  public function testNormalization() {
+    FilterFormat::create([
+      'format' => 'filter_html_enabled',
+      'filters' => [
+        'filter_html' => [
+          'status' => 1,
+          'settings' => [
+            'allowed_html' => '<strong>',
+          ],
+        ],
+      ],
+    ])->save();
+    FilterFormat::create([
+      'format' => 'filter_htmlcorrector_enabled',
+      'filters' => [
+        'filter_htmlcorrector' => [
+          'status' => 1,
+        ],
+      ],
+    ])->save();
+    FilterFormat::create([
+      'format' => 'neither_filter_enabled',
+      'filters' => [],
+    ])->save();
+
+    $filtered_markup = FilteredMarkup::create('<div><strong><span>Hello World</span></strong></div>');
+    // With either HTML filter enabled, text_summary() will normalize the text
+    // using HTML::normalize().
+    $summary = text_summary($filtered_markup, 'filter_html_enabled', 30);
+    $this->assertStringContainsString('<div><strong><span>', $summary);
+    $this->assertStringContainsString('</span></strong></div>', $summary);
+    $summary = text_summary($filtered_markup, 'filter_htmlcorrector_enabled', 30);
+    $this->assertStringContainsString('<div><strong><span>', $summary);
+    $this->assertStringContainsString('</span></strong></div>', $summary);
+    // If neither filter is enabled, the text will not be normalized.
+    $summary = text_summary($filtered_markup, 'neither_filter_enabled', 30);
+    $this->assertStringContainsString('<div><strong><span>', $summary);
+    $this->assertStringNotContainsString('</span></strong></div>', $summary);
   }
 
 }
