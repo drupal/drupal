@@ -274,7 +274,7 @@
           // Store href in a data attribute so it can be removed but replaced
           // if the element is re-enabled. This prevents screenreaders from
           // interpreting the link as clickable or focusable.
-          .attr('data-href', function() {
+          .attr('data-href', function () {
             return this.getAttribute('href');
           })
           .removeAttr('href');
@@ -295,12 +295,12 @@
           .on('click', Drupal.MediaLibrary.onSelectMediaItem)
           .closest('.js-media-library-item')
           .find('a')
-          .attr('href', function() {
+          .attr('href', function () {
             if (this.hasAttribute('data-href')) {
               return this.getAttribute('data-href');
             }
           })
-          .removeAttr('data-href');          
+          .removeAttr('data-href');
       }
 
       /**
