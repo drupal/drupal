@@ -6,7 +6,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Provides the user permissions administration form for a specific role.
+ * Provides the user permissions administration form for one or more module(s).
  *
  * @internal
  */
