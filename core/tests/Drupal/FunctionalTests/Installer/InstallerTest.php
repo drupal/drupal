@@ -107,7 +107,7 @@ class InstallerTest extends InstallerTestBase {
     // the settings file non-writable.
     $site_directory = $this->container->getParameter('app.root') . '/' . $this->siteDirectory;
     $this->assertDirectoryIsNotWritable($site_directory);
-    $this->assertFileNotIsWritable($site_directory . '/settings.php');
+    $this->assertFileIsNotWritable($site_directory . '/settings.php');
 
     parent::setUpSite();
   }
