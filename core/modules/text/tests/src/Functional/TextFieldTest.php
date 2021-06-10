@@ -42,7 +42,7 @@ class TextFieldTest extends StringFieldTest {
   // Test fields.
 
   /**
-   * Test text field validation.
+   * Tests text field validation.
    */
   public function testTextFieldValidation() {
     // Create a field with settings to validate.
@@ -77,7 +77,7 @@ class TextFieldTest extends StringFieldTest {
   }
 
   /**
-   * Test required long text with file upload.
+   * Tests required long text with file upload.
    */
   public function testRequiredLongTextWithFileUpload() {
     // Create a text field.
@@ -126,7 +126,8 @@ class TextFieldTest extends StringFieldTest {
 
     $test_file = current($this->drupalGetTestFiles('text'));
     $edit['files[file_field_0]'] = \Drupal::service('file_system')->realpath($test_file->uri);
-    $this->drupalPostForm('entity_test/add', $edit, 'Upload');
+    $this->drupalGet('entity_test/add');
+    $this->submitForm($edit, 'Upload');
     $this->assertSession()->statusCodeEquals(200);
     $edit = [
       'text_long[0][value]' => 'Long text',
@@ -138,7 +139,7 @@ class TextFieldTest extends StringFieldTest {
   }
 
   /**
-   * Test widgets.
+   * Tests widgets.
    */
   public function testTextfieldWidgets() {
     $this->_testTextfieldWidgets('text', 'text_textfield');
@@ -146,7 +147,7 @@ class TextFieldTest extends StringFieldTest {
   }
 
   /**
-   * Test widgets + 'formatted_text' setting.
+   * Tests widgets + 'formatted_text' setting.
    */
   public function testTextfieldWidgetsFormatted() {
     $this->_testTextfieldWidgetsFormatted('text', 'text_textfield');
@@ -188,7 +189,8 @@ class TextFieldTest extends StringFieldTest {
     $this->drupalLogin($this->adminUser);
     foreach (filter_formats() as $format) {
       if (!$format->isFallbackFormat()) {
-        $this->drupalPostForm('admin/config/content/formats/manage/' . $format->id() . '/disable', [], 'Disable');
+        $this->drupalGet('admin/config/content/formats/manage/' . $format->id() . '/disable');
+        $this->submitForm([], 'Disable');
       }
     }
     $this->drupalLogin($this->webUser);
@@ -224,7 +226,8 @@ class TextFieldTest extends StringFieldTest {
       'format' => mb_strtolower($this->randomMachineName()),
       'name' => $this->randomMachineName(),
     ];
-    $this->drupalPostForm('admin/config/content/formats/add', $edit, 'Save configuration');
+    $this->drupalGet('admin/config/content/formats/add');
+    $this->submitForm($edit, 'Save configuration');
     filter_formats_reset();
     $format = FilterFormat::load($edit['format']);
     $format_id = $format->id();

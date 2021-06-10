@@ -4,6 +4,7 @@ namespace Drupal\content_moderation;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\workflows\Entity\Workflow;
+use Drupal\workflows\State;
 
 /**
  * Defines a class for dynamic permissions based on transitions.
@@ -30,6 +31,14 @@ class Permissions {
             '%workflow' => $workflow->label(),
             '%transition' => $transition->label(),
           ]),
+          'description' => $this->formatPlural(
+            count($transition->from()),
+            'Move content from %from state to %to state.',
+            'Move content from %from states to %to state.', [
+              '%from' => implode(', ', array_map([State::class, 'labelCallback'], $transition->from())),
+              '%to' => $transition->to()->label(),
+            ]
+          ),
         ];
       }
     }

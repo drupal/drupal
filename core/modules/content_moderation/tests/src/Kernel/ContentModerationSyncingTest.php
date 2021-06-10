@@ -40,7 +40,7 @@ class ContentModerationSyncingTest extends KernelTestBase {
   }
 
   /**
-   * Test no new revision is forced during a sync.
+   * Tests no new revision is forced during a sync.
    */
   public function testNoRevisionForcedDuringSync() {
     $entity = EntityTestMulRevPub::create([
@@ -58,7 +58,7 @@ class ContentModerationSyncingTest extends KernelTestBase {
   }
 
   /**
-   * Test changing the moderation state during a sync.
+   * Tests changing the moderation state during a sync.
    */
   public function testSingleRevisionStateChangedDuringSync() {
     $entity = EntityTestMulRevPub::create([
@@ -84,7 +84,7 @@ class ContentModerationSyncingTest extends KernelTestBase {
   }
 
   /**
-   * Test state changes with multiple revisions during a sync.
+   * Tests state changes with multiple revisions during a sync.
    */
   public function testMultipleRevisionStateChangedDuringSync() {
     $entity = EntityTestMulRevPub::create([
@@ -112,7 +112,7 @@ class ContentModerationSyncingTest extends KernelTestBase {
   }
 
   /**
-   * Test modifying a previous revision during a sync.
+   * Tests modifying a previous revision during a sync.
    */
   public function testUpdatingPreviousRevisionDuringSync() {
     $storage = $this->container->get('entity_type.manager')->getStorage('entity_test_mulrevpub');
@@ -139,7 +139,7 @@ class ContentModerationSyncingTest extends KernelTestBase {
   }
 
   /**
-   * Test a moderation state changed on a previous revision during a sync.
+   * Tests a moderation state changed on a previous revision during a sync.
    */
   public function testStateChangedPreviousRevisionDuringSync() {
     $storage = $this->container->get('entity_type.manager')->getStorage('entity_test_mulrevpub');

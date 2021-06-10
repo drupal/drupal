@@ -24,7 +24,7 @@ class HtmlResponseAttachmentsTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test rendering of ['#attached'].
+   * Tests rendering of ['#attached'].
    */
   public function testAttachments() {
     // Test ['#attached']['http_header] = ['Status', $code].
@@ -70,7 +70,7 @@ class HtmlResponseAttachmentsTest extends BrowserTestBase {
   }
 
   /**
-   * Test caching of ['#attached'].
+   * Tests caching of ['#attached'].
    */
   public function testRenderCachedBlock() {
     // Make sure our test block is visible.

@@ -95,7 +95,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
   }
 
   /**
-   * Test responsive image formatters when image style is empty.
+   * Tests responsive image formatters when image style is empty.
    */
   public function testResponsiveImageFieldFormattersEmptyStyle() {
     $this->addTestImageStyleMappings(TRUE);
@@ -166,7 +166,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
   }
 
   /**
-   * Test responsive image formatters on node display.
+   * Tests responsive image formatters on node display.
    *
    * If the empty styles param is set, then the function only tests for the
    * fallback image style (large).

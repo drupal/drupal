@@ -56,11 +56,11 @@ class ContentPreviewToggleTest extends WebDriverTestBase {
     $body_field_placeholder_label = '"Body" field';
     $content_preview_body_text = 'I should only be visible if content preview is enabled.';
 
-    $this->drupalPostForm(
-      'admin/structure/types/manage/bundle_for_this_particular_test/display/default',
-      ['layout[enabled]' => TRUE, 'layout[allow_custom]' => TRUE],
-      'Save'
-    );
+    $this->drupalGet('admin/structure/types/manage/bundle_for_this_particular_test/display/default');
+    $this->submitForm([
+      'layout[enabled]' => TRUE,
+      'layout[allow_custom]' => TRUE,
+    ], 'Save');
 
     $this->createNode([
       'type' => 'bundle_for_this_particular_test',

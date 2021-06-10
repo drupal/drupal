@@ -17,7 +17,7 @@ use Drupal\Core\File\FileSystemInterface;
 class DirectoryTest extends FileTestBase {
 
   /**
-   * Test local directory handling functions.
+   * Tests local directory handling functions.
    */
   public function testFileCheckLocalDirectoryHandling() {
     $site_path = $this->container->getParameter('site.path');
@@ -58,13 +58,13 @@ class DirectoryTest extends FileTestBase {
   }
 
   /**
-   * Test directory handling functions.
+   * Tests directory handling functions.
    */
   public function testFileCheckDirectoryHandling() {
     // A directory to operate on.
     $default_scheme = 'public';
     $directory = $default_scheme . '://' . $this->randomMachineName() . '/' . $this->randomMachineName();
-    $this->assertDirectoryNotExists($directory);
+    $this->assertDirectoryDoesNotExist($directory);
 
     // Non-existent directory.
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */

@@ -49,7 +49,7 @@ class InfoParserUnitTest extends UnitTestCase {
   }
 
   /**
-   * Test if correct exception is thrown for a broken info file.
+   * Tests if correct exception is thrown for a broken info file.
    *
    * @covers ::parse
    */
@@ -616,7 +616,7 @@ CORE_INCOMPATIBILITY;
   }
 
   /**
-   * Test a profile info file.
+   * Tests a profile info file.
    */
   public function testProfile() {
     $profile = <<<PROFILE_TEST

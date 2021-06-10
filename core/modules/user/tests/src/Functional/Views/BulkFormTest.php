@@ -50,7 +50,8 @@ class BulkFormTest extends UserTestBase {
     $edit = [
       'action' => 'user_block_user_action',
     ];
-    $this->drupalPostForm('test-user-bulk-form', $edit, 'Apply to selected items');
+    $this->drupalGet('test-user-bulk-form');
+    $this->submitForm($edit, 'Apply to selected items');
     $this->assertSession()->pageTextContains('No users selected.');
 
     // Assign a role to a user.
@@ -123,12 +124,14 @@ class BulkFormTest extends UserTestBase {
       'options[include_exclude]' => 'exclude',
       "options[selected_actions][$action_id]" => $action_id,
     ];
-    $this->drupalPostForm('admin/structure/views/nojs/handler/test_user_bulk_form/default/field/user_bulk_form', $edit, 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/handler/test_user_bulk_form/default/field/user_bulk_form');
+    $this->submitForm($edit, 'Apply');
     $this->submitForm([], 'Save');
     $this->drupalGet('test-user-bulk-form');
     $this->assertSession()->optionNotExists('edit-action', $action_id);
     $edit['options[include_exclude]'] = 'include';
-    $this->drupalPostForm('admin/structure/views/nojs/handler/test_user_bulk_form/default/field/user_bulk_form', $edit, 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/handler/test_user_bulk_form/default/field/user_bulk_form');
+    $this->submitForm($edit, 'Apply');
     $this->submitForm([], 'Save');
     $this->drupalGet('test-user-bulk-form');
     $this->assertSession()->optionExists('edit-action', $action_id);

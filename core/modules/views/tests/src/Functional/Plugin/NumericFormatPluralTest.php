@@ -44,7 +44,7 @@ class NumericFormatPluralTest extends ViewTestBase {
   }
 
   /**
-   * Test plural formatting setting on a numeric views handler.
+   * Tests plural formatting setting on a numeric views handler.
    */
   public function testNumericFormatPlural() {
     // Create a file.
@@ -87,7 +87,8 @@ class NumericFormatPluralTest extends ViewTestBase {
 
     // Add Slovenian and set its plural formula to test multiple plural forms.
     $edit = ['predefined_langcode' => 'sl'];
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
+    $this->drupalGet('admin/config/regional/language/add');
+    $this->submitForm($edit, 'Add language');
     $formula = 'nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);';
     $header = new PoHeader();
     list($nplurals, $formula) = $header->parsePluralForms($formula);

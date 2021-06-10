@@ -141,7 +141,8 @@ class SearchRankingTest extends BrowserTestBase {
     foreach ($node_ranks as $node_rank) {
       // Enable the ranking we are testing.
       $edit['rankings[' . $node_rank . '][value]'] = 10;
-      $this->drupalPostForm('admin/config/search/pages/manage/node_search', $edit, 'Save search page');
+      $this->drupalGet('admin/config/search/pages/manage/node_search');
+      $this->submitForm($edit, 'Save search page');
       $this->drupalGet('admin/config/search/pages/manage/node_search');
       $this->assertSession()->optionExists('edit-rankings-' . $node_rank . '-value', '10');
 
@@ -158,7 +159,8 @@ class SearchRankingTest extends BrowserTestBase {
 
     // Save the final node_rank change then check that all rankings are visible
     // and have been set back to 0.
-    $this->drupalPostForm('admin/config/search/pages/manage/node_search', $edit, 'Save search page');
+    $this->drupalGet('admin/config/search/pages/manage/node_search');
+    $this->submitForm($edit, 'Save search page');
     $this->drupalGet('admin/config/search/pages/manage/node_search');
     foreach ($node_ranks as $node_rank) {
       $this->assertSession()->optionExists('edit-rankings-' . $node_rank . '-value', '0');
@@ -216,7 +218,7 @@ class SearchRankingTest extends BrowserTestBase {
   }
 
   /**
-   * Test rankings of HTML tags.
+   * Tests rankings of HTML tags.
    */
   public function testHTMLRankings() {
     $full_html_format = FilterFormat::create([

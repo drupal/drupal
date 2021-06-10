@@ -78,7 +78,7 @@ class ContentModerationWorkflowConfigTest extends KernelTestBase {
   }
 
   /**
-   * Test deleting a state via config import.
+   * Tests deleting a state via config import.
    */
   public function testDeletingStateViaConfiguration() {
     $config_sync = \Drupal::service('config.storage.sync');

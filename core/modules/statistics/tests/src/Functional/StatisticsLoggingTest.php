@@ -78,8 +78,10 @@ class StatisticsLoggingTest extends BrowserTestBase {
       'label' => $this->randomMachineName(16),
       'direction' => 'ltr',
     ];
-    $this->drupalPostForm('admin/config/regional/language/add', $this->language, 'Add custom language');
-    $this->drupalPostForm('admin/config/regional/language/detection', ['language_interface[enabled][language-url]' => 1], 'Save settings');
+    $this->drupalGet('admin/config/regional/language/add');
+    $this->submitForm($this->language, 'Add custom language');
+    $this->drupalGet('admin/config/regional/language/detection');
+    $this->submitForm(['language_interface[enabled][language-url]' => 1], 'Save settings');
     $this->drupalLogout();
 
     // Enable access logging.

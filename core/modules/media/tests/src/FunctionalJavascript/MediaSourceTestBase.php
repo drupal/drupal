@@ -105,7 +105,7 @@ abstract class MediaSourceTestBase extends MediaJavascriptTestBase {
   }
 
   /**
-   * Test generic media type creation.
+   * Tests generic media type creation.
    *
    * @param string $media_type_id
    *   The media type config entity ID.

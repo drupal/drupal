@@ -29,7 +29,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test the GET method.
+   * Tests the GET method.
    */
   public function testRead() {
     $this->createDefaultContent(61, 5, TRUE, TRUE, static::IS_NOT_MULTILINGUAL, FALSE);
@@ -196,7 +196,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
     $this->assertCount(1, $non_help_links);
     $link_keys = array_keys($single_output['meta']['omitted']['links']);
     $this->assertSame('help', reset($link_keys));
-    $this->assertRegExp('/^item--[a-zA-Z0-9]{7}$/', next($link_keys));
+    $this->assertMatchesRegularExpression('/^item--[a-zA-Z0-9]{7}$/', next($link_keys));
     $this->nodes[1]->set('status', TRUE);
     $this->nodes[1]->save();
     // 13. Test filtering when using short syntax.
@@ -516,7 +516,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
   }
 
   /**
-   * Test the GET method on articles referencing the same tag twice.
+   * Tests the GET method on articles referencing the same tag twice.
    */
   public function testReferencingTwiceRead() {
     $this->createDefaultContent(1, 1, FALSE, FALSE, static::IS_NOT_MULTILINGUAL, TRUE);
@@ -530,7 +530,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
   }
 
   /**
-   * Test POST, PATCH and DELETE.
+   * Tests POST, PATCH and DELETE.
    */
   public function testWrite() {
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);

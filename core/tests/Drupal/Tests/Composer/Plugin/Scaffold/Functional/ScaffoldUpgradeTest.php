@@ -42,7 +42,7 @@ class ScaffoldUpgradeTest extends TestCase {
   }
 
   /**
-   * Test upgrading the Composer Scaffold plugin.
+   * Tests upgrading the Composer Scaffold plugin.
    */
   public function testScaffoldUpgrade() {
     $composerVersionLine = exec('composer --version');
