@@ -20,7 +20,7 @@ class UserPermissionsModuleSpecificForm extends UserPermissionsForm {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    * @param string $modules
-   *   (optional) One or more module names, comma-separated.
+   *   (optional) One or more module machine names, comma-separated.
    */
   public function buildForm(array $form, FormStateInterface $form_state, $modules = '') {
     $this->moduleList = explode(',', $modules);
@@ -31,7 +31,7 @@ class UserPermissionsModuleSpecificForm extends UserPermissionsForm {
    * Checks that at least one module defines permissions.
    *
    * @param string $modules
-   *   (optional) One or more module names, comma-separated.
+   *   (optional) One or more module machine names, comma-separated.
    *
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
