@@ -1,0 +1,8 @@
+name: 'Exception Message Test'
+type: module
+description: 'Tests that exception messages are properly visible in dblog.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:contact
+  - drupal:user

@@ -1,0 +1,36 @@
+<?php
+
+/**
+ * @file
+ * Contains install and update hooks.
+ */
+
+use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
+
+/**
+ * Implements hook_install().
+ */
+function dblog_exception_message_test_install() {
+  $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+
+  $original = $entity_definition_update_manager->getEntityType('contact_message');
+  $entity_definition_update_manager->uninstallEntityType($original);
+
+  // Update the entity type definition and make it use the default SQL storage.
+  $entity_type = clone $original;
+  $entity_type->setStorageClass(SqlContentEntityStorage::class);
+  $keys = $entity_type->getKeys();
+  $keys['id'] = 'id';
+  $entity_type->set('entity_keys', $keys);
+  $entity_type->set('base_table', 'contact_message');
+  $entity_definition_update_manager->installEntityType($entity_type);
+
+  /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $field_manager */
+  $field_manager = \Drupal::service('entity_field.manager');
+
+  // Purposefully change the field storage definition to get exception message.
+  $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $field_definition = $field_manager->getFieldStorageDefinitions('contact_message')['id'];
+  $entity_definition_update_manager->installFieldStorageDefinition('id', 'contact_message', 'contact_storage', $field_definition);
+
+}
