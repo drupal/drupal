@@ -40,7 +40,8 @@ class UserPermissionsForm extends FormBase {
   /**
    * The module list.
    *
-   * A list of modules, or NULL to handle all installed modules.
+   * A keyed array of module machine names, or NULL to handle all installed
+   * modules.
    *
    * @var string[]|null
    */
