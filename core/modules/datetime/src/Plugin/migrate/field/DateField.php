@@ -30,6 +30,10 @@ class DateField extends FieldPluginBase {
   public function getFieldFormatterMap() {
     return [
       'date_default' => 'datetime_default',
+      'format_interval' => 'datetime_time_ago',
+      // The date_plain formatter exists in Drupal 7 but not Drupal 6. It is
+      // added here because this plugin is declared for Drupal 6 and Drupal 7.
+      'date_plain' => 'datetime_plain',
     ];
   }
 
