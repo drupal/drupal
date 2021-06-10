@@ -91,7 +91,6 @@ class Rss extends RssPluginBase {
       return;
     }
 
-    $node->link = $node->toUrl('canonical', ['absolute' => TRUE])->toString();
     $node->rss_namespaces = [];
     $node->rss_elements = [
       [
@@ -138,7 +137,7 @@ class Rss extends RssPluginBase {
       $item->description = $build;
     }
     $item->title = $node->label();
-    $item->link = $node->link;
+    $item->link = $node->toUrl('canonical', ['absolute' => TRUE])->toString();
     // Provide a reference so that the render call in
     // template_preprocess_views_view_row_rss() can still access it.
     $item->elements = &$node->rss_elements;
