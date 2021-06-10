@@ -759,7 +759,7 @@ trait AssertContentTrait {
     if (!$message) {
       $message = new FormattableMarkup('Pattern "@pattern" not found', ['@pattern' => $pattern]);
     }
-    $this->assertNotRegExp($pattern, $this->getRawContent(), $message);
+    $this->assertDoesNotMatchRegularExpression($pattern, $this->getRawContent(), $message);
     return TRUE;
   }
 

@@ -234,7 +234,7 @@ class HtmlToTextTest extends BrowserTestBase {
 EOT;
     $input = str_replace(["\r", "\n"], '', $input);
     $output = MailFormatHelper::htmlToText($input);
-    $this->assertNotRegExp('/\][^\n]*\[/s', $output, 'Block-level HTML tags should force newlines');
+    $this->assertDoesNotMatchRegularExpression('/\][^\n]*\[/s', $output, 'Block-level HTML tags should force newlines');
     $output_upper = mb_strtoupper($output);
     $upper_input = mb_strtoupper($input);
     $upper_output = MailFormatHelper::htmlToText($upper_input);
