@@ -323,7 +323,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     // directories in the file system.
     $directory = $scheme . '://styles/' . $this->style->id() . '/' . $scheme . '/' . $this->randomMachineName();
     $this->drupalGet(file_create_url($directory . '/' . $this->randomString()));
-    $this->assertDirectoryNotExists($directory);
+    $this->assertDirectoryDoesNotExist($directory);
   }
 
 }

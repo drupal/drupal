@@ -12,7 +12,6 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\taxonomy\Entity\Term;
-use Drupal\taxonomy\TermInterface;
 
 /**
  * Implements hook_help().
@@ -55,37 +54,6 @@ function taxonomy_term_uri($term) {
   return new Url('entity.taxonomy_term.canonical', [
     'taxonomy_term' => $term->id(),
   ]);
-}
-
-/**
- * Implements hook_page_attachments_alter().
- */
-function taxonomy_page_attachments_alter(array &$page) {
-  $route_match = \Drupal::routeMatch();
-  if ($route_match->getRouteName() == 'entity.taxonomy_term.canonical' && ($term = $route_match->getParameter('taxonomy_term')) && $term instanceof TermInterface) {
-    foreach ($term->uriRelationships() as $rel) {
-      // Set the URI relationships, like canonical.
-      $page['#attached']['html_head_link'][] = [
-        [
-          'rel' => $rel,
-          'href' => $term->toUrl($rel)->toString(),
-        ],
-        TRUE,
-      ];
-
-      // Set the term path as the canonical URL to prevent duplicate content.
-      if ($rel == 'canonical') {
-        // Set the non-aliased canonical path as a default shortlink.
-        $page['#attached']['html_head_link'][] = [
-          [
-            'rel' => 'shortlink',
-            'href' => $term->toUrl($rel, ['alias' => TRUE])->toString(),
-          ],
-          TRUE,
-        ];
-      }
-    }
-  }
 }
 
 /**

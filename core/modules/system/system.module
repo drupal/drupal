@@ -700,9 +700,8 @@ function system_js_settings_build(&$settings, AttachedAssetsInterface $assets) {
  * as well as theme_token ajax state.
  */
 function system_js_settings_alter(&$settings, AttachedAssetsInterface $assets) {
-  // As this is being output in the final response always use the master
-  // request.
-  $request = \Drupal::requestStack()->getMasterRequest();
+  // As this is being output in the final response always use the main request.
+  $request = \Drupal::requestStack()->getMainRequest();
   $current_query = $request->query->all();
 
   // Let output path processors set a prefix.

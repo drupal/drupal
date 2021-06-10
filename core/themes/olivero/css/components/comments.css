@@ -200,7 +200,6 @@
 .add-comment__picture img, .comment__picture img {
     width: 100%;
     height: 100%;
-    -o-object-fit: cover;
     object-fit: cover
 
     /* @TODO: create image-style for profile's avatar to have image squared by default. */

@@ -60,7 +60,7 @@ class InstallerConfigDirectorySetNoDirectoryErrorTest extends InstallerTestBase 
    */
   public function testError() {
     $this->assertSession()->pageTextContains("An automated attempt to create the directory {$this->configDirectory}/sync failed, possibly due to a permissions problem.");
-    $this->assertDirectoryNotExists($this->configDirectory . '/sync');
+    $this->assertDirectoryDoesNotExist($this->configDirectory . '/sync');
   }
 
 }
