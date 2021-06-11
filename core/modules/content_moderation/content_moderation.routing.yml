@@ -4,6 +4,7 @@ content_moderation.admin_moderated_content:
     _controller: '\Drupal\content_moderation\Controller\ModeratedContentController::nodeListing'
     _title: 'Moderated content'
   requirements:
+    _module_dependencies: 'node'
     _permission: 'view any unpublished content'
 
 content_moderation.workflow_type_edit_form:
