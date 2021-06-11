@@ -85,7 +85,7 @@ class DrupalDateTimeTest extends UnitTestCase {
         'expected' => $positive_19_hours,
       ],
       // In 1970 Sydney did not observe daylight savings time
-      // So there is only a 18 hour time interval.
+      // So there is only an 18 hour time interval.
       [
         'input2' => DrupalDateTime::createFromFormat('Y-m-d H:i:s', '1970-01-01 00:00:00', new \DateTimeZone('Australia/Sydney'), $settings),
         'input1' => DrupalDateTime::createFromFormat('Y-m-d H:i:s', '1970-01-01 00:00:00', new \DateTimeZone('America/Los_Angeles'), $settings),
@@ -237,6 +237,25 @@ class DrupalDateTimeTest extends UnitTestCase {
     $this->assertEquals('Europe/Berlin', $datetime->getTimezone()->getName());
     $this->assertEquals(1500000000, $drupaldatetime->getTimestamp());
     $this->assertEquals('America/New_York', $drupaldatetime->getTimezone()->getName());
+  }
+
+  /**
+   * Test to avoid serialization of formatTranslationCache
+   */
+  public function testSleep() {
+    $tz = new \DateTimeZone(date_default_timezone_get());
+    $date = new DrupalDateTime('now', $tz, ['langcode' => 'en']);
+
+    // Override timestamp before serialize.
+    $date->setTimestamp(12345678);
+
+    $vars = $date->__sleep();
+    $this->assertContains('langcode', $vars);
+    $this->assertContains('dateTimeObject', $vars);
+    $this->assertNotContains('formatTranslationCache', $vars);
+
+    $unserialized_date = unserialize(serialize($date));
+    $this->assertSame(12345678, $unserialized_date->getTimestamp());
   }
 
 }
