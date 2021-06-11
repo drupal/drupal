@@ -27,6 +27,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
     'layout_builder',
     'layout_test',
     'node',
+    'block',
   ];
 
   /**
