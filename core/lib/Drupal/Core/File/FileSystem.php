@@ -500,6 +500,7 @@ class FileSystem implements FileSystemInterface {
   public function saveData($data, $destination, $replace = self::EXISTS_RENAME) {
     // Write the data to a temporary file.
     $temp_name = $this->tempnam('temporary://', 'file');
+    $this->prepareDirectory($temp_name, self::CREATE_DIRECTORY);
     if (file_put_contents($temp_name, $data) === FALSE) {
       $this->logger->error("Temporary file '%temp_name' could not be created.", ['%temp_name' => $temp_name]);
       throw new FileWriteException("Temporary file '$temp_name' could not be created.");
