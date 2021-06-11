@@ -42,7 +42,7 @@ class BlockInterestCohortTest extends KernelTestBase {
   }
 
   /**
-   * Tests that an existing header is appended to correctly.
+   * Tests that an existing header is not modified.
    */
   public function testExistingPolicyHeader() {
     $headers['Permissions-Policy'] = 'geolocation=()';
@@ -53,9 +53,7 @@ class BlockInterestCohortTest extends KernelTestBase {
     $event = new ResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST, $response);
     \Drupal::service('finish_response_subscriber')->onRespond($event);
 
-    $permissions_policy = $response->headers->get('Permissions-Policy');
-    $this->assertStringContainsString('geolocation=()', $permissions_policy);
-    $this->assertStringContainsString('interest-cohort=()', $permissions_policy);
+    $this->assertSame($headers['Permissions-Policy'], $response->headers->get('Permissions-Policy'));
   }
 
   /**
