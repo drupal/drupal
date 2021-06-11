@@ -532,6 +532,9 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
         '#plain_text' => $node->label(),
         '#suffix' => '</h1>',
         '#weight' => -1000,
+        '#cache' => [
+          'max-age' => 0,
+        ],
       ];
       $text = $this->renderer->renderPlain($build);
 
