@@ -725,7 +725,7 @@ abstract class DatabaseConnection {
    *
    * @throws PDOException
    */
-  public function query($query, array $args = array(), $options = array()) {
+  public function runQuery($query, array $args = array(), $options = array()) {
 
     // Use default values if not already set.
     $options += $this->defaultOptions();
@@ -1125,7 +1125,7 @@ abstract class DatabaseConnection {
         if (empty($this->transactionLayers)) {
           break;
         }
-        $this->query('ROLLBACK TO SAVEPOINT ' . $savepoint);
+        $this->runQuery('ROLLBACK TO SAVEPOINT ' . $savepoint);
         $this->popCommittableTransactions();
         if ($rolled_back_other_active_savepoints) {
           throw new DatabaseTransactionOutOfOrderException();
@@ -1161,7 +1161,7 @@ abstract class DatabaseConnection {
     // If we're already in a transaction then we want to create a savepoint
     // rather than try to create another transaction.
     if ($this->inTransaction()) {
-      $this->query('SAVEPOINT ' . $name);
+      $this->runQuery('SAVEPOINT ' . $name);
     }
     else {
       $this->connection->beginTransaction();
@@ -1220,7 +1220,7 @@ abstract class DatabaseConnection {
         }
       }
       else {
-        $this->query('RELEASE SAVEPOINT ' . $name);
+        $this->runQuery('RELEASE SAVEPOINT ' . $name);
       }
     }
   }
@@ -1228,7 +1228,7 @@ abstract class DatabaseConnection {
   /**
    * Runs a limited-range query on this database object.
    *
-   * Use this as a substitute for ->query() when a subset of the query is to be
+   * Use this as a substitute for ->runQuery() when a subset of the query is to be
    * returned. User-supplied arguments to the query should be passed in as
    * separate parameters so that they can be properly escaped to avoid SQL
    * injection attacks.
@@ -1263,7 +1263,7 @@ abstract class DatabaseConnection {
   /**
    * Runs a SELECT query and stores its results in a temporary table.
    *
-   * Use this as a substitute for ->query() when the results need to stored
+   * Use this as a substitute for ->runQuery() when the results need to stored
    * in a temporary table. Temporary tables exist for the duration of the page
    * request. User-supplied arguments to the query should be passed in as
    * separate parameters so that they can be properly escaped to avoid SQL
@@ -2454,7 +2454,7 @@ function db_query($query, array $args = array(), array $options = array()) {
     $options['target'] = 'default';
   }
 
-  return Database::getConnection($options['target'])->query($query, $args, $options);
+  return Database::getConnection($options['target'])->runQuery($query, $args, $options);
 }
 
 /**

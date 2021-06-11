@@ -33,7 +33,7 @@ class InsertQuery_mysql extends InsertQuery {
       $values = $this->fromQuery->getArguments();
     }
 
-    $last_insert_id = $this->connection->query((string) $this, $values, $this->queryOptions);
+    $last_insert_id = $this->connection->runQuery((string) $this, $values, $this->queryOptions);
 
     // Re-initialize the values array so that we can re-use this query.
     $this->insertValues = array();

@@ -22,7 +22,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
     $info = $this->getPrefixInfo($table);
 
     // Don't use {} around sqlite_master table.
-    return (bool) $this->connection->query('SELECT 1 FROM ' . $info['schema'] . '.sqlite_master WHERE type = :type AND name = :name', array(':type' => 'table', ':name' => $info['table']))->fetchField();
+    return (bool) $this->connection->runQuery('SELECT 1 FROM ' . $info['schema'] . '.sqlite_master WHERE type = :type AND name = :name', array(':type' => 'table', ':name' => $info['table']))->fetchField();
   }
 
   public function fieldExists($table, $column) {
@@ -246,7 +246,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
     // the table with curly braces incase the db_prefix contains a reference
     // to a database outside of our existing database.
     $info = $this->getPrefixInfo($new_name);
-    $this->connection->query('ALTER TABLE {' . $table . '} RENAME TO ' . $info['table']);
+    $this->connection->runQuery('ALTER TABLE {' . $table . '} RENAME TO ' . $info['table']);
 
     // Drop the indexes, there is no RENAME INDEX command in SQLite.
     if (!empty($schema['unique keys'])) {
@@ -263,7 +263,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
     // Recreate the indexes.
     $statements = $this->createIndexSql($new_name, $schema);
     foreach ($statements as $statement) {
-      $this->connection->query($statement);
+      $this->connection->runQuery($statement);
     }
   }
 
@@ -272,7 +272,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
       return FALSE;
     }
     $this->connection->tableDropped = TRUE;
-    $this->connection->query('DROP TABLE {' . $table . '}');
+    $this->connection->runQuery('DROP TABLE {' . $table . '}');
     return TRUE;
   }
 
@@ -291,7 +291,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
       // When we don't have to create new keys and we are not creating a
       // NOT NULL column without a default value, we can use the quicker version.
       $query = 'ALTER TABLE {' . $table . '} ADD ' . $this->createFieldSql($field, $this->processField($specification));
-      $this->connection->query($query);
+      $this->connection->runQuery($query);
 
       // Apply the initial value if set.
       if (isset($specification['initial'])) {
@@ -386,8 +386,8 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
       ->from($select)
       ->execute();
 
-    $old_count = $this->connection->query('SELECT COUNT(*) FROM {' . $table . '}')->fetchField();
-    $new_count = $this->connection->query('SELECT COUNT(*) FROM {' . $new_table . '}')->fetchField();
+    $old_count = $this->connection->runQuery('SELECT COUNT(*) FROM {' . $table . '}')->fetchField();
+    $new_count = $this->connection->runQuery('SELECT COUNT(*) FROM {' . $new_table . '}')->fetchField();
     if ($old_count == $new_count) {
       $this->dropTable($table);
       $this->renameTable($new_table, $table);
@@ -417,7 +417,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
     );
 
     $info = $this->getPrefixInfo($table);
-    $result = $this->connection->query('PRAGMA ' . $info['schema'] . '.table_info(' . $info['table'] . ')');
+    $result = $this->connection->runQuery('PRAGMA ' . $info['schema'] . '.table_info(' . $info['table'] . ')');
     foreach ($result as $row) {
       if (preg_match('/^([^(]+)\((.*)\)$/', $row->type, $matches)) {
         $type = $matches[1];
@@ -447,7 +447,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
       }
     }
     $indexes = array();
-    $result = $this->connection->query('PRAGMA ' . $info['schema'] . '.index_list(' . $info['table'] . ')');
+    $result = $this->connection->runQuery('PRAGMA ' . $info['schema'] . '.index_list(' . $info['table'] . ')');
     foreach ($result as $row) {
       if (strpos($row->name, 'sqlite_autoindex_') !== 0) {
         $indexes[] = array(
@@ -460,7 +460,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
       $name = $index['name'];
       // Get index name without prefix.
       $index_name = substr($name, strlen($info['table']) + 1);
-      $result = $this->connection->query('PRAGMA ' . $info['schema'] . '.index_info(' . $name . ')');
+      $result = $this->connection->runQuery('PRAGMA ' . $info['schema'] . '.index_info(' . $name . ')');
       foreach ($result as $row) {
         $schema[$index['schema_key']][$index_name][] = $row->name;
       }
@@ -568,14 +568,14 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
     $schema['indexes'][$name] = $fields;
     $statements = $this->createIndexSql($table, $schema);
     foreach ($statements as $statement) {
-      $this->connection->query($statement);
+      $this->connection->runQuery($statement);
     }
   }
 
   public function indexExists($table, $name) {
     $info = $this->getPrefixInfo($table);
 
-    return $this->connection->query('PRAGMA ' . $info['schema'] . '.index_info(' . $info['table'] . '_' . $name . ')')->fetchField() != '';
+    return $this->connection->runQuery('PRAGMA ' . $info['schema'] . '.index_info(' . $info['table'] . '_' . $name . ')')->fetchField() != '';
   }
 
   public function dropIndex($table, $name) {
@@ -585,7 +585,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
 
     $info = $this->getPrefixInfo($table);
 
-    $this->connection->query('DROP INDEX ' . $info['schema'] . '.' . $info['table'] . '_' . $name);
+    $this->connection->runQuery('DROP INDEX ' . $info['schema'] . '.' . $info['table'] . '_' . $name);
     return TRUE;
   }
 
@@ -600,7 +600,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
     $schema['unique keys'][$name] = $fields;
     $statements = $this->createIndexSql($table, $schema);
     foreach ($statements as $statement) {
-      $this->connection->query($statement);
+      $this->connection->runQuery($statement);
     }
   }
 
@@ -611,7 +611,7 @@ class DatabaseSchema_sqlite extends DatabaseSchema {
 
     $info = $this->getPrefixInfo($table);
 
-    $this->connection->query('DROP INDEX ' . $info['schema'] . '.' . $info['table'] . '_' . $name);
+    $this->connection->runQuery('DROP INDEX ' . $info['schema'] . '.' . $info['table'] . '_' . $name);
     return TRUE;
   }
 

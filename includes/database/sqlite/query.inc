@@ -27,7 +27,7 @@ class InsertQuery_sqlite extends InsertQuery {
       return parent::execute();
     }
     else {
-      return $this->connection->query('INSERT INTO {' . $this->table . '} DEFAULT VALUES', array(), $this->queryOptions);
+      return $this->connection->runQuery('INSERT INTO {' . $this->table . '} DEFAULT VALUES', array(), $this->queryOptions);
     }
   }
 
@@ -112,7 +112,7 @@ class DeleteQuery_sqlite extends DeleteQuery {
     // deleted by that optimized "truncate" optimization. But we want to return
     // the number of rows affected, so we calculate it directly.
     if (!count($this->condition)) {
-      $total_rows = $this->connection->query('SELECT COUNT(*) FROM {' . $this->connection->escapeTable($this->table) . '}')->fetchField();
+      $total_rows = $this->connection->runQuery('SELECT COUNT(*) FROM {' . $this->connection->escapeTable($this->table) . '}')->fetchField();
       parent::execute();
       return $total_rows;
     }

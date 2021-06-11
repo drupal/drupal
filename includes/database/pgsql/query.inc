@@ -60,7 +60,7 @@ class InsertQuery_pgsql extends InsertQuery {
             // used twice. However, trying to insert a value into a serial
             // column should only be done in very rare cases and is not thread
             // safe by definition.
-            $this->connection->query("SELECT setval('" . $table_information->sequences[$index] . "', GREATEST(MAX(" . $serial_field . "), :serial_value)) FROM {" . $this->table . "}", array(':serial_value' => (int)$serial_value));
+            $this->connection->runQuery("SELECT setval('" . $table_information->sequences[$index] . "', GREATEST(MAX(" . $serial_field . "), :serial_value)) FROM {" . $this->table . "}", array(':serial_value' => (int)$serial_value));
           }
         }
       }
@@ -90,10 +90,10 @@ class InsertQuery_pgsql extends InsertQuery {
     }
     // Only use the returned last_insert_id if it is not already set.
     if (!empty($last_insert_id)) {
-      $this->connection->query($stmt, array(), $options);
+      $this->connection->runQuery($stmt, array(), $options);
     }
     else {
-      $last_insert_id = $this->connection->query($stmt, array(), $options);
+      $last_insert_id = $this->connection->runQuery($stmt, array(), $options);
     }
 
     // Re-initialize the values array so that we can re-use this query.
@@ -203,7 +203,7 @@ class UpdateQuery_pgsql extends UpdateQuery {
 
     $options = $this->queryOptions;
     $options['already_prepared'] = TRUE;
-    $this->connection->query($stmt, $options);
+    $this->connection->runQuery($stmt, $options);
 
     return $stmt->rowCount();
   }

@@ -81,7 +81,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
         // Only attach the database once.
         if (!isset($this->attachedDatabases[$prefix])) {
           $this->attachedDatabases[$prefix] = $prefix;
-          $this->query('ATTACH DATABASE :database AS :prefix', array(':database' => $connection_options['database'] . '-' . $prefix, ':prefix' => $prefix));
+          $this->runQuery('ATTACH DATABASE :database AS :prefix', array(':database' => $connection_options['database'] . '-' . $prefix, ':prefix' => $prefix));
         }
 
         // Add a ., so queries become prefix.table, which is proper syntax for
@@ -93,7 +93,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
     $this->setPrefix($prefixes);
 
     // Detect support for SAVEPOINT.
-    $version = $this->query('SELECT sqlite_version()')->fetchField();
+    $version = $this->runQuery('SELECT sqlite_version()')->fetchField();
     $this->savepointSupport = (version_compare($version, '3.6.8') >= 0);
 
     // Create functions needed by SQLite.
@@ -137,7 +137,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
       foreach ($this->attachedDatabases as $prefix) {
         // Check if the database is now empty, ignore the internal SQLite tables.
         try {
-          $count = $this->query('SELECT COUNT(*) FROM ' . $prefix . '.sqlite_master WHERE type = :type AND name NOT LIKE :pattern', array(':type' => 'table', ':pattern' => 'sqlite_%'))->fetchField();
+          $count = $this->runQuery('SELECT COUNT(*) FROM ' . $prefix . '.sqlite_master WHERE type = :type AND name NOT LIKE :pattern', array(':type' => 'table', ':pattern' => 'sqlite_%'))->fetchField();
 
           // We can prune the database file if it doesn't have any tables.
           if ($count == 0 && $this->connectionOptions['database'] != ':memory:') {
@@ -263,7 +263,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
   }
 
   public function queryRange($query, $from, $count, array $args = array(), array $options = array()) {
-    return $this->query($query . ' LIMIT ' . (int) $from . ', ' . (int) $count, $args, $options);
+    return $this->runQuery($query . ' LIMIT ' . (int) $from . ', ' . (int) $count, $args, $options);
   }
 
   public function queryTemporary($query, array $args = array(), array $options = array()) {
@@ -274,7 +274,7 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
     $prefixes[$tablename] = '';
     $this->setPrefix($prefixes);
 
-    $this->query('CREATE TEMPORARY TABLE ' . $tablename . ' AS ' . $query, $args, $options);
+    $this->runQuery('CREATE TEMPORARY TABLE ' . $tablename . ' AS ' . $query, $args, $options);
     return $tablename;
   }
 
@@ -307,17 +307,17 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
     // and integers and no known databases require special handling for those
     // simple cases. If another transaction wants to write the same row, it will
     // wait until this transaction commits.
-    $stmt = $this->query('UPDATE {sequences} SET value = GREATEST(value, :existing_id) + 1', array(
+    $stmt = $this->runQuery('UPDATE {sequences} SET value = GREATEST(value, :existing_id) + 1', array(
       ':existing_id' => $existing_id,
     ));
     if (!$stmt->rowCount()) {
-      $this->query('INSERT INTO {sequences} (value) VALUES (:existing_id + 1)', array(
+      $this->runQuery('INSERT INTO {sequences} (value) VALUES (:existing_id + 1)', array(
         ':existing_id' => $existing_id,
       ));
     }
     // The transaction gets committed when the transaction object gets destroyed
     // because it gets out of scope.
-    return $this->query('SELECT value FROM {sequences}')->fetchField();
+    return $this->runQuery('SELECT value FROM {sequences}')->fetchField();
   }
 
   public function rollback($savepoint_name = 'drupal_transaction') {

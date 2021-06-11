@@ -51,7 +51,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
         'sequences' => array(),
       );
       // Don't use {} around information_schema.columns table.
-      $result = $this->connection->query("SELECT column_name, data_type, column_default FROM information_schema.columns WHERE table_schema = :schema AND table_name = :table AND (data_type = 'bytea' OR (numeric_precision IS NOT NULL AND column_default LIKE :default))", array(
+      $result = $this->connection->runQuery("SELECT column_name, data_type, column_default FROM information_schema.columns WHERE table_schema = :schema AND table_name = :table AND (data_type = 'bytea' OR (numeric_precision IS NOT NULL AND column_default LIKE :default))", array(
         ':schema' => $schema,
         ':table' => $table_name,
         ':default' => '%nextval%',
@@ -96,7 +96,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
     $field_information = (object) array(
         'checks' => array(),
     );
-    $checks = $this->connection->query("SELECT conname FROM pg_class cl INNER JOIN pg_constraint co ON co.conrelid = cl.oid INNER JOIN pg_attribute attr ON attr.attrelid = cl.oid AND attr.attnum = ANY (co.conkey) INNER JOIN pg_namespace ns ON cl.relnamespace = ns.oid WHERE co.contype = 'c' AND ns.nspname = :schema AND cl.relname = :table AND attr.attname = :column", array(
+    $checks = $this->connection->runQuery("SELECT conname FROM pg_class cl INNER JOIN pg_constraint co ON co.conrelid = cl.oid INNER JOIN pg_attribute attr ON attr.attrelid = cl.oid AND attr.attnum = ANY (co.conkey) INNER JOIN pg_namespace ns ON cl.relnamespace = ns.oid WHERE co.contype = 'c' AND ns.nspname = :schema AND cl.relname = :table AND attr.attname = :column", array(
       ':schema' => $schema,
       ':table' => $table_name,
       ':column' => $field,
@@ -326,18 +326,18 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
 
     // Index names and constraint names are global in PostgreSQL, so we need to
     // rename them when renaming the table.
-    $indexes = $this->connection->query('SELECT indexname FROM pg_indexes WHERE schemaname = :schema AND tablename = :table', array(':schema' => $old_schema, ':table' => $old_table_name));
+    $indexes = $this->connection->runQuery('SELECT indexname FROM pg_indexes WHERE schemaname = :schema AND tablename = :table', array(':schema' => $old_schema, ':table' => $old_table_name));
     foreach ($indexes as $index) {
       if (preg_match('/^' . preg_quote($old_full_name) . '_(.*)$/', $index->indexname, $matches)) {
         $index_name = $matches[1];
-        $this->connection->query('ALTER INDEX ' . $index->indexname . ' RENAME TO {' . $new_name . '}_' . $index_name);
+        $this->connection->runQuery('ALTER INDEX ' . $index->indexname . ' RENAME TO {' . $new_name . '}_' . $index_name);
       }
     }
 
     // Now rename the table.
     // Ensure the new table name does not include schema syntax.
     $prefixInfo = $this->getPrefixInfo($new_name);
-    $this->connection->query('ALTER TABLE {' . $table . '} RENAME TO ' . $prefixInfo['table']);
+    $this->connection->runQuery('ALTER TABLE {' . $table . '} RENAME TO ' . $prefixInfo['table']);
   }
 
   public function dropTable($table) {
@@ -345,7 +345,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
       return FALSE;
     }
 
-    $this->connection->query('DROP TABLE {' . $table . '}');
+    $this->connection->runQuery('DROP TABLE {' . $table . '}');
     return TRUE;
   }
 
@@ -364,21 +364,21 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
     }
     $query = 'ALTER TABLE {' . $table . '} ADD COLUMN ';
     $query .= $this->createFieldSql($field, $this->processField($spec));
-    $this->connection->query($query);
+    $this->connection->runQuery($query);
     if (isset($spec['initial'])) {
       $this->connection->update($table)
         ->fields(array($field => $spec['initial']))
         ->execute();
     }
     if ($fixnull) {
-      $this->connection->query("ALTER TABLE {" . $table . "} ALTER $field SET NOT NULL");
+      $this->connection->runQuery("ALTER TABLE {" . $table . "} ALTER $field SET NOT NULL");
     }
     if (isset($new_keys)) {
       $this->_createKeys($table, $new_keys);
     }
     // Add column comment.
     if (!empty($spec['description'])) {
-      $this->connection->query('COMMENT ON COLUMN {' . $table . '}.' . $field . ' IS ' . $this->prepareComment($spec['description']));
+      $this->connection->runQuery('COMMENT ON COLUMN {' . $table . '}.' . $field . ' IS ' . $this->prepareComment($spec['description']));
     }
   }
 
@@ -387,7 +387,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
       return FALSE;
     }
 
-    $this->connection->query('ALTER TABLE {' . $table . '} DROP COLUMN "' . $field . '"');
+    $this->connection->runQuery('ALTER TABLE {' . $table . '} DROP COLUMN "' . $field . '"');
     return TRUE;
   }
 
@@ -403,7 +403,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
       $default = is_string($default) ? "'$default'" : $default;
     }
 
-    $this->connection->query('ALTER TABLE {' . $table . '} ALTER COLUMN "' . $field . '" SET DEFAULT ' . $default);
+    $this->connection->runQuery('ALTER TABLE {' . $table . '} ALTER COLUMN "' . $field . '" SET DEFAULT ' . $default);
   }
 
   public function fieldSetNoDefault($table, $field) {
@@ -411,13 +411,13 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
       throw new DatabaseSchemaObjectDoesNotExistException(t("Cannot remove default value of field @table.@field: field doesn't exist.", array('@table' => $table, '@field' => $field)));
     }
 
-    $this->connection->query('ALTER TABLE {' . $table . '} ALTER COLUMN "' . $field . '" DROP DEFAULT');
+    $this->connection->runQuery('ALTER TABLE {' . $table . '} ALTER COLUMN "' . $field . '" DROP DEFAULT');
   }
 
   public function indexExists($table, $name) {
     // Details http://www.postgresql.org/docs/8.3/interactive/view-pg-indexes.html
     $index_name = '{' . $table . '}_' . $name . '_idx';
-    return (bool) $this->connection->query("SELECT 1 FROM pg_indexes WHERE indexname = '$index_name'")->fetchField();
+    return (bool) $this->connection->runQuery("SELECT 1 FROM pg_indexes WHERE indexname = '$index_name'")->fetchField();
   }
 
   /**
@@ -430,7 +430,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
    */
   protected function constraintExists($table, $name) {
     $constraint_name = '{' . $table . '}_' . $name;
-    return (bool) $this->connection->query("SELECT 1 FROM pg_constraint WHERE conname = '$constraint_name'")->fetchField();
+    return (bool) $this->connection->runQuery("SELECT 1 FROM pg_constraint WHERE conname = '$constraint_name'")->fetchField();
   }
 
   public function addPrimaryKey($table, $fields) {
@@ -441,7 +441,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
       throw new DatabaseSchemaObjectExistsException(t("Cannot add primary key to table @table: primary key already exists.", array('@table' => $table)));
     }
 
-    $this->connection->query('ALTER TABLE {' . $table . '} ADD PRIMARY KEY (' . implode(',', $fields) . ')');
+    $this->connection->runQuery('ALTER TABLE {' . $table . '} ADD PRIMARY KEY (' . implode(',', $fields) . ')');
   }
 
   public function dropPrimaryKey($table) {
@@ -449,7 +449,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
       return FALSE;
     }
 
-    $this->connection->query('ALTER TABLE {' . $table . '} DROP CONSTRAINT ' . $this->prefixNonTable($table, 'pkey'));
+    $this->connection->runQuery('ALTER TABLE {' . $table . '} DROP CONSTRAINT ' . $this->prefixNonTable($table, 'pkey'));
     return TRUE;
   }
 
@@ -461,7 +461,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
       throw new DatabaseSchemaObjectExistsException(t("Cannot add unique key @name to table @table: unique key already exists.", array('@table' => $table, '@name' => $name)));
     }
 
-    $this->connection->query('ALTER TABLE {' . $table . '} ADD CONSTRAINT "' . $this->prefixNonTable($table, $name, 'key') . '" UNIQUE (' . implode(',', $fields) . ')');
+    $this->connection->runQuery('ALTER TABLE {' . $table . '} ADD CONSTRAINT "' . $this->prefixNonTable($table, $name, 'key') . '" UNIQUE (' . implode(',', $fields) . ')');
   }
 
   public function dropUniqueKey($table, $name) {
@@ -469,7 +469,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
       return FALSE;
     }
 
-    $this->connection->query('ALTER TABLE {' . $table . '} DROP CONSTRAINT "' . $this->prefixNonTable($table, $name, 'key') . '"');
+    $this->connection->runQuery('ALTER TABLE {' . $table . '} DROP CONSTRAINT "' . $this->prefixNonTable($table, $name, 'key') . '"');
     return TRUE;
   }
 
@@ -481,7 +481,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
       throw new DatabaseSchemaObjectExistsException(t("Cannot add index @name to table @table: index already exists.", array('@table' => $table, '@name' => $name)));
     }
 
-    $this->connection->query($this->_createIndexSql($table, $name, $fields));
+    $this->connection->runQuery($this->_createIndexSql($table, $name, $fields));
   }
 
   public function dropIndex($table, $name) {
@@ -489,7 +489,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
       return FALSE;
     }
 
-    $this->connection->query('DROP INDEX ' . $this->prefixNonTable($table, $name, 'idx'));
+    $this->connection->runQuery('DROP INDEX ' . $this->prefixNonTable($table, $name, 'idx'));
     return TRUE;
   }
 
@@ -524,13 +524,13 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
     $field_info = $this->queryFieldInformation($table, $field);
 
     foreach ($field_info as $check) {
-      $this->connection->query('ALTER TABLE {' . $table . '} DROP CONSTRAINT "' . $check . '"');
+      $this->connection->runQuery('ALTER TABLE {' . $table . '} DROP CONSTRAINT "' . $check . '"');
     }
 
     // Remove old default.
     $this->fieldSetNoDefault($table, $field);
 
-    $this->connection->query('ALTER TABLE {' . $table . '} ALTER "' . $field . '" TYPE ' . $typecast . ' USING "' . $field . '"::' . $typecast);
+    $this->connection->runQuery('ALTER TABLE {' . $table . '} ALTER "' . $field . '" TYPE ' . $typecast . ' USING "' . $field . '"::' . $typecast);
 
     if (isset($spec['not null'])) {
       if ($spec['not null']) {
@@ -539,7 +539,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
       else {
         $nullaction = 'DROP NOT NULL';
       }
-      $this->connection->query('ALTER TABLE {' . $table . '} ALTER "' . $field . '" ' . $nullaction);
+      $this->connection->runQuery('ALTER TABLE {' . $table . '} ALTER "' . $field . '" ' . $nullaction);
     }
 
     if (in_array($spec['pgsql_type'], array('serial', 'bigserial'))) {
@@ -547,21 +547,21 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
       // not when altering. Because of that, the sequence needs to be created
       // and initialized by hand.
       $seq = "{" . $table . "}_" . $field_new . "_seq";
-      $this->connection->query("CREATE SEQUENCE " . $seq);
+      $this->connection->runQuery("CREATE SEQUENCE " . $seq);
       // Set sequence to maximal field value to not conflict with existing
       // entries.
-      $this->connection->query("SELECT setval('" . $seq . "', MAX(\"" . $field . '")) FROM {' . $table . "}");
-      $this->connection->query('ALTER TABLE {' . $table . '} ALTER "' . $field . '" SET DEFAULT nextval(\'' . $seq . '\')');
+      $this->connection->runQuery("SELECT setval('" . $seq . "', MAX(\"" . $field . '")) FROM {' . $table . "}");
+      $this->connection->runQuery('ALTER TABLE {' . $table . '} ALTER "' . $field . '" SET DEFAULT nextval(\'' . $seq . '\')');
     }
 
     // Rename the column if necessary.
     if ($field != $field_new) {
-      $this->connection->query('ALTER TABLE {' . $table . '} RENAME "' . $field . '" TO "' . $field_new . '"');
+      $this->connection->runQuery('ALTER TABLE {' . $table . '} RENAME "' . $field . '" TO "' . $field_new . '"');
     }
 
     // Add unsigned check if necessary.
     if (!empty($spec['unsigned'])) {
-      $this->connection->query('ALTER TABLE {' . $table . '} ADD CHECK ("' . $field_new . '" >= 0)');
+      $this->connection->runQuery('ALTER TABLE {' . $table . '} ADD CHECK ("' . $field_new . '" >= 0)');
     }
 
     // Add default if necessary.
@@ -571,7 +571,7 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
 
     // Change description if necessary.
     if (!empty($spec['description'])) {
-      $this->connection->query('COMMENT ON COLUMN {' . $table . '}."' . $field_new . '" IS ' . $this->prepareComment($spec['description']));
+      $this->connection->runQuery('COMMENT ON COLUMN {' . $table . '}."' . $field_new . '" IS ' . $this->prepareComment($spec['description']));
     }
 
     if (isset($new_keys)) {
@@ -608,10 +608,10 @@ class DatabaseSchema_pgsql extends DatabaseSchema {
     $info = $this->getPrefixInfo($table);
     // Don't use {} around pg_class, pg_attribute tables.
     if (isset($column)) {
-      return $this->connection->query('SELECT col_description(oid, attnum) FROM pg_class, pg_attribute WHERE attrelid = oid AND relname = ? AND attname = ?', array($info['table'], $column))->fetchField();
+      return $this->connection->runQuery('SELECT col_description(oid, attnum) FROM pg_class, pg_attribute WHERE attrelid = oid AND relname = ? AND attname = ?', array($info['table'], $column))->fetchField();
     }
     else {
-      return $this->connection->query('SELECT obj_description(oid, ?) FROM pg_class WHERE relname = ?', array('pg_class', $info['table']))->fetchField();
+      return $this->connection->runQuery('SELECT obj_description(oid, ?) FROM pg_class WHERE relname = ?', array('pg_class', $info['table']))->fetchField();
     }
   }
 }

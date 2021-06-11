@@ -4112,7 +4112,7 @@ class ConnectionUnitTest extends DrupalUnitTestCase {
    * @return integer
    */
   protected function getConnectionID() {
-    return (int) Database::getConnection($this->target, $this->key)->query('SELECT CONNECTION_ID()')->fetchField();
+    return (int) Database::getConnection($this->target, $this->key)->runQuery('SELECT CONNECTION_ID()')->fetchField();
   }
 
   /**
@@ -4122,7 +4122,7 @@ class ConnectionUnitTest extends DrupalUnitTestCase {
    *   The connection ID to verify.
    */
   protected function assertConnection($id) {
-    $list = $this->monitor->query('SHOW PROCESSLIST')->fetchAllKeyed(0, 0);
+    $list = $this->monitor->runQuery('SHOW PROCESSLIST')->fetchAllKeyed(0, 0);
     return $this->assertTrue(isset($list[$id]), format_string('Connection ID @id found.', array('@id' => $id)));
   }
 
@@ -4133,7 +4133,7 @@ class ConnectionUnitTest extends DrupalUnitTestCase {
    *   The connection ID to verify.
    */
   protected function assertNoConnection($id) {
-    $list = $this->monitor->query('SHOW PROCESSLIST')->fetchAllKeyed(0, 0);
+    $list = $this->monitor->runQuery('SHOW PROCESSLIST')->fetchAllKeyed(0, 0);
     return $this->assertFalse(isset($list[$id]), format_string('Connection ID @id not found.', array('@id' => $id)));
   }
 
@@ -4179,7 +4179,7 @@ class ConnectionUnitTest extends DrupalUnitTestCase {
     $this->assertConnection($id);
 
     // Execute a query.
-    Database::getConnection($this->target, $this->key)->query('SHOW TABLES');
+    Database::getConnection($this->target, $this->key)->runQuery('SHOW TABLES');
 
     // Close the connection.
     Database::closeConnection($this->target, $this->key);
@@ -4206,7 +4206,7 @@ class ConnectionUnitTest extends DrupalUnitTestCase {
     $this->assertConnection($id);
 
     // Execute a query.
-    Database::getConnection($this->target, $this->key)->query('SHOW TABLES')->fetchCol();
+    Database::getConnection($this->target, $this->key)->runQuery('SHOW TABLES')->fetchCol();
 
     // Close the connection.
     Database::closeConnection($this->target, $this->key);
@@ -4429,9 +4429,9 @@ class DatabaseTablePrefixTestCase extends DatabaseTestCase {
     Database::addConnectionInfo('default', 'prefixed', $prefixed);
 
     // Test that the prefixed database connection can query the prefixed tables.
-    $num_users_prefixed = Database::getConnection('prefixed', 'default')->query('SELECT COUNT(1) FROM {users}')->fetchField();
+    $num_users_prefixed = Database::getConnection('prefixed', 'default')->runQuery('SELECT COUNT(1) FROM {users}')->fetchField();
     $this->assertTrue((int) $num_users_prefixed > 0, 'Successfully queried the users table using a schema.table prefix');
-    $num_users_default = Database::getConnection('default', 'default')->query('SELECT COUNT(1) FROM {users}')->fetchField();
+    $num_users_default = Database::getConnection('default', 'default')->runQuery('SELECT COUNT(1) FROM {users}')->fetchField();
     $this->assertEqual($num_users_default, $num_users_prefixed, 'Verified results of query using a connection with schema.table prefixed tables');
   }
 }

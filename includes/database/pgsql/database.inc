@@ -85,7 +85,7 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
     return parent::prepareQuery(preg_replace('/ ([^ ]+) +(I*LIKE|NOT +I*LIKE) /i', ' ${1}::text ${2} ', $query));
   }
 
-  public function query($query, array $args = array(), $options = array()) {
+  public function runQuery($query, array $args = array(), $options = array()) {
 
     $options += $this->defaultOptions();
 
@@ -141,12 +141,12 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
   }
 
   public function queryRange($query, $from, $count, array $args = array(), array $options = array()) {
-    return $this->query($query . ' LIMIT ' . (int) $count . ' OFFSET ' . (int) $from, $args, $options);
+    return $this->runQuery($query . ' LIMIT ' . (int) $count . ' OFFSET ' . (int) $from, $args, $options);
   }
 
   public function queryTemporary($query, array $args = array(), array $options = array()) {
     $tablename = $this->generateTemporaryTableName();
-    $this->query('CREATE TEMPORARY TABLE {' . $tablename . '} AS ' . $query, $args, $options);
+    $this->runQuery('CREATE TEMPORARY TABLE {' . $tablename . '} AS ' . $query, $args, $options);
     return $tablename;
   }
 
@@ -188,7 +188,7 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
 
     // When PostgreSQL gets a value too small then it will lock the table,
     // retry the INSERT and if it's still too small then alter the sequence.
-    $id = $this->query("SELECT nextval('" . $sequence_name . "')")->fetchField();
+    $id = $this->runQuery("SELECT nextval('" . $sequence_name . "')")->fetchField();
     if ($id > $existing) {
       return $id;
     }
@@ -196,23 +196,23 @@ class DatabaseConnection_pgsql extends DatabaseConnection {
     // PostgreSQL advisory locks are simply locks to be used by an
     // application such as Drupal. This will prevent other Drupal processes
     // from altering the sequence while we are.
-    $this->query("SELECT pg_advisory_lock(" . POSTGRESQL_NEXTID_LOCK . ")");
+    $this->runQuery("SELECT pg_advisory_lock(" . POSTGRESQL_NEXTID_LOCK . ")");
 
     // While waiting to obtain the lock, the sequence may have been altered
     // so lets try again to obtain an adequate value.
-    $id = $this->query("SELECT nextval('" . $sequence_name . "')")->fetchField();
+    $id = $this->runQuery("SELECT nextval('" . $sequence_name . "')")->fetchField();
     if ($id > $existing) {
-      $this->query("SELECT pg_advisory_unlock(" . POSTGRESQL_NEXTID_LOCK . ")");
+      $this->runQuery("SELECT pg_advisory_unlock(" . POSTGRESQL_NEXTID_LOCK . ")");
       return $id;
     }
 
     // Reset the sequence to a higher value than the existing id.
-    $this->query("ALTER SEQUENCE " . $sequence_name . " RESTART WITH " . ($existing + 1));
+    $this->runQuery("ALTER SEQUENCE " . $sequence_name . " RESTART WITH " . ($existing + 1));
 
     // Retrieve the next id. We know this will be as high as we want it.
-    $id = $this->query("SELECT nextval('" . $sequence_name . "')")->fetchField();
+    $id = $this->runQuery("SELECT nextval('" . $sequence_name . "')")->fetchField();
 
-    $this->query("SELECT pg_advisory_unlock(" . POSTGRESQL_NEXTID_LOCK . ")");
+    $this->runQuery("SELECT pg_advisory_unlock(" . POSTGRESQL_NEXTID_LOCK . ")");
 
     return $id;
   }
