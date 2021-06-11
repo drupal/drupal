@@ -6,7 +6,6 @@ use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Config\PreExistingConfigException;
 use Drupal\Core\Config\UnmetDependenciesException;
 use Drupal\KernelTests\KernelTestBase;
-use PHPUnit\Framework\Error\Warning;
 
 /**
  * Tests installation of configuration objects in installation functionality.
@@ -249,8 +248,8 @@ class ConfigInstallTest extends KernelTestBase {
    * Tests installing configuration where the filename and ID do not match.
    */
   public function testIdMisMatch() {
-    $this->expectException(Warning::class);
-    $this->expectExceptionMessage('The configuration name "config_test.dynamic.no_id_match" does not match the ID "does_not_match"');
+    $this->expectWarning();
+    $this->expectWarningMessage('The configuration name "config_test.dynamic.no_id_match" does not match the ID "does_not_match"');
     $this->installModules(['config_test_id_mismatch']);
   }
 
