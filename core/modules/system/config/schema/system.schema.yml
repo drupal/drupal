@@ -260,7 +260,7 @@ system.file:
       label: 'Allow insecure uploads'
     default_scheme:
       type: string
-      label: 'Default download method'
+      label: 'Default file storage scheme'
     path:
       type: mapping
       label: 'Path settings'

@@ -125,10 +125,10 @@ class FileSystemForm extends ConfigFormBase {
     if (!empty($options)) {
       $form['file_default_scheme'] = [
         '#type' => 'radios',
-        '#title' => $this->t('Default download method'),
+        '#title' => $this->t('Default file storage scheme'),
         '#default_value' => $config->get('default_scheme'),
         '#options' => $options,
-        '#description' => $this->t('This setting is used as the preferred download method. The use of public files is more efficient, but does not provide any access control.'),
+        '#description' => $this->t('This setting is used as the preferred file storage scheme. The use of public files is simplest, but does not provide any access control.<br />Contributed modules can add support for additional schemes (e.g., object storage) which enable more advanced file storage and download options.'),
       ];
     }
 
