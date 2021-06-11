@@ -235,7 +235,7 @@ class EntityFormTest extends UnitTestCase {
    *
    * @group legacy
    *
-   * @expectedDeprecation EntityForm::setEntityTypeManager() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use EntityFormInterface::setEntityTypeManager() instead. See https://www.drupal.org/node/2549139
+   * @expectedDeprecation EntityForm::setEntityManager() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use EntityFormInterface::setEntityTypeManager() instead. See https://www.drupal.org/node/2549139
    */
   public function testSetEntityManager() {
     $this->entityForm->setEntityManager($this->prophesize(EntityManager::class)->reveal());

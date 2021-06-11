@@ -461,7 +461,7 @@ class EntityForm extends FormBase implements EntityFormInterface {
    * {@inheritdoc}
    */
   public function setEntityManager(EntityManagerInterface $entity_manager) {
-    @trigger_error('EntityForm::setEntityTypeManager() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use EntityFormInterface::setEntityTypeManager() instead. See https://www.drupal.org/node/2549139', E_USER_DEPRECATED);
+    @trigger_error('EntityForm::setEntityManager() is deprecated in drupal:8.0.0 and is removed from drupal:9.0.0. Use EntityFormInterface::setEntityTypeManager() instead. See https://www.drupal.org/node/2549139', E_USER_DEPRECATED);
     $this->privateEntityManager = $entity_manager;
     return $this;
   }
