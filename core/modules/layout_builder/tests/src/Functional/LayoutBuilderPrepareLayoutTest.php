@@ -78,7 +78,6 @@ class LayoutBuilderPrepareLayoutTest extends BrowserTestBase {
 
     $this->drupalLogin($this->drupalCreateUser([
       'access content',
-      'administer blocks',
       'configure any layout',
       'administer node display',
       'configure all bundle_with_section_field node layout overrides',
