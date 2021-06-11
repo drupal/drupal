@@ -112,7 +112,7 @@ class UserMailChangeTest extends BrowserTestBase {
    * administrator. The other way around, changing an non-empty E-mail to an
    * empty one, is not allowed.
    */
-  public  function testMailChangeForUserWithEmptyEmail() {
+  public function testMailChangeForUserWithEmptyEmail() {
     // Simulate a user without an E-mail address.
     $this->account->setEmail(NULL)->save();
 
