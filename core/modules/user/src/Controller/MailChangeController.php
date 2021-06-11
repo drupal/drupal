@@ -8,6 +8,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Url;
 use Drupal\user\UserInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Provides a controller Email change routes.
@@ -56,7 +57,7 @@ class MailChangeController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   An HTTP response doing a redirect.
    */
-  public function page(UserInterface $user, $new_mail, $timestamp, $hash) {
+  public function page(UserInterface $user, string $new_mail, int $timestamp, string $hash) : RedirectResponse {
     $timeout = $this->config('user.settings')->get('mail_change_timeout');
     /** @var \Drupal\Core\Session\AccountProxyInterface $current_user */
     $current_user = $this->currentUser();
@@ -64,7 +65,7 @@ class MailChangeController extends ControllerBase {
     $messenger = $this->messenger();
 
     // Other user is authenticated.
-    if ($current_user->isAuthenticated() && $current_user->id() != $user->id()) {
+    if ($current_user->isAuthenticated() && $current_user->id() !== $user->id()) {
       $arguments = [
         '%user' => $current_user->getAccountName(),
         ':logout' => Url::fromRoute('user.logout')->toString(),
@@ -84,7 +85,7 @@ class MailChangeController extends ControllerBase {
       $user_storage = $this->entityTypeManager()->getStorage('user');
       $user_storage->updateLastLoginTimestamp($user);
       // Reflect the changes in the session if the user is logged in.
-      if ($current_user->isAuthenticated() && $current_user->id() == $user->id()) {
+      if ($current_user->isAuthenticated() && $current_user->id() === $user->id()) {
         $current_user->setAccount($user);
       }
       $arguments = ['%mail' => $new_mail];
@@ -133,7 +134,7 @@ class MailChangeController extends ControllerBase {
    */
   public static function getUrl(UserInterface $account, array $options = [], $timestamp = NULL, $hash = NULL) {
     $timestamp = $timestamp ?: \Drupal::time()->getRequestTime();
-    $langcode = isset($options['langcode']) ? $options['langcode'] : $account->getPreferredLangcode();
+    $langcode = $options['langcode'] ?? $account->getPreferredLangcode();
     $hash = empty($hash) ? user_pass_rehash($account, $timestamp) : $hash;
     $url_options = ['absolute' => TRUE, 'language' => \Drupal::service('language_manager')->getLanguage($langcode)];
     return Url::fromRoute('user.mail_change', [
