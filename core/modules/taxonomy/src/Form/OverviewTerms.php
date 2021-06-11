@@ -13,6 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Pager\PagerManagerInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
+use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\VocabularyInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -77,6 +78,13 @@ class OverviewTerms extends FormBase {
    * @var \Drupal\Core\Pager\PagerManagerInterface
    */
   protected $pagerManager;
+
+  /**
+   * The term filter.
+   *
+   * @var String
+   */
+  protected $termFilter;
 
   /**
    * Constructs an OverviewTerms object.
@@ -176,6 +184,12 @@ class OverviewTerms extends FormBase {
     $term_deltas = [];
     $tree = $this->storageController->loadTree($taxonomy_vocabulary->id(), 0, NULL, TRUE);
     $tree_index = 0;
+
+    // Filter tree if filter has a value.
+    if ($this->termFilter = $form_state->getValue('filter')) {
+      $tree = array_values(array_filter($tree, [$this, 'filter']));
+    }
+
     do {
       // In case this tree is completely empty.
       if (empty($tree[$tree_index])) {
@@ -245,7 +259,9 @@ class OverviewTerms extends FormBase {
     // error. Ensure the form is rebuilt in the same order as the user
     // submitted.
     $user_input = $form_state->getUserInput();
-    if (!empty($user_input)) {
+    $triggering_element = $form_state->getTriggeringElement()['#array_parents'];
+    $filter = !empty($triggering_element) && in_array('filter', $triggering_element);
+    if (!empty($user_input) && !$filter) {
       // Get the POST order.
       $order = array_flip(array_keys($user_input['terms']));
       // Update our form with the new order.
@@ -323,6 +339,22 @@ class OverviewTerms extends FormBase {
     if (!$update_tree_access->isAllowed()) {
       $form['help']['#attributes']['class'] = ['messages', 'messages--warning'];
     }
+
+    // Add filter field.
+    $form['filter'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => ['container-inline'],
+      ],
+    ];
+    $form['filter']['filter'] = [
+      '#type' => 'textfield',
+      '#size' => 30,
+    ];
+    $form['filter']['submit'] = [
+      '#type' => 'submit',
+      '#value' => t('Filter'),
+    ];
 
     $errors = $form_state->getErrors();
     $row_position = 0;
@@ -523,84 +555,92 @@ class OverviewTerms extends FormBase {
    *   The current state of the form.
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    // Sort term order based on weight.
-    uasort($form_state->getValue('terms'), ['Drupal\Component\Utility\SortArray', 'sortByWeightElement']);
+    $triggering_element = $form_state->getTriggeringElement()['#array_parents'];
+    if (in_array('filter', $triggering_element)) {
+      $this->getRequest()->query->remove('page');
 
-    $vocabulary = $form_state->get(['taxonomy', 'vocabulary']);
-    $changed_terms = [];
-    $tree = $this->storageController->loadTree($vocabulary->id(), 0, NULL, TRUE);
-
-    if (empty($tree)) {
-      return;
+      return $form_state->setRebuild(TRUE);
     }
+    else {
+      // Sort term order based on weight.
+      uasort($form_state->getValue('terms'), ['Drupal\Component\Utility\SortArray', 'sortByWeightElement']);
 
-    // Build a list of all terms that need to be updated on previous pages.
-    $weight = 0;
-    $term = $tree[0];
-    while ($term->id() != $form['#first_tid']) {
-      if ($term->parents[0] == 0 && $term->getWeight() != $weight) {
-        $term->setWeight($weight);
-        $changed_terms[$term->id()] = $term;
-      }
-      $weight++;
-      $term = $tree[$weight];
-    }
+      $vocabulary = $form_state->get(['taxonomy', 'vocabulary']);
+      $changed_terms = [];
+      $tree = $this->storageController->loadTree($vocabulary->id(), 0, NULL, TRUE);
 
-    // Renumber the current page weights and assign any new parents.
-    $level_weights = [];
-    foreach ($form_state->getValue('terms') as $tid => $values) {
-      if (isset($form['terms'][$tid]['#term'])) {
-        $term = $form['terms'][$tid]['#term'];
-        // Give terms at the root level a weight in sequence with terms on previous pages.
-        if ($values['term']['parent'] == 0 && $term->getWeight() != $weight) {
-          $term->setWeight($weight);
-          $changed_terms[$term->id()] = $term;
-        }
-        // Terms not at the root level can safely start from 0 because they're all on this page.
-        elseif ($values['term']['parent'] > 0) {
-          $level_weights[$values['term']['parent']] = isset($level_weights[$values['term']['parent']]) ? $level_weights[$values['term']['parent']] + 1 : 0;
-          if ($level_weights[$values['term']['parent']] != $term->getWeight()) {
-            $term->setWeight($level_weights[$values['term']['parent']]);
-            $changed_terms[$term->id()] = $term;
-          }
-        }
-        // Update any changed parents.
-        if ($values['term']['parent'] != $term->parents[0]) {
-          $term->parent->target_id = $values['term']['parent'];
-          $changed_terms[$term->id()] = $term;
-        }
-        $weight++;
-      }
-    }
-
-    // Build a list of all terms that need to be updated on following pages.
-    for ($weight; $weight < count($tree); $weight++) {
-      $term = $tree[$weight];
-      if ($term->parents[0] == 0 && $term->getWeight() != $weight) {
-        $term->parent->target_id = $term->parents[0];
-        $term->setWeight($weight);
-        $changed_terms[$term->id()] = $term;
-      }
-    }
-
-    if (!empty($changed_terms)) {
-      $pending_term_ids = $this->storageController->getTermIdsWithPendingRevisions();
-
-      // Force a form rebuild if any of the changed terms has a pending
-      // revision.
-      if (array_intersect_key(array_flip($pending_term_ids), $changed_terms)) {
-        $this->messenger()->addError($this->t('The terms with updated parents have been modified by another user, the changes could not be saved.'));
-        $form_state->setRebuild();
-
+      if (empty($tree)) {
         return;
       }
 
-      // Save all updated terms.
-      foreach ($changed_terms as $term) {
-        $term->save();
+      // Build a list of all terms that need to be updated on previous pages.
+      $weight = 0;
+      $term = $tree[0];
+      while ($term->id() != $form['#first_tid']) {
+        if ($term->parents[0] == 0 && $term->getWeight() != $weight) {
+          $term->setWeight($weight);
+          $changed_terms[$term->id()] = $term;
+        }
+        $weight++;
+        $term = $tree[$weight];
       }
 
-      $this->messenger()->addStatus($this->t('The configuration options have been saved.'));
+      // Renumber the current page weights and assign any new parents.
+      $level_weights = [];
+      foreach ($form_state->getValue('terms') as $tid => $values) {
+        if (isset($form['terms'][$tid]['#term'])) {
+          $term = $form['terms'][$tid]['#term'];
+          // Give terms at the root level a weight in sequence with terms on previous pages.
+          if ($values['term']['parent'] == 0 && $term->getWeight() != $weight) {
+            $term->setWeight($weight);
+            $changed_terms[$term->id()] = $term;
+          }
+          // Terms not at the root level can safely start from 0 because they're all on this page.
+          elseif ($values['term']['parent'] > 0) {
+            $level_weights[$values['term']['parent']] = isset($level_weights[$values['term']['parent']]) ? $level_weights[$values['term']['parent']] + 1 : 0;
+            if ($level_weights[$values['term']['parent']] != $term->getWeight()) {
+              $term->setWeight($level_weights[$values['term']['parent']]);
+              $changed_terms[$term->id()] = $term;
+            }
+          }
+          // Update any changed parents.
+          if ($values['term']['parent'] != $term->parents[0]) {
+            $term->parent->target_id = $values['term']['parent'];
+            $changed_terms[$term->id()] = $term;
+          }
+          $weight++;
+        }
+      }
+
+      // Build a list of all terms that need to be updated on following pages.
+      for ($weight; $weight < count($tree); $weight++) {
+        $term = $tree[$weight];
+        if ($term->parents[0] == 0 && $term->getWeight() != $weight) {
+          $term->parent->target_id = $term->parents[0];
+          $term->setWeight($weight);
+          $changed_terms[$term->id()] = $term;
+        }
+      }
+
+      if (!empty($changed_terms)) {
+        $pending_term_ids = $this->storageController->getTermIdsWithPendingRevisions();
+
+        // Force a form rebuild if any of the changed terms has a pending
+        // revision.
+        if (array_intersect_key(array_flip($pending_term_ids), $changed_terms)) {
+          $this->messenger()->addError($this->t('The terms with updated parents have been modified by another user, the changes could not be saved.'));
+          $form_state->setRebuild();
+
+          return;
+        }
+
+        // Save all updated terms.
+        foreach ($changed_terms as $term) {
+          $term->save();
+        }
+
+        $this->messenger()->addStatus($this->t('The configuration options have been saved.'));
+      }
     }
   }
 
@@ -611,6 +651,19 @@ class OverviewTerms extends FormBase {
     /** @var $vocabulary \Drupal\taxonomy\VocabularyInterface */
     $vocabulary = $form_state->get(['taxonomy', 'vocabulary']);
     $form_state->setRedirectUrl($vocabulary->toUrl('reset-form'));
+  }
+
+  /**
+   * Filter terms.
+   *
+   * Whether the term matches the filter.
+   *
+   * @param \Drupal\taxonomy\Entity\Term $term
+   *
+   * @return bool
+   */
+  public function filter(Term $term) {
+    return strpos($term->getName(), $this->termFilter) !== FALSE;
   }
 
 }
