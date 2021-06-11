@@ -343,4 +343,18 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
     $this->assertArrayNotHasKey('#theme', $build);
   }
 
+  /**
+   * Tests an entity type with an external canonical rel.
+   */
+  public function testExternalEntity() {
+    $this->installEntitySchema('entity_test_external');
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = $this->container->get('renderer');
+    $entity_test = $this->createTestEntity('entity_test_external');
+    $entity_test->save();
+    $view = $this->container->get('entity_type.manager')->getViewBuilder('entity_test_external')->view($entity_test);
+    $renderer->renderRoot($view);
+    $this->assertArrayNotHasKey('#contextual_links', $view);
+  }
+
 }
