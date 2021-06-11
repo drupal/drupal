@@ -225,6 +225,25 @@ class UserMailChangeTest extends BrowserTestBase {
   }
 
   /**
+   * Test that the link must contain the requested email address.
+   */
+  public function testWrongEmail() {
+    $timestamp = $this->time->getRequestTime() - 1;
+    // Can't use MailChangeController here as its ::getUrl method uses the
+    // stored email address.
+    $langcode = $this->account->getPreferredLangcode();
+    $url_options = ['absolute' => TRUE, 'language' => \Drupal::service('language_manager')->getLanguage($langcode)];
+    $url = Url::fromRoute('user.mail_change', [
+      'user' => $this->account->id(),
+      'timestamp' => $timestamp,
+      'new_mail' => $this->getRandomEmailAddress(),
+      'hash' => user_pass_rehash($this->account, $timestamp),
+    ], $url_options);
+    $this->drupalGet($url);
+    $this->assertSession()->responseContains('You have tried to use an email address change link that has either been used or is no longer valid. Please visit your account and change your email again.');
+  }
+
+  /**
    * Retrieves the change email and extracts the link.
    *
    * @param string $mail_id
