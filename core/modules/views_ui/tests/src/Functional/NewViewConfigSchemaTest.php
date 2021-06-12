@@ -55,7 +55,8 @@ class NewViewConfigSchemaTest extends UITestBase {
       $edit['id'] = strtolower($this->randomMachineName());
       $edit['show[wizard_key]'] = $wizard_key;
       $edit['description'] = $this->randomString();
-      $this->drupalPostForm('admin/structure/views/add', $edit, 'Save and edit');
+      $this->drupalGet('admin/structure/views/add');
+      $this->submitForm($edit, 'Save and edit');
     }
   }
 

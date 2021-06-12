@@ -34,7 +34,7 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
   }
 
   /**
-   * Test that cache tags are properly bubbled up to the page level.
+   * Tests that cache tags are properly bubbled up to the page level.
    */
   public function testPageCacheTags() {
     // Create two nodes.
@@ -80,7 +80,6 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
       // These two cache contexts are added by BigPipe.
       'cookies:big_pipe_nojs',
       'session.exists',
-      'user.roles:anonymous',
       'user.roles:authenticated',
     ];
 

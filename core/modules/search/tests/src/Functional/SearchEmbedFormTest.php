@@ -62,27 +62,29 @@ class SearchEmbedFormTest extends BrowserTestBase {
    */
   public function testEmbeddedForm() {
     // First verify we can submit the form from the module's page.
-    $this->drupalPostForm('search_embedded_form', ['name' => 'John'], 'Send away');
-    $this->assertText('Test form was submitted');
+    $this->drupalGet('search_embedded_form');
+    $this->submitForm(['name' => 'John'], 'Send away');
+    $this->assertSession()->pageTextContains('Test form was submitted');
     $count = \Drupal::state()->get('search_embedded_form.submit_count');
-    $this->assertEqual($this->submitCount + 1, $count, 'Form submission count is correct');
+    $this->assertEquals($this->submitCount + 1, $count, 'Form submission count is correct');
     $this->submitCount = $count;
 
     // Now verify that we can see and submit the form from the search results.
     $this->drupalGet('search/node', ['query' => ['keys' => $this->node->label()]]);
-    $this->assertText('Your name');
+    $this->assertSession()->pageTextContains('Your name');
     $this->submitForm(['name' => 'John'], 'Send away');
-    $this->assertText('Test form was submitted');
+    $this->assertSession()->pageTextContains('Test form was submitted');
     $count = \Drupal::state()->get('search_embedded_form.submit_count');
-    $this->assertEqual($this->submitCount + 1, $count, 'Form submission count is correct');
+    $this->assertEquals($this->submitCount + 1, $count, 'Form submission count is correct');
     $this->submitCount = $count;
 
     // Now verify that if we submit the search form, it doesn't count as
     // our form being submitted.
-    $this->drupalPostForm('search', ['keys' => 'foo'], 'Search');
+    $this->drupalGet('search');
+    $this->submitForm(['keys' => 'foo'], 'Search');
     $this->assertNoText('Test form was submitted');
     $count = \Drupal::state()->get('search_embedded_form.submit_count');
-    $this->assertEqual($this->submitCount, $count, 'Form submission count is correct');
+    $this->assertEquals($this->submitCount, $count, 'Form submission count is correct');
     $this->submitCount = $count;
   }
 

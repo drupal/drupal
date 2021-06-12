@@ -105,7 +105,7 @@ function forum_theme() {
  * Implements hook_entity_type_build().
  */
 function forum_entity_type_build(array &$entity_types) {
-  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   // Register forum specific forms.
   $entity_types['taxonomy_term']
     ->setFormClass('forum', 'Drupal\forum\Form\ForumForm')

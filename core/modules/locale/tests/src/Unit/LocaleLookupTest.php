@@ -338,4 +338,48 @@ class LocaleLookupTest extends UnitTestCase {
     ];
   }
 
+  /**
+   * @covers ::getCid
+   *
+   * @dataProvider getCidProvider
+   */
+  public function testGetCid(array $roles, $expected) {
+    $this->user = $this->createMock('Drupal\Core\Session\AccountInterface');
+    $this->user->expects($this->any())
+      ->method('getRoles')
+      ->will($this->returnValue($roles));
+
+    $container = new ContainerBuilder();
+    $container->set('current_user', $this->user);
+    \Drupal::setContainer($container);
+
+    $locale_lookup = $this->getMockBuilder('Drupal\locale\LocaleLookup')
+      ->setConstructorArgs(['en', 'irrelevant', $this->storage, $this->cache, $this->lock, $this->configFactory, $this->languageManager, $this->requestStack])
+      ->getMock();
+
+    $o = new \ReflectionObject($locale_lookup);
+    $method = $o->getMethod('getCid');
+    $method->setAccessible(TRUE);
+    $cid = $method->invoke($locale_lookup, 'getCid');
+
+    $this->assertEquals($expected, $cid);
+  }
+
+  /**
+   * Provides test data for testGetCid().
+   */
+  public function getCidProvider() {
+    return [
+      [
+        ['a'], 'locale:en:irrelevant:a',
+      ],
+      [
+        ['a', 'b'], 'locale:en:irrelevant:a:b',
+      ],
+      [
+        ['b', 'a'], 'locale:en:irrelevant:a:b',
+      ],
+    ];
+  }
+
 }

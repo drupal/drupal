@@ -62,7 +62,6 @@
     "stylelint": "^13.0.0",
     "stylelint-checkstyle-formatter": "^0.1.1",
     "stylelint-config-standard": "^20.0.0",
-    "stylelint-no-browser-hacks": "^1.2.1",
     "stylelint-order": "^4.0.0",
     "terser": "^5.3.4"
   },
@@ -105,7 +104,6 @@
     "last 1 ChromeAndroid version",
     "last 1 UCAndroid version",
     "last 1 Samsung version",
-    "last 1 OperaMini version",
     "Firefox ESR"
   ]
 }

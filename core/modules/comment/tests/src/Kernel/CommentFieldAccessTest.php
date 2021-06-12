@@ -91,7 +91,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test permissions on comment fields.
+   * Tests permissions on comment fields.
    */
   public function testAccessToAdministrativeFields() {
     // Create a comment type.
@@ -217,7 +217,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
           '@comment' => $set['comment']->getSubject(),
           '@field' => $field,
         ]));
-        $this->assertEqual($may_update, $set['user']->hasPermission('administer comments'), new FormattableMarkup('User @user @state update field @field on comment @comment', [
+        $this->assertEquals($may_update, $set['user']->hasPermission('administer comments'), new FormattableMarkup('User @user @state update field @field on comment @comment', [
           '@user' => $set['user']->getAccountName(),
           '@state' => $may_update ? 'can' : 'cannot',
           '@comment' => $set['comment']->getSubject(),
@@ -229,7 +229,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
     // Check access to normal field.
     foreach ($permutations as $set) {
       $may_update = $set['comment']->access('update', $set['user']) && $set['comment']->subject->access('edit', $set['user']);
-      $this->assertEqual($may_update, $set['user']->hasPermission('administer comments') || ($set['user']->hasPermission('edit own comments') && $set['user']->id() == $set['comment']->getOwnerId()), new FormattableMarkup('User @user @state update field subject on comment @comment', [
+      $this->assertEquals($may_update, $set['user']->hasPermission('administer comments') || ($set['user']->hasPermission('edit own comments') && $set['user']->id() == $set['comment']->getOwnerId()), new FormattableMarkup('User @user @state update field subject on comment @comment', [
         '@user' => $set['user']->getAccountName(),
         '@state' => $may_update ? 'can' : 'cannot',
         '@comment' => $set['comment']->getSubject(),
@@ -251,7 +251,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
           $view_access = TRUE;
           $state = 'can';
         }
-        $this->assertEqual($may_view, $view_access, new FormattableMarkup('User @user @state view field @field on comment @comment', [
+        $this->assertEquals($may_view, $view_access, new FormattableMarkup('User @user @state view field @field on comment @comment', [
           '@user' => $set['user']->getAccountName(),
           '@comment' => $set['comment']->getSubject(),
           '@field' => $field,
@@ -277,7 +277,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
           '@comment' => $set['comment']->getSubject(),
           '@field' => $field,
         ]));
-        $this->assertEqual($may_update, $set['user']->hasPermission('post comments') && $set['comment']->isNew(), new FormattableMarkup('User @user @state update field @field on comment @comment', [
+        $this->assertEquals($may_update, $set['user']->hasPermission('post comments') && $set['comment']->isNew(), new FormattableMarkup('User @user @state update field @field on comment @comment', [
           '@user' => $set['user']->getAccountName(),
           '@state' => $may_update ? 'can' : 'cannot',
           '@comment' => $set['comment']->getSubject(),
@@ -294,7 +294,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
         // To edit the 'mail' or 'name' field, either the user has the
         // "administer comments" permissions or the user is anonymous and
         // adding a new comment using a field that allows contact details.
-        $this->assertEqual($may_update, $set['user']->hasPermission('administer comments') || (
+        $this->assertEquals($may_update, $set['user']->hasPermission('administer comments') || (
             $set['user']->isAnonymous() &&
             $set['comment']->isNew() &&
             $set['user']->hasPermission('post comments') &&
@@ -310,7 +310,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
     foreach ($permutations as $set) {
       // Check no view-access to mail field for other than admin.
       $may_view = $set['comment']->mail->access('view', $set['user']);
-      $this->assertEqual($may_view, $set['user']->hasPermission('administer comments'));
+      $this->assertEquals($may_view, $set['user']->hasPermission('administer comments'));
     }
   }
 

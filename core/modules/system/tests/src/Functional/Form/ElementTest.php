@@ -189,8 +189,9 @@ class ElementTest extends BrowserTestBase {
    * Tests form element error messages.
    */
   public function testFormElementErrors() {
-    $this->drupalPostForm('form_test/details-form', [], 'Submit');
-    $this->assertText('I am an error on the details element.');
+    $this->drupalGet('form_test/details-form');
+    $this->submitForm([], 'Submit');
+    $this->assertSession()->pageTextContains('I am an error on the details element.');
   }
 
   /**

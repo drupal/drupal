@@ -120,7 +120,7 @@ class EntitySerializationTest extends NormalizerTestBase {
   }
 
   /**
-   * Test the normalize function.
+   * Tests the normalize function.
    */
   public function testNormalize() {
     $expected = [
@@ -179,7 +179,7 @@ class EntitySerializationTest extends NormalizerTestBase {
     foreach (array_keys($expected) as $fieldName) {
       $this->assertSame($expected[$fieldName], $normalized[$fieldName], "Normalization produces expected array for $fieldName.");
     }
-    $this->assertEqual([], array_diff_key($normalized, $expected), 'No unexpected data is added to the normalized array.');
+    $this->assertEquals([], array_diff_key($normalized, $expected), 'No unexpected data is added to the normalized array.');
   }
 
   /**
@@ -203,7 +203,7 @@ class EntitySerializationTest extends NormalizerTestBase {
   }
 
   /**
-   * Test registered Serializer's entity serialization for core's formats.
+   * Tests registered Serializer's entity serialization for core's formats.
    */
   public function testSerialize() {
     // Test that Serializer responds using the ComplexDataNormalizer and

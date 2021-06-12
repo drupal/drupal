@@ -418,7 +418,7 @@ class FunctionsTest extends KernelTestBase {
   }
 
   /**
-   * Test the use of Link::preRenderLinks() on a nested array of links.
+   * Tests the use of Link::preRenderLinks() on a nested array of links.
    *
    * @see \Drupal\Core\Render\Element\Link::preRenderLinks()
    */
@@ -482,12 +482,12 @@ class FunctionsTest extends KernelTestBase {
     $html = \Drupal::service('renderer')->renderRoot($render_array);
     $dom = new \DOMDocument();
     $dom->loadHTML($html);
-    $this->assertEqual(1, $dom->getElementsByTagName('ul')->length, 'One "ul" tag found in the rendered HTML.');
+    $this->assertEquals(1, $dom->getElementsByTagName('ul')->length, 'One "ul" tag found in the rendered HTML.');
     $list_elements = $dom->getElementsByTagName('li');
-    $this->assertEqual(3, $list_elements->length, 'Three "li" tags found in the rendered HTML.');
-    $this->assertEqual('Parent link original', $list_elements->item(0)->nodeValue, 'First expected link found.');
-    $this->assertEqual('First child link', $list_elements->item(1)->nodeValue, 'Second expected link found.');
-    $this->assertEqual('Second child link', $list_elements->item(2)->nodeValue, 'Third expected link found.');
+    $this->assertEquals(3, $list_elements->length, 'Three "li" tags found in the rendered HTML.');
+    $this->assertEquals('Parent link original', $list_elements->item(0)->nodeValue, 'First expected link found.');
+    $this->assertEquals('First child link', $list_elements->item(1)->nodeValue, 'Second expected link found.');
+    $this->assertEquals('Second child link', $list_elements->item(2)->nodeValue, 'Third expected link found.');
     $this->assertStringNotContainsString('Parent link copy', $html, '"Parent link copy" link not found.');
     $this->assertStringNotContainsString('Third child link', $html, '"Third child link" link not found.');
 
@@ -500,19 +500,19 @@ class FunctionsTest extends KernelTestBase {
     // First check the child HTML.
     $dom = new \DOMDocument();
     $dom->loadHTML($child_html);
-    $this->assertEqual(1, $dom->getElementsByTagName('ul')->length, 'One "ul" tag found in the rendered child HTML.');
+    $this->assertEquals(1, $dom->getElementsByTagName('ul')->length, 'One "ul" tag found in the rendered child HTML.');
     $list_elements = $dom->getElementsByTagName('li');
-    $this->assertEqual(2, $list_elements->length, 'Two "li" tags found in the rendered child HTML.');
-    $this->assertEqual('Parent link copy', $list_elements->item(0)->nodeValue, 'First expected link found.');
-    $this->assertEqual('First child link', $list_elements->item(1)->nodeValue, 'Second expected link found.');
+    $this->assertEquals(2, $list_elements->length, 'Two "li" tags found in the rendered child HTML.');
+    $this->assertEquals('Parent link copy', $list_elements->item(0)->nodeValue, 'First expected link found.');
+    $this->assertEquals('First child link', $list_elements->item(1)->nodeValue, 'Second expected link found.');
     // Then check the parent HTML.
     $dom = new \DOMDocument();
     $dom->loadHTML($parent_html);
-    $this->assertEqual(1, $dom->getElementsByTagName('ul')->length, 'One "ul" tag found in the rendered parent HTML.');
+    $this->assertEquals(1, $dom->getElementsByTagName('ul')->length, 'One "ul" tag found in the rendered parent HTML.');
     $list_elements = $dom->getElementsByTagName('li');
-    $this->assertEqual(2, $list_elements->length, 'Two "li" tags found in the rendered parent HTML.');
-    $this->assertEqual('Parent link original', $list_elements->item(0)->nodeValue, 'First expected link found.');
-    $this->assertEqual('Second child link', $list_elements->item(1)->nodeValue, 'Second expected link found.');
+    $this->assertEquals(2, $list_elements->length, 'Two "li" tags found in the rendered parent HTML.');
+    $this->assertEquals('Parent link original', $list_elements->item(0)->nodeValue, 'First expected link found.');
+    $this->assertEquals('Second child link', $list_elements->item(1)->nodeValue, 'Second expected link found.');
     $this->assertStringNotContainsString('First child link', $parent_html, '"First child link" link not found.');
     $this->assertStringNotContainsString('Third child link', $parent_html, '"Third child link" link not found.');
   }

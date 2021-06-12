@@ -58,7 +58,7 @@ class CacheabilityMetadataConfigOverrideIntegrationTest extends BrowserTestBase 
     // overridden.
     \Drupal::state()->set('config_override_integration_test.enabled', TRUE);
     $this->drupalGet('<front>');
-    $this->assertText('Overridden block label');
+    $this->assertSession()->pageTextContains('Overridden block label');
 
     // Both the cache context and tag should still be present.
     $this->assertCacheContext('config_override_integration_test');

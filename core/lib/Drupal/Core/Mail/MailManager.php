@@ -5,7 +5,6 @@ namespace Drupal\Core\Mail;
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\Mail as MailHelper;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Plugin\DefaultPluginManager;
@@ -17,6 +16,8 @@ use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Header\MailboxHeader;
 
 /**
  * Provides a Mail plugin manager.
@@ -255,9 +256,12 @@ class MailManager extends DefaultPluginManager implements MailManagerInterface {
     // To prevent email from looking like spam, the addresses in the Sender and
     // Return-Path headers should have a domain authorized to use the
     // originating SMTP server.
-    $headers['Sender'] = $headers['Return-Path'] = $site_mail;
+    $headers['From'] = $headers['Sender'] = $headers['Return-Path'] = $site_mail;
     // Make sure the site-name is a RFC-2822 compliant 'display-name'.
-    $headers['From'] = MailHelper::formatDisplayName($site_config->get('name')) . ' <' . $site_mail . '>';
+    if ($site_mail) {
+      $mailbox = new MailboxHeader('From', new Address($site_mail, $site_config->get('name') ?: ''));
+      $headers['From'] = $mailbox->getBodyAsString();
+    }
     if ($reply) {
       $headers['Reply-to'] = $reply;
     }

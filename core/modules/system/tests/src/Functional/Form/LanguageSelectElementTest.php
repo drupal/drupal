@@ -55,7 +55,7 @@ class LanguageSelectElementTest extends BrowserTestBase {
     foreach ($ids as $id => $flags) {
       $this->assertSession()->fieldExists($id);
       $options = [];
-      /* @var $language_manager \Drupal\Core\Language\LanguageManagerInterface */
+      /** @var \Drupal\Core\Language\LanguageManagerInterface $language_manager */
       $language_manager = $this->container->get('language_manager');
       foreach ($language_manager->getLanguages($flags) as $langcode => $language) {
         $options[$langcode] = $language->isLocked() ? t('- @name -', ['@name' => $language->getName()]) : $language->getName();
@@ -89,11 +89,11 @@ class LanguageSelectElementTest extends BrowserTestBase {
     $edit = [];
     $this->submitForm($edit, 'Submit');
     $values = Json::decode($this->getSession()->getPage()->getContent());
-    $this->assertEqual('xx', $values['languages_all']);
-    $this->assertEqual('en', $values['languages_configurable']);
-    $this->assertEqual(LanguageInterface::LANGCODE_NOT_SPECIFIED, $values['languages_locked']);
-    $this->assertEqual('dummy_value', $values['languages_config_and_locked']);
-    $this->assertEqual('opt2', $values['language_custom_options']);
+    $this->assertEquals('xx', $values['languages_all']);
+    $this->assertEquals('en', $values['languages_configurable']);
+    $this->assertEquals(LanguageInterface::LANGCODE_NOT_SPECIFIED, $values['languages_locked']);
+    $this->assertEquals('dummy_value', $values['languages_config_and_locked']);
+    $this->assertEquals('opt2', $values['language_custom_options']);
   }
 
   /**

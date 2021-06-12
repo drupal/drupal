@@ -16,12 +16,14 @@ use Drupal\Core\DrupalKernel;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PrivateStream;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
+use GuzzleHttp\Exception\TransferException;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -91,6 +93,7 @@ function system_requirements($phase) {
         'severity' => REQUIREMENT_WARNING,
       ];
     }
+    _system_advisories_requirements($requirements);
   }
 
   // Web server information.
@@ -1447,6 +1450,57 @@ function system_update_8901() {
 
         $installed_storage_schema->set($entity_type_id . '.field_schema_data.' . $field_storage_definition->getName(), $field_schema_data);
       }
+    }
+  }
+}
+
+/**
+ * Display requirements from security advisories.
+ *
+ * @param array[] $requirements
+ *   The requirements array as specified in hook_requirements().
+ */
+function _system_advisories_requirements(array &$requirements): void {
+  if (!\Drupal::config('system.advisories')->get('enabled')) {
+    return;
+  }
+
+  /** @var \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher $fetcher */
+  $fetcher = \Drupal::service('system.sa_fetcher');
+  try {
+    $advisories = $fetcher->getSecurityAdvisories(TRUE, 5);
+  }
+  catch (TransferException $exception) {
+    $requirements['system_advisories']['title'] = t('Critical security announcements');
+    $requirements['system_advisories']['severity'] = REQUIREMENT_WARNING;
+    $requirements['system_advisories']['description'] = ['#theme' => 'system_security_advisories_fetch_error_message'];
+    watchdog_exception('system', $exception, 'Failed to retrieve security advisory data.');
+    return;
+  }
+
+  if (!empty($advisories)) {
+    $advisory_links = [];
+    $severity = REQUIREMENT_WARNING;
+    foreach ($advisories as $advisory) {
+      if (!$advisory->isPsa()) {
+        $severity = REQUIREMENT_ERROR;
+      }
+      $advisory_links[] = new Link($advisory->getTitle(), Url::fromUri($advisory->getUrl()));
+    }
+    $requirements['system_advisories']['title'] = t('Critical security announcements');
+    $requirements['system_advisories']['severity'] = $severity;
+    $requirements['system_advisories']['description'] = [
+      'list' => [
+        '#theme' => 'item_list',
+        '#items' => $advisory_links,
+      ],
+    ];
+    if (\Drupal::moduleHandler()->moduleExists('help')) {
+      $requirements['system_advisories']['description']['help_link'] = Link::createFromRoute(
+        'What are critical security announcements?',
+        'help.page', ['name' => 'system'],
+        ['fragment' => 'security-advisories']
+      )->toRenderable();
     }
   }
 }

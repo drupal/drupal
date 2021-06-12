@@ -67,12 +67,12 @@ class CommentBlockTest extends CommentTestBase {
     // block.
     $this->drupalLogin($this->webUser);
     $this->drupalGet('');
-    $this->assertText('Recent comments');
+    $this->assertSession()->pageTextContains('Recent comments');
 
     // Test the only the 10 latest comments are shown and in the proper order.
     $this->assertNoText($comments[10]->getSubject());
     for ($i = 0; $i < 10; $i++) {
-      $this->assertText($comments[$i]->getSubject());
+      $this->assertSession()->pageTextContains($comments[$i]->getSubject());
       if ($i > 1) {
         $previous_position = $position;
         $position = strpos($this->getSession()->getPage()->getContent(), $comments[$i]->getSubject());
@@ -86,7 +86,7 @@ class CommentBlockTest extends CommentTestBase {
 
     for ($i = 0; $i < 10; $i++) {
       $this->clickLink($comments[$i]->getSubject());
-      $this->assertText($comments[$i]->getSubject());
+      $this->assertSession()->pageTextContains($comments[$i]->getSubject());
       $this->assertRaw('<link rel="canonical"');
     }
   }

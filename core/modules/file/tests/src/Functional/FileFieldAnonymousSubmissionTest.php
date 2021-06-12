@@ -41,7 +41,7 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
     $this->drupalLogout();
     $this->drupalGet('node/add/article');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText(strip_tags(t('Create @name', ['@name' => $bundle_label])));
+    $this->assertSession()->pageTextContains(strip_tags(t('Create @name', ['@name' => $bundle_label])));
 
     $edit = [
       'title[0][value]' => $node_title,
@@ -50,7 +50,7 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
     $t_args = ['@type' => $bundle_label, '%title' => $node_title];
-    $this->assertText(strip_tags(t('@type %title has been created.', $t_args)));
+    $this->assertSession()->pageTextContains(strip_tags(t('@type %title has been created.', $t_args)));
     $matches = [];
     if (preg_match('@node/(\d+)$@', $this->getUrl(), $matches)) {
       $nid = end($matches);
@@ -72,7 +72,7 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
     $this->drupalLogout();
     $this->drupalGet('node/add/article');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText(strip_tags(t('Create @name', ['@name' => $bundle_label])));
+    $this->assertSession()->pageTextContains(strip_tags(t('Create @name', ['@name' => $bundle_label])));
 
     // Generate an image file.
     $image = $this->getTestFile('image');
@@ -86,7 +86,7 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
     $t_args = ['@type' => $bundle_label, '%title' => $node_title];
-    $this->assertText(strip_tags(t('@type %title has been created.', $t_args)));
+    $this->assertSession()->pageTextContains(strip_tags(t('@type %title has been created.', $t_args)));
     $matches = [];
     if (preg_match('@node/(\d+)$@', $this->getUrl(), $matches)) {
       $nid = end($matches);
@@ -129,7 +129,7 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
     // Load the node form.
     $this->drupalGet('node/add/article');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText(strip_tags(t('Create @name', ['@name' => $bundle_label])));
+    $this->assertSession()->pageTextContains(strip_tags(t('Create @name', ['@name' => $bundle_label])));
 
     // Generate an image file.
     $image = $this->getTestFile('image');
@@ -149,7 +149,7 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $t_args = ['@type' => $bundle_label, '%title' => $node_title];
     $this->assertNoText(strip_tags(t('@type %title has been created.', $t_args)));
-    $this->assertText('Title field is required.');
+    $this->assertSession()->pageTextContains('Title field is required.');
 
     // Submit the form again but this time with the missing title field. This
     // should still work.
@@ -160,7 +160,7 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
 
     // Confirm the final submission actually worked.
     $t_args = ['@type' => $bundle_label, '%title' => $node_title];
-    $this->assertText(strip_tags(t('@type %title has been created.', $t_args)));
+    $this->assertSession()->pageTextContains(strip_tags(t('@type %title has been created.', $t_args)));
     $matches = [];
     if (preg_match('@node/(\d+)$@', $this->getUrl(), $matches)) {
       $nid = end($matches);

@@ -97,8 +97,8 @@ class ContextualFiltersBlockContextTest extends ViewTestBase {
     $this->assertInstanceOf(ContextDefinitionInterface::class, $definition['context_definitions']['nid']);
     /** @var \Drupal\Core\Plugin\Context\ContextDefinitionInterface $context */
     $context = $definition['context_definitions']['nid'];
-    $this->assertEqual('entity:node', $context->getDataType(), 'Context definition data type is correct.');
-    $this->assertEqual('Content: ID', $context->getLabel(), 'Context definition label is correct.');
+    $this->assertEquals('entity:node', $context->getDataType(), 'Context definition data type is correct.');
+    $this->assertEquals('Content: ID', $context->getLabel(), 'Context definition label is correct.');
     $this->assertFalse($context->isRequired(), 'Context is not required.');
 
     // Place test block via block UI to check if contexts are correctly exposed.
@@ -125,17 +125,17 @@ class ContextualFiltersBlockContextTest extends ViewTestBase {
       'items_per_page' => 'none',
       'context_mapping' => ['nid' => '@node.node_route_context:node'],
     ];
-    $this->assertEqual($expected_settings, $block->getPlugin()->getConfiguration(), 'Block settings are correct.');
+    $this->assertEquals($expected_settings, $block->getPlugin()->getConfiguration(), 'Block settings are correct.');
 
     // Make sure view behaves as expected.
     $this->drupalGet('<front>');
-    $this->assertText('Test view: No results found.');
+    $this->assertSession()->pageTextContains('Test view: No results found.');
 
     $this->drupalGet($this->nodes[0]->toUrl());
-    $this->assertText('Test view row: First test node');
+    $this->assertSession()->pageTextContains('Test view row: First test node');
 
     $this->drupalGet($this->nodes[1]->toUrl());
-    $this->assertText('Test view row: Second test node');
+    $this->assertSession()->pageTextContains('Test view row: Second test node');
 
     // Check the second block which should expose two integer contexts, one
     // based on the numeric plugin and the other based on numeric validation.
@@ -144,22 +144,22 @@ class ContextualFiltersBlockContextTest extends ViewTestBase {
     $this->assertInstanceOf(ContextDefinitionInterface::class, $definition['context_definitions']['created']);
     /** @var \Drupal\Core\Plugin\Context\ContextDefinitionInterface $context */
     $context = $definition['context_definitions']['created'];
-    $this->assertEqual('integer', $context->getDataType(), 'Context definition data type is correct.');
-    $this->assertEqual('Content: Authored on', $context->getLabel(), 'Context definition label is correct.');
+    $this->assertEquals('integer', $context->getDataType(), 'Context definition data type is correct.');
+    $this->assertEquals('Content: Authored on', $context->getLabel(), 'Context definition label is correct.');
     $this->assertFalse($context->isRequired(), 'Context is not required.');
 
     $this->assertInstanceOf(ContextDefinitionInterface::class, $definition['context_definitions']['vid']);
     /** @var \Drupal\Core\Plugin\Context\ContextDefinitionInterface $context */
     $context = $definition['context_definitions']['vid'];
-    $this->assertEqual('integer', $context->getDataType(), 'Context definition data type is correct.');
-    $this->assertEqual('Content: Revision ID', $context->getLabel(), 'Context definition label is correct.');
+    $this->assertEquals('integer', $context->getDataType(), 'Context definition data type is correct.');
+    $this->assertEquals('Content: Revision ID', $context->getLabel(), 'Context definition label is correct.');
     $this->assertFalse($context->isRequired(), 'Context is not required.');
 
     $this->assertInstanceOf(ContextDefinitionInterface::class, $definition['context_definitions']['title']);
     /** @var \Drupal\Core\Plugin\Context\ContextDefinitionInterface $context */
     $context = $definition['context_definitions']['title'];
-    $this->assertEqual('string', $context->getDataType(), 'Context definition data type is correct.');
-    $this->assertEqual('Content: Title', $context->getLabel(), 'Context definition label is correct.');
+    $this->assertEquals('string', $context->getDataType(), 'Context definition data type is correct.');
+    $this->assertEquals('Content: Title', $context->getLabel(), 'Context definition label is correct.');
     $this->assertFalse($context->isRequired(), 'Context is not required.');
   }
 

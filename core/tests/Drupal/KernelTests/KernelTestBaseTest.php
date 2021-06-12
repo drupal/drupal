@@ -32,7 +32,7 @@ class KernelTestBaseTest extends KernelTestBase {
    * @covers ::bootEnvironment
    */
   public function testBootEnvironment() {
-    $this->assertRegExp('/^test\d{8}$/', $this->databasePrefix);
+    $this->assertMatchesRegularExpression('/^test\d{8}$/', $this->databasePrefix);
     $this->assertStringStartsWith('vfs://root/sites/simpletest/', $this->siteDirectory);
     $this->assertEquals([
       'root' => [
@@ -226,8 +226,8 @@ class KernelTestBaseTest extends KernelTestBase {
     $output = \Drupal::service('renderer')->renderRoot($build);
     $this->assertEquals('core', \Drupal::theme()->getActiveTheme()->getName());
 
-    $this->assertRegExp($expected, (string) $build['#children']);
-    $this->assertRegExp($expected, (string) $output);
+    $this->assertMatchesRegularExpression($expected, (string) $build['#children']);
+    $this->assertMatchesRegularExpression($expected, (string) $output);
   }
 
   /**
@@ -269,7 +269,7 @@ class KernelTestBaseTest extends KernelTestBase {
       $this->fail('Missing required module throws skipped test exception.');
     }
     catch (SkippedTestError $e) {
-      $this->assertEqual('Required modules: module_does_not_exist', $e->getMessage());
+      $this->assertEquals('Required modules: module_does_not_exist', $e->getMessage());
     }
   }
 
@@ -296,7 +296,7 @@ class KernelTestBaseTest extends KernelTestBase {
       $this->fail('Missing required module throws skipped test exception.');
     }
     catch (SkippedTestError $e) {
-      $this->assertEqual('Required modules: module_does_not_exist', $e->getMessage());
+      $this->assertEquals('Required modules: module_does_not_exist', $e->getMessage());
     }
   }
 
@@ -354,6 +354,16 @@ class KernelTestBaseTest extends KernelTestBase {
   public function testAssertIdenticalObject() {
     $this->expectDeprecation('AssertLegacyTrait::assertIdenticalObject() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertEquals() instead. See https://www.drupal.org/node/3129738');
     $this->assertIdenticalObject((object) ['foo' => 'bar'], (object) ['foo' => 'bar']);
+  }
+
+  /**
+   * Tests the deprecation of AssertLegacyTrait::assertEqual.
+   *
+   * @group legacy
+   */
+  public function testAssertEqual() {
+    $this->expectDeprecation('AssertLegacyTrait::assertEqual() is deprecated in drupal:8.0.0 and is removed from drupal:10.0.0. Use $this->assertEquals() instead. See https://www.drupal.org/node/3129738');
+    $this->assertEqual('0', 0);
   }
 
   /**
