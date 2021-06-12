@@ -55,8 +55,14 @@ class QueueFactory implements ContainerAwareInterface {
       }
       // If no reliable queue was defined, check the service and global
       // settings, fall back to queue.database.
-      if (empty($service_name)) {
-        $service_name = $this->settings->get('queue_service_' . $name, $this->settings->get('queue_default', 'queue.database'));
+      if (empty($service_name) || !$this->container->has($service_name)) {
+        $service_name = $this->settings->get('queue_service_' . $name);
+      }
+      if (empty($service_name) || !$this->container->has($service_name)) {
+        $service_name = $this->settings->get('queue_default');
+      }
+      if (empty($service_name) || !$this->container->has($service_name)) {
+        $service_name = 'queue.database';
       }
       $this->queues[$name] = $this->container->get($service_name)->get($name);
     }
