@@ -12,43 +12,7 @@ namespace Drupal\Core\StreamWrapper;
  * Drupal\Core\StreamWrapper\ReadOnlyStream implementations need to implement
  * all the read-related classes.
  */
-abstract class ReadOnlyStream implements StreamWrapperInterface {
-  /**
-   * Stream context resource.
-   *
-   * @var resource
-   */
-  public $context;
-
-  /**
-   * A generic resource handle.
-   *
-   * @var resource
-   */
-  public $handle = NULL;
-
-  /**
-   * Instance URI (stream).
-   *
-   * A stream is referenced as "scheme://target".
-   *
-   * @var string
-   */
-  protected $uri;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setUri($uri) {
-    $this->uri = $uri;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getUri() {
-    return $this->uri;
-  }
+abstract class ReadOnlyStream extends StreamWrapperBase {
 
   /**
    * Support for fopen(), file_get_contents(), etc.

@@ -200,14 +200,10 @@ function drupal_get_filename($type, $name, $filename = NULL) {
 /**
  * Returns the path to a system item (module, theme, etc.).
  *
- * This function should only be used when including a file containing PHP code;
- * the 'module://', 'profile://' and 'theme://' stream wrappers should be used
- * for other use cases.
- *
- * @param string $type
+ * @param $type
  *   The type of the item; one of 'core', 'profile', 'module', 'theme', or
  *   'theme_engine'.
- * @param string $name
+ * @param $name
  *   The name of the item for which the path is requested. Ignored for
  *   $type 'core'.
  *

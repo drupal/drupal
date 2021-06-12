@@ -175,7 +175,7 @@ interface StreamWrapperInterface extends PhpStreamWrapperInterface {
    *   An optional URI.
    *
    * @return string
-   *   A string containing the directory name, or FALSE if not applicable.
+   *   A string containing the directory name.
    *
    * @see \Drupal\Core\File\FileSystemInterface::dirname()
    */

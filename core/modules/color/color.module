@@ -386,7 +386,7 @@ function color_scheme_form_submit($form, FormStateInterface $form_state) {
   // Make sure enough memory is available.
   if (isset($info['base_image'])) {
     // Fetch source image dimensions.
-    $source = drupal_get_path('theme', $theme) . '/' . $info['base_image'];
+    $source = "theme://$theme/{$info['base_image']}";
     list($width, $height) = getimagesize($source);
 
     // We need at least a copy of the source and a target buffer of the same
