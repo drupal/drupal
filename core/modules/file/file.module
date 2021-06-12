@@ -616,7 +616,7 @@ function file_theme() {
       'variables' => ['files' => [], 'attributes' => NULL],
     ],
     'file_video' => [
-      'variables' => ['files' => [], 'attributes' => NULL],
+      'variables' => ['files' => [], 'tracks' => NULL, 'attributes' => NULL],
     ],
 
     // From file.field.inc.
