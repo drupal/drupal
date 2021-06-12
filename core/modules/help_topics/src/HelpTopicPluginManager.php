@@ -103,6 +103,11 @@ class HelpTopicPluginManager extends DefaultPluginManager implements HelpTopicPl
   protected $root;
 
   /**
+   * {@inheritdoc}
+   */
+  protected $disallowDots = FALSE;
+
+  /**
    * Constructs a new HelpTopicManager object.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
