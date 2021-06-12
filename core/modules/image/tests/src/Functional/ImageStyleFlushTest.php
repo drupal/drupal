@@ -37,8 +37,11 @@ class ImageStyleFlushTest extends ImageFieldTestBase {
     // Make sure we have an image in our wrapper testing file directory.
     $source_uri = \Drupal::service('file_system')->copy($file->uri, $wrapper . '://');
     // Build the derivative image.
-    $derivative_uri = $style->buildUri($source_uri);
-    $derivative = $style->createDerivative($source_uri, $derivative_uri);
+    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+      ->setImageStyle($style)
+      ->setSourceImageUri($source_uri);
+    $derivative_uri = $pipeline->getDerivativeImageUri();
+    $derivative = $pipeline->buildDerivativeImage();
 
     return $derivative ? $derivative_uri : FALSE;
   }

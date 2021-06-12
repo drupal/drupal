@@ -194,7 +194,10 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Ensure the derivative image is generated so we do not have to deal with
     // image style callback paths.
-    $this->drupalGet(ImageStyle::load('thumbnail')->buildUrl($image_uri));
+    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+      ->setImageStyle(ImageStyle::load('thumbnail'))
+      ->setSourceImageUri($image_uri);
+    $this->drupalGet($pipeline->getDerivativeImageUrl()->toString());
     $image_style = [
       '#theme' => 'image_style',
       '#uri' => $image_uri,
@@ -212,7 +215,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     if ($scheme == 'private') {
       // Log out and ensure the file cannot be accessed.
       $this->drupalLogout();
-      $this->drupalGet(ImageStyle::load('thumbnail')->buildUrl($image_uri));
+      $this->drupalGet($pipeline->getDerivativeImageUrl()->toString());
       $this->assertSession()->statusCodeEquals(403);
     }
 
@@ -226,7 +229,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Test the image URL formatter with an image style.
     $display_options['settings']['image_style'] = 'thumbnail';
-    $expected_url = file_url_transform_relative(ImageStyle::load('thumbnail')->buildUrl($image_uri));
+    $expected_url = file_url_transform_relative($pipeline->getDerivativeImageUrl()->toString());
     $this->assertEquals($expected_url, $node->{$field_name}->view($display_options)[0]['#markup']);
   }
 
@@ -285,7 +288,10 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $node = $node_storage->load($nid);
     $file = $node->{$field_name}->entity;
 
-    $url = file_url_transform_relative(ImageStyle::load('medium')->buildUrl($file->getFileUri()));
+    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+      ->setImageStyle(ImageStyle::load('medium'))
+      ->setSourceImageUri($file->getFileUri());
+    $url = file_url_transform_relative($pipeline->getDerivativeImageUrl()->toString());
     $this->assertSession()->elementExists('css', 'img[width=40][height=20][class=image-style-medium][src="' . $url . '"]');
 
     // Add alt/title fields to the image and verify that they are displayed.

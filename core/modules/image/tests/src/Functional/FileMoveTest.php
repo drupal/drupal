@@ -34,8 +34,13 @@ class FileMoveTest extends BrowserTestBase {
 
   /**
    * Tests moving a randomly generated image.
+   *
+   * @group legacy
    */
-  public function testNormal() {
+  public function testNormalLegacy() {
+    $this->expectDeprecation('The Drupal\image\Entity\ImageStyle::buildUri method is deprecated since version 9.x.x and will be removed in y.y.y.');
+    $this->expectDeprecation('The Drupal\image\Entity\ImageStyle::createDerivative method is deprecated since version 9.x.x and will be removed in y.y.y.');
+
     // Pick a file for testing.
     $file = File::create((array) current($this->drupalGetTestFiles('image')));
 
@@ -59,6 +64,38 @@ class FileMoveTest extends BrowserTestBase {
 
     // Check if derivative image has been flushed.
     $this->assertFileNotExists($derivative_uri);
+  }
+
+  /**
+   * Tests moving a randomly generated image.
+   */
+  public function testNormal() {
+    // Pick a file for testing.
+    $file = File::create((array) current($this->drupalGetTestFiles('image')));
+
+    // Create derivative image.
+    $styles = ImageStyle::loadMultiple();
+    $style = reset($styles);
+    $original_uri = $file->getFileUri();
+    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+      ->setImageStyle($style)
+      ->setSourceImageUri($original_uri);
+    $derivative_uri = $pipeline->getDerivativeImageUri();
+    $pipeline->buildDerivativeImage();
+
+    // Check if derivative image exists.
+    $this->assertFileExists($derivative_uri, 'Make sure derivative image is generated successfully.');
+
+    // Clone the object so we don't have to worry about the function changing
+    // our reference copy.
+    $desired_filepath = 'public://' . $this->randomMachineName();
+    $result = file_move(clone $file, $desired_filepath, FileSystemInterface::EXISTS_ERROR);
+
+    // Check if image has been moved.
+    $this->assertFileExists($result->getFileUri(), 'Make sure image is moved successfully.');
+
+    // Check if derivative image has been flushed.
+    $this->assertFileNotExists($derivative_uri, 'Make sure derivative image has been flushed.');
   }
 
 }

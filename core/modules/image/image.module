@@ -14,6 +14,8 @@ use Drupal\field\FieldConfigInterface;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\file\FileInterface;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\image\Event\ImageStyleEvent;
+use Drupal\image\Event\ImageStyleEvents;
 
 /**
  * The name of the query parameter for image derivative tokens.
@@ -192,10 +194,12 @@ function image_file_predelete(FileInterface $file) {
  *   The Drupal file path to the original image.
  */
 function image_path_flush($path) {
-  $styles = ImageStyle::loadMultiple();
-  foreach ($styles as $style) {
-    $style->flush($path);
-  }
+  \Drupal::service('event_dispatcher')->dispatch(
+    new ImageStyleEvent(NULL, [
+      'sourceImageUri' => $path,
+    ]),
+    ImageStyleEvents::FLUSH_FROM_SOURCE_IMAGE_URI
+  );
 }
 
 /**
@@ -252,18 +256,15 @@ function image_style_options($include_empty = TRUE) {
 function template_preprocess_image_style(&$variables) {
   $style = ImageStyle::load($variables['style_name']);
 
-  // Determine the dimensions of the styled image.
-  $dimensions = [
-    'width' => $variables['width'],
-    'height' => $variables['height'],
-  ];
-
-  $style->transformDimensions($dimensions, $variables['uri']);
+  $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+    ->setImageStyle($style)
+    ->setSourceImageUri($variables['uri'])
+    ->setSourceImageDimensions($variables['width'], $variables['height']);
 
   $variables['image'] = [
     '#theme' => 'image',
-    '#width' => $dimensions['width'],
-    '#height' => $dimensions['height'],
+    '#width' => $pipeline->getDerivativeImageWidth(),
+    '#height' => $pipeline->getDerivativeImageHeight(),
     '#attributes' => $variables['attributes'],
     '#style_name' => $variables['style_name'],
   ];
@@ -271,8 +272,8 @@ function template_preprocess_image_style(&$variables) {
   // If the current image toolkit supports this file type, prepare the URI for
   // the derivative image. If not, just use the original image resized to the
   // dimensions specified by the style.
-  if ($style->supportsUri($variables['uri'])) {
-    $variables['image']['#uri'] = $style->buildUrl($variables['uri']);
+  if ($pipeline->isSourceImageProcessable()) {
+    $variables['image']['#uri'] = $pipeline->getDerivativeImageUrl()->toString();
   }
   else {
     $variables['image']['#uri'] = $variables['uri'];

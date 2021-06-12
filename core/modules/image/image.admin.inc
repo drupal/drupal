@@ -47,13 +47,32 @@ function template_preprocess_image_style_preview(&$variables) {
     $variables['preview']['original']['width'] = round($variables['preview']['original']['height'] / $variables['original']['height'] * $variables['original']['width']);
   }
 
-  // Set up derivative file information.
-  $preview_file = $style->buildUri($original_path);
+  // Set up derivative file pipeline.
+  $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+    ->setImageStyle($style)
+    ->setSourceImageUri($original_path);
+  $preview_file = $pipeline->getDerivativeImageUri();
+
   // Create derivative if necessary.
   if (!file_exists($preview_file)) {
-    $style->createDerivative($original_path, $preview_file);
+    $pipeline->buildDerivativeImage();
   }
-  $preview_image = $image_factory->get($preview_file);
+
+  // The resulting image dimensions may be available from the Image object in
+  // the pipeline. If not (the image was already processed, or the state of
+  // dimensions from Image object is not determined), then load the Image
+  // object form the file.
+  $load_from_file = TRUE;
+  if ($pipeline->hasImage()) {
+    $preview_image = $pipeline->getImage();
+    if ($preview_image->getWidth() && $preview_image->getHeight()) {
+      $load_from_file = FALSE;
+    }
+  }
+  if ($load_from_file) {
+    $preview_image = $image_factory->get($preview_file);
+  }
+
   $variables['derivative'] = [
     'url' => file_url_transform_relative(file_create_url($preview_file)),
     'width' => $preview_image->getWidth(),

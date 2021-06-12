@@ -47,9 +47,12 @@ class ConvertTest extends BrowserTestBase {
     $this->assertFileExists($test_uri);
 
     // Execute the image style on the test image via a GET request.
+    $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+      ->setImageStyle($image_style)
+      ->setSourceImageUri($test_uri);
     $derivative_uri = 'public://styles/image_effect_test/public/image-test-do.png.jpeg';
     $this->assertFileNotExists($derivative_uri);
-    $url = file_url_transform_relative($image_style->buildUrl($test_uri));
+    $url = file_url_transform_relative($pipeline->getDerivativeImageUrl()->toString());
     $this->drupalGet($this->getAbsoluteUrl($url));
     $this->assertSession()->statusCodeEquals(200);
     $this->assertFileExists($derivative_uri);

@@ -4,6 +4,16 @@ services:
     arguments: ['@stream_wrapper_manager']
     tags:
       - { name: path_processor_inbound, priority: 300 }
+  image.processor:
+    class: Drupal\image\ImageProcessor
+    parent: default_plugin_manager
+    tags:
+      - { name: plugin_manager_cache_clear }
+  image.pipeline.derivative.event_subscriber:
+    class:  Drupal\image\EventSubscriber\ImageDerivativeSubscriber
+    arguments: ['@image.factory', '@image.processor', '@stream_wrapper_manager', '@private_key', '@module_handler','@config.factory', '@request_stack', '@logger.channel.image', '@file_system']
+    tags:
+      - { name: 'event_subscriber' }
   plugin.manager.image.effect:
     class: Drupal\image\ImageEffectManager
     parent: default_plugin_manager

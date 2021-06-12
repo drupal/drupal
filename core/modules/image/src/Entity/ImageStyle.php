@@ -2,24 +2,17 @@
 
 namespace Drupal\image\Entity;
 
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
-use Drupal\Core\File\Exception\FileException;
-use Drupal\Core\File\FileSystemInterface;
-use Drupal\Core\Routing\RequestHelper;
 use Drupal\Core\Site\Settings;
-use Drupal\Core\StreamWrapper\StreamWrapperManager;
-use Drupal\Core\Url;
+use Drupal\image\Event\ImageDerivativePipelineEvents;
+use Drupal\image\Event\ImageStyleEvent;
+use Drupal\image\Event\ImageStyleEvents;
 use Drupal\image\ImageEffectPluginCollection;
 use Drupal\image\ImageEffectInterface;
 use Drupal\image\ImageStyleInterface;
-use Drupal\Component\Utility\Crypt;
-use Drupal\Component\Utility\UrlHelper;
-use Drupal\Core\StreamWrapper\StreamWrapperInterface;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 
 /**
@@ -174,130 +167,40 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    * {@inheritdoc}
    */
   public function buildUri($uri) {
-    $source_scheme = $scheme = StreamWrapperManager::getScheme($uri);
-    $default_scheme = $this->fileDefaultScheme();
-
-    if ($source_scheme) {
-      $path = StreamWrapperManager::getTarget($uri);
-      // The scheme of derivative image files only needs to be computed for
-      // source files not stored in the default scheme.
-      if ($source_scheme != $default_scheme) {
-        $class = $this->getStreamWrapperManager()->getClass($source_scheme);
-        $is_writable = NULL;
-        if ($class) {
-          $is_writable = $class::getType() & StreamWrapperInterface::WRITE;
-        }
-
-        // Compute the derivative URI scheme. Derivatives created from writable
-        // source stream wrappers will inherit the scheme. Derivatives created
-        // from read-only stream wrappers will fall-back to the default scheme.
-        $scheme = $is_writable ? $source_scheme : $default_scheme;
-      }
-    }
-    else {
-      $path = $uri;
-      $source_scheme = $scheme = $default_scheme;
-    }
-    return "$scheme://styles/{$this->id()}/$source_scheme/{$this->addExtension($path)}";
+    @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 9.x.x and will be removed in y.y.y.', E_USER_DEPRECATED);
+    return \Drupal::service('image.processor')->createInstance('derivative')
+      ->setImageStyle($this)
+      ->setSourceImageUri($uri)
+      ->getDerivativeImageUri();
   }
 
   /**
    * {@inheritdoc}
    */
   public function buildUrl($path, $clean_urls = NULL) {
-    $uri = $this->buildUri($path);
-
-    /** @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager */
-    $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
-
-    // The token query is added even if the
-    // 'image.settings:allow_insecure_derivatives' configuration is TRUE, so
-    // that the emitted links remain valid if it is changed back to the default
-    // FALSE. However, sites which need to prevent the token query from being
-    // emitted at all can additionally set the
-    // 'image.settings:suppress_itok_output' configuration to TRUE to achieve
-    // that (if both are set, the security token will neither be emitted in the
-    // image derivative URL nor checked for in
-    // \Drupal\image\ImageStyleInterface::deliver()).
-    $token_query = [];
-    if (!\Drupal::config('image.settings')->get('suppress_itok_output')) {
-      // The passed $path variable can be either a relative path or a full URI.
-      $original_uri = $stream_wrapper_manager::getScheme($path) ? $stream_wrapper_manager->normalizeUri($path) : file_build_uri($path);
-      $token_query = [IMAGE_DERIVATIVE_TOKEN => $this->getPathToken($original_uri)];
-    }
-
-    if ($clean_urls === NULL) {
-      // Assume clean URLs unless the request tells us otherwise.
-      $clean_urls = TRUE;
-      try {
-        $request = \Drupal::request();
-        $clean_urls = RequestHelper::isCleanUrl($request);
-      }
-      catch (ServiceNotFoundException $e) {
-      }
-    }
-
-    // If not using clean URLs, the image derivative callback is only available
-    // with the script path. If the file does not exist, use Url::fromUri() to
-    // ensure that it is included. Once the file exists it's fine to fall back
-    // to the actual file path, this avoids bootstrapping PHP once the files are
-    // built.
-    if ($clean_urls === FALSE && $stream_wrapper_manager::getScheme($uri) == 'public' && !file_exists($uri)) {
-      $directory_path = $stream_wrapper_manager->getViaUri($uri)->getDirectoryPath();
-      return Url::fromUri('base:' . $directory_path . '/' . $stream_wrapper_manager::getTarget($uri), ['absolute' => TRUE, 'query' => $token_query])->toString();
-    }
-
-    $file_url = file_create_url($uri);
-    // Append the query string with the token, if necessary.
-    if ($token_query) {
-      $file_url .= (strpos($file_url, '?') !== FALSE ? '&' : '?') . UrlHelper::buildQuery($token_query);
-    }
-
-    return $file_url;
+    @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 9.x.x and will be removed in y.y.y.', E_USER_DEPRECATED);
+    return \Drupal::service('image.processor')->createInstance('derivative')
+      ->setImageStyle($this)
+      ->setSourceImageUri($path)
+      ->setCleanUrl($clean_urls)
+      ->getDerivativeImageUrl()
+      ->toString();
   }
 
   /**
    * {@inheritdoc}
    */
   public function flush($path = NULL) {
-    // A specific image path has been provided. Flush only that derivative.
-    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
-    $file_system = \Drupal::service('file_system');
     if (isset($path)) {
-      $derivative_uri = $this->buildUri($path);
-      if (file_exists($derivative_uri)) {
-        try {
-          $file_system->delete($derivative_uri);
-        }
-        catch (FileException $e) {
-          // Ignore failed deletes.
-        }
-      }
-      return $this;
+      // A specific image path has been provided. Flush only that derivative.
+      $pipeline = \Drupal::service('image.processor')->createInstance('derivative')
+        ->setImageStyle($this)
+        ->setSourceImageUri($path)
+        ->dispatch(ImageDerivativePipelineEvents::REMOVE_DERIVATIVE_IMAGE);
     }
-
-    // Delete the style directory in each registered wrapper.
-    $wrappers = $this->getStreamWrapperManager()->getWrappers(StreamWrapperInterface::WRITE_VISIBLE);
-    foreach ($wrappers as $wrapper => $wrapper_data) {
-      if (file_exists($directory = $wrapper . '://styles/' . $this->id())) {
-        try {
-          $file_system->deleteRecursive($directory);
-        }
-        catch (FileException $e) {
-          // Ignore failed deletes.
-        }
-      }
+    else {
+      \Drupal::service('event_dispatcher')->dispatch(new ImageStyleEvent($this), ImageStyleEvents::FLUSH);
     }
-
-    // Let other modules update as necessary on flush.
-    $module_handler = \Drupal::moduleHandler();
-    $module_handler->invokeAll('image_style_flush', [$this]);
-
-    // Clear caches so that formatters may be added for this style.
-    drupal_theme_rebuild();
-
-    Cache::invalidateTags($this->getCacheTagsToInvalidate());
-
     return $this;
   }
 
@@ -305,60 +208,49 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    * {@inheritdoc}
    */
   public function createDerivative($original_uri, $derivative_uri) {
-    // If the source file doesn't exist, return FALSE without creating folders.
-    $image = $this->getImageFactory()->get($original_uri);
-    if (!$image->isValid()) {
-      return FALSE;
-    }
-
-    // Get the folder for the final location of this style.
-    $directory = \Drupal::service('file_system')->dirname($derivative_uri);
-
-    // Build the destination folder tree if it doesn't already exist.
-    if (!\Drupal::service('file_system')->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS)) {
-      \Drupal::logger('image')->error('Failed to create style directory: %directory', ['%directory' => $directory]);
-      return FALSE;
-    }
-
-    foreach ($this->getEffects() as $effect) {
-      $effect->applyEffect($image);
-    }
-
-    if (!$image->save($derivative_uri)) {
-      if (file_exists($derivative_uri)) {
-        \Drupal::logger('image')->error('Cached image file %destination already exists. There may be an issue with your rewrite configuration.', ['%destination' => $derivative_uri]);
-      }
-      return FALSE;
-    }
-
-    return TRUE;
+    @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 9.x.x and will be removed in y.y.y.', E_USER_DEPRECATED);
+    return \Drupal::service('image.processor')->createInstance('derivative')
+      ->setImageStyle($this)
+      ->setSourceImageUri($original_uri)
+      ->setDerivativeImageUri($derivative_uri)
+      ->buildDerivativeImage();
   }
 
   /**
    * {@inheritdoc}
    */
   public function transformDimensions(array &$dimensions, $uri) {
-    foreach ($this->getEffects() as $effect) {
-      $effect->transformDimensions($dimensions, $uri);
-    }
+    @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 9.x.x and will be removed in y.y.y.', E_USER_DEPRECATED);
+    $pipeline = \Drupal::service('image.processor')->createInstance('derivative');
+    $pipeline
+      ->setImageStyle($this)
+      ->setSourceImageUri($uri)
+      ->setSourceImageDimensions($dimensions['width'] ?? NULL, $dimensions['height'] ?? NULL)
+      ->dispatch(ImageDerivativePipelineEvents::RESOLVE_DERIVATIVE_IMAGE_DIMENSIONS);
+    $dimensions['width'] = $pipeline->getVariable('derivativeImageWidth');
+    $dimensions['height'] = $pipeline->getVariable('derivativeImageHeight');
   }
 
   /**
    * {@inheritdoc}
    */
   public function getDerivativeExtension($extension) {
-    foreach ($this->getEffects() as $effect) {
-      $extension = $effect->getDerivativeExtension($extension);
-    }
-    return $extension;
+    @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 9.x.x and will be removed in y.y.y.', E_USER_DEPRECATED);
+    return \Drupal::service('image.processor')->createInstance('derivative')
+      ->setImageStyle($this)
+      ->setSourceImageFileExtension($extension)
+      ->getDerivativeImageFileExtension();
   }
 
   /**
    * {@inheritdoc}
    */
   public function getPathToken($uri) {
-    // Return the first 8 characters.
-    return substr(Crypt::hmacBase64($this->id() . ':' . $this->addExtension($uri), $this->getPrivateKey() . $this->getHashSalt()), 0, 8);
+    @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 9.x.x and will be removed in y.y.y.', E_USER_DEPRECATED);
+    return \Drupal::service('image.processor')->createInstance('derivative')
+      ->setImageStyle($this)
+      ->setSourceImageUri($uri)
+      ->getDerivativeImageUrlSecurityToken();
   }
 
   /**
@@ -374,12 +266,11 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    * {@inheritdoc}
    */
   public function supportsUri($uri) {
-    // Only support the URI if its extension is supported by the current image
-    // toolkit.
-    return in_array(
-      mb_strtolower(pathinfo($uri, PATHINFO_EXTENSION)),
-      $this->getImageFactory()->getSupportedExtensions()
-    );
+    @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 9.x.x and will be removed in y.y.y.', E_USER_DEPRECATED);
+    return \Drupal::service('image.processor')->createInstance('derivative')
+      ->setImageStyle($this)
+      ->setSourceImageUri($uri)
+      ->isSourceImageProcessable();
   }
 
   /**
@@ -455,8 +346,11 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    *
    * @return \Drupal\Core\Image\ImageFactory
    *   The image factory.
+   *
+   * @todo deprecated since version 9.x.x and will be removed in y.y.y.
    */
   protected function getImageFactory() {
+    @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 9.x.x and will be removed in y.y.y.', E_USER_DEPRECATED);
     return \Drupal::service('image.factory');
   }
 
@@ -465,8 +359,11 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    *
    * @return string
    *   The Drupal private key.
+   *
+   * @todo deprecated since version 9.x.x and will be removed in y.y.y.
    */
   protected function getPrivateKey() {
+    @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 9.x.x and will be removed in y.y.y.', E_USER_DEPRECATED);
     return \Drupal::service('private_key')->get();
   }
 
@@ -477,8 +374,11 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    *   A salt based on information in settings.php, not in the database.
    *
    * @throws \RuntimeException
+   *
+   * @todo deprecated since version 9.x.x and will be removed in y.y.y.
    */
   protected function getHashSalt() {
+    @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 9.x.x and will be removed in y.y.y.', E_USER_DEPRECATED);
     return Settings::getHashSalt();
   }
 
@@ -495,8 +395,11 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    * @return string
    *   The given path if this image style doesn't change its extension, or the
    *   path with the added extension if it does.
+   *
+   * @todo deprecated since version 9.x.x and will be removed in y.y.y.
    */
   protected function addExtension($path) {
+    @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 9.x.x and will be removed in y.y.y.', E_USER_DEPRECATED);
     $original_extension = pathinfo($path, PATHINFO_EXTENSION);
     $extension = $this->getDerivativeExtension($original_extension);
     if ($original_extension !== $extension) {
@@ -512,8 +415,11 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    *
    * @return string
    *   'public', 'private' or any other file scheme defined as the default.
+   *
+   * @todo deprecated since version 9.x.x and will be removed in y.y.y.
    */
   protected function fileDefaultScheme() {
+    @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 9.x.x and will be removed in y.y.y.', E_USER_DEPRECATED);
     return \Drupal::config('system.file')->get('default_scheme');
   }
 
@@ -523,9 +429,10 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    * @return \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface
    *   The stream wrapper manager service
    *
-   * @todo Properly inject this service in Drupal 9.0.x.
+   * @todo deprecated since version 9.x.x and will be removed in y.y.y.
    */
   protected function getStreamWrapperManager() {
+    @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 9.x.x and will be removed in y.y.y.', E_USER_DEPRECATED);
     return \Drupal::service('stream_wrapper_manager');
   }
 
