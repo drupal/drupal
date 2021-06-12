@@ -32,7 +32,7 @@ class ModuleStream extends ExtensionStreamBase {
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler service.
    */
-  public function __construct(RequestStack $requestStack, ModuleHandlerInterface  $moduleHandler) {
+  public function __construct(RequestStack $requestStack, ModuleHandlerInterface $moduleHandler) {
     parent::__construct($requestStack);
     $this->moduleHandler = $moduleHandler;
   }
