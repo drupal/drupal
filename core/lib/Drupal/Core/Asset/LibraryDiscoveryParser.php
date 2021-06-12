@@ -200,9 +200,9 @@ class LibraryDiscoveryParser {
           }
           // Determine the file asset URI.
           else {
-            if ($source[0] === '/') {
+            if (isset($source[0]) && $source[0] === '/') {
               // An absolute path maps to DRUPAL_ROOT / base_path().
-              if ($source[1] !== '/') {
+              if (isset($source[1]) && $source[1] !== '/') {
                 $source = substr($source, 1);
                 // Non core provided libraries can be in multiple locations.
                 if (strpos($source, 'libraries/') === 0) {
