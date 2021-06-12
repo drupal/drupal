@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\StreamWrapper;
 
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -12,9 +11,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * system files located in extensions: modules, themes and installed profile.
  */
 abstract class ExtensionStreamBase extends LocalReadOnlyStream {
-
-  // @todo Move this in \Drupal\Core\StreamWrapper\LocalStream in Drupal 9.0.x.
-  use StringTranslationTrait;
 
   /**
    * The request stack object.
@@ -43,10 +39,18 @@ abstract class ExtensionStreamBase extends LocalReadOnlyStream {
   /**
    * Gets the module, theme, or profile name of the current URI.
    *
-   * This will return the name of the module, theme or profile e.g.
-   * @code SystemStream::getOwnerName('module://foo') @endcode and @code
-   * SystemStream::getOwnerName('module://foo/')@endcode will both return @code
-   * 'foo'@endcode
+   * This will return the name of the module, theme or profile e.g.:
+   * @code
+   * ModuleStream::getOwnerName('module://foo')
+   * @endcode
+   * and
+   * @code
+   * ModuleStream::getOwnerName('module://foo/')
+   * @endcode
+   * will both return
+   * @code
+   * 'foo'
+   * @endcode
    *
    * @return string
    *   The extension name.
