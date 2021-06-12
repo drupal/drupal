@@ -187,6 +187,13 @@ class MoveBlockForm extends FormBase {
     if (!isset($components[$uuid])) {
       $components[$uuid] = $sections[$delta]->getComponent($uuid);
     }
+
+    $delta = 10;
+    $count = count($components);
+    if ($count > 20) {
+      $delta = ceil($count / 2);
+    }
+
     foreach ($components as $component_uuid => $component) {
       /** @var \Drupal\Core\Block\BlockPluginInterface $plugin */
       $plugin = $component->getPlugin();
@@ -216,6 +223,7 @@ class MoveBlockForm extends FormBase {
           '#default_value' => $component->getWeight(),
           '#title' => $this->t('Weight for @block block', ['@block' => $plugin->label()]),
           '#title_display' => 'invisible',
+          '#delta' => $delta,
           '#attributes' => [
             'class' => ['table-sort-weight'],
           ],
