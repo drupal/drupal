@@ -528,7 +528,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "30eda55b110e77f197ac7b4564502f37b2391f15"
+                "reference": "4bc7f218682a9eb341e10950c2dec7ce767a74c1"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -690,6 +690,9 @@
                 "drupal/views_ui": "self.version",
                 "drupal/workflows": "self.version",
                 "drupal/workspaces": "self.version"
+            },
+            "suggest": {
+                "ext-zip": "Needed to support plugin.manager.archiver service"
             },
             "type": "drupal-core",
             "extra": {
