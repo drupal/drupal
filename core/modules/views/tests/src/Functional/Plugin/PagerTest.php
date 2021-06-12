@@ -374,7 +374,7 @@ class PagerTest extends ViewTestBase {
   }
 
   /**
-   * Test the api functions on the view object.
+   * Tests the api functions on the view object.
    */
   public function testPagerApi() {
     $view = Views::getView('test_pager_full');

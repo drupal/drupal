@@ -42,7 +42,7 @@ class FileCopyTest extends FileTestBase {
   }
 
   /**
-   * Test successful imports/copies.
+   * Tests successful imports/copies.
    */
   public function testSuccessfulCopies() {
     $file = $this->createUri(NULL, NULL, 'temporary');
@@ -75,7 +75,7 @@ class FileCopyTest extends FileTestBase {
   }
 
   /**
-   * Test successful file reuse.
+   * Tests successful file reuse.
    *
    * @dataProvider providerSuccessfulReuse
    *
@@ -123,7 +123,7 @@ class FileCopyTest extends FileTestBase {
   }
 
   /**
-   * Test successful moves.
+   * Tests successful moves.
    */
   public function testSuccessfulMoves() {
     $file_1 = $this->createUri(NULL, NULL, 'temporary');
@@ -158,7 +158,7 @@ class FileCopyTest extends FileTestBase {
   }
 
   /**
-   * Test that non-existent files throw an exception.
+   * Tests that non-existent files throw an exception.
    */
   public function testNonExistentSourceFile() {
     $source = '/non/existent/file';
@@ -195,7 +195,7 @@ class FileCopyTest extends FileTestBase {
   }
 
   /**
-   * Test the 'rename' overwrite mode.
+   * Tests the 'rename' overwrite mode.
    */
   public function testRenameFile() {
     $source = $this->createUri(NULL, NULL, 'temporary');

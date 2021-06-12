@@ -221,7 +221,7 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
   }
 
   /**
-   * Test translatability of optional configuration in locale.
+   * Tests translatability of optional configuration in locale.
    */
   public function testOptionalConfiguration() {
     $this->assertNodeConfig(FALSE, FALSE);

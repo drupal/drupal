@@ -191,7 +191,7 @@ class TwigEnvironmentTest extends KernelTestBase {
   }
 
   /**
-   * Test template invalidation.
+   * Tests template invalidation.
    */
   public function testTemplateInvalidation() {
     $template_before = <<<TWIG

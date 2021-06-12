@@ -300,7 +300,7 @@ class UserPasswordResetTest extends BrowserTestBase {
   }
 
   /**
-   * Test user password reset while logged in.
+   * Tests user password reset while logged in.
    */
   public function testUserPasswordResetLoggedIn() {
     $another_account = $this->drupalCreateUser();

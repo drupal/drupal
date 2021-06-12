@@ -71,7 +71,7 @@ class ContentTranslationOperationsTest extends NodeTestBase {
   }
 
   /**
-   * Test that the operation "Translate" is displayed in the content listing.
+   * Tests that the operation "Translate" is displayed in the content listing.
    */
   public function testOperationTranslateLink() {
     $node = $this->drupalCreateNode(['type' => 'article', 'langcode' => 'es']);

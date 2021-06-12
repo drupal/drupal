@@ -65,7 +65,7 @@ class LocaleContentTest extends BrowserTestBase {
   }
 
   /**
-   * Test if a content type can be set to multilingual and language is present.
+   * Tests if a content type can be set to multilingual and language is present.
    */
   public function testContentTypeLanguageConfiguration() {
     $type1 = $this->drupalCreateContentType();
@@ -156,7 +156,7 @@ class LocaleContentTest extends BrowserTestBase {
   }
 
   /**
-   * Test if a dir and lang tags exist in node's attributes.
+   * Tests if a dir and lang tags exist in node's attributes.
    */
   public function testContentTypeDirLang() {
     $type = $this->drupalCreateContentType();

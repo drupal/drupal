@@ -1005,7 +1005,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
   }
 
   /**
-   * Test a deployment with fields in dedicated table storage.
+   * Tests deployment with fields in dedicated table storage.
    */
   public function testPublishWorkspaceDedicatedTableStorage() {
     $this->initializeWorkspacesModule();

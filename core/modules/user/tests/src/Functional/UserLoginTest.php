@@ -40,7 +40,7 @@ class UserLoginTest extends BrowserTestBase {
   }
 
   /**
-   * Test the global login flood control.
+   * Tests the global login flood control.
    */
   public function testGlobalLoginFloodControl() {
     $this->config('user.flood')
@@ -77,7 +77,7 @@ class UserLoginTest extends BrowserTestBase {
   }
 
   /**
-   * Test the per-user login flood control.
+   * Tests the per-user login flood control.
    */
   public function testPerUserLoginFloodControl() {
     $this->config('user.flood')
@@ -117,7 +117,7 @@ class UserLoginTest extends BrowserTestBase {
   }
 
   /**
-   * Test that user password is re-hashed upon login after changing $count_log2.
+   * Tests user password is re-hashed upon login after changing $count_log2.
    */
   public function testPasswordRehashOnLogin() {
     // Determine default log2 for phpass hashing algorithm

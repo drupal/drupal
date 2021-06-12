@@ -23,7 +23,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test image validity.
+   * Tests image validity.
    */
   public function testValid() {
     $file_system = $this->container->get('file_system');
@@ -85,7 +85,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
   }
 
   /**
-   * Test min/max resolution settings.
+   * Tests min/max resolution settings.
    */
   public function testResolution() {
     $field_names = [
@@ -164,7 +164,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
   }
 
   /**
-   * Test that required alt/title fields gets validated right.
+   * Tests that required alt/title fields gets validated right.
    */
   public function testRequiredAttributes() {
     $field_name = strtolower($this->randomMachineName());

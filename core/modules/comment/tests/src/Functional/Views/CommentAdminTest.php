@@ -36,7 +36,7 @@ class CommentAdminTest extends CommentBrowserTestBase {
   }
 
   /**
-   * Test comment approval functionality through admin/content/comment.
+   * Tests comment approval functionality through admin/content/comment.
    */
   public function testApprovalAdminInterface() {
     // Set anonymous comments to require approval.

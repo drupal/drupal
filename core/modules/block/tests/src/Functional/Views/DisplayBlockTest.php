@@ -197,7 +197,7 @@ class DisplayBlockTest extends ViewTestBase {
   }
 
   /**
-   * Test the block form for a Views block.
+   * Tests the block form for a Views block.
    */
   public function testViewsBlockForm() {
     $this->drupalLogin($this->drupalCreateUser(['administer blocks']));

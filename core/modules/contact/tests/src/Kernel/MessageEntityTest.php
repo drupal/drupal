@@ -31,7 +31,7 @@ class MessageEntityTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test some of the methods.
+   * Tests some of the methods.
    */
   public function testMessageMethods() {
     $message_storage = $this->container->get('entity_type.manager')->getStorage('contact_message');

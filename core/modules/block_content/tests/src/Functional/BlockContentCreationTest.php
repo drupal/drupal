@@ -226,7 +226,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
   }
 
   /**
-   * Test deleting a block.
+   * Tests deleting a block.
    */
   public function testBlockDelete() {
     // Create a block.
@@ -289,7 +289,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
   }
 
   /**
-   * Test that placed content blocks create a dependency in the block placement.
+   * Tests placed content blocks create a dependency in the block placement.
    */
   public function testConfigDependencies() {
     $block = $this->createBlockContent();

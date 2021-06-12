@@ -12,7 +12,7 @@ use Drupal\migrate\Plugin\migrate\process\Callback;
 class CallbackTest extends MigrateProcessTestCase {
 
   /**
-   * Test callback with valid "callable".
+   * Tests callback with valid "callable".
    *
    * @dataProvider providerCallback
    */
@@ -34,7 +34,7 @@ class CallbackTest extends MigrateProcessTestCase {
   }
 
   /**
-   * Test callback exceptions.
+   * Tests callback exceptions.
    *
    * @dataProvider providerCallbackExceptions
    */

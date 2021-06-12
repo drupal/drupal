@@ -10,7 +10,7 @@ namespace Drupal\KernelTests\Core\Database;
 class SelectCloneTest extends DatabaseTestBase {
 
   /**
-   * Test that subqueries as value within conditions are cloned properly.
+   * Tests that subqueries as value within conditions are cloned properly.
    */
   public function testSelectConditionSubQueryCloning() {
     $subquery = $this->connection->select('test', 't');

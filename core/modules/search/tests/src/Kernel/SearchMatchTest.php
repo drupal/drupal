@@ -37,7 +37,7 @@ class SearchMatchTest extends KernelTestBase {
   }
 
   /**
-   * Test search indexing.
+   * Tests search indexing.
    */
   public function testMatching() {
     $this->_setup();
@@ -218,7 +218,7 @@ class SearchMatchTest extends KernelTestBase {
   }
 
   /**
-   * Test the matching abilities of the engine.
+   * Tests the matching abilities of the engine.
    *
    * Verify if a query produces the correct results.
    */
@@ -236,7 +236,7 @@ class SearchMatchTest extends KernelTestBase {
   }
 
   /**
-   * Test the scoring abilities of the engine.
+   * Tests the scoring abilities of the engine.
    *
    * Verify if a query produces normalized, monotonous scores.
    */

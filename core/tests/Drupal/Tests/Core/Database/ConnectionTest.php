@@ -309,7 +309,7 @@ class ConnectionTest extends UnitTestCase {
   }
 
   /**
-   * Test Connection::schema().
+   * Tests Connection::schema().
    *
    * @dataProvider providerSchema
    */
@@ -321,7 +321,7 @@ class ConnectionTest extends UnitTestCase {
   }
 
   /**
-   * Test Connection::destroy().
+   * Tests Connection::destroy().
    *
    * @group legacy
    */
@@ -343,7 +343,7 @@ class ConnectionTest extends UnitTestCase {
   }
 
   /**
-   * Test Connection::__destruct().
+   * Tests Connection::__destruct().
    *
    * @group legacy
    */
@@ -391,7 +391,7 @@ class ConnectionTest extends UnitTestCase {
   }
 
   /**
-   * Test Connection::makeComments().
+   * Tests Connection::makeComments().
    *
    * @dataProvider providerMakeComments
    */
@@ -418,7 +418,7 @@ class ConnectionTest extends UnitTestCase {
   }
 
   /**
-   * Test Connection::filterComments().
+   * Tests Connection::filterComments().
    *
    * @dataProvider providerFilterComments
    */

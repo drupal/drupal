@@ -182,7 +182,7 @@ class ModerationFormTest extends ModerationStateTestBase {
   }
 
   /**
-   * Test moderation non-bundle entity type.
+   * Tests moderation non-bundle entity type.
    */
   public function testNonBundleModerationForm() {
     $this->drupalLogin($this->rootUser);
@@ -487,7 +487,7 @@ class ModerationFormTest extends ModerationStateTestBase {
   }
 
   /**
-   * Test the moderation_state field when an alternative widget is set.
+   * Tests the moderation_state field when an alternative widget is set.
    */
   public function testAlternativeModerationStateWidget() {
     $entity_form_display = EntityFormDisplay::load('node.moderated_content.default');

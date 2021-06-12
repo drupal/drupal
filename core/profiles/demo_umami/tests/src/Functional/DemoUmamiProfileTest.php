@@ -91,7 +91,8 @@ class DemoUmamiProfileTest extends BrowserTestBase {
   }
 
   /**
-   * Tests that the users can log in with the admin password selected at install.
+   * Tests that the users can log in with the admin password selected at
+   * install.
    */
   public function testUser() {
     $password = $this->rootUser->pass_raw;
