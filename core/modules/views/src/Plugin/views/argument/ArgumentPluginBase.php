@@ -1349,7 +1349,11 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
    *   not possible.
    */
   public function getContextDefinition() {
-    return $this->getPlugin('argument_validator')->getContextDefinition();
+    $plugin = $this->getPlugin('argument_validator');
+    if ($plugin) {
+      return $plugin->getContextDefinition();
+    }
+    return NULL;
   }
 
 }
