@@ -40,7 +40,7 @@ class MigrateShortcutSetUsersTest extends MigrateDrupal7TestBase {
   }
 
   /**
-   * Test the shortcut set migration.
+   * Tests the shortcut set migration.
    */
   public function testShortcutSetUsersMigration() {
     // Check if migrated user has correct migrated shortcut set assigned.

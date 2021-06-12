@@ -77,10 +77,10 @@ class OffCanvasTest extends OffCanvasTestBase {
 
       $style = $page->find('css', '.ui-dialog-off-canvas')->getAttribute('style');
       if ($link_index === 1) {
-        $this->assertTrue((bool) strstr($style, 'height: auto;'));
+        $this->assertStringContainsString('height: auto;', $style);
       }
       else {
-        $this->assertTrue((bool) strstr($style, 'height: 421px;'));
+        $this->assertStringContainsString('height: 421px;', $style);
       }
     }
 
@@ -92,7 +92,6 @@ class OffCanvasTest extends OffCanvasTestBase {
     $web_assert->linkExists('Off_canvas link!');
     // Click off-canvas link inside off-canvas dialog
     $page->clickLink('Off_canvas link!');
-    /*  @var \Behat\Mink\Element\NodeElement $dialog */
     $this->waitForOffCanvasToOpen();
     $web_assert->elementTextContains('css', '.ui-dialog[aria-describedby="drupal-off-canvas"]', 'Thing 2 says hello');
 
@@ -106,7 +105,6 @@ class OffCanvasTest extends OffCanvasTestBase {
     $web_assert->linkExists('Off_canvas link!');
     // Click off-canvas link inside off-canvas dialog
     $page->clickLink('Off_canvas link!');
-    /*  @var \Behat\Mink\Element\NodeElement $dialog */
     $this->waitForOffCanvasToOpen();
     $web_assert->elementTextContains('css', '.ui-dialog[aria-describedby="drupal-off-canvas"]', 'Thing 2 says hello');
   }

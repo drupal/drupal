@@ -39,7 +39,8 @@ class NodeEntityViewModeAlterTest extends NodeTestBase {
     $edit['title[0][value]'] = $this->randomMachineName(8);
     $edit['body[0][value]'] = t('Data that should appear only in the body for the node.');
     $edit['body[0][summary]'] = t('Extra data that should appear only in the teaser for the node.');
-    $this->drupalPostForm('node/add/page', $edit, 'Save');
+    $this->drupalGet('node/add/page');
+    $this->submitForm($edit, 'Save');
 
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
 
@@ -49,13 +50,13 @@ class NodeEntityViewModeAlterTest extends NodeTestBase {
     $this->drupalGet('node/' . $node->id());
 
     // Check that teaser mode is viewed.
-    $this->assertText('Extra data that should appear only in the teaser for the node.');
+    $this->assertSession()->pageTextContains('Extra data that should appear only in the teaser for the node.');
     // Make sure body text is not present.
     $this->assertNoText('Data that should appear only in the body for the node.');
 
     // Test that the correct build mode has been set.
     $build = $this->buildEntityView($node);
-    $this->assertEqual('teaser', $build['#view_mode'], 'The view mode has correctly been set to teaser.');
+    $this->assertEquals('teaser', $build['#view_mode'], 'The view mode has correctly been set to teaser.');
   }
 
 }

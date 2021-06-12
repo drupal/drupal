@@ -48,7 +48,7 @@ class MigrateNodeRevisionTest extends MigrateNodeTestBase {
    *   The revision's time stamp.
    */
   protected function assertRevision($id, $langcode, $title, $log, $timestamp) {
-    /* @var  \Drupal\node\NodeInterface $revision */
+    /** @var  \Drupal\node\NodeInterface $revision */
     $revision = $this->nodeStorage->loadRevision($id)
       ->getTranslation($langcode);
     $this->assertInstanceOf(NodeInterface::class, $revision);
@@ -58,7 +58,7 @@ class MigrateNodeRevisionTest extends MigrateNodeTestBase {
   }
 
   /**
-   * Test node revisions migration from Drupal 6 to 8.
+   * Tests node revisions migration from Drupal 6 to 8.
    */
   public function testNodeRevision() {
     $node = \Drupal::entityTypeManager()->getStorage('node')->loadRevision(2001);

@@ -52,7 +52,8 @@ class BlockFilterTest extends WebDriverTestBase {
 
     // From the manage display page, go to manage the layout.
     $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
-    $this->drupalPostForm("$field_ui_prefix/display/default", ['layout[enabled]' => TRUE], 'Save');
+    $this->drupalGet("{$field_ui_prefix}/display/default");
+    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
     $assert_session->linkExists('Manage layout');
     $this->clickLink('Manage layout');
     $assert_session->addressEquals("$field_ui_prefix/display/default/layout");

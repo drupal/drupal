@@ -108,12 +108,12 @@ class ConfigImporterTest extends KernelTestBase {
 
       $actual_error_log = $this->configImporter->getErrors();
       $expected_error_log = ['Site UUID in source storage does not match the target storage.'];
-      $this->assertEqual($expected_error_log, $actual_error_log);
+      $this->assertEquals($expected_error_log, $actual_error_log);
 
       $expected = static::FAIL_MESSAGE . PHP_EOL . 'Site UUID in source storage does not match the target storage.';
       $this->assertEquals($expected, $actual_message);
       foreach ($expected_error_log as $log_row) {
-        $this->assertRegExp("/$log_row/", $actual_message);
+        $this->assertMatchesRegularExpression("/$log_row/", $actual_message);
       }
     }
   }
@@ -242,17 +242,17 @@ class ConfigImporterTest extends KernelTestBase {
 
     $entity_storage = \Drupal::entityTypeManager()->getStorage('config_test');
     $primary = $entity_storage->load('primary');
-    $this->assertEqual('primary', $primary->id());
-    $this->assertEqual($values_primary['uuid'], $primary->uuid());
-    $this->assertEqual($values_primary['label'], $primary->label());
+    $this->assertEquals('primary', $primary->id());
+    $this->assertEquals($values_primary['uuid'], $primary->uuid());
+    $this->assertEquals($values_primary['label'], $primary->label());
     $secondary = $entity_storage->load('secondary');
-    $this->assertEqual('secondary', $secondary->id());
-    $this->assertEqual($values_secondary['uuid'], $secondary->uuid());
-    $this->assertEqual($values_secondary['label'], $secondary->label());
+    $this->assertEquals('secondary', $secondary->id());
+    $this->assertEquals($values_secondary['uuid'], $secondary->uuid());
+    $this->assertEquals($values_secondary['label'], $secondary->label());
 
     $logs = $this->configImporter->getErrors();
     $this->assertCount(1, $logs);
-    $this->assertEqual(new FormattableMarkup('Deleted and replaced configuration entity "@name"', ['@name' => $name_secondary]), $logs[0]);
+    $this->assertEquals(new FormattableMarkup('Deleted and replaced configuration entity "@name"', ['@name' => $name_secondary]), $logs[0]);
   }
 
   /**
@@ -288,17 +288,17 @@ class ConfigImporterTest extends KernelTestBase {
 
     $entity_storage = \Drupal::entityTypeManager()->getStorage('config_test');
     $primary = $entity_storage->load('primary');
-    $this->assertEqual('primary', $primary->id());
-    $this->assertEqual($values_primary['uuid'], $primary->uuid());
-    $this->assertEqual($values_primary['label'], $primary->label());
+    $this->assertEquals('primary', $primary->id());
+    $this->assertEquals($values_primary['uuid'], $primary->uuid());
+    $this->assertEquals($values_primary['label'], $primary->label());
     $secondary = $entity_storage->load('secondary');
-    $this->assertEqual('secondary', $secondary->id());
-    $this->assertEqual($values_secondary['uuid'], $secondary->uuid());
-    $this->assertEqual($values_secondary['label'], $secondary->label());
+    $this->assertEquals('secondary', $secondary->id());
+    $this->assertEquals($values_secondary['uuid'], $secondary->uuid());
+    $this->assertEquals($values_secondary['label'], $secondary->label());
 
     $logs = $this->configImporter->getErrors();
     $this->assertCount(1, $logs);
-    $this->assertEqual(Html::escape("Unexpected error during import with operation create for {$name_primary}: 'config_test' entity with ID 'secondary' already exists."), $logs[0]);
+    $this->assertEquals(Html::escape("Unexpected error during import with operation create for {$name_primary}: 'config_test' entity with ID 'secondary' already exists."), $logs[0]);
   }
 
   /**
@@ -365,22 +365,22 @@ class ConfigImporterTest extends KernelTestBase {
 
     $entity_storage = \Drupal::entityTypeManager()->getStorage('config_test');
     $deleter = $entity_storage->load('deleter');
-    $this->assertEqual('deleter', $deleter->id());
-    $this->assertEqual($values_deleter['uuid'], $deleter->uuid());
-    $this->assertEqual($values_deleter['label'], $deleter->label());
+    $this->assertEquals('deleter', $deleter->id());
+    $this->assertEquals($values_deleter['uuid'], $deleter->uuid());
+    $this->assertEquals($values_deleter['label'], $deleter->label());
 
     // The deletee was deleted in
     // \Drupal\config_test\Entity\ConfigTest::postSave().
     $this->assertNull($entity_storage->load('deletee'));
 
     $other = $entity_storage->load('other');
-    $this->assertEqual('other', $other->id());
-    $this->assertEqual($values_other['uuid'], $other->uuid());
-    $this->assertEqual($values_other['label'], $other->label());
+    $this->assertEquals('other', $other->id());
+    $this->assertEquals($values_other['uuid'], $other->uuid());
+    $this->assertEquals($values_other['label'], $other->label());
 
     $logs = $this->configImporter->getErrors();
     $this->assertCount(1, $logs);
-    $this->assertEqual(new FormattableMarkup('Update target "@name" is missing.', ['@name' => $name_deletee]), $logs[0]);
+    $this->assertEquals(new FormattableMarkup('Update target "@name" is missing.', ['@name' => $name_deletee]), $logs[0]);
   }
 
   /**
@@ -679,7 +679,7 @@ class ConfigImporterTest extends KernelTestBase {
       $expected = static::FAIL_MESSAGE . PHP_EOL . 'The core.extension configuration does not exist.';
       $this->assertEquals($expected, $e->getMessage());
       $error_log = $this->configImporter->getErrors();
-      $this->assertEqual(['The core.extension configuration does not exist.'], $error_log);
+      $this->assertEquals(['The core.extension configuration does not exist.'], $error_log);
     }
   }
 
@@ -705,7 +705,7 @@ class ConfigImporterTest extends KernelTestBase {
       $this->assertEquals($expected, $e->getMessage(), 'There were errors validating the config synchronization.');
       $error_log = $this->configImporter->getErrors();
       // Install profiles should not even be scanned at this point.
-      $this->assertEqual(['Unable to install the <em class="placeholder">standard</em> module since it does not exist.'], $error_log);
+      $this->assertEquals(['Unable to install the <em class="placeholder">standard</em> module since it does not exist.'], $error_log);
     }
   }
 
@@ -734,7 +734,7 @@ class ConfigImporterTest extends KernelTestBase {
       // does not use an install profile. This situation should be impossible
       // to get in but site's can removed the install profile setting from
       // settings.php so the test is valid.
-      $this->assertEqual(['Cannot change the install profile from <em class="placeholder"></em> to <em class="placeholder">this_will_not_work</em> once Drupal is installed.'], $error_log);
+      $this->assertEquals(['Cannot change the install profile from <em class="placeholder"></em> to <em class="placeholder">this_will_not_work</em> once Drupal is installed.'], $error_log);
     }
   }
 

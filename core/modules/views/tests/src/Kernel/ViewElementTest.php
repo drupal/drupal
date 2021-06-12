@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\views\Kernel;
 
+use Drupal\views\Exception\ViewRenderElementException;
 use Drupal\views\Views;
 
 /**
@@ -127,6 +128,21 @@ class ViewElementTest extends ViewsKernelTestBase {
 
     // Ensure that the exposed form is rendered.
     $this->assertCount(1, $this->xpath('//form[@class="views-exposed-form"]'));
+  }
+
+  /**
+   * Tests that an exception is thrown when an invalid View is passed.
+   */
+  public function testInvalidView() {
+    $renderer = $this->container->get('renderer');
+    $render_element = [
+      '#type' => 'view',
+      '#name' => 'invalid_view_name',
+      '#embed' => FALSE,
+    ];
+    $this->expectException(ViewRenderElementException::class);
+    $this->expectExceptionMessage("Invalid View name ({$render_element['#name']}) given.");
+    $renderer->renderRoot($render_element);
   }
 
 }

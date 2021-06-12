@@ -31,7 +31,10 @@ class MigrateLanguageContentSettingsTest extends MigrateDrupal7TestBase {
     parent::setUp();
 
     $this->migrateContentTypes();
-    $this->executeMigration('d7_language_content_settings');
+    $this->executeMigrations([
+      'language',
+      'd7_language_content_settings',
+    ]);
   }
 
   /**

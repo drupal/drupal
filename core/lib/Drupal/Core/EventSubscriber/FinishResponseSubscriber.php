@@ -110,7 +110,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
    *   The event to process.
    */
   public function onRespond(ResponseEvent $event) {
-    if (!$event->isMasterRequest()) {
+    if (!$event->isMainRequest()) {
       return;
     }
 
@@ -130,6 +130,11 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
     // https://www.owasp.org/index.php/List_of_useful_HTTP_headers
     $response->headers->set('X-Content-Type-Options', 'nosniff', FALSE);
     $response->headers->set('X-Frame-Options', 'SAMEORIGIN', FALSE);
+
+    // Add a Permissions-Policy header to block Federated Learning of Cohorts.
+    if (Settings::get('block_interest_cohort', TRUE) && !$response->headers->has('Permissions-Policy')) {
+      $response->headers->set('Permissions-Policy', 'interest-cohort=()');
+    }
 
     // If the current response isn't an implementation of the
     // CacheableResponseInterface, we assume that a Response is either

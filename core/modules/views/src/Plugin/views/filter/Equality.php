@@ -13,7 +13,11 @@ use Drupal\Core\Form\FormStateInterface;
  */
 class Equality extends FilterPluginBase {
 
-  // exposed filter options
+  /**
+   * Exposed filter options.
+   *
+   * @var bool
+   */
   protected $alwaysMultiple = TRUE;
 
   /**

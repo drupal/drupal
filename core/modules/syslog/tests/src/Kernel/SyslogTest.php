@@ -54,12 +54,12 @@ class SyslogTest extends KernelTestBase {
   }
 
   /**
-   * Test severity level logging.
+   * Tests severity level logging.
    *
    * @covers ::log
    */
   public function testSyslogSeverity() {
-    /* @var \Drupal\Core\Config\Config $config */
+    /** @var \Drupal\Core\Config\Config $config */
     $config = $this->container->get('config.factory')->getEditable('syslog.settings');
     $config->set('format', '!type|!message|!severity');
     $config->save();
