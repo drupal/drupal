@@ -133,7 +133,7 @@ class EntityOperationsTest extends KernelTestBase {
    * Verifies that a newly-created node can go straight to published.
    */
   public function testPublishedCreation() {
-    // Create a new node in draft.
+    // Create a new node as published.
     $page = Node::create([
       'type' => 'page',
       'title' => 'A',
@@ -179,6 +179,41 @@ class EntityOperationsTest extends KernelTestBase {
     $new_revision = $storage->loadRevision($new_revision_id);
     $this->assertFalse($new_revision->isPublished());
     $this->assertTrue($new_revision->isDefaultRevision());
+  }
+
+  /**
+   * Verifies that moderation state is not cloned.
+   */
+  public function testCreateDuplicate() {
+    // Create a new node as published.
+    $page = Node::create([
+      'type' => 'page',
+      'title' => 'A',
+    ]);
+    $page->moderation_state->value = 'published';
+    $page->save();
+
+    $id = $page->id();
+
+    // Verify the entity saved correctly.
+    /** @var \Drupal\node\Entity\Node $page */
+    $page = Node::load($id);
+    $this->assertEquals('published', $page->get('moderation_state')->value);
+    $this->assertTrue($page->isPublished());
+
+    // Create duplicate.
+    $clone = $page->createDuplicate();
+    $this->assertEquals('draft', $clone->get('moderation_state')->value);
+    $this->assertFalse($clone->isPublished());
+
+    // Reload the clone to ensure changes.
+    $clone->save();
+    $id = $clone->id();
+    /** @var \Drupal\node\Entity\Node $clone */
+    $clone = Node::load($id);
+
+    $this->assertEquals('draft', $clone->get('moderation_state')->value);
+    $this->assertFalse($clone->isPublished());
   }
 
 }
