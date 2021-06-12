@@ -3,6 +3,7 @@
 namespace Drupal\Tests\update\Functional;
 
 use Drupal\Core\Url;
+use Drupal\time_test\TestTime;
 
 /**
  * Tests the Update Manager module through a series of functional tests using
@@ -26,6 +27,11 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
    * {@inheritdoc}
    */
   protected $projectTitle = 'Drupal';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['time_test'];
 
   /**
    * Sets the version to x.x.x when no project-specific mapping is defined.
@@ -60,7 +66,9 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
    * @dataProvider securityCoverageMessageProvider
    */
   public function testSecurityCoverageMessage($installed_version, $fixture, $requirements_section_heading, $message, $mock_date) {
-    \Drupal::state()->set('update_test.mock_date', $mock_date);
+    if ($mock_date) {
+      TestTime::setRequestTime($mock_date, 'Y-m-d');
+    }
     $this->setProjectInstalledVersion($installed_version);
     $this->refreshUpdateStatus(['drupal' => $fixture]);
     $this->drupalGet('admin/reports/status');
