@@ -112,7 +112,7 @@ class UpdateProcessor implements UpdateProcessorInterface {
    * {@inheritdoc}
    */
   public function createFetchTask($project) {
-    if (empty($this->fetchTasks)) {
+    if (empty($this->fetchTasks) && $this->fetchQueue->numberOfItems()) {
       $this->fetchTasks = $this->fetchTaskStore->getAll();
     }
     if (empty($this->fetchTasks[$project['name']])) {
@@ -126,7 +126,7 @@ class UpdateProcessor implements UpdateProcessorInterface {
    * {@inheritdoc}
    */
   public function fetchData() {
-    $end = time() + $this->updateSettings->get('fetch.timeout');
+    $end = time() + $this->updateSettings->get('fetch.timeout') ?? 30;
     if ($this->fetchQueue->numberOfItems()) {
       // Delete any stored project data as that needs refreshing when
       // update_calculate_project_data() is called.
