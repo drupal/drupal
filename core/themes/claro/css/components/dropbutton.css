@@ -332,7 +332,7 @@
 .dropbutton__subitems {
   margin: 0;
   list-style: none;
-  color: var(--color-davysgrey);
+  color: var(--color-davysgray);
   background: #fff;
 }
 
