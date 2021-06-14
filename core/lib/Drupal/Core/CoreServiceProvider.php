@@ -7,6 +7,7 @@ use Drupal\Core\Cache\ListCacheBinsPass;
 use Drupal\Core\DependencyInjection\Compiler\AuthenticationProviderPass;
 use Drupal\Core\DependencyInjection\Compiler\BackendCompilerPass;
 use Drupal\Core\DependencyInjection\Compiler\CorsCompilerPass;
+use Drupal\Core\DependencyInjection\Compiler\DeprecatedServicePass;
 use Drupal\Core\DependencyInjection\Compiler\GuzzleMiddlewarePass;
 use Drupal\Core\DependencyInjection\Compiler\ContextProvidersPass;
 use Drupal\Core\DependencyInjection\Compiler\ProxyServicesPass;
@@ -98,6 +99,7 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
     $container->addCompilerPass(new PluginManagerPass());
 
     $container->addCompilerPass(new DependencySerializationTraitPass());
+    $container->addCompilerPass(new DeprecatedServicePass());
   }
 
   /**
