@@ -35,8 +35,9 @@ class DateField extends FieldPluginBase {
       // The date_plain formatter exists in Drupal 7 but not Drupal 6. It is
       // added here because this plugin is declared for Drupal 6 and Drupal 7.
       'date_plain' => 'datetime_plain',
-      // Drupal 6.
-      // @see ::getFieldFormatterType
+      // The date formatter exists in Drupal 6 but not Drupal 7. See
+      // ::getFieldFormatterType() for details. It is added here because this
+      // plugin is declared for Drupal 6 and Drupal 7.
       'default' => 'datetime_default',
     ];
   }
@@ -111,9 +112,9 @@ class DateField extends FieldPluginBase {
    * {@inheritdoc}
    */
   public function getFieldFormatterType(Row $row) {
+    // The Drupal 6 date formatter ID might be the machine name of the date
+    // format, e.g. 'short', 'medium', 'long', or any other custom format.
     if ($d6_formatter_type = $row->getSourceProperty('display_settings/format')) {
-      // The Drupal 6 date formatter ID might be the machine name of the date
-      // format, e.g. 'short', 'medium', 'long', or any other custom format.
       if ($d6_formatter_type !== 'format_interval') {
         return 'default';
       }
