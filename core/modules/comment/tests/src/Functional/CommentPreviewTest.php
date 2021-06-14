@@ -81,6 +81,10 @@ class CommentPreviewTest extends CommentTestBase {
 
     // Check that the user picture is displayed.
     $this->assertSession()->elementExists('xpath', "//article[contains(@class, 'preview')]//div[contains(@class, 'user-picture')]//img");
+
+    // Ensure that preview node is displayed after the submit buttons of the form.
+    $xpath = $this->assertSession()->buildXPathQuery('//div[@id=:id]/following-sibling::article', [':id' => 'edit-actions']);
+    $this->assertSession()->elementExists('xpath', $xpath);
   }
 
   /**

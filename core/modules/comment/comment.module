@@ -529,7 +529,7 @@ function comment_preview(CommentInterface $comment, FormStateInterface $form_sta
   }
 
   $preview_build['comment_output_below'] = $build;
-  $preview_build['comment_output_below']['#weight'] = 100;
+  $preview_build['comment_output_below']['#weight'] = 200;
 
   return $preview_build;
 }
