@@ -130,12 +130,13 @@ class Image extends File {
     }
 
     $uri = $file->getFileUri();
-    $image = $this->imageFactory->get($uri);
     switch ($name) {
       case static::METADATA_ATTRIBUTE_WIDTH:
+        $image = $this->imageFactory->get($uri);
         return $image->getWidth() ?: NULL;
 
       case static::METADATA_ATTRIBUTE_HEIGHT:
+        $image = $this->imageFactory->get($uri);
         return $image->getHeight() ?: NULL;
 
       case 'thumbnail_uri':
