@@ -37,7 +37,7 @@ class HelpSectionManager extends CoreHelpSectionManager {
    */
   public function clearCachedDefinitions() {
     parent::clearCachedDefinitions();
-    if ($this->searchManager && $this->searchManager->hasDefinition('help_search') && $this->moduleHandler->moduleExists('help_topics')) {
+    if ($this->searchManager && $this->searchManager->hasDefinition('help_search') && $this->moduleHandler->moduleExists('help_topics') && $this->moduleHandler->moduleExists('search')) {
       // Rebuild the index on cache clear so that new help topics are indexed
       // and any changes due to help topics edits or translation changes are
       // picked up.
