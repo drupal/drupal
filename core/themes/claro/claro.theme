@@ -640,6 +640,7 @@ function claro_views_ui_display_tab_alter(&$element) {
     $child_keys = Element::children($dummy_dropbutton);
     $prefix_regex = '/(<.*class\s*= *["\']?)([^"\']*)(.*)/i';
     $child_count = 0;
+    $valid_key = NULL;
 
     foreach ($child_keys as $key) {
       if (in_array($key, ['prefix', 'suffix'])) {
@@ -650,14 +651,45 @@ function claro_views_ui_display_tab_alter(&$element) {
       if (!empty($nested_child_keys)) {
         foreach ($nested_child_keys as $nested_key) {
           $child_count++;
+          $valid_key = [$key, $nested_key];
           $prefix = $dummy_dropbutton[$key][$nested_key]['#prefix'];
-          $dummy_dropbutton[$key][$nested_key]['#prefix'] = preg_replace($prefix_regex, '$1$2 dropbutton__item$3', $prefix);
+          if ($child_count === 1) {
+            $dummy_dropbutton[$key][$nested_key]['#prefix'] = preg_replace($prefix_regex, '$1$2 dropbutton__item dropbutton__main-item dropbutton__item--extrasmall$3', $prefix);
+          }
+          else {
+            $dummy_dropbutton[$key][$nested_key]['#prefix'] = preg_replace($prefix_regex, '$1$2 dropbutton__item dropbutton__sub-item dropbutton__item--extrasmall$3', $prefix);
+          }
+
+          if ($child_count === 2) {
+            $dummy_dropbutton[$key][$nested_key]['#prefix'] =
+              '<li class="dropbutton__subitems-wrapper"><ul class="dropbutton__subitems">' . $dummy_dropbutton[$key][$nested_key]['#prefix'];
+          }
         }
       }
       else {
         $child_count++;
+        $valid_key = [$key];
         $prefix = $dummy_dropbutton[$key]['#prefix'];
-        $dummy_dropbutton[$key]['#prefix'] = preg_replace($prefix_regex, '$1$2 dropbutton__item$3', $prefix);
+        if ($child_count === 1) {
+          $dummy_dropbutton[$key]['#prefix'] = preg_replace($prefix_regex, '$1$2 dropbutton__item dropbutton__main-item dropbutton__item--extrasmall$3', $prefix);
+        }
+        else {
+          $dummy_dropbutton[$key]['#prefix'] = preg_replace($prefix_regex, '$1$2 dropbutton__item dropbutton__sub-item dropbutton__item--extrasmall$3', $prefix);
+        }
+
+        if ($child_count === 2) {
+          $dummy_dropbutton[$key]['#prefix'] =
+            '<li class="dropbutton__subitems-wrapper"><ul class="dropbutton__subitems">' . $dummy_dropbutton[$key]['#prefix'];
+        }
+      }
+    }
+
+    if ($child_count > 1) {
+      if (count($valid_key) > 1) {
+        $dummy_dropbutton[$valid_key[0]][$valid_key[1]]['#suffix'] .= '</ul></li>';
+      }
+      else {
+        $dummy_dropbutton[$valid_key[0]]['#suffix'] .= '</ul></li>';
       }
     }
 
@@ -1070,6 +1102,37 @@ function claro_preprocess_links__dropbutton(&$variables) {
 
   foreach ($variables['links'] as &$link_data) {
     $link_data['attributes']->addClass('dropbutton__item');
+  }
+  _claro_dropbutton_preprocess($variables);
+}
+
+/**
+ * Dropbutton preprocess helper for dropbutton and dropbutton__operations.
+ */
+function _claro_dropbutton_preprocess(&$variables) {
+  $item_classes_main = ['dropbutton__item', 'dropbutton__main-item'];
+  $item_classes_other = ['dropbutton__item', 'dropbutton__sub-item'];
+  // Check that the dropbutton has a supported variant class.
+  // @todo Revisit after https://www.drupal.org/node/3057581 is added.
+  if (!empty($variables['attributes']['class'])) {
+    if (array_search('dropbutton--small', $variables['attributes']['class'])) {
+      $item_classes_main[] = 'dropbutton__item--small';
+      $item_classes_other[] = 'dropbutton__item--small';
+    }
+    elseif (array_search('dropbutton--extrasmall', $variables['attributes']['class'])) {
+      $item_classes_main[] = 'dropbutton__item--extrasmall';
+      $item_classes_other[] = 'dropbutton__item--extrasmall';
+    }
+  }
+
+  $link_names = array_keys($variables['links']);
+  $first_link_name = reset($link_names);
+  $variables['links'][$first_link_name]['attributes']->addClass($item_classes_main);
+  foreach ($variables['links'] as $link_name => &$link_data) {
+    if ($link_name === $first_link_name) {
+      continue;
+    }
+    $link_data['attributes']->addClass($item_classes_other);
   }
 }
 
