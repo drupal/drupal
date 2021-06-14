@@ -1,0 +1,7 @@
+services:
+  deprecation_test.service:
+    class: Drupal\deprecation_test\Deprecation\FixtureDeprecatedClass
+    deprecated: The "%service_id%" service is deprecated in drupal:9.0.0 and is removed from drupal:20.0.0. This is a test.
+  deprecation_test.alias:
+    alias: deprecation_test.service
+    deprecated: The "%alias_id%" alias is deprecated in drupal:9.0.0 and is removed from drupal:20.0.0. This is a test.
