@@ -161,7 +161,7 @@ abstract class EntityKernelTestBase extends KernelTestBase {
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   protected function enableModules(array $modules) {
     parent::enableModules($modules);
@@ -169,7 +169,7 @@ abstract class EntityKernelTestBase extends KernelTestBase {
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   protected function disableModules(array $modules) {
     parent::disableModules($modules);
