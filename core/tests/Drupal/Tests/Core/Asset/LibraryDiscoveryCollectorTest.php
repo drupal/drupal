@@ -193,15 +193,17 @@ class LibraryDiscoveryCollectorTest extends UnitTestCase {
       ->method('buildByExtension')
       ->willReturnMap([
         ['test', $this->libraryData],
-        ['kitten_theme', [
-          'extend' => [
-            'css' => [
-              'theme' => [
-                'baz.css' => [],
+        [
+          'kitten_theme', [
+            'extend' => [
+              'css' => [
+                'theme' => [
+                  'baz.css' => [],
+                ],
               ],
             ],
           ],
-        ]],
+        ],
       ]);
     $library_discovery_collector = new LibraryDiscoveryCollector($this->cache, $this->lock, $this->libraryDiscoveryParser, $this->themeManager);
     $libraries = $library_discovery_collector->get('test');
@@ -237,15 +239,17 @@ class LibraryDiscoveryCollectorTest extends UnitTestCase {
       ->method('buildByExtension')
       ->willReturnMap([
         ['test', $this->libraryData],
-        ['kitten_theme', [
-          'extend' => [
-            'css' => [
-              'theme' => [
-                'baz.css' => [],
+        [
+          'kitten_theme', [
+            'extend' => [
+              'css' => [
+                'theme' => [
+                  'baz.css' => [],
+                ],
               ],
             ],
           ],
-        ]],
+        ],
       ]);
     $library_discovery_collector = new LibraryDiscoveryCollector($this->cache, $this->lock, $this->libraryDiscoveryParser, $this->themeManager);
     $library_discovery_collector->get('test');

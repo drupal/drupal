@@ -151,28 +151,33 @@ class MigrateSqlIdMapEnsureTablesTest extends MigrateTestCase {
     $schema->expects($this->exactly(3))
       ->method('addField')
       ->withConsecutive(
-        ['migrate_map_sql_idmap_test', 'rollback_action', [
-          'type' => 'int',
-          'size' => 'tiny',
-          'unsigned' => TRUE,
-          'not null' => TRUE,
-          'default' => 0,
-          'description' => 'Flag indicating what to do for this item on rollback',
-        ]],
-        ['migrate_map_sql_idmap_test', 'hash', [
-          'type' => 'varchar',
-          'length' => '64',
-          'not null' => FALSE,
-          'description' => 'Hash of source row data, for detecting changes',
-        ]],
-        ['migrate_map_sql_idmap_test', 'source_ids_hash', [
-          'type' => 'varchar',
-          'length' => '64',
-          'not null' => TRUE,
-          'description' => 'Hash of source ids. Used as primary key',
-        ]],
+        [
+          'migrate_map_sql_idmap_test', 'rollback_action', [
+            'type' => 'int',
+            'size' => 'tiny',
+            'unsigned' => TRUE,
+            'not null' => TRUE,
+            'default' => 0,
+            'description' => 'Flag indicating what to do for this item on rollback',
+          ],
+        ],
+        [
+          'migrate_map_sql_idmap_test', 'hash', [
+            'type' => 'varchar',
+            'length' => '64',
+            'not null' => FALSE,
+            'description' => 'Hash of source row data, for detecting changes',
+          ],
+        ],
+        [
+          'migrate_map_sql_idmap_test', 'source_ids_hash', [
+            'type' => 'varchar',
+            'length' => '64',
+            'not null' => TRUE,
+            'description' => 'Hash of source ids. Used as primary key',
+          ],
+        ],
       );
-
 
     $this->runEnsureTablesTest($schema);
   }
