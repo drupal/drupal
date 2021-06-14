@@ -19,7 +19,7 @@ class FileField extends D6FileField {
    * {@inheritdoc}
    */
   public function getFieldWidgetMap() {
-    return [
+    return parent::getFieldWidgetMap() + [
       'file_mfw' => 'file_generic',
       'filefield_widget' => 'file_generic',
       'media_generic' => 'file_generic',
