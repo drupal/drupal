@@ -213,4 +213,40 @@ class WorkspaceTest extends BrowserTestBase {
     $page->hasContent('The workspace May 4 has been deleted.');
   }
 
+  /**
+   * Tests the Workspaces listing UI.
+   */
+  public function testWorkspaceList() {
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+
+    // Login and create a workspace.
+    $this->drupalLogin($this->editor1);
+    $this->createWorkspaceThroughUi('Summer event', 'summer_event');
+
+    // Check that Live is the current active workspace.
+    $this->drupalGet('/admin/config/workflow/workspaces');
+    $this->assertSession()->statusCodeEquals(200);
+
+    $active_workspace_row = $page->find('css', '.active-workspace');
+    $this->assertTrue($active_workspace_row->hasClass('active-workspace--default'));
+    $this->assertEquals('Live', $active_workspace_row->find('css', 'td:first-of-type')->getText());
+
+    // The 'Switch to Live' operation is not shown when 'Live' is the active
+    // workspace.
+    $assert_session->linkNotExists('Switch to Live');
+
+    // Switch to another workspace and check that it has been marked as active.
+    $page->clickLink('Switch to Summer event');
+    $page->pressButton('Confirm');
+
+    $active_workspace_row = $page->find('css', '.active-workspace');
+    $this->assertTrue($active_workspace_row->hasClass('active-workspace--not-default'));
+    $this->assertEquals('Summer event', $active_workspace_row->find('css', 'td:first-of-type')->getText());
+
+    // 'Live' is no longer the active workspace, so it's 'Switch to Live'
+    // operation should be visible now.
+    $assert_session->linkExists('Switch to Live');
+  }
+
 }
