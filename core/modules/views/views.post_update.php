@@ -68,3 +68,10 @@ function views_post_update_rename_default_display_setting() {
 function views_post_update_remove_sorting_global_text_field() {
   // Empty post-update hook.
 }
+
+/**
+ * Rebuild routes to fix view title translations.
+ */
+function views_post_update_title_translations() {
+  \Drupal::service('router.builder')->setRebuildNeeded();
+}

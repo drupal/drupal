@@ -108,7 +108,7 @@ class PathPluginBaseTest extends UnitTestCase {
     $this->assertEquals('test_id', $route->getDefault('view_id'));
     $this->assertEquals('page_1', $route->getDefault('display_id'));
     $this->assertFalse($route->getOption('returns_response'));
-    $this->assertEquals('my views title', $route->getDefault('_title'));
+    $this->assertEquals('Drupal\views\Routing\ViewPageController::getTitle', $route->getDefault('_title_callback'));
   }
 
   /**
@@ -135,7 +135,7 @@ class PathPluginBaseTest extends UnitTestCase {
     $this->pathPlugin->collectRoutes($collection);
     $route = $collection->get('view.test_id.page_1');
     $this->assertTrue($route->getOption('returns_response'));
-    $this->assertEquals('my views title', $route->getDefault('_title'));
+    $this->assertEquals('Drupal\views\Routing\ViewPageController::getTitle', $route->getDefault('_title_callback'));
   }
 
   /**
@@ -163,7 +163,7 @@ class PathPluginBaseTest extends UnitTestCase {
     $this->assertEquals('test_id', $route->getDefault('view_id'));
     $this->assertEquals('page_1', $route->getDefault('display_id'));
     $this->assertEquals(['arg_0' => 'arg_0'], $route->getOption('_view_argument_map'));
-    $this->assertEquals('my views title', $route->getDefault('_title'));
+    $this->assertEquals('Drupal\views\Routing\ViewPageController::getTitle', $route->getDefault('_title_callback'));
   }
 
   /**
@@ -194,7 +194,7 @@ class PathPluginBaseTest extends UnitTestCase {
     $this->assertEquals('test_id', $route->getDefault('view_id'));
     $this->assertEquals('page_1', $route->getDefault('display_id'));
     $this->assertEquals(['arg_0' => 'arg_0'], $route->getOption('_view_argument_map'));
-    $this->assertEquals('my views title', $route->getDefault('_title'));
+    $this->assertEquals('Drupal\views\Routing\ViewPageController::getTitle', $route->getDefault('_title_callback'));
   }
 
   /**
@@ -220,7 +220,7 @@ class PathPluginBaseTest extends UnitTestCase {
     $this->assertInstanceOf(Route::class, $route);
     $this->assertEquals('test_id', $route->getDefault('view_id'));
     $this->assertEquals('page_1', $route->getDefault('display_id'));
-    $this->assertEquals('my views title', $route->getDefault('_title'));
+    $this->assertEquals('Drupal\views\Routing\ViewPageController::getTitle', $route->getDefault('_title_callback'));
   }
 
   /**
@@ -250,7 +250,7 @@ class PathPluginBaseTest extends UnitTestCase {
     $this->assertInstanceOf(Route::class, $route);
     $this->assertEquals('test_id', $route->getDefault('view_id'));
     $this->assertEquals('page_1', $route->getDefault('display_id'));
-    $this->assertEquals('my views title', $route->getDefault('_title'));
+    $this->assertEquals('Drupal\views\Routing\ViewPageController::getTitle', $route->getDefault('_title_callback'));
 
     // Ensure that the test_route_2 is not overridden.
     $route = $collection->get('test_route_2');
@@ -295,7 +295,7 @@ class PathPluginBaseTest extends UnitTestCase {
     $this->assertInstanceOf(Route::class, $route);
     $this->assertEquals('test_id', $route->getDefault('view_id'));
     $this->assertEquals('page_1', $route->getDefault('display_id'));
-    $this->assertEquals('my views title', $route->getDefault('_title'));
+    $this->assertEquals('Drupal\views\Routing\ViewPageController::getTitle', $route->getDefault('_title_callback'));
   }
 
   /**
@@ -334,7 +334,7 @@ class PathPluginBaseTest extends UnitTestCase {
     $this->assertInstanceOf(Route::class, $route);
     $this->assertEquals('test_id', $route->getDefault('view_id'));
     $this->assertEquals('page_1', $route->getDefault('display_id'));
-    $this->assertEquals('my views title', $route->getDefault('_title'));
+    $this->assertEquals('Drupal\views\Routing\ViewPageController::getTitle', $route->getDefault('_title_callback'));
   }
 
   /**
@@ -365,7 +365,6 @@ class PathPluginBaseTest extends UnitTestCase {
     $this->assertEquals('test_id', $route->getDefault('view_id'));
     $this->assertEquals('\Drupal\Tests\views\Unit\Plugin\display\TestController::testTitle', $route->getDefault('_title_callback'));
     $this->assertEquals('page_1', $route->getDefault('display_id'));
-    $this->assertEquals('my views title', $route->getDefault('_title'));
 
     // Ensure that the test_route_2 is not overridden.
     $route = $collection->get('test_route_2');
@@ -406,7 +405,7 @@ class PathPluginBaseTest extends UnitTestCase {
     $this->assertEquals('/test_route/{node}/example', $route->getPath());
     $this->assertEquals('test_id', $route->getDefault('view_id'));
     $this->assertEquals('page_1', $route->getDefault('display_id'));
-    $this->assertEquals('my views title', $route->getDefault('_title'));
+    $this->assertEquals('Drupal\views\Routing\ViewPageController::getTitle', $route->getDefault('_title_callback'));
     $this->assertEquals(['arg_0' => 'node'], $route->getOption('_view_argument_map'));
   }
 
@@ -444,7 +443,7 @@ class PathPluginBaseTest extends UnitTestCase {
     // Ensure that the path did not changed and placeholders are respected.
     $this->assertEquals('/test_route/{parameter}', $route->getPath());
     $this->assertEquals(['arg_0' => 'parameter'], $route->getOption('_view_argument_map'));
-    $this->assertEquals('my views title', $route->getDefault('_title'));
+    $this->assertEquals('Drupal\views\Routing\ViewPageController::getTitle', $route->getDefault('_title_callback'));
   }
 
   /**
@@ -482,7 +481,7 @@ class PathPluginBaseTest extends UnitTestCase {
     // Ensure that the path did not changed and placeholders are respected  kk.
     $this->assertEquals('/test_route/{parameter}', $route->getPath());
     $this->assertEquals(['arg_0' => 'parameter'], $route->getOption('_view_argument_map'));
-    $this->assertEquals('my views title', $route->getDefault('_title'));
+    $this->assertEquals('Drupal\views\Routing\ViewPageController::getTitle', $route->getDefault('_title_callback'));
   }
 
   /**
@@ -517,7 +516,7 @@ class PathPluginBaseTest extends UnitTestCase {
     // Ensure that the path did not changed and placeholders are respected.
     $this->assertEquals('/test_route/{parameter}/{arg_1}', $route->getPath());
     $this->assertEquals(['arg_0' => 'parameter'], $route->getOption('_view_argument_map'));
-    $this->assertEquals('my views title', $route->getDefault('_title'));
+    $this->assertEquals('Drupal\views\Routing\ViewPageController::getTitle', $route->getDefault('_title_callback'));
   }
 
   /**
@@ -552,9 +551,6 @@ class PathPluginBaseTest extends UnitTestCase {
     $view = $this->getMockBuilder('Drupal\views\ViewExecutable')
       ->disableOriginalConstructor()
       ->getMock();
-    $view->expects($this->any())
-      ->method('getTitle')
-      ->willReturn('my views title');
 
     $view->storage = $view_entity;
 
