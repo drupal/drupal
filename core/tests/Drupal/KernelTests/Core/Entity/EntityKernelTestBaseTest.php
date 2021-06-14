@@ -27,8 +27,7 @@ class EntityKernelTestBaseTest extends EntityKernelTestBase {
   }
 
   /**
-   * Ensure that calls to enable or disable modules result in our getting
-   * updated references to the DI container's services.
+   * Ensure references to DI objects are kept in sync.
    */
   public function testEnsureContainerIntegrity() {
     $storage = new \SplObjectStorage();
