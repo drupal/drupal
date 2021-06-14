@@ -1,4 +1,4 @@
-/*! @drupal/once - v1.0.0 - 2021-03-04 */
+/*! @drupal/once - v1.0.1 - 2021-06-12 */
 /**
  * Mark DOM elements as processed to prevent multiple initializations.
  *
@@ -138,14 +138,20 @@ function checkElement(itemToCheck) {
  *   An array with the processed Id and the list of elements to process.
  */
 function getElements(selector, context = doc) {
-  if (!selector) {
-    throw new TypeError('Selector must not be empty');
-  }
   // Assume selector is an array-like value.
   let elements = selector;
 
+  // If selector is null it is most likely because of a call to querySelector
+  // that didn't return a result.
+  if (selector === null) {
+    elements = [];
+  }
+  // The selector is undefined, error out.
+  else if (!selector) {
+    throw new TypeError('Selector must not be empty');
+  }
   // This is a selector, query the elements.
-  if (
+  else if (
     typeof selector === 'string' &&
     (context === doc || checkElement(context))
   ) {
@@ -179,7 +185,7 @@ function getElements(selector, context = doc) {
  *   The array of elements that match the CSS selector.
  */
 function filterAndModify(selector, elements, apply) {
-  return elements.filter(element => {
+  return elements.filter((element) => {
     const selected = checkElement(element) && element.matches(selector);
     if (selected && apply) {
       apply(element);
@@ -212,7 +218,7 @@ function updateAttribute(element, { add, remove }) {
     attr(element, 'get')
       .trim()
       .split(wsRE)
-      .forEach(item => {
+      .forEach((item) => {
         if (result.indexOf(item) < 0 && item !== remove) {
           result.push(item);
         }
@@ -272,7 +278,7 @@ function once(id, selector, context) {
   return filterAndModify(
     `:not(${attrSelector(id)})`,
     getElements(selector, context),
-    element => updateAttribute(element, { add: id }),
+    (element) => updateAttribute(element, { add: id }),
   );
 }
 
@@ -314,7 +320,7 @@ once.remove = (id, selector, context) => {
   return filterAndModify(
     attrSelector(id),
     getElements(selector, context),
-    element => updateAttribute(element, { remove: id }),
+    (element) => updateAttribute(element, { remove: id }),
   );
 };
 
