@@ -350,7 +350,7 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
       $scheme = $matches[1];
       $filepath = $fs->realpath($file['uri']);
       if ($scheme === 'temporary') {
-        $this->assertFileNotExists($filepath);
+        $this->assertFileDoesNotExist($filepath);
       }
       else {
         $this->assertFileExists($filepath);

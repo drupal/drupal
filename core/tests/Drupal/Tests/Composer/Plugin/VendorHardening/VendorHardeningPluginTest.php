@@ -70,7 +70,7 @@ class VendorHardeningPluginTest extends TestCase {
 
     $plugin->cleanPackage($package->reveal());
 
-    $this->assertFileNotExists(vfsStream::url('vendor/drupal/package/tests'));
+    $this->assertFileDoesNotExist(vfsStream::url('vendor/drupal/package/tests'));
   }
 
   /**
@@ -98,7 +98,7 @@ class VendorHardeningPluginTest extends TestCase {
     $ref_clean->setAccessible(TRUE);
     $ref_clean->invokeArgs($plugin, [$package->reveal(), ['tests']]);
 
-    $this->assertFileNotExists(vfsStream::url('vendor/drupal/package/tests'));
+    $this->assertFileDoesNotExist(vfsStream::url('vendor/drupal/package/tests'));
   }
 
   /**
@@ -141,7 +141,7 @@ class VendorHardeningPluginTest extends TestCase {
 
     $plugin->cleanAllPackages();
 
-    $this->assertFileNotExists(vfsStream::url('vendor/drupal/package/tests'));
+    $this->assertFileDoesNotExist(vfsStream::url('vendor/drupal/package/tests'));
   }
 
   /**
@@ -164,8 +164,8 @@ class VendorHardeningPluginTest extends TestCase {
 
     $this->assertDirectoryExists($dir);
 
-    $this->assertFileNotExists($dir . '/.htaccess');
-    $this->assertFileNotExists($dir . '/web.config');
+    $this->assertFileDoesNotExist($dir . '/.htaccess');
+    $this->assertFileDoesNotExist($dir . '/web.config');
 
     $plugin->writeAccessRestrictionFiles($dir);
 

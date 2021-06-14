@@ -78,7 +78,7 @@ class GenerateThemeTest extends QuickStartTestBase {
     $this->assertStringContainsString('Theme could not be generated because the destination directory', $process->getErrorOutput());
     $this->assertStringContainsString($theme_path_relative, $process->getErrorOutput());
     $this->assertSame(1, $result);
-    $this->assertFileNotExists($theme_path_absolute . '/test_custom_theme.theme');
+    $this->assertFileDoesNotExist($theme_path_absolute . '/test_custom_theme.theme');
   }
 
 }
