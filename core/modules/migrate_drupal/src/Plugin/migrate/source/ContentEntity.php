@@ -231,6 +231,10 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
     if (!empty($this->configuration['bundle'])) {
       $query->condition($this->entityType->getKey('bundle'), $this->configuration['bundle']);
     }
+    // Exclude anonymous user account.
+    if ($this->entityType->id() === 'user' && !empty($this->entityType->getKey('id'))) {
+      $query->condition($this->entityType->getKey('id'), 0, '>');
+    }
     return $query;
   }
 
