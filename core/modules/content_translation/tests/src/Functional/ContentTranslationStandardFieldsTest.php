@@ -73,7 +73,7 @@ class ContentTranslationStandardFieldsTest extends BrowserTestBase {
   }
 
   /**
-   * Test that revision_log is not translatable.
+   * Tests that revision_log is not translatable.
    */
   public function testRevisionLogNotTranslatable() {
     $path = 'admin/config/regional/content-language';

@@ -112,7 +112,8 @@ class TermIndexTest extends TaxonomyTestBase {
     $edit['body[0][value]'] = $this->randomMachineName();
     $edit["{$this->fieldName1}[]"] = $term_1->id();
     $edit["{$this->fieldName2}[]"] = $term_1->id();
-    $this->drupalPostForm('node/add/article', $edit, 'Save');
+    $this->drupalGet('node/add/article');
+    $this->submitForm($edit, 'Save');
 
     // Check that the term is indexed, and only once.
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
@@ -127,7 +128,8 @@ class TermIndexTest extends TaxonomyTestBase {
 
     // Update the article to change one term.
     $edit["{$this->fieldName1}[]"] = $term_2->id();
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm($edit, 'Save');
 
     // Check that both terms are indexed.
     $index_count = $connection->select('taxonomy_index')
@@ -147,7 +149,8 @@ class TermIndexTest extends TaxonomyTestBase {
 
     // Update the article to change another term.
     $edit["{$this->fieldName2}[]"] = $term_2->id();
-    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->submitForm($edit, 'Save');
 
     // Check that only one term is indexed.
     $index_count = $connection->select('taxonomy_index')

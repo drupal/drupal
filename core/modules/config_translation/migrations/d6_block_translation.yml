@@ -68,3 +68,4 @@ destination:
 migration_dependencies:
   required:
     - d6_block
+    - language

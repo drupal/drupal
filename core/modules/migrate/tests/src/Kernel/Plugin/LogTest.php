@@ -65,7 +65,7 @@ class LogTest extends KernelTestBase {
   }
 
   /**
-   * Test the Log plugin.
+   * Tests the Log plugin.
    */
   public function testLog() {
     $values = [

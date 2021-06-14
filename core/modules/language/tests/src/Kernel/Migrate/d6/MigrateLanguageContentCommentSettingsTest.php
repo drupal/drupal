@@ -28,6 +28,7 @@ class MigrateLanguageContentCommentSettingsTest extends MigrateDrupal6TestBase {
     parent::setUp();
     $this->installConfig(['comment']);
     $this->executeMigrations([
+      'language',
       'd6_comment_type',
       'd6_language_content_comment_settings',
     ]);

@@ -33,7 +33,7 @@ class ImportStorageTransformerTest extends KernelTestBase {
   }
 
   /**
-   * Test the import transformation.
+   * Tests the import transformation.
    */
   public function testTransform() {
     // Get the raw system.site config and set it in the sync storage.
@@ -61,7 +61,7 @@ class ImportStorageTransformerTest extends KernelTestBase {
   }
 
   /**
-   * Test that the import transformer throws an exception.
+   * Tests that the import transformer throws an exception.
    */
   public function testTransformLocked() {
     // Mock the request lock not being available.
@@ -92,7 +92,7 @@ class ImportStorageTransformerTest extends KernelTestBase {
   }
 
   /**
-   * Test the import transformer during a running config import.
+   * Tests the import transformer during a running config import.
    */
   public function testTransformWhileImporting() {
     // Set up the database table with the current active config.

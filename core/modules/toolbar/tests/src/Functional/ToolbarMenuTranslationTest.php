@@ -56,7 +56,8 @@ class ToolbarMenuTranslationTest extends BrowserTestBase {
 
     // Add Spanish.
     $edit['predefined_langcode'] = $langcode;
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
+    $this->drupalGet('admin/config/regional/language/add');
+    $this->submitForm($edit, 'Add language');
 
     // The menu item 'Structure' in the toolbar will be translated.
     $menu_item = 'Structure';
@@ -70,7 +71,8 @@ class ToolbarMenuTranslationTest extends BrowserTestBase {
       'langcode' => $langcode,
       'translation' => 'untranslated',
     ];
-    $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
+    $this->drupalGet('admin/config/regional/translate');
+    $this->submitForm($search, 'Filter');
     // Make sure will be able to translate the menu item.
     $this->assertNoText('No strings available.');
 
@@ -85,7 +87,8 @@ class ToolbarMenuTranslationTest extends BrowserTestBase {
     $edit = [
       $lid => $menu_item_translated,
     ];
-    $this->drupalPostForm('admin/config/regional/translate', $edit, 'Save translations');
+    $this->drupalGet('admin/config/regional/translate');
+    $this->submitForm($edit, 'Save translations');
 
     // Search for the translated menu item.
     $search = [
@@ -93,7 +96,8 @@ class ToolbarMenuTranslationTest extends BrowserTestBase {
       'langcode' => $langcode,
       'translation' => 'translated',
     ];
-    $this->drupalPostForm('admin/config/regional/translate', $search, 'Filter');
+    $this->drupalGet('admin/config/regional/translate');
+    $this->submitForm($search, 'Filter');
     // Make sure the menu item string was translated.
     $this->assertSession()->pageTextContains($menu_item_translated);
 

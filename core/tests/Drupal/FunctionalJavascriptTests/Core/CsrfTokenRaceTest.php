@@ -22,7 +22,7 @@ class CsrfTokenRaceTest extends WebDriverTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test race condition for CSRF tokens for simultaneous requests.
+   * Tests race condition for CSRF tokens for simultaneous requests.
    */
   public function testCsrfRace() {
     $user = $this->createUser(['access content']);

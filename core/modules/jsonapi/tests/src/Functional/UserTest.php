@@ -427,7 +427,7 @@ class UserTest extends ResourceTestBase {
   }
 
   /**
-   * Test good error DX when trying to filter users by role.
+   * Tests good error DX when trying to filter users by role.
    */
   public function testQueryInvolvingRoles() {
     $this->setUpAuthorization('GET');

@@ -27,7 +27,7 @@ class CommentAdminTest extends CommentTestBase {
   }
 
   /**
-   * Test comment approval functionality through admin/content/comment.
+   * Tests comment approval functionality through admin/content/comment.
    */
   public function testApprovalAdminInterface() {
     // Set anonymous comments to require approval.
@@ -277,7 +277,8 @@ class CommentAdminTest extends CommentTestBase {
       "comments[{$comment1->id()}]" => 1,
       "comments[{$comment2->id()}]" => 1,
     ];
-    $this->drupalPostForm('admin/content/comment', $edit, 'Update');
+    $this->drupalGet('admin/content/comment');
+    $this->submitForm($edit, 'Update');
     $this->assertRaw(new FormattableMarkup('@label (Original translation) - <em>The following comment translations will be deleted:</em>', ['@label' => $comment1->label()]));
     $this->assertRaw(new FormattableMarkup('@label (Original translation) - <em>The following comment translations will be deleted:</em>', ['@label' => $comment2->label()]));
     $this->assertSession()->pageTextContains('English');

@@ -39,7 +39,7 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
   }
 
   /**
-   * Test responsive image administration functionality.
+   * Tests responsive image administration functionality.
    */
   public function testResponsiveImageAdmin() {
     // We start without any default styles.
@@ -58,7 +58,8 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
       'breakpoint_group' => 'responsive_image_test_module',
       'fallback_image_style' => 'thumbnail',
     ];
-    $this->drupalPostForm('admin/config/media/responsive-image-style/add', $edit, 'Save');
+    $this->drupalGet('admin/config/media/responsive-image-style/add');
+    $this->submitForm($edit, 'Save');
 
     // Check if the new group is created.
     $this->assertSession()->statusCodeEquals(200);
@@ -115,7 +116,8 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
       'keyed_styles[responsive_image_test_module.wide][1x][image_mapping_type]' => 'image_style',
       'keyed_styles[responsive_image_test_module.wide][1x][image_style]' => 'large',
     ];
-    $this->drupalPostForm('admin/config/media/responsive-image-style/style_one', $edit, 'Save');
+    $this->drupalGet('admin/config/media/responsive-image-style/style_one');
+    $this->submitForm($edit, 'Save');
     $this->drupalGet('admin/config/media/responsive-image-style/style_one');
 
     // Check the mapping for multipliers 1x and 2x for the mobile breakpoint.

@@ -15,7 +15,7 @@ use Drupal\Tests\UnitTestCase;
 class PhpUnitTestRunnerTest extends UnitTestCase {
 
   /**
-   * Test an error in the test running phase.
+   * Tests an error in the test running phase.
    *
    * @covers ::runTests
    */
