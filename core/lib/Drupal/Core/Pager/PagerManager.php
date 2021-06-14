@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Pager;
 
-use Drupal\Core\Database\Query\PagerSelectExtender;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 
 /**
@@ -109,9 +108,6 @@ class PagerManager implements PagerManagerInterface {
    */
   public function reservePagerElementId(int $element): void {
     $this->maxPagerElementId = max($element, $this->maxPagerElementId);
-    // BC for PagerSelectExtender::$maxElement.
-    // @todo remove the line below in D10.
-    PagerSelectExtender::$maxElement = $this->getMaxPagerElementId();
   }
 
   /**

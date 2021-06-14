@@ -753,7 +753,6 @@
                     "lib/Drupal/Core/Database/Driver/mysql/Connection.php",
                     "lib/Drupal/Core/Database/Driver/pgsql/Connection.php",
                     "lib/Drupal/Core/Database/Driver/sqlite/Connection.php",
-                    "lib/Drupal/Core/Database/Statement.php",
                     "lib/Drupal/Core/Database/StatementInterface.php",
                     "lib/Drupal/Core/DependencyInjection/Container.php",
                     "lib/Drupal/Core/DrupalKernel.php",

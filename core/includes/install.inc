@@ -175,9 +175,6 @@ function drupal_get_database_types() {
   /** @var \Drupal\Core\File\FileSystemInterface $file_system */
   $file_system = \Drupal::service('file_system');
   $files = $file_system->scanDirectory(DRUPAL_ROOT . '/core/lib/Drupal/Core/Database/Driver', $mask, ['recurse' => FALSE]);
-  if (is_dir(DRUPAL_ROOT . '/drivers/lib/Drupal/Driver/Database')) {
-    $files += $file_system->scanDirectory(DRUPAL_ROOT . '/drivers/lib/Drupal/Driver/Database/', $mask, ['recurse' => FALSE]);
-  }
   foreach ($files as $file) {
     if (file_exists($file->uri . '/Install/Tasks.php')) {
       // The namespace doesn't need to be added here, because
@@ -1171,14 +1168,7 @@ function db_installer_object($driver, $namespace = NULL) {
     $task_class = $namespace . "\\Install\\Tasks";
     return new $task_class();
   }
-  // Old Drupal 8 style contrib namespace.
-  $task_class = "Drupal\\Driver\\Database\\{$driver}\\Install\\Tasks";
-  if (class_exists($task_class)) {
-    return new $task_class();
-  }
-  else {
-    // Core provided driver.
-    $task_class = "Drupal\\Core\\Database\\Driver\\{$driver}\\Install\\Tasks";
-    return new $task_class();
-  }
+  // Core provided driver.
+  $task_class = "Drupal\\Core\\Database\\Driver\\{$driver}\\Install\\Tasks";
+  return new $task_class();
 }
