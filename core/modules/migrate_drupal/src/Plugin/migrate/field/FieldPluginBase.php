@@ -49,8 +49,8 @@ abstract class FieldPluginBase extends PluginBase implements MigrateFieldInterfa
    * {@inheritdoc}
    */
   public function getFieldFormatterType(Row $row) {
-    // Drupal 6 formatter settings migration has 'display_settings/format',
-    // Drupal 7 formatter settings migration has 'formatter/type'.
+    // For Drupal 6 sources the widget type is on the row as
+    // display_settings/format and for Drupal 7 sources it is formatter/type.
     return $row->getSourceProperty('formatter/type') ?? $row->getSourceProperty('display_settings/format');
   }
 
@@ -65,8 +65,8 @@ abstract class FieldPluginBase extends PluginBase implements MigrateFieldInterfa
    * {@inheritdoc}
    */
   public function getFieldWidgetType(Row $row) {
-    // Drupal 6 widget settings migration has 'widget_type',
-    // Drupal 7 widget settings migration has 'widget/type'.
+    // For Drupal 6 sources the widget type is on the row as widget_type and
+    // for Drupal 7 sources it is widget/type.
     return $row->getSourceProperty('widget/type') ?? $row->getSourceProperty('widget_type');
   }
 
