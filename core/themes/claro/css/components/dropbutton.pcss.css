@@ -68,10 +68,6 @@
   margin: 0;
 }
 
-.js .dropbutton {
-  height: var(--dropbutton-toggle-size);
-}
-
 /* Variants. */
 .js.no-touchevents .dropbutton--small {
   height: var(--dropbutton-small-toggle-size);
@@ -84,27 +80,27 @@
 /**
  * First dropbutton list item.
  */
-.js .dropbutton--multiple .dropbutton__item:first-of-type {
+.js .dropbutton--multiple .dropbutton__main-item {
   margin-right: calc(var(--dropbutton-toggle-size) + var(--dropbutton-toggle-size-spacing)); /* LTR */
 }
-[dir="rtl"].js .dropbutton--multiple .dropbutton__item:first-of-type {
+[dir="rtl"].js .dropbutton--multiple .dropbutton__main-item {
   margin-right: 0;
   margin-left: calc(var(--dropbutton-toggle-size) + var(--dropbutton-toggle-size-spacing));
 }
 
 /* First dropbutton list item variants */
-.js.no-touchevents .dropbutton--multiple.dropbutton--small .dropbutton__item:first-of-type {
+js.no-touchevents .dropbutton--multiple.dropbutton--small .dropbutton__main-item {
   margin-right: calc(var(--dropbutton-small-toggle-size) + var(--dropbutton-toggle-size-spacing)); /* LTR */
 }
-[dir="rtl"].js.no-touchevents .dropbutton--multiple.dropbutton--small .dropbutton__item:first-of-type {
+[dir="rtl"].js.no-touchevents .dropbutton--multiple.dropbutton--small .dropbutton__main-item {
   margin-right: 0;
   margin-left: calc(var(--dropbutton-small-toggle-size) + var(--dropbutton-toggle-size-spacing));
 }
 
-.js.no-touchevents .dropbutton--multiple.dropbutton--extrasmall .dropbutton__item:first-of-type {
+.js.no-touchevents .dropbutton--multiple.dropbutton--extrasmall .dropbutton__main-item {
   margin-right: calc(var(--dropbutton-extrasmall-toggle-size) + var(--dropbutton-toggle-size-spacing)); /* LTR */
 }
-[dir="rtl"].js.no-touchevents .dropbutton--multiple.dropbutton--extrasmall .dropbutton__item:first-of-type {
+[dir="rtl"].js.no-touchevents .dropbutton--multiple.dropbutton--extrasmall .dropbutton__main-item {
   margin-right: 0;
   margin-left: calc(var(--dropbutton-extrasmall-toggle-size) + var(--dropbutton-toggle-size-spacing));
 }
@@ -119,7 +115,6 @@
   right: 0; /* LTR */
   bottom: 0;
   width: var(--dropbutton-toggle-size);
-  height: var(--dropbutton-toggle-size);
   border: var(--dropbutton-border-size) solid transparent !important; /* 1 */
   border-radius: 0 var(--button-border-radius-size) var(--button-border-radius-size) 0; /* LTR */
   background: var(--button-bg-color);
@@ -170,12 +165,10 @@
 /* Toggler variants */
 .no-touchevents .dropbutton--small .dropbutton__toggle {
   width: var(--dropbutton-small-toggle-size);
-  height: var(--dropbutton-small-toggle-size);
 }
 
 .no-touchevents .dropbutton--extrasmall .dropbutton__toggle {
   width: var(--dropbutton-extrasmall-toggle-size);
-  height: var(--dropbutton-extrasmall-toggle-size);
 }
 
 .no-touchevents .dropbutton--small .dropbutton__toggle::before,
@@ -223,7 +216,7 @@
  *
  * Duplicates base button styles.
  */
-.dropbutton__item:first-of-type > * {
+.dropbutton .dropbutton__main-item > * {
   display: inline-block;
   margin: 0;
   padding: calc(var(--dropbutton-spacing-size) - var(--dropbutton-border-size)) calc(var(--space-l) - var(--dropbutton-border-size));
@@ -240,66 +233,69 @@
   appearance: none;
   -webkit-font-smoothing: antialiased;
 }
-.dropbutton--multiple .dropbutton__item:first-of-type > * {
+.dropbutton--multiple .dropbutton__main-item > * {
   padding-right: calc(var(--dropbutton-spacing-size) - var(--dropbutton-border-size));
   padding-left: calc(var(--dropbutton-spacing-size) - var(--dropbutton-border-size));
 }
 
 /* Variants */
-.no-touchevents .dropbutton--small .dropbutton__item:first-of-type > * {
+.no-touchevents .dropbutton .dropbutton__main-item.dropbutton__item--small > * {
   padding-top: calc(var(--dropbutton-small-spacing-size) - var(--dropbutton-border-size));
   padding-bottom: calc(var(--dropbutton-small-spacing-size) - var(--dropbutton-border-size));
   font-size: var(--dropbutton-small-font-size);
   line-height: var(--dropbutton-small-line-height);
 }
 
-.no-touchevents .dropbutton--extrasmall .dropbutton__item:first-of-type > * {
+.no-touchevents .dropbutton .dropbutton__main-item.dropbutton__item--extrasmall > * {
   padding-top: calc(var(--dropbutton-extrasmall-spacing-size) - var(--dropbutton-border-size));
   padding-bottom: calc(var(--dropbutton-extrasmall-spacing-size) - var(--dropbutton-border-size));
   font-size: var(--dropbutton-extrasmall-font-size);
   line-height: var(--dropbutton-extrasmall-line-height);
 }
 
-.dropbutton__item:first-of-type > *:hover,
-.dropbutton__item:first-of-type > .button:hover {
+.dropbutton .dropbutton__main-item > *:hover,
+.dropbutton .dropbutton__main-item > .button:hover {
   text-decoration: none;
   color: var(--button-fg-color);
   background-color: var(--button--hover-bg-color);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
 }
 
-.dropbutton__item:first-of-type > *:focus:hover,
-.dropbutton__item:first-of-type > .button:focus:hover {
+.dropbutton .dropbutton__main-item > *:focus:hover,
+.dropbutton .dropbutton__main-item > .button:focus:hover {
   box-shadow: 0 0 0 2px var(--color-white), 0 0 0 5px var(--color-focus);
 }
 
-.dropbutton__item:first-of-type > *:focus {
+.dropbutton .dropbutton__item > *:hover,
+.dropbutton .dropbutton__item > *:focus {
   text-decoration: none;
 }
 
-.dropbutton__item:first-of-type > *:active {
+.dropbutton .dropbutton__main-item > *:active {
   color: var(--button-fg-color);
   background-color: var(--button--active-bg-color);
 }
 
-.dropbutton--multiple .dropbutton__item:first-of-type > * {
+.dropbutton--multiple .dropbutton__main-item > * {
   position: relative;
   z-index: 3;
 }
 
-.dropbutton--multiple .dropbutton__item:first-of-type > *:focus {
+.dropbutton--multiple .dropbutton__item:first-of-type > *:focus,
+.js .dropbutton--multiple .dropbutton__main-item > * {
   z-index: 2;
 }
 
 .js .dropbutton--multiple .dropbutton__item:first-of-type > * {
   border-radius: var(--button-border-radius-size) 0 0 var(--button-border-radius-size); /* LTR */
 }
-[dir="rtl"].js .dropbutton--multiple .dropbutton__item:first-of-type > * {
+[dir="rtl"].js .dropbutton--multiple .dropbutton__item:first-of-type > *,
+[dir="rtl"].js .dropbutton--multiple .dropbutton__main-item > * {
   border-radius: 0 var(--button-border-radius-size) var(--button-border-radius-size) 0;
 }
 
-.dropbutton > .dropbutton__item > a,
-.dropbutton > .dropbutton__item > .button {
+[dir="rtl"] .dropbutton .dropbutton__item > a,
+[dir="rtl"] .dropbutton .dropbutton__item > .button {
   display: block;
   box-sizing: border-box;
   width: 100%;
@@ -316,19 +312,39 @@
 }
 
 /**
- * Non-first dropbutton list elements.
+ * List of the other dropbutton items.
  */
-.dropbutton__item:first-of-type ~ .dropbutton__item {
+.dropbutton__subitems {
+  margin: 0;
+  list-style: none;
+  color: var(--color-davysgray);
+  background: #fff;
+}
+
+[dir="rtl"] .dropbutton__subitems {
+  margin: 0;
+}
+
+.dropbutton__subitems-wrapper {
+  position: relative;
+  z-index: 1;
+  height: 0;
+}
+
+.js .dropbutton-wrapper:not(.open) .dropbutton__subitems-wrapper {
+  display: none;
+}
+.dropbutton__sub-item {
   border: var(--dropbutton-border-size) solid var(--color-lightgray);
   border-bottom: 0;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
 
-.dropbutton__item:first-of-type ~ .dropbutton__item ~ .dropbutton__item {
+.dropbutton__sub-item ~ .dropbutton__sub-item {
   border-top: 0;
 }
 
-.dropbutton__item ~ .dropbutton__item:last-child {
+.dropbutton__sub-item ~ .dropbutton__sub-item:last-child {
   border-bottom: var(--dropbutton-border-size) solid var(--color-lightgray);
   border-radius: 0 0 var(--dropbutton-border-radius-size) var(--dropbutton-border-radius-size);
 }
@@ -336,9 +352,10 @@
 /**
  * Dropbutton items of non-first dropbutton list elements.
  */
-.dropbutton__item:first-of-type ~ .dropbutton__item > a,
-.dropbutton__item:first-of-type ~ .dropbutton__item > .button {
+.dropbutton .dropbutton__sub-item > a,
+.dropbutton .dropbutton__sub-item > .button {
   position: relative;
+  display: block;
   padding: calc(var(--dropbutton-spacing-size) - var(--dropbutton-border-size));
   text-decoration: none;
   color: var(--color-davysgray);
@@ -357,28 +374,28 @@
  * mode.
  */
 @media screen and (-ms-high-contrast: active) {
-  .dropbutton__item:first-of-type ~ .dropbutton__item > a,
-  .dropbutton__item:first-of-type ~ .dropbutton__item > .button {
+  .dropbutton .dropbutton__sub-item > a,
+  .dropbutton .dropbutton__sub-item > .button {
     border-color: transparent !important;
   }
 }
 
-.dropbutton__item:first-of-type ~ .dropbutton__item > a:not(:focus),
-.dropbutton__item:first-of-type ~ .dropbutton__item > .button:not(:focus) {
+.dropbutton .dropbutton__sub-item > a:not(:focus),
+.dropbutton .dropbutton__sub-item > .button:not(:focus) {
   z-index: 1;
 }
 
 /* Variants. */
-.no-touchevents .dropbutton--small .dropbutton__item:first-of-type ~ .dropbutton__item > a,
-.no-touchevents .dropbutton--small .dropbutton__item:first-of-type ~ .dropbutton__item > .button {
+.no-touchevents .dropbutton .dropbutton__sub-item.dropbutton__item--small > a,
+.no-touchevents .dropbutton__sub-item.dropbutton__item--small > .button {
   padding-top: var(--dropbutton-small-spacing-size);
   padding-bottom: var(--dropbutton-small-spacing-size);
   font-size: var(--dropbutton-small-font-size);
   line-height: var(--dropbutton-small-line-height);
 }
 
-.no-touchevents .dropbutton--extrasmall .dropbutton__item:first-of-type ~ .dropbutton__item > a,
-.no-touchevents .dropbutton--extrasmall .dropbutton__item:first-of-type ~ .dropbutton__item > .button {
+.no-touchevents .dropbutton .dropbutton__sub-item.dropbutton__item--extrasmall > a,
+.no-touchevents .dropbutton__sub-item.dropbutton__item--extrasmall > .button {
   padding-top: var(--dropbutton-extrasmall-spacing-size);
   padding-bottom: var(--dropbutton-extrasmall-spacing-size);
   font-size: var(--dropbutton-extrasmall-font-size);
@@ -386,21 +403,21 @@
 }
 
 /* States. */
-.dropbutton__item > *:focus {
+.dropbutton .dropbutton__item > *:focus {
   position: relative;
   z-index: 3;
 }
 
-.dropbutton__item:first-of-type ~ .dropbutton__item > *:hover {
+.dropbutton .dropbutton__sub-item > *:hover {
   color: var(--color-text);
   background: var(--color-whitesmoke);
 }
 
-.dropbutton__item > .button:not(:focus) {
+.dropbutton .dropbutton__item > .button:not(:focus) {
   box-shadow: none;
 }
 
-.dropbutton__item:first-of-type ~ .dropbutton__item > *:focus {
+.dropbutton .dropbutton__sub-item > *:focus {
   border-color: var(--color-focus) !important; /* 1 */
   box-shadow: inset 0 0 0 1px var(--color-focus), 0 0 0 1px var(--color-focus);
 }
